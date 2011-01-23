@@ -7,10 +7,12 @@ namespace PatchApply
 {
     public class PatchProcessor
     {
-        public List<Patch> ProcessInput(TextReader re, string input, Patch patch)
+        public List<Patch> CreatePatchesFromReader(TextReader textReader)
         {
             var patches = new List<Patch>();
+            Patch patch = null;
             bool gitPatch = false;
+            string input = textReader.ReadLine();
             while (input != null)
             {
                 //diff --git a/FileA b/FileB
@@ -33,7 +35,7 @@ namespace PatchApply
                     //new file mode xxxxxx means new file
                     //delete file mode xxxxxx means delete file
                     //index means -> no new and no delete, edit
-                    if ((input = re.ReadLine()) != null)
+                    if ((input = textReader.ReadLine()) != null)
                     {
                         //WTF! No change
                         if (input.StartsWith("diff --git "))
@@ -54,13 +56,13 @@ namespace PatchApply
                         //because we are not sure if we are there yet because
                         //we might point at the new or delete line lines
                         if (!input.StartsWith("index "))
-                            if ((input = re.ReadLine()) == null)
+                            if ((input = textReader.ReadLine()) == null)
                                 break;
                     }
 
                     //The next lines tells us more about the change itself
                     //Read the next
-                    if ((input = re.ReadLine()) != null)
+                    if ((input = textReader.ReadLine()) != null)
                     {
                         //Binary files a/FileA and /dev/null differ
                         //means the file is deleted but the changes are not listed explicid
@@ -74,7 +76,7 @@ namespace PatchApply
 
                             patch = null;
 
-                            if ((input = re.ReadLine()) == null)
+                            if ((input = textReader.ReadLine()) == null)
                                 break;
 
                             //Continue loop, we do not get more info about this change
@@ -96,7 +98,7 @@ namespace PatchApply
 
                             patch = null;
 
-                            if ((input = re.ReadLine()) == null)
+                            if ((input = textReader.ReadLine()) == null)
                                 break;
 
                             continue;
@@ -113,7 +115,7 @@ namespace PatchApply
 
                             patch = null;
 
-                            if ((input = re.ReadLine()) == null)
+                            if ((input = textReader.ReadLine()) == null)
                                 break;
 
                             continue;
@@ -140,7 +142,7 @@ namespace PatchApply
                             throw new Exception("Change not parsed correct: " + input);
 
                         //This line is parsed, NEXT!
-                        if ((input = re.ReadLine()) == null)
+                        if ((input = textReader.ReadLine()) == null)
                             break;
 
                     }
@@ -160,7 +162,7 @@ namespace PatchApply
                         patch.FileNameA = (input.Substring(6).Trim());
 
                         //This line is parsed, NEXT!
-                        if ((input = re.ReadLine()) == null)
+                        if ((input = textReader.ReadLine()) == null)
                             break;
 
                     }
@@ -172,7 +174,7 @@ namespace PatchApply
                             throw new Exception("Change not parsed correct: " + input);
 
                         //This line is parsed, NEXT!
-                        if ((input = re.ReadLine()) == null)
+                        if ((input = textReader.ReadLine()) == null)
                             break;
                     }
 
@@ -189,7 +191,7 @@ namespace PatchApply
                         patch.FileNameB = (regexMatch.Groups[1].Value.Trim());
 
                         //This line is parsed, NEXT!
-                        if ((input = re.ReadLine()) == null)
+                        if ((input = textReader.ReadLine()) == null)
                             break;
                     }
                 }
@@ -197,7 +199,7 @@ namespace PatchApply
                 if (patch != null)
                     patch.AppendTextLine(input);
 
-                if ((input = re.ReadLine()) == null)
+                if ((input = textReader.ReadLine()) == null)
                     break;
             }
 

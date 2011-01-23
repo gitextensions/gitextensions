@@ -2,23 +2,24 @@
 using System.Collections.Generic;
 using System.IO;
 using GitCommands;
-using System.Text.RegularExpressions;
 
 namespace PatchApply
 {
     public class PatchManager
     {
-        public List<Patch> patches = new List<Patch>();
+        private List<Patch> _patches = new List<Patch>();
+        private readonly PatchProcessor patchProcessor = new PatchProcessor();
+
         public string PatchFileName { get; set; }
+
         public string DirToPatch { get; set; }
 
-        private PatchProcessor patchProcessor;
-
-        public PatchManager()
+        public List<Patch> Patches
         {
-            patchProcessor = new PatchProcessor();
+            get { return _patches; }
+            set { _patches = value; }
         }
-        
+
         public static string GetSelectedLinesAsPatch(string text, int selectionPosition, int selectionLength, bool staged)
         {
             //When there is no patch, return nothing
@@ -251,7 +252,7 @@ namespace PatchApply
                 // update $patch (makes sure $pre_context gets appended)
                 patch += pre_context;
                 // update $wholepatch with the current hunk
-                wholepatch += "@@ -" + hln + "," + n.ToString() + " +" + hln + "," + m.ToString() + " @@\n" + patch;
+                wholepatch += "@@ -" + hln + "," + n + " +" + hln + "," + m + " @@\n" + patch;
 
                 // set $first_l to first line after the next @@ line
                 first_l = diff.IndexOf("\n", i_l) + 1;
@@ -269,21 +270,20 @@ namespace PatchApply
         {
             try
             {
-                var re = new StreamReader(DirToPatch + fileName, Settings.Encoding);
-                // string retval = re.ReadToEnd();
-                // GetMD5Hash(retval);
-                string retval = "";
-                string line;
-                while ((line = re.ReadLine()) != null)
+                using (var streamReader = new StreamReader(DirToPatch + fileName, Settings.Encoding))
                 {
-                    retval += line + "\n"; ;
+                    string retval = "";
+                    string line;
+                    while ((line = streamReader.ReadLine()) != null)
+                    {
+                        retval += line + "\n";
+                    }
+
+                    if (retval.Length > 0 && retval[retval.Length - 1] == '\n')
+                        retval = retval.Remove(retval.Length - 1, 1);
+
+                    return retval;
                 }
-                re.Close();
-
-                if (retval.Length > 0 && retval[retval.Length - 1] == '\n')
-                    retval = retval.Remove(retval.Length - 1, 1);
-
-                return retval;
             }
             catch
             {
@@ -293,7 +293,7 @@ namespace PatchApply
 
         public void SavePatch()
         {
-            foreach (Patch patch in patches)
+            foreach (Patch patch in _patches)
             {
                 if (!patch.Apply)
                     continue;
@@ -304,10 +304,9 @@ namespace PatchApply
                 }
                 else
                 {
-                    Directory.CreateDirectory(path.Substring(0, path.LastIndexOfAny(((String)"\\/").ToCharArray())));
-                    TextWriter tw = new StreamWriter(DirToPatch + patch.FileNameA, false);
-                    tw.Write(patch.FileTextB);
-                    tw.Close();
+                    Directory.CreateDirectory(path.Substring(0, path.LastIndexOfAny("\\/".ToCharArray())));
+                    using(TextWriter tw = new StreamWriter(DirToPatch + patch.FileNameA, false))
+                        tw.Write(patch.FileTextB);
                 }
             }
         }
@@ -361,7 +360,7 @@ namespace PatchApply
             }
         }
 
-        private void handleChangeFilePatchType(Patch patch, string[] patchLines)
+        private void handleChangeFilePatchType(Patch patch, IEnumerable<string> patchLines)
         {
             var fileLines = new List<string>();
             foreach (string s in LoadFile(patch.FileNameA).Split('\n'))
@@ -372,7 +371,7 @@ namespace PatchApply
             int lineNumber = 0;
             foreach (string line in patchLines)
             {
-                //Parse fist line
+                //Parse first line
                 //@@ -1,4 +1,4 @@
                 if (line.StartsWith("@@") && line.LastIndexOf("@@") > 0)
                 {
@@ -381,8 +380,6 @@ namespace PatchApply
                     string[] oldLines = addrem[1].Split(',');
 
                     lineNumber = Int32.Parse(oldLines[0]) - 1;
-
-                    //line = line.Substring(line.LastIndexOf("@@") + 3));
                     continue;
                 }
 
@@ -421,8 +418,6 @@ namespace PatchApply
                         fileLines.RemoveAt(lineNumber);
                     else
                         patch.Rate -= 20;
-
-                    //lineNumber++;
                 }
                 if (line.StartsWith("+"))
                 {
@@ -453,7 +448,7 @@ namespace PatchApply
                 patch.Apply = false;
         }
 
-        private void handleNewFilePatchType(Patch patch, string[] patchLines)
+        private void handleNewFilePatchType(Patch patch, IEnumerable<string> patchLines)
         {
             foreach (string line in patchLines)
             {
@@ -493,47 +488,28 @@ namespace PatchApply
 
         public void LoadPatch(string text, bool applyPatch)
         {
-            try
+            using (var stream = new StringReader(text))
             {
-                using (var stream = new StringReader(text))
-                {
-                    LoadPatchStream(stream, applyPatch);
-                }
+                LoadPatchStream(stream, applyPatch);
             }
-            catch
-            {
-            }
-
         }
 
         public void LoadPatchFile(bool applyPatch)
         {
-            try
+            using (var re = new StreamReader(PatchFileName, Settings.Encoding))
             {
-                using (var re = new StreamReader(PatchFileName, Settings.Encoding))
-                {
-                    LoadPatchStream(re, applyPatch);
-                }
-            }
-            catch
-            {
+                LoadPatchStream(re, applyPatch);
             }
         }
 
         public void LoadPatchStream(TextReader reader, bool applyPatch)
         {
-            Patch patch = null;
-
-            string input = reader.ReadLine();
-
-            patches = patchProcessor.ProcessInput(reader, input, patch);
-
-            reader.Close();
+            _patches = patchProcessor.CreatePatchesFromReader(reader);
 
             if (!applyPatch)
                 return;
 
-            foreach (Patch patchApply in patches)
+            foreach (Patch patchApply in _patches)
             {
                 if (patchApply.Apply)
                     ApplyPatch(patchApply);
@@ -546,7 +522,7 @@ namespace PatchApply
         /// Probably not be including newline characters in the count.
         /// Not set up to handle DOS (CR LF) line endings.
         /// 
-        /// Assumes file is a text file and that line < lines.Length
+        /// Assumes file is a text file and that line < lines.Length/>
         /// </summary>
         /// <param name="file">file we want to contain lines from</param>
         /// <param name="line">line number we want to count up to</param>
