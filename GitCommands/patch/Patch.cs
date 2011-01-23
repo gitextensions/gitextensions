@@ -114,24 +114,6 @@ namespace PatchApply
             }
         }
 
-        private void SavePatch()
-        {
-            if (!Apply)
-                return;
-            string path = DirToPatch + FileNameA;
-            if (Type == PatchType.DeleteFile)
-            {
-                System.IO.File.Delete(path);
-            }
-            else
-            {
-                Directory.CreateDirectory(path.Substring(0, path.LastIndexOfAny("\\/".ToCharArray())));
-                using (TextWriter tw = new StreamWriter(DirToPatch + FileNameA, false))
-                    tw.Write(FileTextB);
-            }
-
-        }
-
         private void handleChangeFilePatchType()
         {
             var fileLines = new List<string>();
