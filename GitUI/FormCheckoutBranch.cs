@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
@@ -9,8 +9,8 @@ namespace GitUI
 {
     public partial class FormCheckoutBranch : GitExtensionsForm
     {
-        private TranslationString trackRemoteBranch = new TranslationString("You choose to checkout a remote branch." + Environment.NewLine + Environment.NewLine + "Do you want create a local branch with the name '{0}'" + Environment.NewLine + "that track's this remote branch?");
-        private TranslationString trackRemoteBranchCaption = new TranslationString("Checkout branch");
+        private readonly TranslationString trackRemoteBranch = new TranslationString("You choose to checkout a remote branch." + Environment.NewLine + Environment.NewLine + "Do you want create a local branch with the name '{0}'" + Environment.NewLine + "that track's this remote branch?");
+        private readonly TranslationString trackRemoteBranchCaption = new TranslationString("Checkout branch");
 
         public FormCheckoutBranch()
         {
@@ -31,15 +31,8 @@ namespace GitUI
             else
             {
                 var heads = GitCommandHelpers.GetHeads(true, true);
-                var remoteHeads = new List<GitHead>();
 
-                foreach (var head in heads)
-                {
-                    if (head.IsRemote && !head.IsTag)
-                        remoteHeads.Add(head);
-                }
-
-                Branches.DataSource = remoteHeads;
+                Branches.DataSource = heads.Where(head => head.IsRemote && !head.IsTag);
             }
 
             Branches.Text = null;
@@ -91,12 +84,7 @@ namespace GitUI
 
         private static bool LocalBranchExists(string name)
         {
-            foreach (GitHead head in GitCommandHelpers.GetHeads(false))
-            {
-                if (head.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
-                    return true;
-            }
-            return false;
+            return GitCommandHelpers.GetHeads(false).Any(head => head.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
 
 

@@ -9,7 +9,7 @@ namespace GitUI
         private bool IsMerge;
         public FormCherryPickCommitSmall(GitRevision revision)
         {
-            this.Revision = revision;
+            Revision = revision;
             InitializeComponent();
 
             Translate();
@@ -34,13 +34,13 @@ namespace GitUI
             }
             else
             {
-                this.ParentsList.Visible = false;
-                this.ParentsLabel.Visible = false;
-                this.Height = this.Height - (ParentsList.Height + ParentsLabel.Height);
-                this.Pick.Location = new System.Drawing.Point(this.Pick.Location.X,
-                    this.Pick.Location.Y - (ParentsList.Height + ParentsLabel.Height));
-                this.AutoCommit.Location = new System.Drawing.Point(this.AutoCommit.Location.X,
-                    this.AutoCommit.Location.Y - (ParentsList.Height + ParentsLabel.Height));
+                ParentsList.Visible = false;
+                ParentsLabel.Visible = false;
+                Height = Height - (ParentsList.Height + ParentsLabel.Height);
+                Pick.Location = new System.Drawing.Point(Pick.Location.X,
+                Pick.Location.Y - (ParentsList.Height + ParentsLabel.Height));
+                AutoCommit.Location = new System.Drawing.Point(AutoCommit.Location.X,
+                AutoCommit.Location.Y - (ParentsList.Height + ParentsLabel.Height));
             }
 
         }

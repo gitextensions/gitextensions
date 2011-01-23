@@ -4,7 +4,6 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using PatchApply;
-using System.Globalization;
 using System.Diagnostics;
 using System.Collections.Generic;
 
@@ -60,11 +59,11 @@ namespace GitUI
                 if (File.Exists(fullFilePath))
                 {
                     // grab the 8.3 file path
-                    StringBuilder shortPath = new StringBuilder(4096);
+                    var shortPath = new StringBuilder(4096);
                     NativeMethods.GetShortPathName(fullFilePath, shortPath, shortPath.Capacity);
 
                     // use 8.3 file path to get properly cased full file path
-                    StringBuilder longPath = new StringBuilder(4096);
+                    var longPath = new StringBuilder(4096);
                     NativeMethods.GetLongPathName(shortPath.ToString(), longPath, longPath.Capacity);
 
                     // remove the working dir and now we have a properly cased file name.
@@ -88,26 +87,23 @@ namespace GitUI
                 // note: This implementation is quite a quick hack (by someone who does not speak C# fluently).
                 // 
 
-                GitCommandsInstance gitGetGraphCommand = new GitCommandsInstance();
-                gitGetGraphCommand.StreamOutput = true;
-                gitGetGraphCommand.CollectOutput = false;
+                var gitGetGraphCommand = new GitCommandsInstance { StreamOutput = true, CollectOutput = false };
 
                 string arg = "log --format=\"%n\" --name-only --follow -- \"" + fileName + "\"";
                 Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arg);
 
                 // the sequence of (quoted) file names - start with the initial filename for the search.
                 string listOfFileNames = "\"" + fileName + "\"";
-                
+
                 // keep a set of the file names already seen
-                HashSet<string> setOfFileNames = new HashSet<string>();
-                setOfFileNames.Add(fileName);
+                var setOfFileNames = new HashSet<string> { fileName };
 
                 string line;
                 do
                 {
                     line = p.StandardOutput.ReadLine();
 
-                    if ( (line != null) && (line != "") )
+                    if (!string.IsNullOrEmpty(line))
                     {
                         if (!setOfFileNames.Contains(line))
                         {

@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
-using GitUI.Properties;
 using System.Drawing;
-using ResourceManager;
 using System.ComponentModel;
-using System.Reflection;
-using System.Globalization;
 using ResourceManager.Translation;
 
 namespace GitUI
@@ -16,17 +10,17 @@ namespace GitUI
     {
         public GitExtensionsControl()
         {
-            this.Font = SystemFonts.MessageBoxFont;
+            Font = SystemFonts.MessageBoxFont;
 
-            this.Load += new EventHandler(GitExtensionsControl_Load);
+            Load += GitExtensionsControl_Load;
         }
 
-        private bool translated = false;
+        private bool translated;
 
         private static bool CheckComponent(object value)
         {
             bool isComponentInDesignMode = false;
-            IComponent component = value as IComponent;
+            var component = value as IComponent;
             if (component != null)
             {
                 ISite site = component.Site;
@@ -48,20 +42,9 @@ namespace GitUI
 
         protected void Translate()
         {
-            Translator translator = new Translator(GitCommands.Settings.Translation);
+            var translator = new Translator(GitCommands.Settings.Translation);
             translator.TranslateControl(this);
             translated = true;
-        }
-
-        private void InitializeComponent()
-        {
-            this.SuspendLayout();
-            // 
-            // GitExtensionsControl
-            // 
-            this.Name = "GitExtensionsControl";
-            this.ResumeLayout(false);
-
         }
     }
 }

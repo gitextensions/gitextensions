@@ -1,10 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using GitUIPluginInterfaces.RepositoryHosts;
 using GitCommands;
@@ -19,13 +15,13 @@ namespace GitUI.RepoHosting
         private readonly TranslationString _strFailedToFetchPullData = new TranslationString("Failed to fetch pull data!\r\n");
         private readonly TranslationString _strFailedToLoadDiscussionItem = new TranslationString("Failed to post discussion item!\r\n");
         private readonly TranslationString _strFailedToClosePullRequest = new TranslationString("Failed to close pull request!\r\n");
-        private readonly TranslationString _strFailedToLoadDiffData = new TranslationString("Failed to load diff data!\r\n" );
+        private readonly TranslationString _strFailedToLoadDiffData = new TranslationString("Failed to load diff data!\r\n");
         private readonly TranslationString _strCouldNotLoadDiscussion = new TranslationString("Could not load discussion!\r\n");
         private readonly TranslationString _strError = new TranslationString("Error");
         private readonly TranslationString _strLoading = new TranslationString(" : LOADING : ");
         #endregion
 
-        private IRepositoryHostPlugin _gitHoster;
+        private readonly IRepositoryHostPlugin _gitHoster;
         private bool _isFirstLoad;
 
         public ViewPullRequestsForm()
@@ -34,7 +30,8 @@ namespace GitUI.RepoHosting
             Translate();
         }
 
-        public ViewPullRequestsForm(IRepositoryHostPlugin gitHoster) : this()
+        public ViewPullRequestsForm(IRepositoryHostPlugin gitHoster)
+            : this()
         {
             _gitHoster = gitHoster;
         }
@@ -57,7 +54,7 @@ namespace GitUI.RepoHosting
 
             AsyncHelpers.DoAsync(
                 () => _gitHoster.GetHostedRemotesForCurrentWorkingDirRepo().Select(el => el.GetHostedRepository()).ToList(),
-                (repos) =>
+                repos =>
                 {
                     _hostedRepositories = repos;
                     _selectHostedRepoCB.Items.Clear();
@@ -66,7 +63,7 @@ namespace GitUI.RepoHosting
 
                     SelectNextHostedRepository();
                 },
-                (ex) => MessageBox.Show(this, ex.Message, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error));
+                ex => MessageBox.Show(this, ex.Message, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error));
         }
 
         private void _selectedOwner_SelectedIndexChanged(object sender, EventArgs e)
@@ -78,9 +75,9 @@ namespace GitUI.RepoHosting
             ResetAllAndShowLoadingPullRequests();
 
             AsyncHelpers.DoAsync(
-                () => hostedRepo.GetPullRequests(),
-                (res) => { SetPullRequestsData(res); _selectHostedRepoCB.Enabled = true; },
-                (ex) => MessageBox.Show(this, _strFailedToFetchPullData.Text + ex.Message, _strError.Text)
+                hostedRepo.GetPullRequests,
+                res => { SetPullRequestsData(res); _selectHostedRepoCB.Enabled = true; },
+                ex => MessageBox.Show(this, _strFailedToFetchPullData.Text + ex.Message, _strError.Text)
             );
         }
 
@@ -110,7 +107,7 @@ namespace GitUI.RepoHosting
             if (_selectHostedRepoCB.Items.Count == 0)
                 return;
 
-            int i = _selectHostedRepoCB.SelectedIndex+1;
+            int i = _selectHostedRepoCB.SelectedIndex + 1;
             if (i >= _selectHostedRepoCB.Items.Count)
                 i = 0;
             _selectHostedRepoCB.SelectedIndex = i;
@@ -133,11 +130,11 @@ namespace GitUI.RepoHosting
         {
             foreach (var info in _pullRequestsInfo)
             {
-                var lvi = new ListViewItem()
-                {
-                    Text = info.Id,
-                    Tag = info
-                };
+                var lvi = new ListViewItem
+                              {
+                                  Text = info.Id,
+                                  Tag = info
+                              };
                 lvi.SubItems.Add(info.Title);
                 lvi.SubItems.Add(info.Owner);
                 lvi.SubItems.Add(info.Created.ToString());
@@ -150,7 +147,7 @@ namespace GitUI.RepoHosting
         private void _pullRequestsList_SelectedIndexChanged(object sender, EventArgs e)
         {
             var prevPri = _currentPullRequestInfo;
-            
+
             if (_pullRequestsList.SelectedItems.Count != 1)
             {
                 _currentPullRequestInfo = null;
@@ -177,8 +174,8 @@ namespace GitUI.RepoHosting
         {
             AsyncHelpers.DoAsync(
                 () => _currentPullRequestInfo.Discussion,
-                (d) => LoadDiscussion(d),
-                (ex) => MessageBox.Show(this, _strCouldNotLoadDiscussion.Text + ex.Message, _strError.Text));
+                LoadDiscussion,
+                ex => MessageBox.Show(this, _strCouldNotLoadDiscussion.Text + ex.Message, _strError.Text));
         }
 
         private void LoadDiscussion(IPullRequestDiscussion discussion)
@@ -189,15 +186,19 @@ namespace GitUI.RepoHosting
 
         void _discussionWB_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            _discussionWB.Document.Window.ScrollTo(0, _discussionWB.Document.Body.ScrollRectangle.Height);
+            if (_discussionWB.Document != null)
+            {
+                if (_discussionWB.Document.Window != null && _discussionWB.Document.Body != null)
+                    _discussionWB.Document.Window.ScrollTo(0, _discussionWB.Document.Body.ScrollRectangle.Height);
+            }
         }
 
         private void LoadDiffPatch()
         {
             AsyncHelpers.DoAsync(
                 () => _currentPullRequestInfo.DiffData,
-                (data) => SplitAndLoadDiff(data),
-                (ex) => MessageBox.Show(this, _strFailedToLoadDiffData.Text + ex.Message, _strError.Text));
+                SplitAndLoadDiff,
+                ex => MessageBox.Show(this, _strFailedToLoadDiffData.Text + ex.Message, _strError.Text));
         }
 
         Dictionary<string, string> _diffCache;
@@ -206,7 +207,7 @@ namespace GitUI.RepoHosting
             _diffCache = new Dictionary<string, string>();
 
             var fileParts = Regex.Split(diffData, @"(?:\n|^)diff --git ").Where(el => el != null && el.Trim().Length > 10).ToList();
-            List<GitItemStatus> giss = new List<GitItemStatus>();
+            var giss = new List<GitItemStatus>();
 
             foreach (var part in fileParts)
             {
@@ -217,14 +218,14 @@ namespace GitUI.RepoHosting
                     return;
                 }
 
-                var gis = new GitItemStatus()
-                {
-                    IsChanged = true,
-                    IsNew = false,
-                    IsDeleted = false,
-                    IsTracked = true,
-                    Name = match.Groups[2].Value.Trim()
-                };
+                var gis = new GitItemStatus
+                              {
+                                  IsChanged = true,
+                                  IsNew = false,
+                                  IsDeleted = false,
+                                  IsTracked = true,
+                                  Name = match.Groups[2].Value.Trim()
+                              };
 
                 giss.Add(gis);
                 _diffCache.Add(gis.Name, match.Groups[3].Value);
@@ -251,7 +252,7 @@ namespace GitUI.RepoHosting
 
         void _fileStatusList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var gis = _fileStatusList.SelectedItem as GitItemStatus;
+            var gis = _fileStatusList.SelectedItem;
             if (gis == null)
                 return;
 
@@ -288,7 +289,7 @@ namespace GitUI.RepoHosting
                 _currentPullRequestInfo.Discussion.ForceReload();
                 LoadDiscussion(_currentPullRequestInfo.Discussion);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(this, _strFailedToLoadDiscussionItem.Text + ex.Message, _strError.Text);
             }
@@ -313,7 +314,7 @@ namespace GitUI.RepoHosting
                 _currentPullRequestInfo.Discussion.ForceReload();
                 LoadDiscussion(_currentPullRequestInfo.Discussion);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(this, _strFailedToLoadDiscussionItem.Text + ex.Message, _strError.Text);
             }

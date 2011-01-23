@@ -118,7 +118,7 @@ namespace GitUI
             resources.ApplyResources(this.Add, "Add");
             this.Add.Name = "Add";
             this.Add.UseVisualStyleBackColor = true;
-            this.Add.Click += new System.EventHandler(this.Add_Click);
+            this.Add.Click += new System.EventHandler(Add_Click);
             // 
             // tableLayoutPanel3
             // 

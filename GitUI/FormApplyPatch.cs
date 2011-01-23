@@ -76,18 +76,19 @@ namespace GitUI
 
         
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private static void textBox1_TextChanged(object sender, EventArgs e)
         {
 
         }
 
         private string SelectPatchFile(string initialDirectory)
         {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Filter =
-               "Patch file (*.Patch)|*.Patch";
-            dialog.InitialDirectory = initialDirectory;
-            dialog.Title = "Select patch file";
+            var dialog = new OpenFileDialog
+                             {
+                                 Filter = "Patch file (*.Patch)|*.Patch",
+                                 InitialDirectory = initialDirectory,
+                                 Title = "Select patch file"
+                             };
             return (dialog.ShowDialog() == DialogResult.OK) ? dialog.FileName : PatchFile.Text;
         }
 
@@ -147,7 +148,7 @@ namespace GitUI
             Cursor.Current = Cursors.Default;
         }
 
-        private void AddFiles_Click(object sender, EventArgs e)
+        private static void AddFiles_Click(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartAddFilesDialog();
         }
@@ -160,12 +161,12 @@ namespace GitUI
         private void MergePatch_Load(object sender, EventArgs e)
         {
             RestorePosition("merge-patch");
-            this.Text = "Apply patch (" + GitCommands.Settings.WorkingDir + ")";
+            Text = "Apply patch (" + Settings.WorkingDir + ")";
         }
 
         private void BrowseDir_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog browseDialog = new FolderBrowserDialog();
+            var browseDialog = new FolderBrowserDialog();
 
             if (browseDialog.ShowDialog() == DialogResult.OK)
             {
@@ -179,7 +180,7 @@ namespace GitUI
             EnableButtons();
         }
 
-        private void PatchDirMode_CheckedChanged(object sender, EventArgs e)
+        private static void PatchDirMode_CheckedChanged(object sender, EventArgs e)
         {
 
         }

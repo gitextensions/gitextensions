@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
@@ -38,7 +39,7 @@ namespace GitUI
         private bool _contextMenuEnabled = true;
 
         private bool _initialLoad = true;
-        private string _initialSelectedRevision = null;
+        private string _initialSelectedRevision;
         private string _lastQuickSearchString = string.Empty;
         private Label _quickSearchLabel;
         private string _quickSearchString;
@@ -58,7 +59,7 @@ namespace GitUI
             NormalFont = SystemFonts.DefaultFont;
             RefsFont = new Font(NormalFont, FontStyle.Bold);
             HeadFont = new Font(NormalFont, FontStyle.Bold);
-            Loading.Paint += new PaintEventHandler(Loading_Paint);
+            Loading.Paint += Loading_Paint;
 
             Revisions.CellPainting += RevisionsCellPainting;
             Revisions.KeyDown += RevisionsKeyDown;
@@ -83,17 +84,20 @@ namespace GitUI
             Revisions.Loading += RevisionsLoading;
 
             //Allow to drop patch file on revisiongrid
-            Revisions.DragEnter += new DragEventHandler(Revisions_DragEnter);
-            Revisions.DragDrop += new DragEventHandler(Revisions_DragDrop);
+            Revisions.DragEnter += Revisions_DragEnter;
+            Revisions.DragDrop += Revisions_DragDrop;
             Revisions.AllowDrop = true;
         }
 
         void Loading_Paint(object sender, PaintEventArgs e)
         {
             // If our loading state has changed since the last paint, update it.
-            if (Loading.Visible != _isLoading)
+            if (Loading != null)
             {
-                Loading.Visible = _isLoading;
+                if (Loading.Visible != _isLoading)
+                {
+                    Loading.Visible = _isLoading;
+                }
             }
         }
 
@@ -115,10 +119,7 @@ namespace GitUI
 
         public void SetInitialRevision(GitRevision initialSelectedRevision)
         {
-            if (initialSelectedRevision != null)
-                _initialSelectedRevision = initialSelectedRevision.Guid;
-            else
-                _initialSelectedRevision = null;
+            _initialSelectedRevision = initialSelectedRevision != null ? initialSelectedRevision.Guid : null;
         }
 
         public event EventHandler ActionOnRepositoryPerformed;
@@ -129,7 +130,7 @@ namespace GitUI
                 ActionOnRepositoryPerformed(this, null);
         }
 
-        private bool _isLoading = false;
+        private bool _isLoading;
         private void RevisionsLoading(bool isLoading)
         {
             // Since this can happen on a background thread, we'll just set a
@@ -236,19 +237,13 @@ namespace GitUI
                     switch (key)
                     {
                         case 51:
-                            if (e.Shift)
-                                _quickSearchString = string.Concat(_quickSearchString, "#").ToLower();
-                            else
-                                _quickSearchString = string.Concat(_quickSearchString, "3").ToLower();
+                            _quickSearchString = e.Shift ? string.Concat(_quickSearchString, "#").ToLower() : string.Concat(_quickSearchString, "3").ToLower();
                             break;
                         case 188:
                             _quickSearchString = string.Concat(_quickSearchString, ",").ToLower();
                             break;
                         case 189:
-                            if (e.Shift)
-                                _quickSearchString = string.Concat(_quickSearchString, "_").ToLower();
-                            else
-                                _quickSearchString = string.Concat(_quickSearchString, "-").ToLower();
+                            _quickSearchString = e.Shift ? string.Concat(_quickSearchString, "_").ToLower() : string.Concat(_quickSearchString, "-").ToLower();
                             break;
                         case 190:
                             _quickSearchString = string.Concat(_quickSearchString, ".").ToLower();
@@ -464,14 +459,11 @@ namespace GitUI
 
         public List<GitRevision> GetRevisions()
         {
-            var retval = new List<GitRevision>();
-
-            foreach (DataGridViewRow row in Revisions.SelectedRows)
-            {
-                if (Revisions.RowCount > row.Index)
-                    retval.Add(GetRevision(row.Index));
-            }
-            return retval;
+            return Revisions
+                .SelectedRows
+                .Cast<DataGridViewRow>()
+                .Where(row => Revisions.RowCount > row.Index)
+                .Select(row => GetRevision(row.Index)).ToList();
         }
 
         public GitRevision GetRevision(int aRow)
@@ -481,7 +473,7 @@ namespace GitUI
 
         public GitRevision GetCurrentRevision()
         {
-            string formatString =
+            const string formatString =
                 /* Tree           */ "%T%n" +
                 /* Author Name    */ "%aN%n" +
                 /* Author Date    */ "%ai%n" +
@@ -491,7 +483,7 @@ namespace GitUI
             string cmd = "log -n 1 --pretty=format:" + formatString + " " + CurrentCheckout;
             var RevInfo = GitCommandHelpers.RunCmd(Settings.GitCommand, cmd);
             string[] Infos = RevInfo.Split('\n');
-            GitRevision Revision = new GitRevision
+            var Revision = new GitRevision
             {
                 Guid = CurrentCheckout,
                 TreeGuid = Infos[0],
@@ -499,11 +491,11 @@ namespace GitUI
                 Committer = Infos[3],
                 Message = Infos[5]
             };
-            DateTime Date;
-            DateTime.TryParse(Infos[2], out Date);
-            Revision.AuthorDate = Date;
-            DateTime.TryParse(Infos[4], out Date);
-            Revision.CommitDate = Date;
+            DateTime date;
+            DateTime.TryParse(Infos[2], out date);
+            Revision.AuthorDate = date;
+            DateTime.TryParse(Infos[4], out date);
+            Revision.CommitDate = date;
             List<GitHead> heads = GitCommandHelpers.GetHeads(true, true);
             foreach (GitHead head in heads)
             {
@@ -521,13 +513,13 @@ namespace GitUI
 
         private class RevisionGridInMemFilter : RevisionGraphInMemFilter
         {
-            private bool _IgnoreCase;
-            private string _AuthorFilter;
-            private Regex _AuthorFilterRegex;
-            private string _CommitterFilter;
-            private Regex _CommitterFilterRegex;
-            private string _MessageFilter;
-            private Regex _MessageFilterRegex;
+            private readonly bool _IgnoreCase;
+            private readonly string _AuthorFilter;
+            private readonly Regex _AuthorFilterRegex;
+            private readonly string _CommitterFilter;
+            private readonly Regex _CommitterFilterRegex;
+            private readonly string _MessageFilter;
+            private readonly Regex _MessageFilterRegex;
 
             public RevisionGridInMemFilter(string authorFilter, string committerFilter, string messageFilter, bool ignoreCase)
             {
@@ -554,7 +546,7 @@ namespace GitUI
                 }
             }
 
-            private bool CheckCondition(string filter, Regex regex, string value)
+            private static bool CheckCondition(string filter, Regex regex, string value)
             {
                 return string.IsNullOrEmpty(filter) ||
                        ((regex != null) && regex.Match(value).Success);
@@ -784,9 +776,12 @@ namespace GitUI
         private void RevisionsCellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             // If our loading state has changed since the last paint, update it.
-            if (Loading.Visible != _isLoading)
+            if (Loading != null)
             {
-                Loading.Visible = _isLoading;
+                if (Loading.Visible != _isLoading)
+                {
+                    Loading.Visible = _isLoading;
+                }
             }
 
             // The graph column is handled by the DvcsGraph
@@ -967,7 +962,7 @@ namespace GitUI
             RefreshRevisions();
         }
 
-        private void GitIgnoreClick(object sender, EventArgs e)
+        private static void GitIgnoreClick(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartEditGitIgnoreDialog();
         }
@@ -1330,20 +1325,27 @@ namespace GitUI
                     if (uncommittedChanges)
                     {
                         //Add working dir as virtual commit
-                        GitRevision workingDir = new GitRevision();
-                        workingDir.Guid = GitRevision.UncommittedWorkingDirGuid;
-                        workingDir.Message = _currentWorkingDirChanges.Text;
-                        workingDir.ParentGuids = stagedChanges ? new string[] { GitRevision.IndexGuid } : new string[] { CurrentCheckout };
+                        var workingDir = new GitRevision
+                                             {
+                                                 Guid = GitRevision.UncommittedWorkingDirGuid,
+                                                 Message = _currentWorkingDirChanges.Text,
+                                                 ParentGuids =
+                                                     stagedChanges
+                                                         ? new[] { GitRevision.IndexGuid }
+                                                         : new[] { CurrentCheckout }
+                                             };
                         Revisions.Add(workingDir.Guid, workingDir.ParentGuids, DvcsGraph.DataType.Normal, workingDir);
                     }
 
                     if (stagedChanges)
                     {
                         //Add index as virtual commit
-                        GitRevision index = new GitRevision();
-                        index.Guid = GitRevision.IndexGuid;
-                        index.Message = _currentIndex.Text;
-                        index.ParentGuids = new string[] { CurrentCheckout };
+                        var index = new GitRevision
+                                        {
+                                            Guid = GitRevision.IndexGuid,
+                                            Message = _currentIndex.Text,
+                                            ParentGuids = new string[] { CurrentCheckout }
+                                        };
                         Revisions.Add(index.Guid, index.ParentGuids, DvcsGraph.DataType.Normal, index);
                     }
                 }
@@ -1381,7 +1383,7 @@ namespace GitUI
             Clipboard.SetText(GetRevision(LastRow).CommitDate.ToString());
         }
 
-        private void copyToClipBoard(object sender, EventArgs e)
+        private static void copyToClipBoard(object sender, EventArgs e)
         {
             Clipboard.SetText(sender.ToString());
         }
@@ -1438,15 +1440,12 @@ namespace GitUI
         private void RemoveOwnScripts()
         {
             runScriptToolStripMenuItem.DropDown.Items.Clear();
-            List<ToolStripItem> list = new List<ToolStripItem>();
-            foreach (ToolStripItem item in CreateTag.Items)
-                list.Add(item);
-            foreach (ToolStripItem item in list)
+            foreach (ToolStripItem item in CreateTag.Items.Cast<ToolStripItem>())
                 if (item.Name.Contains("_ownScript"))
                     CreateTag.Items.RemoveByKey(item.Name);
         }
 
-        private bool settingsLoaded = false;
+        private bool settingsLoaded;
 
         private void runScript(object sender, EventArgs e)
         {
@@ -1461,9 +1460,9 @@ namespace GitUI
 
         #region Drag/drop patch files on revision grid
 
-        void Revisions_DragDrop(object sender, DragEventArgs e)
+        static void Revisions_DragDrop(object sender, DragEventArgs e)
         {
-            System.Array fileNameArray = e.Data.GetData(DataFormats.FileDrop) as System.Array;
+            var fileNameArray = e.Data.GetData(DataFormats.FileDrop) as Array;
             if (fileNameArray != null)
             {
                 if (fileNameArray.Length > 10)
@@ -1475,7 +1474,7 @@ namespace GitUI
 
                 foreach (object fileNameObject in fileNameArray)
                 {
-                    string fileName = fileNameObject as string;
+                    var fileName = fileNameObject as string;
 
                     if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
                     {
@@ -1486,14 +1485,14 @@ namespace GitUI
             }
         }
 
-        void Revisions_DragEnter(object sender, DragEventArgs e)
+        static void Revisions_DragEnter(object sender, DragEventArgs e)
         {
-            System.Array fileNameArray = e.Data.GetData(DataFormats.FileDrop) as System.Array;
+            var fileNameArray = e.Data.GetData(DataFormats.FileDrop) as Array;
             if (fileNameArray != null)
             {
                 foreach (object fileNameObject in fileNameArray)
                 {
-                    string fileName = fileNameObject as string;
+                    var fileName = fileNameObject as string;
 
                     if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
                     {

@@ -605,7 +605,7 @@ namespace GitUI
             this.Message.Size = new System.Drawing.Size(342, 110);
             this.Message.TabIndex = 4;
             this.Message.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Message_KeyUp);
-            this.Message.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Message_KeyDown);
+            this.Message.KeyDown += new System.Windows.Forms.KeyEventHandler(Message_KeyDown);
             // 
             // toolbarCommit
             // 

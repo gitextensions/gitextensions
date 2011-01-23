@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace GitUI
 {
@@ -11,12 +7,13 @@ namespace GitUI
         public static void OpenAs(string file)
         {
             string path = file;
-            Process p = new Process();
-            ProcessStartInfo pi = new ProcessStartInfo("rundll32.exe");
-            pi.UseShellExecute = false;
-            pi.RedirectStandardOutput = true;
-            pi.Arguments = "shell32.dll,OpenAs_RunDLL " + path;
-            p.StartInfo = pi;
+            var pi = new ProcessStartInfo("rundll32.exe")
+                         {
+                             UseShellExecute = false,
+                             RedirectStandardOutput = true,
+                             Arguments = "shell32.dll,OpenAs_RunDLL " + path
+                         };
+            var p = new Process { StartInfo = pi };
             p.Start();
 
         }

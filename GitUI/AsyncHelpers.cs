@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace GitUI
@@ -29,12 +26,12 @@ namespace GitUI
                 }
                 catch (Exception ex)
                 {
-                    SendOrPostCallback cbe = (exp) => { onError((Exception)exp); };
+                    SendOrPostCallback cbe = exp => onError((Exception)exp);
                     syncContext.Post(cbe, ex);
                     return;
                 }
 
-                SendOrPostCallback cb = (tres) => { continueWith((T)tres); };
+                SendOrPostCallback cb = tres => continueWith((T)tres);
                 syncContext.Post(cb, res);
             };
             a.BeginInvoke(null, null);

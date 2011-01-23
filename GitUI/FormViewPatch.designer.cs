@@ -177,7 +177,7 @@ namespace PatchApply
             this.PatchFileNameEdit.Name = "PatchFileNameEdit";
             this.PatchFileNameEdit.Size = new System.Drawing.Size(256, 23);
             this.PatchFileNameEdit.TabIndex = 3;
-            this.PatchFileNameEdit.TextChanged += new System.EventHandler(this.PatchFileNameEdit_TextChanged);
+            this.PatchFileNameEdit.TextChanged += new System.EventHandler(PatchFileNameEdit_TextChanged);
             // 
             // labelPatch
             // 
@@ -197,7 +197,7 @@ namespace PatchApply
             this.Name = "ViewPatch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "View patch file";
-            this.Load += new System.EventHandler(this.ViewPatch_Load);
+            this.Load += new System.EventHandler(ViewPatch_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
