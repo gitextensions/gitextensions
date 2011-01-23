@@ -49,6 +49,7 @@ namespace GitUI
             Translate();
 
             Remotes.DataSource = GitCommandHelpers.GetRemotes();
+            FillPushDestinationDropDown();
         }
 
         private void BrowseSourceClick(object sender, EventArgs e)
@@ -162,7 +163,7 @@ namespace GitUI
             }
         }
 
-        private void PushDestinationDropDown(object sender, EventArgs e)
+        private void FillPushDestinationDropDown()
         {
             PushDestination.DataSource = Repositories.RepositoryHistory.Repositories;
             PushDestination.DisplayMember = "Path";
