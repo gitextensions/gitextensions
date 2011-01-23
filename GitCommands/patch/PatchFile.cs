@@ -1,72 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
+﻿using System.IO;
 
 namespace PatchApply
 {
     public class PatchFile
     {
-        private string fullName;
-        public string FullName
-        {
-            get
-            {
-                return fullName;
-            }
-            set
-            {
-                fullName = value;
-            }
-        }
-        private string name;
-        public string Name
-        {
-            get
-            {
-                return name;
-            }
-            set
-            {
-                name = value;
-            }
-        }
-        private string author;
-        public string Author
-        {
-            get
-            {
-                return author;
-            }
-            set
-            {
-                author = value;
-            }
-        }
-        private string subject;
-        public string Subject
-        {
-            get
-            {
-                return subject;
-            }
-            set
-            {
-                subject = value;
-            }
-        }
-        private string date;
-        public string Date
-        {
-            get
-            {
-                return date;
-            }
-            set
-            {
-                date = value;
-            }
-        }
+        public string FullName { get; set; }
+
+        public string Name { get; set; }
+
+        public string Author { get; set; }
+
+        public string Subject { get; set; }
+
+        public string Date { get; set; }
+
+        public bool IsNext { get; set; }
+
+        public bool IsSkipped { get; set; }
 
         public string Status
         {
@@ -87,30 +37,5 @@ namespace PatchApply
                 return "";
             }
         }
-
-        private bool isNext;
-        public bool IsNext
-        {
-            get
-            {
-                return isNext;
-            }
-            set
-            {
-                isNext = value;
-            }
-        }
-        private bool isSkipped;
-        public bool IsSkipped
-        {
-            get
-            {
-                return isSkipped;
-            }
-            set
-            {
-                isSkipped = value;
-            }
-        }  
     }
 }

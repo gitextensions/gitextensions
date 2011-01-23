@@ -67,6 +67,7 @@
     <Compile Include="Config\ConfigFile.cs" />
     <Compile Include="Config\ConfigSection.cs" />
     <Compile Include="Git\GitCommandCache.cs" />
+    <Compile Include="Patch\PatchProcessor.cs" />
     <Compile Include="Repository\Repository.cs" />
     <Compile Include="Repository\RepositoryCategory.cs" />
     <Compile Include="Git\GitBlame.cs" />
