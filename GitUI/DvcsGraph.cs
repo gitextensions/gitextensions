@@ -90,10 +90,12 @@ namespace GitUI
             syncContext = SynchronizationContext.Current;
             graphData = new Graph();
 
-            backgroundThread = new Thread(backgroundThreadEntry);
-            backgroundThread.IsBackground = true;
-            backgroundThread.Priority = ThreadPriority.BelowNormal;
-            backgroundThread.Name = "DvcsGraph.backgroundThread";
+            backgroundThread = new Thread(backgroundThreadEntry)
+                                   {
+                                       IsBackground = true,
+                                       Priority = ThreadPriority.BelowNormal,
+                                       Name = "DvcsGraph.backgroundThread"
+                                   };
             backgroundThread.Start();
 
             InitializeComponent();
@@ -351,7 +353,7 @@ namespace GitUI
                     }
                 }
 
-                return (i == graphData.Count ? -1 : i);
+                return i == graphData.Count ? -1 : i;
             }
         }
 
@@ -637,7 +639,7 @@ namespace GitUI
                 if (dataGridColumnGraph.Visible)
                 {
                     int laneCount = 2;
-                    if (graphData != null /* && FirstDisplayedCell != null*/)
+                    if (graphData != null)
                     {
                         int width = 1;
                         int start = VerticalScrollBar.Value / rowHeight;
