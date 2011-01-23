@@ -176,7 +176,7 @@
             this.Pull.TabIndex = 7;
             this.Pull.Text = "Pull";
             this.Pull.UseVisualStyleBackColor = true;
-            this.Pull.Click += new System.EventHandler(this.PullClick);
+            this.Pull.Click += new System.EventHandler(PullClick);
             // 
             // groupBox2
             // 
@@ -230,7 +230,7 @@
             this.AddRemote.TabIndex = 3;
             this.AddRemote.Text = "Manage remotes";
             this.AddRemote.UseVisualStyleBackColor = true;
-            this.AddRemote.Click += new System.EventHandler(this.AddRemoteClick);
+            this.AddRemote.Click += new System.EventHandler(AddRemoteClick);
             // 
             // Remotes
             // 

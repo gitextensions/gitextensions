@@ -14,17 +14,17 @@ namespace GitUI.SpellChecker
 {
     public partial class EditNetSpell : GitExtensionsControl
     {
-        TranslationString translateEntireText = new TranslationString("Translate entire text to {0}");
-        TranslationString translateCurrentWord = new TranslationString("Translate '{0}' to {1}");
-        TranslationString addToDictionaryText = new TranslationString("Add to dictionary");
-        TranslationString ignoreWordText = new TranslationString("Ignore word");
-        TranslationString removeWordText = new TranslationString("Remove word");
-        TranslationString dictionaryText = new TranslationString("Dictionary");
-        TranslationString markIllFormedLinesText = new TranslationString("Mark ill formed lines");
+        private readonly TranslationString translateEntireText = new TranslationString("Translate entire text to {0}");
+        private readonly TranslationString translateCurrentWord = new TranslationString("Translate '{0}' to {1}");
+        private readonly TranslationString addToDictionaryText = new TranslationString("Add to dictionary");
+        private readonly TranslationString ignoreWordText = new TranslationString("Ignore word");
+        private readonly TranslationString removeWordText = new TranslationString("Remove word");
+        private readonly TranslationString dictionaryText = new TranslationString("Dictionary");
+        private readonly TranslationString markIllFormedLinesText = new TranslationString("Mark ill formed lines");
        
         private readonly SpellCheckEditControl _customUnderlines;
         private Spelling _spelling;
-        private static WordDictionary _wordDictionary = null;
+        private static WordDictionary _wordDictionary;
 
         public EditNetSpell()
         {
@@ -250,12 +250,12 @@ namespace GitUI.SpellChecker
             if (!string.IsNullOrEmpty(_spelling.CurrentWord))
             {
                 var translate = new ToolStripMenuItem(string.Format(translateCurrentWord.Text, _spelling.CurrentWord, CultureCodeToString(Settings.Dictionary)));
-                translate.Click += new EventHandler(translate_Click);
+                translate.Click += translate_Click;
                 SpellCheckContextMenu.Items.Add(translate);
             }
 
             var translateText = new ToolStripMenuItem(string.Format(translateEntireText.Text, CultureCodeToString(Settings.Dictionary)));
-            translateText.Click += new EventHandler(translateText_Click);
+            translateText.Click += translateText_Click;
             SpellCheckContextMenu.Items.Add(translateText);
 
             SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
@@ -310,7 +310,7 @@ namespace GitUI.SpellChecker
             SpellCheckContextMenu.Items.Add(mi);
         }
 
-        private string CultureCodeToString(string cultureCode)
+        private static string CultureCodeToString(string cultureCode)
         {
             try
             {

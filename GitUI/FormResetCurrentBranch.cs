@@ -7,13 +7,13 @@ namespace GitUI
 {
     public partial class FormResetCurrentBranch : GitExtensionsForm
     {
-        TranslationString branchInfo = new TranslationString("Reset {0} to:");
-        TranslationString commitInfo = new TranslationString("Commit: {0}");
-        TranslationString authorInfo = new TranslationString("Author: {0}");
-        TranslationString dateInfo = new TranslationString("Commit date: {0}");
-        TranslationString commitMessage = new TranslationString("Message: {0}");
-        TranslationString resetHardWarning = new TranslationString("You are about to discard ALL local changes, are you sure?");
-        TranslationString resetCaption = new TranslationString("Reset branch");
+        readonly TranslationString branchInfo = new TranslationString("Reset {0} to:");
+        readonly TranslationString commitInfo = new TranslationString("Commit: {0}");
+        readonly TranslationString authorInfo = new TranslationString("Author: {0}");
+        readonly TranslationString dateInfo = new TranslationString("Commit date: {0}");
+        readonly TranslationString commitMessage = new TranslationString("Message: {0}");
+        readonly TranslationString resetHardWarning = new TranslationString("You are about to discard ALL local changes, are you sure?");
+        readonly TranslationString resetCaption = new TranslationString("Reset branch");
 
         public FormResetCurrentBranch(GitRevision Revision)
         {

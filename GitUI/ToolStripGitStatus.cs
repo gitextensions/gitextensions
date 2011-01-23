@@ -11,10 +11,10 @@ namespace GitUI
 {
     public partial class ToolStripGitStatus : ToolStripMenuItem
     {
-        private static readonly Bitmap ICON_CLEAN = global::GitUI.Properties.Resources._81;
-        private static readonly Bitmap ICON_DIRTY = global::GitUI.Properties.Resources._82;
-        private static readonly Bitmap ICON_STAGED = global::GitUI.Properties.Resources._83;
-        private static readonly Bitmap ICON_MIXED = global::GitUI.Properties.Resources._84;
+        private static readonly Bitmap ICON_CLEAN = Properties.Resources._81;
+        private static readonly Bitmap ICON_DIRTY = Properties.Resources._82;
+        private static readonly Bitmap ICON_STAGED = Properties.Resources._83;
+        private static readonly Bitmap ICON_MIXED = Properties.Resources._84;
 
         // We often change several files at once. Wait a second so they're all changed
         // before we try to get the status
@@ -25,20 +25,17 @@ namespace GitUI
 
         private GitCommandsInstance gitGetUnstagedCommand = new GitCommandsInstance();
         private readonly SynchronizationContext syncContext;
-        private FileSystemWatcher watcher = new FileSystemWatcher();
-        private int nextUpdate = 0;
+        private readonly FileSystemWatcher watcher = new FileSystemWatcher();
+        private int nextUpdate;
 
         public ToolStripGitStatus()
         {
             syncContext = SynchronizationContext.Current;
-            gitGetUnstagedCommand.Exited += new EventHandler(delegate(object o, EventArgs ea)
-                {
-                    syncContext.Post(_ => onData(), null);
-                });
+            gitGetUnstagedCommand.Exited += (o, ea) => syncContext.Post(_ => onData(), null);
 
             InitializeComponent();
 
-            Settings.WorkingDirChanged += new Settings.WorkingDirChangedEventHandler(Settings_WorkingDirChanged);
+            Settings.WorkingDirChanged += Settings_WorkingDirChanged;
 
             GitUICommands.Instance.PreCheckoutBranch += GitUICommands_PreCheckout;
             GitUICommands.Instance.PreCheckoutRevision += GitUICommands_PreCheckout;
@@ -47,10 +44,10 @@ namespace GitUI
 
             // Setup a file watcher to detect changes to our files, or the .git repo files. When they
             // change, we'll update our status.
-            watcher.Changed += new FileSystemEventHandler(watcher_Changed);
-            watcher.Created += new FileSystemEventHandler(watcher_Changed);
-            watcher.Deleted += new FileSystemEventHandler(watcher_Changed);
-            watcher.Error += new ErrorEventHandler(watcher_Error);
+            watcher.Changed += watcher_Changed;
+            watcher.Created += watcher_Changed;
+            watcher.Deleted += watcher_Changed;
+            watcher.Error += watcher_Error;
             watcher.IncludeSubdirectories = true;
 
             try
@@ -105,7 +102,7 @@ namespace GitUI
 
         // destructor shouldn't be used because it's not predictible when
         // it's going to be called by the GC!
-        private void watcher_Error(object sender, System.IO.ErrorEventArgs e)
+        private void watcher_Error(object sender, ErrorEventArgs e)
         {
             nextUpdate = Math.Min(nextUpdate, Environment.TickCount + UPDATE_DELAY);
         }

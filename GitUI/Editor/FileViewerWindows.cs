@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using System.IO;
-using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using ICSharpCode.TextEditor.Document;
-using ICSharpCode.TextEditor.Util;
 
 namespace GitUI.Editor
 {
@@ -18,15 +15,14 @@ namespace GitUI.Editor
             InitializeComponent();
             Translate();
 
-            TextEditor.TextChanged += new EventHandler(TextEditor_TextChanged);
-            TextEditor.ActiveTextAreaControl.VScrollBar.ValueChanged += new EventHandler(VScrollBar_ValueChanged);
+            TextEditor.TextChanged += TextEditor_TextChanged;
+            TextEditor.ActiveTextAreaControl.VScrollBar.ValueChanged += VScrollBar_ValueChanged;
 
-            TextEditor.ActiveTextAreaControl.TextArea.MouseMove += new MouseEventHandler(TextArea_MouseMove);
-            TextEditor.ActiveTextAreaControl.TextArea.MouseLeave += new EventHandler(TextArea_MouseLeave);
+            TextEditor.ActiveTextAreaControl.TextArea.MouseMove += TextArea_MouseMove;
+            TextEditor.ActiveTextAreaControl.TextArea.MouseLeave += TextArea_MouseLeave;
             TextEditor.ActiveTextAreaControl.TextArea.MouseDown += TextAreaMouseDown;
             TextEditor.KeyDown += BlameFileKeyUp;
             TextEditor.ActiveTextAreaControl.TextArea.KeyDown += BlameFileKeyUp;
-            //TextEditor.ActiveTextAreaControl.KeyDown += BlameFileKeyUp;
             TextEditor.ActiveTextAreaControl.TextArea.DoubleClick += ActiveTextAreaControlDoubleClick;
         }
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Timers;
 
 namespace GitUI
@@ -16,7 +13,7 @@ namespace GitUI
         {
             _form = form;
             _timer = new Timer(300);
-            _timer.Elapsed += new ElapsedEventHandler(_timer_Elapsed);
+            _timer.Elapsed += _timer_Elapsed;
             _timer.Enabled = true;
         }
 

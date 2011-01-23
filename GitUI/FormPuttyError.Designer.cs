@@ -54,7 +54,7 @@
             this.pictureBox1.Size = new System.Drawing.Size(50, 50);
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            this.pictureBox1.Click += new System.EventHandler(pictureBox1_Click);
             // 
             // LoadSSHKey
             // 
@@ -66,7 +66,7 @@
             this.LoadSSHKey.TabIndex = 26;
             this.LoadSSHKey.Text = "Load SSH key";
             this.LoadSSHKey.UseVisualStyleBackColor = true;
-            this.LoadSSHKey.Click += new System.EventHandler(this.LoadSSHKey_Click);
+            this.LoadSSHKey.Click += new System.EventHandler(LoadSSHKey_Click);
             // 
             // Retry
             // 
