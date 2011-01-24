@@ -62,7 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FindValidworkingDirTest.cs" />
-    <Compile Include="PatchTest.cs" />
+    <Compile Include="PatchManagerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ConfigFileTest.cs" />
     <Compile Include="TestResource.Designer.cs">

@@ -8,7 +8,7 @@ namespace PatchApply
 {
     public class Patch
     {
-        private StringBuilder textBuilder;
+        private StringBuilder _textBuilder;
 
         public Patch()
         {
@@ -44,7 +44,7 @@ namespace PatchApply
 
         public string Text
         {
-            get { return textBuilder == null ? null : textBuilder.ToString(); }
+            get { return _textBuilder == null ? null : _textBuilder.ToString(); }
         }
 
         public void AppendText(string text)
@@ -57,11 +57,6 @@ namespace PatchApply
             GetTextBuilder().Append(line).Append('\n');
         }
 
-        private StringBuilder GetTextBuilder()
-        {
-            return textBuilder ?? (textBuilder = new StringBuilder());
-        }
-
         public void ApplyPatch()
         {
             FileTextB = "";
@@ -69,7 +64,7 @@ namespace PatchApply
 
             if (Type == PatchType.DeleteFile)
             {
-                handleDeletePatchType();
+                HandleDeletePatchType();
                 return;
             }
 
@@ -78,15 +73,20 @@ namespace PatchApply
 
             if (Type == PatchType.NewFile)
             {
-                handleNewFilePatchType();
+                HandleNewFilePatchType();
                 return;
             }
 
             if (Type == PatchType.ChangeFile)
             {
-                handleChangeFilePatchType();
+                HandleChangeFilePatchType();
                 return;
             }
+        }
+
+        private StringBuilder GetTextBuilder()
+        {
+            return _textBuilder ?? (_textBuilder = new StringBuilder());
         }
 
         private string LoadFile(string fileName)
@@ -114,7 +114,7 @@ namespace PatchApply
             }
         }
 
-        private void handleChangeFilePatchType()
+        private void HandleChangeFilePatchType()
         {
             var fileLines = new List<string>();
             foreach (string s in LoadFile(FileNameA).Split('\n'))
@@ -202,7 +202,7 @@ namespace PatchApply
                 Apply = false;
         }
 
-        private void handleNewFilePatchType()
+        private void HandleNewFilePatchType()
         {
             foreach (string line in Text.Split('\n'))
             {
@@ -228,7 +228,7 @@ namespace PatchApply
             }
         }
 
-        private void handleDeletePatchType()
+        private void HandleDeletePatchType()
         {
             FileTextB = "";
             Rate = 100;
