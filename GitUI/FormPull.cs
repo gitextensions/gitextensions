@@ -125,7 +125,7 @@ namespace GitUI
                 MessageBox.Show(_selectSourceDirectory.Text);
                 return;
             }
-            if (PullFromRemote.Checked && string.IsNullOrEmpty(Remotes.Text))
+            if (PullFromRemote.Checked && string.IsNullOrEmpty(Remotes.Text) && !checkPullAll.Checked)
             {
                 MessageBox.Show(_selectRemoteRepository.Text);
                 return;
