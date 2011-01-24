@@ -313,30 +313,5 @@ namespace PatchApply
                     patchApply.ApplyPatch();
             }
         }
-
-        /// <summary>
-        /// Counts number of characters on all lines in file up to line number specified.
-        /// Currently doesn't check if line > lines.Length.
-        /// Probably not be including newline characters in the count.
-        /// Not set up to handle DOS (CR LF) line endings.
-        /// 
-        /// Assumes file is a text file and that line < lines.Length/>
-        /// </summary>
-        /// <param name="file">file we want to contain lines from</param>
-        /// <param name="line">line number we want to count up to</param>
-        /// <returns></returns>
-        public int LineToChar(string file, int line)
-        {
-            string[] lines = file.Split('\n');
-
-            int retVal = 0;
-
-            for (int n = 0; n < line; n++)
-            {
-                retVal += lines[n].Length;
-            }
-
-            return retVal;
-        }
     }
 }
