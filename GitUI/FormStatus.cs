@@ -179,7 +179,7 @@ namespace GitUI
             Start();
         }
 
-        private static void FormStatus_FormClosed(object sender, FormClosedEventArgs e)
+        private void FormStatus_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (TaskbarManager.IsPlatformSupported)
             {
