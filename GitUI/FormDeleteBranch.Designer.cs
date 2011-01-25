@@ -41,9 +41,9 @@
             // Ok
             // 
             this.Ok.ForeColor = System.Drawing.Color.Black;
-            this.Ok.Location = new System.Drawing.Point(368, 91);
+            this.Ok.Location = new System.Drawing.Point(368, 90);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(75, 23);
+            this.Ok.Size = new System.Drawing.Size(75, 25);
             this.Ok.TabIndex = 5;
             this.Ok.Text = "Delete";
             this.Ok.UseVisualStyleBackColor = true;

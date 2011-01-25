@@ -147,7 +147,7 @@ namespace GitUI
             // 
             this.RefreshButton.Location = new System.Drawing.Point(173, 0);
             this.RefreshButton.Name = "RefreshButton";
-            this.RefreshButton.Size = new System.Drawing.Size(75, 23);
+            this.RefreshButton.Size = new System.Drawing.Size(75, 25);
             this.RefreshButton.TabIndex = 1;
             this.RefreshButton.Text = "Refresh";
             this.RefreshButton.UseVisualStyleBackColor = true;
@@ -268,7 +268,7 @@ namespace GitUI
             // 
             this.Stash.Location = new System.Drawing.Point(3, 3);
             this.Stash.Name = "Stash";
-            this.Stash.Size = new System.Drawing.Size(139, 23);
+            this.Stash.Size = new System.Drawing.Size(139, 25);
             this.Stash.TabIndex = 2;
             this.Stash.Text = "Stash all changes";
             this.Stash.UseVisualStyleBackColor = true;
@@ -278,7 +278,7 @@ namespace GitUI
             // 
             this.Apply.Location = new System.Drawing.Point(293, 3);
             this.Apply.Name = "Apply";
-            this.Apply.Size = new System.Drawing.Size(185, 23);
+            this.Apply.Size = new System.Drawing.Size(185, 25);
             this.Apply.TabIndex = 1;
             this.Apply.Text = "Apply selected stash to working dir";
             this.Apply.UseVisualStyleBackColor = true;
@@ -288,7 +288,7 @@ namespace GitUI
             // 
             this.Clear.Location = new System.Drawing.Point(148, 3);
             this.Clear.Name = "Clear";
-            this.Clear.Size = new System.Drawing.Size(139, 23);
+            this.Clear.Size = new System.Drawing.Size(139, 25);
             this.Clear.TabIndex = 0;
             this.Clear.Text = "Drop selected stash";
             this.Clear.UseVisualStyleBackColor = true;

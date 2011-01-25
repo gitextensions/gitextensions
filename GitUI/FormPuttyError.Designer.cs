@@ -42,7 +42,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(81, 12);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(308, 65);
+            this.label1.Size = new System.Drawing.Size(318, 65);
             this.label1.TabIndex = 0;
             this.label1.Text = resources.GetString("label1.Text");
             // 
@@ -62,7 +62,7 @@
             this.LoadSSHKey.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LoadSSHKey.Location = new System.Drawing.Point(142, 90);
             this.LoadSSHKey.Name = "LoadSSHKey";
-            this.LoadSSHKey.Size = new System.Drawing.Size(123, 23);
+            this.LoadSSHKey.Size = new System.Drawing.Size(123, 25);
             this.LoadSSHKey.TabIndex = 26;
             this.LoadSSHKey.Text = "Load SSH key";
             this.LoadSSHKey.UseVisualStyleBackColor = true;
@@ -72,7 +72,7 @@
             // 
             this.Retry.Location = new System.Drawing.Point(12, 90);
             this.Retry.Name = "Retry";
-            this.Retry.Size = new System.Drawing.Size(123, 23);
+            this.Retry.Size = new System.Drawing.Size(123, 25);
             this.Retry.TabIndex = 27;
             this.Retry.Text = "Retry";
             this.Retry.UseVisualStyleBackColor = true;
@@ -82,7 +82,7 @@
             // 
             this.button1.Location = new System.Drawing.Point(272, 90);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(123, 23);
+            this.button1.Size = new System.Drawing.Size(123, 25);
             this.button1.TabIndex = 28;
             this.button1.Text = "Abort";
             this.button1.UseVisualStyleBackColor = true;
@@ -99,7 +99,6 @@
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormPuttyError";

@@ -88,7 +88,7 @@
             this.CheckoutAfterCreate.AutoSize = true;
             this.CheckoutAfterCreate.Checked = true;
             this.CheckoutAfterCreate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CheckoutAfterCreate.Location = new System.Drawing.Point(244, 8);
+            this.CheckoutAfterCreate.Location = new System.Drawing.Point(244, 9);
             this.CheckoutAfterCreate.Name = "CheckoutAfterCreate";
             this.CheckoutAfterCreate.Size = new System.Drawing.Size(132, 17);
             this.CheckoutAfterCreate.TabIndex = 4;
@@ -100,7 +100,7 @@
             this.Checkout.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Checkout.Location = new System.Drawing.Point(494, 5);
             this.Checkout.Name = "Checkout";
-            this.Checkout.Size = new System.Drawing.Size(119, 23);
+            this.Checkout.Size = new System.Drawing.Size(120, 25);
             this.Checkout.TabIndex = 3;
             this.Checkout.Text = "Checkout branch";
             this.Checkout.UseVisualStyleBackColor = true;
@@ -110,7 +110,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 8);
+            this.label1.Location = new System.Drawing.Point(3, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(69, 13);
             this.label1.TabIndex = 2;
@@ -121,7 +121,7 @@
             this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Ok.Location = new System.Drawing.Point(620, 5);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(124, 23);
+            this.Ok.Size = new System.Drawing.Size(120, 25);
             this.Ok.TabIndex = 1;
             this.Ok.Text = "Create branch";
             this.Ok.UseVisualStyleBackColor = true;
@@ -130,7 +130,7 @@
             // BName
             // 
             this.BName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.BName.Location = new System.Drawing.Point(88, 5);
+            this.BName.Location = new System.Drawing.Point(88, 6);
             this.BName.Name = "BName";
             this.BName.Size = new System.Drawing.Size(150, 21);
             this.BName.TabIndex = 0;

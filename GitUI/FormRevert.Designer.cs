@@ -46,7 +46,7 @@
             // 
             this.Revert.Location = new System.Drawing.Point(356, 38);
             this.Revert.Name = "Revert";
-            this.Revert.Size = new System.Drawing.Size(91, 23);
+            this.Revert.Size = new System.Drawing.Size(91, 25);
             this.Revert.TabIndex = 1;
             this.Revert.Text = "Revert changes";
             this.Revert.UseVisualStyleBackColor = true;
@@ -56,7 +56,7 @@
             // 
             this.button1.Location = new System.Drawing.Point(261, 38);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(89, 23);
+            this.button1.Size = new System.Drawing.Size(89, 25);
             this.button1.TabIndex = 2;
             this.button1.Text = "Cancel";
             this.button1.UseVisualStyleBackColor = true;
