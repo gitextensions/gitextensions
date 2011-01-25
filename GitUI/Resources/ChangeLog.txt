@@ -1,6 +1,23 @@
 Changelog
 =========
 
+Version 2.10
+	Fixed issue 78: refresh commit dialog on focus (optional)
+	Fixed "Recover lost objects"
+	Fixed layout issues in gource plugin dialog
+	Fix FileTree behaviour when right-clicked on empty space below last node
+	Spanish translation updated
+	Layout commit dialog optimized
+	Patch files can now be dropped from file explorer onto the revision grid
+	Added option to enter a different author for a commit to the commit dialog options
+	Added syntax for Pascal, Python and Ruby files to Statistics plugin
+	Added Github integration
+	Added "Reset selected line(s)" to context menu in commit dialog
+	Added option "Draw non relatives text grey" to render commit message grey when commit is not a relative
+	Added autocomplete to various dropdown boxes	
+	Added icons to most messageboxes
+	Added "pull all" button to pull dialog
+	
 Version 2.09
 	Fixed issue 92: added AcceptButton on Push dialog and fixed tab order in push and pull dialog.
 	Fixed issue 289: added support for MonsterId, Identicon and Wavatar when user has no Gravatar
