@@ -32,10 +32,10 @@
             this.OK = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.ParentsList = new System.Windows.Forms.ListView();
-            this.No = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.Message = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.Author = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.CommitDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.No = new System.Windows.Forms.ColumnHeader();
+            this.Message = new System.Windows.Forms.ColumnHeader();
+            this.Author = new System.Windows.Forms.ColumnHeader();
+            this.CommitDate = new System.Windows.Forms.ColumnHeader();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -46,7 +46,7 @@
             // 
             this.OK.Location = new System.Drawing.Point(242, 104);
             this.OK.Name = "OK";
-            this.OK.Size = new System.Drawing.Size(75, 23);
+            this.OK.Size = new System.Drawing.Size(75, 25);
             this.OK.TabIndex = 1;
             this.OK.Text = "OK";
             this.OK.UseVisualStyleBackColor = true;

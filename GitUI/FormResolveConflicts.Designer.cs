@@ -444,7 +444,7 @@
             this.merge.Location = new System.Drawing.Point(388, 0);
             this.merge.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.merge.Name = "merge";
-            this.merge.Size = new System.Drawing.Size(130, 23);
+            this.merge.Size = new System.Drawing.Size(130, 25);
             this.merge.TabIndex = 8;
             this.merge.TabStop = false;
             this.merge.Text = "Merge";
@@ -478,7 +478,7 @@
             // 
             this.startMergetool.Location = new System.Drawing.Point(2, 33);
             this.startMergetool.Name = "startMergetool";
-            this.startMergetool.Size = new System.Drawing.Size(125, 23);
+            this.startMergetool.Size = new System.Drawing.Size(125, 25);
             this.startMergetool.TabIndex = 10;
             this.startMergetool.Text = "Start mergetool";
             this.startMergetool.UseVisualStyleBackColor = true;
@@ -488,7 +488,7 @@
             // 
             this.button1.Location = new System.Drawing.Point(2, 4);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(125, 23);
+            this.button1.Size = new System.Drawing.Size(125, 25);
             this.button1.TabIndex = 1;
             this.button1.Text = "Open in mergetool";
             this.button1.UseVisualStyleBackColor = true;
@@ -498,7 +498,7 @@
             // 
             this.Rescan.Location = new System.Drawing.Point(2, 62);
             this.Rescan.Name = "Rescan";
-            this.Rescan.Size = new System.Drawing.Size(125, 23);
+            this.Rescan.Size = new System.Drawing.Size(125, 25);
             this.Rescan.TabIndex = 7;
             this.Rescan.Text = "Rescan mergeconflicts";
             this.Rescan.UseVisualStyleBackColor = true;
@@ -508,7 +508,7 @@
             // 
             this.Reset.Location = new System.Drawing.Point(2, 92);
             this.Reset.Name = "Reset";
-            this.Reset.Size = new System.Drawing.Size(125, 23);
+            this.Reset.Size = new System.Drawing.Size(125, 25);
             this.Reset.TabIndex = 9;
             this.Reset.Text = "Abort";
             this.Reset.UseVisualStyleBackColor = true;

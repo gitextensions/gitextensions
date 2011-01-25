@@ -39,7 +39,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(13, 13);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(49, 13);
+            this.label1.Size = new System.Drawing.Size(51, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Directory";
             // 
@@ -58,7 +58,7 @@
             // 
             this.Browse.Location = new System.Drawing.Point(360, 8);
             this.Browse.Name = "Browse";
-            this.Browse.Size = new System.Drawing.Size(75, 23);
+            this.Browse.Size = new System.Drawing.Size(75, 25);
             this.Browse.TabIndex = 2;
             this.Browse.Text = "Browse";
             this.Browse.UseVisualStyleBackColor = true;
@@ -68,7 +68,7 @@
             // 
             this.Load.Location = new System.Drawing.Point(360, 43);
             this.Load.Name = "Load";
-            this.Load.Size = new System.Drawing.Size(75, 23);
+            this.Load.Size = new System.Drawing.Size(75, 25);
             this.Load.TabIndex = 3;
             this.Load.Text = "Open";
             this.Load.UseVisualStyleBackColor = true;

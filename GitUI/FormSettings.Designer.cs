@@ -616,9 +616,9 @@ namespace GitUI
             // 
             // Rescan
             // 
-            this.Rescan.Location = new System.Drawing.Point(507, 304);
+            this.Rescan.Location = new System.Drawing.Point(507, 299);
             this.Rescan.Name = "Rescan";
-            this.Rescan.Size = new System.Drawing.Size(195, 24);
+            this.Rescan.Size = new System.Drawing.Size(195, 25);
             this.Rescan.TabIndex = 8;
             this.Rescan.Text = "Save and rescan";
             this.Rescan.UseVisualStyleBackColor = true;
@@ -756,7 +756,7 @@ namespace GitUI
             // 
             this.otherHomeBrowse.Location = new System.Drawing.Point(618, 100);
             this.otherHomeBrowse.Name = "otherHomeBrowse";
-            this.otherHomeBrowse.Size = new System.Drawing.Size(75, 23);
+            this.otherHomeBrowse.Size = new System.Drawing.Size(75, 25);
             this.otherHomeBrowse.TabIndex = 10;
             this.otherHomeBrowse.Text = "Browse";
             this.otherHomeBrowse.UseVisualStyleBackColor = true;
@@ -840,9 +840,9 @@ namespace GitUI
             // 
             // BrowseGitBinPath
             // 
-            this.BrowseGitBinPath.Location = new System.Drawing.Point(618, 64);
+            this.BrowseGitBinPath.Location = new System.Drawing.Point(618, 63);
             this.BrowseGitBinPath.Name = "BrowseGitBinPath";
-            this.BrowseGitBinPath.Size = new System.Drawing.Size(75, 23);
+            this.BrowseGitBinPath.Size = new System.Drawing.Size(75, 25);
             this.BrowseGitBinPath.TabIndex = 8;
             this.BrowseGitBinPath.Text = "Browse";
             this.BrowseGitBinPath.UseVisualStyleBackColor = true;
@@ -876,9 +876,9 @@ namespace GitUI
             // 
             // BrowseGitPath
             // 
-            this.BrowseGitPath.Location = new System.Drawing.Point(618, 38);
+            this.BrowseGitPath.Location = new System.Drawing.Point(618, 37);
             this.BrowseGitPath.Name = "BrowseGitPath";
-            this.BrowseGitPath.Size = new System.Drawing.Size(75, 23);
+            this.BrowseGitPath.Size = new System.Drawing.Size(75, 25);
             this.BrowseGitPath.TabIndex = 5;
             this.BrowseGitPath.Text = "Browse";
             this.BrowseGitPath.UseVisualStyleBackColor = true;
@@ -1398,7 +1398,7 @@ namespace GitUI
             // 
             this.ClearImageCache.Location = new System.Drawing.Point(5, 130);
             this.ClearImageCache.Name = "ClearImageCache";
-            this.ClearImageCache.Size = new System.Drawing.Size(142, 23);
+            this.ClearImageCache.Size = new System.Drawing.Size(142, 25);
             this.ClearImageCache.TabIndex = 1;
             this.ClearImageCache.Text = "Clear image cache";
             this.ClearImageCache.UseVisualStyleBackColor = true;
@@ -1896,9 +1896,9 @@ namespace GitUI
             // 
             // DiffToolCmdSuggest
             // 
-            this.DiffToolCmdSuggest.Location = new System.Drawing.Point(506, 258);
+            this.DiffToolCmdSuggest.Location = new System.Drawing.Point(506, 257);
             this.DiffToolCmdSuggest.Name = "DiffToolCmdSuggest";
-            this.DiffToolCmdSuggest.Size = new System.Drawing.Size(108, 23);
+            this.DiffToolCmdSuggest.Size = new System.Drawing.Size(108, 25);
             this.DiffToolCmdSuggest.TabIndex = 30;
             this.DiffToolCmdSuggest.Text = "Suggest command";
             this.DiffToolCmdSuggest.UseVisualStyleBackColor = true;
@@ -1934,7 +1934,7 @@ namespace GitUI
             // 
             this.BrowseDiffTool.Location = new System.Drawing.Point(506, 229);
             this.BrowseDiffTool.Name = "BrowseDiffTool";
-            this.BrowseDiffTool.Size = new System.Drawing.Size(75, 23);
+            this.BrowseDiffTool.Size = new System.Drawing.Size(75, 25);
             this.BrowseDiffTool.TabIndex = 27;
             this.BrowseDiffTool.Text = "Browse";
             this.BrowseDiffTool.UseVisualStyleBackColor = true;
@@ -2033,7 +2033,7 @@ namespace GitUI
             // 
             this.button1.Location = new System.Drawing.Point(506, 145);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(108, 23);
+            this.button1.Size = new System.Drawing.Size(108, 25);
             this.button1.TabIndex = 16;
             this.button1.Text = "Suggest command";
             this.button1.UseVisualStyleBackColor = true;
@@ -2069,7 +2069,7 @@ namespace GitUI
             // 
             this.BrowseMergeTool.Location = new System.Drawing.Point(506, 117);
             this.BrowseMergeTool.Name = "BrowseMergeTool";
-            this.BrowseMergeTool.Size = new System.Drawing.Size(75, 23);
+            this.BrowseMergeTool.Size = new System.Drawing.Size(75, 25);
             this.BrowseMergeTool.TabIndex = 13;
             this.BrowseMergeTool.Text = "Browse";
             this.BrowseMergeTool.UseVisualStyleBackColor = true;
@@ -2232,7 +2232,7 @@ namespace GitUI
             // 
             this.PageantBrowse.Location = new System.Drawing.Point(488, 75);
             this.PageantBrowse.Name = "PageantBrowse";
-            this.PageantBrowse.Size = new System.Drawing.Size(75, 23);
+            this.PageantBrowse.Size = new System.Drawing.Size(75, 25);
             this.PageantBrowse.TabIndex = 10;
             this.PageantBrowse.Text = "Browse";
             this.PageantBrowse.UseVisualStyleBackColor = true;
@@ -2258,7 +2258,7 @@ namespace GitUI
             // 
             this.PuttygenBrowse.Location = new System.Drawing.Point(488, 45);
             this.PuttygenBrowse.Name = "PuttygenBrowse";
-            this.PuttygenBrowse.Size = new System.Drawing.Size(75, 23);
+            this.PuttygenBrowse.Size = new System.Drawing.Size(75, 25);
             this.PuttygenBrowse.TabIndex = 7;
             this.PuttygenBrowse.Text = "Browse";
             this.PuttygenBrowse.UseVisualStyleBackColor = true;
@@ -2291,9 +2291,9 @@ namespace GitUI
             // 
             // PlinkBrowse
             // 
-            this.PlinkBrowse.Location = new System.Drawing.Point(488, 16);
+            this.PlinkBrowse.Location = new System.Drawing.Point(488, 15);
             this.PlinkBrowse.Name = "PlinkBrowse";
-            this.PlinkBrowse.Size = new System.Drawing.Size(75, 23);
+            this.PlinkBrowse.Size = new System.Drawing.Size(75, 25);
             this.PlinkBrowse.TabIndex = 3;
             this.PlinkBrowse.Text = "Browse";
             this.PlinkBrowse.UseVisualStyleBackColor = true;
@@ -2325,7 +2325,7 @@ namespace GitUI
             // 
             this.OtherSshBrowse.Location = new System.Drawing.Point(488, 79);
             this.OtherSshBrowse.Name = "OtherSshBrowse";
-            this.OtherSshBrowse.Size = new System.Drawing.Size(75, 23);
+            this.OtherSshBrowse.Size = new System.Drawing.Size(75, 25);
             this.OtherSshBrowse.TabIndex = 5;
             this.OtherSshBrowse.Text = "Browse";
             this.OtherSshBrowse.UseVisualStyleBackColor = true;
@@ -2459,7 +2459,7 @@ namespace GitUI
             this.browseScriptButton.Enabled = false;
             this.browseScriptButton.Location = new System.Drawing.Point(627, 269);
             this.browseScriptButton.Name = "browseScriptButton";
-            this.browseScriptButton.Size = new System.Drawing.Size(75, 23);
+            this.browseScriptButton.Size = new System.Drawing.Size(75, 25);
             this.browseScriptButton.TabIndex = 11;
             this.browseScriptButton.Text = "Browse";
             this.browseScriptButton.UseVisualStyleBackColor = true;
@@ -2470,7 +2470,7 @@ namespace GitUI
             this.cancelScriptButton.Enabled = false;
             this.cancelScriptButton.Location = new System.Drawing.Point(627, 241);
             this.cancelScriptButton.Name = "cancelScriptButton";
-            this.cancelScriptButton.Size = new System.Drawing.Size(75, 23);
+            this.cancelScriptButton.Size = new System.Drawing.Size(75, 25);
             this.cancelScriptButton.TabIndex = 10;
             this.cancelScriptButton.Text = "Cancel";
             this.cancelScriptButton.UseVisualStyleBackColor = true;
@@ -2481,7 +2481,7 @@ namespace GitUI
             this.saveScriptButton.Enabled = false;
             this.saveScriptButton.Location = new System.Drawing.Point(540, 241);
             this.saveScriptButton.Name = "saveScriptButton";
-            this.saveScriptButton.Size = new System.Drawing.Size(75, 23);
+            this.saveScriptButton.Size = new System.Drawing.Size(75, 25);
             this.saveScriptButton.TabIndex = 9;
             this.saveScriptButton.Text = "Save";
             this.saveScriptButton.UseVisualStyleBackColor = true;
@@ -2532,7 +2532,7 @@ namespace GitUI
             this.removeScriptButton.Enabled = false;
             this.removeScriptButton.Location = new System.Drawing.Point(627, 124);
             this.removeScriptButton.Name = "removeScriptButton";
-            this.removeScriptButton.Size = new System.Drawing.Size(75, 23);
+            this.removeScriptButton.Size = new System.Drawing.Size(75, 25);
             this.removeScriptButton.TabIndex = 4;
             this.removeScriptButton.Text = "Remove";
             this.removeScriptButton.UseVisualStyleBackColor = true;
@@ -2543,7 +2543,7 @@ namespace GitUI
             this.editScriptButton.Enabled = false;
             this.editScriptButton.Location = new System.Drawing.Point(627, 94);
             this.editScriptButton.Name = "editScriptButton";
-            this.editScriptButton.Size = new System.Drawing.Size(75, 23);
+            this.editScriptButton.Size = new System.Drawing.Size(75, 25);
             this.editScriptButton.TabIndex = 3;
             this.editScriptButton.Text = "Edit";
             this.editScriptButton.UseVisualStyleBackColor = true;
@@ -2553,7 +2553,7 @@ namespace GitUI
             // 
             this.addScriptButton.Location = new System.Drawing.Point(627, 64);
             this.addScriptButton.Name = "addScriptButton";
-            this.addScriptButton.Size = new System.Drawing.Size(75, 23);
+            this.addScriptButton.Size = new System.Drawing.Size(75, 25);
             this.addScriptButton.TabIndex = 2;
             this.addScriptButton.Text = "Add";
             this.addScriptButton.UseVisualStyleBackColor = true;
@@ -2635,7 +2635,7 @@ namespace GitUI
             // 
             this.Ok.Location = new System.Drawing.Point(639, 2);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(75, 23);
+            this.Ok.Size = new System.Drawing.Size(75, 25);
             this.Ok.TabIndex = 0;
             this.Ok.Text = "OK";
             this.Ok.UseVisualStyleBackColor = true;

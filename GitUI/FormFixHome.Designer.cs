@@ -59,7 +59,7 @@
             // 
             this.otherHomeBrowse.Location = new System.Drawing.Point(618, 100);
             this.otherHomeBrowse.Name = "otherHomeBrowse";
-            this.otherHomeBrowse.Size = new System.Drawing.Size(75, 23);
+            this.otherHomeBrowse.Size = new System.Drawing.Size(75, 25);
             this.otherHomeBrowse.TabIndex = 10;
             this.otherHomeBrowse.Text = "Browse";
             this.otherHomeBrowse.UseVisualStyleBackColor = true;
@@ -68,7 +68,7 @@
             // 
             this.otherHomeDir.Location = new System.Drawing.Point(88, 102);
             this.otherHomeDir.Name = "otherHomeDir";
-            this.otherHomeDir.Size = new System.Drawing.Size(527, 20);
+            this.otherHomeDir.Size = new System.Drawing.Size(527, 21);
             this.otherHomeDir.TabIndex = 4;
             // 
             // otherHome
@@ -76,7 +76,7 @@
             this.otherHome.AutoSize = true;
             this.otherHome.Location = new System.Drawing.Point(11, 103);
             this.otherHome.Name = "otherHome";
-            this.otherHome.Size = new System.Drawing.Size(51, 17);
+            this.otherHome.Size = new System.Drawing.Size(53, 17);
             this.otherHome.TabIndex = 3;
             this.otherHome.TabStop = true;
             this.otherHome.Text = "Other";
@@ -87,7 +87,7 @@
             this.userprofileHome.AutoSize = true;
             this.userprofileHome.Location = new System.Drawing.Point(11, 80);
             this.userprofileHome.Name = "userprofileHome";
-            this.userprofileHome.Size = new System.Drawing.Size(166, 17);
+            this.userprofileHome.Size = new System.Drawing.Size(157, 17);
             this.userprofileHome.TabIndex = 2;
             this.userprofileHome.TabStop = true;
             this.userprofileHome.Text = "Set HOME to USERPROFILE";
@@ -109,7 +109,7 @@
             this.label51.AutoSize = true;
             this.label51.Location = new System.Drawing.Point(8, 19);
             this.label51.Name = "label51";
-            this.label51.Size = new System.Drawing.Size(552, 26);
+            this.label51.Size = new System.Drawing.Size(568, 26);
             this.label51.TabIndex = 0;
             this.label51.Text = resources.GetString("label51.Text");
             // 
@@ -117,7 +117,7 @@
             // 
             this.ok.Location = new System.Drawing.Point(660, 177);
             this.ok.Name = "ok";
-            this.ok.Size = new System.Drawing.Size(75, 23);
+            this.ok.Size = new System.Drawing.Size(75, 25);
             this.ok.TabIndex = 12;
             this.ok.Text = "OK";
             this.ok.UseVisualStyleBackColor = true;

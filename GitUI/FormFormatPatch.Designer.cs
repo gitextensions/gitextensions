@@ -151,7 +151,7 @@
             // 
             this.Browse.Location = new System.Drawing.Point(663, 8);
             this.Browse.Name = "Browse";
-            this.Browse.Size = new System.Drawing.Size(75, 23);
+            this.Browse.Size = new System.Drawing.Size(75, 25);
             this.Browse.TabIndex = 8;
             this.Browse.Text = "Browse";
             this.Browse.UseVisualStyleBackColor = true;
@@ -195,6 +195,10 @@
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RevisionGrid.Filter = "";
             this.RevisionGrid.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.RevisionGrid.InMemAuthorFilter = "";
+            this.RevisionGrid.InMemCommitterFilter = "";
+            this.RevisionGrid.InMemFilterIgnoreCase = false;
+            this.RevisionGrid.InMemMessageFilter = "";
             this.RevisionGrid.LastRow = 0;
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Name = "RevisionGrid";
@@ -206,7 +210,7 @@
             // 
             this.FormatPatch.Location = new System.Drawing.Point(639, 4);
             this.FormatPatch.Name = "FormatPatch";
-            this.FormatPatch.Size = new System.Drawing.Size(108, 23);
+            this.FormatPatch.Size = new System.Drawing.Size(108, 25);
             this.FormatPatch.TabIndex = 0;
             this.FormatPatch.Text = "Create patch(es)";
             this.FormatPatch.UseVisualStyleBackColor = true;
@@ -237,7 +241,7 @@
             // 
             this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
             // 
-            // FormFormatPath
+            // FormFormatPatch
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
