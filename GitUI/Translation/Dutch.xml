@@ -2078,6 +2078,12 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="$this" Property="Text">
           <Value>Editor</Value>
         </TranslationItem>
+        <TranslationItem Name="_saveChangesCaption" Property="Text">
+          <Value>Opslaan</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripSaveButton" Property="ToolTipText">
+          <Value>Opslaan</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="AboutBox">
@@ -2565,8 +2571,17 @@ Bij het verwijderen van een vertakking kunnen commits verloren gaan!</Value>
         <TranslationItem Name="_strLoading" Property="Text">
           <Value>Laden...</Value>
         </TranslationItem>
+        <TranslationItem Name="_strCouldNotLocateARemoteThatBelongsToYourUser" Property="Text">
+          <Value>Geen repository gevonden voor uw gebruiker!</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strYouMustSpecifyATitleAndABody" Property="Text">
+          <Value>U moet een titel en bericht opgeven.</Value>
+        </TranslationItem>
         <TranslationItem Name="_strPullRequest" Property="Text">
           <Value>Binnenhaal verzoek</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strFailedToCreatePullRequest" Property="Text">
+          <Value>Fout tijdens aanmaken binnenhaal verzoek.</Value>
         </TranslationItem>
         <TranslationItem Name="_strDone" Property="Text">
           <Value>Klaar</Value>
@@ -2847,6 +2862,9 @@ Klik op de knop voor meer informatie over het maken van donaties.</Value>
         </TranslationItem>
         <TranslationItem Name="toolUnstageAllItem" Property="ToolTipText">
           <Value>Alles terugzetten</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolAuthorLabelItem" Property="Text">
+          <Value>Auteur: (formaat: "naam &lt;email&gt;")</Value>
         </TranslationItem>
         <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text">
           <Value>Wilt u ook de nieuwe bestanden in de selectie verwijderen?
