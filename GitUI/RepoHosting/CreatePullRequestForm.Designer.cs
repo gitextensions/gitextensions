@@ -154,7 +154,7 @@
             this._yourBranchesCB.Name = "_yourBranchesCB";
             this._yourBranchesCB.Size = new System.Drawing.Size(160, 21);
             this._yourBranchesCB.TabIndex = 0;
-            this._yourBranchesCB.SelectedIndexChanged += new System.EventHandler(_yourBranchCB_SelectedIndexChanged);
+            this._yourBranchesCB.SelectedIndexChanged += new System.EventHandler(this._yourBranchCB_SelectedIndexChanged);
             // 
             // _remoteBranchesCB
             // 
@@ -164,7 +164,7 @@
             this._remoteBranchesCB.Name = "_remoteBranchesCB";
             this._remoteBranchesCB.Size = new System.Drawing.Size(160, 21);
             this._remoteBranchesCB.TabIndex = 1;
-            this._remoteBranchesCB.SelectedIndexChanged += new System.EventHandler(_yourBranchCB_SelectedIndexChanged);
+            this._remoteBranchesCB.SelectedIndexChanged += new System.EventHandler(this._yourBranchCB_SelectedIndexChanged);
             // 
             // CreatePullRequestForm
             // 

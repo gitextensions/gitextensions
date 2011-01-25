@@ -83,7 +83,7 @@ namespace GitUI
             UpdateGravatar();
         }
 
-        private static void RegisterAtGravatarcomToolStripMenuItemClick(object sender, EventArgs e)
+        private void RegisterAtGravatarcomToolStripMenuItemClick(object sender, EventArgs e)
         {
             try
             {

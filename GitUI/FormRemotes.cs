@@ -275,7 +275,7 @@ namespace GitUI
                 GitCommandHelpers.GetSetting(string.Format("remote.{0}.puttykeyfile", RemoteName.Text));
         }
 
-        private static void UpdateBranchClick(object sender, EventArgs e)
+        private void UpdateBranchClick(object sender, EventArgs e)
         {
             new FormProcess("remote update").ShowDialog();
         }

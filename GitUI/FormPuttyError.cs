@@ -9,12 +9,12 @@ namespace GitUI
             InitializeComponent(); Translate();
         }
 
-        private static void pictureBox1_Click(object sender, EventArgs e)
+        private void pictureBox1_Click(object sender, EventArgs e)
         {
 
         }
 
-        private static void LoadSSHKey_Click(object sender, EventArgs e)
+        private void LoadSSHKey_Click(object sender, EventArgs e)
         {
             new FormLoadPuttySshKey().ShowDialog();
         }

@@ -76,7 +76,7 @@ namespace GitUI
 
         
 
-        private static void textBox1_TextChanged(object sender, EventArgs e)
+        private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
         }
@@ -148,7 +148,7 @@ namespace GitUI
             Cursor.Current = Cursors.Default;
         }
 
-        private static void AddFiles_Click(object sender, EventArgs e)
+        private void AddFiles_Click(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartAddFilesDialog();
         }
@@ -180,7 +180,7 @@ namespace GitUI
             EnableButtons();
         }
 
-        private static void PatchDirMode_CheckedChanged(object sender, EventArgs e)
+        private void PatchDirMode_CheckedChanged(object sender, EventArgs e)
         {
 
         }

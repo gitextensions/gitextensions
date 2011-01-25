@@ -109,7 +109,7 @@
             this._NO_TRANSLATE_labelVersionInfo.TabIndex = 0;
             this._NO_TRANSLATE_labelVersionInfo.Text = "Version ";
             this._NO_TRANSLATE_labelVersionInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this._NO_TRANSLATE_labelVersionInfo.Click += new System.EventHandler(labelVersion_Click);
+            this._NO_TRANSLATE_labelVersionInfo.Click += new System.EventHandler(this.labelVersion_Click);
             // 
             // pictureDonate
             // 
@@ -123,7 +123,7 @@
             this.pictureDonate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureDonate.TabIndex = 25;
             this.pictureDonate.TabStop = false;
-            this.pictureDonate.Click += new System.EventHandler(pictureBox1_Click);
+            this.pictureDonate.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // _NO_TRANSLATE_labelProductName
             // 
@@ -197,7 +197,7 @@
             this._NO_TRANSLATE_thanksToTicker.Name = "_NO_TRANSLATE_thanksToTicker";
             this._NO_TRANSLATE_thanksToTicker.Size = new System.Drawing.Size(303, 22);
             this._NO_TRANSLATE_thanksToTicker.TabIndex = 28;
-            this._NO_TRANSLATE_thanksToTicker.Click += new System.EventHandler(_NO_TRANSLATE_thanksToTicker_Click);
+            this._NO_TRANSLATE_thanksToTicker.Click += new System.EventHandler(this._NO_TRANSLATE_thanksToTicker_Click);
             // 
             // thanksTimer
             // 

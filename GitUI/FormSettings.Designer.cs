@@ -1402,7 +1402,7 @@ namespace GitUI
             this.ClearImageCache.TabIndex = 1;
             this.ClearImageCache.Text = "Clear image cache";
             this.ClearImageCache.UseVisualStyleBackColor = true;
-            this.ClearImageCache.Click += new System.EventHandler(ClearImageCache_Click);
+            this.ClearImageCache.Click += new System.EventHandler(this.ClearImageCache_Click);
             // 
             // ShowAuthorGravatar
             // 

@@ -206,7 +206,7 @@
             this.registerAtGravatarcomToolStripMenuItem.Name = "registerAtGravatarcomToolStripMenuItem";
             this.registerAtGravatarcomToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
             this.registerAtGravatarcomToolStripMenuItem.Text = "Register at gravatar.com";
-            this.registerAtGravatarcomToolStripMenuItem.Click += new System.EventHandler(RegisterAtGravatarcomToolStripMenuItemClick);
+            this.registerAtGravatarcomToolStripMenuItem.Click += new System.EventHandler(this.RegisterAtGravatarcomToolStripMenuItemClick);
             // 
             // noImageGeneratorToolStripMenuItem
             // 

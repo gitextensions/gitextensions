@@ -594,7 +594,7 @@ namespace GitUI
             this.UpdateBranch.TabIndex = 10;
             this.UpdateBranch.Text = "Update all remote branch info";
             this.UpdateBranch.UseVisualStyleBackColor = true;
-            this.UpdateBranch.Click += new System.EventHandler(UpdateBranchClick);
+            this.UpdateBranch.Click += new System.EventHandler(this.UpdateBranchClick);
             // 
             // nameDataGridViewTextBoxColumn
             // 

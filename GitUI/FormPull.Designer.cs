@@ -149,7 +149,7 @@
             this.AddRemote.TabIndex = 2;
             this.AddRemote.Text = "Manage remotes";
             this.AddRemote.UseVisualStyleBackColor = true;
-            this.AddRemote.Click += new System.EventHandler(AddRemoteClick);
+            this.AddRemote.Click += new System.EventHandler(this.AddRemoteClick);
             // 
             // Remotes
             // 
@@ -313,7 +313,7 @@
             this.Stash.TabIndex = 11;
             this.Stash.Text = "Stash changes";
             this.Stash.UseVisualStyleBackColor = true;
-            this.Stash.Click += new System.EventHandler(StashClick);
+            this.Stash.Click += new System.EventHandler(this.StashClick);
             // 
             // Mergetool
             // 
