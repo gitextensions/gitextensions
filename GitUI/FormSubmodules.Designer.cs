@@ -154,7 +154,7 @@
             // 
             this.AddSubmodule.Location = new System.Drawing.Point(3, 3);
             this.AddSubmodule.Name = "AddSubmodule";
-            this.AddSubmodule.Size = new System.Drawing.Size(162, 23);
+            this.AddSubmodule.Size = new System.Drawing.Size(162, 25);
             this.AddSubmodule.TabIndex = 0;
             this.AddSubmodule.Text = "Add submodule";
             this.AddSubmodule.UseVisualStyleBackColor = true;
@@ -342,7 +342,7 @@
             // 
             this.SynchronizeSubmodule.Location = new System.Drawing.Point(3, 2);
             this.SynchronizeSubmodule.Name = "SynchronizeSubmodule";
-            this.SynchronizeSubmodule.Size = new System.Drawing.Size(100, 23);
+            this.SynchronizeSubmodule.Size = new System.Drawing.Size(100, 25);
             this.SynchronizeSubmodule.TabIndex = 5;
             this.SynchronizeSubmodule.Text = "Synchronize";
             this.SynchronizeSubmodule.UseVisualStyleBackColor = true;
@@ -352,7 +352,7 @@
             // 
             this.InitSubmodule.Location = new System.Drawing.Point(107, 2);
             this.InitSubmodule.Name = "InitSubmodule";
-            this.InitSubmodule.Size = new System.Drawing.Size(75, 23);
+            this.InitSubmodule.Size = new System.Drawing.Size(75, 25);
             this.InitSubmodule.TabIndex = 4;
             this.InitSubmodule.Text = "Initialize";
             this.InitSubmodule.UseVisualStyleBackColor = true;
@@ -362,7 +362,7 @@
             // 
             this.UpdateSubmodule.Location = new System.Drawing.Point(185, 2);
             this.UpdateSubmodule.Name = "UpdateSubmodule";
-            this.UpdateSubmodule.Size = new System.Drawing.Size(75, 23);
+            this.UpdateSubmodule.Size = new System.Drawing.Size(75, 25);
             this.UpdateSubmodule.TabIndex = 3;
             this.UpdateSubmodule.Text = "Update";
             this.UpdateSubmodule.UseVisualStyleBackColor = true;

@@ -70,7 +70,7 @@
             this.Ok.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.Ok.Location = new System.Drawing.Point(374, 3);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(75, 23);
+            this.Ok.Size = new System.Drawing.Size(75, 25);
             this.Ok.TabIndex = 19;
             this.Ok.Text = "OK";
             this.Ok.UseVisualStyleBackColor = true;

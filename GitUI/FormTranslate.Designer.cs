@@ -376,7 +376,7 @@
             // 
             this.googleAll.Location = new System.Drawing.Point(3, 123);
             this.googleAll.Name = "googleAll";
-            this.googleAll.Size = new System.Drawing.Size(154, 23);
+            this.googleAll.Size = new System.Drawing.Size(155, 25);
             this.googleAll.TabIndex = 3;
             this.googleAll.Text = "Google all empty";
             this.googleAll.UseVisualStyleBackColor = true;
@@ -386,7 +386,7 @@
             // 
             this.googleTranslate.Location = new System.Drawing.Point(2, 95);
             this.googleTranslate.Name = "googleTranslate";
-            this.googleTranslate.Size = new System.Drawing.Size(155, 23);
+            this.googleTranslate.Size = new System.Drawing.Size(155, 25);
             this.googleTranslate.TabIndex = 2;
             this.googleTranslate.Text = "Google translate";
             this.googleTranslate.UseVisualStyleBackColor = true;
@@ -396,7 +396,7 @@
             // 
             this.previousButton.Location = new System.Drawing.Point(3, 32);
             this.previousButton.Name = "previousButton";
-            this.previousButton.Size = new System.Drawing.Size(154, 23);
+            this.previousButton.Size = new System.Drawing.Size(155, 25);
             this.previousButton.TabIndex = 1;
             this.previousButton.Text = "&Previous";
             this.previousButton.UseVisualStyleBackColor = true;
@@ -406,7 +406,7 @@
             // 
             this.nextButton.Location = new System.Drawing.Point(2, 3);
             this.nextButton.Name = "nextButton";
-            this.nextButton.Size = new System.Drawing.Size(155, 23);
+            this.nextButton.Size = new System.Drawing.Size(155, 25);
             this.nextButton.TabIndex = 0;
             this.nextButton.Text = "&Next";
             this.nextButton.UseVisualStyleBackColor = true;

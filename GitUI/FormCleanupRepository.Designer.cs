@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormCleanupRepository));
             this.Preview = new System.Windows.Forms.Button();
             this.Cleanup = new System.Windows.Forms.Button();
             this.Cancel = new System.Windows.Forms.Button();
@@ -43,9 +42,9 @@
             // 
             // Preview
             // 
-            this.Preview.Location = new System.Drawing.Point(305, 12);
+            this.Preview.Location = new System.Drawing.Point(296, 12);
             this.Preview.Name = "Preview";
-            this.Preview.Size = new System.Drawing.Size(75, 23);
+            this.Preview.Size = new System.Drawing.Size(88, 25);
             this.Preview.TabIndex = 0;
             this.Preview.Text = "Preview";
             this.Preview.UseVisualStyleBackColor = true;
@@ -53,9 +52,9 @@
             // 
             // Cleanup
             // 
-            this.Cleanup.Location = new System.Drawing.Point(305, 42);
+            this.Cleanup.Location = new System.Drawing.Point(296, 42);
             this.Cleanup.Name = "Cleanup";
-            this.Cleanup.Size = new System.Drawing.Size(75, 23);
+            this.Cleanup.Size = new System.Drawing.Size(88, 25);
             this.Cleanup.TabIndex = 1;
             this.Cleanup.Text = "Cleanup";
             this.Cleanup.UseVisualStyleBackColor = true;
@@ -64,9 +63,9 @@
             // Cancel
             // 
             this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Cancel.Location = new System.Drawing.Point(305, 71);
+            this.Cancel.Location = new System.Drawing.Point(296, 71);
             this.Cancel.Name = "Cancel";
-            this.Cancel.Size = new System.Drawing.Size(75, 23);
+            this.Cancel.Size = new System.Drawing.Size(88, 25);
             this.Cancel.TabIndex = 2;
             this.Cancel.Text = "Cancel";
             this.Cancel.UseVisualStyleBackColor = true;
@@ -89,7 +88,7 @@
             this.RemoveIngnored.AutoSize = true;
             this.RemoveIngnored.Location = new System.Drawing.Point(7, 67);
             this.RemoveIngnored.Name = "RemoveIngnored";
-            this.RemoveIngnored.Size = new System.Drawing.Size(203, 17);
+            this.RemoveIngnored.Size = new System.Drawing.Size(205, 17);
             this.RemoveIngnored.TabIndex = 2;
             this.RemoveIngnored.Text = "Remove only ingnored untracked files";
             this.RemoveIngnored.UseVisualStyleBackColor = true;
@@ -99,7 +98,7 @@
             this.RemoveNonIgnored.AutoSize = true;
             this.RemoveNonIgnored.Location = new System.Drawing.Point(7, 43);
             this.RemoveNonIgnored.Name = "RemoveNonIgnored";
-            this.RemoveNonIgnored.Size = new System.Drawing.Size(218, 17);
+            this.RemoveNonIgnored.Size = new System.Drawing.Size(221, 17);
             this.RemoveNonIgnored.TabIndex = 1;
             this.RemoveNonIgnored.Text = "Remove only non-ignored untracked files";
             this.RemoveNonIgnored.UseVisualStyleBackColor = true;
@@ -123,7 +122,7 @@
             this.RemoveDirectories.CheckState = System.Windows.Forms.CheckState.Checked;
             this.RemoveDirectories.Location = new System.Drawing.Point(19, 119);
             this.RemoveDirectories.Name = "RemoveDirectories";
-            this.RemoveDirectories.Size = new System.Drawing.Size(168, 17);
+            this.RemoveDirectories.Size = new System.Drawing.Size(169, 17);
             this.RemoveDirectories.TabIndex = 4;
             this.RemoveDirectories.Text = "Remove untracked directories";
             this.RemoveDirectories.UseVisualStyleBackColor = true;

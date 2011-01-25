@@ -74,7 +74,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.TagSelectedObject);
             this.splitContainer1.Panel2.Controls.Add(this.Remove);
             this.splitContainer1.Panel2.Controls.Add(this.SaveObjects);
-            this.splitContainer1.Size = new System.Drawing.Size(820, 524);
+            this.splitContainer1.Size = new System.Drawing.Size(859, 524);
             this.splitContainer1.SplitterDistance = 466;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -98,7 +98,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.Warnings);
-            this.splitContainer2.Size = new System.Drawing.Size(820, 466);
+            this.splitContainer2.Size = new System.Drawing.Size(859, 466);
             this.splitContainer2.SplitterDistance = 137;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -107,7 +107,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(4, 3);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(280, 91);
+            this.label2.Size = new System.Drawing.Size(286, 91);
             this.label2.TabIndex = 5;
             this.label2.Text = resources.GetString("label2.Text");
             // 
@@ -131,7 +131,7 @@
             this.NoReflogs.CheckState = System.Windows.Forms.CheckState.Checked;
             this.NoReflogs.Location = new System.Drawing.Point(430, 29);
             this.NoReflogs.Name = "NoReflogs";
-            this.NoReflogs.Size = new System.Drawing.Size(335, 30);
+            this.NoReflogs.Size = new System.Drawing.Size(345, 30);
             this.NoReflogs.TabIndex = 3;
             this.NoReflogs.Text = "Do not consider commits that are referenced only by an entry in a \r\nreflog to be " +
                 "reachable.";
@@ -143,7 +143,7 @@
             this.FullCheck.AutoSize = true;
             this.FullCheck.Location = new System.Drawing.Point(430, 95);
             this.FullCheck.Name = "FullCheck";
-            this.FullCheck.Size = new System.Drawing.Size(382, 30);
+            this.FullCheck.Size = new System.Drawing.Size(376, 30);
             this.FullCheck.TabIndex = 2;
             this.FullCheck.Text = "Check not just objects in GIT_OBJECT_DIRECTORY ($GIT_DIR/objects), \r\nbut also the" +
                 " ones found in alternate object pools.\r\n";
@@ -155,7 +155,7 @@
             this.Unreachable.AutoSize = true;
             this.Unreachable.Location = new System.Drawing.Point(430, 62);
             this.Unreachable.Name = "Unreachable";
-            this.Unreachable.Size = new System.Drawing.Size(383, 30);
+            this.Unreachable.Size = new System.Drawing.Size(403, 30);
             this.Unreachable.TabIndex = 1;
             this.Unreachable.Text = "Print out objects that exist but that aren\'t readable from any of the reference \r" +
                 "\nnodes.\r\n";
@@ -167,7 +167,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 116);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(269, 13);
+            this.label1.Size = new System.Drawing.Size(270, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Double-click on a row containing a sha1 to view object.";
             // 
@@ -177,15 +177,16 @@
             this.Warnings.FormattingEnabled = true;
             this.Warnings.Location = new System.Drawing.Point(0, 0);
             this.Warnings.Name = "Warnings";
-            this.Warnings.Size = new System.Drawing.Size(820, 316);
+            this.Warnings.Size = new System.Drawing.Size(859, 316);
             this.Warnings.TabIndex = 0;
             this.Warnings.DoubleClick += new System.EventHandler(this.WarningsDoubleClick);
             // 
             // TagAllCommits
             // 
+            this.TagAllCommits.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.TagAllCommits.Location = new System.Drawing.Point(300, 3);
             this.TagAllCommits.Name = "TagAllCommits";
-            this.TagAllCommits.Size = new System.Drawing.Size(173, 23);
+            this.TagAllCommits.Size = new System.Drawing.Size(173, 25);
             this.TagAllCommits.TabIndex = 6;
             this.TagAllCommits.Text = "Tag all lost commits";
             this.TagAllCommits.UseVisualStyleBackColor = true;
@@ -193,9 +194,10 @@
             // 
             // DeleteAllLostAndFoundTags
             // 
+            this.DeleteAllLostAndFoundTags.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.DeleteAllLostAndFoundTags.Location = new System.Drawing.Point(4, 29);
             this.DeleteAllLostAndFoundTags.Name = "DeleteAllLostAndFoundTags";
-            this.DeleteAllLostAndFoundTags.Size = new System.Drawing.Size(290, 23);
+            this.DeleteAllLostAndFoundTags.Size = new System.Drawing.Size(290, 25);
             this.DeleteAllLostAndFoundTags.TabIndex = 5;
             this.DeleteAllLostAndFoundTags.Text = "Delete all LOST_AND_FOUND tags";
             this.DeleteAllLostAndFoundTags.UseVisualStyleBackColor = true;
@@ -203,9 +205,10 @@
             // 
             // TagAllObjects
             // 
+            this.TagAllObjects.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.TagAllObjects.Location = new System.Drawing.Point(150, 3);
             this.TagAllObjects.Name = "TagAllObjects";
-            this.TagAllObjects.Size = new System.Drawing.Size(144, 23);
+            this.TagAllObjects.Size = new System.Drawing.Size(144, 25);
             this.TagAllObjects.TabIndex = 4;
             this.TagAllObjects.Text = "Tag all lost objects";
             this.TagAllObjects.UseVisualStyleBackColor = true;
@@ -213,9 +216,10 @@
             // 
             // ViewObject
             // 
+            this.ViewObject.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ViewObject.Location = new System.Drawing.Point(300, 29);
             this.ViewObject.Name = "ViewObject";
-            this.ViewObject.Size = new System.Drawing.Size(173, 23);
+            this.ViewObject.Size = new System.Drawing.Size(173, 25);
             this.ViewObject.TabIndex = 3;
             this.ViewObject.Text = "View selected object";
             this.ViewObject.UseVisualStyleBackColor = true;
@@ -223,9 +227,10 @@
             // 
             // TagSelectedObject
             // 
+            this.TagSelectedObject.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.TagSelectedObject.Location = new System.Drawing.Point(3, 3);
             this.TagSelectedObject.Name = "TagSelectedObject";
-            this.TagSelectedObject.Size = new System.Drawing.Size(141, 23);
+            this.TagSelectedObject.Size = new System.Drawing.Size(141, 25);
             this.TagSelectedObject.TabIndex = 2;
             this.TagSelectedObject.Text = "Tag selected object";
             this.TagSelectedObject.UseVisualStyleBackColor = true;
@@ -233,9 +238,10 @@
             // 
             // Remove
             // 
-            this.Remove.Location = new System.Drawing.Point(610, 3);
+            this.Remove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.Remove.Location = new System.Drawing.Point(644, 3);
             this.Remove.Name = "Remove";
-            this.Remove.Size = new System.Drawing.Size(207, 23);
+            this.Remove.Size = new System.Drawing.Size(207, 25);
             this.Remove.TabIndex = 1;
             this.Remove.Text = "Remove all dangling objects";
             this.Remove.UseVisualStyleBackColor = true;
@@ -243,9 +249,10 @@
             // 
             // SaveObjects
             // 
-            this.SaveObjects.Location = new System.Drawing.Point(610, 29);
+            this.SaveObjects.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.SaveObjects.Location = new System.Drawing.Point(644, 29);
             this.SaveObjects.Name = "SaveObjects";
-            this.SaveObjects.Size = new System.Drawing.Size(208, 23);
+            this.SaveObjects.Size = new System.Drawing.Size(208, 25);
             this.SaveObjects.TabIndex = 0;
             this.SaveObjects.Text = "Save objects to .git/lost-found";
             this.SaveObjects.UseVisualStyleBackColor = true;
@@ -255,7 +262,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(820, 524);
+            this.ClientSize = new System.Drawing.Size(859, 524);
             this.Controls.Add(this.splitContainer1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;

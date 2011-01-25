@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormInit));
             this.label1 = new System.Windows.Forms.Label();
             this.Directory = new System.Windows.Forms.ComboBox();
             this.Browse = new System.Windows.Forms.Button();
@@ -44,7 +43,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(49, 13);
+            this.label1.Size = new System.Drawing.Size(51, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Directory";
             // 
@@ -63,7 +62,7 @@
             // 
             this.Browse.Location = new System.Drawing.Point(468, 4);
             this.Browse.Name = "Browse";
-            this.Browse.Size = new System.Drawing.Size(75, 23);
+            this.Browse.Size = new System.Drawing.Size(75, 25);
             this.Browse.TabIndex = 2;
             this.Browse.Text = "Browse";
             this.Browse.UseVisualStyleBackColor = true;
@@ -85,7 +84,7 @@
             this.Central.AutoSize = true;
             this.Central.Location = new System.Drawing.Point(6, 42);
             this.Central.Name = "Central";
-            this.Central.Size = new System.Drawing.Size(274, 17);
+            this.Central.Size = new System.Drawing.Size(292, 17);
             this.Central.TabIndex = 1;
             this.Central.Text = "Central repository, no working dir  (--bare --shared=all)";
             this.Central.UseVisualStyleBackColor = true;
@@ -96,7 +95,7 @@
             this.Personal.Checked = true;
             this.Personal.Location = new System.Drawing.Point(6, 19);
             this.Personal.Name = "Personal";
-            this.Personal.Size = new System.Drawing.Size(114, 17);
+            this.Personal.Size = new System.Drawing.Size(118, 17);
             this.Personal.TabIndex = 0;
             this.Personal.TabStop = true;
             this.Personal.Text = "Personal repository";
@@ -106,7 +105,7 @@
             // 
             this.Init.Location = new System.Drawing.Point(468, 78);
             this.Init.Name = "Init";
-            this.Init.Size = new System.Drawing.Size(75, 23);
+            this.Init.Size = new System.Drawing.Size(75, 25);
             this.Init.TabIndex = 4;
             this.Init.Text = "Initialize";
             this.Init.UseVisualStyleBackColor = true;

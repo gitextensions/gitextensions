@@ -171,7 +171,7 @@
             // 
             this.ToBrowse.Location = new System.Drawing.Point(425, 44);
             this.ToBrowse.Name = "ToBrowse";
-            this.ToBrowse.Size = new System.Drawing.Size(75, 23);
+            this.ToBrowse.Size = new System.Drawing.Size(75, 25);
             this.ToBrowse.TabIndex = 6;
             this.ToBrowse.Text = "Browse";
             this.ToBrowse.UseVisualStyleBackColor = true;
@@ -181,7 +181,7 @@
             // 
             this.FromBrowse.Location = new System.Drawing.Point(425, 16);
             this.FromBrowse.Name = "FromBrowse";
-            this.FromBrowse.Size = new System.Drawing.Size(75, 23);
+            this.FromBrowse.Size = new System.Drawing.Size(75, 25);
             this.FromBrowse.TabIndex = 5;
             this.FromBrowse.Text = "Browse";
             this.FromBrowse.UseVisualStyleBackColor = true;
@@ -211,7 +211,7 @@
             this.LoadSSHKey.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LoadSSHKey.Location = new System.Drawing.Point(0, 2);
             this.LoadSSHKey.Name = "LoadSSHKey";
-            this.LoadSSHKey.Size = new System.Drawing.Size(155, 23);
+            this.LoadSSHKey.Size = new System.Drawing.Size(155, 25);
             this.LoadSSHKey.TabIndex = 25;
             this.LoadSSHKey.Text = "Load SSH key";
             this.LoadSSHKey.UseVisualStyleBackColor = true;
@@ -221,7 +221,7 @@
             // 
             this.Ok.Location = new System.Drawing.Point(425, 2);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(75, 23);
+            this.Ok.Size = new System.Drawing.Size(75, 25);
             this.Ok.TabIndex = 4;
             this.Ok.Text = "Clone";
             this.Ok.UseVisualStyleBackColor = true;

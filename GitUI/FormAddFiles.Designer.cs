@@ -37,9 +37,9 @@
             // 
             // AddFiles
             // 
-            this.AddFiles.Location = new System.Drawing.Point(356, 5);
+            this.AddFiles.Location = new System.Drawing.Point(355, 3);
             this.AddFiles.Name = "AddFiles";
-            this.AddFiles.Size = new System.Drawing.Size(75, 23);
+            this.AddFiles.Size = new System.Drawing.Size(75, 25);
             this.AddFiles.TabIndex = 2;
             this.AddFiles.Text = "Add files";
             this.AddFiles.UseVisualStyleBackColor = true;
@@ -49,7 +49,7 @@
             // 
             this.Filter.Location = new System.Drawing.Point(71, 5);
             this.Filter.Name = "Filter";
-            this.Filter.Size = new System.Drawing.Size(176, 23);
+            this.Filter.Size = new System.Drawing.Size(176, 21);
             this.Filter.TabIndex = 1;
             this.Filter.Text = ".";
             // 
@@ -58,15 +58,15 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 5);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(33, 15);
+            this.label1.Size = new System.Drawing.Size(31, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Filter";
             // 
             // ShowFiles
             // 
-            this.ShowFiles.Location = new System.Drawing.Point(275, 5);
+            this.ShowFiles.Location = new System.Drawing.Point(274, 3);
             this.ShowFiles.Name = "ShowFiles";
-            this.ShowFiles.Size = new System.Drawing.Size(75, 23);
+            this.ShowFiles.Size = new System.Drawing.Size(75, 25);
             this.ShowFiles.TabIndex = 3;
             this.ShowFiles.Text = "Show files";
             this.ShowFiles.UseVisualStyleBackColor = true;
@@ -77,14 +77,14 @@
             this.force.AutoSize = true;
             this.force.Location = new System.Drawing.Point(71, 32);
             this.force.Name = "force";
-            this.force.Size = new System.Drawing.Size(55, 19);
+            this.force.Size = new System.Drawing.Size(53, 17);
             this.force.TabIndex = 4;
             this.force.Text = "Force";
             this.force.UseVisualStyleBackColor = true;
             // 
             // FormAddFiles
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(443, 56);
             this.Controls.Add(this.force);
