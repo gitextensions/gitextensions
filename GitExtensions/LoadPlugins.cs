@@ -58,18 +58,7 @@ namespace GitExtensions
                     else
                     {
                         Action<Exception> getEx = null;
-                        Action<Exception> localGetEx = getEx;
-                        getEx = arg =>
-                                    {
-                                        exInfo += arg.Message + "\r\n";
-                                        if (arg.InnerException != null)
-                                        {
-                                            if (localGetEx != null)
-                                            {
-                                                localGetEx(arg.InnerException);
-                                            }
-                                        }
-                                    };
+                        getEx = arg => { exInfo += arg.Message + "\r\n"; if (arg.InnerException != null) getEx(arg.InnerException); };
                         getEx(ex);
                     }
 
