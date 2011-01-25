@@ -119,7 +119,7 @@
             this.AddFiles.TabIndex = 14;
             this.AddFiles.Text = "Add files";
             this.AddFiles.UseVisualStyleBackColor = true;
-            this.AddFiles.Click += new System.EventHandler(AddFilesClick);
+            this.AddFiles.Click += new System.EventHandler(this.AddFilesClick);
             // 
             // Resolved
             // 

@@ -70,7 +70,7 @@
             this.PatchFile.Name = "PatchFile";
             this.PatchFile.Size = new System.Drawing.Size(281, 21);
             this.PatchFile.TabIndex = 2;
-            this.PatchFile.TextChanged += new System.EventHandler(textBox1_TextChanged);
+            this.PatchFile.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // Apply
             // 
@@ -135,7 +135,7 @@
             this.AddFiles.TabIndex = 9;
             this.AddFiles.Text = "Add files";
             this.AddFiles.UseVisualStyleBackColor = true;
-            this.AddFiles.Click += new System.EventHandler(AddFiles_Click);
+            this.AddFiles.Click += new System.EventHandler(this.AddFiles_Click);
             // 
             // splitContainer1
             // 
@@ -216,7 +216,7 @@
             this.PatchDirMode.TabStop = true;
             this.PatchDirMode.Text = "Patch dir";
             this.PatchDirMode.UseVisualStyleBackColor = true;
-            this.PatchDirMode.CheckedChanged += new System.EventHandler(PatchDirMode_CheckedChanged);
+            this.PatchDirMode.CheckedChanged += new System.EventHandler(this.PatchDirMode_CheckedChanged);
             // 
             // PatchFileMode
             // 

@@ -17,12 +17,12 @@ namespace GitUI
             Close();
         }
 
-        private static void labelVersion_Click(object sender, EventArgs e)
+        private void labelVersion_Click(object sender, EventArgs e)
         {
 
         }
 
-        private static void pictureBox1_Click(object sender, EventArgs e)
+        private void pictureBox1_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start(@"https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=WAL2SSDV8ND54&lc=US&item_name=GitExtensions&no_note=1&no_shipping=1&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted");
         }
@@ -53,7 +53,7 @@ namespace GitUI
             thanksCounter = (thanksCounter + 1) % contributers.Length;
         }
 
-        private static void _NO_TRANSLATE_thanksToTicker_Click(object sender, EventArgs e)
+        private void _NO_TRANSLATE_thanksToTicker_Click(object sender, EventArgs e)
         {
             MessageBox.Show(contributers.Trim(), "Contributors");
         }

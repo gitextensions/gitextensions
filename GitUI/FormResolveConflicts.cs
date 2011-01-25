@@ -688,7 +688,7 @@ namespace GitUI
         }
 
 
-        private static void conflictDescription_Click(object sender, EventArgs e)
+        private void conflictDescription_Click(object sender, EventArgs e)
         {
 
         }

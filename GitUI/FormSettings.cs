@@ -1571,7 +1571,7 @@ namespace GitUI
                 MergeToolCmd.Enabled = true;
         }
 
-        private static void ClearImageCache_Click(object sender, EventArgs e)
+        private void ClearImageCache_Click(object sender, EventArgs e)
         {
             GravatarService.ClearImageCache();
         }

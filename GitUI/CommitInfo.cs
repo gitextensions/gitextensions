@@ -187,7 +187,7 @@ namespace GitUI
             return Environment.NewLine + containedInNoTag.Text;
         }
 
-        private static void tableLayout_Paint(object sender, PaintEventArgs e)
+        private void tableLayout_Paint(object sender, PaintEventArgs e)
         {
 
         }

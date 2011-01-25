@@ -64,7 +64,7 @@
             this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayout.Size = new System.Drawing.Size(766, 334);
             this.tableLayout.TabIndex = 3;
-            this.tableLayout.Paint += new System.Windows.Forms.PaintEventHandler(tableLayout_Paint);
+            this.tableLayout.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayout_Paint);
             // 
             // gravatar1
             // 
