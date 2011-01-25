@@ -113,7 +113,7 @@ namespace GitUI
 
         public string Path { get; set; }
 
-        private static void DashboardItem_Resize(object sender, EventArgs e)
+        private void DashboardItem_Resize(object sender, EventArgs e)
         {
 
         }
@@ -124,12 +124,12 @@ namespace GitUI
             _NO_TRANSLATE_Description.Width = Width - _NO_TRANSLATE_Title.Location.X;
         }
 
-        private static void DashboardItem_Enter(object sender, EventArgs e)
+        private void DashboardItem_Enter(object sender, EventArgs e)
         {
 
         }
 
-        private static void DashboardItem_Leave(object sender, EventArgs e)
+        private void DashboardItem_Leave(object sender, EventArgs e)
         {
 
         }

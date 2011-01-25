@@ -82,12 +82,12 @@ namespace PatchApply
             }
         }
 
-        private static void PatchFileNameEdit_TextChanged(object sender, EventArgs e)
+        private void PatchFileNameEdit_TextChanged(object sender, EventArgs e)
         {
 
         }
 
-        private static void ViewPatch_Load(object sender, EventArgs e)
+        private void ViewPatch_Load(object sender, EventArgs e)
         {
 
         }

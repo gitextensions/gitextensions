@@ -46,7 +46,7 @@ namespace GitUI
             RssFeedType_CheckedChanged(this, null);
         }
 
-        private static void Add_Click(object sender, EventArgs e)
+        private void Add_Click(object sender, EventArgs e)
         {
             Repositories.RepositoryCategories.Add(new RepositoryCategory("new"));
         }

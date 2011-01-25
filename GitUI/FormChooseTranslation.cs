@@ -68,7 +68,7 @@ namespace GitUI
             Close();
         }
 
-        private static void FormChooseTranslation_FormClosing(object sender, FormClosingEventArgs e)
+        private void FormChooseTranslation_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (string.IsNullOrEmpty(Settings.Translation))
                 Settings.Translation = "English";

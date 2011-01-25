@@ -962,7 +962,7 @@ namespace GitUI
             RefreshRevisions();
         }
 
-        private static void GitIgnoreClick(object sender, EventArgs e)
+        private void GitIgnoreClick(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartEditGitIgnoreDialog();
         }

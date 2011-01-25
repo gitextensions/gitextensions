@@ -193,7 +193,7 @@ namespace GitUI
             Branch.Text = curBranch;
         }
 
-        private static void PullClick(object sender, EventArgs e)
+        private void PullClick(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartPullDialog();
         }
@@ -246,7 +246,7 @@ namespace GitUI
             _createPullRequestCB.Visible = gitHoster != null;
         }
 
-        private static void AddRemoteClick(object sender, EventArgs e)
+        private void AddRemoteClick(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartRemotesDialog();
         }

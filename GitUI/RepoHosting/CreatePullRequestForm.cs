@@ -115,7 +115,7 @@ namespace GitUI.RepoHosting
                 ex => { throw ex; });
         }
 
-        private static void _yourBranchCB_SelectedIndexChanged(object sender, EventArgs e)
+        private void _yourBranchCB_SelectedIndexChanged(object sender, EventArgs e)
         {
         }
 

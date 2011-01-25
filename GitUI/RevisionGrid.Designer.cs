@@ -572,7 +572,7 @@ namespace GitUI
             this.GitIgnore.TabIndex = 3;
             this.GitIgnore.Text = "Edit .gitignore";
             this.GitIgnore.UseVisualStyleBackColor = true;
-            this.GitIgnore.Click += new System.EventHandler(GitIgnoreClick);
+            this.GitIgnore.Click += new System.EventHandler(this.GitIgnoreClick);
             // 
             // Commit
             // 
