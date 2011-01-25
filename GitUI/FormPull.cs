@@ -259,7 +259,7 @@ namespace GitUI
             PullSource.DisplayMember = "Path";
         }
 
-        private static void StashClick(object sender, EventArgs e)
+        private void StashClick(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartStashDialog();
         }
@@ -290,7 +290,7 @@ namespace GitUI
             checkPullAll.Enabled = false;
         }
 
-        private static void AddRemoteClick(object sender, EventArgs e)
+        private void AddRemoteClick(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartRemotesDialog();
         }
