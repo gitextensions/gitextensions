@@ -59,7 +59,7 @@ namespace GitUI
 
             if (!SaveToDir.Checked && string.IsNullOrEmpty(Settings.Smtp))
             {
-                MessageBox.Show("You need to enter a valid stmp in the settings dialog.");
+                MessageBox.Show("You need to enter a valid smtp in the settings dialog.");
                 return;
             }
 
