@@ -96,7 +96,7 @@ namespace GitUI
             EnableButtons();
         }
 
-        private static void AddFilesClick(object sender, EventArgs e)
+        private void AddFilesClick(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartAddFilesDialog();
         }
