@@ -641,6 +641,22 @@ namespace GitCommands
             }
         }
 
+        private static bool? _showGitNotes;
+        public static bool ShowGitNotes
+        {
+            get
+            {
+                if (_showGitNotes == null)
+                    SafeSetBool("showgitnotes", true, x => _showGitNotes = x);
+                return _showGitNotes.Value;
+            }
+            set
+            {
+                _showGitNotes = value;
+                Application.UserAppDataRegistry.SetValue("showgitnotes", _showGitNotes);
+            }
+        }
+
         private static bool? _showRevisionGraph;
         public static bool ShowRevisionGraph
         {
