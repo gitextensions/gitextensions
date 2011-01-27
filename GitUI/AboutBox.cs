@@ -13,7 +13,6 @@ namespace GitUI
         public AboutBox()
         {
             InitializeComponent(); Translate();
-            thanksTimer_Tick(null, null);
         }
 
         private void okButton_Click(object sender, EventArgs e)
@@ -36,6 +35,10 @@ namespace GitUI
             Bitmap image = Lemmings.GetPictureBoxImage(DateTime.Now);
             if (image != null)
                 logoPictureBox.Image = image;
+
+            thanksTimer_Tick(null, null);
+            thanksTimer.Enabled = true;
+            thanksTimer.Start();
         }
 
         protected override void OnLoad(EventArgs e)

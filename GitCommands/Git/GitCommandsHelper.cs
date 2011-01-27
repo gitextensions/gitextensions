@@ -940,7 +940,7 @@ namespace GitCommands
             return "reset --hard \"" + commit + "\"";
         }
 
-        public static string CloneCmd(string fromPath, string toPath, bool central, int? depth)
+        public static string CloneCmd(string fromPath, string toPath, bool central, string branch, int? depth)
         {
             var from = FixPath(fromPath);
             var to = FixPath(toPath);
@@ -951,6 +951,8 @@ namespace GitCommands
                 options.Add("--depth " + depth);
             if (VersionInUse.CloneCanAskForProgress)
                 options.Add("--progress");
+            if (!string.IsNullOrEmpty(branch))
+                options.Add("--branch " + branch);
             options.Add(string.Format("\"{0}\"", from.Trim()));
             options.Add(string.Format("\"{0}\"", to.Trim()));
 
