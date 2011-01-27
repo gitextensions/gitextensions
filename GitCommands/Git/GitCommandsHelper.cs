@@ -625,7 +625,7 @@ namespace GitCommands
             {
                 StartExternalCommand("cmd.exe", "/c \"\"" + Settings.GitCommand.Replace("git.cmd", "gitk.cmd")
                                                               .Replace("bin\\git.exe", "cmd\\gitk.cmd")
-                                                              .Replace("bin/git.exe", "cmd/gitk.cmd") + "\" --all\"");
+                                                              .Replace("bin/git.exe", "cmd/gitk.cmd") + "\" --branches --tags --remotes\"");
             }
         }
 
