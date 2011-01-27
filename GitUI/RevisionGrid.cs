@@ -35,7 +35,7 @@ namespace GitUI
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
 
         private readonly SynchronizationContext _syncContext;
-        public string LogParam = "HEAD --all --boundary";
+        public string LogParam = "HEAD --branches --remotes --tags --boundary";
         private bool _contextMenuEnabled = true;
 
         private bool _initialLoad = true;
@@ -1040,13 +1040,13 @@ namespace GitUI
             BranchFilter = _revisionFilter.GetBranchFilter();
 
             if (!Settings.BranchFilterEnabled)
-                LogParam = "HEAD --all --boundary";
+                LogParam = "HEAD --branches --remotes --tags --boundary";
             else if (Settings.ShowCurrentBranchOnly)
                 LogParam = "HEAD";
             else
                 LogParam = BranchFilter.Length > 0
                                ? String.Empty
-                               : "HEAD --all --boundary";
+                               : "HEAD --branches --remotes --tags --boundary";
         }
 
         private void RevertCommitToolStripMenuItemClick(object sender, EventArgs e)
