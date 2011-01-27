@@ -276,7 +276,7 @@ namespace GitUI.RepoHosting
 
             string repoSrc = repo.CloneReadWriteUrl;
 
-            string cmd = GitCommandHelpers.CloneCmd(repoSrc, targetDir, false, null);
+            string cmd = GitCommandHelpers.CloneCmd(repoSrc, targetDir, false, string.Empty, null);
             var formProcess = new FormProcess(Settings.GitCommand, cmd);
             formProcess.ShowDialog();
 
