@@ -722,12 +722,17 @@ namespace GitUI
 
         private void RefreshToolStripMenuItemClick(object sender, EventArgs e)
         {
-            RevisionGrid.ForceRefreshRevisions();
-            InternalInitialize(false);
-            _indexWatcher.Reset();
-
             if (_dashboard != null)
+            {
                 _dashboard.Refresh();
+            }
+            
+            if (!_dashboard.Visible)
+            {
+                RevisionGrid.ForceRefreshRevisions();
+                InternalInitialize(false);
+                _indexWatcher.Reset();
+            }
         }
 
         private void AboutToolStripMenuItemClick(object sender, EventArgs e)
