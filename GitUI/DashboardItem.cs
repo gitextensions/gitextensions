@@ -46,6 +46,14 @@ namespace GitUI
             Initialize(icon, title, title, text);
         }
 
+        ToolTip toolTip;
+
+        public void Close()
+        {
+            if (toolTip != null)
+                toolTip.RemoveAll();
+        }
+
         private void Initialize(Bitmap icon, string path, string title, string text)
         {
             _NO_TRANSLATE_Title.Text = title;
@@ -78,9 +86,8 @@ namespace GitUI
 
             if (icon != null)
                 Icon.Image = icon;
-
-
-            ToolTip toolTip = new ToolTip();
+            
+            toolTip = new ToolTip();
             toolTip.InitialDelay = 1;
             toolTip.AutomaticDelay = 1;
             toolTip.AutoPopDelay = 5000;
@@ -88,7 +95,7 @@ namespace GitUI
             toolTip.UseAnimation = false;
             toolTip.ReshowDelay = 1;
             toolTip.SetToolTip(_NO_TRANSLATE_Title, Path);
-            
+
             _NO_TRANSLATE_Title.MouseDown += new MouseEventHandler(Title_MouseDown);
             _NO_TRANSLATE_Title.Click += new EventHandler(Title_Click);
             _NO_TRANSLATE_Description.Click += new EventHandler(Title_Click);

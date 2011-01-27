@@ -64,7 +64,7 @@ namespace GitUI
                     DashboardItem dashboardItem = new DashboardItem(repository);
                     dashboardItem.Click += dashboardItem_Click;
                     AddItem(dashboardItem);                    
-
+                    
                     if (m_repositoryCategory.CategoryType == RepositoryCategoryType.Repositories)
                     {
                         ContextMenuStrip contextMenu = new ContextMenuStrip();
@@ -262,6 +262,7 @@ namespace GitUI
                 if (dashboardItem is DashboardItem)
                 {
                     dashboardItem.Click -= dashboardItem_Click;
+                    dashboardItem.Close();
                     Controls.RemoveAt(i - 1);
                 }
             }
