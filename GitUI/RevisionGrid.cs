@@ -69,6 +69,7 @@ namespace GitUI
             orderRevisionsByDateToolStripMenuItem.Checked = Settings.OrderRevisionByDate;
             showRelativeDateToolStripMenuItem.Checked = Settings.RelativeDate;
             drawNonrelativesGrayToolStripMenuItem.Checked = Settings.RevisionGraphDrawNonRelativesGray;
+            showGitNotesToolStripMenuItem.Checked = Settings.ShowGitNotes;
 
             BranchFilter = String.Empty;
             SetShowBranches();
@@ -627,6 +628,12 @@ namespace GitUI
                 Loading.Visible = true;
 
                 _indexWatcher.Reset();
+
+                if (Settings.ShowGitNotes && !LogParam.Contains(" --glob=notes"))
+                    LogParam = LogParam + " --glob=notes";
+                else
+                    LogParam = LogParam.Replace(" --glob=notes", string.Empty);
+
                 _revisionGraphCommand = new RevisionGraph { BranchFilter = BranchFilter, LogParam = LogParam + Filter };
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
@@ -1534,6 +1541,13 @@ namespace GitUI
         }
         #endregion
 
+        private void ShowGitNotesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.ShowGitNotes = !showGitNotesToolStripMenuItem.Checked;
+            showGitNotesToolStripMenuItem.Checked = Settings.ShowGitNotes;
+
+            ForceRefreshRevisions();
+        }
         private void InitRepository_Click(object sender, EventArgs e)
         {
             if (GitUICommands.Instance.StartInitializeDialog(Settings.WorkingDir))
