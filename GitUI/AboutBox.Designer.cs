@@ -201,7 +201,6 @@
             // 
             // thanksTimer
             // 
-            this.thanksTimer.Enabled = true;
             this.thanksTimer.Interval = 110;
             this.thanksTimer.Tick += new System.EventHandler(this.thanksTimer_Tick);
             // 
