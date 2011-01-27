@@ -263,7 +263,6 @@ namespace GitUI
                 {
                     dashboardItem.Click -= dashboardItem_Click;
                     Controls.RemoveAt(i - 1);
-                    dashboardItem.Dispose();
                 }
             }
             top = 26;

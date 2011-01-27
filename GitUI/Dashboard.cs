@@ -139,7 +139,6 @@ namespace GitUI
                         currentDashboardCategory.DashboardCategoryChanged -= dashboardCategory_DashboardCategoryChanged;
                         currentDashboardCategory.DashboardItemClick -= dashboardItem_Click;
                         splitContainer5.Panel2.Controls.RemoveAt(i);
-                        currentDashboardCategory.Dispose();
                     }
                 }
                 
@@ -205,7 +204,6 @@ namespace GitUI
                             dashboarCategory.DashboardCategoryChanged -= dashboardCategory_DashboardCategoryChanged;
                             dashboarCategory.DashboardItemClick -= dashboardItem_Click;
                             splitContainer5.Panel2.Controls.RemoveAt(i - 1);
-                            dashboarCategory.Dispose();
                         }
                     }
 

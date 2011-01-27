@@ -43,8 +43,8 @@
             this.AutoStash = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.Fetch = new System.Windows.Forms.RadioButton();
-            this.Rebase = new System.Windows.Forms.RadioButton();
             this.Merge = new System.Windows.Forms.RadioButton();
+            this.Rebase = new System.Windows.Forms.RadioButton();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this._NO_TRANSLATE_localBranch = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -220,8 +220,8 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.Fetch);
-            this.groupBox1.Controls.Add(this.Rebase);
             this.groupBox1.Controls.Add(this.Merge);
+            this.groupBox1.Controls.Add(this.Rebase);
             this.groupBox1.Location = new System.Drawing.Point(3, 174);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(541, 102);
@@ -240,21 +240,10 @@
             this.Fetch.UseVisualStyleBackColor = true;
             this.Fetch.CheckedChanged += new System.EventHandler(this.FetchCheckedChanged);
             // 
-            // Rebase
-            // 
-            this.Rebase.Location = new System.Drawing.Point(7, 40);
-            this.Rebase.Name = "Rebase";
-            this.Rebase.Size = new System.Drawing.Size(526, 38);
-            this.Rebase.TabIndex = 8;
-            this.Rebase.Text = "&Rebase remote branch to current branch, creates linear history. It is recommende" +
-                "d\r\nto choose a remote branch when using rebase. (use with caution)";
-            this.Rebase.UseVisualStyleBackColor = true;
-            this.Rebase.CheckedChanged += new System.EventHandler(this.RebaseCheckedChanged);
-            // 
             // Merge
             // 
             this.Merge.Checked = true;
-            this.Merge.Location = new System.Drawing.Point(7, 20);
+            this.Merge.Location = new System.Drawing.Point(7, 18);
             this.Merge.Name = "Merge";
             this.Merge.Size = new System.Drawing.Size(528, 24);
             this.Merge.TabIndex = 7;
@@ -262,6 +251,17 @@
             this.Merge.Text = "&Merge remote branch to current branch";
             this.Merge.UseVisualStyleBackColor = true;
             this.Merge.CheckedChanged += new System.EventHandler(this.MergeCheckedChanged);
+            // 
+            // Rebase
+            // 
+            this.Rebase.Location = new System.Drawing.Point(7, 36);
+            this.Rebase.Name = "Rebase";
+            this.Rebase.Size = new System.Drawing.Size(525, 44);
+            this.Rebase.TabIndex = 8;
+            this.Rebase.Text = "&Rebase remote branch to current branch, creates linear history. It is recommende" +
+                "d\r\nto choose a remote branch when using rebase. (use with caution)";
+            this.Rebase.UseVisualStyleBackColor = true;
+            this.Rebase.CheckedChanged += new System.EventHandler(this.RebaseCheckedChanged);
             // 
             // groupBox3
             // 
