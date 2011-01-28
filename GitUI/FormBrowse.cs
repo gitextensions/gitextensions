@@ -727,7 +727,7 @@ namespace GitUI
                 _dashboard.Refresh();
             }
             
-            if (!_dashboard.Visible)
+            if (_dashboard == null || !_dashboard.Visible)
             {
                 RevisionGrid.ForceRefreshRevisions();
                 InternalInitialize(false);

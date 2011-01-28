@@ -1,6 +1,9 @@
 Changelog
 =========
 
+Version 2.11
+	Fixed crash when refreshing repository grid
+
 Version 2.10
 	Fixed issue 78: refresh commit dialog on focus (optional)
 	Fixed "Recover lost objects"
