@@ -159,7 +159,7 @@ namespace GitCommands
             foreach (var line in lines)
                 message.AppendFormat("{0}\n", line);
 
-            var body = message.ToString().TrimStart('\n').TrimEnd('\n');
+            var body = "\n\n" + message.ToString().TrimStart().TrimEnd() + "\n\n";
 
             var header = Strings.GetAuthorText() + ":\t" + author + "\n" +
                          Strings.GetAuthorDateText() + ":\t" + GitCommandHelpers.GetRelativeDateString(authorDate) + " " + authorDate.ToString("(ddd MMM dd HH':'mm':'ss yyyy)") + "\n" +

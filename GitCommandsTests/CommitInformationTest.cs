@@ -42,9 +42,9 @@ namespace GitCommandsTests
                                  "Commit date:\t2 days ago (" + expectedCommitTime.ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")\n" +
                                  "Commit hash:\t" + commitGuid;
 
-            var expectedBody = "\tI made a really neato change.\n\n" +
+            var expectedBody = "\n\nI made a really neato change.\n\n" +
                                "Notes (p4notes):\n" +
-                               "\tP4@547123";
+                               "\tP4@547123\n\n";
 
             var commitInformation = CommitInformation.CreateFromRawData(rawData);
             
