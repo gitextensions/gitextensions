@@ -1,11 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 
 namespace GitCommands
 {
     public class CommitInformation
     {
+        private const string COMMIT_LABEL = "commit ";
+        private const string TREE_LABEL = "tree ";
+        private const string PARENT_LABEL = "parent ";
+        private const string AUTHOR_LABEL = "author ";
+        private const string COMMITTER_LABEL = "committer ";
+
         /// <summary>
         /// Private constructor
         /// </summary>
@@ -113,6 +121,76 @@ namespace GitCommands
 
             return new CommitInformation(commitHeader,
                                          commitMessage);
+        }
+
+        /// <summary>
+        /// Creates a CommitInformation object from raw commit info data from git.  The string passed in should be
+        /// exact output of a log or show command using --format=raw.
+        /// </summary>
+        /// <param name="rawData">Raw commit data from git.</param>
+        /// <returns>CommitInformation object populated with parsed info from git string.</returns>
+        public static CommitInformation CreateFromRawData(string rawData)
+        {
+            var lines = new List<string>(rawData.Split('\n'));
+
+            var commit = lines.Single(l => l.StartsWith(COMMIT_LABEL));
+            var guid = commit.Substring(COMMIT_LABEL.Length);
+            lines.Remove(commit);
+
+            var tree = lines.Single(l => l.StartsWith(TREE_LABEL));
+            var treeGuid = tree.Substring(TREE_LABEL.Length);
+            lines.Remove(tree);
+
+            List<string> parentLines = lines.FindAll(l => l.StartsWith(PARENT_LABEL));
+            var parentGuids = parentLines.Select(parent => parent.Substring(PARENT_LABEL.Length)).ToArray();
+            lines.RemoveAll(parentLines.Contains);
+
+            var authorInfo = lines.Single(l => l.StartsWith(AUTHOR_LABEL));
+            var author = GetPersonFromAuthorInfoLine(authorInfo, AUTHOR_LABEL.Length);
+            var authorDate = GetTimeFromAuthorInfoLine(authorInfo);
+            lines.Remove(authorInfo);
+
+            var committerInfo = lines.Single(l => l.StartsWith(COMMITTER_LABEL));
+            var committer = GetPersonFromAuthorInfoLine(committerInfo, COMMITTER_LABEL.Length);
+            var commitDate = GetTimeFromAuthorInfoLine(committerInfo);
+            lines.Remove(committerInfo);
+
+            var message = new StringBuilder();
+            foreach (var line in lines)
+                message.AppendFormat("{0}\n", line);
+
+            var body = message.ToString().TrimStart('\n').TrimEnd('\n');
+
+            var header = Strings.GetAuthorText() + ":\t" + author + "\n" +
+                         Strings.GetAuthorDateText() + ":\t" + GitCommandHelpers.GetRelativeDateString(authorDate) + " " + authorDate.ToString("(ddd MMM dd HH':'mm':'ss yyyy)") + "\n" +
+                         Strings.GetCommitterText() + ":\t" + committer + "\n" +
+                         Strings.GetCommitterDateText() + ":\t" + GitCommandHelpers.GetRelativeDateString(commitDate) + " " + commitDate.ToString("(ddd MMM dd HH':'mm':'ss yyyy)") + "\n" +
+                         Strings.GetCommitHashText() + ":\t" + guid;
+
+            header = RemoveRedundancies(header);
+
+            var commitInformation = new CommitInformation(header, body);
+
+            return commitInformation;
+        }
+
+        private static string GetPersonFromAuthorInfoLine(string authorInfo, int labelLength)
+        {
+            int offsetIndex = authorInfo.LastIndexOf(' ');
+            int timeIndex = authorInfo.LastIndexOf(' ', offsetIndex - 1);
+
+            return authorInfo.Substring(labelLength, timeIndex - labelLength);
+        }
+
+        private static DateTime GetTimeFromAuthorInfoLine(string authorInfo)
+        {
+            int offsetIndex = authorInfo.LastIndexOf(' ');
+            int timeIndex = authorInfo.LastIndexOf(' ', offsetIndex - 1);
+
+            var unixTime = long.Parse(authorInfo.Substring(timeIndex + 1, offsetIndex - (timeIndex + 1)));
+            var offset = authorInfo.Substring(offsetIndex);
+            var time = (new DateTime(1970, 1, 1, 0, 0, 0)).AddSeconds(unixTime);
+            return DateTime.Parse(time + offset);
         }
 
         private static string RemoveRedundancies(string info)
