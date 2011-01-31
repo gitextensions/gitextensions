@@ -58,6 +58,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GitCommandHelpersTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FindValidworkingDirTest.cs" />
     <Compile Include="PatchManagerTest.cs" />
