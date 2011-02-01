@@ -67,7 +67,7 @@ namespace GitImpact
             this.ScollBar.Size = new System.Drawing.Size(150, 17);
             this.ScollBar.SmallChange = 100;
             this.ScollBar.TabIndex = 0;
-            this.ScollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.ScollBar_Scroll);
+            this.ScollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.OnScroll);
             // 
             // ImpactControl
             // 
@@ -246,7 +246,7 @@ namespace GitImpact
                 MessageBox.Show(author);
         }
 
-        private void ScollBar_Scroll(object sender, ScrollEventArgs e)
+        private void OnScroll(object sender, ScrollEventArgs e)
         {
             Invalidate();
         }
