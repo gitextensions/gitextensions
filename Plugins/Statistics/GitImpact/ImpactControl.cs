@@ -131,13 +131,13 @@ namespace GitImpact
             Dictionary<string, List<Rectangle>> author_points_dict = new Dictionary<string, List<Rectangle>>();
             foreach (var week in impact)
             {
-                int h = 0;
+                int y = 0;
                 foreach (var pair in (from entry in week.Value orderby entry.Value.ChangedLines descending select entry))
                 {
                     string author = pair.Key;
 
                     int height = Math.Max(1, (int)Math.Round(Math.Log(pair.Value.ChangedLines) * 5));
-                    Rectangle rc = new Rectangle(x, h, block_width, height);
+                    Rectangle rc = new Rectangle(x, y, block_width, height);
 
                     if (!author_points_dict.ContainsKey(author))
                         author_points_dict.Add(author, new List<Rectangle>());
@@ -147,10 +147,10 @@ namespace GitImpact
                     if (!brushes.ContainsKey(author))
                         brushes.Add(author, new SolidBrush(Color.FromArgb(rnd.Next(255), rnd.Next(255), rnd.Next(255))));
 
-                    h += rc.Height + 2;
+                    y += rc.Height + 2;
                 }
 
-                h_max = Math.Max(h_max, h);
+                h_max = Math.Max(h_max, y);
 
                 x += block_width + transition_width;
             }
