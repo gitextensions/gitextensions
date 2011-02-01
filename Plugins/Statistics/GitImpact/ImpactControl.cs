@@ -79,10 +79,15 @@ namespace GitImpact
 
         }
 
+        public int GetGraphWidth()
+        {
+            return Math.Max(0, impact.Count * (block_width + transition_width) - transition_width);
+        }
+
         private void UpdateWidth()
         {
-            ScollBar.Minimum = 1;
-            ScollBar.Maximum = Math.Max(0, impact.Count * (block_width + transition_width) - transition_width);
+            ScollBar.Minimum = 0;
+            ScollBar.Maximum = GetGraphWidth();
         }
 
         private void OnPaint(object sender, PaintEventArgs e)
