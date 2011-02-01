@@ -109,11 +109,14 @@ namespace GitImpact
         {
             UpdatePaths();
             UpdateWidth();
+            Invalidate();
         }
 
         private void UpdatePaths()
         {
             Random rnd = new Random();
+
+            int h_max = 0;
 
             // Calculate points
             int x = 0;
@@ -139,16 +142,25 @@ namespace GitImpact
                     h += rc.Height + 2;
                 }
 
-                //h_max = Math.Max(h_max, h);
+                h_max = Math.Max(h_max, h);
 
                 x += block_width + transition_width;
             }
+
+            double height_factor = 0.9 * (float)Height / (float)h_max;
 
             // Add points to the GraphicsPath
             paths.Clear();
             foreach (var author_points in author_points_dict)
             {
                 string author = author_points.Key;
+
+                for (int i = 0; i < author_points.Value.Count; i++)
+                {
+                    author_points.Value[i] =
+                        new Rectangle(author_points.Value[i].Left, (int)(author_points.Value[i].Top * height_factor),
+                                      author_points.Value[i].Width, Math.Max(1, (int)(author_points.Value[i].Height * height_factor)));
+                }
 
                 paths.Add(author, new GraphicsPath());
 
