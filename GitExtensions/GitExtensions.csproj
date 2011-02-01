@@ -117,6 +117,10 @@
       <Project>{687A73BB-12A0-4AF7-B420-4A9C47DB75CB}</Project>
       <Name>Gource</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Plugins\Statistics\GitImpact\GitImpact.csproj">
+      <Project>{0B131F9D-BB10-4C3E-9656-5AB858158DE5}</Project>
+      <Name>GitImpact</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Plugins\Statistics\GitStatistics\GitStatistics.csproj">
       <Project>{92B57383-233E-46AE-8A86-6E98BF349A72}</Project>
       <Name>GitStatistics</Name>
