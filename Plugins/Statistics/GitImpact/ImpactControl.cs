@@ -21,16 +21,17 @@ namespace GitImpact
         // <First weekday of commit date, <Author, <Commits, Added Lines, Deleted Lines>>>
         private SortedDictionary<DateTime, Dictionary<string, Impact.DataPoint>> impact;
 
+        private List<string> author_stack;
         private Dictionary<string, GraphicsPath> paths;
         private Dictionary<string, Brush> brushes;
         private HScrollBar ScollBar;
-
-        private string highlighted_author = "";
 
         public ImpactControl()
         {
             authors = new Dictionary<string, Impact.DataPoint>();
             impact = new SortedDictionary<DateTime, Dictionary<string, Impact.DataPoint>>();
+
+            author_stack = new List<string>();
             paths = new Dictionary<string, GraphicsPath>();
             brushes = new Dictionary<string, Brush>();
 
@@ -44,6 +45,7 @@ namespace GitImpact
         {
             impact = Impact.GetImpact();
             authors = Impact.GetAuthors(impact);
+            author_stack = new List<string>(from entry in authors orderby entry.Value.ChangedLines select entry.Key);
             Impact.AddIntermediateEmptyWeeks(ref impact, authors);
 
             UpdateWidth();
@@ -92,22 +94,23 @@ namespace GitImpact
 
         private void OnPaint(object sender, PaintEventArgs e)
         {
-            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            // White background
             e.Graphics.Clear(Color.White);
-            e.Graphics.TranslateTransform(-ScollBar.Value, 0);
 
+            // Nothing to draw
             if (impact.Count == 0)
                 return;
 
-            foreach (var path in paths)
-            {
-                e.Graphics.FillPath(brushes[path.Key], path.Value);
-            }
+            // Activate AntiAliasing
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-            if (!string.IsNullOrEmpty(highlighted_author) &&
-                paths.ContainsKey(highlighted_author))
-                e.Graphics.FillPath(brushes[highlighted_author], paths[highlighted_author]);
+            // "Scroll" to the right position
+            e.Graphics.TranslateTransform(-ScollBar.Value, 0);
 
+            // Draw paths in order of the author_stack
+            // Default: person with least number of changed lines first, others on top
+            foreach (var author in author_stack)
+                e.Graphics.FillPath(brushes[author], paths[author]);
         }
 
         private void OnResize(object sender, EventArgs e)
@@ -133,7 +136,7 @@ namespace GitImpact
                 {
                     string author = pair.Key;
 
-                    int height = Math.Max(1, (int)Math.Round(Math.Log(pair.Value.ChangedLines) * 25));
+                    int height = Math.Max(1, (int)Math.Round(Math.Log(pair.Value.ChangedLines) * 5));
                     Rectangle rc = new Rectangle(x, h, block_width, height);
 
                     if (!author_points_dict.ContainsKey(author))
@@ -209,15 +212,10 @@ namespace GitImpact
 
         private string GetAuthorByScreenPosition(int x, int y)
         {
-            if (!string.IsNullOrEmpty(highlighted_author) &&
-                paths.ContainsKey(highlighted_author) &&
-                paths[highlighted_author].IsVisible(x + ScollBar.Value, y))
-                return highlighted_author;
-
-            foreach (var path in paths)
+            foreach (var author in author_stack.Reverse<string>())
             {
-                if (path.Value.IsVisible(x + ScollBar.Value, y))
-                    return path.Key;
+                if (paths[author].IsVisible(x + ScollBar.Value, y))
+                    return author;
             }
 
             return "";
@@ -225,9 +223,20 @@ namespace GitImpact
 
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
-            highlighted_author = GetAuthorByScreenPosition(e.X, e.Y);
-            if (!string.IsNullOrEmpty(highlighted_author))
+            string author = GetAuthorByScreenPosition(e.X, e.Y);
+            if (!string.IsNullOrEmpty(author))
+            {
+                SelectAuthor(author);
                 Invalidate();
+            }
+        }
+
+        private void SelectAuthor(string author)
+        {
+            // Remove author from the stack
+            author_stack.Remove(author);
+            // and add it again at the end
+            author_stack.Add(author);
         }
 
         private void OnMouseDown(object sender, MouseEventArgs e)
