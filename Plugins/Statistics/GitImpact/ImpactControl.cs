@@ -21,9 +21,13 @@ namespace GitImpact
         // <First weekday of commit date, <Author, <Commits, Added Lines, Deleted Lines>>>
         private SortedDictionary<DateTime, Dictionary<string, Impact.DataPoint>> impact;
 
+        // List of authors that determines the drawing order
         private List<string> author_stack;
+        // The paths for each author
         private Dictionary<string, GraphicsPath> paths;
+        // The brush for each author
         private Dictionary<string, Brush> brushes;
+
         private HScrollBar ScollBar;
 
         public ImpactControl()
@@ -37,6 +41,7 @@ namespace GitImpact
 
             InitializeComponent();
 
+            // Set DoubleBuffer flag for flicker-free drawing
             this.SetStyle(ControlStyles.AllPaintingInWmPaint |
                 ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
         }
@@ -78,7 +83,6 @@ namespace GitImpact
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnMouseMove);
             this.Resize += new System.EventHandler(this.OnResize);
             this.ResumeLayout(false);
-
         }
 
         public int GetGraphWidth()
@@ -122,47 +126,60 @@ namespace GitImpact
 
         private void UpdatePaths()
         {
+            // Randomizer for the user colors
             Random rnd = new Random();
 
             int h_max = 0;
-
-            // Calculate points
             int x = 0;
             Dictionary<string, List<Rectangle>> author_points_dict = new Dictionary<string, List<Rectangle>>();
+
+            // Iterate through weeks
             foreach (var week in impact)
             {
                 int y = 0;
+
+                // Iterate through authors
                 foreach (var pair in (from entry in week.Value orderby entry.Value.ChangedLines descending select entry))
                 {
                     string author = pair.Key;
 
+                    // Calculate week-author-rectangle
                     int height = Math.Max(1, (int)Math.Round(Math.Log(pair.Value.ChangedLines) * 5));
                     Rectangle rc = new Rectangle(x, y, block_width, height);
 
+                    // Add rectangle to temporary list
                     if (!author_points_dict.ContainsKey(author))
                         author_points_dict.Add(author, new List<Rectangle>());
 
                     author_points_dict[author].Add(rc);
 
+                    // Create a new random brush for the author if none exists yet
                     if (!brushes.ContainsKey(author))
                         brushes.Add(author, new SolidBrush(Color.FromArgb(rnd.Next(255), rnd.Next(255), rnd.Next(255))));
 
+                    // Increase y for next block
                     y += rc.Height + 2;
                 }
 
+                // Remember total height of largest week
                 h_max = Math.Max(h_max, y);
 
+                // Increase x for next week
                 x += block_width + transition_width;
             }
 
+            // Pre-calculate height scale factor
             double height_factor = 0.9 * (float)Height / (float)h_max;
 
-            // Add points to the GraphicsPath
+            // Clear previous paths
             paths.Clear();
+
+            // Add points to each author's GraphicsPath
             foreach (var author_points in author_points_dict)
             {
                 string author = author_points.Key;
 
+                // Scale heights
                 for (int i = 0; i < author_points.Value.Count; i++)
                 {
                     author_points.Value[i] =
@@ -210,27 +227,38 @@ namespace GitImpact
             }
         }
 
+        /// <summary>
+        /// Determines if the given coordinates are belonging to any author
+        /// </summary>
+        /// <param name="x">x coordinate</param>
+        /// <param name="y">y coordinate</param>
+        /// <returns>Name of the author</returns>
         private string GetAuthorByScreenPosition(int x, int y)
         {
             foreach (var author in author_stack.Reverse<string>())
-            {
                 if (paths[author].IsVisible(x + ScollBar.Value, y))
                     return author;
-            }
 
             return "";
         }
 
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
+            // Are we hovering above an author path?
             string author = GetAuthorByScreenPosition(e.X, e.Y);
             if (!string.IsNullOrEmpty(author))
             {
+                // Push that author to the top of the stack
+                // -> Draw it above all others
                 SelectAuthor(author);
                 Invalidate();
             }
         }
 
+        /// <summary>
+        /// Pushes the author to the top of the author_stack
+        /// </summary>
+        /// <param name="author">Name of the author</param>
         private void SelectAuthor(string author)
         {
             // Remove author from the stack
@@ -248,6 +276,7 @@ namespace GitImpact
 
         private void OnScroll(object sender, ScrollEventArgs e)
         {
+            // Redraw when we've scrolled
             Invalidate();
         }
     }
