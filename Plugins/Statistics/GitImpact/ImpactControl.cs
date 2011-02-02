@@ -67,7 +67,7 @@ namespace GitImpact
             author_stack = new List<string>(from entry in authors orderby entry.Value.ChangedLines select entry.Key);
             Impact.AddIntermediateEmptyWeeks(ref impact, authors);
 
-            UpdateWidth();
+            UpdateScrollbar();
             UpdatePaths();
 
             DateTime end = DateTime.Now;
@@ -109,7 +109,7 @@ namespace GitImpact
             return Math.Max(0, impact.Count * (block_width + transition_width) - transition_width);
         }
 
-        private void UpdateWidth()
+        private void UpdateScrollbar()
         {
             ScollBar.Minimum = 0;
             ScollBar.Maximum = Math.Max(0, GetGraphWidth() - ClientSize.Width);
@@ -142,7 +142,7 @@ namespace GitImpact
         private void OnResize(object sender, EventArgs e)
         {
             UpdatePaths();
-            UpdateWidth();
+            UpdateScrollbar();
             Invalidate();
         }
 
