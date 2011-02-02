@@ -31,7 +31,7 @@ namespace GitImpact
         private TimeSpan time_data;
         private TimeSpan time_process;
 
-        private HScrollBar ScollBar;
+        private HScrollBar scrollBar;
 
         public ImpactControl()
         {
@@ -78,24 +78,24 @@ namespace GitImpact
 
         private void InitializeComponent()
         {
-            this.ScollBar = new System.Windows.Forms.HScrollBar();
+            this.scrollBar = new System.Windows.Forms.HScrollBar();
             this.SuspendLayout();
             // 
-            // ScollBar
+            // scrollBar
             // 
-            this.ScollBar.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.ScollBar.LargeChange = 1000;
-            this.ScollBar.Location = new System.Drawing.Point(0, 133);
-            this.ScollBar.Maximum = 5000;
-            this.ScollBar.Name = "ScollBar";
-            this.ScollBar.Size = new System.Drawing.Size(150, 17);
-            this.ScollBar.SmallChange = 100;
-            this.ScollBar.TabIndex = 0;
-            this.ScollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.OnScroll);
+            this.scrollBar.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.scrollBar.LargeChange = 1000;
+            this.scrollBar.Location = new System.Drawing.Point(0, 133);
+            this.scrollBar.Maximum = 5000;
+            this.scrollBar.Name = "scrollBar";
+            this.scrollBar.Size = new System.Drawing.Size(150, 17);
+            this.scrollBar.SmallChange = 100;
+            this.scrollBar.TabIndex = 0;
+            this.scrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.OnScroll);
             // 
             // ImpactControl
             // 
-            this.Controls.Add(this.ScollBar);
+            this.Controls.Add(this.scrollBar);
             this.Name = "ImpactControl";
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.OnPaint);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OnMouseDown);
@@ -111,17 +111,17 @@ namespace GitImpact
 
         private void UpdateScrollbar()
         {
-            bool ScrollBarAtMaximum = (ScollBar.Value == ScollBar.Maximum);
+            bool ScrollBarAtMaximum = (scrollBar.Value == scrollBar.Maximum);
             
-            ScollBar.Minimum = 0;
-            ScollBar.Maximum = Math.Max(0, GetGraphWidth() - ClientSize.Width);
-            ScollBar.SmallChange = ScollBar.Maximum / 10;
-            ScollBar.LargeChange = ScollBar.Maximum / 20;
+            scrollBar.Minimum = 0;
+            scrollBar.Maximum = Math.Max(0, GetGraphWidth() - ClientSize.Width);
+            scrollBar.SmallChange = scrollBar.Maximum / 10;
+            scrollBar.LargeChange = scrollBar.Maximum / 20;
             
             if (ScrollBarAtMaximum)
-                this.ScollBar.Value = ScollBar.Maximum;
+                this.scrollBar.Value = scrollBar.Maximum;
 
-            ScollBar.Maximum += ScollBar.LargeChange;
+            scrollBar.Maximum += scrollBar.LargeChange;
         }
 
         private void OnPaint(object sender, PaintEventArgs e)
@@ -137,7 +137,7 @@ namespace GitImpact
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
             // "Scroll" to the right position
-            e.Graphics.TranslateTransform(-ScollBar.Value, 0);
+            e.Graphics.TranslateTransform(-scrollBar.Value, 0);
 
             // Draw paths in order of the author_stack
             // Default: person with least number of changed lines first, others on top
@@ -264,7 +264,7 @@ namespace GitImpact
         private string GetAuthorByScreenPosition(int x, int y)
         {
             foreach (var author in author_stack.Reverse<string>())
-                if (paths[author].IsVisible(x + ScollBar.Value, y))
+                if (paths[author].IsVisible(x + scrollBar.Value, y))
                     return author;
 
             return "";
