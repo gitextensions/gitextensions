@@ -93,7 +93,10 @@ namespace GitImpact
         private void UpdateWidth()
         {
             ScollBar.Minimum = 0;
-            ScollBar.Maximum = GetGraphWidth();
+            ScollBar.Maximum = Math.Max(0, GetGraphWidth() - ClientSize.Width);
+            ScollBar.SmallChange = ScollBar.Maximum / 10;
+            ScollBar.LargeChange = ScollBar.Maximum / 20;
+            ScollBar.Maximum += ScollBar.LargeChange;
         }
 
         private void OnPaint(object sender, PaintEventArgs e)
