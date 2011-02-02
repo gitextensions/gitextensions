@@ -307,5 +307,7 @@ namespace GitImpact
 
             return Color.Transparent;
         }
+
+        public List<string> Authors { get { return author_stack; } }
     }
 }
