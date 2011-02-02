@@ -299,5 +299,13 @@ namespace GitImpact
             // Redraw when we've scrolled
             Invalidate();
         }
+
+        public Color GetAuthorColor(string author)
+        {
+            if (brushes.ContainsKey(author))
+                return brushes[author].Color;
+
+            return Color.Transparent;
+        }
     }
 }
