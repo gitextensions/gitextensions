@@ -27,7 +27,7 @@ namespace GitImpact
         // The paths for each author
         private Dictionary<string, GraphicsPath> paths;
         // The brush for each author
-        private Dictionary<string, Brush> brushes;
+        private Dictionary<string, SolidBrush> brushes;
 
         private TimeSpan time_data;
         private TimeSpan time_process;
@@ -41,7 +41,7 @@ namespace GitImpact
 
             author_stack = new List<string>();
             paths = new Dictionary<string, GraphicsPath>();
-            brushes = new Dictionary<string, Brush>();
+            brushes = new Dictionary<string, SolidBrush>();
 
             time_data = new TimeSpan();
             time_process = new TimeSpan();
