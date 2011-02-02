@@ -39,6 +39,8 @@
             this.Impact.Size = new System.Drawing.Size(863, 484);
             this.Impact.TabIndex = 0;
             this.Impact.TabStop = false;
+            this.Impact.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Impact_MouseClick);
+            this.Impact.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Impact_MouseMove);
             // 
             // FormImpact
             // 
