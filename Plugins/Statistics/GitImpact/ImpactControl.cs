@@ -111,10 +111,16 @@ namespace GitImpact
 
         private void UpdateScrollbar()
         {
+            bool ScrollBarAtMaximum = (ScollBar.Value == ScollBar.Maximum);
+            
             ScollBar.Minimum = 0;
             ScollBar.Maximum = Math.Max(0, GetGraphWidth() - ClientSize.Width);
             ScollBar.SmallChange = ScollBar.Maximum / 10;
             ScollBar.LargeChange = ScollBar.Maximum / 20;
+            
+            if (ScrollBarAtMaximum)
+                this.ScollBar.Value = ScollBar.Maximum;
+
             ScollBar.Maximum += ScollBar.LargeChange;
         }
 
