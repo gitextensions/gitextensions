@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 
 namespace GitCommands.Statistics
@@ -35,21 +36,32 @@ namespace GitCommands.Statistics
             //
             // 4	1	GitCommands/Git/GitCommandsHelper.cs
 
-            string[] log = GitCommandHelpers.RunCmd(GitCommands.Settings.GitCommand,
-                            "log --pretty=tformat:\"--- %ad --- %an\" --numstat --date=iso -C").Split('\n');
+            string command = "log --pretty=tformat:\"--- %ad --- %an\" --numstat --date=iso -C";
+
+            GitCommandsInstance git = new GitCommandsInstance();
+            git.StreamOutput = true;
+            git.CollectOutput = false;
+            Process p = git.CmdStartProcess(Settings.GitCommand, command);
 
             // Analyze commit listing
-            for (int i = 0; i < log.Length; i++)
+            while (true)
             {
+                // Read line
+                string line = p.StandardOutput.ReadLine();
+
+                // Reached the end ?
+                if (line == null)
+                    break;
+            
                 // Look for commit delimiters
-                if (!log[i].StartsWith("--- "))
+                if (!line.StartsWith("--- "))
                     continue;
-                    
+
                 // Strip "--- " 
-                log[i] = log[i].Substring(4);
+                line = line.Substring(4);
 
                 // Split date and author
-                string[] header = log[i].Split(new string[]{" --- "}, 2, StringSplitOptions.RemoveEmptyEntries);
+                string[] header = line.Split(new string[] { " --- " }, 2, StringSplitOptions.RemoveEmptyEntries);
                 if (header.Length != 2)
                     continue;
 
@@ -62,48 +74,38 @@ namespace GitCommands.Statistics
                 date = date.AddDays(-(int)date.DayOfWeek);
 
                 // Skip empty line
-                i++;
+                p.StandardOutput.ReadLine();
 
                 // Parse commit lines
                 int added = 0;
                 int deleted = 0;
-                while (i < log.Length - 1 && !log[i + 1].StartsWith("--- "))
+                while ((line = p.StandardOutput.ReadLine()) != null && !line.StartsWith("--- "))
                 {
-                    // Jump to next lines that does not start with "--- "
-                    i++;
-
-                    string[] line = log[i].Split('\t');
-                    if (line.Length >= 2)
+                    string[] file_line = line.Split('\t');
+                    if (file_line.Length >= 2)
                     {
-                        if (line[0] != "-")
-                            added += int.Parse(line[0]);
-                        if (line[1] != "-")
-                            deleted += int.Parse(line[1]);
-
+                        if (file_line[0] != "-")
+                            added += int.Parse(file_line[0]);
+                        if (file_line[1] != "-")
+                            deleted += int.Parse(file_line[1]);
                     }
                 }
 
                 // If week does not exist yet in the impact dictionary
                 if (!impacts.ContainsKey(date))
-                {
                     // Create it
                     impacts.Add(date, new Dictionary<string, DataPoint>());
-                }
 
                 // If author does not exist yet for this week in the impact dictionary
                 if (!impacts[date].ContainsKey(author))
-                {
                     // Create it
                     impacts[date].Add(author, new DataPoint(1, added, deleted));
-                }
                 else
-                {
                     // Otherwise just add the changes
                     impacts[date][author] = new DataPoint(impacts[date][author].Commits + 1,
-                                                            impacts[date][author].AddedLines + added,
-                                                            impacts[date][author].DeletedLines + deleted);
+                                                          impacts[date][author].AddedLines + added,
+                                                          impacts[date][author].DeletedLines + deleted);
 
-                }
             }
 
             return impacts;
