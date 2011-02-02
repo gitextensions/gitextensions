@@ -57,21 +57,28 @@ namespace GitImpact
 
         public void UpdateData()
         {
+            // Start time measurement
             DateTime start = DateTime.Now;
 
+            // Gather impact information
             impact = Impact.GetImpact();
 
             DateTime gathered = DateTime.Now;
 
+            // Gather author informations
             authors = Impact.GetAuthors(impact);
+            // Create author stack (authors with most changed lines get drawn on top)
             author_stack = new List<string>(from entry in authors orderby entry.Value.ChangedLines select entry.Key);
+            // Add authors to intermediate weeks where they didn't create commits
             Impact.AddIntermediateEmptyWeeks(ref impact, authors);
 
             UpdateScrollbar();
             UpdatePaths();
 
+            // Stop time measurement
             DateTime end = DateTime.Now;
 
+            // Calculate data gathering and processing times
             time_data = gathered - start;
             time_process = end - gathered;
         }
