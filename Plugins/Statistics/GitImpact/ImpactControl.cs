@@ -262,12 +262,17 @@ namespace GitImpact
         /// Pushes the author to the top of the author_stack
         /// </summary>
         /// <param name="author">Name of the author</param>
-        private void SelectAuthor(string author)
+        public bool SelectAuthor(string author)
         {
+            if (!author_stack.Contains(author))
+                return false;
+
             // Remove author from the stack
             author_stack.Remove(author);
             // and add it again at the end
             author_stack.Add(author);
+
+            return true;
         }
 
         private void OnMouseDown(object sender, MouseEventArgs e)
