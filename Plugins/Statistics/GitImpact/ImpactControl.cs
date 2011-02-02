@@ -28,6 +28,9 @@ namespace GitImpact
         // The brush for each author
         private Dictionary<string, Brush> brushes;
 
+        private TimeSpan time_data;
+        private TimeSpan time_process;
+
         private HScrollBar ScollBar;
 
         public ImpactControl()
@@ -39,6 +42,9 @@ namespace GitImpact
             paths = new Dictionary<string, GraphicsPath>();
             brushes = new Dictionary<string, Brush>();
 
+            time_data = new TimeSpan();
+            time_process = new TimeSpan();
+
             InitializeComponent();
 
             // Set DoubleBuffer flag for flicker-free drawing
@@ -46,15 +52,28 @@ namespace GitImpact
                 ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
         }
 
+        public TimeSpan TimeData { get { return time_data; } }
+        public TimeSpan TimeProcess { get { return time_process; } }
+
         public void UpdateData()
         {
+            DateTime start = DateTime.Now;
+
             impact = Impact.GetImpact();
+
+            DateTime gathered = DateTime.Now;
+
             authors = Impact.GetAuthors(impact);
             author_stack = new List<string>(from entry in authors orderby entry.Value.ChangedLines select entry.Key);
             Impact.AddIntermediateEmptyWeeks(ref impact, authors);
 
             UpdateWidth();
             UpdatePaths();
+
+            DateTime end = DateTime.Now;
+
+            time_data = gathered - start;
+            time_process = end - gathered;
         }
 
         private void InitializeComponent()
