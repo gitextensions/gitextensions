@@ -16,6 +16,7 @@ namespace GitImpact
         private const int block_width = 50;
         private const int transition_width = 50;
 
+
         // <Author, <Commits, Added Lines, Deleted Lines>>
         private Dictionary<string, Impact.DataPoint> authors;
         // <First weekday of commit date, <Author, <Commits, Added Lines, Deleted Lines>>>
@@ -105,13 +106,12 @@ namespace GitImpact
             this.Controls.Add(this.scrollBar);
             this.Name = "ImpactControl";
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.OnPaint);
-            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OnMouseDown);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnMouseMove);
             this.Resize += new System.EventHandler(this.OnResize);
             this.ResumeLayout(false);
+
         }
 
-        public int GetGraphWidth()
+        private int GetGraphWidth()
         {
             return Math.Max(0, impact.Count * (block_width + transition_width) - transition_width);
         }
@@ -268,26 +268,13 @@ namespace GitImpact
         /// <param name="x">x coordinate</param>
         /// <param name="y">y coordinate</param>
         /// <returns>Name of the author</returns>
-        private string GetAuthorByScreenPosition(int x, int y)
+        public string GetAuthorByScreenPosition(int x, int y)
         {
             foreach (var author in author_stack.Reverse<string>())
                 if (paths[author].IsVisible(x + scrollBar.Value, y))
                     return author;
 
             return "";
-        }
-
-        private void OnMouseMove(object sender, MouseEventArgs e)
-        {
-            // Are we hovering above an author path?
-            string author = GetAuthorByScreenPosition(e.X, e.Y);
-            if (!string.IsNullOrEmpty(author))
-            {
-                // Push that author to the top of the stack
-                // -> Draw it above all others
-                SelectAuthor(author);
-                Invalidate();
-            }
         }
 
         /// <summary>
@@ -305,13 +292,6 @@ namespace GitImpact
             author_stack.Add(author);
 
             return true;
-        }
-
-        private void OnMouseDown(object sender, MouseEventArgs e)
-        {
-            string author = GetAuthorByScreenPosition(e.X, e.Y);
-            if (!string.IsNullOrEmpty(author))
-                MessageBox.Show(author);
         }
 
         private void OnScroll(object sender, ScrollEventArgs e)
