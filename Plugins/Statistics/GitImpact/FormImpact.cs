@@ -23,7 +23,8 @@ namespace GitImpact
 
             if (lblAuthor.Visible)
             {
-                lblAuthor.Text = author;
+                GitCommands.Statistics.Impact.DataPoint data = Impact.GetAuthorInfo(author);
+                lblAuthor.Text = author + "(" + data.Commits + " Commits, " + data.ChangedLines + " Changed Lines)";
                 pnlAuthorColor.BackColor = Impact.GetAuthorColor(author);
             }
         }
