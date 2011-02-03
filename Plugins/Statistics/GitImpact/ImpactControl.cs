@@ -179,7 +179,7 @@ namespace GitImpact
                     string author = pair.Key;
 
                     // Calculate week-author-rectangle
-                    int height = Math.Max(1, (int)Math.Round(Math.Log(pair.Value.ChangedLines) * 5));
+                    int height = Math.Max(1, (int)Math.Round(Math.Pow(Math.Log(pair.Value.ChangedLines), 1.5) * 4));
                     Rectangle rc = new Rectangle(x, y, block_width, height);
 
                     // Add rectangle to temporary list
