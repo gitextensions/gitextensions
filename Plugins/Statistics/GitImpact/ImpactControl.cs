@@ -17,6 +17,7 @@ namespace GitImpact
         private const int transition_width = 50;
 
         private const int lines_font_size = 10;
+        private const int week_font_size = 8;
 
 
         // <Author, <Commits, Added Lines, Deleted Lines>>
@@ -32,6 +33,8 @@ namespace GitImpact
         private Dictionary<string, SolidBrush> brushes;
         // The changed-lines-labels for each author
         private Dictionary<string, List<Tuple<PointF, int>>> line_labels;
+        // The week-labels
+        private List<Tuple<PointF, DateTime>> week_labels;
 
         private TimeSpan time_data;
         private TimeSpan time_process;
@@ -47,6 +50,7 @@ namespace GitImpact
             paths = new Dictionary<string, GraphicsPath>();
             brushes = new Dictionary<string, SolidBrush>();
             line_labels = new Dictionary<string,List<Tuple<PointF, int>>>();
+            week_labels = new List<Tuple<PointF,DateTime>>();
 
             time_data = new TimeSpan();
             time_process = new TimeSpan();
@@ -158,6 +162,8 @@ namespace GitImpact
 
             foreach (var author in author_stack)
                 DrawAuthorLinesLabels(e.Graphics, author);
+
+            DrawWeekLabels(e.Graphics);
         }
 
         private void DrawAuthorLinesLabels(Graphics g, string author)
@@ -176,6 +182,19 @@ namespace GitImpact
             }
         }
 
+        private void DrawWeekLabels(Graphics g)
+        {
+            Font font = new Font("Arial", week_font_size);
+            Brush brush = new SolidBrush(Color.Gray);
+
+            foreach (var label in week_labels)
+            {
+                SizeF sz = g.MeasureString(label.Item2.ToString("dd. MMM"), font);
+                PointF pt = new PointF(label.Item1.X - sz.Width / 2, label.Item1.Y + sz.Height / 2);
+                g.DrawString(label.Item2.ToString("dd. MMM"), font, brush, pt);
+            }
+        }
+
         private void OnResize(object sender, EventArgs e)
         {
             UpdatePathsAndLabels();
@@ -191,6 +210,9 @@ namespace GitImpact
             int h_max = 0;
             int x = 0;
             Dictionary<string, List<Tuple<Rectangle, int>>> author_points_dict = new Dictionary<string, List<Tuple<Rectangle, int>>>();
+
+            // Clear previous week labels
+            week_labels.Clear();
 
             // Iterate through weeks
             foreach (var week in impact)
@@ -223,12 +245,20 @@ namespace GitImpact
                 // Remember total height of largest week
                 h_max = Math.Max(h_max, y);
 
+                // Add week date label
+                week_labels.Add(Tuple.Create(new PointF(x + block_width / 2, y), week.Key));
+
                 // Increase x for next week
                 x += block_width + transition_width;
             }
 
             // Pre-calculate height scale factor
             double height_factor = 0.9 * (float)Height / (float)h_max;
+
+            // Scale week label coordinates
+            for (int i = 0; i < week_labels.Count; i++)
+                week_labels[i] = Tuple.Create(new PointF(week_labels[i].Item1.X, week_labels[i].Item1.Y * (float)height_factor), 
+                                              week_labels[i].Item2);
 
             // Clear previous paths
             paths.Clear();
