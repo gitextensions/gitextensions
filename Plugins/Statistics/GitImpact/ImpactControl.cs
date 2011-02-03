@@ -376,5 +376,10 @@ namespace GitImpact
         }
 
         public List<string> Authors { get { return author_stack; } }
+        
+        public Impact.DataPoint GetAuthorInfo(string author)
+        {
+            return authors[author];
+        }
     }
 }
