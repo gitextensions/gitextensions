@@ -16,6 +16,8 @@ namespace GitImpact
         private const int block_width = 50;
         private const int transition_width = 50;
 
+        private const int lines_font_size = 10;
+
 
         // <Author, <Commits, Added Lines, Deleted Lines>>
         private Dictionary<string, Impact.DataPoint> authors;
@@ -28,6 +30,8 @@ namespace GitImpact
         private Dictionary<string, GraphicsPath> paths;
         // The brush for each author
         private Dictionary<string, SolidBrush> brushes;
+        // The changed-lines-labels for each author
+        private Dictionary<string, List<Tuple<PointF, int>>> line_labels;
 
         private TimeSpan time_data;
         private TimeSpan time_process;
@@ -42,6 +46,7 @@ namespace GitImpact
             author_stack = new List<string>();
             paths = new Dictionary<string, GraphicsPath>();
             brushes = new Dictionary<string, SolidBrush>();
+            line_labels = new Dictionary<string,List<Tuple<PointF, int>>>();
 
             time_data = new TimeSpan();
             time_process = new TimeSpan();
@@ -74,7 +79,7 @@ namespace GitImpact
             Impact.AddIntermediateEmptyWeeks(ref impact, authors);
 
             UpdateScrollbar();
-            UpdatePaths();
+            UpdatePathsAndLabels();
 
             // Stop time measurement
             DateTime end = DateTime.Now;
@@ -150,23 +155,42 @@ namespace GitImpact
             // Default: person with least number of changed lines first, others on top
             foreach (var author in author_stack)
                 e.Graphics.FillPath(brushes[author], paths[author]);
+
+            foreach (var author in author_stack)
+                DrawAuthorLinesLabels(e.Graphics, author);
+        }
+
+        private void DrawAuthorLinesLabels(Graphics g, string author)
+        {
+            if (!line_labels.ContainsKey(author))
+                return;
+
+            Font font = new Font("Arial", lines_font_size);
+            Brush brush = new SolidBrush(Color.White);
+
+            foreach (var label in line_labels[author])
+            {
+                SizeF sz = g.MeasureString(label.Item2.ToString(), font);
+                PointF pt = new PointF(label.Item1.X - sz.Width / 2, label.Item1.Y - sz.Height / 2);
+                g.DrawString(label.Item2.ToString(), font, brush, pt);
+            }
         }
 
         private void OnResize(object sender, EventArgs e)
         {
-            UpdatePaths();
+            UpdatePathsAndLabels();
             UpdateScrollbar();
             Invalidate();
         }
 
-        private void UpdatePaths()
+        private void UpdatePathsAndLabels()
         {
             // Randomizer for the user colors
             Random rnd = new Random();
 
             int h_max = 0;
             int x = 0;
-            Dictionary<string, List<Rectangle>> author_points_dict = new Dictionary<string, List<Rectangle>>();
+            Dictionary<string, List<Tuple<Rectangle, int>>> author_points_dict = new Dictionary<string, List<Tuple<Rectangle, int>>>();
 
             // Iterate through weeks
             foreach (var week in impact)
@@ -184,9 +208,9 @@ namespace GitImpact
 
                     // Add rectangle to temporary list
                     if (!author_points_dict.ContainsKey(author))
-                        author_points_dict.Add(author, new List<Rectangle>());
+                        author_points_dict.Add(author, new List<Tuple<Rectangle, int>>());
 
-                    author_points_dict[author].Add(rc);
+                    author_points_dict[author].Add(Tuple.Create(rc, pair.Value.ChangedLines));
 
                     // Create a new random brush for the author if none exists yet
                     if (!brushes.ContainsKey(author))
@@ -209,6 +233,9 @@ namespace GitImpact
             // Clear previous paths
             paths.Clear();
 
+            // Clear previous labels
+            line_labels.Clear();
+
             // Add points to each author's GraphicsPath
             foreach (var author_points in author_points_dict)
             {
@@ -217,47 +244,57 @@ namespace GitImpact
                 // Scale heights
                 for (int i = 0; i < author_points.Value.Count; i++)
                 {
-                    author_points.Value[i] =
-                        new Rectangle(author_points.Value[i].Left, (int)(author_points.Value[i].Top * height_factor),
-                                      author_points.Value[i].Width, Math.Max(1, (int)(author_points.Value[i].Height * height_factor)));
-                }
+                    author_points.Value[i] = Tuple.Create(
+                        new Rectangle(author_points.Value[i].Item1.Left, (int)(author_points.Value[i].Item1.Top * height_factor),
+                                      author_points.Value[i].Item1.Width, Math.Max(1, (int)(author_points.Value[i].Item1.Height * height_factor))), 
+                                      author_points.Value[i].Item2);
 
+                    // Add lines-changed-labels
+                    if (!line_labels.ContainsKey(author))
+                        line_labels.Add(author, new List<Tuple<PointF, int>>());
+
+                    if (author_points.Value[i].Item1.Height > lines_font_size * 1.5)
+                        line_labels[author].Add(Tuple.Create(new PointF(author_points.Value[i].Item1.Left + block_width / 2, 
+                            author_points.Value[i].Item1.Top + author_points.Value[i].Item1.Height / 2),
+                            author_points.Value[i].Item2));
+                }
+                
                 paths.Add(author, new GraphicsPath());
 
                 // Left border
-                paths[author].AddLine(author_points.Value[0].Left, author_points.Value[0].Bottom,
-                                      author_points.Value[0].Left, author_points.Value[0].Top);
+                paths[author].AddLine(author_points.Value[0].Item1.Left, author_points.Value[0].Item1.Bottom,
+                                      author_points.Value[0].Item1.Left, author_points.Value[0].Item1.Top);
 
                 // Top borders
                 for (int i = 0; i < author_points.Value.Count; i++)
                 {
-                    paths[author].AddLine(author_points.Value[i].Left, author_points.Value[i].Top,
-                                          author_points.Value[i].Right, author_points.Value[i].Top);
+                    paths[author].AddLine(author_points.Value[i].Item1.Left, author_points.Value[i].Item1.Top,
+                                          author_points.Value[i].Item1.Right, author_points.Value[i].Item1.Top);
 
                     if (i < author_points.Value.Count - 1)
-                        paths[author].AddBezier(author_points.Value[i].Right, author_points.Value[i].Top,
-                                                author_points.Value[i].Right + transition_width / 2, author_points.Value[i].Top,
-                                                author_points.Value[i].Right + transition_width / 2, author_points.Value[i + 1].Top,
-                                                author_points.Value[i + 1].Left, author_points.Value[i + 1].Top);
+                        paths[author].AddBezier(author_points.Value[i].Item1.Right, author_points.Value[i].Item1.Top,
+                                                author_points.Value[i].Item1.Right + transition_width / 2, author_points.Value[i].Item1.Top,
+                                                author_points.Value[i].Item1.Right + transition_width / 2, author_points.Value[i + 1].Item1.Top,
+                                                author_points.Value[i + 1].Item1.Left, author_points.Value[i + 1].Item1.Top);
                 }
 
                 // Right border
-                paths[author].AddLine(author_points.Value[author_points.Value.Count - 1].Right, 
-                                      author_points.Value[author_points.Value.Count - 1].Top,
-                                      author_points.Value[author_points.Value.Count - 1].Right, 
-                                      author_points.Value[author_points.Value.Count - 1].Bottom);
+                paths[author].AddLine(author_points.Value[author_points.Value.Count - 1].Item1.Right,
+                                      author_points.Value[author_points.Value.Count - 1].Item1.Top,
+                                      author_points.Value[author_points.Value.Count - 1].Item1.Right,
+                                      author_points.Value[author_points.Value.Count - 1].Item1.Bottom);
 
                 // Bottom borders
                 for (int i = author_points.Value.Count - 1; i >= 0; i--)
                 {
-                    paths[author].AddLine(author_points.Value[i].Right, author_points.Value[i].Bottom,
-                                          author_points.Value[i].Left, author_points.Value[i].Bottom);
+                    paths[author].AddLine(author_points.Value[i].Item1.Right, author_points.Value[i].Item1.Bottom,
+                                          author_points.Value[i].Item1.Left, author_points.Value[i].Item1.Bottom);
 
                     if (i > 0)
-                        paths[author].AddBezier(author_points.Value[i].Left, author_points.Value[i].Bottom,
-                                                author_points.Value[i].Left - transition_width / 2, author_points.Value[i].Bottom,
-                                                author_points.Value[i].Left - transition_width / 2, author_points.Value[i - 1].Bottom,
-                                                author_points.Value[i - 1].Right, author_points.Value[i - 1].Bottom);
+                        paths[author].AddBezier(author_points.Value[i].Item1.Left, author_points.Value[i].Item1.Bottom,
+                                                author_points.Value[i].Item1.Left - transition_width / 2, author_points.Value[i].Item1.Bottom,
+                                                author_points.Value[i].Item1.Left - transition_width / 2, author_points.Value[i - 1].Item1.Bottom,
+                                                author_points.Value[i - 1].Item1.Right, author_points.Value[i - 1].Item1.Bottom);
                 }
             }
         }
