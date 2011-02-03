@@ -37,7 +37,7 @@ namespace GitImpact
                 // Push that author to the top of the stack
                 // -> Draw it above all others
                 Impact.SelectAuthor(author);
-                UpdateAuthorInfo(Impact.GetAuthorByScreenPosition(e.X, e.Y));
+                UpdateAuthorInfo(author);
                 Impact.Invalidate();
             }            
         }
