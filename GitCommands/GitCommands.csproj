@@ -98,7 +98,7 @@
     <Compile Include="Settings.cs" />
     <Compile Include="ShortDiff.cs" />
     <Compile Include="Statistics\CommitCounter.cs" />
-    <Compile Include="Statistics\Impact.cs" />
+    <Compile Include="Statistics\ImpactLoader.cs" />
     <Compile Include="Strings.cs" />
     <Compile Include="FileInfoExtensions.cs" />
     <Compile Include="System.cs" />
