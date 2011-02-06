@@ -166,7 +166,7 @@ namespace GitImpact
         {
             // White background
             e.Graphics.Clear(Color.White);
-
+            UpdateScrollbar();
             lock (data_lock)
             {
                 // Nothing to draw
@@ -182,15 +182,22 @@ namespace GitImpact
                 // Draw paths in order of the author_stack
                 // Default: person with least number of changed lines first, others on top
                 foreach (var author in author_stack)
+                {
                     if (brushes.ContainsKey(author) && paths.ContainsKey(author))
                         e.Graphics.FillPath(brushes[author], paths[author]);
+                }
+
+                //Draw black border around selected author
+                string selectedAuthor = author_stack[author_stack.Count - 1];
+                if (brushes.ContainsKey(selectedAuthor) && paths.ContainsKey(selectedAuthor))
+                    e.Graphics.DrawPath(new Pen(Color.Black, 2), paths[selectedAuthor]);
+
 
                 foreach (var author in author_stack)
                     DrawAuthorLinesLabels(e.Graphics, author);
             }
 
             DrawWeekLabels(e.Graphics);
-            UpdateScrollbar();
         }
 
         private void DrawAuthorLinesLabels(Graphics g, string author)
@@ -272,7 +279,6 @@ namespace GitImpact
                         // Create a new random brush for the author if none exists yet
                         if (!brushes.ContainsKey(author))
                             brushes.Add(author, new SolidBrush(Color.FromArgb(rnd.Next(255), rnd.Next(255), rnd.Next(255))));
-
                         // Increase y for next block
                         y += rc.Height + 2;
                     }
