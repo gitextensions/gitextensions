@@ -86,7 +86,7 @@
             // 
             this.Ok.Location = new System.Drawing.Point(3, 47);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(116, 23);
+            this.Ok.Size = new System.Drawing.Size(116, 25);
             this.Ok.TabIndex = 7;
             this.Ok.Text = "Rebase";
             this.Ok.UseVisualStyleBackColor = true;
@@ -115,7 +115,7 @@
             // 
             this.AddFiles.Location = new System.Drawing.Point(3, 152);
             this.AddFiles.Name = "AddFiles";
-            this.AddFiles.Size = new System.Drawing.Size(116, 23);
+            this.AddFiles.Size = new System.Drawing.Size(116, 25);
             this.AddFiles.TabIndex = 14;
             this.AddFiles.Text = "Add files";
             this.AddFiles.UseVisualStyleBackColor = true;
@@ -125,7 +125,7 @@
             // 
             this.Resolved.Location = new System.Drawing.Point(3, 199);
             this.Resolved.Name = "Resolved";
-            this.Resolved.Size = new System.Drawing.Size(116, 23);
+            this.Resolved.Size = new System.Drawing.Size(116, 25);
             this.Resolved.TabIndex = 13;
             this.Resolved.Text = "Continue rebase";
             this.Resolved.UseVisualStyleBackColor = true;
@@ -135,7 +135,7 @@
             // 
             this.Abort.Location = new System.Drawing.Point(3, 257);
             this.Abort.Name = "Abort";
-            this.Abort.Size = new System.Drawing.Size(116, 23);
+            this.Abort.Size = new System.Drawing.Size(116, 25);
             this.Abort.TabIndex = 12;
             this.Abort.Text = "Abort";
             this.Abort.UseVisualStyleBackColor = true;
@@ -145,7 +145,7 @@
             // 
             this.Skip.Location = new System.Drawing.Point(3, 228);
             this.Skip.Name = "Skip";
-            this.Skip.Size = new System.Drawing.Size(116, 23);
+            this.Skip.Size = new System.Drawing.Size(116, 25);
             this.Skip.TabIndex = 11;
             this.Skip.Text = "Skip this commit";
             this.Skip.UseVisualStyleBackColor = true;
@@ -155,7 +155,7 @@
             // 
             this.Mergetool.Location = new System.Drawing.Point(3, 98);
             this.Mergetool.Name = "Mergetool";
-            this.Mergetool.Size = new System.Drawing.Size(116, 23);
+            this.Mergetool.Size = new System.Drawing.Size(116, 25);
             this.Mergetool.TabIndex = 10;
             this.Mergetool.Text = "Solve conflicts";
             this.Mergetool.UseVisualStyleBackColor = true;
@@ -278,17 +278,17 @@
             // ContinuePanel
             // 
             this.ContinuePanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.ContinuePanel.Location = new System.Drawing.Point(0, 197);
+            this.ContinuePanel.Location = new System.Drawing.Point(0, 195);
             this.ContinuePanel.Name = "ContinuePanel";
-            this.ContinuePanel.Size = new System.Drawing.Size(122, 27);
+            this.ContinuePanel.Size = new System.Drawing.Size(122, 34);
             this.ContinuePanel.TabIndex = 7;
             // 
             // MergeToolPanel
             // 
             this.MergeToolPanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.MergeToolPanel.Location = new System.Drawing.Point(-1, 96);
+            this.MergeToolPanel.Location = new System.Drawing.Point(-1, 94);
             this.MergeToolPanel.Name = "MergeToolPanel";
-            this.MergeToolPanel.Size = new System.Drawing.Size(122, 27);
+            this.MergeToolPanel.Size = new System.Drawing.Size(122, 34);
             this.MergeToolPanel.TabIndex = 8;
             // 
             // splitContainer4

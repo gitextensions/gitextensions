@@ -297,9 +297,9 @@ namespace GitUI
             this.Loading.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.Loading.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
-            this.Loading.Location = new System.Drawing.Point(0, 25);
+            this.Loading.Location = new System.Drawing.Point(0, 28);
             this.Loading.Name = "Loading";
-            this.Loading.Size = new System.Drawing.Size(397, 259);
+            this.Loading.Size = new System.Drawing.Size(397, 256);
             this.Loading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.Loading.TabIndex = 11;
             this.Loading.TabStop = false;
@@ -310,12 +310,12 @@ namespace GitUI
             this.Unstaged.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Unstaged.Font = new System.Drawing.Font("Tahoma", 9.75F);
             this.Unstaged.GitItemStatuses = null;
-            this.Unstaged.Location = new System.Drawing.Point(0, 25);
+            this.Unstaged.Location = new System.Drawing.Point(0, 28);
             this.Unstaged.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Unstaged.Name = "Unstaged";
             this.Unstaged.Revision = null;
             this.Unstaged.SelectedItem = null;
-            this.Unstaged.Size = new System.Drawing.Size(397, 259);
+            this.Unstaged.Size = new System.Drawing.Size(397, 256);
             this.Unstaged.TabIndex = 10;
             // 
             // toolbarUnstaged
@@ -342,13 +342,13 @@ namespace GitUI
             this.toolRefreshItem.Image = global::GitUI.Properties.Resources.arrow_refresh;
             this.toolRefreshItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolRefreshItem.Name = "toolRefreshItem";
-            this.toolRefreshItem.Size = new System.Drawing.Size(23, 20);
+            this.toolRefreshItem.Size = new System.Drawing.Size(23, 23);
             this.toolRefreshItem.Click += new System.EventHandler(this.RescanChangesToolStripMenuItemClick);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 23);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 26);
             // 
             // workingToolStripMenuItem
             // 
@@ -364,7 +364,7 @@ namespace GitUI
             this.deleteAllUntrackedFilesToolStripMenuItem});
             this.workingToolStripMenuItem.Image = global::GitUI.Properties.Resources._89;
             this.workingToolStripMenuItem.Name = "workingToolStripMenuItem";
-            this.workingToolStripMenuItem.Size = new System.Drawing.Size(133, 20);
+            this.workingToolStripMenuItem.Size = new System.Drawing.Size(133, 23);
             this.workingToolStripMenuItem.Text = "Working dir changes";
             // 
             // showIgnoredFilesToolStripMenuItem
@@ -434,7 +434,7 @@ namespace GitUI
             this.toolStripProgressBar1.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripProgressBar1.Name = "toolStripProgressBar1";
             this.toolStripProgressBar1.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.toolStripProgressBar1.Size = new System.Drawing.Size(150, 23);
+            this.toolStripProgressBar1.Size = new System.Drawing.Size(150, 26);
             this.toolStripProgressBar1.Visible = false;
             // 
             // Staged

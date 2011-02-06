@@ -2048,6 +2048,33 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="DrawNonRelativesTextGray" Property="Text">
           <Value>Teken niet gerelateerde teksten grijs</Value>
         </TranslationItem>
+        <TranslationItem Name="translationConfig_Fix" Property="Text">
+          <Value>Repareren</Value>
+        </TranslationItem>
+        <TranslationItem Name="SshConfig_Fix" Property="Text">
+          <Value>Repareren</Value>
+        </TranslationItem>
+        <TranslationItem Name="GitExtensionsInstall_Fix" Property="Text">
+          <Value>Repareren</Value>
+        </TranslationItem>
+        <TranslationItem Name="GitBinFound_Fix" Property="Text">
+          <Value>Repareren</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShellExtensionsRegistered_Fix" Property="Text">
+          <Value>Repareren</Value>
+        </TranslationItem>
+        <TranslationItem Name="DiffTool2_Fix" Property="Text">
+          <Value>Repareren</Value>
+        </TranslationItem>
+        <TranslationItem Name="DiffTool_Fix" Property="Text">
+          <Value>Repareren</Value>
+        </TranslationItem>
+        <TranslationItem Name="UserNameSet_Fix" Property="Text">
+          <Value>Repareren</Value>
+        </TranslationItem>
+        <TranslationItem Name="GitFound_Fix" Property="Text">
+          <Value>Repareren</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormModifiedDeletedCreated">
@@ -2077,6 +2104,15 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Editor</Value>
+        </TranslationItem>
+        <TranslationItem Name="_saveChanges" Property="Text">
+          <Value>Wilt u de wijzigingen opslaan?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_saveChangesCaption" Property="Text">
+          <Value>Opslaan</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripSaveButton" Property="ToolTipText">
+          <Value>Opslaan</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2565,8 +2601,17 @@ Bij het verwijderen van een vertakking kunnen commits verloren gaan!</Value>
         <TranslationItem Name="_strLoading" Property="Text">
           <Value>Laden...</Value>
         </TranslationItem>
+        <TranslationItem Name="_strCouldNotLocateARemoteThatBelongsToYourUser" Property="Text">
+          <Value>Geen repository gevonden voor uw gebruiker!</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strYouMustSpecifyATitleAndABody" Property="Text">
+          <Value>U moet een titel en bericht opgeven.</Value>
+        </TranslationItem>
         <TranslationItem Name="_strPullRequest" Property="Text">
           <Value>Binnenhaal verzoek</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strFailedToCreatePullRequest" Property="Text">
+          <Value>Fout tijdens aanmaken binnenhaal verzoek.</Value>
         </TranslationItem>
         <TranslationItem Name="_strDone" Property="Text">
           <Value>Klaar</Value>
@@ -2847,6 +2892,9 @@ Klik op de knop voor meer informatie over het maken van donaties.</Value>
         </TranslationItem>
         <TranslationItem Name="toolUnstageAllItem" Property="ToolTipText">
           <Value>Alles terugzetten</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolAuthorLabelItem" Property="Text">
+          <Value>Auteur: (formaat: "naam &lt;email&gt;")</Value>
         </TranslationItem>
         <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text">
           <Value>Wilt u ook de nieuwe bestanden in de selectie verwijderen?
@@ -3380,6 +3428,9 @@ welke deze externe vertakking volgt?</Value>
         <TranslationItem Name="Info" Property="Text">
           <Value>De repositorie zal gekloond worden naar een nieuwe direcorie:
      [destination]\Development</Value>
+        </TranslationItem>
+        <TranslationItem Name="brachLabel" Property="Text">
+          <Value>Vertakking</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

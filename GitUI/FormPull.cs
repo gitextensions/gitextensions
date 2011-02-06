@@ -125,7 +125,7 @@ namespace GitUI
                 MessageBox.Show(_selectSourceDirectory.Text);
                 return;
             }
-            if (PullFromRemote.Checked && string.IsNullOrEmpty(Remotes.Text))
+            if (PullFromRemote.Checked && string.IsNullOrEmpty(Remotes.Text) && !checkPullAll.Checked)
             {
                 MessageBox.Show(_selectRemoteRepository.Text);
                 return;
@@ -275,6 +275,9 @@ namespace GitUI
             Remotes.Enabled = true;
             AddRemote.Enabled = true;
             checkPullAll.Enabled = true;
+
+            Merge.Enabled = !checkPullAll.Checked;
+            Rebase.Enabled = !checkPullAll.Checked;
         }
 
         private void PullFromUrlCheckedChanged(object sender, EventArgs e)
@@ -288,6 +291,9 @@ namespace GitUI
             Remotes.Enabled = false;
             AddRemote.Enabled = false;
             checkPullAll.Enabled = false;
+
+            Merge.Enabled = true;
+            Rebase.Enabled = true;
         }
 
         private void AddRemoteClick(object sender, EventArgs e)
@@ -329,6 +335,11 @@ namespace GitUI
         private void checkPullAll_CheckedChanged(object sender, EventArgs e)
         {
             Remotes.Enabled = !checkPullAll.Checked;
+
+            Merge.Enabled = !checkPullAll.Checked;
+            Rebase.Enabled = !checkPullAll.Checked;
+            if (checkPullAll.Checked)
+                Fetch.Checked = true;
         }
     }
 }

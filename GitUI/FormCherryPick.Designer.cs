@@ -101,6 +101,10 @@
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RevisionGrid.Filter = "";
             this.RevisionGrid.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.RevisionGrid.InMemAuthorFilter = "";
+            this.RevisionGrid.InMemCommitterFilter = "";
+            this.RevisionGrid.InMemFilterIgnoreCase = false;
+            this.RevisionGrid.InMemMessageFilter = "";
             this.RevisionGrid.LastRow = 0;
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Name = "RevisionGrid";
@@ -136,7 +140,7 @@
             // 
             this.CherryPick.Location = new System.Drawing.Point(525, 3);
             this.CherryPick.Name = "CherryPick";
-            this.CherryPick.Size = new System.Drawing.Size(110, 23);
+            this.CherryPick.Size = new System.Drawing.Size(110, 25);
             this.CherryPick.TabIndex = 0;
             this.CherryPick.Text = "Cherry pick";
             this.CherryPick.UseVisualStyleBackColor = true;
@@ -150,8 +154,8 @@
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormCherryPick";
             this.Text = "Cherry pick";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCherryPick_FormClosing);
             this.Load += new System.EventHandler(this.FormCherryPick_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCherryPick_FormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();

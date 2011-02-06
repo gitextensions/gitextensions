@@ -69,7 +69,7 @@ namespace GitUI
                     var dashboardItem = new DashboardItem(repository);
                     dashboardItem.Click += dashboardItem_Click;
                     AddItem(dashboardItem);
-
+                    
                     if (m_repositoryCategory.CategoryType == RepositoryCategoryType.Repositories)
                     {
                         var contextMenu = new ContextMenuStrip();
@@ -249,8 +249,8 @@ namespace GitUI
                 if (dashboardItem != null)
                 {
                     dashboardItem.Click -= dashboardItem_Click;
+                    dashboardItem.Close();
                     Controls.RemoveAt(i - 1);
-                    dashboardItem.Dispose();
                 }
             }
             top = 26;

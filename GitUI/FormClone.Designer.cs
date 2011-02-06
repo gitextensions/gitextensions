@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.Branches = new System.Windows.Forms.ComboBox();
+            this.brachLabel = new System.Windows.Forms.Label();
             this.Info = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_NewDirectory = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -60,6 +62,8 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.Branches);
+            this.splitContainer1.Panel1.Controls.Add(this.brachLabel);
             this.splitContainer1.Panel1.Controls.Add(this.Info);
             this.splitContainer1.Panel1.Controls.Add(this._NO_TRANSLATE_NewDirectory);
             this.splitContainer1.Panel1.Controls.Add(this.label3);
@@ -75,21 +79,39 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.LoadSSHKey);
             this.splitContainer1.Panel2.Controls.Add(this.Ok);
-            this.splitContainer1.Size = new System.Drawing.Size(525, 263);
-            this.splitContainer1.SplitterDistance = 228;
+            this.splitContainer1.Size = new System.Drawing.Size(525, 300);
+            this.splitContainer1.SplitterDistance = 260;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // Branches
+            // 
+            this.Branches.FormattingEnabled = true;
+            this.Branches.Location = new System.Drawing.Point(158, 99);
+            this.Branches.Name = "Branches";
+            this.Branches.Size = new System.Drawing.Size(255, 21);
+            this.Branches.TabIndex = 12;
+            this.Branches.DropDown += new System.EventHandler(this.Branches_DropDown);
+            // 
+            // brachLabel
+            // 
+            this.brachLabel.AutoSize = true;
+            this.brachLabel.Location = new System.Drawing.Point(12, 102);
+            this.brachLabel.Name = "brachLabel";
+            this.brachLabel.Size = new System.Drawing.Size(40, 13);
+            this.brachLabel.TabIndex = 13;
+            this.brachLabel.Text = "Branch";
             // 
             // Info
             // 
-            this.Info.AutoSize = true;
             this.Info.BackColor = System.Drawing.SystemColors.Info;
             this.Info.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Info.Location = new System.Drawing.Point(15, 102);
+            this.Info.Location = new System.Drawing.Point(12, 128);
             this.Info.Name = "Info";
-            this.Info.Size = new System.Drawing.Size(303, 28);
+            this.Info.Size = new System.Drawing.Size(488, 42);
             this.Info.TabIndex = 11;
             this.Info.Text = "The repository will be cloned to a new directory located here:\r\n      [destinatio" +
                 "n]\\[directory]\r\n";
+            this.Info.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // _NO_TRANSLATE_NewDirectory
             // 
@@ -112,9 +134,9 @@
             // 
             this.groupBox1.Controls.Add(this.CentralRepository);
             this.groupBox1.Controls.Add(this.PersonalRepository);
-            this.groupBox1.Location = new System.Drawing.Point(15, 153);
+            this.groupBox1.Location = new System.Drawing.Point(15, 173);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(352, 68);
+            this.groupBox1.Size = new System.Drawing.Size(485, 68);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Repository type";
@@ -171,7 +193,7 @@
             // 
             this.ToBrowse.Location = new System.Drawing.Point(425, 44);
             this.ToBrowse.Name = "ToBrowse";
-            this.ToBrowse.Size = new System.Drawing.Size(75, 23);
+            this.ToBrowse.Size = new System.Drawing.Size(75, 25);
             this.ToBrowse.TabIndex = 6;
             this.ToBrowse.Text = "Browse";
             this.ToBrowse.UseVisualStyleBackColor = true;
@@ -181,7 +203,7 @@
             // 
             this.FromBrowse.Location = new System.Drawing.Point(425, 16);
             this.FromBrowse.Name = "FromBrowse";
-            this.FromBrowse.Size = new System.Drawing.Size(75, 23);
+            this.FromBrowse.Size = new System.Drawing.Size(75, 25);
             this.FromBrowse.TabIndex = 5;
             this.FromBrowse.Text = "Browse";
             this.FromBrowse.UseVisualStyleBackColor = true;
@@ -211,7 +233,7 @@
             this.LoadSSHKey.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LoadSSHKey.Location = new System.Drawing.Point(0, 2);
             this.LoadSSHKey.Name = "LoadSSHKey";
-            this.LoadSSHKey.Size = new System.Drawing.Size(155, 23);
+            this.LoadSSHKey.Size = new System.Drawing.Size(155, 25);
             this.LoadSSHKey.TabIndex = 25;
             this.LoadSSHKey.Text = "Load SSH key";
             this.LoadSSHKey.UseVisualStyleBackColor = true;
@@ -221,7 +243,7 @@
             // 
             this.Ok.Location = new System.Drawing.Point(425, 2);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(75, 23);
+            this.Ok.Size = new System.Drawing.Size(75, 25);
             this.Ok.TabIndex = 4;
             this.Ok.Text = "Clone";
             this.Ok.UseVisualStyleBackColor = true;
@@ -253,7 +275,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(525, 263);
+            this.ClientSize = new System.Drawing.Size(525, 300);
             this.Controls.Add(this.splitContainer1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -291,5 +313,7 @@
         private System.Windows.Forms.TextBox _NO_TRANSLATE_NewDirectory;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label Info;
+        private System.Windows.Forms.ComboBox Branches;
+        private System.Windows.Forms.Label brachLabel;
     }
 }

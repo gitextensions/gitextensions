@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this._NO_TRANSLATE_MailMapText = new GitUI.Editor.FileViewer();
             this.label1 = new System.Windows.Forms.Label();
@@ -60,18 +61,25 @@
             this._NO_TRANSLATE_MailMapText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this._NO_TRANSLATE_MailMapText.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this._NO_TRANSLATE_MailMapText.IgnoreWhitespaceChanges = false;
             this._NO_TRANSLATE_MailMapText.IsReadOnly = false;
             this._NO_TRANSLATE_MailMapText.Location = new System.Drawing.Point(0, 0);
             this._NO_TRANSLATE_MailMapText.Name = "_NO_TRANSLATE_MailMapText";
+            this._NO_TRANSLATE_MailMapText.NumberOfVisibleLines = 3;
+            this._NO_TRANSLATE_MailMapText.ScrollPos = 0;
+            this._NO_TRANSLATE_MailMapText.ShowEntireFile = false;
+            this._NO_TRANSLATE_MailMapText.ShowLineNumbers = true;
             this._NO_TRANSLATE_MailMapText.Size = new System.Drawing.Size(381, 474);
             this._NO_TRANSLATE_MailMapText.TabIndex = 0;
+            this._NO_TRANSLATE_MailMapText.TreatAllFilesAsText = false;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(233, 78);
+            this.label1.Size = new System.Drawing.Size(235, 78);
             this.label1.TabIndex = 1;
             this.label1.Text = "Edit the mailmap.\r\nThis file is meant to correct usernames.\r\n\r\nExample:\r\nHenk Wes" +
                 "thuis <Henk@.(none)>\r\nHenk Westhuis <henk_westhuis@hotmail.com>";
@@ -81,7 +89,7 @@
             this.Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Save.Location = new System.Drawing.Point(162, 439);
             this.Save.Name = "Save";
-            this.Save.Size = new System.Drawing.Size(75, 23);
+            this.Save.Size = new System.Drawing.Size(75, 25);
             this.Save.TabIndex = 0;
             this.Save.Text = "Save";
             this.Save.UseVisualStyleBackColor = true;

@@ -1,9 +1,13 @@
+
 #basic visual studio directories
 _UpgradeReport_Files/
 [Dd]ebug*/
 [Rr]elease*/
 _ReSharper*/
 TestResults/
+
+*.sdf
+*.opensdf
 
 */obj
 Plugins/*/obj

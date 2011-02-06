@@ -178,7 +178,7 @@
             // 
             this.Ok.Location = new System.Drawing.Point(314, 208);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(108, 23);
+            this.Ok.Size = new System.Drawing.Size(108, 25);
             this.Ok.TabIndex = 4;
             this.Ok.Text = "&Merge";
             this.Ok.UseVisualStyleBackColor = true;

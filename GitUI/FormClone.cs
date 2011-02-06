@@ -39,7 +39,7 @@ namespace GitUI
                 var fromProcess =
                     new FormProcess(Settings.GitCommand,
                                     GitCommandHelpers.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
-                                                                     CentralRepository.Checked, null));
+                                                                     CentralRepository.Checked, Branches.Text, null));
                 fromProcess.ShowDialog();
 
                 if (fromProcess.ErrorOccurred() || GitCommandHelpers.InTheMiddleOfPatch())
@@ -205,11 +205,21 @@ namespace GitUI
 
             if (Directory.Exists(destinationPath))
             {
-                Info.Text += " (directory already exists)";
-                Info.ForeColor = Color.Red;
+                if (Directory.GetDirectories(destinationPath).Length > 0 || Directory.GetFiles(destinationPath).Length > 0)
+                {
+                    Info.Text += " (directory already exists)";
+                    Info.ForeColor = Color.Red;
+                }
+                else
+                {
+                    Info.ForeColor = Color.Black;
+                }
             }
             else
+            {
+                Info.Text += " (new directory)";
                 Info.ForeColor = Color.Black;
+            }
         }
 
         private void NewDirectoryTextChanged(object sender, EventArgs e)
@@ -220,6 +230,12 @@ namespace GitUI
         private void ToSelectedIndexChanged(object sender, EventArgs e)
         {
             ToTextUpdate(sender, e);
+        }
+
+        private void Branches_DropDown(object sender, EventArgs e)
+        {
+            Branches.DisplayMember = "LocalName";
+            Branches.DataSource = GitCommandHelpers.GetRemoteHeads(_NO_TRANSLATE_From.Text, false, true);
         }
     }
 }

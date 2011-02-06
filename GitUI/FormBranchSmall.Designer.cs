@@ -39,7 +39,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(77, 15);
+            this.label1.Size = new System.Drawing.Size(69, 13);
             this.label1.TabIndex = 5;
             this.label1.Text = "Branch name";
             // 
@@ -47,7 +47,7 @@
             // 
             this.Ok.Location = new System.Drawing.Point(356, 5);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(108, 23);
+            this.Ok.Size = new System.Drawing.Size(108, 25);
             this.Ok.TabIndex = 4;
             this.Ok.Text = "Create branch";
             this.Ok.UseVisualStyleBackColor = true;
@@ -57,7 +57,7 @@
             // 
             this.BranchNameTextBox.Location = new System.Drawing.Point(127, 6);
             this.BranchNameTextBox.Name = "BranchNameTextBox";
-            this.BranchNameTextBox.Size = new System.Drawing.Size(223, 23);
+            this.BranchNameTextBox.Size = new System.Drawing.Size(223, 21);
             this.BranchNameTextBox.TabIndex = 3;
             this.BranchNameTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.BranchNameTextBoxKeyUp);
             // 
@@ -68,14 +68,14 @@
             this.CheckoutAfterCreate.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CheckoutAfterCreate.Location = new System.Drawing.Point(127, 32);
             this.CheckoutAfterCreate.Name = "CheckoutAfterCreate";
-            this.CheckoutAfterCreate.Size = new System.Drawing.Size(139, 19);
+            this.CheckoutAfterCreate.Size = new System.Drawing.Size(132, 17);
             this.CheckoutAfterCreate.TabIndex = 6;
             this.CheckoutAfterCreate.Text = "Checkout after create";
             this.CheckoutAfterCreate.UseVisualStyleBackColor = true;
             // 
             // FormBranchSmall
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(471, 58);
             this.Controls.Add(this.CheckoutAfterCreate);

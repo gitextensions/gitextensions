@@ -161,9 +161,9 @@ namespace PatchApply
             // 
             // BrowsePatch
             // 
-            this.BrowsePatch.Location = new System.Drawing.Point(356, 9);
+            this.BrowsePatch.Location = new System.Drawing.Point(356, 7);
             this.BrowsePatch.Name = "BrowsePatch";
-            this.BrowsePatch.Size = new System.Drawing.Size(75, 23);
+            this.BrowsePatch.Size = new System.Drawing.Size(75, 25);
             this.BrowsePatch.TabIndex = 5;
             this.BrowsePatch.Text = "Browse";
             this.BrowsePatch.UseVisualStyleBackColor = true;
@@ -175,7 +175,7 @@ namespace PatchApply
             this.PatchFileNameEdit.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
             this.PatchFileNameEdit.Location = new System.Drawing.Point(93, 9);
             this.PatchFileNameEdit.Name = "PatchFileNameEdit";
-            this.PatchFileNameEdit.Size = new System.Drawing.Size(256, 23);
+            this.PatchFileNameEdit.Size = new System.Drawing.Size(256, 21);
             this.PatchFileNameEdit.TabIndex = 3;
             this.PatchFileNameEdit.TextChanged += new System.EventHandler(this.PatchFileNameEdit_TextChanged);
             // 
@@ -184,13 +184,13 @@ namespace PatchApply
             this.labelPatch.AutoSize = true;
             this.labelPatch.Location = new System.Drawing.Point(3, 9);
             this.labelPatch.Name = "labelPatch";
-            this.labelPatch.Size = new System.Drawing.Size(37, 15);
+            this.labelPatch.Size = new System.Drawing.Size(34, 13);
             this.labelPatch.TabIndex = 1;
             this.labelPatch.Text = "Patch";
             // 
             // ViewPatch
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(689, 501);
             this.Controls.Add(this.splitContainer4);

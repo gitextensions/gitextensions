@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormArchive));
             this.label1 = new System.Windows.Forms.Label();
             this.Save = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -47,7 +46,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 6);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(113, 13);
+            this.label1.Size = new System.Drawing.Size(114, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Select a revision to zip";
             // 
@@ -55,7 +54,7 @@
             // 
             this.Save.Location = new System.Drawing.Point(753, 6);
             this.Save.Name = "Save";
-            this.Save.Size = new System.Drawing.Size(75, 23);
+            this.Save.Size = new System.Drawing.Size(75, 25);
             this.Save.TabIndex = 3;
             this.Save.Text = "Save";
             this.Save.UseVisualStyleBackColor = true;
@@ -101,11 +100,20 @@
             // 
             // revisionGrid1
             // 
-            this.revisionGrid1.CurrentCheckout = null;
+            this.revisionGrid1.AllowGraphWithFilter = false;
+            this.revisionGrid1.BranchFilter = "";
+            this.revisionGrid1.CurrentCheckout = "";
             this.revisionGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.revisionGrid1.Filter = "";
+            this.revisionGrid1.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.revisionGrid1.InMemAuthorFilter = "";
+            this.revisionGrid1.InMemCommitterFilter = "";
+            this.revisionGrid1.InMemFilterIgnoreCase = false;
+            this.revisionGrid1.InMemMessageFilter = "";
             this.revisionGrid1.LastRow = 0;
             this.revisionGrid1.Location = new System.Drawing.Point(0, 0);
             this.revisionGrid1.Name = "revisionGrid1";
+            this.revisionGrid1.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.revisionGrid1.Size = new System.Drawing.Size(831, 235);
             this.revisionGrid1.TabIndex = 0;
             // 
@@ -115,12 +123,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(831, 300);
             this.Controls.Add(this.splitContainer1);
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "FormArchive";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Archive";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormArchive_FormClosing);
             this.Load += new System.EventHandler(this.FormArchive_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormArchive_FormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
