@@ -1677,9 +1677,11 @@ namespace GitUI
             {
                 translationConfig.BackColor = Color.LightSalmon;
                 translationConfig.Text = "There is no language configured for Git Extensions.";
+                translationConfig_Fix.Visible = true;
                 return false;
             }
             translationConfig.BackColor = Color.LightGreen;
+            translationConfig_Fix.Visible = false;
             translationConfig.Text = "The configured language is " + Settings.Translation + ".";
             return true;
         }
@@ -1692,15 +1694,20 @@ namespace GitUI
                 if (!File.Exists(Settings.Plink) || !File.Exists(Settings.Puttygen) || !File.Exists(Settings.Pageant))
                 {
                     SshConfig.BackColor = Color.LightSalmon;
+                    SshConfig.Text = "PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.";
                     SshConfig.Text =
                         "PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.";
+                    SshConfig.Text = "PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.";
+                    SshConfig_Fix.Visible = true;
                     return false;
                 }
                 SshConfig.BackColor = Color.LightGreen;
+                SshConfig_Fix.Visible = false;
                 SshConfig.Text = "SSH client PuTTY is configured properly.";
                 return true;
             }
             SshConfig.BackColor = Color.LightGreen;
+            SshConfig_Fix.Visible = false;
             if (string.IsNullOrEmpty(GitCommandHelpers.GetSsh()))
                 SshConfig.Text =
                     "Default SSH client, OpenSSH, will be used. (commandline window will appear on pull, push and clone operations)";
@@ -1716,10 +1723,11 @@ namespace GitUI
                 !CheckIfFileIsInPath("sh.exe") && !CheckIfFileIsInPath("sh"))
             {
                 GitBinFound.BackColor = Color.LightSalmon;
-                GitBinFound.Text =
-                    "Linux tools (sh) not found. To solve this problem you can set the correct path in settings.";
+                GitBinFound.Text = "Linux tools (sh) not found. To solve this problem you can set the correct path in settings.";
+                GitBinFound_Fix.Visible = true;
                 return false;
             }
+            GitBinFound_Fix.Visible = false;
             GitBinFound.BackColor = Color.LightGreen;
             GitBinFound.Text = "Linux tools (sh) found on your computer.";
             return true;
@@ -1732,8 +1740,10 @@ namespace GitUI
             {
                 GitFound.BackColor = Color.LightSalmon;
                 GitFound.Text = "Git not found. To solve this problem you can set the correct path in settings.";
+                GitFound_Fix.Visible = true;
                 return false;
             }
+            GitFound_Fix.Visible = false;
             GitFound.BackColor = Color.LightGreen;
             GitFound.Text = "Git is found on your computer.";
             return true;
@@ -1745,8 +1755,8 @@ namespace GitUI
             if (string.IsNullOrEmpty(GetGlobalDiffToolFromConfig()))
             {
                 DiffTool2.BackColor = Color.LightSalmon;
-                DiffTool2.Text =
-                    "You should configure a diff tool to show file diff in external program (kdiff3 for example).";
+                DiffTool2_Fix.Visible = true;
+                DiffTool2.Text = "You should configure a diff tool to show file diff in external program (kdiff3 for example).";
                 return false;
             }
             if (Settings.RunningOnWindows())
@@ -1757,18 +1767,20 @@ namespace GitUI
                     if (string.IsNullOrEmpty(p) || !File.Exists(p))
                     {
                         DiffTool2.BackColor = Color.LightSalmon;
-                        DiffTool2.Text =
-                            "KDiff3 is configured as difftool, but the path to kdiff.exe is not configured.";
+                        DiffTool2.Text = "KDiff3 is configured as difftool, but the path to kdiff.exe is not configured.";
+                        DiffTool2_Fix.Visible = true;
                         return false;
                     }
                     DiffTool2.BackColor = Color.LightGreen;
                     DiffTool2.Text = "KDiff3 is configured as difftool.";
+                    DiffTool2_Fix.Visible = false;
                     return true;
                 }
             }
             string difftool = GetGlobalDiffToolFromConfig();
             DiffTool2.BackColor = Color.LightGreen;
             DiffTool2.Text = "There is a difftool configured: " + difftool;
+            DiffTool2_Fix.Visible = false;
             return true;
         }
 
@@ -1778,8 +1790,8 @@ namespace GitUI
             if (string.IsNullOrEmpty(GitCommandHelpers.GetGlobalSetting("merge.tool")))
             {
                 DiffTool.BackColor = Color.LightSalmon;
-                DiffTool.Text =
-                    "You need to configure merge tool in order to solve mergeconflicts (kdiff3 for example).";
+                DiffTool.Text = "You need to configure merge tool in order to solve mergeconflicts (kdiff3 for example).";
+                DiffTool_Fix.Visible = true;
                 return false;
             }
 
@@ -1792,12 +1804,13 @@ namespace GitUI
                     if (string.IsNullOrEmpty(p) || !File.Exists(p))
                     {
                         DiffTool.BackColor = Color.LightSalmon;
-                        DiffTool.Text =
-                            "KDiff3 is configured as mergetool, but the path to kdiff.exe is not configured.";
+                        DiffTool.Text = "KDiff3 is configured as mergetool, but the path to kdiff.exe is not configured.";
+                        DiffTool_Fix.Visible = true;
                         return false;
                     }
                     DiffTool.BackColor = Color.LightGreen;
                     DiffTool.Text = "KDiff3 is configured as mergetool.";
+                    DiffTool_Fix.Visible = false;
                     return true;
                 }
                 string mergetool = GitCommandHelpers.GetGlobalSetting("merge.tool");
@@ -1808,17 +1821,19 @@ namespace GitUI
                     if (string.IsNullOrEmpty(p))
                     {
                         DiffTool.BackColor = Color.LightSalmon;
-                        DiffTool.Text = mergetool +
-                                        " is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.";
+                        DiffTool.Text = mergetool + " is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.";
+                        DiffTool_Fix.Visible = true;
                         return false;
                     }
                     DiffTool.BackColor = Color.LightGreen;
                     DiffTool.Text = "There is a custom mergetool configured: " + mergetool;
+                    DiffTool_Fix.Visible = false;
                     return true;
                 }
             }
             DiffTool.BackColor = Color.LightGreen;
             DiffTool.Text = "There is a mergetool configured.";
+            DiffTool_Fix.Visible = false;
             return true;
         }
 
@@ -1830,10 +1845,12 @@ namespace GitUI
             {
                 UserNameSet.BackColor = Color.LightSalmon;
                 UserNameSet.Text = "You need to configure a username and an email address.";
+                UserNameSet_Fix.Visible = true;
                 return false;
             }
             UserNameSet.BackColor = Color.LightGreen;
             UserNameSet.Text = "A username and an email address are configured.";
+            UserNameSet_Fix.Visible = false;
             return true;
         }
 
@@ -1856,13 +1873,13 @@ namespace GitUI
                                                       null)))
             {
                 ShellExtensionsRegistered.BackColor = Color.LightSalmon;
-                ShellExtensionsRegistered.Text =
-                    String.Format("{0} needs to be registered in order to use the shell extensions.",
-                                  GitExtensionsShellExName);
+                ShellExtensionsRegistered.Text = String.Format("{0} needs to be registered in order to use the shell extensions.", GitExtensionsShellExName);
+                ShellExtensionsRegistered_Fix.Visible = true;
                 return false;
             }
             ShellExtensionsRegistered.BackColor = Color.LightGreen;
             ShellExtensionsRegistered.Text = "Shell extensions registered properly.";
+            ShellExtensionsRegistered_Fix.Visible = false;
             return true;
         }
 
@@ -1875,19 +1892,20 @@ namespace GitUI
             if (string.IsNullOrEmpty(Settings.GetInstallDir()))
             {
                 GitExtensionsInstall.BackColor = Color.LightSalmon;
-                GitExtensionsInstall.Text =
-                    "Registry entry missing [Software\\GitExtensions\\GitExtensions\\1.0.0.0\\InstallDir].";
+                GitExtensionsInstall.Text = "Registry entry missing [Software\\GitExtensions\\GitExtensions\\1.0.0.0\\InstallDir].";
+                GitExtensionsInstall_Fix.Visible = true;
                 return false;
             }
             if (Settings.GetInstallDir() != null && Settings.GetInstallDir().EndsWith(".exe"))
             {
                 GitExtensionsInstall.BackColor = Color.LightSalmon;
-                GitExtensionsInstall.Text =
-                    "Invalid installation directory stored in [Software\\GitExtensions\\GitExtensions\\1.0.0.0\\InstallDir].";
+                GitExtensionsInstall.Text = "Invalid installation directory stored in [Software\\GitExtensions\\GitExtensions\\1.0.0.0\\InstallDir].";
+                GitExtensionsInstall_Fix.Visible = true;
                 return false;
             }
             GitExtensionsInstall.BackColor = Color.LightGreen;
             GitExtensionsInstall.Text = "GitExtensions is properly registered.";
+            GitExtensionsInstall_Fix.Visible = false;
             return true;
         }
 

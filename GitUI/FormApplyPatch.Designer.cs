@@ -54,9 +54,9 @@
             // 
             // BrowsePatch
             // 
-            this.BrowsePatch.Location = new System.Drawing.Point(453, 9);
+            this.BrowsePatch.Location = new System.Drawing.Point(453, 8);
             this.BrowsePatch.Name = "BrowsePatch";
-            this.BrowsePatch.Size = new System.Drawing.Size(75, 23);
+            this.BrowsePatch.Size = new System.Drawing.Size(79, 25);
             this.BrowsePatch.TabIndex = 0;
             this.BrowsePatch.Text = "Browse";
             this.BrowsePatch.UseVisualStyleBackColor = true;
@@ -76,7 +76,7 @@
             // 
             this.Apply.Location = new System.Drawing.Point(3, 3);
             this.Apply.Name = "Apply";
-            this.Apply.Size = new System.Drawing.Size(112, 23);
+            this.Apply.Size = new System.Drawing.Size(112, 25);
             this.Apply.TabIndex = 3;
             this.Apply.Text = "Apply patch";
             this.Apply.UseVisualStyleBackColor = true;
@@ -91,7 +91,7 @@
             this.Mergetool.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Mergetool.Location = new System.Drawing.Point(3, 76);
             this.Mergetool.Name = "Mergetool";
-            this.Mergetool.Size = new System.Drawing.Size(112, 23);
+            this.Mergetool.Size = new System.Drawing.Size(112, 25);
             this.Mergetool.TabIndex = 5;
             this.Mergetool.Text = "Solve conflicts";
             this.Mergetool.UseVisualStyleBackColor = true;
@@ -101,7 +101,7 @@
             // 
             this.Skip.Location = new System.Drawing.Point(2, 209);
             this.Skip.Name = "Skip";
-            this.Skip.Size = new System.Drawing.Size(112, 23);
+            this.Skip.Size = new System.Drawing.Size(112, 25);
             this.Skip.TabIndex = 6;
             this.Skip.Text = "Skip patch";
             this.Skip.UseVisualStyleBackColor = true;
@@ -111,7 +111,7 @@
             // 
             this.Abort.Location = new System.Drawing.Point(2, 238);
             this.Abort.Name = "Abort";
-            this.Abort.Size = new System.Drawing.Size(112, 23);
+            this.Abort.Size = new System.Drawing.Size(112, 25);
             this.Abort.TabIndex = 7;
             this.Abort.Text = "Abort patch";
             this.Abort.UseVisualStyleBackColor = true;
@@ -121,7 +121,7 @@
             // 
             this.Resolved.Location = new System.Drawing.Point(3, 180);
             this.Resolved.Name = "Resolved";
-            this.Resolved.Size = new System.Drawing.Size(112, 23);
+            this.Resolved.Size = new System.Drawing.Size(112, 25);
             this.Resolved.TabIndex = 8;
             this.Resolved.Text = "Conflicts resolved";
             this.Resolved.UseVisualStyleBackColor = true;
@@ -131,7 +131,7 @@
             // 
             this.AddFiles.Location = new System.Drawing.Point(3, 131);
             this.AddFiles.Name = "AddFiles";
-            this.AddFiles.Size = new System.Drawing.Size(112, 23);
+            this.AddFiles.Size = new System.Drawing.Size(112, 25);
             this.AddFiles.TabIndex = 9;
             this.AddFiles.Text = "Add files";
             this.AddFiles.UseVisualStyleBackColor = true;
@@ -198,9 +198,9 @@
             // BrowseDir
             // 
             this.BrowseDir.Enabled = false;
-            this.BrowseDir.Location = new System.Drawing.Point(453, 35);
+            this.BrowseDir.Location = new System.Drawing.Point(453, 34);
             this.BrowseDir.Name = "BrowseDir";
-            this.BrowseDir.Size = new System.Drawing.Size(75, 23);
+            this.BrowseDir.Size = new System.Drawing.Size(79, 25);
             this.BrowseDir.TabIndex = 5;
             this.BrowseDir.Text = "Browse";
             this.BrowseDir.UseVisualStyleBackColor = true;

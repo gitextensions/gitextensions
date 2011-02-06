@@ -47,7 +47,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(56, 13);
+            this.label1.Size = new System.Drawing.Size(58, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Fi&nd what:";
             // 
@@ -66,7 +66,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtLookFor.Location = new System.Drawing.Point(90, 6);
             this.txtLookFor.Name = "txtLookFor";
-            this.txtLookFor.Size = new System.Drawing.Size(232, 20);
+            this.txtLookFor.Size = new System.Drawing.Size(232, 21);
             this.txtLookFor.TabIndex = 1;
             // 
             // txtReplaceWith
@@ -75,7 +75,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtReplaceWith.Location = new System.Drawing.Point(90, 32);
             this.txtReplaceWith.Name = "txtReplaceWith";
-            this.txtReplaceWith.Size = new System.Drawing.Size(232, 20);
+            this.txtReplaceWith.Size = new System.Drawing.Size(232, 21);
             this.txtReplaceWith.TabIndex = 3;
             // 
             // btnFindNext
@@ -83,7 +83,7 @@
             this.btnFindNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnFindNext.Location = new System.Drawing.Point(247, 81);
             this.btnFindNext.Name = "btnFindNext";
-            this.btnFindNext.Size = new System.Drawing.Size(75, 23);
+            this.btnFindNext.Size = new System.Drawing.Size(75, 25);
             this.btnFindNext.TabIndex = 6;
             this.btnFindNext.Text = "&Find next";
             this.btnFindNext.UseVisualStyleBackColor = true;
@@ -94,7 +94,7 @@
             this.btnReplace.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnReplace.Location = new System.Drawing.Point(85, 110);
             this.btnReplace.Name = "btnReplace";
-            this.btnReplace.Size = new System.Drawing.Size(75, 23);
+            this.btnReplace.Size = new System.Drawing.Size(75, 25);
             this.btnReplace.TabIndex = 7;
             this.btnReplace.Text = "&Replace";
             this.btnReplace.UseVisualStyleBackColor = true;
@@ -105,7 +105,7 @@
             this.btnReplaceAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnReplaceAll.Location = new System.Drawing.Point(166, 110);
             this.btnReplaceAll.Name = "btnReplaceAll";
-            this.btnReplaceAll.Size = new System.Drawing.Size(75, 23);
+            this.btnReplaceAll.Size = new System.Drawing.Size(75, 25);
             this.btnReplaceAll.TabIndex = 9;
             this.btnReplaceAll.Text = "Replace &All";
             this.btnReplaceAll.UseVisualStyleBackColor = true;
@@ -126,7 +126,7 @@
             this.chkMatchCase.AutoSize = true;
             this.chkMatchCase.Location = new System.Drawing.Point(90, 58);
             this.chkMatchCase.Name = "chkMatchCase";
-            this.chkMatchCase.Size = new System.Drawing.Size(82, 17);
+            this.chkMatchCase.Size = new System.Drawing.Size(80, 17);
             this.chkMatchCase.TabIndex = 4;
             this.chkMatchCase.Text = "Match &case";
             this.chkMatchCase.UseVisualStyleBackColor = true;
@@ -136,7 +136,7 @@
             this.btnHighlightAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnHighlightAll.Location = new System.Drawing.Point(105, 110);
             this.btnHighlightAll.Name = "btnHighlightAll";
-            this.btnHighlightAll.Size = new System.Drawing.Size(136, 23);
+            this.btnHighlightAll.Size = new System.Drawing.Size(136, 25);
             this.btnHighlightAll.TabIndex = 8;
             this.btnHighlightAll.Text = "Find && highlight &all";
             this.btnHighlightAll.UseVisualStyleBackColor = true;
@@ -149,7 +149,7 @@
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Location = new System.Drawing.Point(247, 110);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.Size = new System.Drawing.Size(75, 25);
             this.btnCancel.TabIndex = 6;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
@@ -160,7 +160,7 @@
             this.btnFindPrevious.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnFindPrevious.Location = new System.Drawing.Point(157, 81);
             this.btnFindPrevious.Name = "btnFindPrevious";
-            this.btnFindPrevious.Size = new System.Drawing.Size(84, 23);
+            this.btnFindPrevious.Size = new System.Drawing.Size(84, 25);
             this.btnFindPrevious.TabIndex = 6;
             this.btnFindPrevious.Text = "Find pre&vious";
             this.btnFindPrevious.UseVisualStyleBackColor = true;
@@ -189,7 +189,6 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FindAndReplaceForm";
-            this.ShowInTaskbar = false;
             this.Text = "Find and replace";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FindAndReplaceForm_FormClosing);
             this.ResumeLayout(false);

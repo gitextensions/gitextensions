@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormLoadPuttySshKey));
             this.label1 = new System.Windows.Forms.Label();
             this.PrivateKeypath = new System.Windows.Forms.ComboBox();
             this.Browse = new System.Windows.Forms.Button();
@@ -40,7 +39,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 19);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(76, 13);
+            this.label1.Size = new System.Drawing.Size(78, 13);
             this.label1.TabIndex = 27;
             this.label1.Text = "Private key file";
             // 
@@ -57,7 +56,7 @@
             // 
             this.Browse.Location = new System.Drawing.Point(443, 14);
             this.Browse.Name = "Browse";
-            this.Browse.Size = new System.Drawing.Size(75, 23);
+            this.Browse.Size = new System.Drawing.Size(75, 25);
             this.Browse.TabIndex = 29;
             this.Browse.Text = "Browse";
             this.Browse.UseVisualStyleBackColor = true;
@@ -69,23 +68,22 @@
             this.LoadSSHKey.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LoadSSHKey.Location = new System.Drawing.Point(443, 43);
             this.LoadSSHKey.Name = "LoadSSHKey";
-            this.LoadSSHKey.Size = new System.Drawing.Size(75, 23);
+            this.LoadSSHKey.Size = new System.Drawing.Size(75, 25);
             this.LoadSSHKey.TabIndex = 26;
             this.LoadSSHKey.Text = "Load";
             this.LoadSSHKey.UseVisualStyleBackColor = true;
             this.LoadSSHKey.Click += new System.EventHandler(this.LoadSshKeyClick);
             // 
-            // FormLoadPuttySSHKey
+            // FormLoadPuttySshKey
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(530, 71);
+            this.ClientSize = new System.Drawing.Size(530, 75);
             this.Controls.Add(this.Browse);
             this.Controls.Add(this.PrivateKeypath);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.LoadSSHKey);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormLoadPuttySshKey";

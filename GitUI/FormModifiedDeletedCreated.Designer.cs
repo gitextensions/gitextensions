@@ -48,16 +48,17 @@
             this.Label.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Label.Location = new System.Drawing.Point(67, 0);
             this.Label.Name = "Label";
-            this.Label.Size = new System.Drawing.Size(420, 59);
+            this.Label.Size = new System.Drawing.Size(420, 61);
             this.Label.TabIndex = 0;
             this.Label.Text = "Use created or deleted file?";
             // 
             // Local
             // 
             this.Local.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Local.Location = new System.Drawing.Point(3, 3);
+            this.Local.Location = new System.Drawing.Point(0, 0);
+            this.Local.Margin = new System.Windows.Forms.Padding(0);
             this.Local.Name = "Local";
-            this.Local.Size = new System.Drawing.Size(157, 21);
+            this.Local.Size = new System.Drawing.Size(163, 25);
             this.Local.TabIndex = 1;
             this.Local.Text = "Local";
             this.Local.UseVisualStyleBackColor = true;
@@ -66,9 +67,10 @@
             // Remote
             // 
             this.Remote.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Remote.Location = new System.Drawing.Point(166, 3);
+            this.Remote.Location = new System.Drawing.Point(163, 0);
+            this.Remote.Margin = new System.Windows.Forms.Padding(0);
             this.Remote.Name = "Remote";
-            this.Remote.Size = new System.Drawing.Size(157, 21);
+            this.Remote.Size = new System.Drawing.Size(163, 25);
             this.Remote.TabIndex = 2;
             this.Remote.Text = "Remote";
             this.Remote.UseVisualStyleBackColor = true;
@@ -88,9 +90,10 @@
             // Base
             // 
             this.Base.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Base.Location = new System.Drawing.Point(329, 3);
+            this.Base.Location = new System.Drawing.Point(326, 0);
+            this.Base.Margin = new System.Windows.Forms.Padding(0);
             this.Base.Name = "Base";
-            this.Base.Size = new System.Drawing.Size(158, 21);
+            this.Base.Size = new System.Drawing.Size(164, 25);
             this.Base.TabIndex = 4;
             this.Base.Text = "Base";
             this.Base.UseVisualStyleBackColor = true;
@@ -108,7 +111,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(496, 98);
             this.tableLayoutPanel1.TabIndex = 5;
             // 
@@ -122,11 +125,11 @@
             this.tableLayoutPanel2.Controls.Add(this.Remote, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.Base, 2, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 68);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 70);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(490, 27);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(490, 25);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // tableLayoutPanel3
@@ -141,7 +144,7 @@
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 1;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(490, 59);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(490, 61);
             this.tableLayoutPanel3.TabIndex = 1;
             // 
             // questionImage
@@ -151,7 +154,7 @@
             this.questionImage.Location = new System.Drawing.Point(0, 0);
             this.questionImage.Margin = new System.Windows.Forms.Padding(0);
             this.questionImage.Name = "questionImage";
-            this.questionImage.Size = new System.Drawing.Size(64, 59);
+            this.questionImage.Size = new System.Drawing.Size(64, 61);
             this.questionImage.TabIndex = 6;
             this.questionImage.TabStop = false;
             // 

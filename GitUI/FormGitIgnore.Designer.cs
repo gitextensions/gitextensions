@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormGitIgnore));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this._NO_TRANSLATE_GitIgnoreEdit = new GitUI.Editor.FileViewer();
@@ -64,18 +65,25 @@
             this._NO_TRANSLATE_GitIgnoreEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this._NO_TRANSLATE_GitIgnoreEdit.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this._NO_TRANSLATE_GitIgnoreEdit.IgnoreWhitespaceChanges = false;
             this._NO_TRANSLATE_GitIgnoreEdit.IsReadOnly = false;
             this._NO_TRANSLATE_GitIgnoreEdit.Location = new System.Drawing.Point(0, 0);
-            this._NO_TRANSLATE_GitIgnoreEdit.Name = "_GitIgnoreEdit";
+            this._NO_TRANSLATE_GitIgnoreEdit.Name = "_NO_TRANSLATE_GitIgnoreEdit";
+            this._NO_TRANSLATE_GitIgnoreEdit.NumberOfVisibleLines = 3;
+            this._NO_TRANSLATE_GitIgnoreEdit.ScrollPos = 0;
+            this._NO_TRANSLATE_GitIgnoreEdit.ShowEntireFile = false;
+            this._NO_TRANSLATE_GitIgnoreEdit.ShowLineNumbers = true;
             this._NO_TRANSLATE_GitIgnoreEdit.Size = new System.Drawing.Size(400, 473);
             this._NO_TRANSLATE_GitIgnoreEdit.TabIndex = 0;
+            this._NO_TRANSLATE_GitIgnoreEdit.TreatAllFilesAsText = false;
             // 
             // AddDefault
             // 
             this.AddDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.AddDefault.Location = new System.Drawing.Point(6, 438);
             this.AddDefault.Name = "AddDefault";
-            this.AddDefault.Size = new System.Drawing.Size(108, 23);
+            this.AddDefault.Size = new System.Drawing.Size(139, 25);
             this.AddDefault.TabIndex = 2;
             this.AddDefault.Text = "Add default ignores";
             this.AddDefault.UseVisualStyleBackColor = true;
@@ -84,9 +92,9 @@
             // Save
             // 
             this.Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Save.Location = new System.Drawing.Point(143, 438);
+            this.Save.Location = new System.Drawing.Point(151, 438);
             this.Save.Name = "Save";
-            this.Save.Size = new System.Drawing.Size(75, 23);
+            this.Save.Size = new System.Drawing.Size(75, 25);
             this.Save.TabIndex = 1;
             this.Save.Text = "Save";
             this.Save.UseVisualStyleBackColor = true;
@@ -97,7 +105,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(203, 390);
+            this.label1.Size = new System.Drawing.Size(213, 390);
             this.label1.TabIndex = 0;
             this.label1.Text = resources.GetString("label1.Text");
             // 

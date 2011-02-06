@@ -92,6 +92,7 @@
     <Compile Include="RevisionGraph.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Statistics\CommitCounter.cs" />
+    <Compile Include="Statistics\ImpactLoader.cs" />
     <Compile Include="Strings.cs" />
     <Compile Include="FileInfoExtensions.cs" />
     <Compile Include="System.cs" />

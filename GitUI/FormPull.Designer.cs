@@ -32,6 +32,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.PullImage = new System.Windows.Forms.PictureBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.checkPullAll = new System.Windows.Forms.CheckBox();
             this.PullFromUrl = new System.Windows.Forms.RadioButton();
             this.PullFromRemote = new System.Windows.Forms.RadioButton();
             this.AddRemote = new System.Windows.Forms.Button();
@@ -42,8 +43,8 @@
             this.AutoStash = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.Fetch = new System.Windows.Forms.RadioButton();
-            this.Rebase = new System.Windows.Forms.RadioButton();
             this.Merge = new System.Windows.Forms.RadioButton();
+            this.Rebase = new System.Windows.Forms.RadioButton();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this._NO_TRANSLATE_localBranch = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -52,7 +53,6 @@
             this.Stash = new System.Windows.Forms.Button();
             this.Mergetool = new System.Windows.Forms.Button();
             this.Tooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.checkPullAll = new System.Windows.Forms.CheckBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -115,6 +115,17 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Pull from";
             // 
+            // checkPullAll
+            // 
+            this.checkPullAll.AutoSize = true;
+            this.checkPullAll.Location = new System.Drawing.Point(93, 20);
+            this.checkPullAll.Name = "checkPullAll";
+            this.checkPullAll.Size = new System.Drawing.Size(37, 17);
+            this.checkPullAll.TabIndex = 6;
+            this.checkPullAll.Text = "All";
+            this.checkPullAll.UseVisualStyleBackColor = true;
+            this.checkPullAll.CheckedChanged += new System.EventHandler(this.checkPullAll_CheckedChanged);
+            // 
             // PullFromUrl
             // 
             this.PullFromUrl.AutoSize = true;
@@ -143,9 +154,9 @@
             // 
             // AddRemote
             // 
-            this.AddRemote.Location = new System.Drawing.Point(422, 18);
+            this.AddRemote.Location = new System.Drawing.Point(422, 14);
             this.AddRemote.Name = "AddRemote";
-            this.AddRemote.Size = new System.Drawing.Size(110, 23);
+            this.AddRemote.Size = new System.Drawing.Size(110, 25);
             this.AddRemote.TabIndex = 2;
             this.AddRemote.Text = "Manage remotes";
             this.AddRemote.UseVisualStyleBackColor = true;
@@ -156,7 +167,7 @@
             this.Remotes.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.Remotes.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.Remotes.FormattingEnabled = true;
-            this.Remotes.Location = new System.Drawing.Point(148, 19);
+            this.Remotes.Location = new System.Drawing.Point(148, 16);
             this.Remotes.Name = "Remotes";
             this.Remotes.Size = new System.Drawing.Size(268, 21);
             this.Remotes.TabIndex = 1;
@@ -167,7 +178,7 @@
             this.BrowseSource.Enabled = false;
             this.BrowseSource.Location = new System.Drawing.Point(422, 46);
             this.BrowseSource.Name = "BrowseSource";
-            this.BrowseSource.Size = new System.Drawing.Size(111, 23);
+            this.BrowseSource.Size = new System.Drawing.Size(110, 25);
             this.BrowseSource.TabIndex = 5;
             this.BrowseSource.Text = "Browse";
             this.BrowseSource.UseVisualStyleBackColor = true;
@@ -190,7 +201,7 @@
             this.Pull.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Pull.Location = new System.Drawing.Point(425, 282);
             this.Pull.Name = "Pull";
-            this.Pull.Size = new System.Drawing.Size(111, 23);
+            this.Pull.Size = new System.Drawing.Size(111, 25);
             this.Pull.TabIndex = 14;
             this.Pull.Text = "&Pull";
             this.Pull.UseVisualStyleBackColor = true;
@@ -199,7 +210,7 @@
             // AutoStash
             // 
             this.AutoStash.AutoSize = true;
-            this.AutoStash.Location = new System.Drawing.Point(245, 286);
+            this.AutoStash.Location = new System.Drawing.Point(243, 287);
             this.AutoStash.Name = "AutoStash";
             this.AutoStash.Size = new System.Drawing.Size(78, 17);
             this.AutoStash.TabIndex = 12;
@@ -209,8 +220,8 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.Fetch);
-            this.groupBox1.Controls.Add(this.Rebase);
             this.groupBox1.Controls.Add(this.Merge);
+            this.groupBox1.Controls.Add(this.Rebase);
             this.groupBox1.Location = new System.Drawing.Point(3, 174);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(541, 102);
@@ -229,21 +240,10 @@
             this.Fetch.UseVisualStyleBackColor = true;
             this.Fetch.CheckedChanged += new System.EventHandler(this.FetchCheckedChanged);
             // 
-            // Rebase
-            // 
-            this.Rebase.Location = new System.Drawing.Point(7, 40);
-            this.Rebase.Name = "Rebase";
-            this.Rebase.Size = new System.Drawing.Size(526, 38);
-            this.Rebase.TabIndex = 8;
-            this.Rebase.Text = "&Rebase remote branch to current branch, creates linear history. It is recommende" +
-                "d\r\nto choose a remote branch when using rebase. (use with caution)";
-            this.Rebase.UseVisualStyleBackColor = true;
-            this.Rebase.CheckedChanged += new System.EventHandler(this.RebaseCheckedChanged);
-            // 
             // Merge
             // 
             this.Merge.Checked = true;
-            this.Merge.Location = new System.Drawing.Point(7, 20);
+            this.Merge.Location = new System.Drawing.Point(7, 18);
             this.Merge.Name = "Merge";
             this.Merge.Size = new System.Drawing.Size(528, 24);
             this.Merge.TabIndex = 7;
@@ -251,6 +251,17 @@
             this.Merge.Text = "&Merge remote branch to current branch";
             this.Merge.UseVisualStyleBackColor = true;
             this.Merge.CheckedChanged += new System.EventHandler(this.MergeCheckedChanged);
+            // 
+            // Rebase
+            // 
+            this.Rebase.Location = new System.Drawing.Point(7, 36);
+            this.Rebase.Name = "Rebase";
+            this.Rebase.Size = new System.Drawing.Size(525, 44);
+            this.Rebase.TabIndex = 8;
+            this.Rebase.Text = "&Rebase remote branch to current branch, creates linear history. It is recommende" +
+                "d\r\nto choose a remote branch when using rebase. (use with caution)";
+            this.Rebase.UseVisualStyleBackColor = true;
+            this.Rebase.CheckedChanged += new System.EventHandler(this.RebaseCheckedChanged);
             // 
             // groupBox3
             // 
@@ -309,7 +320,7 @@
             // 
             this.Stash.Location = new System.Drawing.Point(121, 282);
             this.Stash.Name = "Stash";
-            this.Stash.Size = new System.Drawing.Size(117, 23);
+            this.Stash.Size = new System.Drawing.Size(117, 25);
             this.Stash.TabIndex = 11;
             this.Stash.Text = "Stash changes";
             this.Stash.UseVisualStyleBackColor = true;
@@ -319,22 +330,11 @@
             // 
             this.Mergetool.Location = new System.Drawing.Point(3, 282);
             this.Mergetool.Name = "Mergetool";
-            this.Mergetool.Size = new System.Drawing.Size(117, 23);
+            this.Mergetool.Size = new System.Drawing.Size(117, 25);
             this.Mergetool.TabIndex = 10;
             this.Mergetool.Text = "Solve conflicts";
             this.Mergetool.UseVisualStyleBackColor = true;
             this.Mergetool.Click += new System.EventHandler(this.MergetoolClick);
-            // 
-            // checkPullAll
-            // 
-            this.checkPullAll.AutoSize = true;
-            this.checkPullAll.Location = new System.Drawing.Point(102, 20);
-            this.checkPullAll.Name = "checkPullAll";
-            this.checkPullAll.Size = new System.Drawing.Size(40, 19);
-            this.checkPullAll.TabIndex = 6;
-            this.checkPullAll.Text = "All";
-            this.checkPullAll.UseVisualStyleBackColor = true;
-            this.checkPullAll.CheckedChanged += new System.EventHandler(this.checkPullAll_CheckedChanged);
             // 
             // FormPull
             // 
