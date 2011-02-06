@@ -87,20 +87,20 @@ namespace GitCommands.Statistics
         {
             try
             {
-                string command = "log --pretty=tformat:\"--- %ad --- %an\" --numstat --date=iso -C --all";
+                string command = "log --pretty=tformat:\"--- %ad --- %an\" --numstat --date=iso -C --all --no-merges";
 
                 git = new GitCommandsInstance();
                 git.StreamOutput = true;
                 git.CollectOutput = false;
                 Process p = git.CmdStartProcess(Settings.GitCommand, command);
-                
+
+                // Read line
+                string line = p.StandardOutput.ReadLine();
+
                 // Analyze commit listing
                 while (true)
                 {
                     Commit commit = new Commit();
-
-                    // Read line
-                    string line = p.StandardOutput.ReadLine();
 
                     // Reached the end ?
                     if (line == null)
@@ -108,7 +108,10 @@ namespace GitCommands.Statistics
 
                     // Look for commit delimiters
                     if (!line.StartsWith("--- "))
+                    {
+                        line = p.StandardOutput.ReadLine();
                         continue;
+                    }
 
                     // Strip "--- " 
                     line = line.Substring(4);
@@ -126,9 +129,6 @@ namespace GitCommands.Statistics
                     // Calculate first day of the commit week
                     date = commit.week = date.AddDays(-(int)date.DayOfWeek);
 
-                    // Skip empty line
-                    p.StandardOutput.ReadLine();
-
                     // Reset commit data
                     commit.data.Commits = 1;
                     commit.data.AddedLines = 0;
@@ -137,6 +137,10 @@ namespace GitCommands.Statistics
                     // Parse commit lines
                     while ((line = p.StandardOutput.ReadLine()) != null && !line.StartsWith("--- "))
                     {
+                        // Skip empty line
+                        if (string.IsNullOrEmpty(line))
+                            continue;
+
                         string[] file_line = line.Split('\t');
                         if (file_line.Length >= 2)
                         {
