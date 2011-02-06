@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Version 2.12
+	Fixed issue 368: Browse button does not open dialog in HOME dialog
+	Added impact graph plugin
+	Updated msysgit to version 1.7.4
+
 Version 2.11
 	Fixed crash when refreshing repository grid
 
