@@ -28,9 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormImpact));
             this.pnlTop = new System.Windows.Forms.Panel();
-            this.lblAuthor = new System.Windows.Forms.Label();
             this.pnlAuthorColor = new System.Windows.Forms.Panel();
+            this.lblAuthor = new System.Windows.Forms.Label();
             this.Impact = new GitImpact.ImpactControl();
             this.pnlTop.SuspendLayout();
             this.SuspendLayout();
@@ -45,6 +46,14 @@
             this.pnlTop.Size = new System.Drawing.Size(863, 32);
             this.pnlTop.TabIndex = 1;
             // 
+            // pnlAuthorColor
+            // 
+            this.pnlAuthorColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlAuthorColor.Location = new System.Drawing.Point(6, 6);
+            this.pnlAuthorColor.Name = "pnlAuthorColor";
+            this.pnlAuthorColor.Size = new System.Drawing.Size(20, 20);
+            this.pnlAuthorColor.TabIndex = 1;
+            // 
             // lblAuthor
             // 
             this.lblAuthor.AutoSize = true;
@@ -54,14 +63,6 @@
             this.lblAuthor.Size = new System.Drawing.Size(46, 16);
             this.lblAuthor.TabIndex = 0;
             this.lblAuthor.Text = "Author";
-            // 
-            // pnlAuthorColor
-            // 
-            this.pnlAuthorColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlAuthorColor.Location = new System.Drawing.Point(6, 6);
-            this.pnlAuthorColor.Name = "pnlAuthorColor";
-            this.pnlAuthorColor.Size = new System.Drawing.Size(20, 20);
-            this.pnlAuthorColor.TabIndex = 1;
             // 
             // Impact
             // 
@@ -81,6 +82,7 @@
             this.ClientSize = new System.Drawing.Size(863, 484);
             this.Controls.Add(this.Impact);
             this.Controls.Add(this.pnlTop);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormImpact";
             this.Text = "Impact";
             this.pnlTop.ResumeLayout(false);
