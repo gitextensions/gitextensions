@@ -63,6 +63,7 @@
             this.otherHomeBrowse.TabIndex = 10;
             this.otherHomeBrowse.Text = "Browse";
             this.otherHomeBrowse.UseVisualStyleBackColor = true;
+            this.otherHomeBrowse.Click += new System.EventHandler(this.otherHomeBrowse_Click);
             // 
             // otherHomeDir
             // 
