@@ -122,5 +122,16 @@ namespace GitUI
 
             Close();
         }
+
+        private void otherHomeBrowse_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog browseDialog = new FolderBrowserDialog();
+            browseDialog.SelectedPath = Environment.GetEnvironmentVariable("USERPROFILE");
+
+            if (browseDialog.ShowDialog() == DialogResult.OK)
+            {
+                otherHomeDir.Text = browseDialog.SelectedPath;
+            }
+        }
     }
 }
