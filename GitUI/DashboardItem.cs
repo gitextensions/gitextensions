@@ -41,6 +41,14 @@ namespace GitUI
             Initialize(icon, title, title, text);
         }
 
+        ToolTip toolTip;
+
+        public void Close()
+        {
+            if (toolTip != null)
+                toolTip.RemoveAll();
+        }
+
         private void Initialize(Bitmap icon, string path, string title, string text)
         {
             _NO_TRANSLATE_Title.Text = title;

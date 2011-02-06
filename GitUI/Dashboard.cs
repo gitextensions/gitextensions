@@ -134,8 +134,8 @@ namespace GitUI
                     {
                         currentDashboardCategory.DashboardCategoryChanged -= dashboardCategory_DashboardCategoryChanged;
                         currentDashboardCategory.DashboardItemClick -= dashboardItem_Click;
+                        currentDashboardCategory.Clear();
                         splitContainer5.Panel2.Controls.RemoveAt(i);
-                        currentDashboardCategory.Dispose();
                     }
                 }
 
@@ -183,25 +183,21 @@ namespace GitUI
             {
                 return;
             }
-            try
+            //Make sure the dashboard is only initialized once
+            if (!initialized)
             {
-                splitContainer5.Visible = false;
-
-                //Make sure the dashboard is only initialized once
-                if (!initialized)
+                //Remove favourites
+                for (int i = splitContainer5.Panel2.Controls.Count; i > 0; i--)
                 {
-                    //Remove favourites
-                    for (int i = splitContainer5.Panel2.Controls.Count; i > 0; i--)
+                    DashboardCategory dashboarCategory = splitContainer5.Panel2.Controls[i - 1] as DashboardCategory;
+                    if (dashboarCategory != null)
                     {
-                        var dashboarCategory = splitContainer5.Panel2.Controls[i - 1] as DashboardCategory;
-                        if (dashboarCategory != null)
-                        {
-                            dashboarCategory.DashboardCategoryChanged -= dashboardCategory_DashboardCategoryChanged;
-                            dashboarCategory.DashboardItemClick -= dashboardItem_Click;
-                            splitContainer5.Panel2.Controls.RemoveAt(i - 1);
-                            dashboarCategory.Dispose();
-                        }
+                        dashboarCategory.DashboardCategoryChanged -= dashboardCategory_DashboardCategoryChanged;
+                        dashboarCategory.DashboardItemClick -= dashboardItem_Click;
+                        dashboarCategory.Clear();
+                        splitContainer5.Panel2.Controls.RemoveAt(i - 1);
                     }
+                }
 
                     //Show favourites
                     Repositories.RepositoryCategories.Aggregate(0, AddDashboardEntry);
@@ -211,14 +207,15 @@ namespace GitUI
                     initialized = true;
                 }
 
-                //Show recent repositories
-                RecentRepositories.Clear();
-                RecentRepositories.RepositoryCategory = Repositories.RepositoryHistory;
+                splitContainer7.SplitterDistance = splitContainer7.Height - (DonateCategory.Height + 25);
+                
+                initialized = true;
             }
-            finally
-            {
-                splitContainer5.Visible = true;
-            }
+            
+            //Show recent repositories
+            RecentRepositories.Clear();
+            RecentRepositories.RepositoryCategory = Repositories.RepositoryHistory;
+
         }
 
         private static void TranslateItem_Click(object sender, EventArgs e)

@@ -167,9 +167,9 @@ namespace GitUI
             this.LoadSSHKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.LoadSSHKey.Image = global::GitUI.Properties.Resources.putty;
             this.LoadSSHKey.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.LoadSSHKey.Location = new System.Drawing.Point(130, 39);
+            this.LoadSSHKey.Location = new System.Drawing.Point(130, 40);
             this.LoadSSHKey.Name = "LoadSSHKey";
-            this.LoadSSHKey.Size = new System.Drawing.Size(143, 23);
+            this.LoadSSHKey.Size = new System.Drawing.Size(143, 25);
             this.LoadSSHKey.TabIndex = 9;
             this.LoadSSHKey.Text = "Load SSH key";
             this.LoadSSHKey.UseVisualStyleBackColor = true;
@@ -189,9 +189,9 @@ namespace GitUI
             this.TestConnection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.TestConnection.Image = global::GitUI.Properties.Resources.putty;
             this.TestConnection.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.TestConnection.Location = new System.Drawing.Point(279, 39);
+            this.TestConnection.Location = new System.Drawing.Point(279, 40);
             this.TestConnection.Name = "TestConnection";
-            this.TestConnection.Size = new System.Drawing.Size(156, 23);
+            this.TestConnection.Size = new System.Drawing.Size(156, 25);
             this.TestConnection.TabIndex = 8;
             this.TestConnection.Text = "Test connection";
             this.TestConnection.UseVisualStyleBackColor = true;
@@ -211,7 +211,7 @@ namespace GitUI
             this.SshBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.SshBrowse.Location = new System.Drawing.Point(360, 11);
             this.SshBrowse.Name = "SshBrowse";
-            this.SshBrowse.Size = new System.Drawing.Size(75, 23);
+            this.SshBrowse.Size = new System.Drawing.Size(75, 25);
             this.SshBrowse.TabIndex = 6;
             this.SshBrowse.Text = "Browse";
             this.SshBrowse.UseVisualStyleBackColor = true;
@@ -222,7 +222,7 @@ namespace GitUI
             this.Delete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Delete.Location = new System.Drawing.Point(204, 148);
             this.Delete.Name = "Delete";
-            this.Delete.Size = new System.Drawing.Size(75, 23);
+            this.Delete.Size = new System.Drawing.Size(75, 25);
             this.Delete.TabIndex = 7;
             this.Delete.Text = "Delete";
             this.Delete.UseVisualStyleBackColor = true;
@@ -233,7 +233,7 @@ namespace GitUI
             this.New.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.New.Location = new System.Drawing.Point(285, 148);
             this.New.Name = "New";
-            this.New.Size = new System.Drawing.Size(75, 23);
+            this.New.Size = new System.Drawing.Size(75, 25);
             this.New.TabIndex = 6;
             this.New.Text = "New";
             this.New.UseVisualStyleBackColor = true;
@@ -244,7 +244,7 @@ namespace GitUI
             this.Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Save.Location = new System.Drawing.Point(366, 148);
             this.Save.Name = "Save";
-            this.Save.Size = new System.Drawing.Size(75, 23);
+            this.Save.Size = new System.Drawing.Size(75, 25);
             this.Save.TabIndex = 5;
             this.Save.Text = "Save";
             this.Save.UseVisualStyleBackColor = true;
@@ -293,7 +293,7 @@ namespace GitUI
             this.Browse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Browse.Location = new System.Drawing.Point(366, 46);
             this.Browse.Name = "Browse";
-            this.Browse.Size = new System.Drawing.Size(75, 23);
+            this.Browse.Size = new System.Drawing.Size(75, 25);
             this.Browse.TabIndex = 4;
             this.Browse.Text = "Browse";
             this.Browse.UseVisualStyleBackColor = true;
@@ -509,7 +509,7 @@ namespace GitUI
             this.SaveDefaultPushPull.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.SaveDefaultPushPull.Location = new System.Drawing.Point(176, 129);
             this.SaveDefaultPushPull.Name = "SaveDefaultPushPull";
-            this.SaveDefaultPushPull.Size = new System.Drawing.Size(75, 23);
+            this.SaveDefaultPushPull.Size = new System.Drawing.Size(75, 25);
             this.SaveDefaultPushPull.TabIndex = 6;
             this.SaveDefaultPushPull.Text = "Save";
             this.SaveDefaultPushPull.UseVisualStyleBackColor = true;
@@ -579,7 +579,7 @@ namespace GitUI
             this.Prune.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Prune.Location = new System.Drawing.Point(312, 4);
             this.Prune.Name = "Prune";
-            this.Prune.Size = new System.Drawing.Size(137, 23);
+            this.Prune.Size = new System.Drawing.Size(137, 25);
             this.Prune.TabIndex = 11;
             this.Prune.Text = "Prune remote branches";
             this.Prune.UseVisualStyleBackColor = true;
@@ -590,7 +590,7 @@ namespace GitUI
             this.UpdateBranch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.UpdateBranch.Location = new System.Drawing.Point(455, 4);
             this.UpdateBranch.Name = "UpdateBranch";
-            this.UpdateBranch.Size = new System.Drawing.Size(167, 23);
+            this.UpdateBranch.Size = new System.Drawing.Size(167, 25);
             this.UpdateBranch.TabIndex = 10;
             this.UpdateBranch.Text = "Update all remote branch info";
             this.UpdateBranch.UseVisualStyleBackColor = true;

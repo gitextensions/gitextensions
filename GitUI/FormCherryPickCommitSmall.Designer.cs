@@ -36,10 +36,10 @@
             this.Pick = new System.Windows.Forms.Button();
             this.AutoCommit = new System.Windows.Forms.CheckBox();
             this.ParentsList = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
             this.ParentsLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -92,7 +92,7 @@
             // 
             this.Pick.Location = new System.Drawing.Point(453, 216);
             this.Pick.Name = "Pick";
-            this.Pick.Size = new System.Drawing.Size(109, 23);
+            this.Pick.Size = new System.Drawing.Size(109, 25);
             this.Pick.TabIndex = 10;
             this.Pick.Text = "Pick this commit";
             this.Pick.UseVisualStyleBackColor = true;

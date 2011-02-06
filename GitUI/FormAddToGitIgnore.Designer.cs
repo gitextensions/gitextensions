@@ -44,7 +44,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 13);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(103, 13);
+            this.label1.Size = new System.Drawing.Size(108, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "File pattern to ignore";
             // 
@@ -52,7 +52,7 @@
             // 
             this.FilePattern.Location = new System.Drawing.Point(12, 39);
             this.FilePattern.Name = "FilePattern";
-            this.FilePattern.Size = new System.Drawing.Size(460, 20);
+            this.FilePattern.Size = new System.Drawing.Size(460, 21);
             this.FilePattern.TabIndex = 1;
             // 
             // splitContainer1
@@ -81,7 +81,7 @@
             // 
             this.ShowPreview.Location = new System.Drawing.Point(510, 37);
             this.ShowPreview.Name = "ShowPreview";
-            this.ShowPreview.Size = new System.Drawing.Size(113, 23);
+            this.ShowPreview.Size = new System.Drawing.Size(113, 25);
             this.ShowPreview.TabIndex = 3;
             this.ShowPreview.Text = "Show preview";
             this.ShowPreview.UseVisualStyleBackColor = true;
@@ -91,7 +91,7 @@
             // 
             this.AddToIngore.Location = new System.Drawing.Point(510, 8);
             this.AddToIngore.Name = "AddToIngore";
-            this.AddToIngore.Size = new System.Drawing.Size(113, 23);
+            this.AddToIngore.Size = new System.Drawing.Size(113, 25);
             this.AddToIngore.TabIndex = 2;
             this.AddToIngore.Text = "Add to .gitignore";
             this.AddToIngore.UseVisualStyleBackColor = true;

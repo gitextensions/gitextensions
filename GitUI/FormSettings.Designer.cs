@@ -246,6 +246,15 @@ namespace GitUI
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
+            this.GitFound_Fix = new System.Windows.Forms.Button();
+            this.UserNameSet_Fix = new System.Windows.Forms.Button();
+            this.DiffTool_Fix = new System.Windows.Forms.Button();
+            this.DiffTool2_Fix = new System.Windows.Forms.Button();
+            this.ShellExtensionsRegistered_Fix = new System.Windows.Forms.Button();
+            this.GitBinFound_Fix = new System.Windows.Forms.Button();
+            this.GitExtensionsInstall_Fix = new System.Windows.Forms.Button();
+            this.SshConfig_Fix = new System.Windows.Forms.Button();
+            this.translationConfig_Fix = new System.Windows.Forms.Button();
             this.LocalSettings.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
@@ -531,6 +540,15 @@ namespace GitUI
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.translationConfig_Fix);
+            this.tabPage3.Controls.Add(this.SshConfig_Fix);
+            this.tabPage3.Controls.Add(this.GitExtensionsInstall_Fix);
+            this.tabPage3.Controls.Add(this.GitBinFound_Fix);
+            this.tabPage3.Controls.Add(this.ShellExtensionsRegistered_Fix);
+            this.tabPage3.Controls.Add(this.DiffTool2_Fix);
+            this.tabPage3.Controls.Add(this.DiffTool_Fix);
+            this.tabPage3.Controls.Add(this.UserNameSet_Fix);
+            this.tabPage3.Controls.Add(this.GitFound_Fix);
             this.tabPage3.Controls.Add(this.translationConfig);
             this.tabPage3.Controls.Add(this.DiffTool2);
             this.tabPage3.Controls.Add(this.SshConfig);
@@ -557,9 +575,9 @@ namespace GitUI
             this.translationConfig.FlatAppearance.BorderSize = 0;
             this.translationConfig.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.translationConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.translationConfig.Location = new System.Drawing.Point(9, 261);
+            this.translationConfig.Location = new System.Drawing.Point(9, 301);
             this.translationConfig.Name = "translationConfig";
-            this.translationConfig.Size = new System.Drawing.Size(693, 23);
+            this.translationConfig.Size = new System.Drawing.Size(693, 29);
             this.translationConfig.TabIndex = 12;
             this.translationConfig.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.translationConfig.UseVisualStyleBackColor = false;
@@ -573,9 +591,9 @@ namespace GitUI
             this.DiffTool2.FlatAppearance.BorderSize = 0;
             this.DiffTool2.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.DiffTool2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.DiffTool2.Location = new System.Drawing.Point(9, 116);
+            this.DiffTool2.Location = new System.Drawing.Point(9, 131);
             this.DiffTool2.Name = "DiffTool2";
-            this.DiffTool2.Size = new System.Drawing.Size(693, 23);
+            this.DiffTool2.Size = new System.Drawing.Size(693, 29);
             this.DiffTool2.TabIndex = 11;
             this.DiffTool2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.DiffTool2.UseVisualStyleBackColor = false;
@@ -589,9 +607,9 @@ namespace GitUI
             this.SshConfig.FlatAppearance.BorderSize = 0;
             this.SshConfig.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.SshConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SshConfig.Location = new System.Drawing.Point(9, 232);
+            this.SshConfig.Location = new System.Drawing.Point(9, 267);
             this.SshConfig.Name = "SshConfig";
-            this.SshConfig.Size = new System.Drawing.Size(693, 23);
+            this.SshConfig.Size = new System.Drawing.Size(693, 29);
             this.SshConfig.TabIndex = 10;
             this.SshConfig.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SshConfig.UseVisualStyleBackColor = false;
@@ -605,9 +623,9 @@ namespace GitUI
             this.GitBinFound.FlatAppearance.BorderSize = 0;
             this.GitBinFound.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.GitBinFound.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.GitBinFound.Location = new System.Drawing.Point(9, 174);
+            this.GitBinFound.Location = new System.Drawing.Point(9, 199);
             this.GitBinFound.Name = "GitBinFound";
-            this.GitBinFound.Size = new System.Drawing.Size(693, 23);
+            this.GitBinFound.Size = new System.Drawing.Size(693, 29);
             this.GitBinFound.TabIndex = 9;
             this.GitBinFound.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.GitBinFound.UseVisualStyleBackColor = false;
@@ -616,9 +634,9 @@ namespace GitUI
             // 
             // Rescan
             // 
-            this.Rescan.Location = new System.Drawing.Point(507, 304);
+            this.Rescan.Location = new System.Drawing.Point(507, 346);
             this.Rescan.Name = "Rescan";
-            this.Rescan.Size = new System.Drawing.Size(195, 24);
+            this.Rescan.Size = new System.Drawing.Size(195, 25);
             this.Rescan.TabIndex = 8;
             this.Rescan.Text = "Save and rescan";
             this.Rescan.UseVisualStyleBackColor = true;
@@ -627,9 +645,9 @@ namespace GitUI
             // CheckAtStartup
             // 
             this.CheckAtStartup.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.CheckAtStartup.Location = new System.Drawing.Point(12, 304);
+            this.CheckAtStartup.Location = new System.Drawing.Point(12, 351);
             this.CheckAtStartup.Name = "CheckAtStartup";
-            this.CheckAtStartup.Size = new System.Drawing.Size(489, 101);
+            this.CheckAtStartup.Size = new System.Drawing.Size(489, 57);
             this.CheckAtStartup.TabIndex = 7;
             this.CheckAtStartup.Text = "Check settings at startup (disables automatically if all settings are correct)";
             this.CheckAtStartup.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -655,7 +673,7 @@ namespace GitUI
             this.GitFound.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.GitFound.Location = new System.Drawing.Point(9, 29);
             this.GitFound.Name = "GitFound";
-            this.GitFound.Size = new System.Drawing.Size(693, 23);
+            this.GitFound.Size = new System.Drawing.Size(693, 29);
             this.GitFound.TabIndex = 5;
             this.GitFound.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.GitFound.UseVisualStyleBackColor = false;
@@ -669,9 +687,9 @@ namespace GitUI
             this.DiffTool.FlatAppearance.BorderSize = 0;
             this.DiffTool.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.DiffTool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.DiffTool.Location = new System.Drawing.Point(9, 87);
+            this.DiffTool.Location = new System.Drawing.Point(9, 97);
             this.DiffTool.Name = "DiffTool";
-            this.DiffTool.Size = new System.Drawing.Size(693, 23);
+            this.DiffTool.Size = new System.Drawing.Size(693, 29);
             this.DiffTool.TabIndex = 4;
             this.DiffTool.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.DiffTool.UseVisualStyleBackColor = false;
@@ -685,9 +703,9 @@ namespace GitUI
             this.UserNameSet.FlatAppearance.BorderSize = 0;
             this.UserNameSet.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.UserNameSet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.UserNameSet.Location = new System.Drawing.Point(9, 58);
+            this.UserNameSet.Location = new System.Drawing.Point(9, 63);
             this.UserNameSet.Name = "UserNameSet";
-            this.UserNameSet.Size = new System.Drawing.Size(693, 23);
+            this.UserNameSet.Size = new System.Drawing.Size(693, 29);
             this.UserNameSet.TabIndex = 3;
             this.UserNameSet.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.UserNameSet.UseVisualStyleBackColor = false;
@@ -701,9 +719,9 @@ namespace GitUI
             this.ShellExtensionsRegistered.FlatAppearance.BorderSize = 0;
             this.ShellExtensionsRegistered.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.ShellExtensionsRegistered.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ShellExtensionsRegistered.Location = new System.Drawing.Point(9, 145);
+            this.ShellExtensionsRegistered.Location = new System.Drawing.Point(9, 165);
             this.ShellExtensionsRegistered.Name = "ShellExtensionsRegistered";
-            this.ShellExtensionsRegistered.Size = new System.Drawing.Size(693, 23);
+            this.ShellExtensionsRegistered.Size = new System.Drawing.Size(693, 29);
             this.ShellExtensionsRegistered.TabIndex = 2;
             this.ShellExtensionsRegistered.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.ShellExtensionsRegistered.UseVisualStyleBackColor = false;
@@ -717,9 +735,9 @@ namespace GitUI
             this.GitExtensionsInstall.FlatAppearance.BorderSize = 0;
             this.GitExtensionsInstall.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.GitExtensionsInstall.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.GitExtensionsInstall.Location = new System.Drawing.Point(9, 203);
+            this.GitExtensionsInstall.Location = new System.Drawing.Point(9, 233);
             this.GitExtensionsInstall.Name = "GitExtensionsInstall";
-            this.GitExtensionsInstall.Size = new System.Drawing.Size(693, 23);
+            this.GitExtensionsInstall.Size = new System.Drawing.Size(693, 29);
             this.GitExtensionsInstall.TabIndex = 1;
             this.GitExtensionsInstall.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.GitExtensionsInstall.UseVisualStyleBackColor = false;
@@ -756,7 +774,7 @@ namespace GitUI
             // 
             this.otherHomeBrowse.Location = new System.Drawing.Point(618, 100);
             this.otherHomeBrowse.Name = "otherHomeBrowse";
-            this.otherHomeBrowse.Size = new System.Drawing.Size(75, 23);
+            this.otherHomeBrowse.Size = new System.Drawing.Size(75, 25);
             this.otherHomeBrowse.TabIndex = 10;
             this.otherHomeBrowse.Text = "Browse";
             this.otherHomeBrowse.UseVisualStyleBackColor = true;
@@ -840,9 +858,9 @@ namespace GitUI
             // 
             // BrowseGitBinPath
             // 
-            this.BrowseGitBinPath.Location = new System.Drawing.Point(618, 64);
+            this.BrowseGitBinPath.Location = new System.Drawing.Point(618, 63);
             this.BrowseGitBinPath.Name = "BrowseGitBinPath";
-            this.BrowseGitBinPath.Size = new System.Drawing.Size(75, 23);
+            this.BrowseGitBinPath.Size = new System.Drawing.Size(75, 25);
             this.BrowseGitBinPath.TabIndex = 8;
             this.BrowseGitBinPath.Text = "Browse";
             this.BrowseGitBinPath.UseVisualStyleBackColor = true;
@@ -876,9 +894,9 @@ namespace GitUI
             // 
             // BrowseGitPath
             // 
-            this.BrowseGitPath.Location = new System.Drawing.Point(618, 38);
+            this.BrowseGitPath.Location = new System.Drawing.Point(618, 37);
             this.BrowseGitPath.Name = "BrowseGitPath";
-            this.BrowseGitPath.Size = new System.Drawing.Size(75, 23);
+            this.BrowseGitPath.Size = new System.Drawing.Size(75, 25);
             this.BrowseGitPath.TabIndex = 5;
             this.BrowseGitPath.Text = "Browse";
             this.BrowseGitPath.UseVisualStyleBackColor = true;
@@ -1398,7 +1416,7 @@ namespace GitUI
             // 
             this.ClearImageCache.Location = new System.Drawing.Point(5, 130);
             this.ClearImageCache.Name = "ClearImageCache";
-            this.ClearImageCache.Size = new System.Drawing.Size(142, 23);
+            this.ClearImageCache.Size = new System.Drawing.Size(142, 25);
             this.ClearImageCache.TabIndex = 1;
             this.ClearImageCache.Text = "Clear image cache";
             this.ClearImageCache.UseVisualStyleBackColor = true;
@@ -1896,9 +1914,9 @@ namespace GitUI
             // 
             // DiffToolCmdSuggest
             // 
-            this.DiffToolCmdSuggest.Location = new System.Drawing.Point(506, 258);
+            this.DiffToolCmdSuggest.Location = new System.Drawing.Point(506, 257);
             this.DiffToolCmdSuggest.Name = "DiffToolCmdSuggest";
-            this.DiffToolCmdSuggest.Size = new System.Drawing.Size(108, 23);
+            this.DiffToolCmdSuggest.Size = new System.Drawing.Size(108, 25);
             this.DiffToolCmdSuggest.TabIndex = 30;
             this.DiffToolCmdSuggest.Text = "Suggest command";
             this.DiffToolCmdSuggest.UseVisualStyleBackColor = true;
@@ -1934,7 +1952,7 @@ namespace GitUI
             // 
             this.BrowseDiffTool.Location = new System.Drawing.Point(506, 229);
             this.BrowseDiffTool.Name = "BrowseDiffTool";
-            this.BrowseDiffTool.Size = new System.Drawing.Size(75, 23);
+            this.BrowseDiffTool.Size = new System.Drawing.Size(75, 25);
             this.BrowseDiffTool.TabIndex = 27;
             this.BrowseDiffTool.Text = "Browse";
             this.BrowseDiffTool.UseVisualStyleBackColor = true;
@@ -2033,7 +2051,7 @@ namespace GitUI
             // 
             this.button1.Location = new System.Drawing.Point(506, 145);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(108, 23);
+            this.button1.Size = new System.Drawing.Size(108, 25);
             this.button1.TabIndex = 16;
             this.button1.Text = "Suggest command";
             this.button1.UseVisualStyleBackColor = true;
@@ -2069,7 +2087,7 @@ namespace GitUI
             // 
             this.BrowseMergeTool.Location = new System.Drawing.Point(506, 117);
             this.BrowseMergeTool.Name = "BrowseMergeTool";
-            this.BrowseMergeTool.Size = new System.Drawing.Size(75, 23);
+            this.BrowseMergeTool.Size = new System.Drawing.Size(75, 25);
             this.BrowseMergeTool.TabIndex = 13;
             this.BrowseMergeTool.Text = "Browse";
             this.BrowseMergeTool.UseVisualStyleBackColor = true;
@@ -2232,7 +2250,7 @@ namespace GitUI
             // 
             this.PageantBrowse.Location = new System.Drawing.Point(488, 75);
             this.PageantBrowse.Name = "PageantBrowse";
-            this.PageantBrowse.Size = new System.Drawing.Size(75, 23);
+            this.PageantBrowse.Size = new System.Drawing.Size(75, 25);
             this.PageantBrowse.TabIndex = 10;
             this.PageantBrowse.Text = "Browse";
             this.PageantBrowse.UseVisualStyleBackColor = true;
@@ -2258,7 +2276,7 @@ namespace GitUI
             // 
             this.PuttygenBrowse.Location = new System.Drawing.Point(488, 45);
             this.PuttygenBrowse.Name = "PuttygenBrowse";
-            this.PuttygenBrowse.Size = new System.Drawing.Size(75, 23);
+            this.PuttygenBrowse.Size = new System.Drawing.Size(75, 25);
             this.PuttygenBrowse.TabIndex = 7;
             this.PuttygenBrowse.Text = "Browse";
             this.PuttygenBrowse.UseVisualStyleBackColor = true;
@@ -2291,9 +2309,9 @@ namespace GitUI
             // 
             // PlinkBrowse
             // 
-            this.PlinkBrowse.Location = new System.Drawing.Point(488, 16);
+            this.PlinkBrowse.Location = new System.Drawing.Point(488, 15);
             this.PlinkBrowse.Name = "PlinkBrowse";
-            this.PlinkBrowse.Size = new System.Drawing.Size(75, 23);
+            this.PlinkBrowse.Size = new System.Drawing.Size(75, 25);
             this.PlinkBrowse.TabIndex = 3;
             this.PlinkBrowse.Text = "Browse";
             this.PlinkBrowse.UseVisualStyleBackColor = true;
@@ -2325,7 +2343,7 @@ namespace GitUI
             // 
             this.OtherSshBrowse.Location = new System.Drawing.Point(488, 79);
             this.OtherSshBrowse.Name = "OtherSshBrowse";
-            this.OtherSshBrowse.Size = new System.Drawing.Size(75, 23);
+            this.OtherSshBrowse.Size = new System.Drawing.Size(75, 25);
             this.OtherSshBrowse.TabIndex = 5;
             this.OtherSshBrowse.Text = "Browse";
             this.OtherSshBrowse.UseVisualStyleBackColor = true;
@@ -2459,7 +2477,7 @@ namespace GitUI
             this.browseScriptButton.Enabled = false;
             this.browseScriptButton.Location = new System.Drawing.Point(627, 269);
             this.browseScriptButton.Name = "browseScriptButton";
-            this.browseScriptButton.Size = new System.Drawing.Size(75, 23);
+            this.browseScriptButton.Size = new System.Drawing.Size(75, 25);
             this.browseScriptButton.TabIndex = 11;
             this.browseScriptButton.Text = "Browse";
             this.browseScriptButton.UseVisualStyleBackColor = true;
@@ -2470,7 +2488,7 @@ namespace GitUI
             this.cancelScriptButton.Enabled = false;
             this.cancelScriptButton.Location = new System.Drawing.Point(627, 241);
             this.cancelScriptButton.Name = "cancelScriptButton";
-            this.cancelScriptButton.Size = new System.Drawing.Size(75, 23);
+            this.cancelScriptButton.Size = new System.Drawing.Size(75, 25);
             this.cancelScriptButton.TabIndex = 10;
             this.cancelScriptButton.Text = "Cancel";
             this.cancelScriptButton.UseVisualStyleBackColor = true;
@@ -2481,7 +2499,7 @@ namespace GitUI
             this.saveScriptButton.Enabled = false;
             this.saveScriptButton.Location = new System.Drawing.Point(540, 241);
             this.saveScriptButton.Name = "saveScriptButton";
-            this.saveScriptButton.Size = new System.Drawing.Size(75, 23);
+            this.saveScriptButton.Size = new System.Drawing.Size(75, 25);
             this.saveScriptButton.TabIndex = 9;
             this.saveScriptButton.Text = "Save";
             this.saveScriptButton.UseVisualStyleBackColor = true;
@@ -2532,7 +2550,7 @@ namespace GitUI
             this.removeScriptButton.Enabled = false;
             this.removeScriptButton.Location = new System.Drawing.Point(627, 124);
             this.removeScriptButton.Name = "removeScriptButton";
-            this.removeScriptButton.Size = new System.Drawing.Size(75, 23);
+            this.removeScriptButton.Size = new System.Drawing.Size(75, 25);
             this.removeScriptButton.TabIndex = 4;
             this.removeScriptButton.Text = "Remove";
             this.removeScriptButton.UseVisualStyleBackColor = true;
@@ -2543,7 +2561,7 @@ namespace GitUI
             this.editScriptButton.Enabled = false;
             this.editScriptButton.Location = new System.Drawing.Point(627, 94);
             this.editScriptButton.Name = "editScriptButton";
-            this.editScriptButton.Size = new System.Drawing.Size(75, 23);
+            this.editScriptButton.Size = new System.Drawing.Size(75, 25);
             this.editScriptButton.TabIndex = 3;
             this.editScriptButton.Text = "Edit";
             this.editScriptButton.UseVisualStyleBackColor = true;
@@ -2553,7 +2571,7 @@ namespace GitUI
             // 
             this.addScriptButton.Location = new System.Drawing.Point(627, 64);
             this.addScriptButton.Name = "addScriptButton";
-            this.addScriptButton.Size = new System.Drawing.Size(75, 23);
+            this.addScriptButton.Size = new System.Drawing.Size(75, 25);
             this.addScriptButton.TabIndex = 2;
             this.addScriptButton.Text = "Add";
             this.addScriptButton.UseVisualStyleBackColor = true;
@@ -2635,7 +2653,7 @@ namespace GitUI
             // 
             this.Ok.Location = new System.Drawing.Point(639, 2);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(75, 23);
+            this.Ok.Size = new System.Drawing.Size(75, 25);
             this.Ok.TabIndex = 0;
             this.Ok.Text = "OK";
             this.Ok.UseVisualStyleBackColor = true;
@@ -2675,6 +2693,96 @@ namespace GitUI
             // repositoryBindingSource
             // 
             this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository.Repository);
+            // 
+            // GitFound_Fix
+            // 
+            this.GitFound_Fix.Location = new System.Drawing.Point(624, 31);
+            this.GitFound_Fix.Name = "GitFound_Fix";
+            this.GitFound_Fix.Size = new System.Drawing.Size(75, 25);
+            this.GitFound_Fix.TabIndex = 13;
+            this.GitFound_Fix.Text = "Repair";
+            this.GitFound_Fix.UseVisualStyleBackColor = true;
+            this.GitFound_Fix.Click += new System.EventHandler(this.GitFound_Click);
+            // 
+            // UserNameSet_Fix
+            // 
+            this.UserNameSet_Fix.Location = new System.Drawing.Point(624, 65);
+            this.UserNameSet_Fix.Name = "UserNameSet_Fix";
+            this.UserNameSet_Fix.Size = new System.Drawing.Size(75, 25);
+            this.UserNameSet_Fix.TabIndex = 14;
+            this.UserNameSet_Fix.Text = "Repair";
+            this.UserNameSet_Fix.UseVisualStyleBackColor = true;
+            this.UserNameSet_Fix.Click += new System.EventHandler(this.UserNameSet_Click);
+            // 
+            // DiffTool_Fix
+            // 
+            this.DiffTool_Fix.Location = new System.Drawing.Point(624, 99);
+            this.DiffTool_Fix.Name = "DiffTool_Fix";
+            this.DiffTool_Fix.Size = new System.Drawing.Size(75, 25);
+            this.DiffTool_Fix.TabIndex = 15;
+            this.DiffTool_Fix.Text = "Repair";
+            this.DiffTool_Fix.UseVisualStyleBackColor = true;
+            this.DiffTool_Fix.Click += new System.EventHandler(this.DiffTool_Click);
+            // 
+            // DiffTool2_Fix
+            // 
+            this.DiffTool2_Fix.Location = new System.Drawing.Point(624, 133);
+            this.DiffTool2_Fix.Name = "DiffTool2_Fix";
+            this.DiffTool2_Fix.Size = new System.Drawing.Size(75, 25);
+            this.DiffTool2_Fix.TabIndex = 16;
+            this.DiffTool2_Fix.Text = "Repair";
+            this.DiffTool2_Fix.UseVisualStyleBackColor = true;
+            this.DiffTool2_Fix.Click += new System.EventHandler(this.DiffTool2_Click);
+            // 
+            // ShellExtensionsRegistered_Fix
+            // 
+            this.ShellExtensionsRegistered_Fix.Location = new System.Drawing.Point(624, 167);
+            this.ShellExtensionsRegistered_Fix.Name = "ShellExtensionsRegistered_Fix";
+            this.ShellExtensionsRegistered_Fix.Size = new System.Drawing.Size(75, 25);
+            this.ShellExtensionsRegistered_Fix.TabIndex = 17;
+            this.ShellExtensionsRegistered_Fix.Text = "Repair";
+            this.ShellExtensionsRegistered_Fix.UseVisualStyleBackColor = true;
+            this.ShellExtensionsRegistered_Fix.Click += new System.EventHandler(this.ShellExtensionsRegistered_Click);
+            // 
+            // GitBinFound_Fix
+            // 
+            this.GitBinFound_Fix.Location = new System.Drawing.Point(624, 201);
+            this.GitBinFound_Fix.Name = "GitBinFound_Fix";
+            this.GitBinFound_Fix.Size = new System.Drawing.Size(75, 25);
+            this.GitBinFound_Fix.TabIndex = 18;
+            this.GitBinFound_Fix.Text = "Repair";
+            this.GitBinFound_Fix.UseVisualStyleBackColor = true;
+            this.GitBinFound_Fix.Click += new System.EventHandler(this.GitBinFound_Click);
+            // 
+            // GitExtensionsInstall_Fix
+            // 
+            this.GitExtensionsInstall_Fix.Location = new System.Drawing.Point(624, 235);
+            this.GitExtensionsInstall_Fix.Name = "GitExtensionsInstall_Fix";
+            this.GitExtensionsInstall_Fix.Size = new System.Drawing.Size(75, 25);
+            this.GitExtensionsInstall_Fix.TabIndex = 19;
+            this.GitExtensionsInstall_Fix.Text = "Repair";
+            this.GitExtensionsInstall_Fix.UseVisualStyleBackColor = true;
+            this.GitExtensionsInstall_Fix.Click += new System.EventHandler(this.GitExtensionsInstall_Click);
+            // 
+            // SshConfig_Fix
+            // 
+            this.SshConfig_Fix.Location = new System.Drawing.Point(624, 269);
+            this.SshConfig_Fix.Name = "SshConfig_Fix";
+            this.SshConfig_Fix.Size = new System.Drawing.Size(75, 25);
+            this.SshConfig_Fix.TabIndex = 20;
+            this.SshConfig_Fix.Text = "Repair";
+            this.SshConfig_Fix.UseVisualStyleBackColor = true;
+            this.SshConfig_Fix.Click += new System.EventHandler(this.SshConfig_Click);
+            // 
+            // translationConfig_Fix
+            // 
+            this.translationConfig_Fix.Location = new System.Drawing.Point(624, 303);
+            this.translationConfig_Fix.Name = "translationConfig_Fix";
+            this.translationConfig_Fix.Size = new System.Drawing.Size(75, 25);
+            this.translationConfig_Fix.TabIndex = 21;
+            this.translationConfig_Fix.Text = "Repair";
+            this.translationConfig_Fix.UseVisualStyleBackColor = true;
+            this.translationConfig_Fix.Click += new System.EventHandler(this.translationConfig_Click);
             // 
             // FormSettings
             // 
@@ -2961,6 +3069,15 @@ namespace GitUI
         private System.Windows.Forms.Button translationConfig;
         private System.Windows.Forms.LinkLabel downloadDictionary;
         private System.Windows.Forms.CheckBox DrawNonRelativesTextGray;
+        private System.Windows.Forms.Button translationConfig_Fix;
+        private System.Windows.Forms.Button SshConfig_Fix;
+        private System.Windows.Forms.Button GitExtensionsInstall_Fix;
+        private System.Windows.Forms.Button GitBinFound_Fix;
+        private System.Windows.Forms.Button ShellExtensionsRegistered_Fix;
+        private System.Windows.Forms.Button DiffTool2_Fix;
+        private System.Windows.Forms.Button DiffTool_Fix;
+        private System.Windows.Forms.Button UserNameSet_Fix;
+        private System.Windows.Forms.Button GitFound_Fix;
 
     }
 }
