@@ -61,6 +61,15 @@ namespace GitImpact
             // Set DoubleBuffer flag for flicker-free drawing
             this.SetStyle(ControlStyles.AllPaintingInWmPaint |
                 ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
+
+            MouseWheel += new MouseEventHandler(ImpactControl_MouseWheel);
+        }
+
+        void ImpactControl_MouseWheel(object sender, MouseEventArgs e)
+        {
+            this.scrollBar.Value = Math.Min(this.scrollBar.Maximum, Math.Max(this.scrollBar.Minimum, this.scrollBar.Value + e.Delta));
+            // Redraw when we've scrolled
+            Invalidate();
         }
 
         void OnImpactUpdate(ImpactLoader.Commit commit)
@@ -406,6 +415,20 @@ namespace GitImpact
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Returns the selected author
+        /// </summary>
+        public string GetSelectedAuthor()
+        {
+            if (author_stack.Count == 0)
+                return string.Empty;
+
+            lock (data_lock)
+            {
+                return author_stack.Last();
+            }           
         }
 
         private void OnScroll(object sender, ScrollEventArgs e)
