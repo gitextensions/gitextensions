@@ -158,6 +158,9 @@
       <Component Id="GitStatistics.dll" Guid="*">
         <File Source="..\Plugins\Statistics\GitStatistics\bin\Release\GitStatistics.dll"/>
       </Component>
+      <Component Id="GitImpact.dll" Guid="*">
+        <File Source="..\Plugins\Statistics\GitImpact\bin\Release\GitImpact.dll"/>
+      </Component>
       <Component Id="Gource.dll" Guid="*">
         <File Source="..\Plugins\Gource\bin\Release\Gource.dll"/>
       </Component>
@@ -432,6 +435,9 @@
         <Feature Id="Statistics" Title="Statistics" Level="1">
           <ComponentRef Id="GitStatistics.dll"/>
         </Feature>
+        <Feature Id="Impact" Title="Impact Graph" Level="1">
+          <ComponentRef Id="GitImpact.dll"/>
+        </Feature>
         <Feature Id="Gource" Title="Gource visualization" Level="1">
           <ComponentRef Id="Gource.dll"/>
           <ComponentRef Id="ICSharpCode.SharpZipLib.dll"/>
@@ -537,7 +543,7 @@
     <Binary Id="KDiff" SourceFile="..\Bin\KDiff3Setup_0.9.95.exe"/>
     <CustomAction Id="KDiff" Impersonate="no" BinaryKey="KDiff" Execute="deferred" ExeCommand="" Return="ignore"/>
 
-    <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.7.3.1-preview20101002.exe"/>
+    <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.7.4-preview20110204.exe"/>
     <CustomAction Id="MsysGit" Impersonate="no" BinaryKey="MsysGit" Execute="deferred" ExeCommand="" Return="ignore"/>
     <InstallExecuteSequence>
       <Custom Action="KDiff" After="InstallFiles"><![CDATA[INSTALLKDIFF3=1]]>
