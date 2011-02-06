@@ -67,7 +67,7 @@ namespace GitCommands.Statistics
             }
             if (git != null)
             {
-                git.Kill();
+                git.Dispose();
                 git = null;
             }
         }
