@@ -199,20 +199,17 @@ namespace GitUI
                     }
                 }
 
-                    //Show favourites
-                    Repositories.RepositoryCategories.Aggregate(0, AddDashboardEntry);
-
-                    splitContainer7.SplitterDistance = splitContainer7.Height - (DonateCategory.Height + 25);
-
-                    initialized = true;
-                }
+                //Show favourites
+                Repositories.RepositoryCategories.Aggregate(0, AddDashboardEntry);
 
                 splitContainer7.SplitterDistance = splitContainer7.Height - (DonateCategory.Height + 25);
-                
+
+                initialized = true;
+                splitContainer7.SplitterDistance = splitContainer7.Height - (DonateCategory.Height + 25);
+
                 initialized = true;
             }
-            
-            //Show recent repositories
+
             RecentRepositories.Clear();
             RecentRepositories.RepositoryCategory = Repositories.RepositoryHistory;
 
