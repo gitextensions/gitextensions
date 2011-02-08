@@ -665,6 +665,22 @@ namespace GitCommands
             }
         }
 
+        private static int? _commitDialogSplitter;
+        public static int CommitDialogSplitter
+        {
+            get
+            {
+                if (_commitDialogSplitter == null)
+                    SafeSetInt("commitdialogsplitter", 400, x => _commitDialogSplitter = x);
+                return _commitDialogSplitter.Value;
+            }
+            set
+            {
+                _commitDialogSplitter = value;
+                Application.UserAppDataRegistry.SetValue("commitdialogsplitter", _commitDialogSplitter);
+            }
+        }
+
         private static int? _revisionGridQuickSearchTimeout;
         public static int RevisionGridQuickSearchTimeout
         {

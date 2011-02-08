@@ -130,6 +130,8 @@ namespace GitUI
             SelectedDiff.AddContextMenuEntry(null, null);
             _StageSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_stageSelectedLines.Text, new EventHandler(StageSelectedLinesToolStripMenuItemClick));
             _ResetSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_resetSelectedLines.Text, new EventHandler(ResetSelectedLinesToolStripMenuItemClick));
+
+            splitMain.SplitterDistance = Settings.CommitDialogSplitter;
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -199,8 +201,6 @@ namespace GitUI
                     showUntrackedFilesToolStripMenuItem.Checked);
             _gitGetUnstagedCommand.CmdStartProcess(Settings.GitCommand, allChangedFilesCmd);
             Loading.Visible = true;
-            
-            InitializedStagedAsync();
 
             Commit.Focus();
             AcceptButton = Commit;
@@ -216,29 +216,6 @@ namespace GitUI
             Cursor.Current = Cursors.Default;
         }
 
-        private void InitializedStagedAsync()
-        {
-            Cursor.Current = Cursors.WaitCursor;
-
-            ThreadPool.QueueUserWorkItem(
-                o =>
-                {
-                    var inTheMiddleOfConflictedMerge =
-                        GitCommandHelpers.InTheMiddleOfConflictedMerge();
-                    var stagedFiles = GitCommandHelpers.GetStagedFiles();
-
-                    _syncContext.Post(
-                        state1 =>
-                        {
-                            Staged.GitItemStatuses = null;
-                            SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
-                            Staged.GitItemStatuses = stagedFiles;
-                        }, null);
-                });
-            Cursor.Current = Cursors.Default;
-        }
-
-
         /// <summary>
         ///   Loads the unstaged output.
         ///   This method is passed in to the SetTextCallBack delegate
@@ -246,12 +223,31 @@ namespace GitUI
         /// </summary>
         private void LoadUnstagedOutput()
         {
-            Unstaged.GitItemStatuses =
-                GitCommandHelpers.GetAllChangedFilesFromString(_gitGetUnstagedCommand.Output.ToString());
+            var allChangedFiles = GitCommandHelpers.GetAllChangedFilesFromString(_gitGetUnstagedCommand.Output.ToString());
+
+            var unStagedFiles = new List<GitItemStatus>();
+            var stagedFiles = new List<GitItemStatus>();
+
+            foreach (var fileStatus in allChangedFiles)
+            {
+                if (fileStatus.IsStaged)
+                    stagedFiles.Add(fileStatus);
+                else
+                    unStagedFiles.Add(fileStatus);
+            }
+
+            Unstaged.GitItemStatuses = null;
+            Unstaged.GitItemStatuses = stagedFiles;
+            Staged.GitItemStatuses = null;
+            Staged.GitItemStatuses = unStagedFiles;
+
             Loading.Visible = false;
 
             EnableStageButtons(true);
             workingToolStripMenuItem.Enabled = true;
+
+            var inTheMiddleOfConflictedMerge = GitCommandHelpers.InTheMiddleOfConflictedMerge();
+            SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
         }
 
         protected void ShowChanges(GitItemStatus item, bool staged)
@@ -432,7 +428,7 @@ namespace GitUI
                 var unStagedFiles = (List<GitItemStatus>)Unstaged.GitItemStatuses;
                 Unstaged.GitItemStatuses = null;
 
-                unStagedFiles.RemoveAll(item => stagedFiles.Exists(i => i.Name == item.Name) && files.Exists(i => i.Name == item.Name));
+                unStagedFiles.RemoveAll(item => stagedFiles.Exists(i => i.Name == item.Name || i.OldName == item.Name) && files.Exists(i => i.Name == item.Name));
 
                 Unstaged.GitItemStatuses = unStagedFiles;
 
@@ -444,7 +440,7 @@ namespace GitUI
             {
                 Trace.WriteLine(ex.Message);
             }
-            EnableStageButtons(true);           
+            EnableStageButtons(true);
 
             Commit.Enabled = true;
             Amend.Enabled = true;
@@ -484,6 +480,9 @@ namespace GitUI
                         {
                             toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
                             GitCommandHelpers.UnstageFileToRemove(item.Name);
+                            
+                            if (item.IsRenamed)
+                                GitCommandHelpers.UnstageFileToRemove(item.OldName);
                         }
                         else
                         {
@@ -513,6 +512,22 @@ namespace GitUI
                         else
                             item.IsTracked = true;
 
+                        if (item.IsRenamed)
+                        {
+                            GitItemStatus clone = new GitItemStatus();
+                            clone.Name = item.OldName;
+                            clone.IsDeleted = true;
+                            clone.IsTracked = true;
+                            clone.IsStaged = false;
+                            unStagedFiles.Add(clone);
+
+                            item.IsRenamed = false;
+                            item.IsNew = true;
+                            item.IsTracked = false;
+                            item.OldName = string.Empty;
+                        }
+
+                        item.IsStaged = false;
                         unStagedFiles.Add(item);
                     }
                     Staged.GitItemStatuses = stagedFiles;
@@ -729,6 +744,8 @@ namespace GitUI
         {
             GitCommands.Commit.SetCommitMessage(Message.Text);
             SavePosition("commit");
+
+            Settings.CommitDialogSplitter = splitMain.SplitterDistance;
         }
 
         private void DeleteAllUntrackedFilesToolStripMenuItemClick(object sender, EventArgs e)
@@ -1034,11 +1051,12 @@ namespace GitUI
             Settings.RefreshCommitDialogOnFormFocus = refreshDialogOnFormFocusToolStripMenuItem.Checked;
         }
 
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData) { 
-            if (keyData == Keys.F5) 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.F5)
                 ScanClick(null, null);
 
-            return base.ProcessCmdKey(ref msg, keyData); 
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
         private void toolAuthor_TextChanged(object sender, EventArgs e)
@@ -1050,6 +1068,6 @@ namespace GitUI
         {
             toolAuthor.Text = "";
             toolAuthorLabelItem.Enabled = toolAuthorLabelItem.Checked = false;
-        } 
+        }
     }
 }

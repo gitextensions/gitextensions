@@ -1618,28 +1618,13 @@ namespace GitCommands
 
         public static List<GitItemStatus> GetDiffFiles(string from, string to)
         {
-            var result = RunCachableCmd(Settings.GitCommand, "diff -z --name-status \"" + to + "\" \"" + from + "\"");
+            string result;
+            if (Settings.FollowRenamesInFileHistory)
+                result = RunCachableCmd(Settings.GitCommand, "diff -M -z --name-status \"" + to + "\" \"" + from + "\"");
+            else
+                result = RunCachableCmd(Settings.GitCommand, "diff -z --name-status \"" + to + "\" \"" + from + "\"");
 
-            var files = result.Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-
-            var diffFiles = new List<GitItemStatus>();
-            for (int n = 0; n + 1 < files.Length; n = n + 2)
-            {
-                if (string.IsNullOrEmpty(files[n]))
-                    continue;
-
-                diffFiles.Add(
-                    new GitItemStatus
-                        {
-                            Name = files[n + 1].Trim(),
-                            IsNew = files[n] == "A",
-                            IsChanged = files[n] == "M",
-                            IsDeleted = files[n] == "D",
-                            IsTracked = true
-                        });
-            }
-
-            return diffFiles;
+            return GetAllChangedFilesFromString(result, true);
         }
 
         public static List<GitItemStatus> GetUntrackedFiles()
@@ -1669,44 +1654,19 @@ namespace GitCommands
             return gitItemStatusList;
         }
 
-        public static List<GitItemStatus> GetModifiedFiles()
-        {
-            var status = RunCmd(Settings.GitCommand, "ls-files -z --modified --exclude-standard");
-
-            var statusStrings = status.Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-
-            var gitItemStatusList = new List<GitItemStatus>();
-
-            foreach (var statusString in statusStrings)
-            {
-                if (string.IsNullOrEmpty(statusString.Trim()))
-                    continue;
-                gitItemStatusList.Add(
-                    new GitItemStatus
-                        {
-                            IsNew = false,
-                            IsChanged = true,
-                            IsDeleted = false,
-                            IsTracked = true,
-                            Name = statusString.Trim()
-                        });
-            }
-
-            return gitItemStatusList;
-        }
-
         public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, bool showUntrackedFiles)
         {
-            var stringBuilder = new StringBuilder("ls-files -z --deleted --modified --no-empty-directory -t");
+            var stringBuilder = new StringBuilder("status --porcelain -z");
 
+            if (!showUntrackedFiles)
+                stringBuilder.Append(" --untracked-files=no");
             if (showUntrackedFiles)
-                stringBuilder.Append(" --others");
-            if (excludeIgnoredFiles)
-                stringBuilder.Append(" --exclude-standard");
+                stringBuilder.Append(" --untracked-files");
+            if (!excludeIgnoredFiles)
+                stringBuilder.Append(" --ignored");
 
             return stringBuilder.ToString();
         }
-
 
         public static List<GitItemStatus> GetAllChangedFiles()
         {
@@ -1722,31 +1682,87 @@ namespace GitCommands
             return GetAllChangedFilesFromString(status);
         }
 
-        public static List<GitItemStatus> GetAllChangedFilesFromString(string status)
+        public static List<GitItemStatus> GetAllChangedFilesFromString(string statusString)
         {
-            var statusStrings = status.Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            return GetAllChangedFilesFromString(statusString, false);
+        }
 
-            var gitItemStatusList = new List<GitItemStatus>();
+        /*
+               source: C:\Program Files\msysgit\doc\git\html\git-status.html
+        */
+        public static List<GitItemStatus> GetAllChangedFilesFromString(string statusString, bool fromDiff /*old name and new name are switched.. %^&#^% */)
+        {
+            var files = statusString.Split(new char[] { '\0', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
-            GitItemStatus itemStatus = null;
-            foreach (var statusString in statusStrings)
+            var diffFiles = new List<GitItemStatus>();
+            for (int n = 0; n < files.Length; n++)
             {
-                if (string.IsNullOrEmpty(statusString.Trim()) || statusString.Length < 2)
+                if (string.IsNullOrEmpty(files[n]))
                     continue;
 
-                if (!(itemStatus != null && itemStatus.Name == statusString.Substring(1).Trim()))
+                int splitIndex = files[n].IndexOfAny(new char[] { '\0', '\t', ' ' }, 1);
+
+                string status = string.Empty;
+                string fileName = string.Empty;
+
+                if (splitIndex < 0)
                 {
-                    itemStatus = new GitItemStatus { Name = statusString.Substring(1).Trim() };
-                    gitItemStatusList.Add(itemStatus);
+                    status = files[n];
+                    fileName = files[n+1];
+                    n++;
+                }
+                else
+                {
+                    status = files[n].Substring(0, splitIndex);
+                    fileName = files[n].Substring(splitIndex);
                 }
 
-                itemStatus.IsNew = itemStatus.IsNew || statusString[0] == '?';
-                itemStatus.IsChanged = itemStatus.IsChanged || statusString[0] == 'C';
-                itemStatus.IsDeleted = itemStatus.IsDeleted || statusString[0] == 'R';
-                itemStatus.IsTracked = itemStatus.IsTracked || statusString[0] != '?';
+                GitItemStatus gitItemStatus = new GitItemStatus();
+
+                char x = status[0];
+                char y = status.Length > 1 ? status[1] : ' ';
+
+                //Find renamed files...
+                if (x == 'R' || y == 'R')
+                {
+                    if (fromDiff)
+                    {
+                        gitItemStatus.OldName = fileName.Trim();
+                        gitItemStatus.Name = files[n + 1].Trim();
+                    }
+                    else
+                    {
+                        gitItemStatus.Name = fileName.Trim();
+                        gitItemStatus.OldName = files[n + 1].Trim();
+                    }
+                    gitItemStatus.IsNew = false;
+                    gitItemStatus.IsChanged = false;
+                    gitItemStatus.IsDeleted = false;
+                    gitItemStatus.IsRenamed = true;
+                    gitItemStatus.IsTracked = true;
+                    n++;
+                } else
+                {
+                    gitItemStatus.Name = fileName.Trim();
+                    gitItemStatus.IsNew = x == 'A' || x == '?' || y == 'A' || y == '?';
+                    gitItemStatus.IsChanged = x == 'M' || y == 'M';
+                    gitItemStatus.IsDeleted = x == 'D' || y == 'D';
+                    gitItemStatus.IsRenamed = false;
+                    gitItemStatus.IsTracked = x != '?' && x != ' ' || !gitItemStatus.IsNew;
+                }
+
+                //is merge conflict!
+                if (x == 'U' || y == 'U')
+                {
+                    gitItemStatus.IsConflict = true;
+                }
+
+                gitItemStatus.IsStaged = x == '?' || x == ' ';
+
+                diffFiles.Add(gitItemStatus);
             }
 
-            return gitItemStatusList;
+            return diffFiles;
         }
 
         public static List<GitItemStatus> GetDeletedFiles()
@@ -1783,12 +1799,12 @@ namespace GitCommands
 
         public static List<GitItemStatus> GetStagedFiles()
         {
-            var status = RunCmd(Settings.GitCommand, "diff -z --cached --name-status");
+            string status = RunCmd(Settings.GitCommand, "diff -M -z --cached --name-status");
 
-            var gitItemStatusList = new List<GitItemStatus>();
-
-            if (status.Length < 50 && status.Contains("fatal: No HEAD commit to compare"))
+            if (true && status.Length < 50 && status.Contains("fatal: No HEAD commit to compare"))
             {
+                var gitItemStatusList = new List<GitItemStatus>();
+
                 status = RunCmd(Settings.GitCommand, "status --untracked-files=no");
 
                 var statusStrings = status.Split('\n');
@@ -1800,28 +1816,12 @@ namespace GitCommands
                         ProcessStatusNewFile(statusString, gitItemStatusList);
                     }
                 }
+                return gitItemStatusList;
             }
             else
             {
-                var statusStrings = status.Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-                for (int n = 0; n + 1 < statusStrings.Length; n = n + 2)
-                {
-                    if (string.IsNullOrEmpty(statusStrings[n]))
-                        continue;
-
-                    gitItemStatusList.Add(
-                        new GitItemStatus
-                            {
-                                Name = statusStrings[n + 1].Trim(),
-                                IsNew = statusStrings[n] == "A",
-                                IsChanged = statusStrings[n] == "M",
-                                IsDeleted = statusStrings[n] == "D",
-                                IsTracked = true
-                            });
-                }
+                return GetAllChangedFilesFromString(status, true);
             }
-
-            return gitItemStatusList;
         }
 
         public static List<GitItemStatus> GitStatus()
@@ -2014,7 +2014,7 @@ namespace GitCommands
 
         public static string UnstageFileToRemove(string file)
         {
-            return RunCmd(Settings.GitCommand, "reset HEAD --" + " \"" + FixPath(file) + "\"");
+            return RunCmd(Settings.GitCommand, "reset HEAD -- \"" + FixPath(file) + "\"");
         }
 
         public static string GetSelectedBranch()
@@ -2109,6 +2109,7 @@ namespace GitCommands
 
             return string.Empty;
         }
+
         public static string[] GetFiles(string filePattern)
         {
             return RunCmd(Settings.GitCommand, "ls-files -z -o -m -c \"" + filePattern + "\"")
@@ -2197,7 +2198,6 @@ namespace GitCommands
             var itemsStrings =
                 RunCmd(
                     Settings.GitCommand,
-
                     string.Format("blame -M -w -l \"{0}\" -- \"{1}\"", from, filename)
                     )
                     .Split('\n');
