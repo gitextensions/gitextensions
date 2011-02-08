@@ -23,6 +23,13 @@ namespace GitImpact
             Impact.Invalidated += new InvalidateEventHandler(Impact_Invalidated);
         }
 
+        protected override void OnClosed(EventArgs e)
+        {
+            Impact.Stop();
+
+            base.OnClosed(e);
+        }
+
         void Impact_Invalidated(object sender, InvalidateEventArgs e)
         {
             syncContext.Send(new SendOrPostCallback(delegate(object o)
@@ -40,6 +47,9 @@ namespace GitImpact
                 GitCommands.Statistics.ImpactLoader.DataPoint data = Impact.GetAuthorInfo(author);
                 lblAuthor.Text = author + "(" + data.Commits + " Commits, " + data.ChangedLines + " Changed Lines)";
                 pnlAuthorColor.BackColor = Impact.GetAuthorColor(author);
+
+                lblAuthor.Refresh();
+                pnlAuthorColor.Refresh();
             }
         }
 
