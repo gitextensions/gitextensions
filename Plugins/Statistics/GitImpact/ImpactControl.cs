@@ -65,6 +65,15 @@ namespace GitImpact
             MouseWheel += new MouseEventHandler(ImpactControl_MouseWheel);
         }
 
+        public void Stop()
+        {
+            if (impact_loader != null)
+            {
+                impact_loader.Dispose();
+                impact_loader = null;
+            }
+        }
+
         void ImpactControl_MouseWheel(object sender, MouseEventArgs e)
         {
             this.scrollBar.Value = Math.Min(this.scrollBar.Maximum, Math.Max(this.scrollBar.Minimum, this.scrollBar.Value + e.Delta));
@@ -287,7 +296,11 @@ namespace GitImpact
 
                         // Create a new random brush for the author if none exists yet
                         if (!brushes.ContainsKey(author))
-                            brushes.Add(author, new SolidBrush(Color.FromArgb(rnd.Next(255), rnd.Next(255), rnd.Next(255))));
+                        {
+                            int partLength = author.Length / 3;
+                            brushes.Add(author, new SolidBrush(Color.FromArgb(GenerateIntFromString(author.Substring(0, partLength)) % 255, GenerateIntFromString(author.Substring(partLength, partLength)) % 255, GenerateIntFromString(author.Substring(partLength)) % 255)));
+                        }
+
                         // Increase y for next block
                         y += rc.Height + 2;
                     }
@@ -378,6 +391,16 @@ namespace GitImpact
                     }
                 }
             }
+        }
+
+        private int GenerateIntFromString(string text)
+        {
+            int number = 0;
+            foreach (char c in text)
+            {
+                number += (int)c;
+            }
+            return number;
         }
 
         /// <summary>
