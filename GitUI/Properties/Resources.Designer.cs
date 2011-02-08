@@ -379,18 +379,32 @@ namespace GitUI.Properties {
         ///   Looks up a localized string similar to Changelog
         ///=========
         ///
-        ///Version 2.09
-        ///	Fixed issue 92: added AcceptButton on Push dialog and fixed tab order in push and pull dialog.
-        ///	Fixed issue 289: added support for MonsterId, Identicon and Wavatar when user has no Gravatar
-        ///	Fixed issue 304: cannot load commit log
-        ///	Fixed issue 305: binary files are not saved properly when using &quot;save as...&quot;
-        ///	Fixed issue 318: when pushing new branch, track it automaticall
-        ///	Fixed bug: commands Clone and Initialize in Visual Studio plugin are not always enabled
-        ///	Fixed &quot; [rest of string was truncated]&quot;;.
+        ///Version 2.12
+        ///	Fixed issue 368: Browse button does not open dialog in HOME dialog
+        ///	Added impact graph plugin
+        ///	Updated msysgit to version 1.7.4
+        ///
+        ///Version 2.11
+        ///	Fixed crash when refreshing repository grid
+        ///
+        ///Version 2.10
+        ///	Fixed issue 78: refresh commit dialog on focus (optional)
+        ///	Fixed &quot;Recover lost objects&quot;
+        ///	Fixed layout issues in gource plugin dialog
+        ///	Fix FileTree behaviour when right-clicked on empty space below last node
+        ///	Spanish translation updated
+        ///	Layout commit dialog  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ChangeLog {
             get {
                 return ResourceManager.GetString("ChangeLog", resourceCulture);
+            }
+        }
+        
+        public static System.Drawing.Bitmap Conflict {
+            get {
+                object obj = ResourceManager.GetObject("Conflict", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -593,6 +607,13 @@ namespace GitUI.Properties {
         public static System.Drawing.Bitmap Removed {
             get {
                 object obj = ResourceManager.GetObject("Removed", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap Renamed {
+            get {
+                object obj = ResourceManager.GetObject("Renamed", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

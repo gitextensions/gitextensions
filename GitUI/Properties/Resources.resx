@@ -364,4 +364,10 @@
   <data name="45" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\45.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Conflict" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\52.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Renamed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\Renamed.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

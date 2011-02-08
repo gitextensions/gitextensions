@@ -226,8 +226,17 @@ namespace GitUI
                     else
                         if (gitItemStatus.IsChanged)
                             e.Graphics.DrawImage(Resources.Modified, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
+                        else
+                            if (gitItemStatus.IsRenamed)
+                                e.Graphics.DrawImage(Resources.Renamed, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
 
-                e.Graphics.DrawString(gitItemStatus.Name, FileStatusListBox.Font, new SolidBrush(e.ForeColor), e.Bounds.Left + e.Bounds.Height, e.Bounds.Top);
+                string text;
+                if (gitItemStatus.IsRenamed)
+                    text = string.Concat(gitItemStatus.OldName, " -> ", gitItemStatus.Name);
+                else
+                    text = gitItemStatus.Name;
+
+                e.Graphics.DrawString(text, FileStatusListBox.Font, new SolidBrush(e.ForeColor), e.Bounds.Left + e.Bounds.Height, e.Bounds.Top);
             }
         }
 
