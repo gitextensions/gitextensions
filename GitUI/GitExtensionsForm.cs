@@ -157,8 +157,6 @@ namespace GitUI
             {
                 //TODO: howto restore a corrupted config? Properties.Settings.Default.Reset() doesn't work.
             }
-
-
         }
 
         /// <summary>
