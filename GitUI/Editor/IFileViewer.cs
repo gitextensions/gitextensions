@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using System.Drawing;
+
 namespace GitUI.Editor
 {
     public delegate void SelectedLineChangedEventHandler(object sender, int selectedLine);

@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
-using System.IO;
-using GitCommands;
-using ICSharpCode.TextEditor.Util;
 
 namespace GitUI.Editor
 {
@@ -18,14 +11,14 @@ namespace GitUI.Editor
             InitializeComponent();
             Translate();
 
-            TextEditor.TextChanged += new EventHandler(TextEditor_TextChanged);
-            TextEditor.VScroll += new EventHandler(TextEditor_VScroll);
+            TextEditor.TextChanged += TextEditor_TextChanged;
+            TextEditor.VScroll += TextEditor_VScroll;
             TextEditor.WordWrap = false;
-            TextEditor.DoubleClick += new EventHandler(TextEditor_DoubleClick);
-            TextEditor.MouseDown += new MouseEventHandler(TextEditor_MouseDown);
+            TextEditor.DoubleClick += TextEditor_DoubleClick;
+            TextEditor.MouseDown += TextEditor_MouseDown;
             TextEditor.BackColor = Color.White;
-            TextEditor.MouseLeave += new EventHandler(TextArea_MouseLeave);
-            TextEditor.MouseMove += new MouseEventHandler(TextArea_MouseLeave);
+            TextEditor.MouseLeave += TextArea_MouseLeave;
+            TextEditor.MouseMove += TextArea_MouseLeave;
         }
 
         public new event EventHandler MouseLeave;

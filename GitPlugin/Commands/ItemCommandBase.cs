@@ -8,8 +8,8 @@ namespace GitPlugin.Commands
         // an item command is a command associated with selected items in solution explorer
         public abstract class ItemCommandBase : CommandBase
         {
-            private bool m_executeForFileItems = true;
-            private bool m_executeForProjectItems = true;
+            private readonly bool m_executeForFileItems = true;
+            private readonly bool m_executeForProjectItems = true;
 
             protected ItemCommandBase()
             {

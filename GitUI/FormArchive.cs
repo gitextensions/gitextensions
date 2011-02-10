@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace GitUI
@@ -34,9 +29,7 @@ namespace GitUI
             }
             string revision = revisionGrid1.GetRevisions()[0].TreeGuid;
 
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Zip file (*.zip)|*.zip";
-            saveFileDialog.Title = "Save archive as";
+            var saveFileDialog = new SaveFileDialog {Filter = "Zip file (*.zip)|*.zip", Title = "Save archive as"};
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {

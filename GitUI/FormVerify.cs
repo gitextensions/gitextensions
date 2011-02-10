@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Tag;
@@ -135,7 +136,7 @@ namespace GitUI
             var form =
                 new FormTagSmall
                     {
-                        Revision = new GitRevision {Guid = sha1}
+                        Revision = new GitRevision { Guid = sha1 }
                     };
             form.ShowDialog();
         }
@@ -160,9 +161,9 @@ namespace GitUI
         private void CreateLostFoundTags(bool onlyCommits)
         {
             var currentTag = 0;
-            foreach (var warningString in (List<string>) Warnings.DataSource)
+            foreach (var warningString in (List<string>)Warnings.DataSource)
             {
-                if (onlyCommits && !warningString.Contains("commit")) 
+                if (onlyCommits && !warningString.Contains("commit"))
                     continue;
                 var sha1 = FindSha1(warningString);
                 currentTag++;

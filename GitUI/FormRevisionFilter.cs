@@ -65,7 +65,7 @@ namespace GitUI
             if (MessageCheck.Checked && GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(Message.Text))
                 filter += string.Format(" --grep=\"{0}\"", Message.Text);
             if (LimitCheck.Checked)
-                filter += string.Format(" --max-count=\"{0}\"", ((int)_NO_TRANSLATE_Limit.Value).ToString());
+                filter += string.Format(" --max-count=\"{0}\"", ((int)_NO_TRANSLATE_Limit.Value));
             if (!string.IsNullOrEmpty(filter) && IgnoreCase.Checked)
                 filter += " --regexp-ignore-case";
             if (FileFilterCheck.Checked)
@@ -78,24 +78,21 @@ namespace GitUI
         {
             if (AuthorCheck.Checked && !GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(Author.Text))
                 return Author.Text;
-            else
-                return string.Empty;
+            return string.Empty;
         }
 
         public string GetInMemCommitterFilter()
         {
             if (CommitterCheck.Checked && !GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(Committer.Text))
                 return Committer.Text;
-            else
-                return string.Empty;
+            return string.Empty;
         }
 
         public string GetInMemMessageFilter()
         {
             if (MessageCheck.Checked && !GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(Message.Text))
                 return Message.Text;
-            else
-                return string.Empty;
+            return string.Empty;
         }
 
         public bool GetIgnoreCase()

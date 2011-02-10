@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using GitUIPluginInterfaces.RepositoryHosts;
 using GitCommands;
 using System.IO;
 using GitCommands.Repository;
-using System.Threading;
 using System.Diagnostics;
 using ResourceManager.Translation;
 
@@ -19,7 +14,7 @@ namespace GitUI.RepoHosting
     public partial class ForkAndCloneForm : GitExtensionsForm
     {
         #region Translation
-        private readonly TranslationString _strFailedToFetchPullData = new TranslationString("Failed to fetch pull data!\r\n");
+
         private readonly TranslationString _strError = new TranslationString("Error");
         private readonly TranslationString _strLoading = new TranslationString(" : LOADING : ");
         private readonly TranslationString _strYes = new TranslationString("Yes");
@@ -39,8 +34,7 @@ namespace GitUI.RepoHosting
         private readonly TranslationString _strCloneFolderCanNotBeEmpty = new TranslationString("Clone folder can not be empty");
         #endregion
 
-
-        IRepositoryHostPlugin _gitHoster;
+        readonly IRepositoryHostPlugin _gitHoster;
 
         public ForkAndCloneForm(IRepositoryHostPlugin gitHoster)
         {
@@ -65,7 +59,7 @@ namespace GitUI.RepoHosting
                 _destinationTB.Text = Path.GetDirectoryName(p);
             }
 
-            this.Text = _gitHoster.Description + ": " + this.Text;
+            Text = _gitHoster.Description + ": " + Text;
 
             UpdateCloneInfo();
             UpdateMyRepos();
@@ -74,19 +68,17 @@ namespace GitUI.RepoHosting
         private void UpdateMyRepos()
         {
             _myReposLV.Items.Clear();
-            _myReposLV.Items.Add(new ListViewItem() { Text = _strLoading.Text });
+            _myReposLV.Items.Add(new ListViewItem { Text = _strLoading.Text });
 
             AsyncHelpers.DoAsync(
-                ()=>_gitHoster.GetMyRepos(),
+                () => _gitHoster.GetMyRepos(),
 
-                (repos) => 
+                repos =>
                 {
                     _myReposLV.Items.Clear();
                     foreach (var repo in repos)
                     {
-                        var lvi = new ListViewItem();
-                        lvi.Tag = repo;
-                        lvi.Text = repo.Name;
+                        var lvi = new ListViewItem { Tag = repo, Text = repo.Name };
                         lvi.SubItems.Add(repo.IsAFork ? _strYes.Text : _strNo.Text);
                         lvi.SubItems.Add(repo.Forks.ToString());
                         lvi.SubItems.Add(repo.IsPrivate ? _strYes.Text : _strNo.Text);
@@ -94,7 +86,7 @@ namespace GitUI.RepoHosting
                     }
                 },
 
-                (ex) =>
+                ex =>
                 {
                     MessageBox.Show(this, _strFailedToGetRepos.Text + ex.Message, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Close();
@@ -112,8 +104,8 @@ namespace GitUI.RepoHosting
 
             AsyncHelpers.DoAsync(
                 () => _gitHoster.SearchForRepository(search),
-                (repos) => HandleSearchResult(repos),
-                (ex) => { MessageBox.Show(this, _strSearchFailed.Text + ex.Message, _strError.Text); _searchBtn.Enabled = true; });
+                HandleSearchResult,
+                ex => { MessageBox.Show(this, _strSearchFailed.Text + ex.Message, _strError.Text); _searchBtn.Enabled = true; });
         }
         private void _getFromUserBtn_Click(object sender, EventArgs e)
         {
@@ -124,13 +116,14 @@ namespace GitUI.RepoHosting
 
             AsyncHelpers.DoAsync(
                 () => _gitHoster.GetRepositoriesOfUser(search.Trim()),
-                (repos) => HandleSearchResult(repos),
-                (ex) => {
+                HandleSearchResult,
+                ex =>
+                {
                     if (ex.Message.Contains("404"))
                         MessageBox.Show(this, _strUserNotFound.Text, _strError.Text);
                     else
-                        MessageBox.Show(this, _strCouldNotFetchReposOfUser.Text + ex.Message, _strError.Text); 
-                    _searchBtn.Enabled = true; 
+                        MessageBox.Show(this, _strCouldNotFetchReposOfUser.Text + ex.Message, _strError.Text);
+                    _searchBtn.Enabled = true;
                 });
         }
 
@@ -140,7 +133,7 @@ namespace GitUI.RepoHosting
             _searchResultsLV.Items.Clear();
             _searchResultsLV_SelectedIndexChanged(sender, e);
             _searchBtn.Enabled = false;
-            _searchResultsLV.Items.Add(new ListViewItem() { Text = _strSearching.Text });
+            _searchResultsLV.Items.Add(new ListViewItem { Text = _strSearching.Text });
         }
 
         private void HandleSearchResult(IList<IHostedRepository> repos)
@@ -148,12 +141,10 @@ namespace GitUI.RepoHosting
             _searchResultsLV.Items.Clear();
             foreach (var repo in repos)
             {
-                var lvi = new ListViewItem();
-                lvi.Tag = repo;
-                lvi.Text = repo.Name;
+                var lvi = new ListViewItem { Tag = repo, Text = repo.Name };
                 lvi.SubItems.Add(repo.Owner);
                 lvi.SubItems.Add(repo.Forks.ToString());
-                lvi.SubItems.Add(repo.IsAFork ? _strYes.Text :  _strNo.Text);
+                lvi.SubItems.Add(repo.IsAFork ? _strYes.Text : _strNo.Text);
                 _searchResultsLV.Items.Add(lvi);
             }
             _searchBtn.Enabled = true;
@@ -171,7 +162,7 @@ namespace GitUI.RepoHosting
             var hostedRepo = _searchResultsLV.SelectedItems[0].Tag as IHostedRepository;
             try
             {
-                hostedRepo.Fork();
+                if (hostedRepo != null) hostedRepo.Fork();
             }
             catch (Exception ex)
             {
@@ -184,12 +175,12 @@ namespace GitUI.RepoHosting
 
         private void _searchTB_Enter(object sender, EventArgs e)
         {
-            this.AcceptButton = _searchBtn;
+            AcceptButton = _searchBtn;
         }
 
         private void _searchTB_Leave(object sender, EventArgs e)
         {
-            this.AcceptButton = null;
+            AcceptButton = null;
         }
 
         private void _searchResultsLV_SelectedIndexChanged(object sender, EventArgs e)
@@ -270,7 +261,7 @@ namespace GitUI.RepoHosting
 
         private void Clone(IHostedRepository repo)
         {
-            string targetDir = GetTargetDir(repo);
+            string targetDir = GetTargetDir();
             if (targetDir == null)
                 return;
 
@@ -307,13 +298,10 @@ namespace GitUI.RepoHosting
 
                     return (IHostedRepository)_searchResultsLV.SelectedItems[0].Tag;
                 }
-                else
-                {
-                    if (_myReposLV.SelectedItems.Count != 1)
-                        return null;
+                if (_myReposLV.SelectedItems.Count != 1)
+                    return null;
 
-                    return (IHostedRepository)_myReposLV.SelectedItems[0].Tag;
-                }
+                return (IHostedRepository)_myReposLV.SelectedItems[0].Tag;
             }
         }
 
@@ -331,16 +319,16 @@ namespace GitUI.RepoHosting
                 if (updateCreateDirTB)
                 {
                     _createDirTB.Text = repo.Name;
-                    _addRemoteAsTB.Text = repo.ParentOwner != null ? repo.ParentOwner : "";
+                    _addRemoteAsTB.Text = repo.ParentOwner ?? "";
                 }
 
                 _cloneBtn.Enabled = true;
                 var moreInfo = !string.IsNullOrEmpty(_addRemoteAsTB.Text) ? string.Format(_strWillBeAddedAsARemote.Text, _addRemoteAsTB.Text.Trim()) : "";
 
                 if (_tabControl.SelectedTab == _searchReposPage)
-                    _cloneInfoText.Text = string.Format(_strWillCloneInfo.Text, repo.CloneReadWriteUrl, GetTargetDir(repo), moreInfo);
+                    _cloneInfoText.Text = string.Format(_strWillCloneInfo.Text, repo.CloneReadWriteUrl, GetTargetDir(), moreInfo);
                 else if (_tabControl.SelectedTab == _myReposPage)
-                    _cloneInfoText.Text = string.Format(_strWillCloneWithPushAccess.Text, repo.CloneReadWriteUrl, GetTargetDir(repo), moreInfo);
+                    _cloneInfoText.Text = string.Format(_strWillCloneWithPushAccess.Text, repo.CloneReadWriteUrl, GetTargetDir(), moreInfo);
             }
             else
             {
@@ -350,7 +338,7 @@ namespace GitUI.RepoHosting
             }
         }
 
-        private string GetTargetDir(IHostedRepository repo)
+        private string GetTargetDir()
         {
             string targetDir = _destinationTB.Text.Trim();
             if (targetDir.Length == 0)

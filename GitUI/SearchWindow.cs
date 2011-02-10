@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
 namespace GitUI
 {
-    
-    
+
+
     public partial class SearchWindow<T> : Form where T : class
     {
         private readonly Func<string, IList<T>> getCandidates;
@@ -18,7 +19,7 @@ namespace GitUI
         {
             InitializeComponent();
             textBox1.Select();
-            
+
             if (getCandidates == null)
             {
                 throw new InvalidOperationException("getCandidates cannot be null");
@@ -41,7 +42,7 @@ namespace GitUI
                 {
                     listBox1.Items.Add(candidates[i]);
                 }
-                
+
                 listBox1.EndUpdate();
                 if (candidates.Count > 0)
                 {
@@ -57,23 +58,23 @@ namespace GitUI
         {
             if (listBox1.Items.Count == 0)
                 listBox1.Visible = false;
-                
+
             listBox1.Visible = true;
-                
+
             int width = 300;
-            
+
             using (Graphics g = listBox1.CreateGraphics())
             {
-                for (int i1 = 0; i1 < listBox1.Items.Count; i1++)
-                {
-                    int itemWidth = Convert.ToInt32(g.MeasureString(Convert.ToString(listBox1.Items[i1]), listBox1.Font).Width);
-                    width = Math.Max(width, itemWidth);
-                }
+                width = listBox1
+                    .Items
+                    .Cast<object>()
+                    .Select(t => Convert.ToInt32(g.MeasureString(Convert.ToString(t), listBox1.Font).Width))
+                    .Aggregate(width, (current, itemWidth) => Math.Max((sbyte)current, (sbyte)itemWidth));
             }
-            
+
             listBox1.Width = width;
             listBox1.Height = Math.Min(800, listBox1.Font.Height * (listBox1.Items.Count + 1));
-            
+
             Width = listBox1.Width + 15;
         }
 
@@ -95,7 +96,7 @@ namespace GitUI
         {
             if (backgroundThread != null)
                 backgroundThread.Abort();
-            
+
             backgroundThread = new Thread(SearchForCandidates)
             {
                 IsBackground = true,
@@ -140,7 +141,7 @@ namespace GitUI
             {
                 if (listBox1.Items.Count > 1)
                 {
-                    var newSelectedIndex =listBox1.SelectedIndex - 1;
+                    var newSelectedIndex = listBox1.SelectedIndex - 1;
                     if (newSelectedIndex < 0)
                         newSelectedIndex = listBox1.Items.Count - 1;
 

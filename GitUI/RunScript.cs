@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using GitCommands;
 
 namespace GitUI
 {
-    class RunScript
+    internal class RunScript
     {
         public RunScript(string script, RevisionGrid RevisionGrid)
         {
@@ -25,43 +22,43 @@ namespace GitUI
                 argument = scriptInfo[2];
             }
 
-            string[] options = 
-           {
-               "{sTag}",
-               "{sBranch}",
-               "{sLocalBranch}",
-               "{sRemoteBranch}",
-               "{sRemote}",
-               "{sHash}",
-               "{sMessage}",
-               "{sAuthor}",
-               "{sCommitter}",
-               "{sAuthorDate}",
-               "{sCommitDate}",
-               "{cTag}",
-               "{cBranch}",
-               "{cLocalBranch}",
-               "{cRemoteBranch}",
-               "{cHash}",
-               "{cMessage}",
-               "{cAuthor}",
-               "{cCommitter}",
-               "{cAuthorDate}",
-               "{cCommitDate}"
-           };
+            string[] options =
+                {
+                    "{sTag}",
+                    "{sBranch}",
+                    "{sLocalBranch}",
+                    "{sRemoteBranch}",
+                    "{sRemote}",
+                    "{sHash}",
+                    "{sMessage}",
+                    "{sAuthor}",
+                    "{sCommitter}",
+                    "{sAuthorDate}",
+                    "{sCommitDate}",
+                    "{cTag}",
+                    "{cBranch}",
+                    "{cLocalBranch}",
+                    "{cRemoteBranch}",
+                    "{cHash}",
+                    "{cMessage}",
+                    "{cAuthor}",
+                    "{cCommitter}",
+                    "{cAuthorDate}",
+                    "{cCommitDate}"
+                };
 
             GitRevision selectedRevision = null;
             GitRevision currentRevision = null;
 
-            List<GitHead> selectedLocalBranches = new List<GitHead>();
-            List<GitHead> selectedRemoteBranches = new List<GitHead>();
-            List<string> selectedRemotes = new List<string>();
-            List<GitHead> selectedBranches = new List<GitHead>();
-            List<GitHead> selectedTags = new List<GitHead>();
-            List<GitHead> currentLocalBranches = new List<GitHead>();
-            List<GitHead> currentRemoteBranches = new List<GitHead>();
-            List<GitHead> currentBranches = new List<GitHead>();
-            List<GitHead> currentTags = new List<GitHead>();
+            var selectedLocalBranches = new List<GitHead>();
+            var selectedRemoteBranches = new List<GitHead>();
+            var selectedRemotes = new List<string>();
+            var selectedBranches = new List<GitHead>();
+            var selectedTags = new List<GitHead>();
+            var currentLocalBranches = new List<GitHead>();
+            var currentRemoteBranches = new List<GitHead>();
+            var currentBranches = new List<GitHead>();
+            var currentTags = new List<GitHead>();
 
             foreach (string option in options)
             {
@@ -70,7 +67,7 @@ namespace GitUI
                     if (option.StartsWith("{s") && selectedRevision == null)
                     {
                         selectedRevision = RevisionGrid.GetRevision(RevisionGrid.LastRow);
-                        foreach (var head in selectedRevision.Heads)
+                        foreach (GitHead head in selectedRevision.Heads)
                         {
                             if (head.IsTag)
                                 selectedTags.Add(head);
@@ -86,7 +83,6 @@ namespace GitUI
                                 }
                                 else
                                     selectedLocalBranches.Add(head);
-
                             }
                         }
                     }
@@ -94,7 +90,7 @@ namespace GitUI
                     {
                         currentRevision = RevisionGrid.GetCurrentRevision();
 
-                        foreach (var head in currentRevision.Heads)
+                        foreach (GitHead head in currentRevision.Heads)
                         {
                             if (head.IsTag)
                                 currentTags.Add(head);
@@ -123,7 +119,8 @@ namespace GitUI
                             if (selectedBranches.Count == 1)
                                 argument = argument.Replace(option, selectedBranches[0].Name);
                             else if (selectedBranches.Count != 0)
-                                argument = argument.Replace(option, askToSpecify(selectedBranches, "Selected Revision Branch"));
+                                argument = argument.Replace(option,
+                                                            askToSpecify(selectedBranches, "Selected Revision Branch"));
                             else
                                 argument = argument.Replace(option, "");
                             break;
@@ -131,7 +128,9 @@ namespace GitUI
                             if (selectedLocalBranches.Count == 1)
                                 argument = argument.Replace(option, selectedLocalBranches[0].Name);
                             else if (selectedLocalBranches.Count != 0)
-                                argument = argument.Replace(option, askToSpecify(selectedLocalBranches, "Selected Revision Local Branch"));
+                                argument = argument.Replace(option,
+                                                            askToSpecify(selectedLocalBranches,
+                                                                         "Selected Revision Local Branch"));
                             else
                                 argument = argument.Replace(option, "");
                             break;
@@ -139,7 +138,9 @@ namespace GitUI
                             if (selectedRemoteBranches.Count == 1)
                                 argument = argument.Replace(option, selectedRemoteBranches[0].Name);
                             else if (selectedRemoteBranches.Count != 0)
-                                argument = argument.Replace(option, askToSpecify(selectedRemoteBranches, "Selected Revision Remote Branch"));
+                                argument = argument.Replace(option,
+                                                            askToSpecify(selectedRemoteBranches,
+                                                                         "Selected Revision Remote Branch"));
                             else
                                 argument = argument.Replace(option, "");
                             break;
@@ -148,7 +149,8 @@ namespace GitUI
                                 argument = argument.Replace(option, selectedRemotes[0]);
                             else if (selectedRemotes.Count != 0)
                             {
-                                argument = argument.Replace(option, askToSpecify(selectedRemotes, "Selected Revision Remote"));
+                                argument = argument.Replace(option,
+                                                            askToSpecify(selectedRemotes, "Selected Revision Remote"));
                             }
                             else
                                 argument = argument.Replace(option, "");
@@ -183,7 +185,8 @@ namespace GitUI
                             if (currentBranches.Count == 1)
                                 argument = argument.Replace(option, currentBranches[0].Name);
                             else if (currentBranches.Count != 0)
-                                argument = argument.Replace(option, askToSpecify(currentBranches, "Current Revision Branch"));
+                                argument = argument.Replace(option,
+                                                            askToSpecify(currentBranches, "Current Revision Branch"));
                             else
                                 argument = argument.Replace(option, "");
                             break;
@@ -191,7 +194,9 @@ namespace GitUI
                             if (currentLocalBranches.Count == 1)
                                 argument = argument.Replace(option, currentLocalBranches[0].Name);
                             else if (currentLocalBranches.Count != 0)
-                                argument = argument.Replace(option, askToSpecify(currentLocalBranches, "Current Revision Local Branch"));
+                                argument = argument.Replace(option,
+                                                            askToSpecify(currentLocalBranches,
+                                                                         "Current Revision Local Branch"));
                             else
                                 argument = argument.Replace(option, "");
                             break;
@@ -199,7 +204,9 @@ namespace GitUI
                             if (currentRemoteBranches.Count == 1)
                                 argument = argument.Replace(option, currentRemoteBranches[0].Name);
                             else if (currentRemoteBranches.Count != 0)
-                                argument = argument.Replace(option, askToSpecify(currentRemoteBranches, "Current Revision Remote Branch"));
+                                argument = argument.Replace(option,
+                                                            askToSpecify(currentRemoteBranches,
+                                                                         "Current Revision Remote Branch"));
                             else
                                 argument = argument.Replace(option, "");
                             break;
@@ -230,16 +237,16 @@ namespace GitUI
             new FormProcess(command, argument).ShowDialog();
         }
 
-        private string askToSpecify(List<GitHead> options, string title)
+        private static string askToSpecify(IEnumerable<GitHead> options, string title)
         {
-            FormRunScriptSpecify f = new FormRunScriptSpecify(options, title);
+            var f = new FormRunScriptSpecify(options, title);
             f.ShowDialog();
             return f.ret;
         }
 
-        private string askToSpecify(List<string> options, string title)
+        private static string askToSpecify(IEnumerable<string> options, string title)
         {
-            FormRunScriptSpecify f = new FormRunScriptSpecify(options, title);
+            var f = new FormRunScriptSpecify(options, title);
             f.ShowDialog();
             return f.ret;
         }

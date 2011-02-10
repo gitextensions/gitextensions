@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using GitCommands;
 
 namespace GitUI
@@ -10,8 +7,8 @@ namespace GitUI
     {
         public int Compare(IGitItem x, IGitItem y)
         {
-            GitItem xGitItem = (GitItem)x;
-            GitItem yGitItem = (GitItem)y;
+            var xGitItem = (GitItem)x;
+            var yGitItem = (GitItem)y;
 
             if ((xGitItem.ItemType == "tree" || xGitItem.ItemType == "commit") && yGitItem.ItemType == "blob")
                 return -1;
