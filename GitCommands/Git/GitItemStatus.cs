@@ -13,6 +13,7 @@ namespace GitCommands
             IsDeleted = false;
             IsChanged = false;
             IsRenamed = false;
+            IsCopied = false;
             IsConflict = false;
             IsNew = false;
             IsStaged = true;
@@ -31,6 +32,7 @@ namespace GitCommands
                 else if (IsNew) return "New";
                 else if (IsRenamed) return "Renamed";
                 else if (IsConflict) return "Conflict";
+                else if (IsCopied) return "Copied";
                 else return "";
             }
         }
@@ -40,6 +42,7 @@ namespace GitCommands
         public bool IsChanged { get; set; }
         public bool IsNew { get; set; }
         public bool IsRenamed { get; set; }
+        public bool IsCopied { get; set; }
         public bool IsConflict { get; set; }
         public bool IsStaged { get; set; }
 
@@ -48,7 +51,7 @@ namespace GitCommands
             string toString = string.Empty;
             if (IsRenamed)
             {
-                toString = string.Concat(OldName, " -> ", Name);
+                toString = string.Concat("Renamed \"", OldName, "\" to \"", Name, "\"");
             }
             else
             {
@@ -58,6 +61,11 @@ namespace GitCommands
             if (IsConflict)
             {
                 toString += " (Conflict)";
+            }
+
+            if (IsCopied)
+            {
+                toString += " (Copied)";
             }
 
             return toString;
