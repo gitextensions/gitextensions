@@ -1,82 +1,88 @@
 ﻿using System;
-using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using GitCommands;
 using GitCommands.Repository;
 using GitUI.Properties;
-using System.Text.RegularExpressions;
+using GitUI.RepoHosting;
+using GitUIPluginInterfaces.RepositoryHosts;
 using ResourceManager.Translation;
+using Settings = GitCommands.Settings;
 
 namespace GitUI
 {
     public partial class Dashboard : GitExtensionsControl
     {
-        TranslationString openRepository = new TranslationString("Open repository");
-        TranslationString cloneRepository = new TranslationString("Clone repository");
-        TranslationString createRepository = new TranslationString("Create new repository");
-        TranslationString cloneFork = new TranslationString("Clone {0} repository");
-        TranslationString develop = new TranslationString("Develop");
-        TranslationString donate = new TranslationString("Donate");
-        TranslationString translate = new TranslationString("Translate");
-        TranslationString issues = new TranslationString("Issues");
+        private readonly TranslationString cloneFork = new TranslationString("Clone {0} repository");
+        private readonly TranslationString cloneRepository = new TranslationString("Clone repository");
+        private readonly TranslationString createRepository = new TranslationString("Create new repository");
+        private readonly TranslationString develop = new TranslationString("Develop");
+        private readonly TranslationString donate = new TranslationString("Donate");
+        private readonly TranslationString issues = new TranslationString("Issues");
+        private readonly TranslationString openRepository = new TranslationString("Open repository");
+        private readonly TranslationString translate = new TranslationString("Translate");
+        private bool Recalculating;
+        private bool initialized;
 
         public Dashboard()
         {
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
 
             RecentRepositories.DashboardItemClick += dashboardItem_Click;
             RecentRepositories.DisableContextMenu();
             RecentRepositories.DashboardCategoryChanged += dashboardCategory_DashboardCategoryChanged;
             //Repositories.RepositoryCategories.ListChanged += new ListChangedEventHandler(RepositoryCategories_ListChanged);
 
-            var image = Lemmings.GetPictureBoxImage(DateTime.Now);
+            Bitmap image = Lemmings.GetPictureBoxImage(DateTime.Now);
             if (image != null)
                 pictureBox1.Image = image;
 
-            this.Load += Dashboard_Load;
+            Load += Dashboard_Load;
         }
 
-        void Dashboard_Load(object sender, EventArgs e)
+        private void Dashboard_Load(object sender, EventArgs e)
         {
             DonateCategory.Dock = DockStyle.Top;
             //Show buttons
             CommonActions.DisableContextMenu();
-            DashboardItem openItem = new DashboardItem(Resources._40, openRepository.Text);
+            var openItem = new DashboardItem(Resources._40, openRepository.Text);
             openItem.Click += openItem_Click;
             CommonActions.AddItem(openItem);
 
-            DashboardItem cloneItem = new DashboardItem(Resources._46, cloneRepository.Text);
+            var cloneItem = new DashboardItem(Resources._46, cloneRepository.Text);
             cloneItem.Click += cloneItem_Click;
             CommonActions.AddItem(cloneItem);
 
-            foreach (var el in GitUI.RepoHosting.RepoHosts.GitHosters)
+            foreach (IRepositoryHostPlugin el in RepoHosts.GitHosters)
             {
-                var gitHoster = el;
-                DashboardItem di = new DashboardItem(Resources._46, string.Format(cloneFork.Text, el.Description));
-                di.Click += (repoSender, eventArgs) => { GitUICommands.Instance.StartCloneForkFromHoster(gitHoster); };
+                IRepositoryHostPlugin gitHoster = el;
+                var di = new DashboardItem(Resources._46, string.Format(cloneFork.Text, el.Description));
+                di.Click += (repoSender, eventArgs) => GitUICommands.Instance.StartCloneForkFromHoster(gitHoster);
                 CommonActions.AddItem(di);
             }
-            
-            DashboardItem createItem = new DashboardItem(Resources._14, createRepository.Text);
+
+            var createItem = new DashboardItem(Resources._14, createRepository.Text);
             createItem.Click += createItem_Click;
             CommonActions.AddItem(createItem);
 
             DonateCategory.DisableContextMenu();
-            DashboardItem GitHubItem = new DashboardItem(Resources.develop.ToBitmap(), develop.Text);
+            var GitHubItem = new DashboardItem(Resources.develop.ToBitmap(), develop.Text);
             GitHubItem.Click += GitHubItem_Click;
             DonateCategory.AddItem(GitHubItem);
-            DashboardItem DonateItem = new DashboardItem(Resources.dollar.ToBitmap(), donate.Text);
+            var DonateItem = new DashboardItem(Resources.dollar.ToBitmap(), donate.Text);
             DonateItem.Click += DonateItem_Click;
             DonateCategory.AddItem(DonateItem);
-            DashboardItem TranslateItem = new DashboardItem(Resources._24, translate.Text);
+            var TranslateItem = new DashboardItem(Resources._24, translate.Text);
             TranslateItem.Click += TranslateItem_Click;
             DonateCategory.AddItem(TranslateItem);
-            DashboardItem IssuesItem = new DashboardItem(Resources.bug, issues.Text);
+            var IssuesItem = new DashboardItem(Resources.bug, issues.Text);
             IssuesItem.Click += IssuesItem_Click;
             DonateCategory.AddItem(IssuesItem);
         }
-         
+
         public event EventHandler WorkingDirChanged;
 
         public virtual void OnWorkingDirChanged()
@@ -84,14 +90,14 @@ namespace GitUI
             if (WorkingDirChanged != null)
                 WorkingDirChanged(this, null);
         }
-        
+
         private int AddDashboardEntry(int y, RepositoryCategory entry)
         {
-            DashboardCategory dashboardCategory = new DashboardCategory(entry.Description, entry)
-                                                      {
-                                                          Location = new Point(0, y),
-                                                          Width = splitContainer5.Panel2.Width
-                                                      };
+            var dashboardCategory = new DashboardCategory(entry.Description, entry)
+                                        {
+                                            Location = new Point(0, y),
+                                            Width = splitContainer5.Panel2.Width
+                                        };
             splitContainer5.Panel2.Controls.Add(dashboardCategory);
             dashboardCategory.BringToFront();
             y += dashboardCategory.Height;
@@ -102,23 +108,12 @@ namespace GitUI
             return y;
         }
 
-        void dashboardCategory_DashboardCategoryChanged(object sender, EventArgs e)
+        private void dashboardCategory_DashboardCategoryChanged(object sender, EventArgs e)
         {
             Recalculate();
         }
 
-        void RepositoryCategories_ListChanged(object sender, ListChangedEventArgs e)
-        {
-            Recalculate();
-
-        }
         //Recalculate hieght when list is changed
-        private void entry_ListChanged(object sender, ListChangedEventArgs e)
-        {
-            Recalculate();
-        }
-
-        private bool Recalculating;
 
         private void Recalculate()
         {
@@ -132,9 +127,10 @@ namespace GitUI
                 //Remove deleted entries
                 for (int i = splitContainer5.Panel2.Controls.Count - 1; i >= 0; i--)
                 {
-                    DashboardCategory currentDashboardCategory = splitContainer5.Panel2.Controls[i] as DashboardCategory;
+                    var currentDashboardCategory = splitContainer5.Panel2.Controls[i] as DashboardCategory;
 
-                    if (currentDashboardCategory != null && !Repositories.RepositoryCategories.Contains(currentDashboardCategory.RepositoryCategory))
+                    if (currentDashboardCategory != null &&
+                        !Repositories.RepositoryCategories.Contains(currentDashboardCategory.RepositoryCategory))
                     {
                         currentDashboardCategory.DashboardCategoryChanged -= dashboardCategory_DashboardCategoryChanged;
                         currentDashboardCategory.DashboardItemClick -= dashboardItem_Click;
@@ -142,19 +138,19 @@ namespace GitUI
                         splitContainer5.Panel2.Controls.RemoveAt(i);
                     }
                 }
-                
+
                 foreach (RepositoryCategory entry in Repositories.RepositoryCategories)
                 {
                     DashboardCategory dashboardCategory = null;
                     //Try to find existing entry first
                     for (int i = splitContainer5.Panel2.Controls.Count - 1; i >= 0; i--)
                     {
-                        DashboardCategory currentDashboardCategory = splitContainer5.Panel2.Controls[i] as DashboardCategory;
+                        var currentDashboardCategory = splitContainer5.Panel2.Controls[i] as DashboardCategory;
 
                         if (currentDashboardCategory == null || currentDashboardCategory.RepositoryCategory != entry)
                             continue;
 
-                        dashboardCategory = currentDashboardCategory;                            
+                        dashboardCategory = currentDashboardCategory;
                         dashboardCategory.Recalculate();
                         dashboardCategory.Location = new Point(0, y);
                         y += dashboardCategory.Height;
@@ -181,8 +177,6 @@ namespace GitUI
             ShowRecentRepositories();
         }
 
-        private bool initialized;
-
         public void ShowRecentRepositories()
         {
             if (!Visible)
@@ -206,41 +200,39 @@ namespace GitUI
                 }
 
                 //Show favourites
-                int y = 0;
-                foreach (RepositoryCategory entry in Repositories.RepositoryCategories)
-                {
-                    y = AddDashboardEntry(y, entry);
-                }
+                Repositories.RepositoryCategories.Aggregate(0, AddDashboardEntry);
 
                 splitContainer7.SplitterDistance = splitContainer7.Height - (DonateCategory.Height + 25);
-                
+
+                initialized = true;
+                splitContainer7.SplitterDistance = splitContainer7.Height - (DonateCategory.Height + 25);
+
                 initialized = true;
             }
-            
-            //Show recent repositories
+
             RecentRepositories.Clear();
             RecentRepositories.RepositoryCategory = Repositories.RepositoryHistory;
 
         }
 
-        void TranslateItem_Click(object sender, EventArgs e)
+        private static void TranslateItem_Click(object sender, EventArgs e)
         {
             new FormTranslate().ShowDialog();
         }
 
-        void GitHubItem_Click(object sender, EventArgs e)
+        private static void GitHubItem_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(@"http://github.com/spdr870/gitextensions");
+            Process.Start(@"http://github.com/spdr870/gitextensions");
         }
 
-        void IssuesItem_Click(object sender, EventArgs e)
+        private static void IssuesItem_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(@"http://github.com/spdr870/gitextensions/issues");
+            Process.Start(@"http://github.com/spdr870/gitextensions/issues");
         }
 
-        void dashboardItem_Click(object sender, EventArgs e)
+        private void dashboardItem_Click(object sender, EventArgs e)
         {
-            DashboardItem label = sender as DashboardItem;
+            var label = sender as DashboardItem;
             if (label == null || string.IsNullOrEmpty(label.Path))
                 return;
 
@@ -248,12 +240,12 @@ namespace GitUI
             if (Regex.IsMatch(label.Path,
                               @"^(?#Protocol)(?:(?:ht|f)tp(?:s?)\:\/\/|~\/|\/)?(?#Username:Password)(?:\w+:\w+@)?(?#Subdomains)(?:(?:[-\w]+\.)+(?#TopLevel Domains)(?:com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum|travel|[a-z]{2}))(?#Port)(?::[\d]{1,5})?(?#Directories)(?:(?:(?:\/(?:[-\w~!$+|.,=]|%[a-f\d]{2})+)+|\/)+|\?|#)?(?#Query)(?:(?:\?(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)(?:&(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)*)*(?#Anchor)(?:#(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)?$"))
             {
-                System.Diagnostics.Process.Start(label.Path);
+                Process.Start(label.Path);
             }
             else
             {
-                GitCommands.Settings.WorkingDir = label.Path;
-                Repositories.RepositoryHistory.AddMostRecentRepository(GitCommands.Settings.WorkingDir);
+                Settings.WorkingDir = label.Path;
+                Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
 
                 OnWorkingDirChanged();
             }
@@ -262,27 +254,28 @@ namespace GitUI
 
         private void openItem_Click(object sender, EventArgs e)
         {
-            Open open = new Open();
+            var open = new Open();
             open.ShowDialog();
             OnWorkingDirChanged();
         }
 
         private void cloneItem_Click(object sender, EventArgs e)
         {
-            if (GitUICommands.Instance.StartCloneDialog()) 
+            if (GitUICommands.Instance.StartCloneDialog())
                 OnWorkingDirChanged();
         }
 
         private void createItem_Click(object sender, EventArgs e)
         {
-            GitUICommands.Instance.StartInitializeDialog(GitCommands.Settings.WorkingDir);
+            GitUICommands.Instance.StartInitializeDialog(Settings.WorkingDir);
 
             OnWorkingDirChanged();
         }
 
-        private void DonateItem_Click(object sender, EventArgs e)
+        private static void DonateItem_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(@"https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=WAL2SSDV8ND54&lc=US&item_name=GitExtensions&no_note=1&no_shipping=1&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted");
+            Process.Start(
+                @"https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=WAL2SSDV8ND54&lc=US&item_name=GitExtensions&no_note=1&no_shipping=1&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted");
         }
 
         private void splitContainer5_SplitterMoved(object sender, SplitterEventArgs e)

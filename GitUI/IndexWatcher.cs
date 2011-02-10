@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
+﻿using System.IO;
 
 namespace GitUI
 {
@@ -17,8 +14,8 @@ namespace GitUI
             }
 
             IndexChanged = true;
-            GitIndexWatcher.Changed += new FileSystemEventHandler(fileSystemWatcher_Changed);
-            RefsWatcher.Changed += new FileSystemEventHandler(fileSystemWatcher_Changed);
+            GitIndexWatcher.Changed += fileSystemWatcher_Changed;
+            RefsWatcher.Changed += fileSystemWatcher_Changed;
         }
 
         private static void SetFileSystemWatcher()

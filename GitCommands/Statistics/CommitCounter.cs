@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace GitCommands.Statistics
 {
-    public class CommitCounter
+    public static class CommitCounter
     {
         public static Tuple<Dictionary<string, int>, int> GroupAllCommitsByContributor()
         {
             return GroupAllCommitsByContributor(DateTime.MinValue, DateTime.MaxValue);
         }
 
-        public static Tuple<Dictionary<string, int>, int> GroupAllCommitsByContributor(DateTime since, DateTime until)
+        private static Tuple<Dictionary<string, int>, int> GroupAllCommitsByContributor(DateTime since, DateTime until)
         {
             var sinceParam = since != DateTime.MinValue ? GetDateParameter(since, "since") : "";
             var untilParam = until != DateTime.MaxValue ? GetDateParameter(since, "until") : "";
@@ -25,7 +25,7 @@ namespace GitCommands.Statistics
             return ParseCommitsPerContributor(unformattedCommitsPerContributor);
         }
 
-        public static Tuple<Dictionary<string, int>, int> ParseCommitsPerContributor(
+        private static Tuple<Dictionary<string, int>, int> ParseCommitsPerContributor(
             IEnumerable<string> unformattedCommitsPerContributor)
         {
             var commitsPerContributor = new Dictionary<string, int>();

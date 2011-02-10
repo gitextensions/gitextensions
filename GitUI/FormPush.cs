@@ -135,12 +135,12 @@ namespace GitUI
                                                              ForcePushBranches.Checked);
             else
             {
-				List<GitPushAction> pushActions = new List<GitPushAction>();
+				var pushActions = new List<GitPushAction>();
             	foreach (DataRow row in _branchTable.Rows)
             	{
-            		bool push = (bool) row["Push"];
-            		bool force = (bool) row["Force"];
-            		bool delete = (bool) row["Delete"];
+            		var push = (bool) row["Push"];
+            		var force = (bool) row["Force"];
+            		var delete = (bool) row["Delete"];
 
 					if (push || force)
 						pushActions.Add(new GitPushAction(row["Local"].ToString(), row["Remote"].ToString(), force));
@@ -218,7 +218,7 @@ namespace GitUI
             {
                 if (PullFromRemote.Checked)
                 {
-                    GitHead branch = Branch.SelectedItem as GitHead;
+                    var branch = Branch.SelectedItem as GitHead;
                     if (branch != null && branch.TrackingRemote.Equals(Remotes.Text.Trim()))
                     {
                         RemoteBranch.Text = branch.MergeWith;
@@ -292,7 +292,7 @@ namespace GitUI
                 RemoteBranch.Text = "";
                 if (values.Length > 0)
                 {
-                    GitHead currentBranch = new GitHead(null, values[0], Remotes.Text);
+                    var currentBranch = new GitHead(null, values[0], Remotes.Text);
                     Branch.Items.Add(currentBranch);
                     Branch.SelectedItem = currentBranch;
                 }
@@ -307,7 +307,7 @@ namespace GitUI
                 // Doing this makes it pretty easy to accidentally create a branch on the remote.
                 // But leaving it blank will do the 'default' thing, meaning all branches are pushed.
                 // Solution: when pushing a branch that doesn't exist on the remote, ask what to do
-                GitHead currentBranch = new GitHead(null, _currentBranch, Remotes.Text);
+                var currentBranch = new GitHead(null, _currentBranch, Remotes.Text);
                 Branch.Items.Add(currentBranch);
                 Branch.SelectedItem = currentBranch;
                 return;
@@ -377,9 +377,8 @@ namespace GitUI
 			_branchTable.Columns.Add("Force", typeof(bool));
 			_branchTable.Columns.Add("Delete", typeof(bool));
 			_branchTable.ColumnChanged += BranchTable_ColumnChanged;
-			BindingSource bs = new BindingSource();
-			bs.DataSource = _branchTable;
-			BranchGrid.DataSource = bs;
+			var bs = new BindingSource {DataSource = _branchTable};
+		    BranchGrid.DataSource = bs;
 
 			string remote = Remotes.Text.Trim();
 			if (remote == "")
@@ -413,7 +412,8 @@ namespace GitUI
 			// Offer to delete all the left over remote branches.
 			foreach (var remoteHead in remoteHeads)
 			{
-				if (!localHeads.Any(h => h.Name == remoteHead.Name))
+			    GitHead head = remoteHead;
+			    if (!localHeads.Any(h => h.Name == head.Name))
 				{
 					DataRow row = _branchTable.NewRow();
 					row["Local"] = null;
@@ -427,7 +427,7 @@ namespace GitUI
 			}
 		}
 
-		void BranchTable_ColumnChanged(object sender, DataColumnChangeEventArgs e)
+        static void BranchTable_ColumnChanged(object sender, DataColumnChangeEventArgs e)
 		{
 			if (e.Column.ColumnName == "Push" && (bool)e.ProposedValue)
 			{

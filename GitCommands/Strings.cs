@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ResourceManager.Translation;
+﻿using ResourceManager.Translation;
 using ResourceManager;
 
 namespace GitCommands
@@ -10,7 +7,7 @@ namespace GitCommands
     {
         public Strings()
         {
-            Translator translator = new Translator(Settings.Translation);
+            var translator = new Translator(Settings.Translation);
             translator.TranslateControl(this);
         }
 
@@ -44,11 +41,11 @@ namespace GitCommands
             return new Strings().commitHashText.Text;
         }
 
-        private TranslationString dateText = new TranslationString("Date");
-        private TranslationString authorText = new TranslationString("Author");
-        private TranslationString authorDateText = new TranslationString("Author date");
-        private TranslationString committerText = new TranslationString("Committer");
-        private TranslationString committerDateText = new TranslationString("Commit date");
-        private TranslationString commitHashText = new TranslationString("Commit hash");
+        private readonly TranslationString dateText = new TranslationString("Date");
+        private readonly TranslationString authorText = new TranslationString("Author");
+        private readonly TranslationString authorDateText = new TranslationString("Author date");
+        private readonly TranslationString committerText = new TranslationString("Committer");
+        private readonly TranslationString committerDateText = new TranslationString("Commit date");
+        private readonly TranslationString commitHashText = new TranslationString("Commit hash");
     }
 }

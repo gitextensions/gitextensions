@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using GitUI;
-using System.Collections;
+using System.Linq;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
 
@@ -10,17 +8,17 @@ namespace GitExtensions
 {
     public class GitPluginSettingsContainer : IGitPluginSettingsContainer
     {
-        private string pluginName;
+        private readonly string pluginName;
         public GitPluginSettingsContainer(string pluginName)
         {
             this.pluginName = pluginName;
         }
 
-        Dictionary<string, string> settings = new Dictionary<string, string>();
+        readonly Dictionary<string, string> settings = new Dictionary<string, string>();
 
         public void AddSetting(string name, string defaultValue)
         {
-            string value = Application.UserAppDataRegistry.GetValue(pluginName + name) as string;
+            var value = Application.UserAppDataRegistry.GetValue(pluginName + name) as string;
 
             if (value == null)
             {
@@ -48,23 +46,17 @@ namespace GitExtensions
             if (!settings.ContainsKey(name))
                 throw new ArgumentOutOfRangeException("name", "Cannot find setting. Dit you add the setting in the Register() function of the plugin?");
 
-            string value = Application.UserAppDataRegistry.GetValue(pluginName + name) as string;
+            var value = Application.UserAppDataRegistry.GetValue(pluginName + name) as string;
             
             if (value == null)
                 return settings[name];
 
-            return (string)value;
+            return value;
         }
 
         public IList<string> GetAvailableSettings()
         {
-            IList<string> keys = new List<string>(settings.Keys.Count);
-            foreach (string key in settings.Keys)
-            {
-                keys.Add(key);
-            }
-
-            return keys;
+            return settings.Keys.ToList();
         }
     }
 }

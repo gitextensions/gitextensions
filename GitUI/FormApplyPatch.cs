@@ -83,11 +83,12 @@ namespace GitUI
 
         private string SelectPatchFile(string initialDirectory)
         {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Filter =
-               "Patch file (*.Patch)|*.Patch";
-            dialog.InitialDirectory = initialDirectory;
-            dialog.Title = "Select patch file";
+            var dialog = new OpenFileDialog
+                             {
+                                 Filter = "Patch file (*.Patch)|*.Patch",
+                                 InitialDirectory = initialDirectory,
+                                 Title = "Select patch file"
+                             };
             return (dialog.ShowDialog() == DialogResult.OK) ? dialog.FileName : PatchFile.Text;
         }
 
@@ -160,12 +161,12 @@ namespace GitUI
         private void MergePatch_Load(object sender, EventArgs e)
         {
             RestorePosition("merge-patch");
-            this.Text = "Apply patch (" + GitCommands.Settings.WorkingDir + ")";
+            Text = "Apply patch (" + Settings.WorkingDir + ")";
         }
 
         private void BrowseDir_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog browseDialog = new FolderBrowserDialog();
+            var browseDialog = new FolderBrowserDialog();
 
             if (browseDialog.ShowDialog() == DialogResult.OK)
             {

@@ -15,7 +15,7 @@ namespace GitUI
 
         private void Browse_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            var dialog = new FolderBrowserDialog();
             if (dialog.ShowDialog() == DialogResult.OK)
                 OutputPath.Text = dialog.SelectedPath;
         }
@@ -151,15 +151,15 @@ namespace GitUI
 
                 string to = MailAddress.Text;
 
-                using (MailMessage mail = new MailMessage(from, to, MailSubject.Text, MailBody.Text))
+                using (var mail = new MailMessage(from, to, MailSubject.Text, MailBody.Text))
                 {
                     foreach (string file in Directory.GetFiles(dir, "*.patch"))
                     {
-                        Attachment attacheMent = new Attachment(file);
+                        var attacheMent = new Attachment(file);
                         mail.Attachments.Add(attacheMent);
                     }
 
-                    SmtpClient smtpClient = new SmtpClient(Settings.Smtp);
+                    var smtpClient = new SmtpClient(Settings.Smtp);
                     smtpClient.Send(mail);
                 }
             }

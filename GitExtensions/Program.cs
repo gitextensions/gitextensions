@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
@@ -33,7 +34,10 @@ namespace GitExtensions
 
             if (string.IsNullOrEmpty(Settings.Translation))
             {
-                new FormChooseTranslation().ShowDialog();
+                using (var formChoose = new FormChooseTranslation())
+                {
+                    formChoose.ShowDialog();
+                }
             }
 
             try
@@ -222,9 +226,10 @@ namespace GitExtensions
 
         private static string GetParameterOrEmptyStringAsDefault(string[] args, string paramName)
         {
-            foreach (string arg in args)
-                if (arg.StartsWith(paramName + "="))
-                    return args[2].Replace(paramName + "=", "");
+            if (args.Any(arg => arg.StartsWith(paramName + "=")))
+            {
+                return args[2].Replace(paramName + "=", "");
+            }
 
             return string.Empty;
         }

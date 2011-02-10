@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="LoadPlugins.cs" />
     <Compile Include="GitPluginSettingsContainer.cs" />
+    <Compile Include="PluginExtraction.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
