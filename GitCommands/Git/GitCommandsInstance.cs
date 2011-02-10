@@ -9,7 +9,7 @@ namespace GitCommands
 {
     public sealed class GitCommandsInstance : IGitCommands, IDisposable
     {
-        private object processLock = new object();
+        private readonly object processLock = new object();
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         public Process CmdStartProcess(string cmd, string arguments)
@@ -25,7 +25,7 @@ namespace GitCommands
                 Settings.GitLog.Log(cmd + " " + arguments);
 
                 //process used to execute external commands
-                Process process = new Process() { StartInfo = GitCommandHelpers.CreateProcessStartInfo() };
+                var process = new Process { StartInfo = GitCommandHelpers.CreateProcessStartInfo() };
                 process.StartInfo.CreateNoWindow = (!ssh && !Settings.ShowGitCommandLine);
                 process.StartInfo.FileName = cmd;
                 process.StartInfo.Arguments = arguments;
@@ -76,7 +76,10 @@ namespace GitCommands
                         myProcess.Exited -= ProcessExited;
                         myProcess.Kill();
                     }
-                    myProcess.Close();
+                    if (myProcess != null) // process is null here if filter is a slow diff
+                    {
+                        myProcess.Close();
+                    }
                 }
                 catch (Exception ex)
                 {

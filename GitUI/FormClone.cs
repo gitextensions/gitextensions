@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -189,7 +188,6 @@ namespace GitUI
                 destinationPath += "[destination]";
             else
                 destinationPath += _NO_TRANSLATE_To.Text.TrimEnd(new[] { '\\', '/' });
-            ;
             destinationPath += "\\";
 
             if (string.IsNullOrEmpty(_NO_TRANSLATE_NewDirectory.Text))

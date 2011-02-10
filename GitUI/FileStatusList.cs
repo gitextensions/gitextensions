@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Properties;
@@ -15,14 +16,14 @@ namespace GitUI
             InitializeComponent(); Translate();
 
             FileStatusListBox.DrawMode = DrawMode.OwnerDrawVariable;
-            FileStatusListBox.MeasureItem += new MeasureItemEventHandler(FileStatusListBox_MeasureItem);
-            FileStatusListBox.DrawItem += new DrawItemEventHandler(FileStatusListBox_DrawItem);
-            FileStatusListBox.SelectedIndexChanged += new EventHandler(FileStatusListBox_SelectedIndexChanged);
-            FileStatusListBox.DoubleClick += new EventHandler(FileStatusListBox_DoubleClick);
-            FileStatusListBox.MouseMove += new MouseEventHandler(FileStatusListBox_MouseMove);
+            FileStatusListBox.MeasureItem += FileStatusListBox_MeasureItem;
+            FileStatusListBox.DrawItem += FileStatusListBox_DrawItem;
+            FileStatusListBox.SelectedIndexChanged += FileStatusListBox_SelectedIndexChanged;
+            FileStatusListBox.DoubleClick += FileStatusListBox_DoubleClick;
+            FileStatusListBox.MouseMove += FileStatusListBox_MouseMove;
             FileStatusListBox.Sorted = true;
             FileStatusListBox.SelectionMode = SelectionMode.MultiExtended;
-            FileStatusListBox.MouseDown += new MouseEventHandler(FileStatusListBox_MouseDown);
+            FileStatusListBox.MouseDown += FileStatusListBox_MouseDown;
 
             NoFiles.Visible = false;
             NoFiles.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
@@ -43,7 +44,7 @@ namespace GitUI
             //SELECT
             if (e.Button == MouseButtons.Right)
             {
-                Point point = new Point(e.X, e.Y);
+                var point = new Point(e.X, e.Y);
                 int hoverIndex = FileStatusListBox.IndexFromPoint(point);
 
                 if (hoverIndex >= 0)
@@ -118,7 +119,7 @@ namespace GitUI
             {
                 if (SelectedItems.Count > 0)
                 {
-                    StringCollection fileList = new StringCollection();
+                    var fileList = new StringCollection();
 
                     foreach (GitItemStatus item in SelectedItems)
                     {
@@ -127,7 +128,7 @@ namespace GitUI
                         fileList.Add(fileName.Replace('/', '\\'));
                     }
 
-                    DataObject obj = new DataObject();
+                    var obj = new DataObject();
                     obj.SetFileDropList(fileList);
 
                     // Proceed with the drag and drop, passing in the list item.                   
@@ -137,10 +138,10 @@ namespace GitUI
             }
 
             //TOOLTIP
-            ListBox listBox = sender as ListBox;
+            var listBox = sender as ListBox;
             if (listBox != null)
             {
-                Point point = new Point(e.X, e.Y);
+                var point = new Point(e.X, e.Y);
                 int hoverIndex = listBox.IndexFromPoint(point);
                 if (hoverIndex >= 0 && hoverIndex <= listBox.Items.Count)
                 {
@@ -168,13 +169,7 @@ namespace GitUI
         {
             get
             {
-                IList<GitItemStatus> selectedItems = new List<GitItemStatus>();
-                foreach (object selectedItem in FileStatusListBox.SelectedItems)
-                {
-                    selectedItems.Add((GitItemStatus)selectedItem);
-                }
-
-                return selectedItems;
+                return FileStatusListBox.SelectedItems.Cast<GitItemStatus>().ToList();
             }
         }
 
@@ -197,10 +192,10 @@ namespace GitUI
 
         void FileStatusListBox_DoubleClick(object sender, EventArgs e)
         {
-            if (this.DoubleClick == null)
+            if (DoubleClick == null)
                 GitUICommands.Instance.StartFileHistoryDialog(SelectedItem.Name, Revision);
             else
-                this.DoubleClick(sender, e);
+                DoubleClick(sender, e);
         }
 
         void FileStatusListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -216,17 +211,23 @@ namespace GitUI
                 e.DrawBackground();
                 e.DrawFocusRectangle();
 
-                GitItemStatus gitItemStatus = (GitItemStatus)FileStatusListBox.Items[e.Index];
+                var gitItemStatus = (GitItemStatus)FileStatusListBox.Items[e.Index];
 
                 if (gitItemStatus.IsDeleted)
                     e.Graphics.DrawImage(Resources.Removed, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
                 else
+                {
                     if (gitItemStatus.IsNew || !gitItemStatus.IsTracked)
-                        e.Graphics.DrawImage(Resources.Added, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
-                    else
-                        if (gitItemStatus.IsChanged)
-                            e.Graphics.DrawImage(Resources.Modified, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
-
+                    {
+                        e.Graphics.DrawImage(Resources.Added, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height,
+                                             e.Bounds.Height);
+                    }
+                    else if (gitItemStatus.IsChanged)
+                    {
+                        e.Graphics.DrawImage(Resources.Modified, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height,
+                                             e.Bounds.Height);
+                    }
+                }
                 e.Graphics.DrawString(gitItemStatus.Name, FileStatusListBox.Font, new SolidBrush(e.ForeColor), e.Bounds.Left + e.Bounds.Height, e.Bounds.Top);
             }
         }
@@ -287,8 +288,8 @@ namespace GitUI
                         break;
                     }
                 default:
-                    if (this.KeyDown != null)
-                        this.KeyDown(sender, e);
+                    if (KeyDown != null)
+                        KeyDown(sender, e);
                     break;
             }
                 

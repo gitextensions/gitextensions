@@ -63,7 +63,7 @@
             this.Patches.Size = new System.Drawing.Size(675, 406);
             this.Patches.TabIndex = 0;
             this.Patches.DoubleClick += new System.EventHandler(this.Patches_DoubleClick);
-            this.Patches.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            this.Patches.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(dataGridView1_CellContentClick);
             // 
             // patchFileBindingSource
             // 

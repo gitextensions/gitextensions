@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
-using GitCommands;
 using GitCommands.Repository;
 using GitUI.Properties;
 
@@ -29,7 +24,7 @@ namespace GitUI
                 icon = Resources.history.ToBitmap();
 
             Initialize(icon, repository.Path, repository.Title, repository.Description);
-            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
         }
 
         public DashboardItem(Bitmap icon, string title)
@@ -75,31 +70,34 @@ namespace GitUI
             //}
 
 
-            this.Height = _NO_TRANSLATE_Title.Height+6;
+            Height = _NO_TRANSLATE_Title.Height + 6;
             if (_NO_TRANSLATE_Description.Visible)
             {
-                _NO_TRANSLATE_Description.Top = _NO_TRANSLATE_Title.Height+4;
-                this.Height += _NO_TRANSLATE_Description.Height+2;
+                _NO_TRANSLATE_Description.Top = _NO_TRANSLATE_Title.Height + 4;
+                Height += _NO_TRANSLATE_Description.Height + 2;
             }
-            
-                
+
+
 
             if (icon != null)
                 Icon.Image = icon;
-            
-            toolTip = new ToolTip();
-            toolTip.InitialDelay = 1;
-            toolTip.AutomaticDelay = 1;
-            toolTip.AutoPopDelay = 5000;
-            toolTip.UseFading = false;
-            toolTip.UseAnimation = false;
-            toolTip.ReshowDelay = 1;
+
+
+            var toolTip = new ToolTip
+                              {
+                                  InitialDelay = 1,
+                                  AutomaticDelay = 1,
+                                  AutoPopDelay = 5000,
+                                  UseFading = false,
+                                  UseAnimation = false,
+                                  ReshowDelay = 1
+                              };
             toolTip.SetToolTip(_NO_TRANSLATE_Title, Path);
 
-            _NO_TRANSLATE_Title.MouseDown += new MouseEventHandler(Title_MouseDown);
-            _NO_TRANSLATE_Title.Click += new EventHandler(Title_Click);
-            _NO_TRANSLATE_Description.Click += new EventHandler(Title_Click);
-            Icon.Click += new EventHandler(Title_Click);
+            _NO_TRANSLATE_Title.MouseDown += Title_MouseDown;
+            _NO_TRANSLATE_Title.Click += Title_Click;
+            _NO_TRANSLATE_Description.Click += Title_Click;
+            Icon.Click += Title_Click;
         }
 
         void Title_Click(object sender, EventArgs e)
@@ -111,8 +109,8 @@ namespace GitUI
         {
             if (e.Button == MouseButtons.Right)
             {
-                if (this.ContextMenuStrip != null)
-                    this.ContextMenuStrip.Show((Control)sender, e.Location);
+                if (ContextMenuStrip != null)
+                    ContextMenuStrip.Show((Control)sender, e.Location);
             }
         }
 
@@ -146,12 +144,12 @@ namespace GitUI
 
         private void DashboardItem_MouseEnter(object sender, EventArgs e)
         {
-            this.BackColor = SystemColors.ControlLight;
+            BackColor = SystemColors.ControlLight;
         }
 
         private void DashboardItem_MouseLeave(object sender, EventArgs e)
         {
-            this.BackColor = SystemColors.Control;
+            BackColor = SystemColors.Control;
         }
     }
 }

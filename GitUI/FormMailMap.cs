@@ -21,7 +21,7 @@ namespace GitUI
                 if (File.Exists(Settings.WorkingDir + ".mailmap"))
                 {
                     _NO_TRANSLATE_MailMapText.ViewFile(Settings.WorkingDir + ".mailmap");
-                };
+                }
             }
             catch (Exception ex)
             {

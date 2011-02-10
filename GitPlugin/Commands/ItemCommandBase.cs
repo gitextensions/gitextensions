@@ -8,8 +8,8 @@ namespace GitPlugin.Commands
         // an item command is a command associated with selected items in solution explorer
         public abstract class ItemCommandBase : CommandBase
         {
-            private bool m_executeForFileItems = true;
-            private bool m_executeForProjectItems = true;
+            private readonly bool m_executeForFileItems = true;
+            private readonly bool m_executeForProjectItems = true;
 
             protected ItemCommandBase()
             {
@@ -38,13 +38,13 @@ namespace GitPlugin.Commands
                         //http://github.com/spdr870/gitextensions/issues/#issue/57
                         try
                         {
-                            OnExecute(sel, sel.ProjectItem.get_FileNames(0), pane);
+                            OnExecute(sel, sel.ProjectItem.FileNames[0], pane);
                         }
                         catch (ArgumentException)
                         {
                             if (sel.ProjectItem.FileCount > 0)
                             {
-                                OnExecute(sel, sel.ProjectItem.get_FileNames(1), pane);
+                                OnExecute(sel, sel.ProjectItem.FileNames[1], pane);
                             }
                             else
                             {

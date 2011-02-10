@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
@@ -17,21 +16,22 @@ namespace GitUI
         public string ProcessInput { get; set; }
         public Process Process { get; set; }
 
-        private bool restart = false;
-        private GitCommands.GitCommandsInstance gitCommand;
+        private bool restart;
+        private GitCommandsInstance gitCommand;
 
         //Input does not work for password inputs. I don't know why, but it turned out not to be really necessary.
         //For other inputs, it is not tested.
-        public FormProcess(string process, string arguments, string input) : this(process, arguments)
+        public FormProcess(string process, string arguments, string input)
+            : this(process, arguments)
         {
             ProcessInput = input;
         }
 
-        public FormProcess(string process, string arguments) : base()
-        {            
+        public FormProcess(string process, string arguments)
+        {
             ProcessCallback = new ProcessStart(processStart);
             AbortCallback = new ProcessAbort(processAbort);
-            ProcessString = process ?? GitCommands.Settings.GitCommand;
+            ProcessString = process ?? Settings.GitCommand;
             ProcessArguments = arguments;
             Remote = "";
             ProcessInput = null;
@@ -49,14 +49,13 @@ namespace GitUI
 
             Plink = GitCommandHelpers.Plink();
 
-            gitCommand = new GitCommands.GitCommandsInstance();
-            gitCommand.CollectOutput = false;
+            gitCommand = new GitCommandsInstance { CollectOutput = false };
             try
             {
                 Process = gitCommand.CmdStartProcess(ProcessString, ProcessArguments);
 
-                gitCommand.Exited += new EventHandler(gitCommand_Exited);
-                gitCommand.DataReceived += new DataReceivedEventHandler(gitCommand_DataReceived);
+                gitCommand.Exited += gitCommand_Exited;
+                gitCommand.DataReceived += gitCommand_DataReceived;
                 if (!string.IsNullOrEmpty(ProcessInput))
                 {
                     Thread.Sleep(500);
@@ -83,20 +82,24 @@ namespace GitUI
         void gitCommand_Exited(object sender, EventArgs e)
         {
             // This has to happen on the UI thread
-            SendOrPostCallback method = new SendOrPostCallback(delegate(object o)
+            var method = new SendOrPostCallback(OnExit);
+
+            syncContext.Send(method, this);
+        }
+
+        private void OnExit(object state)
+        {
+            if (restart)
             {
+                Reset();
+                ProcessCallback(this);
+                return;
+            }
 
-                if (restart)
-                {
-                    Reset();
-                    ProcessCallback(this);
-                    return;
-                }
-
-                bool isError;
-                try
-                {
-                    // An error occurred!
+            bool isError;
+            try
+            {
+                // An error occurred!
                 if (gitCommand != null && gitCommand.ExitCode != 0)
                 {
                     isError = true;
@@ -106,13 +109,7 @@ namespace GitUI
                     // we could end up in this code incorrectly.
                     if (Plink)
                     {
-                        if (ProcessArguments.ToLower().Contains("pull") ||
-                            ProcessArguments.ToLower().Contains("push") ||
-                            ProcessArguments.ToLower().Contains("plink") ||
-                            ProcessArguments.ToLower().Contains("tortoiseplink") ||
-                            ProcessArguments.ToLower().Contains("remote") ||
-                            ProcessString.ToLower().Contains("clone") ||
-                            ProcessArguments.ToLower().Contains("clone"))
+                        if (ProcessArguments.ToLower().Contains("pull") || ProcessArguments.ToLower().Contains("push") || ProcessArguments.ToLower().Contains("plink") || ProcessArguments.ToLower().Contains("tortoiseplink") || ProcessArguments.ToLower().Contains("remote") || ProcessString.ToLower().Contains("clone") || ProcessArguments.ToLower().Contains("clone"))
                         {
                             if (OutputString.ToString().Contains("successfully authenticated"))
                             {
@@ -121,7 +118,7 @@ namespace GitUI
 
                             if (OutputString.ToString().Contains("FATAL ERROR") && OutputString.ToString().Contains("authentication"))
                             {
-                                FormPuttyError puttyError = new FormPuttyError();
+                                var puttyError = new FormPuttyError();
                                 puttyError.ShowDialog();
                                 if (puttyError.RetryProcess)
                                 {
@@ -137,17 +134,13 @@ namespace GitUI
                 {
                     isError = false;
                 }
-                }
-                catch
-                {
-                    isError = true;
-                }
+            }
+            catch
+            {
+                isError = true;
+            }
 
-                Done(!isError);
-
-            });
-
-            syncContext.Send(method, this);
+            Done(!isError);
         }
 
         void gitCommand_DataReceived(object sender, DataReceivedEventArgs e)
@@ -186,9 +179,9 @@ namespace GitUI
                         string remoteUrl = GitCommandHelpers.GetSetting("remote." + Remote + ".url");
 
                         if (string.IsNullOrEmpty(remoteUrl))
-                            GitCommandHelpers.RunRealCmd("cmd.exe", "/k \"\"" + GitCommands.Settings.Plink + "\" " + Remote + "\"");
+                            GitCommandHelpers.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + Remote + "\"");
                         else
-                            GitCommandHelpers.RunRealCmd("cmd.exe", "/k \"\"" + GitCommands.Settings.Plink + "\" " + remoteUrl + "\"");
+                            GitCommandHelpers.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + remoteUrl + "\"");
 
                         restart = true;
                     }
