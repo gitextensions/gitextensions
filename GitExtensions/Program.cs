@@ -33,7 +33,10 @@ namespace GitExtensions
 
             if (string.IsNullOrEmpty(Settings.Translation))
             {
-                new FormChooseTranslation().ShowDialog();
+                using (var formChoose = new FormChooseTranslation())
+                {
+                    formChoose.ShowDialog();
+                }
             }
 
             try

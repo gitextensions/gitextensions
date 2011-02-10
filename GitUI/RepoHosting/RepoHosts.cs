@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using GitUIPluginInterfaces.RepositoryHosts;
-using GitUI.Plugin;
 using GitCommands;
 
 namespace GitUI.RepoHosting
@@ -21,13 +18,7 @@ namespace GitUI.RepoHosting
             if (!Settings.ValidWorkingDir())
                 return null;
 
-            foreach (var gitHoster in GitHosters)
-            {
-                if (gitHoster.CurrentWorkingDirRepoIsRelevantToMe)
-                    return gitHoster;
-            }
-
-            return null;
+            return GitHosters.FirstOrDefault(gitHoster => gitHoster.CurrentWorkingDirRepoIsRelevantToMe);
         }
     }
 }

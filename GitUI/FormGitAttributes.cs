@@ -9,7 +9,7 @@ namespace GitUI
 {
     public partial class FormGitAttributes : GitExtensionsForm
     {
-        TranslationString noWorkingDir = new TranslationString(".gitattributes is only supported when there is a working dir.");
+        readonly TranslationString noWorkingDir = new TranslationString(".gitattributes is only supported when there is a working dir.");
 
         public string GitAttributesFile;
 

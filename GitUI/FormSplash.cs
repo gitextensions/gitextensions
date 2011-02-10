@@ -14,7 +14,7 @@ namespace GitUI
     {
         private readonly TranslationString _version = new TranslationString("Version {0}");
 
-        private static FormSplash instance = null;
+        private static FormSplash instance;
 
         public static void Show(string action)
         {
@@ -28,7 +28,7 @@ namespace GitUI
                 instance.SetActionText(action);
         }
 
-        public static void Hide()
+        public new static void Hide()
         {
             if (instance != null)
             {

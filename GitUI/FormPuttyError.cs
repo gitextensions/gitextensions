@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 
 namespace GitUI
 {
@@ -25,7 +19,7 @@ namespace GitUI
             new FormLoadPuttySshKey().ShowDialog();
         }
 
-        public bool RetryProcess = false;
+        public bool RetryProcess;
 
         private void button1_Click(object sender, EventArgs e)
         {

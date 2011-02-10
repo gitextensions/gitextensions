@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
-using GitUI.Editor;
 
 namespace GitUI.Blame
 {
@@ -19,9 +18,9 @@ namespace GitUI.Blame
             BlameCommitter.IsReadOnly = true;
             BlameCommitter.EnableScrollBars(false);
             BlameCommitter.ShowLineNumbers = false;
-            BlameFile.ScrollPosChanged += new EventHandler(BlameCommitter_ScrollPosChanged);
+            BlameFile.ScrollPosChanged += BlameCommitter_ScrollPosChanged;
             BlameFile.IsReadOnly = true;
-            BlameFile.SelectedLineChanged += new SelectedLineChangedEventHandler(BlameFile_SelectedLineChanged);
+            BlameFile.SelectedLineChanged += BlameFile_SelectedLineChanged;
 
             BlameFile.RequestDiffView += ActiveTextAreaControlDoubleClick;
         }
