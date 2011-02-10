@@ -49,7 +49,10 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
-            Remotes.DataSource = GitCommandHelpers.GetRemotes();
+            IList<string> remotes = new List<string>(GitCommandHelpers.GetRemotes());
+            remotes.Insert(0, "[ All ]");
+            Remotes.DataSource = remotes;
+            
         }
 
         private void BrowseSourceClick(object sender, EventArgs e)
@@ -125,7 +128,7 @@ namespace GitUI
                 MessageBox.Show(_selectSourceDirectory.Text);
                 return;
             }
-            if (PullFromRemote.Checked && string.IsNullOrEmpty(Remotes.Text) && !checkPullAll.Checked)
+            if (PullFromRemote.Checked && string.IsNullOrEmpty(Remotes.Text) && !PullAll())
             {
                 MessageBox.Show(_selectRemoteRepository.Text);
                 return;
@@ -155,7 +158,7 @@ namespace GitUI
             else
             {
                 LoadPuttyKey();
-                source = checkPullAll.Checked ? "--all" : Remotes.Text;
+                source = PullAll() ? "--all" : Remotes.Text;
             }
 
             var stashed = false;
@@ -274,10 +277,14 @@ namespace GitUI
             BrowseSource.Enabled = false;
             Remotes.Enabled = true;
             AddRemote.Enabled = true;
-            checkPullAll.Enabled = true;
 
-            Merge.Enabled = !checkPullAll.Checked;
-            Rebase.Enabled = !checkPullAll.Checked;
+            Merge.Enabled = !PullAll();
+            Rebase.Enabled = !PullAll();
+        }
+
+        private bool PullAll()
+        {
+            return Remotes.Text.Equals("[ All ]", StringComparison.InvariantCultureIgnoreCase);
         }
 
         private void PullFromUrlCheckedChanged(object sender, EventArgs e)
@@ -290,7 +297,6 @@ namespace GitUI
             BrowseSource.Enabled = true;
             Remotes.Enabled = false;
             AddRemote.Enabled = false;
-            checkPullAll.Enabled = false;
 
             Merge.Enabled = true;
             Rebase.Enabled = true;
@@ -321,25 +327,30 @@ namespace GitUI
             ResetRemoteHeads();
         }
 
+        private void Remotes_TextChanged(object sender, EventArgs e)
+        {
+            RemotesValidating(null, null);
+        }
+
         private void RemotesValidating(object sender, CancelEventArgs e)
         {
             ResetRemoteHeads();
+
+            Merge.Enabled = !PullAll();
+            Rebase.Enabled = !PullAll();
+            if (PullAll())
+                Fetch.Checked = true;
+
         }
 
         private void ResetRemoteHeads()
         {
+            if (PullAll())
+            {
+            }
+
             Branches.DataSource = null;
             _heads = null;
-        }
-
-        private void checkPullAll_CheckedChanged(object sender, EventArgs e)
-        {
-            Remotes.Enabled = !checkPullAll.Checked;
-
-            Merge.Enabled = !checkPullAll.Checked;
-            Rebase.Enabled = !checkPullAll.Checked;
-            if (checkPullAll.Checked)
-                Fetch.Checked = true;
         }
     }
 }
