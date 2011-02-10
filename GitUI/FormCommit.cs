@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -76,7 +77,6 @@ namespace GitUI
             new TranslationString("Are you sure you want to reset all selected files?");
 
         private readonly TranslationString _resetStageChunkOfFileCaption = new TranslationString("Unstage chunk of file");
-        private readonly TranslationString _stageChunkOfFileCaption = new TranslationString("Stage chunk of file");
         private readonly TranslationString _stageDetails = new TranslationString("Stage Details");
         private readonly TranslationString _stageFiles = new TranslationString("Stage {0} files");
         private readonly TranslationString _selectOnlyOneFile = new TranslationString("You must have only one file selected.");
@@ -92,15 +92,14 @@ namespace GitUI
         public bool NeedRefresh;
         private GitItemStatus _currentItem;
         private bool _currentItemStaged;
-        private ToolStripItem _StageSelectedLinesToolStripMenuItem;
-        private ToolStripItem _ResetSelectedLinesToolStripMenuItem;
+        private readonly ToolStripItem _StageSelectedLinesToolStripMenuItem;
 
         public FormCommit()
         {
             _syncContext = SynchronizationContext.Current;
 
             InitializeComponent();
-            this.splitRight.Panel2MinSize = 130;
+            splitRight.Panel2MinSize = 130;
             Translate();
 
             SolveMergeconflicts.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Bold);
@@ -128,8 +127,8 @@ namespace GitUI
             Unstaged.Focus();
 
             SelectedDiff.AddContextMenuEntry(null, null);
-            _StageSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_stageSelectedLines.Text, new EventHandler(StageSelectedLinesToolStripMenuItemClick));
-            _ResetSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_resetSelectedLines.Text, new EventHandler(ResetSelectedLinesToolStripMenuItemClick));
+            _StageSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_stageSelectedLines.Text, StageSelectedLinesToolStripMenuItemClick);
+            SelectedDiff.AddContextMenuEntry(_resetSelectedLines.Text, ResetSelectedLinesToolStripMenuItemClick);
 
             splitMain.SplitterDistance = Settings.CommitDialogSplitter;
         }
@@ -271,10 +270,7 @@ namespace GitUI
                 SelectedDiff.ViewFile(item.Name);
             }
 
-            if (staged)
-                _StageSelectedLinesToolStripMenuItem.Text = _unstageSelectedLines.Text;
-            else
-                _StageSelectedLinesToolStripMenuItem.Text = _stageSelectedLines.Text;
+            _StageSelectedLinesToolStripMenuItem.Text = staged ? _unstageSelectedLines.Text : _stageSelectedLines.Text;
         }
 
         private void TrackedSelectionChanged(object sender, EventArgs e)
@@ -354,13 +350,10 @@ namespace GitUI
                     return;
                 }
 
-                foreach (var gitItemStatus in Unstaged.GitItemStatuses)
+                if (Unstaged.GitItemStatuses.Any(gitItemStatus => gitItemStatus.IsTracked))
                 {
-                    if (gitItemStatus.IsTracked)
-                    {
-                        InitializedStaged();
-                        return;
-                    }
+                    InitializedStaged();
+                    return;
                 }
 
                 if (Settings.CloseCommitDialogAfterLastCommit)
@@ -695,7 +688,7 @@ namespace GitUI
             //Save last commit message in settings. This way it can be used in multiple repositories.
             Settings.LastCommitMessage = commitMessageText;
 
-            var path = Settings.WorkingDirGitDir() + Settings.PathSeparator.ToString() + "COMMITMESSAGE";
+            var path = Settings.WorkingDirGitDir() + Settings.PathSeparator + "COMMITMESSAGE";
 
             //Commit messages are UTF-8 by default unless otherwise in the config file.
             //The git manual states:
@@ -704,8 +697,7 @@ namespace GitUI
             //  explicitly say your project uses a legacy encoding. The way to say 
             //  this is to have i18n.commitencoding in .git/config file, like this:...
             Encoding encoding;
-            string encodingString;
-            encodingString = GitCommandHelpers.GetLocalConfig().GetValue("i18n.commitencoding");
+            string encodingString = GitCommandHelpers.GetLocalConfig().GetValue("i18n.commitencoding");
             if (string.IsNullOrEmpty(encodingString))
                 encodingString = GitCommandHelpers.GetGlobalConfig().GetValue("i18n.commitencoding");
 
@@ -851,7 +843,7 @@ namespace GitUI
             if (Unstaged.SelectedItems.Count == 0)
                 return;
 
-            StringBuilder fileNames = new StringBuilder();
+            var fileNames = new StringBuilder();
             foreach (var item in Unstaged.SelectedItems)
             {
                 //Only use appendline when multiple items are selected.
@@ -926,11 +918,6 @@ namespace GitUI
             if (MessageBox.Show(_amendCommit.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo) ==
                 DialogResult.Yes)
                 DoCommit(true, false);
-        }
-
-        private void CancelClick(object sender, EventArgs e)
-        {
-            Close();
         }
 
         private void ShowUntrackedFilesToolStripMenuItemClick(object sender, EventArgs e)
@@ -1024,7 +1011,7 @@ namespace GitUI
             }
         }
 
-        private void Message_KeyDown(object sender, KeyEventArgs e)
+        private static void Message_KeyDown(object sender, KeyEventArgs e)
         {
             // Prevent adding a line break when all we want is to commit
             if (e.Control && e.KeyCode == Keys.Enter)

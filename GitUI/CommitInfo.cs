@@ -10,10 +10,10 @@ namespace GitUI
 {
     public partial class CommitInfo : GitExtensionsControl
     {
-        private TranslationString containedInBranches = new TranslationString("Contained in branches:");
-        private TranslationString containedInNoBranch = new TranslationString("Contained in no branch");
-        private TranslationString containedInTags = new TranslationString("Contained in tags:");
-        private TranslationString containedInNoTag = new TranslationString("Contained in no tag");
+        private readonly TranslationString containedInBranches = new TranslationString("Contained in branches:");
+        private readonly TranslationString containedInNoBranch = new TranslationString("Contained in no branch");
+        private readonly TranslationString containedInTags = new TranslationString("Contained in tags:");
+        private readonly TranslationString containedInNoTag = new TranslationString("Contained in no tag");
 
         private readonly SynchronizationContext _syncContext;
 
@@ -87,19 +87,13 @@ namespace GitUI
         private void loadTagInfo(string revision)
         {
             _tagInfo = GetTagsWhichContainsThisCommit(revision);
-            _syncContext.Post(  s =>
-                                {
-                                    updateText();
-                                }, null);
+            _syncContext.Post(  s => updateText(), null);
         }
 
         private void loadBranchInfo(string revision)
         {
             _branchInfo = GetBranchesWhichContainsThisCommit(revision);
-            _syncContext.Post(s =>
-            {
-                updateText();
-            }, null);
+            _syncContext.Post(s => updateText(), null);
         }
 
         private void updateText()

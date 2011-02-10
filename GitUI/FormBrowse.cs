@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
@@ -10,7 +10,6 @@ using GitCommands.Repository;
 using GitUI.Plugin;
 using GitUI.Statistics;
 using GitUIPluginInterfaces;
-using PatchApply;
 using ICSharpCode.TextEditor.Util;
 using GitUI.RepoHosting;
 
@@ -32,9 +31,11 @@ namespace GitUI
 
             if (Settings.ShowGitStatusInBrowseToolbar)
             {
-                ToolStripGitStatus status = new GitUI.ToolStripGitStatus();
-                status.ImageTransparentColor = System.Drawing.Color.Magenta;
-                status.Click += new System.EventHandler(this.StatusClick);
+                var status = new ToolStripGitStatus
+                                 {
+                                     ImageTransparentColor = System.Drawing.Color.Magenta
+                                 };
+                status.Click += StatusClick;
                 ToolStrip.Items.Insert(1, status);
             }
 
@@ -43,9 +44,9 @@ namespace GitUI
             SetFilter(filter);
 
             GitTree.ImageList = new ImageList();
-            GitTree.ImageList.Images.Add(GitUI.Properties.Resources._21); //File
-            GitTree.ImageList.Images.Add(GitUI.Properties.Resources._40); //Folder
-            GitTree.ImageList.Images.Add(GitUI.Properties.Resources._39); //Submodule
+            GitTree.ImageList.Images.Add(Properties.Resources._21); //File
+            GitTree.ImageList.Images.Add(Properties.Resources._40); //Folder
+            GitTree.ImageList.Images.Add(Properties.Resources._39); //Submodule
         }
 
         private void ShowDashboard()
@@ -101,7 +102,7 @@ namespace GitUI
             Cursor.Current = Cursors.Default;
         }
 
-        private bool pluginsLoaded = false;
+        private bool pluginsLoaded;
         private void LoadPluginsInPluginMenu()
         {
             if (!pluginsLoaded)
@@ -180,9 +181,9 @@ namespace GitUI
             _viewPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
 
             //Only show "Repository hosts" menu item when there is at least 1 repository host plugin loaded
-            _repositoryHostsToolStripMenuItem.Visible = GitUI.RepoHosting.RepoHosts.GitHosters.Count > 0;
-            if (GitUI.RepoHosting.RepoHosts.GitHosters.Count == 1)
-                _repositoryHostsToolStripMenuItem.Text = GitUI.RepoHosting.RepoHosts.GitHosters[0].Description;
+            _repositoryHostsToolStripMenuItem.Visible = RepoHosts.GitHosters.Count > 0;
+            if (RepoHosts.GitHosters.Count == 1)
+                _repositoryHostsToolStripMenuItem.Text = RepoHosts.GitHosters[0].Description;
 
             InitToolStripBranchFilter(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
 
@@ -221,8 +222,7 @@ namespace GitUI
 
                 if (_bisect == null)
                 {
-                    _bisect = new WarningToolStripItem();
-                    _bisect.Text = "Your are in the middle of a bisect";
+                    _bisect = new WarningToolStripItem {Text = "Your are in the middle of a bisect"};
                     _bisect.Click += BisectClick;
                     statusStrip.Items.Add(_bisect);
                 }
@@ -242,10 +242,12 @@ namespace GitUI
             {
                 if (_rebase == null)
                 {
-                    _rebase = new WarningToolStripItem();
-                    _rebase.Text = GitCommandHelpers.InTheMiddleOfRebase()
-                                                ? "You are in the middle of a rebase"
-                                                : "You are in the middle of a patch apply";
+                    _rebase = new WarningToolStripItem
+                                  {
+                                      Text = GitCommandHelpers.InTheMiddleOfRebase()
+                                                 ? "You are in the middle of a rebase"
+                                                 : "You are in the middle of a patch apply"
+                                  };
                     _rebase.Click += RebaseClick;
                     statusStrip.Items.Add(_rebase);
                 }
@@ -265,8 +267,7 @@ namespace GitUI
             {
                 if (_warning == null)
                 {
-                    _warning = new WarningToolStripItem();
-                    _warning.Text = "There are unresolved merge conflicts!";
+                    _warning = new WarningToolStripItem {Text = "There are unresolved merge conflicts!"};
                     _warning.Click += WarningClick;
                     statusStrip.Items.Add(_warning);
                 }
@@ -292,33 +293,28 @@ namespace GitUI
         private void InitToolStripBranchFilter(bool local, bool remote)
         {
             toolStripBranches.Items.Clear();
-            List<string> branches = GetBranchHeads(local, remote);
+            IEnumerable<string> branches = GetBranchHeads(local, remote);
             foreach (var branch in branches)
                 toolStripBranches.Items.Add(branch);
         }
 
-        private static List<string> GetBranchHeads(bool local, bool remote)
+        private static IEnumerable<string> GetBranchHeads(bool local, bool remote)
         {
-            List<string> list = new List<string>();
+            var list = new List<string>();
             if (local && remote)
             {
-                var branches = GitCommands.GitCommandHelpers.GetHeads(true, true);
-                foreach (var branch in branches)
-                    if (!branch.IsTag)
-                        list.Add(branch.Name);
+                var branches = GitCommandHelpers.GetHeads(true, true);
+                list.AddRange(branches.Where(branch => !branch.IsTag).Select(branch => branch.Name));
             }
             else if (local)
             {
-                var branches = GitCommands.GitCommandHelpers.GetHeads(false);
-                foreach (var branch in branches)
-                    list.Add(branch.Name);
+                var branches = GitCommandHelpers.GetHeads(false);
+                list.AddRange(branches.Select(branch => branch.Name));
             }
             else if (remote)
             {
-                var branches = GitCommands.GitCommandHelpers.GetHeads(true, true);
-                foreach (var branch in branches)
-                    if (branch.IsRemote && !branch.IsTag)
-                        list.Add(branch.Name);
+                var branches = GitCommandHelpers.GetHeads(true, true);
+                list.AddRange(branches.Where(branch => branch.IsRemote && !branch.IsTag).Select(branch => branch.Name));
             }
             return list;
         }
@@ -471,10 +467,10 @@ namespace GitUI
                 return;
             }
 
-            string[] items = selectedItem.Split(new char[] { '/' });
+            string[] items = selectedItem.Split(new[] { '/' });
             TreeNodeCollection nodes = GitTree.Nodes;
 
-            TreeNode selectedNode = null;
+            TreeNode selectedNode;
             for (int i = 0; i < items.Length - 1; i++)
             {
                 selectedNode = Find(nodes, items[i]);
@@ -511,18 +507,9 @@ namespace GitUI
         {
             var candidates = GitCommandHelpers.GetFullTree(RevisionGrid.GetRevisions()[0].TreeGuid);
 
-            var fullPaths = new List<string>();
             string nameAsLower = name.ToLower();
 
-            foreach (string fileName in candidates)
-            {
-                if (fileName.ToLower().Contains(nameAsLower))
-                {
-                    fullPaths.Add(fileName);
-                }
-            }
-
-            return fullPaths;
+            return candidates.Where(fileName => fileName.ToLower().Contains(nameAsLower)).ToList();
         }
 
 
@@ -946,7 +933,7 @@ namespace GitUI
             string inMemMessageFilter;
             string inMemCommitterFilter;
             string inMemAuthorFilter;
-            bool[] filterParams = new bool[4];
+            var filterParams = new bool[4];
             filterParams[0] = commitToolStripMenuItem1.Checked;
             filterParams[1] = committerToolStripMenuItem.Checked;
             filterParams[2] = authorToolStripMenuItem.Checked;
@@ -1034,7 +1021,7 @@ namespace GitUI
                                    {
                                        string selectedPatch = GetSelectedPatch(revisions, selectedItem);
                                        
-                                       return selectedPatch == null ? String.Empty : selectedPatch;
+                                       return selectedPatch ?? String.Empty;
                                    });
         }
 
@@ -1044,21 +1031,16 @@ namespace GitUI
             {
                 if (file.IsTracked)
                     return GitCommandHelpers.GetCurrentChanges(file.Name, file.OldName, false, DiffText.GetExtraDiffArguments());
-                else
-                    return FileReader.ReadFileContent(GitCommands.Settings.WorkingDir + file.Name, GitCommands.Settings.Encoding);
+                return FileReader.ReadFileContent(Settings.WorkingDir + file.Name, Settings.Encoding);
             }
-            else
-                if (revisions[0].Guid == GitRevision.IndexGuid) //index
-                {
+            if (revisions[0].Guid == GitRevision.IndexGuid) //index
+            {
                     return GitCommandHelpers.GetCurrentChanges(file.Name, file.OldName, true, DiffText.GetExtraDiffArguments());
-                }
-                else
-                {
-                    var secondRevision = revisions.Count == 2 ? revisions[1].Guid : revisions[0].ParentGuids[0];
+            }
+            var secondRevision = revisions.Count == 2 ? revisions[1].Guid : revisions[0].ParentGuids[0];
 
                     return GitCommandHelpers.GetSingleDiff(revisions[0].Guid, secondRevision, file.Name, file.OldName,
-                                                                     DiffText.GetExtraDiffArguments()).Text;
-                }
+                                                   DiffText.GetExtraDiffArguments()).Text;
         }
 
         private void ChangelogToolStripMenuItemClick(object sender, EventArgs e)
@@ -1430,7 +1412,7 @@ namespace GitUI
 
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
-                using (MemoryStream ms = (MemoryStream)GitCommandHelpers.GetFileStream(item.Guid)) //Ugly, has implementation info.
+                using (var ms = (MemoryStream)GitCommandHelpers.GetFileStream(item.Guid)) //Ugly, has implementation info.
                 {
                     using (FileStream fileOut = File.Create(fileDialog.FileName))
                     {
@@ -1501,7 +1483,7 @@ namespace GitUI
             if (DiffFiles.SelectedItems.Count == 0)
                 return;
 
-            StringBuilder fileNames = new StringBuilder();
+            var fileNames = new StringBuilder();
             foreach (var item in DiffFiles.SelectedItems)
             {
                 //Only use appendline when multiple items are selected.
@@ -1539,9 +1521,6 @@ namespace GitUI
                 return;
            
             GitItemStatus item = DiffFiles.SelectedItem;
-
-            if (item == null)
-                return;
 
             var fileDialog =
                 new SaveFileDialog
@@ -1669,9 +1648,9 @@ namespace GitUI
 
         private void _forkCloneMenuItem_Click(object sender, EventArgs e)
         {
-            if (GitUI.RepoHosting.RepoHosts.GitHosters.Count > 0)
+            if (RepoHosts.GitHosters.Count > 0)
             {
-                GitUICommands.Instance.StartCloneForkFromHoster(GitUI.RepoHosting.RepoHosts.GitHosters[0]); //FIXME: Works untill we have > 1 repo hoster
+                GitUICommands.Instance.StartCloneForkFromHoster(RepoHosts.GitHosters[0]); //FIXME: Works untill we have > 1 repo hoster
                 Initialize();
             }
             else

@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Configuration;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using GitUI.Properties;
 using Microsoft.WindowsAPICodePack.Taskbar;
@@ -180,10 +181,9 @@ namespace GitUI
                 if (position == null || position.Rect.IsEmpty)
                     return null;
 
-                foreach (var screen in Screen.AllScreens)
+                if (Screen.AllScreens.Any(screen => screen.WorkingArea.IntersectsWith(position.Rect)))
                 {
-                    if (screen.WorkingArea.IntersectsWith(position.Rect))
-                        return position;
+                    return position;
                 }
             }
             catch (ConfigurationException)

@@ -10,7 +10,7 @@ namespace GitUI
         public FormDiffSmall()
         {
             InitializeComponent(); Translate();
-            DiffText.ExtraDiffArgumentsChanged += new EventHandler<EventArgs>(DiffText_ExtraDiffArgumentsChanged);
+            DiffText.ExtraDiffArgumentsChanged += DiffText_ExtraDiffArgumentsChanged;
             DiffFiles.Focus();
         }
 
@@ -24,7 +24,7 @@ namespace GitUI
             RestorePosition("diff-small");
         }
 
-        private GitRevision Revision = null;
+        private GitRevision Revision;
 
         public void SetRevision(GitRevision revision)
         {
@@ -40,9 +40,7 @@ namespace GitUI
 
         public void SetRevision(string revision)
         {
-            Revision = new GitRevision();
-            Revision.Guid = revision;
-            Revision.ParentGuids = new string[] { revision + "^" };
+            Revision = new GitRevision {Guid = revision, ParentGuids = new[] {revision + "^"}};
             SetRevision(Revision);
         }
 
@@ -59,14 +57,7 @@ namespace GitUI
             if (DiffFiles.SelectedItem != null)
             {
                 Patch selectedPatch = GitCommandHelpers.GetSingleDiff(Revision.Guid, Revision.ParentGuids[0], DiffFiles.SelectedItem.Name, DiffFiles.SelectedItem.OldName, DiffText.GetExtraDiffArguments());
-                if (selectedPatch != null)
-                {
-                    DiffText.ViewPatch(selectedPatch.Text);
-                }
-                else
-                {
-                    DiffText.ViewPatch("");
-                }
+                DiffText.ViewPatch(selectedPatch != null ? selectedPatch.Text : "");
             }
             Cursor.Current = Cursors.Default;
         }

@@ -237,7 +237,7 @@
             this.LoadSSHKey.TabIndex = 25;
             this.LoadSSHKey.Text = "Load SSH key";
             this.LoadSSHKey.UseVisualStyleBackColor = true;
-            this.LoadSSHKey.Click += new System.EventHandler(this.LoadSshKeyClick);
+            this.LoadSSHKey.Click += new System.EventHandler(LoadSshKeyClick);
             // 
             // Ok
             // 
