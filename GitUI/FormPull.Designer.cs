@@ -32,7 +32,6 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.PullImage = new System.Windows.Forms.PictureBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.checkPullAll = new System.Windows.Forms.CheckBox();
             this.PullFromUrl = new System.Windows.Forms.RadioButton();
             this.PullFromRemote = new System.Windows.Forms.RadioButton();
             this.AddRemote = new System.Windows.Forms.Button();
@@ -101,7 +100,6 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.checkPullAll);
             this.groupBox2.Controls.Add(this.PullFromUrl);
             this.groupBox2.Controls.Add(this.PullFromRemote);
             this.groupBox2.Controls.Add(this.AddRemote);
@@ -114,17 +112,6 @@
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Pull from";
-            // 
-            // checkPullAll
-            // 
-            this.checkPullAll.AutoSize = true;
-            this.checkPullAll.Location = new System.Drawing.Point(93, 20);
-            this.checkPullAll.Name = "checkPullAll";
-            this.checkPullAll.Size = new System.Drawing.Size(37, 17);
-            this.checkPullAll.TabIndex = 6;
-            this.checkPullAll.Text = "All";
-            this.checkPullAll.UseVisualStyleBackColor = true;
-            this.checkPullAll.CheckedChanged += new System.EventHandler(this.checkPullAll_CheckedChanged);
             // 
             // PullFromUrl
             // 
@@ -172,6 +159,7 @@
             this.Remotes.Size = new System.Drawing.Size(268, 21);
             this.Remotes.TabIndex = 1;
             this.Remotes.Validating += new System.ComponentModel.CancelEventHandler(this.RemotesValidating);
+            this.Remotes.TextChanged += new System.EventHandler(this.Remotes_TextChanged);
             // 
             // BrowseSource
             // 
@@ -389,6 +377,5 @@
         private System.Windows.Forms.ToolTip Tooltip;
         private System.Windows.Forms.Label _NO_TRANSLATE_localBranch;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.CheckBox checkPullAll;
     }
 }
