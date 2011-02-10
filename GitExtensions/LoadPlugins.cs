@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Threading;
@@ -53,7 +52,8 @@ namespace GitExtensions
                     var rtle = ex as ReflectionTypeLoadException;
                     if (rtle != null)
                     {
-                        exInfo = rtle.LoaderExceptions.Aggregate(exInfo, (current, el) => current + (el.Message + "\r\n"));
+                        foreach (var el in rtle.LoaderExceptions)
+                            exInfo += el.Message + "\r\n";
                     }
                     else
                     {
