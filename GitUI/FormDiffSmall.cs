@@ -58,7 +58,7 @@ namespace GitUI
 
             if (DiffFiles.SelectedItem != null)
             {
-                Patch selectedPatch = GitCommandHelpers.GetSingleDiff(Revision.Guid, Revision.ParentGuids[0], DiffFiles.SelectedItem.Name, DiffText.GetExtraDiffArguments());
+                Patch selectedPatch = GitCommandHelpers.GetSingleDiff(Revision.Guid, Revision.ParentGuids[0], DiffFiles.SelectedItem.Name, DiffFiles.SelectedItem.OldName, DiffText.GetExtraDiffArguments());
                 if (selectedPatch != null)
                 {
                     DiffText.ViewPatch(selectedPatch.Text);

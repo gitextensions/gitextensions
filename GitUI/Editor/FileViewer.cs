@@ -214,9 +214,9 @@ namespace GitUI.Editor
 
 
 
-        public void ViewCurrentChanges(string fileName, bool staged)
+        public void ViewCurrentChanges(string fileName, string oldFileName, bool staged)
         {
-            _async.Load(() => GitCommandHelpers.GetCurrentChanges(fileName, staged, GetExtraDiffArguments()), ViewStagingPatch);
+            _async.Load(() => GitCommandHelpers.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments()), ViewStagingPatch);
         }
 
         public void ViewStagingPatch(string text)

@@ -79,7 +79,7 @@ namespace GitUI
         private void ViewCurrentChanges()
         {
             Cursor.Current = Cursors.WaitCursor;
-            View.ViewCurrentChanges(((GitItemStatus)Changes.SelectedItem).Name, false);
+            View.ViewCurrentChanges(((GitItemStatus)Changes.SelectedItem).Name, ((GitItemStatus)Changes.SelectedItem).OldName, false);
             Cursor.Current = Cursors.Default;
         }
 

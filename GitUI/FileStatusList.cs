@@ -232,7 +232,7 @@ namespace GitUI
 
                 string text;
                 if (gitItemStatus.IsRenamed)
-                    text = string.Concat(gitItemStatus.OldName, " -> ", gitItemStatus.Name);
+                    text = string.Concat(gitItemStatus.Name, " (", gitItemStatus.OldName, ")");
                 else
                     text = gitItemStatus.Name;
 
