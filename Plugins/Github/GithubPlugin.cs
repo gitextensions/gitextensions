@@ -35,7 +35,7 @@ namespace Github
         static GithubPlugin _instance;
         public static GithubPlugin Instance
         {
-            get { return _instance;  }
+            get { return _instance; }
         }
         #endregion
 
@@ -87,7 +87,12 @@ namespace Github
 
         public IList<IHostedRepository> GetMyRepos()
         {
-            return GetRepositoriesOfUser(GithubUser.Name);
+            if (GithubUser != null)
+            {
+                return GetRepositoriesOfUser(GithubUser.Name);
+            }
+
+            return new List<IHostedRepository>();
         }
 
         public List<IHostedRemote> GetHostedRemotesForCurrentWorkingDirRepo()
@@ -133,7 +138,7 @@ namespace Github
         GithubSharp.Core.Models.GithubUser _githubUser;
         private GithubSharp.Core.Models.GithubUser GithubUser
         {
-            get 
+            get
             {
                 if (_githubUser == null)
                 {
@@ -155,7 +160,7 @@ namespace Github
             username = username.Trim();
             password = password.Trim();
             apitoken = apitoken.Trim();
-            
+
             if (username.Length == 0 || apitoken.Length < 30)
                 throw new ArgumentOutOfRangeException("User or apitoken set to invalid values");
 
@@ -316,7 +321,7 @@ namespace Github
             List<GithubHostedRemoteInformation> repoInfos = new List<GithubHostedRemoteInformation>();
 
             var remoteNames = GitCommands.GitCommandHelpers.GetRemotes();
-            foreach (var remote in remoteNames.Where(r=>!string.IsNullOrEmpty(r)))
+            foreach (var remote in remoteNames.Where(r => !string.IsNullOrEmpty(r)))
             {
                 var remoteUrl = GitCommands.GitCommandHelpers.GetSetting("remote." + remote + ".url");
                 if (string.IsNullOrEmpty(remoteUrl))

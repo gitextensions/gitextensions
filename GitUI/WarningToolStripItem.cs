@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 
@@ -9,18 +6,16 @@ namespace GitUI
 {
     public class WarningToolStripItem : ToolStripButton
     {
-        private Timer _blinkTimer;
+        private readonly Timer _blinkTimer;
         private int _counter;
 
         public WarningToolStripItem()
         {
             _counter = 0;
-            this.Width = 200;
-            this.Height = 20;
-            _blinkTimer = new Timer();
-            _blinkTimer.Interval = 150;
-            _blinkTimer.Enabled = true;
-            _blinkTimer.Tick += new EventHandler(_blinkTimer_Tick);
+            Width = 200;
+            Height = 20;
+            _blinkTimer = new Timer {Interval = 150, Enabled = true};
+            _blinkTimer.Tick += _blinkTimer_Tick;
             _blinkTimer.Start();
         }
 

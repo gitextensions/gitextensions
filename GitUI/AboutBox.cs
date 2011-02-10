@@ -1,9 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-
-using System.Reflection;
 using System.Windows.Forms;
 
 namespace GitUI
@@ -17,7 +13,7 @@ namespace GitUI
 
         private void okButton_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void labelVersion_Click(object sender, EventArgs e)
@@ -51,7 +47,7 @@ namespace GitUI
         //Contributers list
         private const string contributers = "                                                                         Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide, dominiqueplante, Grzegorz Pachocki, Seth Behunin, bleis-tift, Chris Meaney, Adrian Codrington, Troels Thomsen, Wilbert van Dolleweerd, Tobias Bieniek, Radoslaw Miazio, Stan Angeloff, Matt McCormick, Bjørn Moe, William Swanson, Daniel Locantore, Harald Deischinger, Radek Miazio, Stefan Rueckl, Emanuel Henrique do Prado, Lukasz Byczynski, Steffen M. Colding-Jørgensen, alexeik, arBmind, Gianni Rosa Gallina, mausch, xaro, Xharze, Kim Christensen, gor, Charles Brossollet, Patrick Earl";
 
-        private int thanksCounter = 0;
+        private int thanksCounter;
         private void thanksTimer_Tick(object sender, EventArgs e)
         {
             _NO_TRANSLATE_thanksToTicker.Text = contributers.Substring(thanksCounter);// "Thanks to: " + contributers[thanksCounter % contributers.Length];

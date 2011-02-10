@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using GitUIPluginInterfaces.RepositoryHosts;
 using ResourceManager.Translation;
@@ -23,10 +19,10 @@ namespace GitUI.RepoHosting
         private readonly TranslationString _strError = new TranslationString("Error");
         #endregion
 
-        private IRepositoryHostPlugin _repoHost;
+        private readonly IRepositoryHostPlugin _repoHost;
         private IHostedRemote _currentHostedRemote;
         private string _chooseBranch;
-        private string _chooseRemote;
+        private readonly string _chooseRemote;
         private List<IHostedRemote> _hostedRemotes;
 
         public CreatePullRequestForm(IRepositoryHostPlugin repoHost, string chooseRemote, string chooseBranch)
@@ -64,8 +60,8 @@ namespace GitUI.RepoHosting
             {
                 for (int i = 0; i < _pullReqTargetsCB.Items.Count; i++)
                 {
-                    IHostedRemote ihr = _pullReqTargetsCB.Items[i] as IHostedRemote;
-                    if (ihr.Name == _chooseRemote)
+                    var ihr = _pullReqTargetsCB.Items[i] as IHostedRemote;
+                    if (ihr != null && ihr.Name == _chooseRemote)
                     {
                         _pullReqTargetsCB.SelectedIndex = i;
                         break;
@@ -87,7 +83,7 @@ namespace GitUI.RepoHosting
 
             AsyncHelpers.DoAsync(
                 () => _currentHostedRemote.GetHostedRepository().Branches,
-                (branches) =>
+                branches =>
                 {
                     foreach (var branch in branches)
                         _remoteBranchesCB.Items.Add(branch.Name);
@@ -95,7 +91,7 @@ namespace GitUI.RepoHosting
                     if (branches.Count > 0)
                         _remoteBranchesCB.SelectedIndex = 0;
                 },
-                (ex) => { throw ex; });
+                ex => { throw ex; });
         }
 
         private void LoadMyBranches()
@@ -108,7 +104,7 @@ namespace GitUI.RepoHosting
 
             AsyncHelpers.DoAsync(
                 () => myRemote.GetHostedRepository().Branches,
-                (branches) =>
+                branches =>
                 {
                     foreach (var branch in branches)
                         _yourBranchesCB.Items.Add(branch.Name);
@@ -116,7 +112,7 @@ namespace GitUI.RepoHosting
                     if (branches.Count > 0)
                         _yourBranchesCB.SelectedIndex = 0;
                 },
-                (ex) => { throw ex; });
+                ex => { throw ex; });
         }
 
         private void _yourBranchCB_SelectedIndexChanged(object sender, EventArgs e)

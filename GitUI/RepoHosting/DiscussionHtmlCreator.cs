@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GitUIPluginInterfaces.RepositoryHosts;
@@ -26,7 +25,7 @@ namespace GitUI.RepoHosting
             {
                 foreach (var entry in entries)
                 {
-                    ICommitDiscussionEntry cde = entry as ICommitDiscussionEntry;
+                    var cde = entry as ICommitDiscussionEntry;
 
                     AddLine(html, "<div class='entry {0}'>", cde == null ? "commentEntry" : " commitEntry");
 
@@ -45,11 +44,6 @@ namespace GitUI.RepoHosting
             AddLine(html, "</body></html>");
 
             return html.ToString();
-        }
-
-        private static void Add(StringBuilder html, string input, params object[] p)
-        {
-            html.AppendFormat(input, (from el in p select el.ToString().Replace("\r", "").Replace("\n", "<br/>\n").Replace("\"", "&quot;")).ToArray());
         }
 
         private static void AddLine(StringBuilder html, string input, params object[] p)
@@ -74,7 +68,7 @@ namespace GitUI.RepoHosting
 
         private static List<KeyValuePair<string, string>> _systemInfoReplacement;
 
-        private static List<KeyValuePair<string, string>> SystemInfoReplacement
+        private static IEnumerable<KeyValuePair<string, string>> SystemInfoReplacement
         {
             get
             {
@@ -100,7 +94,7 @@ namespace GitUI.RepoHosting
         }
 
         private static string _cssData;
-        private static string _cssDataRaw = @"
+        private const string _cssDataRaw = @"
 body {
     background: SC.Control;
     color: SC.ControlText;

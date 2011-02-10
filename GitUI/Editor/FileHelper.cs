@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -94,15 +93,7 @@ namespace GitUI.Editor
 
         private static bool HasMatchingExtension(IEnumerable<string> extensions, string fileName)
         {
-            foreach (string extension in extensions)
-            {
-                if (fileName.EndsWith(extension, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return extensions.Any(extension => fileName.EndsWith(extension, StringComparison.CurrentCultureIgnoreCase));
         }
     }
 }

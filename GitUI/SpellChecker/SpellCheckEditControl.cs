@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -170,13 +171,9 @@ namespace GitUI.SpellChecker
         private int LineHeight()
         {
             if (_lineHeight == 0)
-                foreach (var line in _richTextBox.Lines)
+                if (_richTextBox.Lines.Any(line => line.Length != 0))
                 {
-                    if (line.Length == 0)
-                        continue;
-
                     _lineHeight = TextBoxHelper.GetBaselineOffsetAtCharIndex(_richTextBox, 0);
-                    break;
                 }
 
             return _lineHeight == 0 ? 12 : _lineHeight;
