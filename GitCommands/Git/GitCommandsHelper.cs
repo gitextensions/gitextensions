@@ -1594,17 +1594,28 @@ namespace GitCommands
             return stashes;
         }
 
-        public static Patch GetSingleDiff(string from, string to, string filter, string extraDiffArguments)
+        public static Patch GetSingleDiff(string from, string to, string fileName, string oldFileName, string extraDiffArguments)
         {
-            filter = FixPath(filter);
+            if (!string.IsNullOrEmpty(fileName))
+                fileName = string.Concat("\"", FixPath(fileName), "\"");
+            
+            if (!string.IsNullOrEmpty(oldFileName))
+                oldFileName = string.Concat("\"", FixPath(oldFileName), "\"");
+
             from = FixPath(from);
             to = FixPath(to);
 
             var patchManager = new PatchManager();
-            var arguments = string.Format("diff{0} \"{1}\" \"{2}\" -- \"{3}\"", extraDiffArguments, to, from, filter);
+            var arguments = string.Format("diff{0} -M \"{1}\" \"{2}\" -- {3} {4}", extraDiffArguments, to, from, fileName, oldFileName);
             patchManager.LoadPatch(RunCachableCmd(Settings.GitCommand, arguments), false);
 
             return patchManager.patches.Count > 0 ? patchManager.patches[0] : null;
+        }
+
+
+        public static Patch GetSingleDiff(string from, string to, string fileName, string extraDiffArguments)
+        {
+            return GetSingleDiff(from, to, fileName, null, extraDiffArguments);
         }
 
         public static List<Patch> GetDiff(string from, string to, string extraDiffArguments)
@@ -1887,12 +1898,15 @@ namespace GitCommands
                     });
         }
 
-        public static string GetCurrentChanges(string name, bool staged, string extraDiffArguments)
+        public static string GetCurrentChanges(string fileName, string oldFileName, bool staged, string extraDiffArguments)
         {
-            name = FixPath(name);
-            var args = "diff" + extraDiffArguments + " -- \"" + name + "\"";
+            fileName = string.Concat("\"", FixPath(fileName), "\"");
+            if (!string.IsNullOrEmpty(oldFileName))
+                oldFileName = string.Concat("\"", FixPath(oldFileName), "\"");
+
+            var args = "diff " + extraDiffArguments + " -- " + fileName;
             if (staged)
-                args = "diff --cached" + extraDiffArguments + " -- \"" + name + "\"";
+                args = "diff -M --cached" + extraDiffArguments + " -- " + fileName + " " + oldFileName;
 
             return RunCmd(Settings.GitCommand, args);
         }

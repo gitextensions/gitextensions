@@ -1043,21 +1043,21 @@ namespace GitUI
             if (revisions[0].Guid == GitRevision.UncommittedWorkingDirGuid) //working dir changes
             {
                 if (file.IsTracked)
-                    return GitCommandHelpers.GetCurrentChanges(file.Name, false, DiffText.GetExtraDiffArguments());
+                    return GitCommandHelpers.GetCurrentChanges(file.Name, file.OldName, false, DiffText.GetExtraDiffArguments());
                 else
                     return FileReader.ReadFileContent(GitCommands.Settings.WorkingDir + file.Name, GitCommands.Settings.Encoding);
             }
             else
                 if (revisions[0].Guid == GitRevision.IndexGuid) //index
                 {
-                    return GitCommandHelpers.GetCurrentChanges(file.Name, true, DiffText.GetExtraDiffArguments());
+                    return GitCommandHelpers.GetCurrentChanges(file.Name, file.OldName, true, DiffText.GetExtraDiffArguments());
                 }
                 else
                 {
                     var secondRevision = revisions.Count == 2 ? revisions[1].Guid : revisions[0].ParentGuids[0];
 
-                    return GitCommandHelpers.GetSingleDiff(revisions[0].Guid, secondRevision, file.Name,
-                                                                 DiffText.GetExtraDiffArguments()).Text;
+                    return GitCommandHelpers.GetSingleDiff(revisions[0].Guid, secondRevision, file.Name, file.OldName,
+                                                                     DiffText.GetExtraDiffArguments()).Text;
                 }
         }
 
