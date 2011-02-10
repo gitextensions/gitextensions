@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
 
@@ -56,7 +55,13 @@ namespace GitExtensions
 
         public IList<string> GetAvailableSettings()
         {
-            return settings.Keys.ToList();
+            IList<string> keys = new List<string>(settings.Keys.Count);
+            foreach (string key in settings.Keys)
+            {
+                keys.Add(key);
+            }
+
+            return keys;
         }
     }
 }

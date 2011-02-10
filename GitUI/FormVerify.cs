@@ -40,12 +40,13 @@ namespace GitUI
             var process = new FormProcess("fsck-objects" + options);
             process.ShowDialog();
 
-            var warningList = process
-                .OutputString
-                .ToString()
-                .Split('\n', '\r')
-                .Where(warning => !string.IsNullOrEmpty(warning) && (!ShowOnlyCommits.Checked || warning.Contains("commit")))
-                .Select(ExtendWarning);
+            var warningList = new List<string>();
+
+            foreach (var warning in process.OutputString.ToString().Split('\n', '\r'))
+            {
+                if (!string.IsNullOrEmpty(warning) && (!ShowOnlyCommits.Checked || warning.Contains("commit")))
+                    warningList.Add(ExtendWarning(warning));
+            }
 
             Warnings.DataSource = warningList;
             Cursor.Current = Cursors.Default;
