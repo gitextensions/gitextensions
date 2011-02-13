@@ -1070,6 +1070,7 @@
     <None Include="Icons\45.png" />
     <None Include="Icons\Renamed.png" />
     <None Include="Icons\52.png" />
+    <None Include="Icons\Copied.png" />
     <Content Include="Resources\success1.png" />
     <None Include="Resources\witespace.ico" />
     <None Include="Resources\whitespace.bmp" />

@@ -22,7 +22,7 @@ namespace GitCommands
         public string Name { get; set; }
         public string OldName { get; set; }
 
-        public string ChangeString 
+        public string ChangeString
         {
             get
             {
@@ -45,6 +45,7 @@ namespace GitCommands
         public bool IsCopied { get; set; }
         public bool IsConflict { get; set; }
         public bool IsStaged { get; set; }
+        public string RenameCopyPercentage { get; set; }
 
         public override string ToString()
         {
@@ -54,19 +55,24 @@ namespace GitCommands
                 toString = string.Concat("Renamed \"", OldName, "\" to \"", Name, "\"");
             }
             else
-            {
-                toString = Name;
-            }
+                if (IsCopied)
+                {
+                    toString = string.Concat("Copied \"", OldName, "\" to \"", Name, "\"");
+                }
+                else
+                {
+                    toString = Name;
+                }
+
+
 
             if (IsConflict)
             {
                 toString += " (Conflict)";
             }
 
-            if (IsCopied)
-            {
-                toString += " (Copied)";
-            }
+            if (!string.IsNullOrEmpty(RenameCopyPercentage))
+                toString +=  string.Concat("(", RenameCopyPercentage, "%)");
 
             return toString;
         }
