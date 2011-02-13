@@ -27,6 +27,11 @@ namespace GitCommands
             d = Get(numbers, 3);
         }
 
+        public bool SupportGitStatusPorcelain
+        {
+            get { return this >= v1_7_0; }
+        }
+
         public bool CloneCanAskForProgress
         {
             get { return this >= v1_7_0; }

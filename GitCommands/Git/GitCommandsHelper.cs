@@ -1647,14 +1647,31 @@ namespace GitCommands
 
         public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, bool showUntrackedFiles)
         {
-            var stringBuilder = new StringBuilder("status --porcelain -z");
+            StringBuilder stringBuilder;
 
-            if (!showUntrackedFiles)
-                stringBuilder.Append(" --untracked-files=no");
-            if (showUntrackedFiles)
-                stringBuilder.Append(" --untracked-files");
-            if (!excludeIgnoredFiles)
-                stringBuilder.Append(" --ignored");
+            if (!VersionInUse.SupportGitStatusPorcelain)
+                throw new Exception("The version of git you are using is not supported for this action. Please upgrade to git 1.7.3 or newer.");
+
+            if (VersionInUse.SupportGitStatusPorcelain)
+            {
+                stringBuilder = new StringBuilder("status --porcelain -z");
+
+                if (!showUntrackedFiles)
+                    stringBuilder.Append(" --untracked-files=no");
+                if (showUntrackedFiles)
+                    stringBuilder.Append(" --untracked-files");
+                if (!excludeIgnoredFiles)
+                    stringBuilder.Append(" --ignored");
+            }
+            else //fall back to depricated ls-files command
+            {
+                stringBuilder = new StringBuilder("ls-files -z --deleted --modified --no-empty-directory -t");
+
+                if (showUntrackedFiles)
+                    stringBuilder.Append(" --others");
+                if (excludeIgnoredFiles)
+                    stringBuilder.Append(" --exclude-standard");
+            }
 
             return stringBuilder.ToString();
         }
