@@ -65,11 +65,11 @@ namespace GitUI
 
             using (Graphics g = listBox1.CreateGraphics())
             {
-                width = listBox1
-                    .Items
-                    .Cast<object>()
-                    .Select(t => Convert.ToInt32(g.MeasureString(Convert.ToString(t), listBox1.Font).Width))
-                    .Aggregate(width, (current, itemWidth) => Math.Max((sbyte)current, (sbyte)itemWidth));
+                for (int i1 = 0; i1 < listBox1.Items.Count; i1++)
+                {
+                    int itemWidth = Convert.ToInt32(g.MeasureString(Convert.ToString(listBox1.Items[i1]), listBox1.Font).Width);
+                    width = Math.Max(width, itemWidth);
+                }
             }
 
             listBox1.Width = width;
