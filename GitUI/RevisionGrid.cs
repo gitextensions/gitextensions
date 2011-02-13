@@ -1440,7 +1440,10 @@ namespace GitUI
         private void RemoveOwnScripts()
         {
             runScriptToolStripMenuItem.DropDown.Items.Clear();
-            foreach (ToolStripItem item in CreateTag.Items.Cast<ToolStripItem>())
+            List<ToolStripItem> list = new List<ToolStripItem>();
+            foreach (ToolStripItem item in CreateTag.Items)
+                list.Add(item);
+            foreach (ToolStripItem item in list) 
                 if (item.Name.Contains("_ownScript"))
                     CreateTag.Items.RemoveByKey(item.Name);
         }
