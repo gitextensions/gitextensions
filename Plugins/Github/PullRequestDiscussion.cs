@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GitUIPluginInterfaces.RepositoryHosts;
+using System.Runtime.Serialization;
+using System.Windows.Forms;
 
 namespace Github
 {
@@ -28,31 +30,39 @@ namespace Github
 
         private void Load()
         {
-            var pullRequestApi = _plugin.GetPullRequestApi();
-            _pullRequest = pullRequestApi.GetById(_owner, _repositoryName, _id);
-
-            Entries = new List<IDiscussionEntry>();
-
-            GithubDiscussionEntry da = new GithubDiscussionEntry(_githubPullReqInfo.Owner, _githubPullReqInfo.Created, _githubPullReqInfo.Body);
-            Entries.Add(da);
-
-            foreach (var el in _pullRequest.Discussion)
+            try
             {
-                GithubDiscussionEntry de;
-                string author;
-                if (el.User == null)
-                    author = string.Format("{0} ({1})", el.Author, el.Email);
-                else
-                    author = el.User.Login;
+                var pullRequestApi = _plugin.GetPullRequestApi();
+                _pullRequest = pullRequestApi.GetById(_owner, _repositoryName, _id);
+
+                Entries = new List<IDiscussionEntry>();
+
+                GithubDiscussionEntry da = new GithubDiscussionEntry(_githubPullReqInfo.Owner, _githubPullReqInfo.Created, _githubPullReqInfo.Body);
+                Entries.Add(da);
+
+                foreach (var el in _pullRequest.Discussion)
+                {
+                    GithubDiscussionEntry de;
+                    string author;
+                    if (el.User == null)
+                        author = string.Format("{0} ({1})", el.Author, el.Email);
+                    else
+                        author = el.User.Login;
 
 
-                if (el.Type.ToLowerInvariant() == "commit")
-                    de = new GithubCommitDiscussionEntry(author, el.Created, el.Subject, el.Sha);
-                else if (el.Type.ToLowerInvariant() == "issuecomment")
-                    de = new GithubDiscussionEntry(author, el.Created, el.Body);
-                else
-                    de = new GithubDiscussionEntry("ERROR", DateTime.Now, "COULD NOT UNDERSTAND A DISCUSSION ENTRY");
-                Entries.Add(de);
+                    if (el.Type.ToLowerInvariant() == "commit")
+                        de = new GithubCommitDiscussionEntry(author, el.Created, el.Subject, el.Sha);
+                    else if (el.Type.ToLowerInvariant() == "issuecomment")
+                        de = new GithubDiscussionEntry(author, el.Created, el.Body);
+                    else
+                        de = new GithubDiscussionEntry("ERROR", DateTime.Now, "COULD NOT UNDERSTAND A DISCUSSION ENTRY");
+                    Entries.Add(de);
+                }
+
+            }
+            catch (SerializationException ex)
+            {
+                MessageBox.Show("Could not load discussion.\n\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -89,7 +99,8 @@ namespace Github
 
     class GithubCommitDiscussionEntry : GithubDiscussionEntry, ICommitDiscussionEntry
     {
-        public GithubCommitDiscussionEntry(string author, DateTime created, string body, string sha) : base(author, created, body)
+        public GithubCommitDiscussionEntry(string author, DateTime created, string body, string sha)
+            : base(author, created, body)
         {
             Sha = sha;
         }
