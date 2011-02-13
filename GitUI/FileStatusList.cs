@@ -229,9 +229,12 @@ namespace GitUI
                         else
                             if (gitItemStatus.IsRenamed)
                                 e.Graphics.DrawImage(Resources.Renamed, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
+                            else
+                                if (gitItemStatus.IsCopied)
+                                    e.Graphics.DrawImage(Resources.Copied, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
 
                 string text;
-                if (gitItemStatus.IsRenamed)
+                if (gitItemStatus.IsRenamed || gitItemStatus.IsCopied)
                     text = string.Concat(gitItemStatus.Name, " (", gitItemStatus.OldName, ")");
                 else
                     text = gitItemStatus.Name;
