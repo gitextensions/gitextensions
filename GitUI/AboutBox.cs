@@ -44,8 +44,9 @@ namespace GitUI
             _NO_TRANSLATE_labelVersionInfo.Text = _NO_TRANSLATE_labelVersionInfo.Text + GitCommands.Settings.GitExtensionsVersionString;
         }
 
-        //Contributers list
-        private const string contributers = "                                                                         Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide, dominiqueplante, Grzegorz Pachocki, Seth Behunin, bleis-tift, Chris Meaney, Adrian Codrington, Troels Thomsen, Wilbert van Dolleweerd, Tobias Bieniek, Radoslaw Miazio, Stan Angeloff, Matt McCormick, Bjørn Moe, William Swanson, Daniel Locantore, Harald Deischinger, Radek Miazio, Stefan Rueckl, Emanuel Henrique do Prado, Lukasz Byczynski, Steffen M. Colding-Jørgensen, alexeik, arBmind, Gianni Rosa Gallina, mausch, xaro, Xharze, Kim Christensen, gor, Charles Brossollet, Patrick Earl";
+        //Contributers list 
+        //TODO: fix order (commit count?)
+        private const string contributers = "                                                                         Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide, dominiqueplante, Grzegorz Pachocki, Seth Behunin, bleis-tift, Chris Meaney, Adrian Codrington, Troels Thomsen, Wilbert van Dolleweerd, Tobias Bieniek, Radoslaw Miazio, Stan Angeloff, Matt McCormick, Bjørn Moe, William Swanson, Daniel Locantore, Harald Deischinger, Radek Miazio, Stefan Rueckl, Emanuel Henrique do Prado, Lukasz Byczynski, Steffen M. Colding-Jørgensen, alexeik, arBmind, Gianni Rosa Gallina, mausch, xaro, Xharze, Kim Christensen, gor, Charles Brossollet, Patrick Earl, ultonis, Michael Frenzel, showell";
 
         private int thanksCounter;
         private void thanksTimer_Tick(object sender, EventArgs e)
