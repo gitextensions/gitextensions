@@ -1647,31 +1647,17 @@ namespace GitCommands
 
         public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, bool showUntrackedFiles)
         {
-            StringBuilder stringBuilder;
-
             if (!VersionInUse.SupportGitStatusPorcelain)
                 throw new Exception("The version of git you are using is not supported for this action. Please upgrade to git 1.7.3 or newer.");
 
-            if (VersionInUse.SupportGitStatusPorcelain)
-            {
-                stringBuilder = new StringBuilder("status --porcelain -z");
+            StringBuilder stringBuilder = new StringBuilder("status --porcelain -z");
 
-                if (!showUntrackedFiles)
-                    stringBuilder.Append(" --untracked-files=no");
-                if (showUntrackedFiles)
-                    stringBuilder.Append(" --untracked-files");
-                if (!excludeIgnoredFiles)
-                    stringBuilder.Append(" --ignored");
-            }
-            else //fall back to depricated ls-files command
-            {
-                stringBuilder = new StringBuilder("ls-files -z --deleted --modified --no-empty-directory -t");
-
-                if (showUntrackedFiles)
-                    stringBuilder.Append(" --others");
-                if (excludeIgnoredFiles)
-                    stringBuilder.Append(" --exclude-standard");
-            }
+            if (!showUntrackedFiles)
+                stringBuilder.Append(" --untracked-files=no");
+            if (showUntrackedFiles)
+                stringBuilder.Append(" --untracked-files");
+            if (!excludeIgnoredFiles)
+                stringBuilder.Append(" --ignored");
 
             return stringBuilder.ToString();
         }
@@ -1836,25 +1822,10 @@ namespace GitCommands
 
             if (true && status.Length < 50 && status.Contains("fatal: No HEAD commit to compare"))
             {
-                var gitItemStatusList = new List<GitItemStatus>();
-
-                status = RunCmd(Settings.GitCommand, "status --untracked-files=no");
-
-                var statusStrings = status.Split('\n');
-
-                foreach (var statusString in statusStrings)
-                {
-                    if (statusString.StartsWith("#\tnew file:"))
-                    {
-                        ProcessStatusNewFile(statusString, gitItemStatusList);
-                    }
-                }
-                return gitItemStatusList;
+                status = RunCmd(Settings.GitCommand, "status --porcelain --untracked-files=no -z");
             }
-            else
-            {
-                return GetAllChangedFilesFromString(status, true);
-            }
+
+            return GetAllChangedFilesFromString(status, true);
         }
 
         public static List<GitItemStatus> GitStatus()
@@ -1864,60 +1835,11 @@ namespace GitCommands
 
         public static List<GitItemStatus> GitStatus(bool untracked)
         {
-            var status = RunCmd(Settings.GitCommand, untracked ? "status --untracked=all" : "status");
-            var statusStrings = status.Split('\n');
+            if (!VersionInUse.SupportGitStatusPorcelain)
+                throw new Exception("The version of git you are using is not supported for this action. Please upgrade to git 1.7.3 or newer.");
 
-            var gitItemStatusList = new List<GitItemStatus>();
-
-            foreach (var statusString in statusStrings)
-            {
-                if (statusString.StartsWith("#\tnew file:"))
-                {
-                    ProcessStatusNewFile(statusString, gitItemStatusList);
-                }
-                else if (statusString.StartsWith("#\tdeleted:"))
-                {
-                    gitItemStatusList.Add(
-                        new GitItemStatus
-                            {
-                                IsDeleted = true,
-                                IsTracked = true,
-                                Name = statusString.Substring(statusString.LastIndexOf(':') + 1).Trim()
-                            });
-                }
-                else if (statusString.StartsWith("#\tmodified:"))
-                {
-                    gitItemStatusList.Add(
-                        new GitItemStatus
-                            {
-                                IsChanged = true,
-                                IsTracked = true,
-                                Name = statusString.Substring(statusString.LastIndexOf(':') + 1).Trim()
-                            });
-                }
-                else if (statusString.StartsWith("#\t"))
-                {
-                    gitItemStatusList.Add(
-                        new GitItemStatus
-                            {
-                                IsNew = true,
-                                Name = statusString.Substring(2).Trim()
-                            });
-                }
-            }
-
-            return gitItemStatusList;
-        }
-
-        private static void ProcessStatusNewFile(string statusString, ICollection<GitItemStatus> gitItemStatusList)
-        {
-            gitItemStatusList.Add(
-                new GitItemStatus
-                    {
-                        IsNew = true,
-                        IsTracked = true,
-                        Name = statusString.Substring(statusString.LastIndexOf(':') + 1).Trim()
-                    });
+            string status = RunCmd(Settings.GitCommand, "status --porcelain --untracked-files -z");
+            return GetAllChangedFilesFromString(status);
         }
 
         public static string GetCurrentChanges(string fileName, string oldFileName, bool staged, string extraDiffArguments)
