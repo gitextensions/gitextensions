@@ -3,7 +3,9 @@ Changelog
 
 Version 2.12
 	Fixed issue 368: Browse button does not open dialog in HOME dialog
+	Fixed issue 373: Archive command is not working
 	Added impact graph plugin
+	Added support for renamed and copied files
 	Updated msysgit to version 1.7.4
 
 Version 2.11
