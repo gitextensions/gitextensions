@@ -1731,8 +1731,33 @@ namespace GitCommands
                     gitItemStatus.IsDeleted = false;
                     gitItemStatus.IsRenamed = true;
                     gitItemStatus.IsTracked = true;
+                    if (status.Length > 2)
+                        gitItemStatus.RenameCopyPercentage = status.Substring(1);
                     n++;
                 } else
+                //Find copied files...
+                if (x == 'C' || y == 'C')
+                {
+                    if (fromDiff)
+                    {
+                        gitItemStatus.OldName = fileName.Trim();
+                        gitItemStatus.Name = files[n + 1].Trim();
+                    }
+                    else
+                    {
+                        gitItemStatus.Name = fileName.Trim();
+                        gitItemStatus.OldName = files[n + 1].Trim();
+                    }
+                    gitItemStatus.IsNew = false;
+                    gitItemStatus.IsChanged = false;
+                    gitItemStatus.IsDeleted = false;
+                    gitItemStatus.IsCopied = true;
+                    gitItemStatus.IsTracked = true;
+                    if (status.Length > 2)
+                        gitItemStatus.RenameCopyPercentage = status.Substring(1);
+                    n++;
+                }
+                else
                 {
                     gitItemStatus.Name = fileName.Trim();
                     gitItemStatus.IsNew = x == 'A' || x == '?' || y == 'A' || y == '?';

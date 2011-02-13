@@ -408,6 +408,13 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap Copied {
+            get {
+                object obj = ResourceManager.GetObject("Copied", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap Cow {
             get {
                 object obj = ResourceManager.GetObject("Cow", resourceCulture);
