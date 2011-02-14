@@ -29,6 +29,7 @@ namespace GitUI
         readonly TranslationString noBaseRevision = new TranslationString("There is no base revision for {0}.\nFall back to 2-way merge?");
         readonly TranslationString ours = new TranslationString("ours");
         readonly TranslationString theirs = new TranslationString("theirs");
+        readonly TranslationString fileBinairyChooseLocalBaseRemote = new TranslationString("File ({0}) appears to be a binairy file.\nChoose to keep the local({1}), remote({2}) or base file.");
         readonly TranslationString fileChangeLocallyAndRemotely = new TranslationString("The file has been changed both locally({0}) and remotely({1}). Merge the changes.");
         readonly TranslationString fileCreatedLocallyAndRemotely = new TranslationString("A file with the same name has been created locally({0}) and remotely({1}). Choose the file you want to keep or merge the files.");
         readonly TranslationString fileCreatedLocallyAndRemotelyLong = new TranslationString("File {0} does not have a base revision.\nA file with the same name has been created locally({1}) and remotely({2}) causing this conflict.\n\nChoose the file you want to keep, merge the files or delete the file?");
@@ -211,119 +212,121 @@ namespace GitUI
             string filename = GetFileName();
             string[] filenames = GitCommandHelpers.GetConflictedFiles(filename);
 
-            if (Directory.Exists(Settings.WorkingDir + filename) && !File.Exists(Settings.WorkingDir + filename))
+            try
             {
-                /* BEGIN REPLACED WITH FASTER, BUT DIRTIER SUBMODULE CHECK
-                IList<IGitSubmodule> submodules = (new GitCommands.GitCommands()).GetSubmodules();
-                foreach (IGitSubmodule submodule in submodules)
+                if (Directory.Exists(Settings.WorkingDir + filename) && !File.Exists(Settings.WorkingDir + filename))
                 {
-                    if (submodule.LocalPath.Equals(filename))
+                    /* BEGIN REPLACED WITH FASTER, BUT DIRTIER SUBMODULE CHECK
+                    IList<IGitSubmodule> submodules = (new GitCommands.GitCommands()).GetSubmodules();
+                    foreach (IGitSubmodule submodule in submodules)
                     {
-                        if (MessageBox.Show(mergeConflictIsSubmodule.Text, mergeConflictIsSubmoduleCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        if (submodule.LocalPath.Equals(filename))
+                        {
+                            if (MessageBox.Show(mergeConflictIsSubmodule.Text, mergeConflictIsSubmoduleCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            {
+                                stageFile(filename);
+                                Initialize();
+                            }
+                            return;
+                        }
+                    }*/
+                    var submoduleConfig = new ConfigFile(Settings.WorkingDir + ".gitmodules");
+                    if (submoduleConfig.GetConfigSections().Any(configSection => configSection.GetValue("path").Trim().Equals(filename.Trim())))
+                    {
+                        if (MessageBox.Show(mergeConflictIsSubmodule.Text, mergeConflictIsSubmoduleCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                         {
                             stageFile(filename);
-                            Initialize();
                         }
                         return;
                     }
-                }*/
-                var submoduleConfig = new ConfigFile(Settings.WorkingDir + ".gitmodules");
-                if (submoduleConfig.GetConfigSections().Any(configSection => configSection.GetValue("path").Trim().Equals(filename.Trim())))
-                {
-                    if (MessageBox.Show(mergeConflictIsSubmodule.Text, mergeConflictIsSubmoduleCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
-                    {
-                        stageFile(filename);
-                        Initialize();
-                    }
-                    return;
-                }
-                //END: REPLACED WITH FASTER, BUT DIRTIER SUBMODULE CHECK
-            }
-
-            string arguments = mergetoolCmd;
-
-            if (CheckForLocalRevision(filename) &&
-                CheckForRemoteRevision(filename))
-            {
-                if (TryMergeWithScript(filename, filenames[0], filenames[2], filenames[1]))
-                {
-                    Cursor.Current = Cursors.Default;
-                    return;
+                    //END: REPLACED WITH FASTER, BUT DIRTIER SUBMODULE CHECK
                 }
 
-                if (FileHelper.IsBinaryFile(filename))
-                {
-                    if (MessageBox.Show(string.Format(fileIsBinary.Text, mergetool), "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
-                        return;
-                }
+                string arguments = mergetoolCmd;
 
-                //Check if there is a base file. If not, ask user to fall back to 2-way merge.
-                //git doesn't support 2-way merge, but we can try to adjust attributes to fix this.
-                //For kdiff3 this is easy; just remove the 3rd file from the arguments. Since the
-                //filenames are quoted, this takes a little extra effort. We need to remove these 
-                //quotes also. For tortoise and araxis a little bit more magic is needed.
-                if (filenames[0] == null)
+                if (CheckForLocalRevision(filename) &&
+                    CheckForRemoteRevision(filename))
                 {
-                    DialogResult result = MessageBox.Show(string.Format(noBaseRevision.Text, filename), "Merge", MessageBoxButtons.YesNoCancel);
-                    if (result == DialogResult.Yes)
+                    if (TryMergeWithScript(filename, filenames[0], filenames[2], filenames[1]))
                     {
-                        arguments = arguments.Replace("-merge -3", "-merge");
-                        arguments = arguments.Replace("/base:\"$BASE\"", "");
-                        arguments = arguments.Replace("\"$BASE\"", "");
-                    }
-
-                    if (result == DialogResult.Cancel)
-                    {
-                        Initialize();
-                        if (filenames[0] != null && File.Exists(filenames[0])) File.Delete(filenames[0]);
-                        if (filenames[1] != null && File.Exists(filenames[1])) File.Delete(filenames[1]);
-                        if (filenames[2] != null && File.Exists(filenames[2])) File.Delete(filenames[2]);
                         Cursor.Current = Cursors.Default;
                         return;
                     }
-                }
 
-                arguments = arguments.Replace("$BASE", filenames[0]);
-                arguments = arguments.Replace("$LOCAL", filenames[1]);
-                arguments = arguments.Replace("$REMOTE", filenames[2]);
-                arguments = arguments.Replace("$MERGED", filename + "");
+                    if (FileHelper.IsBinaryFile(filename))
+                    {
+                        if (MessageBox.Show(string.Format(fileIsBinary.Text, mergetool), "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
+                        {
+                            BinairyFilesChooseLocalBaseRemote(filename);
+                            return;
+                        }
+                    }
 
-                //get timestamp of file before merge. This is an extra check to verify if merge was successfull
-                DateTime lastWriteTimeBeforeMerge = DateTime.Now;
-                if (File.Exists(Settings.WorkingDir + filename))
-                    lastWriteTimeBeforeMerge = File.GetLastWriteTime(Settings.WorkingDir + filename);
+                    //Check if there is a base file. If not, ask user to fall back to 2-way merge.
+                    //git doesn't support 2-way merge, but we can try to adjust attributes to fix this.
+                    //For kdiff3 this is easy; just remove the 3rd file from the arguments. Since the
+                    //filenames are quoted, this takes a little extra effort. We need to remove these 
+                    //quotes also. For tortoise and araxis a little bit more magic is needed.
+                    if (filenames[0] == null)
+                    {
+                        DialogResult result = MessageBox.Show(string.Format(noBaseRevision.Text, filename), "Merge", MessageBoxButtons.YesNoCancel);
+                        if (result == DialogResult.Yes)
+                        {
+                            arguments = arguments.Replace("-merge -3", "-merge");
+                            arguments = arguments.Replace("/base:\"$BASE\"", "");
+                            arguments = arguments.Replace("\"$BASE\"", "");
+                        }
 
-                int exitCode;
-                GitCommandHelpers.RunCmd(mergetoolPath, "" + arguments + "", out exitCode);
+                        if (result == DialogResult.Cancel)
+                        {
+                            return;
+                        }
+                    }
 
-                DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
-                if (File.Exists(Settings.WorkingDir + filename))
-                    lastWriteTimeAfterMerge = File.GetLastWriteTime(Settings.WorkingDir + filename);
+                    arguments = arguments.Replace("$BASE", filenames[0]);
+                    arguments = arguments.Replace("$LOCAL", filenames[1]);
+                    arguments = arguments.Replace("$REMOTE", filenames[2]);
+                    arguments = arguments.Replace("$MERGED", filename + "");
 
-                //Check exitcode AND timestamp of the file. If exitcode is success and
-                //time timestamp is changed, we are pretty sure the merge was done.
-                if (exitCode == 0 && lastWriteTimeBeforeMerge != lastWriteTimeAfterMerge)
-                {
-                    stageFile(filename);
-                }
+                    //get timestamp of file before merge. This is an extra check to verify if merge was successfull
+                    DateTime lastWriteTimeBeforeMerge = DateTime.Now;
+                    if (File.Exists(Settings.WorkingDir + filename))
+                        lastWriteTimeBeforeMerge = File.GetLastWriteTime(Settings.WorkingDir + filename);
 
-                //If the exitcode is 1, but the file is changed, ask if the merge conflict is solved.
-                //If the exitcode is 0, but the file is not changed, ask if the merge conflict is solved.
-                if ((exitCode == 1 && lastWriteTimeBeforeMerge != lastWriteTimeAfterMerge) ||
-                    (exitCode == 0 && lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge))
-                {
-                    if (MessageBox.Show(askMergeConflictSolved.Text, askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    int exitCode;
+                    GitCommandHelpers.RunCmd(mergetoolPath, "" + arguments + "", out exitCode);
+
+                    DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
+                    if (File.Exists(Settings.WorkingDir + filename))
+                        lastWriteTimeAfterMerge = File.GetLastWriteTime(Settings.WorkingDir + filename);
+
+                    //Check exitcode AND timestamp of the file. If exitcode is success and
+                    //time timestamp is changed, we are pretty sure the merge was done.
+                    if (exitCode == 0 && lastWriteTimeBeforeMerge != lastWriteTimeAfterMerge)
                     {
                         stageFile(filename);
                     }
+
+                    //If the exitcode is 1, but the file is changed, ask if the merge conflict is solved.
+                    //If the exitcode is 0, but the file is not changed, ask if the merge conflict is solved.
+                    if ((exitCode == 1 && lastWriteTimeBeforeMerge != lastWriteTimeAfterMerge) ||
+                        (exitCode == 0 && lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge))
+                    {
+                        if (MessageBox.Show(askMergeConflictSolved.Text, askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        {
+                            stageFile(filename);
+                        }
+                    }
                 }
             }
-            Initialize();
-
-            if (filenames[0] != null && File.Exists(filenames[0])) File.Delete(filenames[0]);
-            if (filenames[1] != null && File.Exists(filenames[1])) File.Delete(filenames[1]);
-            if (filenames[2] != null && File.Exists(filenames[2])) File.Delete(filenames[2]);
-            Cursor.Current = Cursors.Default;
+            finally
+            {
+                if (filenames[0] != null && File.Exists(filenames[0])) File.Delete(filenames[0]);
+                if (filenames[1] != null && File.Exists(filenames[1])) File.Delete(filenames[1]);
+                if (filenames[2] != null && File.Exists(filenames[2])) File.Delete(filenames[2]);
+                Cursor.Current = Cursors.Default;
+                Initialize();
+            }
         }
 
         private void InitMergetool()
@@ -450,6 +453,25 @@ namespace GitUI
             Cursor.Current = Cursors.Default;
         }
 
+        private void BinairyFilesChooseLocalBaseRemote(string filename)
+        {
+            string caption = string.Format(fileBinairyChooseLocalBaseRemote.Text,
+                                            filename,
+                                            GetLocalSideString(),
+                                            GetRemoteSideString());
+
+            var frm = new FormModifiedDeletedCreated(string.Format(chooseLocalButtonText.Text + " ({0})", GetLocalSideString()),
+                                                                            string.Format(chooseRemoteButtonText.Text + " ({0})", GetRemoteSideString()),
+                                                                            keepBaseButtonText.Text,
+                                                                            caption);
+            frm.ShowDialog();
+            if (frm.KeepBase) //base
+                GitCommandHelpers.HandleConflictSelectBase(GetFileName());
+            if (frm.KeepLocal) //local
+                GitCommandHelpers.HandleConflictSelectLocal(GetFileName());
+            if (frm.KeepRemote) //remote
+                GitCommandHelpers.HandleConflictSelectRemote(GetFileName());
+        }
 
         private bool CheckForBaseRevision(string filename)
         {
