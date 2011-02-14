@@ -491,17 +491,22 @@ namespace GitCommands
                 if (fileline.Length < 3)
                     continue;
                 Directory.SetCurrentDirectory(Settings.WorkingDir);
-                using (var ms = (MemoryStream)GetFileStream(fileline[1])) //Ugly, has implementation info.
-                {
-                    using (FileStream fileOut = File.Create(saveAs))
-                    {
-                        byte[] buf = ms.GetBuffer();
-                        fileOut.Write(buf, 0, buf.Length);
-                    }
-                }
+                SaveBlobAs(saveAs, fileline[1]);
                 return true;
             }
             return false;
+        }
+
+        public static void SaveBlobAs(string saveAs, string blob)
+        {
+            using (var ms = (MemoryStream)GetFileStream(blob)) //Ugly, has implementation info.
+            {
+                using (FileStream fileOut = File.Create(saveAs))
+                {
+                    byte[] buf = ms.GetBuffer();
+                    fileOut.Write(buf, 0, buf.Length);
+                }
+            }
         }
 
         private static string GetSide(string side)
@@ -2246,8 +2251,7 @@ namespace GitCommands
             } while (read > 0);
         }
 
-
-        public static Stream GetFileStream(string id)
+        public static Stream GetFileStream(string blob)
         {
             try
             {
@@ -2255,23 +2259,23 @@ namespace GitCommands
 
                 SetEnvironmentVariable();
 
-                Settings.GitLog.Log(Settings.GitCommand + " " + "cat-file blob \"" + id + "\"");
+                Settings.GitLog.Log(Settings.GitCommand + " " + "cat-file blob " + blob);
                 //process used to execute external commands
 
                 var info = new ProcessStartInfo
-                               {
-                                   UseShellExecute = false,
-                                   ErrorDialog = false,
-                                   RedirectStandardOutput = true,
-                                   RedirectStandardInput = false,
-                                   RedirectStandardError = false,
-                                   CreateNoWindow = true,
-                                   FileName = "\"" + Settings.GitCommand + "\"",
-                                   Arguments = "cat-file blob \"" + id + "\"",
-                                   WorkingDirectory = Settings.WorkingDir,
-                                   WindowStyle = ProcessWindowStyle.Normal,
-                                   LoadUserProfile = true
-                               };
+                {
+                    UseShellExecute = false,
+                    ErrorDialog = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardInput = false,
+                    RedirectStandardError = false,
+                    CreateNoWindow = true,
+                    FileName = "\"" + Settings.GitCommand + "\"",
+                    Arguments = "cat-file blob " + blob,
+                    WorkingDirectory = Settings.WorkingDir,
+                    WindowStyle = ProcessWindowStyle.Normal,
+                    LoadUserProfile = true
+                };
 
                 using (var process = Process.Start(info))
                 {
