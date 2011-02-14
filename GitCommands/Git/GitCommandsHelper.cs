@@ -1691,9 +1691,23 @@ namespace GitCommands
         */
         public static List<GitItemStatus> GetAllChangedFilesFromString(string statusString, bool fromDiff /*old name and new name are switched.. %^&#^% */)
         {
-            var files = statusString.Split(new char[] { '\0', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-
             var diffFiles = new List<GitItemStatus>();
+
+            if (string.IsNullOrEmpty(statusString))
+                return diffFiles;
+
+            /*The status string can show warnings. This is a text blok in front
+              of the file status. Strip it. Example:
+                warning: LF will be replaced by CRLF in CustomDictionary.xml.
+                The file will have its original line endings in your working directory.
+                warning: LF will be replaced by CRLF in FxCop.targets.
+                The file will have its original line endings in your working directory.*/
+            string trimmedStatus = statusString.Trim(new char[]{'\n','\r'});
+            if (trimmedStatus.Contains(Environment.NewLine))
+                trimmedStatus = trimmedStatus.Substring(trimmedStatus.LastIndexOf(Environment.NewLine)).Trim(new char[] { '\n', '\r' });
+            
+            //Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)
+            var files = trimmedStatus.Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
             for (int n = 0; n < files.Length; n++)
             {
                 if (string.IsNullOrEmpty(files[n]))
