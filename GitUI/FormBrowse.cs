@@ -530,9 +530,7 @@ namespace GitUI
                         fileName = fileName.Substring(fileName.LastIndexOf('/') + 1);
 
                     fileName = (Path.GetTempPath() + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
-                    File.WriteAllText(fileName,
-                                                GitCommandHelpers.RunCmd(Settings.GitCommand,
-                                                                               "cat-file blob \"" + ((GitItem)item).Guid + "\""));
+                    GitCommandHelpers.SaveBlobAs(fileName, ((GitItem)item).Guid);
                     OpenWith.OpenAs(fileName);
                 }
         }
@@ -568,7 +566,7 @@ namespace GitUI
 
                     fileName = (Path.GetTempPath() + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
 
-                    File.WriteAllText(fileName, GitCommandHelpers.RunCmd(Settings.GitCommand, "cat-file blob \"" + ((GitItem)item).Guid + "\""));
+                    GitCommandHelpers.SaveBlobAs(fileName, ((GitItem)item).Guid);
 
                     Process.Start(fileName);
                 }
@@ -1417,14 +1415,7 @@ namespace GitUI
 
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
-                using (var ms = (MemoryStream)GitCommandHelpers.GetFileStream(item.Guid)) //Ugly, has implementation info.
-                {
-                    using (FileStream fileOut = File.Create(fileDialog.FileName))
-                    {
-                        byte[] buf = ms.GetBuffer();
-                        fileOut.Write(buf, 0, buf.Length);
-                    }
-                }
+                GitCommandHelpers.SaveBlobAs(fileDialog.FileName, item.Guid);
             }
         }
 
@@ -1543,10 +1534,7 @@ namespace GitUI
 
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllText(fileDialog.FileName,
-                                GitCommandHelpers.RunCmd(
-                                    Settings.GitCommand,
-                                    string.Format("cat-file blob {0}:\"{1}\"", revisions[0].Guid, item.Name)));
+                GitCommandHelpers.SaveBlobAs(fileDialog.FileName, string.Format("{0}:\"{1}\"", revisions[0].Guid, item.Name));
             }
         }
 
