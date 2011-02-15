@@ -554,22 +554,29 @@ namespace GitUI
 
         public void OpenOnClick(object sender, EventArgs e)
         {
-            var item = GitTree.SelectedNode.Tag;
-            if (item is GitItem)
-                if (((GitItem)item).ItemType == "blob")
-                {
-                    var fileName = ((GitItem)item).FileName;
-                    if (fileName.Contains("\\") && fileName.LastIndexOf("\\") < fileName.Length)
-                        fileName = fileName.Substring(fileName.LastIndexOf('\\') + 1);
-                    if (fileName.Contains("/") && fileName.LastIndexOf("/") < fileName.Length)
-                        fileName = fileName.Substring(fileName.LastIndexOf('/') + 1);
+            try
+            {
+                var item = GitTree.SelectedNode.Tag;
+                if (item is GitItem)
+                    if (((GitItem)item).ItemType == "blob")
+                    {
+                        var fileName = ((GitItem)item).FileName;
+                        if (fileName.Contains("\\") && fileName.LastIndexOf("\\") < fileName.Length)
+                            fileName = fileName.Substring(fileName.LastIndexOf('\\') + 1);
+                        if (fileName.Contains("/") && fileName.LastIndexOf("/") < fileName.Length)
+                            fileName = fileName.Substring(fileName.LastIndexOf('/') + 1);
 
-                    fileName = (Path.GetTempPath() + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
+                        fileName = (Path.GetTempPath() + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
 
-                    GitCommandHelpers.SaveBlobAs(fileName, ((GitItem)item).Guid);
+                        GitCommandHelpers.SaveBlobAs(fileName, ((GitItem)item).Guid);
 
-                    Process.Start(fileName);
-                }
+                        Process.Start(fileName);
+                    }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         protected void LoadInTree(List<IGitItem> items, TreeNodeCollection node)
@@ -1323,7 +1330,14 @@ namespace GitUI
 
         private void UserManualToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Process.Start(Settings.GetInstallDir() + "\\GitExtensionsUserManual.pdf");
+            try
+            {
+                Process.Start(Settings.GetInstallDir() + "\\GitExtensionsUserManual.pdf");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void DiffTextExtraDiffArgumentsChanged(object sender, EventArgs e)
@@ -1382,7 +1396,14 @@ namespace GitUI
 
         private void FileExplorerToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Process.Start(_NO_TRANSLATE_Workingdir.Text);
+            try
+            {
+                Process.Start(_NO_TRANSLATE_Workingdir.Text);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void StatusClick(object sender, EventArgs e)
