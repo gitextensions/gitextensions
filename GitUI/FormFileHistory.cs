@@ -268,5 +268,34 @@ namespace GitUI
             if (!string.IsNullOrEmpty(output))
                 MessageBox.Show(output);
         }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var selectedRows = FileChanges.GetRevisions();
+
+            if (selectedRows.Count > 0)
+            {
+                string orgFileName = selectedRows[0].Name;
+
+                if (string.IsNullOrEmpty(orgFileName))
+                    orgFileName = FileName;
+
+                string fileName = orgFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
+
+                SaveFileDialog fileDialog = new SaveFileDialog();
+                fileDialog.FileName = Settings.WorkingDir + fileName;
+                fileDialog.AddExtension = true;
+                fileDialog.DefaultExt = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
+                fileDialog.Filter =
+                    "Current format (*." +
+                    GitCommandHelpers.GetFileExtension(fileDialog.FileName) + ")|*." +
+                    GitCommandHelpers.GetFileExtension(fileDialog.FileName) +
+                    "|All files (*.*)|*.*";
+                if (fileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    GitCommandHelpers.SaveBlobAs(fileDialog.FileName, selectedRows[0].Guid + ":\"" + orgFileName + "\"");
+                }
+            }
+        }
     }
 }
