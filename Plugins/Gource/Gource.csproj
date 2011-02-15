@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Gource.cs" />
     <Compile Include="GourceStart.cs">
       <SubType>Form</SubType>
@@ -68,7 +69,6 @@
     <Compile Include="GourceStart.Designer.cs">
       <DependentUpon>GourceStart.cs</DependentUpon>
     </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
