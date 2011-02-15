@@ -861,6 +861,7 @@ namespace GitUI
             }
 
             MessageBox.Show("Git can be run using: " + Settings.GitCommand, "Locate git");
+
             GitPath.Text = Settings.GitCommand;
             Rescan_Click(null, null);
         }
@@ -1616,7 +1617,7 @@ namespace GitUI
                 DifftoolCmd.Text = "\"" + DifftoolPath.Text + "\" \"$LOCAL\" \"$REMOTE\"";
         }
 
-        private static void helpTranslate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void helpTranslate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             new FormTranslate().ShowDialog();
         }
@@ -1743,9 +1744,18 @@ namespace GitUI
                 GitFound_Fix.Visible = true;
                 return false;
             }
+
+            if (GitCommandHelpers.VersionInUse < GitVersion.LastSupportedVersion)
+            {
+                GitFound.BackColor = Color.LightSalmon;
+                GitFound.Text = "Git found but version " + GitCommandHelpers.VersionInUse.ToString() + " is not supported. Upgrage to version " + GitVersion.LastSupportedVersion.ToString() + " or later.";
+                GitFound_Fix.Visible = true;
+                return false;
+            }
+
             GitFound_Fix.Visible = false;
             GitFound.BackColor = Color.LightGreen;
-            GitFound.Text = "Git is found on your computer.";
+            GitFound.Text = "Git " + GitCommandHelpers.VersionInUse.ToString() + " is found on your computer.";
             return true;
         }
 
@@ -2185,7 +2195,7 @@ namespace GitUI
             Rescan_Click(null, null);
         }
 
-        private static void downloadDictionary_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void downloadDictionary_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start(@"http://code.google.com/p/gitextensions/wiki/Spelling");
         }
