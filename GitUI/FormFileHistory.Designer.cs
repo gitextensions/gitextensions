@@ -31,7 +31,6 @@ namespace GitUI
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFileHistory));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.FileChanges = new GitUI.RevisionGrid();
             this.DiffContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -44,6 +43,7 @@ namespace GitUI
             this.Blame = new System.Windows.Forms.TabPage();
             this.blameControl1 = new GitUI.Blame.BlameControl();
             this.eventLog1 = new System.Diagnostics.EventLog();
+            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -78,10 +78,14 @@ namespace GitUI
             this.FileChanges.AllowGraphWithFilter = false;
             this.FileChanges.BranchFilter = "";
             this.FileChanges.ContextMenuStrip = this.DiffContextMenu;
-            this.FileChanges.CurrentCheckout = resources.GetString("FileChanges.CurrentCheckout");
+            this.FileChanges.CurrentCheckout = "";
             this.FileChanges.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FileChanges.Filter = "";
             this.FileChanges.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.FileChanges.InMemAuthorFilter = "";
+            this.FileChanges.InMemCommitterFilter = "";
+            this.FileChanges.InMemFilterIgnoreCase = false;
+            this.FileChanges.InMemMessageFilter = "";
             this.FileChanges.LastRow = 0;
             this.FileChanges.Location = new System.Drawing.Point(0, 0);
             this.FileChanges.Name = "FileChanges";
@@ -93,9 +97,10 @@ namespace GitUI
             // DiffContextMenu
             // 
             this.DiffContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openWithDifftoolToolStripMenuItem});
+            this.openWithDifftoolToolStripMenuItem,
+            this.saveAsToolStripMenuItem});
             this.DiffContextMenu.Name = "DiffContextMenu";
-            this.DiffContextMenu.Size = new System.Drawing.Size(191, 48);
+            this.DiffContextMenu.Size = new System.Drawing.Size(191, 70);
             // 
             // openWithDifftoolToolStripMenuItem
             // 
@@ -187,12 +192,19 @@ namespace GitUI
             this.blameControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.blameControl1.Location = new System.Drawing.Point(0, 0);
             this.blameControl1.Name = "blameControl1";
-            this.blameControl1.Size = new System.Drawing.Size(740, 301);
+            this.blameControl1.Size = new System.Drawing.Size(740, 303);
             this.blameControl1.TabIndex = 0;
             // 
             // eventLog1
             // 
             this.eventLog1.SynchronizingObject = this;
+            // 
+            // saveAsToolStripMenuItem
+            // 
+            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.saveAsToolStripMenuItem.Text = "Save as";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // FormFileHistory
             // 
@@ -203,8 +215,8 @@ namespace GitUI
             this.Name = "FormFileHistory";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "File History";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormFileHistoryFormClosing);
             this.Load += new System.EventHandler(this.FormFileHistoryLoad);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormFileHistoryFormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
@@ -232,5 +244,6 @@ namespace GitUI
         private System.Windows.Forms.ContextMenuStrip DiffContextMenu;
         private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;
         private Blame.BlameControl blameControl1;
+        private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
     }
 }
