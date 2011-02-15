@@ -624,7 +624,7 @@ namespace GitUI
         {
             string fileName = GetGitExtensionsDirectory();
 
-            if (File.Exists(fileName))
+            if (Directory.Exists(fileName))
             {
                 Settings.SetInstallDir(fileName);
                 return true;

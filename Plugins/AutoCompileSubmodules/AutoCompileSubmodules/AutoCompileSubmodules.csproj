@@ -56,8 +56,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutoCompileSubModules.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AutoCompileSubModules.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
