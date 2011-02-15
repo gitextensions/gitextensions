@@ -56,6 +56,15 @@ namespace GitUI
             this.label23 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.translationConfig_Fix = new System.Windows.Forms.Button();
+            this.SshConfig_Fix = new System.Windows.Forms.Button();
+            this.GitExtensionsInstall_Fix = new System.Windows.Forms.Button();
+            this.GitBinFound_Fix = new System.Windows.Forms.Button();
+            this.ShellExtensionsRegistered_Fix = new System.Windows.Forms.Button();
+            this.DiffTool2_Fix = new System.Windows.Forms.Button();
+            this.DiffTool_Fix = new System.Windows.Forms.Button();
+            this.UserNameSet_Fix = new System.Windows.Forms.Button();
+            this.GitFound_Fix = new System.Windows.Forms.Button();
             this.translationConfig = new System.Windows.Forms.Button();
             this.DiffTool2 = new System.Windows.Forms.Button();
             this.SshConfig = new System.Windows.Forms.Button();
@@ -246,15 +255,6 @@ namespace GitUI
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
-            this.GitFound_Fix = new System.Windows.Forms.Button();
-            this.UserNameSet_Fix = new System.Windows.Forms.Button();
-            this.DiffTool_Fix = new System.Windows.Forms.Button();
-            this.DiffTool2_Fix = new System.Windows.Forms.Button();
-            this.ShellExtensionsRegistered_Fix = new System.Windows.Forms.Button();
-            this.GitBinFound_Fix = new System.Windows.Forms.Button();
-            this.GitExtensionsInstall_Fix = new System.Windows.Forms.Button();
-            this.SshConfig_Fix = new System.Windows.Forms.Button();
-            this.translationConfig_Fix = new System.Windows.Forms.Button();
             this.LocalSettings.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
@@ -567,6 +567,96 @@ namespace GitUI
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Checklist";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // translationConfig_Fix
+            // 
+            this.translationConfig_Fix.Location = new System.Drawing.Point(608, 303);
+            this.translationConfig_Fix.Name = "translationConfig_Fix";
+            this.translationConfig_Fix.Size = new System.Drawing.Size(91, 25);
+            this.translationConfig_Fix.TabIndex = 21;
+            this.translationConfig_Fix.Text = "Repair";
+            this.translationConfig_Fix.UseVisualStyleBackColor = true;
+            this.translationConfig_Fix.Click += new System.EventHandler(this.translationConfig_Click);
+            // 
+            // SshConfig_Fix
+            // 
+            this.SshConfig_Fix.Location = new System.Drawing.Point(608, 269);
+            this.SshConfig_Fix.Name = "SshConfig_Fix";
+            this.SshConfig_Fix.Size = new System.Drawing.Size(91, 25);
+            this.SshConfig_Fix.TabIndex = 20;
+            this.SshConfig_Fix.Text = "Repair";
+            this.SshConfig_Fix.UseVisualStyleBackColor = true;
+            this.SshConfig_Fix.Click += new System.EventHandler(this.SshConfig_Click);
+            // 
+            // GitExtensionsInstall_Fix
+            // 
+            this.GitExtensionsInstall_Fix.Location = new System.Drawing.Point(608, 235);
+            this.GitExtensionsInstall_Fix.Name = "GitExtensionsInstall_Fix";
+            this.GitExtensionsInstall_Fix.Size = new System.Drawing.Size(91, 25);
+            this.GitExtensionsInstall_Fix.TabIndex = 19;
+            this.GitExtensionsInstall_Fix.Text = "Repair";
+            this.GitExtensionsInstall_Fix.UseVisualStyleBackColor = true;
+            this.GitExtensionsInstall_Fix.Click += new System.EventHandler(this.GitExtensionsInstall_Click);
+            // 
+            // GitBinFound_Fix
+            // 
+            this.GitBinFound_Fix.Location = new System.Drawing.Point(608, 201);
+            this.GitBinFound_Fix.Name = "GitBinFound_Fix";
+            this.GitBinFound_Fix.Size = new System.Drawing.Size(91, 25);
+            this.GitBinFound_Fix.TabIndex = 18;
+            this.GitBinFound_Fix.Text = "Repair";
+            this.GitBinFound_Fix.UseVisualStyleBackColor = true;
+            this.GitBinFound_Fix.Click += new System.EventHandler(this.GitBinFound_Click);
+            // 
+            // ShellExtensionsRegistered_Fix
+            // 
+            this.ShellExtensionsRegistered_Fix.Location = new System.Drawing.Point(608, 167);
+            this.ShellExtensionsRegistered_Fix.Name = "ShellExtensionsRegistered_Fix";
+            this.ShellExtensionsRegistered_Fix.Size = new System.Drawing.Size(91, 25);
+            this.ShellExtensionsRegistered_Fix.TabIndex = 17;
+            this.ShellExtensionsRegistered_Fix.Text = "Repair";
+            this.ShellExtensionsRegistered_Fix.UseVisualStyleBackColor = true;
+            this.ShellExtensionsRegistered_Fix.Click += new System.EventHandler(this.ShellExtensionsRegistered_Click);
+            // 
+            // DiffTool2_Fix
+            // 
+            this.DiffTool2_Fix.Location = new System.Drawing.Point(608, 133);
+            this.DiffTool2_Fix.Name = "DiffTool2_Fix";
+            this.DiffTool2_Fix.Size = new System.Drawing.Size(91, 25);
+            this.DiffTool2_Fix.TabIndex = 16;
+            this.DiffTool2_Fix.Text = "Repair";
+            this.DiffTool2_Fix.UseVisualStyleBackColor = true;
+            this.DiffTool2_Fix.Click += new System.EventHandler(this.DiffTool2_Click);
+            // 
+            // DiffTool_Fix
+            // 
+            this.DiffTool_Fix.Location = new System.Drawing.Point(608, 99);
+            this.DiffTool_Fix.Name = "DiffTool_Fix";
+            this.DiffTool_Fix.Size = new System.Drawing.Size(91, 25);
+            this.DiffTool_Fix.TabIndex = 15;
+            this.DiffTool_Fix.Text = "Repair";
+            this.DiffTool_Fix.UseVisualStyleBackColor = true;
+            this.DiffTool_Fix.Click += new System.EventHandler(this.DiffTool_Click);
+            // 
+            // UserNameSet_Fix
+            // 
+            this.UserNameSet_Fix.Location = new System.Drawing.Point(608, 65);
+            this.UserNameSet_Fix.Name = "UserNameSet_Fix";
+            this.UserNameSet_Fix.Size = new System.Drawing.Size(91, 25);
+            this.UserNameSet_Fix.TabIndex = 14;
+            this.UserNameSet_Fix.Text = "Repair";
+            this.UserNameSet_Fix.UseVisualStyleBackColor = true;
+            this.UserNameSet_Fix.Click += new System.EventHandler(this.UserNameSet_Click);
+            // 
+            // GitFound_Fix
+            // 
+            this.GitFound_Fix.Location = new System.Drawing.Point(608, 31);
+            this.GitFound_Fix.Name = "GitFound_Fix";
+            this.GitFound_Fix.Size = new System.Drawing.Size(91, 25);
+            this.GitFound_Fix.TabIndex = 13;
+            this.GitFound_Fix.Text = "Repair";
+            this.GitFound_Fix.UseVisualStyleBackColor = true;
+            this.GitFound_Fix.Click += new System.EventHandler(this.GitFound_Click);
             // 
             // translationConfig
             // 
@@ -962,7 +1052,7 @@ namespace GitUI
             this.downloadDictionary.TabIndex = 40;
             this.downloadDictionary.TabStop = true;
             this.downloadDictionary.Text = "Download dictionary";
-            this.downloadDictionary.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(downloadDictionary_LinkClicked);
+            this.downloadDictionary.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.downloadDictionary_LinkClicked);
             // 
             // label52
             // 
@@ -1085,7 +1175,7 @@ namespace GitUI
             this.helpTranslate.TabIndex = 30;
             this.helpTranslate.TabStop = true;
             this.helpTranslate.Text = "Help translate";
-            this.helpTranslate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(helpTranslate_LinkClicked);
+            this.helpTranslate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.helpTranslate_LinkClicked);
             // 
             // Language
             // 
@@ -2693,96 +2783,6 @@ namespace GitUI
             // repositoryBindingSource
             // 
             this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository.Repository);
-            // 
-            // GitFound_Fix
-            // 
-            this.GitFound_Fix.Location = new System.Drawing.Point(624, 31);
-            this.GitFound_Fix.Name = "GitFound_Fix";
-            this.GitFound_Fix.Size = new System.Drawing.Size(75, 25);
-            this.GitFound_Fix.TabIndex = 13;
-            this.GitFound_Fix.Text = "Repair";
-            this.GitFound_Fix.UseVisualStyleBackColor = true;
-            this.GitFound_Fix.Click += new System.EventHandler(this.GitFound_Click);
-            // 
-            // UserNameSet_Fix
-            // 
-            this.UserNameSet_Fix.Location = new System.Drawing.Point(624, 65);
-            this.UserNameSet_Fix.Name = "UserNameSet_Fix";
-            this.UserNameSet_Fix.Size = new System.Drawing.Size(75, 25);
-            this.UserNameSet_Fix.TabIndex = 14;
-            this.UserNameSet_Fix.Text = "Repair";
-            this.UserNameSet_Fix.UseVisualStyleBackColor = true;
-            this.UserNameSet_Fix.Click += new System.EventHandler(this.UserNameSet_Click);
-            // 
-            // DiffTool_Fix
-            // 
-            this.DiffTool_Fix.Location = new System.Drawing.Point(624, 99);
-            this.DiffTool_Fix.Name = "DiffTool_Fix";
-            this.DiffTool_Fix.Size = new System.Drawing.Size(75, 25);
-            this.DiffTool_Fix.TabIndex = 15;
-            this.DiffTool_Fix.Text = "Repair";
-            this.DiffTool_Fix.UseVisualStyleBackColor = true;
-            this.DiffTool_Fix.Click += new System.EventHandler(this.DiffTool_Click);
-            // 
-            // DiffTool2_Fix
-            // 
-            this.DiffTool2_Fix.Location = new System.Drawing.Point(624, 133);
-            this.DiffTool2_Fix.Name = "DiffTool2_Fix";
-            this.DiffTool2_Fix.Size = new System.Drawing.Size(75, 25);
-            this.DiffTool2_Fix.TabIndex = 16;
-            this.DiffTool2_Fix.Text = "Repair";
-            this.DiffTool2_Fix.UseVisualStyleBackColor = true;
-            this.DiffTool2_Fix.Click += new System.EventHandler(this.DiffTool2_Click);
-            // 
-            // ShellExtensionsRegistered_Fix
-            // 
-            this.ShellExtensionsRegistered_Fix.Location = new System.Drawing.Point(624, 167);
-            this.ShellExtensionsRegistered_Fix.Name = "ShellExtensionsRegistered_Fix";
-            this.ShellExtensionsRegistered_Fix.Size = new System.Drawing.Size(75, 25);
-            this.ShellExtensionsRegistered_Fix.TabIndex = 17;
-            this.ShellExtensionsRegistered_Fix.Text = "Repair";
-            this.ShellExtensionsRegistered_Fix.UseVisualStyleBackColor = true;
-            this.ShellExtensionsRegistered_Fix.Click += new System.EventHandler(this.ShellExtensionsRegistered_Click);
-            // 
-            // GitBinFound_Fix
-            // 
-            this.GitBinFound_Fix.Location = new System.Drawing.Point(624, 201);
-            this.GitBinFound_Fix.Name = "GitBinFound_Fix";
-            this.GitBinFound_Fix.Size = new System.Drawing.Size(75, 25);
-            this.GitBinFound_Fix.TabIndex = 18;
-            this.GitBinFound_Fix.Text = "Repair";
-            this.GitBinFound_Fix.UseVisualStyleBackColor = true;
-            this.GitBinFound_Fix.Click += new System.EventHandler(this.GitBinFound_Click);
-            // 
-            // GitExtensionsInstall_Fix
-            // 
-            this.GitExtensionsInstall_Fix.Location = new System.Drawing.Point(624, 235);
-            this.GitExtensionsInstall_Fix.Name = "GitExtensionsInstall_Fix";
-            this.GitExtensionsInstall_Fix.Size = new System.Drawing.Size(75, 25);
-            this.GitExtensionsInstall_Fix.TabIndex = 19;
-            this.GitExtensionsInstall_Fix.Text = "Repair";
-            this.GitExtensionsInstall_Fix.UseVisualStyleBackColor = true;
-            this.GitExtensionsInstall_Fix.Click += new System.EventHandler(this.GitExtensionsInstall_Click);
-            // 
-            // SshConfig_Fix
-            // 
-            this.SshConfig_Fix.Location = new System.Drawing.Point(624, 269);
-            this.SshConfig_Fix.Name = "SshConfig_Fix";
-            this.SshConfig_Fix.Size = new System.Drawing.Size(75, 25);
-            this.SshConfig_Fix.TabIndex = 20;
-            this.SshConfig_Fix.Text = "Repair";
-            this.SshConfig_Fix.UseVisualStyleBackColor = true;
-            this.SshConfig_Fix.Click += new System.EventHandler(this.SshConfig_Click);
-            // 
-            // translationConfig_Fix
-            // 
-            this.translationConfig_Fix.Location = new System.Drawing.Point(624, 303);
-            this.translationConfig_Fix.Name = "translationConfig_Fix";
-            this.translationConfig_Fix.Size = new System.Drawing.Size(75, 25);
-            this.translationConfig_Fix.TabIndex = 21;
-            this.translationConfig_Fix.Text = "Repair";
-            this.translationConfig_Fix.UseVisualStyleBackColor = true;
-            this.translationConfig_Fix.Click += new System.EventHandler(this.translationConfig_Click);
             // 
             // FormSettings
             // 

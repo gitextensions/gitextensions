@@ -8,6 +8,8 @@ namespace GitCommands
         private static readonly GitVersion v1_7_0 = new GitVersion("1.7.0");
         private static readonly GitVersion v1_7_1 = new GitVersion("1.7.1");
 
+        public static readonly GitVersion LastSupportedVersion = v1_7_0;
+
         private const string Prefix = "git version";
 
         private readonly string full;
@@ -155,7 +157,7 @@ namespace GitCommands
 
         public override string ToString()
         {
-            return full;
+            return full.Replace(".msysgit.0", "").Replace(".msysgit.1", "");
         }
     }
 }
