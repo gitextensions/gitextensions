@@ -57,8 +57,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ITranslate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ITranslate.cs" />
     <Compile Include="Translation.cs" />
     <Compile Include="TranslationCategory.cs" />
     <Compile Include="TranslationItem.cs" />
