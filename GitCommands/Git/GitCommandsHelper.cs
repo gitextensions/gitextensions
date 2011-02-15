@@ -1614,11 +1614,7 @@ namespace GitCommands
 
         public static List<GitItemStatus> GetDiffFiles(string from, string to)
         {
-            string result;
-            if (Settings.FollowRenamesInFileHistory)
-                result = RunCachableCmd(Settings.GitCommand, "diff -M -z --name-status \"" + to + "\" \"" + from + "\"");
-            else
-                result = RunCachableCmd(Settings.GitCommand, "diff -z --name-status \"" + to + "\" \"" + from + "\"");
+            string result = RunCachableCmd(Settings.GitCommand, "diff -M -C -z --name-status \"" + to + "\" \"" + from + "\"");
 
             return GetAllChangedFilesFromString(result, true);
         }
@@ -1837,7 +1833,7 @@ namespace GitCommands
 
         public static List<GitItemStatus> GetStagedFiles()
         {
-            string status = RunCmd(Settings.GitCommand, "diff -M -z --cached --name-status");
+            string status = RunCmd(Settings.GitCommand, "diff -M -C -z --cached --name-status");
 
             if (true && status.Length < 50 && status.Contains("fatal: No HEAD commit to compare"))
             {
@@ -1869,7 +1865,7 @@ namespace GitCommands
 
             var args = "diff " + extraDiffArguments + " -- " + fileName;
             if (staged)
-                args = "diff -M --cached" + extraDiffArguments + " -- " + fileName + " " + oldFileName;
+                args = "diff -M -C --cached" + extraDiffArguments + " -- " + fileName + " " + oldFileName;
 
             return RunCmd(Settings.GitCommand, args);
         }
