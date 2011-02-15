@@ -17,7 +17,7 @@ using System.Globalization;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("LoreSoft")]
 [assembly: AssemblyProduct("NetSpell")]
-[assembly: AssemblyCopyright("Copyright © 2003 Paul Welter.  All rights reserved.")]
+[assembly: AssemblyCopyright("Copyright © 2003 Paul Welter, modified by Henk Westhuis for Git Extensions.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 
@@ -31,8 +31,7 @@ using System.Globalization;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-
-[assembly: AssemblyVersion("2.1.7.*")]
+[assembly: AssemblyVersion("2.1.7.35462")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 
