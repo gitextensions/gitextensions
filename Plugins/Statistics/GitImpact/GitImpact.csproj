@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FormImpact.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -47,7 +48,6 @@
       <DependentUpon>FormImpact.cs</DependentUpon>
     </Compile>
     <Compile Include="GitImpactPlugin.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ImpactControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
