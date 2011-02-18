@@ -23,8 +23,6 @@ namespace GitExtensions
 
         public static void Load()
         {
-            //Github.GithubPlugin ghp = new Github.GithubPlugin();
-
             var file = new FileInfo(Application.ExecutablePath);
 
             // Only search for plugins in the plugins folder. This increases performance a little bit.
