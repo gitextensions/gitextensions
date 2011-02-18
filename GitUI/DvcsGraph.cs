@@ -560,7 +560,7 @@ namespace GitUI
                     visibleBottom = graphData.Count;
                 }
 
-                int targetBottom = visibleBottom + Settings.MaxCommits;
+                int targetBottom = visibleBottom + 2000;
                 targetBottom = Math.Min(targetBottom, graphData.Count);
                 if (backgroundScrollTo < targetBottom)
                 {

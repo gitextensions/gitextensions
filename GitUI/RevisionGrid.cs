@@ -570,7 +570,7 @@ namespace GitUI
 
                 //Hide graph column when there it is disabled OR when a filter is active
                 //allowing for special case when history of a single file is being displayed
-                if (!Settings.ShowRevisionGraph || (FilterIsApplied(false) && !AllowGraphWithFilter))
+                if (!Settings.ShowRevisionGraph || (ShouldHideGraph(false) && !AllowGraphWithFilter))
                 {
                     Revisions.ShowHideRevisionGraph(false);
                 }
@@ -661,6 +661,15 @@ namespace GitUI
         {
             return (inclBranchFilter && !string.IsNullOrEmpty(BranchFilter)) ||
                    !(string.IsNullOrEmpty(Filter) &&
+                     string.IsNullOrEmpty(InMemAuthorFilter) &&
+                     string.IsNullOrEmpty(InMemCommitterFilter) &&
+                     string.IsNullOrEmpty(InMemMessageFilter));
+        }
+
+        private bool ShouldHideGraph(bool inclBranchFilter)
+        {
+            return (inclBranchFilter && !string.IsNullOrEmpty(BranchFilter)) ||
+                   !(!_revisionFilter.ShouldHideGraph() &&
                      string.IsNullOrEmpty(InMemAuthorFilter) &&
                      string.IsNullOrEmpty(InMemCommitterFilter) &&
                      string.IsNullOrEmpty(InMemMessageFilter));

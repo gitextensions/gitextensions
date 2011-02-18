@@ -210,7 +210,7 @@ namespace GitUI
 
                 SmtpServer.Text = Settings.Smtp;
 
-                _NO_TRANSLATE_MaxCommits.Value = Settings.MaxCommits;
+                _NO_TRANSLATE_MaxCommits.Value = Settings.MaxRevisionGraphCommits;
 
                 GitPath.Text = Settings.GitCommand;
                 GitBinPath.Text = Settings.GitBinDir;
@@ -385,7 +385,7 @@ namespace GitUI
 
             Settings.Dictionary = Dictionary.Text;
 
-            Settings.MaxCommits = (int)_NO_TRANSLATE_MaxCommits.Value;
+            Settings.MaxRevisionGraphCommits = (int)_NO_TRANSLATE_MaxCommits.Value;
 
             Settings.Plink = PlinkPath.Text;
             Settings.Puttygen = PuttygenPath.Text;
