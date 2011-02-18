@@ -1726,35 +1726,62 @@ namespace GitCommands
                     fileName = files[n].Substring(splitIndex);
                 }
 
-                GitItemStatus gitItemStatus = new GitItemStatus();
-
                 char x = status[0];
                 char y = status.Length > 1 ? status[1] : ' ';
 
-                //Find renamed files...
-                if (x == 'R' || y == 'R')
+                GitItemStatus gitItemStatus;
+                
+                n = GitItemStatusFromStatusCharacter(fromDiff, files, n, status, fileName, x, out gitItemStatus);
+                if (gitItemStatus != null)
                 {
-                    if (fromDiff)
-                    {
-                        gitItemStatus.OldName = fileName.Trim();
-                        gitItemStatus.Name = files[n + 1].Trim();
-                    }
-                    else
-                    {
-                        gitItemStatus.Name = fileName.Trim();
-                        gitItemStatus.OldName = files[n + 1].Trim();
-                    }
-                    gitItemStatus.IsNew = false;
-                    gitItemStatus.IsChanged = false;
-                    gitItemStatus.IsDeleted = false;
-                    gitItemStatus.IsRenamed = true;
-                    gitItemStatus.IsTracked = true;
-                    if (status.Length > 2)
-                        gitItemStatus.RenameCopyPercentage = status.Substring(1);
-                    n++;
-                } else
+                    gitItemStatus.IsStaged = false;
+                    diffFiles.Add(gitItemStatus);
+                }
+
+                n = GitItemStatusFromStatusCharacter(fromDiff, files, n, status, fileName, y, out gitItemStatus);
+                if (gitItemStatus != null)
+                {
+                    gitItemStatus.IsStaged = true;
+                    diffFiles.Add(gitItemStatus);
+                }
+            }
+
+            return diffFiles;
+        }
+
+        private static int GitItemStatusFromStatusCharacter(bool fromDiff, string[] files, int n, string status, string fileName, char x, out GitItemStatus gitItemStatus)
+        {
+            gitItemStatus = null;
+
+            if (x == ' ')
+                return n;
+
+            gitItemStatus = new GitItemStatus();
+            //Find renamed files...
+            if (x == 'R')
+            {
+                if (fromDiff)
+                {
+                    gitItemStatus.OldName = fileName.Trim();
+                    gitItemStatus.Name = files[n + 1].Trim();
+                }
+                else
+                {
+                    gitItemStatus.Name = fileName.Trim();
+                    gitItemStatus.OldName = files[n + 1].Trim();
+                }
+                gitItemStatus.IsNew = false;
+                gitItemStatus.IsChanged = false;
+                gitItemStatus.IsDeleted = false;
+                gitItemStatus.IsRenamed = true;
+                gitItemStatus.IsTracked = true;
+                if (status.Length > 2)
+                    gitItemStatus.RenameCopyPercentage = status.Substring(1);
+                n++;
+            }
+            else
                 //Find copied files...
-                if (x == 'C' || y == 'C')
+                if (x == 'C')
                 {
                     if (fromDiff)
                     {
@@ -1778,25 +1805,14 @@ namespace GitCommands
                 else
                 {
                     gitItemStatus.Name = fileName.Trim();
-                    gitItemStatus.IsNew = x == 'A' || x == '?' || y == 'A' || y == '?';
-                    gitItemStatus.IsChanged = x == 'M' || y == 'M';
-                    gitItemStatus.IsDeleted = x == 'D' || y == 'D';
+                    gitItemStatus.IsNew = x == 'A' || x == '?';
+                    gitItemStatus.IsChanged = x == 'M';
+                    gitItemStatus.IsDeleted = x == 'D';
                     gitItemStatus.IsRenamed = false;
                     gitItemStatus.IsTracked = x != '?' && x != ' ' || !gitItemStatus.IsNew;
+                    gitItemStatus.IsConflict = x == 'U';
                 }
-
-                //is merge conflict!
-                if (x == 'U' || y == 'U')
-                {
-                    gitItemStatus.IsConflict = true;
-                }
-
-                gitItemStatus.IsStaged = x == '?' || x == ' ';
-
-                diffFiles.Add(gitItemStatus);
-            }
-
-            return diffFiles;
+            return n;
         }
 
         public static List<GitItemStatus> GetDeletedFiles()
