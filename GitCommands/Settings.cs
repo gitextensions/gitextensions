@@ -46,6 +46,8 @@ namespace GitCommands
             }
             set
             {
+                if (_showErrorsWhenStagingFiles == value)
+                    return;
                 _showErrorsWhenStagingFiles = value;
                 Application.UserAppDataRegistry.SetValue("showerrorswhenstagingfiles", _showErrorsWhenStagingFiles);
             }
@@ -62,6 +64,8 @@ namespace GitCommands
             }
             set
             {
+                if (_lastCommitMessage == value)
+                    return;
                 _lastCommitMessage = value;
                 Application.UserAppDataRegistry.SetValue("lastCommitMessage", _lastCommitMessage);
             }
@@ -78,6 +82,8 @@ namespace GitCommands
             }
             set
             {
+                if (_showGitStatusInBrowseToolbar == value)
+                    return;
                 _showGitStatusInBrowseToolbar = value;
                 Application.UserAppDataRegistry.SetValue("showgitstatusinbrowsetoolbar", _showGitStatusInBrowseToolbar);
             }
@@ -104,6 +110,8 @@ namespace GitCommands
             }
             set
             {
+                if (_commitInfoShowContainedInBranchesLocal == value)
+                    return;
                 _commitInfoShowContainedInBranchesLocal = value;
                 Application.UserAppDataRegistry.SetValue("commitinfoshowcontainedinbrancheslocal", _commitInfoShowContainedInBranchesLocal);
             }
@@ -156,6 +164,8 @@ namespace GitCommands
             }
             set
             {
+                if (_commitInfoShowContainedInTags == value)
+                    return;
                 _commitInfoShowContainedInTags = value;
                 Application.UserAppDataRegistry.SetValue("commitinfoshowcontainedintags", _commitInfoShowContainedInTags);
             }
@@ -174,6 +184,8 @@ namespace GitCommands
             }
             set
             {
+                if (_translation == value)
+                    return;
                 _translation = value;
                 Application.UserAppDataRegistry.SetValue("translation", _translation != null ? _translation : "");
             }
@@ -190,6 +202,8 @@ namespace GitCommands
             }
             set
             {
+                if (_userProfileHomeDir == value)
+                    return;
                 _userProfileHomeDir = value;
                 Application.UserAppDataRegistry.SetValue("userprofilehomedir", _userProfileHomeDir);
             }
@@ -206,6 +220,8 @@ namespace GitCommands
             }
             set
             {
+                if (_customHomeDir == value)
+                    return;
                 _customHomeDir = value;
                 Application.UserAppDataRegistry.SetValue("customhomedir", _customHomeDir);
             }
@@ -222,6 +238,8 @@ namespace GitCommands
             }
             set
             {
+                if (_iconColor == value)
+                    return;
                 _iconColor = value;
                 Application.UserAppDataRegistry.SetValue("iconcolor", _iconColor);
             }
@@ -238,6 +256,8 @@ namespace GitCommands
             }
             set
             {
+                if (_authorImageSize == value)
+                    return;
                 _authorImageSize = value;
                 Application.UserAppDataRegistry.SetValue("authorimagesize", _authorImageSize);
             }
@@ -253,6 +273,8 @@ namespace GitCommands
             }
             set
             {
+                if (_authorImageCacheDays == value)
+                    return;
                 _authorImageCacheDays = value;
                 Application.UserAppDataRegistry.SetValue("authorimagecachedays", _authorImageCacheDays);
             }
@@ -269,6 +291,8 @@ namespace GitCommands
             }
             set
             {
+                if (_showAuthorGravatar == value)
+                    return;
                 _showAuthorGravatar = value;
                 Application.UserAppDataRegistry.SetValue("showauthorgravatar", _showAuthorGravatar);
             }
@@ -285,6 +309,8 @@ namespace GitCommands
             }
             set
             {
+                if (_closeCommitDialogAfterCommit == value)
+                    return;
                 _closeCommitDialogAfterCommit = value;
                 Application.UserAppDataRegistry.SetValue("closecommitdialogaftercommit", _closeCommitDialogAfterCommit);
             }
@@ -301,6 +327,8 @@ namespace GitCommands
             }
             set
             {
+                if (_closeCommitDialogAfterLastCommit == value)
+                    return;
                 _closeCommitDialogAfterLastCommit = value;
                 Application.UserAppDataRegistry.SetValue("closecommitdialogafterlastcommit", _closeCommitDialogAfterLastCommit);
             }
@@ -317,6 +345,8 @@ namespace GitCommands
             }
             set
             {
+                if (_refreshCommitDialogOnFormFocus == value)
+                    return;
                 _refreshCommitDialogOnFormFocus = value;
                 Application.UserAppDataRegistry.SetValue("refreshcommitdialogonformfocus", _refreshCommitDialogOnFormFocus);
             }
@@ -333,6 +363,8 @@ namespace GitCommands
             }
             set
             {
+                if (_followRenamesInFileHistory == value)
+                    return;
                 _followRenamesInFileHistory = value;
                 Application.UserAppDataRegistry.SetValue("followrenamesinfilehistory", _followRenamesInFileHistory);
             }
@@ -349,6 +381,8 @@ namespace GitCommands
             }
             set
             {
+                if (_revisionGraphShowWorkingDirChanges == value)
+                    return;
                 _revisionGraphShowWorkingDirChanges = value;
                 Application.UserAppDataRegistry.SetValue("revisiongraphshowworkingdirchanges", _revisionGraphShowWorkingDirChanges);
             }
@@ -365,6 +399,8 @@ namespace GitCommands
             }
             set
             {
+                if (_revisionGraphDrawNonRelativesGray == value)
+                    return;
                 _revisionGraphDrawNonRelativesGray = value;
                 Application.UserAppDataRegistry.SetValue("revisiongraphdrawnonrelativesgray", _revisionGraphDrawNonRelativesGray);
             }
@@ -381,6 +417,8 @@ namespace GitCommands
             }
             set
             {
+                if (_revisionGraphDrawNonRelativesTextGray == value)
+                    return;
                 _revisionGraphDrawNonRelativesTextGray = value;
                 Application.UserAppDataRegistry.SetValue("revisiongraphdrawnonrelativestextgray", _revisionGraphDrawNonRelativesTextGray);
             }
@@ -450,6 +488,8 @@ namespace GitCommands
             }
             set
             {
+                if (_pullMerge == value)
+                    return;
                 _pullMerge = value;
                 Application.UserAppDataRegistry.SetValue("pullmerge", _pullMerge);
             }
@@ -467,6 +507,8 @@ namespace GitCommands
             }
             set
             {
+                if (_smtp == value)
+                    return;
                 _smtp = value;
                 Application.UserAppDataRegistry.SetValue("smtp", _smtp);
             }
@@ -484,6 +526,8 @@ namespace GitCommands
             }
             set
             {
+                if (_autoStash == value)
+                    return;
                 _autoStash = value;
                 Application.UserAppDataRegistry.SetValue("autostash", _autoStash);
             }
@@ -500,6 +544,8 @@ namespace GitCommands
             }
             set
             {
+                if (_orderRevisionByDate == value)
+                    return;
                 _orderRevisionByDate = value;
                 Application.UserAppDataRegistry.SetValue("orderrevisionbydate", _orderRevisionByDate);
             }
@@ -516,6 +562,8 @@ namespace GitCommands
             }
             set
             {
+                if (_dictionary == value)
+                    return;
                 _dictionary = value;
                 Application.UserAppDataRegistry.SetValue("dictionary", _dictionary);
             }
@@ -532,6 +580,8 @@ namespace GitCommands
             }
             set
             {
+                if (_showGitCommandLine == value)
+                    return;
                 _showGitCommandLine = value;
                 Application.UserAppDataRegistry.SetValue("showgitcommandline", _showGitCommandLine);
             }
@@ -548,6 +598,8 @@ namespace GitCommands
             }
             set
             {
+                if (_showStashCount == value)
+                    return;
                 _showStashCount = value;
                 Application.UserAppDataRegistry.SetValue("showstashcount", _showStashCount);
             }
@@ -564,6 +616,8 @@ namespace GitCommands
             }
             set
             {
+                if (_relativeDate == value)
+                    return;
                 _relativeDate = value;
                 Application.UserAppDataRegistry.SetValue("relativedate", _relativeDate);
             }
@@ -580,6 +634,8 @@ namespace GitCommands
             }
             set
             {
+                if (_useFastChecks == value)
+                    return;
                 _useFastChecks = value;
                 Application.UserAppDataRegistry.SetValue("usefastchecks", _useFastChecks);
             }
@@ -596,6 +652,8 @@ namespace GitCommands
             }
             set
             {
+                if (_showRevisionGraph == value)
+                    return;
                 _showRevisionGraph = value;
                 Application.UserAppDataRegistry.SetValue("showrevisiongraph", _showRevisionGraph);
             }
@@ -612,6 +670,8 @@ namespace GitCommands
             }
             set
             {
+                if (_showAuthorDate == value)
+                    return;
                 _showAuthorDate = value;
                 Application.UserAppDataRegistry.SetValue("showauthordate", _showAuthorDate);
             }
@@ -628,6 +688,8 @@ namespace GitCommands
             }
             set
             {
+                if (_closeProcessDialog == value)
+                    return;
                 _closeProcessDialog = value;
                 Application.UserAppDataRegistry.SetValue("closeprocessdialog", _closeProcessDialog);
             }
@@ -644,6 +706,8 @@ namespace GitCommands
             }
             set
             {
+                if (_showCurrentBranchOnly == value)
+                    return;
                 _showCurrentBranchOnly = value;
                 Application.UserAppDataRegistry.SetValue("showcurrentbranchonly", _showCurrentBranchOnly);
             }
@@ -660,6 +724,8 @@ namespace GitCommands
             }
             set
             {
+                if (_branchFilterEnabled == value)
+                    return;
                 _branchFilterEnabled = value;
                 Application.UserAppDataRegistry.SetValue("branchfilterenabled", _branchFilterEnabled);
             }
@@ -676,6 +742,9 @@ namespace GitCommands
             }
             set
             {
+                if (_commitDialogSplitter == value)
+                    return;
+
                 _commitDialogSplitter = value;
                 Application.UserAppDataRegistry.SetValue("commitdialogsplitter", _commitDialogSplitter);
             }
@@ -692,6 +761,9 @@ namespace GitCommands
             }
             set
             {
+                if (_revisionGridQuickSearchTimeout == value)
+                    return;
+
                 _revisionGridQuickSearchTimeout = value;
                 Application.UserAppDataRegistry.SetValue("revisiongridquicksearchtimeout", _revisionGridQuickSearchTimeout);
             }
@@ -708,6 +780,9 @@ namespace GitCommands
             }
             set
             {
+                if (_gravatarFallbackService == value)
+                    return;
+
                 _gravatarFallbackService = value;
                 Application.UserAppDataRegistry.SetValue("gravatarfallbackservice", _gravatarFallbackService);
             }
@@ -724,6 +799,9 @@ namespace GitCommands
             }
             set
             {
+                if (_gitCommand == value)
+                    return;
+
                 _gitCommand = value;
                 Application.UserAppDataRegistry.SetValue("gitcommand", _gitCommand);
             }
@@ -755,19 +833,21 @@ namespace GitCommands
             }
         }
 
-        private static int? _maxCommits;
-        public static int MaxCommits
+        private static int? _maxRevisionGraphCommits;
+        public static int MaxRevisionGraphCommits
         {
             get
             {
-                if (_maxCommits == null)
-                    SafeSetInt("maxcommits", 2000, x => _maxCommits = x);
-                return _maxCommits.Value;
+                if (_maxRevisionGraphCommits == null)
+                    SafeSetInt("maxrevisiongraphcommits", 100000, x => _maxRevisionGraphCommits = x);
+                return _maxRevisionGraphCommits.Value;
             }
             set
             {
-                _maxCommits = value;
-                Application.UserAppDataRegistry.SetValue("maxcommits", _maxCommits);
+                if (_maxRevisionGraphCommits == value)
+                    return;
+                _maxRevisionGraphCommits = value;
+                Application.UserAppDataRegistry.SetValue("maxrevisiongraphcommits", _maxRevisionGraphCommits);
             }
         }
 
@@ -805,6 +885,8 @@ namespace GitCommands
             }
             set
             {
+                if (_plink == value)
+                    return;
                 _plink = value;
                 Application.UserAppDataRegistry.SetValue("plink", _plink);
             }
@@ -820,6 +902,8 @@ namespace GitCommands
             }
             set
             {
+                if (_puttygen == value)
+                    return;
                 _puttygen = value;
                 Application.UserAppDataRegistry.SetValue("puttygen", _puttygen);
             }
@@ -836,6 +920,8 @@ namespace GitCommands
             }
             set
             {
+                if (_pageant == value)
+                    return;
                 _pageant = value;
                 Application.UserAppDataRegistry.SetValue("pageant", _pageant);
             }
@@ -852,6 +938,8 @@ namespace GitCommands
             }
             set
             {
+                if (_autoStartPageant == value)
+                    return;
                 _autoStartPageant = value;
                 Application.UserAppDataRegistry.SetValue("autostartpageant", _autoStartPageant);
             }
@@ -868,6 +956,8 @@ namespace GitCommands
             }
             set
             {
+                if (_markIllFormedLinesInCommitMsg == value)
+                    return;
                 _markIllFormedLinesInCommitMsg = value;
                 Application.UserAppDataRegistry.SetValue("markillformedlinesincommitmsg", _markIllFormedLinesInCommitMsg);
             }
@@ -1047,6 +1137,8 @@ namespace GitCommands
             }
             set
             {
+                if (_multicolorBranches == value)
+                    return;
                 _multicolorBranches = value;
                 Application.UserAppDataRegistry.SetValue("multicolorbranches", _multicolorBranches);
             }
@@ -1063,6 +1155,8 @@ namespace GitCommands
             }
             set
             {
+                if (_stripedBranchChange == value)
+                    return;
                 _stripedBranchChange = value;
                 Application.UserAppDataRegistry.SetValue("stripedbranchchange", _stripedBranchChange);
             }
@@ -1079,6 +1173,8 @@ namespace GitCommands
             }
             set
             {
+                if (_branchBorders == value)
+                    return;
                 _branchBorders = value;
                 Application.UserAppDataRegistry.SetValue("branchborders", _branchBorders);
             }
@@ -1095,6 +1191,8 @@ namespace GitCommands
             }
             set
             {
+                if (_lastFormatPatchDir == value)
+                    return;
                 _lastFormatPatchDir = value;
                 Application.UserAppDataRegistry.SetValue("lastformatpatchdir", _lastFormatPatchDir);
             }
@@ -1268,6 +1366,8 @@ namespace GitCommands
             }
             set
             {
+                if (_ownScripts == value)
+                    return;
                 _ownScripts = value;
                 Application.UserAppDataRegistry.SetValue("ownScripts", _ownScripts);
             }
