@@ -83,7 +83,7 @@ namespace GitUI
                 Icon.Image = icon;
 
 
-            var toolTip = new ToolTip
+            toolTip = new ToolTip
                               {
                                   InitialDelay = 1,
                                   AutomaticDelay = 1,
