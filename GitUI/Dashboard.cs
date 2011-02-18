@@ -23,7 +23,6 @@ namespace GitUI
         private readonly TranslationString issues = new TranslationString("Issues");
         private readonly TranslationString openRepository = new TranslationString("Open repository");
         private readonly TranslationString translate = new TranslationString("Translate");
-        private bool Recalculating;
         private bool initialized;
 
         public Dashboard()
