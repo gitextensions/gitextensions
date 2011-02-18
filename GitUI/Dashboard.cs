@@ -110,65 +110,7 @@ namespace GitUI
 
         private void dashboardCategory_DashboardCategoryChanged(object sender, EventArgs e)
         {
-            Recalculate();
-        }
-
-        //Recalculate hieght when list is changed
-
-        private void Recalculate()
-        {
-            if (Recalculating)
-                return;
-            int y = 0;
-
-            try
-            {
-                Recalculating = true;
-                //Remove deleted entries
-                for (int i = splitContainer5.Panel2.Controls.Count - 1; i >= 0; i--)
-                {
-                    var currentDashboardCategory = splitContainer5.Panel2.Controls[i] as DashboardCategory;
-
-                    if (currentDashboardCategory != null &&
-                        !Repositories.RepositoryCategories.Contains(currentDashboardCategory.RepositoryCategory))
-                    {
-                        currentDashboardCategory.DashboardCategoryChanged -= dashboardCategory_DashboardCategoryChanged;
-                        currentDashboardCategory.DashboardItemClick -= dashboardItem_Click;
-                        currentDashboardCategory.Clear();
-                        splitContainer5.Panel2.Controls.RemoveAt(i);
-                    }
-                }
-
-                foreach (RepositoryCategory entry in Repositories.RepositoryCategories)
-                {
-                    DashboardCategory dashboardCategory = null;
-                    //Try to find existing entry first
-                    for (int i = splitContainer5.Panel2.Controls.Count - 1; i >= 0; i--)
-                    {
-                        var currentDashboardCategory = splitContainer5.Panel2.Controls[i] as DashboardCategory;
-
-                        if (currentDashboardCategory == null || currentDashboardCategory.RepositoryCategory != entry)
-                            continue;
-
-                        dashboardCategory = currentDashboardCategory;
-                        dashboardCategory.Recalculate();
-                        dashboardCategory.Location = new Point(0, y);
-                        y += dashboardCategory.Height;
-                        break;
-                    }
-
-                    if (dashboardCategory == null)
-                    {
-                        y = AddDashboardEntry(y, entry);
-                    }
-                }
-
-                RecentRepositories.Recalculate();
-            }
-            finally
-            {
-                Recalculating = false;
-            }
+            Refresh();
         }
 
         public override void Refresh()
@@ -211,7 +153,21 @@ namespace GitUI
             }
 
             RecentRepositories.Clear();
-            RecentRepositories.RepositoryCategory = Repositories.RepositoryHistory;
+
+            RepositoryCategory filteredRecentRepositoryHistory = new RepositoryCategory();
+            filteredRecentRepositoryHistory.Description = Repositories.RepositoryHistory.Description;
+            filteredRecentRepositoryHistory.CategoryType = Repositories.RepositoryHistory.CategoryType;
+            
+            foreach (Repository repository in Repositories.RepositoryHistory.Repositories)
+            {
+                if (!Repositories.RepositoryCategories.Any(c => c.Repositories.Any(r => r.Path.Equals(repository.Path, StringComparison.CurrentCultureIgnoreCase))))
+                {
+                    repository.RepositoryType = RepositoryType.History;
+                    filteredRecentRepositoryHistory.Repositories.Add(repository);
+                }
+            }
+
+            RecentRepositories.RepositoryCategory = filteredRecentRepositoryHistory;
 
         }
 
@@ -286,7 +242,7 @@ namespace GitUI
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             new FormDashboardEditor().ShowDialog();
-            Recalculate();
+            Refresh();
         }
     }
 }
