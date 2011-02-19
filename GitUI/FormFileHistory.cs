@@ -6,6 +6,7 @@ using GitCommands;
 using PatchApply;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace GitUI
 {
@@ -17,10 +18,7 @@ namespace GitUI
             FileChanges.SetInitialRevision(revision);
             Translate();
 
-            if (string.IsNullOrEmpty(fileName))
-                return;
-
-            LoadFileHistory(fileName);
+            this.FileName = fileName;
 
             Diff.ExtraDiffArgumentsChanged += DiffExtraDiffArgumentsChanged;
 
@@ -31,6 +29,13 @@ namespace GitUI
         public FormFileHistory(string fileName)
             : this(fileName, null)
         {
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            LoadFileHistory(FileName);
         }
 
         public string FileName { get; set; }
@@ -123,6 +128,8 @@ namespace GitUI
                 FileChanges.Filter = " --parents -- \"" + fileName + "\"";
                 FileChanges.AllowGraphWithFilter = true;
             }
+
+            FileChanges.Load();
         }
 
         private void DiffExtraDiffArgumentsChanged(object sender, EventArgs e)

@@ -31,6 +31,8 @@ namespace GitUI.Tag
 
         private void FormTagLoad(object sender, EventArgs e)
         {
+            GitRevisions.Load();
+
             RestorePosition("tag");
         }
 

@@ -7,7 +7,8 @@ namespace GitUI
     {
         public FormArchive()
         {
-            InitializeComponent(); Translate();
+            InitializeComponent(); 
+            Translate();
         }
 
         private void FormArchive_FormClosing(object sender, FormClosingEventArgs e)
@@ -17,6 +18,7 @@ namespace GitUI
 
         private void FormArchive_Load(object sender, EventArgs e)
         {
+            revisionGrid1.Load();
             RestorePosition("archive");
         }
 
