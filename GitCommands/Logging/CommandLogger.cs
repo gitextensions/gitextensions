@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using System;
 
 namespace GitCommands.Logging
 {
@@ -7,6 +8,11 @@ namespace GitCommands.Logging
     {
         private const int LogLimit = 100;
         private Queue<string> _logQueue = new Queue<string>(LogLimit);
+
+        public string[] Commands()
+        {
+            return _logQueue.ToArray();
+        }
 
         public void Log(string command)
         {

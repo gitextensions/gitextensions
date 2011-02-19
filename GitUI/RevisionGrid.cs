@@ -87,6 +87,7 @@ namespace GitUI
             Revisions.DragEnter += Revisions_DragEnter;
             Revisions.DragDrop += Revisions_DragDrop;
             Revisions.AllowDrop = true;
+            Revisions.ColumnHeadersVisible = false;
         }
 
         void Loading_Paint(object sender, PaintEventArgs e)

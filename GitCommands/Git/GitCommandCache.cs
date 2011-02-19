@@ -25,6 +25,10 @@ namespace GitCommands
         /// </summary>
         private static Queue<string> queue = new Queue<string>(cacheLimit);
 
+        public static IEnumerable<string> CachedCommands()
+        {
+            return commandCache.Keys;
+        }
 
         public static bool TryGet(string cmd, out string cmdOutput)
         {
