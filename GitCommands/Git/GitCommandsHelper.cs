@@ -1738,11 +1738,14 @@ namespace GitCommands
                     diffFiles.Add(gitItemStatus);
                 }
 
-                n = GitItemStatusFromStatusCharacter(fromDiff, files, n, status, fileName, y, out gitItemStatus);
-                if (gitItemStatus != null)
+                if (!fromDiff)
                 {
-                    gitItemStatus.IsStaged = true;
-                    diffFiles.Add(gitItemStatus);
+                    n = GitItemStatusFromStatusCharacter(fromDiff, files, n, status, fileName, y, out gitItemStatus);
+                    if (gitItemStatus != null)
+                    {
+                        gitItemStatus.IsStaged = true;
+                        diffFiles.Add(gitItemStatus);
+                    }
                 }
             }
 
