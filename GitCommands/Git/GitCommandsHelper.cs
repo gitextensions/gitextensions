@@ -1730,12 +1730,15 @@ namespace GitCommands
                 char y = status.Length > 1 ? status[1] : ' ';
 
                 GitItemStatus gitItemStatus;
-                
-                n = GitItemStatusFromStatusCharacter(fromDiff, files, n, status, fileName, x, out gitItemStatus);
-                if (gitItemStatus != null)
+
+                if (x != '?')
                 {
-                    gitItemStatus.IsStaged = false;
-                    diffFiles.Add(gitItemStatus);
+                    n = GitItemStatusFromStatusCharacter(fromDiff, files, n, status, fileName, x, out gitItemStatus);
+                    if (gitItemStatus != null)
+                    {
+                        gitItemStatus.IsStaged = false;
+                        diffFiles.Add(gitItemStatus);
+                    }
                 }
 
                 if (!fromDiff)

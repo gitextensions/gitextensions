@@ -33,6 +33,8 @@ namespace GitUI
 
         private void FormDiffLoad(object sender, EventArgs e)
         {
+            RevisionGrid.Load();
+
             RestorePosition("diff");
         }
 

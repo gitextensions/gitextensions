@@ -94,6 +94,7 @@ namespace GitUI
             this.SelecctionTimer = new System.Windows.Forms.Timer(this.components);
             this.NoCommits = new System.Windows.Forms.Panel();
             this.NoGit = new System.Windows.Forms.Panel();
+            this.InitRepository = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.GitIgnore = new System.Windows.Forms.Button();
             this.Commit = new System.Windows.Forms.Button();
@@ -549,11 +550,23 @@ namespace GitUI
             // 
             // NoGit
             // 
+            this.NoGit.Controls.Add(this.InitRepository);
             this.NoGit.Controls.Add(this.label2);
             this.NoGit.Location = new System.Drawing.Point(0, 0);
             this.NoGit.Name = "NoGit";
             this.NoGit.Size = new System.Drawing.Size(585, 204);
             this.NoGit.TabIndex = 4;
+            // 
+            // 
+            // InitRepository
+            // 
+            this.InitRepository.Location = new System.Drawing.Point(16, 36);
+            this.InitRepository.Name = "InitRepository";
+            this.InitRepository.Size = new System.Drawing.Size(143, 23);
+            this.InitRepository.TabIndex = 2;
+            this.InitRepository.Text = "Initialize repository";
+            this.InitRepository.UseVisualStyleBackColor = true;
+            this.InitRepository.Click += new System.EventHandler(this.InitRepository_Click);
             // 
             // label2
             // 
@@ -720,5 +733,6 @@ namespace GitUI
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem runScriptToolStripMenuItem;
+        private System.Windows.Forms.Button InitRepository;
     }
 }

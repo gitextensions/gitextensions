@@ -28,6 +28,7 @@ namespace GitUI.Editor
             ".pdf",
             ".png",
             ".pdb",
+            ".sc1",
             ".tif",
             ".tiff",
             ".vsd",
