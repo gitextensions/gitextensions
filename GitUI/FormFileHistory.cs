@@ -12,6 +12,8 @@ namespace GitUI
 {
     public partial class FormFileHistory : GitExtensionsForm
     {
+        SynchronizationContext syncContext = SynchronizationContext.Current;
+
         public FormFileHistory(string fileName, GitRevision revision)
         {
             InitializeComponent();
@@ -35,7 +37,7 @@ namespace GitUI
         {
             base.OnLoad(e);
 
-            LoadFileHistory(FileName);
+            ThreadPool.QueueUserWorkItem(o => LoadFileHistory(FileName));
         }
 
         public string FileName { get; set; }
@@ -81,6 +83,7 @@ namespace GitUI
 
             FileName = fileName;
 
+            string filter;
             if (Settings.FollowRenamesInFileHistory)
             {
                 // git log --follow is not working as expected (see  http://kerneltrap.org/mailarchive/git/2009/1/30/4856404/thread)
@@ -119,17 +122,21 @@ namespace GitUI
                 } while (line != null);
 
                 // here we need --name-only to get the previous filenames in the revision graph
-                FileChanges.Filter = " --name-only --parents -- " + listOfFileNames;
-                FileChanges.AllowGraphWithFilter = true;
+                filter = " --name-only --parents -- " + listOfFileNames;
             }
             else
             {
                 // --parents doesn't work with --follow enabled, but needed to graph a filtered log
-                FileChanges.Filter = " --parents -- \"" + fileName + "\"";
-                FileChanges.AllowGraphWithFilter = true;
+                filter = " --parents -- \"" + fileName + "\"";
             }
 
-            FileChanges.Load();
+
+            syncContext.Post(o =>
+            {
+                FileChanges.Filter = filter;
+                FileChanges.AllowGraphWithFilter = true;
+                FileChanges.Load();
+            }, this);
         }
 
         private void DiffExtraDiffArgumentsChanged(object sender, EventArgs e)
