@@ -12,7 +12,8 @@ namespace GitUI
 
         public FormBranch()
         {
-            InitializeComponent(); Translate();
+            InitializeComponent(); 
+            Translate();
         }
 
         private void Ok_Click(object sender, EventArgs e)
@@ -50,6 +51,8 @@ namespace GitUI
 
         private void FormBranch_Load(object sender, EventArgs e)
         {
+            RevisionGrid.Load();
+
             RestorePosition("branch");
             BName.Focus();
             AcceptButton = Ok;

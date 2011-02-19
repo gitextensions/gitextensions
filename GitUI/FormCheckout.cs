@@ -43,6 +43,8 @@ namespace GitUI
 
         private void FormCheckoutLoad(object sender, EventArgs e)
         {
+            RevisionGrid.Load();
+
             RestorePosition("checkout");
         }
     }

@@ -19,6 +19,8 @@ namespace GitUI
 
         private void FormCherryPick_Load(object sender, EventArgs e)
         {
+            RevisionGrid.Load();
+
             RestorePosition("cherry-pick");
         }
 

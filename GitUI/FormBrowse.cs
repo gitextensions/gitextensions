@@ -91,6 +91,8 @@ namespace GitUI
 
         private void BrowseLoad(object sender, EventArgs e)
         {
+            RevisionGrid.Load();
+
             RestorePosition("browse");
 
             Cursor.Current = Cursors.WaitCursor;
@@ -155,11 +157,12 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            var validWorkingDir = Settings.ValidWorkingDir();
+            bool validWorkingDir = Settings.ValidWorkingDir();
+            bool hasWorkingDir = !string.IsNullOrEmpty(Settings.WorkingDir);
 
             branchSelect.Text = validWorkingDir ? GitCommandHelpers.GetSelectedBranch() : "";
 
-            if (validWorkingDir)
+            if (hasWorkingDir)
                 HideDashboard();
             else
                 ShowDashboard();

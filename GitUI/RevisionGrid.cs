@@ -416,6 +416,16 @@ namespace GitUI
         {
             base.OnCreateControl();
 
+            _isLoading = true;
+            Error.Visible = false;
+            NoCommits.Visible = false;
+            NoGit.Visible = false;
+            Revisions.Visible = false;
+            Loading.Visible = true;
+        }
+
+        public void Load()
+        {
             RefreshRevisions();
         }
 
@@ -594,26 +604,27 @@ namespace GitUI
                 Revisions.ClearSelection();
 
                 CurrentCheckout = newCurrentCheckout;
-                Error.Visible = false;
-                NoCommits.Visible = false;
-                NoGit.Visible = false;
-                Revisions.Visible = true;
-                Loading.Visible = true;
 
                 Revisions.Clear();
+
+                Error.Visible = false;
 
                 if (!Settings.ValidWorkingDir())
                 {
                     Revisions.Visible = false;
 
-                    NoCommits.Visible = false;
+                    NoCommits.Visible = true;
                     NoGit.Visible = true;
                     Loading.Visible = false;
                     return;
                 }
 
+                NoCommits.Visible = false;
+                NoGit.Visible = false;
+                Revisions.Visible = true;
                 Revisions.Enabled = false;
                 Loading.Visible = true;
+
                 _indexWatcher.Reset();
                 _revisionGraphCommand = new RevisionGraph { BranchFilter = BranchFilter, LogParam = LogParam + Filter };
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
@@ -1521,5 +1532,12 @@ namespace GitUI
             }
         }
         #endregion
+
+        private void InitRepository_Click(object sender, EventArgs e)
+        {
+            if (GitUICommands.Instance.StartInitializeDialog(Settings.WorkingDir))
+                ForceRefreshRevisions();
+
+        }
     }
 }
