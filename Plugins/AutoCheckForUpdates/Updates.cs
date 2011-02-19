@@ -8,8 +8,6 @@ using System.Windows.Forms;
 
 namespace AutoCheckForUpdates
 {
-    internal delegate void DoneCallback();
-
     public partial class Updates : Form
     {
         public bool AutoClose;
@@ -17,9 +15,11 @@ namespace AutoCheckForUpdates
         public bool UpdateFound;
         public string UpdateUrl;
         private const string FilesUrl = "http://gitextensions.googlecode.com/files/GitExtensions";
+        private readonly SynchronizationContext syncContext;
 
         public Updates(string currentVersion)
         {
+            syncContext = SynchronizationContext.Current;
             InitializeComponent();
             UpdateFound = false;
             link.Visible = false;
@@ -42,30 +42,48 @@ namespace AutoCheckForUpdates
 
         private void SearchForUpdates()
         {
+            var webClient = new WebClient { Proxy = WebRequest.DefaultWebProxy };
+            webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
+            webClient.Encoding = Encoding.UTF8;
+            webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(webClient_DownloadProgressChanged);
+            webClient.DownloadStringCompleted += new DownloadStringCompletedEventHandler(webClient_DownloadStringCompleted);
+            webClient.DownloadStringAsync(new Uri(@"http://code.google.com/p/gitextensions/"));
+        }
+
+        void webClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            syncContext.Send(o =>
+            {
+                progressBar1.Style = ProgressBarStyle.Continuous;
+                progressBar1.Maximum = 100;
+                progressBar1.Value = e.ProgressPercentage;
+            }, this);
+        }
+
+        void webClient_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
+        {
             try
             {
-                var webClient = new WebClient {Proxy = WebRequest.DefaultWebProxy};
-                webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
-                webClient.Encoding = Encoding.UTF8;
-
-                var response = webClient.DownloadString(@"http://code.google.com/p/gitextensions/");
-
-                // search for string like "http://gitextensions.googlecode.com/files/GitExtensions170SetupComplete.msi"
-                var regEx = new Regex(FilesUrl + @"[0-9][0-9][0-9]SetupComplete.msi");
-
-                var matches = regEx.Matches(response);
-
-                foreach (Match match in matches)
+                if (e.Error == null)
                 {
-                    if (match.Value.Equals(FilesUrl + CurrentVersion + "SetupComplete.msi")) 
-                        continue;
+                    string response = e.Result;
+                    // search for string like "http://gitextensions.googlecode.com/files/GitExtensions170SetupComplete.msi"
+                    var regEx = new Regex(FilesUrl + @"[0-9][0-9][0-9]SetupComplete.msi");
 
-                    UpdateFound = true;
-                    UpdateUrl = match.Value;
-                    Done();
-                    return;
+                    var matches = regEx.Matches(response);
+
+                    foreach (Match match in matches)
+                    {
+                        if (match.Value.Equals(FilesUrl + CurrentVersion + "SetupComplete.msi"))
+                            continue;
+
+                        UpdateFound = true;
+                        UpdateUrl = match.Value;
+                        Done();
+                        return;
+                    }
+
                 }
-
                 UpdateUrl = "";
                 UpdateFound = false;
                 Done();
@@ -80,19 +98,15 @@ namespace AutoCheckForUpdates
 
         private void Done()
         {
-            if (link.InvokeRequired)
-            {
-                // It's on a different thread, so use Invoke.
-                DoneCallback d = Done;
-                Invoke(d, new object[] {});
-            }
-            else
+            syncContext.Send(o =>
             {
                 progressBar1.Visible = false;
                 link.Text = UpdateUrl;
-                link.Visible = true;
+
                 if (UpdateFound)
                 {
+                    link.Visible = true;
+
                     UpdateLabel.Text = "There is a new version available";
                 }
                 else
@@ -101,7 +115,7 @@ namespace AutoCheckForUpdates
                     if (AutoClose)
                         Close();
                 }
-            }
+            }, this);
         }
 
         private void UpdatesShown(object sender, EventArgs e)

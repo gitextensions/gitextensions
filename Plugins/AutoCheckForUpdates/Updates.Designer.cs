@@ -28,11 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Updates));
             this.Close = new System.Windows.Forms.Button();
             this.UpdateLabel = new System.Windows.Forms.Label();
             this.link = new System.Windows.Forms.LinkLabel();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.SuspendLayout();
             // 
             // Close
@@ -73,6 +75,11 @@
             this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.progressBar1.TabIndex = 3;
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            // 
             // Updates
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -82,6 +89,7 @@
             this.Controls.Add(this.link);
             this.Controls.Add(this.UpdateLabel);
             this.Controls.Add(this.Close);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Updates";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -98,5 +106,6 @@
         private System.Windows.Forms.Label UpdateLabel;
         private System.Windows.Forms.LinkLabel link;
         private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
     }
 }
