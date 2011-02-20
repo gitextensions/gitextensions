@@ -78,7 +78,11 @@ namespace GitExtensions
             }
 
             if (string.IsNullOrEmpty(Settings.WorkingDir))
-                Settings.WorkingDir = Directory.GetCurrentDirectory();
+            {
+                string findWorkingDir = GitCommandHelpers.FindGitWorkingDir(Directory.GetCurrentDirectory());
+                if (Settings.ValidWorkingDir(findWorkingDir))
+                    Settings.WorkingDir = findWorkingDir;
+            }
 
             FormSplash.Hide();
 
