@@ -23,6 +23,8 @@ namespace GitUI
         private readonly TranslationString issues = new TranslationString("Issues");
         private readonly TranslationString openRepository = new TranslationString("Open repository");
         private readonly TranslationString translate = new TranslationString("Translate");
+        private readonly TranslationString directoryIsNotAValidRepositoryCaption = new TranslationString("Open");
+        private readonly TranslationString directoryIsNotAValidRepository = new TranslationString("The selected item is not a valid git repository.\n\nDo you want to abort and remove it from the recent repositories list?");
         private bool initialized;
 
         public Dashboard()
@@ -200,8 +202,25 @@ namespace GitUI
             else
             {
                 Settings.WorkingDir = label.Path;
-                Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
 
+                if (!Settings.ValidWorkingDir())
+                {
+                    DialogResult dialogResult = MessageBox.Show(directoryIsNotAValidRepository.Text, directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                    if (dialogResult == DialogResult.Cancel)
+                    {
+                        Settings.WorkingDir = string.Empty;
+                        return;
+                    }
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        Settings.WorkingDir = string.Empty;
+                        Repositories.RepositoryHistory.RemoveRecentRepository(label.Path);
+                        Refresh();
+                        return;
+                    }
+                }
+
+                Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
                 OnWorkingDirChanged();
             }
         }
