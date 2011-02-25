@@ -28,6 +28,7 @@ namespace GitUI
 
             SaveToDir_CheckedChanged(null, null);
             OutputPath.TextChanged += OutputPath_TextChanged;
+            RevisionGrid.Load();
         }
 
         private void OutputPath_TextChanged(object sender, EventArgs e)
