@@ -631,7 +631,7 @@ namespace GitUI
 
                 if (Settings.ShowGitNotes && !LogParam.Contains(" --glob=notes"))
                     LogParam = LogParam + " --glob=notes";
-                else
+                if (!Settings.ShowGitNotes && LogParam.Contains(" --glob=notes"))
                     LogParam = LogParam.Replace(" --glob=notes", string.Empty);
 
                 _revisionGraphCommand = new RevisionGraph { BranchFilter = BranchFilter, LogParam = LogParam + Filter };
