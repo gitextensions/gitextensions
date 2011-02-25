@@ -79,7 +79,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(750, 454);
+            this.splitContainer1.Size = new System.Drawing.Size(824, 532);
             this.splitContainer1.SplitterDistance = 152;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -103,25 +103,31 @@
             // 
             // MailBody
             // 
+            this.MailBody.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.MailBody.Location = new System.Drawing.Point(254, 93);
             this.MailBody.Name = "MailBody";
-            this.MailBody.Size = new System.Drawing.Size(403, 56);
+            this.MailBody.Size = new System.Drawing.Size(477, 56);
             this.MailBody.TabIndex = 13;
             this.MailBody.Text = "";
             // 
             // MailSubject
             // 
+            this.MailSubject.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.MailSubject.Location = new System.Drawing.Point(254, 66);
             this.MailSubject.Name = "MailSubject";
-            this.MailSubject.Size = new System.Drawing.Size(403, 21);
+            this.MailSubject.Size = new System.Drawing.Size(477, 21);
             this.MailSubject.TabIndex = 12;
             // 
             // MailAddress
             // 
+            this.MailAddress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.MailAddress.FormattingEnabled = true;
             this.MailAddress.Location = new System.Drawing.Point(254, 38);
             this.MailAddress.Name = "MailAddress";
-            this.MailAddress.Size = new System.Drawing.Size(403, 21);
+            this.MailAddress.Size = new System.Drawing.Size(477, 21);
             this.MailAddress.TabIndex = 11;
             // 
             // SendToMail
@@ -149,7 +155,8 @@
             // 
             // Browse
             // 
-            this.Browse.Location = new System.Drawing.Point(663, 8);
+            this.Browse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.Browse.Location = new System.Drawing.Point(737, 8);
             this.Browse.Name = "Browse";
             this.Browse.Size = new System.Drawing.Size(75, 25);
             this.Browse.TabIndex = 8;
@@ -159,11 +166,13 @@
             // 
             // OutputPath
             // 
+            this.OutputPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.OutputPath.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.OutputPath.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this.OutputPath.Location = new System.Drawing.Point(254, 11);
             this.OutputPath.Name = "OutputPath";
-            this.OutputPath.Size = new System.Drawing.Size(403, 21);
+            this.OutputPath.Size = new System.Drawing.Size(477, 21);
             this.OutputPath.TabIndex = 7;
             // 
             // splitContainer2
@@ -183,8 +192,8 @@
             this.splitContainer2.Panel2.Controls.Add(this.FormatPatch);
             this.splitContainer2.Panel2.Controls.Add(this.SelectedBranch);
             this.splitContainer2.Panel2.Controls.Add(this.CurrentBranch);
-            this.splitContainer2.Size = new System.Drawing.Size(750, 298);
-            this.splitContainer2.SplitterDistance = 260;
+            this.splitContainer2.Size = new System.Drawing.Size(824, 376);
+            this.splitContainer2.SplitterDistance = 338;
             this.splitContainer2.TabIndex = 0;
             // 
             // RevisionGrid
@@ -203,12 +212,13 @@
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Name = "RevisionGrid";
             this.RevisionGrid.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RevisionGrid.Size = new System.Drawing.Size(750, 260);
+            this.RevisionGrid.Size = new System.Drawing.Size(824, 338);
             this.RevisionGrid.TabIndex = 0;
             // 
             // FormatPatch
             // 
-            this.FormatPatch.Location = new System.Drawing.Point(639, 4);
+            this.FormatPatch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.FormatPatch.Location = new System.Drawing.Point(713, 4);
             this.FormatPatch.Name = "FormatPatch";
             this.FormatPatch.Size = new System.Drawing.Size(108, 25);
             this.FormatPatch.TabIndex = 0;
@@ -245,7 +255,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(750, 454);
+            this.ClientSize = new System.Drawing.Size(824, 532);
             this.Controls.Add(this.splitContainer1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
