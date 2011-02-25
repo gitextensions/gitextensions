@@ -90,12 +90,7 @@ namespace GitCommands
             string info = GitCommandHelpers.RunCachableCmd(
                 Settings.GitCommand,
                 string.Format(
-                    "show -s --pretty=format:\"{0}:\t\t%aN (%aE)%n{1}:\t%ar (%ad)%n{2}:\t%cN (%cE)%n{3}:\t%cr (%cd)%n{4}:\t%H%n%n%s%n%n%b\" {5}",
-                    Strings.GetAuthorText(),
-                    Strings.GetAuthorDateText(),
-                    Strings.GetCommitterText(),
-                    Strings.GetCommitterDateText(),
-                    Strings.GetCommitHashText(), sha1));
+                    "show -s --pretty=raw --show-notes=* {0}", sha1));
 
             if (info.Trim().StartsWith("fatal"))
                 return new CommitInformation("Cannot find commit" + sha1, "");
@@ -109,18 +104,9 @@ namespace GitCommands
             if (index >= info.Length)
                 return new CommitInformation(info, "");
 
-            string commitHeader = info.Substring(0, index);
-            string commitMessage = info.Substring(index);
+            CommitInformation commitInformation = CreateFromRawData(info);
 
-            //We need to recode the commit message because of a bug in Git.
-            //We cannot let git recode the message to Settings.Encoding which is
-            //needed to allow the "git log" to print the filename in Settings.Encoding
-            Encoding logoutputEncoding = GitCommandHelpers.GetLogoutputEncoding();
-            if (logoutputEncoding != Settings.Encoding)
-                commitMessage = logoutputEncoding.GetString(Settings.Encoding.GetBytes(commitMessage));
-
-            return new CommitInformation(commitHeader,
-                                         commitMessage);
+            return commitInformation;
         }
 
         /// <summary>
@@ -137,10 +123,12 @@ namespace GitCommands
             var guid = commit.Substring(COMMIT_LABEL.Length);
             lines.Remove(commit);
 
+            // TODO: we can use this to add more relationship info like gitk does if wanted
             var tree = lines.Single(l => l.StartsWith(TREE_LABEL));
             var treeGuid = tree.Substring(TREE_LABEL.Length);
             lines.Remove(tree);
 
+            // TODO: we can use this to add more relationship info like gitk does if wanted
             List<string> parentLines = lines.FindAll(l => l.StartsWith(PARENT_LABEL));
             var parentGuids = parentLines.Select(parent => parent.Substring(PARENT_LABEL.Length)).ToArray();
             lines.RemoveAll(parentLines.Contains);
@@ -161,10 +149,17 @@ namespace GitCommands
 
             var body = "\n\n" + message.ToString().TrimStart().TrimEnd() + "\n\n";
 
+            //We need to recode the commit message because of a bug in Git.
+            //We cannot let git recode the message to Settings.Encoding which is
+            //needed to allow the "git log" to print the filename in Settings.Encoding
+            Encoding logoutputEncoding = GitCommandHelpers.GetLogoutputEncoding();
+            if (logoutputEncoding != Settings.Encoding)
+                body = logoutputEncoding.GetString(Settings.Encoding.GetBytes(body));
+
             var header = Strings.GetAuthorText() + ":\t" + author + "\n" +
-                         Strings.GetAuthorDateText() + ":\t" + GitCommandHelpers.GetRelativeDateString(authorDate) + " " + authorDate.ToString("(ddd MMM dd HH':'mm':'ss yyyy)") + "\n" +
+                         Strings.GetAuthorDateText() + ":\t" + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, authorDate.UtcDateTime) + " (" + authorDate.LocalDateTime.ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")\n" +
                          Strings.GetCommitterText() + ":\t" + committer + "\n" +
-                         Strings.GetCommitterDateText() + ":\t" + GitCommandHelpers.GetRelativeDateString(commitDate) + " " + commitDate.ToString("(ddd MMM dd HH':'mm':'ss yyyy)") + "\n" +
+                         Strings.GetCommitterDateText() + ":\t" + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, commitDate.UtcDateTime) + " (" + commitDate.LocalDateTime.ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")\n" +
                          Strings.GetCommitHashText() + ":\t" + guid;
 
             header = RemoveRedundancies(header);
@@ -182,15 +177,15 @@ namespace GitCommands
             return authorInfo.Substring(labelLength, timeIndex - labelLength);
         }
 
-        private static DateTime GetTimeFromAuthorInfoLine(string authorInfo)
+        private static DateTimeOffset GetTimeFromAuthorInfoLine(string authorInfo)
         {
-            int offsetIndex = authorInfo.LastIndexOf(' ');
-            int timeIndex = authorInfo.LastIndexOf(' ', offsetIndex - 1);
-
+            var offsetIndex = authorInfo.LastIndexOf(' ');
+            var timeIndex = authorInfo.LastIndexOf(' ', offsetIndex - 1);
+            
             var unixTime = long.Parse(authorInfo.Substring(timeIndex + 1, offsetIndex - (timeIndex + 1)));
-            var offset = authorInfo.Substring(offsetIndex);
-            var time = (new DateTime(1970, 1, 1, 0, 0, 0)).AddSeconds(unixTime);
-            return DateTime.Parse(time + offset);
+            var time = (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddSeconds(unixTime);
+
+            return new DateTimeOffset(time, new TimeSpan(0));
         }
 
         private static string RemoveRedundancies(string info)
