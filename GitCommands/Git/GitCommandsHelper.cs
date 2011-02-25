@@ -625,7 +625,7 @@ namespace GitCommands
             {
                 StartExternalCommand("cmd.exe", "/c \"\"" + Settings.GitCommand.Replace("git.cmd", "gitk.cmd")
                                                               .Replace("bin\\git.exe", "cmd\\gitk.cmd")
-                                                              .Replace("bin/git.exe", "cmd/gitk.cmd") + "\" --all\"");
+                                                              .Replace("bin/git.exe", "cmd/gitk.cmd") + "\" --branches --tags --remotes\"");
             }
         }
 
@@ -2359,6 +2359,61 @@ namespace GitCommands
                 return fileName.Substring(fileName.LastIndexOf('.') + 1);
 
             return null;
+        }
+
+        /// <summary>
+        /// Takes a date/time which and determines a friendly string for time from now to be displayed for the relative time from the date.
+        /// It is important to note that times are compared using the current timezone, so the date that is passed in should be converted 
+        /// to the local timezone before passing it in.
+        /// </summary>
+        /// <param name="theDate">The date to get relative time string for.</param>
+        /// <returns>The human readable string for relative date.</returns>
+        /// <see cref="http://stackoverflow.com/questions/11/how-do-i-calculate-relative-time"/>
+        public static string GetRelativeDateString(DateTime originDate, DateTime previousDate)
+        {
+            var ts = new TimeSpan(originDate.Ticks - previousDate.Ticks);
+            double delta = ts.TotalSeconds;
+
+            if (delta < 60)
+            {
+                return ts.Seconds == 1 ? "1 second ago" : ts.Seconds + " seconds ago";
+            }
+            if (delta < 120)
+            {
+                return "1 minute ago";
+            }
+            if (delta < 2700) // 45 * 60
+            {
+                return ts.Minutes + " minutes ago";
+            }
+            if (delta < 5400) // 90 * 60
+            {
+                return "1 hour ago";
+            }
+            if (delta < 86400) // 24 * 60 * 60
+            {
+                return ts.Hours + " hours ago";
+            }
+            if (delta < 172800) // 48 * 60 * 60
+            {
+                return "1 day ago";
+            }
+            if (delta < 604800) // 7 * 24 * 60 * 60
+            {
+                return ts.Days + " days ago";
+            }
+            if (delta < 2592000) // 30 * 24 * 60 * 60
+            {
+                int weeks = Convert.ToInt32(Math.Floor((double)ts.Days / 7));
+                return weeks <= 1 ? "1 week ago" : weeks + " weeks ago";
+            }
+            if (delta < 31104000) // 12 * 30 * 24 * 60 * 60
+            {
+                int months = Convert.ToInt32(Math.Floor((double)ts.Days / 30));
+                return months <= 1 ? "1 month ago" : months + " months ago";
+            }
+            int years = Convert.ToInt32(Math.Floor((double)ts.Days / 365));
+            return years <= 1 ? "1 year ago" : years + " years ago";
         }
     }
 }

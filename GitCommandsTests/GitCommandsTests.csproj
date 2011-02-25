@@ -60,6 +60,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommitInformationTest.cs" />
+    <Compile Include="GitCommandHelpersTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FindValidworkingDirTest.cs" />
     <Compile Include="PatchManagerTest.cs" />
