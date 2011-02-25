@@ -178,7 +178,8 @@ namespace GitExtensions
                         {
                             using (var formEditor = new FormEditor(args[2]))
                             {
-                                formEditor.ShowDialog();
+                                if (formEditor.ShowDialog() == DialogResult.Cancel)
+                                    System.Environment.ExitCode = -1;
                             }
                         }
                         else
