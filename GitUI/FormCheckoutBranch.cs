@@ -21,6 +21,20 @@ namespace GitUI
             Initialize();
         }
 
+        public FormCheckoutBranch(string branch, bool remote)
+        {
+            InitializeComponent();
+            Translate();
+
+            Initialize();
+
+            LocalBranch.Checked = !remote;
+            Remotebranch.Checked = remote;
+
+            Branches.Text = branch;
+        }
+
+
         private void Initialize()
         {
             Branches.DisplayMember = "Name";
