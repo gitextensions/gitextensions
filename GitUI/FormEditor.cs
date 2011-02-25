@@ -50,9 +50,15 @@ namespace GitUI
         {
             try
             {
-                if (MessageBox.Show(this, _saveChanges.Text, _saveChangesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                DialogResult result = MessageBox.Show(this, _saveChanges.Text, _saveChangesCaption.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
                 {
                     SaveChanges();
+                }
+
+                if (result == DialogResult.Cancel)
+                {
+                    this.DialogResult = DialogResult.Cancel;
                 }
 
                 SavePosition("fileeditor");
