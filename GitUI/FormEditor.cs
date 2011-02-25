@@ -50,10 +50,13 @@ namespace GitUI
         {
             try
             {
+                this.DialogResult = DialogResult.No;
+
                 DialogResult result = MessageBox.Show(this, _saveChanges.Text, _saveChangesCaption.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 if (result == DialogResult.Yes)
                 {
                     SaveChanges();
+                    this.DialogResult = DialogResult.Yes;
                 }
 
                 if (result == DialogResult.Cancel)
