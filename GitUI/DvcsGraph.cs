@@ -1404,6 +1404,7 @@ namespace GitUI
                 }
 
                 Visit visit = null;
+                Visit localVisit = visit;
                 visit = (Node n) =>
                     {
                         if (!P.Contains(n))
@@ -1411,7 +1412,7 @@ namespace GitUI
                             P.Enqueue(n);
                             foreach (Junction e in n.Ancestors)
                             {
-                                visit(e.Parent);
+                                if (localVisit != null) localVisit(e.Parent);
                             }
                             L.Enqueue(n);
                             return true;
