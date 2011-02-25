@@ -190,6 +190,19 @@ namespace GitUI
             return true;
         }
 
+        public bool StartCheckoutBranchDialog(string branch, bool remote)
+        {
+            if (!InvokeEvent(PreCheckoutBranch))
+                return false;
+
+            var form = new FormCheckoutBranch(branch, remote);
+            form.ShowDialog();
+
+            InvokeEvent(PostCheckoutBranch);
+
+            return true;
+        }
+
         public bool StartFileHistoryDialog(string fileName)
         {
             return StartFileHistoryDialog(fileName, null);

@@ -1140,14 +1140,17 @@ namespace GitUI
                     branchName.Click += copyToClipBoard;
                     branchNameCopy.Items.Add(branchName);
 
-                    if (head.IsHead && !head.IsRemote)
+                    //if (head.IsHead && !head.IsRemote)
                     {
                         toolStripItem = new ToolStripMenuItem(head.Name);
                         toolStripItem.Click += ToolStripItemClickBranch;
                         branchDropDown.Items.Add(toolStripItem);
 
                         toolStripItem = new ToolStripMenuItem(head.Name);
-                        toolStripItem.Click += ToolStripItemClickCheckoutBranch;
+                        if (head.IsRemote)
+                            toolStripItem.Click += ToolStripItemClickCheckoutRemoteBranch;
+                        else
+                            toolStripItem.Click += ToolStripItemClickCheckoutBranch;
                         checkoutBranchDropDown.Items.Add(toolStripItem);
                     }
                 }
@@ -1215,6 +1218,20 @@ namespace GitUI
             OnActionOnRepositoryPerformed();
         }
 
+        private void ToolStripItemClickCheckoutRemoteBranch(object sender, EventArgs e)
+        {
+            var toolStripItem = sender as ToolStripItem;
+
+            if (toolStripItem == null)
+                return;
+
+
+            GitUICommands.Instance.StartCheckoutBranchDialog(toolStripItem.Text, true);
+
+            ForceRefreshRevisions();
+            OnActionOnRepositoryPerformed();
+        }
+
         private void ToolStripItemClickMergeBranch(object sender, EventArgs e)
         {
             var toolStripItem = sender as ToolStripItem;
@@ -1266,15 +1283,6 @@ namespace GitUI
             Settings.OrderRevisionByDate = !orderRevisionsByDateToolStripMenuItem.Checked;
             orderRevisionsByDateToolStripMenuItem.Checked = Settings.OrderRevisionByDate;
             ForceRefreshRevisions();
-        }
-
-        private void CheckoutBranchToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            if (GitUICommands.Instance.StartCheckoutBranchDialog())
-            {
-                RefreshRevisions();
-                OnActionOnRepositoryPerformed();
-            }
         }
 
         private void CherryPickCommitToolStripMenuItemClick(object sender, EventArgs e)
