@@ -792,7 +792,7 @@ namespace GitUI
 
         private void CommitMessageToolStripMenuItemDropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            Message.Text = (string)e.ClickedItem.Tag;
+            Message.Text = ((string)e.ClickedItem.Tag).Trim();
         }
 
         private void AddFileTogitignoreToolStripMenuItemClick(object sender, EventArgs e)
@@ -911,7 +911,7 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(Message.Text))
             {
-                Message.Text = GitCommandHelpers.GetPreviousCommitMessage(0);
+                Message.Text = GitCommandHelpers.GetPreviousCommitMessage(0).Trim();
                 return;
             }
 

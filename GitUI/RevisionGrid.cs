@@ -35,7 +35,7 @@ namespace GitUI
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
 
         private readonly SynchronizationContext _syncContext;
-        public string LogParam = "HEAD --all --boundary";
+        public string LogParam = "HEAD --branches --remotes --tags --boundary";
         private bool _contextMenuEnabled = true;
 
         private bool _initialLoad = true;
@@ -69,6 +69,7 @@ namespace GitUI
             orderRevisionsByDateToolStripMenuItem.Checked = Settings.OrderRevisionByDate;
             showRelativeDateToolStripMenuItem.Checked = Settings.RelativeDate;
             drawNonrelativesGrayToolStripMenuItem.Checked = Settings.RevisionGraphDrawNonRelativesGray;
+            showGitNotesToolStripMenuItem.Checked = Settings.ShowGitNotes;
 
             BranchFilter = String.Empty;
             SetShowBranches();
@@ -627,6 +628,12 @@ namespace GitUI
                 Loading.Visible = true;
 
                 _indexWatcher.Reset();
+
+                if (Settings.ShowGitNotes && !LogParam.Contains(" --glob=notes"))
+                    LogParam = LogParam + " --glob=notes";
+                else
+                    LogParam = LogParam.Replace(" --glob=notes", string.Empty);
+
                 _revisionGraphCommand = new RevisionGraph { BranchFilter = BranchFilter, LogParam = LogParam + Filter };
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
@@ -1040,13 +1047,13 @@ namespace GitUI
             BranchFilter = _revisionFilter.GetBranchFilter();
 
             if (!Settings.BranchFilterEnabled)
-                LogParam = "HEAD --all --boundary";
+                LogParam = "HEAD --branches --remotes --tags --boundary";
             else if (Settings.ShowCurrentBranchOnly)
                 LogParam = "HEAD";
             else
                 LogParam = BranchFilter.Length > 0
                                ? String.Empty
-                               : "HEAD --all --boundary";
+                               : "HEAD --branches --remotes --tags --boundary";
         }
 
         private void RevertCommitToolStripMenuItemClick(object sender, EventArgs e)
@@ -1534,6 +1541,13 @@ namespace GitUI
         }
         #endregion
 
+        private void ShowGitNotesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.ShowGitNotes = !showGitNotesToolStripMenuItem.Checked;
+            showGitNotesToolStripMenuItem.Checked = Settings.ShowGitNotes;
+
+            ForceRefreshRevisions();
+        }
         private void InitRepository_Click(object sender, EventArgs e)
         {
             if (GitUICommands.Instance.StartInitializeDialog(Settings.WorkingDir))
