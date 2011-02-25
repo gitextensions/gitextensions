@@ -2369,9 +2369,9 @@ namespace GitCommands
         /// <param name="theDate">The date to get relative time string for.</param>
         /// <returns>The human readable string for relative date.</returns>
         /// <see cref="http://stackoverflow.com/questions/11/how-do-i-calculate-relative-time"/>
-        public static string GetRelativeDateString(DateTime theDate)
+        public static string GetRelativeDateString(DateTime originDate, DateTime previousDate)
         {
-            var ts = new TimeSpan(DateTime.Now.Ticks - theDate.Ticks);
+            var ts = new TimeSpan(originDate.Ticks - previousDate.Ticks);
             double delta = ts.TotalSeconds;
 
             if (delta < 60)
