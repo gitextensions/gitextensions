@@ -30,7 +30,7 @@ namespace GitUI
 
         void FileStatusListBox_MeasureItem(object sender, MeasureItemEventArgs e)
         {
-            e.ItemHeight = (int)e.Graphics.MeasureString(FileStatusListBox.Items[e.Index].ToString(), FileStatusListBox.Font).Height;
+            e.ItemHeight = Math.Max((int)e.Graphics.MeasureString(((GitItemStatus)FileStatusListBox.Items[e.Index]).Name, FileStatusListBox.Font).Height, 16);
         }
 
         public void SetNoFilesText(string text)
@@ -144,15 +144,21 @@ namespace GitUI
                 int hoverIndex = listBox.IndexFromPoint(point);
                 if (hoverIndex >= 0 && hoverIndex <= listBox.Items.Count)
                 {
-                    string text = listBox.Items[hoverIndex].ToString();
+                    GitItemStatus gitItemStatus = (GitItemStatus)listBox.Items[hoverIndex];
 
-                    float fTextWidth = listBox.CreateGraphics().MeasureString(text, listBox.Font).Width;
+                    string text;
+                    if (gitItemStatus.IsRenamed || gitItemStatus.IsCopied)
+                        text = string.Concat(gitItemStatus.Name, " (", gitItemStatus.OldName, ")");
+                    else
+                        text = gitItemStatus.Name;
+
+                    float fTextWidth = listBox.CreateGraphics().MeasureString(text, listBox.Font).Width + 17;
 
                     //Use width-itemheight because the icon drawn in front of the text is the itemheight
                     if (fTextWidth > (FileStatusListBox.Width - FileStatusListBox.ItemHeight))
                     {
-                        if (!DiffFilesTooltip.GetToolTip(listBox).Equals(text))
-                            DiffFilesTooltip.SetToolTip(listBox, text);
+                        if (!DiffFilesTooltip.GetToolTip(listBox).Equals(gitItemStatus.ToString()))
+                            DiffFilesTooltip.SetToolTip(listBox, gitItemStatus.ToString());
                     }
                     else
                         DiffFilesTooltip.RemoveAll();
@@ -218,20 +224,22 @@ namespace GitUI
 
                 GitItemStatus gitItemStatus = (GitItemStatus)FileStatusListBox.Items[e.Index];
 
+                e.Graphics.FillRectangle(Brushes.White, e.Bounds.Left, e.Bounds.Top, 16, e.Bounds.Height);
+
                 if (gitItemStatus.IsDeleted)
-                    e.Graphics.DrawImage(Resources.Removed, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
+                    e.Graphics.DrawImage(Resources.Removed, e.Bounds.Left, e.Bounds.Top, 16, 16);
                 else
                     if (gitItemStatus.IsNew || !gitItemStatus.IsTracked)
-                        e.Graphics.DrawImage(Resources.Added, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
+                        e.Graphics.DrawImage(Resources.Added, e.Bounds.Left, e.Bounds.Top, 16, 16);
                     else
                         if (gitItemStatus.IsChanged)
-                            e.Graphics.DrawImage(Resources.Modified, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
+                            e.Graphics.DrawImage(Resources.Modified, e.Bounds.Left, e.Bounds.Top, 16, 16);
                         else
                             if (gitItemStatus.IsRenamed)
-                                e.Graphics.DrawImage(Resources.Renamed, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
+                                e.Graphics.DrawImage(Resources.Renamed, e.Bounds.Left, e.Bounds.Top, 16, 16);
                             else
                                 if (gitItemStatus.IsCopied)
-                                    e.Graphics.DrawImage(Resources.Copied, e.Bounds.Left, e.Bounds.Top, e.Bounds.Height, e.Bounds.Height);
+                                    e.Graphics.DrawImage(Resources.Copied, e.Bounds.Left, e.Bounds.Top, 16, 16);
 
                 string text;
                 if (gitItemStatus.IsRenamed || gitItemStatus.IsCopied)
