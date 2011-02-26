@@ -1855,7 +1855,7 @@ This program is destributed in the hope that it will be useful, but WITHOUT ANY 
           <Value>次へ(&amp;N)</Value>
         </TranslationItem>
         <TranslationItem Name="googleTranslate" Property="Text">
-          <Value>Goole翻訳</Value>
+          <Value>Google翻訳</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripTranslationLabel" Property="Text">
           <Value>現在の翻訳：</Value>
