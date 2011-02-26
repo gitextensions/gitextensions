@@ -52,12 +52,12 @@ namespace GitCommands
             string toString = string.Empty;
             if (IsRenamed)
             {
-                toString = string.Concat("Renamed \"", OldName, "\" to \"", Name, "\"");
+                toString = string.Concat("Renamed\n   ", OldName, "\nto\n   ", Name, "");
             }
             else
                 if (IsCopied)
                 {
-                    toString = string.Concat("Copied \"", OldName, "\" to \"", Name, "\"");
+                    toString = string.Concat("Copied\n   ", OldName, "\nto\n   ", Name, "");
                 }
                 else
                 {
@@ -72,7 +72,7 @@ namespace GitCommands
             }
 
             if (!string.IsNullOrEmpty(RenameCopyPercentage))
-                toString +=  string.Concat("(", RenameCopyPercentage, "%)");
+                toString += string.Concat("\nSimilarity ", RenameCopyPercentage, "%");
 
             return toString;
         }
