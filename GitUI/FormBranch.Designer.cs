@@ -130,9 +130,9 @@
             // BName
             // 
             this.BName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.BName.Location = new System.Drawing.Point(88, 6);
+            this.BName.Location = new System.Drawing.Point(112, 6);
             this.BName.Name = "BName";
-            this.BName.Size = new System.Drawing.Size(150, 21);
+            this.BName.Size = new System.Drawing.Size(126, 21);
             this.BName.TabIndex = 0;
             // 
             // FormBranch
