@@ -1,9 +1,16 @@
 ﻿using System.IO;
+using GitCommands;
+using System;
 
 namespace GitUI
 {
+    [Serializable]
+    public delegate void IndexChangedEventHandler(bool indexChanged);
+
     public class IndexWatcher
     {
+        public static event IndexChangedEventHandler Changed;
+
         public IndexWatcher()
         {
             if (GitIndexWatcher == null)
@@ -11,11 +18,11 @@ namespace GitUI
                 GitIndexWatcher = new FileSystemWatcher();
                 RefsWatcher = new FileSystemWatcher();
                 SetFileSystemWatcher();
-            }
 
-            IndexChanged = true;
-            GitIndexWatcher.Changed += fileSystemWatcher_Changed;
-            RefsWatcher.Changed += fileSystemWatcher_Changed;
+                IndexChanged = true;
+                GitIndexWatcher.Changed += fileSystemWatcher_Changed;
+                RefsWatcher.Changed += fileSystemWatcher_Changed;
+            }
         }
 
         private static void SetFileSystemWatcher()
@@ -44,8 +51,8 @@ namespace GitUI
             }
         }
 
-        private bool indexChanged;
-        public bool IndexChanged 
+        private static bool indexChanged;
+        public static bool IndexChanged 
         { 
             get
             {
@@ -69,27 +76,33 @@ namespace GitUI
         static private FileSystemWatcher GitIndexWatcher { get; set; }
         static private FileSystemWatcher RefsWatcher { get; set; }
 
-        void fileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
+        private static void fileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
         {
             IndexChanged = true;
+            if (Changed != null)
+                Changed(IndexChanged);
         }
 
-        public void Reset()
+        public static void Reset()
         {
-            if (Path != GitCommands.Settings.WorkingDirGitDir() ||
-                enabled != GitCommands.Settings.UseFastChecks)
-                SetFileSystemWatcher();
-
             IndexChanged = false;
-        }
-
-        public void Clear()
-        {
+            if (Changed != null)
+                Changed(IndexChanged);
+            
             if (Path != GitCommands.Settings.WorkingDirGitDir() ||
                 enabled != GitCommands.Settings.UseFastChecks)
                 SetFileSystemWatcher();
+        }
 
+        public static void Clear()
+        {
             IndexChanged = true;
+            if (Changed != null)
+                Changed(IndexChanged);
+
+            if (Path != GitCommands.Settings.WorkingDirGitDir() ||
+                enabled != GitCommands.Settings.UseFastChecks)
+                SetFileSystemWatcher();
         }
     }
 }

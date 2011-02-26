@@ -90,7 +90,7 @@ namespace GitCommands
             }
         }
 
-        public string LogParam = "HEAD --all";
+        public string LogParam = "HEAD --branches --remotes --tags";
         public string BranchFilter = String.Empty;
         public RevisionGraphInMemFilter InMemFilter = null;
 

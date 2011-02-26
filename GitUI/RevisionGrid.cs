@@ -35,7 +35,7 @@ namespace GitUI
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
 
         private readonly SynchronizationContext _syncContext;
-        public string LogParam = "HEAD --all --boundary";
+        public string LogParam = "HEAD --branches --remotes --tags --boundary";
         private bool _contextMenuEnabled = true;
 
         private bool _initialLoad = true;
@@ -69,6 +69,7 @@ namespace GitUI
             orderRevisionsByDateToolStripMenuItem.Checked = Settings.OrderRevisionByDate;
             showRelativeDateToolStripMenuItem.Checked = Settings.RelativeDate;
             drawNonrelativesGrayToolStripMenuItem.Checked = Settings.RevisionGraphDrawNonRelativesGray;
+            showGitNotesToolStripMenuItem.Checked = Settings.ShowGitNotes;
 
             BranchFilter = String.Empty;
             SetShowBranches();
@@ -427,7 +428,7 @@ namespace GitUI
 
         public void Load()
         {
-            RefreshRevisions();
+            ForceRefreshRevisions();
         }
 
         public event EventHandler SelectionChanged;
@@ -518,7 +519,7 @@ namespace GitUI
 
         public void RefreshRevisions()
         {
-            if (_indexWatcher.IndexChanged)
+            if (IndexWatcher.IndexChanged)
                 ForceRefreshRevisions();
         }
 
@@ -575,6 +576,8 @@ namespace GitUI
         {
             try
             {
+                ApplyFilterFromRevisionFilterDialog();
+
                 _initialLoad = true;
 
                 LastScrollPos = Revisions.FirstDisplayedScrollingRowIndex;
@@ -626,7 +629,13 @@ namespace GitUI
                 Revisions.Enabled = false;
                 Loading.Visible = true;
 
-                _indexWatcher.Reset();
+                IndexWatcher.Reset();
+
+                if (Settings.ShowGitNotes && !LogParam.Contains(" --glob=notes"))
+                    LogParam = LogParam + " --glob=notes";
+                if (!Settings.ShowGitNotes && LogParam.Contains(" --glob=notes"))
+                    LogParam = LogParam.Replace(" --glob=notes", string.Empty);
+
                 _revisionGraphCommand = new RevisionGraph { BranchFilter = BranchFilter, LogParam = LogParam + Filter };
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
@@ -950,7 +959,6 @@ namespace GitUI
         {
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
-
             var frm = new FormBranchSmall { Revision = GetRevision(LastRow) };
             frm.ShowDialog();
             RefreshRevisions();
@@ -1040,13 +1048,13 @@ namespace GitUI
             BranchFilter = _revisionFilter.GetBranchFilter();
 
             if (!Settings.BranchFilterEnabled)
-                LogParam = "HEAD --all --boundary";
+                LogParam = "HEAD --branches --remotes --tags --boundary";
             else if (Settings.ShowCurrentBranchOnly)
                 LogParam = "HEAD";
             else
                 LogParam = BranchFilter.Length > 0
                                ? String.Empty
-                               : "HEAD --all --boundary";
+                               : "HEAD --branches --remotes --tags --boundary";
         }
 
         private void RevertCommitToolStripMenuItemClick(object sender, EventArgs e)
@@ -1070,6 +1078,11 @@ namespace GitUI
         private void FilterToolStripMenuItemClick(object sender, EventArgs e)
         {
             _revisionFilter.ShowDialog();
+            ForceRefreshRevisions();
+        }
+
+        private void ApplyFilterFromRevisionFilterDialog()
+        {
             Filter = _revisionFilter.GetFilter();
             InMemAuthorFilter = _revisionFilter.GetInMemAuthorFilter();
             InMemCommitterFilter = _revisionFilter.GetInMemCommitterFilter();
@@ -1077,7 +1090,6 @@ namespace GitUI
             InMemFilterIgnoreCase = _revisionFilter.GetIgnoreCase();
             BranchFilter = _revisionFilter.GetBranchFilter();
             SetShowBranches();
-            ForceRefreshRevisions();
         }
 
         private void RevisionsKeyUp(object sender, KeyEventArgs e)
@@ -1133,14 +1145,17 @@ namespace GitUI
                     branchName.Click += copyToClipBoard;
                     branchNameCopy.Items.Add(branchName);
 
-                    if (head.IsHead && !head.IsRemote)
+                    //if (head.IsHead && !head.IsRemote)
                     {
                         toolStripItem = new ToolStripMenuItem(head.Name);
                         toolStripItem.Click += ToolStripItemClickBranch;
                         branchDropDown.Items.Add(toolStripItem);
 
                         toolStripItem = new ToolStripMenuItem(head.Name);
-                        toolStripItem.Click += ToolStripItemClickCheckoutBranch;
+                        if (head.IsRemote)
+                            toolStripItem.Click += ToolStripItemClickCheckoutRemoteBranch;
+                        else
+                            toolStripItem.Click += ToolStripItemClickCheckoutBranch;
                         checkoutBranchDropDown.Items.Add(toolStripItem);
                     }
                 }
@@ -1208,6 +1223,20 @@ namespace GitUI
             OnActionOnRepositoryPerformed();
         }
 
+        private void ToolStripItemClickCheckoutRemoteBranch(object sender, EventArgs e)
+        {
+            var toolStripItem = sender as ToolStripItem;
+
+            if (toolStripItem == null)
+                return;
+
+
+            GitUICommands.Instance.StartCheckoutBranchDialog(toolStripItem.Text, true);
+
+            ForceRefreshRevisions();
+            OnActionOnRepositoryPerformed();
+        }
+
         private void ToolStripItemClickMergeBranch(object sender, EventArgs e)
         {
             var toolStripItem = sender as ToolStripItem;
@@ -1261,15 +1290,6 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-        private void CheckoutBranchToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            if (GitUICommands.Instance.StartCheckoutBranchDialog())
-            {
-                RefreshRevisions();
-                OnActionOnRepositoryPerformed();
-            }
-        }
-
         private void CherryPickCommitToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (Revisions.RowCount <= LastRow || LastRow < 0)
@@ -1277,7 +1297,7 @@ namespace GitUI
 
             var frm = new FormCherryPickCommitSmall(GetRevision(LastRow));
             frm.ShowDialog();
-            RefreshRevisions();
+            ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
         }
 
@@ -1534,6 +1554,13 @@ namespace GitUI
         }
         #endregion
 
+        private void ShowGitNotesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.ShowGitNotes = !showGitNotesToolStripMenuItem.Checked;
+            showGitNotesToolStripMenuItem.Checked = Settings.ShowGitNotes;
+
+            ForceRefreshRevisions();
+        }
         private void InitRepository_Click(object sender, EventArgs e)
         {
             if (GitUICommands.Instance.StartInitializeDialog(Settings.WorkingDir))

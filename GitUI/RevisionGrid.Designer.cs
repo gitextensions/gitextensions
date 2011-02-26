@@ -82,6 +82,7 @@ namespace GitUI
             this.showFilteredBranchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.ShowRemoteBranches = new System.Windows.Forms.ToolStripMenuItem();
+            this.showGitNotesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showRevisionGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.drawNonrelativesGrayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showAuthorDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -238,6 +239,7 @@ namespace GitUI
             this.showAuthorDateToolStripMenuItem,
             this.showRelativeDateToolStripMenuItem,
             this.orderRevisionsByDateToolStripMenuItem,
+            this.showGitNotesToolStripMenuItem,
             this.toolStripSeparator3,
             this.filterToolStripMenuItem,
             this.toolStripSeparator7,
@@ -387,7 +389,6 @@ namespace GitUI
             this.checkoutBranchToolStripMenuItem.Name = "checkoutBranchToolStripMenuItem";
             this.checkoutBranchToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.checkoutBranchToolStripMenuItem.Text = "Checkout branch";
-            this.checkoutBranchToolStripMenuItem.Click += new System.EventHandler(this.CheckoutBranchToolStripMenuItemClick);
             // 
             // checkoutRevisionToolStripMenuItem
             // 
@@ -461,6 +462,13 @@ namespace GitUI
             this.ShowRemoteBranches.Size = new System.Drawing.Size(208, 22);
             this.ShowRemoteBranches.Text = "Show remote branches";
             this.ShowRemoteBranches.Click += new System.EventHandler(this.ShowRemoteBranchesClick);
+            // 
+            // showGitNotesToolStripMenuItem
+            // 
+            this.showGitNotesToolStripMenuItem.Name = "showGitNotesToolStripMenuItem";
+            this.showGitNotesToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.showGitNotesToolStripMenuItem.Text = "Show git notes";
+            this.showGitNotesToolStripMenuItem.Click += new System.EventHandler(this.ShowGitNotesToolStripMenuItem_Click);
             // 
             // showRevisionGraphToolStripMenuItem
             // 
@@ -734,5 +742,6 @@ namespace GitUI
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem runScriptToolStripMenuItem;
         private System.Windows.Forms.Button InitRepository;
+        private System.Windows.Forms.ToolStripMenuItem showGitNotesToolStripMenuItem;
     }
 }

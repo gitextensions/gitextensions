@@ -4,9 +4,16 @@ Changelog
 Version 2.12
 	Fixed issue 368: Browse button does not open dialog in HOME dialog
 	Fixed issue 373: Archive command is not working
+	Fixed issue 376: Added "Save As" button to file history
+	Fixed issue 379: Find Window Sticks in Windows XP Taskbar
+	Fixed issue 381: autostash is not needed when fetching without merge or rebase
+	Fixed "Open With" and "Open" on binairy files
+	Added "dirty index" icon to formbrowse
 	Added impact graph plugin
+	Added Simplified Chinese translation
 	Added support for renamed and copied files
-	Updated msysgit to version 1.7.4
+	Added support for git notes
+	Various bugfixes and minor changes
 
 Version 2.11
 	Fixed crash when refreshing repository grid

@@ -24,6 +24,8 @@ namespace GitUI
             InitializeComponent();
             Translate();
             _search = new TextEditorSearcher();
+
+            ShowInTaskbar = false;
         }
 
         private TextEditorControl Editor
