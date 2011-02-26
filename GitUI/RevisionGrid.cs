@@ -428,7 +428,7 @@ namespace GitUI
 
         public void Load()
         {
-            RefreshRevisions();
+            ForceRefreshRevisions();
         }
 
         public event EventHandler SelectionChanged;
