@@ -13,6 +13,7 @@ namespace GitCommands
         private const string PARENT_LABEL = "parent ";
         private const string AUTHOR_LABEL = "author ";
         private const string COMMITTER_LABEL = "committer ";
+        private const int COMMITHEADER_STRING_LENGTH = 16;
 
         /// <summary>
         /// Private constructor
@@ -156,17 +157,26 @@ namespace GitCommands
             if (logoutputEncoding != Settings.Encoding)
                 body = logoutputEncoding.GetString(Settings.Encoding.GetBytes(body));
 
-            var header = Strings.GetAuthorText() + ":\t" + author + "\n" +
-                         Strings.GetAuthorDateText() + ":\t" + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, authorDate.UtcDateTime) + " (" + authorDate.LocalDateTime.ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")\n" +
-                         Strings.GetCommitterText() + ":\t" + committer + "\n" +
-                         Strings.GetCommitterDateText() + ":\t" + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, commitDate.UtcDateTime) + " (" + commitDate.LocalDateTime.ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")\n" +
-                         Strings.GetCommitHashText() + ":\t" + guid;
+            var header = FillToLenght(Strings.GetAuthorText() + ":", COMMITHEADER_STRING_LENGTH) + author + "\n" +
+                         FillToLenght(Strings.GetAuthorDateText() + ":", COMMITHEADER_STRING_LENGTH) + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, authorDate.UtcDateTime) + " (" + authorDate.LocalDateTime.ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")\n" +
+                         FillToLenght(Strings.GetCommitterText() + ":", COMMITHEADER_STRING_LENGTH) + committer + "\n" +
+                         FillToLenght(Strings.GetCommitterDateText() + ":", COMMITHEADER_STRING_LENGTH) + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, commitDate.UtcDateTime) + " (" + commitDate.LocalDateTime.ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")\n" +
+                         FillToLenght(Strings.GetCommitHashText() + ":", COMMITHEADER_STRING_LENGTH) + guid;
 
             header = RemoveRedundancies(header);
 
             var commitInformation = new CommitInformation(header, body);
 
             return commitInformation;
+        }
+
+        private static string FillToLenght(string input, int length)
+        {
+            const int tabsize = 8;
+            if (input.Length < length)
+                return input + new string('\t', ((length - input.Length) / tabsize) + (((length - input.Length) % tabsize) == 0 ? 0 : 1));
+
+            return input;
         }
 
         private static string GetPersonFromAuthorInfoLine(string authorInfo, int labelLength)
@@ -205,7 +215,7 @@ namespace GitCommands
             {
                 info =
                     RemoveField(info, Strings.GetCommitterDateText() + ":").Replace(
-                        Strings.GetAuthorDateText() + ":\t", Strings.GetDateText() + ":\t\t");
+                        FillToLenght(Strings.GetAuthorDateText() + ":", COMMITHEADER_STRING_LENGTH), FillToLenght(Strings.GetDateText() + ":", COMMITHEADER_STRING_LENGTH));
             }
 
             return info;
