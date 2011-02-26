@@ -162,7 +162,7 @@ namespace GitUI
             }
 
             var stashed = false;
-            if (AutoStash.Checked && GitCommandHelpers.GitStatus(false).Count > 0)
+            if (!Fetch.Checked && AutoStash.Checked && GitCommandHelpers.GitStatus(false).Count > 0)
             {
                 new FormProcess("stash save").ShowDialog();
                 stashed = true;
