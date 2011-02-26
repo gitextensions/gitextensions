@@ -519,7 +519,7 @@ namespace GitUI
 
         public void RefreshRevisions()
         {
-            if (_indexWatcher.IndexChanged)
+            if (IndexWatcher.IndexChanged)
                 ForceRefreshRevisions();
         }
 
@@ -627,7 +627,7 @@ namespace GitUI
                 Revisions.Enabled = false;
                 Loading.Visible = true;
 
-                _indexWatcher.Reset();
+                IndexWatcher.Reset();
 
                 if (Settings.ShowGitNotes && !LogParam.Contains(" --glob=notes"))
                     LogParam = LogParam + " --glob=notes";
@@ -957,7 +957,6 @@ namespace GitUI
         {
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
-
             var frm = new FormBranchSmall { Revision = GetRevision(LastRow) };
             frm.ShowDialog();
             RefreshRevisions();
@@ -1292,7 +1291,7 @@ namespace GitUI
 
             var frm = new FormCherryPickCommitSmall(GetRevision(LastRow));
             frm.ShowDialog();
-            RefreshRevisions();
+            ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
         }
 

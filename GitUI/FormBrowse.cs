@@ -12,11 +12,13 @@ using GitUI.Statistics;
 using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor.Util;
 using GitUI.RepoHosting;
+using System.Threading;
 
 namespace GitUI
 {
     public partial class FormBrowse : GitExtensionsForm
     {
+        private readonly SynchronizationContext syncContext;
         private readonly IndexWatcher _indexWatcher = new IndexWatcher();
 
         private Dashboard _dashboard;
@@ -26,6 +28,8 @@ namespace GitUI
 
         public FormBrowse(string filter)
         {
+            syncContext = SynchronizationContext.Current;
+
             InitializeComponent();
             Translate();
 
@@ -71,10 +75,10 @@ namespace GitUI
 
         private void DashboardWorkingDirChanged(object sender, EventArgs e)
         {
-            _indexWatcher.Clear();
+            IndexWatcher.Clear();
             RevisionGrid.ForceRefreshRevisions();
             InternalInitialize(false);
-            _indexWatcher.Reset();
+            IndexWatcher.Reset();
         }
 
         private void TreeView1AfterSelect(object sender, TreeViewEventArgs e)
@@ -99,9 +103,22 @@ namespace GitUI
             InternalInitialize(false);
             RevisionGrid.Focus();
             RevisionGrid.ActionOnRepositoryPerformed += ActionOnRepositoryPerformed;
-            _indexWatcher.Reset();
+            IndexWatcher.Reset();
+
+            IndexWatcher.Changed += _indexWatcher_Changed;
 
             Cursor.Current = Cursors.Default;
+        }
+
+        void _indexWatcher_Changed(bool indexChanged)
+        {
+            syncContext.Post(o =>
+            {
+                if (indexChanged && Settings.UseFastChecks)
+                    this.RefreshButton.Image = GitUI.Properties.Resources.arrow_refresh_dirty;
+                else
+                    this.RefreshButton.Image = GitUI.Properties.Resources.arrow_refresh;
+            }, this);
         }
 
         private bool pluginsLoaded;
@@ -334,14 +351,14 @@ namespace GitUI
 
         private void ShowRevisions()
         {
-            if (_indexWatcher.IndexChanged)
+            if (IndexWatcher.IndexChanged)
             {
                 RevisionGrid.RefreshRevisions();
                 FillFileTree();
                 FillDiff();
                 FillCommitInfo();
             }
-            _indexWatcher.Reset();
+            IndexWatcher.Reset();
         }
 
         private void FillFileTree()
@@ -651,10 +668,10 @@ namespace GitUI
         {
             new Open().ShowDialog();
 
-            _indexWatcher.Clear();
+            IndexWatcher.Clear();
             RevisionGrid.ForceRefreshRevisions();
             InternalInitialize(false);
-            _indexWatcher.Reset();
+            IndexWatcher.Reset();
         }
 
         private void CheckoutToolStripMenuItemClick(object sender, EventArgs e)
@@ -726,7 +743,7 @@ namespace GitUI
             {
                 RevisionGrid.ForceRefreshRevisions();
                 InternalInitialize(false);
-                _indexWatcher.Reset();
+                IndexWatcher.Reset();
             }
         }
 
@@ -1304,10 +1321,10 @@ namespace GitUI
         {
             Settings.WorkingDir = "";
 
-            _indexWatcher.Clear();
+            IndexWatcher.Clear();
             RevisionGrid.ForceRefreshRevisions();
             InternalInitialize(false);
-            _indexWatcher.Reset();
+            IndexWatcher.Reset();
         }
 
         public override void CancelButtonClick(object sender, EventArgs e)
@@ -1319,10 +1336,10 @@ namespace GitUI
             }
             Settings.WorkingDir = "";
 
-            _indexWatcher.Clear();
+            IndexWatcher.Clear();
             RevisionGrid.ForceRefreshRevisions();
             InternalInitialize(false);
-            _indexWatcher.Reset();
+            IndexWatcher.Reset();
         }
 
         private void GitTreeMouseDown(object sender, MouseEventArgs e)
