@@ -576,6 +576,8 @@ namespace GitUI
         {
             try
             {
+                ApplyFilterFromRevisionFilterDialog();
+
                 _initialLoad = true;
 
                 LastScrollPos = Revisions.FirstDisplayedScrollingRowIndex;
@@ -1076,6 +1078,11 @@ namespace GitUI
         private void FilterToolStripMenuItemClick(object sender, EventArgs e)
         {
             _revisionFilter.ShowDialog();
+            ForceRefreshRevisions();
+        }
+
+        private void ApplyFilterFromRevisionFilterDialog()
+        {
             Filter = _revisionFilter.GetFilter();
             InMemAuthorFilter = _revisionFilter.GetInMemAuthorFilter();
             InMemCommitterFilter = _revisionFilter.GetInMemCommitterFilter();
@@ -1083,7 +1090,6 @@ namespace GitUI
             InMemFilterIgnoreCase = _revisionFilter.GetIgnoreCase();
             BranchFilter = _revisionFilter.GetBranchFilter();
             SetShowBranches();
-            ForceRefreshRevisions();
         }
 
         private void RevisionsKeyUp(object sender, KeyEventArgs e)
