@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
 using PatchApply;
+using GitUI.Hotkey;
 
 namespace GitUI
 {
@@ -131,7 +132,74 @@ namespace GitUI
             SelectedDiff.AddContextMenuEntry(_resetSelectedLines.Text, ResetSelectedLinesToolStripMenuItemClick);
 
             splitMain.SplitterDistance = Settings.CommitDialogSplitter;
+
+            this.Hotkeys = CreateHotkeys();
+            this.HotkeysEnabled = true;
         }
+
+        #region Hotkey commands
+
+        internal enum Commands : int
+        {
+          FocusStagedFiles,
+          FocusUnstagedFiles,
+          FocusSelectedDiff,
+          FocusCommitMessage
+        }
+
+        private void FocusStagedFiles()
+        {
+          FocusFileList(this.Staged);
+        }
+
+        private void FocusUnstagedFiles()
+        {
+          FocusFileList(this.Unstaged);
+        }
+
+        /// <summary>Helper method that moves the focus to the supplied FileStatusList</summary>
+        private void FocusFileList(FileStatusList fileStatusList)
+        {
+          fileStatusList.Focus();
+          fileStatusList.SelectedItem = fileStatusList.GitItemStatuses.Count > 0 ? fileStatusList.GitItemStatuses[0] : null;
+        }
+
+        private void FocusSelectedDiff()
+        {
+          this.SelectedDiff.Focus();
+        }
+
+        private void FocusCommitMessage()
+        {
+          this.Message.StartEditing();
+        }
+
+        protected override void ExecuteCommand(int cmd)
+        {
+          Commands command = (Commands)cmd;
+          
+          switch (command)
+          {
+            case Commands.FocusStagedFiles: FocusStagedFiles(); break;
+            case Commands.FocusUnstagedFiles: FocusUnstagedFiles(); break;
+            case Commands.FocusSelectedDiff: FocusSelectedDiff(); break;
+            case Commands.FocusCommitMessage: FocusCommitMessage(); break;
+          }
+        }
+
+        private IEnumerable<HotkeyMapping> CreateHotkeys()
+        {
+          return new[]
+          {
+            new HotkeyMapping(Keys.Control | Keys.D1, (int)Commands.FocusUnstagedFiles),
+            new HotkeyMapping(Keys.Control | Keys.D2, (int)Commands.FocusSelectedDiff),
+            new HotkeyMapping(Keys.Control | Keys.D3, (int)Commands.FocusStagedFiles),
+            new HotkeyMapping(Keys.Control | Keys.D4, (int)Commands.FocusCommitMessage)
+          };
+        }
+
+        #endregion
+
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
