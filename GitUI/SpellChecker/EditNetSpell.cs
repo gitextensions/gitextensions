@@ -436,5 +436,10 @@ namespace GitUI.SpellChecker
         {
             OnKeyDown(e);
         }
+
+        public void StartEditing()
+        {
+          EmptyLabelClick(null, null);
+        }
     }
 }
