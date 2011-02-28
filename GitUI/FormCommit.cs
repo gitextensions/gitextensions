@@ -14,7 +14,7 @@ using GitUI.Hotkey;
 
 namespace GitUI
 {
-    public partial class FormCommit : GitExtensionsForm
+    public partial class FormCommit : GitExtensionsForm, IHotkeyable
     {
         #region Translation strings
         private readonly TranslationString _alsoDeleteUntrackedFiles =
@@ -94,6 +94,7 @@ namespace GitUI
         private GitItemStatus _currentItem;
         private bool _currentItemStaged;
         private readonly ToolStripItem _StageSelectedLinesToolStripMenuItem;
+        private readonly Hotkey.HotkeyManager<FormCommit> HotkeyManager = new HotkeyManager<FormCommit>();
 
         public FormCommit()
         {
@@ -138,6 +139,22 @@ namespace GitUI
         }
 
         #region Hotkey commands
+
+        private IEnumerable<HotkeyableCommand> _AvailableCommands;
+        IEnumerable<HotkeyableCommand> IHotkeyable.AvailableCommands 
+        { 
+          get 
+          {
+            if (_AvailableCommands == null)
+              _AvailableCommands = GetAvailableCommands();
+            return _AvailableCommands; 
+          } 
+        }
+
+        private IEnumerable<HotkeyableCommand> GetAvailableCommands()
+        {
+          return Enum.GetValues(typeof(Commands)).Cast<Commands>().Select(c => new HotkeyableCommand((int)c, c.ToString())).ToArray();
+        }
 
         internal enum Commands : int
         {
