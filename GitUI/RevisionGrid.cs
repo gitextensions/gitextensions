@@ -636,7 +636,7 @@ namespace GitUI
                 if (!Settings.ShowGitNotes && LogParam.Contains(" --glob=notes"))
                     LogParam = LogParam.Replace(" --glob=notes", string.Empty);
 
-                _revisionGraphCommand = new RevisionGraph { BranchFilter = BranchFilter, LogParam = LogParam + Filter };
+                _revisionGraphCommand = new RevisionGraph { BranchFilter = BranchFilter, LogParam = LogParam + Filter + _revisionFilter.GetFilter() };
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
                 _revisionGraphCommand.Error += _revisionGraphCommand_Error;
@@ -682,6 +682,7 @@ namespace GitUI
         {
             return (inclBranchFilter && !string.IsNullOrEmpty(BranchFilter)) ||
                    !(string.IsNullOrEmpty(Filter) &&
+                     string.IsNullOrEmpty(_revisionFilter.GetFilter()) &&
                      string.IsNullOrEmpty(InMemAuthorFilter) &&
                      string.IsNullOrEmpty(InMemCommitterFilter) &&
                      string.IsNullOrEmpty(InMemMessageFilter));
@@ -1083,7 +1084,6 @@ namespace GitUI
 
         private void ApplyFilterFromRevisionFilterDialog()
         {
-            Filter = _revisionFilter.GetFilter();
             InMemAuthorFilter = _revisionFilter.GetInMemAuthorFilter();
             InMemCommitterFilter = _revisionFilter.GetInMemCommitterFilter();
             InMemMessageFilter = _revisionFilter.GetInMemMessageFilter();
