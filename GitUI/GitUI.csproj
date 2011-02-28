@@ -94,9 +94,11 @@
     <Compile Include="Hotkey\FormHotkeys.Designer.cs">
       <DependentUpon>FormHotkeys.cs</DependentUpon>
     </Compile>
-    <Compile Include="Hotkey\HotkeyFormFactory.cs" />
+    <Compile Include="Hotkey\HotkeyableCommand.cs" />
+    <Compile Include="Hotkey\HotkeyManager.cs" />
     <Compile Include="Hotkey\HotkeyMapping.cs" />
     <Compile Include="Hotkey\HotkeySettings.cs" />
+    <Compile Include="Hotkey\HotkeySettingsManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Editor\FileViewer.cs">
       <SubType>UserControl</SubType>

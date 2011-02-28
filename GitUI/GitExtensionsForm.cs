@@ -18,8 +18,6 @@ namespace GitUI
 
         private bool _translated;
 
-        private GitUI.Hotkey.HotkeyFormFactory HotkeyFormFactory = new Hotkey.HotkeyFormFactory();
-
         public GitExtensionsForm()
         {
             Icon = ApplicationIcon;
@@ -70,8 +68,6 @@ namespace GitUI
         {
         }
 
-        
-        
         #endregion
 
         private void SetFont()

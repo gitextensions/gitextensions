@@ -14,6 +14,8 @@ namespace GitUI.Hotkey
     public FormHotkeys()
     {
       InitializeComponent();
+
+      Translate();
     }
   }
 }

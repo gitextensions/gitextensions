@@ -7,6 +7,9 @@ using System.Xml.Serialization;
 
 namespace GitUI.Hotkey
 {
+  /// <summary>
+  /// Maps a command (int) to a KeyData
+  /// </summary>
   [Serializable]
   public class HotkeyMapping
   {
