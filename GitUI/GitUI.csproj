@@ -88,6 +88,10 @@
     <Compile Include="AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="Hotkey\FormHotkeys.cs" />
+    <Compile Include="Hotkey\FormHotkeys.Designer.cs">
+      <DependentUpon>FormHotkeys.cs</DependentUpon>
+    </Compile>
     <Compile Include="Hotkey\HotkeyMapping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Editor\FileViewer.cs">
