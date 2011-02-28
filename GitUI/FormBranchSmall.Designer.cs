@@ -45,9 +45,10 @@
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(356, 5);
+            this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.Ok.Location = new System.Drawing.Point(336, 5);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(108, 25);
+            this.Ok.Size = new System.Drawing.Size(128, 25);
             this.Ok.TabIndex = 4;
             this.Ok.Text = "Create branch";
             this.Ok.UseVisualStyleBackColor = true;
@@ -55,9 +56,11 @@
             // 
             // BranchNameTextBox
             // 
-            this.BranchNameTextBox.Location = new System.Drawing.Point(127, 6);
+            this.BranchNameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.BranchNameTextBox.Location = new System.Drawing.Point(143, 6);
             this.BranchNameTextBox.Name = "BranchNameTextBox";
-            this.BranchNameTextBox.Size = new System.Drawing.Size(223, 21);
+            this.BranchNameTextBox.Size = new System.Drawing.Size(187, 21);
             this.BranchNameTextBox.TabIndex = 3;
             this.BranchNameTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.BranchNameTextBoxKeyUp);
             // 
@@ -66,7 +69,7 @@
             this.CheckoutAfterCreate.AutoSize = true;
             this.CheckoutAfterCreate.Checked = true;
             this.CheckoutAfterCreate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CheckoutAfterCreate.Location = new System.Drawing.Point(127, 32);
+            this.CheckoutAfterCreate.Location = new System.Drawing.Point(143, 33);
             this.CheckoutAfterCreate.Name = "CheckoutAfterCreate";
             this.CheckoutAfterCreate.Size = new System.Drawing.Size(132, 17);
             this.CheckoutAfterCreate.TabIndex = 6;
@@ -82,7 +85,6 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.Ok);
             this.Controls.Add(this.BranchNameTextBox);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormBranchSmall";
