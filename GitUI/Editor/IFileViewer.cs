@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace GitUI.Editor
 {
@@ -21,6 +22,8 @@ namespace GitUI.Editor
         string GetText();
         void SetText(string text);
         void SetHighlighting(string syntax);
+        void HighlightLine(int line, Color color);
+        void ClearHighlighting();
         string GetSelectedText();
         int GetSelectionPosition();
         int GetSelectionLength();
@@ -35,6 +38,7 @@ namespace GitUI.Editor
         bool Visible { get; set; }
         
         int FirstVisibleLine { get; set; }
+        int GetLineFromVisualPosY(int visualPosY);
         string GetLineText(int line);
         int TotalNumberOfLines { get; }
     }
