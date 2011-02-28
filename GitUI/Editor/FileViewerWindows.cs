@@ -349,9 +349,30 @@ namespace GitUI.Editor
             }
         }
 
+        public int GetLineFromVisualPosY(int visualPosY)
+        {
+            return TextEditor.ActiveTextAreaControl.TextArea.TextView.GetLogicalLine(visualPosY);
+        }
+
         public string GetLineText(int line)
         {
             return TextEditor.Document.GetText(TextEditor.Document.GetLineSegment(line));
+        }
+
+        public void HighlightLine(int line, Color color)
+        {
+            var document = TextEditor.Document;
+            var markerStrategy = document.MarkerStrategy;
+            var lineSegment = document.GetLineSegment(line);
+            markerStrategy.AddMarker(new TextMarker(lineSegment.Offset,
+                                                    lineSegment.Length, TextMarkerType.SolidBlock, color
+                                                    ));
+        }
+
+        public void ClearHighlighting()
+        {
+            var document = TextEditor.Document;
+            document.MarkerStrategy.RemoveAll(t => true);
         }
 
         public int TotalNumberOfLines
