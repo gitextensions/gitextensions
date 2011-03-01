@@ -58,7 +58,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
             this.splitContainer1.Size = new System.Drawing.Size(735, 641);
-            this.splitContainer1.SplitterDistance = 142;
+            this.splitContainer1.SplitterDistance = 157;
             this.splitContainer1.TabIndex = 7;
             // 
             // commitInfo
@@ -68,7 +68,7 @@
             this.commitInfo.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.commitInfo.Location = new System.Drawing.Point(0, 0);
             this.commitInfo.Name = "commitInfo";
-            this.commitInfo.Size = new System.Drawing.Size(735, 142);
+            this.commitInfo.Size = new System.Drawing.Size(735, 157);
             this.commitInfo.TabIndex = 5;
             // 
             // splitContainer2
@@ -85,7 +85,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.BlameFile);
-            this.splitContainer2.Size = new System.Drawing.Size(735, 495);
+            this.splitContainer2.Size = new System.Drawing.Size(735, 480);
             this.splitContainer2.SplitterDistance = 160;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -101,7 +101,7 @@
             this.BlameCommitter.ScrollPos = 0;
             this.BlameCommitter.ShowEntireFile = false;
             this.BlameCommitter.ShowLineNumbers = true;
-            this.BlameCommitter.Size = new System.Drawing.Size(158, 493);
+            this.BlameCommitter.Size = new System.Drawing.Size(158, 478);
             this.BlameCommitter.TabIndex = 5;
             this.BlameCommitter.TreatAllFilesAsText = false;
             // 
@@ -117,7 +117,7 @@
             this.BlameFile.ScrollPos = 0;
             this.BlameFile.ShowEntireFile = false;
             this.BlameFile.ShowLineNumbers = true;
-            this.BlameFile.Size = new System.Drawing.Size(569, 493);
+            this.BlameFile.Size = new System.Drawing.Size(569, 478);
             this.BlameFile.TabIndex = 0;
             this.BlameFile.TreatAllFilesAsText = false;
             // 
