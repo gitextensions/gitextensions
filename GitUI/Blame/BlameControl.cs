@@ -27,6 +27,7 @@ namespace GitUI.Blame
 
             BlameFile.MouseMove += new MouseEventHandler(BlameFile_MouseMove);
             BlameFile.MouseLeave += new EventHandler(BlameFile_MouseLeave);
+            //BlameFile.MouseHover
         }
 
         void BlameFile_MouseLeave(object sender, EventArgs e)
@@ -51,6 +52,22 @@ namespace GitUI.Blame
 
             string tooltipText = blameHeader.ToString();
 
+            if (lastTooltip != tooltipText)
+            {
+                BlameCommitter.ClearHighlighting();
+                BlameFile.ClearHighlighting();
+                for (int i = 0; i < _blame.Lines.Count; i++)
+                {
+                    if (_blame.Lines[i].CommitGuid == blameHeader.CommitGuid)
+                    {
+                        BlameCommitter.HighlightLine(i, Color.FromArgb(225, 225, 225));
+                        BlameFile.HighlightLine(i, Color.FromArgb(225, 225, 225));
+                    }
+                }
+                BlameCommitter.Refresh();
+                BlameFile.Refresh();
+            }
+
             int newTooltipX = e.X + splitContainer2.SplitterDistance + 20;
             int newTooltipY = e.Y + splitContainer1.SplitterDistance + 20;
 
@@ -59,21 +76,8 @@ namespace GitUI.Blame
                 lastTooltip = tooltipText;
                 lastTooltipX = newTooltipX;
                 lastTooltipY = newTooltipY;
-                blameTooltip.Show(tooltipText, this, newTooltipX, newTooltipY);
+                //blameTooltip.Show(tooltipText, this, newTooltipX, newTooltipY);
             }
-
-            BlameCommitter.ClearHighlighting();
-            BlameFile.ClearHighlighting();
-            for (int i = 0; i < _blame.Lines.Count; i++)
-            {
-                if (_blame.Lines[i].CommitGuid == blameHeader.CommitGuid)
-                {
-                    BlameCommitter.HighlightLine(i, Color.FromArgb(245, 245, 245));
-                    BlameFile.HighlightLine(i, Color.FromArgb(245, 245, 245));
-                }
-            }
-            BlameCommitter.Refresh();
-            BlameFile.Refresh();
         }
 
         void BlameFile_SelectedLineChanged(object sender, int selectedLine)
@@ -113,7 +117,7 @@ namespace GitUI.Blame
                     blameCommitter.AppendLine(new string(' ', 200));
                 } else
                 {
-                    blameCommitter.AppendLine(_blame.FindHeaderForCommitGuid(blameLine.CommitGuid).Committer + new string(' ', 200));
+                    blameCommitter.AppendLine(blameHeader.Author + " - " + blameHeader.AuthorTime.ToString() + " - " + blameHeader.FileName + new string(' ', 100));
                 }
                 blameFile.AppendLine(blameLine.LineText);
             }
