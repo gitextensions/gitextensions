@@ -41,7 +41,7 @@ namespace GitUI
         protected bool HotkeysEnabled { get; set; }
 
         /// <summary>Gets or sets the hotkeys</summary>
-        protected IEnumerable<Hotkey.HotkeyMapping> Hotkeys { get; set; }
+        protected IEnumerable<Hotkey.HotkeyCommand> Hotkeys { get; set; }
 
         /// <summary>Overridden: Checks if a hotkey wants to handle the key before letting the message propagate</summary>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -51,7 +51,7 @@ namespace GitUI
             {
               if (hotkey.KeyData == keyData)
               {
-                ExecuteCommand(hotkey.Command);
+                ExecuteCommand(hotkey.CommandCode);
                 return true;
               }
             }

@@ -5,28 +5,24 @@ using System.Text;
 
 namespace GitUI.Hotkey
 {
-  public interface IHotkeyable
-  {
-    //string Name;
-    IEnumerable<HotkeyableCommand> AvailableCommands { get; }
-  }
+  ///// <summary>
+  ///// 
+  ///// </summary>
+  //public class HotkeyManager
+  //{
 
-  /// <summary>
-  /// 
-  /// </summary>
-  public class HotkeyManager<T> 
-    where T : IHotkeyable
-  {
+  //  internal void Edit()
+  //  {
+  //    // Retrieve the HotkeySettings
+  //    HotkeySettingsManager settingsManager = new HotkeySettingsManager();
+  //    var mappings = settingsManager.LoadSettings();
 
-    internal void Edit()
-    {
-      HotkeySettingsManager<T> settingsManager = new HotkeySettingsManager<T>();
-      var mappings = settingsManager.LoadSettings();
+  //    using (FormHotkeys form = new FormHotkeys())
+  //    {
+  //      form.SetHotkeys(mappings);
 
-      using (FormHotkeys form = new FormHotkeys())
-      {
-        form.ShowDialog();
-      }
-    }
-  }
+  //      form.ShowDialog();
+  //    }
+  //  }
+  //}
 }

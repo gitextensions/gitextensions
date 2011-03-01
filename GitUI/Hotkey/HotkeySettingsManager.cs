@@ -5,25 +5,24 @@ using System.Text;
 
 namespace GitUI.Hotkey
 {
-  class HotkeySettingsManager<T>
+  class HotkeySettingsManager
   {
-    public void SaveSettings(HotkeyMapping[] hotkeys)
+    public HotkeySettings[] LoadSettings()
     {
-      var settings = CreateSettings(hotkeys);
-    }
-
-    private HotkeySettings CreateSettings(HotkeyMapping[] hotkeys)
-    {
-      return new HotkeySettings()
+      // Check if we have saved some 
+      return new[]
       {
-        Name = typeof(T).FullName,
-        Mappings = hotkeys
+        new FormCommit().CreateSetting()
       };
     }
 
-    public HotkeyMapping[] LoadSettings()
-    {
-      return null;
-    }
+    //public void SaveSettings(HotkeySettings settings)
+    //{
+    //}
+
+    //public HotkeySettings LoadSettings(string name)
+    //{
+    //  return null;
+    //}
   }
 }
