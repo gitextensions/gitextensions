@@ -725,7 +725,6 @@ namespace GitUI
                                           NoCommits.Visible = true;
                                           Revisions.Visible = false;
                                           Loading.Visible = false;
-                                          DisposeRevisionGraphCommand();
                                       }, this);
             }
             else
@@ -736,7 +735,6 @@ namespace GitUI
                                           UpdateGraph(null);
                                           Loading.Visible = false;
                                           SelectInitialRevision();
-                                          DisposeRevisionGraphCommand();
                                       }, this);
             }
         }
