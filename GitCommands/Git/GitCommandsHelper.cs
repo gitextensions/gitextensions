@@ -2190,10 +2190,11 @@ namespace GitCommands
         {
             from = FixPath(from);
             filename = FixPath(filename);
+            string blameCommand = string.Format("blame --porcelain -M -w -l \"{0}\" -- \"{1}\"", from, filename);
             var itemsStrings =
                 RunCmd(
                     Settings.GitCommand,
-                    string.Format("blame --porcelain -M -w -l \"{0}\" -- \"{1}\"", from, filename)
+                    blameCommand
                     )
                     .Split('\n');
 
@@ -2204,53 +2205,62 @@ namespace GitCommands
 
             for (int i = 0; i < itemsStrings.GetLength(0); i++)
             {
-                string line = itemsStrings[i];
+                try
+                {
+                    string line = itemsStrings[i];
 
-                //The contents of the actual line is output after the above header, prefixed by a TAB. This is to allow adding more header elements later.
-                if (line.StartsWith("\t"))
-                    blameLine.LineText = line.Substring(1);//trim first tab
-                else
-                    if (line.StartsWith("author-mail"))
-                        blameHeader.AuthorMail = line.Substring("author-mail".Length).Trim();
+                    //The contents of the actual line is output after the above header, prefixed by a TAB. This is to allow adding more header elements later.
+                    if (line.StartsWith("\t"))
+                        blameLine.LineText = line.Substring(1);//trim first tab
                     else
-                        if (line.StartsWith("author-time"))
-                            blameHeader.AuthorTime = line.Substring("author-time".Length).Trim();
+                        if (line.StartsWith("author-mail"))
+                            blameHeader.AuthorMail = line.Substring("author-mail".Length).Trim();
                         else
-                            if (line.StartsWith("author-tz"))
-                                blameHeader.AuthorTimeZone = line.Substring("author-tz".Length).Trim();
+                            if (line.StartsWith("author-time"))
+                                blameHeader.AuthorTime = (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddSeconds(int.Parse(line.Substring("author-time".Length).Trim()));
                             else
-                                if (line.StartsWith("author"))
-                                {
-                                    blameHeader = new GitBlameHeader();
-                                    blameHeader.CommitGuid = blameLine.CommitGuid;
-                                    blameHeader.Author = line.Substring("author".Length).Trim();
-                                    blame.Headers.Add(blameHeader);
-                                }
+                                if (line.StartsWith("author-tz"))
+                                    blameHeader.AuthorTimeZone = line.Substring("author-tz".Length).Trim();
                                 else
-                                    if (line.StartsWith("committer-mail"))
-                                        blameHeader.CommitterMail = line.Substring("committer-mail".Length).Trim();
+                                    if (line.StartsWith("author"))
+                                    {
+                                        blameHeader = new GitBlameHeader();
+                                        blameHeader.CommitGuid = blameLine.CommitGuid;
+                                        blameHeader.Author = line.Substring("author".Length).Trim();
+                                        blame.Headers.Add(blameHeader);
+                                    }
                                     else
-                                        if (line.StartsWith("committer-time"))
-                                            blameHeader.CommitterTime = line.Substring("committer-time".Length).Trim();
+                                        if (line.StartsWith("committer-mail"))
+                                            blameHeader.CommitterMail = line.Substring("committer-mail".Length).Trim();
                                         else
-                                            if (line.StartsWith("committer-tz"))
-                                                blameHeader.CommitterTimeZone = line.Substring("committer-tz".Length).Trim();
+                                            if (line.StartsWith("committer-time"))
+                                                blameHeader.CommitterTime = (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddSeconds(int.Parse(line.Substring("committer-time".Length).Trim()));
                                             else
-                                                if (line.StartsWith("committer"))
-                                                    blameHeader.Committer = line.Substring("committer".Length).Trim();
+                                                if (line.StartsWith("committer-tz"))
+                                                    blameHeader.CommitterTimeZone = line.Substring("committer-tz".Length).Trim();
                                                 else
-                                                    if (line.StartsWith("summary"))
-                                                        blameHeader.Summary = line.Substring("summary".Length).Trim();
+                                                    if (line.StartsWith("committer"))
+                                                        blameHeader.Committer = line.Substring("committer".Length).Trim();
                                                     else
-                                                        if (line.StartsWith("filename"))
-                                                            blameHeader.FileName = line.Substring("filename".Length).Trim();
+                                                        if (line.StartsWith("summary"))
+                                                            blameHeader.Summary = line.Substring("summary".Length).Trim();
                                                         else
-                                                            if (line.IndexOf(' ') == 40) //SHA1, create new line!
-                                                            {
-                                                                blameLine = new GitBlameLine();
-                                                                blameLine.CommitGuid = line.Substring(0, 40);
-                                                                blame.Lines.Add(blameLine);
-                                                            }
+                                                            if (line.StartsWith("filename"))
+                                                                blameHeader.FileName = line.Substring("filename".Length).Trim();
+                                                            else
+                                                                if (line.IndexOf(' ') == 40) //SHA1, create new line!
+                                                                {
+                                                                    blameLine = new GitBlameLine();
+                                                                    blameLine.CommitGuid = line.Substring(0, 40);
+                                                                    blame.Lines.Add(blameLine);
+                                                                }
+                }
+                catch
+                {
+                    //Catch all parser errors, and ignore them all!
+                    //We should never get here...
+                    Settings.GitLog.Log("Error parsing output from command: " + blameCommand + "\n\nPlease report a bug!");
+                }
             }
 
 
