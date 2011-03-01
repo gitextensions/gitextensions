@@ -100,11 +100,13 @@
     <Compile Include="Hotkey\FormHotkeys.Designer.cs">
       <DependentUpon>FormHotkeys.cs</DependentUpon>
     </Compile>
-    <Compile Include="Hotkey\HotkeyableCommand.cs" />
+    <Compile Include="Hotkey\HotkeyCommand.cs" />
     <Compile Include="Hotkey\HotkeyManager.cs" />
     <Compile Include="Hotkey\HotkeyMapping.cs" />
     <Compile Include="Hotkey\HotkeySettings.cs" />
     <Compile Include="Hotkey\HotkeySettingsManager.cs" />
+    <Compile Include="Hotkey\IHotkeyable.cs" />
+    <Compile Include="Hotkey\IHotkeyableExtensions.cs" />
     <Compile Include="Hotkey\KeysExtensions.cs" />
     <Compile Include="Hotkey\TextboxHotkey.cs">
       <SubType>Component</SubType>
@@ -772,6 +774,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Hotkey\ControlHotkeys.resx">
       <DependentUpon>ControlHotkeys.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Hotkey\FormHotkeys.resx">
+      <DependentUpon>FormHotkeys.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RepoHosting\CreatePullRequestForm.resx">
       <DependentUpon>CreatePullRequestForm.cs</DependentUpon>

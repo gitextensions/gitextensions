@@ -94,7 +94,6 @@ namespace GitUI
         private GitItemStatus _currentItem;
         private bool _currentItemStaged;
         private readonly ToolStripItem _StageSelectedLinesToolStripMenuItem;
-        private readonly Hotkey.HotkeyManager<FormCommit> HotkeyManager = new HotkeyManager<FormCommit>();
 
         public FormCommit()
         {
@@ -134,14 +133,16 @@ namespace GitUI
 
             splitMain.SplitterDistance = Settings.CommitDialogSplitter;
 
-            this.Hotkeys = CreateHotkeys();
+            //this.Hotkeys = CreateHotkeys();
             this.HotkeysEnabled = true;
         }
 
         #region Hotkey commands
 
-        private IEnumerable<HotkeyableCommand> _AvailableCommands;
-        IEnumerable<HotkeyableCommand> IHotkeyable.AvailableCommands 
+        string IHotkeyable.Name { get { return "Commit"; } }
+
+        private IEnumerable<HotkeyCommand> _AvailableCommands;
+        IEnumerable<HotkeyCommand> IHotkeyable.AvailableCommands 
         { 
           get 
           {
@@ -151,9 +152,10 @@ namespace GitUI
           } 
         }
 
-        private IEnumerable<HotkeyableCommand> GetAvailableCommands()
+        private IEnumerable<HotkeyCommand> GetAvailableCommands()
         {
-          return Enum.GetValues(typeof(Commands)).Cast<Commands>().Select(c => new HotkeyableCommand((int)c, c.ToString())).ToArray();
+          return HotkeyCommand.FromEnum(typeof(Commands));
+          //return Enum.GetValues(typeof(Commands)).Cast<Commands>().Select(c => new HotkeyableCommand((int)c, c.ToString())).ToArray();
         }
 
         internal enum Commands : int
@@ -204,16 +206,16 @@ namespace GitUI
           }
         }
 
-        private IEnumerable<HotkeyMapping> CreateHotkeys()
-        {
-          return new[]
-          {
-            new HotkeyMapping(Keys.Control | Keys.D1, (int)Commands.FocusUnstagedFiles),
-            new HotkeyMapping(Keys.Control | Keys.D2, (int)Commands.FocusSelectedDiff),
-            new HotkeyMapping(Keys.Control | Keys.D3, (int)Commands.FocusStagedFiles),
-            new HotkeyMapping(Keys.Control | Keys.D4, (int)Commands.FocusCommitMessage)
-          };
-        }
+        //private IEnumerable<HotkeyMapping> CreateHotkeys()
+        //{
+        //  return new[]
+        //  {
+        //    new HotkeyMapping(Keys.Control | Keys.D1, (int)Commands.FocusUnstagedFiles),
+        //    new HotkeyMapping(Keys.Control | Keys.D2, (int)Commands.FocusSelectedDiff),
+        //    new HotkeyMapping(Keys.Control | Keys.D3, (int)Commands.FocusStagedFiles),
+        //    new HotkeyMapping(Keys.Control | Keys.D4, (int)Commands.FocusCommitMessage)
+        //  };
+        //}
 
         #endregion
 

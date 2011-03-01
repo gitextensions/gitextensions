@@ -28,11 +28,20 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.components = new System.ComponentModel.Container();
+      this.SuspendLayout();
+      // 
+      // FormHotkeys
+      // 
+      this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.Text = "FormHotkeys";
+      this.ClientSize = new System.Drawing.Size(465, 506);
+      this.Name = "FormHotkeys";
+      this.Text = "Hotkeys";
+      this.ResumeLayout(false);
+
     }
 
     #endregion
+
   }
 }
