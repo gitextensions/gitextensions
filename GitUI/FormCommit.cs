@@ -268,6 +268,7 @@ namespace GitUI
                     showUntrackedFilesToolStripMenuItem.Checked);
             _gitGetUnstagedCommand.CmdStartProcess(Settings.GitCommand, allChangedFilesCmd);
             Loading.Visible = true;
+            LoadingStaged.Visible = true;
 
             Commit.Focus();
             AcceptButton = Commit;
@@ -309,6 +310,7 @@ namespace GitUI
             Staged.GitItemStatuses = unStagedFiles;
 
             Loading.Visible = false;
+            LoadingStaged.Visible = false;
 
             EnableStageButtons(true);
             workingToolStripMenuItem.Enabled = true;
@@ -522,6 +524,7 @@ namespace GitUI
                 if (Staged.GitItemStatuses.Count > 10 && Staged.SelectedItems.Count == Staged.GitItemStatuses.Count)
                 {
                     Loading.Visible = true;
+                    LoadingStaged.Visible = true;
                     GitCommandHelpers.ResetMixed("HEAD");
                     Initialize();
                 }
@@ -1079,7 +1082,7 @@ namespace GitUI
             }
         }
 
-        private static void Message_KeyDown(object sender, KeyEventArgs e)
+        private void Message_KeyDown(object sender, KeyEventArgs e)
         {
             // Prevent adding a line break when all we want is to commit
             if (e.Control && e.KeyCode == Keys.Enter)
