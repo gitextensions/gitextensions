@@ -1591,7 +1591,7 @@ namespace GitCommands
             to = FixPath(to);
 
             var patchManager = new PatchManager();
-            var arguments = string.Format("diff{0} -M \"{1}\" \"{2}\" -- {3} {4}", extraDiffArguments, to, from, fileName, oldFileName);
+            var arguments = string.Format("diff{0} -M -C \"{1}\" \"{2}\" -- {3} {4}", extraDiffArguments, to, from, fileName, oldFileName);
             patchManager.LoadPatch(RunCachableCmd(Settings.GitCommand, arguments), false);
 
             return patchManager.Patches.Count > 0 ? patchManager.Patches[0] : null;
