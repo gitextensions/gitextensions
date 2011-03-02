@@ -11,6 +11,7 @@ namespace GitUI.Blame
     {
         private GitBlame _blame;
         private string _lastRevision;
+        private RevisionGrid _revGrid;
 
         public BlameControl()
         {
@@ -99,12 +100,13 @@ namespace GitUI.Blame
             SyncBlameViews();
         }
 
-        public void LoadBlame(string guid, string fileName)
+        public void LoadBlame(string guid, string fileName, RevisionGrid revGrid)
         {
             var scrollpos = BlameFile.ScrollPos;
 
             var blameCommitter = new StringBuilder();
             var blameFile = new StringBuilder();
+			_revGrid = revGrid;
 
             _blame = GitCommandHelpers.Blame(fileName, guid);
 
@@ -136,9 +138,16 @@ namespace GitUI.Blame
 
         private void ActiveTextAreaControlDoubleClick(object sender, EventArgs e)
         {
-            var frm = new FormDiffSmall();
-            frm.SetRevision(_lastRevision);
-            frm.ShowDialog();
+            if (_revGrid != null)
+            {
+                _revGrid.SetSelectedRevision(new GitRevision { Guid = _lastRevision, ParentGuids = new[] { _lastRevision + "^" } });
+            }
+            else
+            {
+                var frm = new FormDiffSmall();
+                frm.SetRevision(_lastRevision);
+                frm.ShowDialog();
+            }
         }
     }
 }

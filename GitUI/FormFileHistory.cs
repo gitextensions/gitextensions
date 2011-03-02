@@ -178,7 +178,7 @@ namespace GitUI
             Text = string.Format("File History ({0})", fileName);
 
             if (tabControl1.SelectedTab == Blame)
-                blameControl1.LoadBlame(revision.Guid, fileName);
+                blameControl1.LoadBlame(revision.Guid, fileName, FileChanges);
             if (tabControl1.SelectedTab == ViewTab)
             {
                 var scrollpos = View.ScrollPos;
