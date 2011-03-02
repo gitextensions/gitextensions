@@ -9,6 +9,7 @@ Version 2.12
 	Fixed issue 381: autostash is not needed when fetching without merge or rebase
 	Fixed "Open With" and "Open" on binairy files
 	Added "dirty index" icon to formbrowse
+	Added hotkey support to CommitForm for keyboard navigation (Ctrl+1 t/m Ctrl+5)
 	Added impact graph plugin
 	Added Simplified Chinese translation
 	Added support for renamed and copied files
