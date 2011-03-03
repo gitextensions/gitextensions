@@ -48,5 +48,16 @@ namespace GitUI.Hotkey
         .Select(k => k.ToString())
         .ToArray());
     }
+    public static string ToFormattedString(this Keys key)
+    {
+      // Get the string representation
+      var str = key.ToString();
+
+      // Strip the leading 'D' if it's a Decimal Key (D1, D2, ...)
+      if (str.Length == 2 && str[0]=='D')
+        str =  str[1].ToString();
+
+      return str;
+    }
   }
 }
