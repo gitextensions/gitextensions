@@ -247,6 +247,8 @@ namespace GitUI
             this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader5 = new System.Windows.Forms.ColumnHeader();
+          this.tabPageHotkeys = new System.Windows.Forms.TabPage();
+          this.controlHotkeys = new GitUI.Hotkey.ControlHotkeys();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.Ok = new System.Windows.Forms.Button();
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
@@ -283,6 +285,7 @@ namespace GitUI
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.scriptsTab.SuspendLayout();
+          this.tabPageHotkeys.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -2800,6 +2803,26 @@ namespace GitUI
             this.columnHeader5.Text = "Context menu";
             this.columnHeader5.Width = 80;
             // 
+          // tabPageHotkeys
+          // 
+          this.tabPageHotkeys.Controls.Add(this.controlHotkeys);
+          this.tabPageHotkeys.Location = new System.Drawing.Point(4, 29);
+          this.tabPageHotkeys.Name = "tabPageHotkeys";
+          this.tabPageHotkeys.Padding = new System.Windows.Forms.Padding(3);
+          this.tabPageHotkeys.Size = new System.Drawing.Size(710, 424);
+          this.tabPageHotkeys.TabIndex = 9;
+          this.tabPageHotkeys.Text = "Hotkeys";
+          this.tabPageHotkeys.UseVisualStyleBackColor = true;
+          // 
+          // controlHotkeys
+          // 
+          this.controlHotkeys.Dock = System.Windows.Forms.DockStyle.Fill;
+          this.controlHotkeys.Location = new System.Drawing.Point(3, 3);
+          this.controlHotkeys.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+          this.controlHotkeys.Name = "controlHotkeys";
+          this.controlHotkeys.Size = new System.Drawing.Size(704, 418);
+          this.controlHotkeys.TabIndex = 0;
+          // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -2926,6 +2949,7 @@ namespace GitUI
             this.groupBox1.PerformLayout();
             this.scriptsTab.ResumeLayout(false);
             this.scriptsTab.PerformLayout();
+          this.tabPageHotkeys.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
@@ -3160,6 +3184,8 @@ namespace GitUI
         private System.Windows.Forms.Button DiffTool_Fix;
         private System.Windows.Forms.Button UserNameSet_Fix;
         private System.Windows.Forms.Button GitFound_Fix;
+        private System.Windows.Forms.TabPage tabPageHotkeys;
+        private Hotkey.ControlHotkeys controlHotkeys;
 
     }
 }
