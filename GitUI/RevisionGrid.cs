@@ -449,10 +449,13 @@ namespace GitUI
 
             if (revision != null)
             {
-                foreach (DataGridViewRow row in Revisions.Rows)
+                for (var i = 0; i < Revisions.RowCount; i++)
                 {
-                    if (((GitRevision)row.DataBoundItem).Guid == revision.Guid)
-                        row.Selected = true;
+                    if (((GitRevision)Revisions.GetRowData(i)).Guid == revision.Guid)
+                    {
+                        SetSelectedIndex(i);
+                        break;
+                    }
                 }
             }
             Revisions.Select();
