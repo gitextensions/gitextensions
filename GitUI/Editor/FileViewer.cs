@@ -30,6 +30,8 @@ namespace GitUI.Editor
             else
                 _internalFileViewer = new FileViewerMono();
 
+            _internalFileViewer.MouseMove += new MouseEventHandler(_internalFileViewer_MouseMove);
+
             Control internalFileViewerControl = (Control)_internalFileViewer;
             internalFileViewerControl.Dock = DockStyle.Fill;
             Controls.Add(internalFileViewerControl);
@@ -53,6 +55,11 @@ namespace GitUI.Editor
             _internalFileViewer.ScrollPosChanged += new EventHandler(_internalFileViewer_ScrollPosChanged);
             _internalFileViewer.SelectedLineChanged += new SelectedLineChangedEventHandler(_internalFileViewer_SelectedLineChanged);
             _internalFileViewer.DoubleClick += (sender, args) => OnRequestDiffView(EventArgs.Empty);
+        }
+
+        void _internalFileViewer_MouseMove(object sender, MouseEventArgs e)
+        {
+            this.OnMouseMove(e);
         }
 
         void _internalFileViewer_SelectedLineChanged(object sender, int selectedLine)
@@ -554,6 +561,26 @@ namespace GitUI.Editor
 
             //Do not go to the end of the file if no change is found
             //TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = totalNumberOfLines - TextEditor.ActiveTextAreaControl.TextArea.TextView.VisibleLineCount;
+        }
+
+        public int GetLineFromVisualPosY(int visualPosY)
+        {
+            return _internalFileViewer.GetLineFromVisualPosY(visualPosY);
+        }
+
+        public string GetLineText(int line)
+        {
+            return _internalFileViewer.GetLineText(line);
+        }
+
+        public void HighlightLine(int line, Color color)
+        {
+            _internalFileViewer.HighlightLine(line, color);
+        }
+
+        public void ClearHighlighting()
+        {
+            _internalFileViewer.ClearHighlighting();
         }
 
         private void PreviousChangeButtonClick(object sender, EventArgs e)

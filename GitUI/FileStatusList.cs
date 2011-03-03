@@ -226,20 +226,25 @@ namespace GitUI
 
                 e.Graphics.FillRectangle(Brushes.White, e.Bounds.Left, e.Bounds.Top, 16, e.Bounds.Height);
 
+                int centeredImageTop = e.Bounds.Top;
+                if ((e.Bounds.Height - 16) > 1)
+                    centeredImageTop = e.Bounds.Top + ((e.Bounds.Height - 16) / 2);
+
+
                 if (gitItemStatus.IsDeleted)
-                    e.Graphics.DrawImage(Resources.Removed, e.Bounds.Left, e.Bounds.Top, 16, 16);
+                    e.Graphics.DrawImage(Resources.Removed, e.Bounds.Left, centeredImageTop, 16, 16);
                 else
                     if (gitItemStatus.IsNew || !gitItemStatus.IsTracked)
-                        e.Graphics.DrawImage(Resources.Added, e.Bounds.Left, e.Bounds.Top, 16, 16);
+                        e.Graphics.DrawImage(Resources.Added, e.Bounds.Left, centeredImageTop, 16, 16);
                     else
                         if (gitItemStatus.IsChanged)
-                            e.Graphics.DrawImage(Resources.Modified, e.Bounds.Left, e.Bounds.Top, 16, 16);
+                            e.Graphics.DrawImage(Resources.Modified, e.Bounds.Left, centeredImageTop, 16, 16);
                         else
                             if (gitItemStatus.IsRenamed)
-                                e.Graphics.DrawImage(Resources.Renamed, e.Bounds.Left, e.Bounds.Top, 16, 16);
+                                e.Graphics.DrawImage(Resources.Renamed, e.Bounds.Left, centeredImageTop, 16, 16);
                             else
                                 if (gitItemStatus.IsCopied)
-                                    e.Graphics.DrawImage(Resources.Copied, e.Bounds.Left, e.Bounds.Top, 16, 16);
+                                    e.Graphics.DrawImage(Resources.Copied, e.Bounds.Left, centeredImageTop, 16, 16);
 
                 string text;
                 if (gitItemStatus.IsRenamed || gitItemStatus.IsCopied)
@@ -247,7 +252,7 @@ namespace GitUI
                 else
                     text = gitItemStatus.Name;
 
-                e.Graphics.DrawString(text, FileStatusListBox.Font, new SolidBrush(e.ForeColor), e.Bounds.Left + e.Bounds.Height, e.Bounds.Top);
+                e.Graphics.DrawString(text, FileStatusListBox.Font, new SolidBrush(e.ForeColor), e.Bounds.Left + 16, e.Bounds.Top);
             }
         }
 

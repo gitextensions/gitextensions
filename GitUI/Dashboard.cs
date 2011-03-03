@@ -33,6 +33,7 @@ namespace GitUI
             Translate();
 
             RecentRepositories.DashboardItemClick += dashboardItem_Click;
+            RecentRepositories.RepositoryRemoved += RecentRepositories_RepositoryRemoved;
             RecentRepositories.DisableContextMenu();
             RecentRepositories.DashboardCategoryChanged += dashboardCategory_DashboardCategoryChanged;
             //Repositories.RepositoryCategories.ListChanged += new ListChangedEventHandler(RepositoryCategories_ListChanged);
@@ -42,6 +43,12 @@ namespace GitUI
                 pictureBox1.Image = image;
 
             Load += Dashboard_Load;
+        }
+
+        void RecentRepositories_RepositoryRemoved(Repository repository)
+        {
+            if (repository != null)
+                Repositories.RepositoryHistory.RemoveRepository(repository);
         }
 
         private void Dashboard_Load(object sender, EventArgs e)
@@ -161,7 +168,7 @@ namespace GitUI
             
             foreach (Repository repository in Repositories.RepositoryHistory.Repositories)
             {
-                if (!Repositories.RepositoryCategories.Any(c => c.Repositories.Any(r => r.Path.Equals(repository.Path, StringComparison.CurrentCultureIgnoreCase))))
+                if (!Repositories.RepositoryCategories.Any(c => c.Repositories.Any(r => r.Path != null && r.Path.Equals(repository.Path, StringComparison.CurrentCultureIgnoreCase))))
                 {
                     repository.RepositoryType = RepositoryType.History;
                     filteredRecentRepositoryHistory.Repositories.Add(repository);

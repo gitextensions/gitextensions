@@ -75,6 +75,10 @@ namespace GitUI.Plugin
                             Location = new Point(xEditStart, yStart),
                             Size = new Size(splitContainer1.Panel2.Width - xEditStart - 20, 20)
                         };
+
+                if (setting.ToLower().Contains("password"))
+                    textBox.PasswordChar = '*';
+
                 splitContainer1.Panel2.Controls.Add(textBox);
 
                 yStart += 25;

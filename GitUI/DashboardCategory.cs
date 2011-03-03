@@ -159,6 +159,7 @@ namespace GitUI
                 return;
 
             RepositoryCategory.RemoveRepository(repository);
+            repositoryRemoved(repository);
             dashboardCategoryChanged(this, null);
         }
 
@@ -229,6 +230,16 @@ namespace GitUI
         {
             if (DashboardCategoryChanged != null)
                 DashboardCategoryChanged(sender, e);
+        }
+
+        public delegate void RepositoryRemovedHandler(Repository repository);
+
+        public event RepositoryRemovedHandler RepositoryRemoved;
+
+        private void repositoryRemoved(Repository repository)
+        {
+            if (RepositoryRemoved != null)
+                RepositoryRemoved(repository);
         }
 
 
