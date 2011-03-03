@@ -54,9 +54,9 @@
       // bApply
       // 
       this.bApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.bApply.Location = new System.Drawing.Point(648, 496);
+      this.bApply.Location = new System.Drawing.Point(622, 466);
       this.bApply.Name = "bApply";
-      this.bApply.Size = new System.Drawing.Size(66, 26);
+      this.bApply.Size = new System.Drawing.Size(81, 26);
       this.bApply.TabIndex = 4;
       this.bApply.Text = "Apply";
       this.bApply.UseVisualStyleBackColor = true;
@@ -65,9 +65,9 @@
       // bClear
       // 
       this.bClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.bClear.Location = new System.Drawing.Point(720, 496);
+      this.bClear.Location = new System.Drawing.Point(709, 466);
       this.bClear.Name = "bClear";
-      this.bClear.Size = new System.Drawing.Size(66, 26);
+      this.bClear.Size = new System.Drawing.Size(77, 26);
       this.bClear.TabIndex = 5;
       this.bClear.Text = "Clear";
       this.bClear.UseVisualStyleBackColor = true;
@@ -138,7 +138,7 @@
       // bSaveSettings
       // 
       this.bSaveSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.bSaveSettings.Location = new System.Drawing.Point(478, 496);
+      this.bSaveSettings.Location = new System.Drawing.Point(622, 496);
       this.bSaveSettings.Name = "bSaveSettings";
       this.bSaveSettings.Size = new System.Drawing.Size(164, 26);
       this.bSaveSettings.TabIndex = 7;
@@ -153,7 +153,7 @@
       this.txtHotkey.KeyData = System.Windows.Forms.Keys.None;
       this.txtHotkey.Location = new System.Drawing.Point(56, 468);
       this.txtHotkey.Name = "txtHotkey";
-      this.txtHotkey.Size = new System.Drawing.Size(730, 22);
+      this.txtHotkey.Size = new System.Drawing.Size(560, 22);
       this.txtHotkey.TabIndex = 3;
       this.txtHotkey.Text = "None";
       // 
