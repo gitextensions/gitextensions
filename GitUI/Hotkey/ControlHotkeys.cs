@@ -18,8 +18,7 @@ namespace GitUI.Hotkey
 
     #region Settings
     private HotkeySettings[] _Settings;
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public HotkeySettings[] Settings 
+    private HotkeySettings[] Settings 
     {
       get { return _Settings; }
       set 
@@ -32,7 +31,7 @@ namespace GitUI.Hotkey
 
     #region SelectedHotkeySettings
     private HotkeySettings _SelectedHotkeySettings;
-    public HotkeySettings SelectedHotkeySettings 
+    private HotkeySettings SelectedHotkeySettings 
     { 
       get { return _SelectedHotkeySettings; } 
       set
@@ -46,7 +45,7 @@ namespace GitUI.Hotkey
 
     #region SelectedHotkeyCommand
     private HotkeyCommand _SelectedHotkeyCommand;
-    public HotkeyCommand SelectedHotkeyCommand 
+    private HotkeyCommand SelectedHotkeyCommand 
     {
       get { return _SelectedHotkeyCommand; }
       set 
