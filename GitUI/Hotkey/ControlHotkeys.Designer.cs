@@ -101,7 +101,10 @@
       this.listMappings.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnCommand,
             this.columnKey});
+      this.listMappings.FullRowSelect = true;
+      this.listMappings.HideSelection = false;
       this.listMappings.Location = new System.Drawing.Point(6, 53);
+      this.listMappings.MultiSelect = false;
       this.listMappings.Name = "listMappings";
       this.listMappings.Size = new System.Drawing.Size(284, 488);
       this.listMappings.TabIndex = 1;
