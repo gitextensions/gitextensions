@@ -102,7 +102,6 @@
     </Compile>
     <Compile Include="Hotkey\HotkeyCommand.cs" />
     <Compile Include="Hotkey\HotkeyManager.cs" />
-    <Compile Include="Hotkey\HotkeyMapping.cs" />
     <Compile Include="Hotkey\HotkeySettings.cs" />
     <Compile Include="Hotkey\HotkeySettingsManager.cs" />
     <Compile Include="Hotkey\IHotkeyable.cs" />
