@@ -37,6 +37,12 @@ namespace GitUI
                                                  Environment.GetEnvironmentVariable("USERPROFILE"));
         }
 
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            base.OnClosing(e);
+            SavePosition("settings");
+        }
+
         private int selectedScriptItem { get; set; }
 
         public static bool AutoSolveAllSettings()
@@ -1344,6 +1350,7 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
             WindowState = FormWindowState.Normal;
+            RestorePosition("settings");
             LoadSettings();
             CheckSettings();
             WindowState = FormWindowState.Normal;

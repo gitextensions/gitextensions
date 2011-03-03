@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Version 2.13
+	Fixed issue 391: application crashes when repository favourites contains empty item
+	Double click on line in blame jumps to commit instead of opening commit
+	
 Version 2.12
 	Fixed issue 368: Browse button does not open dialog in HOME dialog
 	Fixed issue 373: Archive command is not working
@@ -9,6 +13,7 @@ Version 2.12
 	Fixed issue 381: autostash is not needed when fetching without merge or rebase
 	Fixed "Open With" and "Open" on binairy files
 	Added "dirty index" icon to formbrowse
+	Added hotkey support to CommitForm for keyboard navigation (Ctrl+1 t/m Ctrl+5)
 	Added impact graph plugin
 	Added Simplified Chinese translation
 	Added support for renamed and copied files

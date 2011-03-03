@@ -706,10 +706,10 @@ _ReSharper*/</Value>
           <Value>提交：</Value>
         </TranslationItem>
         <TranslationItem Name="BranchInfo" Property="Text">
-          <Value>还原此承诺：</Value>
+          <Value>还原此提交：</Value>
         </TranslationItem>
         <TranslationItem Name="Revert" Property="Text">
-          <Value>还原此承诺</Value>
+          <Value>还原此提交</Value>
         </TranslationItem>
         <TranslationItem Name="AutoCommit" Property="Text">
           <Value>自动创建一个提交</Value>
@@ -810,9 +810,6 @@ _ReSharper*/</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>目录</Value>
-        </TranslationItem>
-        <TranslationItem Name="Directory" Property="Text">
-          <Value>C:\Program Files (x86)\GitExtensions\</Value>
         </TranslationItem>
         <TranslationItem Name="Browse" Property="Text">
           <Value>浏览</Value>
@@ -1035,7 +1032,7 @@ _ReSharper*/</Value>
           <Value>自动创建一个提交</Value>
         </TranslationItem>
         <TranslationItem Name="columnHeader1" Property="Text">
-          <Value>号</Value>
+          <Value>序号</Value>
         </TranslationItem>
         <TranslationItem Name="columnHeader2" Property="Text">
           <Value>消息</Value>
@@ -1183,7 +1180,7 @@ _ReSharper*/</Value>
           <Value>管理远程</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox2" Property="Text">
-          <Value>“拉”的源</Value>
+          <Value>从这里拉取</Value>
         </TranslationItem>
         <TranslationItem Name="PullFromUrl" Property="Text">
           <Value>Url地址</Value>
@@ -1673,7 +1670,7 @@ _ReSharper*/</Value>
           <Value>显示相对日期，而不是完整的日期</Value>
         </TranslationItem>
         <TranslationItem Name="label38" Property="Text">
-          <Value>使用FileSystemWatcher，以便检查是否改变指数</Value>
+          <Value>使用FileSystemWatcher检查索引是否改变了</Value>
         </TranslationItem>
         <TranslationItem Name="label40" Property="Text">
           <Value>按照文件的历史重命名（实验）</Value>
@@ -2372,7 +2369,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
           <Value>请选择一个远程档案库</Value>
         </TranslationItem>
         <TranslationItem Name="_selectTag" Property="Text">
-          <Value>您需要选择一个标签来推动，或者您可以选择“推送所有标签。”</Value>
+          <Value>您需要选择一个标签来推送，或者您可以选择“推送所有标签。”</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2520,7 +2517,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
           <Value>删除文件失败</Value>
         </TranslationItem>
         <TranslationItem Name="_deleteSelectedFiles" Property="Text">
-          <Value>您确定要删除选中的文件嘛？</Value>
+          <Value>您确定要删除选中的文件吗？</Value>
         </TranslationItem>
         <TranslationItem Name="_deleteSelectedFilesCaption" Property="Text">
           <Value>删除</Value>
@@ -2871,7 +2868,7 @@ stash</Value>
         </TranslationItem>
         <TranslationItem Name="Info" Property="Text">
           <Value>此档案库将被克隆到一个新的目录：
-     C:\Program Files (x86)\GitExtensions\[directory]</Value>
+     [destination]\GitExtensions\</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

@@ -171,6 +171,21 @@ namespace GitUI.Editor
             }
         }
 
+        public void HighlightLine(int line, Color color)
+        {
+
+        }
+        public void ClearHighlighting()
+        {
+        }
+
+        public int GetLineFromVisualPosY(int visualPosY)
+        {
+            int index = TextEditor.GetCharIndexFromPosition(new Point(0, visualPosY));
+            return TextEditor.GetLineFromCharIndex(index);
+
+        }
+
         public string GetLineText(int line)
         {
             return "";// TextEditor.GetFirstCharIndexFromLine(line);                
