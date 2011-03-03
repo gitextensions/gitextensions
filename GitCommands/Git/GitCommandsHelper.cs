@@ -1583,7 +1583,7 @@ namespace GitCommands
         {
             if (!string.IsNullOrEmpty(fileName))
                 fileName = string.Concat("\"", FixPath(fileName), "\"");
-            
+
             if (!string.IsNullOrEmpty(oldFileName))
                 oldFileName = string.Concat("\"", FixPath(oldFileName), "\"");
 
@@ -1591,7 +1591,7 @@ namespace GitCommands
             to = FixPath(to);
 
             var patchManager = new PatchManager();
-            var arguments = string.Format("diff{0} -M \"{1}\" \"{2}\" -- {3} {4}", extraDiffArguments, to, from, fileName, oldFileName);
+            var arguments = string.Format("diff{0} -M -C \"{1}\" \"{2}\" -- {3} {4}", extraDiffArguments, to, from, fileName, oldFileName);
             patchManager.LoadPatch(RunCachableCmd(Settings.GitCommand, arguments), false);
 
             return patchManager.Patches.Count > 0 ? patchManager.Patches[0] : null;
@@ -1698,10 +1698,10 @@ namespace GitCommands
                 The file will have its original line endings in your working directory.
                 warning: LF will be replaced by CRLF in FxCop.targets.
                 The file will have its original line endings in your working directory.*/
-            string trimmedStatus = statusString.Trim(new char[]{'\n','\r'});
+            string trimmedStatus = statusString.Trim(new char[] { '\n', '\r' });
             if (trimmedStatus.Contains(Environment.NewLine))
                 trimmedStatus = trimmedStatus.Substring(trimmedStatus.LastIndexOf(Environment.NewLine)).Trim(new char[] { '\n', '\r' });
-            
+
             //Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)
             var files = trimmedStatus.Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
             for (int n = 0; n < files.Length; n++)
@@ -1717,7 +1717,7 @@ namespace GitCommands
                 if (splitIndex < 0)
                 {
                     status = files[n];
-                    fileName = files[n+1];
+                    fileName = files[n + 1];
                     n++;
                 }
                 else
@@ -2186,55 +2186,85 @@ namespace GitCommands
             return items;
         }
 
-        public static List<GitBlame> Blame(string filename, string from)
+        public static GitBlame Blame(string filename, string from)
         {
             from = FixPath(from);
             filename = FixPath(filename);
+            string blameCommand = string.Format("blame --porcelain -M -w -l \"{0}\" -- \"{1}\"", from, filename);
             var itemsStrings =
                 RunCmd(
                     Settings.GitCommand,
-                    string.Format("blame -M -w -l \"{0}\" -- \"{1}\"", from, filename)
+                    blameCommand
                     )
                     .Split('\n');
 
-            var items = new List<GitBlame>();
+            GitBlame blame = new GitBlame();
 
-            GitBlame item;
-            var lastCommitGuid = "";
+            GitBlameHeader blameHeader = null;
+            GitBlameLine blameLine = null;
 
-            var color1 = Color.Azure;
-            var color2 = Color.Ivory;
-            var currentColor = color1;
-
-            foreach (var itemsString in itemsStrings)
+            for (int i = 0; i < itemsStrings.GetLength(0); i++)
             {
-                if (itemsString.Length <= 50)
-                    continue;
-
-                var commitGuid = itemsString.Substring(0, 40).Trim();
-
-                if (lastCommitGuid != commitGuid)
-                    currentColor = currentColor == color1 ? color2 : color1;
-
-                item = new GitBlame { Color = currentColor, CommitGuid = commitGuid };
-                items.Add(item);
-
-                var codeIndex = itemsString.IndexOf(')', 41) + 1;
-                if (codeIndex > 41)
+                try
                 {
-                    if (lastCommitGuid != commitGuid)
-                        item.Author = itemsString.Substring(41, codeIndex - 41).Trim();
+                    string line = itemsStrings[i];
 
-                    if (!string.IsNullOrEmpty(item.Text))
-                        item.Text += Environment.NewLine;
-                    item.Text += itemsString.Substring(codeIndex).Trim(new[] { '\r' });
+                    //The contents of the actual line is output after the above header, prefixed by a TAB. This is to allow adding more header elements later.
+                    if (line.StartsWith("\t"))
+                        blameLine.LineText = line.Substring(1);//trim first tab
+                    else
+                        if (line.StartsWith("author-mail"))
+                            blameHeader.AuthorMail = line.Substring("author-mail".Length).Trim();
+                        else
+                            if (line.StartsWith("author-time"))
+                                blameHeader.AuthorTime = (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddSeconds(int.Parse(line.Substring("author-time".Length).Trim()));
+                            else
+                                if (line.StartsWith("author-tz"))
+                                    blameHeader.AuthorTimeZone = line.Substring("author-tz".Length).Trim();
+                                else
+                                    if (line.StartsWith("author"))
+                                    {
+                                        blameHeader = new GitBlameHeader();
+                                        blameHeader.CommitGuid = blameLine.CommitGuid;
+                                        blameHeader.Author = line.Substring("author".Length).Trim();
+                                        blame.Headers.Add(blameHeader);
+                                    }
+                                    else
+                                        if (line.StartsWith("committer-mail"))
+                                            blameHeader.CommitterMail = line.Substring("committer-mail".Length).Trim();
+                                        else
+                                            if (line.StartsWith("committer-time"))
+                                                blameHeader.CommitterTime = (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddSeconds(int.Parse(line.Substring("committer-time".Length).Trim()));
+                                            else
+                                                if (line.StartsWith("committer-tz"))
+                                                    blameHeader.CommitterTimeZone = line.Substring("committer-tz".Length).Trim();
+                                                else
+                                                    if (line.StartsWith("committer"))
+                                                        blameHeader.Committer = line.Substring("committer".Length).Trim();
+                                                    else
+                                                        if (line.StartsWith("summary"))
+                                                            blameHeader.Summary = line.Substring("summary".Length).Trim();
+                                                        else
+                                                            if (line.StartsWith("filename"))
+                                                                blameHeader.FileName = line.Substring("filename".Length).Trim();
+                                                            else
+                                                                if (line.IndexOf(' ') == 40) //SHA1, create new line!
+                                                                {
+                                                                    blameLine = new GitBlameLine();
+                                                                    blameLine.CommitGuid = line.Substring(0, 40);
+                                                                    blame.Lines.Add(blameLine);
+                                                                }
                 }
-
-                lastCommitGuid = commitGuid;
+                catch
+                {
+                    //Catch all parser errors, and ignore them all!
+                    //We should never get here...
+                    Settings.GitLog.Log("Error parsing output from command: " + blameCommand + "\n\nPlease report a bug!");
+                }
             }
 
 
-            return items;
+            return blame;
         }
 
         public static string GetFileRevisionText(string file, string revision)

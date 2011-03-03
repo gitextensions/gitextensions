@@ -114,7 +114,7 @@ namespace GitUI
         {
             syncContext.Post(o =>
             {
-                if (indexChanged && Settings.UseFastChecks)
+                if (indexChanged && Settings.UseFastChecks && Settings.ValidWorkingDir())
                     this.RefreshButton.Image = GitUI.Properties.Resources.arrow_refresh_dirty;
                 else
                     this.RefreshButton.Image = GitUI.Properties.Resources.arrow_refresh;

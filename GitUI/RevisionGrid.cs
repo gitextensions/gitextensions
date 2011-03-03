@@ -449,10 +449,13 @@ namespace GitUI
 
             if (revision != null)
             {
-                foreach (DataGridViewRow row in Revisions.Rows)
+                for (var i = 0; i < Revisions.RowCount; i++)
                 {
-                    if (((GitRevision)row.DataBoundItem).Guid == revision.Guid)
-                        row.Selected = true;
+                    if (((GitRevision)Revisions.GetRowData(i)).Guid == revision.Guid)
+                    {
+                        SetSelectedIndex(i);
+                        break;
+                    }
                 }
             }
             Revisions.Select();
@@ -636,7 +639,7 @@ namespace GitUI
                 if (!Settings.ShowGitNotes && LogParam.Contains(" --glob=notes"))
                     LogParam = LogParam.Replace(" --glob=notes", string.Empty);
 
-                _revisionGraphCommand = new RevisionGraph { BranchFilter = BranchFilter, LogParam = LogParam + Filter };
+                _revisionGraphCommand = new RevisionGraph { BranchFilter = BranchFilter, LogParam = LogParam + Filter + _revisionFilter.GetFilter() };
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
                 _revisionGraphCommand.Error += _revisionGraphCommand_Error;
@@ -682,6 +685,7 @@ namespace GitUI
         {
             return (inclBranchFilter && !string.IsNullOrEmpty(BranchFilter)) ||
                    !(string.IsNullOrEmpty(Filter) &&
+                     string.IsNullOrEmpty(_revisionFilter.GetFilter()) &&
                      string.IsNullOrEmpty(InMemAuthorFilter) &&
                      string.IsNullOrEmpty(InMemCommitterFilter) &&
                      string.IsNullOrEmpty(InMemMessageFilter));
@@ -724,7 +728,6 @@ namespace GitUI
                                           NoCommits.Visible = true;
                                           Revisions.Visible = false;
                                           Loading.Visible = false;
-                                          DisposeRevisionGraphCommand();
                                       }, this);
             }
             else
@@ -735,7 +738,6 @@ namespace GitUI
                                           UpdateGraph(null);
                                           Loading.Visible = false;
                                           SelectInitialRevision();
-                                          DisposeRevisionGraphCommand();
                                       }, this);
             }
         }
@@ -1083,7 +1085,6 @@ namespace GitUI
 
         private void ApplyFilterFromRevisionFilterDialog()
         {
-            Filter = _revisionFilter.GetFilter();
             InMemAuthorFilter = _revisionFilter.GetInMemAuthorFilter();
             InMemCommitterFilter = _revisionFilter.GetInMemCommitterFilter();
             InMemMessageFilter = _revisionFilter.GetInMemMessageFilter();
