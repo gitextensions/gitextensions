@@ -5,5 +5,8 @@
     <Setting Name="WindowPositions" Type="GitUI.WindowPositionList" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="Hotkeys" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

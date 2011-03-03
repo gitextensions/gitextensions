@@ -10,6 +10,8 @@ namespace GitUI.Hotkey
   [Serializable]
   public class HotkeyCommand
   {
+    #region Properties
+
     [XmlAttribute]
     public int CommandCode { get; set; }
 
@@ -18,6 +20,8 @@ namespace GitUI.Hotkey
 
     [XmlAttribute]
     public Keys KeyData { get; set; }
+
+    #endregion
 
     public HotkeyCommand()
     {

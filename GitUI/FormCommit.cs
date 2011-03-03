@@ -14,7 +14,7 @@ using GitUI.Hotkey;
 
 namespace GitUI
 {
-    public partial class FormCommit : GitExtensionsForm, IHotkeyable
+    public partial class FormCommit : GitExtensionsForm //, IHotkeyable
     {
         #region Translation strings
         private readonly TranslationString _alsoDeleteUntrackedFiles =
@@ -133,36 +133,30 @@ namespace GitUI
 
             splitMain.SplitterDistance = Settings.CommitDialogSplitter;
 
-            //this.Hotkeys = CreateHotkeys();
             this.HotkeysEnabled = true;
+            this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
         }
 
         #region Hotkey commands
 
-        string IHotkeyable.Name { get { return "Commit"; } }
+        public const string HotkeySettingsName = "Commit";
 
-        private IEnumerable<HotkeyCommand> _AvailableCommands;
-        IEnumerable<HotkeyCommand> IHotkeyable.AvailableCommands 
-        { 
-          get 
-          {
-            if (_AvailableCommands == null)
-              _AvailableCommands = GetAvailableCommands();
-            return _AvailableCommands; 
-          } 
-        }
+        //private IEnumerable<HotkeyCommand> GetDefaultCommands()
+        //{
+        //  var cmds = HotkeyCommand.FromEnum(typeof(Commands));
 
-        private IEnumerable<HotkeyCommand> GetAvailableCommands()
-        {
-          return HotkeyCommand.FromEnum(typeof(Commands));
-          //return Enum.GetValues(typeof(Commands)).Cast<Commands>().Select(c => new HotkeyableCommand((int)c, c.ToString())).ToArray();
-        }
+        //  // Set some default control keys (Ctrl-1, Ctrl-2, ...)
+        //  for (int i = 0; i < cmds.Length; i++)
+        //    cmds[i].KeyData = Keys.Control | (Keys.D0 + i);
+
+        //  return cmds;
+        //}
 
         internal enum Commands : int
         {
-          FocusStagedFiles,
           FocusUnstagedFiles,
           FocusSelectedDiff,
+          FocusStagedFiles,
           FocusCommitMessage
         }
 
@@ -205,17 +199,6 @@ namespace GitUI
             case Commands.FocusCommitMessage: FocusCommitMessage(); break;
           }
         }
-
-        //private IEnumerable<HotkeyMapping> CreateHotkeys()
-        //{
-        //  return new[]
-        //  {
-        //    new HotkeyMapping(Keys.Control | Keys.D1, (int)Commands.FocusUnstagedFiles),
-        //    new HotkeyMapping(Keys.Control | Keys.D2, (int)Commands.FocusSelectedDiff),
-        //    new HotkeyMapping(Keys.Control | Keys.D3, (int)Commands.FocusStagedFiles),
-        //    new HotkeyMapping(Keys.Control | Keys.D4, (int)Commands.FocusCommitMessage)
-        //  };
-        //}
 
         #endregion
 
