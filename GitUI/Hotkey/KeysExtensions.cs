@@ -43,11 +43,12 @@ namespace GitUI.Hotkey
     public static string ToText(this Keys key)
     {
       return string.Join("+", 
-        new [] { key.GetKeyCode() }
-        .Union(key.GetModifiers())
-        .Select(k => k.ToString())
+        key.GetModifiers()
+        .Union(new[] { key.GetKeyCode() })
+        .Select(k => k.ToFormattedString())
         .ToArray());
     }
+
     public static string ToFormattedString(this Keys key)
     {
       // Get the string representation
