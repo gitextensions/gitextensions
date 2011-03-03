@@ -77,7 +77,7 @@ namespace GitUI.Hotkey
 
     private void UpdateListViewItems(HotkeySettings setting)
     {
-      this.listMappings.Clear();
+      this.listMappings.Items.Clear();
       if (setting != null)
         foreach (var cmd in setting.Commands)
           this.listMappings.Items.Add(new ListViewItem(cmd.Name, cmd.KeyData.ToText()) { Tag = setting });
