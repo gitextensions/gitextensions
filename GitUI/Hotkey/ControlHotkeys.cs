@@ -51,7 +51,7 @@ namespace GitUI.Hotkey
       set 
       { 
         _SelectedHotkeyCommand = value;
-
+        UpdateTextBox(value);
       }
     }
     #endregion
@@ -80,17 +80,17 @@ namespace GitUI.Hotkey
       this.listMappings.Items.Clear();
       if (setting != null)
         foreach (var cmd in setting.Commands)
-          this.listMappings.Items.Add(new ListViewItem(cmd.Name, cmd.KeyData.ToText()) { Tag = setting });
+          this.listMappings.Items.Add(new ListViewItem(new[] { cmd.Name, cmd.KeyData.ToText() }) { Tag = cmd });
+    }
+
+    private void UpdateTextBox(HotkeyCommand command)
+    {
+      txtHotkey.KeyData = (command != null) ? command.KeyData : Keys.None;
     }
 
     private void ControlHotkeys_Load(object sender, EventArgs e)
     {
       this.Settings = this.HotkeySettingsManager.LoadSettings();
-    }
-
-    private void bClear_Click(object sender, EventArgs e)
-    {
-      this.txtHotkey.KeyData = Keys.None;
     }
 
     private void cmbSettings_SelectedIndexChanged(object sender, EventArgs e)
@@ -104,12 +104,26 @@ namespace GitUI.Hotkey
       if (lvi != null)
       {
         var hotkey = lvi.Tag as HotkeyCommand;
+        this.SelectedHotkeyCommand = hotkey;
       }
     }
 
     private void bApply_Click(object sender, EventArgs e)
     {
+      var hotkey = this.SelectedHotkeyCommand;
+      if (hotkey != null)
+      {
+        // Update the KeyData with the chosen one
+        hotkey.KeyData = txtHotkey.KeyData;
 
+        // Refresh the ListView
+        UpdateListViewItems(this.SelectedHotkeySettings);
+      }
+    }
+
+    private void bClear_Click(object sender, EventArgs e)
+    {
+      this.txtHotkey.KeyData = Keys.None;
     }
 
     #endregion
