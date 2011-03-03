@@ -56,8 +56,6 @@ namespace GitUI.Hotkey
     }
     #endregion
 
-    private HotkeySettingsManager HotkeySettingsManager = new HotkeySettingsManager();
-
     #endregion
 
     public ControlHotkeys()
@@ -67,8 +65,20 @@ namespace GitUI.Hotkey
 
     #region Methods
 
+    private void SaveSettings()
+    {
+      HotkeySettingsManager.SaveSettings(this.Settings);
+    }
+
+    private void ReloadSettings()
+    {
+      this.Settings = HotkeySettingsManager.LoadSettings();
+    }
+
     private void UpdateCombobox(HotkeySettings[] settings)
     {
+      this.SelectedHotkeySettings = null;
+
       this.cmbSettings.Items.Clear();
       if (settings != null)
         foreach (var setting in settings)
@@ -77,6 +87,8 @@ namespace GitUI.Hotkey
 
     private void UpdateListViewItems(HotkeySettings setting)
     {
+      this.SelectedHotkeyCommand = null;
+
       this.listMappings.Items.Clear();
       if (setting != null)
         foreach (var cmd in setting.Commands)
@@ -90,7 +102,7 @@ namespace GitUI.Hotkey
 
     private void ControlHotkeys_Load(object sender, EventArgs e)
     {
-      this.Settings = this.HotkeySettingsManager.LoadSettings();
+      ReloadSettings();
     }
 
     private void cmbSettings_SelectedIndexChanged(object sender, EventArgs e)
@@ -124,6 +136,16 @@ namespace GitUI.Hotkey
     private void bClear_Click(object sender, EventArgs e)
     {
       this.txtHotkey.KeyData = Keys.None;
+    }
+
+    private void bResetToDefaults_Click(object sender, EventArgs e)
+    {
+      this.Settings = HotkeySettingsManager.CreateDefaultSettings();
+    }
+
+    private void bSaveSettings_Click(object sender, EventArgs e)
+    {
+      SaveSettings();
     }
 
     #endregion

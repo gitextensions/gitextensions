@@ -13,7 +13,6 @@ namespace GitUI.Hotkey
   public class HotkeySettings
   {
     [XmlArray]
-    //public HotkeyMapping[] Mappings { get; set; }
     public HotkeyCommand[] Commands { get; set; }
 
     [XmlAttribute]
@@ -21,6 +20,11 @@ namespace GitUI.Hotkey
 
     public HotkeySettings()
     {
+    }
+    public HotkeySettings(string name, params HotkeyCommand[] commands)
+    {
+      this.Name = name;
+      this.Commands = commands;
     }
   }
 }

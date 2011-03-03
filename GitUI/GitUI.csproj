@@ -101,11 +101,8 @@
       <DependentUpon>FormHotkeys.cs</DependentUpon>
     </Compile>
     <Compile Include="Hotkey\HotkeyCommand.cs" />
-    <Compile Include="Hotkey\HotkeyManager.cs" />
     <Compile Include="Hotkey\HotkeySettings.cs" />
     <Compile Include="Hotkey\HotkeySettingsManager.cs" />
-    <Compile Include="Hotkey\IHotkeyable.cs" />
-    <Compile Include="Hotkey\IHotkeyableExtensions.cs" />
     <Compile Include="Hotkey\KeysExtensions.cs" />
     <Compile Include="Hotkey\TextboxHotkey.cs">
       <SubType>Component</SubType>
