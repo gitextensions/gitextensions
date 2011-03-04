@@ -356,11 +356,17 @@ namespace GitUI.Editor
 
         public string GetLineText(int line)
         {
+            if (line >= TextEditor.Document.TotalNumberOfLines)
+                return string.Empty; 
+            
             return TextEditor.Document.GetText(TextEditor.Document.GetLineSegment(line));
         }
 
         public void HighlightLine(int line, Color color)
         {
+            if (line >= TextEditor.Document.TotalNumberOfLines)
+                return; 
+
             var document = TextEditor.Document;
             var markerStrategy = document.MarkerStrategy;
             var lineSegment = document.GetLineSegment(line);
