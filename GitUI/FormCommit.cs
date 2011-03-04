@@ -141,17 +141,6 @@ namespace GitUI
 
         public const string HotkeySettingsName = "Commit";
 
-        //private IEnumerable<HotkeyCommand> GetDefaultCommands()
-        //{
-        //  var cmds = HotkeyCommand.FromEnum(typeof(Commands));
-
-        //  // Set some default control keys (Ctrl-1, Ctrl-2, ...)
-        //  for (int i = 0; i < cmds.Length; i++)
-        //    cmds[i].KeyData = Keys.Control | (Keys.D0 + i);
-
-        //  return cmds;
-        //}
-
         internal enum Commands : int
         {
           FocusUnstagedFiles,

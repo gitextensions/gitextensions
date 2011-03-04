@@ -33,37 +33,27 @@ namespace GitUI
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DashboardEditor));
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.CategoriesLabel = new System.Windows.Forms.Label();
-            this._NO_TRANSLATE_Categories = new System.Windows.Forms.ListBox();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.Remove = new System.Windows.Forms.Button();
+            this._NO_TRANSLATE_Categories = new System.Windows.Forms.ListBox();
             this.Add = new System.Windows.Forms.Button();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.RepositoriesGrid = new System.Windows.Forms.DataGridView();
             this.pathDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Title = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
-            this._NO_TRANSLATE_Caption = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this._NO_TRANSLATE_RssFeed = new System.Windows.Forms.TextBox();
-            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
-            this.RssFeedType = new System.Windows.Forms.RadioButton();
             this.RepositoriesType = new System.Windows.Forms.RadioButton();
+            this._NO_TRANSLATE_RssFeed = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.RssFeedType = new System.Windows.Forms.RadioButton();
+            this.label2 = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_Caption = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
-            this.tableLayoutPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RepositoriesGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
-            this.tableLayoutPanel4.SuspendLayout();
-            this.tableLayoutPanel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer2
@@ -73,38 +63,26 @@ namespace GitUI
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.tableLayoutPanel1);
+            this.splitContainer2.Panel1.Controls.Add(this._NO_TRANSLATE_Categories);
+            this.splitContainer2.Panel1.Controls.Add(this.CategoriesLabel);
+            this.splitContainer2.Panel1.Controls.Add(this.Remove);
+            this.splitContainer2.Panel1.Controls.Add(this.Add);
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.tableLayoutPanel3);
-            // 
-            // tableLayoutPanel1
-            // 
-            resources.ApplyResources(this.tableLayoutPanel1, "tableLayoutPanel1");
-            this.tableLayoutPanel1.Controls.Add(this.CategoriesLabel, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_Categories, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 2);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.splitContainer2.Panel2.Controls.Add(this.RepositoriesGrid);
+            this.splitContainer2.Panel2.Controls.Add(this.RepositoriesType);
+            this.splitContainer2.Panel2.Controls.Add(this._NO_TRANSLATE_RssFeed);
+            this.splitContainer2.Panel2.Controls.Add(this.label3);
+            this.splitContainer2.Panel2.Controls.Add(this.RssFeedType);
+            this.splitContainer2.Panel2.Controls.Add(this.label2);
+            this.splitContainer2.Panel2.Controls.Add(this._NO_TRANSLATE_Caption);
+            this.splitContainer2.Panel2.Controls.Add(this.label1);
             // 
             // CategoriesLabel
             // 
             resources.ApplyResources(this.CategoriesLabel, "CategoriesLabel");
             this.CategoriesLabel.Name = "CategoriesLabel";
-            // 
-            // _NO_TRANSLATE_Categories
-            // 
-            resources.ApplyResources(this._NO_TRANSLATE_Categories, "_NO_TRANSLATE_Categories");
-            this._NO_TRANSLATE_Categories.FormattingEnabled = true;
-            this._NO_TRANSLATE_Categories.Name = "_NO_TRANSLATE_Categories";
-            this._NO_TRANSLATE_Categories.SelectedIndexChanged += new System.EventHandler(this.Categories_SelectedIndexChanged);
-            // 
-            // tableLayoutPanel2
-            // 
-            resources.ApplyResources(this.tableLayoutPanel2, "tableLayoutPanel2");
-            this.tableLayoutPanel2.Controls.Add(this.Remove, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.Add, 0, 0);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             // 
             // Remove
             // 
@@ -113,6 +91,13 @@ namespace GitUI
             this.Remove.UseVisualStyleBackColor = true;
             this.Remove.Click += new System.EventHandler(this.Remove_Click);
             // 
+            // _NO_TRANSLATE_Categories
+            // 
+            resources.ApplyResources(this._NO_TRANSLATE_Categories, "_NO_TRANSLATE_Categories");
+            this._NO_TRANSLATE_Categories.FormattingEnabled = true;
+            this._NO_TRANSLATE_Categories.Name = "_NO_TRANSLATE_Categories";
+            this._NO_TRANSLATE_Categories.SelectedIndexChanged += new System.EventHandler(this.Categories_SelectedIndexChanged);
+            // 
             // Add
             // 
             resources.ApplyResources(this.Add, "Add");
@@ -120,15 +105,9 @@ namespace GitUI
             this.Add.UseVisualStyleBackColor = true;
             this.Add.Click += new System.EventHandler(this.Add_Click);
             // 
-            // tableLayoutPanel3
-            // 
-            resources.ApplyResources(this.tableLayoutPanel3, "tableLayoutPanel3");
-            this.tableLayoutPanel3.Controls.Add(this.RepositoriesGrid, 0, 1);
-            this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel4, 0, 0);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            // 
             // RepositoriesGrid
             // 
+            resources.ApplyResources(this.RepositoriesGrid, "RepositoriesGrid");
             this.RepositoriesGrid.AutoGenerateColumns = false;
             this.RepositoriesGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.RepositoriesGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -136,7 +115,6 @@ namespace GitUI
             this.Title,
             this.descriptionDataGridViewTextBoxColumn});
             this.RepositoriesGrid.DataSource = this.repositoryBindingSource;
-            resources.ApplyResources(this.RepositoriesGrid, "RepositoriesGrid");
             this.RepositoriesGrid.MultiSelect = false;
             this.RepositoriesGrid.Name = "RepositoriesGrid";
             this.RepositoriesGrid.RowHeadersVisible = false;
@@ -168,38 +146,13 @@ namespace GitUI
             // 
             this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository.Repository);
             // 
-            // tableLayoutPanel4
+            // RepositoriesType
             // 
-            resources.ApplyResources(this.tableLayoutPanel4, "tableLayoutPanel4");
-            this.tableLayoutPanel4.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel4.Controls.Add(this._NO_TRANSLATE_Caption, 1, 0);
-            this.tableLayoutPanel4.Controls.Add(this.label2, 0, 1);
-            this.tableLayoutPanel4.Controls.Add(this.label3, 0, 2);
-            this.tableLayoutPanel4.Controls.Add(this._NO_TRANSLATE_RssFeed, 1, 2);
-            this.tableLayoutPanel4.Controls.Add(this.tableLayoutPanel5, 1, 1);
-            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            // 
-            // label1
-            // 
-            resources.ApplyResources(this.label1, "label1");
-            this.label1.Name = "label1";
-            // 
-            // _NO_TRANSLATE_Caption
-            // 
-            resources.ApplyResources(this._NO_TRANSLATE_Caption, "_NO_TRANSLATE_Caption");
-            this._NO_TRANSLATE_Caption.Name = "_NO_TRANSLATE_Caption";
-            this._NO_TRANSLATE_Caption.TextChanged += new System.EventHandler(this.Caption_TextChanged);
-            this._NO_TRANSLATE_Caption.Validating += new System.ComponentModel.CancelEventHandler(this.Caption_Validating);
-            // 
-            // label2
-            // 
-            resources.ApplyResources(this.label2, "label2");
-            this.label2.Name = "label2";
-            // 
-            // label3
-            // 
-            resources.ApplyResources(this.label3, "label3");
-            this.label3.Name = "label3";
+            resources.ApplyResources(this.RepositoriesType, "RepositoriesType");
+            this.RepositoriesType.Name = "RepositoriesType";
+            this.RepositoriesType.TabStop = true;
+            this.RepositoriesType.UseVisualStyleBackColor = true;
+            this.RepositoriesType.Validating += new System.ComponentModel.CancelEventHandler(this.RepositoriesType_Validating);
             // 
             // _NO_TRANSLATE_RssFeed
             // 
@@ -208,12 +161,11 @@ namespace GitUI
             this._NO_TRANSLATE_RssFeed.TextChanged += new System.EventHandler(this.RssFeed_TextChanged);
             this._NO_TRANSLATE_RssFeed.Validating += new System.ComponentModel.CancelEventHandler(this.RssFeed_Validating);
             // 
-            // tableLayoutPanel5
+            // label3
             // 
-            resources.ApplyResources(this.tableLayoutPanel5, "tableLayoutPanel5");
-            this.tableLayoutPanel5.Controls.Add(this.RssFeedType, 0, 0);
-            this.tableLayoutPanel5.Controls.Add(this.RepositoriesType, 0, 1);
-            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
+            resources.ApplyResources(this.label3, "label3");
+            this.label3.Name = "label3";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // RssFeedType
             // 
@@ -224,13 +176,22 @@ namespace GitUI
             this.RssFeedType.Validating += new System.ComponentModel.CancelEventHandler(this.RssFeedType_Validating);
             this.RssFeedType.CheckedChanged += new System.EventHandler(this.RssFeedType_CheckedChanged);
             // 
-            // RepositoriesType
+            // label2
             // 
-            resources.ApplyResources(this.RepositoriesType, "RepositoriesType");
-            this.RepositoriesType.Name = "RepositoriesType";
-            this.RepositoriesType.TabStop = true;
-            this.RepositoriesType.UseVisualStyleBackColor = true;
-            this.RepositoriesType.Validating += new System.ComponentModel.CancelEventHandler(this.RepositoriesType_Validating);
+            resources.ApplyResources(this.label2, "label2");
+            this.label2.Name = "label2";
+            // 
+            // _NO_TRANSLATE_Caption
+            // 
+            resources.ApplyResources(this._NO_TRANSLATE_Caption, "_NO_TRANSLATE_Caption");
+            this._NO_TRANSLATE_Caption.Name = "_NO_TRANSLATE_Caption";
+            this._NO_TRANSLATE_Caption.TextChanged += new System.EventHandler(this.Caption_TextChanged);
+            this._NO_TRANSLATE_Caption.Validating += new System.ComponentModel.CancelEventHandler(this.Caption_Validating);
+            // 
+            // label1
+            // 
+            resources.ApplyResources(this.label1, "label1");
+            this.label1.Name = "label1";
             // 
             // DashboardEditor
             // 
@@ -240,16 +201,10 @@ namespace GitUI
             this.Name = "DashboardEditor";
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
+            this.splitContainer2.Panel2.PerformLayout();
             this.splitContainer2.ResumeLayout(false);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.RepositoriesGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).EndInit();
-            this.tableLayoutPanel4.ResumeLayout(false);
-            this.tableLayoutPanel4.PerformLayout();
-            this.tableLayoutPanel5.ResumeLayout(false);
-            this.tableLayoutPanel5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -262,17 +217,12 @@ namespace GitUI
         private System.Windows.Forms.ListBox _NO_TRANSLATE_Categories;
         private System.Windows.Forms.Label CategoriesLabel;
         private System.Windows.Forms.DataGridView RepositoriesGrid;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.BindingSource repositoryBindingSource;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox _NO_TRANSLATE_Caption;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox _NO_TRANSLATE_RssFeed;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
         private System.Windows.Forms.RadioButton RssFeedType;
         private System.Windows.Forms.RadioButton RepositoriesType;
         private System.Windows.Forms.DataGridViewTextBoxColumn pathDataGridViewTextBoxColumn;
