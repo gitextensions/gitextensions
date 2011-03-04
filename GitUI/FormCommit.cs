@@ -117,9 +117,7 @@ namespace GitUI
             Unstaged.SelectedIndexChanged += UntrackedSelectionChanged;
             Staged.SelectedIndexChanged += TrackedSelectionChanged;
 
-            Unstaged.KeyDown += Unstaged_KeyDown;
             Unstaged.DoubleClick += Unstaged_DoubleClick;
-            Staged.KeyDown += Staged_KeyDown;
             Staged.DoubleClick += Staged_DoubleClick;
 
             _gitGetUnstagedCommand = new GitCommandsInstance();
@@ -135,6 +133,8 @@ namespace GitUI
 
             this.HotkeysEnabled = true;
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+
+            Commit.Focus();
         }
 
         #region Hotkey commands
@@ -143,50 +143,79 @@ namespace GitUI
 
         internal enum Commands : int
         {
-          FocusUnstagedFiles,
-          FocusSelectedDiff,
-          FocusStagedFiles,
-          FocusCommitMessage
+            FocusUnstagedFiles,
+            FocusSelectedDiff,
+            FocusStagedFiles,
+            FocusCommitMessage,
+            StageSelectedFile,
+            UnStageSelectedFile,
         }
 
-        private void FocusStagedFiles()
+        private bool FocusStagedFiles()
         {
-          FocusFileList(this.Staged);
+            FocusFileList(this.Staged);
+            return true;
         }
 
-        private void FocusUnstagedFiles()
+        private bool FocusUnstagedFiles()
         {
-          FocusFileList(this.Unstaged);
+            FocusFileList(this.Unstaged);
+            return true;
         }
 
         /// <summary>Helper method that moves the focus to the supplied FileStatusList</summary>
-        private void FocusFileList(FileStatusList fileStatusList)
+        private bool FocusFileList(FileStatusList fileStatusList)
         {
-          fileStatusList.Focus();
-          fileStatusList.SelectedItem = fileStatusList.GitItemStatuses.Count > 0 ? fileStatusList.GitItemStatuses[0] : null;
+            fileStatusList.Focus();
+            return true;
         }
 
-        private void FocusSelectedDiff()
+        private bool FocusSelectedDiff()
         {
-          this.SelectedDiff.Focus();
+            this.SelectedDiff.Focus();
+            return true;
         }
 
-        private void FocusCommitMessage()
+        private bool FocusCommitMessage()
         {
-          this.Message.StartEditing();
+            this.Message.StartEditing();
+            return true;
         }
 
-        protected override void ExecuteCommand(int cmd)
+        private bool StageSelectedFile()
         {
-          Commands command = (Commands)cmd;
-          
-          switch (command)
-          {
-            case Commands.FocusStagedFiles: FocusStagedFiles(); break;
-            case Commands.FocusUnstagedFiles: FocusUnstagedFiles(); break;
-            case Commands.FocusSelectedDiff: FocusSelectedDiff(); break;
-            case Commands.FocusCommitMessage: FocusCommitMessage(); break;
-          }
+            if (Unstaged.Focused)
+            {
+                StageClick(this, null);
+                return true;
+            }
+            return false;
+        }
+
+        private bool UnStageSelectedFile()
+        {
+            if (Staged.Focused)
+            {
+                UnstageFilesClick(this, null);
+                return true;
+            }
+            return false;
+        }
+
+        protected override bool ExecuteCommand(int cmd)
+        {
+            Commands command = (Commands)cmd;
+
+            switch (command)
+            {
+                case Commands.FocusStagedFiles: return FocusStagedFiles(); 
+                case Commands.FocusUnstagedFiles: return FocusUnstagedFiles(); 
+                case Commands.FocusSelectedDiff: return FocusSelectedDiff(); 
+                case Commands.FocusCommitMessage: return FocusCommitMessage(); 
+                case Commands.StageSelectedFile: return StageSelectedFile(); 
+                case Commands.UnStageSelectedFile: return UnStageSelectedFile();
+                default: return false;
+            }
         }
 
         #endregion
@@ -261,7 +290,6 @@ namespace GitUI
             Loading.Visible = true;
             LoadingStaged.Visible = true;
 
-            Commit.Focus();
             AcceptButton = Commit;
             Cursor.Current = Cursors.Default;
         }
@@ -499,7 +527,6 @@ namespace GitUI
             Commit.Enabled = true;
             Amend.Enabled = true;
             AcceptButton = Commit;
-            Commit.Focus();
             Cursor.Current = Cursors.Default;
 
             if (Settings.RevisionGraphShowWorkingDirChanges)
@@ -535,7 +562,7 @@ namespace GitUI
                         {
                             toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
                             GitCommandHelpers.UnstageFileToRemove(item.Name);
-                            
+
                             if (item.IsRenamed)
                                 GitCommandHelpers.UnstageFileToRemove(item.OldName);
                         }
@@ -1027,40 +1054,6 @@ namespace GitUI
         void Staged_DoubleClick(object sender, EventArgs e)
         {
             UnstageFilesClick(sender, e);
-        }
-
-        void Unstaged_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Modifiers == Keys.None)
-            {
-                switch (e.KeyCode)
-                {
-                    case Keys.S:
-                        StageClick(sender, e);
-                        Unstaged.Focus();
-                        e.Handled = true;
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
-        void Staged_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Modifiers == Keys.None)
-            {
-                switch (e.KeyCode)
-                {
-                    case Keys.U:
-                        UnstageFilesClick(sender, e);
-                        Staged.Focus();
-                        e.Handled = true;
-                        break;
-                    default:
-                        break;
-                }
-            }
         }
 
         private void Message_KeyUp(object sender, KeyEventArgs e)
