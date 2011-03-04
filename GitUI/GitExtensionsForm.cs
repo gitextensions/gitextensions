@@ -51,8 +51,7 @@ namespace GitUI
             {
               if (hotkey.KeyData == keyData)
               {
-                ExecuteCommand(hotkey.CommandCode);
-                return true;
+                return ExecuteCommand(hotkey.CommandCode);
               }
             }
 
@@ -64,8 +63,9 @@ namespace GitUI
         /// This base method does nothing
         /// </summary>
         /// <param name="command"></param>
-        protected virtual void ExecuteCommand(int command)
+        protected virtual bool ExecuteCommand(int command)
         {
+            return false;
         }
 
         #endregion
