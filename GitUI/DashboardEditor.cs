@@ -165,5 +165,10 @@ namespace GitUI
             datasource.Remove(repositoryToRemove);
             RepositoriesGrid.DataSource = datasource;
         }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
