@@ -28,6 +28,14 @@ namespace GitUI
             NoFiles.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
         }
 
+        public override bool Focused
+        {
+            get
+            {
+                return FileStatusListBox.Focused;
+            }
+        }
+
         void FileStatusListBox_MeasureItem(object sender, MeasureItemEventArgs e)
         {
             e.ItemHeight = Math.Max((int)e.Graphics.MeasureString(((GitItemStatus)FileStatusListBox.Items[e.Index]).Name, FileStatusListBox.Font).Height, 16);

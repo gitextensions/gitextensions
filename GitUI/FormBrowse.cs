@@ -13,6 +13,7 @@ using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor.Util;
 using GitUI.RepoHosting;
 using System.Threading;
+using GitUI.Hotkey;
 
 namespace GitUI
 {
@@ -51,6 +52,9 @@ namespace GitUI
             GitTree.ImageList.Images.Add(Properties.Resources._21); //File
             GitTree.ImageList.Images.Add(Properties.Resources._40); //Folder
             GitTree.ImageList.Images.Add(Properties.Resources._39); //Submodule
+
+            this.HotkeysEnabled = true;
+            this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
         }
 
         private void ShowDashboard()
@@ -1718,5 +1722,42 @@ namespace GitUI
             GitUICommands.Instance.StartCreatePullRequest(repoHost);
             Initialize();
         }
+
+        #region Hotkey commands
+
+        public const string HotkeySettingsName = "Browse";
+
+        internal enum Commands : int
+        {
+            GitBash,
+            GitGui,
+            GitGitK,
+            FocusRevisionGrid,
+            FocusCommitInfo,
+            FocusFileTree,
+            FocusDiff,
+            Commit
+        }
+
+        protected override bool ExecuteCommand(int cmd)
+        {
+            Commands command = (Commands)cmd;
+
+            switch (command)
+            {
+                case Commands.GitBash: GitCommandHelpers.RunBash(); break;
+                case Commands.GitGui: GitCommandHelpers.RunGui(); break;
+                case Commands.GitGitK: GitCommandHelpers.RunGitK(); break;
+                case Commands.FocusRevisionGrid: RevisionGrid.Focus(); break;
+                case Commands.FocusCommitInfo: tabControl1.SelectedTab = CommitInfo; break;
+                case Commands.FocusFileTree: tabControl1.SelectedTab = Tree; GitTree.Focus(); break;
+                case Commands.FocusDiff: tabControl1.SelectedTab = Diff; DiffFiles.Focus(); break;
+                case Commands.Commit: CommitToolStripMenuItemClick(null, null); break;
+            }
+
+            return true;
+        }
+
+        #endregion
     }
 }
