@@ -712,6 +712,7 @@ namespace GitUI
             this.flowCommitButtons.Controls.Add(this.Amend);
             this.flowCommitButtons.Controls.Add(this.Reset);
             this.flowCommitButtons.Dock = System.Windows.Forms.DockStyle.Left;
+            this.flowCommitButtons.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowCommitButtons.Location = new System.Drawing.Point(0, 0);
             this.flowCommitButtons.Name = "flowCommitButtons";
             this.flowCommitButtons.Size = new System.Drawing.Size(175, 138);
