@@ -1,6 +1,14 @@
 Changelog
 =========
 
+Version 2.14
+	Fixed crash when viewing binary file in blame
+	Fixed settings dialog on Linux host
+	Fixed commit dialog on Linux host
+	Added option to edit git notes
+	Added settings page to configure hotkeys
+	Removed shell extensions check when it is not installed
+
 Version 2.13
 	Fixed issue 391: application crashes when repository favourites contains empty item
 	Double click on line in blame jumps to commit instead of opening commit
