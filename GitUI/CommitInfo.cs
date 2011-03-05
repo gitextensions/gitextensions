@@ -220,5 +220,11 @@ namespace GitUI
             Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal = !Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
             ReloadCommitInfo();
         }
+
+        private void addNoteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GitCommandHelpers.EditNotes(_revision);
+            ReloadCommitInfo();
+        }
     }
 }

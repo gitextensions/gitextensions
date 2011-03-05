@@ -410,6 +410,21 @@ namespace GitCommands
             }
         }
 
+        public static void EditNotes(string revision)
+        {
+            if (GitCommandHelpers.GetGlobalConfig().GetValue("core.editor").ToLower().Contains("gitextensions") ||
+                GitCommandHelpers.GetLocalConfig().GetValue("core.editor").ToLower().Contains("gitextensions") ||
+                GitCommandHelpers.GetGlobalConfig().GetValue("core.editor").ToLower().Contains("notepad") ||
+                GitCommandHelpers.GetLocalConfig().GetValue("core.editor").ToLower().Contains("notepad"))
+            {
+                RunCmd(Settings.GitCommand, "notes edit " + revision);
+            }
+            else
+            {
+                RunRealCmd(Settings.GitCommand, "notes edit " + revision);
+            }
+        }
+
         public static bool InTheMiddleOfConflictedMerge()
         {
             return !string.IsNullOrEmpty(RunCmd(Settings.GitCommand, "ls-files -z --unmerged"));

@@ -900,6 +900,7 @@ namespace GitUI
             GitUICommands.Instance.StartSettingsDialog();
 
             Translate();
+            this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             Initialize();
             RevisionGrid.ForceRefreshRevisions();
         }
@@ -1736,7 +1737,18 @@ namespace GitUI
             FocusCommitInfo,
             FocusFileTree,
             FocusDiff,
-            Commit
+            Commit,
+            AddNotes
+        }
+
+        private void AddNotes()
+        {
+            if (RevisionGrid.GetRevisions().Count > 0)
+                GitCommandHelpers.EditNotes(RevisionGrid.GetRevisions()[0].Guid);
+            else
+                GitCommandHelpers.EditNotes(string.Empty);
+            
+            FillCommitInfo();
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -1753,6 +1765,7 @@ namespace GitUI
                 case Commands.FocusFileTree: tabControl1.SelectedTab = Tree; GitTree.Focus(); break;
                 case Commands.FocusDiff: tabControl1.SelectedTab = Diff; DiffFiles.Focus(); break;
                 case Commands.Commit: CommitToolStripMenuItemClick(null, null); break;
+                case Commands.AddNotes: AddNotes(); break;
             }
 
             return true;
