@@ -583,6 +583,7 @@ namespace GitUI
             this.translationConfig_Fix.TabIndex = 21;
             this.translationConfig_Fix.Text = "Repair";
             this.translationConfig_Fix.UseVisualStyleBackColor = true;
+            this.translationConfig_Fix.Visible = false;
             this.translationConfig_Fix.Click += new System.EventHandler(this.translationConfig_Click);
             // 
             // SshConfig_Fix
@@ -594,6 +595,7 @@ namespace GitUI
             this.SshConfig_Fix.TabIndex = 20;
             this.SshConfig_Fix.Text = "Repair";
             this.SshConfig_Fix.UseVisualStyleBackColor = true;
+            this.SshConfig_Fix.Visible = false;
             this.SshConfig_Fix.Click += new System.EventHandler(this.SshConfig_Click);
             // 
             // GitExtensionsInstall_Fix
@@ -605,6 +607,7 @@ namespace GitUI
             this.GitExtensionsInstall_Fix.TabIndex = 19;
             this.GitExtensionsInstall_Fix.Text = "Repair";
             this.GitExtensionsInstall_Fix.UseVisualStyleBackColor = true;
+            this.GitExtensionsInstall_Fix.Visible = false;
             this.GitExtensionsInstall_Fix.Click += new System.EventHandler(this.GitExtensionsInstall_Click);
             // 
             // GitBinFound_Fix
@@ -616,6 +619,7 @@ namespace GitUI
             this.GitBinFound_Fix.TabIndex = 18;
             this.GitBinFound_Fix.Text = "Repair";
             this.GitBinFound_Fix.UseVisualStyleBackColor = true;
+            this.GitBinFound_Fix.Visible = false;
             this.GitBinFound_Fix.Click += new System.EventHandler(this.GitBinFound_Click);
             // 
             // ShellExtensionsRegistered_Fix
@@ -627,6 +631,7 @@ namespace GitUI
             this.ShellExtensionsRegistered_Fix.TabIndex = 17;
             this.ShellExtensionsRegistered_Fix.Text = "Repair";
             this.ShellExtensionsRegistered_Fix.UseVisualStyleBackColor = true;
+            this.ShellExtensionsRegistered_Fix.Visible = false;
             this.ShellExtensionsRegistered_Fix.Click += new System.EventHandler(this.ShellExtensionsRegistered_Click);
             // 
             // DiffTool2_Fix
@@ -638,6 +643,7 @@ namespace GitUI
             this.DiffTool2_Fix.TabIndex = 16;
             this.DiffTool2_Fix.Text = "Repair";
             this.DiffTool2_Fix.UseVisualStyleBackColor = true;
+            this.DiffTool2_Fix.Visible = false;
             this.DiffTool2_Fix.Click += new System.EventHandler(this.DiffTool2_Click);
             // 
             // DiffTool_Fix
@@ -649,6 +655,7 @@ namespace GitUI
             this.DiffTool_Fix.TabIndex = 15;
             this.DiffTool_Fix.Text = "Repair";
             this.DiffTool_Fix.UseVisualStyleBackColor = true;
+            this.DiffTool_Fix.Visible = false;
             this.DiffTool_Fix.Click += new System.EventHandler(this.DiffTool_Click);
             // 
             // UserNameSet_Fix
@@ -660,6 +667,7 @@ namespace GitUI
             this.UserNameSet_Fix.TabIndex = 14;
             this.UserNameSet_Fix.Text = "Repair";
             this.UserNameSet_Fix.UseVisualStyleBackColor = true;
+            this.UserNameSet_Fix.Visible = false;
             this.UserNameSet_Fix.Click += new System.EventHandler(this.UserNameSet_Click);
             // 
             // GitFound_Fix
@@ -671,6 +679,7 @@ namespace GitUI
             this.GitFound_Fix.TabIndex = 13;
             this.GitFound_Fix.Text = "Repair";
             this.GitFound_Fix.UseVisualStyleBackColor = true;
+            this.GitFound_Fix.Visible = false;
             this.GitFound_Fix.Click += new System.EventHandler(this.GitFound_Click);
             // 
             // translationConfig
