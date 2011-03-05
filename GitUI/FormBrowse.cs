@@ -902,6 +902,8 @@ namespace GitUI
             Translate();
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             Initialize();
+            RevisionGrid.ReloadHotkeys();
+            RevisionGrid.ReloadTranslation(); 
             RevisionGrid.ForceRefreshRevisions();
         }
 

@@ -173,7 +173,6 @@ namespace GitUI
             this.Revisions.VirtualMode = true;
             this.Revisions.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.RevisionsCellMouseDown);
             this.Revisions.DoubleClick += new System.EventHandler(this.RevisionsDoubleClick);
-            this.Revisions.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RevisionsKeyUp);
             this.Revisions.MouseClick += new System.Windows.Forms.MouseEventHandler(this.RevisionsMouseClick);
             // 
             // dataGridViewTextBoxColumn3
