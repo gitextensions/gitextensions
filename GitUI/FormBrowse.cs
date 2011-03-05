@@ -1738,7 +1738,9 @@ namespace GitUI
             FocusFileTree,
             FocusDiff,
             Commit,
-            AddNotes
+            AddNotes,
+            FindFileInSelectedCommit,
+            SelectCurrentRevision
         }
 
         private void AddNotes()
@@ -1747,8 +1749,15 @@ namespace GitUI
                 GitCommandHelpers.EditNotes(RevisionGrid.GetRevisions()[0].Guid);
             else
                 GitCommandHelpers.EditNotes(string.Empty);
-            
+
             FillCommitInfo();
+        }
+
+        private void FindFileInSelectedCommit()
+        {
+            tabControl1.SelectedTab = Tree; 
+            GitTree.Focus();
+            FindFileOnClick(null, null);
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -1766,6 +1775,8 @@ namespace GitUI
                 case Commands.FocusDiff: tabControl1.SelectedTab = Diff; DiffFiles.Focus(); break;
                 case Commands.Commit: CommitToolStripMenuItemClick(null, null); break;
                 case Commands.AddNotes: AddNotes(); break;
+                case Commands.FindFileInSelectedCommit: FindFileInSelectedCommit(); break;
+                case Commands.SelectCurrentRevision: RevisionGrid.SetSelectedRevision(new GitRevision() { Guid = RevisionGrid.CurrentCheckout }); break;
             }
 
             return true;
