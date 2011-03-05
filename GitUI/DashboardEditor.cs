@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 using GitCommands.Repository;
+using System.Drawing;
 
 namespace GitUI
 {
@@ -81,6 +82,7 @@ namespace GitUI
             {
                 RepositoriesGrid.ReadOnly = true;
                 RepositoriesGrid.Enabled = false;
+                RepositoriesGrid.BackgroundColor = Color.Gray;
                 _NO_TRANSLATE_RssFeed.Enabled = true;
                 repositoryCategory.CategoryType = RepositoryCategoryType.RssFeed;
             }
@@ -89,6 +91,7 @@ namespace GitUI
             {
                 RepositoriesGrid.ReadOnly = false;
                 RepositoriesGrid.Enabled = true;
+                RepositoriesGrid.BackgroundColor = Color.White;
                 _NO_TRANSLATE_RssFeed.Enabled = false;
                 repositoryCategory.CategoryType = RepositoryCategoryType.Repositories;
             }
@@ -167,6 +170,11 @@ namespace GitUI
         }
 
         private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RepositoriesType_CheckedChanged(object sender, EventArgs e)
         {
 
         }

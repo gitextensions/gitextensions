@@ -331,7 +331,7 @@
             this.splitContainer3.Panel2.Controls.Add(this.previousButton);
             this.splitContainer3.Panel2.Controls.Add(this.nextButton);
             this.splitContainer3.Size = new System.Drawing.Size(595, 153);
-            this.splitContainer3.SplitterDistance = 431;
+            this.splitContainer3.SplitterDistance = 388;
             this.splitContainer3.TabIndex = 0;
             // 
             // splitContainer4
@@ -348,7 +348,7 @@
             // splitContainer4.Panel2
             // 
             this.splitContainer4.Panel2.Controls.Add(this.translatedText);
-            this.splitContainer4.Size = new System.Drawing.Size(431, 153);
+            this.splitContainer4.Size = new System.Drawing.Size(388, 153);
             this.splitContainer4.SplitterDistance = 72;
             this.splitContainer4.TabIndex = 0;
             // 
@@ -358,7 +358,7 @@
             this.neutralTekst.Location = new System.Drawing.Point(0, 0);
             this.neutralTekst.Name = "neutralTekst";
             this.neutralTekst.ReadOnly = true;
-            this.neutralTekst.Size = new System.Drawing.Size(431, 72);
+            this.neutralTekst.Size = new System.Drawing.Size(388, 72);
             this.neutralTekst.TabIndex = 0;
             this.neutralTekst.Text = "";
             // 
@@ -367,7 +367,7 @@
             this.translatedText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.translatedText.Location = new System.Drawing.Point(0, 0);
             this.translatedText.Name = "translatedText";
-            this.translatedText.Size = new System.Drawing.Size(431, 77);
+            this.translatedText.Size = new System.Drawing.Size(388, 77);
             this.translatedText.TabIndex = 0;
             this.translatedText.Text = "";
             this.translatedText.TextChanged += new System.EventHandler(this.translatedText_TextChanged);
@@ -376,7 +376,7 @@
             // 
             this.googleAll.Location = new System.Drawing.Point(3, 123);
             this.googleAll.Name = "googleAll";
-            this.googleAll.Size = new System.Drawing.Size(155, 25);
+            this.googleAll.Size = new System.Drawing.Size(198, 25);
             this.googleAll.TabIndex = 3;
             this.googleAll.Text = "Google all empty";
             this.googleAll.UseVisualStyleBackColor = true;
@@ -386,7 +386,7 @@
             // 
             this.googleTranslate.Location = new System.Drawing.Point(2, 95);
             this.googleTranslate.Name = "googleTranslate";
-            this.googleTranslate.Size = new System.Drawing.Size(155, 25);
+            this.googleTranslate.Size = new System.Drawing.Size(198, 25);
             this.googleTranslate.TabIndex = 2;
             this.googleTranslate.Text = "Google translate";
             this.googleTranslate.UseVisualStyleBackColor = true;
@@ -396,7 +396,7 @@
             // 
             this.previousButton.Location = new System.Drawing.Point(3, 32);
             this.previousButton.Name = "previousButton";
-            this.previousButton.Size = new System.Drawing.Size(155, 25);
+            this.previousButton.Size = new System.Drawing.Size(198, 25);
             this.previousButton.TabIndex = 1;
             this.previousButton.Text = "&Previous";
             this.previousButton.UseVisualStyleBackColor = true;
@@ -406,7 +406,7 @@
             // 
             this.nextButton.Location = new System.Drawing.Point(2, 3);
             this.nextButton.Name = "nextButton";
-            this.nextButton.Size = new System.Drawing.Size(155, 25);
+            this.nextButton.Size = new System.Drawing.Size(198, 25);
             this.nextButton.TabIndex = 0;
             this.nextButton.Text = "&Next";
             this.nextButton.UseVisualStyleBackColor = true;

@@ -123,7 +123,15 @@ namespace GitUI.Hotkey
             hk(FormBrowse.Commands.SelectCurrentRevision, Keys.Control | Keys.Shift | Keys.C),
             hk(FormBrowse.Commands.CheckoutBranch, Keys.Control | Keys.Decimal),
             hk(FormBrowse.Commands.QuickFetch, Keys.None),
-            hk(FormBrowse.Commands.QuickPush, Keys.None))
+            hk(FormBrowse.Commands.QuickPush, Keys.None)),
+        new HotkeySettings(RevisionGrid.HotkeySettingsName,
+            hk(RevisionGrid.Commands.RevisionFilter, Keys.Control | Keys.F),
+            hk(RevisionGrid.Commands.ToggleRevisionGraph, Keys.None),
+            hk(RevisionGrid.Commands.ToggleAuthorDateCommitDate, Keys.None),
+            hk(RevisionGrid.Commands.ToggleOrderRevisionsByDate, Keys.None),
+            hk(RevisionGrid.Commands.ToggleShowRelativeDate, Keys.None),
+            hk(RevisionGrid.Commands.ToggleDrawNonRelativesGray, Keys.None),
+            hk(RevisionGrid.Commands.ToggleShowGitNotes, Keys.None))
       };
     }
   }

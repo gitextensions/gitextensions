@@ -10,6 +10,7 @@ using GitCommands;
 using GitUI.Tag;
 using ResourceManager.Translation;
 using System.Text.RegularExpressions;
+using GitUI.Hotkey;
 
 namespace GitUI
 {
@@ -89,6 +90,9 @@ namespace GitUI
             Revisions.DragDrop += Revisions_DragDrop;
             Revisions.AllowDrop = true;
             Revisions.ColumnHeadersVisible = false;
+
+            this.HotkeysEnabled = true;
+            ReloadHotkeys();
         }
 
         void Loading_Paint(object sender, PaintEventArgs e)
@@ -573,6 +577,16 @@ namespace GitUI
                        CheckCondition(_CommitterFilter, _CommitterFilterRegex, rev.Committer) &&
                        CheckCondition(_MessageFilter, _MessageFilterRegex, rev.Message);
             }
+        }
+
+        public void ReloadHotkeys()
+        {
+            this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+        }
+
+        public void ReloadTranslation()
+        {
+            Translate();
         }
 
         public void ForceRefreshRevisions()
@@ -1093,12 +1107,6 @@ namespace GitUI
             SetShowBranches();
         }
 
-        private void RevisionsKeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.F && _contextMenuEnabled)
-                FilterToolStripMenuItemClick(null, null);
-        }
-
         private void CreateTagOpening(object sender, CancelEventArgs e)
         {
             if (Revisions.RowCount < LastRow || LastRow < 0 || Revisions.RowCount == 0)
@@ -1568,5 +1576,40 @@ namespace GitUI
                 ForceRefreshRevisions();
 
         }
+
+        #region Hotkey commands
+
+        public const string HotkeySettingsName = "RevisionGrid";
+
+        internal enum Commands : int
+        {
+            ToggleRevisionGraph,
+            RevisionFilter,
+            ToggleAuthorDateCommitDate,
+            ToggleOrderRevisionsByDate,
+            ToggleShowRelativeDate,
+            ToggleDrawNonRelativesGray,
+            ToggleShowGitNotes
+        }
+
+        protected override bool ExecuteCommand(int cmd)
+        {
+            Commands command = (Commands)cmd;
+
+            switch (command)
+            {
+                case Commands.ToggleRevisionGraph: ShowRevisionGraphToolStripMenuItemClick(null, null); break;
+                case Commands.RevisionFilter: FilterToolStripMenuItemClick(null, null); break;
+                case Commands.ToggleAuthorDateCommitDate: ShowAuthorDateToolStripMenuItemClick(null, null); break;
+                case Commands.ToggleOrderRevisionsByDate: OrderRevisionsByDateToolStripMenuItemClick(null, null); break;
+                case Commands.ToggleShowRelativeDate: ShowRelativeDateToolStripMenuItemClick(null, null); break;
+                case Commands.ToggleDrawNonRelativesGray: drawNonrelativesGrayToolStripMenuItem_Click(null, null); break;
+                case Commands.ToggleShowGitNotes: ShowGitNotesToolStripMenuItem_Click(null, null); break;
+            }
+
+            return true;
+        }
+
+        #endregion
     }
 }
