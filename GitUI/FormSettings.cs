@@ -338,24 +338,27 @@ namespace GitUI
 
         private bool Save()
         {
-            if (otherHome.Checked)
+            if (Settings.RunningOnWindows())
             {
-                Settings.UserProfileHomeDir = false;
-                if (string.IsNullOrEmpty(otherHomeDir.Text))
+                if (otherHome.Checked)
                 {
-                    MessageBox.Show("Please enter a valid HOME directory.");
-                    new FormFixHome().ShowDialog();
+                    Settings.UserProfileHomeDir = false;
+                    if (string.IsNullOrEmpty(otherHomeDir.Text))
+                    {
+                        MessageBox.Show("Please enter a valid HOME directory.");
+                        new FormFixHome().ShowDialog();
+                    }
+                    else
+                        Settings.CustomHomeDir = otherHomeDir.Text;
                 }
                 else
-                    Settings.CustomHomeDir = otherHomeDir.Text;
-            }
-            else
-            {
-                Settings.CustomHomeDir = "";
-                Settings.UserProfileHomeDir = userprofileHome.Checked;
-            }
+                {
+                    Settings.CustomHomeDir = "";
+                    Settings.UserProfileHomeDir = userprofileHome.Checked;
+                }
 
-            FormFixHome.CheckHomePath();
+                FormFixHome.CheckHomePath();
+            }
 
             GitCommandHelpers.SetEnvironmentVariable(true);
 
