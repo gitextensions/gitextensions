@@ -1158,6 +1158,9 @@ namespace GitCommands
 
         public static string FetchCmd(string remote, string remoteBranch, string localBranch)
         {
+            if (string.IsNullOrEmpty(remote) && string.IsNullOrEmpty(remoteBranch) && string.IsNullOrEmpty(localBranch))
+                return "fetch";
+
             return "fetch " + GetFetchArgs(remote, remoteBranch, localBranch);
         }
 

@@ -120,7 +120,10 @@ namespace GitUI.Hotkey
             hk(FormBrowse.Commands.Commit, Keys.Control | Keys.Space),
             hk(FormBrowse.Commands.AddNotes, Keys.Control | Keys.Shift | Keys.N),
             hk(FormBrowse.Commands.FindFileInSelectedCommit, Keys.Control | Keys.Shift | Keys.F),
-            hk(FormBrowse.Commands.SelectCurrentRevision, Keys.Control | Keys.Shift | Keys.C))
+            hk(FormBrowse.Commands.SelectCurrentRevision, Keys.Control | Keys.Shift | Keys.C),
+            hk(FormBrowse.Commands.CheckoutBranch, Keys.Control | Keys.Decimal),
+            hk(FormBrowse.Commands.QuickFetch, Keys.None),
+            hk(FormBrowse.Commands.QuickPush, Keys.None))
       };
     }
   }

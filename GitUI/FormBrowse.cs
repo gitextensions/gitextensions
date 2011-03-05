@@ -1740,7 +1740,10 @@ namespace GitUI
             Commit,
             AddNotes,
             FindFileInSelectedCommit,
-            SelectCurrentRevision
+            SelectCurrentRevision,
+            CheckoutBranch,
+            QuickFetch,
+            QuickPush
         }
 
         private void AddNotes()
@@ -1760,6 +1763,12 @@ namespace GitUI
             FindFileOnClick(null, null);
         }
 
+        private void QuickFetch()
+        {
+            new FormProcess(GitCommandHelpers.FetchCmd(string.Empty, string.Empty, string.Empty)).ShowDialog();
+            Initialize();
+        }
+
         protected override bool ExecuteCommand(int cmd)
         {
             Commands command = (Commands)cmd;
@@ -1777,6 +1786,9 @@ namespace GitUI
                 case Commands.AddNotes: AddNotes(); break;
                 case Commands.FindFileInSelectedCommit: FindFileInSelectedCommit(); break;
                 case Commands.SelectCurrentRevision: RevisionGrid.SetSelectedRevision(new GitRevision() { Guid = RevisionGrid.CurrentCheckout }); break;
+                case Commands.CheckoutBranch: CheckoutBranchToolStripMenuItemClick(null, null); break;
+                case Commands.QuickFetch: QuickFetch(); break;
+                case Commands.QuickPush: GitUICommands.Instance.StartPushDialog(true); break;
             }
 
             return true;
