@@ -1877,6 +1877,7 @@ namespace GitUI
                 return true;
 
             ShellExtensionsRegistered.Visible = true;
+
             if (
                 string.IsNullOrEmpty(GetRegistryValue(Registry.LocalMachine,
                                                       "Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved",
@@ -1889,6 +1890,16 @@ namespace GitUI
                                                       "Directory\\Background\\shellex\\ContextMenuHandlers\\GitExtensions2",
                                                       null)))
             {
+                //Check if shell extensions are installed
+                string path = Path.Combine(Settings.GetInstallDir(), GitExtensionsShellExName);
+                if (!File.Exists(path))
+                {
+                    ShellExtensionsRegistered.BackColor = Color.LightGreen;
+                    ShellExtensionsRegistered.Text = String.Format("Shell extensions are not installed. Run the installer to intall the shell extensions.");
+                    ShellExtensionsRegistered_Fix.Visible = false;
+                    return true;
+                }
+
                 ShellExtensionsRegistered.BackColor = Color.LightSalmon;
                 ShellExtensionsRegistered.Text = String.Format("{0} needs to be registered in order to use the shell extensions.", GitExtensionsShellExName);
                 ShellExtensionsRegistered_Fix.Visible = true;
