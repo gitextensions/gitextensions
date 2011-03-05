@@ -117,7 +117,8 @@ namespace GitUI.Hotkey
             hk(FormBrowse.Commands.FocusCommitInfo, Keys.Control | Keys.D2),
             hk(FormBrowse.Commands.FocusFileTree, Keys.Control | Keys.D3),
             hk(FormBrowse.Commands.FocusDiff, Keys.Control | Keys.D4),
-            hk(FormBrowse.Commands.Commit, Keys.None))
+            hk(FormBrowse.Commands.Commit, Keys.None),
+            hk(FormBrowse.Commands.AddNotes, Keys.None))
       };
     }
   }

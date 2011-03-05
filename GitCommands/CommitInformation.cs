@@ -88,7 +88,8 @@ namespace GitCommands
         /// <returns></returns>
         public static CommitInformation GetCommitInfo(string sha1)
         {
-            string info = GitCommandHelpers.RunCachableCmd(
+            //Do not cache this command, since notes can be added
+            string info = GitCommandHelpers.RunCmd(
                 Settings.GitCommand,
                 string.Format(
                     "show -s --pretty=raw --show-notes=* {0}", sha1));

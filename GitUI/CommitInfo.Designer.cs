@@ -41,6 +41,8 @@
             this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showContainedInTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RevisionInfo = new System.Windows.Forms.RichTextBox();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.addNoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayout.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -122,9 +124,11 @@
             this.showContainedInBranchesToolStripMenuItem,
             this.showContainedInBranchesRemoteToolStripMenuItem,
             this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem,
-            this.showContainedInTagsToolStripMenuItem});
+            this.showContainedInTagsToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.addNoteToolStripMenuItem});
             this.commitInfoContextMenuStrip.Name = "commitInfoContextMenuStrip";
-            this.commitInfoContextMenuStrip.Size = new System.Drawing.Size(422, 142);
+            this.commitInfoContextMenuStrip.Size = new System.Drawing.Size(422, 170);
             // 
             // copyCommitInfoToolStripMenuItem
             // 
@@ -173,12 +177,24 @@
             this.RevisionInfo.ContextMenuStrip = this.commitInfoContextMenuStrip;
             this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RevisionInfo.Location = new System.Drawing.Point(0, 0);
-            this.RevisionInfo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.RevisionInfo.Margin = new System.Windows.Forms.Padding(4);
             this.RevisionInfo.Name = "RevisionInfo";
             this.RevisionInfo.ReadOnly = true;
             this.RevisionInfo.Size = new System.Drawing.Size(670, 214);
             this.RevisionInfo.TabIndex = 0;
             this.RevisionInfo.Text = "";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(418, 6);
+            // 
+            // addNoteToolStripMenuItem
+            // 
+            this.addNoteToolStripMenuItem.Name = "addNoteToolStripMenuItem";
+            this.addNoteToolStripMenuItem.Size = new System.Drawing.Size(421, 22);
+            this.addNoteToolStripMenuItem.Text = "Add notes";
+            this.addNoteToolStripMenuItem.Click += new System.EventHandler(this.addNoteToolStripMenuItem_Click);
             // 
             // CommitInfo
             // 
@@ -210,5 +226,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem showContainedInBranchesRemoteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showContainedInBranchesRemoteIfNoLocalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem addNoteToolStripMenuItem;
     }
 }
