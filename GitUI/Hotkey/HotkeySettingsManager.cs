@@ -110,15 +110,17 @@ namespace GitUI.Hotkey
             hk(FormCommit.Commands.StageSelectedFile, Keys.S),
             hk(FormCommit.Commands.UnStageSelectedFile, Keys.U)),
         new HotkeySettings(FormBrowse.HotkeySettingsName,
-            hk(FormBrowse.Commands.GitBash, Keys.None),
+            hk(FormBrowse.Commands.GitBash, Keys.Control | Keys.G),
             hk(FormBrowse.Commands.GitGui, Keys.None),
             hk(FormBrowse.Commands.GitGitK, Keys.None),
             hk(FormBrowse.Commands.FocusRevisionGrid, Keys.Control | Keys.D1),
             hk(FormBrowse.Commands.FocusCommitInfo, Keys.Control | Keys.D2),
             hk(FormBrowse.Commands.FocusFileTree, Keys.Control | Keys.D3),
             hk(FormBrowse.Commands.FocusDiff, Keys.Control | Keys.D4),
-            hk(FormBrowse.Commands.Commit, Keys.None),
-            hk(FormBrowse.Commands.AddNotes, Keys.None))
+            hk(FormBrowse.Commands.Commit, Keys.Control | Keys.Space),
+            hk(FormBrowse.Commands.AddNotes, Keys.Control | Keys.Shift | Keys.N),
+            hk(FormBrowse.Commands.FindFileInSelectedCommit, Keys.Control | Keys.Shift | Keys.F),
+            hk(FormBrowse.Commands.SelectCurrentRevision, Keys.Control | Keys.Shift | Keys.C))
       };
     }
   }
