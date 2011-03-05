@@ -33,9 +33,9 @@ namespace GitUI
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DashboardEditor));
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this._NO_TRANSLATE_Categories = new System.Windows.Forms.ListBox();
             this.CategoriesLabel = new System.Windows.Forms.Label();
             this.Remove = new System.Windows.Forms.Button();
-            this._NO_TRANSLATE_Categories = new System.Windows.Forms.ListBox();
             this.Add = new System.Windows.Forms.Button();
             this.RepositoriesGrid = new System.Windows.Forms.DataGridView();
             this.pathDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -79,6 +79,13 @@ namespace GitUI
             this.splitContainer2.Panel2.Controls.Add(this._NO_TRANSLATE_Caption);
             this.splitContainer2.Panel2.Controls.Add(this.label1);
             // 
+            // _NO_TRANSLATE_Categories
+            // 
+            resources.ApplyResources(this._NO_TRANSLATE_Categories, "_NO_TRANSLATE_Categories");
+            this._NO_TRANSLATE_Categories.FormattingEnabled = true;
+            this._NO_TRANSLATE_Categories.Name = "_NO_TRANSLATE_Categories";
+            this._NO_TRANSLATE_Categories.SelectedIndexChanged += new System.EventHandler(this.Categories_SelectedIndexChanged);
+            // 
             // CategoriesLabel
             // 
             resources.ApplyResources(this.CategoriesLabel, "CategoriesLabel");
@@ -90,13 +97,6 @@ namespace GitUI
             this.Remove.Name = "Remove";
             this.Remove.UseVisualStyleBackColor = true;
             this.Remove.Click += new System.EventHandler(this.Remove_Click);
-            // 
-            // _NO_TRANSLATE_Categories
-            // 
-            resources.ApplyResources(this._NO_TRANSLATE_Categories, "_NO_TRANSLATE_Categories");
-            this._NO_TRANSLATE_Categories.FormattingEnabled = true;
-            this._NO_TRANSLATE_Categories.Name = "_NO_TRANSLATE_Categories";
-            this._NO_TRANSLATE_Categories.SelectedIndexChanged += new System.EventHandler(this.Categories_SelectedIndexChanged);
             // 
             // Add
             // 
@@ -153,6 +153,7 @@ namespace GitUI
             this.RepositoriesType.TabStop = true;
             this.RepositoriesType.UseVisualStyleBackColor = true;
             this.RepositoriesType.Validating += new System.ComponentModel.CancelEventHandler(this.RepositoriesType_Validating);
+            this.RepositoriesType.CheckedChanged += new System.EventHandler(this.RepositoriesType_CheckedChanged);
             // 
             // _NO_TRANSLATE_RssFeed
             // 
