@@ -37,7 +37,6 @@ namespace GitUI
 
         private readonly SynchronizationContext _syncContext;
         public string LogParam = "HEAD --branches --remotes --tags --boundary";
-        private bool _contextMenuEnabled = true;
 
         private bool _initialLoad = true;
         private string _initialSelectedRevision;
@@ -352,7 +351,6 @@ namespace GitUI
         public void DisableContextMenu()
         {
             Revisions.ContextMenuStrip = null;
-            _contextMenuEnabled = false;
         }
 
         public void FormatQuickFilter(string filter,
