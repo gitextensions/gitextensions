@@ -42,6 +42,17 @@ namespace GitUI
         {
         }
 
+        private string UrlTryingToConnect = string.Empty;
+        /// <summary>
+        /// When cloning a remote using putty, sometimes an error occurs that the fingerprint is not known.
+        /// This is fixed by trying to connect from the command line, and choose yes when asked for storing
+        /// the fingerpring. Just a dirty fix...
+        /// </summary>
+        public void SetUrlTryingToConnect(string url)
+        {
+            UrlTryingToConnect = url;
+        }
+
         private void processStart(FormStatus form)
         {
             restart = false;
@@ -127,7 +138,22 @@ namespace GitUI
                                     return;
                                 }
                             }
+                            if (OutputString.ToString().ToLower().Contains("the server's host key is not cached in the registry") && !string.IsNullOrEmpty(UrlTryingToConnect))
+                            {
+                                if (MessageBox.Show("The server's host key is not cached in the registry.\n\nDo you want to trust this host key and then try again?", "SSH", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                                {
+                                    GitCommandHelpers.RunRealCmdDetached(
+                                        "cmd.exe",
+                                        string.Format("/k \"\"{0}\" -T \"{1}\"\"", Settings.Plink, UrlTryingToConnect));
+
+                                    Reset();
+                                    ProcessCallback(this);
+                                    return;
+                                }
+
+                            }
                         }
+
                     }
                 }
                 else

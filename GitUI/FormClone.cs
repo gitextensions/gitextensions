@@ -40,6 +40,7 @@ namespace GitUI
                     new FormProcess(Settings.GitCommand,
                                     GitCommandHelpers.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
                                                                      CentralRepository.Checked, Branches.Text, null));
+                fromProcess.SetUrlTryingToConnect(_NO_TRANSLATE_From.Text);
                 fromProcess.ShowDialog();
 
                 if (fromProcess.ErrorOccurred() || GitCommandHelpers.InTheMiddleOfPatch())
