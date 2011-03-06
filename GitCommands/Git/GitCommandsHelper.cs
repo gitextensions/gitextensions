@@ -1749,7 +1749,7 @@ namespace GitCommands
 
                 GitItemStatus gitItemStatus;
 
-                if (x != '?')
+                if (x != '?' && x != '!')
                 {
                     n = GitItemStatusFromStatusCharacter(fromDiff, files, n, status, fileName, x, out gitItemStatus);
                     if (gitItemStatus != null)
@@ -1829,11 +1829,11 @@ namespace GitCommands
                 else
                 {
                     gitItemStatus.Name = fileName.Trim();
-                    gitItemStatus.IsNew = x == 'A' || x == '?';
+                    gitItemStatus.IsNew = x == 'A' || x == '?' || x == '!';
                     gitItemStatus.IsChanged = x == 'M';
                     gitItemStatus.IsDeleted = x == 'D';
                     gitItemStatus.IsRenamed = false;
-                    gitItemStatus.IsTracked = x != '?' && x != ' ' || !gitItemStatus.IsNew;
+                    gitItemStatus.IsTracked = x != '?' && x != '!' && x != ' ' || !gitItemStatus.IsNew;
                     gitItemStatus.IsConflict = x == 'U';
                 }
             return n;
