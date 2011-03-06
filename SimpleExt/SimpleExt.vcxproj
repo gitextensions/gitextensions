@@ -97,16 +97,12 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <CustomBuildStep>
-      <Message>Performing registration</Message>
-      <Command>if (%SkipShellExtRegistration%)==() (
-echo Registering $(TargetFileName)
-regsvr32 /s /c "$(TargetPath)"
-) else (
-echo Skipping registration
-)
-
-echo regsvr32 exe. time &gt; "$(OutDir)regsvr32.trg"</Command>
-      <Outputs>$(OutDir)regsvr32.trg;%(Outputs)</Outputs>
+      <Message>
+      </Message>
+      <Command>
+      </Command>
+      <Outputs>
+      </Outputs>
     </CustomBuildStep>
     <Midl>
       <TypeLibraryName>.\Debug/SimpleExt.tlb</TypeLibraryName>
