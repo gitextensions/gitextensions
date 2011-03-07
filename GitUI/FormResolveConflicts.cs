@@ -7,6 +7,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitUI.Editor;
 using ResourceManager.Translation;
+using GitUI.Hotkey;
 
 namespace GitUI
 {
@@ -53,6 +54,9 @@ namespace GitUI
             ThereWhereMergeConflicts = GitCommandHelpers.InTheMiddleOfConflictedMerge();
             merge.Focus();
             merge.Select();
+
+            this.HotkeysEnabled = true;
+            this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
         }
 
 
@@ -734,5 +738,36 @@ namespace GitUI
         {
             new FormFileHistory(GetFileName()).ShowDialog();
         }
+
+        #region Hotkey commands
+
+        public const string HotkeySettingsName = "FormMergeConflicts";
+
+        internal enum Commands : int
+        {
+            Merge,
+            Rescan,
+            ChooseRemote,
+            ChooseLocal,
+            ChooseBase
+        }
+
+        protected override bool ExecuteCommand(int cmd)
+        {
+            Commands command = (Commands)cmd;
+
+            switch (command)
+            {
+                case Commands.Merge: this.OpenMergetool_Click(null, null); break;
+                case Commands.Rescan: this.Rescan_Click(null, null); break;
+                case Commands.ChooseBase: this.ContextChooseBase_Click(null, null); break;
+                case Commands.ChooseLocal: this.ContextChooseLocal_Click(null, null); break;
+                case Commands.ChooseRemote: this.ContextChooseRemote_Click(null, null); break;
+            }
+
+            return true;
+        }
+
+        #endregion
     }
 }
