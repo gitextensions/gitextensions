@@ -32,7 +32,7 @@ namespace GitUI
 
         private void OkClick(object sender, EventArgs e)
         {
-            var process = new FormProcess(GitCommandHelpers.MergeBranchCmd(Branches.Text, fastForward.Checked, _NO_TRANSLATE_mergeStrategy.Text));
+            var process = new FormProcess(GitCommandHelpers.MergeBranchCmd(Branches.Text, fastForward.Checked, squash.Checked, _NO_TRANSLATE_mergeStrategy.Text));
             process.ShowDialog();
 
             MergeConflictHandler.HandleMergeConflicts();
@@ -53,6 +53,19 @@ namespace GitUI
         private void strategyHelp_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
         {
             strategyToolTip.SetToolTip(strategyHelp, _strategyTooltipText.Text);
+        }
+
+        private void advanced_CheckedChanged(object sender, EventArgs e)
+        {
+            NonDefaultMergeStrategy.Visible = advanced.Checked;
+            NonDefaultMergeStrategy_CheckedChanged(null, null);
+            squash.Visible = advanced.Checked;
+
+            if (!advanced.Checked)
+            {
+                NonDefaultMergeStrategy.Checked = false;
+                squash.Checked = false;
+            }
         }
     }
 }
