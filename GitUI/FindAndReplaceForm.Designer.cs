@@ -81,7 +81,7 @@
             // btnFindNext
             // 
             this.btnFindNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnFindNext.Location = new System.Drawing.Point(247, 81);
+            this.btnFindNext.Location = new System.Drawing.Point(247, 105);
             this.btnFindNext.Name = "btnFindNext";
             this.btnFindNext.Size = new System.Drawing.Size(75, 25);
             this.btnFindNext.TabIndex = 6;
@@ -92,7 +92,7 @@
             // btnReplace
             // 
             this.btnReplace.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnReplace.Location = new System.Drawing.Point(85, 110);
+            this.btnReplace.Location = new System.Drawing.Point(85, 134);
             this.btnReplace.Name = "btnReplace";
             this.btnReplace.Size = new System.Drawing.Size(75, 25);
             this.btnReplace.TabIndex = 7;
@@ -103,7 +103,7 @@
             // btnReplaceAll
             // 
             this.btnReplaceAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnReplaceAll.Location = new System.Drawing.Point(166, 110);
+            this.btnReplaceAll.Location = new System.Drawing.Point(166, 134);
             this.btnReplaceAll.Name = "btnReplaceAll";
             this.btnReplaceAll.Size = new System.Drawing.Size(75, 25);
             this.btnReplaceAll.TabIndex = 9;
@@ -114,7 +114,7 @@
             // chkMatchWholeWord
             // 
             this.chkMatchWholeWord.AutoSize = true;
-            this.chkMatchWholeWord.Location = new System.Drawing.Point(178, 58);
+            this.chkMatchWholeWord.Location = new System.Drawing.Point(90, 81);
             this.chkMatchWholeWord.Name = "chkMatchWholeWord";
             this.chkMatchWholeWord.Size = new System.Drawing.Size(113, 17);
             this.chkMatchWholeWord.TabIndex = 5;
@@ -134,7 +134,7 @@
             // btnHighlightAll
             // 
             this.btnHighlightAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnHighlightAll.Location = new System.Drawing.Point(105, 110);
+            this.btnHighlightAll.Location = new System.Drawing.Point(105, 134);
             this.btnHighlightAll.Name = "btnHighlightAll";
             this.btnHighlightAll.Size = new System.Drawing.Size(136, 25);
             this.btnHighlightAll.TabIndex = 8;
@@ -147,7 +147,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(247, 110);
+            this.btnCancel.Location = new System.Drawing.Point(247, 134);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 25);
             this.btnCancel.TabIndex = 6;
@@ -158,7 +158,7 @@
             // btnFindPrevious
             // 
             this.btnFindPrevious.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnFindPrevious.Location = new System.Drawing.Point(157, 81);
+            this.btnFindPrevious.Location = new System.Drawing.Point(157, 105);
             this.btnFindPrevious.Name = "btnFindPrevious";
             this.btnFindPrevious.Size = new System.Drawing.Size(84, 25);
             this.btnFindPrevious.TabIndex = 6;
@@ -172,7 +172,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(334, 145);
+            this.ClientSize = new System.Drawing.Size(334, 169);
             this.Controls.Add(this.chkMatchCase);
             this.Controls.Add(this.chkMatchWholeWord);
             this.Controls.Add(this.btnReplaceAll);

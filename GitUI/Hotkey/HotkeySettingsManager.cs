@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml.Serialization;
 using System.IO;
 using System.Windows.Forms;
+using GitUI.Editor;
 
 namespace GitUI.Hotkey
 {
@@ -101,39 +102,51 @@ namespace GitUI.Hotkey
         {
             Func<object, Keys, HotkeyCommand> hk = (en, k) => new HotkeyCommand((int)en, en.ToString()) { KeyData = k };
             return new[]
-      {
-        // FormCommit
-        new HotkeySettings(FormCommit.HotkeySettingsName, 
-            hk(FormCommit.Commands.FocusUnstagedFiles, Keys.Control | Keys.D1),
-            hk(FormCommit.Commands.FocusSelectedDiff, Keys.Control | Keys.D2),
-            hk(FormCommit.Commands.FocusStagedFiles, Keys.Control | Keys.D3),
-            hk(FormCommit.Commands.FocusCommitMessage, Keys.Control | Keys.D4),
-            hk(FormCommit.Commands.StageSelectedFile, Keys.S),
-            hk(FormCommit.Commands.UnStageSelectedFile, Keys.U)),
-        new HotkeySettings(FormBrowse.HotkeySettingsName,
-            hk(FormBrowse.Commands.GitBash, Keys.Control | Keys.G),
-            hk(FormBrowse.Commands.GitGui, Keys.None),
-            hk(FormBrowse.Commands.GitGitK, Keys.None),
-            hk(FormBrowse.Commands.FocusRevisionGrid, Keys.Control | Keys.D1),
-            hk(FormBrowse.Commands.FocusCommitInfo, Keys.Control | Keys.D2),
-            hk(FormBrowse.Commands.FocusFileTree, Keys.Control | Keys.D3),
-            hk(FormBrowse.Commands.FocusDiff, Keys.Control | Keys.D4),
-            hk(FormBrowse.Commands.Commit, Keys.Control | Keys.Space),
-            hk(FormBrowse.Commands.AddNotes, Keys.Control | Keys.Shift | Keys.N),
-            hk(FormBrowse.Commands.FindFileInSelectedCommit, Keys.Control | Keys.Shift | Keys.F),
-            hk(FormBrowse.Commands.SelectCurrentRevision, Keys.Control | Keys.Shift | Keys.C),
-            hk(FormBrowse.Commands.CheckoutBranch, Keys.Control | Keys.Decimal),
-            hk(FormBrowse.Commands.QuickFetch, Keys.None),
-            hk(FormBrowse.Commands.QuickPush, Keys.None)),
-        new HotkeySettings(RevisionGrid.HotkeySettingsName,
-            hk(RevisionGrid.Commands.RevisionFilter, Keys.Control | Keys.F),
-            hk(RevisionGrid.Commands.ToggleRevisionGraph, Keys.None),
-            hk(RevisionGrid.Commands.ToggleAuthorDateCommitDate, Keys.None),
-            hk(RevisionGrid.Commands.ToggleOrderRevisionsByDate, Keys.None),
-            hk(RevisionGrid.Commands.ToggleShowRelativeDate, Keys.None),
-            hk(RevisionGrid.Commands.ToggleDrawNonRelativesGray, Keys.None),
-            hk(RevisionGrid.Commands.ToggleShowGitNotes, Keys.None))
-      };
+              {
+                // FormCommit
+                new HotkeySettings(FormCommit.HotkeySettingsName, 
+                    hk(FormCommit.Commands.FocusUnstagedFiles, Keys.Control | Keys.D1),
+                    hk(FormCommit.Commands.FocusSelectedDiff, Keys.Control | Keys.D2),
+                    hk(FormCommit.Commands.FocusStagedFiles, Keys.Control | Keys.D3),
+                    hk(FormCommit.Commands.FocusCommitMessage, Keys.Control | Keys.D4),
+                    hk(FormCommit.Commands.StageSelectedFile, Keys.S),
+                    hk(FormCommit.Commands.UnStageSelectedFile, Keys.U)),
+                new HotkeySettings(FormBrowse.HotkeySettingsName,
+                    hk(FormBrowse.Commands.GitBash, Keys.Control | Keys.G),
+                    hk(FormBrowse.Commands.GitGui, Keys.None),
+                    hk(FormBrowse.Commands.GitGitK, Keys.None),
+                    hk(FormBrowse.Commands.FocusRevisionGrid, Keys.Control | Keys.D1),
+                    hk(FormBrowse.Commands.FocusCommitInfo, Keys.Control | Keys.D2),
+                    hk(FormBrowse.Commands.FocusFileTree, Keys.Control | Keys.D3),
+                    hk(FormBrowse.Commands.FocusDiff, Keys.Control | Keys.D4),
+                    hk(FormBrowse.Commands.Commit, Keys.Control | Keys.Space),
+                    hk(FormBrowse.Commands.AddNotes, Keys.Control | Keys.Shift | Keys.N),
+                    hk(FormBrowse.Commands.FindFileInSelectedCommit, Keys.Control | Keys.Shift | Keys.F),
+                    hk(FormBrowse.Commands.SelectCurrentRevision, Keys.Control | Keys.Shift | Keys.C),
+                    hk(FormBrowse.Commands.CheckoutBranch, Keys.Control | Keys.Decimal),
+                    hk(FormBrowse.Commands.QuickFetch, Keys.None),
+                    hk(FormBrowse.Commands.QuickPush, Keys.None)),
+                new HotkeySettings(RevisionGrid.HotkeySettingsName,
+                    hk(RevisionGrid.Commands.RevisionFilter, Keys.Control | Keys.F),
+                    hk(RevisionGrid.Commands.ToggleRevisionGraph, Keys.None),
+                    hk(RevisionGrid.Commands.ToggleAuthorDateCommitDate, Keys.None),
+                    hk(RevisionGrid.Commands.ToggleOrderRevisionsByDate, Keys.None),
+                    hk(RevisionGrid.Commands.ToggleShowRelativeDate, Keys.None),
+                    hk(RevisionGrid.Commands.ToggleDrawNonRelativesGray, Keys.None),
+                    hk(RevisionGrid.Commands.ToggleShowGitNotes, Keys.None)),
+                new HotkeySettings(FileViewer.HotkeySettingsName,
+                    hk(FileViewer.Commands.Find, Keys.Control | Keys.F),
+                    hk(FileViewer.Commands.IncreaseNumberOfVisibleLines, Keys.None),
+                    hk(FileViewer.Commands.DecreaseNumberOfVisibleLines, Keys.None),
+                    hk(FileViewer.Commands.ShowEntireFile, Keys.None),
+                    hk(FileViewer.Commands.TreatFileAsText, Keys.None)),
+                new HotkeySettings(FormResolveConflicts.HotkeySettingsName,
+                    hk(FormResolveConflicts.Commands.ChooseBase, Keys.None),
+                    hk(FormResolveConflicts.Commands.ChooseLocal, Keys.None),
+                    hk(FormResolveConflicts.Commands.ChooseRemote, Keys.None),
+                    hk(FormResolveConflicts.Commands.Merge, Keys.M),
+                    hk(FormResolveConflicts.Commands.Rescan, Keys.F5))
+              };
         }
     }
 }
