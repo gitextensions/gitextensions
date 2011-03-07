@@ -2359,7 +2359,7 @@ namespace GitCommands
 
         public static string MergeBranch(string branch)
         {
-            return RunCmd(Settings.GitCommand, MergeBranchCmd(branch, true, null));
+            return RunCmd(Settings.GitCommand, MergeBranchCmd(branch, true, false, null));
         }
 
         public static string OpenWithDifftool(string filename)
@@ -2384,7 +2384,7 @@ namespace GitCommands
             return output;
         }
 
-        public static string MergeBranchCmd(string branch, bool allowFastForward, string strategy)
+        public static string MergeBranchCmd(string branch, bool allowFastForward, bool squash, string strategy)
         {
             StringBuilder command = new StringBuilder("merge");
 
@@ -2395,6 +2395,8 @@ namespace GitCommands
                 command.Append(" --strategy=");
                 command.Append(strategy);
             }
+            if (squash)
+                command.Append(" --squash");
 
             command.Append(" ");
             command.Append(branch);
