@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using GitCommands;
 using ICSharpCode.TextEditor.Util;
 using PatchApply;
+using GitUI.Hotkey;
 
 namespace GitUI.Editor
 {
@@ -55,6 +56,9 @@ namespace GitUI.Editor
             _internalFileViewer.ScrollPosChanged += new EventHandler(_internalFileViewer_ScrollPosChanged);
             _internalFileViewer.SelectedLineChanged += new SelectedLineChangedEventHandler(_internalFileViewer_SelectedLineChanged);
             _internalFileViewer.DoubleClick += (sender, args) => OnRequestDiffView(EventArgs.Empty);
+
+            this.HotkeysEnabled = true;
+            this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
         }
 
         void _internalFileViewer_MouseMove(object sender, MouseEventArgs e)
@@ -648,5 +652,38 @@ namespace GitUI.Editor
         {
             IgnoreWhitespaceChangesToolStripMenuItemClick(null, null);
         }
+
+        #region Hotkey commands
+
+        public const string HotkeySettingsName = "FileViewer";
+
+        internal enum Commands : int
+        {
+            Find,
+            IncreaseNumberOfVisibleLines,
+            DecreaseNumberOfVisibleLines,
+            ShowEntireFile,
+            TreatFileAsText
+
+        }
+
+        protected override bool ExecuteCommand(int cmd)
+        {
+            Commands command = (Commands)cmd;
+
+            switch (command)
+            {
+                case Commands.Find: this.FindToolStripMenuItemClick(null, null); break;
+                case Commands.IncreaseNumberOfVisibleLines: this.IncreaseNumberOfLinesToolStripMenuItemClick(null, null); break;
+                case Commands.DecreaseNumberOfVisibleLines: this.DescreaseNumberOfLinesToolStripMenuItemClick(null, null); break;
+                case Commands.ShowEntireFile: this.ShowEntireFileToolStripMenuItemClick(null, null); break;
+                case Commands.TreatFileAsText: this.TreatAllFilesAsTextToolStripMenuItemClick(null, null); break;
+            }
+
+            return true;
+        }
+
+        #endregion
+
     }
 }
