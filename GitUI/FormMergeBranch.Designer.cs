@@ -32,8 +32,11 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.noCommit = new System.Windows.Forms.CheckBox();
+            this.advanced = new System.Windows.Forms.CheckBox();
+            this.NonDefaultMergeStrategy = new System.Windows.Forms.CheckBox();
+            this.squash = new System.Windows.Forms.CheckBox();
             this.strategyHelp = new System.Windows.Forms.LinkLabel();
-            this.NonDefaultMergeStrategy = new System.Windows.Forms.RadioButton();
             this._NO_TRANSLATE_mergeStrategy = new System.Windows.Forms.ComboBox();
             this.currentBranchLabel = new System.Windows.Forms.Label();
             this.noFastForward = new System.Windows.Forms.RadioButton();
@@ -66,7 +69,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
-            this.splitContainer1.Size = new System.Drawing.Size(514, 243);
+            this.splitContainer1.Size = new System.Drawing.Size(514, 248);
             this.splitContainer1.SplitterDistance = 80;
             this.splitContainer1.TabIndex = 5;
             // 
@@ -78,14 +81,17 @@
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(80, 243);
+            this.pictureBox1.Size = new System.Drawing.Size(80, 248);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.strategyHelp);
+            this.groupBox1.Controls.Add(this.noCommit);
+            this.groupBox1.Controls.Add(this.advanced);
             this.groupBox1.Controls.Add(this.NonDefaultMergeStrategy);
+            this.groupBox1.Controls.Add(this.squash);
+            this.groupBox1.Controls.Add(this.strategyHelp);
             this.groupBox1.Controls.Add(this._NO_TRANSLATE_mergeStrategy);
             this.groupBox1.Controls.Add(this.currentBranchLabel);
             this.groupBox1.Controls.Add(this.noFastForward);
@@ -98,15 +104,61 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(430, 243);
+            this.groupBox1.Size = new System.Drawing.Size(430, 248);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Merge";
             // 
+            // noCommit
+            // 
+            this.noCommit.AutoSize = true;
+            this.noCommit.Location = new System.Drawing.Point(27, 233);
+            this.noCommit.Name = "noCommit";
+            this.noCommit.Size = new System.Drawing.Size(94, 17);
+            this.noCommit.TabIndex = 16;
+            this.noCommit.Text = "Do not commit";
+            this.noCommit.UseVisualStyleBackColor = true;
+            this.noCommit.Visible = false;
+            // 
+            // advanced
+            // 
+            this.advanced.AutoSize = true;
+            this.advanced.CheckAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.advanced.Location = new System.Drawing.Point(13, 160);
+            this.advanced.Name = "advanced";
+            this.advanced.Size = new System.Drawing.Size(140, 17);
+            this.advanced.TabIndex = 15;
+            this.advanced.Text = "Show advanced options";
+            this.advanced.UseVisualStyleBackColor = true;
+            this.advanced.CheckedChanged += new System.EventHandler(this.advanced_CheckedChanged);
+            // 
+            // NonDefaultMergeStrategy
+            // 
+            this.NonDefaultMergeStrategy.AutoSize = true;
+            this.NonDefaultMergeStrategy.Location = new System.Drawing.Point(27, 185);
+            this.NonDefaultMergeStrategy.Name = "NonDefaultMergeStrategy";
+            this.NonDefaultMergeStrategy.Size = new System.Drawing.Size(180, 17);
+            this.NonDefaultMergeStrategy.TabIndex = 14;
+            this.NonDefaultMergeStrategy.Text = "Use non-default merge strategy";
+            this.NonDefaultMergeStrategy.UseVisualStyleBackColor = true;
+            this.NonDefaultMergeStrategy.Visible = false;
+            this.NonDefaultMergeStrategy.CheckedChanged += new System.EventHandler(this.NonDefaultMergeStrategy_CheckedChanged);
+            // 
+            // squash
+            // 
+            this.squash.AutoSize = true;
+            this.squash.Location = new System.Drawing.Point(27, 209);
+            this.squash.Name = "squash";
+            this.squash.Size = new System.Drawing.Size(102, 17);
+            this.squash.TabIndex = 13;
+            this.squash.Text = "Squash commits";
+            this.squash.UseVisualStyleBackColor = true;
+            this.squash.Visible = false;
+            // 
             // strategyHelp
             // 
             this.strategyHelp.AutoSize = true;
-            this.strategyHelp.Location = new System.Drawing.Point(381, 160);
+            this.strategyHelp.Location = new System.Drawing.Point(392, 186);
             this.strategyHelp.Name = "strategyHelp";
             this.strategyHelp.Size = new System.Drawing.Size(28, 13);
             this.strategyHelp.TabIndex = 12;
@@ -114,17 +166,6 @@
             this.strategyHelp.Text = "Help";
             this.strategyHelp.Visible = false;
             this.strategyHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.strategyHelp_LinkClicked);
-            // 
-            // NonDefaultMergeStrategy
-            // 
-            this.NonDefaultMergeStrategy.AutoSize = true;
-            this.NonDefaultMergeStrategy.Location = new System.Drawing.Point(13, 156);
-            this.NonDefaultMergeStrategy.Name = "NonDefaultMergeStrategy";
-            this.NonDefaultMergeStrategy.Size = new System.Drawing.Size(179, 17);
-            this.NonDefaultMergeStrategy.TabIndex = 11;
-            this.NonDefaultMergeStrategy.Text = "Use non-default merge strategy";
-            this.NonDefaultMergeStrategy.UseVisualStyleBackColor = true;
-            this.NonDefaultMergeStrategy.CheckedChanged += new System.EventHandler(this.NonDefaultMergeStrategy_CheckedChanged);
             // 
             // _NO_TRANSLATE_mergeStrategy
             // 
@@ -137,9 +178,9 @@
             "octopus",
             "ours",
             "subtree"});
-            this._NO_TRANSLATE_mergeStrategy.Location = new System.Drawing.Point(230, 155);
+            this._NO_TRANSLATE_mergeStrategy.Location = new System.Drawing.Point(254, 183);
             this._NO_TRANSLATE_mergeStrategy.Name = "_NO_TRANSLATE_mergeStrategy";
-            this._NO_TRANSLATE_mergeStrategy.Size = new System.Drawing.Size(145, 21);
+            this._NO_TRANSLATE_mergeStrategy.Size = new System.Drawing.Size(132, 21);
             this._NO_TRANSLATE_mergeStrategy.TabIndex = 10;
             this._NO_TRANSLATE_mergeStrategy.Visible = false;
             // 
@@ -155,7 +196,7 @@
             // noFastForward
             // 
             this.noFastForward.AutoSize = true;
-            this.noFastForward.Location = new System.Drawing.Point(13, 133);
+            this.noFastForward.Location = new System.Drawing.Point(13, 135);
             this.noFastForward.Name = "noFastForward";
             this.noFastForward.Size = new System.Drawing.Size(194, 17);
             this.noFastForward.TabIndex = 7;
@@ -176,7 +217,8 @@
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(314, 208);
+            this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.Ok.Location = new System.Drawing.Point(314, 213);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(108, 25);
             this.Ok.TabIndex = 4;
@@ -189,9 +231,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(10, 16);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(211, 13);
+            this.label1.Size = new System.Drawing.Size(168, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Merge current branch with another branch";
+            this.label1.Text = "Merge branch into current branch";
             // 
             // Branches
             // 
@@ -236,7 +278,7 @@
             this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(514, 243);
+            this.ClientSize = new System.Drawing.Size(514, 248);
             this.Controls.Add(this.splitContainer1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -269,8 +311,11 @@
         private System.Windows.Forms.RadioButton fastForward;
         private System.Windows.Forms.Label currentBranchLabel;
         private System.Windows.Forms.ComboBox _NO_TRANSLATE_mergeStrategy;
-        private System.Windows.Forms.RadioButton NonDefaultMergeStrategy;
         private System.Windows.Forms.LinkLabel strategyHelp;
         private System.Windows.Forms.ToolTip strategyToolTip;
+        private System.Windows.Forms.CheckBox squash;
+        private System.Windows.Forms.CheckBox advanced;
+        private System.Windows.Forms.CheckBox NonDefaultMergeStrategy;
+        private System.Windows.Forms.CheckBox noCommit;
     }
 }

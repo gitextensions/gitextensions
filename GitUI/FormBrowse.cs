@@ -159,7 +159,7 @@ namespace GitUI
 
         private void ActionOnRepositoryPerformed(object sender, EventArgs e)
         {
-            Initialize();
+            InternalInitialize(false);
         }
 
         protected void Initialize()
