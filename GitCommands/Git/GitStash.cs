@@ -20,5 +20,10 @@ namespace GitCommands
         }
         
         public string Message;
+
+        public override string ToString()
+        {
+            return name;
+        }
     }
 }
