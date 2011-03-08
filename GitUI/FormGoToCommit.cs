@@ -13,22 +13,20 @@ namespace GitUI
 {
     public partial class FormGoToCommit : GitExtensionsForm
     {
-        private RevisionGrid _revGrid;
-
-        public FormGoToCommit(RevisionGrid revGrid)
+        public FormGoToCommit()
         {
             InitializeComponent();
             Translate();
-            _revGrid = revGrid;
         }
+
+        public string GetRevision()
+        {
+            return GitCommandHelpers.RevParse(commitExpression.Text);
+        }
+
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string commitExpr = GitCommandHelpers.RevParse(commitExpression.Text);
-            if (!commitExpr.Equals(""))
-            {
-                _revGrid.SetSelectedRevision(new GitRevision { Guid = commitExpr });
-            }
             Close();
         }
     }
