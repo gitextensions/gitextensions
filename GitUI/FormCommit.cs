@@ -1111,5 +1111,10 @@ namespace GitUI
             toolAuthor.Text = "";
             toolAuthorLabelItem.Enabled = toolAuthorLabelItem.Checked = false;
         }
+
+        private void toolbarUnstaged_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
     }
 }

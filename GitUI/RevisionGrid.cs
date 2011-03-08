@@ -36,7 +36,7 @@ namespace GitUI
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
 
         private readonly SynchronizationContext _syncContext;
-        public string LogParam = "HEAD --branches --remotes --tags --boundary";
+        public string LogParam = "HEAD --all --boundary";
 
         private bool _initialLoad = true;
         private string _initialSelectedRevision;
@@ -646,10 +646,10 @@ namespace GitUI
 
                 IndexWatcher.Reset();
 
-                if (Settings.ShowGitNotes && !LogParam.Contains(" --glob=notes"))
-                    LogParam = LogParam + " --glob=notes";
-                if (!Settings.ShowGitNotes && LogParam.Contains(" --glob=notes"))
-                    LogParam = LogParam.Replace(" --glob=notes", string.Empty);
+                if (!Settings.ShowGitNotes && !LogParam.Contains(" --not --glob=notes --not"))
+                    LogParam = LogParam + " --not --glob=notes --not";
+                if (Settings.ShowGitNotes && LogParam.Contains(" --not --glob=notes --not"))
+                    LogParam = LogParam.Replace("  --not --glob=notes --not", string.Empty);
 
                 _revisionGraphCommand = new RevisionGraph { BranchFilter = BranchFilter, LogParam = LogParam + Filter + _revisionFilter.GetFilter() };
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
@@ -1062,13 +1062,13 @@ namespace GitUI
             BranchFilter = _revisionFilter.GetBranchFilter();
 
             if (!Settings.BranchFilterEnabled)
-                LogParam = "HEAD --branches --remotes --tags --boundary";
+                LogParam = "HEAD --all --boundary";
             else if (Settings.ShowCurrentBranchOnly)
                 LogParam = "HEAD";
             else
                 LogParam = BranchFilter.Length > 0
                                ? String.Empty
-                               : "HEAD --branches --remotes --tags --boundary";
+                               : "HEAD --all --boundary";
         }
 
         private void RevertCommitToolStripMenuItemClick(object sender, EventArgs e)
