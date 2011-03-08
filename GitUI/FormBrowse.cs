@@ -1800,7 +1800,17 @@ namespace GitUI
 
         private void goToToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormGoToCommit(RevisionGrid).ShowDialog();
+            FormGoToCommit formGoToCommit = new FormGoToCommit();
+            formGoToCommit.ShowDialog();
+            string revisionGuid = formGoToCommit.GetRevision();
+            if (!string.IsNullOrEmpty(revisionGuid))
+            {
+                RevisionGrid.SetSelectedRevision(new GitRevision { Guid = revisionGuid });
+            }
+            else
+            {
+                MessageBox.Show("No revision found.");
+            }                        
         }
     }
 }
