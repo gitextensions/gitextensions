@@ -1797,5 +1797,10 @@ namespace GitUI
         }
 
         #endregion
+
+        private void goToToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormGoToCommit(RevisionGrid).ShowDialog();
+        }
     }
 }

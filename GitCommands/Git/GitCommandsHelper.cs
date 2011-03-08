@@ -2384,6 +2384,27 @@ namespace GitCommands
             return output;
         }
 
+        public static string RevParse(string revisionExpression)
+        {
+            string revparseCommand = string.Format("rev-parse \"{0}\"", revisionExpression);
+            int exitCode = 0;
+            string[] resultStrings =
+                RunCmd(
+                    Settings.GitCommand,
+                    revparseCommand,
+                    out exitCode, ""
+                    )
+                    .Split('\n');
+            if (exitCode == 0)
+            {
+                return resultStrings[0];
+            }
+            else
+            {
+                return "";
+            }
+        }
+
         public static string MergeBranchCmd(string branch, bool allowFastForward, string strategy)
         {
             StringBuilder command = new StringBuilder("merge");
