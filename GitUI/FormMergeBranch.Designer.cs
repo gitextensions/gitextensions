@@ -32,6 +32,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.noCommit = new System.Windows.Forms.CheckBox();
             this.advanced = new System.Windows.Forms.CheckBox();
             this.NonDefaultMergeStrategy = new System.Windows.Forms.CheckBox();
             this.squash = new System.Windows.Forms.CheckBox();
@@ -68,7 +69,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
-            this.splitContainer1.Size = new System.Drawing.Size(514, 260);
+            this.splitContainer1.Size = new System.Drawing.Size(514, 248);
             this.splitContainer1.SplitterDistance = 80;
             this.splitContainer1.TabIndex = 5;
             // 
@@ -80,12 +81,13 @@
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(80, 260);
+            this.pictureBox1.Size = new System.Drawing.Size(80, 248);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.noCommit);
             this.groupBox1.Controls.Add(this.advanced);
             this.groupBox1.Controls.Add(this.NonDefaultMergeStrategy);
             this.groupBox1.Controls.Add(this.squash);
@@ -102,10 +104,21 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(430, 260);
+            this.groupBox1.Size = new System.Drawing.Size(430, 248);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Merge";
+            // 
+            // noCommit
+            // 
+            this.noCommit.AutoSize = true;
+            this.noCommit.Location = new System.Drawing.Point(27, 233);
+            this.noCommit.Name = "noCommit";
+            this.noCommit.Size = new System.Drawing.Size(94, 17);
+            this.noCommit.TabIndex = 16;
+            this.noCommit.Text = "Do not commit";
+            this.noCommit.UseVisualStyleBackColor = true;
+            this.noCommit.Visible = false;
             // 
             // advanced
             // 
@@ -113,16 +126,15 @@
             this.advanced.CheckAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.advanced.Location = new System.Drawing.Point(13, 160);
             this.advanced.Name = "advanced";
-            this.advanced.Size = new System.Drawing.Size(74, 17);
+            this.advanced.Size = new System.Drawing.Size(140, 17);
             this.advanced.TabIndex = 15;
-            this.advanced.Text = "Advanced";
+            this.advanced.Text = "Show advanced options";
             this.advanced.UseVisualStyleBackColor = true;
             this.advanced.CheckedChanged += new System.EventHandler(this.advanced_CheckedChanged);
             // 
             // NonDefaultMergeStrategy
             // 
             this.NonDefaultMergeStrategy.AutoSize = true;
-            this.NonDefaultMergeStrategy.CheckAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.NonDefaultMergeStrategy.Location = new System.Drawing.Point(27, 185);
             this.NonDefaultMergeStrategy.Name = "NonDefaultMergeStrategy";
             this.NonDefaultMergeStrategy.Size = new System.Drawing.Size(180, 17);
@@ -135,8 +147,7 @@
             // squash
             // 
             this.squash.AutoSize = true;
-            this.squash.CheckAlign = System.Drawing.ContentAlignment.BottomLeft;
-            this.squash.Location = new System.Drawing.Point(27, 210);
+            this.squash.Location = new System.Drawing.Point(27, 209);
             this.squash.Name = "squash";
             this.squash.Size = new System.Drawing.Size(102, 17);
             this.squash.TabIndex = 13;
@@ -147,7 +158,7 @@
             // strategyHelp
             // 
             this.strategyHelp.AutoSize = true;
-            this.strategyHelp.Location = new System.Drawing.Point(390, 189);
+            this.strategyHelp.Location = new System.Drawing.Point(392, 186);
             this.strategyHelp.Name = "strategyHelp";
             this.strategyHelp.Size = new System.Drawing.Size(28, 13);
             this.strategyHelp.TabIndex = 12;
@@ -167,7 +178,7 @@
             "octopus",
             "ours",
             "subtree"});
-            this._NO_TRANSLATE_mergeStrategy.Location = new System.Drawing.Point(252, 186);
+            this._NO_TRANSLATE_mergeStrategy.Location = new System.Drawing.Point(254, 183);
             this._NO_TRANSLATE_mergeStrategy.Name = "_NO_TRANSLATE_mergeStrategy";
             this._NO_TRANSLATE_mergeStrategy.Size = new System.Drawing.Size(132, 21);
             this._NO_TRANSLATE_mergeStrategy.TabIndex = 10;
@@ -207,7 +218,7 @@
             // Ok
             // 
             this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Ok.Location = new System.Drawing.Point(314, 225);
+            this.Ok.Location = new System.Drawing.Point(314, 213);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(108, 25);
             this.Ok.TabIndex = 4;
@@ -267,7 +278,7 @@
             this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(514, 260);
+            this.ClientSize = new System.Drawing.Size(514, 248);
             this.Controls.Add(this.splitContainer1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -305,5 +316,6 @@
         private System.Windows.Forms.CheckBox squash;
         private System.Windows.Forms.CheckBox advanced;
         private System.Windows.Forms.CheckBox NonDefaultMergeStrategy;
+        private System.Windows.Forms.CheckBox noCommit;
     }
 }
