@@ -14,6 +14,8 @@ namespace GitUI
             InitializeComponent();
             Translate();
             _defaultBranch = defaultBranch;
+
+            advanced_CheckedChanged(null, null);
         }
 
         private void FormMergeBranchLoad(object sender, EventArgs e)
@@ -32,7 +34,7 @@ namespace GitUI
 
         private void OkClick(object sender, EventArgs e)
         {
-            var process = new FormProcess(GitCommandHelpers.MergeBranchCmd(Branches.Text, fastForward.Checked, _NO_TRANSLATE_mergeStrategy.Text));
+            var process = new FormProcess(GitCommandHelpers.MergeBranchCmd(Branches.Text, fastForward.Checked, squash.Checked, noCommit.Checked, _NO_TRANSLATE_mergeStrategy.Text));
             process.ShowDialog();
 
             MergeConflictHandler.HandleMergeConflicts();
@@ -53,6 +55,26 @@ namespace GitUI
         private void strategyHelp_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
         {
             strategyToolTip.SetToolTip(strategyHelp, _strategyTooltipText.Text);
+        }
+
+        private void advanced_CheckedChanged(object sender, EventArgs e)
+        {
+            if (advanced.Checked)
+                this.Height = 320;
+            else
+                this.Height = 280;
+
+            NonDefaultMergeStrategy.Visible = advanced.Checked;
+            NonDefaultMergeStrategy_CheckedChanged(null, null);
+            squash.Visible = advanced.Checked;
+            noCommit.Visible = advanced.Checked;
+
+            if (!advanced.Checked)
+            {
+                NonDefaultMergeStrategy.Checked = false;
+                squash.Checked = false;
+                noCommit.Checked = false;
+            }
         }
     }
 }
