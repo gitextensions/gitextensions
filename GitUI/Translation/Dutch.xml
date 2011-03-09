@@ -686,6 +686,9 @@ _ReSharper*/
         <TranslationItem Name="_createPullRequestsToolStripMenuItem" Property="Text">
           <Value>Maak binnenhaal verzoek</Value>
         </TranslationItem>
+        <TranslationItem Name="goToToolStripMenuItem" Property="Text">
+          <Value>Ga naar revisie</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormBlame">
@@ -997,6 +1000,19 @@ Kies een directory.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormGoToCommit">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Ga naar revisie</Value>
+        </TranslationItem>
+        <TranslationItem Name="goButton" Property="Text">
+          <Value>Zoek</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Expressie:</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormEdit">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -1288,11 +1304,20 @@ Als u een vertakking wilt ophalen en samenvoegen, kies een vertakking.</Value>
         <TranslationItem Name="fastForward" Property="Text">
           <Value>Behoud lineaire geschiedenis indien mogelijk (fast forward)</Value>
         </TranslationItem>
+        <TranslationItem Name="strategyHelp" Property="Text">
+          <Value>Help</Value>
+        </TranslationItem>
+        <TranslationItem Name="squash" Property="Text">
+          <Value>Voeg revisies samen tot een</Value>
+        </TranslationItem>
+        <TranslationItem Name="advanced" Property="Text">
+          <Value>Toon geavanceerde opties</Value>
+        </TranslationItem>
         <TranslationItem Name="NonDefaultMergeStrategy" Property="Text">
           <Value>Gebruik samenvoegen strategie</Value>
         </TranslationItem>
-        <TranslationItem Name="strategyHelp" Property="Text">
-          <Value>Help</Value>
+        <TranslationItem Name="noCommit" Property="Text">
+          <Value>Niet committen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2101,6 +2126,9 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="GitFound_Fix" Property="Text">
           <Value>Repareren</Value>
         </TranslationItem>
+        <TranslationItem Name="tabPageHotkeys" Property="Text">
+          <Value>Sneltoetsen</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormModifiedDeletedCreated">
@@ -2268,6 +2296,13 @@ de git help documentatie</Value>
         </TranslationItem>
         <TranslationItem Name="labelPatch" Property="Text">
           <Value>Patch</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormHotkeys">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Sneltoetsen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3298,6 +3333,9 @@ stash
         <TranslationItem Name="showContainedInBranchesRemoteIfNoLocalToolStripMenuItem" Property="Text">
           <Value>Toon externe vertakkingen indien deze commit in geen lokale vertakking voorkomt</Value>
         </TranslationItem>
+        <TranslationItem Name="addNoteToolStripMenuItem" Property="Text">
+          <Value>Voeg notitie toe</Value>
+        </TranslationItem>
         <TranslationItem Name="containedInBranches" Property="Text">
           <Value>Komt voor in vertakkingen:</Value>
         </TranslationItem>
@@ -3382,6 +3420,12 @@ welke deze externe vertakking volgt?</Value>
         <TranslationItem Name="$this" Property="Text">
           <Value>Stash</Value>
         </TranslationItem>
+        <TranslationItem Name="currentWorkingDirChanges" Property="Text">
+          <Value>Huidige wijzigingen</Value>
+        </TranslationItem>
+        <TranslationItem Name="noStashes" Property="Text">
+          <Value>Er zijn geen weggezette wijzigingen</Value>
+        </TranslationItem>
         <TranslationItem Name="Clear" Property="Text">
           <Value>Verwijder geselecteerde stash</Value>
         </TranslationItem>
@@ -3391,17 +3435,8 @@ welke deze externe vertakking volgt?</Value>
         <TranslationItem Name="Apply" Property="Text">
           <Value>Zet geselecteerde stash terug op de werk directorie</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>Gevolgde wijzigingen in de werk directorie</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>Stash:</Value>
-        </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
-          <Value>Bericht:</Value>
-        </TranslationItem>
-        <TranslationItem Name="RefreshButton" Property="Text">
-          <Value>Verversen</Value>
+        <TranslationItem Name="toolStripLabel1" Property="Text">
+          <Value>Toon:</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
