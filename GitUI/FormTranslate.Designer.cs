@@ -1,4 +1,5 @@
-﻿namespace GitUI
+﻿using System.Windows.Forms;
+namespace GitUI
 {
     partial class FormTranslate
     {
@@ -355,6 +356,7 @@
             // neutralTekst
             // 
             this.neutralTekst.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.neutralTekst.LanguageOption = RichTextBoxLanguageOptions.AutoKeyboard;
             this.neutralTekst.Location = new System.Drawing.Point(0, 0);
             this.neutralTekst.Name = "neutralTekst";
             this.neutralTekst.ReadOnly = true;
@@ -365,6 +367,7 @@
             // translatedText
             // 
             this.translatedText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.translatedText.LanguageOption = RichTextBoxLanguageOptions.AutoKeyboard;
             this.translatedText.Location = new System.Drawing.Point(0, 0);
             this.translatedText.Name = "translatedText";
             this.translatedText.Size = new System.Drawing.Size(388, 77);
