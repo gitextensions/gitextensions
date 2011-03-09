@@ -29,23 +29,39 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutBox));
+            this.thanksTimer = new System.Windows.Forms.Timer(this.components);
+            this.okButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this._NO_TRANSLATE_labelCopyright = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_labelVersionInfo = new System.Windows.Forms.Label();
             this.pictureDonate = new System.Windows.Forms.PictureBox();
             this._NO_TRANSLATE_labelProductName = new System.Windows.Forms.Label();
-            this.okButton = new System.Windows.Forms.Button();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.thanksTo = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_thanksToTicker = new System.Windows.Forms.Label();
-            this.thanksTimer = new System.Windows.Forms.Timer(this.components);
             this.tableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureDonate)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // thanksTimer
+            // 
+            this.thanksTimer.Interval = 1000;
+            this.thanksTimer.Tick += new System.EventHandler(this.thanksTimer_Tick);
+            // 
+            // okButton
+            // 
+            this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.okButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.okButton.Location = new System.Drawing.Point(470, 275);
+            this.okButton.Name = "okButton";
+            this.okButton.Size = new System.Drawing.Size(75, 25);
+            this.okButton.TabIndex = 24;
+            this.okButton.Text = "&OK";
+            this.okButton.Click += new System.EventHandler(this.okButton_Click);
             // 
             // tableLayoutPanel
             // 
@@ -67,8 +83,8 @@
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.39607F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.44382F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.44382F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.44382F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.44382F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.590759F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 6.930693F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 46.52388F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.304775F));
             this.tableLayoutPanel.Size = new System.Drawing.Size(548, 303);
@@ -137,17 +153,6 @@
             this._NO_TRANSLATE_labelProductName.Text = "Git Extensions";
             this._NO_TRANSLATE_labelProductName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // okButton
-            // 
-            this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.okButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.okButton.Location = new System.Drawing.Point(470, 275);
-            this.okButton.Name = "okButton";
-            this.okButton.Size = new System.Drawing.Size(75, 25);
-            this.okButton.TabIndex = 24;
-            this.okButton.Text = "&OK";
-            this.okButton.Click += new System.EventHandler(this.okButton_Click);
-            // 
             // textBoxDescription
             // 
             this.textBoxDescription.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -157,7 +162,7 @@
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.ReadOnly = true;
             this.textBoxDescription.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxDescription.Size = new System.Drawing.Size(375, 134);
+            this.textBoxDescription.Size = new System.Drawing.Size(375, 135);
             this.textBoxDescription.TabIndex = 23;
             this.textBoxDescription.TabStop = false;
             this.textBoxDescription.Text = resources.GetString("textBoxDescription.Text");
@@ -170,12 +175,12 @@
             this.tableLayoutPanel1.Controls.Add(this.thanksTo, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_thanksToTicker, 1, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(164, 109);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(164, 110);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(384, 22);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(384, 21);
             this.tableLayoutPanel1.TabIndex = 26;
             // 
             // thanksTo
@@ -195,14 +200,9 @@
             this._NO_TRANSLATE_thanksToTicker.Dock = System.Windows.Forms.DockStyle.Fill;
             this._NO_TRANSLATE_thanksToTicker.Location = new System.Drawing.Point(78, 0);
             this._NO_TRANSLATE_thanksToTicker.Name = "_NO_TRANSLATE_thanksToTicker";
-            this._NO_TRANSLATE_thanksToTicker.Size = new System.Drawing.Size(303, 22);
+            this._NO_TRANSLATE_thanksToTicker.Size = new System.Drawing.Size(303, 21);
             this._NO_TRANSLATE_thanksToTicker.TabIndex = 28;
             this._NO_TRANSLATE_thanksToTicker.Click += new System.EventHandler(this._NO_TRANSLATE_thanksToTicker_Click);
-            // 
-            // thanksTimer
-            // 
-            this.thanksTimer.Interval = 110;
-            this.thanksTimer.Tick += new System.EventHandler(this.thanksTimer_Tick);
             // 
             // AboutBox
             // 

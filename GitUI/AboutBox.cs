@@ -8,7 +8,10 @@ namespace GitUI
     {
         public AboutBox()
         {
-            InitializeComponent(); Translate();
+            contributersList = contributers.Split(',');
+
+            InitializeComponent(); 
+            Translate();
         }
 
         private void okButton_Click(object sender, EventArgs e)
@@ -34,6 +37,7 @@ namespace GitUI
 
             thanksTimer_Tick(null, null);
             thanksTimer.Enabled = true;
+            thanksTimer.Interval = 500;
             thanksTimer.Start();
         }
 
@@ -45,16 +49,13 @@ namespace GitUI
         }
 
         //Contributers list 
-        //TODO: fix order (commit count?)
-        private const string contributers = "                                                                         Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide, dominiqueplante, Grzegorz Pachocki, Seth Behunin, bleis-tift, Chris Meaney, Adrian Codrington, Troels Thomsen, Wilbert van Dolleweerd, Tobias Bieniek, Radoslaw Miazio, Stan Angeloff, Matt McCormick, Bjørn Moe, William Swanson, Daniel Locantore, Harald Deischinger, Radek Miazio, Stefan Rueckl, Emanuel Henrique do Prado, Lukasz Byczynski, Steffen M. Colding-Jørgensen, alexeik, arBmind, Gianni Rosa Gallina, mausch, xaro, Xharze, Kim Christensen, gor, Charles Brossollet, Patrick Earl, Cheng Huang, ultonis, Michael Frenzel, showell, mdk, superlongman, Marc Murray, rferriz, Jacek Pasternak, miloja";
+        private const string contributers = "Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide, dominiqueplante, Grzegorz Pachocki, Seth Behunin, bleis-tift, Chris Meaney, Adrian Codrington, Troels Thomsen, Wilbert van Dolleweerd, Tobias Bieniek, Radoslaw Miazio, Stan Angeloff, Matt McCormick, Bjørn Moe, William Swanson, Daniel Locantore, Harald Deischinger, Radek Miazio, Stefan Rueckl, Emanuel Henrique do Prado, Lukasz Byczynski, Steffen M. Colding-Jørgensen, alexeik, arBmind, Gianni Rosa Gallina, mausch, xaro, Xharze, Kim Christensen, gor, Charles Brossollet, Patrick Earl, Cheng Huang, ultonis, Michael Frenzel, showell, mdk, superlongman, Marc Murray, rferriz, Jacek Pasternak, miloja";
+        private string[] contributersList;
+        private Random random = new Random();
 
-        private int thanksCounter;
         private void thanksTimer_Tick(object sender, EventArgs e)
         {
-            _NO_TRANSLATE_thanksToTicker.Text = contributers.Substring(thanksCounter);// "Thanks to: " + contributers[thanksCounter % contributers.Length];
-            _NO_TRANSLATE_thanksToTicker.Tag = null;
-            _NO_TRANSLATE_thanksToTicker.Refresh();
-            thanksCounter = (thanksCounter + 1) % contributers.Length;
+            _NO_TRANSLATE_thanksToTicker.Text = contributersList[random.Next(contributersList.Length - 1)].Trim();
         }
 
         private void _NO_TRANSLATE_thanksToTicker_Click(object sender, EventArgs e)
