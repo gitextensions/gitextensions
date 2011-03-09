@@ -1,6 +1,17 @@
 Changelog
 =========
 
+Version 2.15
+	Fixed issue 399: blame is showing source code double space
+	Fixed issue 400: commit summary with polish letters in author names shown incorrect
+	Fixed "show ignored files" in commit dialog
+	Added hotkeys for FileViewer and FormResolveConflicts
+	Added advanced option to merge dialog
+	Added "Go to commit"
+	Installer checks for .Net 3.5
+	Updated stash view
+	Various bugfixes and minor changes
+
 Version 2.14
 	Fixed crash when viewing binary file in blame
 	Fixed settings dialog on Linux host
