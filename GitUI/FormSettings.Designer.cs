@@ -1,4 +1,5 @@
 using GitCommands.Repository;
+using System.Windows.Forms;
 
 namespace GitUI
 {
@@ -2681,6 +2682,7 @@ namespace GitUI
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.argumentsTextBox.Enabled = false;
             this.helpProvider1.SetHelpString(this.argumentsTextBox, resources.GetString("argumentsTextBox.HelpString"));
+            this.argumentsTextBox.LanguageOption = RichTextBoxLanguageOptions.AutoKeyboard;
             this.argumentsTextBox.Location = new System.Drawing.Point(107, 299);
             this.argumentsTextBox.Name = "argumentsTextBox";
             this.helpProvider1.SetShowHelp(this.argumentsTextBox, true);

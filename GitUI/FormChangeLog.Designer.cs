@@ -1,4 +1,5 @@
-﻿namespace GitUI
+﻿using System.Windows.Forms;
+namespace GitUI
 {
     partial class FormChangeLog
     {
@@ -34,6 +35,7 @@
             // ChangeLog
             // 
             this.ChangeLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ChangeLog.LanguageOption = RichTextBoxLanguageOptions.AutoKeyboard;
             this.ChangeLog.Location = new System.Drawing.Point(0, 0);
             this.ChangeLog.Name = "ChangeLog";
             this.ChangeLog.Size = new System.Drawing.Size(849, 411);
