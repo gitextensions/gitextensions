@@ -1,18 +1,27 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using PatchApply;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormStash : GitExtensionsForm
     {
+        TranslationString currentWorkingDirChanges = new TranslationString("Current working dir changes");
+        TranslationString noStashes = new TranslationString("There are no stashes.");        
+
         public bool NeedRefresh;
+        private readonly SynchronizationContext _syncContext;
 
         public FormStash()
         {
+            _syncContext = SynchronizationContext.Current;
+
             InitializeComponent();
             Translate();
             View.ExtraDiffArgumentsChanged += ViewExtraDiffArgumentsChanged;
@@ -41,8 +50,8 @@ namespace GitUI
             IList<GitStash> stashedItems = GitCommandHelpers.GetStashes();
 
             currentWorkingDirStashItem = new GitStash();
-            currentWorkingDirStashItem.Name = "Current working dir changes";
-            currentWorkingDirStashItem.Message = "Current working dir changes";
+            currentWorkingDirStashItem.Name = currentWorkingDirChanges.Text;
+            currentWorkingDirStashItem.Message = currentWorkingDirChanges.Text;
 
             stashedItems.Insert(0, currentWorkingDirStashItem);
 
@@ -63,34 +72,69 @@ namespace GitUI
         {
             GitStash gitStash = Stashes.SelectedItem as GitStash;
 
-            Stashed.DataSource = null;
+            Stashed.GitItemStatuses = null;
 
+            Loading.Visible = true;
+            Stashes.Enabled = false;
+            toolStripButton1.Enabled = false;
             if (gitStash == null)
             {
-                Stashed.DataSource = null;
+                Stashed.GitItemStatuses = null;
             }else
             if (gitStash == currentWorkingDirStashItem)
             {
-                var itemStatusList = GitCommandHelpers.GetAllChangedFiles();
-
-                Stashed.DisplayMember = "Name";
-                Stashed.DataSource = itemStatusList;
-
+                ThreadPool.QueueUserWorkItem(
+                o =>
+                {
+                    IList<GitItemStatus> gitItemStatuses = GitCommandHelpers.GetAllChangedFiles();
+                    _syncContext.Post(state1 => LoadGitItemStatuses(gitItemStatuses), null);
+                });
             }
             else
             {
-                Stashed.DisplayMember = "FileNameA";
-                Stashed.DataSource = GitCommandHelpers.GetStashedItems(gitStash.Name);
+                ThreadPool.QueueUserWorkItem(
+                o =>
+                {
+                    IList<GitItemStatus> gitItemStatuses = GitCommandHelpers.GetDiffFiles(gitStash.Name + "^", gitStash.Name);
+                    _syncContext.Post(state1 => LoadGitItemStatuses(gitItemStatuses), null);
+                });
             }
+        }
+
+        private void LoadGitItemStatuses(IList<GitItemStatus> gitItemStatuses)
+        {
+            Stashed.GitItemStatuses = gitItemStatuses;
+            Loading.Visible = false;
+            Stashes.Enabled = true;
+            toolStripButton1.Enabled = true;
         }
 
         private void StashedSelectedIndexChanged(object sender, EventArgs e)
         {
+            GitStash gitStash = Stashes.SelectedItem as GitStash;
+            GitItemStatus stashedItem = Stashed.SelectedItem;
             Cursor.Current = Cursors.WaitCursor;
-            if (Stashed.SelectedItem is Patch)
-                ShowPatch((Patch)Stashed.SelectedItem);
-            if (Stashed.SelectedItem is GitItemStatus)
-                View.ViewCurrentChanges(((GitItemStatus)Stashed.SelectedItem).Name, ((GitItemStatus)Stashed.SelectedItem).OldName, !((GitItemStatus)Stashed.SelectedItem).IsStaged);
+
+            if (stashedItem != null && 
+                gitStash == currentWorkingDirStashItem) //current working dir
+            {
+                View.ViewCurrentChanges(stashedItem.Name, stashedItem.OldName, !stashedItem.IsStaged);
+            }
+            else
+            if (stashedItem != null)
+            {
+                string extraDiffArguments = View.GetExtraDiffArguments();
+                View.ViewPatch(() =>
+                {
+                    PatchApply.Patch patch = GitCommandHelpers.GetSingleDiff(gitStash.Name + "^", gitStash.Name, stashedItem.Name, stashedItem.OldName, extraDiffArguments);
+                    if (patch == null)
+                        return String.Empty;
+                    return patch.Text;
+                });
+
+            }
+            else
+                View.ViewText(string.Empty, string.Empty);
             Cursor.Current = Cursors.Default;
         }
 
@@ -137,7 +181,7 @@ namespace GitUI
                 StashMessage.Text = ((GitStash)Stashes.SelectedItem).Message;
 
             if (Stashes.Items.Count == 1)
-                StashMessage.Text = "There are no stashes.";
+                StashMessage.Text = noStashes.Text;
 
             Cursor.Current = Cursors.Default;
         }
@@ -161,7 +205,7 @@ namespace GitUI
 
         private void splitContainer2_SplitterMoved(object sender, SplitterEventArgs e)
         {
-            Stashes.Size =  new Size(Math.Max(200, toolStrip1.Width - 25 - toolStripButton1.Width - toolStripLabel1.Width), Stashes.Size.Height);
+            Stashes.Size =  new Size(Math.Min(200, toolStrip1.Width - 25 - toolStripButton1.Width - toolStripLabel1.Width), Stashes.Size.Height);
 
         }
 
