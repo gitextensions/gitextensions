@@ -2229,7 +2229,7 @@ namespace GitCommands
 
                     //The contents of the actual line is output after the above header, prefixed by a TAB. This is to allow adding more header elements later.
                     if (line.StartsWith("\t"))
-                        blameLine.LineText = line.Substring(1);//trim first tab
+                        blameLine.LineText = line.Substring(1).Trim(new char[] { '\r' });//trim first tab
                     else
                         if (line.StartsWith("author-mail"))
                             blameHeader.AuthorMail = line.Substring("author-mail".Length).Trim();

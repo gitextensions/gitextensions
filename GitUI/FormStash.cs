@@ -161,7 +161,7 @@ namespace GitUI
 
         private void splitContainer2_SplitterMoved(object sender, SplitterEventArgs e)
         {
-            Stashes.Size =  new Size(toolStrip1.Width - 25 - toolStripButton1.Width - toolStripLabel1.Width, Stashes.Size.Height);
+            Stashes.Size =  new Size(Math.Max(200, toolStrip1.Width - 25 - toolStripButton1.Width - toolStripLabel1.Width), Stashes.Size.Height);
 
         }
 
