@@ -119,9 +119,9 @@ namespace GitUI.Blame
                     blameCommitter.AppendLine(new string(' ', 200));
                 } else
                 {
-                    blameCommitter.AppendLine(blameHeader.Author + " - " + blameHeader.AuthorTime.ToString() + " - " + blameHeader.FileName + new string(' ', 100));
+                    blameCommitter.AppendLine((blameHeader.Author + " - " + blameHeader.AuthorTime.ToString() + " - " + blameHeader.FileName + new string(' ', 100)).Trim(new char[] { '\r', '\n' }));
                 }
-                blameFile.AppendLine(blameLine.LineText);
+                blameFile.AppendLine(blameLine.LineText.Trim(new char[] { '\r', '\n' }));
             }
 
             BlameCommitter.ViewText("committer.txt", blameCommitter.ToString());
