@@ -1,4 +1,5 @@
-﻿namespace GitUI
+﻿using System.Windows.Forms;
+namespace GitUI
 {
     partial class FormFormatPatch
     {
@@ -105,6 +106,7 @@
             // 
             this.MailBody.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.MailBody.LanguageOption = RichTextBoxLanguageOptions.AutoKeyboard;
             this.MailBody.Location = new System.Drawing.Point(254, 93);
             this.MailBody.Name = "MailBody";
             this.MailBody.Size = new System.Drawing.Size(477, 56);

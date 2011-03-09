@@ -1,4 +1,5 @@
 ﻿using GitUI.Editor;
+using System.Windows.Forms;
 
 namespace GitUI
 {
@@ -193,6 +194,7 @@ namespace GitUI
             this.StashMessage.BackColor = System.Drawing.SystemColors.Info;
             this.StashMessage.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.StashMessage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.StashMessage.LanguageOption = RichTextBoxLanguageOptions.AutoKeyboard;
             this.StashMessage.Location = new System.Drawing.Point(0, 0);
             this.StashMessage.Name = "StashMessage";
             this.StashMessage.ReadOnly = true;

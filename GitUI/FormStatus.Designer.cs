@@ -1,4 +1,5 @@
-﻿namespace GitUI
+﻿using System.Windows.Forms;
+namespace GitUI
 {
     partial class FormStatus
     {
@@ -115,6 +116,7 @@
             this.Output.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Output.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Output.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Output.LanguageOption = RichTextBoxLanguageOptions.AutoKeyboard;
             this.Output.Location = new System.Drawing.Point(0, 0);
             this.Output.Name = "Output";
             this.Output.ReadOnly = true;
