@@ -17,9 +17,9 @@
 
     <Media Id="1" Cabinet="media1.cab" EmbedCab="yes"/>
     
-    <PropertyRef Id="NETFRAMEWORK20"/>
-    <Condition Message='.NET Framework 2.0 must be installed prior to installation of Git Extensions.'>
-      Installed OR NETFRAMEWORK20
+    <PropertyRef Id="NETFRAMEWORK35"/>
+    <Condition Message='.NET Framework 3.5 must be installed prior to installation of Git Extensions.'>
+      Installed OR NETFRAMEWORK35
     </Condition>
    
     <Icon Id="cow_head.ico" SourceFile="../cow-head.ico"/>
@@ -550,7 +550,7 @@
     </Feature>
 
     <?if $(var.IncludeRequiredSoftware) = 1 ?>
-    <Binary Id="KDiff" SourceFile="..\Bin\KDiff3Setup_0.9.95.exe"/>
+    <Binary Id="KDiff" SourceFile="..\Bin\KDiff3Setup_0.9.95-2.exe"/>
     <CustomAction Id="KDiff" Impersonate="no" BinaryKey="KDiff" Execute="deferred" ExeCommand="" Return="ignore"/>
 
     <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.7.3.1-preview20101002.exe"/>
