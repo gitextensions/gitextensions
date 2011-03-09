@@ -44,10 +44,12 @@ namespace GitUI
 
         #endregion
 
-        private const int NODE_DIMENSION = 8;
-        private const int LANE_WIDTH = 13;
-        private const int LANE_LINE_WIDTH = 2;
+        private int NODE_DIMENSION;
+        private int LANE_WIDTH;
+        private int LANE_LINE_WIDTH;
         private const int MAX_LANES = 30;
+        private Brush selectionBrush;
+
         private readonly AutoResetEvent backgroundEvent = new AutoResetEvent(false);
         private readonly Graph graphData;
         private readonly Dictionary<Junction, int> junctionColors = new Dictionary<Junction, int>();
@@ -85,6 +87,14 @@ namespace GitUI
         private int visibleBottom;
         private int visibleTop;
 
+        public void SetDimensions(int node_dimension, int lane_width, int lane_line_width, Brush selectionBrush)
+        {
+            NODE_DIMENSION = node_dimension;
+            LANE_WIDTH = lane_width;
+            LANE_LINE_WIDTH = lane_line_width;
+            this.selectionBrush = selectionBrush;
+        }
+
         public DvcsGraph()
         {
             syncContext = SynchronizationContext.Current;
@@ -117,6 +127,12 @@ namespace GitUI
 
             VirtualMode = true;
             Clear();
+        }
+
+        public void ShowAuthor(bool show)
+        {
+            this.Columns[2].Visible = show;
+            this.Columns[3].Visible = show;
         }
 
         public FilterType FilterMode
@@ -432,8 +448,7 @@ namespace GitUI
                     {
                         if ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
                             e.Graphics.FillRectangle(
-                                new LinearGradientBrush(e.CellBounds, RowTemplate.DefaultCellStyle.SelectionBackColor,
-                                                        Color.LightBlue, 90, false), e.CellBounds);
+                                selectionBrush, e.CellBounds);
                         else
                             e.Graphics.FillRectangle(new SolidBrush(Color.White), e.CellBounds);
 

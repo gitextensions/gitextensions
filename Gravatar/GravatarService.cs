@@ -28,6 +28,37 @@ namespace Gravatar
             cache.DeleteCachedFile(imageFileName);
         }
 
+        public static Image GetGravatar(string imageFileName, string email, int cacheDays,
+                                        int imageSize, string imageCachePath, FallBackService fallBack)
+        {
+            try
+            {
+                if (cache == null)
+                    cache = new DirectoryImageCache(imageCachePath); //or: new IsolatedStorageImageCache();
+
+                // If the user image is not cached yet, download it from gravatar and store it in the isolatedStorage
+                if (!cache.FileIsCached(imageFileName) ||
+                    cache.FileIsExpired(imageFileName, cacheDays))
+                {
+                    GetImageFromGravatar(imageFileName, email, imageSize, fallBack);
+                }
+                if (cache.FileIsCached(imageFileName))
+                {
+                    return cache.LoadImageFromCache(imageFileName, null);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                //catch IO errors
+                Trace.WriteLine(ex.Message);
+            }
+            return null;
+        }
+
         public static void LoadCachedImage(string imageFileName, string email, Bitmap defaultBitmap, int cacheDays,
                                              int imageSize, string imageCachePath, Action<Image> onChangedImage,
                                              FallBackService fallBack)

@@ -33,6 +33,11 @@ namespace GitUI
         private readonly TranslationString _monthsAgo = new TranslationString("{0} months ago");
         private readonly TranslationString _yearsAgo = new TranslationString("{0} years ago");
 
+        private const int NODE_DIMENSION = 8;
+        private const int LANE_WIDTH = 13;
+        private const int LANE_LINE_WIDTH = 2;
+        private Brush selectedItemBrush;
+
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
 
         private readonly SynchronizationContext _syncContext;
@@ -44,6 +49,9 @@ namespace GitUI
         private Label _quickSearchLabel;
         private string _quickSearchString;
         private RevisionGraph _revisionGraphCommand;
+
+        private bool large = true;
+        private int rowHeigth;
 
         public RevisionGrid()
         {
@@ -92,6 +100,30 @@ namespace GitUI
 
             this.HotkeysEnabled = true;
             ReloadHotkeys();
+
+
+            if (large)
+            {
+                rowHeigth = 70;
+
+                selectedItemBrush = new LinearGradientBrush(new Rectangle(0, 0, rowHeigth, rowHeigth),
+                                Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
+                                Color.LightBlue, 90, false);
+
+                Revisions.RowTemplate.Height = rowHeigth;
+                Revisions.ShowAuthor(!large);
+                Revisions.SetDimensions(10, 20, 3, Brushes.White);
+            }
+            else
+            {
+                rowHeigth = Revisions.RowTemplate.Height;
+
+                selectedItemBrush = new LinearGradientBrush(new Rectangle(0, 0, rowHeigth, rowHeigth),
+                                Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
+                                Color.LightBlue, 90, false);
+
+                Revisions.SetDimensions(NODE_DIMENSION, LANE_WIDTH, LANE_LINE_WIDTH, selectedItemBrush);
+            }
         }
 
         void Loading_Paint(object sender, PaintEventArgs e)
@@ -847,13 +879,10 @@ namespace GitUI
 
             e.Handled = true;
 
-            if ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
-                e.Graphics.FillRectangle(
-                    new LinearGradientBrush(e.CellBounds,
-                                            Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
-                                            Color.LightBlue, 90, false), e.CellBounds);
+            if (((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected) && !large)
+                e.Graphics.FillRectangle(selectedItemBrush, e.CellBounds);
             else
-                e.Graphics.FillRectangle(new SolidBrush(Color.White), e.CellBounds);
+               e.Graphics.FillRectangle(new SolidBrush(Color.White), e.CellBounds);
 
             Brush foreBrush;
 
@@ -866,9 +895,26 @@ namespace GitUI
 
             switch (column)
             {
-                case 1:
+                case 1: //Description!!
                     {
-                        float offset = 0;
+                        int baseOffset = 0;
+                        if (large)
+                        {
+                            baseOffset = 5;
+
+                            Rectangle cellRectangle = new Rectangle(e.CellBounds.Left + baseOffset, e.CellBounds.Top + 1, e.CellBounds.Width - (baseOffset * 2), e.CellBounds.Height - 4);
+
+                            e.Graphics.FillRectangle(
+                                new LinearGradientBrush(cellRectangle,
+                                                        Color.FromArgb(255, 240, 240, 240),
+                                                        Color.FromArgb(255, 250, 250, 250), 90, false), cellRectangle);
+                            if ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
+                                e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, 40, 40, 40), 1), cellRectangle);
+                            else
+                                e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, 200, 200, 200), 1), cellRectangle);
+                        }
+                        float offset = baseOffset;
+
                         var heads = revision.Heads;
                         if (heads.Count > 0)
                         {
@@ -907,6 +953,29 @@ namespace GitUI
 
                         e.Graphics.DrawString(text, rowFont, foreBrush,
                                               new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
+
+                        if (large)
+                        {
+                            int textHeight = rowHeigth / 3;
+
+                            int gravatarSize = rowHeigth - textHeight - 8;
+                            int gravatarTop = e.CellBounds.Top + textHeight;
+                            int gravatarLeft = e.CellBounds.Left + baseOffset + 2;
+                            
+
+                            Image gravatar = Gravatar.GravatarService.GetGravatar(revision.Author + ".png", revision.Author, Settings.AuthorImageCacheDays, gravatarSize, Settings.ApplicationDataPath + "Images\\", Gravatar.GravatarService.FallBackService.MonsterId);
+                            e.Graphics.DrawRectangle(Pens.Black, gravatarLeft, gravatarTop, gravatarSize + 2, gravatarSize + 2);
+                            e.Graphics.DrawImage(gravatar, gravatarLeft + 1, gravatarTop + 1, gravatarSize, gravatarSize);
+
+                            e.Graphics.DrawString(revision.Author, rowFont, foreBrush,
+                                                  new PointF(gravatarLeft + gravatarSize + 5, gravatarTop));
+
+                            var time = Settings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
+                            var timeText = TimeToString(time);
+
+                            e.Graphics.DrawString(timeText, rowFont, foreBrush,
+                                                  new PointF(gravatarLeft + gravatarSize + 5, gravatarTop + textHeight));
+                        }
                     }
                     break;
                 case 2:
