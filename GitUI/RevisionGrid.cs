@@ -717,7 +717,6 @@ namespace GitUI
         private bool ShouldHideGraph(bool inclBranchFilter)
         {
             return (inclBranchFilter && !string.IsNullOrEmpty(BranchFilter)) ||
-                     showRevisionCards ||
                    !(!_revisionFilter.ShouldHideGraph() &&
                      string.IsNullOrEmpty(InMemAuthorFilter) &&
                      string.IsNullOrEmpty(InMemCommitterFilter) &&
@@ -1174,14 +1173,6 @@ namespace GitUI
             var frm = new FormRevertCommitSmall(GetRevision(LastRow));
             frm.ShowDialog();
             RefreshRevisions();
-        }
-
-        private void ShowRevisionGraphToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            Settings.ShowRevisionGraph = !showRevisionGraphToolStripMenuItem.Checked;
-            showRevisionGraphToolStripMenuItem.Checked = Settings.ShowRevisionGraph;
-
-            Revisions.ShowHideRevisionGraph(Settings.ShowRevisionGraph);
         }
 
         private void FilterToolStripMenuItemClick(object sender, EventArgs e)
@@ -1705,16 +1696,47 @@ namespace GitUI
 
         #endregion
 
+        private void ShowRevisionSmallToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            showRevisionSmallToolStripMenuItem.Checked = true;
+            showRevisionGraphToolStripMenuItem.Checked = false;
+            showRevisionCardsToolStripMenuItem.Checked = false;
+            showRevisionCardsWithGraphToolStripMenuItem.Checked = false;
+            SetRevisionsLayout();
+        }
+
+        private void ShowRevisionGraphToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            showRevisionSmallToolStripMenuItem.Checked = false;
+            showRevisionGraphToolStripMenuItem.Checked = true;
+            showRevisionCardsToolStripMenuItem.Checked = false;
+            showRevisionCardsWithGraphToolStripMenuItem.Checked = false;
+            SetRevisionsLayout();
+        }
+
         private void showRevisionCardsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            showRevisionCardsToolStripMenuItem.Checked = !showRevisionCardsToolStripMenuItem.Checked;
-            showRevisionCards = showRevisionCardsToolStripMenuItem.Checked;
+            showRevisionSmallToolStripMenuItem.Checked = false;
+            showRevisionGraphToolStripMenuItem.Checked = false;
+            showRevisionCardsToolStripMenuItem.Checked = true;
+            showRevisionCardsWithGraphToolStripMenuItem.Checked = false;
+            SetRevisionsLayout();
+        }
 
+        private void showRevisionCardsWithGraphToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            showRevisionSmallToolStripMenuItem.Checked = false;
+            showRevisionGraphToolStripMenuItem.Checked = false;
+            showRevisionCardsToolStripMenuItem.Checked = false;
+            showRevisionCardsWithGraphToolStripMenuItem.Checked = true;
             SetRevisionsLayout();
         }
 
         private void SetRevisionsLayout()
         {
+            Settings.ShowRevisionGraph = showRevisionCardsWithGraphToolStripMenuItem.Checked || showRevisionGraphToolStripMenuItem.Checked;
+            showRevisionCards = showRevisionCardsToolStripMenuItem.Checked || showRevisionCardsWithGraphToolStripMenuItem.Checked;
+
             if (showRevisionCards)
             {
                 rowHeigth = 70;
