@@ -28,8 +28,8 @@ namespace Gravatar
             cache.DeleteCachedFile(imageFileName);
         }
 
-        public static Image GetGravatar(string imageFileName, string email, int cacheDays,
-                                        int imageSize, string imageCachePath, FallBackService fallBack)
+        public static Image GetImageFromCache(string imageFileName, string email, int cacheDays,
+                                             int imageSize, string imageCachePath, FallBackService fallBack)
         {
             try
             {
@@ -40,16 +40,13 @@ namespace Gravatar
                 if (!cache.FileIsCached(imageFileName) ||
                     cache.FileIsExpired(imageFileName, cacheDays))
                 {
-                    GetImageFromGravatar(imageFileName, email, imageSize, fallBack);
+                    return null;
                 }
                 if (cache.FileIsCached(imageFileName))
                 {
                     return cache.LoadImageFromCache(imageFileName, null);
                 }
-                else
-                {
-                    return null;
-                }
+
             }
             catch (Exception ex)
             {
@@ -63,23 +60,20 @@ namespace Gravatar
                                              int imageSize, string imageCachePath, Action<Image> onChangedImage,
                                              FallBackService fallBack)
         {
+            Image image = GetImageFromCache(imageFileName, email, cacheDays, imageSize, imageCachePath, fallBack);
+
             try
             {
-                if (cache == null)
-                    cache = new DirectoryImageCache(imageCachePath); //or: new IsolatedStorageImageCache();
-
-                // If the user image is not cached yet, download it from gravatar and store it in the isolatedStorage
-                if (!cache.FileIsCached(imageFileName) ||
-                    cache.FileIsExpired(imageFileName, cacheDays))
+                if (image == null)
                 {
                     onChangedImage(defaultBitmap);
 
                     GetImageFromGravatar(imageFileName, email, imageSize, fallBack);
                 }
-                if (cache.FileIsCached(imageFileName))
+                image = GetImageFromCache(imageFileName, email, cacheDays, imageSize, imageCachePath, fallBack);
+                if (image != null)
                 {
-                    onChangedImage(cache.LoadImageFromCache(imageFileName,
-                                                                 defaultBitmap));
+                    onChangedImage(image);
                 }
                 else
                 {

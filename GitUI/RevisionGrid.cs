@@ -50,7 +50,7 @@ namespace GitUI
         private string _quickSearchString;
         private RevisionGraph _revisionGraphCommand;
 
-        private bool large = true;
+        private bool showRevisionCards = false;
         private int rowHeigth;
 
         public RevisionGrid()
@@ -101,29 +101,7 @@ namespace GitUI
             this.HotkeysEnabled = true;
             ReloadHotkeys();
 
-
-            if (large)
-            {
-                rowHeigth = 70;
-
-                selectedItemBrush = new LinearGradientBrush(new Rectangle(0, 0, rowHeigth, rowHeigth),
-                                Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
-                                Color.LightBlue, 90, false);
-
-                Revisions.RowTemplate.Height = rowHeigth;
-                Revisions.ShowAuthor(!large);
-                Revisions.SetDimensions(10, 20, 3, Brushes.White);
-            }
-            else
-            {
-                rowHeigth = Revisions.RowTemplate.Height;
-
-                selectedItemBrush = new LinearGradientBrush(new Rectangle(0, 0, rowHeigth, rowHeigth),
-                                Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
-                                Color.LightBlue, 90, false);
-
-                Revisions.SetDimensions(NODE_DIMENSION, LANE_WIDTH, LANE_LINE_WIDTH, selectedItemBrush);
-            }
+            SetRevisionsLayout();
         }
 
         void Loading_Paint(object sender, PaintEventArgs e)
@@ -684,6 +662,7 @@ namespace GitUI
                     LogParam = LogParam.Replace("  --not --glob=notes --not", string.Empty);
 
                 _revisionGraphCommand = new RevisionGraph { BranchFilter = BranchFilter, LogParam = LogParam + Filter + _revisionFilter.GetFilter() };
+                _revisionGraphCommand.NeedAuthorEmail = showRevisionCards;
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
                 _revisionGraphCommand.Error += _revisionGraphCommand_Error;
@@ -738,6 +717,7 @@ namespace GitUI
         private bool ShouldHideGraph(bool inclBranchFilter)
         {
             return (inclBranchFilter && !string.IsNullOrEmpty(BranchFilter)) ||
+                     showRevisionCards ||
                    !(!_revisionFilter.ShouldHideGraph() &&
                      string.IsNullOrEmpty(InMemAuthorFilter) &&
                      string.IsNullOrEmpty(InMemCommitterFilter) &&
@@ -879,10 +859,10 @@ namespace GitUI
 
             e.Handled = true;
 
-            if (((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected) && !large)
+            if (((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected) && !showRevisionCards)
                 e.Graphics.FillRectangle(selectedItemBrush, e.CellBounds);
             else
-               e.Graphics.FillRectangle(new SolidBrush(Color.White), e.CellBounds);
+                e.Graphics.FillRectangle(new SolidBrush(Color.White), e.CellBounds);
 
             Brush foreBrush;
 
@@ -898,20 +878,30 @@ namespace GitUI
                 case 1: //Description!!
                     {
                         int baseOffset = 0;
-                        if (large)
+                        if (showRevisionCards)
                         {
                             baseOffset = 5;
 
                             Rectangle cellRectangle = new Rectangle(e.CellBounds.Left + baseOffset, e.CellBounds.Top + 1, e.CellBounds.Width - (baseOffset * 2), e.CellBounds.Height - 4);
 
-                            e.Graphics.FillRectangle(
-                                new LinearGradientBrush(cellRectangle,
-                                                        Color.FromArgb(255, 240, 240, 240),
-                                                        Color.FromArgb(255, 250, 250, 250), 90, false), cellRectangle);
-                            if ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
-                                e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, 40, 40, 40), 1), cellRectangle);
-                            else
+                            if (!Settings.RevisionGraphDrawNonRelativesGray || Revisions.RowIsRelative(e.RowIndex))
+                            {
+                                e.Graphics.FillRectangle(
+                                    new LinearGradientBrush(cellRectangle,
+                                                            Color.FromArgb(255, 220, 220, 231),
+                                                            Color.FromArgb(255, 240, 240, 250), 90, false), cellRectangle);
                                 e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, 200, 200, 200), 1), cellRectangle);
+                            }
+                            else
+                            {
+                                e.Graphics.FillRectangle(
+                                    new LinearGradientBrush(cellRectangle,
+                                                            Color.FromArgb(255, 240, 240, 240),
+                                                            Color.FromArgb(255, 250, 250, 250), 90, false), cellRectangle);
+                            }
+
+                            if ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
+                                e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, 40, 40, 40), 3), cellRectangle);
                         }
                         float offset = baseOffset;
 
@@ -942,30 +932,60 @@ namespace GitUI
                                                                    ? Settings.RemoteBranchColor
                                                                    : Settings.OtherTagColor);
 
-                                var headName = "[" + head.Name + "] ";
-                                e.Graphics.DrawString(headName, RefsFont, brush,
-                                                      new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
+                                string headName;
+                                if (!showRevisionCards)
+                                    headName = string.Concat("[", head.Name, "] ");
+                                else
+                                    headName = head.Name;
 
-                                offset += e.Graphics.MeasureString(headName, RefsFont).Width;
+                                PointF location;
+
+                                if (showRevisionCards)
+                                {
+                                    offset += e.Graphics.MeasureString(headName, RefsFont).Width + 6; 
+                                    location = new PointF(e.CellBounds.Right - offset, e.CellBounds.Top + 4);
+                                    SizeF size = new SizeF(e.Graphics.MeasureString(headName, RefsFont).Width, e.Graphics.MeasureString(headName, RefsFont).Height);
+                                    e.Graphics.FillRectangle(new SolidBrush(SystemColors.Info), location.X - 1, location.Y - 1, size.Width + 3, size.Height + 2);
+                                    e.Graphics.DrawRectangle(new Pen(SystemColors.InfoText), location.X-1, location.Y-1, size.Width+3, size.Height+2);
+                                }
+                                else
+                                {
+                                    location = new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4);
+                                    offset += e.Graphics.MeasureString(headName, RefsFont).Width;
+                                }
+                                e.Graphics.DrawString(headName, RefsFont, brush, location);
                             }
                         }
+
+                        if (showRevisionCards)
+                            offset = baseOffset;
+
                         var text = revision.Message;
 
                         e.Graphics.DrawString(text, rowFont, foreBrush,
                                               new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
 
-                        if (large)
+                        if (showRevisionCards)
                         {
                             int textHeight = rowHeigth / 3;
 
                             int gravatarSize = rowHeigth - textHeight - 8;
                             int gravatarTop = e.CellBounds.Top + textHeight;
                             int gravatarLeft = e.CellBounds.Left + baseOffset + 2;
-                            
 
-                            Image gravatar = Gravatar.GravatarService.GetGravatar(revision.Author + ".png", revision.Author, Settings.AuthorImageCacheDays, gravatarSize, Settings.ApplicationDataPath + "Images\\", Gravatar.GravatarService.FallBackService.MonsterId);
-                            e.Graphics.DrawRectangle(Pens.Black, gravatarLeft, gravatarTop, gravatarSize + 2, gravatarSize + 2);
-                            e.Graphics.DrawImage(gravatar, gravatarLeft + 1, gravatarTop + 1, gravatarSize, gravatarSize);
+
+                            Image gravatar = Gravatar.GravatarService.GetImageFromCache(revision.AuthorEmail + "Small.png", revision.AuthorEmail, Settings.AuthorImageCacheDays, gravatarSize, Settings.ApplicationDataPath + "Images\\", Gravatar.GravatarService.FallBackService.MonsterId);
+
+                            if (gravatar == null)
+                            {
+                                ThreadPool.QueueUserWorkItem(o =>
+                                        Gravatar.GravatarService.LoadCachedImage(revision.AuthorEmail + "Small.png", revision.AuthorEmail, null, Settings.AuthorImageCacheDays, gravatarSize, Settings.ApplicationDataPath + "Images\\", RefreshGravatar, Gravatar.GravatarService.FallBackService.MonsterId));
+                            }
+
+                            if (gravatar != null)
+                                e.Graphics.DrawImage(gravatar, gravatarLeft + 1, gravatarTop + 1, gravatarSize, gravatarSize);
+
+                            e.Graphics.DrawRectangle(Pens.Black, gravatarLeft, gravatarTop, gravatarSize + 1, gravatarSize + 1);
 
                             e.Graphics.DrawString(revision.Author, rowFont, foreBrush,
                                                   new PointF(gravatarLeft + gravatarSize + 5, gravatarTop));
@@ -995,6 +1015,12 @@ namespace GitUI
                     break;
             }
         }
+
+        private void RefreshGravatar(Image image)
+        {
+            _syncContext.Post(state => { Revisions.Refresh(); }, null);
+        }
+
 
         private void RevisionsDoubleClick(object sender, EventArgs e)
         {
@@ -1560,7 +1586,7 @@ namespace GitUI
             List<ToolStripItem> list = new List<ToolStripItem>();
             foreach (ToolStripItem item in CreateTag.Items)
                 list.Add(item);
-            foreach (ToolStripItem item in list) 
+            foreach (ToolStripItem item in list)
                 if (item.Name.Contains("_ownScript"))
                     CreateTag.Items.RemoveByKey(item.Name);
         }
@@ -1678,5 +1704,44 @@ namespace GitUI
         }
 
         #endregion
+
+        private void showRevisionCardsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            showRevisionCardsToolStripMenuItem.Checked = !showRevisionCardsToolStripMenuItem.Checked;
+            showRevisionCards = showRevisionCardsToolStripMenuItem.Checked;
+
+            SetRevisionsLayout();
+        }
+
+        private void SetRevisionsLayout()
+        {
+            if (showRevisionCards)
+            {
+                rowHeigth = 70;
+
+                selectedItemBrush = new LinearGradientBrush(new Rectangle(0, 0, rowHeigth, rowHeigth),
+                                Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
+                                Color.LightBlue, 90, false);
+
+                Revisions.RowTemplate.Height = rowHeigth;
+                Revisions.ShowAuthor(!showRevisionCards);
+                Revisions.SetDimensions(NODE_DIMENSION, LANE_WIDTH, LANE_LINE_WIDTH, Brushes.White);
+                
+            }
+            else
+            {
+                rowHeigth = 25;
+
+                selectedItemBrush = new LinearGradientBrush(new Rectangle(0, 0, rowHeigth, rowHeigth),
+                                Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
+                                Color.LightBlue, 90, false);
+
+                Revisions.RowTemplate.Height = rowHeigth;
+                Revisions.ShowAuthor(!showRevisionCards);
+                Revisions.SetDimensions(NODE_DIMENSION, LANE_WIDTH, LANE_LINE_WIDTH, selectedItemBrush);
+            }
+
+            ForceRefreshRevisions();
+        }
     }
 }

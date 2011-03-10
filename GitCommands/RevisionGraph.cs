@@ -32,6 +32,7 @@ namespace GitCommands
 
         public bool BackgroundThread { get; set; }
         public bool ShaOnly { get; set; }
+        public bool NeedAuthorEmail { get; set; }
 
         private readonly char[] splitChars = " \t\n".ToCharArray();
 
@@ -54,6 +55,7 @@ namespace GitCommands
             Parents,
             Tree,
             AuthorName,
+            AuthorEmail,
             AuthorDate,
             CommitterName,
             CommitterDate,
@@ -69,6 +71,7 @@ namespace GitCommands
         public RevisionGraph()
         {
             BackgroundThread = true;
+            NeedAuthorEmail = false;
         }
 
         ~RevisionGraph()
@@ -126,13 +129,27 @@ namespace GitCommands
                     /* Parents        */ "%P%n";
                 if (!ShaOnly)
                 {
-                    formatString +=
-                        /* Tree           */ "%T%n" +
-                        /* Author Name    */ "%aN%n" +
-                        /* Author Date    */ "%ai%n" +
-                        /* Committer Name */ "%cN%n" +
-                        /* Committer Date */ "%ci%n" +
-                        /* Commit Message */ "%s";
+                    if (!NeedAuthorEmail)
+                    {
+                        formatString +=
+                            /* Tree           */ "%T%n" +
+                            /* Author Name    */ "%aN%n" +
+                            /* Author Date    */ "%ai%n" +
+                            /* Committer Name */ "%cN%n" +
+                            /* Committer Date */ "%ci%n" +
+                            /* Commit Message */ "%s";
+                    }
+                    else
+                    {
+                        formatString +=
+                            /* Tree           */ "%T%n" +
+                            /* Author Name    */ "%aN%n" +
+                            /* Author Email    */ "%aE%n" +                            
+                            /* Author Date    */ "%ai%n" +
+                            /* Committer Name */ "%cN%n" +
+                            /* Committer Date */ "%ci%n" +
+                            /* Commit Message */ "%s";
+                    }
                 }
 
                 // NOTE:
@@ -261,6 +278,10 @@ namespace GitCommands
                     revision.Author = line;
                     break;
 
+                case ReadStep.AuthorEmail:
+                    revision.AuthorEmail = line;
+                    break;
+
                 case ReadStep.AuthorDate:
                     {
                         DateTime dateTime;
@@ -300,6 +321,10 @@ namespace GitCommands
             }
 
             nextStep++;
+
+            //Skip AuthorEmail when we do not need it
+            if (nextStep == ReadStep.AuthorEmail && !NeedAuthorEmail)
+                nextStep++;
         }
     }
 }
