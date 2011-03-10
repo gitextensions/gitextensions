@@ -1107,6 +1107,8 @@
     <None Include="Icons\Renamed.png" />
     <None Include="Icons\52.png" />
     <None Include="Icons\Copied.png" />
+    <None Include="Icons\SplitViewLayout.png" />
+    <None Include="Icons\cardModeLayout.png" />
     <Content Include="Resources\success1.png" />
     <None Include="Resources\witespace.ico" />
     <None Include="Resources\whitespace.bmp" />

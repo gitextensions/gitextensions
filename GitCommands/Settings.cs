@@ -657,21 +657,21 @@ namespace GitCommands
             }
         }
 
-        private static bool? _showRevisionGraph;
-        public static bool ShowRevisionGraph
+        private static int? _revisionGraphLayout;
+        public static int RevisionGraphLayout
         {
             get
             {
-                if (_showRevisionGraph == null)
-                    SafeSetBool("showrevisiongraph", true, x => _showRevisionGraph = x);
-                return _showRevisionGraph.Value;
+                if (_revisionGraphLayout == null)
+                    SafeSetInt("revisiongraphlayout", 2, x => _revisionGraphLayout = x);
+                return _revisionGraphLayout.Value;
             }
             set
             {
-                if (_showRevisionGraph == value)
+                if (_revisionGraphLayout == value)
                     return;
-                _showRevisionGraph = value;
-                Application.UserAppDataRegistry.SetValue("showrevisiongraph", _showRevisionGraph);
+                _revisionGraphLayout = value;
+                Application.UserAppDataRegistry.SetValue("revisiongraphlayout", _revisionGraphLayout);
             }
         }
 
