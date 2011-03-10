@@ -625,18 +625,6 @@ namespace GitUI
 
                 LastScrollPos = Revisions.FirstDisplayedScrollingRowIndex;
 
-                //Hide graph column when there it is disabled OR when a filter is active
-                //allowing for special case when history of a single file is being displayed
-                if (!(Settings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph || Settings.RevisionGraphLayout == (int)RevisionGridLayout.SmallWithGraph) || (ShouldHideGraph(false) && !AllowGraphWithFilter))
-                {
-                    Revisions.ShowHideRevisionGraph(false);
-                }
-                else
-                {
-                    Revisions.ShowHideRevisionGraph(true);
-                }
-
-
                 DisposeRevisionGraphCommand();
 
                 var newCurrentCheckout = GitCommandHelpers.GetCurrentCheckout();
@@ -959,11 +947,11 @@ namespace GitUI
 
                                 if (showRevisionCards)
                                 {
-                                    offset += e.Graphics.MeasureString(headName, RefsFont).Width + 6; 
+                                    offset += e.Graphics.MeasureString(headName, RefsFont).Width + 6;
                                     location = new PointF(e.CellBounds.Right - offset, e.CellBounds.Top + 4);
                                     SizeF size = new SizeF(e.Graphics.MeasureString(headName, RefsFont).Width, e.Graphics.MeasureString(headName, RefsFont).Height);
                                     e.Graphics.FillRectangle(new SolidBrush(SystemColors.Info), location.X - 1, location.Y - 1, size.Width + 3, size.Height + 2);
-                                    e.Graphics.DrawRectangle(new Pen(SystemColors.InfoText), location.X-1, location.Y-1, size.Width+3, size.Height+2);
+                                    e.Graphics.DrawRectangle(new Pen(SystemColors.InfoText), location.X - 1, location.Y - 1, size.Width + 3, size.Height + 2);
                                 }
                                 else
                                 {
@@ -1716,30 +1704,42 @@ namespace GitUI
 
         private void ShowRevisionSmallToolStripMenuItemClick(object sender, EventArgs e)
         {
+            bool shouldRefresh = Settings.RevisionGraphLayout != (int)RevisionGridLayout.SmallWithGraph;
             Settings.RevisionGraphLayout = (int)RevisionGridLayout.Small;
             SetRevisionsLayout();
-            ForceRefreshRevisions();
+            if (shouldRefresh)
+                ForceRefreshRevisions();
+            else Refresh();
         }
 
         private void ShowRevisionGraphToolStripMenuItemClick(object sender, EventArgs e)
         {
+            bool shouldRefresh = Settings.RevisionGraphLayout != (int)RevisionGridLayout.Small;
             Settings.RevisionGraphLayout = (int)RevisionGridLayout.SmallWithGraph;
             SetRevisionsLayout();
-            ForceRefreshRevisions();
+            if (shouldRefresh)
+                ForceRefreshRevisions();
+            else Refresh();
         }
 
         private void showRevisionCardsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            bool shouldRefresh = Settings.RevisionGraphLayout != (int)RevisionGridLayout.CardWithGraph;
             Settings.RevisionGraphLayout = (int)RevisionGridLayout.Card;
             SetRevisionsLayout();
-            ForceRefreshRevisions();
+            if (shouldRefresh)
+                ForceRefreshRevisions();
+            else Refresh();
         }
 
         private void showRevisionCardsWithGraphToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            bool shouldRefresh = Settings.RevisionGraphLayout != (int)RevisionGridLayout.Card;
             Settings.RevisionGraphLayout = (int)RevisionGridLayout.CardWithGraph;
             SetRevisionsLayout();
-            ForceRefreshRevisions();
+            if (shouldRefresh)
+                ForceRefreshRevisions();
+            else Refresh();
         }
 
         public void SetRevisionsLayout(RevisionGridLayout revisionGridLayout)
@@ -1771,7 +1771,7 @@ namespace GitUI
                 Revisions.RowTemplate.Height = rowHeigth;
                 Revisions.ShowAuthor(!showRevisionCards);
                 Revisions.SetDimensions(NODE_DIMENSION, LANE_WIDTH, LANE_LINE_WIDTH, Brushes.White);
-                
+
             }
             else
             {
@@ -1784,6 +1784,17 @@ namespace GitUI
                 Revisions.RowTemplate.Height = rowHeigth;
                 Revisions.ShowAuthor(!showRevisionCards);
                 Revisions.SetDimensions(NODE_DIMENSION, LANE_WIDTH, LANE_LINE_WIDTH, selectedItemBrush);
+            }
+
+            //Hide graph column when there it is disabled OR when a filter is active
+            //allowing for special case when history of a single file is being displayed
+            if (!(Settings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph || Settings.RevisionGraphLayout == (int)RevisionGridLayout.SmallWithGraph) || (ShouldHideGraph(false) && !AllowGraphWithFilter))
+            {
+                Revisions.ShowHideRevisionGraph(false);
+            }
+            else
+            {
+                Revisions.ShowHideRevisionGraph(true);
             }
         }
     }
