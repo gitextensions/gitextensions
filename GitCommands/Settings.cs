@@ -539,7 +539,7 @@ namespace GitCommands
             get
             {
                 if (_orderRevisionByDate == null)
-                    SafeSetBool("orderrevisionbydate", true, x => _orderRevisionByDate = x);
+                    SafeSetBool("orderrevisionbydate", false, x => _orderRevisionByDate = x);
                 return _orderRevisionByDate.Value;
             }
             set
