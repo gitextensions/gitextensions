@@ -26,6 +26,8 @@ namespace GitUI
 
             FileChanges.SelectionChanged += FileChangesSelectionChanged;
             FileChanges.DisableContextMenu();
+
+            followFileHistoryToolStripMenuItem.Checked = Settings.FollowRenamesInFileHistory;
         }
 
         public FormFileHistory(string fileName)
@@ -310,6 +312,14 @@ namespace GitUI
                     GitCommandHelpers.SaveBlobAs(fileDialog.FileName, selectedRows[0].Guid + ":\"" + orgFileName + "\"");
                 }
             }
+        }
+
+        private void followFileHistoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.FollowRenamesInFileHistory = !Settings.FollowRenamesInFileHistory;
+            followFileHistoryToolStripMenuItem.Checked = Settings.FollowRenamesInFileHistory;
+
+            ThreadPool.QueueUserWorkItem(o => LoadFileHistory(FileName));
         }
     }
 }
