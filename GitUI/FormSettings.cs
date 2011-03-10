@@ -302,7 +302,6 @@ namespace GitUI
                 AutostartPageant.Checked = Settings.AutoStartPageant;
 
                 CloseProcessDialog.Checked = Settings.CloseProcessDialog;
-                ShowRevisionGraph.Checked = Settings.ShowRevisionGraph;
                 ShowGitCommandLine.Checked = Settings.ShowGitCommandLine;
 
                 UseFastChecks.Checked = Settings.UseFastChecks;
@@ -386,7 +385,6 @@ namespace GitUI
             Settings.GravatarFallbackService = noImageService.Text;
 
             Settings.CloseProcessDialog = CloseProcessDialog.Checked;
-            Settings.ShowRevisionGraph = ShowRevisionGraph.Checked;
             Settings.ShowGitCommandLine = ShowGitCommandLine.Checked;
 
             Settings.UseFastChecks = UseFastChecks.Checked;

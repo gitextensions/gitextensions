@@ -60,12 +60,14 @@ namespace GitUI
             this.remoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
+            this.toggleSplitViewLayout = new System.Windows.Forms.ToolStripButton();
             this.toolStripTextBoxFilter = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.commitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.committerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.authorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.diffContainsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toggleCardViewLayout = new System.Windows.Forms.ToolStripButton();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.RevisionGrid = new GitUI.RevisionGrid();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -234,8 +236,10 @@ namespace GitUI
             this.toolStripDropDownButton2,
             this.toolStripSeparator19,
             this.toolStripLabel2,
+            this.toggleSplitViewLayout,
             this.toolStripTextBoxFilter,
-            this.toolStripDropDownButton1});
+            this.toolStripDropDownButton1,
+            this.toggleCardViewLayout});
             this.ToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.ToolStrip.Location = new System.Drawing.Point(0, 24);
             this.ToolStrip.Name = "ToolStrip";
@@ -439,6 +443,17 @@ namespace GitUI
             this.toolStripLabel2.Text = "Filter:";
             this.toolStripLabel2.Click += new System.EventHandler(this.ToolStripLabel2Click);
             // 
+            // toggleSplitViewLayout
+            // 
+            this.toggleSplitViewLayout.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toggleSplitViewLayout.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toggleSplitViewLayout.Image = global::GitUI.Properties.Resources.SplitViewLayout;
+            this.toggleSplitViewLayout.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toggleSplitViewLayout.Name = "toggleSplitViewLayout";
+            this.toggleSplitViewLayout.Size = new System.Drawing.Size(23, 22);
+            this.toggleSplitViewLayout.ToolTipText = "Toggle split view layout";
+            this.toggleSplitViewLayout.Click += new System.EventHandler(this.toggleSplitViewLayout_Click);
+            // 
             // toolStripTextBoxFilter
             // 
             this.toolStripTextBoxFilter.ForeColor = System.Drawing.Color.Black;
@@ -491,6 +506,17 @@ namespace GitUI
             this.diffContainsToolStripMenuItem.Text = "Diff contains (SLOW)";
             this.diffContainsToolStripMenuItem.Click += new System.EventHandler(this.diffContainsToolStripMenuItem_Click);
             // 
+            // toggleCardViewLayout
+            // 
+            this.toggleCardViewLayout.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toggleCardViewLayout.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toggleCardViewLayout.Image = global::GitUI.Properties.Resources.cardModeLayout;
+            this.toggleCardViewLayout.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toggleCardViewLayout.Name = "toggleCardViewLayout";
+            this.toggleCardViewLayout.Size = new System.Drawing.Size(23, 22);
+            this.toggleCardViewLayout.ToolTipText = "Toggle card view";
+            this.toggleCardViewLayout.Click += new System.EventHandler(this.toggleCardViewLayout_Click);
+            // 
             // splitContainer3
             // 
             this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -505,6 +531,7 @@ namespace GitUI
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.tabControl1);
+            this.splitContainer3.Panel2MinSize = 0;
             this.splitContainer3.Size = new System.Drawing.Size(959, 502);
             this.splitContainer3.SplitterDistance = 220;
             this.splitContainer3.TabIndex = 1;
@@ -1759,5 +1786,7 @@ namespace GitUI
         private ToolStripMenuItem _viewPullRequestsToolStripMenuItem;
         private ToolStripMenuItem _createPullRequestsToolStripMenuItem;
         private ToolStripMenuItem goToToolStripMenuItem;
+        private ToolStripButton toggleSplitViewLayout;
+        private ToolStripButton toggleCardViewLayout;
     }
 }
