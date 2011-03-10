@@ -21,6 +21,7 @@ namespace GitCommands
         public string TreeGuid { get; set; }
 
         public string Author { get; set; }
+        public string AuthorEmail { get; set; }
         public DateTime AuthorDate { get; set; }
         public string Committer { get; set; }
         public DateTime CommitDate { get; set; }

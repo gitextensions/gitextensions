@@ -93,6 +93,8 @@ namespace GitUI
             LANE_WIDTH = lane_width;
             LANE_LINE_WIDTH = lane_line_width;
             this.selectionBrush = selectionBrush;
+
+            dataGrid_Resize(null, null);
         }
 
         public DvcsGraph()

@@ -647,7 +647,7 @@ namespace GitCommands
             get
             {
                 if (_showGitNotes == null)
-                    SafeSetBool("showgitnotes", true, x => _showGitNotes = x);
+                    SafeSetBool("showgitnotes", false, x => _showGitNotes = x);
                 return _showGitNotes.Value;
             }
             set

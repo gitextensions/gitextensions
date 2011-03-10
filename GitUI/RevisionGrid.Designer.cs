@@ -82,14 +82,11 @@ namespace GitUI
             this.showFilteredBranchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.ShowRemoteBranches = new System.Windows.Forms.ToolStripMenuItem();
-            this.showGitNotesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showRevisionGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.drawNonrelativesGrayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showAuthorDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showRelativeDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.orderRevisionsByDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.runScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SelecctionTimer = new System.Windows.Forms.Timer(this.components);
@@ -104,8 +101,14 @@ namespace GitUI
             this.Loading = new System.Windows.Forms.PictureBox();
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.quickSearchTimer = new System.Windows.Forms.Timer(this.components);
-            this.runScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.showRevisionGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.drawNonrelativesGrayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.orderRevisionsByDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showAuthorDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showRelativeDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showGitNotesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showRevisionCardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
             this.CreateTag.SuspendLayout();
             this.NoCommits.SuspendLayout();
@@ -233,11 +236,10 @@ namespace GitUI
             this.cherryPickCommitToolStripMenuItem,
             this.toolStripSeparator1,
             this.showBranchesToolStripMenuItem,
-            this.showRevisionGraphToolStripMenuItem,
-            this.drawNonrelativesGrayToolStripMenuItem,
+            this.toolStripMenuItem1,
+            this.orderRevisionsByDateToolStripMenuItem,
             this.showAuthorDateToolStripMenuItem,
             this.showRelativeDateToolStripMenuItem,
-            this.orderRevisionsByDateToolStripMenuItem,
             this.showGitNotesToolStripMenuItem,
             this.toolStripSeparator3,
             this.filterToolStripMenuItem,
@@ -462,48 +464,6 @@ namespace GitUI
             this.ShowRemoteBranches.Text = "Show remote branches";
             this.ShowRemoteBranches.Click += new System.EventHandler(this.ShowRemoteBranchesClick);
             // 
-            // showGitNotesToolStripMenuItem
-            // 
-            this.showGitNotesToolStripMenuItem.Name = "showGitNotesToolStripMenuItem";
-            this.showGitNotesToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
-            this.showGitNotesToolStripMenuItem.Text = "Show git notes";
-            this.showGitNotesToolStripMenuItem.Click += new System.EventHandler(this.ShowGitNotesToolStripMenuItem_Click);
-            // 
-            // showRevisionGraphToolStripMenuItem
-            // 
-            this.showRevisionGraphToolStripMenuItem.Name = "showRevisionGraphToolStripMenuItem";
-            this.showRevisionGraphToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.showRevisionGraphToolStripMenuItem.Text = "Show revision graph";
-            this.showRevisionGraphToolStripMenuItem.Click += new System.EventHandler(this.ShowRevisionGraphToolStripMenuItemClick);
-            // 
-            // drawNonrelativesGrayToolStripMenuItem
-            // 
-            this.drawNonrelativesGrayToolStripMenuItem.Name = "drawNonrelativesGrayToolStripMenuItem";
-            this.drawNonrelativesGrayToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.drawNonrelativesGrayToolStripMenuItem.Text = "Draw non relatives gray";
-            this.drawNonrelativesGrayToolStripMenuItem.Click += new System.EventHandler(this.drawNonrelativesGrayToolStripMenuItem_Click);
-            // 
-            // showAuthorDateToolStripMenuItem
-            // 
-            this.showAuthorDateToolStripMenuItem.Name = "showAuthorDateToolStripMenuItem";
-            this.showAuthorDateToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.showAuthorDateToolStripMenuItem.Text = "Show author date";
-            this.showAuthorDateToolStripMenuItem.Click += new System.EventHandler(this.ShowAuthorDateToolStripMenuItemClick);
-            // 
-            // showRelativeDateToolStripMenuItem
-            // 
-            this.showRelativeDateToolStripMenuItem.Name = "showRelativeDateToolStripMenuItem";
-            this.showRelativeDateToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.showRelativeDateToolStripMenuItem.Text = "Show relative date";
-            this.showRelativeDateToolStripMenuItem.Click += new System.EventHandler(this.ShowRelativeDateToolStripMenuItemClick);
-            // 
-            // orderRevisionsByDateToolStripMenuItem
-            // 
-            this.orderRevisionsByDateToolStripMenuItem.Name = "orderRevisionsByDateToolStripMenuItem";
-            this.orderRevisionsByDateToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.orderRevisionsByDateToolStripMenuItem.Text = "Order revisions by date";
-            this.orderRevisionsByDateToolStripMenuItem.Click += new System.EventHandler(this.OrderRevisionsByDateToolStripMenuItemClick);
-            // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
@@ -515,6 +475,28 @@ namespace GitUI
             this.filterToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.filterToolStripMenuItem.Text = "Set advanced filter";
             this.filterToolStripMenuItem.Click += new System.EventHandler(this.FilterToolStripMenuItemClick);
+            // 
+            // toolStripSeparator7
+            // 
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            this.toolStripSeparator7.Size = new System.Drawing.Size(222, 6);
+            // 
+            // runScriptToolStripMenuItem
+            // 
+            this.runScriptToolStripMenuItem.Name = "runScriptToolStripMenuItem";
+            this.runScriptToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.runScriptToolStripMenuItem.Text = "Run script";
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.dataGridViewTextBoxColumn3.DefaultCellStyle = dataGridViewCellStyle11;
+            this.dataGridViewTextBoxColumn3.Frozen = true;
+            this.dataGridViewTextBoxColumn3.HeaderText = "";
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            this.dataGridViewTextBoxColumn3.ReadOnly = true;
+            this.dataGridViewTextBoxColumn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.dataGridViewTextBoxColumn3.Width = 70;
             // 
             // dataGridViewTextBoxColumn2
             // 
@@ -645,16 +627,64 @@ namespace GitUI
             // 
             this.quickSearchTimer.Interval = 500;
             // 
-            // runScriptToolStripMenuItem
+            // toolStripMenuItem1
             // 
-            this.runScriptToolStripMenuItem.Name = "runScriptToolStripMenuItem";
-            this.runScriptToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.runScriptToolStripMenuItem.Text = "Run script";
+            this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showRevisionGraphToolStripMenuItem,
+            this.showRevisionCardsToolStripMenuItem,
+            this.drawNonrelativesGrayToolStripMenuItem});
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(225, 22);
+            this.toolStripMenuItem1.Text = "Layout";
             // 
-            // toolStripSeparator7
+            // showRevisionGraphToolStripMenuItem
             // 
-            this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(222, 6);
+            this.showRevisionGraphToolStripMenuItem.Name = "showRevisionGraphToolStripMenuItem";
+            this.showRevisionGraphToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.showRevisionGraphToolStripMenuItem.Text = "Show revision graph";
+            this.showRevisionGraphToolStripMenuItem.Click += new System.EventHandler(this.ShowRevisionGraphToolStripMenuItemClick);
+            // 
+            // drawNonrelativesGrayToolStripMenuItem
+            // 
+            this.drawNonrelativesGrayToolStripMenuItem.Name = "drawNonrelativesGrayToolStripMenuItem";
+            this.drawNonrelativesGrayToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.drawNonrelativesGrayToolStripMenuItem.Text = "Draw non relatives gray";
+            this.drawNonrelativesGrayToolStripMenuItem.Click += new System.EventHandler(this.drawNonrelativesGrayToolStripMenuItem_Click);
+            // 
+            // orderRevisionsByDateToolStripMenuItem
+            // 
+            this.orderRevisionsByDateToolStripMenuItem.Name = "orderRevisionsByDateToolStripMenuItem";
+            this.orderRevisionsByDateToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.orderRevisionsByDateToolStripMenuItem.Text = "Order revisions by date";
+            this.orderRevisionsByDateToolStripMenuItem.Click += new System.EventHandler(this.OrderRevisionsByDateToolStripMenuItemClick);
+            // 
+            // showAuthorDateToolStripMenuItem
+            // 
+            this.showAuthorDateToolStripMenuItem.Name = "showAuthorDateToolStripMenuItem";
+            this.showAuthorDateToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.showAuthorDateToolStripMenuItem.Text = "Show author date";
+            this.showAuthorDateToolStripMenuItem.Click += new System.EventHandler(this.ShowAuthorDateToolStripMenuItemClick);
+            // 
+            // showRelativeDateToolStripMenuItem
+            // 
+            this.showRelativeDateToolStripMenuItem.Name = "showRelativeDateToolStripMenuItem";
+            this.showRelativeDateToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.showRelativeDateToolStripMenuItem.Text = "Show relative date";
+            this.showRelativeDateToolStripMenuItem.Click += new System.EventHandler(this.ShowRelativeDateToolStripMenuItemClick);
+            // 
+            // showGitNotesToolStripMenuItem
+            // 
+            this.showGitNotesToolStripMenuItem.Name = "showGitNotesToolStripMenuItem";
+            this.showGitNotesToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.showGitNotesToolStripMenuItem.Text = "Show git notes";
+            this.showGitNotesToolStripMenuItem.Click += new System.EventHandler(this.ShowGitNotesToolStripMenuItem_Click);
+            // 
+            // showRevisionCardsToolStripMenuItem
+            // 
+            this.showRevisionCardsToolStripMenuItem.Name = "showRevisionCardsToolStripMenuItem";
+            this.showRevisionCardsToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.showRevisionCardsToolStripMenuItem.Text = "Show revision cards";
+            this.showRevisionCardsToolStripMenuItem.Click += new System.EventHandler(this.showRevisionCardsToolStripMenuItem_Click);
             // 
             // RevisionGrid
             // 
@@ -699,7 +729,6 @@ namespace GitUI
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem revertCommitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showRevisionGraphToolStripMenuItem;
         private System.Windows.Forms.Panel NoGit;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
@@ -707,19 +736,15 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem deleteTagToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteBranchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem checkoutRevisionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem orderRevisionsByDateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem checkoutBranchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mergeBranchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cherryPickCommitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showAuthorDateToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showRelativeDateToolStripMenuItem;
         private System.Windows.Forms.Timer quickSearchTimer;
         private System.Windows.Forms.ToolStripMenuItem rebaseOnToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showAllBranchesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showCurrentBranchOnlyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showFilteredBranchesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.ToolStripMenuItem drawNonrelativesGrayToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.ToolStripMenuItem copyToClipboardToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
@@ -741,6 +766,13 @@ namespace GitUI
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem runScriptToolStripMenuItem;
         private System.Windows.Forms.Button InitRepository;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem showRevisionGraphToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showRevisionCardsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem drawNonrelativesGrayToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem orderRevisionsByDateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showAuthorDateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showRelativeDateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showGitNotesToolStripMenuItem;
     }
 }
