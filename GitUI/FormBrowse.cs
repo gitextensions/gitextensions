@@ -1760,7 +1760,8 @@ namespace GitUI
 
         private void FindFileInSelectedCommit()
         {
-            tabControl1.SelectedTab = Tree; 
+            tabControl1.SelectedTab = Tree;
+            EnabledSplitViewLayout(true);
             GitTree.Focus();
             FindFileOnClick(null, null);
         }
@@ -1811,6 +1812,29 @@ namespace GitUI
             {
                 MessageBox.Show("No revision found.");
             }                        
+        }
+
+        private void toggleSplitViewLayout_Click(object sender, EventArgs e)
+        {
+            EnabledSplitViewLayout(splitContainer3.Panel2.Height == 0 && splitContainer3.Height > 0);
+        }
+
+        private void EnabledSplitViewLayout(bool enabled)
+        {
+            if (enabled)
+                splitContainer3.SplitterDistance = (splitContainer3.Height / 5) * 2;
+            else
+                splitContainer3.SplitterDistance = splitContainer3.Height;
+        }
+
+        private void toggleCardViewLayout_Click(object sender, EventArgs e)
+        {
+            if (Settings.RevisionGraphLayout == (int)RevisionGridLayout.SmallWithGraph)
+                RevisionGrid.SetRevisionsLayout(RevisionGridLayout.Card);
+            else
+                RevisionGrid.SetRevisionsLayout(RevisionGridLayout.SmallWithGraph);
+
+            RevisionGrid.ForceRefreshRevisions();
         }
     }
 }

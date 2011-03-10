@@ -14,6 +14,14 @@ using GitUI.Hotkey;
 
 namespace GitUI
 {
+    public enum RevisionGridLayout
+    {
+        Small = 1,
+        SmallWithGraph = 2,
+        Card = 3,
+        CardWithGraph = 4
+    }
+
     public partial class RevisionGrid : GitExtensionsControl
     {
         private readonly TranslationString _authorCaption = new TranslationString("Author");
@@ -72,7 +80,6 @@ namespace GitUI
             Revisions.CellPainting += RevisionsCellPainting;
             Revisions.KeyDown += RevisionsKeyDown;
 
-            showRevisionGraphToolStripMenuItem.Checked = Settings.ShowRevisionGraph;
             showAuthorDateToolStripMenuItem.Checked = Settings.ShowAuthorDate;
             orderRevisionsByDateToolStripMenuItem.Checked = Settings.OrderRevisionByDate;
             showRelativeDateToolStripMenuItem.Checked = Settings.RelativeDate;
@@ -101,7 +108,14 @@ namespace GitUI
             this.HotkeysEnabled = true;
             ReloadHotkeys();
 
-            SetRevisionsLayout();
+            try
+            {
+                SetRevisionsLayout((RevisionGridLayout)Settings.RevisionGraphLayout);
+            }
+            catch
+            {
+                SetRevisionsLayout();
+            }
         }
 
         void Loading_Paint(object sender, PaintEventArgs e)
@@ -421,6 +435,8 @@ namespace GitUI
 
         public override void Refresh()
         {
+            SetRevisionsLayout();
+
             base.Refresh();
 
             Revisions.Refresh();
@@ -601,6 +617,8 @@ namespace GitUI
         {
             try
             {
+                SetRevisionsLayout();
+
                 ApplyFilterFromRevisionFilterDialog();
 
                 _initialLoad = true;
@@ -609,7 +627,7 @@ namespace GitUI
 
                 //Hide graph column when there it is disabled OR when a filter is active
                 //allowing for special case when history of a single file is being displayed
-                if (!Settings.ShowRevisionGraph || (ShouldHideGraph(false) && !AllowGraphWithFilter))
+                if (!(Settings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph || Settings.RevisionGraphLayout == (int)RevisionGridLayout.SmallWithGraph) || (ShouldHideGraph(false) && !AllowGraphWithFilter))
                 {
                     Revisions.ShowHideRevisionGraph(false);
                 }
@@ -1698,44 +1716,49 @@ namespace GitUI
 
         private void ShowRevisionSmallToolStripMenuItemClick(object sender, EventArgs e)
         {
-            showRevisionSmallToolStripMenuItem.Checked = true;
-            showRevisionGraphToolStripMenuItem.Checked = false;
-            showRevisionCardsToolStripMenuItem.Checked = false;
-            showRevisionCardsWithGraphToolStripMenuItem.Checked = false;
+            Settings.RevisionGraphLayout = (int)RevisionGridLayout.Small;
             SetRevisionsLayout();
+            ForceRefreshRevisions();
         }
 
         private void ShowRevisionGraphToolStripMenuItemClick(object sender, EventArgs e)
         {
-            showRevisionSmallToolStripMenuItem.Checked = false;
-            showRevisionGraphToolStripMenuItem.Checked = true;
-            showRevisionCardsToolStripMenuItem.Checked = false;
-            showRevisionCardsWithGraphToolStripMenuItem.Checked = false;
+            Settings.RevisionGraphLayout = (int)RevisionGridLayout.SmallWithGraph;
             SetRevisionsLayout();
+            ForceRefreshRevisions();
         }
 
         private void showRevisionCardsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            showRevisionSmallToolStripMenuItem.Checked = false;
-            showRevisionGraphToolStripMenuItem.Checked = false;
-            showRevisionCardsToolStripMenuItem.Checked = true;
-            showRevisionCardsWithGraphToolStripMenuItem.Checked = false;
+            Settings.RevisionGraphLayout = (int)RevisionGridLayout.Card;
             SetRevisionsLayout();
+            ForceRefreshRevisions();
         }
 
         private void showRevisionCardsWithGraphToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            showRevisionSmallToolStripMenuItem.Checked = false;
-            showRevisionGraphToolStripMenuItem.Checked = false;
-            showRevisionCardsToolStripMenuItem.Checked = false;
-            showRevisionCardsWithGraphToolStripMenuItem.Checked = true;
+            Settings.RevisionGraphLayout = (int)RevisionGridLayout.CardWithGraph;
+            SetRevisionsLayout();
+            ForceRefreshRevisions();
+        }
+
+        public void SetRevisionsLayout(RevisionGridLayout revisionGridLayout)
+        {
+            Settings.RevisionGraphLayout = (int)revisionGridLayout;
+            showRevisionSmallToolStripMenuItem.Checked = revisionGridLayout == RevisionGridLayout.Small;
+            showRevisionGraphToolStripMenuItem.Checked = revisionGridLayout == RevisionGridLayout.SmallWithGraph;
+            showRevisionCardsToolStripMenuItem.Checked = revisionGridLayout == RevisionGridLayout.Card;
+            showRevisionCardsWithGraphToolStripMenuItem.Checked = revisionGridLayout == RevisionGridLayout.CardWithGraph;
             SetRevisionsLayout();
         }
 
         private void SetRevisionsLayout()
         {
-            Settings.ShowRevisionGraph = showRevisionCardsWithGraphToolStripMenuItem.Checked || showRevisionGraphToolStripMenuItem.Checked;
-            showRevisionCards = showRevisionCardsToolStripMenuItem.Checked || showRevisionCardsWithGraphToolStripMenuItem.Checked;
+            showRevisionSmallToolStripMenuItem.Checked = Settings.RevisionGraphLayout == (int)RevisionGridLayout.Small;
+            showRevisionGraphToolStripMenuItem.Checked = Settings.RevisionGraphLayout == (int)RevisionGridLayout.SmallWithGraph;
+            showRevisionCardsToolStripMenuItem.Checked = Settings.RevisionGraphLayout == (int)RevisionGridLayout.Card;
+            showRevisionCardsWithGraphToolStripMenuItem.Checked = Settings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph;
+            showRevisionCards = Settings.RevisionGraphLayout == (int)RevisionGridLayout.Card || Settings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph;
 
             if (showRevisionCards)
             {
@@ -1762,8 +1785,6 @@ namespace GitUI
                 Revisions.ShowAuthor(!showRevisionCards);
                 Revisions.SetDimensions(NODE_DIMENSION, LANE_WIDTH, LANE_LINE_WIDTH, selectedItemBrush);
             }
-
-            ForceRefreshRevisions();
         }
     }
 }
