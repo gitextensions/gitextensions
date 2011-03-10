@@ -48,7 +48,7 @@ namespace GitUI.RepoHosting
 
         private static void AddLine(StringBuilder html, string input, params object[] p)
         {
-            html.AppendFormat(input + "\r\n", (from el in p select el.ToString().Replace("\r", "").Replace("\n", "<br/>\n").Replace("\"", "&quot;")).ToArray());
+            html.AppendFormat(input + "\r\n", (from el in p select (el == null) ? "[UNKNOWN]" : el.ToString().Replace("\r", "").Replace("\n", "<br/>\n").Replace("\"", "&quot;")).ToArray());
         }
 
         private static string CssData
