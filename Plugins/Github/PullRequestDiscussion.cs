@@ -25,45 +25,69 @@ namespace Github
             _repositoryName = repositoryName;
             _id = id;
 
-            Load();
+            TryLoad();
+        }
+
+        private void TryLoad()
+        {
+            try
+            {
+                Load();
+            }
+            catch (Exception ex)
+            {
+                Entries = new List<IDiscussionEntry>();
+                throw;
+            }
         }
 
         private void Load()
         {
-            try
+            var pullRequestApi = _plugin.GetPullRequestApi();
+            _pullRequest = pullRequestApi.GetById(_owner, _repositoryName, _id);
+
+            Entries = new List<IDiscussionEntry>();
+
+            GithubDiscussionEntry da = new GithubDiscussionEntry(_githubPullReqInfo.Owner, _githubPullReqInfo.Created, _githubPullReqInfo.Body);
+            Entries.Add(da);
+
+            foreach (var el in _pullRequest.Discussion)
             {
-                var pullRequestApi = _plugin.GetPullRequestApi();
-                _pullRequest = pullRequestApi.GetById(_owner, _repositoryName, _id);
+                GithubDiscussionEntry de;
+                string author = GetAuthorFrom(el.User) ?? GetAuthorFrom(el.Author) ?? "!UNKNOWN!";
 
-                Entries = new List<IDiscussionEntry>();
-
-                GithubDiscussionEntry da = new GithubDiscussionEntry(_githubPullReqInfo.Owner, _githubPullReqInfo.Created, _githubPullReqInfo.Body);
-                Entries.Add(da);
-
-                foreach (var el in _pullRequest.Discussion)
-                {
-                    GithubDiscussionEntry de;
-                    string author;
-                    if (el.User == null)
-                        author = string.Format("{0} ({1})", el.Author, el.Email);
-                    else
-                        author = el.User.Login;
-
-
-                    if (el.Type.ToLowerInvariant() == "commit")
-                        de = new GithubCommitDiscussionEntry(author, el.Created, el.Subject, el.Sha);
-                    else if (el.Type.ToLowerInvariant() == "issuecomment")
-                        de = new GithubDiscussionEntry(author, el.Created, el.Body);
-                    else
-                        de = new GithubDiscussionEntry("ERROR", DateTime.Now, "COULD NOT UNDERSTAND A DISCUSSION ENTRY");
-                    Entries.Add(de);
-                }
-
+                if (el.Type.ToLowerInvariant() == "commit")
+                    de = new GithubCommitDiscussionEntry(author, el.Created, el.Message, el.Id);
+                else if (el.Type.ToLowerInvariant() == "issuecomment")
+                    de = new GithubDiscussionEntry(author, el.Created, el.Body);
+                else
+                    de = new GithubDiscussionEntry("ERROR", DateTime.Now, "COULD NOT UNDERSTAND A DISCUSSION ENTRY");
+                Entries.Add(de);
             }
-            catch (SerializationException ex)
+        }
+
+        private static string GetAuthorFrom(GithubSharp.Core.Models.IssueUser issueUser)
+        {
+            if (issueUser == null)
+                return null;
+            string namePart = null;
+            string p2 = null;
+
+            if (!string.IsNullOrEmpty(issueUser.Login))
             {
-                MessageBox.Show("Could not load discussion.\n\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                namePart = issueUser.Login;
             }
+            else if (!string.IsNullOrEmpty(issueUser.Name))
+            {
+                namePart = issueUser.Name;
+                p2 = issueUser.Email;
+            }
+            else if (!string.IsNullOrEmpty(issueUser.Email))
+                namePart = issueUser.Email;
+            else
+                return null;
+
+            return p2 != null ? string.Format("{0} ({1})", namePart, p2) : namePart;
         }
 
         public void ForceReload()
@@ -102,6 +126,8 @@ namespace Github
         public GithubCommitDiscussionEntry(string author, DateTime created, string body, string sha)
             : base(author, created, body)
         {
+            if (sha == null)
+                throw new ArgumentNullException("Sha can not be null!", "sha");
             Sha = sha;
         }
 
