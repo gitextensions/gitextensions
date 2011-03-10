@@ -175,12 +175,16 @@ namespace GitUI.RepoHosting
             AsyncHelpers.DoAsync(
                 () => _currentPullRequestInfo.Discussion,
                 LoadDiscussion,
-                ex => MessageBox.Show(this, _strCouldNotLoadDiscussion.Text + ex.Message, _strError.Text));
+                ex => 
+                { 
+                    MessageBox.Show(this, _strCouldNotLoadDiscussion.Text + ex.Message, _strError.Text);
+                    LoadDiscussion(null);
+                });
         }
 
         private void LoadDiscussion(IPullRequestDiscussion discussion)
         {
-            var t = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo, discussion.Entries);
+            var t = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo, discussion != null ? discussion.Entries : null);
             _discussionWB.DocumentText = t;
         }
 
