@@ -1826,15 +1826,5 @@ namespace GitUI
             else
                 splitContainer3.SplitterDistance = splitContainer3.Height;
         }
-
-        private void toggleCardViewLayout_Click(object sender, EventArgs e)
-        {
-            if (Settings.RevisionGraphLayout == (int)RevisionGridLayout.SmallWithGraph)
-                RevisionGrid.SetRevisionsLayout(RevisionGridLayout.Card);
-            else
-                RevisionGrid.SetRevisionsLayout(RevisionGridLayout.SmallWithGraph);
-
-            RevisionGrid.ForceRefreshRevisions();
-        }
     }
 }
