@@ -10,6 +10,7 @@ namespace Gravatar
     public class GravatarService
     {
         static IImageCache cache;
+        static object gravatarServiceLock = new object();
 
         public enum FallBackService
         {
@@ -68,7 +69,12 @@ namespace Gravatar
                 {
                     onChangedImage(defaultBitmap);
 
-                    GetImageFromGravatar(imageFileName, email, imageSize, fallBack);
+                    //Lock added to make sure gravatar doesn't block this ip..
+                    lock (gravatarServiceLock)
+                    {
+                        if (GetImageFromCache(imageFileName, email, cacheDays, imageSize, imageCachePath, fallBack) == null)
+                            GetImageFromGravatar(imageFileName, email, imageSize, fallBack);
+                    }
                 }
                 image = GetImageFromCache(imageFileName, email, cacheDays, imageSize, imageCachePath, fallBack);
                 if (image != null)
