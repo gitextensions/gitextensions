@@ -67,7 +67,6 @@ namespace GitUI
             this.committerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.authorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.diffContainsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toggleCardViewLayout = new System.Windows.Forms.ToolStripButton();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.RevisionGrid = new GitUI.RevisionGrid();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -238,8 +237,7 @@ namespace GitUI
             this.toolStripLabel2,
             this.toggleSplitViewLayout,
             this.toolStripTextBoxFilter,
-            this.toolStripDropDownButton1,
-            this.toggleCardViewLayout});
+            this.toolStripDropDownButton1});
             this.ToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.ToolStrip.Location = new System.Drawing.Point(0, 24);
             this.ToolStrip.Name = "ToolStrip";
@@ -505,17 +503,6 @@ namespace GitUI
             this.diffContainsToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.diffContainsToolStripMenuItem.Text = "Diff contains (SLOW)";
             this.diffContainsToolStripMenuItem.Click += new System.EventHandler(this.diffContainsToolStripMenuItem_Click);
-            // 
-            // toggleCardViewLayout
-            // 
-            this.toggleCardViewLayout.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toggleCardViewLayout.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toggleCardViewLayout.Image = global::GitUI.Properties.Resources.cardModeLayout;
-            this.toggleCardViewLayout.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toggleCardViewLayout.Name = "toggleCardViewLayout";
-            this.toggleCardViewLayout.Size = new System.Drawing.Size(23, 22);
-            this.toggleCardViewLayout.ToolTipText = "Toggle card view";
-            this.toggleCardViewLayout.Click += new System.EventHandler(this.toggleCardViewLayout_Click);
             // 
             // splitContainer3
             // 
@@ -1787,6 +1774,5 @@ namespace GitUI
         private ToolStripMenuItem _createPullRequestsToolStripMenuItem;
         private ToolStripMenuItem goToToolStripMenuItem;
         private ToolStripButton toggleSplitViewLayout;
-        private ToolStripButton toggleCardViewLayout;
     }
 }

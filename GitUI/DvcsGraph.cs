@@ -87,8 +87,9 @@ namespace GitUI
         private int visibleBottom;
         private int visibleTop;
 
-        public void SetDimensions(int node_dimension, int lane_width, int lane_line_width, Brush selectionBrush)
+        public void SetDimensions(int node_dimension, int lane_width, int lane_line_width, int row_height, Brush selectionBrush)
         {
+            RowTemplate.Height = row_height;
             NODE_DIMENSION = node_dimension;
             LANE_WIDTH = lane_width;
             LANE_LINE_WIDTH = lane_line_width;
@@ -441,6 +442,12 @@ namespace GitUI
 
         private void dataGrid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
+            if (Rows[e.RowIndex].Height != RowTemplate.Height)
+            {
+                Rows[e.RowIndex].Height = RowTemplate.Height;
+                dataGrid_Scroll(null, null);
+            }
+
             lock (graphData)
             {
                 Graph.LaneRow row = graphData[e.RowIndex];
@@ -668,7 +675,8 @@ namespace GitUI
 
                         laneCount = Math.Min(Math.Max(laneCount, width), MAX_LANES);
                     }
-                    dataGridColumnGraph.Width = LANE_WIDTH * laneCount;
+                    if (dataGridColumnGraph.Width != LANE_WIDTH * laneCount)
+                        dataGridColumnGraph.Width = LANE_WIDTH * laneCount;
                 }
             }
         }
@@ -1100,6 +1108,7 @@ namespace GitUI
             // Keep an extra page in the cache
             cacheCountMax = Height * 2 / rowHeight + 1;
             clearDrawCache();
+            dataGrid_Scroll(null, null);
         }
 
         // end of class Junction

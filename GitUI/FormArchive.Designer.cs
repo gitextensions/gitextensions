@@ -52,7 +52,8 @@
             // 
             // Save
             // 
-            this.Save.Location = new System.Drawing.Point(753, 6);
+            this.Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.Save.Location = new System.Drawing.Point(731, 6);
             this.Save.Name = "Save";
             this.Save.Size = new System.Drawing.Size(75, 25);
             this.Save.TabIndex = 3;
@@ -75,7 +76,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(831, 300);
+            this.splitContainer1.Size = new System.Drawing.Size(809, 380);
             this.splitContainer1.SplitterDistance = 25;
             this.splitContainer1.TabIndex = 4;
             // 
@@ -94,8 +95,8 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.Save);
-            this.splitContainer2.Size = new System.Drawing.Size(831, 271);
-            this.splitContainer2.SplitterDistance = 235;
+            this.splitContainer2.Size = new System.Drawing.Size(809, 351);
+            this.splitContainer2.SplitterDistance = 315;
             this.splitContainer2.TabIndex = 0;
             // 
             // revisionGrid1
@@ -114,20 +115,20 @@
             this.revisionGrid1.Location = new System.Drawing.Point(0, 0);
             this.revisionGrid1.Name = "revisionGrid1";
             this.revisionGrid1.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.revisionGrid1.Size = new System.Drawing.Size(831, 235);
+            this.revisionGrid1.Size = new System.Drawing.Size(809, 315);
             this.revisionGrid1.TabIndex = 0;
             // 
             // FormArchive
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(831, 300);
+            this.ClientSize = new System.Drawing.Size(809, 380);
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormArchive";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Archive";
-            this.Load += new System.EventHandler(this.FormArchive_Load);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormArchive_FormClosing);
+            this.Load += new System.EventHandler(this.FormArchive_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
