@@ -59,6 +59,16 @@ namespace GitUI
                                    !CurrentBranchOnlyCheck.Checked;
         }
 
+        public bool FilterEnabled()
+        {
+            return (AuthorCheck.Checked ||
+                    CommitterCheck.Checked ||
+                    MessageCheck.Checked ||
+                    SinceCheck.Checked ||
+                    CheckUntil.Checked ||
+                    FileFilterCheck.Checked);                
+        }
+
         public string GetFilter()
         {
             var filter = "";

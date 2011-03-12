@@ -454,6 +454,7 @@ namespace GitUI
             NoGit.Visible = false;
             Revisions.Visible = false;
             Loading.Visible = true;
+            Loading.BringToFront();
         }
 
         public void Load()
@@ -649,18 +650,20 @@ namespace GitUI
                 if (!Settings.ValidWorkingDir())
                 {
                     Revisions.Visible = false;
-
                     NoCommits.Visible = true;
-                    NoGit.Visible = true;
                     Loading.Visible = false;
+                    NoGit.Visible = true;
+                    NoGit.BringToFront();
                     return;
                 }
 
                 NoCommits.Visible = false;
                 NoGit.Visible = false;
                 Revisions.Visible = true;
+                Revisions.BringToFront();
                 Revisions.Enabled = false;
                 Loading.Visible = true;
+                Loading.BringToFront();
 
                 IndexWatcher.Reset();
 
@@ -688,6 +691,7 @@ namespace GitUI
             catch (Exception exception)
             {
                 Error.Visible = true;
+                Error.BringToFront();
                 MessageBox.Show(exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -698,6 +702,7 @@ namespace GitUI
             _syncContext.Send(o =>
                                   {
                                       Error.Visible = true;
+                                      //Error.BringToFront();
                                       NoGit.Visible = false;
                                       NoCommits.Visible = false;
                                       Revisions.Visible = false;
@@ -715,7 +720,7 @@ namespace GitUI
         {
             return (inclBranchFilter && !string.IsNullOrEmpty(BranchFilter)) ||
                    !(string.IsNullOrEmpty(Filter) &&
-                     string.IsNullOrEmpty(_revisionFilter.GetFilter()) &&
+                     !_revisionFilter.FilterEnabled() &&
                      string.IsNullOrEmpty(InMemAuthorFilter) &&
                      string.IsNullOrEmpty(InMemCommitterFilter) &&
                      string.IsNullOrEmpty(InMemMessageFilter));
@@ -756,6 +761,7 @@ namespace GitUI
                                       {
                                           NoGit.Visible = false;
                                           NoCommits.Visible = true;
+                                          //NoCommits.BringToFront();
                                           Revisions.Visible = false;
                                           Loading.Visible = false;
                                       }, this);
@@ -1677,7 +1683,7 @@ namespace GitUI
         private void InitRepository_Click(object sender, EventArgs e)
         {
             if (GitUICommands.Instance.StartInitializeDialog(Settings.WorkingDir))
-                ; ForceRefreshRevisions();
+                ForceRefreshRevisions();
 
         }
 
