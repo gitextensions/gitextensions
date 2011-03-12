@@ -44,9 +44,9 @@ namespace GitUI
 
         #endregion
 
-        private int NODE_DIMENSION;
-        private int LANE_WIDTH;
-        private int LANE_LINE_WIDTH;
+        private int NODE_DIMENSION = 8;
+        private int LANE_WIDTH = 13;
+        private int LANE_LINE_WIDTH = 2;
         private const int MAX_LANES = 30;
         private Brush selectionBrush;
 
@@ -675,7 +675,7 @@ namespace GitUI
 
                         laneCount = Math.Min(Math.Max(laneCount, width), MAX_LANES);
                     }
-                    if (dataGridColumnGraph.Width != LANE_WIDTH * laneCount)
+                    if (dataGridColumnGraph.Width != LANE_WIDTH * laneCount && LANE_WIDTH * laneCount > dataGridColumnGraph.MinimumWidth)
                         dataGridColumnGraph.Width = LANE_WIDTH * laneCount;
                 }
             }

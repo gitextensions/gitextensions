@@ -116,7 +116,7 @@ namespace GitUI
             }
             catch
             {
-                SetRevisionsLayout();
+                SetRevisionsLayout(RevisionGridLayout.SmallWithGraph);
             }
         }
 
