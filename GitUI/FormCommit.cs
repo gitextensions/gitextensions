@@ -86,6 +86,7 @@ namespace GitUI
         private readonly TranslationString _unstageSelectedLines = new TranslationString("Unstage selected line(s)");
         private readonly TranslationString _resetSelectedLines = new TranslationString("Reset selected line(s)");
         private readonly TranslationString _resetSelectedLinesConfirmation = new TranslationString("Are you sure you want to reset the changes to the selected lines?");
+
         #endregion
 
         private readonly GitCommandsInstance _gitGetUnstagedCommand;
@@ -223,8 +224,11 @@ namespace GitUI
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            _gitGetUnstagedCommand.Exited -= GitCommandsExited;
-            _gitGetUnstagedCommand.Dispose();
+            if (_gitGetUnstagedCommand != null)
+            {
+                _gitGetUnstagedCommand.Exited -= GitCommandsExited;
+                _gitGetUnstagedCommand.Dispose();
+            }
 
             base.OnClosing(e);
         }
