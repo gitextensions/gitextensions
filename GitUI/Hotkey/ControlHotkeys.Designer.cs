@@ -36,7 +36,6 @@
         this.columnCommand = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
         this.columnKey = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
         this.bResetToDefaults = new System.Windows.Forms.Button();
-        this.bSaveSettings = new System.Windows.Forms.Button();
         this.cmbSettings = new System.Windows.Forms.ListBox();
         this.txtHotkey = new GitUI.Hotkey.TextboxHotkey();
         this.SuspendLayout();
@@ -122,17 +121,6 @@
         this.bResetToDefaults.UseVisualStyleBackColor = true;
         this.bResetToDefaults.Click += new System.EventHandler(this.bResetToDefaults_Click);
         // 
-        // bSaveSettings
-        // 
-        this.bSaveSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-        this.bSaveSettings.Location = new System.Drawing.Point(622, 496);
-        this.bSaveSettings.Name = "bSaveSettings";
-        this.bSaveSettings.Size = new System.Drawing.Size(164, 26);
-        this.bSaveSettings.TabIndex = 7;
-        this.bSaveSettings.Text = "Save Hotkey Settings";
-        this.bSaveSettings.UseVisualStyleBackColor = true;
-        this.bSaveSettings.Click += new System.EventHandler(this.bSaveSettings_Click);
-        // 
         // cmbSettings
         // 
         this.cmbSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -160,7 +148,6 @@
         // 
         this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
         this.Controls.Add(this.cmbSettings);
-        this.Controls.Add(this.bSaveSettings);
         this.Controls.Add(this.bResetToDefaults);
         this.Controls.Add(this.listMappings);
         this.Controls.Add(this.lHotkeyableItems);
@@ -187,7 +174,6 @@
     private System.Windows.Forms.ColumnHeader columnCommand;
     private System.Windows.Forms.ColumnHeader columnKey;
     private System.Windows.Forms.Button bResetToDefaults;
-    private System.Windows.Forms.Button bSaveSettings;
     private System.Windows.Forms.ListBox cmbSettings;
   }
 }
