@@ -11,10 +11,12 @@ using GitUI.Tag;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using PatchApply;
+using System.ComponentModel;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public class GitUICommands : IGitUICommands
+    public class GitUICommands  : IGitUICommands
     {
         private static GitUICommands instance;
 
@@ -132,6 +134,17 @@ namespace GitUI
         }
 
 
+        private bool RequiresValidWorkingDir()
+        {
+            if (!Settings.ValidWorkingDir())
+            {
+                MessageBox.Show("The current directory is not a valid git repsoitory.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            return true;
+        }
+
         public bool StartCommandLineProcessDialog(string command, string arguments)
         {
             var process = new FormProcess(command, arguments);
@@ -153,6 +166,9 @@ namespace GitUI
 
         public bool StartDeleteBranchDialog(string branch)
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreDeleteBranch))
                 return false;
 
@@ -166,6 +182,9 @@ namespace GitUI
 
         public bool StartCheckoutRevisionDialog()
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreCheckoutRevision))
                 return false;
 
@@ -179,6 +198,9 @@ namespace GitUI
 
         public bool StartCheckoutBranchDialog()
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreCheckoutBranch))
                 return false;
 
@@ -192,6 +214,9 @@ namespace GitUI
 
         public bool StartCheckoutBranchDialog(string branch, bool remote)
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreCheckoutBranch))
                 return false;
 
@@ -205,11 +230,15 @@ namespace GitUI
 
         public bool StartFileHistoryDialog(string fileName)
         {
+
             return StartFileHistoryDialog(fileName, null);
         }
 
         public bool StartCompareRevisionsDialog()
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreCompareRevisions))
                 return false;
 
@@ -223,6 +252,9 @@ namespace GitUI
 
         public bool StartAddFilesDialog()
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreAddFiles))
                 return false;
 
@@ -236,6 +268,9 @@ namespace GitUI
 
         public bool StartCreateBranchDialog()
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreCreateBranch))
                 return false;
 
@@ -263,6 +298,9 @@ namespace GitUI
 
         public bool StartCommitDialog()
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreCommit))
                 return true;
 
@@ -312,6 +350,9 @@ namespace GitUI
 
         public bool StartPullDialog()
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PrePull))
                 return true;
 
@@ -342,6 +383,9 @@ namespace GitUI
 
         public bool StartFormatPatchDialog()
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreFormatPatch))
                 return true;
 
@@ -355,6 +399,9 @@ namespace GitUI
 
         public bool StartStashDialog()
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreStash))
                 return true;
 
@@ -368,6 +415,9 @@ namespace GitUI
 
         public bool StartResolveConflictsDialog()
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreResolveConflicts))
                 return true;
 
@@ -381,6 +431,9 @@ namespace GitUI
 
         public bool StartCherryPickDialog()
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreCherryPick))
                 return true;
 
@@ -394,6 +447,9 @@ namespace GitUI
 
         public bool StartMergeBranchDialog(string branch)
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreMergeBranch))
                 return true;
 
@@ -407,6 +463,9 @@ namespace GitUI
 
         public bool StartCreateTagDialog()
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreCreateTag))
                 return true;
 
@@ -420,6 +479,9 @@ namespace GitUI
 
         public bool StartDeleteTagDialog()
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreDeleteTag))
                 return true;
 
@@ -433,6 +495,9 @@ namespace GitUI
 
         public bool StartEditGitIgnoreDialog()
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreEditGitIgnore))
                 return true;
 
@@ -459,6 +524,9 @@ namespace GitUI
 
         public bool StartArchiveDialog()
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreArchive))
                 return true;
 
@@ -472,6 +540,9 @@ namespace GitUI
 
         public bool StartMailMapDialog()
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreMailMap))
                 return true;
 
@@ -485,6 +556,9 @@ namespace GitUI
 
         public bool StartVerifyDatabaseDialog()
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreVerifyDatabase))
                 return true;
 
@@ -498,6 +572,9 @@ namespace GitUI
 
         public bool StartRemotesDialog()
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreRemotes))
                 return true;
 
@@ -511,6 +588,9 @@ namespace GitUI
 
         public bool StartRebaseDialog(string branch)
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreRebase))
                 return true;
 
@@ -524,6 +604,9 @@ namespace GitUI
 
         public bool StartSubmodulesDialog()
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreSubmodulesEdit))
                 return true;
 
@@ -537,6 +620,9 @@ namespace GitUI
 
         public bool StartUpdateSubmodulesDialog()
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreUpdateSubmodules))
                 return true;
 
@@ -550,6 +636,9 @@ namespace GitUI
 
         public bool StartUpdateSubmodulesRecursiveDialog()
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreUpdateSubmodulesRecursive))
                 return true;
 
@@ -590,6 +679,9 @@ namespace GitUI
 
         public bool StartFileHistoryDialog(string fileName, GitRevision revision)
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreFileHistory))
                 return false;
 
@@ -603,6 +695,9 @@ namespace GitUI
 
         public bool StartPushDialog(bool pushOnShow)
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PrePush))
                 return true;
 
@@ -616,6 +711,9 @@ namespace GitUI
 
         public bool StartApplyPatchDialog(string patchFile)
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreApplyPatch))
                 return true;
 
@@ -630,6 +728,9 @@ namespace GitUI
 
         public bool StartEditGitAttributesDialog()
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreEditGitAttributes))
                 return true;
 
@@ -696,6 +797,9 @@ namespace GitUI
 
         private bool StartBlameDialog(string fileName, GitRevision revision)
         {
+            if (!RequiresValidWorkingDir())
+                return false;
+
             if (!InvokeEvent(PreBlame))
                 return false;
 

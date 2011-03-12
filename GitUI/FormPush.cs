@@ -44,9 +44,10 @@ namespace GitUI
 
         public FormPush()
         {
-            _currentBranch = GitCommandHelpers.GetSelectedBranch();
             InitializeComponent();
             Translate();
+
+            _currentBranch = GitCommandHelpers.GetSelectedBranch();
 
             Remotes.DataSource = GitCommandHelpers.GetRemotes();
 

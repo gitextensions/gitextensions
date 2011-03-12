@@ -77,6 +77,8 @@ namespace GitPlugin
 
                 _gitPlugin.OutputPane.OutputString("Git Extensions plugin connected" + Environment.NewLine);
 
+
+
                 //GitPlugin.DeleteCommandBar("GitExtensions");
                 try
                 {
@@ -109,7 +111,6 @@ namespace GitPlugin
                 {
                     MessageBox.Show(ex.ToString());
                 }
-
 
                 //Place the command on the tools menu.
                 //Find the MenuBar command bar, which is the top-level command bar holding all the main menu items:
@@ -218,40 +219,48 @@ namespace GitPlugin
                 }
 
 
-                try
-                {
-                    _gitPlugin.AddMenuCommand("Item", "GitExtensionsFileHistory", "File history", "Show file history", 6,
-                                             4);
-                    _gitPlugin.AddMenuCommand("Item", "GitExtensionsRevert", "Undo file changes",
-                                             "Undo changes made to this file", 4, 5);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.ToString());
-                }
-                try
-                {
-                    _gitPlugin.AddMenuCommand("Easy MDI Document Window", "GitExtensionsFileHistory", "File history",
-                                             "Show file history", 6, 4);
-                    _gitPlugin.AddMenuCommand("Easy MDI Document Window", "GitExtensionsRevert", "Undo file changes",
-                                             "Undo changes made to this file", 4, 5);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.ToString());
-                }
+                AddContextMenuItemsToContextMenu("XML Editor");
+                AddContextMenuItemsToContextMenu("Web Item");
+                AddContextMenuItemsToContextMenu("Item");
+                AddContextMenuItemsToContextMenu("Easy MDI Document Window");
+                AddContextMenuItemsToContextMenu("Code Window");
+                AddContextMenuItemsToContextMenu("Script Context");
+                AddContextMenuItemsToContextMenu("ASPX Context");
 
-                try
+                /*
+                 * Uncomment the code block below to help find the name of commandbars in
+                 * visual studio. All commandbars (and context menu's) will get a new entry
+                 * with the name of that commandbar.
+                foreach (var commandBar in ((CommandBars)_applicationObject.CommandBars))
                 {
-                    _gitPlugin.AddMenuCommand("Code Window", "GitExtensionsFileHistory", "File history",
-                                             "Show file history", 6, 10);
-                    _gitPlugin.AddMenuCommand("Code Window", "GitExtensionsRevert", "Undo file changes",
-                                             "Undo changes made to this file", 4, 11);
+                    try
+                    {
+                        var name = Guid.NewGuid().ToString("N");
+                        _gitPlugin.RegisterCommand(name, new ToolbarCommand<Remotes>());
+                        _gitPlugin.AddMenuCommand(((CommandBar)commandBar).Name, name, ((CommandBar)commandBar).Name, ((CommandBar)commandBar).Name, 6, 4);
+                    }
+                    catch
+                    {
+                    }
+
+                    _gitPlugin.OutputPane.OutputString(((CommandBar)commandBar).Name + Environment.NewLine);
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.ToString());
-                }
+                */
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+
+        private void AddContextMenuItemsToContextMenu(string toolbarName)
+        {
+            try
+            {
+                _gitPlugin.AddMenuCommand(toolbarName, "GitExtensionsFileHistory", "File history", "Show file history", 6,
+                                         4);
+                _gitPlugin.AddMenuCommand(toolbarName, "GitExtensionsRevert", "Undo file changes",
+                                         "Undo changes made to this file", 4, 5);
             }
             catch (Exception ex)
             {

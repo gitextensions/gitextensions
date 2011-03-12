@@ -2,6 +2,7 @@
 using System;
 using EnvDTE;
 using EnvDTE80;
+using System.Windows.Forms;
 
 namespace GitPlugin.Commands
 {
@@ -52,8 +53,11 @@ namespace GitPlugin.Commands
                             }
                         }
                     }
-                    else if (m_executeForProjectItems && sel.Project != null)
-                        OnExecute(sel, sel.Project.FullName, pane);
+                    else
+                        if (m_executeForProjectItems && sel.Project != null)
+                            OnExecute(sel, sel.Project.FullName, pane);
+                        else
+                            MessageBox.Show("You need to select a file or project to use this function.", "Git", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 }
             }
