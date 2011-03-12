@@ -131,20 +131,19 @@ namespace GitUI.Hotkey
                 // Refresh the ListView
                 UpdateListViewItems(this.SelectedHotkeySettings);
             }
+
+            SaveSettings();
         }
 
         private void bClear_Click(object sender, EventArgs e)
         {
             this.txtHotkey.KeyData = Keys.None;
+            SaveSettings();
         }
 
         private void bResetToDefaults_Click(object sender, EventArgs e)
         {
             this.Settings = HotkeySettingsManager.CreateDefaultSettings();
-        }
-
-        private void bSaveSettings_Click(object sender, EventArgs e)
-        {
             SaveSettings();
         }
 

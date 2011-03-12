@@ -1681,30 +1681,14 @@ namespace GitUI
 
         }
 
-        private void ShowRevisionSmallToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            Settings.RevisionGraphLayout = (int)RevisionGridLayout.Small;
-            SetRevisionsLayout();
-            Refresh();
-        }
-
         private void ShowRevisionGraphToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Settings.RevisionGraphLayout = (int)RevisionGridLayout.SmallWithGraph;
-            SetRevisionsLayout();
-            Refresh();
-        }
-
-        private void showRevisionCardsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Settings.RevisionGraphLayout = (int)RevisionGridLayout.Card;
-            SetRevisionsLayout();
-            Refresh();
-        }
-
-        private void showRevisionCardsWithGraphToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Settings.RevisionGraphLayout = (int)RevisionGridLayout.CardWithGraph;
+            if (Settings.RevisionGraphLayout == (int)RevisionGridLayout.Small) Settings.RevisionGraphLayout = (int)RevisionGridLayout.SmallWithGraph;
+            else if (Settings.RevisionGraphLayout == (int)RevisionGridLayout.Card) Settings.RevisionGraphLayout = (int)RevisionGridLayout.CardWithGraph;
+            else if (Settings.RevisionGraphLayout == (int)RevisionGridLayout.LargeCard) Settings.RevisionGraphLayout = (int)RevisionGridLayout.LargeCardWithGraph;
+            else if (Settings.RevisionGraphLayout == (int)RevisionGridLayout.SmallWithGraph) Settings.RevisionGraphLayout = (int)RevisionGridLayout.Small;
+            else if (Settings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph) Settings.RevisionGraphLayout = (int)RevisionGridLayout.Card;
+            else if (Settings.RevisionGraphLayout == (int)RevisionGridLayout.LargeCardWithGraph) Settings.RevisionGraphLayout = (int)RevisionGridLayout.LargeCard;
             SetRevisionsLayout();
             Refresh();
         }
@@ -1721,19 +1705,12 @@ namespace GitUI
         public void SetRevisionsLayout(RevisionGridLayout revisionGridLayout)
         {
             Settings.RevisionGraphLayout = (int)revisionGridLayout;
-            showRevisionSmallToolStripMenuItem.Checked = revisionGridLayout == RevisionGridLayout.Small;
-            showRevisionGraphToolStripMenuItem.Checked = revisionGridLayout == RevisionGridLayout.SmallWithGraph;
-            showRevisionCardsToolStripMenuItem.Checked = revisionGridLayout == RevisionGridLayout.Card;
-            showRevisionCardsWithGraphToolStripMenuItem.Checked = revisionGridLayout == RevisionGridLayout.CardWithGraph;
             SetRevisionsLayout();
         }
 
         private void SetRevisionsLayout()
         {
-            showRevisionSmallToolStripMenuItem.Checked = Settings.RevisionGraphLayout == (int)RevisionGridLayout.Small;
-            showRevisionGraphToolStripMenuItem.Checked = Settings.RevisionGraphLayout == (int)RevisionGridLayout.SmallWithGraph;
-            showRevisionCardsToolStripMenuItem.Checked = Settings.RevisionGraphLayout == (int)RevisionGridLayout.Card;
-            showRevisionCardsWithGraphToolStripMenuItem.Checked = Settings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph;
+            showRevisionGraphToolStripMenuItem.Checked = (Settings.RevisionGraphLayout == (int)RevisionGridLayout.SmallWithGraph) || (Settings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph) || (Settings.RevisionGraphLayout == (int)RevisionGridLayout.LargeCardWithGraph);
             showRevisionCards = Settings.RevisionGraphLayout == (int)RevisionGridLayout.Card || Settings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph || Settings.RevisionGraphLayout == (int)RevisionGridLayout.LargeCard || Settings.RevisionGraphLayout == (int)RevisionGridLayout.LargeCardWithGraph;
 
             if (showRevisionCards)
