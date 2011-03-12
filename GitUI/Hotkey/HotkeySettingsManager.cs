@@ -134,7 +134,7 @@ namespace GitUI.Hotkey
                     hk(RevisionGrid.Commands.ToggleShowRelativeDate, Keys.None),
                     hk(RevisionGrid.Commands.ToggleDrawNonRelativesGray, Keys.None),
                     hk(RevisionGrid.Commands.ToggleShowGitNotes, Keys.None),
-                    hk(RevisionGrid.Commands.ToggleRevisionCardLayout, Keys.Control | Keys.L)),
+                    hk(RevisionGrid.Commands.ToggleRevisionCardLayout, Keys.Control | Keys.Shift | Keys.L)),
                 new HotkeySettings(FileViewer.HotkeySettingsName,
                     hk(FileViewer.Commands.Find, Keys.Control | Keys.F),
                     hk(FileViewer.Commands.IncreaseNumberOfVisibleLines, Keys.None),
