@@ -1,15 +1,21 @@
-Changelog
+﻿Changelog
 =========
 
 Version 2.15
 	Fixed issue 399: blame is showing source code double space
 	Fixed issue 400: commit summary with polish letters in author names shown incorrect
 	Fixed "show ignored files" in commit dialog
+	Fixed context menu on web project in Visual Studio
+	Fixed view pull request in GitHub plugin
+	Fixed "Open with difftool" when comparing two or more commits
+	Fixed problem with polish "ń" letter and sudden font change
+	Added "Follow file history" to file history context menu
 	Added hotkeys for FileViewer and FormResolveConflicts
 	Added advanced option to merge dialog
 	Added "Go to commit"
 	Installer checks for .Net 3.5
 	Updated stash view
+	Updated kdiff3 to version 0.9.95-2
 	Various bugfixes and minor changes
 
 Version 2.14
