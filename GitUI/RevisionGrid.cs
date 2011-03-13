@@ -774,6 +774,7 @@ namespace GitUI
                                           UpdateGraph(null);
                                           Loading.Visible = false;
                                           SelectInitialRevision();
+                                          _isLoading = false;
                                       }, this);
             }
         }
