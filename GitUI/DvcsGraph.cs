@@ -557,7 +557,7 @@ namespace GitUI
                 visibleBottom = rowHeight > 0 ? visibleTop + (Height / rowHeight) : visibleTop;
 
                 //Subtract 2 for safe marge (1 for rounding and 1 for whitspace)....
-                if (visibleBottom - 2 > graphData.Count)
+                if (visibleBottom - 2 > graphData.Count && graphData.Count < RowCount)
                 {
                     //Currently we are doing some important work; we are recieving
                     //rows that the user is viewing
