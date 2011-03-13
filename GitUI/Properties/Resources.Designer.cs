@@ -386,7 +386,7 @@ namespace GitUI.Properties {
         ///   Looks up a localized string similar to Changelog
         ///=========
         ///
-        ///Version 2.15
+        ///Version 2.16
         ///	Fixed issue 399: blame is showing source code double space
         ///	Fixed issue 400: commit summary with polish letters in author names shown incorrect
         ///	Fixed &quot;show ignored files&quot; in commit dialog

@@ -1,6 +1,9 @@
 ﻿Changelog
 =========
 
+Version 2.16
+	Fixed refresh issues
+
 Version 2.15
 	Fixed issue 399: blame is showing source code double space
 	Fixed issue 400: commit summary with polish letters in author names shown incorrect
