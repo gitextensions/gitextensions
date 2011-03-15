@@ -457,7 +457,7 @@ namespace GitUI
             Loading.BringToFront();
         }
 
-        public void Load()
+        public new void Load()
         {
             ForceRefreshRevisions();
         }
@@ -620,8 +620,6 @@ namespace GitUI
         {
             try
             {
-                SetRevisionsLayout();
-
                 ApplyFilterFromRevisionFilterDialog();
 
                 _initialLoad = true;
@@ -687,6 +685,8 @@ namespace GitUI
                 _revisionGraphCommand.Execute();
 
                 LoadRevisions();
+
+                SetRevisionsLayout();
             }
             catch (Exception exception)
             {
