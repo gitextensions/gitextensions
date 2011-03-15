@@ -557,12 +557,12 @@ namespace GitUI
                 visibleBottom = rowHeight > 0 ? visibleTop + (Height / rowHeight) : visibleTop;
 
                 //Subtract 2 for safe marge (1 for rounding and 1 for whitspace)....
-                if (visibleBottom - 2 > graphData.Count && graphData.Count < RowCount)
+                if (visibleBottom - 2 > graphData.Count)
                 {
                     //Currently we are doing some important work; we are recieving
                     //rows that the user is viewing
                     SetBackgroundThreadToNormalPriority();
-                    if (Loading != null)
+                    if (Loading != null && graphData.Count > RowCount)// && graphData.Count != RowCount)
                     {
                         Loading(true);
                     }
