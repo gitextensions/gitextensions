@@ -218,7 +218,6 @@ namespace GitPlugin
                     MessageBox.Show(ex.ToString());
                 }
 
-
                 AddContextMenuItemsToContextMenu("XML Editor");
                 AddContextMenuItemsToContextMenu("Web Item");
                 AddContextMenuItemsToContextMenu("Item");
@@ -262,9 +261,10 @@ namespace GitPlugin
                 _gitPlugin.AddMenuCommand(toolbarName, "GitExtensionsRevert", "Undo file changes",
                                          "Undo changes made to this file", 4, 5);
             }
-            catch (Exception ex)
+            catch 
             {
-                MessageBox.Show(ex.ToString());
+                //ignore all exceptions....
+                //When a commandbar is not found, an exception will be thrown -> todo avoid exceptions!
             }
         }
 
