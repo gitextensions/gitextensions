@@ -1,6 +1,10 @@
 ﻿Changelog
 =========
 
+Version 2.17
+	Fixed exception thrown while loading Visual Studio plugin
+	Fixed refresh issues
+
 Version 2.16
 	Fixed refresh issues
 

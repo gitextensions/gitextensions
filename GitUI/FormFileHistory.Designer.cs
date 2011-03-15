@@ -36,6 +36,8 @@ namespace GitUI
             this.DiffContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.followFileHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.ViewTab = new System.Windows.Forms.TabPage();
             this.View = new GitUI.Editor.FileViewer();
@@ -44,8 +46,6 @@ namespace GitUI
             this.Blame = new System.Windows.Forms.TabPage();
             this.blameControl1 = new GitUI.Blame.BlameControl();
             this.eventLog1 = new System.Diagnostics.EventLog();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.followFileHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -104,7 +104,7 @@ namespace GitUI
             this.toolStripSeparator1,
             this.followFileHistoryToolStripMenuItem});
             this.DiffContextMenu.Name = "DiffContextMenu";
-            this.DiffContextMenu.Size = new System.Drawing.Size(191, 98);
+            this.DiffContextMenu.Size = new System.Drawing.Size(214, 98);
             // 
             // openWithDifftoolToolStripMenuItem
             // 
@@ -120,6 +120,18 @@ namespace GitUI
             this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.saveAsToolStripMenuItem.Text = "Save as";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(187, 6);
+            // 
+            // followFileHistoryToolStripMenuItem
+            // 
+            this.followFileHistoryToolStripMenuItem.Name = "followFileHistoryToolStripMenuItem";
+            this.followFileHistoryToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.followFileHistoryToolStripMenuItem.Text = "Detect and follow renames";
+            this.followFileHistoryToolStripMenuItem.Click += new System.EventHandler(this.followFileHistoryToolStripMenuItem_Click);
             // 
             // tabControl1
             // 
@@ -209,18 +221,6 @@ namespace GitUI
             // eventLog1
             // 
             this.eventLog1.SynchronizingObject = this;
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(187, 6);
-            // 
-            // followFileHistoryToolStripMenuItem
-            // 
-            this.followFileHistoryToolStripMenuItem.Name = "followFileHistoryToolStripMenuItem";
-            this.followFileHistoryToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-            this.followFileHistoryToolStripMenuItem.Text = "Follow file history";
-            this.followFileHistoryToolStripMenuItem.Click += new System.EventHandler(this.followFileHistoryToolStripMenuItem_Click);
             // 
             // FormFileHistory
             // 
