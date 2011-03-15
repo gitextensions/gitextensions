@@ -1341,6 +1341,9 @@ Als u een vertakking wilt ophalen en samenvoegen, kies een vertakking.</Value>
         <TranslationItem Name="saveAsToolStripMenuItem" Property="Text">
           <Value>Opslaan als</Value>
         </TranslationItem>
+        <TranslationItem Name="followFileHistoryToolStripMenuItem" Property="Text">
+          <Value>Detecteer hernoemen van bestand</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormDashboardEditor">
@@ -1509,9 +1512,6 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         <TranslationItem Name="revertCommitToolStripMenuItem" Property="Text">
           <Value>Commit ongedaan maken</Value>
         </TranslationItem>
-        <TranslationItem Name="showRevisionGraphToolStripMenuItem" Property="Text">
-          <Value>Toon revisie grafiek</Value>
-        </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Value>De huidige werk directorie is geen git opslagplaats</Value>
         </TranslationItem>
@@ -1527,9 +1527,6 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         <TranslationItem Name="checkoutRevisionToolStripMenuItem" Property="Text">
           <Value>Revisie uitchecken</Value>
         </TranslationItem>
-        <TranslationItem Name="orderRevisionsByDateToolStripMenuItem" Property="Text">
-          <Value>Sorteer revisies op datum</Value>
-        </TranslationItem>
         <TranslationItem Name="checkoutBranchToolStripMenuItem" Property="Text">
           <Value>Vertakking uitchecken</Value>
         </TranslationItem>
@@ -1538,12 +1535,6 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         </TranslationItem>
         <TranslationItem Name="cherryPickCommitToolStripMenuItem" Property="Text">
           <Value>Commit opnieuw toepassen</Value>
-        </TranslationItem>
-        <TranslationItem Name="showAuthorDateToolStripMenuItem" Property="Text">
-          <Value>Toon auteur datum</Value>
-        </TranslationItem>
-        <TranslationItem Name="showRelativeDateToolStripMenuItem" Property="Text">
-          <Value>Toon relatieve datum</Value>
         </TranslationItem>
         <TranslationItem Name="rebaseOnToolStripMenuItem" Property="Text">
           <Value>Rebase op</Value>
@@ -1556,9 +1547,6 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         </TranslationItem>
         <TranslationItem Name="showFilteredBranchesToolStripMenuItem" Property="Text">
           <Value>Toon alleen gefilterde vertakkingen</Value>
-        </TranslationItem>
-        <TranslationItem Name="drawNonrelativesGrayToolStripMenuItem" Property="Text">
-          <Value>Teken niet gerelateerde vertakkingen grijs</Value>
         </TranslationItem>
         <TranslationItem Name="copyToClipboardToolStripMenuItem" Property="Text">
           <Value>Kopiëren naar het klembord</Value>
@@ -1592,6 +1580,21 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         </TranslationItem>
         <TranslationItem Name="InitRepository" Property="Text">
           <Value>Nieuwe repository maken</Value>
+        </TranslationItem>
+        <TranslationItem Name="showRevisionGraphToolStripMenuItem" Property="Text">
+          <Value>Toon revisie grafiek</Value>
+        </TranslationItem>
+        <TranslationItem Name="drawNonrelativesGrayToolStripMenuItem" Property="Text">
+          <Value>Teken niet gerelateerde vertakkingen grijs</Value>
+        </TranslationItem>
+        <TranslationItem Name="orderRevisionsByDateToolStripMenuItem" Property="Text">
+          <Value>Sorteer revisies op datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="showAuthorDateToolStripMenuItem" Property="Text">
+          <Value>Toon auteur datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="showRelativeDateToolStripMenuItem" Property="Text">
+          <Value>Toon relatieve datum</Value>
         </TranslationItem>
         <TranslationItem Name="showGitNotesToolStripMenuItem" Property="Text">
           <Value>Toon git notities</Value>
