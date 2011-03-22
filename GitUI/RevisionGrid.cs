@@ -662,6 +662,8 @@ namespace GitUI
                 Revisions.Enabled = false;
                 Loading.Visible = true;
                 Loading.BringToFront();
+                _isLoading = true;
+                base.Refresh();
 
                 IndexWatcher.Reset();
 
