@@ -431,6 +431,8 @@ namespace GitUI
             // showAllBranchesToolStripMenuItem
             // 
             this.showAllBranchesToolStripMenuItem.Name = "showAllBranchesToolStripMenuItem";
+            this.showAllBranchesToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+                       | System.Windows.Forms.Keys.A)));
             this.showAllBranchesToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.showAllBranchesToolStripMenuItem.Text = "Show all branches";
             this.showAllBranchesToolStripMenuItem.Click += new System.EventHandler(this.ShowAllBranchesToolStripMenuItemClick);
@@ -438,6 +440,8 @@ namespace GitUI
             // showCurrentBranchOnlyToolStripMenuItem
             // 
             this.showCurrentBranchOnlyToolStripMenuItem.Name = "showCurrentBranchOnlyToolStripMenuItem";
+            this.showCurrentBranchOnlyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+                       | System.Windows.Forms.Keys.U)));
             this.showCurrentBranchOnlyToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.showCurrentBranchOnlyToolStripMenuItem.Text = "Show current branch only";
             this.showCurrentBranchOnlyToolStripMenuItem.Click += new System.EventHandler(this.ShowCurrentBranchOnlyToolStripMenuItemClick);
