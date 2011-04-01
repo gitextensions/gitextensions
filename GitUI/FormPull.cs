@@ -158,6 +158,7 @@ namespace GitUI
             }
 
             Settings.AutoStash = AutoStash.Checked;
+            Settings.UpdateAllSubModules = UpdateSubmodules.Checked;
 
             Repositories.RepositoryHistory.AddMostRecentRepository(PullSource.Text);
 
@@ -295,6 +296,7 @@ namespace GitUI
             Fetch.Checked = Settings.PullMerge == "fetch";
 
             AutoStash.Checked = Settings.AutoStash;
+            UpdateSubmodules.Checked = Settings.UpdateAllSubModules;
         }
 
         private void PullSourceDropDown(object sender, EventArgs e)

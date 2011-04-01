@@ -533,6 +533,24 @@ namespace GitCommands
             }
         }
 
+        private static bool? _updateAllSubModules;
+        public static bool UpdateAllSubModules
+        {
+            get
+            {
+                if (_updateAllSubModules == null)
+                    SafeSetBool("updateAllSubModules", false, x => _updateAllSubModules = x);
+                return _updateAllSubModules.Value;
+            }
+            set
+            {
+                if (_updateAllSubModules == value)
+                    return;
+                _updateAllSubModules = value;
+                Application.UserAppDataRegistry.SetValue("updateAllSubModules", _autoStash);
+            }
+        }
+
         private static bool? _orderRevisionByDate;
         public static bool OrderRevisionByDate
         {
