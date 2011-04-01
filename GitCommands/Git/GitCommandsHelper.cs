@@ -810,6 +810,11 @@ namespace GitCommands
             return "submodule update \"" + name.Trim() + "\"";
         }
 
+        public static string SubmoduleUpdatePullAll(string currentBranch, string remoteBranch)
+        {
+            return string.Format("submodule foreach git pull {0} {1}", currentBranch, remoteBranch);
+        }
+
         public static string SubmoduleSyncCmd(string name)
         {
             if (string.IsNullOrEmpty(name))
