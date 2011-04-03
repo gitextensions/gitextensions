@@ -224,6 +224,14 @@ namespace GitUI
             this.OpenSSH = new System.Windows.Forms.RadioButton();
             this.Putty = new System.Windows.Forms.RadioButton();
             this.scriptsTab = new System.Windows.Forms.TabPage();
+            this.scriptEnabled = new System.Windows.Forms.CheckBox();
+            this.ScriptList = new System.Windows.Forms.DataGridView();
+            this.Enabled = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.commandDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.argumentsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.addToRevisionGridContextMenuDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.scriptInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.helpLabel = new System.Windows.Forms.Label();
             this.inMenuCheckBox = new System.Windows.Forms.CheckBox();
             this.argumentsLabel = new System.Windows.Forms.Label();
@@ -240,12 +248,6 @@ namespace GitUI
             this.editScriptButton = new System.Windows.Forms.Button();
             this.addScriptButton = new System.Windows.Forms.Button();
             this.moveUpButton = new System.Windows.Forms.Button();
-            this.ScriptList = new System.Windows.Forms.ListView();
-            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader5 = new System.Windows.Forms.ColumnHeader();
             this.tabPageHotkeys = new System.Windows.Forms.TabPage();
             this.controlHotkeys = new GitUI.Hotkey.ControlHotkeys();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -284,6 +286,8 @@ namespace GitUI
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.scriptsTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ScriptList)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.scriptInfoBindingSource)).BeginInit();
             this.tabPageHotkeys.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -2541,6 +2545,8 @@ namespace GitUI
             // 
             // scriptsTab
             // 
+            this.scriptsTab.Controls.Add(this.scriptEnabled);
+            this.scriptsTab.Controls.Add(this.ScriptList);
             this.scriptsTab.Controls.Add(this.helpLabel);
             this.scriptsTab.Controls.Add(this.inMenuCheckBox);
             this.scriptsTab.Controls.Add(this.argumentsLabel);
@@ -2557,7 +2563,6 @@ namespace GitUI
             this.scriptsTab.Controls.Add(this.editScriptButton);
             this.scriptsTab.Controls.Add(this.addScriptButton);
             this.scriptsTab.Controls.Add(this.moveUpButton);
-            this.scriptsTab.Controls.Add(this.ScriptList);
             this.scriptsTab.Location = new System.Drawing.Point(4, 22);
             this.scriptsTab.Name = "scriptsTab";
             this.scriptsTab.Padding = new System.Windows.Forms.Padding(3);
@@ -2566,12 +2571,91 @@ namespace GitUI
             this.scriptsTab.Text = "Scripts";
             this.scriptsTab.UseVisualStyleBackColor = true;
             // 
+            // scriptEnabled
+            // 
+            this.scriptEnabled.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.scriptEnabled.AutoSize = true;
+            this.scriptEnabled.Enabled = false;
+            this.scriptEnabled.Location = new System.Drawing.Point(107, 379);
+            this.scriptEnabled.Name = "scriptEnabled";
+            this.scriptEnabled.Size = new System.Drawing.Size(64, 17);
+            this.scriptEnabled.TabIndex = 18;
+            this.scriptEnabled.Text = "Enabled";
+            this.scriptEnabled.UseVisualStyleBackColor = true;
+            // 
+            // ScriptList
+            // 
+            this.ScriptList.AllowUserToAddRows = false;
+            this.ScriptList.AllowUserToDeleteRows = false;
+            this.ScriptList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.ScriptList.AutoGenerateColumns = false;
+            this.ScriptList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.ScriptList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Enabled,
+            this.nameDataGridViewTextBoxColumn,
+            this.commandDataGridViewTextBoxColumn,
+            this.argumentsDataGridViewTextBoxColumn,
+            this.addToRevisionGridContextMenuDataGridViewCheckBoxColumn});
+            this.ScriptList.DataSource = this.scriptInfoBindingSource;
+            this.ScriptList.GridColor = System.Drawing.SystemColors.ActiveBorder;
+            this.ScriptList.Location = new System.Drawing.Point(3, 3);
+            this.ScriptList.Name = "ScriptList";
+            this.ScriptList.ReadOnly = true;
+            this.ScriptList.RowHeadersVisible = false;
+            this.ScriptList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.ScriptList.Size = new System.Drawing.Size(724, 232);
+            this.ScriptList.TabIndex = 17;
+            this.ScriptList.SelectionChanged += new System.EventHandler(this.ScriptList_SelectionChanged);
+            // 
+            // Enabled
+            // 
+            this.Enabled.DataPropertyName = "Enabled";
+            this.Enabled.HeaderText = "Enabled";
+            this.Enabled.Name = "Enabled";
+            this.Enabled.ReadOnly = true;
+            // 
+            // nameDataGridViewTextBoxColumn
+            // 
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // commandDataGridViewTextBoxColumn
+            // 
+            this.commandDataGridViewTextBoxColumn.DataPropertyName = "Command";
+            this.commandDataGridViewTextBoxColumn.HeaderText = "Command";
+            this.commandDataGridViewTextBoxColumn.Name = "commandDataGridViewTextBoxColumn";
+            this.commandDataGridViewTextBoxColumn.ReadOnly = true;
+            this.commandDataGridViewTextBoxColumn.Width = 150;
+            // 
+            // argumentsDataGridViewTextBoxColumn
+            // 
+            this.argumentsDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.argumentsDataGridViewTextBoxColumn.DataPropertyName = "Arguments";
+            this.argumentsDataGridViewTextBoxColumn.HeaderText = "Arguments";
+            this.argumentsDataGridViewTextBoxColumn.Name = "argumentsDataGridViewTextBoxColumn";
+            this.argumentsDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // addToRevisionGridContextMenuDataGridViewCheckBoxColumn
+            // 
+            this.addToRevisionGridContextMenuDataGridViewCheckBoxColumn.DataPropertyName = "AddToRevisionGridContextMenu";
+            this.addToRevisionGridContextMenuDataGridViewCheckBoxColumn.HeaderText = "Add to context menu";
+            this.addToRevisionGridContextMenuDataGridViewCheckBoxColumn.Name = "addToRevisionGridContextMenuDataGridViewCheckBoxColumn";
+            this.addToRevisionGridContextMenuDataGridViewCheckBoxColumn.ReadOnly = true;
+            // 
+            // scriptInfoBindingSource
+            // 
+            this.scriptInfoBindingSource.DataSource = typeof(GitUI.Script.ScriptInfo);
+            // 
             // helpLabel
             // 
+            this.helpLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.helpLabel.AutoSize = true;
             this.helpLabel.BackColor = System.Drawing.SystemColors.Info;
             this.helpLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.helpLabel.Location = new System.Drawing.Point(107, 413);
+            this.helpLabel.Location = new System.Drawing.Point(561, 356);
             this.helpLabel.Name = "helpLabel";
             this.helpLabel.Size = new System.Drawing.Size(166, 15);
             this.helpLabel.TabIndex = 16;
@@ -2580,10 +2664,10 @@ namespace GitUI
             // 
             // inMenuCheckBox
             // 
-            this.inMenuCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.inMenuCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.inMenuCheckBox.AutoSize = true;
             this.inMenuCheckBox.Enabled = false;
-            this.inMenuCheckBox.Location = new System.Drawing.Point(458, 245);
+            this.inMenuCheckBox.Location = new System.Drawing.Point(107, 356);
             this.inMenuCheckBox.Name = "inMenuCheckBox";
             this.inMenuCheckBox.Size = new System.Drawing.Size(188, 17);
             this.inMenuCheckBox.TabIndex = 15;
@@ -2621,7 +2705,7 @@ namespace GitUI
             // 
             this.browseScriptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.browseScriptButton.Enabled = false;
-            this.browseScriptButton.Location = new System.Drawing.Point(739, 269);
+            this.browseScriptButton.Location = new System.Drawing.Point(648, 269);
             this.browseScriptButton.Name = "browseScriptButton";
             this.browseScriptButton.Size = new System.Drawing.Size(75, 25);
             this.browseScriptButton.TabIndex = 11;
@@ -2633,7 +2717,7 @@ namespace GitUI
             // 
             this.cancelScriptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelScriptButton.Enabled = false;
-            this.cancelScriptButton.Location = new System.Drawing.Point(739, 241);
+            this.cancelScriptButton.Location = new System.Drawing.Point(739, 141);
             this.cancelScriptButton.Name = "cancelScriptButton";
             this.cancelScriptButton.Size = new System.Drawing.Size(75, 25);
             this.cancelScriptButton.TabIndex = 10;
@@ -2645,7 +2729,7 @@ namespace GitUI
             // 
             this.saveScriptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.saveScriptButton.Enabled = false;
-            this.saveScriptButton.Location = new System.Drawing.Point(652, 241);
+            this.saveScriptButton.Location = new System.Drawing.Point(739, 110);
             this.saveScriptButton.Name = "saveScriptButton";
             this.saveScriptButton.Size = new System.Drawing.Size(75, 25);
             this.saveScriptButton.TabIndex = 9;
@@ -2655,14 +2739,15 @@ namespace GitUI
             // 
             // argumentsTextBox
             // 
-            this.argumentsTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.argumentsTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.argumentsTextBox.Enabled = false;
             this.helpProvider1.SetHelpString(this.argumentsTextBox, resources.GetString("argumentsTextBox.HelpString"));
             this.argumentsTextBox.Location = new System.Drawing.Point(107, 299);
             this.argumentsTextBox.Name = "argumentsTextBox";
             this.helpProvider1.SetShowHelp(this.argumentsTextBox, true);
-            this.argumentsTextBox.Size = new System.Drawing.Size(707, 111);
+            this.argumentsTextBox.Size = new System.Drawing.Size(620, 51);
             this.argumentsTextBox.TabIndex = 8;
             this.argumentsTextBox.Text = "";
             this.argumentsTextBox.Enter += new System.EventHandler(this.argumentsTextBox_Enter);
@@ -2675,7 +2760,7 @@ namespace GitUI
             this.commandTextBox.Enabled = false;
             this.commandTextBox.Location = new System.Drawing.Point(107, 271);
             this.commandTextBox.Name = "commandTextBox";
-            this.commandTextBox.Size = new System.Drawing.Size(620, 21);
+            this.commandTextBox.Size = new System.Drawing.Size(529, 21);
             this.commandTextBox.TabIndex = 7;
             // 
             // nameTextBox
@@ -2693,7 +2778,7 @@ namespace GitUI
             this.moveDownButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.moveDownButton.Enabled = false;
             this.moveDownButton.Image = global::GitUI.Properties.Resources._4;
-            this.moveDownButton.Location = new System.Drawing.Point(761, 153);
+            this.moveDownButton.Location = new System.Drawing.Point(761, 200);
             this.moveDownButton.Name = "moveDownButton";
             this.moveDownButton.Size = new System.Drawing.Size(26, 23);
             this.moveDownButton.TabIndex = 5;
@@ -2704,7 +2789,7 @@ namespace GitUI
             // 
             this.removeScriptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.removeScriptButton.Enabled = false;
-            this.removeScriptButton.Location = new System.Drawing.Point(739, 124);
+            this.removeScriptButton.Location = new System.Drawing.Point(739, 171);
             this.removeScriptButton.Name = "removeScriptButton";
             this.removeScriptButton.Size = new System.Drawing.Size(75, 25);
             this.removeScriptButton.TabIndex = 4;
@@ -2716,7 +2801,7 @@ namespace GitUI
             // 
             this.editScriptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.editScriptButton.Enabled = false;
-            this.editScriptButton.Location = new System.Drawing.Point(739, 94);
+            this.editScriptButton.Location = new System.Drawing.Point(739, 79);
             this.editScriptButton.Name = "editScriptButton";
             this.editScriptButton.Size = new System.Drawing.Size(75, 25);
             this.editScriptButton.TabIndex = 3;
@@ -2727,7 +2812,7 @@ namespace GitUI
             // addScriptButton
             // 
             this.addScriptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.addScriptButton.Location = new System.Drawing.Point(739, 64);
+            this.addScriptButton.Location = new System.Drawing.Point(739, 49);
             this.addScriptButton.Name = "addScriptButton";
             this.addScriptButton.Size = new System.Drawing.Size(75, 25);
             this.addScriptButton.TabIndex = 2;
@@ -2740,56 +2825,12 @@ namespace GitUI
             this.moveUpButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.moveUpButton.Enabled = false;
             this.moveUpButton.Image = global::GitUI.Properties.Resources._3;
-            this.moveUpButton.Location = new System.Drawing.Point(761, 35);
+            this.moveUpButton.Location = new System.Drawing.Point(761, 20);
             this.moveUpButton.Name = "moveUpButton";
             this.moveUpButton.Size = new System.Drawing.Size(26, 23);
             this.moveUpButton.TabIndex = 1;
             this.moveUpButton.UseVisualStyleBackColor = true;
             this.moveUpButton.Click += new System.EventHandler(this.moveUpButton_Click);
-            // 
-            // ScriptList
-            // 
-            this.ScriptList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.ScriptList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2,
-            this.columnHeader3,
-            this.columnHeader4,
-            this.columnHeader5});
-            this.ScriptList.FullRowSelect = true;
-            this.ScriptList.Location = new System.Drawing.Point(9, 7);
-            this.ScriptList.Name = "ScriptList";
-            this.ScriptList.Size = new System.Drawing.Size(718, 210);
-            this.ScriptList.TabIndex = 0;
-            this.ScriptList.UseCompatibleStateImageBehavior = false;
-            this.ScriptList.View = System.Windows.Forms.View.Details;
-            this.ScriptList.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.ScriptList_ItemSelectionChanged);
-            // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "No.";
-            this.columnHeader1.Width = 30;
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Text = "Name";
-            this.columnHeader2.Width = 150;
-            // 
-            // columnHeader3
-            // 
-            this.columnHeader3.Text = "Command";
-            this.columnHeader3.Width = 120;
-            // 
-            // columnHeader4
-            // 
-            this.columnHeader4.Text = "Arguments";
-            this.columnHeader4.Width = 200;
-            // 
-            // columnHeader5
-            // 
-            this.columnHeader5.Text = "Context menu";
-            this.columnHeader5.Width = 80;
             // 
             // tabPageHotkeys
             // 
@@ -2937,6 +2978,8 @@ namespace GitUI
             this.groupBox1.PerformLayout();
             this.scriptsTab.ResumeLayout(false);
             this.scriptsTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ScriptList)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.scriptInfoBindingSource)).EndInit();
             this.tabPageHotkeys.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -3150,12 +3193,6 @@ namespace GitUI
         private System.Windows.Forms.Button editScriptButton;
         private System.Windows.Forms.Button addScriptButton;
         private System.Windows.Forms.Button moveUpButton;
-        private System.Windows.Forms.ListView ScriptList;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.ColumnHeader columnHeader4;
-        private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.HelpProvider helpProvider1;
         private System.Windows.Forms.Label helpLabel;
         private System.Windows.Forms.Button translationConfig;
@@ -3172,6 +3209,14 @@ namespace GitUI
         private System.Windows.Forms.Button GitFound_Fix;
         private System.Windows.Forms.TabPage tabPageHotkeys;
         private Hotkey.ControlHotkeys controlHotkeys;
+        private DataGridView ScriptList;
+        private BindingSource scriptInfoBindingSource;
+        private DataGridViewCheckBoxColumn Enabled;
+        private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn commandDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn argumentsDataGridViewTextBoxColumn;
+        private DataGridViewCheckBoxColumn addToRevisionGridContextMenuDataGridViewCheckBoxColumn;
+        private CheckBox scriptEnabled;
 
     }
 }
