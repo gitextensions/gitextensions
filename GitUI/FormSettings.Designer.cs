@@ -113,7 +113,6 @@ namespace GitUI
             this.FollowRenamesInFileHistory = new System.Windows.Forms.CheckBox();
             this.label39 = new System.Windows.Forms.Label();
             this.label38 = new System.Windows.Forms.Label();
-            this.label37 = new System.Windows.Forms.Label();
             this.label35 = new System.Windows.Forms.Label();
             this.label34 = new System.Windows.Forms.Label();
             this.EncodingLabel = new System.Windows.Forms.Label();
@@ -123,7 +122,6 @@ namespace GitUI
             this.ShowRelativeDate = new System.Windows.Forms.CheckBox();
             this.UseFastChecks = new System.Windows.Forms.CheckBox();
             this.ShowGitCommandLine = new System.Windows.Forms.CheckBox();
-            this.ShowRevisionGraph = new System.Windows.Forms.CheckBox();
             this.CloseProcessDialog = new System.Windows.Forms.CheckBox();
             this._NO_TRANSLATE_MaxCommits = new System.Windows.Forms.NumericUpDown();
             this.label12 = new System.Windows.Forms.Label();
@@ -1076,7 +1074,6 @@ namespace GitUI
             this.TabPageGitExtensions.Controls.Add(this.FollowRenamesInFileHistory);
             this.TabPageGitExtensions.Controls.Add(this.label39);
             this.TabPageGitExtensions.Controls.Add(this.label38);
-            this.TabPageGitExtensions.Controls.Add(this.label37);
             this.TabPageGitExtensions.Controls.Add(this.label35);
             this.TabPageGitExtensions.Controls.Add(this.label34);
             this.TabPageGitExtensions.Controls.Add(this.EncodingLabel);
@@ -1088,7 +1085,6 @@ namespace GitUI
             this.TabPageGitExtensions.Controls.Add(this.ShowRelativeDate);
             this.TabPageGitExtensions.Controls.Add(this.UseFastChecks);
             this.TabPageGitExtensions.Controls.Add(this.ShowGitCommandLine);
-            this.TabPageGitExtensions.Controls.Add(this.ShowRevisionGraph);
             this.TabPageGitExtensions.Controls.Add(this.CloseProcessDialog);
             this.TabPageGitExtensions.Controls.Add(this._NO_TRANSLATE_MaxCommits);
             this.TabPageGitExtensions.Controls.Add(this.label12);
@@ -1151,7 +1147,7 @@ namespace GitUI
             // showErrorsWhenStagingFilesLabel
             // 
             this.showErrorsWhenStagingFilesLabel.AutoSize = true;
-            this.showErrorsWhenStagingFilesLabel.Location = new System.Drawing.Point(32, 347);
+            this.showErrorsWhenStagingFilesLabel.Location = new System.Drawing.Point(32, 325);
             this.showErrorsWhenStagingFilesLabel.Name = "showErrorsWhenStagingFilesLabel";
             this.showErrorsWhenStagingFilesLabel.Size = new System.Drawing.Size(154, 13);
             this.showErrorsWhenStagingFilesLabel.TabIndex = 35;
@@ -1160,7 +1156,7 @@ namespace GitUI
             // showErrorsWhenStagingFiles
             // 
             this.showErrorsWhenStagingFiles.AutoSize = true;
-            this.showErrorsWhenStagingFiles.Location = new System.Drawing.Point(11, 347);
+            this.showErrorsWhenStagingFiles.Location = new System.Drawing.Point(11, 325);
             this.showErrorsWhenStagingFiles.Name = "showErrorsWhenStagingFiles";
             this.showErrorsWhenStagingFiles.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.showErrorsWhenStagingFiles.Size = new System.Drawing.Size(15, 14);
@@ -1170,7 +1166,7 @@ namespace GitUI
             // showGitStatusInToolbarLabel
             // 
             this.showGitStatusInToolbarLabel.AutoSize = true;
-            this.showGitStatusInToolbarLabel.Location = new System.Drawing.Point(32, 324);
+            this.showGitStatusInToolbarLabel.Location = new System.Drawing.Point(32, 302);
             this.showGitStatusInToolbarLabel.Name = "showGitStatusInToolbarLabel";
             this.showGitStatusInToolbarLabel.Size = new System.Drawing.Size(432, 13);
             this.showGitStatusInToolbarLabel.TabIndex = 32;
@@ -1180,7 +1176,7 @@ namespace GitUI
             // ShowGitStatusInToolbar
             // 
             this.ShowGitStatusInToolbar.AutoSize = true;
-            this.ShowGitStatusInToolbar.Location = new System.Drawing.Point(11, 324);
+            this.ShowGitStatusInToolbar.Location = new System.Drawing.Point(11, 302);
             this.ShowGitStatusInToolbar.Name = "ShowGitStatusInToolbar";
             this.ShowGitStatusInToolbar.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ShowGitStatusInToolbar.Size = new System.Drawing.Size(15, 14);
@@ -1194,7 +1190,7 @@ namespace GitUI
             0,
             0,
             0});
-            this.RevisionGridQuickSearchTimeout.Location = new System.Drawing.Point(396, 374);
+            this.RevisionGridQuickSearchTimeout.Location = new System.Drawing.Point(396, 352);
             this.RevisionGridQuickSearchTimeout.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -1217,7 +1213,7 @@ namespace GitUI
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(8, 376);
+            this.label24.Location = new System.Drawing.Point(8, 354);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(193, 13);
             this.label24.TabIndex = 32;
@@ -1258,7 +1254,7 @@ namespace GitUI
             // label40
             // 
             this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(32, 302);
+            this.label40.Location = new System.Drawing.Point(32, 280);
             this.label40.Name = "label40";
             this.label40.Size = new System.Drawing.Size(218, 13);
             this.label40.TabIndex = 27;
@@ -1267,7 +1263,7 @@ namespace GitUI
             // FollowRenamesInFileHistory
             // 
             this.FollowRenamesInFileHistory.AutoSize = true;
-            this.FollowRenamesInFileHistory.Location = new System.Drawing.Point(11, 302);
+            this.FollowRenamesInFileHistory.Location = new System.Drawing.Point(11, 280);
             this.FollowRenamesInFileHistory.Name = "FollowRenamesInFileHistory";
             this.FollowRenamesInFileHistory.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.FollowRenamesInFileHistory.Size = new System.Drawing.Size(15, 14);
@@ -1277,7 +1273,7 @@ namespace GitUI
             // label39
             // 
             this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(32, 280);
+            this.label39.Location = new System.Drawing.Point(32, 258);
             this.label39.Name = "label39";
             this.label39.Size = new System.Drawing.Size(190, 13);
             this.label39.TabIndex = 25;
@@ -1286,20 +1282,11 @@ namespace GitUI
             // label38
             // 
             this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(32, 257);
+            this.label38.Location = new System.Drawing.Point(32, 235);
             this.label38.Name = "label38";
             this.label38.Size = new System.Drawing.Size(255, 13);
             this.label38.TabIndex = 24;
             this.label38.Text = "Use FileSystemWatcher to check if index is changed";
-            // 
-            // label37
-            // 
-            this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(32, 235);
-            this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(168, 13);
-            this.label37.TabIndex = 23;
-            this.label37.Text = "Show revision graph in commit log";
             // 
             // label35
             // 
@@ -1322,7 +1309,7 @@ namespace GitUI
             // EncodingLabel
             // 
             this.EncodingLabel.AutoSize = true;
-            this.EncodingLabel.Location = new System.Drawing.Point(8, 406);
+            this.EncodingLabel.Location = new System.Drawing.Point(8, 384);
             this.EncodingLabel.Name = "EncodingLabel";
             this.EncodingLabel.Size = new System.Drawing.Size(50, 13);
             this.EncodingLabel.TabIndex = 20;
@@ -1331,7 +1318,7 @@ namespace GitUI
             // _NO_TRANSLATE_Encoding
             // 
             this._NO_TRANSLATE_Encoding.FormattingEnabled = true;
-            this._NO_TRANSLATE_Encoding.Location = new System.Drawing.Point(396, 403);
+            this._NO_TRANSLATE_Encoding.Location = new System.Drawing.Point(396, 381);
             this._NO_TRANSLATE_Encoding.Name = "_NO_TRANSLATE_Encoding";
             this._NO_TRANSLATE_Encoding.Size = new System.Drawing.Size(242, 21);
             this._NO_TRANSLATE_Encoding.TabIndex = 19;
@@ -1357,7 +1344,7 @@ namespace GitUI
             // ShowRelativeDate
             // 
             this.ShowRelativeDate.AutoSize = true;
-            this.ShowRelativeDate.Location = new System.Drawing.Point(11, 280);
+            this.ShowRelativeDate.Location = new System.Drawing.Point(11, 258);
             this.ShowRelativeDate.Name = "ShowRelativeDate";
             this.ShowRelativeDate.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ShowRelativeDate.Size = new System.Drawing.Size(15, 14);
@@ -1367,7 +1354,7 @@ namespace GitUI
             // UseFastChecks
             // 
             this.UseFastChecks.AutoSize = true;
-            this.UseFastChecks.Location = new System.Drawing.Point(11, 258);
+            this.UseFastChecks.Location = new System.Drawing.Point(11, 236);
             this.UseFastChecks.Name = "UseFastChecks";
             this.UseFastChecks.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.UseFastChecks.Size = new System.Drawing.Size(15, 14);
@@ -1383,16 +1370,6 @@ namespace GitUI
             this.ShowGitCommandLine.Size = new System.Drawing.Size(15, 14);
             this.ShowGitCommandLine.TabIndex = 11;
             this.ShowGitCommandLine.UseVisualStyleBackColor = true;
-            // 
-            // ShowRevisionGraph
-            // 
-            this.ShowRevisionGraph.AutoSize = true;
-            this.ShowRevisionGraph.Location = new System.Drawing.Point(11, 236);
-            this.ShowRevisionGraph.Name = "ShowRevisionGraph";
-            this.ShowRevisionGraph.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.ShowRevisionGraph.Size = new System.Drawing.Size(15, 14);
-            this.ShowRevisionGraph.TabIndex = 10;
-            this.ShowRevisionGraph.UseVisualStyleBackColor = true;
             // 
             // CloseProcessDialog
             // 
@@ -2584,7 +2561,7 @@ namespace GitUI
             this.scriptsTab.Location = new System.Drawing.Point(4, 22);
             this.scriptsTab.Name = "scriptsTab";
             this.scriptsTab.Padding = new System.Windows.Forms.Padding(3);
-            this.scriptsTab.Size = new System.Drawing.Size(710, 431);
+            this.scriptsTab.Size = new System.Drawing.Size(824, 431);
             this.scriptsTab.TabIndex = 8;
             this.scriptsTab.Text = "Scripts";
             this.scriptsTab.UseVisualStyleBackColor = true;
@@ -2606,7 +2583,7 @@ namespace GitUI
             this.inMenuCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.inMenuCheckBox.AutoSize = true;
             this.inMenuCheckBox.Enabled = false;
-            this.inMenuCheckBox.Location = new System.Drawing.Point(344, 245);
+            this.inMenuCheckBox.Location = new System.Drawing.Point(458, 245);
             this.inMenuCheckBox.Name = "inMenuCheckBox";
             this.inMenuCheckBox.Size = new System.Drawing.Size(188, 17);
             this.inMenuCheckBox.TabIndex = 15;
@@ -2644,7 +2621,7 @@ namespace GitUI
             // 
             this.browseScriptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.browseScriptButton.Enabled = false;
-            this.browseScriptButton.Location = new System.Drawing.Point(625, 269);
+            this.browseScriptButton.Location = new System.Drawing.Point(739, 269);
             this.browseScriptButton.Name = "browseScriptButton";
             this.browseScriptButton.Size = new System.Drawing.Size(75, 25);
             this.browseScriptButton.TabIndex = 11;
@@ -2656,7 +2633,7 @@ namespace GitUI
             // 
             this.cancelScriptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelScriptButton.Enabled = false;
-            this.cancelScriptButton.Location = new System.Drawing.Point(625, 241);
+            this.cancelScriptButton.Location = new System.Drawing.Point(739, 241);
             this.cancelScriptButton.Name = "cancelScriptButton";
             this.cancelScriptButton.Size = new System.Drawing.Size(75, 25);
             this.cancelScriptButton.TabIndex = 10;
@@ -2668,7 +2645,7 @@ namespace GitUI
             // 
             this.saveScriptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.saveScriptButton.Enabled = false;
-            this.saveScriptButton.Location = new System.Drawing.Point(538, 241);
+            this.saveScriptButton.Location = new System.Drawing.Point(652, 241);
             this.saveScriptButton.Name = "saveScriptButton";
             this.saveScriptButton.Size = new System.Drawing.Size(75, 25);
             this.saveScriptButton.TabIndex = 9;
@@ -2682,11 +2659,10 @@ namespace GitUI
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.argumentsTextBox.Enabled = false;
             this.helpProvider1.SetHelpString(this.argumentsTextBox, resources.GetString("argumentsTextBox.HelpString"));
-            this.argumentsTextBox.LanguageOption = RichTextBoxLanguageOptions.AutoKeyboard;
             this.argumentsTextBox.Location = new System.Drawing.Point(107, 299);
             this.argumentsTextBox.Name = "argumentsTextBox";
             this.helpProvider1.SetShowHelp(this.argumentsTextBox, true);
-            this.argumentsTextBox.Size = new System.Drawing.Size(593, 111);
+            this.argumentsTextBox.Size = new System.Drawing.Size(707, 111);
             this.argumentsTextBox.TabIndex = 8;
             this.argumentsTextBox.Text = "";
             this.argumentsTextBox.Enter += new System.EventHandler(this.argumentsTextBox_Enter);
@@ -2699,7 +2675,7 @@ namespace GitUI
             this.commandTextBox.Enabled = false;
             this.commandTextBox.Location = new System.Drawing.Point(107, 271);
             this.commandTextBox.Name = "commandTextBox";
-            this.commandTextBox.Size = new System.Drawing.Size(506, 21);
+            this.commandTextBox.Size = new System.Drawing.Size(620, 21);
             this.commandTextBox.TabIndex = 7;
             // 
             // nameTextBox
@@ -2709,7 +2685,7 @@ namespace GitUI
             this.nameTextBox.Enabled = false;
             this.nameTextBox.Location = new System.Drawing.Point(107, 243);
             this.nameTextBox.Name = "nameTextBox";
-            this.nameTextBox.Size = new System.Drawing.Size(134, 21);
+            this.nameTextBox.Size = new System.Drawing.Size(248, 21);
             this.nameTextBox.TabIndex = 6;
             // 
             // moveDownButton
@@ -2717,7 +2693,7 @@ namespace GitUI
             this.moveDownButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.moveDownButton.Enabled = false;
             this.moveDownButton.Image = global::GitUI.Properties.Resources._4;
-            this.moveDownButton.Location = new System.Drawing.Point(647, 153);
+            this.moveDownButton.Location = new System.Drawing.Point(761, 153);
             this.moveDownButton.Name = "moveDownButton";
             this.moveDownButton.Size = new System.Drawing.Size(26, 23);
             this.moveDownButton.TabIndex = 5;
@@ -2728,7 +2704,7 @@ namespace GitUI
             // 
             this.removeScriptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.removeScriptButton.Enabled = false;
-            this.removeScriptButton.Location = new System.Drawing.Point(625, 124);
+            this.removeScriptButton.Location = new System.Drawing.Point(739, 124);
             this.removeScriptButton.Name = "removeScriptButton";
             this.removeScriptButton.Size = new System.Drawing.Size(75, 25);
             this.removeScriptButton.TabIndex = 4;
@@ -2740,7 +2716,7 @@ namespace GitUI
             // 
             this.editScriptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.editScriptButton.Enabled = false;
-            this.editScriptButton.Location = new System.Drawing.Point(625, 94);
+            this.editScriptButton.Location = new System.Drawing.Point(739, 94);
             this.editScriptButton.Name = "editScriptButton";
             this.editScriptButton.Size = new System.Drawing.Size(75, 25);
             this.editScriptButton.TabIndex = 3;
@@ -2751,7 +2727,7 @@ namespace GitUI
             // addScriptButton
             // 
             this.addScriptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.addScriptButton.Location = new System.Drawing.Point(625, 64);
+            this.addScriptButton.Location = new System.Drawing.Point(739, 64);
             this.addScriptButton.Name = "addScriptButton";
             this.addScriptButton.Size = new System.Drawing.Size(75, 25);
             this.addScriptButton.TabIndex = 2;
@@ -2764,7 +2740,7 @@ namespace GitUI
             this.moveUpButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.moveUpButton.Enabled = false;
             this.moveUpButton.Image = global::GitUI.Properties.Resources._3;
-            this.moveUpButton.Location = new System.Drawing.Point(647, 35);
+            this.moveUpButton.Location = new System.Drawing.Point(761, 35);
             this.moveUpButton.Name = "moveUpButton";
             this.moveUpButton.Size = new System.Drawing.Size(26, 23);
             this.moveUpButton.TabIndex = 1;
@@ -2784,7 +2760,7 @@ namespace GitUI
             this.ScriptList.FullRowSelect = true;
             this.ScriptList.Location = new System.Drawing.Point(9, 7);
             this.ScriptList.Name = "ScriptList";
-            this.ScriptList.Size = new System.Drawing.Size(604, 210);
+            this.ScriptList.Size = new System.Drawing.Size(718, 210);
             this.ScriptList.TabIndex = 0;
             this.ScriptList.UseCompatibleStateImageBehavior = false;
             this.ScriptList.View = System.Windows.Forms.View.Details;
@@ -3045,7 +3021,6 @@ namespace GitUI
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.CheckBox CloseProcessDialog;
-        private System.Windows.Forms.CheckBox ShowRevisionGraph;
         private System.Windows.Forms.CheckBox ShowGitCommandLine;
         private System.Windows.Forms.CheckBox UseFastChecks;
         private System.Windows.Forms.Label NoGitRepo;
@@ -3083,7 +3058,6 @@ namespace GitUI
         private System.Windows.Forms.Label label32;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.Label label28;
-        private System.Windows.Forms.Label label37;
         private System.Windows.Forms.Label label35;
         private System.Windows.Forms.Label label34;
         private System.Windows.Forms.Label label39;
