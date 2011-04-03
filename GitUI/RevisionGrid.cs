@@ -11,6 +11,7 @@ using GitUI.Tag;
 using ResourceManager.Translation;
 using System.Text.RegularExpressions;
 using GitUI.Hotkey;
+using GitUI.Script;
 
 namespace GitUI
 {
@@ -1586,19 +1587,25 @@ namespace GitUI
 
         private void AddOwnScripts()
         {
-            string[][] scripts = Settings.GetScripts();
-            foreach (string[] parameters in scripts)
+            IList<ScriptInfo> scripts = ScriptManager.GetScripts();
+            if (scripts != null)
             {
-                ToolStripItem item = new ToolStripMenuItem(parameters[0]);
-                item.Name = item.Text + "_ownScript";
-                item.Click += runScript;
-                if (parameters[3].Equals("yes"))
-                    CreateTag.Items.Add(item);
-                else
-                    runScriptToolStripMenuItem.DropDown.Items.Add(item);
+                foreach (ScriptInfo scriptInfo in scripts)
+                {
+                    if (scriptInfo.Enabled)
+                    {
+                        ToolStripItem item = new ToolStripMenuItem(scriptInfo.Name);
+                        item.Name = item.Text + "_ownScript";
+                        item.Click += runScript;
+                        if (scriptInfo.AddToRevisionGridContextMenu)
+                            CreateTag.Items.Add(item);
+                        else
+                            runScriptToolStripMenuItem.DropDown.Items.Add(item);
+                    }
+                }
+                toolStripSeparator7.Visible = scripts.Count > 1;
+                runScriptToolStripMenuItem.Visible = runScriptToolStripMenuItem.DropDown.Items.Count > 0;
             }
-            toolStripSeparator7.Visible = scripts.Length > 1;
-            runScriptToolStripMenuItem.Visible = runScriptToolStripMenuItem.DropDown.Items.Count > 0;
         }
 
         private void RemoveOwnScripts()

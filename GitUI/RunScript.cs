@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using GitCommands;
+using GitUI.Script;
 
 namespace GitUI
 {
@@ -7,7 +8,7 @@ namespace GitUI
     {
         public RunScript(string script, RevisionGrid RevisionGrid)
         {
-            string[] scriptInfo = Settings.GetScript(script);
+            ScriptInfo scriptInfo = ScriptManager.GetScript(script);
             string command;
             string argument;
 
@@ -18,9 +19,14 @@ namespace GitUI
             }
             else
             {
-                command = scriptInfo[1];
-                argument = scriptInfo[2];
+                command = scriptInfo.Command;
+                argument = scriptInfo.Arguments;
             }
+
+            //Make sure we are able to run git, even if git is not in the path
+            if (command.Equals("git", System.StringComparison.CurrentCultureIgnoreCase) ||
+                command.Equals("{git}", System.StringComparison.CurrentCultureIgnoreCase))
+                command = Settings.GitCommand;
 
             string[] options =
                 {
