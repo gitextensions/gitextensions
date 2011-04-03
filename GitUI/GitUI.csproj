@@ -302,6 +302,8 @@
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="RunScript.cs" />
+    <Compile Include="Script\ScriptInfo.cs" />
+    <Compile Include="Script\ScriptManager.cs" />
     <Compile Include="SpellChecker\EditNetSpell.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1084,6 +1086,7 @@
     <Content Include="cow-head.ico" />
     <None Include="Icons\24.png" />
     <None Include="Icons\bash.png" />
+    <None Include="Properties\DataSources\GitUI.Script.ScriptInfo.datasource" />
     <None Include="Resources\minus.png" />
     <None Include="Resources\minus.ico" />
     <None Include="Resources\plus.png" />

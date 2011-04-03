@@ -1371,8 +1371,8 @@ namespace GitCommands
             else
                 actionToPerformIfValueExists(value.ToString());
         }
-        private static string _ownScripts;
-        private static string ownScripts
+        public static string _ownScripts;
+        public static string ownScripts
         {
             get
             {
@@ -1387,42 +1387,6 @@ namespace GitCommands
                 _ownScripts = value;
                 Application.UserAppDataRegistry.SetValue("ownScripts", _ownScripts);
             }
-        }
-
-        private const string PARAM_SEPARATOR = "<_PARAM_SEPARATOR_>";
-        private const string SCRIPT_SEPARATOR = "<_SCRIPT_SEPARATOR_>";
-
-        public static void SaveScripts(string[][] scripts)
-        {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < scripts.Length; i++)
-            {
-                for (int j = 0; j < scripts[i].Length; j++)
-                    sb.Append(scripts[i][j] + PARAM_SEPARATOR);
-                sb.Append(SCRIPT_SEPARATOR);
-            }
-            ownScripts = sb.ToString();
-        }
-
-        public static string[][] GetScripts()
-        {
-            string[] scripts = Settings.ownScripts.Split(new string[] { Settings.SCRIPT_SEPARATOR }, StringSplitOptions.RemoveEmptyEntries);
-            string[][] scripts_params = new string[scripts.Length][];
-            for (int i = 0; i < scripts.Length; i++)
-            {
-                string[] parameters = scripts[i].Split(new string[] { Settings.PARAM_SEPARATOR }, StringSplitOptions.None);
-                scripts_params[i] = parameters;
-            }
-            return scripts_params;
-        }
-
-        public static string[] GetScript(string key)
-        {
-            string[][] scripts = GetScripts();
-            foreach (string[] parameters in scripts)
-                if (parameters[0].Equals(key))
-                    return parameters;
-            return null;
         }
 
         private static bool? _pushAllTags;

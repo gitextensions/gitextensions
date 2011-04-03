@@ -13,6 +13,7 @@ using GitUI.Editor;
 using Gravatar;
 using Microsoft.Win32;
 using ResourceManager.Translation;
+using GitUI.Script;
 
 namespace GitUI
 {
@@ -42,8 +43,6 @@ namespace GitUI
             base.OnClosing(e);
             SavePosition("settings");
         }
-
-        private int selectedScriptItem { get; set; }
 
         public static bool AutoSolveAllSettings()
         {
@@ -1998,6 +1997,7 @@ namespace GitUI
 
         private void SaveScripts()
         {
+            /*
             var scripts_params = new string[ScriptList.Items.Count][];
             for (int i = 0; i < ScriptList.Items.Count; i++)
             {
@@ -2006,20 +2006,14 @@ namespace GitUI
                 for (int j = 1; j < item.SubItems.Count; j++)
                     parameters[j - 1] = item.SubItems[j].Text;
                 scripts_params[i] = parameters;
-            }
-            Settings.SaveScripts(scripts_params);
+            }*/
+            Settings.ownScripts = ScriptManager.SerializeIntoXml();
         }
 
         private void LoadScripts()
         {
-            ScriptList.Items.Clear();
-            string[][] scripts = Settings.GetScripts();
-            foreach (var parameters in scripts)
-            {
-                ScriptList.Items.Add((ScriptList.Items.Count + 1).ToString());
-                foreach (string param in parameters)
-                    ScriptList.Items[ScriptList.Items.Count - 1].SubItems.Add(param);
-            }
+            ScriptList.DataSource = ScriptManager.GetScripts();
+           
         }
 
         private void ClearScriptDetails()
@@ -2039,6 +2033,8 @@ namespace GitUI
             saveScriptButton.Enabled = false;
             cancelScriptButton.Enabled = false;
             browseScriptButton.Enabled = false;
+            scriptEnabled.Enabled = false;
+            editScriptButton.Enabled = true;
         }
 
         private void EnableScriptDetails()
@@ -2050,32 +2046,39 @@ namespace GitUI
             saveScriptButton.Enabled = true;
             cancelScriptButton.Enabled = true;
             browseScriptButton.Enabled = true;
+            scriptEnabled.Enabled = true;
+            editScriptButton.Enabled = false;
         }
 
         private void RefreshScriptDetails()
         {
-            nameTextBox.Text = ScriptList.SelectedItems[0].SubItems[1].Text;
-            commandTextBox.Text = ScriptList.SelectedItems[0].SubItems[2].Text;
-            argumentsTextBox.Text = ScriptList.SelectedItems[0].SubItems[3].Text;
-            if (ScriptList.Items[ScriptList.SelectedIndices[0]].SubItems[4].Text.Equals("yes"))
-                inMenuCheckBox.Checked = true;
+            if (ScriptList.SelectedRows.Count == 0)
+                return;
+
+            ScriptInfo scriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
+
+            nameTextBox.Text = scriptInfo.Name;
+            commandTextBox.Text = scriptInfo.Command;
+            argumentsTextBox.Text = scriptInfo.Arguments;
+            inMenuCheckBox.Checked = scriptInfo.AddToRevisionGridContextMenu;
+            scriptEnabled.Checked = scriptInfo.Enabled;
         }
 
         private void addScriptButton_Click(object sender, EventArgs e)
         {
-            ScriptList.SelectedItems.Clear();
-            ListViewItem lv = ScriptList.Items.Add((ScriptList.Items.Count + 1).ToString());
-            for (int i = 0; i < 4; i++)
-                ScriptList.Items[ScriptList.Items.Count - 1].SubItems.Add(string.Empty);
-            lv.Selected = true;
+            ScriptList.ClearSelection();
+            ScriptManager.GetScripts().AddNew();
+            ScriptList.Rows[ScriptList.RowCount - 1].Selected = true;
+
             editScriptButton_Click(sender, e);
         }
 
         private void removeScriptButton_Click(object sender, EventArgs e)
         {
-            if (ScriptList.SelectedItems.Count > 0)
+            if (ScriptList.SelectedRows.Count > 0)
             {
-                ScriptList.Items.RemoveAt(ScriptList.SelectedItems[0].Index);
+                ScriptManager.GetScripts().Remove(ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo);
+
                 ClearScriptDetails();
                 DisableScriptDetails();
                 SaveScripts();
@@ -2084,9 +2087,8 @@ namespace GitUI
 
         private void editScriptButton_Click(object sender, EventArgs e)
         {
-            if (ScriptList.SelectedItems.Count > 0)
+            if (ScriptList.SelectedRows.Count > 0)
             {
-                selectedScriptItem = ScriptList.SelectedIndices[0];
                 RefreshScriptDetails();
                 EnableScriptDetails();
                 nameTextBox.Focus();
@@ -2095,36 +2097,19 @@ namespace GitUI
 
         private void saveScriptButton_Click(object sender, EventArgs e)
         {
-            ScriptList.Items[selectedScriptItem].SubItems[1].Text = nameTextBox.Text;
-            ScriptList.Items[selectedScriptItem].SubItems[2].Text = commandTextBox.Text;
-            ScriptList.Items[selectedScriptItem].SubItems[3].Text = argumentsTextBox.Text;
-            ScriptList.Items[selectedScriptItem].SubItems[4].Text = inMenuCheckBox.Checked ? "yes" : "no";
-            DisableScriptDetails();
-            ScriptList.Focus();
-            SaveScripts();
-        }
+            if (ScriptList.SelectedRows.Count > 0)
+            {
+                ScriptInfo selectedScriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
+                selectedScriptInfo.Name = nameTextBox.Text;
+                selectedScriptInfo.Command = commandTextBox.Text;
+                selectedScriptInfo.Arguments = argumentsTextBox.Text;
+                selectedScriptInfo.AddToRevisionGridContextMenu = inMenuCheckBox.Checked;
+                selectedScriptInfo.Enabled = scriptEnabled.Checked;
 
-        private void ScriptList_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
-        {
-            if (ScriptList.SelectedIndices.Count > 0)
-            {
-                RefreshScriptDetails();
-                selectedScriptItem = ScriptList.SelectedIndices[0];
-                editScriptButton.Enabled = true;
-                removeScriptButton.Enabled = true;
-                moveDownButton.Enabled = moveUpButton.Enabled = false;
-                if (ScriptList.SelectedIndices[0] > 0)
-                    moveUpButton.Enabled = true;
-                if (ScriptList.SelectedIndices[0] < ScriptList.Items.Count - 1)
-                    moveDownButton.Enabled = true;
-            }
-            else
-            {
-                editScriptButton.Enabled = false;
-                removeScriptButton.Enabled = false;
-                moveUpButton.Enabled = false;
-                moveDownButton.Enabled = false;
-                ClearScriptDetails();
+                DisableScriptDetails();
+                ScriptList.Focus();
+                ScriptList.Refresh();
+                SaveScripts();
             }
         }
 
@@ -2133,55 +2118,40 @@ namespace GitUI
             DisableScriptDetails();
             ClearScriptDetails();
             ScriptList.Focus();
-            ScriptList_ItemSelectionChanged(sender, null);
+            ScriptList.Refresh();
+            ScriptList_SelectionChanged(null, null);
         }
 
         private void moveUpButton_Click(object sender, EventArgs e)
         {
-            int no;
-            var lv = new ListView();
-            foreach (ListViewItem lvi in ScriptList.Items)
-                lv.Items.Add((ListViewItem)lvi.Clone());
-            ScriptList.Items.Clear();
-            for (int i = 0; i < selectedScriptItem - 1; i++)
-                ScriptList.Items.Add((ListViewItem)lv.Items[i].Clone());
-            var currentItem = (ListViewItem)lv.Items[selectedScriptItem].Clone();
-            var aboveItem = (ListViewItem)lv.Items[selectedScriptItem - 1].Clone();
-            int.TryParse(currentItem.SubItems[0].Text, out no);
-            currentItem.SubItems[0].Text = (no - 1).ToString();
-            aboveItem.SubItems[0].Text = (no).ToString();
-            ScriptList.Items.Add(currentItem);
-            ScriptList.Items.Add(aboveItem);
-            for (int i = selectedScriptItem + 1; i < lv.Items.Count; i++)
-                ScriptList.Items.Add((ListViewItem)lv.Items[i].Clone());
-            SaveScripts();
-            selectedScriptItem--;
-            ScriptList.Items[selectedScriptItem].Selected = true;
-            ScriptList.Focus();
+            if (ScriptList.SelectedRows.Count > 0)
+            {
+                ScriptInfo scriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
+                int index = ScriptManager.GetScripts().IndexOf(scriptInfo);
+                ScriptManager.GetScripts().Remove(scriptInfo);
+                ScriptManager.GetScripts().Insert(Math.Max(index - 1, 0), scriptInfo);
+
+                ScriptList.ClearSelection();
+                ScriptList.Rows[Math.Max(index - 1, 0)].Selected = true;
+                ScriptList.Focus();
+                SaveScripts();
+            }
         }
 
         private void moveDownButton_Click(object sender, EventArgs e)
         {
-            int no;
-            var lv = new ListView();
-            foreach (ListViewItem lvi in ScriptList.Items)
-                lv.Items.Add((ListViewItem)lvi.Clone());
-            ScriptList.Items.Clear();
-            for (int i = 0; i < selectedScriptItem; i++)
-                ScriptList.Items.Add((ListViewItem)lv.Items[i].Clone());
-            var currentItem = (ListViewItem)lv.Items[selectedScriptItem].Clone();
-            var underItem = (ListViewItem)lv.Items[selectedScriptItem + 1].Clone();
-            int.TryParse(currentItem.SubItems[0].Text, out no);
-            currentItem.SubItems[0].Text = (no + 1).ToString();
-            underItem.SubItems[0].Text = (no).ToString();
-            ScriptList.Items.Add(underItem);
-            ScriptList.Items.Add(currentItem);
-            for (int i = selectedScriptItem + 2; i < lv.Items.Count; i++)
-                ScriptList.Items.Add((ListViewItem)lv.Items[i].Clone());
-            SaveScripts();
-            selectedScriptItem++;
-            ScriptList.Items[selectedScriptItem].Selected = true;
-            ScriptList.Focus();
+            if (ScriptList.SelectedRows.Count > 0)
+            {
+                ScriptInfo scriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
+                int index = ScriptManager.GetScripts().IndexOf(scriptInfo);
+                ScriptManager.GetScripts().Remove(scriptInfo);
+                ScriptManager.GetScripts().Insert(Math.Min(index + 1, ScriptManager.GetScripts().Count), scriptInfo);
+
+                ScriptList.ClearSelection();
+                ScriptList.Rows[Math.Max(index + 1, 0)].Selected = true;
+                ScriptList.Focus();
+                SaveScripts();
+            }
         }
 
         private void browseScriptButton_Click(object sender, EventArgs e)
@@ -2217,6 +2187,31 @@ namespace GitUI
         private void downloadDictionary_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start(@"http://code.google.com/p/gitextensions/wiki/Spelling");
+        }
+
+        private void ScriptList_SelectionChanged(object sender, EventArgs e)
+        {
+            if (ScriptList.SelectedRows.Count > 0)
+            {
+                ScriptInfo selectedScriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
+                RefreshScriptDetails();
+                
+                editScriptButton.Enabled = true;
+                removeScriptButton.Enabled = true;
+                moveDownButton.Enabled = moveUpButton.Enabled = false;
+                if (ScriptList.SelectedRows[0].Index > 0)
+                    moveUpButton.Enabled = true;
+                if (ScriptList.SelectedRows[0].Index < ScriptList.RowCount - 1)
+                    moveDownButton.Enabled = true;
+            }
+            else
+            {
+                editScriptButton.Enabled = false;
+                removeScriptButton.Enabled = false;
+                moveUpButton.Enabled = false;
+                moveDownButton.Enabled = false;
+                ClearScriptDetails();
+            }
         }
     }
 }
