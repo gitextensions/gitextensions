@@ -1776,7 +1776,9 @@ namespace GitUI
             ToggleShowRelativeDate,
             ToggleDrawNonRelativesGray,
             ToggleShowGitNotes,
-            ToggleRevisionCardLayout
+            ToggleRevisionCardLayout,
+            ShowAllBranches,
+            ShowCurrentBranchOnly
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -1793,6 +1795,8 @@ namespace GitUI
                 case Commands.ToggleDrawNonRelativesGray: drawNonrelativesGrayToolStripMenuItem_Click(null, null); break;
                 case Commands.ToggleShowGitNotes: ShowGitNotesToolStripMenuItem_Click(null, null); break;
                 case Commands.ToggleRevisionCardLayout: ToggleRevisionCardLayout(); break;
+                case Commands.ShowAllBranches: ShowAllBranchesToolStripMenuItemClick(null, null); break;
+                case Commands.ShowCurrentBranchOnly: ShowCurrentBranchOnlyToolStripMenuItemClick(null, null); break;
             }
 
             return true;
