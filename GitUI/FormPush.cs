@@ -8,6 +8,7 @@ using GitCommands;
 using GitCommands.Repository;
 using ResourceManager.Translation;
 using GitUI.RepoHosting;
+using GitUI.Script;
 
 namespace GitUI
 {
@@ -151,6 +152,8 @@ namespace GitUI
             	pushCmd = GitCommandHelpers.PushMultipleCmd(destination, pushActions);
             }
 
+            ScriptManager.RunEventScripts(ScriptEvent.BeforePush);
+
         	var form = new FormProcess(pushCmd)
                        {
                            Remote = remote,
@@ -162,6 +165,7 @@ namespace GitUI
             if (!GitCommandHelpers.InTheMiddleOfConflictedMerge() &&
                 !GitCommandHelpers.InTheMiddleOfRebase() && !form.ErrorOccurred())
             {
+                ScriptManager.RunEventScripts(ScriptEvent.AfterPush);
                 Close();
                 if (_createPullRequestCB.Checked)
                     GitUICommands.Instance.StartCreatePullRequest();
