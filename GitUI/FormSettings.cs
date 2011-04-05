@@ -111,6 +111,8 @@ namespace GitUI
         {
             try
             {
+                scriptEvent.DataSource = Enum.GetValues(typeof(ScriptEvent));
+
                 if (Settings.Encoding.GetType() == typeof(ASCIIEncoding))
                     _NO_TRANSLATE_Encoding.Text = "ASCII";
                 else if (Settings.Encoding.GetType() == typeof(UnicodeEncoding))
@@ -336,6 +338,8 @@ namespace GitUI
 
         private bool Save()
         {
+            SaveScripts();
+
             if (Settings.RunningOnWindows())
             {
                 if (otherHome.Checked)
@@ -1997,16 +2001,6 @@ namespace GitUI
 
         private void SaveScripts()
         {
-            /*
-            var scripts_params = new string[ScriptList.Items.Count][];
-            for (int i = 0; i < ScriptList.Items.Count; i++)
-            {
-                ListViewItem item = ScriptList.Items[i];
-                var parameters = new string[item.SubItems.Count - 1];
-                for (int j = 1; j < item.SubItems.Count; j++)
-                    parameters[j - 1] = item.SubItems[j].Text;
-                scripts_params[i] = parameters;
-            }*/
             Settings.ownScripts = ScriptManager.SerializeIntoXml();
         }
 
@@ -2024,32 +2018,6 @@ namespace GitUI
             inMenuCheckBox.Checked = false;
         }
 
-        private void DisableScriptDetails()
-        {
-            nameTextBox.Enabled = false;
-            commandTextBox.Enabled = false;
-            argumentsTextBox.Enabled = false;
-            inMenuCheckBox.Enabled = false;
-            saveScriptButton.Enabled = false;
-            cancelScriptButton.Enabled = false;
-            browseScriptButton.Enabled = false;
-            scriptEnabled.Enabled = false;
-            editScriptButton.Enabled = true;
-        }
-
-        private void EnableScriptDetails()
-        {
-            nameTextBox.Enabled = true;
-            commandTextBox.Enabled = true;
-            argumentsTextBox.Enabled = true;
-            inMenuCheckBox.Enabled = true;
-            saveScriptButton.Enabled = true;
-            cancelScriptButton.Enabled = true;
-            browseScriptButton.Enabled = true;
-            scriptEnabled.Enabled = true;
-            editScriptButton.Enabled = false;
-        }
-
         private void RefreshScriptDetails()
         {
             if (ScriptList.SelectedRows.Count == 0)
@@ -2062,6 +2030,8 @@ namespace GitUI
             argumentsTextBox.Text = scriptInfo.Arguments;
             inMenuCheckBox.Checked = scriptInfo.AddToRevisionGridContextMenu;
             scriptEnabled.Checked = scriptInfo.Enabled;
+            scriptNeedsConfirmation.Checked = scriptInfo.AskConfirmation;
+            scriptEvent.SelectedItem = scriptInfo.OnEvent;
         }
 
         private void addScriptButton_Click(object sender, EventArgs e)
@@ -2069,8 +2039,6 @@ namespace GitUI
             ScriptList.ClearSelection();
             ScriptManager.GetScripts().AddNew();
             ScriptList.Rows[ScriptList.RowCount - 1].Selected = true;
-
-            editScriptButton_Click(sender, e);
         }
 
         private void removeScriptButton_Click(object sender, EventArgs e)
@@ -2080,22 +2048,11 @@ namespace GitUI
                 ScriptManager.GetScripts().Remove(ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo);
 
                 ClearScriptDetails();
-                DisableScriptDetails();
-                SaveScripts();
             }
         }
 
-        private void editScriptButton_Click(object sender, EventArgs e)
-        {
-            if (ScriptList.SelectedRows.Count > 0)
-            {
-                RefreshScriptDetails();
-                EnableScriptDetails();
-                nameTextBox.Focus();
-            }
-        }
 
-        private void saveScriptButton_Click(object sender, EventArgs e)
+        private void ScriptInfoFromEdits()
         {
             if (ScriptList.SelectedRows.Count > 0)
             {
@@ -2105,21 +2062,9 @@ namespace GitUI
                 selectedScriptInfo.Arguments = argumentsTextBox.Text;
                 selectedScriptInfo.AddToRevisionGridContextMenu = inMenuCheckBox.Checked;
                 selectedScriptInfo.Enabled = scriptEnabled.Checked;
-
-                DisableScriptDetails();
-                ScriptList.Focus();
-                ScriptList.Refresh();
-                SaveScripts();
+                selectedScriptInfo.AskConfirmation = scriptNeedsConfirmation.Checked;
+                selectedScriptInfo.OnEvent = (ScriptEvent)scriptEvent.SelectedItem;
             }
-        }
-
-        private void cancelScriptButton_Click(object sender, EventArgs e)
-        {
-            DisableScriptDetails();
-            ClearScriptDetails();
-            ScriptList.Focus();
-            ScriptList.Refresh();
-            ScriptList_SelectionChanged(null, null);
         }
 
         private void moveUpButton_Click(object sender, EventArgs e)
@@ -2134,7 +2079,6 @@ namespace GitUI
                 ScriptList.ClearSelection();
                 ScriptList.Rows[Math.Max(index - 1, 0)].Selected = true;
                 ScriptList.Focus();
-                SaveScripts();
             }
         }
 
@@ -2150,7 +2094,6 @@ namespace GitUI
                 ScriptList.ClearSelection();
                 ScriptList.Rows[Math.Max(index + 1, 0)].Selected = true;
                 ScriptList.Focus();
-                SaveScripts();
             }
         }
 
@@ -2196,7 +2139,6 @@ namespace GitUI
                 ScriptInfo selectedScriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
                 RefreshScriptDetails();
                 
-                editScriptButton.Enabled = true;
                 removeScriptButton.Enabled = true;
                 moveDownButton.Enabled = moveUpButton.Enabled = false;
                 if (ScriptList.SelectedRows[0].Index > 0)
@@ -2206,12 +2148,17 @@ namespace GitUI
             }
             else
             {
-                editScriptButton.Enabled = false;
                 removeScriptButton.Enabled = false;
                 moveUpButton.Enabled = false;
                 moveDownButton.Enabled = false;
                 ClearScriptDetails();
             }
+        }
+
+        private void ScriptInfoEdit_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            ScriptInfoFromEdits();
+            ScriptList.Refresh();
         }
     }
 }

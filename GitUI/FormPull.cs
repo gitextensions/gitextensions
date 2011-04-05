@@ -8,6 +8,7 @@ using GitCommands.Repository;
 using GitUI.Properties;
 using ResourceManager.Translation;
 using Settings = GitCommands.Settings;
+using GitUI.Script;
 
 namespace GitUI
 {
@@ -161,6 +162,8 @@ namespace GitUI
                 source = PullAll() ? "--all" : Remotes.Text;
             }
 
+            ScriptManager.RunEventScripts(ScriptEvent.BeforePull);
+
             var stashed = false;
             if (!Fetch.Checked && AutoStash.Checked && GitCommandHelpers.GitStatus(false).Count > 0)
             {
@@ -188,38 +191,58 @@ namespace GitUI
             if (process != null)
                 process.ShowDialog();
 
-            if (!GitCommandHelpers.InTheMiddleOfConflictedMerge() &&
-                !GitCommandHelpers.InTheMiddleOfRebase() &&
-                (process != null && !process.ErrorOccurred()))
-                Close();
-
-            // Rebase failed -> special 'rebase' merge conflict
-            if (Rebase.Checked && GitCommandHelpers.InTheMiddleOfRebase())
+            try
             {
-                GitUICommands.Instance.StartRebaseDialog(null);
                 if (!GitCommandHelpers.InTheMiddleOfConflictedMerge() &&
-                    !GitCommandHelpers.InTheMiddleOfRebase())
+                    !GitCommandHelpers.InTheMiddleOfRebase() &&
+                    (process != null && !process.ErrorOccurred()))
+                {
                     Close();
-            }
-            else
-            {
+                }
+
+                // Rebase failed -> special 'rebase' merge conflict
+                if (Rebase.Checked && GitCommandHelpers.InTheMiddleOfRebase())
+                {
+                    GitUICommands.Instance.StartRebaseDialog(null);
+                    if (!GitCommandHelpers.InTheMiddleOfConflictedMerge() &&
+                        !GitCommandHelpers.InTheMiddleOfRebase())
+                    {
+                        Close();
+                    }
+                }
+                else
+                {
+                    MergeConflictHandler.HandleMergeConflicts();
+                    if (!GitCommandHelpers.InTheMiddleOfConflictedMerge() &&
+                        !GitCommandHelpers.InTheMiddleOfRebase())
+                    {
+                        Close();
+                    }
+                }
+
+                if (!AutoStash.Checked || !stashed || GitCommandHelpers.InTheMiddleOfConflictedMerge() ||
+                    GitCommandHelpers.InTheMiddleOfRebase())
+                {
+                    return;
+                }
+
+                if (MessageBox.Show(_applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text,
+                                    MessageBoxButtons.YesNo) != DialogResult.Yes)
+                {
+                    return;
+                }
+
+                if (stashed)
+                {
+                    new FormProcess("stash pop").ShowDialog();
+                }
+
                 MergeConflictHandler.HandleMergeConflicts();
-                if (!GitCommandHelpers.InTheMiddleOfConflictedMerge() &&
-                    !GitCommandHelpers.InTheMiddleOfRebase())
-                    Close();
             }
-
-            if (!AutoStash.Checked || !stashed || GitCommandHelpers.InTheMiddleOfConflictedMerge() ||
-                GitCommandHelpers.InTheMiddleOfRebase())
-                return;
-
-            if (MessageBox.Show(_applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text,
-                                MessageBoxButtons.YesNo) != DialogResult.Yes)
-                return;
-
-            new FormProcess("stash pop").ShowDialog();
-
-            MergeConflictHandler.HandleMergeConflicts();
+            finally
+            {
+                ScriptManager.RunEventScripts(ScriptEvent.AfterPull);
+            }
         }
 
         private void LoadPuttyKey()

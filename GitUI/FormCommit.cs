@@ -11,6 +11,7 @@ using GitCommands;
 using ResourceManager.Translation;
 using PatchApply;
 using GitUI.Hotkey;
+using GitUI.Script;
 
 namespace GitUI
 {
@@ -422,6 +423,8 @@ namespace GitUI
             {
                 SetCommitMessageFromTextBox(Message.Text);
 
+                ScriptManager.RunEventScripts(ScriptEvent.BeforeCommit);
+
                 var form = new FormProcess(GitCommandHelpers.CommitCmd(amend, toolAuthor.Text));
                 form.ShowDialog();
 
@@ -429,6 +432,8 @@ namespace GitUI
 
                 if (form.ErrorOccurred())
                     return;
+
+                ScriptManager.RunEventScripts(ScriptEvent.AfterCommit);
 
                 Message.Text = string.Empty;
 
