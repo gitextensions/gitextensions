@@ -42,7 +42,7 @@ namespace GitUI
             // richTextBox1
             // 
             this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox1.LanguageOption = RichTextBoxLanguageOptions.AutoKeyboard;
+            this.richTextBox1.LanguageOption = RichTextBoxLanguageOptions.UIFonts;
             this.richTextBox1.Location = new System.Drawing.Point(0, 0);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
