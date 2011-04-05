@@ -73,6 +73,12 @@ namespace GitUI.Script
                 {
                     if (option.StartsWith("{s") && selectedRevision == null)
                     {
+                        if (RevisionGrid == null)
+                        {
+                            MessageBox.Show("Option " + option + " is only supported when started from revision grid.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
                         selectedRevision = RevisionGrid.GetRevision(RevisionGrid.LastRow);
                         foreach (GitHead head in selectedRevision.Heads)
                         {
@@ -95,9 +101,25 @@ namespace GitUI.Script
                     }
                     else if (option.StartsWith("{c") && currentRevision == null)
                     {
-                       currentRevision = RevisionGrid.GetCurrentRevision();
+                        IList<GitHead> heads;
 
-                        foreach (GitHead head in currentRevision.Heads)
+                        if (RevisionGrid == null)
+                        {
+                            heads = new List<GitHead>();
+                            string currentRevisionGuid = GitCommandHelpers.GetCurrentCheckout();
+                            foreach (GitHead head in GitCommandHelpers.GetHeads(true, true))
+                            {
+                                if (head.Guid == currentRevisionGuid)
+                                    heads.Add(head);
+                            }
+                        }
+                        else
+                        {
+                            currentRevision = RevisionGrid.GetCurrentRevision();
+                            heads = currentRevision.Heads;
+                        }
+
+                        foreach (GitHead head in heads)
                         {
                             if (head.IsTag)
                                 currentTags.Add(head);
