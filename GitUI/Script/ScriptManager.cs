@@ -66,7 +66,35 @@ namespace GitUI.Script
             catch (Exception ex)
             {
                 Scripts = new BindingList<ScriptInfo>();
-                Trace.WriteLine(ex.Message);
+                DeserializeFromOldFormat(xml);
+                
+                Trace.WriteLine(ex.Message);                
+            }
+        }
+
+        private static void DeserializeFromOldFormat(string inputString)
+        {
+            string PARAM_SEPARATOR = "<_PARAM_SEPARATOR_>";
+            string SCRIPT_SEPARATOR = "<_SCRIPT_SEPARATOR_>";
+
+            if (inputString.Contains(PARAM_SEPARATOR) || inputString.Contains(SCRIPT_SEPARATOR))
+            {
+                Scripts = new BindingList<ScriptInfo>();
+
+                string[] scripts = inputString.Split(new string[] { SCRIPT_SEPARATOR }, StringSplitOptions.RemoveEmptyEntries);
+                for (int i = 0; i < scripts.Length; i++)
+                {
+                    string[] parameters = scripts[i].Split(new string[] { PARAM_SEPARATOR }, StringSplitOptions.None);
+
+                    ScriptInfo scriptInfo = new ScriptInfo();
+                    scriptInfo.Name = parameters[0];
+                    scriptInfo.Command = parameters[1];
+                    scriptInfo.Arguments = parameters[2];
+                    scriptInfo.AddToRevisionGridContextMenu = parameters[3].Equals("yes");
+                    scriptInfo.Enabled = true;
+
+                    Scripts.Add(scriptInfo);
+                }
             }
         }
     }
