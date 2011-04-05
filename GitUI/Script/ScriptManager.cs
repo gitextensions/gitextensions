@@ -8,6 +8,7 @@ using System.Xml;
 using System.Diagnostics;
 using GitCommands;
 using System.ComponentModel;
+using System.Windows.Forms;
 
 namespace GitUI.Script
 {
@@ -34,6 +35,19 @@ namespace GitUI.Script
             return null;
         }
 
+        public static void RunEventScripts(ScriptEvent scriptEvent)
+        {
+            foreach (ScriptInfo scriptInfo in GetScripts())
+                if (scriptInfo.Enabled && scriptInfo.OnEvent == scriptEvent)
+                {
+                    if (scriptInfo.AskConfirmation)
+                        if (MessageBox.Show("Do you want to execute '" + scriptInfo.Name + "'?", "Script", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                            continue;
+                    
+                    ScriptRunner.RunScript(scriptInfo.Name, null);
+                }
+        }
+
         public static string SerializeIntoXml()
         {
             try
@@ -51,8 +65,13 @@ namespace GitUI.Script
 
         public static void DeserializeFromXml(string xml)
         {
+            //When there is nothing to deserialize, add default scripts
             if (string.IsNullOrEmpty(xml))
+            {
+                Scripts = new BindingList<ScriptInfo>();
+                AddDefaultScripts();
                 return;
+            }
 
             try
             {
@@ -70,6 +89,29 @@ namespace GitUI.Script
                 
                 Trace.WriteLine(ex.Message);                
             }
+        }
+
+        private static void AddDefaultScripts()
+        {
+            ScriptInfo fetchAfterCommitScript = new ScriptInfo();
+            fetchAfterCommitScript.Name = "Fetch changes after commit";
+            fetchAfterCommitScript.Command = "git";
+            fetchAfterCommitScript.Arguments = "fetch";
+            fetchAfterCommitScript.AskConfirmation = true;
+            fetchAfterCommitScript.OnEvent = ScriptEvent.AfterCommit;
+            fetchAfterCommitScript.AddToRevisionGridContextMenu = false;
+            fetchAfterCommitScript.Enabled = false;
+            Scripts.Add(fetchAfterCommitScript);
+
+            ScriptInfo updateSubmodulesAfterPullScript = new ScriptInfo();
+            updateSubmodulesAfterPullScript.Name = "Update submodules after pull";
+            updateSubmodulesAfterPullScript.Command = "git";
+            updateSubmodulesAfterPullScript.Arguments = "submodule update";
+            updateSubmodulesAfterPullScript.AskConfirmation = true;
+            updateSubmodulesAfterPullScript.OnEvent = ScriptEvent.AfterPull;
+            updateSubmodulesAfterPullScript.AddToRevisionGridContextMenu = false;
+            updateSubmodulesAfterPullScript.Enabled = false;
+            Scripts.Add(updateSubmodulesAfterPullScript);
         }
 
         private static void DeserializeFromOldFormat(string inputString)

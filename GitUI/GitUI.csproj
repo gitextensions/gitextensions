@@ -301,7 +301,7 @@
     <Compile Include="RepoHosting\ViewPullRequestsForm.Designer.cs">
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="RunScript.cs" />
+    <Compile Include="Script\RunScript.cs" />
     <Compile Include="Script\ScriptInfo.cs" />
     <Compile Include="Script\ScriptManager.cs" />
     <Compile Include="SpellChecker\EditNetSpell.cs">

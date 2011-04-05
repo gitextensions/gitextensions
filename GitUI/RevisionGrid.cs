@@ -1588,12 +1588,14 @@ namespace GitUI
         private void AddOwnScripts()
         {
             IList<ScriptInfo> scripts = ScriptManager.GetScripts();
+            int addedScripts = 0;
             if (scripts != null)
             {
                 foreach (ScriptInfo scriptInfo in scripts)
                 {
                     if (scriptInfo.Enabled)
                     {
+                        addedScripts++;
                         ToolStripItem item = new ToolStripMenuItem(scriptInfo.Name);
                         item.Name = item.Text + "_ownScript";
                         item.Click += runScript;
@@ -1603,7 +1605,7 @@ namespace GitUI
                             runScriptToolStripMenuItem.DropDown.Items.Add(item);
                     }
                 }
-                toolStripSeparator7.Visible = scripts.Count > 1;
+                toolStripSeparator7.Visible = addedScripts > 1;
                 runScriptToolStripMenuItem.Visible = runScriptToolStripMenuItem.DropDown.Items.Count > 0;
             }
         }
@@ -1628,7 +1630,7 @@ namespace GitUI
                 new FormSettings().LoadSettings();
                 settingsLoaded = true;
             }
-            new RunScript(sender.ToString(), this);
+            ScriptRunner.RunScript(sender.ToString(), this);
             RefreshRevisions();
         }
 
