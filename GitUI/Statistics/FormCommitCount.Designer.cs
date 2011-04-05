@@ -38,7 +38,7 @@ namespace GitUI.Statistics
             // CommitCount
             // 
             this.CommitCount.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CommitCount.LanguageOption = RichTextBoxLanguageOptions.AutoKeyboard;
+            this.CommitCount.LanguageOption = RichTextBoxLanguageOptions.UIFonts;
             this.CommitCount.Location = new System.Drawing.Point(0, 0);
             this.CommitCount.Name = "CommitCount";
             this.CommitCount.ReadOnly = true;
