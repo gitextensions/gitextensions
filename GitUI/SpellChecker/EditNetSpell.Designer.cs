@@ -61,7 +61,7 @@ namespace GitUI.SpellChecker
             this.TextBox.AcceptsTab = true;
             this.TextBox.ContextMenuStrip = this.SpellCheckContextMenu;
             this.TextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TextBox.LanguageOption = RichTextBoxLanguageOptions.AutoKeyboard;
+            this.TextBox.LanguageOption = RichTextBoxLanguageOptions.UIFonts;
             this.TextBox.Location = new System.Drawing.Point(0, 0);
             this.TextBox.Name = "TextBox";
             this.TextBox.Size = new System.Drawing.Size(386, 336);
