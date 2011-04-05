@@ -144,9 +144,9 @@ namespace GitUI.Hotkey
                     hk(FileViewer.Commands.ShowEntireFile, Keys.None),
                     hk(FileViewer.Commands.TreatFileAsText, Keys.None)),
                 new HotkeySettings(FormResolveConflicts.HotkeySettingsName,
-                    hk(FormResolveConflicts.Commands.ChooseBase, Keys.None),
-                    hk(FormResolveConflicts.Commands.ChooseLocal, Keys.None),
-                    hk(FormResolveConflicts.Commands.ChooseRemote, Keys.None),
+                    hk(FormResolveConflicts.Commands.ChooseBase, Keys.B),
+                    hk(FormResolveConflicts.Commands.ChooseLocal, Keys.L),
+                    hk(FormResolveConflicts.Commands.ChooseRemote, Keys.R),
                     hk(FormResolveConflicts.Commands.Merge, Keys.M),
                     hk(FormResolveConflicts.Commands.Rescan, Keys.F5))
               };
