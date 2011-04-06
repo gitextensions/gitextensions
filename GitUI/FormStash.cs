@@ -126,7 +126,7 @@ namespace GitUI
                 string extraDiffArguments = View.GetExtraDiffArguments();
                 View.ViewPatch(() =>
                 {
-                    PatchApply.Patch patch = GitCommandHelpers.GetSingleDiff(gitStash.Name + "^", gitStash.Name, stashedItem.Name, stashedItem.OldName, extraDiffArguments);
+                    PatchApply.Patch patch = GitCommandHelpers.GetSingleDiff(gitStash.Name, gitStash.Name + "^", stashedItem.Name, stashedItem.OldName, extraDiffArguments);
                     if (patch == null)
                         return String.Empty;
                     return patch.Text;
