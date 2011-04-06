@@ -3,6 +3,7 @@
 
 Version 2.18
 	Fixed issue 406: keyboard language changes in commit dialog
+	Fixed issue 415: Diffs in Stash view are reversed
 	Added hotkeys for ShowAllBranches and ShowCurrentBranchOnly
 	Scripts can be executed before and after actions
 
