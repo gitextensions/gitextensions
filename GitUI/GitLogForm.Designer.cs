@@ -107,7 +107,7 @@ namespace GitUI
             this.LogOutput.BackColor = System.Drawing.SystemColors.ControlLight;
             this.LogOutput.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.LogOutput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LogOutput.LanguageOption = RichTextBoxLanguageOptions.AutoKeyboard;
+            this.LogOutput.LanguageOption = RichTextBoxLanguageOptions.UIFonts;
             this.LogOutput.Location = new System.Drawing.Point(0, 0);
             this.LogOutput.Margin = new System.Windows.Forms.Padding(0);
             this.LogOutput.Name = "LogOutput";
@@ -160,7 +160,7 @@ namespace GitUI
             this.commandCacheOutput.BackColor = System.Drawing.SystemColors.ControlLight;
             this.commandCacheOutput.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.commandCacheOutput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.commandCacheOutput.LanguageOption = RichTextBoxLanguageOptions.AutoKeyboard;
+            this.commandCacheOutput.LanguageOption = RichTextBoxLanguageOptions.UIFonts;
             this.commandCacheOutput.Location = new System.Drawing.Point(0, 0);
             this.commandCacheOutput.Margin = new System.Windows.Forms.Padding(0);
             this.commandCacheOutput.Name = "commandCacheOutput";
