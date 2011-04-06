@@ -109,7 +109,7 @@ namespace GitUI
             this._RevisionHeader.ContextMenuStrip = this.commitInfoContextMenuStrip;
             this._RevisionHeader.Dock = System.Windows.Forms.DockStyle.Fill;
             this._RevisionHeader.Font = new System.Drawing.Font("Tahoma", 9.75F);
-            this._RevisionHeader.LanguageOption = RichTextBoxLanguageOptions.AutoKeyboard;
+            this._RevisionHeader.LanguageOption = RichTextBoxLanguageOptions.UIFonts;
             this._RevisionHeader.Location = new System.Drawing.Point(0, 0);
             this._RevisionHeader.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this._RevisionHeader.Name = "_RevisionHeader";
@@ -178,7 +178,7 @@ namespace GitUI
             this.RevisionInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.RevisionInfo.ContextMenuStrip = this.commitInfoContextMenuStrip;
             this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RevisionInfo.LanguageOption = RichTextBoxLanguageOptions.AutoKeyboard;
+            this.RevisionInfo.LanguageOption = RichTextBoxLanguageOptions.UIFonts;
             this.RevisionInfo.Location = new System.Drawing.Point(0, 0);
             this.RevisionInfo.Margin = new System.Windows.Forms.Padding(4);
             this.RevisionInfo.Name = "RevisionInfo";
