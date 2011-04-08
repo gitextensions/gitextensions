@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
 using GitUI;
+using System.Collections.Generic;
 
 namespace GitExtensions
 {
@@ -100,6 +101,17 @@ namespace GitExtensions
 
         private static void RunCommand(string[] args)
         {
+            Dictionary<string, string> arguments = new Dictionary<string, string>();
+
+            for (int i = 2; i < args.Length; i++)
+            {
+                if (args[i].StartsWith("--") && i + 1 < args.Length && !args[i + 1].StartsWith("--"))
+                    arguments.Add(args[i].TrimStart('-'), args[++i]);
+                else
+                    if (args[i].StartsWith("--"))
+                        arguments.Add(args[i].TrimStart('-'), null);
+            }
+
             if (args.Length > 1)
             {
                 switch (args[1])
@@ -159,7 +171,7 @@ namespace GitExtensions
                         GitUICommands.Instance.StartCloneDialog();
                         return;
                     case "commit":
-                        GitUICommands.Instance.StartCommitDialog();
+                        Commit(arguments);
                         return;
                     case "filehistory":
                         if (args.Length > 2)
@@ -189,10 +201,10 @@ namespace GitExtensions
                         GitUICommands.Instance.StartFormatPatchDialog();
                         return;
                     case "pull":
-                        GitUICommands.Instance.StartPullDialog();
+                        Pull(arguments);
                         return;
                     case "push":
-                        GitUICommands.Instance.StartPushDialog();
+                        Push(arguments);
                         return;
                     case "settings":
                         GitUICommands.Instance.StartSettingsDialog();
@@ -201,11 +213,21 @@ namespace GitExtensions
                         GitUICommands.Instance.StartCompareRevisionsDialog();
                         return;
                     case "rebase":
-                        GitUICommands.Instance.StartRebaseDialog(null);
-                        return;
+                        {
+                            string branch = null;
+                            if (arguments.ContainsKey("branch"))
+                                branch = arguments["branch"];
+                            GitUICommands.Instance.StartRebaseDialog(branch);
+                            return;
+                        }
                     case "merge":
-                        GitUICommands.Instance.StartMergeBranchDialog(null);
-                        return;
+                        {
+                            string branch = null;
+                            if (arguments.ContainsKey("branch"))
+                                branch = arguments["branch"];
+                            GitUICommands.Instance.StartMergeBranchDialog(branch);
+                            return;
+                        }
                     case "cherry":
                         GitUICommands.Instance.StartCherryPickDialog();
                         return;
@@ -221,11 +243,37 @@ namespace GitExtensions
                     case "stash":
                         GitUICommands.Instance.StartStashDialog();
                         return;
+                    case "synchronize":
+                        Commit(arguments);
+                        Pull(arguments);
+                        Push(arguments);
+                        return;
                     default:
                         Application.Run(new FormCommandlineHelp());
                         return;
                 }
             }
+        }
+
+        private static void Commit(Dictionary<string, string> arguments)
+        {
+            GitUICommands.Instance.StartCommitDialog(arguments.ContainsKey("quiet"));
+        }
+
+        private static void Push(Dictionary<string, string> arguments)
+        {
+            GitUICommands.Instance.StartPushDialog(arguments.ContainsKey("quiet"));
+        }
+
+        private static void Pull(Dictionary<string, string> arguments)
+        {
+            if (arguments.ContainsKey("merge"))
+                Settings.PullMerge = "merge";
+            if (arguments.ContainsKey("rebase"))
+                Settings.PullMerge = "rebase";
+            if (arguments.ContainsKey("fetch"))
+                Settings.PullMerge = "fetch";
+            GitUICommands.Instance.StartPullDialog(arguments.ContainsKey("quiet"));
         }
 
         private static string GetParameterOrEmptyStringAsDefault(string[] args, string paramName)
