@@ -1461,7 +1461,7 @@ namespace GitUI
             this.groupBox6.Controls.Add(this._NO_TRANSLATE_authorImageSize);
             this.groupBox6.Controls.Add(this.ClearImageCache);
             this.groupBox6.Controls.Add(this.ShowAuthorGravatar);
-            this.groupBox6.Location = new System.Drawing.Point(328, 236);
+            this.groupBox6.Location = new System.Drawing.Point(402, 236);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(311, 158);
             this.groupBox6.TabIndex = 13;
@@ -1569,7 +1569,7 @@ namespace GitUI
             this.groupBox5.Controls.Add(this.PurpleIcon);
             this.groupBox5.Controls.Add(this.BlueIcon);
             this.groupBox5.Controls.Add(this.DefaultIcon);
-            this.groupBox5.Location = new System.Drawing.Point(327, 3);
+            this.groupBox5.Location = new System.Drawing.Point(401, 3);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(312, 227);
             this.groupBox5.TabIndex = 12;
@@ -1671,7 +1671,7 @@ namespace GitUI
             this.groupBox4.Controls.Add(this.label32);
             this.groupBox4.Location = new System.Drawing.Point(8, 3);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(313, 250);
+            this.groupBox4.Size = new System.Drawing.Size(387, 250);
             this.groupBox4.TabIndex = 11;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Revision graph";
@@ -1702,7 +1702,7 @@ namespace GitUI
             this._NO_TRANSLATE_ColorGraphLabel.BackColor = System.Drawing.Color.Red;
             this._NO_TRANSLATE_ColorGraphLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._NO_TRANSLATE_ColorGraphLabel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this._NO_TRANSLATE_ColorGraphLabel.Location = new System.Drawing.Point(211, 21);
+            this._NO_TRANSLATE_ColorGraphLabel.Location = new System.Drawing.Point(287, 21);
             this._NO_TRANSLATE_ColorGraphLabel.Name = "_NO_TRANSLATE_ColorGraphLabel";
             this._NO_TRANSLATE_ColorGraphLabel.Size = new System.Drawing.Size(28, 15);
             this._NO_TRANSLATE_ColorGraphLabel.TabIndex = 15;
@@ -1755,7 +1755,7 @@ namespace GitUI
             this._NO_TRANSLATE_ColorRemoteBranchLabel.BackColor = System.Drawing.Color.Red;
             this._NO_TRANSLATE_ColorRemoteBranchLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._NO_TRANSLATE_ColorRemoteBranchLabel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this._NO_TRANSLATE_ColorRemoteBranchLabel.Location = new System.Drawing.Point(211, 200);
+            this._NO_TRANSLATE_ColorRemoteBranchLabel.Location = new System.Drawing.Point(287, 200);
             this._NO_TRANSLATE_ColorRemoteBranchLabel.Name = "_NO_TRANSLATE_ColorRemoteBranchLabel";
             this._NO_TRANSLATE_ColorRemoteBranchLabel.Size = new System.Drawing.Size(28, 15);
             this._NO_TRANSLATE_ColorRemoteBranchLabel.TabIndex = 9;
@@ -1768,7 +1768,7 @@ namespace GitUI
             this._NO_TRANSLATE_ColorOtherLabel.BackColor = System.Drawing.Color.Red;
             this._NO_TRANSLATE_ColorOtherLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._NO_TRANSLATE_ColorOtherLabel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this._NO_TRANSLATE_ColorOtherLabel.Location = new System.Drawing.Point(211, 228);
+            this._NO_TRANSLATE_ColorOtherLabel.Location = new System.Drawing.Point(287, 228);
             this._NO_TRANSLATE_ColorOtherLabel.Name = "_NO_TRANSLATE_ColorOtherLabel";
             this._NO_TRANSLATE_ColorOtherLabel.Size = new System.Drawing.Size(28, 15);
             this._NO_TRANSLATE_ColorOtherLabel.TabIndex = 11;
@@ -1799,7 +1799,7 @@ namespace GitUI
             this._NO_TRANSLATE_ColorTagLabel.BackColor = System.Drawing.Color.Red;
             this._NO_TRANSLATE_ColorTagLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._NO_TRANSLATE_ColorTagLabel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this._NO_TRANSLATE_ColorTagLabel.Location = new System.Drawing.Point(211, 143);
+            this._NO_TRANSLATE_ColorTagLabel.Location = new System.Drawing.Point(287, 143);
             this._NO_TRANSLATE_ColorTagLabel.Name = "_NO_TRANSLATE_ColorTagLabel";
             this._NO_TRANSLATE_ColorTagLabel.Size = new System.Drawing.Size(28, 15);
             this._NO_TRANSLATE_ColorTagLabel.TabIndex = 5;
@@ -1812,7 +1812,7 @@ namespace GitUI
             this._NO_TRANSLATE_ColorBranchLabel.BackColor = System.Drawing.Color.Red;
             this._NO_TRANSLATE_ColorBranchLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._NO_TRANSLATE_ColorBranchLabel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this._NO_TRANSLATE_ColorBranchLabel.Location = new System.Drawing.Point(211, 171);
+            this._NO_TRANSLATE_ColorBranchLabel.Location = new System.Drawing.Point(287, 171);
             this._NO_TRANSLATE_ColorBranchLabel.Name = "_NO_TRANSLATE_ColorBranchLabel";
             this._NO_TRANSLATE_ColorBranchLabel.Size = new System.Drawing.Size(28, 15);
             this._NO_TRANSLATE_ColorBranchLabel.TabIndex = 7;
@@ -1842,7 +1842,7 @@ namespace GitUI
             this.groupBox3.Controls.Add(this._NO_TRANSLATE_ColorAddedLineLabel);
             this.groupBox3.Location = new System.Drawing.Point(8, 259);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(313, 158);
+            this.groupBox3.Size = new System.Drawing.Size(387, 158);
             this.groupBox3.TabIndex = 10;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Difference view";
@@ -1862,7 +1862,7 @@ namespace GitUI
             this._NO_TRANSLATE_ColorRemovedLineDiffLabel.BackColor = System.Drawing.Color.Red;
             this._NO_TRANSLATE_ColorRemovedLineDiffLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._NO_TRANSLATE_ColorRemovedLineDiffLabel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this._NO_TRANSLATE_ColorRemovedLineDiffLabel.Location = new System.Drawing.Point(208, 79);
+            this._NO_TRANSLATE_ColorRemovedLineDiffLabel.Location = new System.Drawing.Point(284, 79);
             this._NO_TRANSLATE_ColorRemovedLineDiffLabel.Name = "_NO_TRANSLATE_ColorRemovedLineDiffLabel";
             this._NO_TRANSLATE_ColorRemovedLineDiffLabel.Size = new System.Drawing.Size(28, 15);
             this._NO_TRANSLATE_ColorRemovedLineDiffLabel.TabIndex = 11;
@@ -1884,7 +1884,7 @@ namespace GitUI
             this._NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor = System.Drawing.Color.Red;
             this._NO_TRANSLATE_ColorAddedLineDiffLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._NO_TRANSLATE_ColorAddedLineDiffLabel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this._NO_TRANSLATE_ColorAddedLineDiffLabel.Location = new System.Drawing.Point(208, 109);
+            this._NO_TRANSLATE_ColorAddedLineDiffLabel.Location = new System.Drawing.Point(284, 109);
             this._NO_TRANSLATE_ColorAddedLineDiffLabel.Name = "_NO_TRANSLATE_ColorAddedLineDiffLabel";
             this._NO_TRANSLATE_ColorAddedLineDiffLabel.Size = new System.Drawing.Size(28, 15);
             this._NO_TRANSLATE_ColorAddedLineDiffLabel.TabIndex = 13;
@@ -1906,7 +1906,7 @@ namespace GitUI
             this._NO_TRANSLATE_ColorSectionLabel.BackColor = System.Drawing.Color.Red;
             this._NO_TRANSLATE_ColorSectionLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._NO_TRANSLATE_ColorSectionLabel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this._NO_TRANSLATE_ColorSectionLabel.Location = new System.Drawing.Point(208, 138);
+            this._NO_TRANSLATE_ColorSectionLabel.Location = new System.Drawing.Point(284, 138);
             this._NO_TRANSLATE_ColorSectionLabel.Name = "_NO_TRANSLATE_ColorSectionLabel";
             this._NO_TRANSLATE_ColorSectionLabel.Size = new System.Drawing.Size(28, 15);
             this._NO_TRANSLATE_ColorSectionLabel.TabIndex = 9;
@@ -1919,7 +1919,7 @@ namespace GitUI
             this._NO_TRANSLATE_ColorRemovedLine.BackColor = System.Drawing.Color.Red;
             this._NO_TRANSLATE_ColorRemovedLine.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._NO_TRANSLATE_ColorRemovedLine.Cursor = System.Windows.Forms.Cursors.Hand;
-            this._NO_TRANSLATE_ColorRemovedLine.Location = new System.Drawing.Point(208, 18);
+            this._NO_TRANSLATE_ColorRemovedLine.Location = new System.Drawing.Point(284, 18);
             this._NO_TRANSLATE_ColorRemovedLine.Name = "_NO_TRANSLATE_ColorRemovedLine";
             this._NO_TRANSLATE_ColorRemovedLine.Size = new System.Drawing.Size(28, 15);
             this._NO_TRANSLATE_ColorRemovedLine.TabIndex = 5;
@@ -1950,7 +1950,7 @@ namespace GitUI
             this._NO_TRANSLATE_ColorAddedLineLabel.BackColor = System.Drawing.Color.Red;
             this._NO_TRANSLATE_ColorAddedLineLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._NO_TRANSLATE_ColorAddedLineLabel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this._NO_TRANSLATE_ColorAddedLineLabel.Location = new System.Drawing.Point(208, 48);
+            this._NO_TRANSLATE_ColorAddedLineLabel.Location = new System.Drawing.Point(284, 48);
             this._NO_TRANSLATE_ColorAddedLineLabel.Name = "_NO_TRANSLATE_ColorAddedLineLabel";
             this._NO_TRANSLATE_ColorAddedLineLabel.Size = new System.Drawing.Size(28, 15);
             this._NO_TRANSLATE_ColorAddedLineLabel.TabIndex = 7;
@@ -2575,7 +2575,7 @@ namespace GitUI
             // 
             this.scriptNeedsConfirmation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.scriptNeedsConfirmation.AutoSize = true;
-            this.scriptNeedsConfirmation.Location = new System.Drawing.Point(107, 383);
+            this.scriptNeedsConfirmation.Location = new System.Drawing.Point(107, 387);
             this.scriptNeedsConfirmation.Name = "scriptNeedsConfirmation";
             this.scriptNeedsConfirmation.Size = new System.Drawing.Size(122, 17);
             this.scriptNeedsConfirmation.TabIndex = 21;
@@ -2598,7 +2598,7 @@ namespace GitUI
             this.scriptEvent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.scriptEvent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.scriptEvent.FormattingEnabled = true;
-            this.scriptEvent.Location = new System.Drawing.Point(107, 356);
+            this.scriptEvent.Location = new System.Drawing.Point(107, 354);
             this.scriptEvent.Name = "scriptEvent";
             this.scriptEvent.Size = new System.Drawing.Size(188, 21);
             this.scriptEvent.TabIndex = 19;
@@ -2606,6 +2606,7 @@ namespace GitUI
             // 
             // scriptEnabled
             // 
+            this.scriptEnabled.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.scriptEnabled.AutoSize = true;
             this.scriptEnabled.Location = new System.Drawing.Point(361, 246);
             this.scriptEnabled.Name = "scriptEnabled";
@@ -2697,7 +2698,7 @@ namespace GitUI
             // 
             this.inMenuCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.inMenuCheckBox.AutoSize = true;
-            this.inMenuCheckBox.Location = new System.Drawing.Point(107, 406);
+            this.inMenuCheckBox.Location = new System.Drawing.Point(107, 410);
             this.inMenuCheckBox.Name = "inMenuCheckBox";
             this.inMenuCheckBox.Size = new System.Drawing.Size(188, 17);
             this.inMenuCheckBox.TabIndex = 15;

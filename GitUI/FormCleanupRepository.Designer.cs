@@ -42,6 +42,7 @@
             // 
             // Preview
             // 
+            this.Preview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Preview.Location = new System.Drawing.Point(296, 12);
             this.Preview.Name = "Preview";
             this.Preview.Size = new System.Drawing.Size(88, 25);
@@ -52,6 +53,7 @@
             // 
             // Cleanup
             // 
+            this.Cleanup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Cleanup.Location = new System.Drawing.Point(296, 42);
             this.Cleanup.Name = "Cleanup";
             this.Cleanup.Size = new System.Drawing.Size(88, 25);
@@ -62,6 +64,7 @@
             // 
             // Cancel
             // 
+            this.Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.Cancel.Location = new System.Drawing.Point(296, 71);
             this.Cancel.Name = "Cancel";
@@ -73,6 +76,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.RemoveIngnored);
             this.groupBox1.Controls.Add(this.RemoveNonIgnored);
             this.groupBox1.Controls.Add(this.RemoveAll);
@@ -129,6 +134,9 @@
             // 
             // PreviewOutput
             // 
+            this.PreviewOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.PreviewOutput.Location = new System.Drawing.Point(12, 142);
             this.PreviewOutput.Multiline = true;
             this.PreviewOutput.Name = "PreviewOutput";
@@ -149,7 +157,6 @@
             this.Controls.Add(this.Cancel);
             this.Controls.Add(this.Cleanup);
             this.Controls.Add(this.Preview);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormCleanupRepository";
