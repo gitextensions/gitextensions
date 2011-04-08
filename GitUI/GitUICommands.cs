@@ -315,6 +315,25 @@ namespace GitUI
             return true;
         }
 
+        public bool StartCommitDialog(bool closeWhenNoChanges)
+        {
+            if (!RequiresValidWorkingDir())
+                return false;
+
+            if (!InvokeEvent(PreCommit))
+                return true;
+
+            var form = new FormCommit() { CloseWhenNoChanges = closeWhenNoChanges };
+            form.ShowDialog();
+
+            InvokeEvent(PostCommit);
+
+            if (!form.NeedRefresh)
+                return false;
+
+            return true;
+        }
+
 
         public bool StartInitializeDialog()
         {
@@ -363,6 +382,22 @@ namespace GitUI
             return true;
         }
 
+        public bool StartPullDialog(bool pullOnShow)
+        {
+            if (!RequiresValidWorkingDir())
+                return false;
+
+            if (!InvokeEvent(PrePull))
+                return true;
+
+            FormPull formPull = new FormPull() { PullOnShow = pullOnShow };
+            formPull.ShowDialog();
+
+            InvokeEvent(PostPull);
+
+            return true;
+        }
+                
         public bool StartViewPatchDialog()
         {
             if (!InvokeEvent(PreViewPatch))

@@ -131,17 +131,18 @@ checkoutbranch
 checkoutrevision
 init
 clone [path]
-commit
+commit [--quiet]
 filehistory [file]
 formatpatch
-pull
-push
+pull [--rebase] [--merge] [--fetch] [--quiet]
+push [--quiet]
 settings
 viewdiff
-rebase
-merge
+rebase [--branch name]
+merge [--branch name]
 cherry
 tag
-stash</value>
+stash
+synchronize [--rebase] [--merge] [--fetch] [--quiet]</value>
   </data>
 </root>

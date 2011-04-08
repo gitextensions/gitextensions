@@ -97,6 +97,8 @@ namespace GitUI
         private bool _currentItemStaged;
         private readonly ToolStripItem _StageSelectedLinesToolStripMenuItem;
 
+        public Boolean CloseWhenNoChanges { get; set; }
+
         public FormCommit()
         {
             _syncContext = SynchronizationContext.Current;
@@ -316,6 +318,12 @@ namespace GitUI
         private void LoadUnstagedOutput()
         {
             var allChangedFiles = GitCommandHelpers.GetAllChangedFilesFromString(_gitGetUnstagedCommand.Output.ToString());
+
+            if (CloseWhenNoChanges && allChangedFiles.Count == 0)
+            {
+                Close();
+            }
+            CloseWhenNoChanges = false;
 
             var unStagedFiles = new List<GitItemStatus>();
             var stagedFiles = new List<GitItemStatus>();

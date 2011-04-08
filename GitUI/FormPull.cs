@@ -45,6 +45,8 @@ namespace GitUI
 
         private List<GitHead> _heads;
 
+        public Boolean PullOnShow { get; set; }
+
         public FormPull()
         {
             InitializeComponent();
@@ -277,6 +279,9 @@ namespace GitUI
             Fetch.Checked = Settings.PullMerge == "fetch";
 
             AutoStash.Checked = Settings.AutoStash;
+
+            if (PullOnShow)
+                PullClick(null, null);
         }
 
         private void PullSourceDropDown(object sender, EventArgs e)

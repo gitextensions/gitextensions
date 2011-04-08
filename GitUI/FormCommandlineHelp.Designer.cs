@@ -37,7 +37,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(176, 325);
+            this.label1.Size = new System.Drawing.Size(252, 338);
             this.label1.TabIndex = 0;
             this.label1.Text = resources.GetString("label1.Text");
             // 
@@ -45,9 +45,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(248, 378);
+            this.ClientSize = new System.Drawing.Size(417, 398);
             this.Controls.Add(this.label1);
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "FormCommandlineHelp";
             this.Text = "Commandline usage";
             this.ResumeLayout(false);
