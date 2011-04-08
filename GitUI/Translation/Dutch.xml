@@ -689,6 +689,12 @@ _ReSharper*/
         <TranslationItem Name="goToToolStripMenuItem" Property="Text">
           <Value>Ga naar revisie</Value>
         </TranslationItem>
+        <TranslationItem Name="toggleSplitViewLayout" Property="ToolTipText">
+          <Value>Toggle split view layout</Value>
+        </TranslationItem>
+        <TranslationItem Name="editCheckedOutFileToolStripMenuItem" Property="Text">
+          <Value>Wijzig uitgecheckt bestand</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormBlame">
@@ -1872,9 +1878,6 @@ te kunnen wijzigen.</Value>
         <TranslationItem Name="label28" Property="Text">
           <Value>Bewaar backup (.orig) na samenvoegen</Value>
         </TranslationItem>
-        <TranslationItem Name="label37" Property="Text">
-          <Value>Toon revisie grafiek in log</Value>
-        </TranslationItem>
         <TranslationItem Name="label35" Property="Text">
           <Value>Toon git commandline dialoog bij het uitvoeren van een proces</Value>
         </TranslationItem>
@@ -2063,35 +2066,11 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="browseScriptButton" Property="Text">
           <Value>Bladeren</Value>
         </TranslationItem>
-        <TranslationItem Name="cancelScriptButton" Property="Text">
-          <Value>Annuleren</Value>
-        </TranslationItem>
-        <TranslationItem Name="saveScriptButton" Property="Text">
-          <Value>Opslaan</Value>
-        </TranslationItem>
         <TranslationItem Name="removeScriptButton" Property="Text">
           <Value>Verwijderen</Value>
         </TranslationItem>
-        <TranslationItem Name="editScriptButton" Property="Text">
-          <Value>Wijzigen</Value>
-        </TranslationItem>
         <TranslationItem Name="addScriptButton" Property="Text">
           <Value>Toevoegen</Value>
-        </TranslationItem>
-        <TranslationItem Name="columnHeader1" Property="Text">
-          <Value>Nr.</Value>
-        </TranslationItem>
-        <TranslationItem Name="columnHeader2" Property="Text">
-          <Value>Naam</Value>
-        </TranslationItem>
-        <TranslationItem Name="columnHeader3" Property="Text">
-          <Value>Commando</Value>
-        </TranslationItem>
-        <TranslationItem Name="columnHeader4" Property="Text">
-          <Value>Argumenten</Value>
-        </TranslationItem>
-        <TranslationItem Name="columnHeader5" Property="Text">
-          <Value>Context menu</Value>
         </TranslationItem>
         <TranslationItem Name="helpLabel" Property="Text">
           <Value>Toets F1 voor beschikbare opties</Value>
@@ -2131,6 +2110,15 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         </TranslationItem>
         <TranslationItem Name="tabPageHotkeys" Property="Text">
           <Value>Sneltoetsen</Value>
+        </TranslationItem>
+        <TranslationItem Name="scriptEnabled" Property="Text">
+          <Value>Ingeschakeld</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelOnEvent" Property="Text">
+          <Value>On event:</Value>
+        </TranslationItem>
+        <TranslationItem Name="scriptNeedsConfirmation" Property="Text">
+          <Value>Vraag om bevestiging</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3271,10 +3259,10 @@ Kies of u het gewijzigde bestand wilt bewaren of het bestand wilt verwijderen.</
     <TranslationCategory Name="FormCommandlineHelp">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Command lijn opties</Value>
+          <Value>Commandline opties</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
-          <Value>Ondersteunde command lijn argumenten:
+          <Value>Ondersteunde commandline argumenten:
 
 browse
 add

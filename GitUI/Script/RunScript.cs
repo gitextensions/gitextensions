@@ -29,6 +29,12 @@ namespace GitUI.Script
                 command.Equals("{git}", System.StringComparison.CurrentCultureIgnoreCase))
                 command = Settings.GitCommand;
 
+            if (command.Equals("gitextensions", System.StringComparison.CurrentCultureIgnoreCase) ||
+                command.Equals("{gitextensions}", System.StringComparison.CurrentCultureIgnoreCase) ||
+                command.Equals("gitex", System.StringComparison.CurrentCultureIgnoreCase) ||
+                command.Equals("{gitex}", System.StringComparison.CurrentCultureIgnoreCase))
+                command = Settings.GetGitExtensionsFullPath();
+
             string[] options =
                 {
                     "{sTag}",

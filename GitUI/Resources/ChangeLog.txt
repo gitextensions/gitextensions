@@ -5,7 +5,8 @@ Version 2.18
 	Fixed issue 406: keyboard language changes in commit dialog
 	Fixed issue 415: Diffs in Stash view are reversed
 	Added hotkeys for ShowAllBranches and ShowCurrentBranchOnly
-	Scripts can be executed before and after actions
+	Added more commandline options
+	Scripts can be executed before and after actions	
 
 Version 2.17
 	Fixed exception thrown while loading Visual Studio plugin
