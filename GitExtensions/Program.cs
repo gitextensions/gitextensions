@@ -116,8 +116,11 @@ namespace GitExtensions
             {
                 switch (args[1])
                 {
+                    case "mergetool":
                     case "mergeconflicts":
-                        GitUICommands.Instance.StartResolveConflictsDialog();
+                        if (!arguments.ContainsKey("quiet") || GitCommandHelpers.InTheMiddleOfConflictedMerge())
+                            GitUICommands.Instance.StartResolveConflictsDialog();
+                        
                         return;
                     case "gitbash":
                         GitCommandHelpers.RunBash();
