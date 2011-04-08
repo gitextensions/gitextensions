@@ -129,11 +129,12 @@ branch
 checkout
 checkoutbranch
 checkoutrevision
-init
+cleanup
 clone [path]
 commit [--quiet]
 filehistory [file]
 formatpatch
+init
 pull [--rebase] [--merge] [--fetch] [--quiet]
 push [--quiet]
 settings

@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using GitCommands.Logging;
 using GitCommands.Repository;
 using System.Threading;
+using System.Reflection;
 
 namespace GitCommands
 {
@@ -1406,6 +1407,18 @@ namespace GitCommands
                     Application.UserAppDataRegistry.SetValue("pushalltags", _pushAllTags);
                 }
             }
+        }
+
+        public static string GetGitExtensionsFullPath()
+        {
+            return GetGitExtensionsDirectory() + "\\GitExtensions.exe";
+        }
+
+        public static string GetGitExtensionsDirectory()
+        {
+            string fileName = Assembly.GetAssembly(typeof(Settings)).Location;
+            fileName = fileName.Substring(0, fileName.LastIndexOfAny(new[] { '\\', '/' }));
+            return fileName;
         }
     }
 }

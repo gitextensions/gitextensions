@@ -645,14 +645,12 @@ namespace GitUI
 
         private static string GetGitExtensionsFullPath()
         {
-            return GetGitExtensionsDirectory() + "\\GitExtensions.exe";
+            return Settings.GetGitExtensionsFullPath();
         }
 
         private static string GetGitExtensionsDirectory()
         {
-            string fileName = Assembly.GetAssembly(typeof(FormSettings)).Location;
-            fileName = fileName.Substring(0, fileName.LastIndexOfAny(new[] { '\\', '/' }));
-            return fileName;
+            return Settings.GetGitExtensionsDirectory();
         }
 
 

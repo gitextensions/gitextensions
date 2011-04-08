@@ -146,6 +146,9 @@ namespace GitExtensions
                     case "browse":
                         GitUICommands.Instance.StartBrowseDialog(GetParameterOrEmptyStringAsDefault(args, "-filter"));
                         return;
+                    case "cleanup":
+                        new FormCleanupRepository().ShowDialog();
+                        return;
                     case "add":
                     case "addfiles":
                         GitUICommands.Instance.StartAddFilesDialog();
