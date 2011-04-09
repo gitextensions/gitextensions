@@ -115,10 +115,12 @@ namespace GitPlugin.Commands
             return false;
         }
 
-        public static void ChangeCommandCaption(DTE2 application, string tooltipText, string caption)
+        public static void ChangeCommandCaption(DTE2 application, string commandBarName, string tooltipText, string caption)
         {
-            var cmdBars = (CommandBars)application.CommandBars;
-            foreach (CommandBar commandBar in cmdBars)
+            try
+            {
+                var cmdBars = (CommandBars)application.CommandBars;
+                CommandBar commandBar = cmdBars[commandBarName];
                 foreach (CommandBarControl control in commandBar.Controls)
                 {
                     if (control.TooltipText.Trim().Equals(tooltipText.Trim(), StringComparison.CurrentCultureIgnoreCase))
@@ -126,6 +128,11 @@ namespace GitPlugin.Commands
                         control.Caption = caption;
                     }
                 }
+            }
+            catch
+            {
+                //ignore!
+            }
             
         }
 
@@ -138,6 +145,7 @@ namespace GitPlugin.Commands
             }
             catch
             {
+                //ignore!
             }
         }
 

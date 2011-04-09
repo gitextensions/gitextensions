@@ -57,30 +57,37 @@ namespace GitPlugin.Git
 
         public static string GetCurrentBranch(string fileName)
         {
-            if (!string.IsNullOrEmpty(fileName))
+            try
             {
-                string head;
-                string headFileName = GitCommands.FindGitWorkingDir(fileName) + ".git\\HEAD";
-                if (File.Exists(headFileName))
+                if (!string.IsNullOrEmpty(fileName))
                 {
-                    head = File.ReadAllText(headFileName);
-                    if (!head.Contains("ref:"))
-                        head = "no branch";
-                }
-                else
-                {
-                    int exitCode;
-                    head = GitCommands.RunGit("symbolic-ref HEAD", new FileInfo(fileName).DirectoryName, out exitCode);
-                    if (exitCode == 1)
-                        head = "no branch";
-                }
+                    string head;
+                    string headFileName = GitCommands.FindGitWorkingDir(fileName) + ".git\\HEAD";
+                    if (File.Exists(headFileName))
+                    {
+                        head = File.ReadAllText(headFileName);
+                        if (!head.Contains("ref:"))
+                            head = "no branch";
+                    }
+                    else
+                    {
+                        int exitCode;
+                        head = GitCommands.RunGit("symbolic-ref HEAD", new FileInfo(fileName).DirectoryName, out exitCode);
+                        if (exitCode == 1)
+                            head = "no branch";
+                    }
 
-                if (!string.IsNullOrEmpty(head))
-                {
-                    head = head.Replace("ref:", "").Trim().Replace("refs/heads/", string.Empty);
-                    return string.Concat(" (", head, ")");
-                }
+                    if (!string.IsNullOrEmpty(head))
+                    {
+                        head = head.Replace("ref:", "").Trim().Replace("refs/heads/", string.Empty);
+                        return string.Concat(" (", head, ")");
+                    }
 
+                }
+            }
+            catch
+            {
+                //ignore
             }
 
             return string.Empty;
@@ -174,10 +181,10 @@ namespace GitPlugin.Git
 
         public static bool GetShowCurrentBranchSetting()
         {
-            string showCurrentBranchSetting = GetRegistryValue(Registry.CurrentUser, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", "showcurrentbranch");
+            string showCurrentBranchSetting = GetRegistryValue(Registry.CurrentUser, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", "showcurrentbranchinvisualstudio");
 
             if (string.IsNullOrEmpty(showCurrentBranchSetting))
-                showCurrentBranchSetting = GetRegistryValue(Registry.Users, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", "showcurrentbranch");
+                showCurrentBranchSetting = GetRegistryValue(Registry.Users, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", "showcurrentbranchinvisualstudio");
 
             return showCurrentBranchSetting != null && showCurrentBranchSetting.Equals("True", StringComparison.CurrentCultureIgnoreCase);
         }

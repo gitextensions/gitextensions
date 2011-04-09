@@ -2120,6 +2120,9 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="scriptNeedsConfirmation" Property="Text">
           <Value>Vraag om bevestiging</Value>
         </TranslationItem>
+        <TranslationItem Name="labelShowCurrentBranchInVisualStudio" Property="Text">
+          <Value>Toon huidige vertakking  in Visual Studio</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormModifiedDeletedCreated">
