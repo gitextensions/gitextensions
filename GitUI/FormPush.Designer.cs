@@ -502,7 +502,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Push";
             this.Load += new System.EventHandler(this.FormPushLoad);
-            this.Shown += new System.EventHandler(this.FormPush_Shown);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormPush_FormClosing);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();

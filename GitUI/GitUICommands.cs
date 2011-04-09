@@ -315,7 +315,7 @@ namespace GitUI
             return true;
         }
 
-        public bool StartCommitDialog(bool closeWhenNoChanges)
+        public bool StartCommitDialog(bool showWhenNoChanges)
         {
             if (!RequiresValidWorkingDir())
                 return false;
@@ -323,8 +323,11 @@ namespace GitUI
             if (!InvokeEvent(PreCommit))
                 return true;
 
-            var form = new FormCommit() { CloseWhenNoChanges = closeWhenNoChanges };
-            form.ShowDialog();
+            var form = new FormCommit();
+            if (showWhenNoChanges)
+                form.ShowDialogWhenChanges();
+            else
+                form.ShowDialog();
 
             InvokeEvent(PostCommit);
 
@@ -390,8 +393,11 @@ namespace GitUI
             if (!InvokeEvent(PrePull))
                 return true;
 
-            FormPull formPull = new FormPull() { PullOnShow = pullOnShow };
-            formPull.ShowDialog();
+            FormPull formPull = new FormPull();
+            if (pullOnShow)
+                formPull.PullAndShowDialogWhenFailed();
+            else
+                formPull.ShowDialog();
 
             InvokeEvent(PostPull);
 
@@ -736,8 +742,11 @@ namespace GitUI
             if (!InvokeEvent(PrePush))
                 return true;
 
-            var form = new FormPush { PushOnShow = pushOnShow };
-            form.ShowDialog();
+            var form = new FormPush();
+            if (pushOnShow)
+                form.PushAndShowDialogWhenFailed();
+            else 
+                form.ShowDialog();
 
             InvokeEvent(PostPush);
 

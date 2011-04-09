@@ -279,6 +279,8 @@ namespace GitExtensions
                 Settings.PullMerge = "rebase";
             if (arguments.ContainsKey("fetch"))
                 Settings.PullMerge = "fetch";
+            if (arguments.ContainsKey("autostash"))
+                Settings.AutoStash = true;
             GitUICommands.Instance.StartPullDialog(arguments.ContainsKey("quiet"));
         }
 

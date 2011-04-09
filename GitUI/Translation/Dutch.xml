@@ -3276,20 +3276,22 @@ branch
 checkout
 checkoutbranch
 checkoutrevision
-init
+cleanup
 clone [path]
-commit
+commit [--quiet]
 filehistory [file]
 formatpatch
-pull
-push
+init
+pull [--rebase] [--merge] [--fetch] [--quiet]
+push [--quiet]
 settings
 viewdiff
-rebase
-merge
+rebase [--branch name]
+merge [--branch name]
 cherry
 tag
 stash
+synchronize [--rebase] [--merge] [--fetch] [--quiet]
 </Value>
         </TranslationItem>
       </translationItems>
