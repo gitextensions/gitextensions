@@ -45,8 +45,6 @@ namespace GitUI
 
         private List<GitHead> _heads;
 
-        public Boolean PullOnShow { get; set; }
-
         public FormPull()
         {
             InitializeComponent();
@@ -55,7 +53,21 @@ namespace GitUI
             IList<string> remotes = new List<string>(GitCommandHelpers.GetRemotes());
             remotes.Insert(0, "[ All ]");
             Remotes.DataSource = remotes;
-            
+
+            string branch = GitCommandHelpers.GetSelectedBranch();
+            Remotes.Text = GitCommandHelpers.GetSetting(string.Format("branch.{0}.remote", branch));
+            _NO_TRANSLATE_localBranch.Text = branch;
+
+            Merge.Checked = Settings.PullMerge == "merge";
+            Rebase.Checked = Settings.PullMerge == "rebase";
+            Fetch.Checked = Settings.PullMerge == "fetch";
+            AutoStash.Checked = Settings.AutoStash;
+        }
+
+        public void PullAndShowDialogWhenFailed()
+        {
+            if (!PullChanges())
+                ShowDialog();
         }
 
         private void BrowseSourceClick(object sender, EventArgs e)
@@ -126,21 +138,27 @@ namespace GitUI
 
         private void PullClick(object sender, EventArgs e)
         {
+            if (PullChanges())
+                Close();
+        }
+
+        public bool PullChanges()
+        {
             if (PullFromUrl.Checked && string.IsNullOrEmpty(PullSource.Text))
             {
                 MessageBox.Show(_selectSourceDirectory.Text);
-                return;
+                return false;
             }
             if (PullFromRemote.Checked && string.IsNullOrEmpty(Remotes.Text) && !PullAll())
             {
                 MessageBox.Show(_selectRemoteRepository.Text);
-                return;
+                return false;
             }
 
             if (!Fetch.Checked && Branches.Text == "*")
             {
                 MessageBox.Show(_fetchAllBranchesCanOnlyWithFetch.Text);
-                return;
+                return false;
             }
 
             if (Merge.Checked)
@@ -199,7 +217,7 @@ namespace GitUI
                     !GitCommandHelpers.InTheMiddleOfRebase() &&
                     (process != null && !process.ErrorOccurred()))
                 {
-                    Close();
+                    return true;
                 }
 
                 // Rebase failed -> special 'rebase' merge conflict
@@ -209,7 +227,7 @@ namespace GitUI
                     if (!GitCommandHelpers.InTheMiddleOfConflictedMerge() &&
                         !GitCommandHelpers.InTheMiddleOfRebase())
                     {
-                        Close();
+                        return true;
                     }
                 }
                 else
@@ -218,20 +236,20 @@ namespace GitUI
                     if (!GitCommandHelpers.InTheMiddleOfConflictedMerge() &&
                         !GitCommandHelpers.InTheMiddleOfRebase())
                     {
-                        Close();
+                        return true;
                     }
                 }
 
                 if (!AutoStash.Checked || !stashed || GitCommandHelpers.InTheMiddleOfConflictedMerge() ||
                     GitCommandHelpers.InTheMiddleOfRebase())
                 {
-                    return;
+                    return true;
                 }
 
                 if (MessageBox.Show(_applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text,
                                     MessageBoxButtons.YesNo) != DialogResult.Yes)
                 {
-                    return;
+                    return true;
                 }
 
                 if (stashed)
@@ -245,6 +263,8 @@ namespace GitUI
             {
                 ScriptManager.RunEventScripts(ScriptEvent.AfterPull);
             }
+
+            return false;
         }
 
         private void LoadPuttyKey()
@@ -262,26 +282,12 @@ namespace GitUI
         {
             Remotes.Select();
 
-            string branch = GitCommandHelpers.GetSelectedBranch();
-            Remotes.Text = GitCommandHelpers.GetSetting(string.Format("branch.{0}.remote", branch));
-
-            _NO_TRANSLATE_localBranch.Text = branch;
-
             Text = string.Format("Pull ({0})", Settings.WorkingDir);
         }
 
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
-
-            Merge.Checked = Settings.PullMerge == "merge";
-            Rebase.Checked = Settings.PullMerge == "rebase";
-            Fetch.Checked = Settings.PullMerge == "fetch";
-
-            AutoStash.Checked = Settings.AutoStash;
-
-            if (PullOnShow)
-                PullClick(null, null);
         }
 
         private void PullSourceDropDown(object sender, EventArgs e)
