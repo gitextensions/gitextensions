@@ -35,11 +35,11 @@ namespace GitPlugin.Commands
             {
                 if (enabled)
                 {
-                    Plugin.ChangeCommandCaption(application, "Commit changes", "Commit" + GitCommands.GetCurrentBranch(fileName));
+                    Plugin.ChangeCommandCaption(application, "GitExtensions", "Commit changes", "Commit" + GitCommands.GetCurrentBranch(fileName));
                 }
                 else
                 {
-                    Plugin.ChangeCommandCaption(application, "Commit changes", "Commit");
+                    Plugin.ChangeCommandCaption(application, "GitExtensions", "Commit changes", "Commit");
                 }
 
                 lastBranchCheck = DateTime.Now;

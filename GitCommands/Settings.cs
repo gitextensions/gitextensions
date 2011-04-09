@@ -1197,6 +1197,24 @@ namespace GitCommands
             }
         }
 
+        private static bool? _showCurrentBranchInVisualStudio;
+        public static bool ShowCurrentBranchInVisualStudio
+        {
+            get
+            {
+                if (_showCurrentBranchInVisualStudio == null)
+                    SafeSetBool("showcurrentbranchinvisualstudio", true, x => _showCurrentBranchInVisualStudio = x);
+                return _showCurrentBranchInVisualStudio.Value;
+            }
+            set
+            {
+                if (_showCurrentBranchInVisualStudio == value)
+                    return;
+                _showCurrentBranchInVisualStudio = value;
+                Application.UserAppDataRegistry.SetValue("showcurrentbranchinvisualstudio", _showCurrentBranchInVisualStudio);
+            }
+        }
+
         private static string _lastFormatPatchDir;
         public static string LastFormatPatchDir
         {
