@@ -2032,14 +2032,28 @@ namespace GitCommands
 
         public static string GetSelectedBranch()
         {
-            var branches = RunCmd(Settings.GitCommand, "branch");
-            var branchStrings = branches.Split('\n');
-            foreach (var branch in branchStrings)
+            string head;
+            string headFileName = Settings.WorkingDirGitDir() + "\\HEAD";
+            if (File.Exists(headFileName))
             {
-                if (branch.IndexOf('*') > -1)
-                    return branch.Trim('*', ' ');
+                head = File.ReadAllText(headFileName);
+                if (!head.Contains("ref:"))
+                    head = "(no branch)";
             }
-            return "";
+            else
+            {
+                int exitcode;
+                head = RunCmd(Settings.GitCommand, "symbolic-ref HEAD", out exitcode);
+                if (exitcode == 1)
+                    head = "(no branch)";
+            }
+
+            if (!string.IsNullOrEmpty(head))
+            {
+                return head.Replace("ref:", "").Replace("refs/heads/", string.Empty).Trim();
+            }
+
+            return string.Empty;
         }
 
         public static List<GitHead> GetRemoteHeads(string remote, bool tags, bool branches)

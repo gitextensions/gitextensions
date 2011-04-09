@@ -115,6 +115,20 @@ namespace GitPlugin.Commands
             return false;
         }
 
+        public static void ChangeCommandCaption(DTE2 application, string tooltipText, string caption)
+        {
+            var cmdBars = (CommandBars)application.CommandBars;
+            foreach (CommandBar commandBar in cmdBars)
+                foreach (CommandBarControl control in commandBar.Controls)
+                {
+                    if (control.TooltipText.Trim().Equals(tooltipText.Trim(), StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        control.Caption = caption;
+                    }
+                }
+            
+        }
+
         public void DeleteCommandBar(string name)
         {
             var cmdBars = (CommandBars) m_application.CommandBars;
