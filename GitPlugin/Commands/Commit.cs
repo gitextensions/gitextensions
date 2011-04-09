@@ -31,7 +31,7 @@ namespace GitPlugin.Commands
 
             string fileName = GetSelectedFile(application);
 
-            if (showCurrentBranch.Value && (fileName != lastFile || DateTime.Now - lastBranchCheck > new TimeSpan(0, 0, 0, 1, 0)))
+            if (showCurrentBranch != null && lastBranchCheck != null && showCurrentBranch.Value && (fileName != lastFile || DateTime.Now - lastBranchCheck > new TimeSpan(0, 0, 0, 1, 0)))
             {
                 if (enabled)
                 {
