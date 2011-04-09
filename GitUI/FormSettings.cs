@@ -126,6 +126,8 @@ namespace GitUI
                 else if (Settings.Encoding == Encoding.Default)
                     _NO_TRANSLATE_Encoding.Text = "Default (" + Encoding.Default.HeaderName + ")";
 
+                showCurrentBranchInVisualStudio.Checked = Settings.ShowCurrentBranchInVisualStudio;
+
                 RevisionGridQuickSearchTimeout.Value = Settings.RevisionGridQuickSearchTimeout;
 
                 FollowRenamesInFileHistory.Checked = Settings.FollowRenamesInFileHistory;
@@ -363,6 +365,8 @@ namespace GitUI
             }
 
             GitCommandHelpers.SetEnvironmentVariable(true);
+
+            Settings.ShowCurrentBranchInVisualStudio = showCurrentBranchInVisualStudio.Checked;
 
             Settings.ShowErrorsWhenStagingFiles = showErrorsWhenStagingFiles.Checked;
 
