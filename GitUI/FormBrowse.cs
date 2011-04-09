@@ -574,6 +574,7 @@ namespace GitUI
             openWithToolStripMenuItem.Enabled = enableItems;
             copyFilenameToClipboardToolStripMenuItem.Enabled = enableItems;
             fileHistoryToolStripMenuItem.Enabled = enableItems;
+            editCheckedOutFileToolStripMenuItem.Enabled = enableItems;
         }
 
         public void OpenOnClick(object sender, EventArgs e)
