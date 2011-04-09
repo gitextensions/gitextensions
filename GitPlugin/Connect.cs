@@ -9,6 +9,8 @@ using Extensibility;
 using GitPlugin.Commands;
 using Microsoft.VisualStudio.CommandBars;
 using Thread = System.Threading.Thread;
+using GitPlugin.Git;
+using System.IO;
 
 namespace GitPlugin
 {
@@ -109,7 +111,7 @@ namespace GitPlugin
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.ToString());
+                    _gitPlugin.OutputPane.OutputString("Error adding commands: " + ex.ToString());
                 }
 
                 //Place the command on the tools menu.
@@ -142,11 +144,18 @@ namespace GitPlugin
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.ToString());
-                    if (toolsControl == null)
+                    try
                     {
-                        toolsControl = menuBarCommandBar.Controls[GetToolsMenuName()];
-                        toolsPopup = (CommandBarPopup) toolsControl;
+                        _gitPlugin.OutputPane.OutputString("Error creating git menu (trying to add commands to tools menu): " + ex.ToString());
+                        if (toolsControl == null)
+                        {
+                            toolsControl = menuBarCommandBar.Controls[GetToolsMenuName()];
+                            toolsPopup = (CommandBarPopup)toolsControl;
+                        }
+                    }
+                    catch (Exception ex2)
+                    {
+                        _gitPlugin.OutputPane.OutputString("Error menu: " + ex2.ToString());
                     }
                 }
 
@@ -160,8 +169,10 @@ namespace GitPlugin
 
                     _gitPlugin.AddToolbarCommand(commandBar, 
                         "GitExtensionsBrowse", "Browse", "Browse repository", 12, 2);
+                    
                     _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsPull", "Pull",
                                                 "Pull changes from remote repository", 9, 3);
+
                     _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsPush", "Push",
                                                 "Push changes to remote repository", 8, 4);
                     _gitPlugin.AddToolbarCommand(commandBar, 
@@ -171,7 +182,7 @@ namespace GitPlugin
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.ToString());
+                    _gitPlugin.OutputPane.OutputString("Error creating toolbar: " + ex.ToString());
                 }
 
                 try
@@ -215,7 +226,7 @@ namespace GitPlugin
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.ToString());
+                    _gitPlugin.OutputPane.OutputString("Error creating contextmenu: " + ex.ToString());
                 }
 
                 AddContextMenuItemsToContextMenu("XML Editor");
@@ -248,7 +259,7 @@ namespace GitPlugin
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                _gitPlugin.OutputPane.OutputString("Error loading plugin: " + ex.ToString());
             }
         }
 
@@ -286,6 +297,7 @@ namespace GitPlugin
         }
 
         #endregion
+
 
         private string GetToolsMenuName()
         {

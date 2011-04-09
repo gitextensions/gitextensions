@@ -57,8 +57,7 @@ namespace GitPlugin.Commands
                         if (m_executeForProjectItems && sel.Project != null)
                             OnExecute(sel, sel.Project.FullName, pane);
                         else
-                            MessageBox.Show("You need to select a file or project to use this function.", "Git", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
+                            MessageBox.Show("You need to select a file or project to use this function.", "Git Extensions", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
 
