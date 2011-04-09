@@ -41,8 +41,6 @@ namespace GitUI
 		private readonly TranslationString _yes = new TranslationString("Yes");
 		private readonly TranslationString _no = new TranslationString("No");
 
-        public Boolean PushOnShow { get; set; }
-
         public FormPush()
         {
             InitializeComponent();
@@ -56,7 +54,17 @@ namespace GitUI
             UpdateRemoteBranchDropDown();
 
             Push.Focus();
+
+            Remotes.Text = GitCommandHelpers.GetSetting(string.Format("branch.{0}.remote", _currentBranch));
+            RemotesUpdated(null, null);
         }
+
+        public void PushAndShowDialogWhenFailed()
+        {
+            if (!PushChanges())
+                ShowDialog();
+        }
+
 
         private void BrowseSourceClick(object sender, EventArgs e)
         {
@@ -67,21 +75,27 @@ namespace GitUI
 
         private void PushClick(object sender, EventArgs e)
         {
+            if (PushChanges())
+                Close();
+        }
+
+        private bool PushChanges()
+        {
             if (PullFromUrl.Checked && string.IsNullOrEmpty(PushDestination.Text))
             {
                 MessageBox.Show(_selectDestinationDirectory.Text);
-                return;
+                return false;
             }
             if (PullFromRemote.Checked && string.IsNullOrEmpty(Remotes.Text))
             {
                 MessageBox.Show(_selectRemote.Text);
-                return;
+                return false;
             }
             if (TabControlTagBranch.SelectedTab == TagTab && string.IsNullOrEmpty(TagComboBox.Text) &&
                 !PushAllTags.Checked)
             {
                 MessageBox.Show(_selectTag.Text);
-                return;
+                return false;
             }
 
             bool newBranch = false;
@@ -97,7 +111,7 @@ namespace GitUI
                     if (MessageBox.Show(_branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo) ==
                         DialogResult.No)
                     {
-                        return;
+                        return false;
                     }
                     else
                     {
@@ -166,10 +180,12 @@ namespace GitUI
                 !GitCommandHelpers.InTheMiddleOfRebase() && !form.ErrorOccurred())
             {
                 ScriptManager.RunEventScripts(ScriptEvent.AfterPush);
-                Close();
                 if (_createPullRequestCB.Checked)
                     GitUICommands.Instance.StartCreatePullRequest();
+                return true;
             }
+
+            return false;
         }
 
         private void FillPushDestinationDropDown()
@@ -241,8 +257,6 @@ namespace GitUI
             RestorePosition("push");
 
             Remotes.Select();
-            Remotes.Text = GitCommandHelpers.GetSetting(string.Format("branch.{0}.remote", _currentBranch));
-            RemotesUpdated(null, null);
 
             Text = string.Concat(_pushCaption.Text, " (", Settings.WorkingDir, ")");
 
@@ -360,12 +374,6 @@ namespace GitUI
         {
             Branch.Enabled = !PushAllBranches.Checked;
             RemoteBranch.Enabled = !PushAllBranches.Checked;
-        }
-
-        private void FormPush_Shown(object sender, EventArgs e)
-        {
-            if (PushOnShow)
-                Push.PerformClick();
         }
 
 		#region Multi-Branch Methods

@@ -90,14 +90,12 @@ namespace GitUI
 
         #endregion
 
-        private readonly GitCommandsInstance _gitGetUnstagedCommand;
+        private GitCommandsInstance _gitGetUnstagedCommand;
         private readonly SynchronizationContext _syncContext;
         public bool NeedRefresh;
         private GitItemStatus _currentItem;
         private bool _currentItemStaged;
         private readonly ToolStripItem _StageSelectedLinesToolStripMenuItem;
-
-        public Boolean CloseWhenNoChanges { get; set; }
 
         public FormCommit()
         {
@@ -123,9 +121,6 @@ namespace GitUI
 
             Unstaged.DoubleClick += Unstaged_DoubleClick;
             Staged.DoubleClick += Staged_DoubleClick;
-
-            _gitGetUnstagedCommand = new GitCommandsInstance();
-            _gitGetUnstagedCommand.Exited += GitCommandsExited;
 
             Unstaged.Focus();
 
@@ -225,15 +220,39 @@ namespace GitUI
         #endregion
 
 
+        public void ShowDialogWhenChanges()
+        {
+            Initialize();
+            while (_gitGetUnstagedCommand.IsRunning)
+            {
+                Thread.Sleep(200);
+            }
+
+            var allChangedFiles = GitCommandHelpers.GetAllChangedFilesFromString(_gitGetUnstagedCommand.Output.ToString());
+            if (allChangedFiles.Count > 0)
+            {
+                ShowDialog();
+            }
+            else
+            {
+                DisposeGitGetUnstagedCommand();
+            }
+        }
+
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            DisposeGitGetUnstagedCommand();
+
+            base.OnClosing(e);
+        }
+
+        private void DisposeGitGetUnstagedCommand()
         {
             if (_gitGetUnstagedCommand != null)
             {
                 _gitGetUnstagedCommand.Exited -= GitCommandsExited;
                 _gitGetUnstagedCommand.Dispose();
             }
-
-            base.OnClosing(e);
         }
 
         private void StageSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
@@ -288,16 +307,22 @@ namespace GitUI
 
             Cursor.Current = Cursors.WaitCursor;
 
+            if (_gitGetUnstagedCommand == null)
+            {
+                _gitGetUnstagedCommand = new GitCommandsInstance();
+                _gitGetUnstagedCommand.Exited += GitCommandsExited;
+            }
+
             // Load unstaged files
             var allChangedFilesCmd =
                 GitCommandHelpers.GetAllChangedFilesCmd(
                     !showIgnoredFilesToolStripMenuItem.Checked,
                     showUntrackedFilesToolStripMenuItem.Checked);
             _gitGetUnstagedCommand.CmdStartProcess(Settings.GitCommand, allChangedFilesCmd);
+ 
             Loading.Visible = true;
             LoadingStaged.Visible = true;
 
-            AcceptButton = Commit;
             Cursor.Current = Cursors.Default;
         }
 
@@ -318,12 +343,6 @@ namespace GitUI
         private void LoadUnstagedOutput()
         {
             var allChangedFiles = GitCommandHelpers.GetAllChangedFilesFromString(_gitGetUnstagedCommand.Output.ToString());
-
-            if (CloseWhenNoChanges && allChangedFiles.Count == 0)
-            {
-                Close();
-            }
-            CloseWhenNoChanges = false;
 
             var unStagedFiles = new List<GitItemStatus>();
             var stagedFiles = new List<GitItemStatus>();
@@ -769,7 +788,10 @@ namespace GitUI
 
         private void FormCommitShown(object sender, EventArgs e)
         {
-            Initialize();
+            if (_gitGetUnstagedCommand == null)
+                Initialize();
+
+            AcceptButton = Commit;
 
             var message = GitCommandHelpers.GetMergeMessage();
 
