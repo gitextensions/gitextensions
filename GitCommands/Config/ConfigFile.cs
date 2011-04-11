@@ -274,5 +274,28 @@ namespace GitCommands.Config
 
             return path.Replace("$QUOTE$", "\\\"");
         }
+
+        public static string GetPath()
+        {
+            String[] paths = {
+                Environment.GetEnvironmentVariable("HOME"),
+                Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User),
+                Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH"),
+                Environment.GetEnvironmentVariable("USERPROFILE"),
+                Environment.GetFolderPath(Environment.SpecialFolder.Personal),
+            };
+
+            foreach(string path in paths)
+            {
+                if (! String.IsNullOrEmpty(path))
+                {
+                    string candidate = Path.Combine(path, ".gitconfig");
+                    if (File.Exists(candidate))
+                        return candidate;
+                }
+            }
+
+            return Path.Combine(Environment.CurrentDirectory, ".gitconfig");
+        }
     }
 }

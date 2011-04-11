@@ -7,32 +7,36 @@ namespace GitUI
 {
     public partial class FormFixHome : GitExtensionsForm
     {
-        public static void CheckHomePath()
+        private static bool IsFixHome()
         {
-            bool fixHome = false;
-            GitCommandHelpers.SetEnvironmentVariable();
-            if (!Directory.Exists(Environment.GetEnvironmentVariable("HOME")) ||
-                string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME")))
+            string home = Environment.GetEnvironmentVariable("HOME");
+            if (string.IsNullOrEmpty(home) || !Directory.Exists(home))
+                return true;
+
+            //This is bad... or... it is the first time any git action has taken place.
+            if (File.Exists(Path.Combine(home, ".gitconfig")))
+                return false;
+
+            string[] candidates = {
+                Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User),
+                Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH"),
+                Environment.GetEnvironmentVariable("USERPROFILE"),
+            };
+
+            foreach(string candidate in candidates)
             {
-                fixHome = true;
-            }
-            else
-            {
-                //This is bad... or... it is the first time any git action has taken place.
-                if (!File.Exists(Environment.GetEnvironmentVariable("HOME") + "\\.gitconfig"))
-                {
-                    //If there is a .gitconfig file in any of the obvious places, we can make
-                    //a suggestion for HOME that is probably better then the current HOME
-                    if (File.Exists(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User) + "\\.gitconfig") ||
-                        File.Exists(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH") + "\\.gitconfig") ||
-                        File.Exists(Environment.GetEnvironmentVariable("USERPROFILE") + "\\.gitconfig"))
-                    {
-                        fixHome = true;
-                    }
-                }
+                if (File.Exists(Path.Combine(candidate, ".gitconfig")))
+                    return true;
             }
 
-            if (fixHome)
+            return false;
+        }
+
+        public static void CheckHomePath()
+        {
+            GitCommandHelpers.SetEnvironmentVariable();
+
+            if (IsFixHome())
             {
                 if (MessageBox.Show("The environment variable HOME does not point to a directory that contains the global git config file:" + Environment.NewLine +
                                 "\"" + Environment.GetEnvironmentVariable("HOME") + "\"" + Environment.NewLine + Environment.NewLine +
@@ -40,7 +44,6 @@ namespace GitUI
                     new FormFixHome().ShowDialog();
             }
         }
-
 
         public FormFixHome()
         {
@@ -80,18 +83,16 @@ namespace GitUI
                 MessageBox.Show("Located .gitconfig in %HOME% (" + Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User) + "). This setting has been chosen automatically.");
                 defaultHome.Checked = true;
             }
-            else
-                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH")) && File.Exists(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH") + "\\.gitconfig"))
-                {
-                    MessageBox.Show("Located .gitconfig in %HOMEDRIVE%%HOMEPATH% (" + Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH") + "). This setting has been chosen automatically.");
-                    defaultHome.Checked = true;
-                }
-                else
-                    if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("USERPROFILE")) && File.Exists(Environment.GetEnvironmentVariable("USERPROFILE") + "\\.gitconfig"))
-                    {
-                        MessageBox.Show("Located .gitconfig in %USERPROFILE% (" + Environment.GetEnvironmentVariable("USERPROFILE") + "). This setting has been chosen automatically.");
-                        userprofileHome.Checked = true;
-                    }
+            else if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH")) && File.Exists(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH") + "\\.gitconfig"))
+            {
+                MessageBox.Show("Located .gitconfig in %HOMEDRIVE%%HOMEPATH% (" + Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH") + "). This setting has been chosen automatically.");
+                defaultHome.Checked = true;
+            }
+            else if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("USERPROFILE")) && File.Exists(Environment.GetEnvironmentVariable("USERPROFILE") + "\\.gitconfig"))
+            {
+                MessageBox.Show("Located .gitconfig in %USERPROFILE% (" + Environment.GetEnvironmentVariable("USERPROFILE") + "). This setting has been chosen automatically.");
+                userprofileHome.Checked = true;
+            }
         }
 
         private void ok_Click(object sender, EventArgs e)

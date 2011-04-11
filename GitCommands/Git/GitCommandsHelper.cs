@@ -1536,7 +1536,7 @@ namespace GitCommands
 
         public static ConfigFile GetGlobalConfig()
         {
-            return new ConfigFile(Environment.GetEnvironmentVariable("HOME") + Settings.PathSeparator + ".gitconfig");
+            return new ConfigFile(ConfigFile.GetPath());
         }
 
         public static ConfigFile GetLocalConfig()
