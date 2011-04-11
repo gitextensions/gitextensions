@@ -2041,6 +2041,7 @@ namespace GitUI
             ScriptList.ClearSelection();
             ScriptManager.GetScripts().AddNew();
             ScriptList.Rows[ScriptList.RowCount - 1].Selected = true;
+            ScriptList_SelectionChanged(null, null);//needed for linux
         }
 
         private void removeScriptButton_Click(object sender, EventArgs e)
@@ -2161,6 +2162,11 @@ namespace GitUI
         {
             ScriptInfoFromEdits();
             ScriptList.Refresh();
+        }
+
+        private void ScriptList_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            ScriptList_SelectionChanged(null, null);//needed for linux
         }
     }
 }

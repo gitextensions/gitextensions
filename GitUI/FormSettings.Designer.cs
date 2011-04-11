@@ -2662,6 +2662,7 @@ namespace GitUI
             this.ScriptList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.ScriptList.Size = new System.Drawing.Size(724, 232);
             this.ScriptList.TabIndex = 17;
+            this.ScriptList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ScriptList_CellClick);
             this.ScriptList.SelectionChanged += new System.EventHandler(this.ScriptList_SelectionChanged);
             // 
             // Enabled
