@@ -1,4 +1,4 @@
-Changelog
+﻿Changelog
 =========
 
 Version 2.18
@@ -6,10 +6,11 @@ Version 2.18
 	Fixed issue 415: Diffs in Stash view are reversed
 	Fixed issue 417: popup complains about missing .gitconfig on Linux
 	Fixed translations on Linux
+	Fixed browse dialog size issues on Linux
 	Added hotkeys for ShowAllBranches and ShowCurrentBranchOnly
 	Added more commandline options
 	Show current branch in Visual Studio toolbar (default off)
-	Scripts can be executed before and after actions		
+	Scripts can be executed before and after actions			
 
 Version 2.17
 	Fixed exception thrown while loading Visual Studio plugin
