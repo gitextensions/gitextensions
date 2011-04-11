@@ -96,6 +96,7 @@ namespace GitUI
         private GitItemStatus _currentItem;
         private bool _currentItemStaged;
         private readonly ToolStripItem _StageSelectedLinesToolStripMenuItem;
+        private readonly ToolStripItem _ResetSelectedLinesToolStripMenuItem;
 
         public FormCommit()
         {
@@ -126,7 +127,7 @@ namespace GitUI
 
             SelectedDiff.AddContextMenuEntry(null, null);
             _StageSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_stageSelectedLines.Text, StageSelectedLinesToolStripMenuItemClick);
-            SelectedDiff.AddContextMenuEntry(_resetSelectedLines.Text, ResetSelectedLinesToolStripMenuItemClick);
+            _ResetSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_resetSelectedLines.Text, ResetSelectedLinesToolStripMenuItemClick);
 
             splitMain.SplitterDistance = Settings.CommitDialogSplitter;
 
@@ -267,7 +268,11 @@ namespace GitUI
 
             if (!string.IsNullOrEmpty(patch))
             {
-                GitCommandHelpers.RunCmd(Settings.GitCommand, args, patch);
+                string output = GitCommandHelpers.RunCmd(Settings.GitCommand, args, patch);
+                if (!string.IsNullOrEmpty(output))
+                {
+                    MessageBox.Show(output);
+                }
                 ScanClick(null, null);
             }
         }
@@ -283,11 +288,15 @@ namespace GitUI
             if (_currentItemStaged) //staged
                 args += " --index";
 
-            string patch = PatchManager.GetSelectedLinesAsPatch(SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), true);
+            string patch = PatchManager.GetSelectedLinesAsPatch(SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), _currentItemStaged);
 
             if (!string.IsNullOrEmpty(patch))
             {
-                GitCommandHelpers.RunCmd(Settings.GitCommand, args, patch);
+                string output = GitCommandHelpers.RunCmd(Settings.GitCommand, args, patch);
+                if (!string.IsNullOrEmpty(output))
+                {
+                    MessageBox.Show(output);
+                }
                 ScanClick(null, null);
             }
         }
@@ -392,6 +401,7 @@ namespace GitUI
             }
 
             _StageSelectedLinesToolStripMenuItem.Text = staged ? _unstageSelectedLines.Text : _stageSelectedLines.Text;
+            _ResetSelectedLinesToolStripMenuItem.Enabled = staged;
         }
 
         private void TrackedSelectionChanged(object sender, EventArgs e)
