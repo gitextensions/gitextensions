@@ -21,7 +21,10 @@ namespace ResourceManager.Translation
             } else
             if (!translationName.Equals(Translator.name))
             {
-                Translator.translation = TranslationSerializer.Deserialize(Translator.GetTranslationDir() + @"\" + translationName + ".xml");
+                if (RunningOnWindows())
+                    Translator.translation = TranslationSerializer.Deserialize(Translator.GetTranslationDir() + @"\" + translationName + ".xml");
+                else
+                    Translator.translation = TranslationSerializer.Deserialize(Translator.GetTranslationDir() + @"/" + translationName + ".xml");
             }
             Translator.name = translationName;
         }
