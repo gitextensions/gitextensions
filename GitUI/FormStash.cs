@@ -95,7 +95,7 @@ namespace GitUI
                 ThreadPool.QueueUserWorkItem(
                 o =>
                 {
-                    IList<GitItemStatus> gitItemStatuses = GitCommandHelpers.GetDiffFiles(gitStash.Name + "^", gitStash.Name);
+                    IList<GitItemStatus> gitItemStatuses = GitCommandHelpers.GetDiffFiles(gitStash.Name, gitStash.Name + "^");
                     _syncContext.Post(state1 => LoadGitItemStatuses(gitItemStatuses), null);
                 });
             }
