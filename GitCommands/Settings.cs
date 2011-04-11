@@ -1203,7 +1203,9 @@ namespace GitCommands
             get
             {
                 if (_showCurrentBranchInVisualStudio == null)
-                    SafeSetBool("showcurrentbranchinvisualstudio", true, x => _showCurrentBranchInVisualStudio = x);
+                    //This setting MUST be set to false by default, otherwise it will not work in Visual Studio without
+                    //other changes in the Visual Studio plugin itself.
+                    SafeSetBool("showcurrentbranchinvisualstudio", false, x => _showCurrentBranchInVisualStudio = x);
                 return _showCurrentBranchInVisualStudio.Value;
             }
             set
