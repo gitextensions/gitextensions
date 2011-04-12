@@ -745,16 +745,27 @@ namespace GitCommands
             return RunCmd(Settings.GitCommand, "shortlog -s -n");
         }
 
-        public static string DeleteBranch(string branchName, bool force)
+        public static string DeleteBranch(string branchName, bool force, bool remoteBranch)
         {
-            return RunCmd(Settings.GitCommand, DeleteBranchCmd(branchName, force));
+            return RunCmd(Settings.GitCommand, DeleteBranchCmd(branchName, force, remoteBranch));
         }
 
-        public static string DeleteBranchCmd(string branchName, bool force)
+        public static string DeleteBranchCmd(string branchName, bool force, bool remoteBranch)
         {
+            StringBuilder cmd = new StringBuilder("branch");
             if (force)
-                return "branch -D \"" + branchName + "\"";
-            return "branch -d \"" + branchName + "\"";
+                cmd.Append(" -D");
+            else
+                cmd.Append(" -d");
+
+            if (remoteBranch)
+                cmd.Append(" -r");
+
+            cmd.Append(" \"");
+            cmd.Append(branchName);
+            cmd.Append("\"");
+
+            return cmd.ToString();
         }
 
         public static string DeleteTag(string tagName)
