@@ -30,10 +30,10 @@ namespace GitExtensions
 #if DEBUG
             var plugins = file.Directory.GetFiles("*.dll", SearchOption.AllDirectories);
 #else
-            var plugins =
-                Directory.Exists(Path.Combine(file.Directory.FullName, "Plugins"))
-                    ? file.Directory.GetFiles("Plugins\\*.dll", SearchOption.AllDirectories)
-                    : new FileInfo[] { };
+            FileInfo[] plugins =
+                           Directory.Exists(Path.Combine(file.Directory.FullName, "Plugins"))
+                               ? new DirectoryInfo(Path.Combine(file.Directory.FullName, "Plugins")).GetFiles("*.dll")
+                               : new FileInfo[] { };
 #endif
 
             foreach (var pluginFile in plugins)
@@ -63,6 +63,20 @@ namespace GitExtensions
                     MessageBox.Show(string.Format("Failed to load plugin {0} : \r\n{1}", pluginFile, exInfo));
                     Trace.WriteLine(ex.Message);
                 }
+            }
+        }
+
+        public static bool RunningOnWindows()
+        {
+            switch (Environment.OSVersion.Platform)
+            {
+                case PlatformID.Win32NT:
+                case PlatformID.Win32S:
+                case PlatformID.Win32Windows:
+                case PlatformID.WinCE:
+                    return true;
+                default:
+                    return false;
             }
         }
     }
