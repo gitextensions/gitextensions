@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -518,7 +518,7 @@ namespace GitCommands
             {
                 using (FileStream fileOut = File.Create(saveAs))
                 {
-                    byte[] buf = ms.GetBuffer();
+                    byte[] buf = ms.ToArray();
                     fileOut.Write(buf, 0, buf.Length);
                 }
             }
