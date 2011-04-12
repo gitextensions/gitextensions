@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Git\GitCommandsInstance.cs" />
     <Compile Include="Logging\CommandLogger.cs" />

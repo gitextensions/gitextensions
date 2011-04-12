@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -530,16 +530,8 @@ namespace GitCommands
                 buf = ms.ToArray();                
                 if (convertcrlf)
                 {
-                    //Check for binary file.
-                    int nullCount = 0;
-                    foreach (byte c in buf)
-                    {
-                        if (c == '\0')
-                            nullCount++;
-                        if (nullCount > 5) break;
-                    }
-
-                    if (nullCount < 6)//it's a text file convert lf to crlf
+                    if (!FileHelper.IsBinaryFile(saveAs) &&
+                        !FileHelper.IsBinaryFileAccordingToContent(buf))
                     {
                         buf = null;
                         StreamReader reader = new StreamReader(ms);
