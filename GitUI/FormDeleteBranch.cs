@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
+using System.Collections.Generic;
 
 namespace GitUI
 {
@@ -17,6 +18,8 @@ namespace GitUI
             new TranslationString(
                 "Are you sure you want to delete this branch?\nDeleting a branch can cause commits to be deleted too!");
 
+        private List<GitHead> Heads;
+
         public FormDeleteBranch(string defaultBranch)
         {
             InitializeComponent();
@@ -27,7 +30,8 @@ namespace GitUI
         private void FormDeleteBranchLoad(object sender, EventArgs e)
         {
             Branches.DisplayMember = "Name";
-            Branches.DataSource = GitCommandHelpers.GetHeads(false, true);
+            Heads = GitCommandHelpers.GetHeads(true, true);
+            Branches.DataSource = Heads.FindAll(h => h.IsHead == true && h.IsRemote == false);
 
             if (_defaultBranch != null)
                 Branches.Text = _defaultBranch;
@@ -40,7 +44,12 @@ namespace GitUI
                 if (MessageBox.Show(_deleteBranchQuestion.Text, _deleteBranchCaption.Text, MessageBoxButtons.YesNo) ==
                     DialogResult.Yes)
                 {
-                    var deleteBranchResult = GitCommandHelpers.DeleteBranch(Branches.Text, ForceDelete.Checked);
+                    GitHead head = Heads.Find(h => h.Name.Equals(Branches.Text));
+                    
+                    bool isRemote;
+                    isRemote = head != null && head.IsRemote;
+
+                    var deleteBranchResult = GitCommandHelpers.DeleteBranch(Branches.Text, ForceDelete.Checked, isRemote);
                     MessageBox.Show(_branchDeleted.Text + Environment.NewLine + deleteBranchResult,
                                     _deleteBranchCaption.Text);
                 }
