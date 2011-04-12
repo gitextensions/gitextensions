@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -516,9 +516,31 @@ namespace GitCommands
         {
             using (var ms = (MemoryStream)GetFileStream(blob)) //Ugly, has implementation info.
             {
-                using (FileStream fileOut = File.Create(saveAs))
+                byte[] buf;
+                ConfigFile localConfig = GetLocalConfig();
+                bool convertcrlf = false;
+                if (localConfig.HasValue("core.autocrlf"))
                 {
-                    byte[] buf = ms.ToArray();
+                    convertcrlf = localConfig.GetValue("core.autocrlf").Equals("true",StringComparison.OrdinalIgnoreCase);
+                }else{
+                    ConfigFile globalConfig = GetGlobalConfig();
+                    convertcrlf = globalConfig.GetValue("core.autocrlf").Equals("true",StringComparison.OrdinalIgnoreCase);
+                }
+
+
+                if (convertcrlf) //convert lf to crlf
+                {
+                    StreamReader reader = new StreamReader(ms);
+                    String sfileout = reader.ReadToEnd();
+                    sfileout = sfileout.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", "\r\n");
+                    buf = Settings.Encoding.GetBytes(sfileout);
+                }else{
+                    buf = ms.ToArray();
+                }
+
+
+                using (FileStream fileOut = File.Create(saveAs))
+                {                    
                     fileOut.Write(buf, 0, buf.Length);
                 }
             }
@@ -745,27 +767,16 @@ namespace GitCommands
             return RunCmd(Settings.GitCommand, "shortlog -s -n");
         }
 
-        public static string DeleteBranch(string branchName, bool force, bool remoteBranch)
+        public static string DeleteBranch(string branchName, bool force)
         {
-            return RunCmd(Settings.GitCommand, DeleteBranchCmd(branchName, force, remoteBranch));
+            return RunCmd(Settings.GitCommand, DeleteBranchCmd(branchName, force));
         }
 
-        public static string DeleteBranchCmd(string branchName, bool force, bool remoteBranch)
+        public static string DeleteBranchCmd(string branchName, bool force)
         {
-            StringBuilder cmd = new StringBuilder("branch");
             if (force)
-                cmd.Append(" -D");
-            else
-                cmd.Append(" -d");
-
-            if (remoteBranch)
-                cmd.Append(" -r");
-
-            cmd.Append(" \"");
-            cmd.Append(branchName);
-            cmd.Append("\"");
-
-            return cmd.ToString();
+                return "branch -D \"" + branchName + "\"";
+            return "branch -d \"" + branchName + "\"";
         }
 
         public static string DeleteTag(string tagName)
