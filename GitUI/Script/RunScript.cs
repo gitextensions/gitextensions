@@ -9,6 +9,9 @@ namespace GitUI.Script
     {
         public static void RunScript(string script, RevisionGrid RevisionGrid)
         {
+            if (string.IsNullOrEmpty(script))
+                return;
+
             ScriptInfo scriptInfo = ScriptManager.GetScript(script);
             string command;
             string argument;
@@ -23,6 +26,10 @@ namespace GitUI.Script
                 command = scriptInfo.Command;
                 argument = scriptInfo.Arguments;
             }
+
+
+            if (string.IsNullOrEmpty(command))
+                return;
 
             //Make sure we are able to run git, even if git is not in the path
             if (command.Equals("git", System.StringComparison.CurrentCultureIgnoreCase) ||
@@ -75,7 +82,7 @@ namespace GitUI.Script
 
             foreach (string option in options)
             {
-                if (argument.Contains(option))
+                if (!string.IsNullOrEmpty(argument) && argument.Contains(option))
                 {
                     if (option.StartsWith("{s") && selectedRevision == null)
                     {
