@@ -61,6 +61,7 @@ namespace GitUI
             Plink = GitCommandHelpers.Plink();
 
             gitCommand = new GitCommandsInstance { CollectOutput = false };
+
             try
             {
                 Process = gitCommand.CmdStartProcess(ProcessString, ProcessArguments);
