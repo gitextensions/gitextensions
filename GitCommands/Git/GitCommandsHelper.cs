@@ -527,17 +527,27 @@ namespace GitCommands
                     convertcrlf = globalConfig.GetValue("core.autocrlf").Equals("true",StringComparison.OrdinalIgnoreCase);
                 }
 
-
-                if (convertcrlf) //convert lf to crlf
+                buf = ms.ToArray();                
+                if (convertcrlf)
                 {
-                    StreamReader reader = new StreamReader(ms);
-                    String sfileout = reader.ReadToEnd();
-                    sfileout = sfileout.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", "\r\n");
-                    buf = Settings.Encoding.GetBytes(sfileout);
-                }else{
-                    buf = ms.ToArray();
-                }
+                    //Check for binary file.
+                    int nullCount = 0;
+                    foreach (byte c in buf)
+                    {
+                        if (c == '\0')
+                            nullCount++;
+                        if (nullCount > 5) break;
+                    }
 
+                    if (nullCount < 6)//it's a text file convert lf to crlf
+                    {
+                        buf = null;
+                        StreamReader reader = new StreamReader(ms);
+                        String sfileout = reader.ReadToEnd();
+                        sfileout = sfileout.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", "\r\n");
+                        buf = Settings.Encoding.GetBytes(sfileout);
+                    }
+                }
 
                 using (FileStream fileOut = File.Create(saveAs))
                 {                    
