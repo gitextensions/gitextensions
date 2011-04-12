@@ -259,22 +259,10 @@ namespace GitUI.Editor
             ResetForText(fileName);
 
             //Check for binary file.
-            if (!string.IsNullOrEmpty(text))
+            if (FileHelper.IsBinaryFileAccordingToContent(text))
             {
-                int nullCount = 0;
-                foreach (char c in text)
-                {
-                    if (c == '\0')
-                        nullCount++;
-                    if (nullCount > 5) break;
-                }
-
-
-                if (nullCount > 5)
-                {
-                    _internalFileViewer.SetText("Binary file: " + fileName + " (Detected)");
-                    return;
-                }
+                _internalFileViewer.SetText("Binary file: " + fileName + " (Detected)");
+                return;
             }
 
             _internalFileViewer.SetText(text);

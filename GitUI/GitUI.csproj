@@ -311,7 +311,6 @@
       <DependentUpon>EditNetSpell.cs</DependentUpon>
     </Compile>
     <Compile Include="Editor\EditorOptions.cs" />
-    <Compile Include="Editor\FileHelper.cs" />
     <Compile Include="FindAndReplaceForm.cs">
       <SubType>Form</SubType>
     </Compile>
