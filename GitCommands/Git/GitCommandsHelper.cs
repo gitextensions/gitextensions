@@ -534,7 +534,7 @@ namespace GitCommands
                         !FileHelper.IsBinaryFileAccordingToContent(buf))
                     {
                         buf = null;
-                        StreamReader reader = new StreamReader(ms);
+                        StreamReader reader = new StreamReader(ms, Settings.Encoding);
                         String sfileout = reader.ReadToEnd();
                         sfileout = sfileout.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", "\r\n");
                         buf = Settings.Encoding.GetBytes(sfileout);
