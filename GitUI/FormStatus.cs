@@ -87,7 +87,7 @@ namespace GitUI
                     Output.ScrollToCaret();
                     Output.Visible = true;
                 };
-            syncContext.Send(method, this);
+            syncContext.Post(method, this);
         }
 
         public void AddOutput(string text)
