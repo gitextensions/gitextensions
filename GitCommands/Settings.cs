@@ -14,8 +14,8 @@ namespace GitCommands
     public static class Settings
     {
         //Constants
-        public static readonly string GitExtensionsVersionString = "2.18";
-        public static readonly int GitExtensionsVersionInt = 218;
+        public static readonly string GitExtensionsVersionString = "2.20";
+        public static readonly int GitExtensionsVersionInt = 220;
 
         //semi-constants
         public static char PathSeparator = '\\';
@@ -540,7 +540,7 @@ namespace GitCommands
             get
             {
                 if (_orderRevisionByDate == null)
-                    SafeSetBool("orderrevisionbydate", false, x => _orderRevisionByDate = x);
+                    SafeSetBool("orderrevisionbydate", true, x => _orderRevisionByDate = x);
                 return _orderRevisionByDate.Value;
             }
             set

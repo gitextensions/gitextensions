@@ -246,21 +246,20 @@ namespace GitUI
                     return true;
                 }
 
-                if (MessageBox.Show(_applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text,
-                                    MessageBoxButtons.YesNo) != DialogResult.Yes)
-                {
-                    return true;
-                }
-
-                if (stashed)
-                {
-                    new FormProcess("stash pop").ShowDialog();
-                }
-
-                MergeConflictHandler.HandleMergeConflicts();
             }
             finally
             {
+                if (stashed && 
+                    process != null && 
+                    !process.ErrorOccurred() &&
+                    !GitCommandHelpers.InTheMiddleOfConflictedMerge() && 
+                    !GitCommandHelpers.InTheMiddleOfRebase() &&
+                    MessageBox.Show(_applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    new FormProcess("stash pop").ShowDialog();
+                    MergeConflictHandler.HandleMergeConflicts();
+                }               
+
                 ScriptManager.RunEventScripts(ScriptEvent.AfterPull);
             }
 

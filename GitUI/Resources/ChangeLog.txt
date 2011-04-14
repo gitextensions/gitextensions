@@ -1,7 +1,7 @@
 ﻿Changelog
 =========
 
-Version 2.18
+Version 2.20
 	Fixed issue 406: keyboard language changes in commit dialog
 	Fixed issue 415: Diffs in Stash view are reversed
 	Fixed issue 417: popup complains about missing .gitconfig on Linux
