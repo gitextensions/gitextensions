@@ -13,19 +13,19 @@ namespace GitUI
             if (string.IsNullOrEmpty(home) || !Directory.Exists(home))
                 return true;
 
-            //This is bad... or... it is the first time any git action has taken place.
             if (File.Exists(Path.Combine(home, ".gitconfig")))
                 return false;
 
             string[] candidates = {
                 Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User),
                 Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH"),
-                Environment.GetEnvironmentVariable("USERPROFILE"),
+                Environment.GetEnvironmentVariable("USERPROFILE")
             };
 
             foreach(string candidate in candidates)
             {
-                if (File.Exists(Path.Combine(candidate, ".gitconfig")))
+                if (!string.IsNullOrEmpty(candidate) && 
+                    File.Exists(Path.Combine(candidate, ".gitconfig")))
                     return true;
             }
 
