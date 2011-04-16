@@ -1,6 +1,9 @@
 ﻿Changelog
 =========
 
+Version 2.21
+	Fixed issue 423: "GitExtensions has stopped working" at startup
+
 Version 2.20
 	Fixed issue 406: keyboard language changes in commit dialog
 	Fixed issue 415: Diffs in Stash view are reversed
