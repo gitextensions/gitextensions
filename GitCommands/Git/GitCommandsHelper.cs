@@ -1752,8 +1752,8 @@ namespace GitCommands
                 warning: LF will be replaced by CRLF in FxCop.targets.
                 The file will have its original line endings in your working directory.*/
             string trimmedStatus = statusString.Trim(new char[] { '\n', '\r' });
-            if (trimmedStatus.Contains(Environment.NewLine))
-                trimmedStatus = trimmedStatus.Substring(trimmedStatus.LastIndexOf(Environment.NewLine)).Trim(new char[] { '\n', '\r' });
+            if (trimmedStatus.Contains("\n") || trimmedStatus.Contains("\r"))
+                trimmedStatus = trimmedStatus.Substring(trimmedStatus.LastIndexOfAny(new char[] { '\n', '\r' })).Trim(new char[] { '\n', '\r' });
 
             //Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)
             var files = trimmedStatus.Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
