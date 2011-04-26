@@ -9,26 +9,42 @@ namespace GitUI
     {
         private static bool IsFixHome()
         {
-            string home = Environment.GetEnvironmentVariable("HOME");
-            if (string.IsNullOrEmpty(home) || !Directory.Exists(home))
-                return true;
-
-            if (File.Exists(Path.Combine(home, ".gitconfig")))
-                return false;
-
-            string[] candidates = {
-                Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User),
-                Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH"),
-                Environment.GetEnvironmentVariable("USERPROFILE")
-            };
-
-            foreach(string candidate in candidates)
+            try
             {
-                if (!string.IsNullOrEmpty(candidate) && 
-                    File.Exists(Path.Combine(candidate, ".gitconfig")))
+                string home = Environment.GetEnvironmentVariable("HOME");
+                if (string.IsNullOrEmpty(home) || !Directory.Exists(home))
                     return true;
-            }
 
+                if (File.Exists(Path.Combine(home, ".gitconfig")))
+                    return false;
+
+                string[] candidates = {
+                            Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User),
+                            Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH"),
+                            Environment.GetEnvironmentVariable("USERPROFILE")
+                                      };
+
+                foreach (string candidate in candidates)
+                {
+                    try
+                    {
+                        if (!string.IsNullOrEmpty(candidate) &&
+                            File.Exists(Path.Combine(candidate, ".gitconfig")))
+                            return true;
+                    }
+                    catch
+                    {
+                        //ignore
+                    }
+                }
+            }
+            catch
+            {
+                //Exception occured while checking for home dir. 
+                //Could be a security issue. Just return true to let the user fix
+                //this manually.
+                return true;
+            }
             return false;
         }
 
@@ -78,20 +94,29 @@ namespace GitUI
                 defaultHome.Checked = true;
             }
 
-            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)) && File.Exists(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User) + "\\.gitconfig"))
+            try
             {
-                MessageBox.Show("Located .gitconfig in %HOME% (" + Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User) + "). This setting has been chosen automatically.");
-                defaultHome.Checked = true;
+                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)) && File.Exists(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User) + "\\.gitconfig"))
+                {
+                    MessageBox.Show("Located .gitconfig in %HOME% (" + Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User) + "). This setting has been chosen automatically.");
+                    defaultHome.Checked = true;
+                }
+                else if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH")) && File.Exists(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH") + "\\.gitconfig"))
+                {
+                    MessageBox.Show("Located .gitconfig in %HOMEDRIVE%%HOMEPATH% (" + Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH") + "). This setting has been chosen automatically.");
+                    defaultHome.Checked = true;
+                }
+                else if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("USERPROFILE")) && File.Exists(Environment.GetEnvironmentVariable("USERPROFILE") + "\\.gitconfig"))
+                {
+                    MessageBox.Show("Located .gitconfig in %USERPROFILE% (" + Environment.GetEnvironmentVariable("USERPROFILE") + "). This setting has been chosen automatically.");
+                    userprofileHome.Checked = true;
+                }
             }
-            else if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH")) && File.Exists(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH") + "\\.gitconfig"))
+            catch
             {
-                MessageBox.Show("Located .gitconfig in %HOMEDRIVE%%HOMEPATH% (" + Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH") + "). This setting has been chosen automatically.");
-                defaultHome.Checked = true;
-            }
-            else if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("USERPROFILE")) && File.Exists(Environment.GetEnvironmentVariable("USERPROFILE") + "\\.gitconfig"))
-            {
-                MessageBox.Show("Located .gitconfig in %USERPROFILE% (" + Environment.GetEnvironmentVariable("USERPROFILE") + "). This setting has been chosen automatically.");
-                userprofileHome.Checked = true;
+                //Exception occured while checking for home dir. 
+                //Could be a security issue. Just ignore and let the user choose
+                //manually.
             }
         }
 
@@ -115,7 +140,7 @@ namespace GitUI
             GitCommandHelpers.SetEnvironmentVariable(true);
             if (!Directory.Exists(Environment.GetEnvironmentVariable("HOME")) || string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME")))
             {
-                MessageBox.Show("The environment variable HOME point to a directory that is not accessible:" + Environment.NewLine +
+                MessageBox.Show("The environment variable HOME points to a directory that is not accessible:" + Environment.NewLine +
                                 "\"" + Environment.GetEnvironmentVariable("HOME") + "\"");
 
                 return;
