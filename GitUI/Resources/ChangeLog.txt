@@ -1,6 +1,8 @@
 ﻿Changelog
 =========
 
+Version 2.22
+
 Version 2.21
 	Fixed issue 423: "GitExtensions has stopped working" at startup
 
