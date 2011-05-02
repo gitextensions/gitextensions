@@ -90,6 +90,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GitPlugin\CreateLocalBranches\CreateLocalBranches.csproj">
+      <Project>{31D96116-16A6-45C2-9A6D-6DD5A1FC5F20}</Project>
+      <Name>CreateLocalBranches</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GitUI\GitUI.csproj">
       <Project>{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}</Project>
       <Name>GitUI</Name>
