@@ -1389,9 +1389,14 @@ namespace GitUI
             if (revisions.Count == 0)
                 return;
 
+            string output;
+            if (revisions.Count == 1)   // single item selected
+                output = GitCommandHelpers.OpenWithDifftool(selectedItem, revisions[0].Guid, 
+                                                                  revisions[0].ParentGuids[0]);
+            else                        // multiple items selected
+                output = GitCommandHelpers.OpenWithDifftool(selectedItem, revisions[0].Guid,
+                                                                  revisions[revisions.Count - 1].Guid);
 
-            var output = GitCommandHelpers.OpenWithDifftool(selectedItem, revisions[0].Guid,
-                                                                  revisions[revisions.Count - 1].ParentGuids[0]);
             if (!string.IsNullOrEmpty(output))
                 MessageBox.Show(output);
         }
