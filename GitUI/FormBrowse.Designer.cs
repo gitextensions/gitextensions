@@ -80,6 +80,7 @@ namespace GitUI
             this.openFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileWithToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openWithToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editCheckedOutFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();
             this.copyFilenameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -189,7 +190,6 @@ namespace GitUI
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.editCheckedOutFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStrip.SuspendLayout();
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
@@ -398,10 +398,10 @@ namespace GitUI
             // 
             this.toolStripBranches.Name = "toolStripBranches";
             this.toolStripBranches.Size = new System.Drawing.Size(150, 25);
-            this.toolStripBranches.KeyUp += new System.Windows.Forms.KeyEventHandler(this.toolStripBranches_KeyUp);
+            this.toolStripBranches.DropDown += new System.EventHandler(this.toolStripBranches_DropDown);
             this.toolStripBranches.TextUpdate += new System.EventHandler(this.toolStripBranches_TextUpdate);
             this.toolStripBranches.Leave += new System.EventHandler(this.toolStripBranches_Leave);
-            this.toolStripBranches.DropDown += new System.EventHandler(this.toolStripBranches_DropDown);
+            this.toolStripBranches.KeyUp += new System.Windows.Forms.KeyEventHandler(this.toolStripBranches_KeyUp);
             // 
             // toolStripDropDownButton2
             // 
@@ -621,8 +621,8 @@ namespace GitUI
             this.GitTree.Size = new System.Drawing.Size(213, 246);
             this.GitTree.TabIndex = 0;
             this.GitTree.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.GitTreeBeforeExpand);
-            this.GitTree.DoubleClick += new System.EventHandler(this.GitTreeDoubleClick);
             this.GitTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView1AfterSelect);
+            this.GitTree.DoubleClick += new System.EventHandler(this.GitTreeDoubleClick);
             this.GitTree.MouseDown += new System.Windows.Forms.MouseEventHandler(this.GitTreeMouseDown);
             // 
             // FileTreeContextMenu
@@ -670,6 +670,13 @@ namespace GitUI
             this.openWithToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
             this.openWithToolStripMenuItem.Text = "Open checked out file with...";
             this.openWithToolStripMenuItem.Click += new System.EventHandler(this.openWithToolStripMenuItem_Click);
+            // 
+            // editCheckedOutFileToolStripMenuItem
+            // 
+            this.editCheckedOutFileToolStripMenuItem.Name = "editCheckedOutFileToolStripMenuItem";
+            this.editCheckedOutFileToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
+            this.editCheckedOutFileToolStripMenuItem.Text = "Edit checked out file";
+            this.editCheckedOutFileToolStripMenuItem.Click += new System.EventHandler(this.editCheckedOutFileToolStripMenuItem_Click);
             // 
             // toolStripSeparator20
             // 
@@ -762,8 +769,8 @@ namespace GitUI
             this.DiffFiles.SelectedItem = null;
             this.DiffFiles.Size = new System.Drawing.Size(217, 252);
             this.DiffFiles.TabIndex = 1;
-            this.DiffFiles.DoubleClick += new System.EventHandler(this.DiffFilesDoubleClick);
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFilesSelectedIndexChanged);
+            this.DiffFiles.DoubleClick += new System.EventHandler(this.DiffFilesDoubleClick);
             // 
             // DiffContextMenu
             // 
@@ -1110,8 +1117,8 @@ namespace GitUI
             // 
             this.goToToolStripMenuItem.Image = global::GitUI.Properties.Resources._75;
             this.goToToolStripMenuItem.Name = "goToToolStripMenuItem";
-            this.goToToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
-                        | System.Windows.Forms.Keys.G)));
+            this.goToToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.G)));
             this.goToToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
             this.goToToolStripMenuItem.Text = "Go to commit";
             this.goToToolStripMenuItem.Click += new System.EventHandler(this.goToToolStripMenuItem_Click);
@@ -1578,13 +1585,6 @@ namespace GitUI
             this.toolStripStatusLabel1.Text = "X";
             this.toolStripStatusLabel1.Click += new System.EventHandler(this.toolStripStatusLabel1_Click);
             // 
-            // editCheckedOutFileToolStripMenuItem
-            // 
-            this.editCheckedOutFileToolStripMenuItem.Name = "editCheckedOutFileToolStripMenuItem";
-            this.editCheckedOutFileToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
-            this.editCheckedOutFileToolStripMenuItem.Text = "Edit checked out file";
-            this.editCheckedOutFileToolStripMenuItem.Click += new System.EventHandler(this.editCheckedOutFileToolStripMenuItem_Click);
-            // 
             // FormBrowse
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1596,8 +1596,8 @@ namespace GitUI
             this.Controls.Add(this.statusStrip);
             this.Name = "FormBrowse";
             this.Text = "Git Extensions";
-            this.Load += new System.EventHandler(this.BrowseLoad);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormBrowseFormClosing);
+            this.Load += new System.EventHandler(this.BrowseLoad);
             this.ToolStrip.ResumeLayout(false);
             this.ToolStrip.PerformLayout();
             this.splitContainer3.Panel1.ResumeLayout(false);
