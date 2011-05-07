@@ -17,6 +17,8 @@
 
     <Media Id="1" Cabinet="media1.cab" EmbedCab="yes"/>
     
+    <Property Id="ALLUSERS" Value="1" />
+    
     <PropertyRef Id="NETFRAMEWORK35"/>
     <Condition Message='.NET Framework 3.5 must be installed prior to installation of Git Extensions.'>
       Installed OR NETFRAMEWORK35
@@ -32,6 +34,8 @@
     <Property Id="SSHCLIENT" Value="PuTTY" Secure="yes"/>
     <WixVariable Id="WixUIDialogBmp" Value="dialog.bmp"/>
     <WixVariable Id="WixUIBannerBmp" Value="banner.bmp"/>
+    <WixVariable Id="WixUISupportPerUser" Value="1" Overridable="yes" />
+    <WixVariable Id="WixUISupportPerMachine" Value="1" Overridable="yes"/>
 
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
@@ -318,6 +322,7 @@
 
     <?foreach VsVersion in $(var.VsVersions)?>
     <DirectoryRef Id="VS$(var.VsVersion)">
+
       <Directory Id="VS$(var.VsVersion)_Addins" Name="Addins">
         
         <Component Id="VS$(var.VsVersion)_GitPlugin.AddIn" Guid="*">
