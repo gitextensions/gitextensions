@@ -1084,6 +1084,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cow-head.ico" />
+    <Content Include="Translation\Traditional Chinese.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Translation\Traditional Chinese.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Icons\24.png" />
     <None Include="Icons\bash.png" />
     <None Include="Properties\DataSources\GitUI.Script.ScriptInfo.datasource" />

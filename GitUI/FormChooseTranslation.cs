@@ -20,16 +20,23 @@ namespace GitUI
         {
             base.OnLoad(e);
 
-            int x = 0;
-            int y = 0;
             const int labelHeight = 20;
-            const int imageHeight = 47;
-            const int imageWidth = 96;
+            const int imageHeight = 55;
+            const int imageWidth = 120;
+            int x = -(imageWidth + 6);
+            int y = 0;
             var translations = new List<string>(Translator.GetAllTranslations()) {"English"};
             translations.Sort();
 
             foreach (string translation in translations)
             {
+                x += imageWidth + 6;
+                if (x > imageWidth * 4)
+                {
+                    x = 0;
+                    y += imageHeight + 6 + labelHeight;
+                }
+
                 var translationImage = new PictureBox
                                            {
                                                Top = y + 34,
@@ -59,16 +66,10 @@ namespace GitUI
                 label.TextAlign = ContentAlignment.TopCenter;
                 label.Click += translationImage_Click;
                 Controls.Add(label);
-
-                x += imageWidth + 6;
-                if (x > imageWidth * 4)
-                {
-                    x = 0;
-                    y += imageHeight + 6 + labelHeight;
-                }
             }
 
             Height = 34 + y + imageHeight + labelHeight + SystemInformation.CaptionHeight + 37;
+            Width = (imageWidth + 6) * 4 + 24;
             label2.Top = Height - SystemInformation.CaptionHeight - 25;
         }
 
