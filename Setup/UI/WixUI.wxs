@@ -20,6 +20,8 @@
       <Property Id="DefaultUIFont" Value="WixUI_Font_Normal"/>
       <Property Id="WixUI_Mode" Value="FeatureTree"/>
 
+      <Property Id="WixAppFolder" Value="WixPerMachineFolder" />
+
       <DialogRef Id="BrowseDlg"/>
       <DialogRef Id="FilesInUse"/>
       <DialogRef Id="MsiRMFilesInUse"/>
@@ -37,15 +39,17 @@
       <?include ../Config.wxi ?>
       
       <?if $(var.IncludeRequiredSoftware) = 1 ?>
-        <Publish Dialog="GitEx_WelcomeDlg" Control="Next" Event="NewDialog" Value="GitEx_RequiredSoftwareDlg">1</Publish>
-
-        <Publish Dialog="GitEx_RequiredSoftwareDlg" Control="Back" Event="NewDialog" Value="GitEx_WelcomeDlg">1</Publish>
+        <Publish Dialog="GitEx_WelcomeDlg" Control="Next" Event="NewDialog" Value="InstallScopeDlg">1</Publish>
+        <Publish Dialog="InstallScopeDlg" Control="Back" Event="NewDialog" Value="GitEx_WelcomeDlg" Order="1">1</Publish>
+        <Publish Dialog="InstallScopeDlg" Control="Next" Event="NewDialog" Value="GitEx_RequiredSoftwareDlg" Order="1">1</Publish>
+        <Publish Dialog="GitEx_RequiredSoftwareDlg" Control="Back" Event="NewDialog" Value="InstallScopeDlg">1</Publish>
         <Publish Dialog="GitEx_RequiredSoftwareDlg" Control="Next" Event="NewDialog" Value="GitEx_InstallDirDlg">1</Publish>
-
         <Publish Dialog="GitEx_InstallDirDlg" Control="Back" Event="NewDialog" Value="GitEx_RequiredSoftwareDlg">1</Publish>
       <?else?>
-        <Publish Dialog="GitEx_WelcomeDlg" Control="Next" Event="NewDialog" Value="GitEx_InstallDirDlg">1</Publish>
-        <Publish Dialog="GitEx_InstallDirDlg" Control="Back" Event="NewDialog" Value="GitEx_WelcomeDlg">1</Publish>
+        <Publish Dialog="GitEx_WelcomeDlg" Control="Next" Event="NewDialog" Value="InstallScopeDlg">1</Publish>
+        <Publish Dialog="InstallScopeDlg" Control="Back" Event="NewDialog" Value="GitEx_WelcomeDlg" Order="1">1</Publish>
+        <Publish Dialog="InstallScopeDlg" Control="Next" Event="NewDialog" Value="GitEx_InstallDirDlg" Order="1">1</Publish>
+        <Publish Dialog="GitEx_InstallDirDlg" Control="Back" Event="NewDialog" Value="InstallScopeDlg">1</Publish>
       <?endif?>
       
       <Publish Dialog="GitEx_InstallDirDlg" Control="ChangeFolder" Property="_BrowseProperty" Value="[WIXUI_INSTALLDIR]" Order="1">1</Publish>

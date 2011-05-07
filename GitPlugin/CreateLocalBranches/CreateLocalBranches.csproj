@@ -33,13 +33,21 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DeleteUnusedBranchesPlugin.cs" />
+    <Compile Include="CreateLocalBranchesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateLocalBranchesForm.Designer.cs">
+      <DependentUpon>CreateLocalBranchesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreateLocalBranchesPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -47,6 +55,11 @@
       <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
       <Name>GitUIPluginInterfaces</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CreateLocalBranchesForm.resx">
+      <DependentUpon>CreateLocalBranchesForm.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

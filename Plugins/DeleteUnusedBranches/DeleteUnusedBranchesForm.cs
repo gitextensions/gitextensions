@@ -26,7 +26,7 @@ namespace DeleteUnusedBranches
         {
             base.OnLoad(e);
 
-            foreach (string reference in GitCommands.RunGit("branch").Split('\n'))
+            foreach (string reference in GitCommands.RunGit("branch --merged").Split('\n'))
             {
                 if (string.IsNullOrEmpty(reference)) continue;
 
