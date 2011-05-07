@@ -20,22 +20,7 @@ namespace CreateLocalBranches
 
         public void Execute(GitUIBaseEventArgs gitUiCommands)
         {
-			foreach (string reference in gitUiCommands.GitCommands.RunGit("branch -a").Split('\n'))
-			{
-				try
-				{
-					if (string.IsNullOrEmpty(reference)) continue;
-
-					string branchName = reference.Trim('*', ' ', '\n', '\r');
-
-					if (branchName.StartsWith("remotes"))
-						gitUiCommands.GitCommands.RunGit(string.Concat("branch --track ", branchName.Replace("remotes/origin/", ""), " ", branchName));
-				}
-				catch
-				{ 
-				}
-			}
-
+            new CreateLocalBranchesForm(gitUiCommands).ShowDialog();
         }
     }
 }

@@ -2,6 +2,8 @@
 =========
 
 Version 2.22
+	Fixed problem with line endings warning in commit dialog
+	Application can be installed for all users
 
 Version 2.21
 	Fixed issue 423: "GitExtensions has stopped working" at startup
