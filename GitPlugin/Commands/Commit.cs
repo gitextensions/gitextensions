@@ -51,6 +51,9 @@ namespace GitPlugin.Commands
 
         public override void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane)
         {
+            const string saveAllCommandName = "File.SaveAll";
+
+            item.DTE.ExecuteCommand(saveAllCommandName);
             RunGitEx("commit", fileName);
         }
         private static string GetSelectedFile(EnvDTE80.DTE2 application)
