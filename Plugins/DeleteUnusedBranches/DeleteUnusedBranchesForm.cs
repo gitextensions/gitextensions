@@ -1,39 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
 
 namespace DeleteUnusedBranches
 {
-    public partial class DeleteUnusedBranchesForm : Form
+    public sealed partial class DeleteUnusedBranchesForm : Form
     {
+        private readonly SortableBranchesList branches = new SortableBranchesList();
+        private readonly int days;
+        private readonly IGitCommands gitCommands;
+
         public DeleteUnusedBranchesForm(int days, IGitCommands gitCommands)
         {
             InitializeComponent();
 
-            Days = days;
-            GitCommands = gitCommands;
-            Branches = new List<Branch>();
+            this.days = days;
+            this.gitCommands = gitCommands;
         }
-
-        public int Days { get; private set; }
-
-        public IGitCommands GitCommands { get; private set; }
-
-        public IList<Branch> Branches { get; private set; }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
-            foreach (string reference in GitCommands.RunGit("branch --merged").Split('\n'))
+            branches.AddRange(GetObsoleteBranches());
+            BranchesGrid.DataSource = branches;
+        }
+
+        private IEnumerable<Branch> GetObsoleteBranches()
+        {
+            foreach (string branchName in GetObsoleteBranchNames())
             {
-                if (string.IsNullOrEmpty(reference)) continue;
-
-                string branchName = reference.Trim('*', ' ', '\n', '\r');
-
                 DateTime date = new DateTime();
-                foreach (string dateString in GitCommands.RunGit(string.Concat("log --pretty=%ci ", branchName, "^1..", branchName)).Split('\n'))
+                foreach (string dateString in gitCommands.RunGit(string.Concat("log --pretty=%ci ", branchName, "^1..", branchName)).Split('\n'))
                 {
                     DateTime singleDate;
                     if (DateTime.TryParse(dateString, out singleDate))
@@ -41,10 +41,17 @@ namespace DeleteUnusedBranches
                             date = singleDate;
 
                 }
-                Branches.Add(new Branch(branchName, date, date < (DateTime.Now.AddDays(-Days))));
+                yield return new Branch(branchName, date, date < DateTime.Now.AddDays(-days));
             }
+        }
 
-            BranchesGrid.DataSource = Branches;
+        private IEnumerable<string> GetObsoleteBranchNames()
+        {
+            return gitCommands.RunGit("branch --merged")
+                .Split('\n')
+                .Where(branchName => !string.IsNullOrEmpty(branchName))
+                .Select(branchName => branchName.Trim('*', ' ', '\n', '\r'))
+                .Where(branchName => branchName != "master");
         }
 
         private void Cancel_Click(object sender, EventArgs e)
@@ -54,16 +61,13 @@ namespace DeleteUnusedBranches
 
         private void Delete_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure to delete the selected branches?" + Environment.NewLine + "Only branches that are not fully merged will be deleted.", "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show("Are you sure to delete the selected branches?" + Environment.NewLine + "Only branches that are fully merged will be deleted.", "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                foreach (Branch branch in Branches)
+                foreach (Branch branch in branches.Where(branch => branch.Delete))
                 {
-                    if (branch.Delete)
-                    {
-                        branch.Result = GitCommands.RunGit(string.Concat("branch -d " + branch.Name)).Trim();
-                        BranchesGrid.Refresh();
-                    }
+                    branch.Result = gitCommands.RunGit("branch -d " + branch.Name).Trim();
                 }
+                BranchesGrid.Refresh();
             }
         }
     }
