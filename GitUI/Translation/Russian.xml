@@ -1456,7 +1456,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Сообщение: {0}</Value>
         </TranslationItem>
         <TranslationItem Name="resetHardWarning" Property="Text">
-          <Value>Сейчас буду отменены все локальные изменения. Вы уверены?</Value>
+          <Value>Сейчас будут отменены все локальные изменения. Вы уверены?</Value>
         </TranslationItem>
         <TranslationItem Name="resetCaption" Property="Text">
           <Value>Сбросить ветку</Value>
