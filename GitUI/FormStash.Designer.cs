@@ -128,7 +128,7 @@ namespace GitUI
             this.toolStripButton1.Name = "toolStripButton1";
             this.toolStripButton1.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.toolStripButton1.Size = new System.Drawing.Size(23, 24);
-            this.toolStripButton1.Text = "toolStripButton1";
+            this.toolStripButton1.Text = "Refresh";
             this.toolStripButton1.Click += new System.EventHandler(this.RefreshClick);
             // 
             // toolStripLabel1
