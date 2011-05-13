@@ -215,7 +215,7 @@ namespace GitUI
                 ShowRevisions();
 
             _NO_TRANSLATE_Workingdir.Text = Settings.WorkingDir;
-            Text = Settings.WorkingDir + " - Git Extensions";
+            Text = GenerateWindowTitle(Settings.WorkingDir, validWorkingDir);
 
             CheckForMergeConflicts();
             UpdateStashCount();
@@ -312,6 +312,50 @@ namespace GitUI
                 statusStrip.Show();
             else
                 statusStrip.Hide();
+        }
+
+        /// <summary>
+        /// Generates main window title according to given repository.
+        /// </summary>
+        /// <param name="workingDir">Path to repository.</param>
+        /// <param name="isWorkingDirValid">If the given path contains valid repository.</param>
+        private static string GenerateWindowTitle(string workingDir, bool isWorkingDirValid)
+        {
+            const string defaultTitle = "Git Extensions";
+            const string repositoryTitleFormat = "{0} - Git Extensions";
+
+            if (!isWorkingDirValid)
+                return defaultTitle;
+            string repositoryDescription = ReadRepositoryDescription(workingDir) ?? Directory.GetParent(workingDir).Name;
+            return string.Format(repositoryTitleFormat, repositoryDescription);
+        }
+
+        /// <summary>
+        /// Reads repository description's first line from ".git\description" file.
+        /// </summary>
+        /// <param name="workingDir">Path to repository.</param>
+        /// <returns>If the repository has description, returns that description, else returns <c>null</c>.</returns>
+        private static string ReadRepositoryDescription(string workingDir)
+        {
+            const string repositoryDescriptionFileName = "description";
+            const string repositoryDirectoryName = ".git";
+            const string defaultDescription = "Unnamed repository; edit this file 'description' to name the repository.";
+
+            var repositoryPath = Path.Combine(workingDir, repositoryDirectoryName);
+            var repositoryDescriptionFilePath = Path.Combine(repositoryPath, repositoryDescriptionFileName);
+            if (!File.Exists(repositoryDescriptionFilePath))
+                return null;
+            try
+            {
+                var repositoryDescription = File.ReadAllLines(repositoryDescriptionFilePath).FirstOrDefault();
+                return string.Equals(repositoryDescription, defaultDescription, StringComparison.CurrentCulture)
+                           ? null
+                           : repositoryDescription;
+            }
+            catch (IOException)
+            {
+                return null;
+            }
         }
 
         private void InitToolStripBranchFilter(bool local, bool remote)
@@ -904,7 +948,7 @@ namespace GitUI
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             Initialize();
             RevisionGrid.ReloadHotkeys();
-            RevisionGrid.ReloadTranslation(); 
+            RevisionGrid.ReloadTranslation();
             RevisionGrid.ForceRefreshRevisions();
         }
 
@@ -1391,7 +1435,7 @@ namespace GitUI
 
             string output;
             if (revisions.Count == 1)   // single item selected
-                output = GitCommandHelpers.OpenWithDifftool(selectedItem, revisions[0].Guid, 
+                output = GitCommandHelpers.OpenWithDifftool(selectedItem, revisions[0].Guid,
                                                                   revisions[0].ParentGuids[0]);
             else                        // multiple items selected
                 output = GitCommandHelpers.OpenWithDifftool(selectedItem, revisions[0].Guid,
@@ -1817,7 +1861,7 @@ namespace GitUI
             else
             {
                 MessageBox.Show("No revision found.");
-            }                        
+            }
         }
 
         private void toggleSplitViewLayout_Click(object sender, EventArgs e)
