@@ -102,6 +102,7 @@
             this.Result.HeaderText = "Result";
             this.Result.Name = "Result";
             this.Result.ReadOnly = true;
+            this.Result.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // branchBindingSource
             // 
