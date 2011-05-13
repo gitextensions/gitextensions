@@ -144,26 +144,36 @@ namespace GitUI
 
             string pushCmd;
             if (TabControlTagBranch.SelectedTab == BranchTab)
+            {
+                bool track = newBranch;
+                string[] remotes = Remotes.DataSource as string[];
+                if (remotes != null)
+                    foreach (string remoteBranch in remotes)
+                        if (Branch.Text.StartsWith(remoteBranch))
+                            track = false;
+
+
                 pushCmd = GitCommandHelpers.PushCmd(destination, Branch.Text, RemoteBranch.Text,
-                                                          PushAllBranches.Checked, ForcePushBranches.Checked, newBranch);
+                                                          PushAllBranches.Checked, ForcePushBranches.Checked, track);
+            }
             else if (TabControlTagBranch.SelectedTab == TagTab)
                 pushCmd = GitCommandHelpers.PushTagCmd(destination, TagComboBox.Text, PushAllTags.Checked,
                                                              ForcePushBranches.Checked);
             else
             {
-				var pushActions = new List<GitPushAction>();
-            	foreach (DataRow row in _branchTable.Rows)
-            	{
-            		var push = (bool) row["Push"];
-            		var force = (bool) row["Force"];
-            		var delete = (bool) row["Delete"];
+                var pushActions = new List<GitPushAction>();
+                foreach (DataRow row in _branchTable.Rows)
+                {
+                    var push = (bool)row["Push"];
+                    var force = (bool)row["Force"];
+                    var delete = (bool)row["Delete"];
 
-					if (push || force)
-						pushActions.Add(new GitPushAction(row["Local"].ToString(), row["Remote"].ToString(), force));
-					else if (delete)
-						pushActions.Add(new GitPushAction(row["Remote"].ToString()));
-            	}
-            	pushCmd = GitCommandHelpers.PushMultipleCmd(destination, pushActions);
+                    if (push || force)
+                        pushActions.Add(new GitPushAction(row["Local"].ToString(), row["Remote"].ToString(), force));
+                    else if (delete)
+                        pushActions.Add(new GitPushAction(row["Remote"].ToString()));
+                }
+                pushCmd = GitCommandHelpers.PushMultipleCmd(destination, pushActions);
             }
 
             ScriptManager.RunEventScripts(ScriptEvent.BeforePush);
