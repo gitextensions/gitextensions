@@ -147,18 +147,25 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)))
                 return Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User);
 
-            string homePath;
-            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE")))
+            if (Settings.RunningOnWindows())
             {
-                homePath = Environment.GetEnvironmentVariable("HOMEDRIVE");
-                homePath += Environment.GetEnvironmentVariable("HOMEPATH");
+                string homePath;
+                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE")))
+                {
+                    homePath = Environment.GetEnvironmentVariable("HOMEDRIVE");
+                    homePath += Environment.GetEnvironmentVariable("HOMEPATH");
+                }
+                else
+                {
+                    homePath = Environment.GetEnvironmentVariable("USERPROFILE");
+                }
+
+                return homePath;
             }
             else
             {
-                homePath = Environment.GetEnvironmentVariable("USERPROFILE");
+                return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             }
-
-            return homePath;
         }
 
         public static void RunRealCmd(string cmd, string arguments)
@@ -1571,7 +1578,7 @@ namespace GitCommands
 
         public static ConfigFile GetGlobalConfig()
         {
-            return new ConfigFile(ConfigFile.GetPath());
+            return new ConfigFile(GitCommandHelpers.GetDefaultHomeDir() + Settings.PathSeparator + ".gitconfig");
         }
 
         public static ConfigFile GetLocalConfig()
