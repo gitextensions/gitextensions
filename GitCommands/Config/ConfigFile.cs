@@ -297,7 +297,7 @@ namespace GitCommands.Config
                 }
             }
 
-            return Path.Combine(Environment.CurrentDirectory, ".gitconfig");
+            return Path.Combine(String.IsNullOrEmpty(paths[0]) ? Environment.CurrentDirectory : paths[0], ".gitconfig");
         }
     }
 }
