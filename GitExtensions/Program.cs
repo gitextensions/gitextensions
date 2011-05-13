@@ -18,7 +18,6 @@ namespace GitExtensions
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
             string[] args = Environment.GetCommandLineArgs();
             FormSplash.Show("Load settings");
             Settings.LoadSettings();
