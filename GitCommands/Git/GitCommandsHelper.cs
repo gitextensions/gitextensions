@@ -1665,10 +1665,19 @@ namespace GitCommands
             return patchManager.Patches;
         }
 
-        public static List<GitItemStatus> GetDiffFiles(string from, string to)
+        public static List<GitItemStatus> GetDiffFiles(string from, string to, bool noCache = false)
         {
-            string result = RunCachableCmd(Settings.GitCommand, "diff -M -C -z --name-status \"" + to + "\" \"" + from + "\"");
-
+            string result;
+            string cmd = "diff -M -C -z --name-status \"" + to + "\" \"" + from + "\"";
+            if (noCache)
+            {
+                result = RunCmd(Settings.GitCommand, cmd);
+            }
+            else
+            {
+                result = RunCachableCmd(Settings.GitCommand, cmd);
+                
+            }
             return GetAllChangedFilesFromString(result, true);
         }
 
