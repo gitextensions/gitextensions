@@ -2,8 +2,16 @@
 =========
 
 Version 2.22
+	Fixed issue 142: Changed main window title to repository name instead of path
+	Fixed issue 375: Save on Commit in Visual Studio
+	Fixed issue 436: Cannot order branches by date in "Delete obsolete branches" plugin
+	Fixed issue 439: .gitconfig file is created in Program Files instead of Home path
 	Fixed problem with line endings warning in commit dialog
+	Fixed wrong text on stash refresh button tooltip
 	Application can be installed for all users
+	Added drag file from filetree in browse dialog
+	Added Traditional Chinese translation
+	Added plugin to create local tracking branches for all remote branches
 
 Version 2.21
 	Fixed issue 423: "GitExtensions has stopped working" at startup
