@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -1805,7 +1806,7 @@ namespace GitCommands
                     n = GitItemStatusFromStatusCharacter(fromDiff, files, n, status, fileName, x, out gitItemStatus);
                     if (gitItemStatus != null)
                     {
-                        gitItemStatus.IsStaged = false;
+                        gitItemStatus.IsStaged = true;
                         diffFiles.Add(gitItemStatus);
                     }
                 }
@@ -1815,7 +1816,7 @@ namespace GitCommands
                     n = GitItemStatusFromStatusCharacter(fromDiff, files, n, status, fileName, y, out gitItemStatus);
                     if (gitItemStatus != null)
                     {
-                        gitItemStatus.IsStaged = true;
+                        gitItemStatus.IsStaged = false;
                         diffFiles.Add(gitItemStatus);
                     }
                 }
@@ -1928,7 +1929,10 @@ namespace GitCommands
 
             if (true && status.Length < 50 && status.Contains("fatal: No HEAD commit to compare"))
             {
+                //This command is a little more expensive because it will return both staged and unstaged files
                 status = RunCmd(Settings.GitCommand, "status --porcelain --untracked-files=no -z");
+                List<GitItemStatus> stagedFiles = GetAllChangedFilesFromString(status, false);
+                return stagedFiles.Where(f => f.IsStaged).ToList<GitItemStatus>();
             }
 
             return GetAllChangedFilesFromString(status, true);
