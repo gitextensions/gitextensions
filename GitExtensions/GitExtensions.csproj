@@ -90,10 +90,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GitPlugin\CreateLocalBranches\CreateLocalBranches.csproj">
-      <Project>{31D96116-16A6-45C2-9A6D-6DD5A1FC5F20}</Project>
-      <Name>CreateLocalBranches</Name>
-    </ProjectReference>
     <ProjectReference Include="..\GitUI\GitUI.csproj">
       <Project>{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}</Project>
       <Name>GitUI</Name>
@@ -105,6 +101,10 @@
     <ProjectReference Include="..\Plugins\AutoCompileSubmodules\AutoCompileSubmodules\AutoCompileSubmodules.csproj">
       <Project>{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}</Project>
       <Name>AutoCompileSubmodules</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\CreateLocalBranches\CreateLocalBranches.csproj">
+      <Project>{31D96116-16A6-45C2-9A6D-6DD5A1FC5F20}</Project>
+      <Name>CreateLocalBranches</Name>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\DeleteUnusedBranches\DeleteUnusedBranches.csproj">
       <Project>{921F0443-C3A1-4A09-82E8-C4AFB9654943}</Project>
