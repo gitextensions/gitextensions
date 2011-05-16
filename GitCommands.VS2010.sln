@@ -41,7 +41,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpellChecker", "NetSpell.Sp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitImpact", "Plugins\Statistics\GitImpact\GitImpact.csproj", "{0B131F9D-BB10-4C3E-9656-5AB858158DE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateLocalBranches", "GitPlugin\CreateLocalBranches\CreateLocalBranches.csproj", "{31D96116-16A6-45C2-9A6D-6DD5A1FC5F20}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateLocalBranches", "Plugins\CreateLocalBranches\CreateLocalBranches.csproj", "{31D96116-16A6-45C2-9A6D-6DD5A1FC5F20}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
