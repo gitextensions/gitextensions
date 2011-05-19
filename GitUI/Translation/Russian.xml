@@ -1869,7 +1869,7 @@ _ReSharper*/
           <Value>Уменьшить количество видимых строк</Value>
         </TranslationItem>
         <TranslationItem Name="showEntireFileToolStripMenuItem" Property="Text">
-          <Value>Показвать весь файл</Value>
+          <Value>Показывать весь файл</Value>
         </TranslationItem>
         <TranslationItem Name="treatAllFilesAsTextToolStripMenuItem" Property="Text">
           <Value>Считать все файлы текстовыми</Value>
@@ -1893,7 +1893,7 @@ _ReSharper*/
           <Value>Уменьшить количество видимых строк</Value>
         </TranslationItem>
         <TranslationItem Name="showEntireFileButton" Property="ToolTipText">
-          <Value>Показвать весь файл</Value>
+          <Value>Показывать весь файл</Value>
         </TranslationItem>
         <TranslationItem Name="showNonPrintChars" Property="ToolTipText">
           <Value>Показывать непечатные символы</Value>
