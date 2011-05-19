@@ -16,6 +16,7 @@ using System.Threading;
 using GitUI.Hotkey;
 using System.Drawing;
 using System.Collections.Specialized;
+using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace GitUI
 {
@@ -224,10 +225,38 @@ namespace GitUI
             _NO_TRANSLATE_Workingdir.Text = Settings.WorkingDir;
             Text = GenerateWindowTitle(Settings.WorkingDir, validWorkingDir);
 
+
+            UpdateJumplist(validWorkingDir);
+
+
             CheckForMergeConflicts();
             UpdateStashCount();
 
             Cursor.Current = Cursors.Default;
+        }
+
+        private void UpdateJumplist(bool validWorkingDir)
+        {
+            if (Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+            {
+                //Call this method using reflection.  This is a workaround to *not* reference WPF libraries, becuase of how the WindowsAPICodePack was implimented.  
+                TaskbarManager.Instance.GetType().InvokeMember("SetApplicationIdForSpecificWindow", System.Reflection.BindingFlags.InvokeMethod, null, TaskbarManager.Instance, new object[] { Handle, "GitExtensions" });
+            
+                if(validWorkingDir)
+                {
+                    string repositoryDescription = ReadRepositoryDescription(Settings.WorkingDir) ?? Directory.GetParent(Settings.WorkingDir).Name;
+                    string baseFolder = Path.Combine(Settings.ApplicationDataPath, "Recent");
+                    if(!Directory.Exists(baseFolder))
+                    {
+                        Directory.CreateDirectory(baseFolder);
+                    }
+
+
+                    string path = Path.Combine(baseFolder, String.Format("{0}.{1}", repositoryDescription, "gitext"));
+                    File.WriteAllText(path, Settings.WorkingDir);
+                    JumpList.AddToRecent(path);
+                }
+            }
         }
 
         private void UpdateStashCount()
