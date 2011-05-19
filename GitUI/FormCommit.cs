@@ -365,9 +365,9 @@ namespace GitUI
             }
 
             Unstaged.GitItemStatuses = null;
-            Unstaged.GitItemStatuses = stagedFiles;
+            Unstaged.GitItemStatuses = unStagedFiles;
             Staged.GitItemStatuses = null;
-            Staged.GitItemStatuses = unStagedFiles;
+            Staged.GitItemStatuses = stagedFiles;
 
             Loading.Visible = false;
             LoadingStaged.Visible = false;

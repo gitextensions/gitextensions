@@ -21,7 +21,8 @@ namespace GitUI
                 string[] candidates = {
                             Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User),
                             Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH"),
-                            Environment.GetEnvironmentVariable("USERPROFILE")
+                            Environment.GetEnvironmentVariable("USERPROFILE"),
+                            Environment.GetFolderPath(Environment.SpecialFolder.Personal)
                                       };
 
                 foreach (string candidate in candidates)
@@ -96,20 +97,11 @@ namespace GitUI
 
             try
             {
-                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)) && File.Exists(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User) + "\\.gitconfig"))
+                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)) && File.Exists(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User) + Settings.PathSeparator + ".gitconfig"))
                 {
                     MessageBox.Show("Located .gitconfig in %HOME% (" + Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User) + "). This setting has been chosen automatically.");
                     defaultHome.Checked = true;
-                }
-                else if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH")) && File.Exists(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH") + "\\.gitconfig"))
-                {
-                    MessageBox.Show("Located .gitconfig in %HOMEDRIVE%%HOMEPATH% (" + Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH") + "). This setting has been chosen automatically.");
-                    defaultHome.Checked = true;
-                }
-                else if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("USERPROFILE")) && File.Exists(Environment.GetEnvironmentVariable("USERPROFILE") + "\\.gitconfig"))
-                {
-                    MessageBox.Show("Located .gitconfig in %USERPROFILE% (" + Environment.GetEnvironmentVariable("USERPROFILE") + "). This setting has been chosen automatically.");
-                    userprofileHome.Checked = true;
+                    return;
                 }
             }
             catch
@@ -118,6 +110,53 @@ namespace GitUI
                 //Could be a security issue. Just ignore and let the user choose
                 //manually.
             }
+            try
+            {
+                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH")) && File.Exists(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH") + Settings.PathSeparator + ".gitconfig"))
+                {
+                    MessageBox.Show("Located .gitconfig in %HOMEDRIVE%%HOMEPATH% (" + Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH") + "). This setting has been chosen automatically.");
+                    defaultHome.Checked = true;
+                    return;
+                }
+            }
+            catch
+            {
+                //Exception occured while checking for home dir. 
+                //Could be a security issue. Just ignore and let the user choose
+                //manually.
+            }
+            try
+            {
+                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("USERPROFILE")) && File.Exists(Environment.GetEnvironmentVariable("USERPROFILE") + Settings.PathSeparator + ".gitconfig"))
+                {
+                    MessageBox.Show("Located .gitconfig in %USERPROFILE% (" + Environment.GetEnvironmentVariable("USERPROFILE") + "). This setting has been chosen automatically.");
+                    userprofileHome.Checked = true;
+                    return;
+                }
+            }
+            catch
+            {
+                //Exception occured while checking for home dir. 
+                //Could be a security issue. Just ignore and let the user choose
+                //manually.
+            }
+            try
+            {
+                if (!string.IsNullOrEmpty(Environment.GetFolderPath(Environment.SpecialFolder.Personal)) && File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + Settings.PathSeparator + ".gitconfig"))
+                {
+                    MessageBox.Show("Located .gitconfig in personal folder (" + Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "). This setting has been chosen automatically.");
+                    otherHome.Checked = true;
+                    otherHomeDir.Text = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                    return;
+                }
+                            }
+            catch
+            {
+                //Exception occured while checking for home dir. 
+                //Could be a security issue. Just ignore and let the user choose
+                //manually.
+            }
+
         }
 
         private void ok_Click(object sender, EventArgs e)

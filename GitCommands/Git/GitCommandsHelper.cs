@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -147,18 +148,25 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)))
                 return Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User);
 
-            string homePath;
-            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE")))
+            if (Settings.RunningOnWindows())
             {
-                homePath = Environment.GetEnvironmentVariable("HOMEDRIVE");
-                homePath += Environment.GetEnvironmentVariable("HOMEPATH");
+                string homePath;
+                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE")))
+                {
+                    homePath = Environment.GetEnvironmentVariable("HOMEDRIVE");
+                    homePath += Environment.GetEnvironmentVariable("HOMEPATH");
+                }
+                else
+                {
+                    homePath = Environment.GetEnvironmentVariable("USERPROFILE");
+                }
+
+                return homePath;
             }
             else
             {
-                homePath = Environment.GetEnvironmentVariable("USERPROFILE");
+                return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             }
-
-            return homePath;
         }
 
         public static void RunRealCmd(string cmd, string arguments)
@@ -1571,7 +1579,7 @@ namespace GitCommands
 
         public static ConfigFile GetGlobalConfig()
         {
-            return new ConfigFile(ConfigFile.GetPath());
+            return new ConfigFile(GitCommandHelpers.GetDefaultHomeDir() + Settings.PathSeparator + ".gitconfig");
         }
 
         public static ConfigFile GetLocalConfig()
@@ -1665,10 +1673,19 @@ namespace GitCommands
             return patchManager.Patches;
         }
 
-        public static List<GitItemStatus> GetDiffFiles(string from, string to)
+        public static List<GitItemStatus> GetDiffFiles(string from, string to, bool noCache = false)
         {
-            string result = RunCachableCmd(Settings.GitCommand, "diff -M -C -z --name-status \"" + to + "\" \"" + from + "\"");
-
+            string result;
+            string cmd = "diff -M -C -z --name-status \"" + to + "\" \"" + from + "\"";
+            if (noCache)
+            {
+                result = RunCmd(Settings.GitCommand, cmd);
+            }
+            else
+            {
+                result = RunCachableCmd(Settings.GitCommand, cmd);
+                
+            }
             return GetAllChangedFilesFromString(result, true);
         }
 
@@ -1789,7 +1806,7 @@ namespace GitCommands
                     n = GitItemStatusFromStatusCharacter(fromDiff, files, n, status, fileName, x, out gitItemStatus);
                     if (gitItemStatus != null)
                     {
-                        gitItemStatus.IsStaged = false;
+                        gitItemStatus.IsStaged = true;
                         diffFiles.Add(gitItemStatus);
                     }
                 }
@@ -1799,7 +1816,7 @@ namespace GitCommands
                     n = GitItemStatusFromStatusCharacter(fromDiff, files, n, status, fileName, y, out gitItemStatus);
                     if (gitItemStatus != null)
                     {
-                        gitItemStatus.IsStaged = true;
+                        gitItemStatus.IsStaged = false;
                         diffFiles.Add(gitItemStatus);
                     }
                 }
@@ -1912,7 +1929,10 @@ namespace GitCommands
 
             if (true && status.Length < 50 && status.Contains("fatal: No HEAD commit to compare"))
             {
+                //This command is a little more expensive because it will return both staged and unstaged files
                 status = RunCmd(Settings.GitCommand, "status --porcelain --untracked-files=no -z");
+                List<GitItemStatus> stagedFiles = GetAllChangedFilesFromString(status, false);
+                return stagedFiles.Where(f => f.IsStaged).ToList<GitItemStatus>();
             }
 
             return GetAllChangedFilesFromString(status, true);
