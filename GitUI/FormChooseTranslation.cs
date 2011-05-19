@@ -21,8 +21,8 @@ namespace GitUI
             base.OnLoad(e);
 
             const int labelHeight = 20;
-            const int imageHeight = 55;
-            const int imageWidth = 120;
+            const int imageHeight = 75;
+            const int imageWidth = 150;
             int x = -(imageWidth + 6);
             int y = 0;
             var translations = new List<string>(Translator.GetAllTranslations()) {"English"};
