@@ -160,7 +160,7 @@
         <File Source="..\Plugins\AutoCompileSubmodules\AutoCompileSubmodules\bin\Release\AutoCompileSubmodules.dll"/>
       </Component>
       <Component Id="CreateLocalBranches.dll" Guid="*">
-        <File Source="..\Plugins\Statistics\CreateLocalBranches\bin\Release\CreateLocalBranches.dll"/>
+        <File Source="..\Plugins\CreateLocalBranches\bin\Release\CreateLocalBranches.dll"/>
       </Component>
       <Component Id="GitStatistics.dll" Guid="*">
         <File Source="..\Plugins\Statistics\GitStatistics\bin\Release\GitStatistics.dll"/>
