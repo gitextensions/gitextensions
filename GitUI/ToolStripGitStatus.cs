@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
@@ -16,12 +17,16 @@ namespace GitUI
         private static readonly Bitmap ICON_STAGED = Properties.Resources._83;
         private static readonly Bitmap ICON_MIXED = Properties.Resources._84;
 
-        // We often change several files at once. Wait a second so they're all changed
-        // before we try to get the status
-        private const int UPDATE_DELAY = 1000;
+        /// <summary>
+        /// We often change several files at once.
+        /// Wait a second so they're all changed before we try to get the status.
+        /// </summary>
+        private const int UpdateDelay = 1000;
 
-        // Update every 5min, just to make sure something didn't slip through the cracks.
-        private const int MAX_UPDATE_PERIOD = 5 * 60 * 1000;
+        /// <summary>
+        /// Update every 5min, just to make sure something didn't slip through the cracks.
+        /// </summary>
+        private const int MaxUpdatePeriod = 5 * 60 * 1000;
 
         private GitCommandsInstance gitGetUnstagedCommand = new GitCommandsInstance();
         private readonly SynchronizationContext syncContext;
@@ -50,13 +55,13 @@ namespace GitUI
             watcher.Error += watcher_Error;
             watcher.IncludeSubdirectories = true;
 
+            update();
             try
             {
                 watcher.Path = Settings.WorkingDir;
                 watcher.EnableRaisingEvents = true;
             }
             catch { }
-            update();
         }
 
 
@@ -92,10 +97,11 @@ namespace GitUI
                 else
                 {
                     watcher.EnableRaisingEvents = false;
+                    Text = "=)";
                 }
 
 
-                nextUpdate = Math.Min(nextUpdate, Environment.TickCount + UPDATE_DELAY);
+                nextUpdate = Math.Min(nextUpdate, Environment.TickCount + UpdateDelay);
             }
             catch { }
         }
@@ -104,12 +110,20 @@ namespace GitUI
         // it's going to be called by the GC!
         private void watcher_Error(object sender, ErrorEventArgs e)
         {
-            nextUpdate = Math.Min(nextUpdate, Environment.TickCount + UPDATE_DELAY);
+            nextUpdate = Math.Min(nextUpdate, Environment.TickCount + UpdateDelay);
         }
 
         private void watcher_Changed(object sender, FileSystemEventArgs e)
         {
-            nextUpdate = Math.Min(nextUpdate, Environment.TickCount + UPDATE_DELAY);
+            const string repositoryDirectoryName = ".git";
+            var isGitSelfChange = e.FullPath
+                .Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                .Any(directoryName => directoryName == repositoryDirectoryName);
+
+            if (isGitSelfChange)
+                return;
+
+            nextUpdate = Math.Min(nextUpdate, Environment.TickCount + UpdateDelay);
         }
 
         private void timerRefresh_Tick(object sender, EventArgs e)
@@ -132,7 +146,7 @@ namespace GitUI
                 gitGetUnstagedCommand.CmdStartProcess(Settings.GitCommand, command);
 
                 // Always update every 5 min, even if we don't know anything changed
-                nextUpdate = Environment.TickCount + MAX_UPDATE_PERIOD;
+                nextUpdate = Environment.TickCount + MaxUpdatePeriod;
             }
         }
 
