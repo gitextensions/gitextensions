@@ -253,6 +253,21 @@ namespace GitExtensions
                         Pull(arguments);
                         Push(arguments);
                         return;
+                    case "openrepo":
+                        if (args.Length > 2)
+                        {
+                            if (File.Exists(args[2]))
+                            {
+                                string path = File.ReadAllText(args[2]);
+                                if (Directory.Exists(path))
+                                {
+                                    Settings.WorkingDir = path;
+                                }
+                            }
+                        }
+
+                        GitUICommands.Instance.StartBrowseDialog();
+                        return;
                     default:
                         Application.Run(new FormCommandlineHelp());
                         return;
