@@ -28,6 +28,11 @@ namespace GitUI
         /// </summary>
         private const int MaxUpdatePeriod = 5 * 60 * 1000;
 
+        /// <summary>
+        /// Paths to be ignored on filesystem changes watching.
+        /// </summary>
+        private static readonly string[] IgnoredPaths = new[] { @"\.git", @"\.git\index.lock" };
+
         private GitCommandsInstance gitGetUnstagedCommand = new GitCommandsInstance();
         private readonly SynchronizationContext syncContext;
         private readonly FileSystemWatcher watcher = new FileSystemWatcher();
@@ -101,11 +106,7 @@ namespace GitUI
 
         private void watcher_Changed(object sender, FileSystemEventArgs e)
         {
-            const string repositoryDirectoryName = ".git";
-            var isGitSelfChange = e.FullPath
-                .Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
-                .Any(directoryName => directoryName == repositoryDirectoryName);
-
+            var isGitSelfChange = IgnoredPaths.Any(path => e.FullPath.EndsWith(path));
             if (isGitSelfChange)
                 return;
 
