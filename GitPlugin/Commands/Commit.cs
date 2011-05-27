@@ -53,7 +53,7 @@ namespace GitPlugin.Commands
         {
             const string saveAllCommandName = "File.SaveAll";
 
-            item.DTE.ExecuteCommand(saveAllCommandName);
+            item.DTE.ExecuteCommand(saveAllCommandName, string.Empty);
             RunGitEx("commit", fileName);
         }
         private static string GetSelectedFile(EnvDTE80.DTE2 application)
