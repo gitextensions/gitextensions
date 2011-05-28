@@ -272,13 +272,13 @@ namespace GitUI
             {
                 if (!_toolbarButtonsCreated)
                 {
-                    _commitButton = new ThumbnailToolBarButton(MakeIcon(toolStripButton1.Image, 48, true), "Commit");
+                    _commitButton = new ThumbnailToolBarButton(MakeIcon(toolStripButton1.Image, 48, true), toolStripButton1.Text);
                     _commitButton.Click += ToolStripButton1Click;
 
-                    _pushButton = new ThumbnailToolBarButton(MakeIcon(toolStripButtonPush.Image, 48, true), "Push");
+                    _pushButton = new ThumbnailToolBarButton(MakeIcon(toolStripButtonPush.Image, 48, true), toolStripButtonPush.Text);
                     _pushButton.Click += PushToolStripMenuItemClick;
 
-                    _pullButton = new ThumbnailToolBarButton(MakeIcon(toolStripButtonPull.Image, 48, true), "Pull");
+                    _pullButton = new ThumbnailToolBarButton(MakeIcon(toolStripButtonPull.Image, 48, true), toolStripButtonPull.Text);
                     _pullButton.Click += PullToolStripMenuItemClick;
 
                     _toolbarButtonsCreated = true;
