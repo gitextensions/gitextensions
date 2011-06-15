@@ -1773,15 +1773,21 @@ namespace GitCommands
             if (string.IsNullOrEmpty(statusString))
                 return diffFiles;
 
-            /*The status string can show warnings. This is a text blok in front
+            /*The status string can show warnings. This is a text blok at the start or at the beginning
               of the file status. Strip it. Example:
                 warning: LF will be replaced by CRLF in CustomDictionary.xml.
                 The file will have its original line endings in your working directory.
                 warning: LF will be replaced by CRLF in FxCop.targets.
                 The file will have its original line endings in your working directory.*/
             string trimmedStatus = statusString.Trim(new char[] { '\n', '\r' });
-            if (trimmedStatus.Contains("\n") || trimmedStatus.Contains("\r"))
-                trimmedStatus = trimmedStatus.Substring(trimmedStatus.LastIndexOfAny(new char[] { '\n', '\r' })).Trim(new char[] { '\n', '\r' });
+            int lastNewLinePos = trimmedStatus.LastIndexOfAny(new char[] { '\n', '\r' });
+            if (lastNewLinePos > 0)
+            {
+                if (trimmedStatus.IndexOf('\0') > lastNewLinePos) //Warning at beginning
+                    trimmedStatus = trimmedStatus.Substring(0, lastNewLinePos).Trim(new char[] { '\n', '\r' });
+                else                                              //Warning at end
+                    trimmedStatus = trimmedStatus.Substring(lastNewLinePos).Trim(new char[] { '\n', '\r' });
+            }
 
             //Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)
             var files = trimmedStatus.Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
