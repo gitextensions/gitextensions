@@ -140,7 +140,7 @@ namespace ResourceManager.Translation
                 }
 
                 if (subControl == null)
-                    return;
+                    continue;
 
                 PropertyInfo propertyInfo = subControl.GetType().GetProperty(translationItem.Property, BindingFlags.Public | BindingFlags.Instance);
                 if (propertyInfo != null)
