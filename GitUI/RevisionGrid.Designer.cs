@@ -653,7 +653,7 @@ namespace GitUI
             // 
             this.showRevisionGraphToolStripMenuItem.Name = "showRevisionGraphToolStripMenuItem";
             this.showRevisionGraphToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
-            this.showRevisionGraphToolStripMenuItem.Text = "Show revisions small with graph";
+            this.showRevisionGraphToolStripMenuItem.Text = "Show revision graph";
             this.showRevisionGraphToolStripMenuItem.Click += new System.EventHandler(this.ShowRevisionGraphToolStripMenuItemClick);
             // 
             // RevisionGrid
