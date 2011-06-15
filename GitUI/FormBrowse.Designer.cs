@@ -1320,7 +1320,7 @@ namespace GitUI
             // 
             this.synchronizeAllSubmodulesRecursiveToolStripMenuItem.Name = "synchronizeAllSubmodulesRecursiveToolStripMenuItem";
             this.synchronizeAllSubmodulesRecursiveToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
-            this.synchronizeAllSubmodulesRecursiveToolStripMenuItem.Text = "Synchronize al submodules recursive";
+            this.synchronizeAllSubmodulesRecursiveToolStripMenuItem.Text = "Synchronize all submodules recursive";
             this.synchronizeAllSubmodulesRecursiveToolStripMenuItem.Click += new System.EventHandler(this.SynchronizeAllSubmodulesRecursiveToolStripMenuItemClick);
             // 
             // toolStripSeparator14
