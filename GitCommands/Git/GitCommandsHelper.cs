@@ -1651,6 +1651,9 @@ namespace GitCommands
             from = FixPath(from);
             to = FixPath(to);
 
+            if (Settings.UsePatienceDiffAlgorithm)
+                extraDiffArguments = string.Concat(extraDiffArguments, " --patience");
+
             var patchManager = new PatchManager();
             var arguments = string.Format("diff{0} -M -C \"{1}\" \"{2}\" -- {3} {4}", extraDiffArguments, to, from, fileName, oldFileName);
             patchManager.LoadPatch(RunCachableCmd(Settings.GitCommand, arguments), false);
@@ -1666,6 +1669,9 @@ namespace GitCommands
 
         public static List<Patch> GetDiff(string from, string to, string extraDiffArguments)
         {
+            if (Settings.UsePatienceDiffAlgorithm)
+                extraDiffArguments = string.Concat(extraDiffArguments, " --patience");
+
             var patchManager = new PatchManager();
             var arguments = string.Format("diff{0} \"{1}\" \"{2}\"", extraDiffArguments, from, to);
             patchManager.LoadPatch(RunCachableCmd(Settings.GitCommand, arguments), false);
@@ -1963,9 +1969,12 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(oldFileName))
                 oldFileName = string.Concat("\"", FixPath(oldFileName), "\"");
 
-            var args = "diff " + extraDiffArguments + " -- " + fileName;
+            if (Settings.UsePatienceDiffAlgorithm)
+                extraDiffArguments = string.Concat(extraDiffArguments, " --patience");
+
+            var args = string.Concat("diff ", extraDiffArguments, " -- ", fileName);
             if (staged)
-                args = "diff -M -C --cached" + extraDiffArguments + " -- " + fileName + " " + oldFileName;
+                args = string.Concat("diff -M -C --cached", extraDiffArguments, " -- ", fileName, " ", oldFileName);
 
             return RunCmd(Settings.GitCommand, args);
         }
