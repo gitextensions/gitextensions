@@ -126,6 +126,8 @@ namespace GitUI
                 else if (Settings.Encoding == Encoding.Default)
                     _NO_TRANSLATE_Encoding.Text = "Default (" + Encoding.Default.HeaderName + ")";
 
+                usePatienceDiffAlgorithm.Checked = Settings.UsePatienceDiffAlgorithm;
+
                 showCurrentBranchInVisualStudio.Checked = Settings.ShowCurrentBranchInVisualStudio;
 
                 RevisionGridQuickSearchTimeout.Value = Settings.RevisionGridQuickSearchTimeout;
@@ -365,6 +367,8 @@ namespace GitUI
             }
 
             GitCommandHelpers.SetEnvironmentVariable(true);
+
+            Settings.UsePatienceDiffAlgorithm = usePatienceDiffAlgorithm.Checked;
 
             Settings.ShowCurrentBranchInVisualStudio = showCurrentBranchInVisualStudio.Checked;
 

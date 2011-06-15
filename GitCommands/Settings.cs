@@ -14,8 +14,8 @@ namespace GitCommands
     public static class Settings
     {
         //Constants
-        public static readonly string GitExtensionsVersionString = "2.22";
-        public static readonly int GitExtensionsVersionInt = 222;
+        public static readonly string GitExtensionsVersionString = "2.23";
+        public static readonly int GitExtensionsVersionInt = 223;
 
         //semi-constants
         public static char PathSeparator = '\\';
@@ -34,6 +34,24 @@ namespace GitCommands
 
             GitLog = new CommandLogger();
             ApplicationDataPath = Application.UserAppDataPath + Settings.PathSeparator.ToString();
+        }
+
+        private static bool? _usePatienceDiffAlgorithm;
+        public static bool UsePatienceDiffAlgorithm
+        {
+            get
+            {
+                if (_usePatienceDiffAlgorithm == null)
+                    SafeSetBool("usepatiencediffalgorithm", false, x => _usePatienceDiffAlgorithm = x);
+                return _usePatienceDiffAlgorithm.Value;
+            }
+            set
+            {
+                if (_usePatienceDiffAlgorithm == value)
+                    return;
+                _usePatienceDiffAlgorithm = value;
+                Application.UserAppDataRegistry.SetValue("usepatiencediffalgorithm", _usePatienceDiffAlgorithm);
+            }
         }
 
         private static bool? _showErrorsWhenStagingFiles;

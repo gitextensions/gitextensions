@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
 
+Version 2.23
+	Fixed issue 452: "Show repository status" always updates status every second
+	Fixed issue 465: "Create branch" dialog closes immediately after opening by enter key
+	Fixed issue 471: Implement option to use Patience algorithm
+	Added support for Windows 7 "Recent" Jumplist to quickly open repositories.
+
 Version 2.22
 	Fixed issue 142: Changed main window title to repository name instead of path
 	Fixed issue 375: Save on Commit in Visual Studio
