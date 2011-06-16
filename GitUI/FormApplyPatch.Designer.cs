@@ -43,6 +43,8 @@
             this.PatchDirMode = new System.Windows.Forms.RadioButton();
             this.PatchFileMode = new System.Windows.Forms.RadioButton();
             this.patchGrid1 = new GitUI.PatchGrid();
+            this.label1 = new System.Windows.Forms.Label();
+            this.IgnoreWhitespace = new System.Windows.Forms.CheckBox();
             this.SolveMergeconflicts = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -150,6 +152,8 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.label1);
+            this.splitContainer1.Panel2.Controls.Add(this.IgnoreWhitespace);
             this.splitContainer1.Panel2.Controls.Add(this.SolveMergeconflicts);
             this.splitContainer1.Panel2.Controls.Add(this.Apply);
             this.splitContainer1.Panel2.Controls.Add(this.Mergetool);
@@ -240,6 +244,25 @@
             this.patchGrid1.Size = new System.Drawing.Size(642, 315);
             this.patchGrid1.TabIndex = 10;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(27, 34);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(82, 13);
+            this.label1.TabIndex = 22;
+            this.label1.Text = "Ignore Wh.spc.";
+            // 
+            // IgnoreWhitespace
+            // 
+            this.IgnoreWhitespace.AutoSize = true;
+            this.IgnoreWhitespace.Location = new System.Drawing.Point(8, 34);
+            this.IgnoreWhitespace.Name = "IgnoreWhitespace";
+            this.IgnoreWhitespace.Size = new System.Drawing.Size(15, 14);
+            this.IgnoreWhitespace.TabIndex = 21;
+            this.IgnoreWhitespace.UseVisualStyleBackColor = true;
+            this.IgnoreWhitespace.CheckedChanged += new System.EventHandler(this.IgnoreWhitespace_CheckedChanged);
+            // 
             // SolveMergeconflicts
             // 
             this.SolveMergeconflicts.BackColor = System.Drawing.Color.Salmon;
@@ -267,6 +290,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MergePatch_FormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
@@ -294,5 +318,7 @@
         private System.Windows.Forms.RadioButton PatchDirMode;
         private System.Windows.Forms.RadioButton PatchFileMode;
         private System.Windows.Forms.Button SolveMergeconflicts;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox IgnoreWhitespace;
     }
 }

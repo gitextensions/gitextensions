@@ -107,9 +107,23 @@ namespace GitUI
             }
             Cursor.Current = Cursors.WaitCursor;
             if (PatchFileMode.Checked)
+                if (IgnoreWhitespace.Checked)
+                {
+                    new FormProcess(GitCommandHelpers.PatchCmdIgnoreWhitespace(PatchFile.Text)).ShowDialog();
+                }
+                else
+                {
                 new FormProcess(GitCommandHelpers.PatchCmd(PatchFile.Text)).ShowDialog();
+                }
             else
+                if (IgnoreWhitespace.Checked)
+                {
+                    new FormProcess(GitCommandHelpers.PatchDirCmdIgnoreWhitespace(PatchFile.Text)).ShowDialog();
+                }
+                else
+                {
                 new FormProcess(GitCommandHelpers.PatchDirCmd(PatchDir.Text)).ShowDialog();
+                }
 
             EnableButtons();
 
