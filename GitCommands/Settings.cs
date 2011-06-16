@@ -36,6 +36,24 @@ namespace GitCommands
             ApplicationDataPath = Application.UserAppDataPath + Settings.PathSeparator.ToString();
         }
 
+        private static bool? _applyPatchIgnoreWhitespace;
+        public static bool ApplyPatchIgnoreWhitespace
+        {
+            get
+            {
+                if (_applyPatchIgnoreWhitespace == null)
+                    SafeSetBool("applypatchignorewhitespace", false, x => _applyPatchIgnoreWhitespace = x);
+                return _applyPatchIgnoreWhitespace.Value;
+            }
+            set
+            {
+                if (_applyPatchIgnoreWhitespace == value)
+                    return;
+                _applyPatchIgnoreWhitespace = value;
+                Application.UserAppDataRegistry.SetValue("applypatchignorewhitespace", _applyPatchIgnoreWhitespace);
+            }
+        }
+
         private static bool? _usePatienceDiffAlgorithm;
         public static bool UsePatienceDiffAlgorithm
         {
