@@ -15,22 +15,13 @@ namespace GitPlugin.Git
             if (!string.IsNullOrEmpty(filename))
                 command += " \"" + filename + "\"";
 
-
-            string path = GetRegistryValue(Registry.CurrentUser, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", "InstallDir");
-
-            if (string.IsNullOrEmpty(path))
-                path = GetRegistryValue(Registry.Users, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", "InstallDir");
-
+            string path = GetGitExRegValue("InstallDir");
             Run(path + "\\GitExtensions.exe", command);
         }
 
         public static string RunGit(string arguments, string filename, out int exitCode)
         {
-            string gitcommand = GetRegistryValue(Registry.CurrentUser, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", "gitcommand");
-
-            if (string.IsNullOrEmpty(gitcommand))
-                gitcommand = GetRegistryValue(Registry.Users, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", "gitcommand");
-
+            string gitcommand = GetGitExRegValue("gitcommand");
 
             ProcessStartInfo startInfo = new ProcessStartInfo
                        {
@@ -82,7 +73,6 @@ namespace GitPlugin.Git
                         head = head.Replace("ref:", "").Trim().Replace("refs/heads/", string.Empty);
                         return string.Concat(" (", head, ")");
                     }
-
                 }
             }
             catch
@@ -127,7 +117,7 @@ namespace GitPlugin.Git
                    Directory.Exists(dir + "\\" + "refs");
         }
 
-        public static string GetRegistryValue(RegistryKey root, string subkey, string key)
+        private static string GetRegistryValue(RegistryKey root, string subkey, string key)
         {
             try
             {
@@ -151,6 +141,17 @@ namespace GitPlugin.Git
             }
             return "";
         }
+
+        private static string GetGitExRegValue(string key)
+        {
+            string result = GetRegistryValue(Registry.CurrentUser, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", key);
+
+            if (string.IsNullOrEmpty(result))
+                result = GetRegistryValue(Registry.Users, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", key);
+
+            return result;
+        }
+
         public static void Run(string cmd, string arguments)
         {
             try
@@ -181,11 +182,7 @@ namespace GitPlugin.Git
 
         public static bool GetShowCurrentBranchSetting()
         {
-            string showCurrentBranchSetting = GetRegistryValue(Registry.CurrentUser, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", "showcurrentbranchinvisualstudio");
-
-            if (string.IsNullOrEmpty(showCurrentBranchSetting))
-                showCurrentBranchSetting = GetRegistryValue(Registry.Users, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", "showcurrentbranchinvisualstudio");
-
+            string showCurrentBranchSetting = GetGitExRegValue("showcurrentbranchinvisualstudio");
             return showCurrentBranchSetting != null && showCurrentBranchSetting.Equals("True", StringComparison.CurrentCultureIgnoreCase);
         }
     }
