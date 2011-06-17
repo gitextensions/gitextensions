@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Win32;
-using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
+using System.Windows.Forms;
+using Microsoft.Win32;
 
 namespace GitPlugin.Git
 {
@@ -19,7 +18,7 @@ namespace GitPlugin.Git
             Run(path + "\\GitExtensions.exe", command);
         }
 
-        public static string RunGit(string arguments, string filename, out int exitCode)
+        private static string RunGit(string arguments, string filename, out int exitCode)
         {
             string gitcommand = GetGitExRegValue("gitcommand");
 
@@ -83,7 +82,7 @@ namespace GitPlugin.Git
             return string.Empty;
         }
 
-        public static string FindGitWorkingDir(string startDir)
+        private static string FindGitWorkingDir(string startDir)
         {
             if (string.IsNullOrEmpty(startDir))
                 return "";
@@ -103,7 +102,7 @@ namespace GitPlugin.Git
             return startDir;
         }
 
-        public static bool ValidWorkingDir(string dir)
+        private static bool ValidWorkingDir(string dir)
         {
             if (string.IsNullOrEmpty(dir))
                 return false;
@@ -152,7 +151,7 @@ namespace GitPlugin.Git
             return result;
         }
 
-        public static void Run(string cmd, string arguments)
+        private static void Run(string cmd, string arguments)
         {
             try
             {
