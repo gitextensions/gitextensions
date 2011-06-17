@@ -107,9 +107,23 @@ namespace GitUI
             }
             Cursor.Current = Cursors.WaitCursor;
             if (PatchFileMode.Checked)
-                new FormProcess(GitCommandHelpers.PatchCmd(PatchFile.Text)).ShowDialog();
+                if (IgnoreWhitespace.Checked)
+                {
+                    new FormProcess(GitCommandHelpers.PatchCmdIgnoreWhitespace(PatchFile.Text)).ShowDialog();
+                }
+                else
+                {
+                    new FormProcess(GitCommandHelpers.PatchCmd(PatchFile.Text)).ShowDialog();
+                }
             else
-                new FormProcess(GitCommandHelpers.PatchDirCmd(PatchDir.Text)).ShowDialog();
+                if (IgnoreWhitespace.Checked)
+                {
+                    new FormProcess(GitCommandHelpers.PatchDirCmdIgnoreWhitespace(PatchFile.Text)).ShowDialog();
+                }
+                else
+                {
+                    new FormProcess(GitCommandHelpers.PatchDirCmd(PatchDir.Text)).ShowDialog();
+                }
 
             EnableButtons();
 
@@ -162,6 +176,7 @@ namespace GitUI
         {
             RestorePosition("merge-patch");
             Text = "Apply patch (" + Settings.WorkingDir + ")";
+            IgnoreWhitespace.Checked = Settings.ApplyPatchIgnoreWhitespace;
         }
 
         private void BrowseDir_Click(object sender, EventArgs e)
@@ -188,6 +203,11 @@ namespace GitUI
         private void SolveMergeconflicts_Click(object sender, EventArgs e)
         {
             Mergetool_Click(sender, e);
+        }
+
+        private void IgnoreWhitespace_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.ApplyPatchIgnoreWhitespace = IgnoreWhitespace.Checked;
         }
     }
 }

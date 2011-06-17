@@ -1521,10 +1521,20 @@ namespace GitCommands
             return "am --3way --signoff \"" + FixPath(patchFile) + "\"";
         }
 
-        public static string PatchDirCmd(string patchDir)
+        public static string PatchCmdIgnoreWhitespace(string patchFile)
+		{
+			return "am --3way --signoff --ignore-whitespace \"" + FixPath(patchFile) + "\"";
+		}
+
+		public static string PatchDirCmd(string patchDir)
         {
             return "am --3way --signoff --directory=\"" + FixPath(patchDir) + "\"";
         }
+
+		public static string PatchDirCmdIgnoreWhitespace(string patchDir)
+		{
+		    return "am --3way --signoff --ignore-whitespace --directory=\"" + FixPath(patchDir) + "\"";
+		}
 
         public static string UpdateRemotes()
         {
