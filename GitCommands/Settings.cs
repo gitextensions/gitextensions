@@ -18,8 +18,8 @@ namespace GitCommands
         public static readonly int GitExtensionsVersionInt = 223;
 
         //semi-constants
-        public static char PathSeparator = '\\';
-        public static char PathSeparatorWrong = '/';
+        public static readonly char PathSeparator = '\\';
+        public static readonly char PathSeparatorWrong = '/';
 
 
 
