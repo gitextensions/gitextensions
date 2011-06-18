@@ -80,13 +80,6 @@ namespace GitUI
 
         }
 
-        
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private string SelectPatchFile(string initialDirectory)
         {
             var dialog = new OpenFileDialog
