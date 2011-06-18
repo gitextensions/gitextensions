@@ -22,19 +22,8 @@ namespace GitPlugin.Git
         {
             string gitcommand = GetGitExRegValue("gitcommand");
 
-            ProcessStartInfo startInfo = new ProcessStartInfo
-                       {
-                           UseShellExecute = false,
-                           ErrorDialog = false,
-                           RedirectStandardOutput = true,
-                           RedirectStandardInput = true,
-                           RedirectStandardError = true
-                       };
-            startInfo.CreateNoWindow = true;
-            startInfo.FileName = gitcommand;
-            startInfo.Arguments = arguments;
-            startInfo.WorkingDirectory = filename;
-            startInfo.LoadUserProfile = true;
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            SetupProcessStartInfo(startInfo, gitcommand, arguments, filename, false, false);
 
             using (var process = Process.Start(startInfo))
             {
@@ -151,25 +140,35 @@ namespace GitPlugin.Git
             return result;
         }
 
+        private static void SetupProcessStartInfo(ProcessStartInfo startInfo, string command, string arguments, string workingDir, bool useUTF8, bool show)
+        {
+            startInfo.UseShellExecute = false;
+            startInfo.ErrorDialog = false;
+            startInfo.RedirectStandardInput = true;
+            startInfo.RedirectStandardOutput = true;
+            startInfo.RedirectStandardError = true;
+            if (useUTF8)
+            {
+                startInfo.StandardOutputEncoding = Encoding.UTF8;
+                startInfo.StandardErrorEncoding = Encoding.UTF8;
+            }
+            startInfo.CreateNoWindow = true;
+            startInfo.LoadUserProfile = true;
+
+            startInfo.FileName = command;
+            startInfo.Arguments = arguments;
+            startInfo.WorkingDirectory = workingDir;
+            if (show)
+                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+        }
+
         private static void Run(string cmd, string arguments)
         {
             try
             {
                 //process used to execute external commands
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.ErrorDialog = false;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.RedirectStandardInput = true;
-                process.StartInfo.RedirectStandardError = true;
-                process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
-                process.StartInfo.StandardErrorEncoding = Encoding.UTF8;
-
-                process.StartInfo.CreateNoWindow = true;
-                process.StartInfo.FileName = cmd;
-                process.StartInfo.Arguments = arguments;
-                process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-                process.StartInfo.LoadUserProfile = true;
+                SetupProcessStartInfo(process.StartInfo, cmd, arguments, "", true, true);
 
                 process.Start();
                 //process.WaitForExit();
