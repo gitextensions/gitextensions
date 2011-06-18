@@ -23,6 +23,9 @@ namespace GitUI
             if (GitCommandHelpers.InTheMiddleOfPatch())
             {
                 Apply.Enabled = false;
+                IgnoreWhitespace.Enabled = false;
+                PatchFileMode.Enabled = false;
+                PatchDirMode.Enabled = false;
                 AddFiles.Enabled = true;
                 Resolved.Enabled = !GitCommandHelpers.InTheMiddleOfConflictedMerge();
                 Mergetool.Enabled = GitCommandHelpers.InTheMiddleOfConflictedMerge();
@@ -46,6 +49,9 @@ namespace GitUI
                 BrowseDir.Enabled = PatchDirMode.Checked;
 
                 Apply.Enabled = true;
+                IgnoreWhitespace.Enabled = true;
+                PatchFileMode.Enabled = true;
+                PatchDirMode.Enabled = true;
                 AddFiles.Enabled = false;
                 Resolved.Enabled = false;
                 Mergetool.Enabled = false;
