@@ -208,7 +208,7 @@ namespace GitCommands
             }
         }
 
-        public static string ApplicationDataPath { get; set; }
+        public static string ApplicationDataPath { get; private set; }
 
         private static string _translation;
         public static string Translation
