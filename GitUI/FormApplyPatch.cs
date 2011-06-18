@@ -180,6 +180,7 @@ namespace GitUI
 
         private void MergePatch_Load(object sender, EventArgs e)
         {
+            PatchFile.Select();
             RestorePosition("merge-patch");
             Text = "Apply patch (" + Settings.WorkingDir + ")";
             IgnoreWhitespace.Checked = Settings.ApplyPatchIgnoreWhitespace;
