@@ -72,7 +72,6 @@
             this.PatchFile.Name = "PatchFile";
             this.PatchFile.Size = new System.Drawing.Size(281, 21);
             this.PatchFile.TabIndex = 1;
-            this.PatchFile.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // Apply
             // 
