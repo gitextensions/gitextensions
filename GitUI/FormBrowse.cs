@@ -256,12 +256,14 @@ namespace GitUI
 
                     ToolStripButton Button1 = new ToolStripButton();
                     //store scriptname in button
+                    Button1.Text = scriptInfo.Name;
                     Button1.Tag = scriptInfo.Name;
                     //add handler
                     Button1.Click += new EventHandler(UserMenu_Click);
                     Button1.Enabled = true;
                     Button1.Visible = true;
                     Button1.Image = GitUI.Properties.Resources.bug;
+                    Button1.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
                     //add to main toolstrip
                     this.UserMenuToolStrip.Items.Add((ToolStripItem)Button1);
                     //
