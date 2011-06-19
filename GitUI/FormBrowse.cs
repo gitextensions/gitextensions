@@ -17,6 +17,7 @@ using GitUI.Hotkey;
 using System.Drawing;
 using System.Collections.Specialized;
 using Microsoft.WindowsAPICodePack.Taskbar;
+using GitUI.Script;
 
 namespace GitUI
 {
@@ -237,7 +238,41 @@ namespace GitUI
             CheckForMergeConflicts();
             UpdateStashCount();
 
+            // load custom user menu
+            LoadUserMenu();
             Cursor.Current = Cursors.Default;
+        }
+
+        private void LoadUserMenu()
+        {
+            this.UserMenuToolStrip.Visible = false;
+            // TODO: restore position usermenu
+            this.UserMenuToolStrip.Items.Clear();
+
+            foreach (ScriptInfo scriptInfo in ScriptManager.GetScripts())
+            {
+                if (scriptInfo.Enabled && scriptInfo.OnEvent == ScriptEvent.ShowInUserMenuBar)
+                {
+
+                    ToolStripButton Button1 = new ToolStripButton();
+                    //store scriptname in button
+                    Button1.Tag = scriptInfo.Name;
+                    //add handler
+                    Button1.Click += new EventHandler(UserMenu_Click);
+                    Button1.Enabled = true;
+                    Button1.Visible = true;
+                    Button1.Image = GitUI.Properties.Resources.bug;
+                    //add to main toolstrip
+                    this.UserMenuToolStrip.Items.Add((ToolStripItem)Button1);
+                    //
+                    this.UserMenuToolStrip.Visible = true;
+                }
+            }
+        }
+
+        void UserMenu_Click(object sender, EventArgs e)
+        {
+            ScriptRunner.RunScript(( (ToolStripButton) sender).Tag.ToString(), null);
         }
 
         private void UpdateJumplist(bool validWorkingDir)

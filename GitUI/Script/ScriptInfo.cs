@@ -13,7 +13,8 @@ namespace GitUI.Script
         BeforePull,
         AfterPull,
         BeforePush,
-        AfterPush
+        AfterPush,
+        ShowInUserMenuBar
     }
 
     public class ScriptInfo
