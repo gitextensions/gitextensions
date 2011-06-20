@@ -33,7 +33,20 @@ namespace GitCommands
             GitLog = new CommandLogger();
             ApplicationDataPath = Application.UserAppDataPath + Settings.PathSeparator.ToString();
         }
+        
+        private static int? _UserMenuLocationX;
+        public static int UserMenuLocationX
+        {
+            get { return SafeGet("usermenulocationx", -1, ref _UserMenuLocationX); }
+            set { SafeSet("usermenulocationx", value, ref _UserMenuLocationX); }
+        }
 
+        private static int? _UserMenuLocationY;
+        public static int UserMenuLocationY
+        {
+            get { return SafeGet("usermenulocationy", -1, ref _UserMenuLocationY); }
+            set { SafeSet("usermenulocationy", value, ref _UserMenuLocationY); }
+        }
         private static bool? _applyPatchIgnoreWhitespace;
         public static bool ApplyPatchIgnoreWhitespace
         {

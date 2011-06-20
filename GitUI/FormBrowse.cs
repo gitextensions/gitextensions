@@ -245,8 +245,17 @@ namespace GitUI
 
         private void LoadUserMenu()
         {
-            this.UserMenuToolStrip.Visible = false;
-            // TODO: restore position usermenu
+            //menu strip must be visible to be able to move it
+            this.UserMenuToolStrip.Show();
+            if( GitCommands.Settings.UserMenuLocationX >= 0 && GitCommands.Settings.UserMenuLocationY >= 0)
+            {
+                this.UserMenuToolStrip.Location = new Point(
+                                    GitCommands.Settings.UserMenuLocationX,
+                                    GitCommands.Settings.UserMenuLocationY
+                                    );
+            }
+            // just hide the damn thing already!
+            this.UserMenuToolStrip.Hide();
             this.UserMenuToolStrip.Items.Clear();
 
             foreach (ScriptInfo scriptInfo in ScriptManager.GetScripts())
@@ -254,20 +263,20 @@ namespace GitUI
                 if (scriptInfo.Enabled && scriptInfo.OnEvent == ScriptEvent.ShowInUserMenuBar)
                 {
 
-                    ToolStripButton Button1 = new ToolStripButton();
-                    //store scriptname in button
-                    Button1.Text = scriptInfo.Name;
-                    Button1.Tag = scriptInfo.Name;
+                    ToolStripButton tempButton = new ToolStripButton();
+                    tempButton.Text = scriptInfo.Name;
+                    //store scriptname
+                    tempButton.Tag = scriptInfo.Name;
                     //add handler
-                    Button1.Click += new EventHandler(UserMenu_Click);
-                    Button1.Enabled = true;
-                    Button1.Visible = true;
-                    Button1.Image = GitUI.Properties.Resources.bug;
-                    Button1.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
-                    //add to main toolstrip
-                    this.UserMenuToolStrip.Items.Add((ToolStripItem)Button1);
-                    //
-                    this.UserMenuToolStrip.Visible = true;
+                    tempButton.Click += new EventHandler(UserMenu_Click);
+                    tempButton.Enabled = true;
+                    tempButton.Visible = true;
+                    tempButton.Image = GitUI.Properties.Resources.bug;
+                    tempButton.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
+                    //add to toolstrip
+                    this.UserMenuToolStrip.Items.Add((ToolStripItem)tempButton);
+                    //set visible
+                    this.UserMenuToolStrip.Show();
                 }
             }
         }
@@ -1093,7 +1102,14 @@ namespace GitUI
 
         private void FormBrowseFormClosing(object sender, FormClosingEventArgs e)
         {
+            SaveUserMenuPosition();
             SavePosition("browse");
+        }
+
+        private void SaveUserMenuPosition()
+        {
+            GitCommands.Settings.UserMenuLocationX = this.UserMenuToolStrip.Location.X;
+            GitCommands.Settings.UserMenuLocationY = this.UserMenuToolStrip.Location.Y;
         }
 
         private void EditGitignoreToolStripMenuItem1Click(object sender, EventArgs e)
