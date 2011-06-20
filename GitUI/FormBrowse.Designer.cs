@@ -156,6 +156,7 @@ namespace GitUI
             this.committerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.authorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.diffContainsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.UserMenuToolStrip = new System.Windows.Forms.ToolStrip();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.RevisionGrid = new GitUI.RevisionGrid();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -191,7 +192,6 @@ namespace GitUI
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.UserMenuToolStrip = new System.Windows.Forms.ToolStrip();
             this.toolPanel.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.ToolStrip.SuspendLayout();
@@ -1238,6 +1238,15 @@ namespace GitUI
             this.diffContainsToolStripMenuItem.Text = "Diff contains (SLOW)";
             this.diffContainsToolStripMenuItem.Click += new System.EventHandler(this.diffContainsToolStripMenuItem_Click);
             // 
+            // UserMenuToolStrip
+            // 
+            this.UserMenuToolStrip.Dock = System.Windows.Forms.DockStyle.None;
+            this.UserMenuToolStrip.Location = new System.Drawing.Point(843, 24);
+            this.UserMenuToolStrip.Name = "UserMenuToolStrip";
+            this.UserMenuToolStrip.Size = new System.Drawing.Size(41, 25);
+            this.UserMenuToolStrip.TabIndex = 5;
+            this.UserMenuToolStrip.Visible = false;
+            // 
             // splitContainer3
             // 
             this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1601,15 +1610,6 @@ namespace GitUI
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(13, 17);
             this.toolStripStatusLabel1.Text = "X";
             this.toolStripStatusLabel1.Click += new System.EventHandler(this.toolStripStatusLabel1_Click);
-            // 
-            // UserMenuToolStrip
-            // 
-            this.UserMenuToolStrip.Dock = System.Windows.Forms.DockStyle.None;
-            this.UserMenuToolStrip.Location = new System.Drawing.Point(843, 24);
-            this.UserMenuToolStrip.Name = "UserMenuToolStrip";
-            this.UserMenuToolStrip.Size = new System.Drawing.Size(41, 25);
-            this.UserMenuToolStrip.TabIndex = 5;
-            this.UserMenuToolStrip.Visible = false;
             // 
             // FormBrowse
             // 
