@@ -36,6 +36,8 @@ namespace GitUI
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormBrowse));
             this.toolPanel = new System.Windows.Forms.ToolStripPanel();
+            this.toolPanelContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolPanelContextMenu_HideUserMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -193,6 +195,7 @@ namespace GitUI
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolPanel.SuspendLayout();
+            this.toolPanelContextMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.ToolStrip.SuspendLayout();
             this.splitContainer3.Panel1.SuspendLayout();
@@ -218,6 +221,7 @@ namespace GitUI
             // 
             // toolPanel
             // 
+            this.toolPanel.ContextMenuStrip = this.toolPanelContextMenu;
             this.toolPanel.Controls.Add(this.menuStrip1);
             this.toolPanel.Controls.Add(this.ToolStrip);
             this.toolPanel.Controls.Add(this.UserMenuToolStrip);
@@ -227,6 +231,22 @@ namespace GitUI
             this.toolPanel.Orientation = System.Windows.Forms.Orientation.Horizontal;
             this.toolPanel.RowMargin = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.toolPanel.Size = new System.Drawing.Size(959, 49);
+            // 
+            // toolPanelContextMenu
+            // 
+            this.toolPanelContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolPanelContextMenu_HideUserMenu});
+            this.toolPanelContextMenu.Name = "contextMenuStrip1";
+            this.toolPanelContextMenu.ShowCheckMargin = true;
+            this.toolPanelContextMenu.ShowImageMargin = false;
+            this.toolPanelContextMenu.Size = new System.Drawing.Size(160, 48);
+            // 
+            // toolPanelContextMenu_HideUserMenu
+            // 
+            this.toolPanelContextMenu_HideUserMenu.Name = "toolPanelContextMenu_HideUserMenu";
+            this.toolPanelContextMenu_HideUserMenu.Size = new System.Drawing.Size(159, 22);
+            this.toolPanelContextMenu_HideUserMenu.Text = "Hide user menu";
+            this.toolPanelContextMenu_HideUserMenu.Click += new System.EventHandler(this.toolPanelContextMenu_HideUserMenu_Click);
             // 
             // menuStrip1
             // 
@@ -1243,7 +1263,7 @@ namespace GitUI
             this.UserMenuToolStrip.Dock = System.Windows.Forms.DockStyle.None;
             this.UserMenuToolStrip.Location = new System.Drawing.Point(843, 24);
             this.UserMenuToolStrip.Name = "UserMenuToolStrip";
-            this.UserMenuToolStrip.Size = new System.Drawing.Size(41, 25);
+            this.UserMenuToolStrip.Size = new System.Drawing.Size(109, 25);
             this.UserMenuToolStrip.TabIndex = 5;
             this.UserMenuToolStrip.Visible = false;
             // 
@@ -1625,6 +1645,7 @@ namespace GitUI
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormBrowseFormClosing);
             this.toolPanel.ResumeLayout(false);
             this.toolPanel.PerformLayout();
+            this.toolPanelContextMenu.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ToolStrip.ResumeLayout(false);
@@ -1813,5 +1834,7 @@ namespace GitUI
         private ToolStripMenuItem editCheckedOutFileToolStripMenuItem;
         private ToolStripPanel toolPanel;
         private ToolStrip UserMenuToolStrip;
+        private ContextMenuStrip toolPanelContextMenu;
+        private ToolStripMenuItem toolPanelContextMenu_HideUserMenu;
     }
 }
