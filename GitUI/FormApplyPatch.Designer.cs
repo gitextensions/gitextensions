@@ -43,7 +43,6 @@
             this.PatchDirMode = new System.Windows.Forms.RadioButton();
             this.PatchFileMode = new System.Windows.Forms.RadioButton();
             this.patchGrid1 = new GitUI.PatchGrid();
-            this.label1 = new System.Windows.Forms.Label();
             this.IgnoreWhitespace = new System.Windows.Forms.CheckBox();
             this.SolveMergeconflicts = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -151,8 +150,6 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.label1);
-            this.splitContainer1.Panel2.Controls.Add(this.IgnoreWhitespace);
             this.splitContainer1.Panel2.Controls.Add(this.SolveMergeconflicts);
             this.splitContainer1.Panel2.Controls.Add(this.Apply);
             this.splitContainer1.Panel2.Controls.Add(this.Mergetool);
@@ -160,6 +157,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.Skip);
             this.splitContainer1.Panel2.Controls.Add(this.Resolved);
             this.splitContainer1.Panel2.Controls.Add(this.Abort);
+            this.splitContainer1.Panel2.Controls.Add(this.IgnoreWhitespace);
             this.splitContainer1.Size = new System.Drawing.Size(764, 391);
             this.splitContainer1.SplitterDistance = 642;
             this.splitContainer1.TabIndex = 11;
@@ -245,23 +243,14 @@
             this.patchGrid1.TabIndex = 10;
             this.patchGrid1.TabStop = false;
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(27, 34);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(82, 13);
-            this.label1.TabIndex = 22;
-            this.label1.Text = "Ignore Wh.spc.";
-            // 
             // IgnoreWhitespace
             // 
             this.IgnoreWhitespace.AutoSize = true;
             this.IgnoreWhitespace.Location = new System.Drawing.Point(8, 34);
             this.IgnoreWhitespace.Name = "IgnoreWhitespace";
-            this.IgnoreWhitespace.Padding = new System.Windows.Forms.Padding(0, 0, 90, 0);
-            this.IgnoreWhitespace.Size = new System.Drawing.Size(105, 14);
+            this.IgnoreWhitespace.Size = new System.Drawing.Size(101, 17);
             this.IgnoreWhitespace.TabIndex = 5;
+            this.IgnoreWhitespace.Text = "Ignore Wh.spc.";
             this.IgnoreWhitespace.UseVisualStyleBackColor = true;
             this.IgnoreWhitespace.CheckedChanged += new System.EventHandler(this.IgnoreWhitespace_CheckedChanged);
             // 
@@ -320,7 +309,6 @@
         private System.Windows.Forms.RadioButton PatchDirMode;
         private System.Windows.Forms.RadioButton PatchFileMode;
         private System.Windows.Forms.Button SolveMergeconflicts;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox IgnoreWhitespace;
     }
 }
