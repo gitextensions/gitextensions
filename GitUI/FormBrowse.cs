@@ -257,6 +257,8 @@ namespace GitUI
             // just hide the damn thing already!
             this.UserMenuToolStrip.Hide();
             this.UserMenuToolStrip.Items.Clear();
+            // disable context menu if no scripts are found/enabled
+            this.toolPanelContextMenu.Enabled = false;
 
             foreach (ScriptInfo scriptInfo in ScriptManager.GetScripts())
             {
@@ -277,6 +279,9 @@ namespace GitUI
                     this.UserMenuToolStrip.Items.Add((ToolStripItem)tempButton);
                     //set visible
                     this.UserMenuToolStrip.Show();
+                    // enable context menu
+                    this.toolPanelContextMenu.Enabled = true;
+                    this.toolPanelContextMenu_HideUserMenu.Checked = false;
                 }
             }
         }
@@ -2120,5 +2125,19 @@ namespace GitUI
             }
         }
         #endregion
+
+        private void toolPanelContextMenu_HideUserMenu_Click(object sender, EventArgs e)
+        {
+            if (((ToolStripMenuItem)sender).Checked)
+            {
+                this.UserMenuToolStrip.Show();
+                ((ToolStripMenuItem)sender).Checked = false;
+            }
+            else
+            {
+                this.UserMenuToolStrip.Hide();
+                ((ToolStripMenuItem)sender).Checked = true;
+            }
+        }
     }
 }
