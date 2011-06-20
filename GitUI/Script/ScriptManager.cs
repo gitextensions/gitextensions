@@ -112,6 +112,17 @@ namespace GitUI.Script
             updateSubmodulesAfterPullScript.AddToRevisionGridContextMenu = false;
             updateSubmodulesAfterPullScript.Enabled = false;
             Scripts.Add(updateSubmodulesAfterPullScript);
+
+            ScriptInfo userMenuScript = new ScriptInfo();
+            userMenuScript.Name = "Example";
+            userMenuScript.Command = "c:\\windows\\system32\\calc.exe";
+            userMenuScript.Arguments = "";
+            userMenuScript.AskConfirmation = false;
+            userMenuScript.OnEvent = ScriptEvent.ShowInUserMenuBar;
+            userMenuScript.AddToRevisionGridContextMenu = false;
+            userMenuScript.Enabled = false;
+            Scripts.Add(userMenuScript);
+
         }
 
         private static void DeserializeFromOldFormat(string inputString)
