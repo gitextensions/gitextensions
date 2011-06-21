@@ -162,7 +162,7 @@
             this.ForcePushTags.Location = new System.Drawing.Point(160, 74);
             this.ForcePushTags.Name = "ForcePushTags";
             this.ForcePushTags.Size = new System.Drawing.Size(79, 17);
-            this.ForcePushTags.TabIndex = 19;
+            this.ForcePushTags.TabIndex = 22;
             this.ForcePushTags.Text = "&Force Push";
             this.ForcePushTags.UseVisualStyleBackColor = true;
             this.ForcePushTags.CheckedChanged += new System.EventHandler(this.ForcePushTagsCheckedChanged);
@@ -338,7 +338,7 @@
             this.PushAllTags.Location = new System.Drawing.Point(160, 51);
             this.PushAllTags.Name = "PushAllTags";
             this.PushAllTags.Size = new System.Drawing.Size(86, 17);
-            this.PushAllTags.TabIndex = 22;
+            this.PushAllTags.TabIndex = 19;
             this.PushAllTags.Text = "Push &all tags";
             this.PushAllTags.UseVisualStyleBackColor = true;
             // 
@@ -490,7 +490,7 @@
             this.AcceptButton = this.Push;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(562, 278);
+            this.ClientSize = new System.Drawing.Size(562, 285);
             this.Controls.Add(this.TabControlTagBranch);
             this.Controls.Add(this.LoadSSHKey);
             this.Controls.Add(this.groupBox2);

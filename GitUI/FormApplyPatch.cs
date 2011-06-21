@@ -23,6 +23,9 @@ namespace GitUI
             if (GitCommandHelpers.InTheMiddleOfPatch())
             {
                 Apply.Enabled = false;
+                IgnoreWhitespace.Enabled = false;
+                PatchFileMode.Enabled = false;
+                PatchDirMode.Enabled = false;
                 AddFiles.Enabled = true;
                 Resolved.Enabled = !GitCommandHelpers.InTheMiddleOfConflictedMerge();
                 Mergetool.Enabled = GitCommandHelpers.InTheMiddleOfConflictedMerge();
@@ -46,6 +49,9 @@ namespace GitUI
                 BrowseDir.Enabled = PatchDirMode.Checked;
 
                 Apply.Enabled = true;
+                IgnoreWhitespace.Enabled = true;
+                PatchFileMode.Enabled = true;
+                PatchDirMode.Enabled = true;
                 AddFiles.Enabled = false;
                 Resolved.Enabled = false;
                 Mergetool.Enabled = false;
@@ -71,13 +77,6 @@ namespace GitUI
                     Resolved.Text = ">Conflicts resolved<";
                     AcceptButton = Resolved;
                 }
-
-        }
-
-        
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
 
         }
 
@@ -174,6 +173,7 @@ namespace GitUI
 
         private void MergePatch_Load(object sender, EventArgs e)
         {
+            PatchFile.Select();
             RestorePosition("merge-patch");
             Text = "Apply patch (" + Settings.WorkingDir + ")";
             IgnoreWhitespace.Checked = Settings.ApplyPatchIgnoreWhitespace;
