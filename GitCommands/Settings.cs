@@ -36,6 +36,29 @@ namespace GitCommands
             ApplicationDataPath = Application.UserAppDataPath + Settings.PathSeparator.ToString();
         }
 
+        private static bool? _stashKeepIndex;
+        public static bool StashKeepIndex
+        {
+            get
+            {
+                if (_stashKeepIndex == null)
+                    SafeSetBool("stashkeepindex", false, x => _stashKeepIndex = x);
+                return _stashKeepIndex.Value;
+            }
+            set
+            {
+                if (_stashKeepIndex == value)
+                    return;
+                _stashKeepIndex = value;
+                Application.UserAppDataRegistry.SetValue("stashkeepindex", _stashKeepIndex);
+            }
+            /*  Use after Mexx' refraction commit:
+             *  get { return SafeGet("stashkeepindex", false, ref _stashKeepIndex); }
+             *  set { SafeSet("stashkeepindex", value, ref _stashKeepIndex); } 
+             */
+        }
+       
+
         private static bool? _applyPatchIgnoreWhitespace;
         public static bool ApplyPatchIgnoreWhitespace
         {
