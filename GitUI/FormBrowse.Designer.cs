@@ -239,7 +239,7 @@ namespace GitUI
             this.toolPanelContextMenu.Name = "contextMenuStrip1";
             this.toolPanelContextMenu.ShowCheckMargin = true;
             this.toolPanelContextMenu.ShowImageMargin = false;
-            this.toolPanelContextMenu.Size = new System.Drawing.Size(160, 48);
+            this.toolPanelContextMenu.Size = new System.Drawing.Size(160, 26);
             // 
             // toolPanelContextMenu_HideUserMenu
             // 
@@ -968,6 +968,7 @@ namespace GitUI
             // ToolStrip
             // 
             this.ToolStrip.Dock = System.Windows.Forms.DockStyle.None;
+            this.ToolStrip.GripMargin = new System.Windows.Forms.Padding(0);
             this.ToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.ToolStrip.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.ToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -995,7 +996,8 @@ namespace GitUI
             this.ToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.ToolStrip.Location = new System.Drawing.Point(3, 24);
             this.ToolStrip.Name = "ToolStrip";
-            this.ToolStrip.Size = new System.Drawing.Size(834, 25);
+            this.ToolStrip.Padding = new System.Windows.Forms.Padding(0);
+            this.ToolStrip.Size = new System.Drawing.Size(833, 25);
             this.ToolStrip.TabIndex = 4;
             this.ToolStrip.Text = "toolStrip1";
             // 
@@ -1261,9 +1263,9 @@ namespace GitUI
             // UserMenuToolStrip
             // 
             this.UserMenuToolStrip.Dock = System.Windows.Forms.DockStyle.None;
-            this.UserMenuToolStrip.Location = new System.Drawing.Point(843, 24);
+            this.UserMenuToolStrip.Location = new System.Drawing.Point(836, 24);
             this.UserMenuToolStrip.Name = "UserMenuToolStrip";
-            this.UserMenuToolStrip.Size = new System.Drawing.Size(109, 25);
+            this.UserMenuToolStrip.Size = new System.Drawing.Size(43, 25);
             this.UserMenuToolStrip.TabIndex = 5;
             this.UserMenuToolStrip.Visible = false;
             // 
