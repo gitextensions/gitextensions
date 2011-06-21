@@ -243,6 +243,22 @@ namespace GitUI
             Cursor.Current = Cursors.Default;
         }
 
+        /// <summary>
+        /// Returns a short name for repository. 
+        /// If the repository contains a description it is returned,
+        /// otherwise the last part of path is returned.
+        /// </summary>
+        /// <param name="repositoryDir">Path to repository.</param>
+        /// <returns>Short name for repository</returns>
+        private static String GetRepositoryShortName(string repositoryDir)
+        {
+            DirectoryInfo dirInfo = new DirectoryInfo(repositoryDir);
+            if (dirInfo.Exists)
+                return ReadRepositoryDescription(repositoryDir) ?? dirInfo.Name;
+            else
+                return dirInfo.Name;
+        }
+
         private void LoadUserMenu()
         {
             //menu strip must be visible to be able to move it
@@ -300,7 +316,7 @@ namespace GitUI
             
                 if(validWorkingDir)
                 {
-                    string repositoryDescription = ReadRepositoryDescription(Settings.WorkingDir) ?? Directory.GetParent(Settings.WorkingDir).Name;
+                    string repositoryDescription = GetRepositoryShortName(Settings.WorkingDir);
                     string baseFolder = Path.Combine(Settings.ApplicationDataPath, "Recent");
                     if(!Directory.Exists(baseFolder))
                     {
@@ -502,7 +518,7 @@ namespace GitUI
 
             if (!isWorkingDirValid)
                 return defaultTitle;
-            string repositoryDescription = ReadRepositoryDescription(workingDir) ?? Directory.GetParent(workingDir).Name;
+            string repositoryDescription = GetRepositoryShortName(workingDir);
             return string.Format(repositoryTitleFormat, repositoryDescription);
         }
 
