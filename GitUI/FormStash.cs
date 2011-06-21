@@ -34,11 +34,13 @@ namespace GitUI
 
         private void FormStashFormClosing(object sender, FormClosingEventArgs e)
         {
+            Settings.StashKeepIndex = this.StashKeepIndex.Checked;
             SavePosition("stash");
         }
 
         private void FormStashLoad(object sender, EventArgs e)
         {
+            this.StashKeepIndex.Checked = Settings.StashKeepIndex;
             RestorePosition("stash");
             splitContainer2_SplitterMoved(null, null);
         }
@@ -147,7 +149,14 @@ namespace GitUI
         private void StashClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess("stash save").ShowDialog();
+            if (!StashKeepIndex.Checked)
+            {
+                new FormProcess("stash save").ShowDialog();
+            }
+            else
+            {
+                new FormProcess("stash save --keep-index").ShowDialog();
+            }
             NeedRefresh = true;
             Initialize();
             Cursor.Current = Cursors.Default;
@@ -212,6 +221,8 @@ namespace GitUI
         private void FormStash_Resize(object sender, EventArgs e)
         {
             splitContainer2_SplitterMoved(null, null);
+            this.StashKeepIndex.Location = new Point(this.Stash.Location.X + 5, this.Stash.Location.Y - 21);
         }
+
     }
 }
