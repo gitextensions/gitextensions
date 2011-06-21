@@ -47,6 +47,15 @@ namespace GitCommands
             get { return SafeGet("usermenulocationy", -1, ref _UserMenuLocationY); }
             set { SafeSet("usermenulocationy", value, ref _UserMenuLocationY); }
         }
+        
+        private static bool? _stashKeepIndex;
+        public static bool StashKeepIndex
+        {
+            get { return SafeGet("stashkeepindex", false, ref _stashKeepIndex); }
+            set { SafeSet("stashkeepindex", value, ref _stashKeepIndex); } 
+        }
+       
+
         private static bool? _applyPatchIgnoreWhitespace;
         public static bool ApplyPatchIgnoreWhitespace
         {
