@@ -924,8 +924,8 @@ Kies een directory.</Value>
         <TranslationItem Name="SolveMergeconflicts" Property="Text">
           <Value>Er zijn niet opgeloste conflicten</Value>
         </TranslationItem>
-		<TranslationItem Name="label1" Property="Text">
-          <Value>Negeer  wit.rmtn.</Value>
+		<TranslationItem Name="IgnoreWhitespace" Property="Text">
+          <Value>Negeer wit.rmtn.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
