@@ -118,7 +118,7 @@ namespace GitUI
             else
                 if (IgnoreWhitespace.Checked)
                 {
-                    new FormProcess(GitCommandHelpers.PatchDirCmdIgnoreWhitespace(PatchFile.Text)).ShowDialog();
+                    new FormProcess(GitCommandHelpers.PatchDirCmdIgnoreWhitespace(PatchDir.Text)).ShowDialog();
                 }
                 else
                 {
