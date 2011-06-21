@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Win32;
-using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
+using System.Windows.Forms;
+using Microsoft.Win32;
 
 namespace GitPlugin.Git
 {
@@ -15,36 +14,16 @@ namespace GitPlugin.Git
             if (!string.IsNullOrEmpty(filename))
                 command += " \"" + filename + "\"";
 
-
-            string path = GetRegistryValue(Registry.CurrentUser, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", "InstallDir");
-
-            if (string.IsNullOrEmpty(path))
-                path = GetRegistryValue(Registry.Users, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", "InstallDir");
-
+            string path = GetGitExRegValue("InstallDir");
             Run(path + "\\GitExtensions.exe", command);
         }
 
-        public static string RunGit(string arguments, string filename, out int exitCode)
+        private static string RunGit(string arguments, string filename, out int exitCode)
         {
-            string gitcommand = GetRegistryValue(Registry.CurrentUser, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", "gitcommand");
+            string gitcommand = GetGitExRegValue("gitcommand");
 
-            if (string.IsNullOrEmpty(gitcommand))
-                gitcommand = GetRegistryValue(Registry.Users, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", "gitcommand");
-
-
-            ProcessStartInfo startInfo = new ProcessStartInfo
-                       {
-                           UseShellExecute = false,
-                           ErrorDialog = false,
-                           RedirectStandardOutput = true,
-                           RedirectStandardInput = true,
-                           RedirectStandardError = true
-                       };
-            startInfo.CreateNoWindow = true;
-            startInfo.FileName = gitcommand;
-            startInfo.Arguments = arguments;
-            startInfo.WorkingDirectory = filename;
-            startInfo.LoadUserProfile = true;
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            SetupProcessStartInfo(startInfo, gitcommand, arguments, filename, false, false);
 
             using (var process = Process.Start(startInfo))
             {
@@ -82,7 +61,6 @@ namespace GitPlugin.Git
                         head = head.Replace("ref:", "").Trim().Replace("refs/heads/", string.Empty);
                         return string.Concat(" (", head, ")");
                     }
-
                 }
             }
             catch
@@ -93,7 +71,7 @@ namespace GitPlugin.Git
             return string.Empty;
         }
 
-        public static string FindGitWorkingDir(string startDir)
+        private static string FindGitWorkingDir(string startDir)
         {
             if (string.IsNullOrEmpty(startDir))
                 return "";
@@ -113,7 +91,7 @@ namespace GitPlugin.Git
             return startDir;
         }
 
-        public static bool ValidWorkingDir(string dir)
+        private static bool ValidWorkingDir(string dir)
         {
             if (string.IsNullOrEmpty(dir))
                 return false;
@@ -127,7 +105,7 @@ namespace GitPlugin.Git
                    Directory.Exists(dir + "\\" + "refs");
         }
 
-        public static string GetRegistryValue(RegistryKey root, string subkey, string key)
+        private static string GetRegistryValue(RegistryKey root, string subkey, string key)
         {
             try
             {
@@ -151,25 +129,46 @@ namespace GitPlugin.Git
             }
             return "";
         }
-        public static void Run(string cmd, string arguments)
+
+        private static string GetGitExRegValue(string key)
+        {
+            string result = GetRegistryValue(Registry.CurrentUser, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", key);
+
+            if (string.IsNullOrEmpty(result))
+                result = GetRegistryValue(Registry.Users, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", key);
+
+            return result;
+        }
+
+        private static void SetupProcessStartInfo(ProcessStartInfo startInfo, string command, string arguments, string workingDir, bool useUTF8, bool show)
+        {
+            startInfo.UseShellExecute = false;
+            startInfo.ErrorDialog = false;
+            startInfo.RedirectStandardInput = true;
+            startInfo.RedirectStandardOutput = true;
+            startInfo.RedirectStandardError = true;
+            if (useUTF8)
+            {
+                startInfo.StandardOutputEncoding = Encoding.UTF8;
+                startInfo.StandardErrorEncoding = Encoding.UTF8;
+            }
+            startInfo.CreateNoWindow = true;
+            startInfo.LoadUserProfile = true;
+
+            startInfo.FileName = command;
+            startInfo.Arguments = arguments;
+            startInfo.WorkingDirectory = workingDir;
+            if (show)
+                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+        }
+
+        private static void Run(string cmd, string arguments)
         {
             try
             {
                 //process used to execute external commands
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.ErrorDialog = false;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.RedirectStandardInput = true;
-                process.StartInfo.RedirectStandardError = true;
-                process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
-                process.StartInfo.StandardErrorEncoding = Encoding.UTF8;
-
-                process.StartInfo.CreateNoWindow = true;
-                process.StartInfo.FileName = cmd;
-                process.StartInfo.Arguments = arguments;
-                process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-                process.StartInfo.LoadUserProfile = true;
+                SetupProcessStartInfo(process.StartInfo, cmd, arguments, "", true, true);
 
                 process.Start();
                 //process.WaitForExit();
@@ -181,11 +180,7 @@ namespace GitPlugin.Git
 
         public static bool GetShowCurrentBranchSetting()
         {
-            string showCurrentBranchSetting = GetRegistryValue(Registry.CurrentUser, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", "showcurrentbranchinvisualstudio");
-
-            if (string.IsNullOrEmpty(showCurrentBranchSetting))
-                showCurrentBranchSetting = GetRegistryValue(Registry.Users, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", "showcurrentbranchinvisualstudio");
-
+            string showCurrentBranchSetting = GetGitExRegValue("showcurrentbranchinvisualstudio");
             return showCurrentBranchSetting != null && showCurrentBranchSetting.Equals("True", StringComparison.CurrentCultureIgnoreCase);
         }
     }
