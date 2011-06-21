@@ -35,7 +35,20 @@ namespace GitPlugin.Commands
             {
                 if (enabled)
                 {
-                    Plugin.ChangeCommandCaption(application, "GitExtensions", "Commit changes", "Commit" + GitCommands.GetCurrentBranch(fileName));
+                    string head = GitCommands.GetCurrentBranch(fileName);
+                    if (!string.IsNullOrEmpty(head))
+                    {
+                        string headShort;
+                        if (head.Length > 27)
+                            headShort = "..." + head.Substring(head.Length - 23);
+                        else
+                            headShort = head;
+                        Plugin.ChangeCommandCaption(application, "GitExtensions", "Commit changes to " + head, "Commit (" + headShort + ")");
+                    }
+                    else
+                    {
+                        Plugin.ChangeCommandCaption(application, "GitExtensions", "Commit changes", "Commit");
+                    }
                 }
                 else
                 {
