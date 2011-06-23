@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Editor;
@@ -250,7 +250,6 @@ namespace GitUI
             // 
             // menuStrip1
             // 
-            this.menuStrip1.Dock = System.Windows.Forms.DockStyle.None;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.gitToolStripMenuItem,
@@ -1265,7 +1264,7 @@ namespace GitUI
             this.UserMenuToolStrip.Dock = System.Windows.Forms.DockStyle.None;
             this.UserMenuToolStrip.Location = new System.Drawing.Point(836, 24);
             this.UserMenuToolStrip.Name = "UserMenuToolStrip";
-            this.UserMenuToolStrip.Size = new System.Drawing.Size(43, 25);
+            this.UserMenuToolStrip.Size = new System.Drawing.Size(111, 25);
             this.UserMenuToolStrip.TabIndex = 5;
             this.UserMenuToolStrip.Visible = false;
             // 
