@@ -332,6 +332,11 @@ namespace GitUI
             Loading.Visible = true;
             LoadingStaged.Visible = true;
 
+            Commit.Enabled = false;
+            CommitAndPush.Enabled = false;
+            Amend.Enabled = false;
+            Reset.Enabled = false;
+
             Cursor.Current = Cursors.Default;
         }
 
@@ -371,6 +376,10 @@ namespace GitUI
 
             Loading.Visible = false;
             LoadingStaged.Visible = false;
+            Commit.Enabled = true;
+            CommitAndPush.Enabled = true;
+            Amend.Enabled = true;
+            Reset.Enabled = true;
 
             EnableStageButtons(true);
             workingToolStripMenuItem.Enabled = true;
@@ -589,6 +598,11 @@ namespace GitUI
                 {
                     Loading.Visible = true;
                     LoadingStaged.Visible = true;
+                    Commit.Enabled = false;
+                    CommitAndPush.Enabled = false;
+                    Amend.Enabled = false;
+                    Reset.Enabled = false;
+
                     GitCommandHelpers.ResetMixed("HEAD");
                     Initialize();
                 }
