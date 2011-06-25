@@ -125,7 +125,7 @@ namespace GitUI.SpellChecker
             _customUnderlines.Lines.Clear();
             try
             {
-                if (_spelling != null)
+                if (_spelling != null && TextBox.Text.Length < 5000)
                 {
                     _spelling.Text = TextBox.Text;
                     _spelling.ShowDialog = false;
