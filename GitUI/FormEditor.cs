@@ -15,14 +15,8 @@ namespace GitUI
         public FormEditor()
         {
             InitializeComponent();
-            fileViewer.TextChanged += fileViewer_TextChanged;
             Translate();
-        }
-
-        void fileViewer_TextChanged(object sender, EventArgs e)
-        {
-            // I don't care what the old value is, it ought to be set to true whatever the old value is.
-            _textIsChanged = true;
+            fileViewer.TextChanged += fileViewer_TextChanged;
         }
 
         public FormEditor(string fileName)
@@ -31,6 +25,22 @@ namespace GitUI
             Translate();
 
             OpenFile(fileName);
+            fileViewer.TextChanged += fileViewer_TextChanged;
+            fileViewer.TextLoaded += fileViewer_TextLoaded;
+        }
+
+        void fileViewer_TextChanged(object sender, EventArgs e)
+        {
+            // I don't care what the old value is, it ought to be set to true whatever the old value is.
+            _textIsChanged = true;
+            toolStripSaveButton.Enabled = _textIsChanged;
+        }
+
+        void fileViewer_TextLoaded(object sender, EventArgs e)
+        {
+            //reset 'changed' flag
+            _textIsChanged = false;
+            toolStripSaveButton.Enabled = _textIsChanged;
         }
 
         private string _fileName;

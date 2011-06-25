@@ -43,7 +43,8 @@ namespace GitUI.Editor
                 {
                     ResetForText(null);
                     _internalFileViewer.SetText("Unsupported file");
-
+                    if (TextLoaded != null)
+                        TextLoaded(this, null);
                 };
 
             IgnoreWhitespaceChanges = false;
@@ -77,6 +78,7 @@ namespace GitUI.Editor
         public event EventHandler ScrollPosChanged;
         public event EventHandler RequestDiffView;
         public new event EventHandler TextChanged;
+        public event EventHandler TextLoaded;
 
         public ToolStripItem AddContextMenuEntry(string text, EventHandler toolStripItem_Click)
         {
@@ -240,6 +242,8 @@ namespace GitUI.Editor
         {
             ResetForDiff();
             _internalFileViewer.SetText(text);
+            if (TextLoaded != null)
+                TextLoaded(this, null);
             RestoreCurrentScrollPos();
         }
 
@@ -262,10 +266,14 @@ namespace GitUI.Editor
             if (FileHelper.IsBinaryFileAccordingToContent(text))
             {
                 _internalFileViewer.SetText("Binary file: " + fileName + " (Detected)");
+                if (TextLoaded != null)
+                    TextLoaded(this, null);
                 return;
             }
 
             _internalFileViewer.SetText(text);
+            if (TextLoaded != null)
+                TextLoaded(this, null);
 
             RestoreCurrentScrollPos();
         }
