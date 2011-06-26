@@ -102,6 +102,8 @@ namespace GitUI.Blame
 
         public void LoadBlame(string guid, string fileName, RevisionGrid revGrid)
         {
+            try
+            {
             var scrollpos = BlameFile.ScrollPos;
 
             var blameCommitter = new StringBuilder();
@@ -129,6 +131,12 @@ namespace GitUI.Blame
             BlameFile.ScrollPos = scrollpos;
 
             BlameFile_SelectedLineChanged(null, 0);
+            }
+            catch (Exception e)
+            {
+                return;
+            }
+           
         }
 
         private void SyncBlameViews()
