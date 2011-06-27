@@ -2172,5 +2172,98 @@ namespace GitUI
         {
             ScriptList_SelectionChanged(null, null);//needed for linux
         }
+
+
+
+        #region Hotkey commands
+
+        public const string HotkeySettingsName = "Scripts";
+
+        internal enum Commands : int
+        {
+            FocusUnstagedFiles,
+            FocusSelectedDiff,
+            FocusStagedFiles,
+            FocusCommitMessage,
+            StageSelectedFile,
+            UnStageSelectedFile,
+        }
+
+        private bool FocusStagedFiles()
+        {
+            //FocusFileList(this.Staged);
+            return true;
+        }
+
+        private bool FocusUnstagedFiles()
+        {
+            //FocusFileList(this.Unstaged);
+            return true;
+        }
+
+        /// <summary>Helper method that moves the focus to the supplied FileStatusList</summary>
+        private bool FocusFileList(FileStatusList fileStatusList)
+        {
+            //fileStatusList.Focus();
+            return true;
+        }
+
+        private bool FocusSelectedDiff()
+        {
+            //this.SelectedDiff.Focus();
+            return true;
+        }
+
+        private bool FocusCommitMessage()
+        {//
+            //this.Message.StartEditing();
+            return true;
+        }
+
+        private bool StageSelectedFile()
+        {
+            /*if (Unstaged.Focused)
+            {
+                StageClick(this, null);
+                return true;
+            }
+             */ 
+            return false;
+        }
+
+        private bool UnStageSelectedFile()
+        {
+            /*
+            if (Staged.Focused)
+            {
+                UnstageFilesClick(this, null);
+                return true;
+            }
+             */ 
+            return false;
+        }
+
+        protected override bool ExecuteCommand(int cmd)
+        {
+            /*
+            Commands command = (Commands)cmd;
+
+            switch (command)
+            {
+                case Commands.FocusStagedFiles: return FocusStagedFiles();
+                case Commands.FocusUnstagedFiles: return FocusUnstagedFiles();
+                case Commands.FocusSelectedDiff: return FocusSelectedDiff();
+                case Commands.FocusCommitMessage: return FocusCommitMessage();
+                case Commands.StageSelectedFile: return StageSelectedFile();
+                case Commands.UnStageSelectedFile: return UnStageSelectedFile();
+                default: return false;
+            }
+             */
+            return true;
+        }
+
+        #endregion
+
+
     }
 }

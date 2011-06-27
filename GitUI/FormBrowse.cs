@@ -1994,7 +1994,8 @@ namespace GitUI
             SelectCurrentRevision,
             CheckoutBranch,
             QuickFetch,
-            QuickPush
+            QuickPush,
+            RunScript
         }
 
         private void AddNotes()
@@ -2021,6 +2022,11 @@ namespace GitUI
             Initialize();
         }
 
+        private void RunScript()
+        {
+            MessageBox.Show("I'm in" + System.Reflection.MethodBase.GetCurrentMethod().Name);
+        }
+
         protected override bool ExecuteCommand(int cmd)
         {
             Commands command = (Commands)cmd;
@@ -2041,6 +2047,7 @@ namespace GitUI
                 case Commands.CheckoutBranch: CheckoutBranchToolStripMenuItemClick(null, null); break;
                 case Commands.QuickFetch: QuickFetch(); break;
                 case Commands.QuickPush: GitUICommands.Instance.StartPushDialog(true); break;
+                case Commands.RunScript: RunScript(); break;
             }
 
             return true;
