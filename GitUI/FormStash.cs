@@ -18,6 +18,8 @@ namespace GitUI
         public bool NeedRefresh;
         private readonly SynchronizationContext _syncContext;
 
+        private string OrigiMessage = "";
+
         public FormStash()
         {
             _syncContext = SynchronizationContext.Current;
@@ -155,7 +157,7 @@ namespace GitUI
             }
             else
             {
-                new FormProcess("stash save --keep-index").ShowDialog();
+                new FormProcess(string.Format("stash save --keep-index {0}",StashMessage.Text)).ShowDialog();
             }
             NeedRefresh = true;
             Initialize();
@@ -192,6 +194,7 @@ namespace GitUI
             if (Stashes.Items.Count == 1)
                 StashMessage.Text = noStashes.Text;
 
+            this.OrigiMessage = StashMessage.Text;
             Cursor.Current = Cursors.Default;
         }
 
@@ -223,6 +226,13 @@ namespace GitUI
             splitContainer2_SplitterMoved(null, null);
             this.StashKeepIndex.Location = new Point(this.Stash.Location.X + 5, this.Stash.Location.Y - 21);
         }
+
+        private void toolStripButton_RemoveCustomMessage_Click(object sender, EventArgs e)
+        {
+            StashMessage.Text = this.OrigiMessage;
+        }
+
+       
 
     }
 }

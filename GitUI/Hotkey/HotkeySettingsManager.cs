@@ -125,7 +125,8 @@ namespace GitUI.Hotkey
                     hk(FormBrowse.Commands.SelectCurrentRevision, Keys.Control | Keys.Shift | Keys.C),
                     hk(FormBrowse.Commands.CheckoutBranch, Keys.Control | Keys.Decimal),
                     hk(FormBrowse.Commands.QuickFetch, Keys.Control | Keys.Shift | Keys.Down),
-                    hk(FormBrowse.Commands.QuickPush, Keys.Control | Keys.Shift | Keys.Up)),
+                    hk(FormBrowse.Commands.QuickPush, Keys.Control | Keys.Shift | Keys.Up),
+                    hk(FormBrowse.Commands.RunScript,Keys.Control | Keys.T)),
                 new HotkeySettings(RevisionGrid.HotkeySettingsName,
                     hk(RevisionGrid.Commands.RevisionFilter, Keys.Control | Keys.F),
                     hk(RevisionGrid.Commands.ToggleRevisionGraph, Keys.None),
@@ -148,7 +149,10 @@ namespace GitUI.Hotkey
                     hk(FormResolveConflicts.Commands.ChooseLocal, Keys.L),
                     hk(FormResolveConflicts.Commands.ChooseRemote, Keys.R),
                     hk(FormResolveConflicts.Commands.Merge, Keys.M),
-                    hk(FormResolveConflicts.Commands.Rescan, Keys.F5))
+                    hk(FormResolveConflicts.Commands.Rescan, Keys.F5)),
+                new HotkeySettings(FormSettings.HotkeySettingsName,
+                    hk(FormSettings.Commands.FocusCommitMessage,Keys.B),
+                    hk(FormSettings.Commands.FocusSelectedDiff,Keys.C))
               };
         }
     }
