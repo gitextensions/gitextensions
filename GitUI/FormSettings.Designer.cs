@@ -95,6 +95,8 @@ namespace GitUI
             this.BrowseGitPath = new System.Windows.Forms.Button();
             this.GitBinPath = new System.Windows.Forms.TextBox();
             this.TabPageGitExtensions = new System.Windows.Forms.TabPage();
+            this.label37 = new System.Windows.Forms.Label();
+            this.usePatienceDiffAlgorithm = new System.Windows.Forms.CheckBox();
             this.labelShowCurrentBranchInVisualStudio = new System.Windows.Forms.Label();
             this.showCurrentBranchInVisualStudio = new System.Windows.Forms.CheckBox();
             this.downloadDictionary = new System.Windows.Forms.LinkLabel();
@@ -260,8 +262,6 @@ namespace GitUI
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
-            this.label37 = new System.Windows.Forms.Label();
-            this.usePatienceDiffAlgorithm = new System.Windows.Forms.CheckBox();
             this.LocalSettings.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
@@ -547,7 +547,7 @@ namespace GitUI
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(832, 457);
+            this.tabControl1.Size = new System.Drawing.Size(832, 464);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
@@ -576,7 +576,7 @@ namespace GitUI
             this.tabPage3.Controls.Add(this.GitExtensionsInstall);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(824, 431);
+            this.tabPage3.Size = new System.Drawing.Size(824, 438);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Checklist";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -1107,6 +1107,25 @@ namespace GitUI
             this.TabPageGitExtensions.Text = "Git extensions";
             this.TabPageGitExtensions.UseVisualStyleBackColor = true;
             this.TabPageGitExtensions.Click += new System.EventHandler(this.TabPageGitExtensions_Click);
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Location = new System.Drawing.Point(32, 355);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(135, 13);
+            this.label37.TabIndex = 44;
+            this.label37.Text = "Use patience diff algorithm";
+            // 
+            // usePatienceDiffAlgorithm
+            // 
+            this.usePatienceDiffAlgorithm.AutoSize = true;
+            this.usePatienceDiffAlgorithm.Location = new System.Drawing.Point(11, 355);
+            this.usePatienceDiffAlgorithm.Name = "usePatienceDiffAlgorithm";
+            this.usePatienceDiffAlgorithm.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.usePatienceDiffAlgorithm.Size = new System.Drawing.Size(15, 14);
+            this.usePatienceDiffAlgorithm.TabIndex = 43;
+            this.usePatienceDiffAlgorithm.UseVisualStyleBackColor = true;
             // 
             // labelShowCurrentBranchInVisualStudio
             // 
@@ -2861,7 +2880,7 @@ namespace GitUI
             this.tabPageHotkeys.Location = new System.Drawing.Point(4, 22);
             this.tabPageHotkeys.Name = "tabPageHotkeys";
             this.tabPageHotkeys.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageHotkeys.Size = new System.Drawing.Size(824, 431);
+            this.tabPageHotkeys.Size = new System.Drawing.Size(824, 438);
             this.tabPageHotkeys.TabIndex = 9;
             this.tabPageHotkeys.Text = "Hotkeys";
             this.tabPageHotkeys.UseVisualStyleBackColor = true;
@@ -2872,7 +2891,7 @@ namespace GitUI
             this.controlHotkeys.Location = new System.Drawing.Point(3, 3);
             this.controlHotkeys.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.controlHotkeys.Name = "controlHotkeys";
-            this.controlHotkeys.Size = new System.Drawing.Size(818, 425);
+            this.controlHotkeys.Size = new System.Drawing.Size(818, 432);
             this.controlHotkeys.TabIndex = 0;
             // 
             // splitContainer1
@@ -2890,8 +2909,8 @@ namespace GitUI
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.Ok);
-            this.splitContainer1.Size = new System.Drawing.Size(832, 490);
-            this.splitContainer1.SplitterDistance = 457;
+            this.splitContainer1.Size = new System.Drawing.Size(832, 497);
+            this.splitContainer1.SplitterDistance = 464;
             this.splitContainer1.TabIndex = 1;
             // 
             // Ok
@@ -2940,30 +2959,11 @@ namespace GitUI
             // 
             this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository.Repository);
             // 
-            // label37
-            // 
-            this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(32, 355);
-            this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(135, 13);
-            this.label37.TabIndex = 44;
-            this.label37.Text = "Use patience diff algorithm";
-            // 
-            // usePatienceDiffAlgorithm
-            // 
-            this.usePatienceDiffAlgorithm.AutoSize = true;
-            this.usePatienceDiffAlgorithm.Location = new System.Drawing.Point(11, 355);
-            this.usePatienceDiffAlgorithm.Name = "usePatienceDiffAlgorithm";
-            this.usePatienceDiffAlgorithm.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.usePatienceDiffAlgorithm.Size = new System.Drawing.Size(15, 14);
-            this.usePatienceDiffAlgorithm.TabIndex = 43;
-            this.usePatienceDiffAlgorithm.UseVisualStyleBackColor = true;
-            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(832, 490);
+            this.ClientSize = new System.Drawing.Size(832, 497);
             this.Controls.Add(this.splitContainer1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;

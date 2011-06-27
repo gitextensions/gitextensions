@@ -39,6 +39,7 @@ namespace GitUI
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.Stashes = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripButton_RemoveCustomMessage = new System.Windows.Forms.ToolStripButton();
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
             this.StashMessage = new System.Windows.Forms.RichTextBox();
             this.StashKeepIndex = new System.Windows.Forms.CheckBox();
@@ -112,7 +113,8 @@ namespace GitUI
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton1,
             this.toolStripLabel1,
-            this.Stashes});
+            this.Stashes,
+            this.toolStripButton_RemoveCustomMessage});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
@@ -148,6 +150,16 @@ namespace GitUI
             this.Stashes.Size = new System.Drawing.Size(150, 27);
             this.Stashes.SelectedIndexChanged += new System.EventHandler(this.StashesSelectedIndexChanged);
             // 
+            // toolStripButton_RemoveCustomMessage
+            // 
+            this.toolStripButton_RemoveCustomMessage.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton_RemoveCustomMessage.Image = global::GitUI.Properties.Resources.Removed;
+            this.toolStripButton_RemoveCustomMessage.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton_RemoveCustomMessage.Name = "toolStripButton_RemoveCustomMessage";
+            this.toolStripButton_RemoveCustomMessage.Size = new System.Drawing.Size(23, 20);
+            this.toolStripButton_RemoveCustomMessage.Text = "toolStripButton2";
+            this.toolStripButton_RemoveCustomMessage.Click += new System.EventHandler(this.toolStripButton_RemoveCustomMessage_Click);
+            // 
             // splitContainer5
             // 
             this.splitContainer5.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -179,7 +191,6 @@ namespace GitUI
             this.StashMessage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.StashMessage.Location = new System.Drawing.Point(0, 0);
             this.StashMessage.Name = "StashMessage";
-            this.StashMessage.ReadOnly = true;
             this.StashMessage.Size = new System.Drawing.Size(251, 45);
             this.StashMessage.TabIndex = 3;
             this.StashMessage.Text = "";
@@ -329,5 +340,6 @@ namespace GitUI
         private System.Windows.Forms.ToolStripComboBox Stashes;
         private PictureBox Loading;
         private CheckBox StashKeepIndex;
+        private ToolStripButton toolStripButton_RemoveCustomMessage;
     }
 }
