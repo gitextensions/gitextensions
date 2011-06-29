@@ -72,12 +72,7 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
-            Message.DefaultCellStyle.Font = SystemFonts.DefaultFont;
-            Date.DefaultCellStyle.Font = SystemFonts.DefaultFont;
-
             NormalFont = SystemFonts.DefaultFont;
-            RefsFont = new Font(NormalFont, FontStyle.Bold);
-            HeadFont = new Font(NormalFont, FontStyle.Bold);
             Loading.Paint += Loading_Paint;
 
             Revisions.CellPainting += RevisionsCellPainting;
@@ -144,7 +139,22 @@ namespace GitUI
         public string InMemMessageFilter { get; set; }
 
         public string BranchFilter { get; set; }
-        public Font NormalFont { get; set; }
+        private Font _normalFont;
+
+        public Font NormalFont
+        {
+            get { return _normalFont; }
+            set
+            {
+                _normalFont = value;
+                Message.DefaultCellStyle.Font = _normalFont;
+                Date.DefaultCellStyle.Font = _normalFont;
+
+                RefsFont = new Font(_normalFont, FontStyle.Bold);
+                HeadFont = new Font(_normalFont, FontStyle.Bold);
+            }
+        }
+
         public string CurrentCheckout { get; set; }
         public int LastRow { get; set; }
         public bool AllowGraphWithFilter { get; set; }
