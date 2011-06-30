@@ -2026,7 +2026,8 @@ namespace GitUI
         {
             MessageBox.Show("I'm in" + System.Reflection.MethodBase.GetCurrentMethod().Name);
         }
-
+        
+        
         protected override bool ExecuteCommand(int cmd)
         {
             Commands command = (Commands)cmd;
@@ -2048,6 +2049,7 @@ namespace GitUI
                 case Commands.QuickFetch: QuickFetch(); break;
                 case Commands.QuickPush: GitUICommands.Instance.StartPushDialog(true); break;
                 case Commands.RunScript: RunScript(); break;
+                default: ExecuteScriptCommand(cmd, Keys.None); break;
             }
 
             return true;
