@@ -45,17 +45,17 @@ namespace GitUI
 
         /// <summary>Overridden: Checks if a hotkey wants to handle the key before letting the message propagate</summary>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
+     {   
           if (HotkeysEnabled && this.Hotkeys != null)
             foreach (var hotkey in this.Hotkeys)
-            {
+           { 
               if (hotkey.KeyData == keyData)
               {
                 return ExecuteCommand(hotkey.CommandCode);
               }
             }
 
-          return base.ProcessCmdKey(ref msg, keyData);
+         return base.ProcessCmdKey(ref msg, keyData);
         }
         
         /// <summary>
@@ -65,6 +65,17 @@ namespace GitUI
         /// <param name="command"></param>
         protected virtual bool ExecuteCommand(int command)
         {
+            return false;
+        }
+        protected virtual bool ExecuteScriptCommand(int command, Keys keyData)
+        {
+            var curScripts = GitUI.Script.ScriptManager.GetScripts();
+            
+            foreach (GitUI.Script.ScriptInfo s in curScripts)
+            {
+                if (s.HotkeyCommandIdentifier == command)
+                    GitUI.Script.ScriptRunner.RunScript(s.Name, null);
+            }
             return false;
         }
 

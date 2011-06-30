@@ -22,7 +22,7 @@ namespace GitUI.Script
             {
                 DeserializeFromXml(Settings.ownScripts);
             }
-
+            //AddDefaultScripts();
             return Scripts;
         }
 
