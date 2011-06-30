@@ -37,5 +37,7 @@ namespace GitUI.Script
         public ScriptEvent OnEvent { get; set; }
 
         public bool AskConfirmation { get; set; }
+
+        public int HotkeyCommandIdentifier { get; set; }
     }
 }

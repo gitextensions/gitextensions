@@ -29,7 +29,18 @@ namespace GitUI.Hotkey
         {
             var settings = LoadSettings().FirstOrDefault(s => s.Name == name);
 
-            return settings != null ? settings.Commands : null;
+            if(settings != null) {
+                //append general hotkeys to every form
+                HotkeyCommand[] scriptkeys = LoadScriptHotkeys();
+                HotkeyCommand[] allkeys = new HotkeyCommand[settings.Commands.Length + scriptkeys.Length];
+                settings.Commands.CopyTo(allkeys,0);
+                scriptkeys.CopyTo(allkeys,settings.Commands.Length);
+
+                return allkeys;
+            }
+
+            //return settings != null ? settings.Commands : null;
+            return null;
         }
 
         public static HotkeySettings[] LoadSettings()
@@ -101,8 +112,13 @@ namespace GitUI.Hotkey
         public static HotkeySettings[] CreateDefaultSettings()
         {
             Func<object, Keys, HotkeyCommand> hk = (en, k) => new HotkeyCommand((int)en, en.ToString()) { KeyData = k };
+
+            HotkeyCommand[] j = LoadScriptHotkeys();
+            
+            
             return new[]
               {
+                  
                 // FormCommit
                 new HotkeySettings(FormCommit.HotkeySettingsName, 
                     hk(FormCommit.Commands.FocusUnstagedFiles, Keys.Control | Keys.D1),
@@ -151,9 +167,33 @@ namespace GitUI.Hotkey
                     hk(FormResolveConflicts.Commands.Merge, Keys.M),
                     hk(FormResolveConflicts.Commands.Rescan, Keys.F5)),
                 new HotkeySettings(FormSettings.HotkeySettingsName,
-                    hk(FormSettings.Commands.FocusCommitMessage,Keys.B),
-                    hk(FormSettings.Commands.FocusSelectedDiff,Keys.C))
+                    j)
               };
         }
+
+        public static HotkeyCommand[] LoadScriptHotkeys()
+        {
+            Func<object, Keys, HotkeyCommand> hk = (en, k) => new HotkeyCommand((int)en, en.ToString()) { KeyData = k };
+
+            var curScripts = GitUI.Script.ScriptManager.GetScripts();
+
+            HotkeyCommand[] scriptKeys = new HotkeyCommand[curScripts.Count];
+            /* define unusable int for identifying a shortcut for a custom script is pressed
+             * all integers above 9000 represent a scripthotkey 
+             * these integers are never matched in the 'switch' routine on a form and
+             * therefore execute the 'default' action
+             */
+
+            // TODO: get real hotkeys
+
+            int i=0;
+            foreach (GitUI.Script.ScriptInfo s in curScripts)
+            {
+                scriptKeys[i] = hk(s.HotkeyCommandIdentifier, (Keys.Control | Keys.T));
+                i++;
+            }
+            return scriptKeys;
+        }
+
     }
 }

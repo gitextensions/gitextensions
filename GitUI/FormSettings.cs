@@ -2064,6 +2064,7 @@ namespace GitUI
             if (ScriptList.SelectedRows.Count > 0)
             {
                 ScriptInfo selectedScriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
+                selectedScriptInfo.HotkeyCommandIdentifier = ScriptList.SelectedRows[0].Index+9000;
                 selectedScriptInfo.Name = nameTextBox.Text;
                 selectedScriptInfo.Command = commandTextBox.Text;
                 selectedScriptInfo.Arguments = argumentsTextBox.Text;
