@@ -43,8 +43,10 @@
             this.PatchDirMode = new System.Windows.Forms.RadioButton();
             this.PatchFileMode = new System.Windows.Forms.RadioButton();
             this.patchGrid1 = new GitUI.PatchGrid();
-            this.IgnoreWhitespace = new System.Windows.Forms.CheckBox();
             this.SolveMergeconflicts = new System.Windows.Forms.Button();
+            this.IgnoreWhitespace = new System.Windows.Forms.CheckBox();
+            this.ContinuePanel = new System.Windows.Forms.Panel();
+            this.MergeToolPanel = new System.Windows.Forms.Panel();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -76,7 +78,7 @@
             // 
             this.Apply.Location = new System.Drawing.Point(3, 3);
             this.Apply.Name = "Apply";
-            this.Apply.Size = new System.Drawing.Size(112, 25);
+            this.Apply.Size = new System.Drawing.Size(125, 25);
             this.Apply.TabIndex = 6;
             this.Apply.Text = "Apply patch";
             this.Apply.UseVisualStyleBackColor = true;
@@ -91,7 +93,7 @@
             this.Mergetool.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Mergetool.Location = new System.Drawing.Point(3, 76);
             this.Mergetool.Name = "Mergetool";
-            this.Mergetool.Size = new System.Drawing.Size(112, 25);
+            this.Mergetool.Size = new System.Drawing.Size(125, 25);
             this.Mergetool.TabIndex = 7;
             this.Mergetool.Text = "Solve conflicts";
             this.Mergetool.UseVisualStyleBackColor = true;
@@ -101,7 +103,7 @@
             // 
             this.Skip.Location = new System.Drawing.Point(2, 209);
             this.Skip.Name = "Skip";
-            this.Skip.Size = new System.Drawing.Size(112, 25);
+            this.Skip.Size = new System.Drawing.Size(125, 25);
             this.Skip.TabIndex = 10;
             this.Skip.Text = "Skip patch";
             this.Skip.UseVisualStyleBackColor = true;
@@ -111,7 +113,7 @@
             // 
             this.Abort.Location = new System.Drawing.Point(2, 238);
             this.Abort.Name = "Abort";
-            this.Abort.Size = new System.Drawing.Size(112, 25);
+            this.Abort.Size = new System.Drawing.Size(125, 25);
             this.Abort.TabIndex = 11;
             this.Abort.Text = "Abort patch";
             this.Abort.UseVisualStyleBackColor = true;
@@ -121,7 +123,7 @@
             // 
             this.Resolved.Location = new System.Drawing.Point(3, 180);
             this.Resolved.Name = "Resolved";
-            this.Resolved.Size = new System.Drawing.Size(112, 25);
+            this.Resolved.Size = new System.Drawing.Size(125, 25);
             this.Resolved.TabIndex = 9;
             this.Resolved.Text = "Conflicts resolved";
             this.Resolved.UseVisualStyleBackColor = true;
@@ -131,7 +133,7 @@
             // 
             this.AddFiles.Location = new System.Drawing.Point(3, 131);
             this.AddFiles.Name = "AddFiles";
-            this.AddFiles.Size = new System.Drawing.Size(112, 25);
+            this.AddFiles.Size = new System.Drawing.Size(125, 25);
             this.AddFiles.TabIndex = 8;
             this.AddFiles.Text = "Add files";
             this.AddFiles.UseVisualStyleBackColor = true;
@@ -148,7 +150,7 @@
             // 
             this.splitContainer1.Panel1.Controls.Add(this.splitContainer2);
             // 
-            // splitContainer1.Panel2
+            // 
             // 
             this.splitContainer1.Panel2.Controls.Add(this.SolveMergeconflicts);
             this.splitContainer1.Panel2.Controls.Add(this.Apply);
@@ -158,8 +160,10 @@
             this.splitContainer1.Panel2.Controls.Add(this.Resolved);
             this.splitContainer1.Panel2.Controls.Add(this.Abort);
             this.splitContainer1.Panel2.Controls.Add(this.IgnoreWhitespace);
+            this.splitContainer1.Panel2.Controls.Add(this.ContinuePanel);
+            this.splitContainer1.Panel2.Controls.Add(this.MergeToolPanel);
             this.splitContainer1.Size = new System.Drawing.Size(764, 391);
-            this.splitContainer1.SplitterDistance = 642;
+            this.splitContainer1.SplitterDistance = 629;
             this.splitContainer1.TabIndex = 11;
             this.splitContainer1.TabStop = false;
             // 
@@ -183,7 +187,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.patchGrid1);
-            this.splitContainer2.Size = new System.Drawing.Size(642, 391);
+            this.splitContainer2.Size = new System.Drawing.Size(629, 391);
             this.splitContainer2.SplitterDistance = 72;
             this.splitContainer2.TabIndex = 0;
             this.splitContainer2.TabStop = false;
@@ -239,9 +243,22 @@
             this.patchGrid1.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.patchGrid1.Location = new System.Drawing.Point(0, 0);
             this.patchGrid1.Name = "patchGrid1";
-            this.patchGrid1.Size = new System.Drawing.Size(642, 315);
+            this.patchGrid1.Size = new System.Drawing.Size(629, 315);
             this.patchGrid1.TabIndex = 10;
             this.patchGrid1.TabStop = false;
+            // 
+            // SolveMergeconflicts
+            // 
+            this.SolveMergeconflicts.BackColor = System.Drawing.Color.Salmon;
+            this.SolveMergeconflicts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SolveMergeconflicts.Location = new System.Drawing.Point(3, 267);
+            this.SolveMergeconflicts.Name = "SolveMergeconflicts";
+            this.SolveMergeconflicts.Size = new System.Drawing.Size(120, 49);
+            this.SolveMergeconflicts.TabIndex = 12;
+            this.SolveMergeconflicts.Text = "There are unresolved mergeconflicts\r\n";
+            this.SolveMergeconflicts.UseVisualStyleBackColor = false;
+            this.SolveMergeconflicts.Visible = false;
+            this.SolveMergeconflicts.Click += new System.EventHandler(this.SolveMergeconflicts_Click);
             // 
             // IgnoreWhitespace
             // 
@@ -254,18 +271,21 @@
             this.IgnoreWhitespace.UseVisualStyleBackColor = true;
             this.IgnoreWhitespace.CheckedChanged += new System.EventHandler(this.IgnoreWhitespace_CheckedChanged);
             // 
-            // SolveMergeconflicts
+            // ContinuePanel
             // 
-            this.SolveMergeconflicts.BackColor = System.Drawing.Color.Salmon;
-            this.SolveMergeconflicts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SolveMergeconflicts.Location = new System.Drawing.Point(3, 267);
-            this.SolveMergeconflicts.Name = "SolveMergeconflicts";
-            this.SolveMergeconflicts.Size = new System.Drawing.Size(107, 49);
-            this.SolveMergeconflicts.TabIndex = 12;
-            this.SolveMergeconflicts.Text = "There are unresolved mergeconflicts\r\n";
-            this.SolveMergeconflicts.UseVisualStyleBackColor = false;
-            this.SolveMergeconflicts.Visible = false;
-            this.SolveMergeconflicts.Click += new System.EventHandler(this.SolveMergeconflicts_Click);
+            this.ContinuePanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.ContinuePanel.Location = new System.Drawing.Point(6, 175);
+            this.ContinuePanel.Name = "ContinuePanel";
+            this.ContinuePanel.Size = new System.Drawing.Size(122, 34);
+            this.ContinuePanel.TabIndex = 12;
+            // 
+            // MergeToolPanel
+            // 
+            this.MergeToolPanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.MergeToolPanel.Location = new System.Drawing.Point(5, 72);
+            this.MergeToolPanel.Name = "MergeToolPanel";
+            this.MergeToolPanel.Size = new System.Drawing.Size(122, 34);
+            this.MergeToolPanel.TabIndex = 13;
             // 
             // FormApplyPatch
             // 
@@ -310,5 +330,7 @@
         private System.Windows.Forms.RadioButton PatchFileMode;
         private System.Windows.Forms.Button SolveMergeconflicts;
         private System.Windows.Forms.CheckBox IgnoreWhitespace;
+        private System.Windows.Forms.Panel ContinuePanel;
+        private System.Windows.Forms.Panel MergeToolPanel;
     }
 }

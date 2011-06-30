@@ -2,6 +2,7 @@
 
 using System.Windows.Forms;
 using GitCommands;
+using System.Drawing;
 
 namespace GitUI
 {
@@ -65,17 +66,23 @@ namespace GitUI
 
             Resolved.Text = "Conflicts resolved";
             Mergetool.Text = "Solve conflicts";
+            ContinuePanel.BackColor = Color.Transparent;
+            MergeToolPanel.BackColor = Color.Transparent;
 
             if (GitCommandHelpers.InTheMiddleOfConflictedMerge())
             {
                 Mergetool.Text = ">Solve conflicts<";
+                Mergetool.Focus();
                 AcceptButton = Mergetool;
+                MergeToolPanel.BackColor = Color.Black;
             }
             else
                 if (GitCommandHelpers.InTheMiddleOfPatch())
                 {
                     Resolved.Text = ">Conflicts resolved<";
+                    Resolved.Focus();
                     AcceptButton = Resolved;
+                    ContinuePanel.BackColor = Color.Black;
                 }
 
         }
