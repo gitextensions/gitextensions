@@ -224,7 +224,7 @@
             this.Fetch.Name = "Fetch";
             this.Fetch.Size = new System.Drawing.Size(526, 21);
             this.Fetch.TabIndex = 10;
-            this.Fetch.Text = "Do not merge, only &fetch remote branch";
+            this.Fetch.Text = "Do not merge, only &fetch remote changes";
             this.Fetch.UseVisualStyleBackColor = true;
             this.Fetch.CheckedChanged += new System.EventHandler(this.FetchCheckedChanged);
             // 
@@ -236,7 +236,7 @@
             this.Merge.Size = new System.Drawing.Size(528, 24);
             this.Merge.TabIndex = 8;
             this.Merge.TabStop = true;
-            this.Merge.Text = "&Merge remote branch to current branch";
+            this.Merge.Text = "&Merge remote branch into current branch";
             this.Merge.UseVisualStyleBackColor = true;
             this.Merge.CheckedChanged += new System.EventHandler(this.MergeCheckedChanged);
             // 
@@ -246,8 +246,8 @@
             this.Rebase.Name = "Rebase";
             this.Rebase.Size = new System.Drawing.Size(525, 44);
             this.Rebase.TabIndex = 9;
-            this.Rebase.Text = "&Rebase remote branch to current branch, creates linear history. It is recommende" +
-                "d\r\nto choose a remote branch when using rebase. (use with caution)";
+            this.Rebase.Text = "&Rebase current branch on top of remote branch, creates linear history (use with " +
+                "caution)";
             this.Rebase.UseVisualStyleBackColor = true;
             this.Rebase.CheckedChanged += new System.EventHandler(this.RebaseCheckedChanged);
             // 
