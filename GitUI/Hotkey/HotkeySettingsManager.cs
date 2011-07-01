@@ -27,14 +27,26 @@ namespace GitUI.Hotkey
 
         public static HotkeyCommand[] LoadHotkeys(string name)
         {
-            var settings = LoadSettings().FirstOrDefault(s => s.Name == name);
+            //var settings = LoadSettings().FirstOrDefault(s => s.Name == name);
+            HotkeySettings settings = new HotkeySettings();
+            HotkeySettings scriptkeys = new HotkeySettings();
+
+            foreach(HotkeySettings hs in LoadSettings())
+            {
+                if(hs.Name == name)
+                    settings = hs;
+                if(hs.Name == "Scripts")
+                    scriptkeys = hs;
+            }
+
+            //HotkeyCommand[] scriptkeys = LoadSettings().FirstOrDefault(s => s.Name == name);
 
             if(settings != null) {
                 //append general hotkeys to every form
-                HotkeyCommand[] scriptkeys = LoadScriptHotkeys();
-                HotkeyCommand[] allkeys = new HotkeyCommand[settings.Commands.Length + scriptkeys.Length];
+                //HotkeyCommand[] scriptkeys = LoadScriptHotkeys();
+                HotkeyCommand[] allkeys = new HotkeyCommand[settings.Commands.Length + scriptkeys.Commands.Length];
                 settings.Commands.CopyTo(allkeys,0);
-                scriptkeys.CopyTo(allkeys,settings.Commands.Length);
+                scriptkeys.Commands.CopyTo(allkeys,settings.Commands.Length);
 
                 return allkeys;
             }
@@ -141,8 +153,7 @@ namespace GitUI.Hotkey
                     hk(FormBrowse.Commands.SelectCurrentRevision, Keys.Control | Keys.Shift | Keys.C),
                     hk(FormBrowse.Commands.CheckoutBranch, Keys.Control | Keys.Decimal),
                     hk(FormBrowse.Commands.QuickFetch, Keys.Control | Keys.Shift | Keys.Down),
-                    hk(FormBrowse.Commands.QuickPush, Keys.Control | Keys.Shift | Keys.Up),
-                    hk(FormBrowse.Commands.RunScript,Keys.Control | Keys.T)),
+                    hk(FormBrowse.Commands.QuickPush, Keys.Control | Keys.Shift | Keys.Up)),
                 new HotkeySettings(RevisionGrid.HotkeySettingsName,
                     hk(RevisionGrid.Commands.RevisionFilter, Keys.Control | Keys.F),
                     hk(RevisionGrid.Commands.ToggleRevisionGraph, Keys.None),
@@ -173,8 +184,6 @@ namespace GitUI.Hotkey
 
         public static HotkeyCommand[] LoadScriptHotkeys()
         {
-            Func<object, Keys, HotkeyCommand> hk = (en, k) => new HotkeyCommand((int)en, en.ToString()) { KeyData = k };
-
             var curScripts = GitUI.Script.ScriptManager.GetScripts();
 
             HotkeyCommand[] scriptKeys = new HotkeyCommand[curScripts.Count];
@@ -189,7 +198,23 @@ namespace GitUI.Hotkey
             int i=0;
             foreach (GitUI.Script.ScriptInfo s in curScripts)
             {
-                scriptKeys[i] = hk(s.HotkeyCommandIdentifier, (Keys.Control | Keys.T));
+                Keys k = (Keys)i;
+                switch ((int)i)
+                {
+                    case 0: k = (Keys.Control | Keys.D1); break;
+                    case 1: k = (Keys.Control | Keys.D2); break;
+                    case 2: k = (Keys.Control | Keys.D3); break;
+                    case 3: k = (Keys.Control | Keys.D4); break;
+                    case 4: k = (Keys.Control | Keys.D5); break;
+                    case 5: k = (Keys.Control | Keys.D6); break;
+                    case 6: k = (Keys.Control | Keys.D7); break;
+                    case 7: k = (Keys.Control | Keys.D8); break;
+                    case 8: k = (Keys.Control | Keys.D9); break;
+                    case 9: k = (Keys.Control | Keys.D0); break;
+                    default: k = Keys.None; break;
+                }
+
+                scriptKeys[ i ] = new HotkeyCommand((int)s.HotkeyCommandIdentifier, s.Name.ToString()) { KeyData = (k) };
                 i++;
             }
             return scriptKeys;

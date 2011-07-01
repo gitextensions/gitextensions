@@ -48,8 +48,12 @@ namespace GitUI
      {   
           if (HotkeysEnabled && this.Hotkeys != null)
             foreach (var hotkey in this.Hotkeys)
-           { 
-              if (hotkey.KeyData == keyData)
+           {
+               if ((int)keyData == (int)131144)
+               {
+                   if (System.Diagnostics.Debugger.IsAttached) System.Diagnostics.Debugger.Break();
+               }
+            if (hotkey.KeyData == keyData)
               {
                 return ExecuteCommand(hotkey.CommandCode);
               }
@@ -60,12 +64,13 @@ namespace GitUI
         
         /// <summary>
         /// Override this method to handle form specific Hotkey commands
-        /// This base method does nothing
+        /// This base method calls script-hotkeys
         /// </summary>
         /// <param name="command"></param>
         protected virtual bool ExecuteCommand(int command)
         {
-            return false;
+            ExecuteScriptCommand(command, Keys.None);
+            return true;
         }
         protected virtual bool ExecuteScriptCommand(int command, Keys keyData)
         {
@@ -76,7 +81,7 @@ namespace GitUI
                 if (s.HotkeyCommandIdentifier == command)
                     GitUI.Script.ScriptRunner.RunScript(s.Name, null);
             }
-            return false;
+            return true;
         }
 
         #endregion
