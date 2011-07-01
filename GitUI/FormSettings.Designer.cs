@@ -257,8 +257,8 @@ namespace GitUI
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
-            this.Enabled = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.HotkeyCommandIdentifier = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Enabled = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.OnEvent = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AskConfirmation = new System.Windows.Forms.DataGridViewCheckBoxColumn();
@@ -2672,8 +2672,8 @@ namespace GitUI
             this.ScriptList.AutoGenerateColumns = false;
             this.ScriptList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.ScriptList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Enabled,
             this.HotkeyCommandIdentifier,
+            this.Enabled,
             this.nameDataGridViewTextBoxColumn,
             this.OnEvent,
             this.AskConfirmation,
@@ -2925,19 +2925,21 @@ namespace GitUI
             // 
             this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository.Repository);
             // 
+            // HotkeyCommandIdentifier
+            // 
+            this.HotkeyCommandIdentifier.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.HotkeyCommandIdentifier.DataPropertyName = "HotkeyCommandIdentifier";
+            this.HotkeyCommandIdentifier.HeaderText = "#";
+            this.HotkeyCommandIdentifier.Name = "HotkeyCommandIdentifier";
+            this.HotkeyCommandIdentifier.ReadOnly = true;
+            this.HotkeyCommandIdentifier.Width = 40;
+            // 
             // Enabled
             // 
             this.Enabled.DataPropertyName = "Enabled";
             this.Enabled.HeaderText = "Enabled";
             this.Enabled.Name = "Enabled";
             this.Enabled.ReadOnly = true;
-            // 
-            // HotkeyCommandIdentifier
-            // 
-            this.HotkeyCommandIdentifier.DataPropertyName = "HotkeyCommandIdentifier";
-            this.HotkeyCommandIdentifier.HeaderText = "HotkeyCommandIdentifier";
-            this.HotkeyCommandIdentifier.Name = "HotkeyCommandIdentifier";
-            this.HotkeyCommandIdentifier.ReadOnly = true;
             // 
             // nameDataGridViewTextBoxColumn
             // 
@@ -3267,8 +3269,8 @@ namespace GitUI
         private CheckBox showCurrentBranchInVisualStudio;
         private Label label37;
         private CheckBox usePatienceDiffAlgorithm;
-        private DataGridViewCheckBoxColumn Enabled;
         private DataGridViewTextBoxColumn HotkeyCommandIdentifier;
+        private DataGridViewCheckBoxColumn Enabled;
         private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn OnEvent;
         private DataGridViewCheckBoxColumn AskConfirmation;

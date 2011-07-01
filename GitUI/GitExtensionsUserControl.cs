@@ -71,6 +71,7 @@ namespace GitUI
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
+        /*
         /// <summary>
         /// Override this method to handle form specific Hotkey commands
         /// This base method does nothing
@@ -81,6 +82,30 @@ namespace GitUI
             return false;
         }
 
+
+        */
+
+        /// <summary>
+        /// Override this method to handle form specific Hotkey commands
+        /// This base method calls script-hotkeys
+        /// </summary>
+        /// <param name="command"></param>
+        protected virtual bool ExecuteCommand(int command)
+        {
+            ExecuteScriptCommand(command, Keys.None);
+            return true;
+        }
+        protected virtual bool ExecuteScriptCommand(int command, Keys keyData)
+        {
+            var curScripts = GitUI.Script.ScriptManager.GetScripts();
+
+            foreach (GitUI.Script.ScriptInfo s in curScripts)
+            {
+                if (s.HotkeyCommandIdentifier == command)
+                    GitUI.Script.ScriptRunner.RunScript(s.Name, null);
+            }
+            return true;
+        }
         #endregion
     }
 }

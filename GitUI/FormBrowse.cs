@@ -1994,8 +1994,7 @@ namespace GitUI
             SelectCurrentRevision,
             CheckoutBranch,
             QuickFetch,
-            QuickPush,
-            RunScript
+            QuickPush
         }
 
         private void AddNotes()
@@ -2048,7 +2047,7 @@ namespace GitUI
                 case Commands.CheckoutBranch: CheckoutBranchToolStripMenuItemClick(null, null); break;
                 case Commands.QuickFetch: QuickFetch(); break;
                 case Commands.QuickPush: GitUICommands.Instance.StartPushDialog(true); break;
-                case Commands.RunScript: RunScript(); break;
+                //case Commands.RunScript: RunScript(); break;
                 default: ExecuteScriptCommand(cmd, Keys.None); break;
             }
 

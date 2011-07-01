@@ -2246,20 +2246,13 @@ namespace GitUI
 
         protected override bool ExecuteCommand(int cmd)
         {
-            /*
+            
             Commands command = (Commands)cmd;
 
             switch (command)
             {
-                case Commands.FocusStagedFiles: return FocusStagedFiles();
-                case Commands.FocusUnstagedFiles: return FocusUnstagedFiles();
-                case Commands.FocusSelectedDiff: return FocusSelectedDiff();
-                case Commands.FocusCommitMessage: return FocusCommitMessage();
-                case Commands.StageSelectedFile: return StageSelectedFile();
-                case Commands.UnStageSelectedFile: return UnStageSelectedFile();
-                default: return false;
+                default: ExecuteScriptCommand(cmd, Keys.None); break;
             }
-             */
             return true;
         }
 
