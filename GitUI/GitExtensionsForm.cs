@@ -49,10 +49,6 @@ namespace GitUI
           if (HotkeysEnabled && this.Hotkeys != null)
             foreach (var hotkey in this.Hotkeys)
            {
-               if ((int)keyData == (int)131144)
-               {
-                   if (System.Diagnostics.Debugger.IsAttached) System.Diagnostics.Debugger.Break();
-               }
             if (hotkey.KeyData == keyData)
               {
                 return ExecuteCommand(hotkey.CommandCode);
