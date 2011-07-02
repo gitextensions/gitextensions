@@ -17,6 +17,7 @@ namespace GitUI.Hotkey
       set 
       { 
         _KeyData = value;
+        this.ForeColor = (HotkeySettingsManager.IsUniqueKey(_KeyData)) ? System.Drawing.Color.Red : System.Drawing.Color.Black;
         this.Text = value.ToText();
       }
     }
