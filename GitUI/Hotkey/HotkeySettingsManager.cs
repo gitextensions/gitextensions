@@ -229,23 +229,7 @@ namespace GitUI.Hotkey
             int i=0;
             foreach (GitUI.Script.ScriptInfo s in curScripts)
             {
-                Keys k = (Keys)i;
-                switch ((int)i)
-                {
-                    case 0: k = (Keys.Control | Keys.D1); break;
-                    case 1: k = (Keys.Control | Keys.D2); break;
-                    case 2: k = (Keys.Control | Keys.D3); break;
-                    case 3: k = (Keys.Control | Keys.D4); break;
-                    case 4: k = (Keys.Control | Keys.D5); break;
-                    case 5: k = (Keys.Control | Keys.D6); break;
-                    case 6: k = (Keys.Control | Keys.D7); break;
-                    case 7: k = (Keys.Control | Keys.D8); break;
-                    case 8: k = (Keys.Control | Keys.D9); break;
-                    case 9: k = (Keys.Control | Keys.D0); break;
-                    default: k = Keys.None; break;
-                }
-
-                scriptKeys[ i ] = new HotkeyCommand((int)s.HotkeyCommandIdentifier, s.Name.ToString()) { KeyData = (k) };
+                scriptKeys[i] = new HotkeyCommand((int)s.HotkeyCommandIdentifier, s.Name.ToString()) { KeyData = (Keys.None) };            
                 i++;
             }
             return scriptKeys;
