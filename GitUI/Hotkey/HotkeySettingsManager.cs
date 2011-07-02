@@ -25,13 +25,29 @@ namespace GitUI.Hotkey
         }
         #endregion
 
+        private static List<Keys> UsedKeys = new List<Keys>();
+
+        /// <summary>
+        /// Returns wheter the hotkey is already assigned.
+        /// </summary>
+        /// <param name="keyData"></param>
+        /// <returns></returns>
+        public static bool IsUniqueKey(Keys keyData)
+        {
+            return (UsedKeys.Contains(keyData)) ? true : false;
+        }
+
         public static HotkeyCommand[] LoadHotkeys(string name)
         {
             //var settings = LoadSettings().FirstOrDefault(s => s.Name == name);
+            HotkeySettings[] allSettings;
             HotkeySettings settings = new HotkeySettings();
             HotkeySettings scriptkeys = new HotkeySettings();
+            allSettings = LoadSettings();
 
-            foreach(HotkeySettings hs in LoadSettings())
+            GetUsedHotkeys(allSettings);
+
+            foreach(HotkeySettings hs in allSettings)
             {
                 if(hs.Name == name)
                     settings = hs;
@@ -68,11 +84,26 @@ namespace GitUI.Hotkey
                 return loadedSettings;
         }
 
+        private static void GetUsedHotkeys(HotkeySettings[] settings)
+        {
+            UsedKeys.Clear();
+            foreach (HotkeySettings hs in settings)
+            {
+                for (int i = 0; i < hs.Commands.Length; i++)
+                {
+                    if (!UsedKeys.Contains(hs.Commands[i].KeyData)) UsedKeys.Add(hs.Commands[i].KeyData);
+                }
+            }
+            //MessageBox.Show(UsedKeys.Count.ToString());
+        }
+
         /// <summary>Serializes and saves the supplied settings</summary>
         public static void SaveSettings(HotkeySettings[] settings)
         {
             try
             {
+                GetUsedHotkeys(settings);
+
                 StringBuilder strBuilder = new StringBuilder();
                 using (StringWriter writer = new StringWriter(strBuilder))
                 {
