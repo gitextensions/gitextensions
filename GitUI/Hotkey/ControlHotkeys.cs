@@ -70,7 +70,7 @@ namespace GitUI.Hotkey
             HotkeySettingsManager.SaveSettings(this.Settings);
         }
 
-        private void ReloadSettings()
+        public void ReloadSettings()
         {
             this.Settings = HotkeySettingsManager.LoadSettings();
         }
