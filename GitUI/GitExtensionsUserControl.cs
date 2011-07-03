@@ -71,20 +71,6 @@ namespace GitUI
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        /*
-        /// <summary>
-        /// Override this method to handle form specific Hotkey commands
-        /// This base method does nothing
-        /// </summary>
-        /// <param name="command"></param>
-        protected virtual bool ExecuteCommand(int command)
-        {
-            return false;
-        }
-
-
-        */
-
         /// <summary>
         /// Override this method to handle form specific Hotkey commands
         /// This base method calls script-hotkeys
