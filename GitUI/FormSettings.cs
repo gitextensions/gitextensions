@@ -1582,6 +1582,9 @@ namespace GitUI
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if(((TabControl)sender).TabPages[((TabControl)sender).SelectedIndex].Name.ToLower() == "tabpagehotkeys")
+                controlHotkeys.ReloadSettings();
+
             if (GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
                 string.IsNullOrEmpty(MergeToolCmd.Text))
                 MergeToolCmd.Enabled = false;
