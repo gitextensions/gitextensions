@@ -224,8 +224,6 @@ namespace GitUI.Hotkey
              * therefore execute the 'default' action
              */
 
-            // TODO: get real hotkeys
-
             int i=0;
             foreach (GitUI.Script.ScriptInfo s in curScripts)
             {

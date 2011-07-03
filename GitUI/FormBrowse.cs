@@ -2020,12 +2020,6 @@ namespace GitUI
             new FormProcess(GitCommandHelpers.FetchCmd(string.Empty, string.Empty, string.Empty)).ShowDialog();
             Initialize();
         }
-
-        private void RunScript()
-        {
-            MessageBox.Show("I'm in" + System.Reflection.MethodBase.GetCurrentMethod().Name);
-        }
-        
         
         protected override bool ExecuteCommand(int cmd)
         {
@@ -2047,7 +2041,6 @@ namespace GitUI
                 case Commands.CheckoutBranch: CheckoutBranchToolStripMenuItemClick(null, null); break;
                 case Commands.QuickFetch: QuickFetch(); break;
                 case Commands.QuickPush: GitUICommands.Instance.StartPushDialog(true); break;
-                //case Commands.RunScript: RunScript(); break;
                 default: ExecuteScriptCommand(cmd, Keys.None); break;
             }
 
