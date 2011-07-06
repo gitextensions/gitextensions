@@ -196,6 +196,12 @@ namespace GitUI.Editor
             get { return 0; }
         }
 
+        public void FocusTextAria()
+        {
+            if (!TextEditor.Focused)
+                TextEditor.Focus();
+        }
+
         public bool IsReadOnly
         {
             get
