@@ -42,6 +42,6 @@ namespace GitUI.Editor
         string GetLineText(int line);
         int TotalNumberOfLines { get; }
         bool Focused { get; }
-        void FocusTextAria();
+        void FocusTextArea();
     }
 }

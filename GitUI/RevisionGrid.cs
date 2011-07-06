@@ -1816,6 +1816,7 @@ namespace GitUI
                 case Commands.ToggleRevisionCardLayout: ToggleRevisionCardLayout(); break;
                 case Commands.ShowAllBranches: ShowAllBranchesToolStripMenuItemClick(null, null); break;
                 case Commands.ShowCurrentBranchOnly: ShowCurrentBranchOnlyToolStripMenuItemClick(null, null); break;
+                default: ExecuteScriptCommand(cmd, Keys.None); break;
             }
 
             return true;

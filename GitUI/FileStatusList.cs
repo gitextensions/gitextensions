@@ -41,11 +41,9 @@ namespace GitUI
         void FileStatusListBox_MeasureItem(object sender, MeasureItemEventArgs e)
         {
             var gitItemStatus = (GitItemStatus)FileStatusListBox.Items[e.Index];
-            var text = GetItemText(e.Graphics, gitItemStatus);
 
-            e.ItemHeight = Math.Max((int)e.Graphics.MeasureString(text, FileStatusListBox.Font).Height, ImageSize);
-            e.ItemWidth = Math.Max((int)e.Graphics.MeasureString(text, FileStatusListBox.Font).Width, ImageSize);
-
+            e.ItemHeight = Math.Max((int)e.Graphics.MeasureString(gitItemStatus.Name, FileStatusListBox.Font).Height, ImageSize);
+            //Do NOT set e.ItemWidth becauase it will crash in MONO
         }
 
         private string GetItemText(Graphics graphics, GitItemStatus gitItemStatus)

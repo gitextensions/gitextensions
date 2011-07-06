@@ -196,7 +196,7 @@ namespace GitUI.Editor
             get { return 0; }
         }
 
-        public void FocusTextAria()
+        public void FocusTextArea()
         {
             if (!TextEditor.Focused)
                 TextEditor.Focus();
