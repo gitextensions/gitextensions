@@ -64,9 +64,6 @@ namespace GitUI.Editor
 
         void _internalFileViewer_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!Focused)
-                Focus();
-
             this.OnMouseMove(e);
         }
 
