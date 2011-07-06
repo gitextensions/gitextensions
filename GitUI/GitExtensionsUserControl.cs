@@ -18,12 +18,6 @@ namespace GitUI
 
         private bool translated;
 
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            if (!Focused)
-                Focus();
-        }
-
         private static bool CheckComponent(object value)
         {
             bool isComponentInDesignMode = false;
