@@ -132,6 +132,14 @@ namespace GitUI
 
         void FileStatusListBox_MouseMove(object sender, MouseEventArgs e)
         {
+            ListBox listBox = sender as ListBox;
+
+            if (listBox != null)
+            {
+                if (!listBox.Focused)
+                    listBox.Focus();
+            }
+
             //DRAG
             // If the mouse moves outside the rectangle, start the drag.
             if (dragBoxFromMouseDown != Rectangle.Empty &&
@@ -158,7 +166,6 @@ namespace GitUI
             }
 
             //TOOLTIP
-            ListBox listBox = sender as ListBox;
             if (listBox != null)
             {
                 Point point = new Point(e.X, e.Y);
