@@ -235,11 +235,6 @@ namespace GitUI
             this.scriptEvent = new System.Windows.Forms.ComboBox();
             this.scriptEnabled = new System.Windows.Forms.CheckBox();
             this.ScriptList = new System.Windows.Forms.DataGridView();
-            this.Enabled = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.OnEvent = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.AskConfirmation = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.addToRevisionGridContextMenuDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.scriptInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.helpLabel = new System.Windows.Forms.Label();
             this.inMenuCheckBox = new System.Windows.Forms.CheckBox();
@@ -264,6 +259,12 @@ namespace GitUI
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
+            this.HotkeyCommandIdentifier = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Enabled = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.OnEvent = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AskConfirmation = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.addToRevisionGridContextMenuDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.LocalSettings.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
@@ -1131,6 +1132,27 @@ namespace GitUI
             this._NO_TRANSLATE_truncatePathMethod.Location = new System.Drawing.Point(396, 433);
             this._NO_TRANSLATE_truncatePathMethod.Name = "_NO_TRANSLATE_truncatePathMethod";
             this._NO_TRANSLATE_truncatePathMethod.Size = new System.Drawing.Size(242, 21);
+            this._NO_TRANSLATE_truncatePathMethod.TabIndex = 45;
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Location = new System.Drawing.Point(32, 355);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(135, 13);
+            this.label37.TabIndex = 44;
+            this.label37.Text = "Use patience diff algorithm";
+            // 
+            // usePatienceDiffAlgorithm
+            // 
+            this.usePatienceDiffAlgorithm.AutoSize = true;
+            this.usePatienceDiffAlgorithm.Location = new System.Drawing.Point(11, 355);
+            this.usePatienceDiffAlgorithm.Name = "usePatienceDiffAlgorithm";
+            this.usePatienceDiffAlgorithm.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.usePatienceDiffAlgorithm.Size = new System.Drawing.Size(15, 14);
+            this.usePatienceDiffAlgorithm.TabIndex = 43;
+            this.usePatienceDiffAlgorithm.UseVisualStyleBackColor = true;
+            // 
             this._NO_TRANSLATE_truncatePathMethod.TabIndex = 45;
             // 
             // label37
@@ -2696,6 +2718,7 @@ namespace GitUI
             this.ScriptList.AutoGenerateColumns = false;
             this.ScriptList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.ScriptList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.HotkeyCommandIdentifier,
             this.Enabled,
             this.nameDataGridViewTextBoxColumn,
             this.OnEvent,
@@ -2712,42 +2735,6 @@ namespace GitUI
             this.ScriptList.TabIndex = 17;
             this.ScriptList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ScriptList_CellClick);
             this.ScriptList.SelectionChanged += new System.EventHandler(this.ScriptList_SelectionChanged);
-            // 
-            // Enabled
-            // 
-            this.Enabled.DataPropertyName = "Enabled";
-            this.Enabled.HeaderText = "Enabled";
-            this.Enabled.Name = "Enabled";
-            this.Enabled.ReadOnly = true;
-            // 
-            // nameDataGridViewTextBoxColumn
-            // 
-            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // OnEvent
-            // 
-            this.OnEvent.DataPropertyName = "OnEvent";
-            this.OnEvent.HeaderText = "OnEvent";
-            this.OnEvent.Name = "OnEvent";
-            this.OnEvent.ReadOnly = true;
-            // 
-            // AskConfirmation
-            // 
-            this.AskConfirmation.DataPropertyName = "AskConfirmation";
-            this.AskConfirmation.HeaderText = "Confirmation";
-            this.AskConfirmation.Name = "AskConfirmation";
-            this.AskConfirmation.ReadOnly = true;
-            // 
-            // addToRevisionGridContextMenuDataGridViewCheckBoxColumn
-            // 
-            this.addToRevisionGridContextMenuDataGridViewCheckBoxColumn.DataPropertyName = "AddToRevisionGridContextMenu";
-            this.addToRevisionGridContextMenuDataGridViewCheckBoxColumn.HeaderText = "Context menu";
-            this.addToRevisionGridContextMenuDataGridViewCheckBoxColumn.Name = "addToRevisionGridContextMenuDataGridViewCheckBoxColumn";
-            this.addToRevisionGridContextMenuDataGridViewCheckBoxColumn.ReadOnly = true;
             // 
             // scriptInfoBindingSource
             // 
@@ -2984,6 +2971,50 @@ namespace GitUI
             // 
             this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository.Repository);
             // 
+            // HotkeyCommandIdentifier
+            // 
+            this.HotkeyCommandIdentifier.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.HotkeyCommandIdentifier.DataPropertyName = "HotkeyCommandIdentifier";
+            this.HotkeyCommandIdentifier.HeaderText = "#";
+            this.HotkeyCommandIdentifier.Name = "HotkeyCommandIdentifier";
+            this.HotkeyCommandIdentifier.ReadOnly = true;
+            this.HotkeyCommandIdentifier.Width = 40;
+            // 
+            // Enabled
+            // 
+            this.Enabled.DataPropertyName = "Enabled";
+            this.Enabled.HeaderText = "Enabled";
+            this.Enabled.Name = "Enabled";
+            this.Enabled.ReadOnly = true;
+            // 
+            // nameDataGridViewTextBoxColumn
+            // 
+            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // OnEvent
+            // 
+            this.OnEvent.DataPropertyName = "OnEvent";
+            this.OnEvent.HeaderText = "OnEvent";
+            this.OnEvent.Name = "OnEvent";
+            this.OnEvent.ReadOnly = true;
+            // 
+            // AskConfirmation
+            // 
+            this.AskConfirmation.DataPropertyName = "AskConfirmation";
+            this.AskConfirmation.HeaderText = "Confirmation";
+            this.AskConfirmation.Name = "AskConfirmation";
+            this.AskConfirmation.ReadOnly = true;
+            // 
+            // addToRevisionGridContextMenuDataGridViewCheckBoxColumn
+            // 
+            this.addToRevisionGridContextMenuDataGridViewCheckBoxColumn.DataPropertyName = "AddToRevisionGridContextMenu";
+            this.addToRevisionGridContextMenuDataGridViewCheckBoxColumn.HeaderText = "Context menu";
+            this.addToRevisionGridContextMenuDataGridViewCheckBoxColumn.Name = "addToRevisionGridContextMenuDataGridViewCheckBoxColumn";
+            this.addToRevisionGridContextMenuDataGridViewCheckBoxColumn.ReadOnly = true;
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3279,15 +3310,16 @@ namespace GitUI
         private ComboBox scriptEvent;
         private Label labelOnEvent;
         private CheckBox scriptNeedsConfirmation;
+        private Label labelShowCurrentBranchInVisualStudio;
+        private CheckBox showCurrentBranchInVisualStudio;
+        private Label label37;
+        private CheckBox usePatienceDiffAlgorithm;
+        private DataGridViewTextBoxColumn HotkeyCommandIdentifier;
         private DataGridViewCheckBoxColumn Enabled;
         private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn OnEvent;
         private DataGridViewCheckBoxColumn AskConfirmation;
         private DataGridViewCheckBoxColumn addToRevisionGridContextMenuDataGridViewCheckBoxColumn;
-        private Label labelShowCurrentBranchInVisualStudio;
-        private CheckBox showCurrentBranchInVisualStudio;
-        private Label label37;
-        private CheckBox usePatienceDiffAlgorithm;
         private Label truncatePathMethod;
         private ComboBox _NO_TRANSLATE_truncatePathMethod;
 
