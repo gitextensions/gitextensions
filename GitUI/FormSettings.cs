@@ -158,6 +158,7 @@ namespace GitUI
 
                 ShowGitStatusInToolbar.Checked = Settings.ShowGitStatusInBrowseToolbar;
 
+                _NO_TRANSLATE_truncatePathMethod.Text = Settings.TruncatePathMethod;
                 _NO_TRANSLATE_ColorGraphLabel.BackColor = Settings.GraphColor;
                 _NO_TRANSLATE_ColorGraphLabel.Text = Settings.GraphColor.Name;
                 _NO_TRANSLATE_ColorGraphLabel.ForeColor =
@@ -369,6 +370,8 @@ namespace GitUI
             GitCommandHelpers.SetEnvironmentVariable(true);
 
             Settings.UsePatienceDiffAlgorithm = usePatienceDiffAlgorithm.Checked;
+
+            Settings.TruncatePathMethod = _NO_TRANSLATE_truncatePathMethod.Text;
 
             Settings.ShowCurrentBranchInVisualStudio = showCurrentBranchInVisualStudio.Checked;
 
