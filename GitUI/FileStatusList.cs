@@ -134,6 +134,9 @@ namespace GitUI
 
         void FileStatusListBox_MouseMove(object sender, MouseEventArgs e)
         {
+            if (!Focused)
+                Focus();
+
             //DRAG
             // If the mouse moves outside the rectangle, start the drag.
             if (dragBoxFromMouseDown != Rectangle.Empty &&
