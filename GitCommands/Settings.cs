@@ -84,6 +84,13 @@ namespace GitCommands
             set { SafeSet("lastCommitMessage", value, ref _lastCommitMessage); }
         }
 
+        private static string _truncatePathMethod;
+        public static string TruncatePathMethod
+        {
+            get { return SafeGet("truncatepathmethod", "none", ref _truncatePathMethod); }
+            set { SafeSet("truncatepathmethod", value, ref _truncatePathMethod); }
+        }
+
         private static bool? _showGitStatusInBrowseToolbar;
         public static bool ShowGitStatusInBrowseToolbar
         {

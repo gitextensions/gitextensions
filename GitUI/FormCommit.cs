@@ -214,8 +214,10 @@ namespace GitUI
                 case Commands.FocusCommitMessage: return FocusCommitMessage(); 
                 case Commands.StageSelectedFile: return StageSelectedFile(); 
                 case Commands.UnStageSelectedFile: return UnStageSelectedFile();
-                default: return false;
+                //default: return false;
+                default: ExecuteScriptCommand(cmd, Keys.None); return true;
             }
+            
         }
 
         #endregion

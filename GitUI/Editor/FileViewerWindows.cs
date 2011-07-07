@@ -386,6 +386,12 @@ namespace GitUI.Editor
             get { return TextEditor.Document.TotalNumberOfLines; }
         }
 
+        public void FocusTextArea()
+        {
+            if (!TextEditor.ActiveTextAreaControl.TextArea.Focused)
+                TextEditor.ActiveTextAreaControl.TextArea.Focus();
+        }
+
         public bool IsReadOnly 
         {
             get
