@@ -65,6 +65,7 @@ namespace GitUI.Editor
         void _internalFileViewer_MouseMove(object sender, MouseEventArgs e)
         {
             this.OnMouseMove(e);
+            _internalFileViewer.FocusTextArea();
         }
 
         void _internalFileViewer_SelectedLineChanged(object sender, int selectedLine)
@@ -674,6 +675,7 @@ namespace GitUI.Editor
                 case Commands.DecreaseNumberOfVisibleLines: this.DescreaseNumberOfLinesToolStripMenuItemClick(null, null); break;
                 case Commands.ShowEntireFile: this.ShowEntireFileToolStripMenuItemClick(null, null); break;
                 case Commands.TreatFileAsText: this.TreatAllFilesAsTextToolStripMenuItemClick(null, null); break;
+                default: ExecuteScriptCommand(cmd, Keys.None); break;
             }
 
             return true;

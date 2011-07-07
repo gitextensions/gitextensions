@@ -70,7 +70,7 @@ namespace GitUI.Hotkey
             HotkeySettingsManager.SaveSettings(this.Settings);
         }
 
-        private void ReloadSettings()
+        public void ReloadSettings()
         {
             this.Settings = HotkeySettingsManager.LoadSettings();
         }
@@ -92,7 +92,10 @@ namespace GitUI.Hotkey
             this.listMappings.Items.Clear();
             if (setting != null)
                 foreach (var cmd in setting.Commands)
-                    this.listMappings.Items.Add(new ListViewItem(new[] { cmd.Name, cmd.KeyData.ToText() }) { Tag = cmd });
+                {
+                    if (cmd != null)
+                        this.listMappings.Items.Add(new ListViewItem(new[] { cmd.Name, cmd.KeyData.ToText() }) { Tag = cmd });
+                }
         }
 
         private void UpdateTextBox(HotkeyCommand command)
