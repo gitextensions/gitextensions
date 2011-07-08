@@ -207,6 +207,7 @@ namespace GitUI
             this.StashMessage.Size = new System.Drawing.Size(251, 45);
             this.StashMessage.TabIndex = 3;
             this.StashMessage.Text = "";
+            this.StashMessage.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.StashMessage_MouseDoubleClick);
             // 
             // StashKeepIndex
             // 
