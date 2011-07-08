@@ -225,6 +225,13 @@ namespace GitUI
 
         private void toolStripButton_customMessage_Click(object sender, EventArgs e)
         {
+        private void StashMessage_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (this.toolStripButton_customMessage.Enabled)
+            {
+                if (!this.toolStripButton_customMessage.Checked)
+                    this.toolStripButton_customMessage.PerformClick();
+            }
         }
 
         private void toolStripButton_customMessage_EnabledChanged(object sender, EventArgs e)
