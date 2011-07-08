@@ -79,12 +79,14 @@ namespace GitUI
             Loading.Visible = true;
             Stashes.Enabled = false;
             toolStripButton1.Enabled = false;
+            toolStripButton_customMessage.Enabled = false;
             if (gitStash == null)
             {
                 Stashed.GitItemStatuses = null;
             }else
             if (gitStash == currentWorkingDirStashItem)
             {
+                this.toolStripButton_customMessage.Enabled = true;
                 ThreadPool.QueueUserWorkItem(
                 o =>
                 {
@@ -213,8 +215,7 @@ namespace GitUI
 
         private void splitContainer2_SplitterMoved(object sender, SplitterEventArgs e)
         {
-            Stashes.Size =  new Size(Math.Min(200, toolStrip1.Width - 25 - toolStripButton1.Width - toolStripLabel1.Width), Stashes.Size.Height);
-
+            Stashes.Size =  new Size(Math.Min(200, toolStrip1.Width - 25 - toolStripButton1.Width - toolStripLabel1.Width - toolStripButton_customMessage.Width), Stashes.Size.Height);
         }
 
         private void FormStash_Resize(object sender, EventArgs e)
