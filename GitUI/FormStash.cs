@@ -225,6 +225,21 @@ namespace GitUI
 
         private void toolStripButton_customMessage_Click(object sender, EventArgs e)
         {
+            if (toolStripButton_customMessage.Enabled)
+            {
+                if (((ToolStripButton)sender).Checked == true)
+                {
+                    this.StashMessage.ReadOnly = false;
+                    this.StashMessage.Focus();
+                    this.StashMessage.SelectAll();
+                }
+                else
+                {
+                    this.StashMessage.ReadOnly = true;
+                }
+            }
+        }
+
         private void StashMessage_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (this.toolStripButton_customMessage.Enabled)
@@ -236,6 +251,14 @@ namespace GitUI
 
         private void toolStripButton_customMessage_EnabledChanged(object sender, EventArgs e)
         {
+            if (!((ToolStripButton)sender).Enabled)
+            {
+                StashMessage.ReadOnly = true;
+            }
+            else if (((ToolStripButton)sender).Enabled && ((ToolStripButton)sender).Checked)
+            {
+                StashMessage.ReadOnly = false;
+            }
         }
 
     }
