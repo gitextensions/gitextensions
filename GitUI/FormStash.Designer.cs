@@ -39,6 +39,8 @@ namespace GitUI
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.Stashes = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripButton_customMessage = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
             this.StashMessage = new System.Windows.Forms.RichTextBox();
             this.StashKeepIndex = new System.Windows.Forms.CheckBox();
@@ -112,11 +114,13 @@ namespace GitUI
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton1,
             this.toolStripLabel1,
-            this.Stashes});
+            this.Stashes,
+            this.toolStripButton_customMessage,
+            this.toolStripSeparator1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolStrip1.Size = new System.Drawing.Size(251, 27);
+            this.toolStrip1.Size = new System.Drawing.Size(284, 27);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -147,6 +151,26 @@ namespace GitUI
             this.Stashes.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.Stashes.Size = new System.Drawing.Size(150, 27);
             this.Stashes.SelectedIndexChanged += new System.EventHandler(this.StashesSelectedIndexChanged);
+            // 
+            // toolStripButton_customMessage
+            // 
+            this.toolStripButton_customMessage.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripButton_customMessage.CheckOnClick = true;
+            this.toolStripButton_customMessage.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton_customMessage.Enabled = false;
+            this.toolStripButton_customMessage.Image = global::GitUI.Properties.Resources.Modified;
+            this.toolStripButton_customMessage.ImageTransparentColor = System.Drawing.Color.White;
+            this.toolStripButton_customMessage.Name = "toolStripButton_customMessage";
+            this.toolStripButton_customMessage.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.toolStripButton_customMessage.Size = new System.Drawing.Size(23, 24);
+            this.toolStripButton_customMessage.Text = "Custom Stashmessage";
+            this.toolStripButton_customMessage.EnabledChanged += new System.EventHandler(this.toolStripButton_customMessage_EnabledChanged);
+            this.toolStripButton_customMessage.Click += new System.EventHandler(this.toolStripButton_customMessage_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 27);
             // 
             // splitContainer5
             // 
@@ -329,5 +353,7 @@ namespace GitUI
         private System.Windows.Forms.ToolStripComboBox Stashes;
         private PictureBox Loading;
         private CheckBox StashKeepIndex;
+        private ToolStripButton toolStripButton_customMessage;
+        private ToolStripSeparator toolStripSeparator1;
     }
 }

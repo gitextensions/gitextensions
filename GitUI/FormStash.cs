@@ -224,5 +224,13 @@ namespace GitUI
             this.StashKeepIndex.Location = new Point(this.Stash.Location.X + 5, this.Stash.Location.Y - 21);
         }
 
+        private void toolStripButton_customMessage_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void toolStripButton_customMessage_EnabledChanged(object sender, EventArgs e)
+        {
+        }
+
     }
 }
