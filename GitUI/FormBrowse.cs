@@ -2114,6 +2114,11 @@ namespace GitUI
 
         void GitTree_MouseMove(object sender, MouseEventArgs e)
         {
+            TreeView gitTree = (TreeView) sender;
+
+            if (!gitTree.Focused)
+                gitTree.Focus();
+
             //DRAG
             // If the mouse moves outside the rectangle, start the drag.
             if (gitTreeDragBoxFromMouseDown != Rectangle.Empty &&
@@ -2122,9 +2127,9 @@ namespace GitUI
                 StringCollection fileList = new StringCollection();
 
                 //foreach (GitItemStatus item in SelectedItems)
-                if (GitTree.SelectedNode != null)
+                if (gitTree.SelectedNode != null)
                 {
-                    GitItem item = GitTree.SelectedNode.Tag as GitItem;
+                    GitItem item = gitTree.SelectedNode.Tag as GitItem;
                     if (item != null)
                     {
                         string fileName = GitCommands.Settings.WorkingDir + item.FileName;
