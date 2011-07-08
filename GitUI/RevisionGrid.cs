@@ -1127,8 +1127,13 @@ namespace GitUI
 
             var pt = Revisions.PointToClient(Cursor.Position);
             var hti = Revisions.HitTest(pt.X, pt.Y);
+
+            if (LastRow == hti.RowIndex)
+                return;
+
             LastRow = hti.RowIndex;
             Revisions.ClearSelection();
+            
             if (LastRow >= 0 && Revisions.Rows.Count > LastRow)
                 Revisions.Rows[LastRow].Selected = true;
         }
