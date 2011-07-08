@@ -149,14 +149,13 @@ namespace GitUI
         private void StashClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            if (!StashKeepIndex.Checked)
-            {
-                new FormProcess("stash save").ShowDialog();
-            }
-            else
-            {
-                new FormProcess("stash save --keep-index").ShowDialog();
-            }
+            string Arguments = "";
+            string Msg = "";
+
+            if (StashKeepIndex.Checked){ Arguments += " --keep-index"; }
+            if (toolStripButton_customMessage.Checked) { Msg = " " + StashMessage.Text.Trim(); }
+
+            new FormProcess(String.Format("stash save{0}{1}",Arguments,Msg)).ShowDialog();
             NeedRefresh = true;
             Initialize();
             Cursor.Current = Cursors.Default;
