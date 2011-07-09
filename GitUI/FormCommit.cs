@@ -417,11 +417,10 @@ namespace GitUI
 
         private void TrackedSelectionChanged(object sender, EventArgs e)
         {
+            ClearDiffViewIfNoFilesLeft();
+
             if (Staged.SelectedItems.Count == 0)
-            {
-                SelectedDiff.Clear();
                 return;
-            }
 
             Unstaged.SelectedItem = null;
             ShowChanges(Staged.SelectedItems[0], true);
@@ -429,14 +428,19 @@ namespace GitUI
 
         private void UntrackedSelectionChanged(object sender, EventArgs e)
         {
+            ClearDiffViewIfNoFilesLeft();
+
             if (Unstaged.SelectedItems.Count == 0)
-            {
-                SelectedDiff.Clear();
                 return;
-            }
 
             Staged.SelectedItem = null;
             ShowChanges(Unstaged.SelectedItems[0], false);
+        }
+
+        private void ClearDiffViewIfNoFilesLeft()
+        {
+            if (Staged.IsEmpty && Unstaged.IsEmpty)
+                SelectedDiff.Clear();
         }
 
         private void CommitClick(object sender, EventArgs e)
@@ -446,7 +450,7 @@ namespace GitUI
 
         private void CheckForStagedAndCommit(bool amend, bool push)
         {
-            if (Staged.GitItemStatuses.Count == 0)
+            if (Staged.IsEmpty)
             {
                 if (MessageBox.Show(_noFilesStaged.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) ==
                     DialogResult.No)
