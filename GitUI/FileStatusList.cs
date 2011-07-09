@@ -279,6 +279,11 @@ namespace GitUI
             }
         }
 
+        public bool IsEmpty
+        {
+            get { return GitItemStatuses == null || GitItemStatuses.Count == 0; }
+        }
+
         public IList<GitItemStatus> GitItemStatuses
         {
             get
