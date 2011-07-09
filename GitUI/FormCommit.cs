@@ -390,7 +390,7 @@ namespace GitUI
             SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
         }
 
-        protected void ShowChanges(GitItemStatus item, bool staged)
+        private void ShowChanges(GitItemStatus item, bool staged)
         {
             _currentItem = item;
             _currentItemStaged = staged;
@@ -418,7 +418,10 @@ namespace GitUI
         private void TrackedSelectionChanged(object sender, EventArgs e)
         {
             if (Staged.SelectedItems.Count == 0)
+            {
+                SelectedDiff.Clear();
                 return;
+            }
 
             Unstaged.SelectedItem = null;
             ShowChanges(Staged.SelectedItems[0], true);
@@ -427,7 +430,10 @@ namespace GitUI
         private void UntrackedSelectionChanged(object sender, EventArgs e)
         {
             if (Unstaged.SelectedItems.Count == 0)
+            {
+                SelectedDiff.Clear();
                 return;
+            }
 
             Staged.SelectedItem = null;
             ShowChanges(Unstaged.SelectedItems[0], false);
@@ -736,7 +742,7 @@ namespace GitUI
         {
             try
             {
-                SelectedDiff.ViewText("", "");
+                SelectedDiff.Clear();
                 if (Unstaged.SelectedItem == null ||
                     MessageBox.Show(_deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo) !=
                     DialogResult.Yes)
@@ -954,7 +960,7 @@ namespace GitUI
             if (Unstaged.SelectedItems.Count == 0)
                 return;
 
-            SelectedDiff.ViewText("", "");
+            SelectedDiff.Clear();
             var item = Unstaged.SelectedItem;
             new FormAddToGitIgnore(item.Name).ShowDialog();
             Initialize();

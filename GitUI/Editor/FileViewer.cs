@@ -683,5 +683,9 @@ namespace GitUI.Editor
 
         #endregion
 
+        public void Clear()
+        {
+            ViewText("", "");
+        }
     }
 }
