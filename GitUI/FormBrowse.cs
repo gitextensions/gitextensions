@@ -653,7 +653,6 @@ namespace GitUI
             if (tabControl1.SelectedTab != Diff)
                 return;
 
-            DiffFiles.GitItemStatuses = null;
             var revisions = RevisionGrid.GetRevisions();
 
             DiffText.SaveCurrentScrollPos();
@@ -665,6 +664,7 @@ namespace GitUI
                         GitCommandHelpers.GetDiffFiles(revisions[0].Guid, revisions[1].Guid);
                     break;
                 case 0:
+                    DiffFiles.GitItemStatuses = null;
                     return;
                 default:
                     var revision = revisions[0];
