@@ -122,19 +122,26 @@ namespace GitUI
 
             Unstaged.DoubleClick += Unstaged_DoubleClick;
             Staged.DoubleClick += Staged_DoubleClick;
-
+            
             Unstaged.Focus();
 
             SelectedDiff.AddContextMenuEntry(null, null);
             _StageSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_stageSelectedLines.Text, StageSelectedLinesToolStripMenuItemClick);
             _ResetSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_resetSelectedLines.Text, ResetSelectedLinesToolStripMenuItemClick);
 
-            splitMain.SplitterDistance = Settings.CommitDialogSplitter;
+            splitMain.SplitterDistance = Settings.CommitDialogSplitter; 
 
             this.HotkeysEnabled = true;
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
 
+            SelectedDiff.ContextMenuOpening += SelectedDiff_ContextMenuOpening;
+
             Commit.Focus();
+        }
+
+        void SelectedDiff_ContextMenuOpening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _StageSelectedLinesToolStripMenuItem.Enabled = SelectedDiff.HasAnyPatches();
         }
 
         #region Hotkey commands

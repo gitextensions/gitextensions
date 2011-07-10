@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -16,7 +17,7 @@ namespace GitUI.Editor
         private readonly AsyncLoader _async;
         private int _currentScrollPos = -1;
         private bool _currentViewIsPatch;
-        private IFileViewer _internalFileViewer;
+        private readonly IFileViewer _internalFileViewer;
 
         public FileViewer()
         {
@@ -60,6 +61,14 @@ namespace GitUI.Editor
 
             this.HotkeysEnabled = true;
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+
+            ContextMenu.Opening += ContextMenu_Opening; 
+        }
+
+        void ContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (ContextMenuOpening != null)
+                ContextMenuOpening(sender, e);
         }
 
         void _internalFileViewer_MouseMove(object sender, MouseEventArgs e)
@@ -80,6 +89,7 @@ namespace GitUI.Editor
         public event EventHandler RequestDiffView;
         public new event EventHandler TextChanged;
         public event EventHandler TextLoaded;
+        public event CancelEventHandler ContextMenuOpening;
 
         public ToolStripItem AddContextMenuEntry(string text, EventHandler toolStripItem_Click)
         {
@@ -686,6 +696,11 @@ namespace GitUI.Editor
         public void Clear()
         {
             ViewText("", "");
+        }
+
+        public bool HasAnyPatches()
+        {
+            return (_internalFileViewer.GetText() != null && _internalFileViewer.GetText().Contains("@@"));
         }
     }
 }
