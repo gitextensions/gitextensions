@@ -79,12 +79,14 @@ namespace GitUI
             Loading.Visible = true;
             Stashes.Enabled = false;
             toolStripButton1.Enabled = false;
+            toolStripButton_customMessage.Enabled = false;
             if (gitStash == null)
             {
                 Stashed.GitItemStatuses = null;
             }else
             if (gitStash == currentWorkingDirStashItem)
             {
+                this.toolStripButton_customMessage.Enabled = true;
                 ThreadPool.QueueUserWorkItem(
                 o =>
                 {
@@ -149,14 +151,13 @@ namespace GitUI
         private void StashClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            if (!StashKeepIndex.Checked)
-            {
-                new FormProcess("stash save").ShowDialog();
-            }
-            else
-            {
-                new FormProcess("stash save --keep-index").ShowDialog();
-            }
+            string Arguments = "";
+            string Msg = "";
+
+            if (StashKeepIndex.Checked){ Arguments += " --keep-index"; }
+            if (toolStripButton_customMessage.Checked) { Msg = " " + StashMessage.Text.Trim(); }
+
+            new FormProcess(String.Format("stash save{0}{1}",Arguments,Msg)).ShowDialog();
             NeedRefresh = true;
             Initialize();
             Cursor.Current = Cursors.Default;
@@ -214,14 +215,51 @@ namespace GitUI
 
         private void splitContainer2_SplitterMoved(object sender, SplitterEventArgs e)
         {
-            Stashes.Size =  new Size(Math.Min(200, toolStrip1.Width - 25 - toolStripButton1.Width - toolStripLabel1.Width), Stashes.Size.Height);
-
+            Stashes.Size =  new Size(Math.Min(200, toolStrip1.Width - 25 - toolStripButton1.Width - toolStripLabel1.Width - toolStripButton_customMessage.Width), Stashes.Size.Height);
         }
 
         private void FormStash_Resize(object sender, EventArgs e)
         {
             splitContainer2_SplitterMoved(null, null);
             this.StashKeepIndex.Location = new Point(this.Stash.Location.X + 5, this.Stash.Location.Y - 21);
+        }
+
+        private void toolStripButton_customMessage_Click(object sender, EventArgs e)
+        {
+            if (toolStripButton_customMessage.Enabled)
+            {
+                if (((ToolStripButton)sender).Checked == true)
+                {
+                    this.StashMessage.ReadOnly = false;
+                    this.StashMessage.Focus();
+                    this.StashMessage.SelectAll();
+                }
+                else
+                {
+                    this.StashMessage.ReadOnly = true;
+                }
+            }
+        }
+
+        private void StashMessage_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (this.toolStripButton_customMessage.Enabled)
+            {
+                if (!this.toolStripButton_customMessage.Checked)
+                    this.toolStripButton_customMessage.PerformClick();
+            }
+        }
+
+        private void toolStripButton_customMessage_EnabledChanged(object sender, EventArgs e)
+        {
+            if (!((ToolStripButton)sender).Enabled)
+            {
+                StashMessage.ReadOnly = true;
+            }
+            else if (((ToolStripButton)sender).Enabled && ((ToolStripButton)sender).Checked)
+            {
+                StashMessage.ReadOnly = false;
+            }
         }
 
     }
