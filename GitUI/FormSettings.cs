@@ -267,6 +267,8 @@ namespace GitUI
                 YellowIcon.Checked = Settings.IconColor.Equals("yellow", StringComparison.CurrentCultureIgnoreCase);
                 RandomIcon.Checked = Settings.IconColor.Equals("random", StringComparison.CurrentCultureIgnoreCase);
 
+                IconStyle.Text = Settings.IconStyle;
+
                 GlobalDiffTool.Text = GetGlobalDiffToolFromConfig();
 
                 if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
@@ -451,20 +453,9 @@ namespace GitUI
 
             Settings.DiffSectionColor = _NO_TRANSLATE_ColorSectionLabel.BackColor;
 
-            if (DefaultIcon.Checked)
-                Settings.IconColor = "default";
-            if (BlueIcon.Checked)
-                Settings.IconColor = "blue";
-            if (GreenIcon.Checked)
-                Settings.IconColor = "green";
-            if (PurpleIcon.Checked)
-                Settings.IconColor = "purple";
-            if (RedIcon.Checked)
-                Settings.IconColor = "red";
-            if (YellowIcon.Checked)
-                Settings.IconColor = "yellow";
-            if (RandomIcon.Checked)
-                Settings.IconColor = "random";
+            Settings.IconColor = GetSelectedApplicationIconColor();
+
+            Settings.IconStyle = IconStyle.Text;
 
             EnableSettings();
 
@@ -495,6 +486,25 @@ namespace GitUI
             Settings.SaveSettings();
 
             return true;
+        }
+
+        private string GetSelectedApplicationIconColor()
+        {
+            if (BlueIcon.Checked)
+                return "blue";
+            if (LightblueIcon.Checked)
+                return "lightblue";
+            if (GreenIcon.Checked)
+                return "green";
+            if (PurpleIcon.Checked)
+                return "purple";
+            if (RedIcon.Checked)
+                return "red";
+            if (YellowIcon.Checked)
+                return "yellow";
+            if (RandomIcon.Checked)
+                return "random";
+            return "default";
         }
 
         private void handleCanFindGitCommand()
@@ -2204,6 +2214,77 @@ namespace GitUI
         }
 
         #endregion
+
+
+
+        private void ShowIconPreview()
+        {
+            if (IconStyle.Text.Equals("Default", StringComparison.OrdinalIgnoreCase))
+            {
+                IconPreview.Image = GetApplicationIcon("Large", GetSelectedApplicationIconColor()).ToBitmap();
+                IconPreviewSmall.Image = GetApplicationIcon("Small", GetSelectedApplicationIconColor()).ToBitmap();
+            }
+            if (IconStyle.Text.Equals("Small", StringComparison.OrdinalIgnoreCase))
+            {
+                IconPreview.Image = GetApplicationIcon("Small", GetSelectedApplicationIconColor()).ToBitmap();
+                IconPreviewSmall.Image = IconPreview.Image;
+            }
+            if (IconStyle.Text.Equals("Large", StringComparison.OrdinalIgnoreCase))
+            {
+                IconPreview.Image = GetApplicationIcon("Large", GetSelectedApplicationIconColor()).ToBitmap();
+                IconPreviewSmall.Image = IconPreview.Image;
+            }
+            if (IconStyle.Text.Equals("Cow", StringComparison.OrdinalIgnoreCase))
+            {
+                IconPreview.Image = GetApplicationIcon("Cow", GetSelectedApplicationIconColor()).ToBitmap();
+                IconPreviewSmall.Image = IconPreview.Image;
+            }
+        }
+
+        private void IconStyle_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ShowIconPreview();
+        }
+
+        private void DefaultIcon_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowIconPreview();
+        }
+
+        private void LightblueIcon_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowIconPreview();
+        }
+
+        private void BlueIcon_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowIconPreview();
+        }
+
+        private void PurpleIcon_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowIconPreview();
+        }
+
+        private void GreenIcon_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowIconPreview();
+        }
+
+        private void RedIcon_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowIconPreview();
+        }
+
+        private void YellowIcon_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowIconPreview();
+        }
+
+        private void RandomIcon_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowIconPreview();
+        }
 
 
     }
