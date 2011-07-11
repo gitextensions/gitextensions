@@ -327,6 +327,7 @@ namespace GitUI
         {
             NoFiles.Location = new Point(5, 5);
             NoFiles.Size = new Size(Size.Width - 10, Size.Height - 10);
+            Refresh();
         }
 
         private void FileStatusListBox_KeyDown(object sender, KeyEventArgs e)
