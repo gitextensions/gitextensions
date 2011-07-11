@@ -30,17 +30,17 @@
         {
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this._NO_TRANSLATE_osLabel = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_versionLabel = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_programTitle = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_actionLabel = new System.Windows.Forms.Label();
-            this._NO_TRANSLATE_osLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::GitUI.Properties.Resources.Cow;
+            this.pictureBox1.Image = global::GitUI.Properties.Resources.git_extensions_logo_final_128;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(128, 128);
@@ -61,6 +61,15 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(256, 128);
             this.panel1.TabIndex = 1;
+            // 
+            // _NO_TRANSLATE_osLabel
+            // 
+            this._NO_TRANSLATE_osLabel.AutoSize = true;
+            this._NO_TRANSLATE_osLabel.Location = new System.Drawing.Point(134, 52);
+            this._NO_TRANSLATE_osLabel.Name = "_NO_TRANSLATE_osLabel";
+            this._NO_TRANSLATE_osLabel.Size = new System.Drawing.Size(22, 13);
+            this._NO_TRANSLATE_osLabel.TabIndex = 4;
+            this._NO_TRANSLATE_osLabel.Text = "OS";
             // 
             // _NO_TRANSLATE_versionLabel
             // 
@@ -88,15 +97,6 @@
             this._NO_TRANSLATE_actionLabel.Size = new System.Drawing.Size(54, 13);
             this._NO_TRANSLATE_actionLabel.TabIndex = 1;
             this._NO_TRANSLATE_actionLabel.Text = "Loading...";
-            // 
-            // _NO_TRANSLATE_osLabel
-            // 
-            this._NO_TRANSLATE_osLabel.AutoSize = true;
-            this._NO_TRANSLATE_osLabel.Location = new System.Drawing.Point(134, 52);
-            this._NO_TRANSLATE_osLabel.Name = "_NO_TRANSLATE_osLabel";
-            this._NO_TRANSLATE_osLabel.Size = new System.Drawing.Size(22, 13);
-            this._NO_TRANSLATE_osLabel.TabIndex = 4;
-            this._NO_TRANSLATE_osLabel.Text = "OS";
             // 
             // FormSplash
             // 
