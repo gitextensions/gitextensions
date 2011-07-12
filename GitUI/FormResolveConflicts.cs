@@ -763,6 +763,7 @@ namespace GitUI
                 case Commands.ChooseBase: this.ContextChooseBase_Click(null, null); break;
                 case Commands.ChooseLocal: this.ContextChooseLocal_Click(null, null); break;
                 case Commands.ChooseRemote: this.ContextChooseRemote_Click(null, null); break;
+                default: ExecuteScriptCommand(cmd, Keys.None); break;
             }
 
             return true;

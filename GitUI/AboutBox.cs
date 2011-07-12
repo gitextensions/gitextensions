@@ -49,7 +49,7 @@ namespace GitUI
         }
 
         //Contributers list 
-        private const string contributers = "Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide, dominiqueplante, Grzegorz Pachocki, Seth Behunin, bleis-tift, Chris Meaney, Nathanael Schmied, Adrian Codrington, Troels Thomsen, Wilbert van Dolleweerd, Tobias Bieniek, Radoslaw Miazio, Stan Angeloff, Matt McCormick, Bjørn Moe, William Swanson, Daniel Locantore, Harald Deischinger, Radek Miazio, Stefan Rueckl, Emanuel Henrique do Prado, Lukasz Byczynski, Steffen M. Colding-Jørgensen, alexeik, arBmind, Gianni Rosa Gallina, mausch, xaro, Xharze, Kim Christensen, gor, Charles Brossollet, Patrick Earl, Cheng Huang, ultonis, Michael Frenzel, showell, Daniel Doubrovkine, mdk, superlongman, Marc Murray, rferriz, Jacek Pasternak, miloja, Ed Starback, Alberto Chiesa, Airat Salikhov";
+        private const string contributers = "Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide, dominiqueplante, Grzegorz Pachocki, Seth Behunin, bleis-tift, Chris Meaney, Nathanael Schmied, Adrian Codrington, Troels Thomsen, Wilbert van Dolleweerd, Tobias Bieniek, Radoslaw Miazio, Stan Angeloff, Matt McCormick, Bjørn Moe, William Swanson, Daniel Locantore, Harald Deischinger, Radek Miazio, Stefan Rueckl, Emanuel Henrique do Prado, Lukasz Byczynski, Steffen M. Colding-Jørgensen, alexeik, arBmind, Gianni Rosa Gallina, mausch, xaro, Xharze, Kim Christensen, gor, Charles Brossollet, Patrick Earl, Cheng Huang, ultonis, Michael Frenzel, showell, Daniel Doubrovkine, mdk, superlongman, Marc Murray, rferriz, Jacek Pasternak, miloja, Ed Starback, Alberto Chiesa, Airat Salikhov, Max Malook, ikke, Simon Walker";
         private string[] contributersList;
         private Random random = new Random();
 

@@ -62,7 +62,6 @@
             this.BranchNameTextBox.Name = "BranchNameTextBox";
             this.BranchNameTextBox.Size = new System.Drawing.Size(187, 21);
             this.BranchNameTextBox.TabIndex = 3;
-            this.BranchNameTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.BranchNameTextBoxKeyUp);
             // 
             // CheckoutAfterCreate
             // 
@@ -78,6 +77,7 @@
             // 
             // FormBranchSmall
             // 
+            this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(471, 58);
