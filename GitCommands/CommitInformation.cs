@@ -92,7 +92,7 @@ namespace GitCommands
             string info = GitCommandHelpers.RunCmd(
                 Settings.GitCommand,
                 string.Format(
-                    "show -s --pretty=raw --show-notes=* {0}", sha1));
+                    "log -1 --pretty=raw --show-notes=* {0}", sha1));
 
             if (info.Trim().StartsWith("fatal"))
                 return new CommitInformation("Cannot find commit" + sha1, "");

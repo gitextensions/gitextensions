@@ -46,7 +46,6 @@ namespace GitUI
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RevisionGrid));
             this.Revisions = new GitUI.DvcsGraph();
-            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Message = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Author = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -175,17 +174,6 @@ namespace GitUI
             this.Revisions.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.RevisionsCellMouseDown);
             this.Revisions.DoubleClick += new System.EventHandler(this.RevisionsDoubleClick);
             this.Revisions.MouseClick += new System.Windows.Forms.MouseEventHandler(this.RevisionsMouseClick);
-            // 
-            // dataGridViewTextBoxColumn3
-            // 
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.dataGridViewTextBoxColumn3.DefaultCellStyle = dataGridViewCellStyle11;
-            this.dataGridViewTextBoxColumn3.Frozen = true;
-            this.dataGridViewTextBoxColumn3.HeaderText = "";
-            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
-            this.dataGridViewTextBoxColumn3.ReadOnly = true;
-            this.dataGridViewTextBoxColumn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.dataGridViewTextBoxColumn3.Width = 70;
             // 
             // Message
             // 
@@ -665,7 +653,7 @@ namespace GitUI
             // 
             this.showRevisionGraphToolStripMenuItem.Name = "showRevisionGraphToolStripMenuItem";
             this.showRevisionGraphToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
-            this.showRevisionGraphToolStripMenuItem.Text = "Show revisions small with graph";
+            this.showRevisionGraphToolStripMenuItem.Text = "Show revision graph";
             this.showRevisionGraphToolStripMenuItem.Click += new System.EventHandler(this.ShowRevisionGraphToolStripMenuItemClick);
             // 
             // RevisionGrid

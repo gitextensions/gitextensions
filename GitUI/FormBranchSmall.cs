@@ -5,7 +5,7 @@ using GitCommands;
 
 namespace GitUI
 {
-    public partial class FormBranchSmall : GitExtensionsForm
+    public sealed partial class FormBranchSmall : GitExtensionsForm
     {
         public FormBranchSmall()
         {
@@ -26,7 +26,10 @@ namespace GitUI
                 }
                 var branchCmd = GitCommandHelpers.BranchCmd(BranchNameTextBox.Text, Revision.Guid,
                                                                   CheckoutAfterCreate.Checked);
-                new FormProcess(branchCmd).ShowDialog();
+                using (var formProcess = new FormProcess(branchCmd))
+                {
+                    formProcess.ShowDialog();
+                }
 
                 Close();
             }
@@ -34,12 +37,6 @@ namespace GitUI
             {
                 Trace.WriteLine(ex.Message);
             }
-        }
-
-        private void BranchNameTextBoxKeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-                OkClick(null, null);
         }
     }
 }

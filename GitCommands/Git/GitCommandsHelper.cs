@@ -1521,10 +1521,20 @@ namespace GitCommands
             return "am --3way --signoff \"" + FixPath(patchFile) + "\"";
         }
 
-        public static string PatchDirCmd(string patchDir)
+        public static string PatchCmdIgnoreWhitespace(string patchFile)
+		{
+			return "am --3way --signoff --ignore-whitespace \"" + FixPath(patchFile) + "\"";
+		}
+
+		public static string PatchDirCmd(string patchDir)
         {
             return "am --3way --signoff --directory=\"" + FixPath(patchDir) + "\"";
         }
+
+		public static string PatchDirCmdIgnoreWhitespace(string patchDir)
+		{
+		    return "am --3way --signoff --ignore-whitespace --directory=\"" + FixPath(patchDir) + "\"";
+		}
 
         public static string UpdateRemotes()
         {
@@ -1651,6 +1661,9 @@ namespace GitCommands
             from = FixPath(from);
             to = FixPath(to);
 
+            if (Settings.UsePatienceDiffAlgorithm)
+                extraDiffArguments = string.Concat(extraDiffArguments, " --patience");
+
             var patchManager = new PatchManager();
             var arguments = string.Format("diff{0} -M -C \"{1}\" \"{2}\" -- {3} {4}", extraDiffArguments, to, from, fileName, oldFileName);
             patchManager.LoadPatch(RunCachableCmd(Settings.GitCommand, arguments), false);
@@ -1666,6 +1679,9 @@ namespace GitCommands
 
         public static List<Patch> GetDiff(string from, string to, string extraDiffArguments)
         {
+            if (Settings.UsePatienceDiffAlgorithm)
+                extraDiffArguments = string.Concat(extraDiffArguments, " --patience");
+
             var patchManager = new PatchManager();
             var arguments = string.Format("diff{0} \"{1}\" \"{2}\"", extraDiffArguments, from, to);
             patchManager.LoadPatch(RunCachableCmd(Settings.GitCommand, arguments), false);
@@ -1673,7 +1689,12 @@ namespace GitCommands
             return patchManager.Patches;
         }
 
-        public static List<GitItemStatus> GetDiffFiles(string from, string to, bool noCache = false)
+        public static List<GitItemStatus> GetDiffFiles(string from, string to)
+        {
+            return GetDiffFiles(from, to, false);
+        }
+
+        public static List<GitItemStatus> GetDiffFiles(string from, string to, bool noCache)
         {
             string result;
             string cmd = "diff -M -C -z --name-status \"" + to + "\" \"" + from + "\"";
@@ -1762,15 +1783,21 @@ namespace GitCommands
             if (string.IsNullOrEmpty(statusString))
                 return diffFiles;
 
-            /*The status string can show warnings. This is a text blok in front
+            /*The status string can show warnings. This is a text blok at the start or at the beginning
               of the file status. Strip it. Example:
                 warning: LF will be replaced by CRLF in CustomDictionary.xml.
                 The file will have its original line endings in your working directory.
                 warning: LF will be replaced by CRLF in FxCop.targets.
                 The file will have its original line endings in your working directory.*/
             string trimmedStatus = statusString.Trim(new char[] { '\n', '\r' });
-            if (trimmedStatus.Contains("\n") || trimmedStatus.Contains("\r"))
-                trimmedStatus = trimmedStatus.Substring(trimmedStatus.LastIndexOfAny(new char[] { '\n', '\r' })).Trim(new char[] { '\n', '\r' });
+            int lastNewLinePos = trimmedStatus.LastIndexOfAny(new char[] { '\n', '\r' });
+            if (lastNewLinePos > 0)
+            {
+                if (trimmedStatus.IndexOf('\0') > lastNewLinePos) //Warning at beginning
+                    trimmedStatus = trimmedStatus.Substring(0, lastNewLinePos).Trim(new char[] { '\n', '\r' });
+                else                                              //Warning at end
+                    trimmedStatus = trimmedStatus.Substring(lastNewLinePos).Trim(new char[] { '\n', '\r' });
+            }
 
             //Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)
             var files = trimmedStatus.Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
@@ -1958,9 +1985,12 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(oldFileName))
                 oldFileName = string.Concat("\"", FixPath(oldFileName), "\"");
 
-            var args = "diff " + extraDiffArguments + " -- " + fileName;
+            if (Settings.UsePatienceDiffAlgorithm)
+                extraDiffArguments = string.Concat(extraDiffArguments, " --patience");
+
+            var args = string.Concat("diff ", extraDiffArguments, " -- ", fileName);
             if (staged)
-                args = "diff -M -C --cached" + extraDiffArguments + " -- " + fileName + " " + oldFileName;
+                args = string.Concat("diff -M -C --cached", extraDiffArguments, " -- ", fileName, " ", oldFileName);
 
             return RunCmd(Settings.GitCommand, args);
         }

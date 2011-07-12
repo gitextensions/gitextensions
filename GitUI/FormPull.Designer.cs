@@ -85,6 +85,7 @@
             this.splitContainer1.Size = new System.Drawing.Size(639, 312);
             this.splitContainer1.SplitterDistance = 80;
             this.splitContainer1.TabIndex = 15;
+            this.splitContainer1.TabStop = false;
             // 
             // PullImage
             // 
@@ -119,7 +120,7 @@
             this.PullFromUrl.Location = new System.Drawing.Point(7, 49);
             this.PullFromUrl.Name = "PullFromUrl";
             this.PullFromUrl.Size = new System.Drawing.Size(38, 17);
-            this.PullFromUrl.TabIndex = 3;
+            this.PullFromUrl.TabIndex = 1;
             this.PullFromUrl.Text = "Url";
             this.Tooltip.SetToolTip(this.PullFromUrl, "Url to pull from");
             this.PullFromUrl.UseVisualStyleBackColor = true;
@@ -190,7 +191,7 @@
             this.Pull.Location = new System.Drawing.Point(425, 282);
             this.Pull.Name = "Pull";
             this.Pull.Size = new System.Drawing.Size(111, 25);
-            this.Pull.TabIndex = 14;
+            this.Pull.TabIndex = 40;
             this.Pull.Text = "&Pull";
             this.Pull.UseVisualStyleBackColor = true;
             this.Pull.Click += new System.EventHandler(this.PullClick);
@@ -201,7 +202,7 @@
             this.AutoStash.Location = new System.Drawing.Point(243, 287);
             this.AutoStash.Name = "AutoStash";
             this.AutoStash.Size = new System.Drawing.Size(78, 17);
-            this.AutoStash.TabIndex = 12;
+            this.AutoStash.TabIndex = 13;
             this.AutoStash.Text = "Auto stash";
             this.AutoStash.UseVisualStyleBackColor = true;
             // 
@@ -213,7 +214,7 @@
             this.groupBox1.Location = new System.Drawing.Point(3, 174);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(541, 102);
-            this.groupBox1.TabIndex = 12;
+            this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Merge options";
             // 
@@ -222,9 +223,8 @@
             this.Fetch.Location = new System.Drawing.Point(7, 76);
             this.Fetch.Name = "Fetch";
             this.Fetch.Size = new System.Drawing.Size(526, 21);
-            this.Fetch.TabIndex = 9;
-            this.Fetch.TabStop = true;
-            this.Fetch.Text = "Do not merge, only &fetch remote branch";
+            this.Fetch.TabIndex = 10;
+            this.Fetch.Text = "Do not merge, only &fetch remote changes";
             this.Fetch.UseVisualStyleBackColor = true;
             this.Fetch.CheckedChanged += new System.EventHandler(this.FetchCheckedChanged);
             // 
@@ -234,9 +234,9 @@
             this.Merge.Location = new System.Drawing.Point(7, 18);
             this.Merge.Name = "Merge";
             this.Merge.Size = new System.Drawing.Size(528, 24);
-            this.Merge.TabIndex = 7;
+            this.Merge.TabIndex = 8;
             this.Merge.TabStop = true;
-            this.Merge.Text = "&Merge remote branch to current branch";
+            this.Merge.Text = "&Merge remote branch into current branch";
             this.Merge.UseVisualStyleBackColor = true;
             this.Merge.CheckedChanged += new System.EventHandler(this.MergeCheckedChanged);
             // 
@@ -245,9 +245,9 @@
             this.Rebase.Location = new System.Drawing.Point(7, 36);
             this.Rebase.Name = "Rebase";
             this.Rebase.Size = new System.Drawing.Size(525, 44);
-            this.Rebase.TabIndex = 8;
-            this.Rebase.Text = "&Rebase remote branch to current branch, creates linear history. It is recommende" +
-                "d\r\nto choose a remote branch when using rebase. (use with caution)";
+            this.Rebase.TabIndex = 9;
+            this.Rebase.Text = "&Rebase current branch on top of remote branch, creates linear history (use with " +
+                "caution)";
             this.Rebase.UseVisualStyleBackColor = true;
             this.Rebase.CheckedChanged += new System.EventHandler(this.RebaseCheckedChanged);
             // 
@@ -309,7 +309,7 @@
             this.Stash.Location = new System.Drawing.Point(121, 282);
             this.Stash.Name = "Stash";
             this.Stash.Size = new System.Drawing.Size(117, 25);
-            this.Stash.TabIndex = 11;
+            this.Stash.TabIndex = 12;
             this.Stash.Text = "Stash changes";
             this.Stash.UseVisualStyleBackColor = true;
             this.Stash.Click += new System.EventHandler(this.StashClick);
@@ -319,7 +319,7 @@
             this.Mergetool.Location = new System.Drawing.Point(3, 282);
             this.Mergetool.Name = "Mergetool";
             this.Mergetool.Size = new System.Drawing.Size(117, 25);
-            this.Mergetool.TabIndex = 10;
+            this.Mergetool.TabIndex = 11;
             this.Mergetool.Text = "Solve conflicts";
             this.Mergetool.UseVisualStyleBackColor = true;
             this.Mergetool.Click += new System.EventHandler(this.MergetoolClick);

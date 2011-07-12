@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -16,7 +17,7 @@ namespace GitUI.Editor
         private readonly AsyncLoader _async;
         private int _currentScrollPos = -1;
         private bool _currentViewIsPatch;
-        private IFileViewer _internalFileViewer;
+        private readonly IFileViewer _internalFileViewer;
 
         public FileViewer()
         {
@@ -43,7 +44,8 @@ namespace GitUI.Editor
                 {
                     ResetForText(null);
                     _internalFileViewer.SetText("Unsupported file");
-
+                    if (TextLoaded != null)
+                        TextLoaded(this, null);
                 };
 
             IgnoreWhitespaceChanges = false;
@@ -59,11 +61,20 @@ namespace GitUI.Editor
 
             this.HotkeysEnabled = true;
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+
+            ContextMenu.Opening += ContextMenu_Opening; 
+        }
+
+        void ContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (ContextMenuOpening != null)
+                ContextMenuOpening(sender, e);
         }
 
         void _internalFileViewer_MouseMove(object sender, MouseEventArgs e)
         {
             this.OnMouseMove(e);
+            _internalFileViewer.FocusTextArea();
         }
 
         void _internalFileViewer_SelectedLineChanged(object sender, int selectedLine)
@@ -77,6 +88,8 @@ namespace GitUI.Editor
         public event EventHandler ScrollPosChanged;
         public event EventHandler RequestDiffView;
         public new event EventHandler TextChanged;
+        public event EventHandler TextLoaded;
+        public event CancelEventHandler ContextMenuOpening;
 
         public ToolStripItem AddContextMenuEntry(string text, EventHandler toolStripItem_Click)
         {
@@ -240,6 +253,8 @@ namespace GitUI.Editor
         {
             ResetForDiff();
             _internalFileViewer.SetText(text);
+            if (TextLoaded != null)
+                TextLoaded(this, null);
             RestoreCurrentScrollPos();
         }
 
@@ -262,10 +277,14 @@ namespace GitUI.Editor
             if (FileHelper.IsBinaryFileAccordingToContent(text))
             {
                 _internalFileViewer.SetText("Binary file: " + fileName + " (Detected)");
+                if (TextLoaded != null)
+                    TextLoaded(this, null);
                 return;
             }
 
             _internalFileViewer.SetText(text);
+            if (TextLoaded != null)
+                TextLoaded(this, null);
 
             RestoreCurrentScrollPos();
         }
@@ -666,6 +685,7 @@ namespace GitUI.Editor
                 case Commands.DecreaseNumberOfVisibleLines: this.DescreaseNumberOfLinesToolStripMenuItemClick(null, null); break;
                 case Commands.ShowEntireFile: this.ShowEntireFileToolStripMenuItemClick(null, null); break;
                 case Commands.TreatFileAsText: this.TreatAllFilesAsTextToolStripMenuItemClick(null, null); break;
+                default: ExecuteScriptCommand(cmd, Keys.None); break;
             }
 
             return true;
@@ -673,5 +693,14 @@ namespace GitUI.Editor
 
         #endregion
 
+        public void Clear()
+        {
+            ViewText("", "");
+        }
+
+        public bool HasAnyPatches()
+        {
+            return (_internalFileViewer.GetText() != null && _internalFileViewer.GetText().Contains("@@"));
+        }
     }
 }
