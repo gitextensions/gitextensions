@@ -156,7 +156,7 @@
           <Value>Отменить изменения</Value>
         </TranslationItem>
         <TranslationItem Name="Amend" Property="Text">
-          <Value>Присоединить к послднему коммиты</Value>
+          <Value>Присоединить к последнему коммиту</Value>
         </TranslationItem>
         <TranslationItem Name="openToolStripMenuItem" Property="Text">
           <Value>Открыть</Value>
@@ -183,10 +183,10 @@
           <Value>Закрывать диалог после каждого коммита</Value>
         </TranslationItem>
         <TranslationItem Name="closeDialogAfterAllFilesCommittedToolStripMenuItem" Property="Text">
-          <Value>Закрыть диалог после того, как будут все изменения будут commited</Value>
+          <Value>Закрыть диалог после коммита всех изменений</Value>
         </TranslationItem>
         <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text">
-          <Value>Хотите также удалить созданные файлы, которые находятся в выделении ?
+          <Value>Хотите также удалить созданные файлы, которые находятся в выделении?
 
 Выберите 'Нет' чтобы оставить все новые файлы.</Value>
         </TranslationItem>
@@ -195,7 +195,7 @@
         </TranslationItem>
         <TranslationItem Name="_amendCommit" Property="Text">
           <Value>Вы собираетесь переписать историю.
-Используйте эту возможность если коммит еще не опубликован!
+Используйте эту возможность, только если коммит еще не опубликован!
 Хотите продолжить?</Value>
         </TranslationItem>
         <TranslationItem Name="_amendCommitCaption" Property="Text">
@@ -253,7 +253,7 @@
           <Value>Эта опция доступна только когда выбран один файл</Value>
         </TranslationItem>
         <TranslationItem Name="_resetChanges" Property="Text">
-          <Value>Вы точно хоттите отменить изменения выделенного файла?</Value>
+          <Value>Вы точно хотите отменить изменения выделенного файла?</Value>
         </TranslationItem>
         <TranslationItem Name="_resetChangesCaption" Property="Text">
           <Value>Отменить изменения</Value>
@@ -633,7 +633,7 @@
           <Value>Удалить только игнорируемы untracked файлы</Value>
         </TranslationItem>
         <TranslationItem Name="RemoveNonIgnored" Property="Text">
-          <Value>Удалить только не игнорируемые untracked файлы</Value>
+          <Value>Удалить только неигнорируемые untracked файлы</Value>
         </TranslationItem>
         <TranslationItem Name="RemoveAll" Property="Text">
           <Value>Удалить все untracked файлы</Value>
@@ -652,7 +652,7 @@
           <Value>Автоматически создавать коммит, если нет конфликтов</Value>
         </TranslationItem>
         <TranslationItem Name="autoParent" Property="Text">
-          <Value>Автоматически устанавливать родителя в 1 если коммит слияния</Value>
+          <Value>Автоматически устанавливать родителя в 1, если коммит слияния</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -707,12 +707,6 @@
         <TranslationItem Name="$this" Property="Text">
           <Value>Прогресс</Value>
         </TranslationItem>
-        <TranslationItem Name="KeepDialogOpen" Property="Text">
-          <Value>Оставить окно открытым</Value>
-        </TranslationItem>
-        <TranslationItem Name="Abort" Property="Text">
-          <Value>Отмена</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormEditor">
@@ -751,11 +745,11 @@
         <TranslationItem Name="fileUnchangedAfterMerge" Property="Text">
           <Value>Файл был изменен при слиянии. Обычно это означает, что файл был сохранен в неправильное место.
 
-Конфликт слияния не будет отмечен как разрешенный. Пожалуйста попробуйте еще.</Value>
+Конфликт слияния не будет отмечен как разрешенный. Пожалуйста, попробуйте еще.</Value>
         </TranslationItem>
         <TranslationItem Name="allConflictsResolved" Property="Text">
           <Value>Все конфликты были разрешены, вы можете коммитить.
-Хотите коммитить сейчас ?</Value>
+Хотите коммитить сейчас?</Value>
         </TranslationItem>
         <TranslationItem Name="allConflictsResolvedCaption" Property="Text">
           <Value>Коммит</Value>
@@ -771,7 +765,7 @@
 Вы точно хотите открыть его с помощью {0}?</Value>
         </TranslationItem>
         <TranslationItem Name="askMergeConflictSolvedAfterCustomMergeScript" Property="Text">
-          <Value>Конфликт должен быть разрешен и результат должен быть сохранен как:
+          <Value>Конфликт должен быть разрешен, и результат должен быть сохранен как:
 {0}
 
 Конфликт разрешен ?</Value>
@@ -783,10 +777,10 @@
           <Value>Конфликт разрешен ?</Value>
         </TranslationItem>
         <TranslationItem Name="modifiedButton" Property="Text">
-          <Value>Измененые</Value>
+          <Value>Измененные</Value>
         </TranslationItem>
         <TranslationItem Name="noMergeTool" Property="Text">
-          <Value>Утилита слияния не сконфигурирована. Пожалуйста перейдите к настройкам и задайте утилиту слияния!</Value>
+          <Value>Утилита слияния не сконфигурирована. Пожалуйста, перейдите к настройкам и задайте утилиту слияния!</Value>
         </TranslationItem>
         <TranslationItem Name="noBaseRevision" Property="Text">
           <Value>Базы слияния для не  {0} существует.
@@ -802,22 +796,22 @@
           <Value>Файл был изменен локально({0}) и удаленно({1}). Слейте изменения.</Value>
         </TranslationItem>
         <TranslationItem Name="fileCreatedLocallyAndRemotely" Property="Text">
-          <Value>Файл с одинаковым именем был создан локально({0}) и удалено({1}). Выберите файл который Вы хотите оставить, или слейте их.</Value>
+          <Value>Файл с одинаковым именем был создан локально({0}) и удалено({1}). Выберите файл, который Вы хотите оставить, или слейте их.</Value>
         </TranslationItem>
         <TranslationItem Name="fileCreatedLocallyAndRemotelyLong" Property="Text">
           <Value>Файл {0} не имеет базовой ревизии.
 Файл с одним и тем же именем был создан локально({1}) и удаленно({2}), что вызвало конфликт.
 
-Удалите файл, слейте файлы или удалите файл.</Value>
+Удалите локальный файл, слейте файлы или удалите другой файл.</Value>
         </TranslationItem>
         <TranslationItem Name="fileDeletedLocallyAndModifiedRemotely" Property="Text">
           <Value>Файл был удален локально и изменен удаленно. Удалите или оставьте измененную версию.</Value>
         </TranslationItem>
         <TranslationItem Name="fileDeletedLocallyAndModifiedRemotelyLong" Property="Text">
           <Value>Файл {0} не имеет локальной версии.
-Файл был удален локально({1}) но изменен удаленно({2}).
+Файл был удален локально({1}), но изменен удаленно({2}).
 
-Удалите файл, или оставьте измененную версию.</Value>
+Удалите файл или оставьте измененную версию.</Value>
         </TranslationItem>
         <TranslationItem Name="fileModifiedLocallyAndDelededRemotely" Property="Text">
           <Value>Файл был изменен локально и удален удаленно. Можно оставить локальную версию или удалить файл.</Value>
@@ -950,8 +944,8 @@
           <Value>в</Value>
         </TranslationItem>
         <TranslationItem Name="_branchNewForRemote" Property="Text">
-          <Value>Ветка, которую вы собираетесь push является новой для удаленного репозитория.
-Вы уверены, что хотите push эту ветку?</Value>
+          <Value>Ветка, которую вы собираетесь отправить, является новой для удаленного репозитория.
+Вы уверены, что хотите отправить эту ветку?</Value>
         </TranslationItem>
         <TranslationItem Name="_cannotLoadPutty" Property="Text">
           <Value>Не могу загрузить SSH ключ. PuTTY сконфигурирован неправильно.</Value>
@@ -963,7 +957,7 @@
           <Value>Пожалуйста, выберите удаленный репозиторий</Value>
         </TranslationItem>
         <TranslationItem Name="_selectTag" Property="Text">
-          <Value>Необходимо выбрать метку для push, или выбрать "Push все метки".</Value>
+          <Value>Необходимо выбрать метку для push или выбрать "Push все метки".</Value>
         </TranslationItem>
         <TranslationItem Name="_yes" Property="Text">
           <Value>Да</Value>
@@ -997,7 +991,7 @@
           <Value>Локальная ветка</Value>
         </TranslationItem>
         <TranslationItem Name="_allMergeConflictSolvedQuestion" Property="Text">
-          <Value>Решены все конфликты ? Хотите коммитить?</Value>
+          <Value>Решены все конфликты? Хотите коммитить?</Value>
         </TranslationItem>
         <TranslationItem Name="_allMergeConflictSolvedQuestionCaption" Property="Text">
           <Value>Конфликты разрешены</Value>
@@ -1135,7 +1129,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Путь к puttygen</Value>
         </TranslationItem>
         <TranslationItem Name="label18" Property="Text">
-          <Value>OpenSSH - утилита командной строки. PuTTY более удобная для пользователей Windows, но требует, чтобы клиент аутентификации PuTTY был запущен в фоновом режиме. Когда используется OpenSSH, показываются диалоги с командной строкой!</Value>
+          <Value>OpenSSH - утилита командной строки. PuTTY удобнее для пользователей Windows, но требует, чтобы клиент аутентификации PuTTY был запущен в фоновом режиме. Когда используется OpenSSH, показываются диалоги с командной строкой!</Value>
         </TranslationItem>
         <TranslationItem Name="OtherSshBrowse" Property="Text">
           <Value>Обзор</Value>
@@ -1144,7 +1138,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Другой клиент ssh</Value>
         </TranslationItem>
         <TranslationItem Name="AutostartPageant" Property="Text">
-          <Value>Автоматический запускать клиент аутентификации, когда для удаленного репозитория сконфигурирован секретный ключ.</Value>
+          <Value>Автоматически запускать клиент аутентификации, когда для удаленного репозитория сконфигурирован секретный ключ.</Value>
         </TranslationItem>
         <TranslationItem Name="PathToKDiff3" Property="Text">
           <Value>Путь к mergetool</Value>
@@ -1157,15 +1151,15 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         </TranslationItem>
         <TranslationItem Name="label9" Property="Text">
           <Value>Перед тем как менять глобавльные настройки,
-необходимо установить коректный путь к git.</Value>
+необходимо установить корректный путь к git.</Value>
         </TranslationItem>
         <TranslationItem Name="label21" Property="Text">
           <Value>Перед тем как менять локальные настройки,
-необходимо установить коректный путь к git.</Value>
+необходимо установить корректный путь к git.</Value>
         </TranslationItem>
         <TranslationItem Name="label10" Property="Text">
-          <Value>Перед тем как менять какие либо глобальные настройки,
-необходимо установить коректный путь к git.cmd.</Value>
+          <Value>Перед тем как менять какие-либо глобальные настройки,
+необходимо установить корректный путь к git.cmd.</Value>
         </TranslationItem>
         <TranslationItem Name="label22" Property="Text">
           <Value>Словарь для проверки орфографии.</Value>
@@ -1216,7 +1210,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Показывать коммандную строку git во время исполнения</Value>
         </TranslationItem>
         <TranslationItem Name="label34" Property="Text">
-          <Value>Закрывать диалог прогресса когда проецсс успешно завершился</Value>
+          <Value>Закрывать диалог прогресса, когда процесс успешно завершился</Value>
         </TranslationItem>
         <TranslationItem Name="label39" Property="Text">
           <Value>Показывать относительные даты вместо полных</Value>
@@ -1297,7 +1291,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Многоцветные ветки</Value>
         </TranslationItem>
         <TranslationItem Name="label50" Property="Text">
-          <Value>Для доступа к git репозиториям в Git Extensions возможно использовать как msysgit так и cygwin . Установите коректный путь ниже.</Value>
+          <Value>Для доступа к git репозиториям в Git Extensions возможно использовать как msysgit, так и cygwin. Установите корректный путь ниже.</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox8" Property="Text">
           <Value>Окружение</Value>
@@ -1312,7 +1306,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Рисовать границы веток</Value>
         </TranslationItem>
         <TranslationItem Name="showGitStatusInToolbarLabel" Property="Text">
-          <Value>Отображать статус репозитория в диалоге обзора (количество изменений на панели инструментов. необходим перезапуск)</Value>
+          <Value>Отображать статус репозитория в диалоге обзора (количество изменений на панели инструментов, необходим перезапуск)</Value>
         </TranslationItem>
         <TranslationItem Name="showErrorsWhenStagingFilesLabel" Property="Text">
           <Value>Показывать ошибки при stage файлов</Value>
@@ -1336,7 +1330,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Аргументы:</Value>
         </TranslationItem>
         <TranslationItem Name="commandLabel" Property="Text">
-          <Value>Комманда:</Value>
+          <Value>Команда:</Value>
         </TranslationItem>
         <TranslationItem Name="nameLabel" Property="Text">
           <Value>Название:</Value>
@@ -1375,7 +1369,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Конекстное меню</Value>
         </TranslationItem>
         <TranslationItem Name="helpLabel" Property="Text">
-          <Value>Нажмите F1 для того чтобы увидеть все доступные опции</Value>
+          <Value>Нажмите F1, для того чтобы увидеть все доступные опции</Value>
         </TranslationItem>
         <TranslationItem Name="downloadDictionary" Property="Text">
           <Value>Скачать словарь</Value>
@@ -1432,7 +1426,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Тип reset</Value>
         </TranslationItem>
         <TranslationItem Name="Hard" Property="Text">
-          <Value>Hard: отменить измененияв рабочей копии и в индексе (отменить ВСЕ локальные изменения, даже те что commited)</Value>
+          <Value>Hard: отменить изменения в рабочей копии и в индексе (удалятся коммиты!)</Value>
         </TranslationItem>
         <TranslationItem Name="Mixed" Property="Text">
           <Value>Mixed: рабочую копию не трогать, сбросить только индекс</Value>
@@ -1516,13 +1510,13 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Создать ветку</Value>
         </TranslationItem>
         <TranslationItem Name="Checkout" Property="Text">
-          <Value>Checkout ветки</Value>
+          <Value>Выбрать ветку</Value>
         </TranslationItem>
         <TranslationItem Name="CheckoutAfterCreate" Property="Text">
           <Value>Создать ветку</Value>
         </TranslationItem>
         <TranslationItem Name="_selectOneRevision" Property="Text">
-          <Value>Выберите одну ревизию чтобы создать из неё ветку.</Value>
+          <Value>Выберите одну ревизию, чтобы создать из неё ветку.</Value>
         </TranslationItem>
         <TranslationItem Name="_branchCaption" Property="Text">
           <Value>Ветка</Value>
@@ -1610,7 +1604,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Вы точно хотите удалить все висящие объекты?</Value>
         </TranslationItem>
         <TranslationItem Name="_xTagsCreated" Property="Text">
-          <Value>Было создано {0} тэгов.
+          <Value>Было создано {0} меток.
 
 Не забудьте удалить их, когда закончите.</Value>
         </TranslationItem>
@@ -1618,19 +1612,19 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Сохранить обьекты в .git/lost-found</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
-          <Value>Клацните два раза по строке содержащей хеш sha1 для того чтобы просмотреть оьбект</Value>
+          <Value>Щёлкните дважды по строке, содержащей хеш sha1, для того чтобы просмотреть объект</Value>
         </TranslationItem>
         <TranslationItem Name="Remove" Property="Text">
-          <Value>Удалить все высящие объекты</Value>
+          <Value>Удалить все висящие объекты</Value>
         </TranslationItem>
         <TranslationItem Name="TagSelectedObject" Property="Text">
-          <Value>Пометить выбранный обюект</Value>
+          <Value>Пометить выбранный объект</Value>
         </TranslationItem>
         <TranslationItem Name="ViewObject" Property="Text">
-          <Value>Просмотреть выбранный обьект</Value>
+          <Value>Просмотреть выбранный объект</Value>
         </TranslationItem>
         <TranslationItem Name="TagAllObjects" Property="Text">
-          <Value>Пометить все потерянные обьекты</Value>
+          <Value>Пометить все потерянные объекты</Value>
         </TranslationItem>
         <TranslationItem Name="DeleteAllLostAndFoundTags" Property="Text">
           <Value>Удалить все метки LOST_AND_FOUND</Value>
@@ -1652,7 +1646,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Пожалуйста, выберите директорию.</Value>
         </TranslationItem>
         <TranslationItem Name="_chooseDirectoryNotFile" Property="Text">
-          <Value>Файл не может  быть использован в качесте пути репозитория.
+          <Value>Файл не может быть использован в качестве пути репозитория.
 Пожалуйста, выберите директорию.</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
@@ -1681,8 +1675,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Редактировать .gitignore</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
-          <Value>Specify filepatterns you want git to ignore.
-Укажите паттерны файлов для игнорирования.
+          <Value>Укажите шаблоны файлов для игнорирования.
 
 Пример:
 #ignore thumbnails created by windows
@@ -1732,10 +1725,10 @@ _ReSharper*/
     <TranslationCategory Name="FormCheckoutBranch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Checkout ветки</Value>
+          <Value>Выбор ветки</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
-          <Value>Выбрать ветку</Value>
+          <Value>Выберите ветку</Value>
         </TranslationItem>
         <TranslationItem Name="LocalBranch" Property="Text">
           <Value>Локальная ветка</Value>
@@ -1747,13 +1740,13 @@ _ReSharper*/
           <Value>Принудительно</Value>
         </TranslationItem>
         <TranslationItem Name="trackRemoteBranch" Property="Text">
-          <Value>Вы выбрали checkout внешней ветки.
+          <Value>Вы выбрали внешнюю ветку.
 
 Хотите создать локальную ветку с именем '{0}',
 которая будет следить за внешней веткой?</Value>
         </TranslationItem>
         <TranslationItem Name="trackRemoteBranchCaption" Property="Text">
-          <Value>Checkout ветки</Value>
+          <Value>Выбор ветки</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1934,7 +1927,7 @@ _ReSharper*/
           <Value>Прервать патч</Value>
         </TranslationItem>
         <TranslationItem Name="Resolved" Property="Text">
-          <Value>Конфлиткы решены</Value>
+          <Value>Конфлиты решены</Value>
         </TranslationItem>
         <TranslationItem Name="AddFiles" Property="Text">
           <Value>Добавить файлы</Value>
@@ -2056,7 +2049,7 @@ _ReSharper*/
           <Value>Все</Value>
         </TranslationItem>
         <TranslationItem Name="saveCurrentChangesText" Property="Text">
-          <Value>Хотите сохранить текущие изменения ?</Value>
+          <Value>Хотите сохранить текущие изменения?</Value>
         </TranslationItem>
         <TranslationItem Name="saveCurrentChangesCaption" Property="Text">
           <Value>Сохранить изменения</Value>
@@ -2078,7 +2071,7 @@ _ReSharper*/
           <Value>Сообщение</Value>
         </TranslationItem>
         <TranslationItem Name="_currentWorkingDirChanges" Property="Text">
-          <Value>Текущие незкомиченные изменения</Value>
+          <Value>Текущие незакоммиченные изменения</Value>
         </TranslationItem>
         <TranslationItem Name="_secondsAgo" Property="Text">
           <Value>{0} секунд назад</Value>
@@ -2159,7 +2152,7 @@ _ReSharper*/
           <Value>Показывать отфильтрованные ветки</Value>
         </TranslationItem>
         <TranslationItem Name="drawNonrelativesGrayToolStripMenuItem" Property="Text">
-          <Value>Рисовать не родственные ветки серыми</Value>
+          <Value>Рисовать неродственные ветки серыми</Value>
         </TranslationItem>
         <TranslationItem Name="copyToClipboardToolStripMenuItem" Property="Text">
           <Value>Копировать в буфер</Value>
@@ -2380,7 +2373,7 @@ _ReSharper*/
           <Value>Коммит:</Value>
         </TranslationItem>
         <TranslationItem Name="BranchInfo" Property="Text">
-          <Value>Cherry pick этот коммит:</Value>
+          <Value>Скопировать этот коммит:</Value>
         </TranslationItem>
         <TranslationItem Name="Pick" Property="Text">
           <Value>Выбрать этот коммит:</Value>
@@ -2401,7 +2394,7 @@ _ReSharper*/
           <Value>Дата</Value>
         </TranslationItem>
         <TranslationItem Name="ParentsLabel" Property="Text">
-          <Value>Этот коммит является мержем, выберите родителя:</Value>
+          <Value>Этот коммит является результатом слияния, выберите родителя:</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2424,7 +2417,7 @@ _ReSharper*/
           <Value>Создать ветку</Value>
         </TranslationItem>
         <TranslationItem Name="CheckoutAfterCreate" Property="Text">
-          <Value>Переключится после создания</Value>
+          <Value>Переключиться после создания</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2469,7 +2462,7 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="_deleteBranchQuestion" Property="Text">
           <Value>Вы точно хотите удалить ветку?
-Удаление ветки также приведет к удалению коммитов!</Value>
+Удаление ветки также приведет к удалению коммитов, которые есть только в этой ветке!</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Value>Удалить</Value>
@@ -2478,9 +2471,10 @@ _ReSharper*/
           <Value>Выберите ветку</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
-          <Value>Удалять можно только полностью слитую в HEAD.
-Если Вы удалите ветку, то коммиты могут быть потеряны, потому что на них ничего не ссылается.
-Если же Вы хотите удалить такую ветку, то следует указать опцию `force delete´.</Value>
+          <Value>Удалять можно только полностью слитую ветку,
+иначе оставшиеся без ссылок коммиты будут потеряны.
+Чтобы принудительно удалить неполностью слитую ветку,
+установите режим "Принудительное удаление".</Value>
         </TranslationItem>
         <TranslationItem Name="ForceDelete" Property="Text">
           <Value>Принудительное удаление</Value>
