@@ -87,6 +87,12 @@ namespace GitUI
         private int visibleBottom;
         private int visibleTop;
 
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            if (!Focused)
+                Focus();
+        }
+
         public void SetDimensions(int node_dimension, int lane_width, int lane_line_width, int row_height, Brush selectionBrush)
         {
             RowTemplate.Height = row_height;
@@ -265,6 +271,16 @@ namespace GitUI
         public void ShowHideRevisionGraph(bool show)
         {
             Columns[0].Visible = show;
+//            updateData();
+            backgroundEvent.Set();
+        }
+
+        public bool RevisionGraphVisible
+        {
+            get
+            {
+                return Columns[0].Visible;
+            }
         }
 
         public void Add(IComparable aId, IComparable[] aParentIds, DataType aType, object aData)
@@ -509,37 +525,43 @@ namespace GitUI
                         graphDataCount = graphData.CachedCount;
                     }
 
-                    while (curCount < scrollTo)
+                    if (!RevisionGraphVisible)//do nothing... do not cache, the graph is invisible
                     {
-                        lock (graphData)
-                        {
-                            // Cache the next item
-                            if (!graphData.CacheTo(curCount))
-                            {
-                                Console.WriteLine("Cached item FAILED {0}", curCount);
-                                lock (backgroundThread)
-                                {
-                                    backgroundScrollTo = curCount;
-                                }
-                                break;
-                            }
-
-                            // Update the row (if needed)
-                            if (curCount < visibleBottom || toBeSelected.Count > 0)
-                            {
-                                syncContext.Post(o => updateRow((int)o), curCount);
-                            }
-
-                            if (curCount ==
-                                (FirstDisplayedCell == null ? 0 : FirstDisplayedCell.RowIndex + DisplayedRowCount(true)))
-                            {
-                                syncContext.Post(state1 => updateColumnWidth(), null);
-                            }
-
-                            curCount = graphData.CachedCount;
-                            graphDataCount = curCount;
-                        }
+                        syncContext.Post(o => updateRow((int)o), curCount);
+                        Thread.Sleep(100);
                     }
+                    else
+                        while (curCount < scrollTo)
+                        {
+                            lock (graphData)
+                            {
+                                // Cache the next item
+                                if (!graphData.CacheTo(curCount))
+                                {
+                                    Console.WriteLine("Cached item FAILED {0}", curCount);
+                                    lock (backgroundThread)
+                                    {
+                                        backgroundScrollTo = curCount;
+                                    }
+                                    break;
+                                }
+
+                                // Update the row (if needed)
+                                if (curCount < visibleBottom || toBeSelected.Count > 0)
+                                {
+                                    syncContext.Post(o => updateRow((int)o), curCount);
+                                }
+
+                                if (curCount ==
+                                    (FirstDisplayedCell == null ? 0 : FirstDisplayedCell.RowIndex + DisplayedRowCount(true)))
+                                {
+                                    syncContext.Post(state1 => updateColumnWidth(), null);
+                                }
+
+                                curCount = graphData.CachedCount;
+                                graphDataCount = curCount;
+                            }
+                        }
 
                     lock (backgroundThread)
                     {
@@ -867,57 +889,57 @@ namespace GitUI
                     return CreateRectangle(aNeededRow, width);
                 }
 
-
-                for (int rowIndex = start; rowIndex < end; rowIndex++)
-                {
-                    Graph.LaneRow row = graphData[rowIndex];
-                    if (row == null)
+                if (RevisionGraphVisible)
+                    for (int rowIndex = start; rowIndex < end; rowIndex++)
                     {
-                        // This shouldn't be happening...If it does, clear the cache so we
-                        // eventually pick it up.
-                        Console.WriteLine("Draw lane {0} {1}", rowIndex, "NO DATA");
-                        clearDrawCache();
-                        return Rectangle.Empty;
-                    }
+                        Graph.LaneRow row = graphData[rowIndex];
+                        if (row == null)
+                        {
+                            // This shouldn't be happening...If it does, clear the cache so we
+                            // eventually pick it up.
+                            Console.WriteLine("Draw lane {0} {1}", rowIndex, "NO DATA");
+                            clearDrawCache();
+                            return Rectangle.Empty;
+                        }
 
-                    Region oldClip = graphWorkArea.Clip;
+                        Region oldClip = graphWorkArea.Clip;
 
-                    // Get the x,y value of the current item's upper left in the cache
-                    int curCacheRow = (cacheHeadRow + rowIndex - cacheHead) % cacheCountMax;
-                    int x = 0;
-                    int y = curCacheRow * rowHeight;
+                        // Get the x,y value of the current item's upper left in the cache
+                        int curCacheRow = (cacheHeadRow + rowIndex - cacheHead) % cacheCountMax;
+                        int x = 0;
+                        int y = curCacheRow * rowHeight;
 
-                    var laneRect = new Rectangle(0, y, Width, rowHeight);
-                    if (rowIndex == start || curCacheRow == 0)
-                    {
-                        // Draw previous row first. Clip top to row. We also need to clear the area
-                        // before we draw since nothing else would clear the top 1/2 of the item to draw.
-                        graphWorkArea.RenderingOrigin = new Point(x, y - rowHeight);
-                        var newClip = new Region(laneRect);
-                        graphWorkArea.Clip = newClip;
-                        graphWorkArea.Clear(Color.Transparent);
-                        drawItem(graphWorkArea, graphData[rowIndex - 1]);
+                        var laneRect = new Rectangle(0, y, Width, rowHeight);
+                        if (rowIndex == start || curCacheRow == 0)
+                        {
+                            // Draw previous row first. Clip top to row. We also need to clear the area
+                            // before we draw since nothing else would clear the top 1/2 of the item to draw.
+                            graphWorkArea.RenderingOrigin = new Point(x, y - rowHeight);
+                            var newClip = new Region(laneRect);
+                            graphWorkArea.Clip = newClip;
+                            graphWorkArea.Clear(Color.Transparent);
+                            drawItem(graphWorkArea, graphData[rowIndex - 1]);
+                            graphWorkArea.Clip = oldClip;
+                        }
+
+                        bool isLast = (rowIndex == end - 1);
+                        if (isLast)
+                        {
+                            var newClip = new Region(laneRect);
+                            graphWorkArea.Clip = newClip;
+                        }
+
+                        graphWorkArea.RenderingOrigin = new Point(x, y);
+                        bool success = drawItem(graphWorkArea, row);
+
                         graphWorkArea.Clip = oldClip;
+
+                        if (!success)
+                        {
+                            clearDrawCache();
+                            return Rectangle.Empty;
+                        }
                     }
-
-                    bool isLast = (rowIndex == end - 1);
-                    if (isLast)
-                    {
-                        var newClip = new Region(laneRect);
-                        graphWorkArea.Clip = newClip;
-                    }
-
-                    graphWorkArea.RenderingOrigin = new Point(x, y);
-                    bool success = drawItem(graphWorkArea, row);
-
-                    graphWorkArea.Clip = oldClip;
-
-                    if (!success)
-                    {
-                        clearDrawCache();
-                        return Rectangle.Empty;
-                    }
-                }
 
                 return CreateRectangle(aNeededRow, width);
             } // end lock
@@ -962,7 +984,7 @@ namespace GitUI
                     for (int item = 0; item < row.LaneInfoCount(lane); item++)
                     {
                         Graph.LaneInfo laneInfo = row[lane, item];
-                        
+
                         //Draw all non-relative items first, them draw
                         //all relative items on top
                         if (laneInfo.Junctions.FirstOrDefault() != null)
@@ -1412,8 +1434,8 @@ namespace GitUI
             public Node[] TopoSortedNodes()
             {
                 //http://en.wikipedia.org/wiki/Topological_ordering
-                //L ← Empty list that will contain the sorted nodes
-                //S ← Set of all nodes with no incoming edges
+                //L ? Empty list that will contain the sorted nodes
+                //S ? Set of all nodes with no incoming edges
 
                 //function visit(node n)
                 //    if n has not been visited yet then
@@ -1805,6 +1827,7 @@ namespace GitUI
 
             private bool MoveNext()
             {
+
                 // If there are no lanes, there is nothing more to draw
                 if (laneNodes.Count == 0 || sourceGraph.Count <= laneRows.Count)
                 {
@@ -1832,6 +1855,7 @@ namespace GitUI
                     {
                         currentRow.Node = lane.Current;
                         currentRow.NodeLane = curLane;
+                        //break;
                     }
                 }
                 if (currentRow.Node == null)
@@ -1897,34 +1921,36 @@ namespace GitUI
                 #region Straighten out lanes
 
                 // Look for crossing lanes
-                for (int lane = 0; lane < currentRow.Count; lane++)
-                {
-                    for (int item = 0; item < currentRow.LaneInfoCount(lane); item++)
+                //   but only when there are not too many lanes taking up too much performance
+                if (currentRow.Count < 10)
+                    for (int lane = 0; lane < currentRow.Count; lane++)
                     {
-                        Graph.LaneInfo laneInfo = currentRow[lane, item];
-                        if (laneInfo.ConnectLane <= lane)
+                        for (int item = 0; item < currentRow.LaneInfoCount(lane); item++)
                         {
-                            continue;
-                        }
-                        // Lane is moving to the right, check to see if it intersects
-                        // with any lanes moving to the left.
-                        for (int otherLane = lane + 1; otherLane <= laneInfo.ConnectLane; otherLane++)
-                        {
-                            if (currentRow.LaneInfoCount(otherLane) != 1)
+                            Graph.LaneInfo laneInfo = currentRow[lane, item];
+                            if (laneInfo.ConnectLane <= lane)
                             {
                                 continue;
                             }
-                            Graph.LaneInfo otherLaneInfo = currentRow[otherLane, 0];
-                            if (otherLaneInfo.ConnectLane < otherLane)
+                            // Lane is moving to the right, check to see if it intersects
+                            // with any lanes moving to the left.
+                            for (int otherLane = lane + 1; otherLane <= laneInfo.ConnectLane; otherLane++)
                             {
-                                currentRow.Swap(otherLaneInfo.ConnectLane, otherLane);
-                                LaneJunctionDetail temp = laneNodes[otherLane];
-                                laneNodes[otherLane] = laneNodes[otherLaneInfo.ConnectLane];
-                                laneNodes[otherLaneInfo.ConnectLane] = temp;
+                                if (currentRow.LaneInfoCount(otherLane) != 1)
+                                {
+                                    continue;
+                                }
+                                Graph.LaneInfo otherLaneInfo = currentRow[otherLane, 0];
+                                if (otherLaneInfo.ConnectLane < otherLane)
+                                {
+                                    currentRow.Swap(otherLaneInfo.ConnectLane, otherLane);
+                                    LaneJunctionDetail temp = laneNodes[otherLane];
+                                    laneNodes[otherLane] = laneNodes[otherLaneInfo.ConnectLane];
+                                    laneNodes[otherLaneInfo.ConnectLane] = temp;
+                                }
                             }
                         }
                     }
-                }
 
                 //// Keep the merge lanes next to each other
                 //int mergeFromCount = currentRow.LaneInfoCount(currentRow.NodeLane);

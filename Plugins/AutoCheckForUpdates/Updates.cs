@@ -14,7 +14,7 @@ namespace AutoCheckForUpdates
         public string CurrentVersion;
         public bool UpdateFound;
         public string UpdateUrl;
-        private const string FilesUrl = "http://gitextensions.googlecode.com/files/GitExtensions";
+        private const string FilesUrl = "gitextensions.googlecode.com/files/GitExtensions";
         private readonly SynchronizationContext syncContext;
 
         public Updates(string currentVersion)
@@ -78,7 +78,7 @@ namespace AutoCheckForUpdates
                             continue;
 
                         UpdateFound = true;
-                        UpdateUrl = match.Value;
+                        UpdateUrl = "http://" + match.Value;
                         Done();
                         return;
                     }

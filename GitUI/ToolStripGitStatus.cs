@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
@@ -9,24 +10,35 @@ using GitUIPluginInterfaces;
 
 namespace GitUI
 {
-    public partial class ToolStripGitStatus : ToolStripMenuItem
+    public sealed partial class ToolStripGitStatus : ToolStripMenuItem
     {
         private static readonly Bitmap ICON_CLEAN = Properties.Resources._81;
         private static readonly Bitmap ICON_DIRTY = Properties.Resources._82;
         private static readonly Bitmap ICON_STAGED = Properties.Resources._83;
         private static readonly Bitmap ICON_MIXED = Properties.Resources._84;
 
-        // We often change several files at once. Wait a second so they're all changed
-        // before we try to get the status
-        private const int UPDATE_DELAY = 1000;
+        /// <summary>
+        /// We often change several files at once.
+        /// Wait a second so they're all changed before we try to get the status.
+        /// </summary>
+        private const int UpdateDelay = 1000;
 
-        // Update every 5min, just to make sure something didn't slip through the cracks.
-        private const int MAX_UPDATE_PERIOD = 5 * 60 * 1000;
+        /// <summary>
+        /// Update every 5min, just to make sure something didn't slip through the cracks.
+        /// </summary>
+        private const int MaxUpdatePeriod = 5 * 60 * 1000;
+
+        /// <summary>
+        /// Paths to be ignored on filesystem changes watching.
+        /// </summary>
+        private static readonly string[] IgnoredPaths = new[] { @"\.git", @"\.git\index.lock" };
 
         private GitCommandsInstance gitGetUnstagedCommand = new GitCommandsInstance();
         private readonly SynchronizationContext syncContext;
         private readonly FileSystemWatcher watcher = new FileSystemWatcher();
-        private int nextUpdate;
+        private int nextUpdateTime;
+        private WorkingStatus currentStatus;
+        private bool hasDeferredUpdateRequests;
 
         public ToolStripGitStatus()
         {
@@ -35,7 +47,7 @@ namespace GitUI
 
             InitializeComponent();
 
-            Settings.WorkingDirChanged += Settings_WorkingDirChanged;
+            Settings.WorkingDirChanged += (_, newDir) => TryStartWatchingChanges(newDir);
 
             GitUICommands.Instance.PreCheckoutBranch += GitUICommands_PreCheckout;
             GitUICommands.Instance.PreCheckoutRevision += GitUICommands_PreCheckout;
@@ -50,52 +62,37 @@ namespace GitUI
             watcher.Error += watcher_Error;
             watcher.IncludeSubdirectories = true;
 
-            try
-            {
-                watcher.Path = Settings.WorkingDir;
-                watcher.EnableRaisingEvents = true;
-            }
-            catch { }
-            update();
+            TryStartWatchingChanges(Settings.WorkingDir);
         }
 
 
         private void GitUICommands_PreCheckout(object sender, GitUIBaseEventArgs e)
         {
-            Pause();
+            CurrentStatus = WorkingStatus.Paused;
         }
 
         private void GitUICommands_PostCheckout(object sender, GitUIBaseEventArgs e)
         {
-            Resume();
+            CurrentStatus = WorkingStatus.Started;
         }
 
-        private void Pause()
+        private void TryStartWatchingChanges(string watchingPath)
         {
-            timerRefresh.Stop();
-        }
+            // reset status info, it was outdated
+            Text = string.Empty;
+            Image = null;
 
-        private void Resume()
-        {
-            timerRefresh.Start();
-        }
-
-        void Settings_WorkingDirChanged(string oldDir, string newDir)
-        {
             try
             {
-                if (Directory.Exists(newDir))
+                if (!string.IsNullOrEmpty(watchingPath) && Directory.Exists(watchingPath))
                 {
-                    watcher.Path = newDir;
-                    watcher.EnableRaisingEvents = true;
+                    watcher.Path = watchingPath;
+                    CurrentStatus = WorkingStatus.Started;
                 }
                 else
                 {
-                    watcher.EnableRaisingEvents = false;
+                    CurrentStatus = WorkingStatus.Stopped;
                 }
-
-
-                nextUpdate = Math.Min(nextUpdate, Environment.TickCount + UPDATE_DELAY);
             }
             catch { }
         }
@@ -104,44 +101,55 @@ namespace GitUI
         // it's going to be called by the GC!
         private void watcher_Error(object sender, ErrorEventArgs e)
         {
-            nextUpdate = Math.Min(nextUpdate, Environment.TickCount + UPDATE_DELAY);
+            ScheduleNextRegularUpdate();
         }
 
         private void watcher_Changed(object sender, FileSystemEventArgs e)
         {
-            nextUpdate = Math.Min(nextUpdate, Environment.TickCount + UPDATE_DELAY);
+            var isGitSelfChange = IgnoredPaths.Any(path => e.FullPath.EndsWith(path));
+            if (isGitSelfChange)
+                return;
+
+            ScheduleNextRegularUpdate();
         }
 
         private void timerRefresh_Tick(object sender, EventArgs e)
         {
-            update();
+            Update();
         }
 
-        private void update()
+        private void Update()
         {
             // If the previous status call hasn't exited yet, we'll wait until it is
-            // so we don't queue up a bunch of commands.
+            // so we don't queue up a bunch of commands
             if (gitGetUnstagedCommand.IsRunning)
             {
+                hasDeferredUpdateRequests = true; // defer this update request
                 return;
             }
 
-            if (Environment.TickCount > nextUpdate)
+            hasDeferredUpdateRequests = false;
+
+            if (Environment.TickCount > nextUpdateTime)
             {
                 string command = GitCommandHelpers.GetAllChangedFilesCmd(true, true);
                 gitGetUnstagedCommand.CmdStartProcess(Settings.GitCommand, command);
 
-                // Always update every 5 min, even if we don't know anything changed
-                nextUpdate = Environment.TickCount + MAX_UPDATE_PERIOD;
+                if (hasDeferredUpdateRequests)
+                    // New changes were detected while processing previous changes, schedule deferred update
+                    ScheduleDeferredUpdate();
+                else
+                    // Always update every 5 min, even if we don't know anything changed
+                    ScheduleNextJustInCaseUpdate();
             }
         }
 
         private void onData()
         {
-            List<GitItemStatus> unstaged = GitCommandHelpers.GetAllChangedFilesFromString
-                (
-                gitGetUnstagedCommand.Output.ToString()
-                );
+            if (CurrentStatus != WorkingStatus.Started)
+                return;
+
+            List<GitItemStatus> unstaged = GitCommandHelpers.GetAllChangedFilesFromString(gitGetUnstagedCommand.Output.ToString());
             List<GitItemStatus> staged = GitCommandHelpers.GetStagedFiles();
 
             if (staged.Count == 0 && unstaged.Count == 0)
@@ -166,6 +174,64 @@ namespace GitUI
             }
 
             Text = string.Format("{0} changes", staged.Count + unstaged.Count);
+        }
+
+        private void ScheduleNextRegularUpdate()
+        {
+            nextUpdateTime = Math.Min(nextUpdateTime, Environment.TickCount + UpdateDelay);
+            hasDeferredUpdateRequests = true;
+        }
+
+        private void ScheduleNextJustInCaseUpdate()
+        {
+            nextUpdateTime = Environment.TickCount + MaxUpdatePeriod;
+        }
+
+        private void ScheduleDeferredUpdate()
+        {
+            nextUpdateTime = Environment.TickCount + UpdateDelay;
+        }
+
+        private void ScheduleImmediateUpdate()
+        {
+            nextUpdateTime = 0;
+            Update();
+        }
+
+        private WorkingStatus CurrentStatus
+        {
+            get { return currentStatus; }
+            set
+            {
+                currentStatus = value;
+                switch (currentStatus)
+                {
+                    case WorkingStatus.Stopped:
+                        timerRefresh.Stop();
+                        watcher.EnableRaisingEvents = false;
+                        Visible = false;
+                        return;
+                    case WorkingStatus.Paused:
+                        timerRefresh.Stop();
+                        watcher.EnableRaisingEvents = false;
+                        return;
+                    case WorkingStatus.Started:
+                        timerRefresh.Start();
+                        watcher.EnableRaisingEvents = true;
+                        ScheduleImmediateUpdate();
+                        Visible = true;
+                        return;
+                    default:
+                        throw new NotSupportedException();
+                }
+            }
+        }
+
+        private enum WorkingStatus
+        {
+            Stopped,
+            Paused,
+            Started
         }
     }
 }

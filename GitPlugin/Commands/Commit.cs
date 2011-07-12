@@ -1,28 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using EnvDTE;
 using GitPlugin.Git;
-using System.IO;
-using System.Threading;
 
 namespace GitPlugin.Commands
 {
-    public class Commit : ItemCommandBase
+    public sealed class Commit : ItemCommandBase
     {
         private static DateTime lastBranchCheck;
         private static string lastFile;
-        private static bool? showCurrentBranch;
+        private static bool showCurrentBranch;
 
         public Commit()
-            : base(true, true)
         {
-            if (lastBranchCheck == null)
-                lastBranchCheck = DateTime.MinValue;
             if (lastFile == null)
                 lastFile = string.Empty;
-            if (showCurrentBranch == null)
-                showCurrentBranch = GitCommands.GetShowCurrentBranchSetting();
+            showCurrentBranch = GitCommands.GetShowCurrentBranchSetting();
         }
 
         public override bool IsEnabled(EnvDTE80.DTE2 application)
@@ -31,11 +23,24 @@ namespace GitPlugin.Commands
 
             string fileName = GetSelectedFile(application);
 
-            if (showCurrentBranch != null && lastBranchCheck != null && showCurrentBranch.Value && (fileName != lastFile || DateTime.Now - lastBranchCheck > new TimeSpan(0, 0, 0, 1, 0)))
+            if (showCurrentBranch && (fileName != lastFile || DateTime.Now - lastBranchCheck > new TimeSpan(0, 0, 0, 1, 0)))
             {
                 if (enabled)
                 {
-                    Plugin.ChangeCommandCaption(application, "GitExtensions", "Commit changes", "Commit" + GitCommands.GetCurrentBranch(fileName));
+                    string head = GitCommands.GetCurrentBranch(fileName);
+                    if (!string.IsNullOrEmpty(head))
+                    {
+                        string headShort;
+                        if (head.Length > 27)
+                            headShort = "..." + head.Substring(head.Length - 23);
+                        else
+                            headShort = head;
+                        Plugin.ChangeCommandCaption(application, "GitExtensions", "Commit changes", "Commit (" + headShort + ")");
+                    }
+                    else
+                    {
+                        Plugin.ChangeCommandCaption(application, "GitExtensions", "Commit changes", "Commit");
+                    }
                 }
                 else
                 {
@@ -49,13 +54,19 @@ namespace GitPlugin.Commands
             return enabled;
         }
 
-        public override void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane)
+        protected override void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane)
         {
             const string saveAllCommandName = "File.SaveAll";
 
-            item.DTE.ExecuteCommand(saveAllCommandName);
+            item.DTE.ExecuteCommand(saveAllCommandName, string.Empty);
             RunGitEx("commit", fileName);
         }
+
+        protected override CommandTarget SupportedTargets
+        {
+            get { return CommandTarget.SolutionExplorerFileItem; }
+        }
+
         private static string GetSelectedFile(EnvDTE80.DTE2 application)
         {
             if (application.SelectedItems.Count == 0)
@@ -65,22 +76,9 @@ namespace GitPlugin.Commands
             {
                 if (sel.ProjectItem != null)
                 {
-                    //The try catch block belowe fixed issue 57:
-                    //http://github.com/spdr870/gitextensions/issues/#issue/57
-                    try
+                    if (sel.ProjectItem.FileCount > 0)
                     {
-                        return sel.ProjectItem.get_FileNames(0);
-                    }
-                    catch (ArgumentException)
-                    {
-                        if (sel.ProjectItem.FileCount > 0)
-                        {
-                            return sel.ProjectItem.get_FileNames(1);
-                        }
-                        else
-                        {
-                            //ignore!
-                        }
+                        return sel.ProjectItem.FileNames[1];
                     }
                 }
                 else

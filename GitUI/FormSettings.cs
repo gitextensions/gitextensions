@@ -126,6 +126,8 @@ namespace GitUI
                 else if (Settings.Encoding == Encoding.Default)
                     _NO_TRANSLATE_Encoding.Text = "Default (" + Encoding.Default.HeaderName + ")";
 
+                usePatienceDiffAlgorithm.Checked = Settings.UsePatienceDiffAlgorithm;
+
                 showCurrentBranchInVisualStudio.Checked = Settings.ShowCurrentBranchInVisualStudio;
 
                 RevisionGridQuickSearchTimeout.Value = Settings.RevisionGridQuickSearchTimeout;
@@ -156,6 +158,7 @@ namespace GitUI
 
                 ShowGitStatusInToolbar.Checked = Settings.ShowGitStatusInBrowseToolbar;
 
+                _NO_TRANSLATE_truncatePathMethod.Text = Settings.TruncatePathMethod;
                 _NO_TRANSLATE_ColorGraphLabel.BackColor = Settings.GraphColor;
                 _NO_TRANSLATE_ColorGraphLabel.Text = Settings.GraphColor.Name;
                 _NO_TRANSLATE_ColorGraphLabel.ForeColor =
@@ -365,6 +368,10 @@ namespace GitUI
             }
 
             GitCommandHelpers.SetEnvironmentVariable(true);
+
+            Settings.UsePatienceDiffAlgorithm = usePatienceDiffAlgorithm.Checked;
+
+            Settings.TruncatePathMethod = _NO_TRANSLATE_truncatePathMethod.Text;
 
             Settings.ShowCurrentBranchInVisualStudio = showCurrentBranchInVisualStudio.Checked;
 
@@ -1578,6 +1585,9 @@ namespace GitUI
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if(((TabControl)sender).TabPages[((TabControl)sender).SelectedIndex].Name.ToLower() == "tabpagehotkeys")
+                controlHotkeys.ReloadSettings();
+
             if (GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
                 string.IsNullOrEmpty(MergeToolCmd.Text))
                 MergeToolCmd.Enabled = false;
@@ -2060,6 +2070,7 @@ namespace GitUI
             if (ScriptList.SelectedRows.Count > 0)
             {
                 ScriptInfo selectedScriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
+                selectedScriptInfo.HotkeyCommandIdentifier = ScriptList.SelectedRows[0].Index+9000;
                 selectedScriptInfo.Name = nameTextBox.Text;
                 selectedScriptInfo.Command = commandTextBox.Text;
                 selectedScriptInfo.Arguments = argumentsTextBox.Text;
@@ -2168,5 +2179,32 @@ namespace GitUI
         {
             ScriptList_SelectionChanged(null, null);//needed for linux
         }
+
+
+
+        #region Hotkey commands
+
+        public const string HotkeySettingsName = "Scripts";
+
+        internal enum Commands : int
+        {
+            NothingYet
+        }
+
+        protected override bool ExecuteCommand(int cmd)
+        {
+            
+            Commands command = (Commands)cmd;
+
+            switch (command)
+            {
+                default: ExecuteScriptCommand(cmd, Keys.None); break;
+            }
+            return true;
+        }
+
+        #endregion
+
+
     }
 }

@@ -16,6 +16,8 @@ using System.Threading;
 using GitUI.Hotkey;
 using System.Drawing;
 using System.Collections.Specialized;
+using Microsoft.WindowsAPICodePack.Taskbar;
+using GitUI.Script;
 
 namespace GitUI
 {
@@ -28,6 +30,11 @@ namespace GitUI
         private ToolStripItem _rebase;
         private ToolStripItem _bisect;
         private ToolStripItem _warning;
+
+        private ThumbnailToolBarButton _commitButton;
+        private ThumbnailToolBarButton _pushButton;
+        private ThumbnailToolBarButton _pullButton;
+        private bool _toolbarButtonsCreated;
 
         public FormBrowse(string filter)
         {
@@ -224,10 +231,188 @@ namespace GitUI
             _NO_TRANSLATE_Workingdir.Text = Settings.WorkingDir;
             Text = GenerateWindowTitle(Settings.WorkingDir, validWorkingDir);
 
+
+            UpdateJumplist(validWorkingDir);
+
+
             CheckForMergeConflicts();
             UpdateStashCount();
 
+            // load custom user menu
+            LoadUserMenu();
             Cursor.Current = Cursors.Default;
+        }
+
+        /// <summary>
+        /// Returns a short name for repository. 
+        /// If the repository contains a description it is returned,
+        /// otherwise the last part of path is returned.
+        /// </summary>
+        /// <param name="repositoryDir">Path to repository.</param>
+        /// <returns>Short name for repository</returns>
+        private static String GetRepositoryShortName(string repositoryDir)
+        {
+            DirectoryInfo dirInfo = new DirectoryInfo(repositoryDir);
+            if (dirInfo.Exists)
+                return ReadRepositoryDescription(repositoryDir) ?? dirInfo.Name;
+            else
+                return dirInfo.Name;
+        }
+
+        private void LoadUserMenu()
+        {
+            //menu strip must be visible to be able to move it
+            this.UserMenuToolStrip.Show();
+            if( GitCommands.Settings.UserMenuLocationX >= 0 && GitCommands.Settings.UserMenuLocationY >= 0)
+            {
+                this.UserMenuToolStrip.Location = new Point(
+                                    GitCommands.Settings.UserMenuLocationX,
+                                    GitCommands.Settings.UserMenuLocationY
+                                    );
+            }
+            // just hide the damn thing already!
+            this.UserMenuToolStrip.Hide();
+            this.UserMenuToolStrip.Items.Clear();
+            // disable context menu if no scripts are found/enabled
+            this.toolPanelContextMenu.Enabled = false;
+
+            foreach (ScriptInfo scriptInfo in ScriptManager.GetScripts())
+            {
+                if (scriptInfo.Enabled && scriptInfo.OnEvent == ScriptEvent.ShowInUserMenuBar)
+                {
+
+                    ToolStripButton tempButton = new ToolStripButton();
+                    tempButton.Text = scriptInfo.Name;
+                    //store scriptname
+                    tempButton.Tag = scriptInfo.Name;
+                    //add handler
+                    tempButton.Click += new EventHandler(UserMenu_Click);
+                    tempButton.Enabled = true;
+                    tempButton.Visible = true;
+                    tempButton.Image = GitUI.Properties.Resources.bug;
+                    tempButton.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
+                    //add to toolstrip
+                    this.UserMenuToolStrip.Items.Add((ToolStripItem)tempButton);
+                    //set visible
+                    this.UserMenuToolStrip.Show();
+                    // enable context menu
+                    this.toolPanelContextMenu.Enabled = true;
+                    this.toolPanelContextMenu_HideUserMenu.Checked = false;
+                }
+            }
+        }
+
+        void UserMenu_Click(object sender, EventArgs e)
+        {
+            ScriptRunner.RunScript(( (ToolStripButton) sender).Tag.ToString(), null);
+        }
+
+        private void UpdateJumplist(bool validWorkingDir)
+        {
+            if (Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+            {
+                //Call this method using reflection.  This is a workaround to *not* reference WPF libraries, becuase of how the WindowsAPICodePack was implimented.  
+                TaskbarManager.Instance.GetType().InvokeMember("SetApplicationIdForSpecificWindow", System.Reflection.BindingFlags.InvokeMethod, null, TaskbarManager.Instance, new object[] { Handle, "GitExtensions" });
+            
+                if(validWorkingDir)
+                {
+                    string repositoryDescription = GetRepositoryShortName(Settings.WorkingDir);
+                    string baseFolder = Path.Combine(Settings.ApplicationDataPath, "Recent");
+                    if(!Directory.Exists(baseFolder))
+                    {
+                        Directory.CreateDirectory(baseFolder);
+                    }
+
+
+                    string path = Path.Combine(baseFolder, String.Format("{0}.{1}", repositoryDescription, "gitext"));
+                    File.WriteAllText(path, Settings.WorkingDir);
+                    JumpList.AddToRecent(path);
+                }
+
+                CreateOrUpdateTaskBarButtons(validWorkingDir);
+            }
+        }
+
+        private void CreateOrUpdateTaskBarButtons(bool validRepo)
+        {
+            if (Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+            {
+                if (!_toolbarButtonsCreated)
+                {
+                    _commitButton = new ThumbnailToolBarButton(MakeIcon(toolStripButton1.Image, 48, true), toolStripButton1.Text);
+                    _commitButton.Click += ToolStripButton1Click;
+
+                    _pushButton = new ThumbnailToolBarButton(MakeIcon(toolStripButtonPush.Image, 48, true), toolStripButtonPush.Text);
+                    _pushButton.Click += PushToolStripMenuItemClick;
+
+                    _pullButton = new ThumbnailToolBarButton(MakeIcon(toolStripButtonPull.Image, 48, true), toolStripButtonPull.Text);
+                    _pullButton.Click += PullToolStripMenuItemClick;
+
+                    _toolbarButtonsCreated = true;
+                    ThumbnailToolBarButton[] buttons = new[] { _commitButton, _pullButton, _pushButton };
+
+                    //Call this method using reflection.  This is a workaround to *not* reference WPF libraries, becuase of how the WindowsAPICodePack was implimented.
+                    TaskbarManager.Instance.ThumbnailToolBars.GetType().InvokeMember("AddButtons", System.Reflection.BindingFlags.InvokeMethod, null, TaskbarManager.Instance.ThumbnailToolBars,
+                                                                                     new object[] { Handle, buttons });
+                }
+
+                _commitButton.Enabled = validRepo;
+                _pushButton.Enabled = validRepo;
+                _pullButton.Enabled = validRepo;
+            }
+        }
+
+        /// <summary>
+        /// Converts an image into an icon.  This was taken off of the interwebs.
+        /// It's on a billion different sites and forum posts, so I would say its creative commons by now. -tekmaven
+        /// </summary>
+        /// <param name="img">The image that shall become an icon</param>
+        /// <param name="size">The width and height of the icon. Standard
+        /// sizes are 16x16, 32x32, 48x48, 64x64.</param>
+        /// <param name="keepAspectRatio">Whether the image should be squashed into a
+        /// square or whether whitespace should be put around it.</param>
+        /// <returns>An icon!!</returns>
+        private static Icon MakeIcon(Image img, int size, bool keepAspectRatio)
+        {
+            Bitmap square = new Bitmap(size, size); // create new bitmap
+            Graphics g = Graphics.FromImage(square); // allow drawing to it
+
+            int x, y, w, h; // dimensions for new image
+
+            if (!keepAspectRatio || img.Height == img.Width)
+            {
+                // just fill the square
+                x = y = 0; // set x and y to 0
+                w = h = size; // set width and height to size
+            }
+            else
+            {
+                // work out the aspect ratio
+                float r = (float)img.Width / (float)img.Height;
+
+                // set dimensions accordingly to fit inside size^2 square
+                if (r > 1)
+                { // w is bigger, so divide h by r
+                    w = size;
+                    h = (int)((float)size / r);
+                    x = 0; y = (size - h) / 2; // center the image
+                }
+                else
+                { // h is bigger, so multiply w by r
+                    w = (int)((float)size * r);
+                    h = size;
+                    y = 0; x = (size - w) / 2; // center the image
+                }
+            }
+
+            // make the image shrink nicely by using HighQualityBicubic mode
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.DrawImage(img, x, y, w, h); // draw image with specified dimensions
+            g.Flush(); // make sure all drawing operations complete before we get the icon
+
+            // following line would work directly on any image, but then
+            // it wouldn't look as nice.
+            return Icon.FromHandle(square.GetHicon());
         }
 
         private void UpdateStashCount()
@@ -333,7 +518,7 @@ namespace GitUI
 
             if (!isWorkingDirValid)
                 return defaultTitle;
-            string repositoryDescription = ReadRepositoryDescription(workingDir) ?? Directory.GetParent(workingDir).Name;
+            string repositoryDescription = GetRepositoryShortName(workingDir);
             return string.Format(repositoryTitleFormat, repositoryDescription);
         }
 
@@ -938,7 +1123,14 @@ namespace GitUI
 
         private void FormBrowseFormClosing(object sender, FormClosingEventArgs e)
         {
+            SaveUserMenuPosition();
             SavePosition("browse");
+        }
+
+        private void SaveUserMenuPosition()
+        {
+            GitCommands.Settings.UserMenuLocationX = this.UserMenuToolStrip.Location.X;
+            GitCommands.Settings.UserMenuLocationY = this.UserMenuToolStrip.Location.Y;
         }
 
         private void EditGitignoreToolStripMenuItem1Click(object sender, EventArgs e)
@@ -1828,7 +2020,7 @@ namespace GitUI
             new FormProcess(GitCommandHelpers.FetchCmd(string.Empty, string.Empty, string.Empty)).ShowDialog();
             Initialize();
         }
-
+        
         protected override bool ExecuteCommand(int cmd)
         {
             Commands command = (Commands)cmd;
@@ -1849,6 +2041,7 @@ namespace GitUI
                 case Commands.CheckoutBranch: CheckoutBranchToolStripMenuItemClick(null, null); break;
                 case Commands.QuickFetch: QuickFetch(); break;
                 case Commands.QuickPush: GitUICommands.Instance.StartPushDialog(true); break;
+                default: ExecuteScriptCommand(cmd, Keys.None); break;
             }
 
             return true;
@@ -1921,6 +2114,11 @@ namespace GitUI
 
         void GitTree_MouseMove(object sender, MouseEventArgs e)
         {
+            TreeView gitTree = (TreeView) sender;
+
+            if (!gitTree.Focused)
+                gitTree.Focus();
+
             //DRAG
             // If the mouse moves outside the rectangle, start the drag.
             if (gitTreeDragBoxFromMouseDown != Rectangle.Empty &&
@@ -1929,9 +2127,9 @@ namespace GitUI
                 StringCollection fileList = new StringCollection();
 
                 //foreach (GitItemStatus item in SelectedItems)
-                if (GitTree.SelectedNode != null)
+                if (gitTree.SelectedNode != null)
                 {
-                    GitItem item = GitTree.SelectedNode.Tag as GitItem;
+                    GitItem item = gitTree.SelectedNode.Tag as GitItem;
                     if (item != null)
                     {
                         string fileName = GitCommands.Settings.WorkingDir + item.FileName;
@@ -1949,5 +2147,19 @@ namespace GitUI
             }
         }
         #endregion
+
+        private void toolPanelContextMenu_HideUserMenu_Click(object sender, EventArgs e)
+        {
+            if (((ToolStripMenuItem)sender).Checked)
+            {
+                this.UserMenuToolStrip.Show();
+                ((ToolStripMenuItem)sender).Checked = false;
+            }
+            else
+            {
+                this.UserMenuToolStrip.Hide();
+                ((ToolStripMenuItem)sender).Checked = true;
+            }
+        }
     }
 }

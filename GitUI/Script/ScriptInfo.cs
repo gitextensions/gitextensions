@@ -13,7 +13,8 @@ namespace GitUI.Script
         BeforePull,
         AfterPull,
         BeforePush,
-        AfterPush
+        AfterPush,
+        ShowInUserMenuBar
     }
 
     public class ScriptInfo
@@ -36,5 +37,7 @@ namespace GitUI.Script
         public ScriptEvent OnEvent { get; set; }
 
         public bool AskConfirmation { get; set; }
+
+        public int HotkeyCommandIdentifier { get; set; }
     }
 }
