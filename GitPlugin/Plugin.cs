@@ -1,6 +1,7 @@
 // Copyright (C) 2006-2008 Jim Tilander. See COPYING for and README for more details.
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.CommandBars;
@@ -44,46 +45,39 @@ namespace GitPlugin.Commands
 
         public void RegisterCommand(string commandName, CommandBase command)
         {
+            if (commandName.IndexOf('.') >= 0)
+                throw new ArgumentException("Command name cannot contain dot symbol.", "commandName");
             if (!m_commands.ContainsKey(commandName))
                 m_commands.Add(commandName, command);
         }
 
         public bool CanHandleCommand(string commandName)
         {
-            // TODO: Gotta be a better way to do this... std::find anyone?
-            foreach (string key in m_commands.Keys)
-            {
-                if (commandName.EndsWith("." + key))
-                    return true;
-            }
-
-            return false;
+            return TryGetCommand(commandName) != null;
         }
 
         public bool IsCommandEnabled(string commandName)
         {
-            foreach (string key in m_commands.Keys)
-            {
-                if (commandName.EndsWith("." + key))
-                    return m_commands[key].IsEnabled(m_application);
-            }
-
-            return false;
+            var command = TryGetCommand(commandName);
+            return command != null && command.IsEnabled(m_application);
         }
 
-        public bool OnCommand(string name)
+        private CommandBase TryGetCommand(string commandName)
         {
-            // TODO: Gotta be a better way to do this... std::find anyone?
-            foreach (string key in m_commands.Keys)
-            {
-                if (name.EndsWith("." + key))
-                {
-                    m_commands[key].OnCommand(m_application, m_outputPane);
-                    return true;
-                }
-            }
+            var commandKey = commandName.Split('.').LastOrDefault();
+            if (commandKey == null)
+                return null;
+            CommandBase result;
+            return m_commands.TryGetValue(commandKey, out result) ? result : null;
+        }
 
-            return false;
+        public bool OnCommand(string commandName)
+        {
+            var command = TryGetCommand(commandName);
+            if (command == null)
+                return false;
+            command.OnCommand(m_application, m_outputPane);
+            return true;
         }
 
         private Command GetCommand(string commandName)
@@ -106,14 +100,10 @@ namespace GitPlugin.Commands
 
         private bool HasCommand(CommandBar commandBar, string caption)
         {
-            foreach (CommandBarControl control in commandBar.Controls)
-            {
-                if (control.Caption.Trim().Equals(caption.Trim(), StringComparison.CurrentCultureIgnoreCase))
-                {
-                    return true;
-                }
-            }
-            return false;
+            caption = caption.Trim();
+            return commandBar.Controls
+                .Cast<CommandBarControl>()
+                .Any(control => control.Caption.Trim().Equals(caption, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public static void ChangeCommandCaption(DTE2 application, string commandBarName, string tooltipText, string caption)
