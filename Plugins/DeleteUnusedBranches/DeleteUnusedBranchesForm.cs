@@ -47,6 +47,7 @@ namespace DeleteUnusedBranches
 
         private IEnumerable<string> GetObsoleteBranchNames()
         {
+            // TODO: skip current branch    
             return gitCommands.RunGit("branch --merged")
                 .Split('\n')
                 .Where(branchName => !string.IsNullOrEmpty(branchName))
