@@ -91,7 +91,10 @@ namespace GitUI.Hotkey
             {
                 for (int i = 0; i < hs.Commands.Length; i++)
                 {
-                    if (!UsedKeys.Contains(hs.Commands[i].KeyData)) UsedKeys.Add(hs.Commands[i].KeyData);
+                    HotkeyCommand hotkeyCommand = hs.Commands[i];
+                    
+                    if (hotkeyCommand != null && !UsedKeys.Contains(hotkeyCommand.KeyData)) 
+                        UsedKeys.Add(hotkeyCommand.KeyData);
                 }
             }
             //MessageBox.Show(UsedKeys.Count.ToString());
