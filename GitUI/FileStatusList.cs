@@ -25,6 +25,7 @@ namespace GitUI
             FileStatusListBox.Sorted = true;
             FileStatusListBox.SelectionMode = SelectionMode.MultiExtended;
             FileStatusListBox.MouseDown += new MouseEventHandler(FileStatusListBox_MouseDown);
+            FileStatusListBox.HorizontalScrollbar = true;
 
             NoFiles.Visible = false;
             NoFiles.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
