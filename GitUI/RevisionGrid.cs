@@ -74,7 +74,7 @@ namespace GitUI
 
             NormalFont = SystemFonts.DefaultFont;
             Loading.Paint += Loading_Paint;
-
+            
             Revisions.CellPainting += RevisionsCellPainting;
             Revisions.KeyDown += RevisionsKeyDown;
 
@@ -649,11 +649,7 @@ namespace GitUI
                 }
 
                 Revisions.ClearSelection();
-
                 CurrentCheckout = newCurrentCheckout;
-
-                Revisions.Clear();
-
                 Error.Visible = false;
 
                 if (!Settings.ValidWorkingDir())
@@ -671,8 +667,6 @@ namespace GitUI
                 Revisions.Visible = true;
                 Revisions.BringToFront();
                 Revisions.Enabled = false;
-                Loading.Visible = true;
-                Loading.BringToFront();
                 _isLoading = true;
                 base.Refresh();
 
@@ -680,6 +674,7 @@ namespace GitUI
 
                 if (!Settings.ShowGitNotes && !LogParam.Contains(" --not --glob=notes --not"))
                     LogParam = LogParam + " --not --glob=notes --not";
+
                 if (Settings.ShowGitNotes && LogParam.Contains(" --not --glob=notes --not"))
                     LogParam = LogParam.Replace("  --not --glob=notes --not", string.Empty);
 
@@ -687,6 +682,8 @@ namespace GitUI
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
                 _revisionGraphCommand.Error += _revisionGraphCommand_Error;
+                _revisionGraphCommand.BeginUpdate += ((s, e) => Revisions.Invoke((Action) (() => Revisions.Clear())));
+
                 if (!(string.IsNullOrEmpty(InMemAuthorFilter) &&
                       string.IsNullOrEmpty(InMemCommitterFilter) &&
                       string.IsNullOrEmpty(InMemMessageFilter)))
@@ -696,9 +693,7 @@ namespace GitUI
                                                                                     InMemFilterIgnoreCase);
 
                 _revisionGraphCommand.Execute();
-
                 LoadRevisions();
-
                 SetRevisionsLayout();
             }
             catch (Exception exception)
