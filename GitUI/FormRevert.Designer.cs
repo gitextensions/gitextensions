@@ -30,7 +30,7 @@
         {
             this._NO_TRANSLATE_RevertLabel = new System.Windows.Forms.Label();
             this.Revert = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnCancel = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // _NO_TRANSLATE_RevertLabel
@@ -38,13 +38,14 @@
             this._NO_TRANSLATE_RevertLabel.AutoSize = true;
             this._NO_TRANSLATE_RevertLabel.Location = new System.Drawing.Point(13, 13);
             this._NO_TRANSLATE_RevertLabel.Name = "_NO_TRANSLATE_RevertLabel";
-            this._NO_TRANSLATE_RevertLabel.Size = new System.Drawing.Size(35, 13);
+            this._NO_TRANSLATE_RevertLabel.Size = new System.Drawing.Size(38, 15);
             this._NO_TRANSLATE_RevertLabel.TabIndex = 0;
             this._NO_TRANSLATE_RevertLabel.Text = "label1";
             // 
             // Revert
             // 
-            this.Revert.Location = new System.Drawing.Point(309, 38);
+            this.Revert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.Revert.Location = new System.Drawing.Point(178, 36);
             this.Revert.Name = "Revert";
             this.Revert.Size = new System.Drawing.Size(138, 25);
             this.Revert.TabIndex = 1;
@@ -52,22 +53,23 @@
             this.Revert.UseVisualStyleBackColor = true;
             this.Revert.Click += new System.EventHandler(this.Revert_Click);
             // 
-            // button1
+            // btnCancel
             // 
-            this.button1.Location = new System.Drawing.Point(178, 38);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(125, 25);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Cancel";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCancel.Location = new System.Drawing.Point(322, 36);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(125, 25);
+            this.btnCancel.TabIndex = 2;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseVisualStyleBackColor = true;
             // 
             // FormRevert
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(459, 73);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.Revert);
             this.Controls.Add(this._NO_TRANSLATE_RevertLabel);
             this.Name = "FormRevert";
@@ -82,6 +84,6 @@
 
         private System.Windows.Forms.Label _NO_TRANSLATE_RevertLabel;
         private System.Windows.Forms.Button Revert;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnCancel;
     }
 }
