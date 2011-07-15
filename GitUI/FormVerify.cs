@@ -96,7 +96,7 @@ namespace GitUI
 
         private void WarningsDoubleClick(object sender, EventArgs e)
         {
-            var sha1 = FindSha1(Warnings.SelectedValue as string);
+            var sha1 = FindSha1(Warnings.CurrentRow.Cells[0].Value as string);
             if (!string.IsNullOrEmpty(sha1))
             {
                 new FormEdit(GitCommandHelpers.ShowSha1(sha1)).ShowDialog();
@@ -131,7 +131,7 @@ namespace GitUI
 
         private void TagSelectedObjectClick(object sender, EventArgs e)
         {
-            var sha1 = FindSha1(Warnings.SelectedValue as string);
+            var sha1 = FindSha1(Warnings.CurrentRow.Cells[0].Value as string);
             if (string.IsNullOrEmpty(sha1)) return;
             var form =
                 new FormTagSmall

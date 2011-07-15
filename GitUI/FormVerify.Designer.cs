@@ -37,7 +37,7 @@
             this.FullCheck = new System.Windows.Forms.CheckBox();
             this.Unreachable = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.Warnings = new System.Windows.Forms.ListBox();
+            this.Warnings = new System.Windows.Forms.DataGridView();
             this.TagAllCommits = new System.Windows.Forms.Button();
             this.DeleteAllLostAndFoundTags = new System.Windows.Forms.Button();
             this.TagAllObjects = new System.Windows.Forms.Button();
@@ -45,12 +45,14 @@
             this.TagSelectedObject = new System.Windows.Forms.Button();
             this.Remove = new System.Windows.Forms.Button();
             this.SaveObjects = new System.Windows.Forms.Button();
+            this.Raw = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Warnings)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -107,7 +109,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(4, 3);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(286, 91);
+            this.label2.Size = new System.Drawing.Size(320, 105);
             this.label2.TabIndex = 5;
             this.label2.Text = resources.GetString("label2.Text");
             // 
@@ -118,7 +120,7 @@
             this.ShowOnlyCommits.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ShowOnlyCommits.Location = new System.Drawing.Point(430, 3);
             this.ShowOnlyCommits.Name = "ShowOnlyCommits";
-            this.ShowOnlyCommits.Size = new System.Drawing.Size(116, 17);
+            this.ShowOnlyCommits.Size = new System.Drawing.Size(131, 19);
             this.ShowOnlyCommits.TabIndex = 4;
             this.ShowOnlyCommits.Text = "Show only commits";
             this.ShowOnlyCommits.UseVisualStyleBackColor = true;
@@ -131,10 +133,10 @@
             this.NoReflogs.CheckState = System.Windows.Forms.CheckState.Checked;
             this.NoReflogs.Location = new System.Drawing.Point(430, 29);
             this.NoReflogs.Name = "NoReflogs";
-            this.NoReflogs.Size = new System.Drawing.Size(345, 30);
+            this.NoReflogs.Size = new System.Drawing.Size(375, 34);
             this.NoReflogs.TabIndex = 3;
             this.NoReflogs.Text = "Do not consider commits that are referenced only by an entry in a \r\nreflog to be " +
-                "reachable.";
+    "reachable.";
             this.NoReflogs.UseVisualStyleBackColor = true;
             this.NoReflogs.CheckedChanged += new System.EventHandler(this.NoReflogsCheckedChanged);
             // 
@@ -143,10 +145,10 @@
             this.FullCheck.AutoSize = true;
             this.FullCheck.Location = new System.Drawing.Point(430, 95);
             this.FullCheck.Name = "FullCheck";
-            this.FullCheck.Size = new System.Drawing.Size(376, 30);
+            this.FullCheck.Size = new System.Drawing.Size(397, 34);
             this.FullCheck.TabIndex = 2;
             this.FullCheck.Text = "Check not just objects in GIT_OBJECT_DIRECTORY ($GIT_DIR/objects), \r\nbut also the" +
-                " ones found in alternate object pools.\r\n";
+    " ones found in alternate object pools.\r\n";
             this.FullCheck.UseVisualStyleBackColor = true;
             this.FullCheck.CheckedChanged += new System.EventHandler(this.FullCheckCheckedChanged);
             // 
@@ -155,10 +157,10 @@
             this.Unreachable.AutoSize = true;
             this.Unreachable.Location = new System.Drawing.Point(430, 62);
             this.Unreachable.Name = "Unreachable";
-            this.Unreachable.Size = new System.Drawing.Size(403, 30);
+            this.Unreachable.Size = new System.Drawing.Size(429, 34);
             this.Unreachable.TabIndex = 1;
             this.Unreachable.Text = "Print out objects that exist but that aren\'t readable from any of the reference \r" +
-                "\nnodes.\r\n";
+    "\nnodes.\r\n";
             this.Unreachable.UseVisualStyleBackColor = true;
             this.Unreachable.CheckedChanged += new System.EventHandler(this.UnreachableCheckedChanged);
             // 
@@ -167,17 +169,20 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 116);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(270, 13);
+            this.label1.Size = new System.Drawing.Size(299, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Double-click on a row containing a sha1 to view object.";
             // 
             // Warnings
             // 
+            this.Warnings.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.Warnings.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Raw});
             this.Warnings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Warnings.FormattingEnabled = true;
             this.Warnings.Location = new System.Drawing.Point(0, 0);
+            this.Warnings.MultiSelect = false;
             this.Warnings.Name = "Warnings";
-            this.Warnings.Size = new System.Drawing.Size(859, 316);
+            this.Warnings.Size = new System.Drawing.Size(859, 325);
             this.Warnings.TabIndex = 0;
             this.Warnings.DoubleClick += new System.EventHandler(this.WarningsDoubleClick);
             // 
@@ -258,9 +263,15 @@
             this.SaveObjects.UseVisualStyleBackColor = true;
             this.SaveObjects.Click += new System.EventHandler(this.SaveObjectsClick);
             // 
+            // Raw
+            // 
+            this.Raw.HeaderText = "Raw";
+            this.Raw.Name = "Raw";
+            this.Raw.ReadOnly = true;
+            // 
             // FormVerify
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(859, 524);
             this.Controls.Add(this.splitContainer1);
@@ -277,6 +288,7 @@
             this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.Warnings)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -285,7 +297,6 @@
 
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Button SaveObjects;
-        private System.Windows.Forms.ListBox Warnings;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button Remove;
@@ -299,5 +310,7 @@
         private System.Windows.Forms.Button TagAllCommits;
         private System.Windows.Forms.CheckBox ShowOnlyCommits;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.DataGridView Warnings;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Raw;
     }
 }
