@@ -126,4 +126,7 @@ dangling objects".
 To recover a lost commit, tag the commit and it will appear
 in the browse dialog again.</value>
   </data>
+  <metadata name="Raw.UserAddedColumn" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
 </root>
