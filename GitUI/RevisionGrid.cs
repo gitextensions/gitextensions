@@ -894,19 +894,19 @@ namespace GitUI
             else
                 e.Graphics.FillRectangle(new SolidBrush(Color.White), e.CellBounds);
 
-            Brush foreBrush;
-
+            Color foreColor;
+            
             if (!Settings.RevisionGraphDrawNonRelativesGray || !Settings.RevisionGraphDrawNonRelativesTextGray || Revisions.RowIsRelative(e.RowIndex))
-            {
+                foreColor = e.CellStyle.ForeColor;
                 foreBrush = isRowSelected && IsFilledBranchesLayout() 
                     ? SystemBrushes.HighlightText 
                     : new SolidBrush(e.CellStyle.ForeColor);
             }
             else
-            {
-                foreBrush = new SolidBrush(Color.LightGray);
+                foreColor = Color.LightGray;
             }
 
+            Brush foreBrush = new SolidBrush(foreColor);
             var rowFont = revision.Guid == CurrentCheckout /*&& !showRevisionCards*/ ? HeadFont : NormalFont;
 
             switch (column)
@@ -1007,10 +1007,13 @@ namespace GitUI
                             offset = baseOffset;
 
                         var text = revision.Message;
-                        var bounds = AdjustCellBounds(e.CellBounds, offset);
-                        DrawColumnText(e.Graphics, text, rowFont, foreColor, bounds);
+                        var bounds = new Rectangle((int) (e.CellBounds.Left + offset), e.CellBounds.Top + 4,
+                                                   e.CellBounds.Width - (int) offset, e.CellBounds.Height);
 
-                        if (IsCardLayout())
+                        TextRenderer.DrawText(e.Graphics, text, rowFont, bounds, foreColor, TextFormatFlags.EndEllipsis);
+
+                        //e.Graphics.DrawString(text, rowFont, foreBrush,
+                        //                      new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
                         {
                             int textHeight = (int)e.Graphics.MeasureString(text, rowFont).Height;
                             int gravatarSize = rowHeigth - textHeight - 12;
