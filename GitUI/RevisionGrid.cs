@@ -22,7 +22,9 @@ namespace GitUI
         Card = 3,
         CardWithGraph = 4,
         LargeCard = 5,
-        LargeCardWithGraph = 6
+        LargeCardWithGraph = 6,
+        FilledBranchesSmall = 7, 
+        FilledBranchesSmallWithGraph = 8
     }
 
     public partial class RevisionGrid : GitExtensionsControl
@@ -61,7 +63,7 @@ namespace GitUI
         private string _quickSearchString;
         private RevisionGraph _revisionGraphCommand;
 
-        private bool showRevisionCards = false;
+        private RevisionGridLayout layout;
         private int rowHeigth;
 
         public RevisionGrid()
@@ -150,8 +152,8 @@ namespace GitUI
                 Message.DefaultCellStyle.Font = _normalFont;
                 Date.DefaultCellStyle.Font = _normalFont;
 
-                RefsFont = new Font(_normalFont, FontStyle.Bold);
-                HeadFont = new Font(_normalFont, FontStyle.Bold);
+                RefsFont = IsFilledBranchesLayout() ? _normalFont : new Font(_normalFont, FontStyle.Bold);
+                HeadFont = IsFilledBranchesLayout() ? _normalFont : new Font(_normalFont, FontStyle.Bold);
             }
         }
 
@@ -885,7 +887,9 @@ namespace GitUI
 
             e.Handled = true;
 
-            if (((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected) /*&& !showRevisionCards*/)
+            bool isRowSelected = ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected);
+            
+            if (isRowSelected /*&& !showRevisionCards*/)
                 e.Graphics.FillRectangle(selectedItemBrush, e.CellBounds);
             else
                 e.Graphics.FillRectangle(new SolidBrush(Color.White), e.CellBounds);
@@ -893,9 +897,15 @@ namespace GitUI
             Brush foreBrush;
 
             if (!Settings.RevisionGraphDrawNonRelativesGray || !Settings.RevisionGraphDrawNonRelativesTextGray || Revisions.RowIsRelative(e.RowIndex))
-                foreBrush = new SolidBrush(e.CellStyle.ForeColor);
+            {
+                foreBrush = isRowSelected && IsFilledBranchesLayout() 
+                    ? SystemBrushes.HighlightText 
+                    : new SolidBrush(e.CellStyle.ForeColor);
+            }
             else
+            {
                 foreBrush = new SolidBrush(Color.LightGray);
+            }
 
             var rowFont = revision.Guid == CurrentCheckout /*&& !showRevisionCards*/ ? HeadFont : NormalFont;
 
@@ -904,7 +914,7 @@ namespace GitUI
                 case 1: //Description!!
                     {
                         int baseOffset = 0;
-                        if (showRevisionCards)
+                        if (IsCardLayout())
                         {
                             baseOffset = 5;
 
@@ -949,25 +959,25 @@ namespace GitUI
                                 if ((head.IsRemote && !ShowRemoteBranches.Checked))
                                     continue;
 
-                                var brush =
-                                    new SolidBrush(head.IsTag
-                                                       ? Settings.TagColor
-                                                       : head.IsHead
-                                                             ? Settings.BranchColor
-                                                             : head.IsRemote
-                                                                   ? Settings.RemoteBranchColor
-                                                                   : Settings.OtherTagColor);
+                                Brush textBrush;
+
+                                if (IsFilledBranchesLayout())
+                                    textBrush = new SolidBrush(SystemColors.WindowText);
+                                else
+                                    textBrush = new SolidBrush(head.IsTag
+                                                               ? Settings.TagColor
+                                                               : head.IsHead
+                                                                     ? Settings.BranchColor
+                                                                     : head.IsRemote
+                                                                           ? Settings.RemoteBranchColor
+                                                                           : Settings.OtherTagColor);
 
                                 string headName;
-                                if (!showRevisionCards)
-                                    headName = string.Concat("[", head.Name, "] ");
-                                else
-                                    headName = head.Name;
-
                                 PointF location;
 
-                                if (showRevisionCards)
+                                if (IsCardLayout())
                                 {
+                                    headName = head.Name;
                                     offset += e.Graphics.MeasureString(headName, RefsFont).Width + 6;
                                     location = new PointF(e.CellBounds.Right - offset, e.CellBounds.Top + 4);
                                     SizeF size = new SizeF(e.Graphics.MeasureString(headName, RefsFont).Width, e.Graphics.MeasureString(headName, RefsFont).Height);
@@ -976,14 +986,38 @@ namespace GitUI
                                 }
                                 else
                                 {
+                                    headName = IsFilledBranchesLayout()
+                                               ? head.Name
+                                               : string.Concat("[", head.Name, "] ");
+
                                     location = new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4);
-                                    offset += e.Graphics.MeasureString(headName, RefsFont).Width;
+                                    SizeF textSize = e.Graphics.MeasureString(headName, RefsFont);
+                                    offset += textSize.Width + 3;
+
+                                    if (IsFilledBranchesLayout())
+                                    {
+                                        offset += 2;
+
+                                        Color fillColor = head.IsTag
+                                                              ? Color.FromArgb(255, 255, 242, 148)
+                                                              : head.IsHead
+                                                                    ? Color.FromArgb(255, 255, 209, 216)
+                                                                    : head.IsRemote
+                                                                          ? Color.FromArgb(255, 208, 255, 208)
+                                                                          : Color.Silver;
+
+                                        var fillBrush = new SolidBrush(fillColor);
+
+                                        var rect = new RectangleF(location.X, location.Y, textSize.Width + 2, textSize.Height);
+                                        e.Graphics.FillRectangle(fillBrush, rect);
+                                    }
                                 }
-                                e.Graphics.DrawString(headName, RefsFont, brush, location);
+
+                                e.Graphics.DrawString(headName, RefsFont, textBrush, location);
                             }
                         }
 
-                        if (showRevisionCards)
+                        if (IsCardLayout())
                             offset = baseOffset;
 
                         var text = revision.Message;
@@ -991,7 +1025,7 @@ namespace GitUI
                         e.Graphics.DrawString(text, rowFont, foreBrush,
                                               new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
 
-                        if (showRevisionCards)
+                        if (IsCardLayout())
                         {
                             int textHeight;
                             textHeight = (int)e.Graphics.MeasureString(text, rowFont).Height;
@@ -1723,17 +1757,24 @@ namespace GitUI
             else if (Settings.RevisionGraphLayout == (int)RevisionGridLayout.SmallWithGraph) Settings.RevisionGraphLayout = (int)RevisionGridLayout.Small;
             else if (Settings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph) Settings.RevisionGraphLayout = (int)RevisionGridLayout.Card;
             else if (Settings.RevisionGraphLayout == (int)RevisionGridLayout.LargeCardWithGraph) Settings.RevisionGraphLayout = (int)RevisionGridLayout.LargeCard;
+            else if (Settings.RevisionGraphLayout == (int)RevisionGridLayout.FilledBranchesSmall) Settings.RevisionGraphLayout = (int)RevisionGridLayout.FilledBranchesSmallWithGraph;
+            else if (Settings.RevisionGraphLayout == (int)RevisionGridLayout.FilledBranchesSmallWithGraph) Settings.RevisionGraphLayout = (int)RevisionGridLayout.FilledBranchesSmall;
             SetRevisionsLayout();
             Refresh();
         }
 
         public void ToggleRevisionCardLayout()
         {
-            int revisionGraphLayout = Settings.RevisionGraphLayout + 1;
-            if (revisionGraphLayout > 6)
-                revisionGraphLayout = 1;
+            var layouts = new List<RevisionGridLayout>((RevisionGridLayout[]) Enum.GetValues(typeof (RevisionGridLayout)));
+            layouts.Sort();
+            var maxLayout = (int) layouts[layouts.Count - 1];
 
-            SetRevisionsLayout((RevisionGridLayout)revisionGraphLayout);
+            int nextLayout = Settings.RevisionGraphLayout + 1;
+            
+            if (nextLayout > maxLayout)
+                nextLayout = 1;
+
+            SetRevisionsLayout((RevisionGridLayout)nextLayout);
         }
 
         public void SetRevisionsLayout(RevisionGridLayout revisionGridLayout)
@@ -1744,47 +1785,97 @@ namespace GitUI
 
         private void SetRevisionsLayout()
         {
-            showRevisionGraphToolStripMenuItem.Checked = (Settings.RevisionGraphLayout == (int)RevisionGridLayout.SmallWithGraph) || (Settings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph) || (Settings.RevisionGraphLayout == (int)RevisionGridLayout.LargeCardWithGraph);
-            showRevisionCards = Settings.RevisionGraphLayout == (int)RevisionGridLayout.Card || Settings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph || Settings.RevisionGraphLayout == (int)RevisionGridLayout.LargeCard || Settings.RevisionGraphLayout == (int)RevisionGridLayout.LargeCardWithGraph;
+            layout = Enum.IsDefined(typeof (RevisionGridLayout), Settings.RevisionGraphLayout)
+                         ? (RevisionGridLayout) Settings.RevisionGraphLayout
+                         : RevisionGridLayout.SmallWithGraph;
 
-            if (showRevisionCards)
+            showRevisionGraphToolStripMenuItem.Checked = IsGraphLayout();
+            IsCardLayout();
+
+            if (IsFilledBranchesLayout())
             {
-                if (Settings.RevisionGraphLayout == (int)RevisionGridLayout.Card || Settings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph)
+                NormalFont = new Font("Tahoma", 8.75F); // SystemFonts.DefaultFont.FontFamily, SystemFonts.DefaultFont.Size + 2);
+            }
+            else
+            {
+                NormalFont = new Font("Tahoma", 8.75F);
+            }
+
+            if (IsCardLayout())
+            {
+                if (Settings.RevisionGraphLayout == (int)RevisionGridLayout.Card 
+                    || Settings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph)
+                {
                     rowHeigth = 45;
+                }
                 else
+                {
                     rowHeigth = 70;
+                }
 
                 selectedItemBrush = new LinearGradientBrush(new Rectangle(0, 0, rowHeigth, rowHeigth),
                 Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
                 Color.LightBlue, 90, false);
 
-                Revisions.ShowAuthor(!showRevisionCards);
+                Revisions.ShowAuthor(!IsCardLayout());
                 Revisions.SetDimensions(NODE_DIMENSION, LANE_WIDTH, LANE_LINE_WIDTH, rowHeigth, selectedItemBrush);
 
             }
             else
             {
-                rowHeigth = 25;
+                if (IsFilledBranchesLayout())
+                {
+                    using (var graphics = Graphics.FromHwnd(Handle))
+                    {
+                        rowHeigth = (int)graphics.MeasureString("By", NormalFont).Height + 9;
+                    }
 
-                selectedItemBrush = new LinearGradientBrush(new Rectangle(0, 0, rowHeigth, rowHeigth),
-                                Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
-                                Color.LightBlue, 90, false);
+                    selectedItemBrush = SystemBrushes.Highlight; 
+                }
+                else
+                {
+                    rowHeigth = 25;
 
+                    selectedItemBrush = new LinearGradientBrush(new Rectangle(0, 0, rowHeigth, rowHeigth),
+                                                                Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
+                                                                Color.LightBlue, 90, false);
+                }
 
-                Revisions.ShowAuthor(!showRevisionCards);
+                Revisions.ShowAuthor(!IsCardLayout());
                 Revisions.SetDimensions(NODE_DIMENSION, LANE_WIDTH, LANE_LINE_WIDTH, rowHeigth, selectedItemBrush);
             }
 
             //Hide graph column when there it is disabled OR when a filter is active
             //allowing for special case when history of a single file is being displayed
-            if (!(Settings.RevisionGraphLayout == (int)RevisionGridLayout.LargeCardWithGraph || Settings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph || Settings.RevisionGraphLayout == (int)RevisionGridLayout.SmallWithGraph) || (ShouldHideGraph(false) && !AllowGraphWithFilter))
+            if (!IsGraphLayout() || (ShouldHideGraph(false) && !AllowGraphWithFilter))
             {
-                Revisions.ShowHideRevisionGraph(false);
+                Revisions.HideRevisionGraph();
             }
             else
             {
-                Revisions.ShowHideRevisionGraph(true);
+                Revisions.ShowRevisionGraph();
             }
+        }
+
+        private bool IsFilledBranchesLayout()
+        {
+            return layout == RevisionGridLayout.FilledBranchesSmall || layout == RevisionGridLayout.FilledBranchesSmallWithGraph;
+        }
+
+        private bool IsCardLayout()
+        {
+            return layout == RevisionGridLayout.Card
+                   || layout == RevisionGridLayout.CardWithGraph
+                   || layout == RevisionGridLayout.LargeCard
+                   || layout == RevisionGridLayout.LargeCardWithGraph;
+        }
+
+        private bool IsGraphLayout()
+        {
+            return layout == RevisionGridLayout.SmallWithGraph
+                   || layout == RevisionGridLayout.CardWithGraph
+                   || layout == RevisionGridLayout.LargeCardWithGraph
+                   || layout == RevisionGridLayout.FilledBranchesSmallWithGraph;
         }
 
         #region Hotkey commands
