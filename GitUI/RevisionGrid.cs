@@ -996,20 +996,21 @@ namespace GitUI
 
                                     if (IsFilledBranchesLayout())
                                     {
-                                        offset += 2;
+                                        offset += 4;
 
                                         Color fillColor = head.IsTag
-                                                              ? Color.FromArgb(255, 255, 242, 148)
+                                                              ? Color.FromArgb(255, 255, 247, 193)
                                                               : head.IsHead
-                                                                    ? Color.FromArgb(255, 255, 209, 216)
+                                                                    ? Color.FromArgb(255, 255, 228, 232)
                                                                     : head.IsRemote
-                                                                          ? Color.FromArgb(255, 208, 255, 208)
+                                                                          ? Color.FromArgb(255, 234, 255, 234)
                                                                           : Color.Silver;
 
-                                        var fillBrush = new SolidBrush(fillColor);
-
-                                        var rect = new RectangleF(location.X, location.Y, textSize.Width + 2, textSize.Height);
-                                        e.Graphics.FillRectangle(fillBrush, rect);
+                                        //var rect = new RectangleF(location.X, location.Y, textSize.Width + 2, textSize.Height);
+                                        DrawRoundRect(e.Graphics, fillColor, location.X, location.Y, textSize.Width + 4, 
+                                            RoundToEven(textSize.Height), 4);
+                                        //e.Graphics.FillRectangle(fillBrush, rect);
+                                        location = new PointF(location.X + 1, location.Y);
                                     }
                                 }
 
@@ -1087,6 +1088,62 @@ namespace GitUI
                     }
                     break;
             }
+        }
+
+        private float RoundToEven(float value)
+        {
+            int result = ((int) value/2)*2;
+            return result < value ? result + 2 : result;
+        }
+
+        public void DrawRoundRect(Graphics graphics, Color color, float X, float Y, float width, float height, float radius)
+        {
+            using (var path = new GraphicsPath())
+            {
+                path.AddLine(X + radius, Y, X + width - (radius * 2), Y);
+                path.AddArc(X + width - (radius * 2), Y, radius * 2, radius * 2, 270, 90);
+                path.AddLine(X + width, Y + radius, X + width, Y + height - (radius * 2));
+                path.AddArc(X + width - (radius * 2), Y + height - (radius * 2), radius * 2, radius * 2, 0, 90);
+                path.AddLine(X + width - (radius * 2), Y + height, X + radius, Y + height);
+                path.AddArc(X, Y + height - (radius * 2), radius * 2, radius * 2, 90, 90);
+                path.AddLine(X, Y + height - (radius * 2), X, Y + radius);
+                path.AddArc(X, Y, radius * 2, radius * 2, 180, 90);
+                path.CloseFigure();
+                var oldMode = graphics.SmoothingMode;
+                graphics.SmoothingMode = SmoothingMode.AntiAlias;
+                
+                var fillBrush = new SolidBrush(color);
+                graphics.FillPath(fillBrush, path);
+                
+                var borderPen = new Pen(Lerp(color, Color.Black, 0.3F));
+                graphics.DrawPath(borderPen, path);
+
+                graphics.SmoothingMode = oldMode;
+            }
+        }
+
+        private static float Lerp(float start, float end, float amount)
+        {
+            float difference = end - start;
+            float adjusted = difference * amount;
+            return start + adjusted;
+        }
+
+        private static Color Lerp(Color colour, Color to, float amount)
+        {
+            // start colours as lerp-able floats
+            float sr = colour.R, sg = colour.G, sb = colour.B;
+
+            // end colours as lerp-able floats
+            float er = to.R, eg = to.G, eb = to.B;
+
+            // lerp the colours to get the difference
+            byte r = (byte) Lerp(sr, er, amount),
+                 g = (byte) Lerp(sg, eg, amount),
+                 b = (byte) Lerp(sb, eb, amount);
+
+            // return the new colour
+            return Color.FromArgb(r, g, b);
         }
 
         private void RefreshGravatar(Image image)
