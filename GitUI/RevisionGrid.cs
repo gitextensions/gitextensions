@@ -976,6 +976,7 @@ namespace GitUI
                                     var size = new SizeF(e.Graphics.MeasureString(headName, refsFont).Width, e.Graphics.MeasureString(headName, RefsFont).Height);
                                     e.Graphics.FillRectangle(new SolidBrush(SystemColors.Info), location.X - 1, location.Y - 1, size.Width + 3, size.Height + 2);
                                     e.Graphics.DrawRectangle(new Pen(SystemColors.InfoText), location.X - 1, location.Y - 1, size.Width + 3, size.Height + 2);
+                                    e.Graphics.DrawString(headName, refsFont, textBrush, location);
                                 }
                                 else
                                 {
@@ -983,7 +984,7 @@ namespace GitUI
                                                ? head.Name
                                                : string.Concat("[", head.Name, "] ");
 
-                                    location = new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4);
+                                    var headBounds = AdjustCellBounds(e.CellBounds, offset);
                                     SizeF textSize = e.Graphics.MeasureString(headName, refsFont);
                                     offset += textSize.Width;
 
@@ -991,15 +992,14 @@ namespace GitUI
                                     {
                                         offset += 9;
 
-                                        DrawRoundRect(e.Graphics, headColor, location.X, location.Y, 
-                                            RoundToEven(textSize.Width + 3), 
-                                            RoundToEven(textSize.Height), 3);
-                                        
-                                        location = new PointF(location.X + 1, location.Y);
-                                    }
-                                }
+                                        DrawRoundRect(e.Graphics, headColor, headBounds.X, headBounds.Y,
+                                                      RoundToEven(textSize.Width + 3), RoundToEven(textSize.Height), 3);
 
-                                e.Graphics.DrawString(headName, refsFont, textBrush, location);
+                                        headBounds.Offset(1, 0);
+                                    }
+
+                                    DrawColumnText(e.Graphics, headName, refsFont, headColor, headBounds);
+                                }
                             }
                         }
 
@@ -1007,9 +1007,8 @@ namespace GitUI
                             offset = baseOffset;
 
                         var text = revision.Message;
-
-                        e.Graphics.DrawString(text, rowFont, foreBrush,
-                                              new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
+                        var bounds = AdjustCellBounds(e.CellBounds, offset);
+                        DrawColumnText(e.Graphics, text, rowFont, foreColor, bounds);
 
                         if (IsCardLayout())
                         {
@@ -1071,6 +1070,17 @@ namespace GitUI
                     }
                     break;
             }
+        }
+
+        private void DrawColumnText(IDeviceContext dc, string text, Font font, Color color, Rectangle bounds)
+        {
+            TextRenderer.DrawText(dc, text, font, bounds, color, TextFormatFlags.EndEllipsis);
+        }
+
+        private static Rectangle AdjustCellBounds(Rectangle cellBounds, float offset)
+        {
+            return new Rectangle((int)(cellBounds.Left + offset), cellBounds.Top + 4,
+                                 cellBounds.Width - (int)offset, cellBounds.Height);
         }
 
         private static Color GetHeadColor(GitHead head)
