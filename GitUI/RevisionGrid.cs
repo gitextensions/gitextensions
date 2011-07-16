@@ -890,13 +890,14 @@ namespace GitUI
             else
                 e.Graphics.FillRectangle(new SolidBrush(Color.White), e.CellBounds);
 
-            Brush foreBrush;
-
+            Color foreColor;
+            
             if (!Settings.RevisionGraphDrawNonRelativesGray || !Settings.RevisionGraphDrawNonRelativesTextGray || Revisions.RowIsRelative(e.RowIndex))
-                foreBrush = new SolidBrush(e.CellStyle.ForeColor);
+                foreColor = e.CellStyle.ForeColor;
             else
-                foreBrush = new SolidBrush(Color.LightGray);
+                foreColor = Color.LightGray;
 
+            Brush foreBrush = new SolidBrush(foreColor);
             var rowFont = revision.Guid == CurrentCheckout /*&& !showRevisionCards*/ ? HeadFont : NormalFont;
 
             switch (column)
@@ -987,9 +988,13 @@ namespace GitUI
                             offset = baseOffset;
 
                         var text = revision.Message;
+                        var bounds = new Rectangle((int) (e.CellBounds.Left + offset), e.CellBounds.Top + 4,
+                                                   e.CellBounds.Width - (int) offset, e.CellBounds.Height);
 
-                        e.Graphics.DrawString(text, rowFont, foreBrush,
-                                              new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
+                        TextRenderer.DrawText(e.Graphics, text, rowFont, bounds, foreColor, TextFormatFlags.EndEllipsis);
+
+                        //e.Graphics.DrawString(text, rowFont, foreBrush,
+                        //                      new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
 
                         if (showRevisionCards)
                         {
