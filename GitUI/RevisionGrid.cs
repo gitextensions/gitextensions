@@ -153,7 +153,7 @@ namespace GitUI
                 Date.DefaultCellStyle.Font = _normalFont;
 
                 RefsFont = IsFilledBranchesLayout() ? _normalFont : new Font(_normalFont, FontStyle.Bold);
-                HeadFont = IsFilledBranchesLayout() ? _normalFont : new Font(_normalFont, FontStyle.Bold);
+                HeadFont = new Font(_normalFont, FontStyle.Bold);
             }
         }
 
@@ -939,9 +939,10 @@ namespace GitUI
                             if ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
                                 e.Graphics.DrawRectangle(new Pen(Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor, 1), cellRectangle);
                         }
+                        
                         float offset = baseOffset;
-
                         var heads = revision.Heads;
+                        
                         if (heads.Count > 0)
                         {
                             heads.Sort(new Comparison<GitHead>(
@@ -953,6 +954,8 @@ namespace GitUI
                                                    return left.IsRemote.CompareTo(right.IsRemote);
                                                return left.Name.CompareTo(right.Name);
                                            }));
+
+                            var refsFont = IsFilledBranchesLayout() ? rowFont : RefsFont;
 
                             foreach (var head in heads)
                             {
@@ -968,9 +971,9 @@ namespace GitUI
                                 if (IsCardLayout())
                                 {
                                     headName = head.Name;
-                                    offset += e.Graphics.MeasureString(headName, RefsFont).Width + 6;
+                                    offset += e.Graphics.MeasureString(headName, refsFont).Width + 6;
                                     location = new PointF(e.CellBounds.Right - offset, e.CellBounds.Top + 4);
-                                    var size = new SizeF(e.Graphics.MeasureString(headName, RefsFont).Width, e.Graphics.MeasureString(headName, RefsFont).Height);
+                                    var size = new SizeF(e.Graphics.MeasureString(headName, refsFont).Width, e.Graphics.MeasureString(headName, RefsFont).Height);
                                     e.Graphics.FillRectangle(new SolidBrush(SystemColors.Info), location.X - 1, location.Y - 1, size.Width + 3, size.Height + 2);
                                     e.Graphics.DrawRectangle(new Pen(SystemColors.InfoText), location.X - 1, location.Y - 1, size.Width + 3, size.Height + 2);
                                 }
@@ -981,22 +984,22 @@ namespace GitUI
                                                : string.Concat("[", head.Name, "] ");
 
                                     location = new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4);
-                                    SizeF textSize = e.Graphics.MeasureString(headName, RefsFont);
-                                    offset += textSize.Width + 3;
+                                    SizeF textSize = e.Graphics.MeasureString(headName, refsFont);
+                                    offset += textSize.Width;
 
                                     if (IsFilledBranchesLayout())
                                     {
-                                        offset += 6;
+                                        offset += 9;
 
                                         DrawRoundRect(e.Graphics, headColor, location.X, location.Y, 
-                                            RoundToEven(textSize.Width + 4), 
-                                            RoundToEven(textSize.Height), 4);
+                                            RoundToEven(textSize.Width + 3), 
+                                            RoundToEven(textSize.Height), 3);
                                         
                                         location = new PointF(location.X + 1, location.Y);
                                     }
                                 }
 
-                                e.Graphics.DrawString(headName, RefsFont, textBrush, location);
+                                e.Graphics.DrawString(headName, refsFont, textBrush, location);
                             }
                         }
 
@@ -1089,31 +1092,48 @@ namespace GitUI
 
         private void DrawRoundRect(Graphics graphics, Color color, float x, float y, float width, float height, float radius)
         {
-            using (var path = new GraphicsPath())
-            {
-                path.AddLine(x + radius, y, x + width - (radius * 2), y);
-                path.AddArc(x + width - (radius * 2), y, radius * 2, radius * 2, 270, 90);
-                path.AddLine(x + width, y + radius, x + width, y + height - (radius * 2));
-                path.AddArc(x + width - (radius * 2), y + height - (radius * 2), radius * 2, radius * 2, 0, 90);
-                path.AddLine(x + width - (radius * 2), y + height, x + radius, y + height);
-                path.AddArc(x, y + height - (radius * 2), radius * 2, radius * 2, 90, 90);
-                path.AddLine(x, y + height - (radius * 2), x, y + radius);
-                path.AddArc(x, y, radius * 2, radius * 2, 180, 90);
-                path.CloseFigure();
-                var oldMode = graphics.SmoothingMode;
-                graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            var oldMode = graphics.SmoothingMode;
+            graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-                try
+            try
+            {
+                using (var shadePath = CreateRoundRectPath(x + 1, y + 1, width, height, radius))
                 {
-                    var fillBrush = new SolidBrush(Lerp(color, Color.White, 0.9F));
-                    graphics.FillPath(fillBrush, path);
-                    graphics.DrawPath(new Pen(color), path);
+                    graphics.FillPath(new SolidBrush(Color.Silver), shadePath);
                 }
-                finally
+
+                using (var forePath = CreateRoundRectPath(x, y, width, height, radius))
                 {
-                    graphics.SmoothingMode = oldMode;
+                    Color fillColor = Lerp(color, Color.White, 0.9F);
+
+                    var fillBrush = new LinearGradientBrush(new RectangleF(x, y, width, height), fillColor,
+                        Lerp(fillColor, Color.White, 0.5F), 90);
+
+                    graphics.FillPath(fillBrush, forePath);
                 }
+
+                //graphics.DrawPath(new Pen(color), path);
             }
+            finally
+            {
+                graphics.SmoothingMode = oldMode;
+            }
+
+        }
+
+        private static GraphicsPath CreateRoundRectPath(float x, float y, float width, float height, float radius)
+        {
+            var path = new GraphicsPath();
+            path.AddLine(x + radius, y, x + width - (radius*2), y);
+            path.AddArc(x + width - (radius*2), y, radius*2, radius*2, 270, 90);
+            path.AddLine(x + width, y + radius, x + width, y + height - (radius*2));
+            path.AddArc(x + width - (radius*2), y + height - (radius*2), radius*2, radius*2, 0, 90);
+            path.AddLine(x + width - (radius*2), y + height, x + radius, y + height);
+            path.AddArc(x, y + height - (radius*2), radius*2, radius*2, 90, 90);
+            path.AddLine(x, y + height - (radius*2), x, y + radius);
+            path.AddArc(x, y, radius*2, radius*2, 180, 90);
+            path.CloseFigure();
+            return path;
         }
 
         private static float Lerp(float start, float end, float amount)
