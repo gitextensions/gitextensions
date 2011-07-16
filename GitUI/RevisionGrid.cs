@@ -897,12 +897,13 @@ namespace GitUI
             Color foreColor;
             
             if (!Settings.RevisionGraphDrawNonRelativesGray || !Settings.RevisionGraphDrawNonRelativesTextGray || Revisions.RowIsRelative(e.RowIndex))
-                foreColor = e.CellStyle.ForeColor;
-                foreBrush = isRowSelected && IsFilledBranchesLayout() 
-                    ? SystemBrushes.HighlightText 
-                    : new SolidBrush(e.CellStyle.ForeColor);
+            {
+                foreColor = isRowSelected && IsFilledBranchesLayout() 
+                    ? SystemColors.HighlightText
+                    : e.CellStyle.ForeColor;
             }
             else
+            {
                 foreColor = Color.LightGray;
             }
 
@@ -1007,13 +1008,10 @@ namespace GitUI
                             offset = baseOffset;
 
                         var text = revision.Message;
-                        var bounds = new Rectangle((int) (e.CellBounds.Left + offset), e.CellBounds.Top + 4,
-                                                   e.CellBounds.Width - (int) offset, e.CellBounds.Height);
+                        var bounds = AdjustCellBounds(e.CellBounds, offset);
+                        DrawColumnText(e.Graphics, text, rowFont, foreColor, bounds);
 
-                        TextRenderer.DrawText(e.Graphics, text, rowFont, bounds, foreColor, TextFormatFlags.EndEllipsis);
-
-                        //e.Graphics.DrawString(text, rowFont, foreBrush,
-                        //                      new PointF(e.CellBounds.Left + offset, e.CellBounds.Top + 4));
+                        if (IsCardLayout())
                         {
                             int textHeight = (int)e.Graphics.MeasureString(text, rowFont).Height;
                             int gravatarSize = rowHeigth - textHeight - 12;
@@ -1999,7 +1997,7 @@ namespace GitUI
                 default: ExecuteScriptCommand(cmd, Keys.None); break;
             }
 
-            return true;
+            return true; 
         }
 
         #endregion
