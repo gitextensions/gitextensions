@@ -1765,7 +1765,8 @@ Este programa es distribuido con la esperanza de que sea útil, pero SIN NINGUNA
           <Value>Cancelar</Value>
         </TranslationItem>
         <TranslationItem Name="_undoChangesIn" Property="Text">
-          <Value>¿Deshacer los cambios realizados en: {0}?</Value>
+          <Value>¿Deshacer los cambios realizados en:
+{0}?</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
