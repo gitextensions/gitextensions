@@ -747,7 +747,8 @@ _ReSharper*/
           <Value>Wijzigingen terugzetten</Value>
         </TranslationItem>
         <TranslationItem Name="_undoChangesIn" Property="Text">
-          <Value>Wijzigingen terugzetten in: {0}?</Value>
+          <Value>Wijzigingen terugzetten in:
+{0}?</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

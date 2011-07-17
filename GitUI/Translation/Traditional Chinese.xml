@@ -741,7 +741,8 @@ _ReSharper*/</Value>
           <Value>重置修改</Value>
         </TranslationItem>
         <TranslationItem Name="_undoChangesIn" Property="Text">
-          <Value>回復修改：{0}？</Value>
+          <Value>回復修改：
+{0}？</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
