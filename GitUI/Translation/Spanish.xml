@@ -1761,7 +1761,7 @@ Este programa es distribuido con la esperanza de que sea útil, pero SIN NINGUNA
         <TranslationItem Name="Revert" Property="Text">
           <Value>Revertir los cambios</Value>
         </TranslationItem>
-        <TranslationItem Name="button1" Property="Text">
+        <TranslationItem Name="btnCancel" Property="Text">
           <Value>Cancelar</Value>
         </TranslationItem>
         <TranslationItem Name="_undoChangesIn" Property="Text">
