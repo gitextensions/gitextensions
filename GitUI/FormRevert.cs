@@ -9,24 +9,24 @@ namespace GitUI
     {
         private readonly TranslationString _resetChangesCaption = new TranslationString("Reset changes");
         private readonly TranslationString _undoChangesIn = new TranslationString("Undo changes in:\n{0}?");
+        private readonly string fileName;
 
-        public FormRevert(string filename)
+        public FormRevert(string fileName)
         {
-            FileName = filename;
-            InitializeComponent(); Translate();
+            this.fileName = fileName;
+            InitializeComponent();
+            Translate();
         }
-
-        private string FileName { get; set; }
 
         private void FormRevert_Load(object sender, EventArgs e)
         {
-            _NO_TRANSLATE_RevertLabel.Text = string.Format(_undoChangesIn.Text, FileName);
+            _NO_TRANSLATE_RevertLabel.Text = string.Format(_undoChangesIn.Text, fileName);
         }
 
         private void Revert_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            string output = GitCommandHelpers.ResetFile(FileName);
+            string output = GitCommandHelpers.ResetFile(fileName);
 
             if (!string.IsNullOrEmpty(output))
                 MessageBox.Show(output, _resetChangesCaption.Text);
