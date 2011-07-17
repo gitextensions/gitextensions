@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.Panel panel1;
-            this._NO_TRANSLATE_RevertLabel = new System.Windows.Forms.Label();
-            this.Revert = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.Revert = new System.Windows.Forms.Button();
+            this._NO_TRANSLATE_RevertLabel = new System.Windows.Forms.Label();
             panel1 = new System.Windows.Forms.Panel();
             panel1.SuspendLayout();
             this.SuspendLayout();
