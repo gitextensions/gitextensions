@@ -5,10 +5,10 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormRevert : GitExtensionsForm
+    public sealed partial class FormRevert : GitExtensionsForm
     {
         private readonly TranslationString _resetChangesCaption = new TranslationString("Reset changes");
-        private readonly TranslationString _undoChangesIn = new TranslationString("Undo changes in: {0}?");
+        private readonly TranslationString _undoChangesIn = new TranslationString("Undo changes in:\n{0}?");
 
         public FormRevert(string filename)
         {
@@ -16,7 +16,7 @@ namespace GitUI
             InitializeComponent(); Translate();
         }
 
-        public string FileName { get; set; }
+        private string FileName { get; set; }
 
         private void FormRevert_Load(object sender, EventArgs e)
         {
