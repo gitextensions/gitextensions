@@ -33,5 +33,10 @@ namespace GitUI
             Close();
             Cursor.Current = Cursors.Default;
         }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }
