@@ -2242,7 +2242,8 @@ _ReSharper*/
           <Value>Отменить изменения</Value>
         </TranslationItem>
         <TranslationItem Name="_undoChangesIn" Property="Text">
-          <Value>Отменить изменения в файле {0} ?</Value>
+          <Value>Отменить изменения в файле
+{0} ?</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
