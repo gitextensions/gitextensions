@@ -745,7 +745,7 @@ _ReSharper*/
         <TranslationItem Name="Revert" Property="Text">
           <Value>Annulla modifiche</Value>
         </TranslationItem>
-        <TranslationItem Name="button1" Property="Text">
+        <TranslationItem Name="btnCancel" Property="Text">
           <Value>Annulla</Value>
         </TranslationItem>
       </translationItems>

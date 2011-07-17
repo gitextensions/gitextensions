@@ -740,14 +740,15 @@ _ReSharper*/
         <TranslationItem Name="Revert" Property="Text">
           <Value>Wijzigingen terugzetten</Value>
         </TranslationItem>
-        <TranslationItem Name="button1" Property="Text">
+        <TranslationItem Name="btnCancel" Property="Text">
           <Value>Annuleren</Value>
         </TranslationItem>
         <TranslationItem Name="_resetChangesCaption" Property="Text">
           <Value>Wijzigingen terugzetten</Value>
         </TranslationItem>
         <TranslationItem Name="_undoChangesIn" Property="Text">
-          <Value>Wijzigingen terugzetten in: {0}?</Value>
+          <Value>Wijzigingen terugzetten in:
+{0}?</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
