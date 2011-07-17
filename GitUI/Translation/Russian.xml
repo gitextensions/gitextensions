@@ -2235,14 +2235,15 @@ _ReSharper*/
         <TranslationItem Name="Revert" Property="Text">
           <Value>Отменить изменения</Value>
         </TranslationItem>
-        <TranslationItem Name="button1" Property="Text">
+        <TranslationItem Name="btnCancel" Property="Text">
           <Value>Отмена</Value>
         </TranslationItem>
         <TranslationItem Name="_resetChangesCaption" Property="Text">
           <Value>Отменить изменения</Value>
         </TranslationItem>
         <TranslationItem Name="_undoChangesIn" Property="Text">
-          <Value>Отменить изменения в файле {0} ?</Value>
+          <Value>Отменить изменения в файле
+{0} ?</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
