@@ -1148,7 +1148,6 @@ namespace GitUI
             Initialize();
             RevisionGrid.ReloadHotkeys();
             RevisionGrid.ReloadTranslation();
-            RevisionGrid.ForceRefreshRevisions();
         }
 
         private void ArchiveToolStripMenuItemClick(object sender, EventArgs e)
