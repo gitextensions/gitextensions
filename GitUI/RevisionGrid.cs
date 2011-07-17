@@ -652,6 +652,7 @@ namespace GitUI
 
                 Revisions.ClearSelection();
                 CurrentCheckout = newCurrentCheckout;
+                Revisions.Clear();
                 Error.Visible = false;
 
                 if (!Settings.ValidWorkingDir())
@@ -669,6 +670,8 @@ namespace GitUI
                 Revisions.Visible = true;
                 Revisions.BringToFront();
                 Revisions.Enabled = false;
+                Loading.Visible = true;
+                Loading.BringToFront();
                 _isLoading = true;
                 base.Refresh();
 
@@ -684,7 +687,7 @@ namespace GitUI
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
                 _revisionGraphCommand.Error += _revisionGraphCommand_Error;
-                _revisionGraphCommand.BeginUpdate += ((s, e) => Revisions.Invoke((Action) (() => Revisions.Clear())));
+                //_revisionGraphCommand.BeginUpdate += ((s, e) => Revisions.Invoke((Action) (() => Revisions.Clear())));
 
                 if (!(string.IsNullOrEmpty(InMemAuthorFilter) &&
                       string.IsNullOrEmpty(InMemCommitterFilter) &&
