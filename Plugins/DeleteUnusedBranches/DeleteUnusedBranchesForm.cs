@@ -55,11 +55,6 @@ namespace DeleteUnusedBranches
                 .Where(branchName => branchName != "master");
         }
 
-        private void Cancel_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
         private void Delete_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Are you sure to delete the selected branches?" + Environment.NewLine + "Only branches that are fully merged will be deleted.", "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
