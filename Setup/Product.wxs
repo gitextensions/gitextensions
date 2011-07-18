@@ -24,7 +24,7 @@
       Installed OR NETFRAMEWORK35
     </Condition>
    
-    <Icon Id="cow_head.ico" SourceFile="../cow-head.ico"/>
+    <Icon Id="gitextensions.ico" SourceFile="../bin/logo/git-extensions-logo-final.ico"/>
 
     <?include AddRemove.wxi?>
     <?include EnableUpgrades.wxi?>
@@ -69,8 +69,8 @@
     <?endforeach?>
 
     <DirectoryRef Id="INSTALLDIR">
-      <Component Id="cow_head.ico" Guid="*">
-        <File Source="..\cow-head.ico"/>
+      <Component Id="gitextensions.ico" Guid="*">
+        <File Source="..\bin\logo\git-extensions-logo-final.ico"/>
       </Component>
       <Component Id="gitex.cmd" Guid="*">
         <File Source="..\bin\gitex.cmd"/>
@@ -80,7 +80,7 @@
       </Component>
       <Component Id="GitExtensions.exe" Guid="*">
         <File Source="..\GitExtensions\bin\Release\GitExtensions.exe"/>
-        <ProgId Id="GitExtensions" Description="Git Extentions Shortcut" Icon="cow_head.ico" Advertise="yes">
+        <ProgId Id="GitExtensions" Description="Git Extentions Shortcut" Icon="gitextensions.ico" Advertise="yes">
           <Extension Id="gitext">
             <Verb Id="open" Command="Open Git Extentions Repository" Argument="openrepo &quot;%1&quot;" />
           </Extension>
@@ -182,20 +182,20 @@
     </DirectoryRef>
 
     <DirectoryRef Id="IconsDir">
-      <Component Id="CowHeadBlue.ico" Guid="*">
-        <File Source="..\GitUI\Icons\cow-head-blue.ico"/>
+      <Component Id="Blue.ico" Guid="*">
+        <File Source="..\bin\logo\git-extensions-logo-final_mixed_blue.ico"/>
       </Component>
-      <Component Id="CowHeadGreen.ico" Guid="*">
-        <File Source="..\GitUI\Icons\cow-head-green.ico"/>
+      <Component Id="Green.ico" Guid="*">
+        <File Source="..\bin\logo\git-extensions-logo-final_mixed_green.ico"/>
       </Component>
-      <Component Id="CowHeadPurple.ico" Guid="*">
-        <File Source="..\GitUI\Icons\cow-head-purple.ico"/>
+      <Component Id="Purple.ico" Guid="*">
+        <File Source="..\bin\logo\git-extensions-logo-final_mixed_purple.ico"/>
       </Component>
-      <Component Id="CowHeadRed.ico" Guid="*">
-        <File Source="..\GitUI\Icons\cow-head-red.ico"/>
+      <Component Id="Red.ico" Guid="*">
+        <File Source="..\bin\logo\git-extensions-logo-final_mixed_red.ico"/>
       </Component>
-      <Component Id="CowHeadYellow.ico" Guid="*">
-        <File Source="..\GitUI\Icons\cow-head-yellow.ico"/>
+      <Component Id="Yellow.ico" Guid="*">
+        <File Source="..\bin\logo\git-extensions-logo-final_mixed_yellow.ico"/>
       </Component>
     </DirectoryRef>
 
@@ -368,7 +368,7 @@
           Id="GitExtensions.startmenu"
           Name="$(var.ProductName)"
           Description="$(var.ProductName)"
-          Icon="cow_head.ico"
+          Icon="gitextensions.ico"
           Target="[INSTALLDIR]GitExtensions.exe"
           WorkingDirectory="INSTALLDIR"/>
         <RegistryValue
@@ -402,7 +402,7 @@
           Id="GitExtensions.desktop"
           Name="$(var.ProductName)"
           Description="$(var.ProductName)"
-          Icon="cow_head.ico"
+          Icon="gitextensions.ico"
           Target="[INSTALLDIR]GitExtensions.exe"
           WorkingDirectory="INSTALLDIR"/>
         <RegistryValue
@@ -416,7 +416,7 @@
     </DirectoryRef>
 
     <Feature Id="GitExtensions" Title="Git Extensions" Level="1" Display="expand">
-      <ComponentRef Id="cow_head.ico"/>
+      <ComponentRef Id="gitextensions.ico"/>
       <ComponentRef Id="gitex.cmd"/>
       <ComponentRef Id="GitExtensionsUserManual.pdf"/>
       <ComponentRef Id="GitExtensions.exe"/>
@@ -477,11 +477,11 @@
       </Feature>
 
       <Feature Id="Icons" Title="Extra application icons" Level="2">
-        <ComponentRef Id="CowHeadBlue.ico"/>
-        <ComponentRef Id="CowHeadGreen.ico"/>
-        <ComponentRef Id="CowHeadPurple.ico"/>
-        <ComponentRef Id="CowHeadRed.ico"/>
-        <ComponentRef Id="CowHeadYellow.ico"/>
+        <ComponentRef Id="Blue.ico"/>
+        <ComponentRef Id="Green.ico"/>
+        <ComponentRef Id="Purple.ico"/>
+        <ComponentRef Id="Red.ico"/>
+        <ComponentRef Id="Yellow.ico"/>
       </Feature>
 
       <Feature Id="DiffScripts" Title="Custom merge scripts" Level="1">
