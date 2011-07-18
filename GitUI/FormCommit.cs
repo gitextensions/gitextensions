@@ -122,14 +122,14 @@ namespace GitUI
 
             Unstaged.DoubleClick += Unstaged_DoubleClick;
             Staged.DoubleClick += Staged_DoubleClick;
-            
+
             Unstaged.Focus();
 
             SelectedDiff.AddContextMenuEntry(null, null);
             _StageSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_stageSelectedLines.Text, StageSelectedLinesToolStripMenuItemClick);
             _ResetSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_resetSelectedLines.Text, ResetSelectedLinesToolStripMenuItemClick);
 
-            splitMain.SplitterDistance = Settings.CommitDialogSplitter; 
+            splitMain.SplitterDistance = Settings.CommitDialogSplitter;
 
             this.HotkeysEnabled = true;
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
@@ -215,16 +215,16 @@ namespace GitUI
 
             switch (command)
             {
-                case Commands.FocusStagedFiles: return FocusStagedFiles(); 
-                case Commands.FocusUnstagedFiles: return FocusUnstagedFiles(); 
-                case Commands.FocusSelectedDiff: return FocusSelectedDiff(); 
-                case Commands.FocusCommitMessage: return FocusCommitMessage(); 
-                case Commands.StageSelectedFile: return StageSelectedFile(); 
+                case Commands.FocusStagedFiles: return FocusStagedFiles();
+                case Commands.FocusUnstagedFiles: return FocusUnstagedFiles();
+                case Commands.FocusSelectedDiff: return FocusSelectedDiff();
+                case Commands.FocusCommitMessage: return FocusCommitMessage();
+                case Commands.StageSelectedFile: return StageSelectedFile();
                 case Commands.UnStageSelectedFile: return UnStageSelectedFile();
                 //default: return false;
                 default: ExecuteScriptCommand(cmd, Keys.None); return true;
             }
-            
+
         }
 
         #endregion
@@ -337,7 +337,7 @@ namespace GitUI
                     !showIgnoredFilesToolStripMenuItem.Checked,
                     showUntrackedFilesToolStripMenuItem.Checked);
             _gitGetUnstagedCommand.CmdStartProcess(Settings.GitCommand, allChangedFilesCmd);
- 
+
             Loading.Visible = true;
             LoadingStaged.Visible = true;
 
@@ -717,23 +717,13 @@ namespace GitUI
                 DialogResult.Yes)
                 return;
 
-            var deleteNewFiles = false;
-            var askToDeleteNewFiles = true;
+            var deleteNewFiles = Unstaged.SelectedItems.Any(item => item.IsNew)
+                && MessageBox.Show(_alsoDeleteUntrackedFiles.Text, _alsoDeleteUntrackedFilesCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes;
             var output = new StringBuilder();
             foreach (var item in Unstaged.SelectedItems)
             {
                 if (item.IsNew)
                 {
-                    if (!deleteNewFiles && askToDeleteNewFiles)
-                    {
-                        var result = MessageBox.Show(_alsoDeleteUntrackedFiles.Text,
-                                                     _alsoDeleteUntrackedFilesCaption.Text, MessageBoxButtons.YesNo);
-                        if (result == DialogResult.Yes)
-                            deleteNewFiles = true;
-
-                        askToDeleteNewFiles = false;
-                    }
-
                     if (deleteNewFiles)
                         File.Delete(Settings.WorkingDir + item.Name);
                 }
