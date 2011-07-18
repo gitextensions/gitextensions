@@ -1084,17 +1084,6 @@ namespace GitUI
                                  cellBounds.Width - (int)offset, cellBounds.Height);
         }
 
-        private void DrawColumnText(IDeviceContext dc, string text, Font font, Color color, Rectangle bounds)
-        {
-            TextRenderer.DrawText(dc, text, font, bounds, color, TextFormatFlags.EndEllipsis);
-        }
-
-        private static Rectangle AdjustCellBounds(Rectangle cellBounds, float offset)
-        {
-            return new Rectangle((int)(cellBounds.Left + offset), cellBounds.Top + 4,
-                                 cellBounds.Width - (int)offset, cellBounds.Height);
-        }
-
         private static Color GetHeadColor(GitHead head)
         {
             return head.IsTag
