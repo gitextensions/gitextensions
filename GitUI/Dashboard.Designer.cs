@@ -74,7 +74,7 @@
             this.splitContainer5.Panel2.AccessibleName = null;
             resources.ApplyResources(this.splitContainer5.Panel2, "splitContainer5.Panel2");
             this.splitContainer5.Panel2.BackgroundImage = null;
-            this.splitContainer5.Panel2.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.pictureBox1);
             this.splitContainer5.Panel2.Font = null;
             this.splitContainer5.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer5_SplitterMoved);
             // 
@@ -113,7 +113,6 @@
             resources.ApplyResources(this.CommonActions, "CommonActions");
             this.CommonActions.BackColor = System.Drawing.Color.Transparent;
             this.CommonActions.BackgroundImage = null;
-            this.CommonActions.Font = null;
             this.CommonActions.Name = "CommonActions";
             this.CommonActions.RepositoryCategory = null;
             this.CommonActions.Title = "Common Actions";
@@ -153,7 +152,6 @@
             resources.ApplyResources(this.RecentRepositories, "RecentRepositories");
             this.RecentRepositories.BackColor = System.Drawing.Color.Transparent;
             this.RecentRepositories.BackgroundImage = null;
-            this.RecentRepositories.Font = null;
             this.RecentRepositories.Name = "RecentRepositories";
             this.RecentRepositories.RepositoryCategory = null;
             this.RecentRepositories.Title = "Recent Repositories";
@@ -165,7 +163,6 @@
             resources.ApplyResources(this.DonateCategory, "DonateCategory");
             this.DonateCategory.BackColor = System.Drawing.Color.Transparent;
             this.DonateCategory.BackgroundImage = null;
-            this.DonateCategory.Font = null;
             this.DonateCategory.Name = "DonateCategory";
             this.DonateCategory.RepositoryCategory = null;
             this.DonateCategory.Title = "Contribute";
@@ -179,7 +176,7 @@
             this.pictureBox1.BackgroundImage = null;
             this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pictureBox1.Font = null;
-            this.pictureBox1.Image = global::GitUI.Properties.Resources.Cow;
+            this.pictureBox1.Image = global::GitUI.Properties.Resources.git_extensions_logo_final_128;
             this.pictureBox1.ImageLocation = null;
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.TabStop = false;
@@ -197,7 +194,6 @@
             this.Name = "Dashboard";
             this.splitContainer5.Panel1.ResumeLayout(false);
             this.splitContainer5.Panel2.ResumeLayout(false);
-            this.splitContainer5.Panel2.PerformLayout();
             this.splitContainer5.ResumeLayout(false);
             this.splitContainer6.Panel1.ResumeLayout(false);
             this.splitContainer6.Panel2.ResumeLayout(false);
