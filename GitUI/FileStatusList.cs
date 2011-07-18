@@ -136,8 +136,7 @@ namespace GitUI
 
             if (listBox != null)
             {
-                if (!listBox.Focused)
-                    listBox.Focus();
+                listBox.Select();
             }
 
             //DRAG
