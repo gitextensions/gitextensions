@@ -993,8 +993,8 @@ namespace GitUI
                                     {
                                         offset += 9;
 
-                                        DrawRoundRect(e.Graphics, headColor, headBounds.X, headBounds.Y,
-                                                      RoundToEven(textSize.Width + 3), RoundToEven(textSize.Height), 3);
+                                        DrawHeadBackground(isRowSelected, e.Graphics, headColor, headBounds.X, headBounds.Y,
+                                                           RoundToEven(textSize.Width + 3), RoundToEven(textSize.Height), 3);
 
                                         headBounds.Offset(1, 0);
                                     }
@@ -1084,6 +1084,17 @@ namespace GitUI
                                  cellBounds.Width - (int)offset, cellBounds.Height);
         }
 
+        private void DrawColumnText(IDeviceContext dc, string text, Font font, Color color, Rectangle bounds)
+        {
+            TextRenderer.DrawText(dc, text, font, bounds, color, TextFormatFlags.EndEllipsis);
+        }
+
+        private static Rectangle AdjustCellBounds(Rectangle cellBounds, float offset)
+        {
+            return new Rectangle((int)(cellBounds.Left + offset), cellBounds.Top + 4,
+                                 cellBounds.Width - (int)offset, cellBounds.Height);
+        }
+
         private static Color GetHeadColor(GitHead head)
         {
             return head.IsTag
@@ -1101,7 +1112,7 @@ namespace GitUI
             return result < value ? result + 2 : result;
         }
 
-        private void DrawRoundRect(Graphics graphics, Color color, float x, float y, float width, float height, float radius)
+        private void DrawHeadBackground(bool isSelected, Graphics graphics, Color color, float x, float y, float width, float height, float radius)
         {
             var oldMode = graphics.SmoothingMode;
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -1110,7 +1121,7 @@ namespace GitUI
             {
                 using (var shadePath = CreateRoundRectPath(x + 1, y + 1, width, height, radius))
                 {
-                    graphics.FillPath(new SolidBrush(Color.Silver), shadePath);
+                    graphics.FillPath(new SolidBrush(isSelected ? Color.Black : Color.Gray), shadePath);
                 }
 
                 using (var forePath = CreateRoundRectPath(x, y, width, height, radius))
@@ -1122,8 +1133,6 @@ namespace GitUI
 
                     graphics.FillPath(fillBrush, forePath);
                 }
-
-                //graphics.DrawPath(new Pen(color), path);
             }
             finally
             {
@@ -1997,7 +2006,7 @@ namespace GitUI
                 default: ExecuteScriptCommand(cmd, Keys.None); break;
             }
 
-            return true;
+            return true; 
         }
 
         #endregion
