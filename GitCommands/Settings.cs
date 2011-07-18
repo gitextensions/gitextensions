@@ -12,7 +12,7 @@ namespace GitCommands
     public static class Settings
     {
         //Constants
-        public static readonly string GitExtensionsVersionString = "2.23";
+        public static readonly string GitExtensionsVersionString = "2.23 RC1";
         public static readonly int GitExtensionsVersionInt = 223;
 
         //semi-constants
@@ -164,6 +164,13 @@ namespace GitCommands
         {
             get { return SafeGet("iconcolor", "default", ref _iconColor); }
             set { SafeSet("iconcolor", value, ref _iconColor); }
+        }
+
+        private static string _iconStyle;
+        public static string IconStyle
+        {
+            get { return SafeGet("iconstyle", "default", ref _iconStyle); }
+            set { SafeSet("iconstyle", value, ref _iconStyle); }
         }
 
         private static int? _authorImageSize;

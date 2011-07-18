@@ -48,6 +48,8 @@ namespace GitUI
             translated = true;
         }
 
+
+
         #region Hotkeys
 
         /// <summary>Gets or sets a value that specifies if the hotkeys are used</summary>
