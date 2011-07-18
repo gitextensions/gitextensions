@@ -1,25 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EnvDTE;
+﻿using EnvDTE;
 
 namespace GitPlugin.Commands
 {
-    public class About : ItemCommandBase
+    public sealed class About : ItemCommandBase
     {
-        public About()
-            : base(true, true)
-        {
-        }
-
-        public override void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane)
+        protected override void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane)
         {
             RunGitEx("about", fileName);
         }
 
-        public override bool IsEnabled(EnvDTE80.DTE2 application)
+        protected override CommandTarget SupportedTargets
         {
-            return true;
+            get { return CommandTarget.Any; }
         }
     }
 }

@@ -15,7 +15,7 @@ namespace GitUI
         public FileStatusList()
         {
             InitializeComponent(); Translate();
-
+            SizeChanged += new EventHandler(FileStatusList_SizeChanged);
             FileStatusListBox.DrawMode = DrawMode.OwnerDrawVariable;
             FileStatusListBox.MeasureItem += new MeasureItemEventHandler(FileStatusListBox_MeasureItem);
             FileStatusListBox.DrawItem += new DrawItemEventHandler(FileStatusListBox_DrawItem);
@@ -28,6 +28,11 @@ namespace GitUI
 
             NoFiles.Visible = false;
             NoFiles.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
+        }
+
+        void FileStatusList_SizeChanged(object sender, EventArgs e)
+        {
+            FileStatusListBox.HorizontalExtent = 0;
         }
 
         public override bool Focused
@@ -273,8 +278,17 @@ namespace GitUI
                                 if (gitItemStatus.IsCopied)
                                     e.Graphics.DrawImage(Resources.Copied, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
 
-                e.Graphics.DrawString(GetItemText(e.Graphics, gitItemStatus), FileStatusListBox.Font,
+                string text = GetItemText(e.Graphics, gitItemStatus);
+
+                e.Graphics.DrawString(text, FileStatusListBox.Font,
                                       new SolidBrush(e.ForeColor), e.Bounds.Left + ImageSize, e.Bounds.Top);
+
+                int width = (int) e.Graphics.MeasureString(text, e.Font).Width + ImageSize;
+
+                ListBox listBox = (ListBox)sender;
+
+                if (listBox.HorizontalExtent < width)
+                    listBox.HorizontalExtent = width;
             }
         }
 
@@ -297,6 +311,7 @@ namespace GitUI
                 else
                     NoFiles.Visible = false;
 
+                FileStatusListBox.HorizontalExtent = 0;
                 FileStatusListBox.DataSource = value;
             }
         }
@@ -311,7 +326,6 @@ namespace GitUI
         {
             NoFiles.Location = new Point(5, 5);
             NoFiles.Size = new Size(Size.Width - 10, Size.Height - 10);
-            Refresh();
         }
 
         private void FileStatusListBox_KeyDown(object sender, KeyEventArgs e)
