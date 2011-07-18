@@ -13,6 +13,7 @@ Version 2.23
 	Added option to save stash with custom message
 	Save setting for 'ignore whitespace' checkbox on 'ApplyPatch' form
 	Updated msysgit to version 1.7.6
+	New logo
 
 Version 2.22
 	Fixed issue 142: Changed main window title to repository name instead of path
