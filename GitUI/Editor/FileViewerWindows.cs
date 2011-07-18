@@ -388,8 +388,7 @@ namespace GitUI.Editor
 
         public void FocusTextArea()
         {
-            if (!TextEditor.ActiveTextAreaControl.TextArea.Focused)
-                TextEditor.ActiveTextAreaControl.TextArea.Focus();
+            TextEditor.ActiveTextAreaControl.TextArea.Select();
         }
 
         public bool IsReadOnly 
