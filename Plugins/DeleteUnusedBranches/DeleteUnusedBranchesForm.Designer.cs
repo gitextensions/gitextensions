@@ -151,6 +151,7 @@
             // 
             // Cancel
             // 
+            this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.Cancel.Dock = System.Windows.Forms.DockStyle.Left;
             this.Cancel.Location = new System.Drawing.Point(380, 3);
             this.Cancel.Name = "Cancel";
@@ -158,7 +159,6 @@
             this.Cancel.TabIndex = 0;
             this.Cancel.Text = "Close";
             this.Cancel.UseVisualStyleBackColor = true;
-            this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
             // 
             // Delete
             // 
@@ -175,6 +175,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.Cancel;
             this.ClientSize = new System.Drawing.Size(760, 421);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

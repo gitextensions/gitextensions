@@ -91,7 +91,10 @@ namespace GitUI.Hotkey
             {
                 for (int i = 0; i < hs.Commands.Length; i++)
                 {
-                    if (!UsedKeys.Contains(hs.Commands[i].KeyData)) UsedKeys.Add(hs.Commands[i].KeyData);
+                    HotkeyCommand hotkeyCommand = hs.Commands[i];
+                    
+                    if (hotkeyCommand != null && !UsedKeys.Contains(hotkeyCommand.KeyData)) 
+                        UsedKeys.Add(hotkeyCommand.KeyData);
                 }
             }
             //MessageBox.Show(UsedKeys.Count.ToString());
@@ -184,7 +187,8 @@ namespace GitUI.Hotkey
                     hk(FormBrowse.Commands.SelectCurrentRevision, Keys.Control | Keys.Shift | Keys.C),
                     hk(FormBrowse.Commands.CheckoutBranch, Keys.Control | Keys.Decimal),
                     hk(FormBrowse.Commands.QuickFetch, Keys.Control | Keys.Shift | Keys.Down),
-                    hk(FormBrowse.Commands.QuickPush, Keys.Control | Keys.Shift | Keys.Up)),
+                    hk(FormBrowse.Commands.QuickPush, Keys.Control | Keys.Shift | Keys.Up),
+                    hk(FormBrowse.Commands.RotateApplicationIcon, Keys.Control | Keys.Shift | Keys.I)),
                 new HotkeySettings(RevisionGrid.HotkeySettingsName,
                     hk(RevisionGrid.Commands.RevisionFilter, Keys.Control | Keys.F),
                     hk(RevisionGrid.Commands.ToggleRevisionGraph, Keys.None),
