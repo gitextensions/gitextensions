@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -191,17 +192,13 @@ namespace GitUI
         private void InternalInitialize(bool hard)
         {
             Cursor.Current = Cursors.WaitCursor;
-
             bool validWorkingDir = Settings.ValidWorkingDir();
             bool hasWorkingDir = !string.IsNullOrEmpty(Settings.WorkingDir);
-
             branchSelect.Text = validWorkingDir ? GitCommandHelpers.GetSelectedBranch() : "";
-
             if (hasWorkingDir)
                 HideDashboard();
             else
                 ShowDashboard();
-
             tabControl1.Visible = validWorkingDir;
             commandsToolStripMenuItem.Enabled = validWorkingDir;
             manageRemoteRepositoriesToolStripMenuItem1.Enabled = validWorkingDir;
@@ -217,27 +214,20 @@ namespace GitUI
             commitcountPerUserToolStripMenuItem.Enabled = validWorkingDir;
             _createPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
             _viewPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
-
             //Only show "Repository hosts" menu item when there is at least 1 repository host plugin loaded
             _repositoryHostsToolStripMenuItem.Visible = RepoHosts.GitHosters.Count > 0;
             if (RepoHosts.GitHosters.Count == 1)
                 _repositoryHostsToolStripMenuItem.Text = RepoHosts.GitHosters[0].Description;
-
             InitToolStripBranchFilter(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
-
             if (hard)
                 ShowRevisions();
-
             _NO_TRANSLATE_Workingdir.Text = Settings.WorkingDir;
             Text = GenerateWindowTitle(Settings.WorkingDir, validWorkingDir);
 
-
             UpdateJumplist(validWorkingDir);
-
 
             CheckForMergeConflicts();
             UpdateStashCount();
-
             // load custom user menu
             LoadUserMenu();
             Cursor.Current = Cursors.Default;
@@ -261,9 +251,18 @@ namespace GitUI
 
         private void LoadUserMenu()
         {
+            var scripts = ScriptManager.GetScripts().Where(script => script.Enabled
+                && script.OnEvent == ScriptEvent.ShowInUserMenuBar).ToList();
+
+            if (scripts.Count == 0)
+            {
+                this.UserMenuToolStrip.Hide();
+                return;
+            }
+
             //menu strip must be visible to be able to move it
             this.UserMenuToolStrip.Show();
-            if( GitCommands.Settings.UserMenuLocationX >= 0 && GitCommands.Settings.UserMenuLocationY >= 0)
+            if (GitCommands.Settings.UserMenuLocationX >= 0 && GitCommands.Settings.UserMenuLocationY >= 0)
             {
                 this.UserMenuToolStrip.Location = new Point(
                                     GitCommands.Settings.UserMenuLocationX,
@@ -276,29 +275,25 @@ namespace GitUI
             // disable context menu if no scripts are found/enabled
             this.toolPanelContextMenu.Enabled = false;
 
-            foreach (ScriptInfo scriptInfo in ScriptManager.GetScripts())
+            foreach (ScriptInfo scriptInfo in scripts)
             {
-                if (scriptInfo.Enabled && scriptInfo.OnEvent == ScriptEvent.ShowInUserMenuBar)
-                {
-
-                    ToolStripButton tempButton = new ToolStripButton();
-                    tempButton.Text = scriptInfo.Name;
-                    //store scriptname
-                    tempButton.Tag = scriptInfo.Name;
-                    //add handler
-                    tempButton.Click += new EventHandler(UserMenu_Click);
-                    tempButton.Enabled = true;
-                    tempButton.Visible = true;
-                    tempButton.Image = GitUI.Properties.Resources.bug;
-                    tempButton.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
-                    //add to toolstrip
-                    this.UserMenuToolStrip.Items.Add((ToolStripItem)tempButton);
-                    //set visible
-                    this.UserMenuToolStrip.Show();
-                    // enable context menu
-                    this.toolPanelContextMenu.Enabled = true;
-                    this.toolPanelContextMenu_HideUserMenu.Checked = false;
-                }
+                ToolStripButton tempButton = new ToolStripButton();
+                tempButton.Text = scriptInfo.Name;
+                //store scriptname
+                tempButton.Tag = scriptInfo.Name;
+                //add handler
+                tempButton.Click += new EventHandler(UserMenu_Click);
+                tempButton.Enabled = true;
+                tempButton.Visible = true;
+                tempButton.Image = GitUI.Properties.Resources.bug;
+                tempButton.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
+                //add to toolstrip
+                this.UserMenuToolStrip.Items.Add((ToolStripItem)tempButton);
+                //set visible
+                this.UserMenuToolStrip.Show();
+                // enable context menu
+                this.toolPanelContextMenu.Enabled = true;
+                this.toolPanelContextMenu_HideUserMenu.Checked = false;
             }
         }
 
@@ -653,7 +648,6 @@ namespace GitUI
             if (tabControl1.SelectedTab != Diff)
                 return;
 
-            DiffFiles.GitItemStatuses = null;
             var revisions = RevisionGrid.GetRevisions();
 
             DiffText.SaveCurrentScrollPos();
@@ -665,6 +659,7 @@ namespace GitUI
                         GitCommandHelpers.GetDiffFiles(revisions[0].Guid, revisions[1].Guid);
                     break;
                 case 0:
+                    DiffFiles.GitItemStatuses = null;
                     return;
                 default:
                     var revision = revisions[0];
@@ -1148,7 +1143,6 @@ namespace GitUI
             Initialize();
             RevisionGrid.ReloadHotkeys();
             RevisionGrid.ReloadTranslation();
-            RevisionGrid.ForceRefreshRevisions();
         }
 
         private void ArchiveToolStripMenuItemClick(object sender, EventArgs e)
