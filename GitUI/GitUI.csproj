@@ -41,7 +41,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\GitExtensions\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -51,7 +51,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\GitExtensions\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -1058,6 +1058,7 @@
     <ProjectReference Include="..\GitCommands\GitCommands.csproj">
       <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
       <Name>GitCommands</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Gravatar\Gravatar.csproj">
       <Project>{4041B976-50D0-4C6E-ABAF-7E67458A1264}</Project>
@@ -1074,6 +1075,7 @@
     <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
       <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
       <Name>GitUIPluginInterfaces</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

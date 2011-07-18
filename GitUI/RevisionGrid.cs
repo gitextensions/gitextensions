@@ -161,6 +161,16 @@ namespace GitUI
         public int LastRow { get; set; }
         public bool AllowGraphWithFilter { get; set; }
 
+        [Description("Indicates whether the user is allowed to select more than one commit at a time.")]
+        [Category("Behavior")]
+        [DefaultValue(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        public bool MultiSelect
+        {
+            get { return Revisions.MultiSelect; }
+            set { Revisions.MultiSelect = value; }
+        }
+
         public void SetInitialRevision(GitRevision initialSelectedRevision)
         {
             _initialSelectedRevision = initialSelectedRevision != null ? initialSelectedRevision.Guid : null;
@@ -1249,7 +1259,7 @@ namespace GitUI
 
             LastRow = hti.RowIndex;
             Revisions.ClearSelection();
-            
+
             if (LastRow >= 0 && Revisions.Rows.Count > LastRow)
                 Revisions.Rows[LastRow].Selected = true;
         }
@@ -1258,7 +1268,7 @@ namespace GitUI
         {
             GitUICommands.Instance.StartCommitDialog();
             OnActionOnRepositoryPerformed();
-            RefreshRevisions();            
+            RefreshRevisions();
         }
 
         private void GitIgnoreClick(object sender, EventArgs e)
