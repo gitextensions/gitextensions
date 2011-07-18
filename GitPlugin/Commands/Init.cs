@@ -1,4 +1,6 @@
-﻿using EnvDTE;
+﻿using System.IO;
+using System.Linq;
+using EnvDTE;
 
 namespace GitPlugin.Commands
 {
@@ -6,7 +8,10 @@ namespace GitPlugin.Commands
     {
         protected override void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane)
         {
-            RunGitEx("init", fileName);
+            if (string.IsNullOrEmpty(fileName) || Path.GetInvalidPathChars().Any(fileName.Contains))
+                return;
+            var directoryName = Path.GetDirectoryName(fileName);
+            RunGitEx("init", directoryName);
         }
 
         protected override CommandTarget SupportedTargets

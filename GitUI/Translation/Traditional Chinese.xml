@@ -734,14 +734,15 @@ _ReSharper*/</Value>
         <TranslationItem Name="Revert" Property="Text">
           <Value>回復修改</Value>
         </TranslationItem>
-        <TranslationItem Name="button1" Property="Text">
+        <TranslationItem Name="btnCancel" Property="Text">
           <Value>取消</Value>
         </TranslationItem>
         <TranslationItem Name="_resetChangesCaption" Property="Text">
           <Value>重置修改</Value>
         </TranslationItem>
         <TranslationItem Name="_undoChangesIn" Property="Text">
-          <Value>回復修改：{0}？</Value>
+          <Value>回復修改：
+{0}？</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
