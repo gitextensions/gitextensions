@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Editor;
@@ -1303,8 +1304,8 @@ namespace GitUI
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.RevisionGrid.Name = "RevisionGrid";
-            this.RevisionGrid.NormalFont = new System.Drawing.Font("Tahoma", 8.75F);
-            this.RevisionGrid.Size = new System.Drawing.Size(959, 218);
+			this.RevisionGrid.NormalFont = new Font(SystemFonts.DefaultFont.FontFamily, SystemFonts.DefaultFont.Size + 1);
+                // new System.Drawing.Font("Tahoma", 8.75F);
             this.RevisionGrid.TabIndex = 0;
             this.RevisionGrid.DoubleClick += new System.EventHandler(this.RevisionGridDoubleClick);
             // 
