@@ -14,7 +14,7 @@ namespace GitUI
 {
     public class GitExtensionsForm : Form
     {
-        private static readonly Icon ApplicationIcon = GetApplicationIcon();
+        private static Icon ApplicationIcon = GetApplicationIcon(Settings.IconStyle, Settings.IconColor);
 
         private bool _translated;
 
@@ -87,27 +87,91 @@ namespace GitUI
             Font = SystemFonts.MessageBoxFont;
         }
 
-        private static Icon GetApplicationIcon()
+        #region icon
+
+        protected void RotateApplicationIcon()
+        {
+            ApplicationIcon = GetApplicationIcon(Settings.IconStyle, Settings.IconColor);
+            Icon = ApplicationIcon;
+        }
+
+        protected static Icon GetApplicationIcon(string iconStyle, string iconColor)
         {
             var randomIcon = -1;
-            if (Settings.IconColor.Equals("random"))
+            if (iconColor.Equals("random"))
                 randomIcon = new Random(DateTime.Now.Millisecond).Next(6);
 
-            if (Settings.IconColor.Equals("default") || randomIcon == 0)
-                return Resources.cow_head;
-            if (Settings.IconColor.Equals("blue") || randomIcon == 1)
-                return Resources.cow_head_blue;
-            if (Settings.IconColor.Equals("purple") || randomIcon == 2)
-                return Resources.cow_head_purple;
-            if (Settings.IconColor.Equals("green") || randomIcon == 3)
-                return Resources.cow_head_green;
-            if (Settings.IconColor.Equals("red") || randomIcon == 4)
-                return Resources.cow_head_red;
-            if (Settings.IconColor.Equals("yellow") || randomIcon == 5)
-                return Resources.cow_head_yellow;
+            if (iconStyle.Equals("small", StringComparison.OrdinalIgnoreCase))
+            {
+                if (iconColor.Equals("default") || randomIcon == 0)
+                    return Resources.x_with_arrow;
+                if (iconColor.Equals("blue") || randomIcon == 1)
+                    return Resources.x_with_arrow_blue;
+                if (iconColor.Equals("green") || randomIcon == 3)
+                    return Resources.x_with_arrow_green;
+                if (iconColor.Equals("lightblue") || randomIcon == 1)
+                    return Resources.x_with_arrow_lightblue;
+                if (iconColor.Equals("purple") || randomIcon == 2)
+                    return Resources.x_with_arrow_purple;
+                if (iconColor.Equals("red") || randomIcon == 4)
+                    return Resources.x_with_arrow_red;
+                if (iconColor.Equals("yellow") || randomIcon == 5)
+                    return Resources.x_with_arrow_yellow;
+            } else
+            if (iconStyle.Equals("large", StringComparison.OrdinalIgnoreCase))
+            {
+                if (iconColor.Equals("default") || randomIcon == 0)
+                    return Resources.git_extensions_logo_final;
+                if (iconColor.Equals("blue") || randomIcon == 1)
+                    return Resources.git_extensions_logo_final_blue;
+                if (iconColor.Equals("green") || randomIcon == 3)
+                    return Resources.git_extensions_logo_final_green;
+                if (iconColor.Equals("lightblue") || randomIcon == 1)
+                    return Resources.git_extensions_logo_final_lightblue;
+                if (iconColor.Equals("purple") || randomIcon == 2)
+                    return Resources.git_extensions_logo_final_purple;
+                if (iconColor.Equals("red") || randomIcon == 4)
+                    return Resources.git_extensions_logo_final_mixed_red;
+                if (iconColor.Equals("yellow") || randomIcon == 5)
+                    return Resources.git_extensions_logo_final_mixed_yellow;
+            } else
+            if (iconStyle.Equals("cow", StringComparison.OrdinalIgnoreCase))
+            {
+                if (iconColor.Equals("default") || randomIcon == 0)
+                    return Resources.cow_head;
+                if (iconColor.Equals("blue") || randomIcon == 1)
+                    return Resources.cow_head_blue;
+                if (iconColor.Equals("green") || randomIcon == 3)
+                    return Resources.cow_head_green;
+                if (iconColor.Equals("lightblue") || randomIcon == 1)
+                    return Resources.cow_head_blue;
+                if (iconColor.Equals("purple") || randomIcon == 2)
+                    return Resources.cow_head_purple;
+                if (iconColor.Equals("red") || randomIcon == 4)
+                    return Resources.cow_head_red;
+                if (iconColor.Equals("yellow") || randomIcon == 5)
+                    return Resources.cow_head_yellow;
+            } else
+            {
+                if (iconColor.Equals("default") || randomIcon == 0)
+                    return Resources.git_extensions_logo_final_mixed;
+                if (iconColor.Equals("blue") || randomIcon == 1)
+                    return Resources.git_extensions_logo_final_mixed_blue;
+                if (iconColor.Equals("green") || randomIcon == 3)
+                    return Resources.git_extensions_logo_final_mixed_green;
+                if (iconColor.Equals("lightblue") || randomIcon == 1)
+                    return Resources.git_extensions_logo_final_mixed_lightblue;
+                if (iconColor.Equals("purple") || randomIcon == 2)
+                    return Resources.git_extensions_logo_final_mixed_purple;
+                if (iconColor.Equals("red") || randomIcon == 4)
+                    return Resources.git_extensions_logo_final_mixed_red;
+                if (iconColor.Equals("yellow") || randomIcon == 5)
+                    return Resources.git_extensions_logo_final_mixed_yellow;
+            }
 
-            return Resources.cow_head;
+            return Resources.git_extensions_logo_final_mixed;
         }
+        #endregion
 
         private static bool CheckComponent(object value)
         {
