@@ -186,9 +186,7 @@
           <Value>Закрыть диалог после коммита всех изменений</Value>
         </TranslationItem>
         <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text">
-          <Value>Хотите также удалить созданные файлы, которые находятся в выделении?
-
-Выберите 'Нет' чтобы оставить все новые файлы.</Value>
+          <Value>Среди выделенных файлов есть новые, отменить изменения в них невозможно. Удалить их?</Value>
         </TranslationItem>
         <TranslationItem Name="_alsoDeleteUntrackedFilesCaption" Property="Text">
           <Value>Удалить</Value>
@@ -745,7 +743,7 @@
         <TranslationItem Name="fileUnchangedAfterMerge" Property="Text">
           <Value>Файл был изменен при слиянии. Обычно это означает, что файл был сохранен в неправильное место.
 
-Конфликт слияния не будет отмечен как разрешенный. Пожалуйста, попробуйте еще.</Value>
+Конфликт слияния не будет отмечен как разрешенный. Пожалуйста, попробуйте ещё раз.</Value>
         </TranslationItem>
         <TranslationItem Name="allConflictsResolved" Property="Text">
           <Value>Все конфликты были разрешены, вы можете коммитить.
@@ -991,7 +989,7 @@
           <Value>Локальная ветка</Value>
         </TranslationItem>
         <TranslationItem Name="_allMergeConflictSolvedQuestion" Property="Text">
-          <Value>Решены все конфликты? Хотите коммитить?</Value>
+          <Value>Разрешены все конфликты? Хотите осуществить коммит?</Value>
         </TranslationItem>
         <TranslationItem Name="_allMergeConflictSolvedQuestionCaption" Property="Text">
           <Value>Конфликты разрешены</Value>
@@ -1601,7 +1599,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Удалить</Value>
         </TranslationItem>
         <TranslationItem Name="_removeDanglingObjectsQuestion" Property="Text">
-          <Value>Вы точно хотите удалить все висящие объекты?</Value>
+          <Value>Вы точно хотите удалить все потерянные объекты?</Value>
         </TranslationItem>
         <TranslationItem Name="_xTagsCreated" Property="Text">
           <Value>Было создано {0} меток.
@@ -1615,7 +1613,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Щёлкните дважды по строке, содержащей хеш sha1, для того чтобы просмотреть объект</Value>
         </TranslationItem>
         <TranslationItem Name="Remove" Property="Text">
-          <Value>Удалить все висящие объекты</Value>
+          <Value>Удалить все потерянные объекты</Value>
         </TranslationItem>
         <TranslationItem Name="TagSelectedObject" Property="Text">
           <Value>Пометить выбранный объект</Value>
@@ -2152,7 +2150,7 @@ _ReSharper*/
           <Value>Показывать отфильтрованные ветки</Value>
         </TranslationItem>
         <TranslationItem Name="drawNonrelativesGrayToolStripMenuItem" Property="Text">
-          <Value>Рисовать неродственные ветки серыми</Value>
+          <Value>Отображать неродственные ветки серыми</Value>
         </TranslationItem>
         <TranslationItem Name="copyToClipboardToolStripMenuItem" Property="Text">
           <Value>Копировать в буфер</Value>
@@ -2374,7 +2372,7 @@ _ReSharper*/
           <Value>Коммит:</Value>
         </TranslationItem>
         <TranslationItem Name="BranchInfo" Property="Text">
-          <Value>Скопировать этот коммит:</Value>
+          <Value>Скопировать (cherry pick) этот коммит:</Value>
         </TranslationItem>
         <TranslationItem Name="Pick" Property="Text">
           <Value>Выбрать этот коммит:</Value>
