@@ -1,77 +1,153 @@
-// Copyright (C) 2006-2008 Jim Tilander. See COPYING for and README for more details.
 using System;
+using System.Linq;
 using EnvDTE;
 using EnvDTE80;
 using System.Windows.Forms;
 
 namespace GitPlugin.Commands
 {
-        // an item command is a command associated with selected items in solution explorer
-        public abstract class ItemCommandBase : CommandBase
+    /// <summary>
+    /// An item command is a command associated with selected items in solution explorer.
+    /// </summary>
+    public abstract class ItemCommandBase : CommandBase
+    {
+        public override void OnCommand(DTE2 application, OutputWindowPane pane)
         {
-            private readonly bool m_executeForFileItems = true;
-            private readonly bool m_executeForProjectItems = true;
-
-            protected ItemCommandBase()
+            if (application.SelectedItems.Count == 0)
             {
-            }
+                // nothing is selected, so if we have current solution and command supports that target, execute command on whole solution
+                if (application.Solution.IsOpen && IsTargetSupported(CommandTarget.Solution))
+                    OnExecute(null, application.Solution.FullName, pane);
 
-            protected ItemCommandBase(bool executeForFileItems, bool executeForProjectItems)
-            {
-                m_executeForFileItems = executeForFileItems;
-                m_executeForProjectItems = executeForProjectItems;
-            }
-
-            private const string m_fileItemGUID = "{6BB5F8EE-4483-11D3-8BCF-00C04F8EC28C}";
-
-            public override void OnCommand(DTE2 application, OutputWindowPane pane)
-            {
-                if (application.SelectedItems.Count == 0)
-                {
+                // there is no opened solution, so try execute command for empty target
+                if (IsTargetSupported(CommandTarget.Empty))
                     OnExecute(null, null, pane);
-                }
 
-                foreach (SelectedItem sel in application.SelectedItems)
-                {
-                    if (m_executeForFileItems && sel.ProjectItem != null && m_fileItemGUID == sel.ProjectItem.Kind)
-                    {
-                        //The try catch block belowe fixed issue 57:
-                        //http://github.com/spdr870/gitextensions/issues/#issue/57
-                        try
-                        {
-                            OnExecute(sel, sel.ProjectItem.get_FileNames(0), pane);
-                        }
-                        catch (ArgumentException)
-                        {
-                            if (sel.ProjectItem.FileCount > 0)
-                            {
-                                OnExecute(sel, sel.ProjectItem.get_FileNames(1), pane);
-                            }
-                            else
-                            {
-                                throw;
-                            }
-                        }
-                    }
-                    else
-                        if (m_executeForProjectItems && sel.Project != null)
-                            OnExecute(sel, sel.Project.FullName, pane);
-                        else
-                            MessageBox.Show("You need to select a file or project to use this function.", "Git Extensions", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+                return;
             }
 
-            public override bool IsEnabled(DTE2 application)
+            foreach (SelectedItem solutionItem in application.SelectedItems)
             {
-                return
-                    ("Tool" == application.ActiveWindow.Kind &&
-                    application.ActiveWindow.Caption.StartsWith("Solution Explorer") &&
-                    application.SelectedItems.Count > 0) ||
-                    ("Document" == application.ActiveWindow.Kind &&
-                    application.ActiveDocument != null);
+                ExecuteOnSolutionItem(solutionItem, application, pane);
+            }
+        }
 
+        private void ExecuteOnSolutionItem(SelectedItem solutionItem, DTE2 application, OutputWindowPane pane)
+        {
+            if (solutionItem.ProjectItem != null && IsTargetSupported(GetProjectItemTarget(solutionItem.ProjectItem)))
+            {
+                //Unfortunaly FileNames[1] is not supported by .net 3.5
+                OnExecute(solutionItem, solutionItem.ProjectItem.get_FileNames(1), pane);
+                return;
             }
 
-            public abstract void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane);
+            if (solutionItem.Project != null && IsTargetSupported(CommandTarget.Project))
+            {
+                OnExecute(solutionItem, solutionItem.Project.FullName, pane);
+                return;
+            }
+
+            if (application.Solution.IsOpen && IsTargetSupported(CommandTarget.Solution))
+            {
+                OnExecute(solutionItem, application.Solution.FullName, pane);
+                return;
+            }
+
+            if (IsTargetSupported(CommandTarget.Empty))
+            {
+                OnExecute(solutionItem, null, pane);
+                return;
+            }
+
+            MessageBox.Show("You need to select a file or project to use this function.", "Git Extensions", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
+        public override bool IsEnabled(DTE2 application)
+        {
+            return application.SelectedItems.Count == 0
+                ? IsTargetSupported(CommandTarget.Empty)
+                : application.SelectedItems
+                    .Cast<SelectedItem>()
+                    .All(item => IsTargetSupported(GetSelectedItemTarget(item, application)));
+        }
+
+        protected abstract void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane);
+
+        protected abstract CommandTarget SupportedTargets { get; }
+
+        private bool IsTargetSupported(CommandTarget commandTarget)
+        {
+            return (SupportedTargets & commandTarget) == commandTarget;
+        }
+
+        private static CommandTarget GetSelectedItemTarget(SelectedItem selectedItem, DTE2 application)
+        {
+            if (selectedItem.ProjectItem != null)
+                return GetProjectItemTarget(selectedItem.ProjectItem);
+            if (selectedItem.Project != null)
+                return CommandTarget.Project;
+            if (application.Solution.IsOpen)
+                return CommandTarget.Solution;
+            return CommandTarget.Empty;
+        }
+
+        private static CommandTarget GetProjectItemTarget(ProjectItem projectItem)
+        {
+            switch (projectItem.Kind)
+            {
+                case Constants.vsProjectItemKindPhysicalFile:
+                    return CommandTarget.File;
+                case Constants.vsProjectItemKindVirtualFolder:
+                    return CommandTarget.VirtualFolder;
+                case Constants.vsProjectItemKindPhysicalFolder:
+                    return CommandTarget.PhysicalFolder;
+                default:
+                    return CommandTarget.Any;
+            }
+        }
+
+        [Flags]
+        protected enum CommandTarget
+        {
+            /// <summary>
+            /// Solution file selected in solution explorer.
+            /// </summary>
+            Solution = 1,
+
+            /// <summary>
+            /// Project file selected in solution explorer.
+            /// </summary>
+            Project = 2,
+
+            /// <summary>
+            /// Physical folder selected in solution explorer.
+            /// </summary>
+            PhysicalFolder = 4,
+
+            /// <summary>
+            /// Project item file selected in solution explorer.
+            /// </summary>
+            File = 8,
+
+            /// <summary>
+            /// Virtual folder selected in solution explorer.
+            /// </summary>
+            VirtualFolder = 16,
+
+            /// <summary>
+            /// Nothing is selected, no current solution.
+            /// </summary>
+            Empty = 32,
+
+            /// <summary>
+            /// Any solution explorer item that presented by physical file.
+            /// </summary>
+            SolutionExplorerFileItem = Solution | Project | File,
+
+            /// <summary>
+            /// Any target including empty.
+            /// </summary>
+            Any = SolutionExplorerFileItem | PhysicalFolder | VirtualFolder | Empty
+        }
+    }
 }
