@@ -1087,6 +1087,28 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cow-head.ico" />
+    <None Include="Resources\git-extensions-logo-final.ico" />
+    <None Include="Resources\x-with-arrow_yellow.ico" />
+    <None Include="Resources\x-with-arrow.ico" />
+    <None Include="Resources\x-with-arrow_blue.ico" />
+    <None Include="Resources\x-with-arrow_green.ico" />
+    <None Include="Resources\x-with-arrow_lightblue.ico" />
+    <None Include="Resources\x-with-arrow_purple.ico" />
+    <None Include="Resources\x-with-arrow_red.ico" />
+    <None Include="Resources\git-extensions-logo-final_blue.ico" />
+    <None Include="Resources\git-extensions-logo-final_green.ico" />
+    <None Include="Resources\git-extensions-logo-final_lightblue.ico" />
+    <None Include="Resources\git-extensions-logo-final_purple.ico" />
+    <None Include="Resources\git-extensions-logo-final_red.ico" />
+    <None Include="Resources\git-extensions-logo-final_yellow.ico" />
+    <None Include="Resources\git-extensions-logo-final_mixed_yellow.ico" />
+    <None Include="Resources\git-extensions-logo-final_mixed.ico" />
+    <None Include="Resources\git-extensions-logo-final_mixed_blue.ico" />
+    <None Include="Resources\git-extensions-logo-final_mixed_green.ico" />
+    <None Include="Resources\git-extensions-logo-final_mixed_lightblue.ico" />
+    <None Include="Resources\git-extensions-logo-final_mixed_purple.ico" />
+    <None Include="Resources\git-extensions-logo-final_mixed_red.ico" />
+    <None Include="Resources\git-extensions-logo-final-128.png" />
     <Content Include="Translation\Traditional Chinese.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
