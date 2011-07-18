@@ -267,9 +267,16 @@ namespace GitUI
         /// </summary>
         public event LoadingEventHandler Loading;
 
-        public void ShowHideRevisionGraph(bool show)
+        public void ShowRevisionGraph()
         {
-            Columns[0].Visible = show;
+            Columns[0].Visible = true;
+//            updateData();
+            backgroundEvent.Set();
+        }
+        
+        public void HideRevisionGraph()
+        {
+            Columns[0].Visible = false;
 //            updateData();
             backgroundEvent.Set();
         }
