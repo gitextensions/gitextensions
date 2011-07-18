@@ -152,10 +152,10 @@ namespace GitUI
                 //Show favourites
                 Repositories.RepositoryCategories.Aggregate(0, AddDashboardEntry);
 
-                splitContainer7.SplitterDistance = splitContainer7.Height - (DonateCategory.Height + 25);
-
                 initialized = true;
             }
+
+            splitContainer7.SplitterDistance = splitContainer7.Height - (DonateCategory.Height + 25);
 
             //Resize favourites
             for (int i = splitContainer5.Panel2.Controls.Count; i > 0; i--)
