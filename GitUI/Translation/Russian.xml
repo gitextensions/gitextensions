@@ -1516,7 +1516,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Создать ветку</Value>
         </TranslationItem>
         <TranslationItem Name="_selectOneRevision" Property="Text">
-          <Value>Выберите одну ревизию, чтобы создать из неё ветку.</Value>
+          <Value>Выберите коммит, чтобы создать на его основе ветку.</Value>
         </TranslationItem>
         <TranslationItem Name="_branchCaption" Property="Text">
           <Value>Ветка</Value>
