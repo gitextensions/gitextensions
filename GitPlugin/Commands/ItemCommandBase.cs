@@ -36,7 +36,8 @@ namespace GitPlugin.Commands
         {
             if (solutionItem.ProjectItem != null && IsTargetSupported(GetProjectItemTarget(solutionItem.ProjectItem)))
             {
-                OnExecute(solutionItem, solutionItem.ProjectItem.FileNames[1], pane);
+                //Unfortunaly FileNames[1] is not supported by .net 3.5
+                OnExecute(solutionItem, solutionItem.ProjectItem.get_FileNames(1), pane);
                 return;
             }
 

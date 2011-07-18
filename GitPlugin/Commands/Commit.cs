@@ -78,7 +78,8 @@ namespace GitPlugin.Commands
                 {
                     if (sel.ProjectItem.FileCount > 0)
                     {
-                        return sel.ProjectItem.FileNames[1];
+                        //Unfortunaly FileNames[1] is not supported by .net 3.5
+                        return sel.ProjectItem.get_FileNames(1);
                     }
                 }
                 else
