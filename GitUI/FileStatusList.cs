@@ -25,6 +25,7 @@ namespace GitUI
             FileStatusListBox.Sorted = true;
             FileStatusListBox.SelectionMode = SelectionMode.MultiExtended;
             FileStatusListBox.MouseDown += new MouseEventHandler(FileStatusListBox_MouseDown);
+            FileStatusListBox.HorizontalScrollbar = true;
 
             NoFiles.Visible = false;
             NoFiles.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
@@ -326,6 +327,7 @@ namespace GitUI
         {
             NoFiles.Location = new Point(5, 5);
             NoFiles.Size = new Size(Size.Width - 10, Size.Height - 10);
+            Refresh();
         }
 
         private void FileStatusListBox_KeyDown(object sender, KeyEventArgs e)
