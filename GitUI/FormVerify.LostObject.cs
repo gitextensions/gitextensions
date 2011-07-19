@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
 
@@ -28,6 +25,7 @@ namespace GitUI
             private static readonly Regex LogRegex = new Regex(LogPattern, RegexOptions.Compiled);
 
             private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0);
+            private readonly string type;
             private readonly string hash;
             private readonly string raw;
 
@@ -37,16 +35,22 @@ namespace GitUI
             public string Raw { get { return raw; } }
 
             /// <summary>
-            /// Sha1 hash
+            /// Sha1 hash of lost object.
             /// </summary>
             public string Hash { get { return hash; } }
+
+            /// <summary>
+            /// Diagnostics and object type.
+            /// </summary>
+            public string Type { get { return type; } }
 
             public string Author { get; private set; }
             public string Subject { get; private set; }
             public DateTime? Date { get; private set; }
 
-            private LostObject(string hash, string raw)
+            private LostObject(string type, string hash, string raw)
             {
+                this.type = type;
                 this.hash = hash;
                 this.raw = raw;
             }
@@ -68,10 +72,11 @@ namespace GitUI
                 if (!patterMatch.Success)
                     return null;
 
-                Debug.Assert(patterMatch.Groups[4].Success);
-                var hash = patterMatch.Groups[4].Value;
+                var matchedGroups = patterMatch.Groups;
+                Debug.Assert(matchedGroups[4].Success);
+                var hash = matchedGroups[4].Value;
 
-                var result = new LostObject(hash, raw);
+                var result = new LostObject(matchedGroups[1].Value, hash, raw);
 
                 var objectInfo = GetLostObjectLog(hash);
                 var logPatternMatch = LogRegex.Match(objectInfo);
