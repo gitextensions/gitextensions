@@ -800,7 +800,7 @@ que hace seguimiento de esta rama remota?</Value>
         <TranslationItem Name="mnuLostObjectsCreateTag" Property="Text">
           <Value>Etiquetar objeto seleccionado</Value>
         </TranslationItem>
-        <TranslationItem Name="ViewObject" Property="Text">
+        <TranslationItem Name="mnuLostObjectView" Property="Text">
           <Value>Ver el objeto seleccionado</Value>
         </TranslationItem>
         <TranslationItem Name="Unreachable" Property="Text">

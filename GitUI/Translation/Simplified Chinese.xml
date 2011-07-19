@@ -96,7 +96,7 @@
         <TranslationItem Name="mnuLostObjectsCreateTag" Property="Text">
           <Value>标记选定的对象</Value>
         </TranslationItem>
-        <TranslationItem Name="ViewObject" Property="Text">
+        <TranslationItem Name="mnuLostObjectView" Property="Text">
           <Value>查看所选对象</Value>
         </TranslationItem>
         <TranslationItem Name="Unreachable" Property="Text">
