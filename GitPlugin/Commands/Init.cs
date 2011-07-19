@@ -1,25 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.IO;
+using System.Linq;
 using EnvDTE;
 
 namespace GitPlugin.Commands
 {
-    public class Init : ItemCommandBase
+    public sealed class Init : ItemCommandBase
     {
-        public Init()
-            : base(true, true)
+        protected override void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane)
         {
+            if (string.IsNullOrEmpty(fileName) || Path.GetInvalidPathChars().Any(fileName.Contains))
+                return;
+            var directoryName = Path.GetDirectoryName(fileName);
+            RunGitEx("init", directoryName);
         }
 
-        public override void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane)
+        protected override CommandTarget SupportedTargets
         {
-            RunGitEx("init", fileName);
-        }
-
-        public override bool IsEnabled(EnvDTE80.DTE2 application)
-        {
-            return true;
+            get { return CommandTarget.Any; }
         }
     }
 }
