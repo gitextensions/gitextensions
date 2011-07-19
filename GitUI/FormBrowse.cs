@@ -221,7 +221,7 @@ namespace GitUI
             if (hard)
                 ShowRevisions();
             _NO_TRANSLATE_Workingdir.Text = Settings.WorkingDir;
-            Text = GenerateWindowTitle(Settings.WorkingDir, validWorkingDir);
+            Text = GenerateWindowTitle(Settings.WorkingDir, validWorkingDir, branchSelect.Text);
 
             UpdateJumplist(validWorkingDir);
 
@@ -492,15 +492,17 @@ namespace GitUI
         /// </summary>
         /// <param name="workingDir">Path to repository.</param>
         /// <param name="isWorkingDirValid">If the given path contains valid repository.</param>
-        private static string GenerateWindowTitle(string workingDir, bool isWorkingDirValid)
+        private static string GenerateWindowTitle(string workingDir, bool isWorkingDirValid, string branchName)
         {
             const string defaultTitle = "Git Extensions";
-            const string repositoryTitleFormat = "{0} - Git Extensions";
-
+            const string repositoryTitleFormat = "{0} ({1}) - Git Extensions";
+            
             if (!isWorkingDirValid)
                 return defaultTitle;
             string repositoryDescription = GetRepositoryShortName(workingDir);
-            return string.Format(repositoryTitleFormat, repositoryDescription);
+            if (string.IsNullOrEmpty(branchName))
+                branchName = "no branch";
+            return string.Format(repositoryTitleFormat, repositoryDescription, branchName.Trim('(', ')'));
         }
 
         /// <summary>
