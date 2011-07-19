@@ -88,6 +88,7 @@
     <Compile Include="AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataGridViewCheckBoxColumnHeaderCell.cs" />
     <Compile Include="FormGoToCommit.cs">
       <SubType>Form</SubType>
     </Compile>

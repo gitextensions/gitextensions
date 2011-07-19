@@ -21,13 +21,16 @@ namespace GitUI
 
         private readonly List<LostObject> lostObjects = new List<LostObject>();
         private readonly SortableLostObjectsList filteredLostObjects = new SortableLostObjectsList();
+        private readonly DataGridViewCheckBoxHeaderCell selectedItemsHeader = new DataGridViewCheckBoxHeaderCell();
 
 
         public FormVerify()
         {
             InitializeComponent();
+            selectedItemsHeader.AttachTo(columnIsLostObjectSelected);
 
             Translate();
+
             Warnings.ContextMenu = new ContextMenu();
             Warnings.AutoGenerateColumns = false;
         }
@@ -211,7 +214,25 @@ namespace GitUI
 
         private void Warnings_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
+            // ignore double click by header, user just wants to change sorting order
+            if (e.RowIndex == -1)
+                return;
+            // ignore double click by checkbox, user probably wanted to change checked state
+            if (e.ColumnIndex == 0)
+                return;
+
             ViewCurrentItem();
         }
+
+
+
+
+
+
+
+
+
+
+
     }
 }
