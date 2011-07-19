@@ -12,6 +12,14 @@ namespace GitUI
             public void AddRange(IEnumerable<LostObject> lostObjects)
             {
                 LostObjects.AddRange(lostObjects);
+
+                // NOTE: adding items via wrapper's AddRange doesn't generate ListChanged event, so DataGridView doesn't update itself
+                // There are two solutions:
+                //  0. Add items one by one using direct this.Add method (without IList<T> wrapper).
+                //     Too many ListChanged events will be generated (one per item), too many updates for gridview. Bad performance.
+                //  1. Batch add items through Items wrapper's AddRange method.
+                //     One reset event will be generated, one batch update for gridview. Ugly but fast code.
+                OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
             }
 
             protected override bool SupportsSortingCore
@@ -35,7 +43,7 @@ namespace GitUI
 
                 static LostObjectsComparer()
                 {
-                    AddSortableProperty(lostObject => lostObject.Type, (x, y) => string.Compare(x.Type, y.Type, StringComparison.CurrentCulture));
+                    AddSortableProperty(lostObject => lostObject.RawType, (x, y) => string.Compare(x.RawType, y.RawType, StringComparison.CurrentCulture));
                     AddSortableProperty(lostObject => lostObject.Hash, (x, y) => string.Compare(x.Hash, y.Hash, StringComparison.InvariantCulture));
                     AddSortableProperty(lostObject => lostObject.Author, (x, y) => string.Compare(x.Author, y.Author, StringComparison.CurrentCulture));
                     AddSortableProperty(lostObject => lostObject.Date, (x, y) => x.Date.HasValue && y.Date.HasValue

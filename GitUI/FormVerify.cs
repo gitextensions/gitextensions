@@ -38,10 +38,11 @@ namespace GitUI
 
         private void FormVerifyShown(object sender, EventArgs e)
         {
-            LoadLostObjects();
+            UpdateLostObjects();
+            Warnings.DataSource = filteredLostObjects;
         }
 
-        private void LoadLostObjects()
+        private void UpdateLostObjects()
         {
             Cursor.Current = Cursors.WaitCursor;
 
@@ -57,36 +58,24 @@ namespace GitUI
                 .Select(LostObject.TryParse)
                 .Where(parsedLostObject => parsedLostObject != null));
 
-            var warningList = new List<string>();
-
-            foreach (var warning in process.OutputString.ToString().Split('\n', '\r'))
-            {
-                if (!string.IsNullOrEmpty(warning) && (!ShowOnlyCommits.Checked || warning.Contains("commit")))
-                    warningList.Add(ExtendWarning(warning));
-            }
-
-            filteredLostObjects.Clear();
-            filteredLostObjects.AddRange(lostObjects);
-            Warnings.DataSource = filteredLostObjects;
+            UpdateFilteredLostObjects();
             Cursor.Current = Cursors.Default;
         }
 
-        private static string ExtendWarning(string warning)
+        private void UpdateFilteredLostObjects()
         {
-            var sha1 = FindSha1(warning);
+            SuspendLayout();
+            filteredLostObjects.Clear();
+            filteredLostObjects.AddRange(lostObjects.Where(IsMatchToFilter));
+            //Warnings.DataSource = filteredLostObjects;
+            ResumeLayout();
+        }
 
-            if (String.IsNullOrEmpty(sha1))
-                return warning;
-
-            var commitInfo = GitCommandHelpers.RunCmd(
-                Settings.GitCommand,
-                "log -n1 --pretty=format:\"%aN, %s, %cd\" " +
-                FindSha1(warning));
-
-            if (String.IsNullOrEmpty(commitInfo))
-                return warning;
-
-            return warning + " -> " + commitInfo;
+        private bool IsMatchToFilter(LostObject lostObject)
+        {
+            if (ShowOnlyCommits.Checked)
+                return lostObject.ObjectType == LostObjectType.Commit;
+            return true;
         }
 
         private void SaveObjectsClick(object sender, EventArgs e)
@@ -95,12 +84,12 @@ namespace GitUI
 
             var process = new FormProcess("fsck-objects --lost-found" + options);
             process.ShowDialog();
-            FormVerifyShown(null, null);
+            UpdateLostObjects();
         }
 
         private string GetOptions()
         {
-            var options = "";
+            var options = string.Empty;
 
             if (Unreachable.Checked)
                 options += " --unreachable";
@@ -115,23 +104,15 @@ namespace GitUI
 
         private void WarningsDoubleClick(object sender, EventArgs e)
         {
+            ViewCurrentItem();
+        }
+
+        private void ViewCurrentItem()
+        {
             var currenItem = CurrentItem;
             if (currenItem == null)
                 return;
             new FormEdit(GitCommandHelpers.ShowSha1(currenItem.Hash)).ShowDialog();
-        }
-
-        private static string FindSha1(string warningString)
-        {
-            foreach (var sha1 in warningString.Split(' '))
-            {
-                if (sha1.Trim().Length == 40)
-                {
-                    return sha1.Trim();
-                }
-            }
-
-            return "";
         }
 
         private void RemoveClick(object sender, EventArgs e)
@@ -143,10 +124,10 @@ namespace GitUI
                 return;
 
             new FormProcess("prune").ShowDialog();
-            FormVerifyShown(null, null);
+            UpdateLostObjects();
         }
 
-        private void mnuLostObjectsCreateTag_Click(object sender, EventArgs e)
+        private void mnuLostObjectCreateTag_Click(object sender, EventArgs e)
         {
             var currentItem = CurrentItem;
             if (currentItem == null)
@@ -155,33 +136,32 @@ namespace GitUI
             new FormTagSmall { Revision = new GitRevision(currentItem.Hash) }.ShowDialog();
         }
 
-        private void ViewObjectClick(object sender, EventArgs e)
+        private void mnuLostObjectView_Click(object sender, EventArgs e)
         {
-            WarningsDoubleClick(null, null);
+            ViewCurrentItem();
         }
 
         private void UnreachableCheckedChanged(object sender, EventArgs e)
         {
-            LoadLostObjects();
+            UpdateLostObjects();
         }
 
         private void TagAllObjectsClick(object sender, EventArgs e)
         {
             DeleteLostFoundTags();
             CreateLostFoundTags(false);
-            LoadLostObjects();
+            UpdateLostObjects();
         }
 
         private void CreateLostFoundTags(bool onlyCommits)
         {
             var currentTag = 0;
-            foreach (var warningString in filteredLostObjects.Select(x => x.Raw))
+            foreach (var lostObject in filteredLostObjects)
             {
-                if (onlyCommits && !warningString.Contains("commit"))
-                    continue;
-                var sha1 = FindSha1(warningString);
+                //if (onlyCommits && !warningString.Contains("commit"))
+                //    continue;
                 currentTag++;
-                GitCommandHelpers.Tag("LOST_FOUND_" + currentTag, sha1, false);
+                GitCommandHelpers.Tag("LOST_FOUND_" + currentTag, lostObject.Hash, false);
             }
 
             MessageBox.Show(string.Format(_xTagsCreated.Text, currentTag), "Tags created");
@@ -190,7 +170,7 @@ namespace GitUI
         private void DeleteAllLostAndFoundTagsClick(object sender, EventArgs e)
         {
             DeleteLostFoundTags();
-            LoadLostObjects();
+            UpdateLostObjects();
         }
 
         private static void DeleteLostFoundTags()
@@ -204,26 +184,27 @@ namespace GitUI
 
         private void FullCheckCheckedChanged(object sender, EventArgs e)
         {
-            LoadLostObjects();
+            UpdateLostObjects();
         }
 
         private void NoReflogsCheckedChanged(object sender, EventArgs e)
         {
-            LoadLostObjects();
+            UpdateLostObjects();
         }
 
         private void TagAllCommitsClick(object sender, EventArgs e)
         {
             DeleteLostFoundTags();
             CreateLostFoundTags(true);
-            LoadLostObjects();
+            UpdateLostObjects();
         }
 
         private void ShowOnlyCommitsCheckedChanged(object sender, EventArgs e)
         {
-            LoadLostObjects();
+            UpdateFilteredLostObjects();
         }
 
+        // NOTE: hack to select row under cursor on right click and context menu open
         private void Warnings_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right && e.RowIndex != -1)
@@ -231,5 +212,7 @@ namespace GitUI
                 Warnings.Rows[e.RowIndex].Selected = true;
             }
         }
+
+
     }
 }
