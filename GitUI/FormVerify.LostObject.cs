@@ -7,6 +7,14 @@ namespace GitUI
 {
     partial class FormVerify
     {
+        private enum LostObjectType
+        {
+            Commit,
+            Blob,
+            Tree,
+            Other
+        }
+
         private sealed class LostObject
         {
             /// <summary>
@@ -25,9 +33,15 @@ namespace GitUI
             private static readonly Regex LogRegex = new Regex(LogPattern, RegexOptions.Compiled);
 
             private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0);
-            private readonly string type;
+            private readonly LostObjectType objectType;
+            private readonly string rawType;
             private readonly string hash;
             private readonly string raw;
+
+            public LostObjectType ObjectType
+            {
+                get { return objectType; }
+            }
 
             /// <summary>
             /// Raw data returned by fsck-objects command.
@@ -42,15 +56,18 @@ namespace GitUI
             /// <summary>
             /// Diagnostics and object type.
             /// </summary>
-            public string Type { get { return type; } }
+            public string RawType { get { return rawType; } }
 
             public string Author { get; private set; }
             public string Subject { get; private set; }
             public DateTime? Date { get; private set; }
 
-            private LostObject(string type, string hash, string raw)
+            public bool IsSelected { get; set; }
+
+            private LostObject(LostObjectType objectType, string rawType, string hash, string raw)
             {
-                this.type = type;
+                this.objectType = objectType;
+                this.rawType = rawType;
                 this.hash = hash;
                 this.raw = raw;
             }
@@ -76,7 +93,7 @@ namespace GitUI
                 Debug.Assert(matchedGroups[4].Success);
                 var hash = matchedGroups[4].Value;
 
-                var result = new LostObject(matchedGroups[1].Value, hash, raw);
+                var result = new LostObject(GetObjectType(matchedGroups), matchedGroups[1].Value, hash, raw);
 
                 var objectInfo = GetLostObjectLog(hash);
                 var logPatternMatch = LogRegex.Match(objectInfo);
@@ -95,6 +112,20 @@ namespace GitUI
                     throw new ArgumentOutOfRangeException("hash", hash, "Hash must be a valid SHA1 hash.");
 
                 return GitCommandHelpers.RunCmd(Settings.GitCommand, string.Format(LogCommandArgumentsFormat, hash));
+            }
+
+            private static LostObjectType GetObjectType(GroupCollection matchedGroup)
+            {
+                if (!matchedGroup[3].Success)
+                    return LostObjectType.Other;
+
+                switch (matchedGroup[3].Value)
+                {
+                    case "commit": return LostObjectType.Commit;
+                    case "blob": return LostObjectType.Blob;
+                    case "tree": return LostObjectType.Tree;
+                    default: return LostObjectType.Other;
+                }
             }
         }
     }

@@ -1618,8 +1618,8 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <TranslationItem Name="mnuLostObjectsCreateTag" Property="Text">
           <Value>Создать метку</Value>
         </TranslationItem>
-        <TranslationItem Name="ViewObject" Property="Text">
-          <Value>Просмотреть выбранный объект</Value>
+        <TranslationItem Name="mnuLostObjectView" Property="Text">
+          <Value>Просмотреть</Value>
         </TranslationItem>
         <TranslationItem Name="TagAllObjects" Property="Text">
           <Value>Пометить все потерянные объекты</Value>

@@ -96,7 +96,7 @@
         <TranslationItem Name="mnuLostObjectsCreateTag" Property="Text">
           <Value>Tagga l'oggetto selezionato</Value>
         </TranslationItem>
-        <TranslationItem Name="ViewObject" Property="Text">
+        <TranslationItem Name="mnuLostObjectView" Property="Text">
           <Value>Visualizza l'oggetto selezionato</Value>
         </TranslationItem>
         <TranslationItem Name="Unreachable" Property="Text">

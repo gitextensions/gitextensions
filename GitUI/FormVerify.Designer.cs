@@ -46,11 +46,11 @@
             this.columnAuthor = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.columnHash = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mnuLostObjects = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.mnuLostObjectsCreateTag = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuLostObjectView = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuLostObjectCreateTag = new System.Windows.Forms.ToolStripMenuItem();
             this.TagAllCommits = new System.Windows.Forms.Button();
             this.DeleteAllLostAndFoundTags = new System.Windows.Forms.Button();
             this.TagAllObjects = new System.Windows.Forms.Button();
-            this.ViewObject = new System.Windows.Forms.Button();
             this.Remove = new System.Windows.Forms.Button();
             this.SaveObjects = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -80,7 +80,6 @@
             this.splitContainer1.Panel2.Controls.Add(this.TagAllCommits);
             this.splitContainer1.Panel2.Controls.Add(this.DeleteAllLostAndFoundTags);
             this.splitContainer1.Panel2.Controls.Add(this.TagAllObjects);
-            this.splitContainer1.Panel2.Controls.Add(this.ViewObject);
             this.splitContainer1.Panel2.Controls.Add(this.Remove);
             this.splitContainer1.Panel2.Controls.Add(this.SaveObjects);
             this.splitContainer1.Size = new System.Drawing.Size(859, 524);
@@ -195,7 +194,7 @@
             this.columnAuthor,
             this.columnHash});
             this.Warnings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Warnings.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.Warnings.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.Warnings.Location = new System.Drawing.Point(0, 0);
             this.Warnings.MultiSelect = false;
             this.Warnings.Name = "Warnings";
@@ -210,6 +209,7 @@
             // columnIsLostObjectSelected
             // 
             this.columnIsLostObjectSelected.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.columnIsLostObjectSelected.DataPropertyName = "IsSelected";
             this.columnIsLostObjectSelected.HeaderText = "";
             this.columnIsLostObjectSelected.MinimumWidth = 10;
             this.columnIsLostObjectSelected.Name = "columnIsLostObjectSelected";
@@ -226,7 +226,7 @@
             // columnType
             // 
             this.columnType.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.columnType.DataPropertyName = "Type";
+            this.columnType.DataPropertyName = "RawType";
             this.columnType.HeaderText = "Type";
             this.columnType.Name = "columnType";
             this.columnType.Width = 58;
@@ -255,16 +255,25 @@
             // mnuLostObjects
             // 
             this.mnuLostObjects.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuLostObjectsCreateTag});
+            this.mnuLostObjectView,
+            this.mnuLostObjectCreateTag});
             this.mnuLostObjects.Name = "mnuLostObjects";
-            this.mnuLostObjects.Size = new System.Drawing.Size(153, 48);
+            this.mnuLostObjects.Size = new System.Drawing.Size(129, 48);
             // 
-            // mnuLostObjectsCreateTag
+            // mnuLostObjectView
             // 
-            this.mnuLostObjectsCreateTag.Name = "mnuLostObjectsCreateTag";
-            this.mnuLostObjectsCreateTag.Size = new System.Drawing.Size(152, 22);
-            this.mnuLostObjectsCreateTag.Text = "Create tag";
-            this.mnuLostObjectsCreateTag.Click += new System.EventHandler(this.mnuLostObjectsCreateTag_Click);
+            this.mnuLostObjectView.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.mnuLostObjectView.Name = "mnuLostObjectView";
+            this.mnuLostObjectView.Size = new System.Drawing.Size(128, 22);
+            this.mnuLostObjectView.Text = "View";
+            this.mnuLostObjectView.Click += new System.EventHandler(this.mnuLostObjectView_Click);
+            // 
+            // mnuLostObjectCreateTag
+            // 
+            this.mnuLostObjectCreateTag.Name = "mnuLostObjectCreateTag";
+            this.mnuLostObjectCreateTag.Size = new System.Drawing.Size(128, 22);
+            this.mnuLostObjectCreateTag.Text = "Create tag";
+            this.mnuLostObjectCreateTag.Click += new System.EventHandler(this.mnuLostObjectCreateTag_Click);
             // 
             // TagAllCommits
             // 
@@ -298,17 +307,6 @@
             this.TagAllObjects.Text = "Tag all lost objects";
             this.TagAllObjects.UseVisualStyleBackColor = true;
             this.TagAllObjects.Click += new System.EventHandler(this.TagAllObjectsClick);
-            // 
-            // ViewObject
-            // 
-            this.ViewObject.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ViewObject.Location = new System.Drawing.Point(300, 29);
-            this.ViewObject.Name = "ViewObject";
-            this.ViewObject.Size = new System.Drawing.Size(173, 25);
-            this.ViewObject.TabIndex = 3;
-            this.ViewObject.Text = "View selected object";
-            this.ViewObject.UseVisualStyleBackColor = true;
-            this.ViewObject.Click += new System.EventHandler(this.ViewObjectClick);
             // 
             // Remove
             // 
@@ -363,7 +361,6 @@
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button Remove;
-        private System.Windows.Forms.Button ViewObject;
         private System.Windows.Forms.CheckBox Unreachable;
         private System.Windows.Forms.Button TagAllObjects;
         private System.Windows.Forms.Button DeleteAllLostAndFoundTags;
@@ -373,13 +370,14 @@
         private System.Windows.Forms.CheckBox ShowOnlyCommits;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DataGridView Warnings;
+        private System.Windows.Forms.ContextMenuStrip mnuLostObjects;
+        private System.Windows.Forms.ToolStripMenuItem mnuLostObjectCreateTag;
         private System.Windows.Forms.DataGridViewCheckBoxColumn columnIsLostObjectSelected;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnDate;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnType;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnSubject;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnAuthor;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnHash;
-        private System.Windows.Forms.ContextMenuStrip mnuLostObjects;
-        private System.Windows.Forms.ToolStripMenuItem mnuLostObjectsCreateTag;
+        private System.Windows.Forms.ToolStripMenuItem mnuLostObjectView;
     }
 }

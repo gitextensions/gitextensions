@@ -107,7 +107,7 @@ Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geope
         <TranslationItem Name="mnuLostObjectsCreateTag" Property="Text">
           <Value>Label geselecteerde item</Value>
         </TranslationItem>
-        <TranslationItem Name="ViewObject" Property="Text">
+        <TranslationItem Name="mnuLostObjectView" Property="Text">
           <Value>Toon geselecteerde object</Value>
         </TranslationItem>
         <TranslationItem Name="Unreachable" Property="Text">
