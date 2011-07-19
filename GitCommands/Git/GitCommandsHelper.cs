@@ -116,6 +116,10 @@ namespace GitCommands
 
         public static void SetEnvironmentVariable(bool reload)
         {
+            string path = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Process);
+            if (!string.IsNullOrEmpty(Settings.GitBinDir) && !path.Contains(Settings.GitBinDir))
+                Environment.SetEnvironmentVariable("PATH", string.Concat(path, ";", Settings.GitBinDir), EnvironmentVariableTarget.Process);
+
             if (!string.IsNullOrEmpty(Settings.CustomHomeDir))
             {
                 Environment.SetEnvironmentVariable(
