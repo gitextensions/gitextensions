@@ -138,6 +138,9 @@
   <data name="RecentRepositories.Size" type="System.Drawing.Size, System.Drawing">
     <value>314, 298</value>
   </data>
+  <data name="splitContainer7.Panel1MinSize" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
   <data name="DonateCategory.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Top</value>
   </data>
@@ -146,6 +149,9 @@
   </data>
   <data name="DonateCategory.Size" type="System.Drawing.Size, System.Drawing">
     <value>314, 70</value>
+  </data>
+  <data name="splitContainer7.Panel2MinSize" type="System.Int32, mscorlib">
+    <value>1</value>
   </data>
   <data name="splitContainer7.Size" type="System.Drawing.Size, System.Drawing">
     <value>314, 409</value>
