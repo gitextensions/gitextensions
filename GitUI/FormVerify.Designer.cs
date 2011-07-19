@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormVerify));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -38,19 +39,20 @@
             this.Unreachable = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.Warnings = new System.Windows.Forms.DataGridView();
-            this.TagAllCommits = new System.Windows.Forms.Button();
-            this.DeleteAllLostAndFoundTags = new System.Windows.Forms.Button();
-            this.TagAllObjects = new System.Windows.Forms.Button();
-            this.ViewObject = new System.Windows.Forms.Button();
-            this.TagSelectedObject = new System.Windows.Forms.Button();
-            this.Remove = new System.Windows.Forms.Button();
-            this.SaveObjects = new System.Windows.Forms.Button();
             this.columnIsLostObjectSelected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.columnDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.columnType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.columnSubject = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.columnAuthor = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.columnHash = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.mnuLostObjects = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.mnuLostObjectsCreateTag = new System.Windows.Forms.ToolStripMenuItem();
+            this.TagAllCommits = new System.Windows.Forms.Button();
+            this.DeleteAllLostAndFoundTags = new System.Windows.Forms.Button();
+            this.TagAllObjects = new System.Windows.Forms.Button();
+            this.ViewObject = new System.Windows.Forms.Button();
+            this.Remove = new System.Windows.Forms.Button();
+            this.SaveObjects = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -58,6 +60,7 @@
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Warnings)).BeginInit();
+            this.mnuLostObjects.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -78,7 +81,6 @@
             this.splitContainer1.Panel2.Controls.Add(this.DeleteAllLostAndFoundTags);
             this.splitContainer1.Panel2.Controls.Add(this.TagAllObjects);
             this.splitContainer1.Panel2.Controls.Add(this.ViewObject);
-            this.splitContainer1.Panel2.Controls.Add(this.TagSelectedObject);
             this.splitContainer1.Panel2.Controls.Add(this.Remove);
             this.splitContainer1.Panel2.Controls.Add(this.SaveObjects);
             this.splitContainer1.Size = new System.Drawing.Size(859, 524);
@@ -198,87 +200,11 @@
             this.Warnings.MultiSelect = false;
             this.Warnings.Name = "Warnings";
             this.Warnings.RowHeadersVisible = false;
+            this.Warnings.RowTemplate.ContextMenuStrip = this.mnuLostObjects;
             this.Warnings.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.Warnings.Size = new System.Drawing.Size(859, 325);
             this.Warnings.TabIndex = 0;
             this.Warnings.DoubleClick += new System.EventHandler(this.WarningsDoubleClick);
-            // 
-            // TagAllCommits
-            // 
-            this.TagAllCommits.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.TagAllCommits.Location = new System.Drawing.Point(300, 3);
-            this.TagAllCommits.Name = "TagAllCommits";
-            this.TagAllCommits.Size = new System.Drawing.Size(173, 25);
-            this.TagAllCommits.TabIndex = 6;
-            this.TagAllCommits.Text = "Tag all lost commits";
-            this.TagAllCommits.UseVisualStyleBackColor = true;
-            this.TagAllCommits.Click += new System.EventHandler(this.TagAllCommitsClick);
-            // 
-            // DeleteAllLostAndFoundTags
-            // 
-            this.DeleteAllLostAndFoundTags.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.DeleteAllLostAndFoundTags.Location = new System.Drawing.Point(4, 29);
-            this.DeleteAllLostAndFoundTags.Name = "DeleteAllLostAndFoundTags";
-            this.DeleteAllLostAndFoundTags.Size = new System.Drawing.Size(290, 25);
-            this.DeleteAllLostAndFoundTags.TabIndex = 5;
-            this.DeleteAllLostAndFoundTags.Text = "Delete all LOST_AND_FOUND tags";
-            this.DeleteAllLostAndFoundTags.UseVisualStyleBackColor = true;
-            this.DeleteAllLostAndFoundTags.Click += new System.EventHandler(this.DeleteAllLostAndFoundTagsClick);
-            // 
-            // TagAllObjects
-            // 
-            this.TagAllObjects.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.TagAllObjects.Location = new System.Drawing.Point(150, 3);
-            this.TagAllObjects.Name = "TagAllObjects";
-            this.TagAllObjects.Size = new System.Drawing.Size(144, 25);
-            this.TagAllObjects.TabIndex = 4;
-            this.TagAllObjects.Text = "Tag all lost objects";
-            this.TagAllObjects.UseVisualStyleBackColor = true;
-            this.TagAllObjects.Click += new System.EventHandler(this.TagAllObjectsClick);
-            // 
-            // ViewObject
-            // 
-            this.ViewObject.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ViewObject.Location = new System.Drawing.Point(300, 29);
-            this.ViewObject.Name = "ViewObject";
-            this.ViewObject.Size = new System.Drawing.Size(173, 25);
-            this.ViewObject.TabIndex = 3;
-            this.ViewObject.Text = "View selected object";
-            this.ViewObject.UseVisualStyleBackColor = true;
-            this.ViewObject.Click += new System.EventHandler(this.ViewObjectClick);
-            // 
-            // TagSelectedObject
-            // 
-            this.TagSelectedObject.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.TagSelectedObject.Location = new System.Drawing.Point(3, 3);
-            this.TagSelectedObject.Name = "TagSelectedObject";
-            this.TagSelectedObject.Size = new System.Drawing.Size(141, 25);
-            this.TagSelectedObject.TabIndex = 2;
-            this.TagSelectedObject.Text = "Tag selected object";
-            this.TagSelectedObject.UseVisualStyleBackColor = true;
-            this.TagSelectedObject.Click += new System.EventHandler(this.TagSelectedObjectClick);
-            // 
-            // Remove
-            // 
-            this.Remove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Remove.Location = new System.Drawing.Point(644, 3);
-            this.Remove.Name = "Remove";
-            this.Remove.Size = new System.Drawing.Size(207, 25);
-            this.Remove.TabIndex = 1;
-            this.Remove.Text = "Remove all dangling objects";
-            this.Remove.UseVisualStyleBackColor = true;
-            this.Remove.Click += new System.EventHandler(this.RemoveClick);
-            // 
-            // SaveObjects
-            // 
-            this.SaveObjects.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SaveObjects.Location = new System.Drawing.Point(644, 29);
-            this.SaveObjects.Name = "SaveObjects";
-            this.SaveObjects.Size = new System.Drawing.Size(208, 25);
-            this.SaveObjects.TabIndex = 0;
-            this.SaveObjects.Text = "Save objects to .git/lost-found";
-            this.SaveObjects.UseVisualStyleBackColor = true;
-            this.SaveObjects.Click += new System.EventHandler(this.SaveObjectsClick);
             // 
             // columnIsLostObjectSelected
             // 
@@ -325,13 +251,92 @@
             this.columnHash.Name = "columnHash";
             this.columnHash.Width = 80;
             // 
+            // mnuLostObjects
+            // 
+            this.mnuLostObjects.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuLostObjectsCreateTag});
+            this.mnuLostObjects.Name = "mnuLostObjects";
+            this.mnuLostObjects.Size = new System.Drawing.Size(153, 48);
+            // 
+            // mnuLostObjectsCreateTag
+            // 
+            this.mnuLostObjectsCreateTag.Name = "mnuLostObjectsCreateTag";
+            this.mnuLostObjectsCreateTag.Size = new System.Drawing.Size(152, 22);
+            this.mnuLostObjectsCreateTag.Text = "Create tag";
+            this.mnuLostObjectsCreateTag.Click += new System.EventHandler(this.mnuLostObjectsCreateTag_Click);
+            // 
+            // TagAllCommits
+            // 
+            this.TagAllCommits.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.TagAllCommits.Location = new System.Drawing.Point(300, 3);
+            this.TagAllCommits.Name = "TagAllCommits";
+            this.TagAllCommits.Size = new System.Drawing.Size(173, 25);
+            this.TagAllCommits.TabIndex = 6;
+            this.TagAllCommits.Text = "Tag all lost commits";
+            this.TagAllCommits.UseVisualStyleBackColor = true;
+            this.TagAllCommits.Click += new System.EventHandler(this.TagAllCommitsClick);
+            // 
+            // DeleteAllLostAndFoundTags
+            // 
+            this.DeleteAllLostAndFoundTags.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.DeleteAllLostAndFoundTags.Location = new System.Drawing.Point(4, 29);
+            this.DeleteAllLostAndFoundTags.Name = "DeleteAllLostAndFoundTags";
+            this.DeleteAllLostAndFoundTags.Size = new System.Drawing.Size(290, 25);
+            this.DeleteAllLostAndFoundTags.TabIndex = 5;
+            this.DeleteAllLostAndFoundTags.Text = "Delete all LOST_AND_FOUND tags";
+            this.DeleteAllLostAndFoundTags.UseVisualStyleBackColor = true;
+            this.DeleteAllLostAndFoundTags.Click += new System.EventHandler(this.DeleteAllLostAndFoundTagsClick);
+            // 
+            // TagAllObjects
+            // 
+            this.TagAllObjects.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.TagAllObjects.Location = new System.Drawing.Point(150, 3);
+            this.TagAllObjects.Name = "TagAllObjects";
+            this.TagAllObjects.Size = new System.Drawing.Size(144, 25);
+            this.TagAllObjects.TabIndex = 4;
+            this.TagAllObjects.Text = "Tag all lost objects";
+            this.TagAllObjects.UseVisualStyleBackColor = true;
+            this.TagAllObjects.Click += new System.EventHandler(this.TagAllObjectsClick);
+            // 
+            // ViewObject
+            // 
+            this.ViewObject.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ViewObject.Location = new System.Drawing.Point(300, 29);
+            this.ViewObject.Name = "ViewObject";
+            this.ViewObject.Size = new System.Drawing.Size(173, 25);
+            this.ViewObject.TabIndex = 3;
+            this.ViewObject.Text = "View selected object";
+            this.ViewObject.UseVisualStyleBackColor = true;
+            this.ViewObject.Click += new System.EventHandler(this.ViewObjectClick);
+            // 
+            // Remove
+            // 
+            this.Remove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.Remove.Location = new System.Drawing.Point(644, 3);
+            this.Remove.Name = "Remove";
+            this.Remove.Size = new System.Drawing.Size(207, 25);
+            this.Remove.TabIndex = 1;
+            this.Remove.Text = "Remove all dangling objects";
+            this.Remove.UseVisualStyleBackColor = true;
+            this.Remove.Click += new System.EventHandler(this.RemoveClick);
+            // 
+            // SaveObjects
+            // 
+            this.SaveObjects.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.SaveObjects.Location = new System.Drawing.Point(644, 29);
+            this.SaveObjects.Name = "SaveObjects";
+            this.SaveObjects.Size = new System.Drawing.Size(208, 25);
+            this.SaveObjects.TabIndex = 0;
+            this.SaveObjects.Text = "Save objects to .git/lost-found";
+            this.SaveObjects.UseVisualStyleBackColor = true;
+            this.SaveObjects.Click += new System.EventHandler(this.SaveObjectsClick);
+            // 
             // FormVerify
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(859, 524);
             this.Controls.Add(this.splitContainer1);
-            this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormVerify";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -345,6 +350,7 @@
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.Warnings)).EndInit();
+            this.mnuLostObjects.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -356,7 +362,6 @@
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button Remove;
-        private System.Windows.Forms.Button TagSelectedObject;
         private System.Windows.Forms.Button ViewObject;
         private System.Windows.Forms.CheckBox Unreachable;
         private System.Windows.Forms.Button TagAllObjects;
@@ -373,5 +378,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn columnSubject;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnAuthor;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnHash;
+        private System.Windows.Forms.ContextMenuStrip mnuLostObjects;
+        private System.Windows.Forms.ToolStripMenuItem mnuLostObjectsCreateTag;
     }
 }

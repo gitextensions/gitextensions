@@ -27,6 +27,7 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
+            Warnings.ContextMenu = new ContextMenu();
             Warnings.AutoGenerateColumns = false;
         }
 
@@ -145,7 +146,7 @@ namespace GitUI
             FormVerifyShown(null, null);
         }
 
-        private void TagSelectedObjectClick(object sender, EventArgs e)
+        private void mnuLostObjectsCreateTag_Click(object sender, EventArgs e)
         {
             var currentItem = CurrentItem;
             if (currentItem == null)

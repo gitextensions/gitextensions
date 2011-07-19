@@ -93,7 +93,7 @@
         <TranslationItem Name="Remove" Property="Text">
           <Value>Cancella tutti gli oggetti vaganti</Value>
         </TranslationItem>
-        <TranslationItem Name="TagSelectedObject" Property="Text">
+        <TranslationItem Name="mnuLostObjectsCreateTag" Property="Text">
           <Value>Tagga l'oggetto selezionato</Value>
         </TranslationItem>
         <TranslationItem Name="ViewObject" Property="Text">
