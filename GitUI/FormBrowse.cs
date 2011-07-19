@@ -69,7 +69,7 @@ namespace GitUI
             this.HotkeysEnabled = true;
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
 
-            
+
         }
 
         private void ShowDashboard()
@@ -299,7 +299,7 @@ namespace GitUI
 
         void UserMenu_Click(object sender, EventArgs e)
         {
-            ScriptRunner.RunScript(( (ToolStripButton) sender).Tag.ToString(), null);
+            ScriptRunner.RunScript(((ToolStripButton)sender).Tag.ToString(), null);
         }
 
         private void UpdateJumplist(bool validWorkingDir)
@@ -308,12 +308,12 @@ namespace GitUI
             {
                 //Call this method using reflection.  This is a workaround to *not* reference WPF libraries, becuase of how the WindowsAPICodePack was implimented.  
                 TaskbarManager.Instance.GetType().InvokeMember("SetApplicationIdForSpecificWindow", System.Reflection.BindingFlags.InvokeMethod, null, TaskbarManager.Instance, new object[] { Handle, "GitExtensions" });
-            
-                if(validWorkingDir)
+
+                if (validWorkingDir)
                 {
                     string repositoryDescription = GetRepositoryShortName(Settings.WorkingDir);
                     string baseFolder = Path.Combine(Settings.ApplicationDataPath, "Recent");
-                    if(!Directory.Exists(baseFolder))
+                    if (!Directory.Exists(baseFolder))
                     {
                         Directory.CreateDirectory(baseFolder);
                     }
@@ -2016,7 +2016,7 @@ namespace GitUI
             Initialize();
         }
 
-       
+
         protected override bool ExecuteCommand(int cmd)
         {
             Commands command = (Commands)cmd;
@@ -2033,11 +2033,11 @@ namespace GitUI
                 case Commands.Commit: CommitToolStripMenuItemClick(null, null); break;
                 case Commands.AddNotes: AddNotes(); break;
                 case Commands.FindFileInSelectedCommit: FindFileInSelectedCommit(); break;
-                case Commands.SelectCurrentRevision: RevisionGrid.SetSelectedRevision(new GitRevision() { Guid = RevisionGrid.CurrentCheckout }); break;
+                case Commands.SelectCurrentRevision: RevisionGrid.SetSelectedRevision(new GitRevision(RevisionGrid.CurrentCheckout)); break;
                 case Commands.CheckoutBranch: CheckoutBranchToolStripMenuItemClick(null, null); break;
                 case Commands.QuickFetch: QuickFetch(); break;
                 case Commands.QuickPush: GitUICommands.Instance.StartPushDialog(true); break;
-                case Commands.RotateApplicationIcon: RotateApplicationIcon(); break;                    
+                case Commands.RotateApplicationIcon: RotateApplicationIcon(); break;
                 default: ExecuteScriptCommand(cmd, Keys.None); break;
             }
 
@@ -2053,7 +2053,7 @@ namespace GitUI
             string revisionGuid = formGoToCommit.GetRevision();
             if (!string.IsNullOrEmpty(revisionGuid))
             {
-                RevisionGrid.SetSelectedRevision(new GitRevision { Guid = revisionGuid });
+                RevisionGrid.SetSelectedRevision(new GitRevision(revisionGuid));
             }
             else
             {
@@ -2111,7 +2111,7 @@ namespace GitUI
 
         void GitTree_MouseMove(object sender, MouseEventArgs e)
         {
-            TreeView gitTree = (TreeView) sender;
+            TreeView gitTree = (TreeView)sender;
 
             if (!gitTree.Focused)
                 gitTree.Focus();
