@@ -204,6 +204,7 @@
             this.Warnings.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.Warnings.Size = new System.Drawing.Size(859, 325);
             this.Warnings.TabIndex = 0;
+            this.Warnings.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Warnings_CellMouseDown);
             this.Warnings.DoubleClick += new System.EventHandler(this.WarningsDoubleClick);
             // 
             // columnIsLostObjectSelected
