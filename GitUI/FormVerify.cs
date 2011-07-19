@@ -33,7 +33,7 @@ namespace GitUI
 
         private LostObject CurrentItem
         {
-            get { return Warnings.CurrentRow == null ? null : filteredLostObjects[Warnings.CurrentRow.Index]; }
+            get { return Warnings.SelectedRows.Count == 0 ? null : filteredLostObjects[Warnings.SelectedRows[0].Index]; }
         }
 
         private void FormVerifyShown(object sender, EventArgs e)
@@ -222,6 +222,14 @@ namespace GitUI
         private void ShowOnlyCommitsCheckedChanged(object sender, EventArgs e)
         {
             LoadLostObjects();
+        }
+
+        private void Warnings_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right && e.RowIndex != -1)
+            {
+                Warnings.Rows[e.RowIndex].Selected = true;
+            }
         }
     }
 }
