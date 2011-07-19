@@ -29,6 +29,11 @@ namespace GitUI
             Translate();
         }
 
+        private LostObject CurrentItem
+        {
+            get { return Warnings.CurrentRow == null ? null : filteredLostObjects[Warnings.CurrentRow.Index]; }
+        }
+
         private void FormVerifyShown(object sender, EventArgs e)
         {
             LoadLostObjects();
@@ -108,11 +113,10 @@ namespace GitUI
 
         private void WarningsDoubleClick(object sender, EventArgs e)
         {
-            var sha1 = FindSha1(Warnings.CurrentRow.Cells[0].Value as string);
-            if (!string.IsNullOrEmpty(sha1))
-            {
-                new FormEdit(GitCommandHelpers.ShowSha1(sha1)).ShowDialog();
-            }
+            var currenItem = CurrentItem;
+            if (currenItem == null)
+                return;
+            new FormEdit(GitCommandHelpers.ShowSha1(currenItem.Hash)).ShowDialog();
         }
 
         private static string FindSha1(string warningString)
@@ -140,17 +144,13 @@ namespace GitUI
             FormVerifyShown(null, null);
         }
 
-
         private void TagSelectedObjectClick(object sender, EventArgs e)
         {
-            var sha1 = FindSha1(Warnings.CurrentRow.Cells[0].Value as string);
-            if (string.IsNullOrEmpty(sha1)) return;
-            var form =
-                new FormTagSmall
-                    {
-                        Revision = new GitRevision { Guid = sha1 }
-                    };
-            form.ShowDialog();
+            var currentItem = CurrentItem;
+            if (currentItem == null)
+                throw new InvalidOperationException();
+
+            new FormTagSmall { Revision = new GitRevision(currentItem.Hash) }.ShowDialog();
         }
 
         private void ViewObjectClick(object sender, EventArgs e)
