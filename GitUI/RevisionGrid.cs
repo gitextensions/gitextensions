@@ -76,7 +76,7 @@ namespace GitUI
 
             NormalFont = SystemFonts.DefaultFont;
             Loading.Paint += Loading_Paint;
-
+            
             Revisions.CellPainting += RevisionsCellPainting;
             Revisions.KeyDown += RevisionsKeyDown;
 
@@ -661,11 +661,8 @@ namespace GitUI
                 }
 
                 Revisions.ClearSelection();
-
                 CurrentCheckout = newCurrentCheckout;
-
                 Revisions.Clear();
-
                 Error.Visible = false;
 
                 if (!Settings.ValidWorkingDir())
@@ -692,6 +689,7 @@ namespace GitUI
 
                 if (!Settings.ShowGitNotes && !LogParam.Contains(" --not --glob=notes --not"))
                     LogParam = LogParam + " --not --glob=notes --not";
+
                 if (Settings.ShowGitNotes && LogParam.Contains(" --not --glob=notes --not"))
                     LogParam = LogParam.Replace("  --not --glob=notes --not", string.Empty);
 
@@ -699,6 +697,8 @@ namespace GitUI
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
                 _revisionGraphCommand.Error += _revisionGraphCommand_Error;
+                //_revisionGraphCommand.BeginUpdate += ((s, e) => Revisions.Invoke((Action) (() => Revisions.Clear())));
+
                 if (!(string.IsNullOrEmpty(InMemAuthorFilter) &&
                       string.IsNullOrEmpty(InMemCommitterFilter) &&
                       string.IsNullOrEmpty(InMemMessageFilter)))
@@ -708,9 +708,7 @@ namespace GitUI
                                                                                     InMemFilterIgnoreCase);
 
                 _revisionGraphCommand.Execute();
-
                 LoadRevisions();
-
                 SetRevisionsLayout();
             }
             catch (Exception exception)
@@ -1003,8 +1001,8 @@ namespace GitUI
                                     {
                                         offset += 9;
 
-                                        DrawRoundRect(e.Graphics, headColor, headBounds.X, headBounds.Y,
-                                                      RoundToEven(textSize.Width + 3), RoundToEven(textSize.Height), 3);
+                                        DrawHeadBackground(isRowSelected, e.Graphics, headColor, headBounds.X, headBounds.Y,
+                                                           RoundToEven(textSize.Width + 3), RoundToEven(textSize.Height), 3);
 
                                         headBounds.Offset(1, 0);
                                     }
@@ -1111,7 +1109,7 @@ namespace GitUI
             return result < value ? result + 2 : result;
         }
 
-        private void DrawRoundRect(Graphics graphics, Color color, float x, float y, float width, float height, float radius)
+        private void DrawHeadBackground(bool isSelected, Graphics graphics, Color color, float x, float y, float width, float height, float radius)
         {
             var oldMode = graphics.SmoothingMode;
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -1120,7 +1118,7 @@ namespace GitUI
             {
                 using (var shadePath = CreateRoundRectPath(x + 1, y + 1, width, height, radius))
                 {
-                    graphics.FillPath(new SolidBrush(Color.Silver), shadePath);
+                    graphics.FillPath(new SolidBrush(isSelected ? Color.Black : Color.Gray), shadePath);
                 }
 
                 using (var forePath = CreateRoundRectPath(x, y, width, height, radius))
@@ -1132,8 +1130,6 @@ namespace GitUI
 
                     graphics.FillPath(fillBrush, forePath);
                 }
-
-                //graphics.DrawPath(new Pen(color), path);
             }
             finally
             {

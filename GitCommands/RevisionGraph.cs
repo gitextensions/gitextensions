@@ -18,6 +18,7 @@ namespace GitCommands
         public event EventHandler Exited;
         public event EventHandler Error;
         public event EventHandler Updated;
+        public event EventHandler BeginUpdate;
         public int RevisionCount { get; set; }
 
         public class RevisionGraphUpdatedEventArgs : EventArgs
@@ -160,6 +161,9 @@ namespace GitCommands
                 gitGetGraphCommand.StreamOutput = true;
                 gitGetGraphCommand.CollectOutput = false;
                 Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arguments);
+
+                if (BeginUpdate != null)
+                    BeginUpdate(this, EventArgs.Empty);
 
                 string line;
                 do
