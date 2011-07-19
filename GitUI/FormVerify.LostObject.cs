@@ -30,7 +30,7 @@ namespace GitUI
 
             private static readonly Regex Sha1HashRegex = new Regex("^" + Sha1HashPattern + "$", RegexOptions.Compiled);
             private static readonly Regex RawDataRegex = new Regex(RawDataPattern, RegexOptions.Compiled);
-            private static readonly Regex LogRegex = new Regex(LogPattern, RegexOptions.Compiled);
+            private static readonly Regex LogRegex = new Regex(LogPattern, RegexOptions.Compiled | RegexOptions.Singleline);
 
             private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0);
             private readonly LostObjectType objectType;
