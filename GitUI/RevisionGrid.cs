@@ -161,6 +161,16 @@ namespace GitUI
         public int LastRow { get; set; }
         public bool AllowGraphWithFilter { get; set; }
 
+        [Description("Indicates whether the user is allowed to select more than one commit at a time.")]
+        [Category("Behavior")]
+        [DefaultValue(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        public bool MultiSelect
+        {
+            get { return Revisions.MultiSelect; }
+            set { Revisions.MultiSelect = value; }
+        }
+
         public void SetInitialRevision(GitRevision initialSelectedRevision)
         {
             _initialSelectedRevision = initialSelectedRevision != null ? initialSelectedRevision.Guid : null;
@@ -991,8 +1001,8 @@ namespace GitUI
                                     {
                                         offset += 9;
 
-                                        DrawRoundRect(e.Graphics, headColor, headBounds.X, headBounds.Y,
-                                                      RoundToEven(textSize.Width + 3), RoundToEven(textSize.Height), 3);
+                                        DrawHeadBackground(isRowSelected, e.Graphics, headColor, headBounds.X, headBounds.Y,
+                                                           RoundToEven(textSize.Width + 3), RoundToEven(textSize.Height), 3);
 
                                         headBounds.Offset(1, 0);
                                     }
@@ -1099,7 +1109,7 @@ namespace GitUI
             return result < value ? result + 2 : result;
         }
 
-        private void DrawRoundRect(Graphics graphics, Color color, float x, float y, float width, float height, float radius)
+        private void DrawHeadBackground(bool isSelected, Graphics graphics, Color color, float x, float y, float width, float height, float radius)
         {
             var oldMode = graphics.SmoothingMode;
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -1108,7 +1118,7 @@ namespace GitUI
             {
                 using (var shadePath = CreateRoundRectPath(x + 1, y + 1, width, height, radius))
                 {
-                    graphics.FillPath(new SolidBrush(Color.Silver), shadePath);
+                    graphics.FillPath(new SolidBrush(isSelected ? Color.Black : Color.Gray), shadePath);
                 }
 
                 using (var forePath = CreateRoundRectPath(x, y, width, height, radius))
@@ -1120,8 +1130,6 @@ namespace GitUI
 
                     graphics.FillPath(fillBrush, forePath);
                 }
-
-                //graphics.DrawPath(new Pen(color), path);
             }
             finally
             {
@@ -1247,7 +1255,7 @@ namespace GitUI
 
             LastRow = hti.RowIndex;
             Revisions.ClearSelection();
-            
+
             if (LastRow >= 0 && Revisions.Rows.Count > LastRow)
                 Revisions.Rows[LastRow].Selected = true;
         }
@@ -1256,7 +1264,7 @@ namespace GitUI
         {
             GitUICommands.Instance.StartCommitDialog();
             OnActionOnRepositoryPerformed();
-            RefreshRevisions();            
+            RefreshRevisions();
         }
 
         private void GitIgnoreClick(object sender, EventArgs e)
@@ -1995,7 +2003,7 @@ namespace GitUI
                 default: ExecuteScriptCommand(cmd, Keys.None); break;
             }
 
-            return true;
+            return true; 
         }
 
         #endregion
