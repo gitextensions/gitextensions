@@ -47,16 +47,12 @@ namespace DeleteUnusedBranches
 
         private IEnumerable<string> GetObsoleteBranchNames()
         {
+            // TODO: skip current branch    
             return gitCommands.RunGit("branch --merged")
                 .Split('\n')
                 .Where(branchName => !string.IsNullOrEmpty(branchName))
                 .Select(branchName => branchName.Trim('*', ' ', '\n', '\r'))
                 .Where(branchName => branchName != "master");
-        }
-
-        private void Cancel_Click(object sender, EventArgs e)
-        {
-            Close();
         }
 
         private void Delete_Click(object sender, EventArgs e)
