@@ -94,6 +94,10 @@
     <Compile Include="FormGoToCommit.Designer.cs">
       <DependentUpon>FormGoToCommit.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormVerify.LostObject.cs">
+      <DependentUpon>FormVerify.cs</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Hotkey\ControlHotkeys.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1080,6 +1084,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Compile Include="FormVerify.SortableLostObjectsList.cs">
+      <DependentUpon>FormVerify.cs</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
     <None Include="gituikey.snk.pfx" />
     <None Include="Properties\DataSources\GitCommands.GitItem.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitItemStatus.datasource" />

@@ -45,7 +45,11 @@
             this.TagSelectedObject = new System.Windows.Forms.Button();
             this.Remove = new System.Windows.Forms.Button();
             this.SaveObjects = new System.Windows.Forms.Button();
-            this.Raw = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.columnDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.columnAuthor = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.columnSubject = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.columnHash = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.columnRaw = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -175,13 +179,23 @@
             // 
             // Warnings
             // 
+            this.Warnings.AllowUserToAddRows = false;
+            this.Warnings.AllowUserToDeleteRows = false;
+            this.Warnings.AllowUserToOrderColumns = true;
             this.Warnings.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Warnings.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Raw});
+            this.columnDate,
+            this.columnAuthor,
+            this.columnSubject,
+            this.columnHash,
+            this.columnRaw});
             this.Warnings.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Warnings.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.Warnings.Location = new System.Drawing.Point(0, 0);
             this.Warnings.MultiSelect = false;
             this.Warnings.Name = "Warnings";
+            this.Warnings.ReadOnly = true;
+            this.Warnings.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.Warnings.Size = new System.Drawing.Size(859, 325);
             this.Warnings.TabIndex = 0;
             this.Warnings.DoubleClick += new System.EventHandler(this.WarningsDoubleClick);
@@ -263,11 +277,42 @@
             this.SaveObjects.UseVisualStyleBackColor = true;
             this.SaveObjects.Click += new System.EventHandler(this.SaveObjectsClick);
             // 
-            // Raw
+            // columnDate
             // 
-            this.Raw.HeaderText = "Raw";
-            this.Raw.Name = "Raw";
-            this.Raw.ReadOnly = true;
+            this.columnDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.columnDate.DataPropertyName = "Date";
+            this.columnDate.HeaderText = "Date";
+            this.columnDate.Name = "columnDate";
+            this.columnDate.ReadOnly = true;
+            this.columnDate.Width = 56;
+            // 
+            // columnAuthor
+            // 
+            this.columnAuthor.DataPropertyName = "Author";
+            this.columnAuthor.HeaderText = "Author";
+            this.columnAuthor.Name = "columnAuthor";
+            this.columnAuthor.ReadOnly = true;
+            // 
+            // columnSubject
+            // 
+            this.columnSubject.DataPropertyName = "Subject";
+            this.columnSubject.HeaderText = "Subject";
+            this.columnSubject.Name = "columnSubject";
+            this.columnSubject.ReadOnly = true;
+            // 
+            // columnHash
+            // 
+            this.columnHash.DataPropertyName = "Hash";
+            this.columnHash.HeaderText = "Hash";
+            this.columnHash.Name = "columnHash";
+            this.columnHash.ReadOnly = true;
+            // 
+            // columnRaw
+            // 
+            this.columnRaw.DataPropertyName = "Raw";
+            this.columnRaw.HeaderText = "Raw";
+            this.columnRaw.Name = "columnRaw";
+            this.columnRaw.ReadOnly = true;
             // 
             // FormVerify
             // 
@@ -311,6 +356,10 @@
         private System.Windows.Forms.CheckBox ShowOnlyCommits;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DataGridView Warnings;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Raw;
+        private System.Windows.Forms.DataGridViewTextBoxColumn columnDate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn columnAuthor;
+        private System.Windows.Forms.DataGridViewTextBoxColumn columnSubject;
+        private System.Windows.Forms.DataGridViewTextBoxColumn columnHash;
+        private System.Windows.Forms.DataGridViewTextBoxColumn columnRaw;
     }
 }
