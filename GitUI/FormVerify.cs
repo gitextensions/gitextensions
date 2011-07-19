@@ -27,6 +27,7 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
+            Warnings.AutoGenerateColumns = false;
         }
 
         private LostObject CurrentItem
