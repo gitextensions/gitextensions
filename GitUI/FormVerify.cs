@@ -8,7 +8,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormVerify : GitExtensionsForm
+    public sealed partial class FormVerify : GitExtensionsForm
     {
         private readonly TranslationString _removeDanglingObjectsCaption = new TranslationString("Remove");
 
@@ -18,6 +18,9 @@ namespace GitUI
         private readonly TranslationString _xTagsCreated =
             new TranslationString("{0} Tags created." + Environment.NewLine + Environment.NewLine +
                                   "Do not forget to delete these tags when finished.");
+
+        private readonly List<LostObject> lostObjects = new List<LostObject>();
+        private readonly SortableLostObjectsList filteredLostObjects = new SortableLostObjectsList();
 
 
         public FormVerify()
@@ -40,6 +43,13 @@ namespace GitUI
             var process = new FormProcess("fsck-objects" + options);
             process.ShowDialog();
 
+            lostObjects.Clear();
+            lostObjects.AddRange(process.OutputString.ToString()
+                .Split('\r', '\n')
+                .Where(s => !string.IsNullOrEmpty(s))
+                .Select(LostObject.TryParse)
+                .Where(parsedLostObject => parsedLostObject != null));
+
             var warningList = new List<string>();
 
             foreach (var warning in process.OutputString.ToString().Split('\n', '\r'))
@@ -48,7 +58,9 @@ namespace GitUI
                     warningList.Add(ExtendWarning(warning));
             }
 
-            Warnings.DataSource = warningList;
+            filteredLostObjects.Clear();
+            filteredLostObjects.AddRange(lostObjects);
+            Warnings.DataSource = filteredLostObjects;
             Cursor.Current = Cursors.Default;
         }
 
@@ -161,7 +173,7 @@ namespace GitUI
         private void CreateLostFoundTags(bool onlyCommits)
         {
             var currentTag = 0;
-            foreach (var warningString in (List<string>)Warnings.DataSource)
+            foreach (var warningString in filteredLostObjects.Select(x => x.Raw))
             {
                 if (onlyCommits && !warningString.Contains("commit"))
                     continue;
