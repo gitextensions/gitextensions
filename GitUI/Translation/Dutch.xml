@@ -104,7 +104,7 @@ Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geope
         <TranslationItem Name="Remove" Property="Text">
           <Value>Verwijdere alle rondzwevende objecten</Value>
         </TranslationItem>
-        <TranslationItem Name="TagSelectedObject" Property="Text">
+        <TranslationItem Name="mnuLostObjectsCreateTag" Property="Text">
           <Value>Label geselecteerde item</Value>
         </TranslationItem>
         <TranslationItem Name="ViewObject" Property="Text">

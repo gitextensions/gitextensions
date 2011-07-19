@@ -797,7 +797,7 @@ que hace seguimiento de esta rama remota?</Value>
         <TranslationItem Name="Remove" Property="Text">
           <Value>Eliminar todos los objetos colgados</Value>
         </TranslationItem>
-        <TranslationItem Name="TagSelectedObject" Property="Text">
+        <TranslationItem Name="mnuLostObjectsCreateTag" Property="Text">
           <Value>Etiquetar objeto seleccionado</Value>
         </TranslationItem>
         <TranslationItem Name="ViewObject" Property="Text">

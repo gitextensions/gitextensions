@@ -93,7 +93,7 @@
         <TranslationItem Name="Remove" Property="Text">
           <Value>遊離オブジェクトを全て削除</Value>
         </TranslationItem>
-        <TranslationItem Name="TagSelectedObject" Property="Text">
+        <TranslationItem Name="mnuLostObjectsCreateTag" Property="Text">
           <Value>選択オブジェクトにタグを作成</Value>
         </TranslationItem>
         <TranslationItem Name="ViewObject" Property="Text">

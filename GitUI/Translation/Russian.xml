@@ -1615,8 +1615,8 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <TranslationItem Name="Remove" Property="Text">
           <Value>Удалить все потерянные объекты</Value>
         </TranslationItem>
-        <TranslationItem Name="TagSelectedObject" Property="Text">
-          <Value>Пометить выбранный объект</Value>
+        <TranslationItem Name="mnuLostObjectsCreateTag" Property="Text">
+          <Value>Создать метку</Value>
         </TranslationItem>
         <TranslationItem Name="ViewObject" Property="Text">
           <Value>Просмотреть выбранный объект</Value>
