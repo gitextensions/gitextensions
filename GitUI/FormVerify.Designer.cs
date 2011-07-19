@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormVerify));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.label2 = new System.Windows.Forms.Label();
@@ -185,6 +186,7 @@
             this.Warnings.AllowUserToDeleteRows = false;
             this.Warnings.AllowUserToOrderColumns = true;
             this.Warnings.AllowUserToResizeRows = false;
+            this.Warnings.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.Warnings.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Warnings.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.columnIsLostObjectSelected,
@@ -201,10 +203,11 @@
             this.Warnings.RowHeadersVisible = false;
             this.Warnings.RowTemplate.ContextMenuStrip = this.mnuLostObjects;
             this.Warnings.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.Warnings.ShowEditingIcon = false;
             this.Warnings.Size = new System.Drawing.Size(859, 325);
             this.Warnings.TabIndex = 0;
+            this.Warnings.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Warnings_CellMouseDoubleClick);
             this.Warnings.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Warnings_CellMouseDown);
-            this.Warnings.DoubleClick += new System.EventHandler(this.WarningsDoubleClick);
             // 
             // columnIsLostObjectSelected
             // 
@@ -221,6 +224,7 @@
             this.columnDate.DataPropertyName = "Date";
             this.columnDate.HeaderText = "Date";
             this.columnDate.Name = "columnDate";
+            this.columnDate.ReadOnly = true;
             this.columnDate.Width = 56;
             // 
             // columnType
@@ -229,20 +233,26 @@
             this.columnType.DataPropertyName = "RawType";
             this.columnType.HeaderText = "Type";
             this.columnType.Name = "columnType";
+            this.columnType.ReadOnly = true;
             this.columnType.Width = 58;
             // 
             // columnSubject
             // 
             this.columnSubject.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.columnSubject.DataPropertyName = "Subject";
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.columnSubject.DefaultCellStyle = dataGridViewCellStyle1;
             this.columnSubject.HeaderText = "Subject";
             this.columnSubject.Name = "columnSubject";
+            this.columnSubject.ReadOnly = true;
             // 
             // columnAuthor
             // 
             this.columnAuthor.DataPropertyName = "Author";
             this.columnAuthor.HeaderText = "Author";
             this.columnAuthor.Name = "columnAuthor";
+            this.columnAuthor.ReadOnly = true;
             this.columnAuthor.Width = 150;
             // 
             // columnHash
@@ -250,6 +260,7 @@
             this.columnHash.DataPropertyName = "Hash";
             this.columnHash.HeaderText = "Hash";
             this.columnHash.Name = "columnHash";
+            this.columnHash.ReadOnly = true;
             this.columnHash.Width = 80;
             // 
             // mnuLostObjects
@@ -372,12 +383,12 @@
         private System.Windows.Forms.DataGridView Warnings;
         private System.Windows.Forms.ContextMenuStrip mnuLostObjects;
         private System.Windows.Forms.ToolStripMenuItem mnuLostObjectCreateTag;
+        private System.Windows.Forms.ToolStripMenuItem mnuLostObjectView;
         private System.Windows.Forms.DataGridViewCheckBoxColumn columnIsLostObjectSelected;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnDate;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnType;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnSubject;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnAuthor;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnHash;
-        private System.Windows.Forms.ToolStripMenuItem mnuLostObjectView;
     }
 }
