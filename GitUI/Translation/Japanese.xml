@@ -696,7 +696,7 @@ _ReSharper*/</Value>
         <TranslationItem Name="Revert" Property="Text">
           <Value>変更をrevert</Value>
         </TranslationItem>
-        <TranslationItem Name="button1" Property="Text">
+        <TranslationItem Name="btnCancel" Property="Text">
           <Value>キャンセル</Value>
         </TranslationItem>
       </translationItems>
