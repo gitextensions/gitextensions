@@ -26,6 +26,7 @@ namespace GitUI
         public FormVerify()
         {
             InitializeComponent();
+
             Translate();
             Warnings.ContextMenu = new ContextMenu();
             Warnings.AutoGenerateColumns = false;
@@ -100,11 +101,6 @@ namespace GitUI
             if (NoReflogs.Checked)
                 options += " --no-reflogs";
             return options;
-        }
-
-        private void WarningsDoubleClick(object sender, EventArgs e)
-        {
-            ViewCurrentItem();
         }
 
         private void ViewCurrentItem()
@@ -213,6 +209,9 @@ namespace GitUI
             }
         }
 
-
+        private void Warnings_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            ViewCurrentItem();
+        }
     }
 }
