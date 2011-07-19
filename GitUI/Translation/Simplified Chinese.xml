@@ -93,7 +93,7 @@
         <TranslationItem Name="Remove" Property="Text">
           <Value>删除所有悬挂对象</Value>
         </TranslationItem>
-        <TranslationItem Name="TagSelectedObject" Property="Text">
+        <TranslationItem Name="mnuLostObjectsCreateTag" Property="Text">
           <Value>标记选定的对象</Value>
         </TranslationItem>
         <TranslationItem Name="ViewObject" Property="Text">

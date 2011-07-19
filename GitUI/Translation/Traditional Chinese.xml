@@ -104,7 +104,7 @@
         <TranslationItem Name="Remove" Property="Text">
           <Value>刪除所有未決定的目標</Value>
         </TranslationItem>
-        <TranslationItem Name="TagSelectedObject" Property="Text">
+        <TranslationItem Name="mnuLostObjectsCreateTag" Property="Text">
           <Value>標記選定的目標</Value>
         </TranslationItem>
         <TranslationItem Name="ViewObject" Property="Text">
