@@ -15,7 +15,7 @@
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <NoWin32Manifest>true</NoWin32Manifest>
-    <ApplicationIcon>cow-head.ico</ApplicationIcon>
+    <ApplicationIcon>git-extensions-logo-final_mixed.ico</ApplicationIcon>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
@@ -164,6 +164,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cow-head.ico" />
+    <Content Include="git-extensions-logo-final.ico" />
+    <Content Include="git-extensions-logo-final_mixed.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
