@@ -17,14 +17,14 @@ namespace GitUI
 {
     public enum RevisionGridLayout
     {
-        Small = 1,
-        SmallWithGraph = 2,
-        Card = 3,
-        CardWithGraph = 4,
-        LargeCard = 5,
-        LargeCardWithGraph = 6,
-        FilledBranchesSmall = 7, 
-        FilledBranchesSmallWithGraph = 8
+        FilledBranchesSmall = 1, 
+        FilledBranchesSmallWithGraph = 2,
+        Small = 3,
+        SmallWithGraph = 4,
+        Card = 5,
+        CardWithGraph = 6,
+        LargeCard = 7,
+        LargeCardWithGraph = 8
     }
 
     public partial class RevisionGrid : GitExtensionsControl
