@@ -23,14 +23,12 @@ namespace GitUI
         private readonly SortableLostObjectsList filteredLostObjects = new SortableLostObjectsList();
         private readonly DataGridViewCheckBoxHeaderCell selectedItemsHeader = new DataGridViewCheckBoxHeaderCell();
 
-
         public FormVerify()
         {
             InitializeComponent();
             selectedItemsHeader.AttachTo(columnIsLostObjectSelected);
 
             Translate();
-            Warnings.ContextMenu = new ContextMenu();
             Warnings.AutoGenerateColumns = false;
         }
 
@@ -39,11 +37,122 @@ namespace GitUI
             get { return Warnings.SelectedRows.Count == 0 ? null : filteredLostObjects[Warnings.SelectedRows[0].Index]; }
         }
 
+        #region Event Handlers
+
         private void FormVerifyShown(object sender, EventArgs e)
         {
             UpdateLostObjects();
             Warnings.DataSource = filteredLostObjects;
         }
+
+        private void SaveObjectsClick(object sender, EventArgs e)
+        {
+            var options = GetOptions();
+
+            var process = new FormProcess("fsck-objects --lost-found" + options);
+            process.ShowDialog();
+            UpdateLostObjects();
+        }
+
+        private void RemoveClick(object sender, EventArgs e)
+        {
+            if (MessageBox.Show(
+                _removeDanglingObjectsQuestion.Text,
+                _removeDanglingObjectsCaption.Text,
+                MessageBoxButtons.YesNo) != DialogResult.Yes)
+                return;
+
+            new FormProcess("prune").ShowDialog();
+            UpdateLostObjects();
+        }
+
+        private void mnuLostObjectCreateTag_Click(object sender, EventArgs e)
+        {
+            using (var frm = new FormTagSmall { Revision = GetCurrentGitRevision() })
+            {
+                var dialogResult = frm.ShowDialog();
+                if (dialogResult == DialogResult.OK)
+                    UpdateLostObjects();
+            }
+        }
+
+        private void mnuLostObjectView_Click(object sender, EventArgs e)
+        {
+            ViewCurrentItem();
+        }
+
+        private void mnuLostObjectCreateBranch_Click(object sender, EventArgs e)
+        {
+            using (var frm = new FormBranchSmall { Revision = GetCurrentGitRevision() })
+            {
+                var dialogResult = frm.ShowDialog();
+                if (dialogResult == DialogResult.OK)
+                    UpdateLostObjects();
+            }
+        }
+
+        private void TagAllObjectsClick(object sender, EventArgs e)
+        {
+            DeleteLostFoundTags();
+            CreateLostFoundTags(false);
+            UpdateLostObjects();
+        }
+
+        private void DeleteAllLostAndFoundTagsClick(object sender, EventArgs e)
+        {
+            DeleteLostFoundTags();
+            UpdateLostObjects();
+        }
+
+        private void TagAllCommitsClick(object sender, EventArgs e)
+        {
+            DeleteLostFoundTags();
+            CreateLostFoundTags(true);
+            UpdateLostObjects();
+        }
+
+        private void UnreachableCheckedChanged(object sender, EventArgs e)
+        {
+            UpdateLostObjects();
+        }
+
+        private void FullCheckCheckedChanged(object sender, EventArgs e)
+        {
+            UpdateLostObjects();
+        }
+
+        private void NoReflogsCheckedChanged(object sender, EventArgs e)
+        {
+            UpdateLostObjects();
+        }
+
+        private void ShowOnlyCommitsCheckedChanged(object sender, EventArgs e)
+        {
+            UpdateFilteredLostObjects();
+        }
+
+        // NOTE: hack to select row under cursor on right click and context menu open
+        private void Warnings_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right && e.RowIndex != -1)
+            {
+                Warnings.Rows[e.RowIndex].Selected = true;
+            }
+        }
+
+        private void Warnings_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            // ignore double click by header, user just wants to change sorting order
+            if (e.RowIndex == -1)
+                return;
+            // ignore double click by checkbox, user probably wanted to change checked state
+            if (e.ColumnIndex == 0)
+                return;
+
+            ViewCurrentItem();
+        }
+
+        #endregion
 
         private void UpdateLostObjects()
         {
@@ -81,15 +190,6 @@ namespace GitUI
             return true;
         }
 
-        private void SaveObjectsClick(object sender, EventArgs e)
-        {
-            var options = GetOptions();
-
-            var process = new FormProcess("fsck-objects --lost-found" + options);
-            process.ShowDialog();
-            UpdateLostObjects();
-        }
-
         private string GetOptions()
         {
             var options = string.Empty;
@@ -113,44 +213,6 @@ namespace GitUI
             new FormEdit(GitCommandHelpers.ShowSha1(currenItem.Hash)).ShowDialog();
         }
 
-        private void RemoveClick(object sender, EventArgs e)
-        {
-            if (MessageBox.Show(
-                _removeDanglingObjectsQuestion.Text,
-                _removeDanglingObjectsCaption.Text,
-                MessageBoxButtons.YesNo) != DialogResult.Yes)
-                return;
-
-            new FormProcess("prune").ShowDialog();
-            UpdateLostObjects();
-        }
-
-        private void mnuLostObjectCreateTag_Click(object sender, EventArgs e)
-        {
-            var currentItem = CurrentItem;
-            if (currentItem == null)
-                throw new InvalidOperationException();
-
-            new FormTagSmall { Revision = new GitRevision(currentItem.Hash) }.ShowDialog();
-        }
-
-        private void mnuLostObjectView_Click(object sender, EventArgs e)
-        {
-            ViewCurrentItem();
-        }
-
-        private void UnreachableCheckedChanged(object sender, EventArgs e)
-        {
-            UpdateLostObjects();
-        }
-
-        private void TagAllObjectsClick(object sender, EventArgs e)
-        {
-            DeleteLostFoundTags();
-            CreateLostFoundTags(false);
-            UpdateLostObjects();
-        }
-
         private void CreateLostFoundTags(bool onlyCommits)
         {
             var currentTag = 0;
@@ -165,12 +227,6 @@ namespace GitUI
             MessageBox.Show(string.Format(_xTagsCreated.Text, currentTag), "Tags created");
         }
 
-        private void DeleteAllLostAndFoundTagsClick(object sender, EventArgs e)
-        {
-            DeleteLostFoundTags();
-            UpdateLostObjects();
-        }
-
         private static void DeleteLostFoundTags()
         {
             foreach (var head in GitCommandHelpers.GetHeads(true, false))
@@ -180,58 +236,13 @@ namespace GitUI
             }
         }
 
-        private void FullCheckCheckedChanged(object sender, EventArgs e)
+        private GitRevision GetCurrentGitRevision()
         {
-            UpdateLostObjects();
+            var currentItem = CurrentItem;
+            if (currentItem == null)
+                throw new InvalidOperationException("There are no current selected item.");
+
+            return new GitRevision(currentItem.Hash);
         }
-
-        private void NoReflogsCheckedChanged(object sender, EventArgs e)
-        {
-            UpdateLostObjects();
-        }
-
-        private void TagAllCommitsClick(object sender, EventArgs e)
-        {
-            DeleteLostFoundTags();
-            CreateLostFoundTags(true);
-            UpdateLostObjects();
-        }
-
-        private void ShowOnlyCommitsCheckedChanged(object sender, EventArgs e)
-        {
-            UpdateFilteredLostObjects();
-        }
-
-        // NOTE: hack to select row under cursor on right click and context menu open
-        private void Warnings_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right && e.RowIndex != -1)
-            {
-                Warnings.Rows[e.RowIndex].Selected = true;
-            }
-        }
-
-        private void Warnings_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            // ignore double click by header, user just wants to change sorting order
-            if (e.RowIndex == -1)
-                return;
-            // ignore double click by checkbox, user probably wanted to change checked state
-            if (e.ColumnIndex == 0)
-                return;
-
-            ViewCurrentItem();
-        }
-
-
-
-
-
-
-
-
-
-
-
     }
 }
