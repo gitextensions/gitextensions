@@ -51,7 +51,7 @@ namespace GitUI.Tag
 
                 if (!string.IsNullOrEmpty(s))
                     MessageBox.Show(s, _messageCaption.Text);
-                Close();
+                DialogResult = DialogResult.OK;
             }
             catch (Exception ex)
             {

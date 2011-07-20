@@ -31,7 +31,7 @@ namespace GitUI
                     formProcess.ShowDialog();
                 }
 
-                Close();
+                DialogResult = DialogResult.OK;
             }
             catch (Exception ex)
             {
