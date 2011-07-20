@@ -64,7 +64,8 @@ namespace GitUI.Script
                     "{cAuthor}",
                     "{cCommitter}",
                     "{cAuthorDate}",
-                    "{cCommitDate}"
+                    "{cCommitDate}",
+                    "{cDefaultRemote}"
                 };
 
             GitRevision selectedRevision = null;
@@ -269,6 +270,15 @@ namespace GitUI.Script
                             break;
                         case "{cCommitDate}":
                             argument = argument.Replace(option, currentRevision.CommitDate.ToString());
+                            break;
+                        case "{cDefaultRemote}":
+                            if (currentBranches.Count == 1)
+                                argument = argument.Replace(option, GitCommandHelpers.GetSetting(string.Format("branch.{0}.remote", currentBranches[0].Name)));
+                            else if (currentBranches.Count != 0)
+                                argument = argument.Replace(option, GitCommandHelpers.GetSetting(string.Format("branch.{0}.remote", 
+                                                            askToSpecify(currentBranches, "Current Revision Branch"))));
+                            else
+                                argument = argument.Replace(option, "");
                             break;
                         default:
                             break;
