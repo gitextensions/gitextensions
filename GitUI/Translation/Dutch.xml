@@ -117,9 +117,6 @@ Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geope
           <Value>Toon alle objecten die  wel bestaan maar niet te bereiken zijn via een 
 andere node.</Value>
         </TranslationItem>
-        <TranslationItem Name="TagAllObjects" Property="Text">
-          <Value>Label alle verloren objecten</Value>
-        </TranslationItem>
         <TranslationItem Name="DeleteAllLostAndFoundTags" Property="Text">
           <Value>Verwijder allee LOST_AND_FOUND labels</Value>
         </TranslationItem>
@@ -131,7 +128,7 @@ andere node.</Value>
           <Value>Behandel commits waarnaar alleen verwezen word vanuit de reflog 
 als niet zichtbaar.</Value>
         </TranslationItem>
-        <TranslationItem Name="TagAllCommits" Property="Text">
+        <TranslationItem Name="btnRestoreSelectedObjects" Property="Text">
           <Value>Label alle commits</Value>
         </TranslationItem>
         <TranslationItem Name="ShowOnlyCommits" Property="Text">
