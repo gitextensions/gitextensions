@@ -116,9 +116,6 @@
         <TranslationItem Name="Unreachable" Property="Text">
           <Value>輸出所有存在但是不可讀的目標</Value>
         </TranslationItem>
-        <TranslationItem Name="TagAllObjects" Property="Text">
-          <Value>標記所有丟失的目標</Value>
-        </TranslationItem>
         <TranslationItem Name="DeleteAllLostAndFoundTags" Property="Text">
           <Value>刪除所有LOST_AND_FOUND標籤</Value>
         </TranslationItem>
@@ -129,7 +126,7 @@
         <TranslationItem Name="NoReflogs" Property="Text">
           <Value>不要認為在reflog中引用的提交是可取得的</Value>
         </TranslationItem>
-        <TranslationItem Name="TagAllCommits" Property="Text">
+        <TranslationItem Name="btnRestoreSelectedObjects" Property="Text">
           <Value>標記所有丟失的提交</Value>
         </TranslationItem>
         <TranslationItem Name="ShowOnlyCommits" Property="Text">

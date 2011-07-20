@@ -1599,7 +1599,13 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Удалить</Value>
         </TranslationItem>
         <TranslationItem Name="_removeDanglingObjectsQuestion" Property="Text">
-          <Value>Вы точно хотите удалить все потерянные объекты?</Value>
+          <Value>Вы точно хотите удалить все висящие объекты?</Value>
+        </TranslationItem>
+        <TranslationItem Name="selectLostObjectsToRestoreMessage" Property="Text">
+          <Value>Отметьте объекты, которые требуется восстановить.</Value>
+        </TranslationItem>
+        <TranslationItem Name="selectLostObjectsToRestoreCaption" Property="Text">
+          <Value>Восстановление висящих объектов.</Value>
         </TranslationItem>
         <TranslationItem Name="_xTagsCreated" Property="Text">
           <Value>Было создано {0} меток.
@@ -1624,14 +1630,11 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <TranslationItem Name="mnuLostObjectView" Property="Text">
           <Value>Просмотреть</Value>
         </TranslationItem>
-        <TranslationItem Name="TagAllObjects" Property="Text">
-          <Value>Пометить все потерянные объекты</Value>
-        </TranslationItem>
         <TranslationItem Name="DeleteAllLostAndFoundTags" Property="Text">
           <Value>Удалить все метки LOST_AND_FOUND</Value>
         </TranslationItem>
-        <TranslationItem Name="TagAllCommits" Property="Text">
-          <Value>Пометить все потерянные коммиты</Value>
+        <TranslationItem Name="btnRestoreSelectedObjects" Property="Text">
+          <Value>Восстановить выделенные объекты</Value>
         </TranslationItem>
         <TranslationItem Name="ShowOnlyCommits" Property="Text">
           <Value>Показать только коммиты</Value>
