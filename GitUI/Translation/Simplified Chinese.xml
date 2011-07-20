@@ -93,17 +93,17 @@
         <TranslationItem Name="Remove" Property="Text">
           <Value>删除所有悬挂对象</Value>
         </TranslationItem>
-        <TranslationItem Name="TagSelectedObject" Property="Text">
+        <TranslationItem Name="mnuLostObjectsCreateTag" Property="Text">
           <Value>标记选定的对象</Value>
         </TranslationItem>
-        <TranslationItem Name="ViewObject" Property="Text">
+        <TranslationItem Name="mnuLostObjectsCreateBranch" Property="Text">
+          <Value>创建分支</Value>
+        </TranslationItem>		
+        <TranslationItem Name="mnuLostObjectView" Property="Text">
           <Value>查看所选对象</Value>
         </TranslationItem>
         <TranslationItem Name="Unreachable" Property="Text">
           <Value>输出所有存在但是不可读的对象</Value>
-        </TranslationItem>
-        <TranslationItem Name="TagAllObjects" Property="Text">
-          <Value>标记所有丢失的对象</Value>
         </TranslationItem>
         <TranslationItem Name="DeleteAllLostAndFoundTags" Property="Text">
           <Value>删除所有LOST_AND_FOUND标签</Value>
@@ -115,7 +115,7 @@
         <TranslationItem Name="NoReflogs" Property="Text">
           <Value>不认为在reflog中引用的提交是可获得的</Value>
         </TranslationItem>
-        <TranslationItem Name="TagAllCommits" Property="Text">
+        <TranslationItem Name="btnRestoreSelectedObjects" Property="Text">
           <Value>标记所有丢失的提交</Value>
         </TranslationItem>
         <TranslationItem Name="ShowOnlyCommits" Property="Text">
