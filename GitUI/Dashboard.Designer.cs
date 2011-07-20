@@ -37,7 +37,6 @@
             this.DonateCategory = new GitUI.DashboardCategory();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.splitContainer5.Panel1.SuspendLayout();
-            this.splitContainer5.Panel2.SuspendLayout();
             this.splitContainer5.SuspendLayout();
             this.splitContainer6.Panel1.SuspendLayout();
             this.splitContainer6.Panel2.SuspendLayout();
@@ -74,7 +73,6 @@
             this.splitContainer5.Panel2.AccessibleName = null;
             resources.ApplyResources(this.splitContainer5.Panel2, "splitContainer5.Panel2");
             this.splitContainer5.Panel2.BackgroundImage = null;
-            this.Controls.Add(this.pictureBox1);
             this.splitContainer5.Panel2.Font = null;
             this.splitContainer5.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer5_SplitterMoved);
             // 
@@ -190,10 +188,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.BackgroundImage = null;
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.splitContainer5);
             this.Name = "Dashboard";
             this.splitContainer5.Panel1.ResumeLayout(false);
-            this.splitContainer5.Panel2.ResumeLayout(false);
             this.splitContainer5.ResumeLayout(false);
             this.splitContainer6.Panel1.ResumeLayout(false);
             this.splitContainer6.Panel2.ResumeLayout(false);
