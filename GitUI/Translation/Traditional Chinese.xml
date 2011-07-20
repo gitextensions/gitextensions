@@ -107,6 +107,9 @@
         <TranslationItem Name="mnuLostObjectsCreateTag" Property="Text">
           <Value>標記選定的目標</Value>
         </TranslationItem>
+        <TranslationItem Name="mnuLostObjectsCreateBranch" Property="Text">
+          <Value>建立分支</Value>
+        </TranslationItem>		
         <TranslationItem Name="mnuLostObjectView" Property="Text">
           <Value>查看所選目標</Value>
         </TranslationItem>

@@ -96,6 +96,9 @@
         <TranslationItem Name="mnuLostObjectsCreateTag" Property="Text">
           <Value>選択オブジェクトにタグを作成</Value>
         </TranslationItem>
+		<TranslationItem Name="mnuLostObjectsCreateBranch" Property="Text">
+          <Value>ブランチの作成</Value>
+        </TranslationItem>
         <TranslationItem Name="mnuLostObjectView" Property="Text">
           <Value>選択したオブジェクトを表示</Value>
         </TranslationItem>
