@@ -93,17 +93,17 @@
         <TranslationItem Name="Remove" Property="Text">
           <Value>Cancella tutti gli oggetti vaganti</Value>
         </TranslationItem>
-        <TranslationItem Name="TagSelectedObject" Property="Text">
+        <TranslationItem Name="mnuLostObjectsCreateTag" Property="Text">
           <Value>Tagga l'oggetto selezionato</Value>
         </TranslationItem>
-        <TranslationItem Name="ViewObject" Property="Text">
+		<TranslationItem Name="mnuLostObjectsCreateBranch" Property="Text">
+          <Value>Crea branch</Value>
+        </TranslationItem>
+        <TranslationItem Name="mnuLostObjectView" Property="Text">
           <Value>Visualizza l'oggetto selezionato</Value>
         </TranslationItem>
         <TranslationItem Name="Unreachable" Property="Text">
           <Value>Elenca gli oggetti che esistono ma che non sono leggibili da alcuno dei nodi referenziati.</Value>
-        </TranslationItem>
-        <TranslationItem Name="TagAllObjects" Property="Text">
-          <Value>Tagga tutti gli oggetti persi</Value>
         </TranslationItem>
         <TranslationItem Name="DeleteAllLostAndFoundTags" Property="Text">
           <Value>Cancella tutti i tag LOST_AND_FOUND</Value>
@@ -116,7 +116,7 @@ ma anche quello trovate in pool di oggetti alternativi.
         <TranslationItem Name="NoReflogs" Property="Text">
           <Value>Non considerare raggiungibili commit che sono referenziati solo da un elemento in un reflog</Value>
         </TranslationItem>
-        <TranslationItem Name="TagAllCommits" Property="Text">
+        <TranslationItem Name="btnRestoreSelectedObjects" Property="Text">
           <Value>Tagga tutti i commit persi</Value>
         </TranslationItem>
         <TranslationItem Name="ShowOnlyCommits" Property="Text">
