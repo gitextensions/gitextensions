@@ -36,17 +36,11 @@ namespace GitUI
             private readonly LostObjectType objectType;
             private readonly string rawType;
             private readonly string hash;
-            private readonly string raw;
 
             public LostObjectType ObjectType
             {
                 get { return objectType; }
             }
-
-            /// <summary>
-            /// Raw data returned by fsck-objects command.
-            /// </summary>
-            public string Raw { get { return raw; } }
 
             /// <summary>
             /// Sha1 hash of lost object.
@@ -62,14 +56,11 @@ namespace GitUI
             public string Subject { get; private set; }
             public DateTime? Date { get; private set; }
 
-            public bool IsSelected { get; set; }
-
-            private LostObject(LostObjectType objectType, string rawType, string hash, string raw)
+            private LostObject(LostObjectType objectType, string rawType, string hash)
             {
                 this.objectType = objectType;
                 this.rawType = rawType;
                 this.hash = hash;
-                this.raw = raw;
             }
 
             public static LostObject TryParse(string raw)
@@ -77,36 +68,40 @@ namespace GitUI
                 if (string.IsNullOrEmpty(raw))
                     throw new ArgumentException("Raw source must be non-empty string", raw);
 
-                var patterMatch = RawDataRegex.Match(raw);
+                var patternMatch = RawDataRegex.Match(raw);
 
                 // show failed assertion for unsupported cases (for developers)
                 // if you get this message, 
                 //     you can implement this format parsing
                 //     or post an issue to https://github.com/spdr870/gitextensions/issues
-                Debug.Assert(patterMatch.Success, "Lost object's extracted diagnostics format not implemented", raw);
+                Debug.Assert(patternMatch.Success, "Lost object's extracted diagnostics format not implemented", raw);
 
                 // skip unsupported raw data format (for end users)
-                if (!patterMatch.Success)
+                if (!patternMatch.Success)
                     return null;
 
-                var matchedGroups = patterMatch.Groups;
+                var matchedGroups = patternMatch.Groups;
                 Debug.Assert(matchedGroups[4].Success);
                 var hash = matchedGroups[4].Value;
 
-                var result = new LostObject(GetObjectType(matchedGroups), matchedGroups[1].Value, hash, raw);
+                var result = new LostObject(GetObjectType(matchedGroups), matchedGroups[1].Value, hash);
 
-                var objectInfo = GetLostObjectLog(hash);
-                var logPatternMatch = LogRegex.Match(objectInfo);
-                if (logPatternMatch.Success)
+                if (result.ObjectType == LostObjectType.Commit)
                 {
-                    result.Author = logPatternMatch.Groups[1].Value;
-                    result.Subject = logPatternMatch.Groups[2].Value;
-                    result.Date = UnixEpoch.AddSeconds(long.Parse(logPatternMatch.Groups[3].Value));
+                    var commitLog = GetLostCommitLog(hash);
+                    var logPatternMatch = LogRegex.Match(commitLog);
+                    if (logPatternMatch.Success)
+                    {
+                        result.Author = logPatternMatch.Groups[1].Value;
+                        result.Subject = logPatternMatch.Groups[2].Value;
+                        result.Date = UnixEpoch.AddSeconds(long.Parse(logPatternMatch.Groups[3].Value));
+                    }
                 }
+
                 return result;
             }
 
-            private static string GetLostObjectLog(string hash)
+            private static string GetLostCommitLog(string hash)
             {
                 if (string.IsNullOrEmpty(hash) || !Sha1HashRegex.IsMatch(hash))
                     throw new ArgumentOutOfRangeException("hash", hash, "Hash must be a valid SHA1 hash.");
