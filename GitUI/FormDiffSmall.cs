@@ -37,7 +37,7 @@ namespace GitUI
 
         public void SetRevision(string revision)
         {
-            Revision = new GitRevision {Guid = revision, ParentGuids = new[] {revision + "^"}};
+            Revision = new GitRevision(revision) { ParentGuids = new[] { revision + "^" } };
             SetRevision(Revision);
         }
 
