@@ -8,7 +8,7 @@ namespace GitUI
     {
         public AboutBox()
         {
-            contributersList = contributers.Split(',');
+            contributersList = string.Concat(coders, translators, designers, other).Split(',');
 
             InitializeComponent(); 
             Translate();
@@ -49,7 +49,11 @@ namespace GitUI
         }
 
         //Contributers list 
-        private const string contributers = "Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide, dominiqueplante, Grzegorz Pachocki, Seth Behunin, bleis-tift, Chris Meaney, Nathanael Schmied, Adrian Codrington, Troels Thomsen, Wilbert van Dolleweerd, Tobias Bieniek, Radoslaw Miazio, Stan Angeloff, Matt McCormick, Bjørn Moe, William Swanson, Daniel Locantore, Harald Deischinger, Radek Miazio, Stefan Rueckl, Emanuel Henrique do Prado, Lukasz Byczynski, Steffen M. Colding-Jørgensen, alexeik, arBmind, Gianni Rosa Gallina, mausch, xaro, Xharze, Kim Christensen, gor, Charles Brossollet, Patrick Earl, Cheng Huang, ultonis, Michael Frenzel, showell, Daniel Doubrovkine, mdk, superlongman, Marc Murray, rferriz, Jacek Pasternak, miloja, Ed Starback, Alberto Chiesa, Airat Salikhov, Max Malook, ikke, Simon Walker";
+        private const string coders = "Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide, dominiqueplante, Grzegorz Pachocki, Seth Behunin, bleis-tift, Chris Meaney, Nathanael Schmied, Adrian Codrington, Troels Thomsen, Wilbert van Dolleweerd, Tobias Bieniek, Radoslaw Miazio, Stan Angeloff, Matt McCormick, Bjørn Moe, William Swanson, Daniel Locantore, Harald Deischinger, Radek Miazio, Stefan Rueckl, Emanuel Henrique do Prado, Lukasz Byczynski, Steffen M. Colding-Jørgensen, alexeik, arBmind, mausch, xaro, Xharze, Kim Christensen, Charles Brossollet, Patrick Earl, ultonis, Michael Frenzel, showell, Daniel Doubrovkine, mdk, Marc Murray, rferriz, Jacek Pasternak, miloja, Ed Starback, Alberto Chiesa, Airat Salikhov, Max Malook, ikke, Simon Walker";
+        private const string translators = "Gianni Rosa Gallina, Cheng Huang, Floyd Hung, superlongman, rferriz, gor, xaro, bleis-tift";
+        private const string designers = "Andréj Telle, Oliver Friedrich";
+        private const string other = "";
+
         private string[] contributersList;
         private Random random = new Random();
 
@@ -60,7 +64,9 @@ namespace GitUI
 
         private void _NO_TRANSLATE_thanksToTicker_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(contributers.Trim(), "Contributors");
+            FormContributors formContributors = new FormContributors();
+            formContributors.LoadContributors(coders, translators, designers, other);
+            formContributors.ShowDialog();
         }
     }
 }
