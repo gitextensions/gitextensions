@@ -152,10 +152,10 @@ namespace GitUI
                 //Show favourites
                 Repositories.RepositoryCategories.Aggregate(0, AddDashboardEntry);
 
-                splitContainer7.SplitterDistance = splitContainer7.Height - (DonateCategory.Height + 25);
-
                 initialized = true;
             }
+
+            splitContainer7.SplitterDistance = Math.Max(2, splitContainer7.Height - (DonateCategory.Height + 25));
 
             //Resize favourites
             for (int i = splitContainer5.Panel2.Controls.Count; i > 0; i--)
@@ -278,7 +278,7 @@ namespace GitUI
             base.OnResize(e);
             ShowRecentRepositories();
             pictureBox1.BringToFront();
-            pictureBox1.Location = new Point(this.Width - 135, this.Height - 135);
+            pictureBox1.Location = new Point(this.Width - 145, this.Height - 145);
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)

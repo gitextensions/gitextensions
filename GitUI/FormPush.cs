@@ -149,7 +149,7 @@ namespace GitUI
                 string[] remotes = Remotes.DataSource as string[];
                 if (remotes != null)
                     foreach (string remoteBranch in remotes)
-                        if (Branch.Text.StartsWith(remoteBranch))
+                        if (!string.IsNullOrEmpty(remoteBranch) && Branch.Text.StartsWith(remoteBranch))
                             track = false;
 
 
