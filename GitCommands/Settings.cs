@@ -12,7 +12,7 @@ namespace GitCommands
     public static class Settings
     {
         //Constants
-        public static readonly string GitExtensionsVersionString = "2.23 RC2";
+        public static readonly string GitExtensionsVersionString = "2.23 RC3";
         public static readonly int GitExtensionsVersionInt = 223;
 
         //semi-constants

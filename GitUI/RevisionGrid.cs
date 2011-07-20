@@ -62,6 +62,7 @@ namespace GitUI
         private Label _quickSearchLabel;
         private string _quickSearchString;
         private RevisionGraph _revisionGraphCommand;
+        private bool _filterQuickSearchStringEnabled;
 
         private RevisionGridLayout layout;
         private int rowHeigth;
@@ -95,6 +96,7 @@ namespace GitUI
             InMemMessageFilter = "";
             AllowGraphWithFilter = false;
             _quickSearchString = "";
+            _filterQuickSearchStringEnabled = false;
             quickSearchTimer.Tick += QuickSearchTimerTick;
 
             Revisions.Loading += RevisionsLoading;
@@ -916,7 +918,7 @@ namespace GitUI
 
             Brush foreBrush = new SolidBrush(foreColor);
             var rowFont = revision.Guid == CurrentCheckout /*&& !showRevisionCards*/ ? HeadFont : NormalFont;
-
+            
             switch (column)
             {
                 case 1: //Description!!
@@ -1978,7 +1980,26 @@ namespace GitUI
             ToggleShowGitNotes,
             ToggleRevisionCardLayout,
             ShowAllBranches,
-            ShowCurrentBranchOnly
+            ShowCurrentBranchOnly,
+            FilterQuickSearchString
+        }
+
+        private void FilterQuickSearchString()
+        {
+            _filterQuickSearchStringEnabled = !_filterQuickSearchStringEnabled;
+            Loading.Visible = true;
+            Revisions.Visible = false;
+            Revisions.SuspendLayout();
+            foreach (DataGridViewRow row in Revisions.Rows)
+            {
+                if (!_filterQuickSearchStringEnabled || ((GitRevision)Revisions.GetRowData(row.Index)).MatchesSearchString(_lastQuickSearchString))
+                    row.Visible = true;
+                else
+                    row.Visible = false;
+            }
+            Revisions.ResumeLayout();
+            Revisions.Visible = true;
+            Loading.Visible = false;
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -1997,6 +2018,7 @@ namespace GitUI
                 case Commands.ToggleRevisionCardLayout: ToggleRevisionCardLayout(); break;
                 case Commands.ShowAllBranches: ShowAllBranchesToolStripMenuItemClick(null, null); break;
                 case Commands.ShowCurrentBranchOnly: ShowCurrentBranchOnlyToolStripMenuItemClick(null, null); break;
+                case Commands.FilterQuickSearchString: FilterQuickSearchString(); break;
                 default: ExecuteScriptCommand(cmd, Keys.None); break;
             }
 

@@ -181,7 +181,7 @@ namespace GitUI
             lostObjects.AddRange(dialogResult
                 .Split('\r', '\n')
                 .Where(s => !string.IsNullOrEmpty(s))
-                .Select(LostObject.TryParse)
+                .Select<string, LostObject>(LostObject.TryParse)
                 .Where(parsedLostObject => parsedLostObject != null));
 
             UpdateFilteredLostObjects();
