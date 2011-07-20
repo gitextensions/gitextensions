@@ -96,6 +96,9 @@
         <TranslationItem Name="mnuLostObjectsCreateTag" Property="Text">
           <Value>标记选定的对象</Value>
         </TranslationItem>
+        <TranslationItem Name="mnuLostObjectsCreateBranch" Property="Text">
+          <Value>创建分支</Value>
+        </TranslationItem>		
         <TranslationItem Name="mnuLostObjectView" Property="Text">
           <Value>查看所选对象</Value>
         </TranslationItem>

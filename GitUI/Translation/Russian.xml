@@ -1618,6 +1618,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <TranslationItem Name="mnuLostObjectsCreateTag" Property="Text">
           <Value>Создать метку</Value>
         </TranslationItem>
+        <TranslationItem Name="mnuLostObjectsCreateBranch" Property="Text">
+          <Value>Создать ветку</Value>
+        </TranslationItem>
         <TranslationItem Name="mnuLostObjectView" Property="Text">
           <Value>Просмотреть</Value>
         </TranslationItem>
