@@ -19,6 +19,7 @@ namespace GitUI
 {
     public partial class FormSettings : GitExtensionsForm
     {
+        private Font diffFont;
         private const string GitExtensionsShellExName = "GitExtensionsShellEx32.dll";
 
         public FormSettings()
@@ -36,6 +37,7 @@ namespace GitUI
             defaultHome.Text = string.Format(defaultHome.Text + " ({0})", GitCommandHelpers.GetDefaultHomeDir());
             userprofileHome.Text = string.Format(userprofileHome.Text + " ({0})",
                                                  Environment.GetEnvironmentVariable("USERPROFILE"));
+            SetCurrentDiffFont(Settings.DiffFont);
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -450,6 +452,7 @@ namespace GitUI
             Settings.DiffRemovedColor = _NO_TRANSLATE_ColorRemovedLine.BackColor;
             Settings.DiffAddedExtraColor = _NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor;
             Settings.DiffRemovedExtraColor = _NO_TRANSLATE_ColorRemovedLineDiffLabel.BackColor;
+            Settings.DiffFont = diffFont;
 
             Settings.DiffSectionColor = _NO_TRANSLATE_ColorSectionLabel.BackColor;
 
@@ -2286,6 +2289,22 @@ namespace GitUI
             ShowIconPreview();
         }
 
+        private void diffFontChangeButton_Click(object sender, EventArgs e)
+        {
+            fontDialog.Font = diffFont;
+            DialogResult result = fontDialog.ShowDialog();
 
+            if (result == DialogResult.OK || result == DialogResult.Yes)
+            {
+                SetCurrentDiffFont(fontDialog.Font);
+            }
+        }
+
+        private void SetCurrentDiffFont(Font font)
+        {
+            diffFont = font;
+            diffFontChangeButton.Text = string.Format("{0}, {1}", diffFont.FontFamily.Name, diffFont.Size);
+
+        }
     }
 }

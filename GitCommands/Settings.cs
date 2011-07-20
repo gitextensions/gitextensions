@@ -584,6 +584,13 @@ namespace GitCommands
             get { return SafeGet("diffaddedextracolor", Color.FromArgb(135, 255, 135), ref _diffAddedExtraColor); }
             set { SafeSet("diffaddedextracolor", value, ref _diffAddedExtraColor); }
         }
+        
+        private static Font _diffFont;
+        public static Font DiffFont
+        {
+            get { return SafeGet("difffont", new Font("Courier New", 10), ref _diffFont); }
+            set { SafeSet("difffont", value, ref _diffFont); }
+        }
 
         #endregion
 
@@ -779,6 +786,15 @@ namespace GitCommands
             return SafeGet(key, defaultValue, ref field, x => x);
         }
 
+        private static Font SafeGet(string key, Font defaultValue, ref Font field)
+        {
+            return SafeGet(key, defaultValue, ref field, x =>
+                                                             {
+                                                                 string[] parts = x.Split(';');
+                                                                 return new Font(parts[0], float.Parse(parts[1]));
+                                                             });
+        }
+
         private static bool SafeGet(string key, bool defaultValue, ref bool? field)
         {
             return SafeGet(key, defaultValue, ref field, x => x == "True").Value;
@@ -810,6 +826,12 @@ namespace GitCommands
         {
             field = value;
             SetValue(key, ColorTranslator.ToHtml(field.Value));
+        }
+        
+        private static void SafeSet(string key, Font value, ref Font field)
+        {
+            field = value;
+            SetValue(key, string.Format("{0};{1}", field.FontFamily.Name, field.Size));
         }
 
         private static T GetValue<T>(string key, T defaultValue)
