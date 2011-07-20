@@ -30,7 +30,6 @@ namespace GitUI
             selectedItemsHeader.AttachTo(columnIsLostObjectSelected);
 
             Translate();
-
             Warnings.ContextMenu = new ContextMenu();
             Warnings.AutoGenerateColumns = false;
         }

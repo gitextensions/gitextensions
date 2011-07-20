@@ -10,7 +10,7 @@ namespace GitUI
     public sealed class DataGridViewCheckBoxHeaderCell : DataGridViewColumnHeaderCell
     {
         private bool wasAttached;
-
+        private bool selfChanging;
         /// <summary>
         /// Relative check box location (from cellbounds).
         /// </summary>
@@ -25,12 +25,14 @@ namespace GitUI
             owningColumn.HeaderCell = this;
             owningColumn.HeaderText = string.Empty;
             DataGridView.CurrentCellDirtyStateChanged += OnCurrentCellDirtyStateChanged;
+            DataGridView.Rows.CollectionChanged += (s, e) => UpdateCheckedState();
+            UpdateCheckedState();
             wasAttached = true;
         }
 
         private void OnCurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
-            if (DataGridView.CurrentCell.ColumnIndex != OwningColumn.Index)
+            if (DataGridView.CurrentCell.ColumnIndex != OwningColumn.Index || selfChanging)
                 return;
             DataGridView.CommitEdit(DataGridViewDataErrorContexts.Commit);
             UpdateCheckedState();
@@ -109,10 +111,12 @@ namespace GitUI
             {
                 var newStateIsChecked = CheckedState != CheckState.Checked;
                 CheckedState = newStateIsChecked ? CheckState.Checked : CheckState.Unchecked;
+                selfChanging = true;
                 foreach (var cell in Cells)
                 {
                     cell.Value = newStateIsChecked;
                 }
+                selfChanging = false;
             }
             base.OnMouseClick(e);
         }
