@@ -142,7 +142,7 @@ namespace GitUI
             try
             {
                 //Set language to neutral to get neutral translations
-                GitCommands.Settings.Translation = null;
+                GitCommands.Settings.Translation = "";
 
                 foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
                 {
