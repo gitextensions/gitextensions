@@ -48,13 +48,13 @@
             this.columnHash = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mnuLostObjects = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnuLostObjectView = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuLostObjectCreateTag = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuLostObjectsCreateTag = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuLostObjectsCreateBranch = new System.Windows.Forms.ToolStripMenuItem();
             this.TagAllCommits = new System.Windows.Forms.Button();
             this.DeleteAllLostAndFoundTags = new System.Windows.Forms.Button();
             this.TagAllObjects = new System.Windows.Forms.Button();
             this.Remove = new System.Windows.Forms.Button();
             this.SaveObjects = new System.Windows.Forms.Button();
-            this.mnuLostObjectCreateBranch = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -268,25 +268,34 @@
             // 
             this.mnuLostObjects.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuLostObjectView,
-            this.mnuLostObjectCreateTag,
-            this.mnuLostObjectCreateBranch});
+            this.mnuLostObjectsCreateTag,
+            this.mnuLostObjectsCreateBranch});
             this.mnuLostObjects.Name = "mnuLostObjects";
-            this.mnuLostObjects.Size = new System.Drawing.Size(153, 92);
+            this.mnuLostObjects.Size = new System.Drawing.Size(190, 92);
             // 
             // mnuLostObjectView
             // 
             this.mnuLostObjectView.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.mnuLostObjectView.Name = "mnuLostObjectView";
-            this.mnuLostObjectView.Size = new System.Drawing.Size(152, 22);
+            this.mnuLostObjectView.Size = new System.Drawing.Size(189, 22);
             this.mnuLostObjectView.Text = "View";
             this.mnuLostObjectView.Click += new System.EventHandler(this.mnuLostObjectView_Click);
             // 
-            // mnuLostObjectCreateTag
+            // mnuLostObjectsCreateTag
             // 
-            this.mnuLostObjectCreateTag.Name = "mnuLostObjectCreateTag";
-            this.mnuLostObjectCreateTag.Size = new System.Drawing.Size(152, 22);
-            this.mnuLostObjectCreateTag.Text = "Create tag";
-            this.mnuLostObjectCreateTag.Click += new System.EventHandler(this.mnuLostObjectCreateTag_Click);
+            this.mnuLostObjectsCreateTag.Name = "mnuLostObjectsCreateTag";
+            this.mnuLostObjectsCreateTag.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
+            this.mnuLostObjectsCreateTag.Size = new System.Drawing.Size(189, 22);
+            this.mnuLostObjectsCreateTag.Text = "Create tag";
+            this.mnuLostObjectsCreateTag.Click += new System.EventHandler(this.mnuLostObjectsCreateTag_Click);
+            // 
+            // mnuLostObjectsCreateBranch
+            // 
+            this.mnuLostObjectsCreateBranch.Name = "mnuLostObjectsCreateBranch";
+            this.mnuLostObjectsCreateBranch.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
+            this.mnuLostObjectsCreateBranch.Size = new System.Drawing.Size(189, 22);
+            this.mnuLostObjectsCreateBranch.Text = "Create branch";
+            this.mnuLostObjectsCreateBranch.Click += new System.EventHandler(this.mnuLostObjectsCreateBranch_Click);
             // 
             // TagAllCommits
             // 
@@ -343,13 +352,6 @@
             this.SaveObjects.UseVisualStyleBackColor = true;
             this.SaveObjects.Click += new System.EventHandler(this.SaveObjectsClick);
             // 
-            // mnuLostObjectCreateBranch
-            // 
-            this.mnuLostObjectCreateBranch.Name = "mnuLostObjectCreateBranch";
-            this.mnuLostObjectCreateBranch.Size = new System.Drawing.Size(152, 22);
-            this.mnuLostObjectCreateBranch.Text = "Create branch";
-            this.mnuLostObjectCreateBranch.Click += new System.EventHandler(this.mnuLostObjectCreateBranch_Click);
-            // 
             // FormVerify
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -391,7 +393,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DataGridView Warnings;
         private System.Windows.Forms.ContextMenuStrip mnuLostObjects;
-        private System.Windows.Forms.ToolStripMenuItem mnuLostObjectCreateTag;
+        private System.Windows.Forms.ToolStripMenuItem mnuLostObjectsCreateTag;
         private System.Windows.Forms.ToolStripMenuItem mnuLostObjectView;
         private System.Windows.Forms.DataGridViewCheckBoxColumn columnIsLostObjectSelected;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnDate;
@@ -399,6 +401,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn columnSubject;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnAuthor;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnHash;
-        private System.Windows.Forms.ToolStripMenuItem mnuLostObjectCreateBranch;
+        private System.Windows.Forms.ToolStripMenuItem mnuLostObjectsCreateBranch;
     }
 }
