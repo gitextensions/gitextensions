@@ -105,9 +105,22 @@ namespace GitUI
         private void btnRestoreSelectedObjects_Click(object sender, EventArgs e)
         {
             DeleteLostFoundTags();
-            var hasRestoredObjects = CreateLostFoundTags();
-            if (hasRestoredObjects)
-                UpdateLostObjects();
+            var restoredObjectsCount = CreateLostFoundTags();
+
+            if (restoredObjectsCount == 0)
+                return;
+
+            MessageBox.Show(string.Format(_xTagsCreated.Text, restoredObjectsCount), "Tags created", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            // if user restored all items, nothing else to do in this form. 
+            // User wants to see restored commits, so close this dialog and return to the main window.
+            if (restoredObjectsCount == Warnings.Rows.Count)
+            {
+                DialogResult = DialogResult.OK;
+                return;
+            }
+
+            UpdateLostObjects();
         }
 
         private void UnreachableCheckedChanged(object sender, EventArgs e)
@@ -157,13 +170,15 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            var options = GetOptions();
-
-            var process = new FormProcess("fsck-objects" + options);
-            process.ShowDialog();
+            string dialogResult;
+            using (var process = new FormProcess("fsck-objects" + GetOptions()))
+            {
+                process.ShowDialog();
+                dialogResult = process.OutputString.ToString();
+            }
 
             lostObjects.Clear();
-            lostObjects.AddRange(process.OutputString.ToString()
+            lostObjects.AddRange(dialogResult
                 .Split('\r', '\n')
                 .Where(s => !string.IsNullOrEmpty(s))
                 .Select(LostObject.TryParse)
@@ -182,6 +197,7 @@ namespace GitUI
             ResumeLayout();
         }
 
+        // TODO: add textbox for simple fulltext search/filtering (useful for large repos)
         private bool IsMatchToFilter(LostObject lostObject)
         {
             if (ShowOnlyCommits.Checked)
@@ -212,19 +228,19 @@ namespace GitUI
             new FormEdit(GitCommandHelpers.ShowSha1(currenItem.Hash)).ShowDialog();
         }
 
-        private bool CreateLostFoundTags()
+        private int CreateLostFoundTags()
         {
             var selectedLostObjects = Warnings.Rows
                 .Cast<DataGridViewRow>()
                 .Select(row => row.Cells[columnIsLostObjectSelected.Index])
-                .Where(cell => (bool)cell.Value)
+                .Where(cell => (bool?)cell.Value == true)
                 .Select(cell => filteredLostObjects[cell.RowIndex])
                 .ToList();
 
             if (selectedLostObjects.Count == 0)
             {
                 MessageBox.Show(selectLostObjectsToRestoreMessage.Text, selectLostObjectsToRestoreCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;
+                return 0;
             }
             var currentTag = 0;
             foreach (var lostObject in selectedLostObjects)
@@ -233,8 +249,7 @@ namespace GitUI
                 GitCommandHelpers.Tag(RestoredObjectsTagPrefix + currentTag, lostObject.Hash, false);
             }
 
-            MessageBox.Show(string.Format(_xTagsCreated.Text, currentTag), "Tags created", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return true;
+            return currentTag;
         }
 
         private static void DeleteLostFoundTags()

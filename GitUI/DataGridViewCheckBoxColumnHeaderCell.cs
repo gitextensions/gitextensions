@@ -42,11 +42,11 @@ namespace GitUI
         {
             var cellValues = Cells
                 .Select(cell => cell.Value)
-                .Cast<bool>()
+                .Cast<bool?>()
                 .Distinct()
                 .ToList();
             CheckedState = cellValues.Count == 1
-                ? cellValues.Single() ? CheckState.Checked : CheckState.Unchecked
+                ? cellValues.Single() == true ? CheckState.Checked : CheckState.Unchecked
                 : CheckState.Indeterminate;
         }
 
