@@ -114,6 +114,11 @@ namespace GitUI
                 selfChanging = true;
                 foreach (var cell in Cells)
                 {
+                    if (cell == DataGridView.CurrentCell)
+                    {
+                        // workaround for updating current cell                        
+                        DataGridView.CurrentCell = null;
+                    }
                     cell.Value = newStateIsChecked;
                 }
                 selfChanging = false;
