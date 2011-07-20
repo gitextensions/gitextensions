@@ -32,6 +32,7 @@ namespace GitUI.Editor
             else
                 _internalFileViewer = new FileViewerMono();
 
+            _internalFileViewer.Font = Settings.DiffFont;
             _internalFileViewer.MouseMove += new MouseEventHandler(_internalFileViewer_MouseMove);
 
             Control internalFileViewerControl = (Control)_internalFileViewer;
