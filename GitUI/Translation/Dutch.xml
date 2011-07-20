@@ -338,90 +338,6 @@ _ReSharper*/
         <TranslationItem Name="Tree" Property="Text">
           <Value>Bestands boom</Value>
         </TranslationItem>
-        <TranslationItem Name="menuStrip1" Property="Text">
-          <Value>menustrip1</Value>
-        </TranslationItem>
-        <TranslationItem Name="fileToolStripMenuItem" Property="Text">
-          <Value>Bestand</Value>
-        </TranslationItem>
-        <TranslationItem Name="openToolStripMenuItem" Property="Text">
-          <Value>Openen</Value>
-        </TranslationItem>
-        <TranslationItem Name="commandsToolStripMenuItem" Property="Text">
-          <Value>Commando's</Value>
-        </TranslationItem>
-        <TranslationItem Name="checkoutToolStripMenuItem" Property="Text">
-          <Value>Revisie uitchecken</Value>
-        </TranslationItem>
-        <TranslationItem Name="viewDiffToolStripMenuItem" Property="Text">
-          <Value>Bekijk wijzigingen</Value>
-        </TranslationItem>
-        <TranslationItem Name="branchToolStripMenuItem" Property="Text">
-          <Value>Vertakking aanmaken</Value>
-        </TranslationItem>
-        <TranslationItem Name="cloneToolStripMenuItem" Property="Text">
-          <Value>Kloon opslagplaats</Value>
-        </TranslationItem>
-        <TranslationItem Name="commitToolStripMenuItem" Property="Text">
-          <Value>Commit</Value>
-        </TranslationItem>
-        <TranslationItem Name="initNewRepositoryToolStripMenuItem" Property="Text">
-          <Value>Nieuwe opslagplaats</Value>
-        </TranslationItem>
-        <TranslationItem Name="pushToolStripMenuItem" Property="Text">
-          <Value>Verzenden</Value>
-        </TranslationItem>
-        <TranslationItem Name="pullToolStripMenuItem" Property="Text">
-          <Value>Ophalen</Value>
-        </TranslationItem>
-        <TranslationItem Name="refreshToolStripMenuItem" Property="Text">
-          <Value>Verversen</Value>
-        </TranslationItem>
-        <TranslationItem Name="helpToolStripMenuItem" Property="Text">
-          <Value>Help</Value>
-        </TranslationItem>
-        <TranslationItem Name="aboutToolStripMenuItem" Property="Text">
-          <Value>Over</Value>
-        </TranslationItem>
-        <TranslationItem Name="patchToolStripMenuItem" Property="Text">
-          <Value>Bekijk patch bestand</Value>
-        </TranslationItem>
-        <TranslationItem Name="applyPatchToolStripMenuItem" Property="Text">
-          <Value>Patch toepassen</Value>
-        </TranslationItem>
-        <TranslationItem Name="gitToolStripMenuItem" Property="Text">
-          <Value>Git</Value>
-        </TranslationItem>
-        <TranslationItem Name="gitBashToolStripMenuItem" Property="Text">
-          <Value>Git bash</Value>
-        </TranslationItem>
-        <TranslationItem Name="gitGUIToolStripMenuItem" Property="Text">
-          <Value>Git GUI</Value>
-        </TranslationItem>
-        <TranslationItem Name="formatPatchToolStripMenuItem" Property="Text">
-          <Value>Patch maken</Value>
-        </TranslationItem>
-        <TranslationItem Name="gitcommandLogToolStripMenuItem" Property="Text">
-          <Value>Git commando logboek</Value>
-        </TranslationItem>
-        <TranslationItem Name="checkoutBranchToolStripMenuItem" Property="Text">
-          <Value>Vertakking uitchecken</Value>
-        </TranslationItem>
-        <TranslationItem Name="stashToolStripMenuItem" Property="Text">
-          <Value>Wijzigingen wegzetten</Value>
-        </TranslationItem>
-        <TranslationItem Name="runMergetoolToolStripMenuItem" Property="Text">
-          <Value>Samenvoeg conflicten oplossen</Value>
-        </TranslationItem>
-        <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
-          <Value>Verwijder vertakking</Value>
-        </TranslationItem>
-        <TranslationItem Name="cherryPickToolStripMenuItem" Property="Text">
-          <Value>Cherry pick</Value>
-        </TranslationItem>
-        <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
-          <Value>Vertakkingen samenvoegen</Value>
-        </TranslationItem>
         <TranslationItem Name="ToolStrip" Property="Text">
           <Value>toolStrip1</Value>
         </TranslationItem>
@@ -437,71 +353,11 @@ _ReSharper*/
         <TranslationItem Name="EditSettings" Property="ToolTipText">
           <Value>Instellingen</Value>
         </TranslationItem>
-        <TranslationItem Name="tagToolStripMenuItem" Property="Text">
-          <Value>Maak label</Value>
-        </TranslationItem>
         <TranslationItem Name="RefreshButton" Property="ToolTipText">
           <Value>Verversen</Value>
         </TranslationItem>
-        <TranslationItem Name="commitcountPerUserToolStripMenuItem" Property="Text">
-          <Value>Commits per gebruiker</Value>
-        </TranslationItem>
-        <TranslationItem Name="kGitToolStripMenuItem" Property="Text">
-          <Value>GitK</Value>
-        </TranslationItem>
-        <TranslationItem Name="donateToolStripMenuItem" Property="Text">
-          <Value>Doneer</Value>
-        </TranslationItem>
-        <TranslationItem Name="deleteTagToolStripMenuItem" Property="Text">
-          <Value>Verwijder label</Value>
-        </TranslationItem>
-        <TranslationItem Name="settingsToolStripMenuItem1" Property="Text">
-          <Value>Instellingen</Value>
-        </TranslationItem>
-        <TranslationItem Name="editgitignoreToolStripMenuItem1" Property="Text">
-          <Value>Wijzig .gitignore</Value>
-        </TranslationItem>
-        <TranslationItem Name="settingsToolStripMenuItem2" Property="Text">
-          <Value>Instellingen</Value>
-        </TranslationItem>
-        <TranslationItem Name="archiveToolStripMenuItem" Property="Text">
-          <Value>Archiveer</Value>
-        </TranslationItem>
-        <TranslationItem Name="editmailmapToolStripMenuItem" Property="Text">
-          <Value>Wijzig .mailmap</Value>
-        </TranslationItem>
-        <TranslationItem Name="gitMaintenanceToolStripMenuItem" Property="Text">
-          <Value>Git onderhoud</Value>
-        </TranslationItem>
-        <TranslationItem Name="compressGitDatabaseToolStripMenuItem" Property="Text">
-          <Value>Comprimeer git database</Value>
-        </TranslationItem>
-        <TranslationItem Name="verifyGitDatabaseToolStripMenuItem" Property="Text">
-          <Value>Verloren bestanden terughalen</Value>
-        </TranslationItem>
-        <TranslationItem Name="rebaseToolStripMenuItem" Property="Text">
-          <Value>Rebase</Value>
-        </TranslationItem>
-        <TranslationItem Name="remotesToolStripMenuItem" Property="Text">
-          <Value>Externe opslagplaatsen</Value>
-        </TranslationItem>
-        <TranslationItem Name="manageRemoteRepositoriesToolStripMenuItem1" Property="Text">
-          <Value>Beheer externe opslagplaatsen</Value>
-        </TranslationItem>
-        <TranslationItem Name="PuTTYToolStripMenuItem" Property="Text">
-          <Value>PuTTY</Value>
-        </TranslationItem>
-        <TranslationItem Name="startAuthenticationAgentToolStripMenuItem" Property="Text">
-          <Value>Start authenticatie-agent</Value>
-        </TranslationItem>
-        <TranslationItem Name="generateOrImportKeyToolStripMenuItem" Property="Text">
-          <Value>Genereer of importeer sleutel</Value>
-        </TranslationItem>
         <TranslationItem Name="Diff" Property="Text">
           <Value>Wijzigingen</Value>
-        </TranslationItem>
-        <TranslationItem Name="changelogToolStripMenuItem" Property="Text">
-          <Value>Versie historie</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripButtonPull" Property="Text">
           <Value>Ophalen</Value>
@@ -520,21 +376,6 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="toolStripLabel2" Property="Text">
           <Value>Filter:</Value>
-        </TranslationItem>
-        <TranslationItem Name="submodulesToolStripMenuItem" Property="Text">
-          <Value>Submodulen</Value>
-        </TranslationItem>
-        <TranslationItem Name="manageSubmodulesToolStripMenuItem" Property="Text">
-          <Value>Beheer submodulen</Value>
-        </TranslationItem>
-        <TranslationItem Name="updateAllSubmodulesToolStripMenuItem" Property="Text">
-          <Value>Alle submodulen vernieuwen</Value>
-        </TranslationItem>
-        <TranslationItem Name="initializeAllSubmodulesToolStripMenuItem" Property="Text">
-          <Value>Initialiseer alle submodulen</Value>
-        </TranslationItem>
-        <TranslationItem Name="syncronizeAllSubmodulesToolStripMenuItem" Property="Text">
-          <Value>Synchoniseer alle submodulen</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripSplitStash" Property="ToolTipText">
           <Value>Wijzigingen wegzetten</Value>
@@ -557,53 +398,11 @@ _ReSharper*/
         <TranslationItem Name="viewStashToolStripMenuItem" Property="ToolTipText">
           <Value>Weggezette wijzigingen bekijken</Value>
         </TranslationItem>
-        <TranslationItem Name="openSubmoduleToolStripMenuItem" Property="Text">
-          <Value>Open submodule</Value>
-        </TranslationItem>
-        <TranslationItem Name="exitToolStripMenuItem" Property="Text">
-          <Value>Sluiten</Value>
-        </TranslationItem>
-        <TranslationItem Name="recentToolStripMenuItem" Property="Text">
-          <Value>Recente opslagplaatsen</Value>
-        </TranslationItem>
-        <TranslationItem Name="toolStripMenuItem2" Property="Text">
-          <Value>...</Value>
-        </TranslationItem>
-        <TranslationItem Name="updateAllSubmodulesRecursiveToolStripMenuItem" Property="Text">
-          <Value>Vernieuw alle submodulen recursief</Value>
-        </TranslationItem>
-        <TranslationItem Name="initializeAllSubmodulesRecursiveToolStripMenuItem" Property="Text">
-          <Value>Initialiseer alle submodulen recursief</Value>
-        </TranslationItem>
-        <TranslationItem Name="synchronizeAllSubmodulesRecursiveToolStripMenuItem" Property="Text">
-          <Value>Synchroniseer alle submodules recursief</Value>
-        </TranslationItem>
-        <TranslationItem Name="pluginsToolStripMenuItem" Property="Text">
-          <Value>Plugins</Value>
-        </TranslationItem>
-        <TranslationItem Name="settingsToolStripMenuItem" Property="Text">
-          <Value>Instellingen</Value>
-        </TranslationItem>
-        <TranslationItem Name="closeToolStripMenuItem" Property="Text">
-          <Value>Sluiten</Value>
-        </TranslationItem>
         <TranslationItem Name="saveToolStripMenuItem" Property="Text">
           <Value>Opslaan</Value>
         </TranslationItem>
-        <TranslationItem Name="userManualToolStripMenuItem" Property="Text">
-          <Value>Handleiding</Value>
-        </TranslationItem>
-        <TranslationItem Name="cleanupToolStripMenuItem" Property="Text">
-          <Value>Opschonen</Value>
-        </TranslationItem>
         <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
           <Value>Openen met Difftool</Value>
-        </TranslationItem>
-        <TranslationItem Name="translateToolStripMenuItem" Property="Text">
-          <Value>Vertalen</Value>
-        </TranslationItem>
-        <TranslationItem Name="fileExplorerToolStripMenuItem" Property="Text">
-          <Value>Open in verkenner</Value>
         </TranslationItem>
         <TranslationItem Name="saveAsToolStripMenuItem" Property="Text">
           <Value>Opslaan als</Value>
@@ -620,17 +419,11 @@ _ReSharper*/
         <TranslationItem Name="findToolStripMenuItem" Property="Text">
           <Value>Zoeken</Value>
         </TranslationItem>
-        <TranslationItem Name="editgitattributesToolStripMenuItem" Property="Text">
-          <Value>Wijzig .gitattributes</Value>
-        </TranslationItem>
         <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem" Property="Text">
           <Value>Kopieer bestandsnaam naar klembord</Value>
         </TranslationItem>
         <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem1" Property="Text">
           <Value>Kopieer bestandsnaam naar klembord</Value>
-        </TranslationItem>
-        <TranslationItem Name="deleteIndexlockToolStripMenuItem" Property="Text">
-          <Value>Verwijder index.lock</Value>
         </TranslationItem>
         <TranslationItem Name="saveAsToolStripMenuItem1" Property="Text">
           <Value>Opslaan als</Value>
@@ -659,9 +452,6 @@ _ReSharper*/
         <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
           <Value>Open uitgecheckt bestand  met...</Value>
         </TranslationItem>
-        <TranslationItem Name="bisectToolStripMenuItem" Property="Text">
-          <Value>Verdeel en heers</Value>
-        </TranslationItem>
         <TranslationItem Name="fileHistoryDiffToolstripMenuItem" Property="Text">
           <Value>Bestands geschiedenis</Value>
         </TranslationItem>
@@ -673,6 +463,138 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="diffContainsToolStripMenuItem" Property="Text">
           <Value>Wijziging bevat (traag)</Value>
+        </TranslationItem>
+        <TranslationItem Name="toggleSplitViewLayout" Property="ToolTipText">
+          <Value>Toggle split view layout</Value>
+        </TranslationItem>
+        <TranslationItem Name="editCheckedOutFileToolStripMenuItem" Property="Text">
+          <Value>Wijzig uitgecheckt bestand</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileToolStripMenuItem" Property="Text">
+          <Value>Bestand</Value>
+        </TranslationItem>
+        <TranslationItem Name="openToolStripMenuItem" Property="Text">
+          <Value>Openen</Value>
+        </TranslationItem>
+        <TranslationItem Name="closeToolStripMenuItem" Property="Text">
+          <Value>Sluiten</Value>
+        </TranslationItem>
+        <TranslationItem Name="refreshToolStripMenuItem" Property="Text">
+          <Value>Verversen</Value>
+        </TranslationItem>
+        <TranslationItem Name="recentToolStripMenuItem" Property="Text">
+          <Value>Recente opslagplaatsen</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripMenuItem2" Property="Text">
+          <Value>...</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileExplorerToolStripMenuItem" Property="Text">
+          <Value>Open in verkenner</Value>
+        </TranslationItem>
+        <TranslationItem Name="exitToolStripMenuItem" Property="Text">
+          <Value>Sluiten</Value>
+        </TranslationItem>
+        <TranslationItem Name="gitToolStripMenuItem" Property="Text">
+          <Value>Git</Value>
+        </TranslationItem>
+        <TranslationItem Name="gitBashToolStripMenuItem" Property="Text">
+          <Value>Git bash</Value>
+        </TranslationItem>
+        <TranslationItem Name="gitGUIToolStripMenuItem" Property="Text">
+          <Value>Git GUI</Value>
+        </TranslationItem>
+        <TranslationItem Name="kGitToolStripMenuItem" Property="Text">
+          <Value>GitK</Value>
+        </TranslationItem>
+        <TranslationItem Name="commandsToolStripMenuItem" Property="Text">
+          <Value>Commando's</Value>
+        </TranslationItem>
+        <TranslationItem Name="applyPatchToolStripMenuItem" Property="Text">
+          <Value>Patch toepassen</Value>
+        </TranslationItem>
+        <TranslationItem Name="archiveToolStripMenuItem" Property="Text">
+          <Value>Archiveer</Value>
+        </TranslationItem>
+        <TranslationItem Name="bisectToolStripMenuItem" Property="Text">
+          <Value>Verdeel en heers</Value>
+        </TranslationItem>
+        <TranslationItem Name="checkoutBranchToolStripMenuItem" Property="Text">
+          <Value>Vertakking uitchecken</Value>
+        </TranslationItem>
+        <TranslationItem Name="checkoutToolStripMenuItem" Property="Text">
+          <Value>Revisie uitchecken</Value>
+        </TranslationItem>
+        <TranslationItem Name="cherryPickToolStripMenuItem" Property="Text">
+          <Value>Cherry pick</Value>
+        </TranslationItem>
+        <TranslationItem Name="cleanupToolStripMenuItem" Property="Text">
+          <Value>Opschonen</Value>
+        </TranslationItem>
+        <TranslationItem Name="cloneToolStripMenuItem" Property="Text">
+          <Value>Kloon opslagplaats</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitToolStripMenuItem" Property="Text">
+          <Value>Commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="branchToolStripMenuItem" Property="Text">
+          <Value>Vertakking aanmaken</Value>
+        </TranslationItem>
+        <TranslationItem Name="tagToolStripMenuItem" Property="Text">
+          <Value>Maak label</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
+          <Value>Verwijder vertakking</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteTagToolStripMenuItem" Property="Text">
+          <Value>Verwijder label</Value>
+        </TranslationItem>
+        <TranslationItem Name="formatPatchToolStripMenuItem" Property="Text">
+          <Value>Patch maken</Value>
+        </TranslationItem>
+        <TranslationItem Name="goToToolStripMenuItem" Property="Text">
+          <Value>Ga naar revisie</Value>
+        </TranslationItem>
+        <TranslationItem Name="initNewRepositoryToolStripMenuItem" Property="Text">
+          <Value>Nieuwe opslagplaats</Value>
+        </TranslationItem>
+        <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
+          <Value>Vertakkingen samenvoegen</Value>
+        </TranslationItem>
+        <TranslationItem Name="pullToolStripMenuItem" Property="Text">
+          <Value>Ophalen</Value>
+        </TranslationItem>
+        <TranslationItem Name="pushToolStripMenuItem" Property="Text">
+          <Value>Verzenden</Value>
+        </TranslationItem>
+        <TranslationItem Name="rebaseToolStripMenuItem" Property="Text">
+          <Value>Rebase</Value>
+        </TranslationItem>
+        <TranslationItem Name="runMergetoolToolStripMenuItem" Property="Text">
+          <Value>Samenvoeg conflicten oplossen</Value>
+        </TranslationItem>
+        <TranslationItem Name="stashToolStripMenuItem" Property="Text">
+          <Value>Wijzigingen wegzetten</Value>
+        </TranslationItem>
+        <TranslationItem Name="viewDiffToolStripMenuItem" Property="Text">
+          <Value>Bekijk wijzigingen</Value>
+        </TranslationItem>
+        <TranslationItem Name="patchToolStripMenuItem" Property="Text">
+          <Value>Bekijk patch bestand</Value>
+        </TranslationItem>
+        <TranslationItem Name="remotesToolStripMenuItem" Property="Text">
+          <Value>Externe opslagplaatsen</Value>
+        </TranslationItem>
+        <TranslationItem Name="manageRemoteRepositoriesToolStripMenuItem1" Property="Text">
+          <Value>Beheer externe opslagplaatsen</Value>
+        </TranslationItem>
+        <TranslationItem Name="PuTTYToolStripMenuItem" Property="Text">
+          <Value>PuTTY</Value>
+        </TranslationItem>
+        <TranslationItem Name="startAuthenticationAgentToolStripMenuItem" Property="Text">
+          <Value>Start authenticatie-agent</Value>
+        </TranslationItem>
+        <TranslationItem Name="generateOrImportKeyToolStripMenuItem" Property="Text">
+          <Value>Genereer of importeer sleutel</Value>
         </TranslationItem>
         <TranslationItem Name="_repositoryHostsToolStripMenuItem" Property="Text">
           <Value>Opslagplaats host</Value>
@@ -686,14 +608,92 @@ _ReSharper*/
         <TranslationItem Name="_createPullRequestsToolStripMenuItem" Property="Text">
           <Value>Maak binnenhaal verzoek</Value>
         </TranslationItem>
-        <TranslationItem Name="goToToolStripMenuItem" Property="Text">
-          <Value>Ga naar revisie</Value>
+        <TranslationItem Name="submodulesToolStripMenuItem" Property="Text">
+          <Value>Submodulen</Value>
         </TranslationItem>
-        <TranslationItem Name="toggleSplitViewLayout" Property="ToolTipText">
-          <Value>Toggle split view layout</Value>
+        <TranslationItem Name="manageSubmodulesToolStripMenuItem" Property="Text">
+          <Value>Beheer submodulen</Value>
         </TranslationItem>
-        <TranslationItem Name="editCheckedOutFileToolStripMenuItem" Property="Text">
-          <Value>Wijzig uitgecheckt bestand</Value>
+        <TranslationItem Name="updateAllSubmodulesRecursiveToolStripMenuItem" Property="Text">
+          <Value>Vernieuw alle submodulen recursief</Value>
+        </TranslationItem>
+        <TranslationItem Name="initializeAllSubmodulesRecursiveToolStripMenuItem" Property="Text">
+          <Value>Initialiseer alle submodulen recursief</Value>
+        </TranslationItem>
+        <TranslationItem Name="synchronizeAllSubmodulesRecursiveToolStripMenuItem" Property="Text">
+          <Value>Synchroniseer alle submodules recursief</Value>
+        </TranslationItem>
+        <TranslationItem Name="updateAllSubmodulesToolStripMenuItem" Property="Text">
+          <Value>Alle submodulen vernieuwen</Value>
+        </TranslationItem>
+        <TranslationItem Name="initializeAllSubmodulesToolStripMenuItem" Property="Text">
+          <Value>Initialiseer alle submodulen</Value>
+        </TranslationItem>
+        <TranslationItem Name="syncronizeAllSubmodulesToolStripMenuItem" Property="Text">
+          <Value>Synchoniseer alle submodulen</Value>
+        </TranslationItem>
+        <TranslationItem Name="openSubmoduleToolStripMenuItem" Property="Text">
+          <Value>Open submodule</Value>
+        </TranslationItem>
+        <TranslationItem Name="pluginsToolStripMenuItem" Property="Text">
+          <Value>Plugins</Value>
+        </TranslationItem>
+        <TranslationItem Name="settingsToolStripMenuItem" Property="Text">
+          <Value>Instellingen</Value>
+        </TranslationItem>
+        <TranslationItem Name="settingsToolStripMenuItem1" Property="Text">
+          <Value>Instellingen</Value>
+        </TranslationItem>
+        <TranslationItem Name="gitMaintenanceToolStripMenuItem" Property="Text">
+          <Value>Git onderhoud</Value>
+        </TranslationItem>
+        <TranslationItem Name="compressGitDatabaseToolStripMenuItem" Property="Text">
+          <Value>Comprimeer git database</Value>
+        </TranslationItem>
+        <TranslationItem Name="verifyGitDatabaseToolStripMenuItem" Property="Text">
+          <Value>Verloren bestanden terughalen</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteIndexlockToolStripMenuItem" Property="Text">
+          <Value>Verwijder index.lock</Value>
+        </TranslationItem>
+        <TranslationItem Name="editgitignoreToolStripMenuItem1" Property="Text">
+          <Value>Wijzig .gitignore</Value>
+        </TranslationItem>
+        <TranslationItem Name="editgitattributesToolStripMenuItem" Property="Text">
+          <Value>Wijzig .gitattributes</Value>
+        </TranslationItem>
+        <TranslationItem Name="editmailmapToolStripMenuItem" Property="Text">
+          <Value>Wijzig .mailmap</Value>
+        </TranslationItem>
+        <TranslationItem Name="settingsToolStripMenuItem2" Property="Text">
+          <Value>Instellingen</Value>
+        </TranslationItem>
+        <TranslationItem Name="helpToolStripMenuItem" Property="Text">
+          <Value>Help</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitcountPerUserToolStripMenuItem" Property="Text">
+          <Value>Commits per gebruiker</Value>
+        </TranslationItem>
+        <TranslationItem Name="gitcommandLogToolStripMenuItem" Property="Text">
+          <Value>Git commando logboek</Value>
+        </TranslationItem>
+        <TranslationItem Name="userManualToolStripMenuItem" Property="Text">
+          <Value>Handleiding</Value>
+        </TranslationItem>
+        <TranslationItem Name="changelogToolStripMenuItem" Property="Text">
+          <Value>Versie historie</Value>
+        </TranslationItem>
+        <TranslationItem Name="translateToolStripMenuItem" Property="Text">
+          <Value>Vertalen</Value>
+        </TranslationItem>
+        <TranslationItem Name="donateToolStripMenuItem" Property="Text">
+          <Value>Doneer</Value>
+        </TranslationItem>
+        <TranslationItem Name="aboutToolStripMenuItem" Property="Text">
+          <Value>Over</Value>
+        </TranslationItem>
+        <TranslationItem Name="menuStrip1" Property="Text">
+          <Value>menustrip1</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -737,11 +737,11 @@ _ReSharper*/
         <TranslationItem Name="$this" Property="Text">
           <Value>Bestandswijzigingen terugzetten</Value>
         </TranslationItem>
-        <TranslationItem Name="Revert" Property="Text">
-          <Value>Wijzigingen terugzetten</Value>
-        </TranslationItem>
         <TranslationItem Name="btnCancel" Property="Text">
           <Value>Annuleren</Value>
+        </TranslationItem>
+        <TranslationItem Name="Revert" Property="Text">
+          <Value>Wijzigingen terugzetten</Value>
         </TranslationItem>
         <TranslationItem Name="_resetChangesCaption" Property="Text">
           <Value>Wijzigingen terugzetten</Value>
@@ -925,7 +925,7 @@ Kies een directory.</Value>
         <TranslationItem Name="SolveMergeconflicts" Property="Text">
           <Value>Er zijn niet opgeloste conflicten</Value>
         </TranslationItem>
-		<TranslationItem Name="IgnoreWhitespace" Property="Text">
+        <TranslationItem Name="IgnoreWhitespace" Property="Text">
           <Value>Negeer wit.rmtn.</Value>
         </TranslationItem>
       </translationItems>
@@ -1144,6 +1144,31 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         </TranslationItem>
         <TranslationItem Name="Stop" Property="Text">
           <Value>Stop verdeel en heers</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormContributors">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Medewerkers</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Coders:</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Vertalers:</Value>
+        </TranslationItem>
+        <TranslationItem Name="translatorsLabel" Property="Text">
+          <Value>Vertalers</Value>
+        </TranslationItem>
+        <TranslationItem Name="codersLabel" Property="Text">
+          <Value>Coders</Value>
+        </TranslationItem>
+        <TranslationItem Name="designersLabel" Property="Text">
+          <Value>Ontwerpers</Value>
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text">
+          <Value>Disigners:</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2126,6 +2151,21 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         </TranslationItem>
         <TranslationItem Name="labelShowCurrentBranchInVisualStudio" Property="Text">
           <Value>Toon huidige vertakking  in Visual Studio</Value>
+        </TranslationItem>
+        <TranslationItem Name="label37" Property="Text">
+          <Value>Gebruik 'patience diff' algoritme</Value>
+        </TranslationItem>
+        <TranslationItem Name="truncatePathMethod" Property="Text">
+          <Value>Truncate lange bestandsnamen</Value>
+        </TranslationItem>
+        <TranslationItem Name="LightblueIcon" Property="Text">
+          <Value>Lichtblauw</Value>
+        </TranslationItem>
+        <TranslationItem Name="label54" Property="Text">
+          <Value>Icoon stijl</Value>
+        </TranslationItem>
+        <TranslationItem Name="label55" Property="Text">
+          <Value>Icoon kleur</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3435,8 +3475,17 @@ welke deze externe vertakking volgt?</Value>
         <TranslationItem Name="Apply" Property="Text">
           <Value>Zet geselecteerde stash terug op de werk directorie</Value>
         </TranslationItem>
+        <TranslationItem Name="toolStripButton1" Property="Text">
+          <Value>Verversen</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButton1" Property="ToolTipText">
+          <Value>Verversen</Value>
+        </TranslationItem>
         <TranslationItem Name="toolStripLabel1" Property="Text">
           <Value>Toon:</Value>
+        </TranslationItem>
+        <TranslationItem Name="StashKeepIndex" Property="Text">
+          <Value>Houden index</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3545,6 +3594,24 @@ welke deze externe vertakking volgt?</Value>
     </TranslationCategory>
     <TranslationCategory Name="Strings">
       <translationItems>
+        <TranslationItem Name="dateText" Property="Text">
+          <Value>Datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorText" Property="Text">
+          <Value>Auteur</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorDateText" Property="Text">
+          <Value>Auteur datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="committerText" Property="Text">
+          <Value>Committer</Value>
+        </TranslationItem>
+        <TranslationItem Name="committerDateText" Property="Text">
+          <Value>Commit datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitHashText" Property="Text">
+          <Value>Commit hash</Value>
+        </TranslationItem>
         <TranslationItem Name="dateText" Property="Text">
           <Value>Datum</Value>
         </TranslationItem>
