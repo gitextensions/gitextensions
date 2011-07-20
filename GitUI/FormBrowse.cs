@@ -68,8 +68,7 @@ namespace GitUI
 
             this.HotkeysEnabled = true;
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
-
-            
+            this.toolPanel.SplitterDistance = this.ToolStrip.Height;
         }
 
         private void ShowDashboard()
@@ -78,7 +77,7 @@ namespace GitUI
             {
                 _dashboard = new Dashboard();
                 _dashboard.WorkingDirChanged += DashboardWorkingDirChanged;
-                Controls.Add(_dashboard);
+                toolPanel.Panel2.Controls.Add(_dashboard);
                 _dashboard.Dock = DockStyle.Fill;
             }
             _dashboard.Visible = true;
@@ -222,7 +221,7 @@ namespace GitUI
             if (hard)
                 ShowRevisions();
             _NO_TRANSLATE_Workingdir.Text = Settings.WorkingDir;
-            Text = GenerateWindowTitle(Settings.WorkingDir, validWorkingDir);
+            Text = GenerateWindowTitle(Settings.WorkingDir, validWorkingDir, branchSelect.Text);
 
             UpdateJumplist(validWorkingDir);
 
@@ -254,33 +253,25 @@ namespace GitUI
             var scripts = ScriptManager.GetScripts().Where(script => script.Enabled
                 && script.OnEvent == ScriptEvent.ShowInUserMenuBar).ToList();
 
-            if (scripts.Count == 0)
-            {
-                this.UserMenuToolStrip.Hide();
-                return;
-            }
+            for (int i = this.ToolStrip.Items.Count - 1; i >= 0; i--)
+                if (this.ToolStrip.Items[i].Tag != null &&
+                    this.ToolStrip.Items[i].Tag as String == "userscript")
+                    this.ToolStrip.Items.RemoveAt(i);
 
-            //menu strip must be visible to be able to move it
-            this.UserMenuToolStrip.Show();
-            if (GitCommands.Settings.UserMenuLocationX >= 0 && GitCommands.Settings.UserMenuLocationY >= 0)
-            {
-                this.UserMenuToolStrip.Location = new Point(
-                                    GitCommands.Settings.UserMenuLocationX,
-                                    GitCommands.Settings.UserMenuLocationY
-                                    );
-            }
-            // just hide the damn thing already!
-            this.UserMenuToolStrip.Hide();
-            this.UserMenuToolStrip.Items.Clear();
-            // disable context menu if no scripts are found/enabled
-            this.toolPanelContextMenu.Enabled = false;
+
+            if (scripts.Count == 0)
+                return;
+
+            ToolStripSeparator toolstripseparator = new ToolStripSeparator();
+            toolstripseparator.Tag = "userscript";
+            this.ToolStrip.Items.Add(toolstripseparator);
 
             foreach (ScriptInfo scriptInfo in scripts)
             {
                 ToolStripButton tempButton = new ToolStripButton();
-                tempButton.Text = scriptInfo.Name;
                 //store scriptname
-                tempButton.Tag = scriptInfo.Name;
+                tempButton.Text = scriptInfo.Name;                
+                tempButton.Tag = "userscript";
                 //add handler
                 tempButton.Click += new EventHandler(UserMenu_Click);
                 tempButton.Enabled = true;
@@ -288,18 +279,13 @@ namespace GitUI
                 tempButton.Image = GitUI.Properties.Resources.bug;
                 tempButton.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
                 //add to toolstrip
-                this.UserMenuToolStrip.Items.Add((ToolStripItem)tempButton);
-                //set visible
-                this.UserMenuToolStrip.Show();
-                // enable context menu
-                this.toolPanelContextMenu.Enabled = true;
-                this.toolPanelContextMenu_HideUserMenu.Checked = false;
+                this.ToolStrip.Items.Add((ToolStripItem)tempButton);
             }
         }
 
         void UserMenu_Click(object sender, EventArgs e)
         {
-            ScriptRunner.RunScript(( (ToolStripButton) sender).Tag.ToString(), null);
+            ScriptRunner.RunScript(( (ToolStripButton) sender).Text, null);
         }
 
         private void UpdateJumplist(bool validWorkingDir)
@@ -506,15 +492,17 @@ namespace GitUI
         /// </summary>
         /// <param name="workingDir">Path to repository.</param>
         /// <param name="isWorkingDirValid">If the given path contains valid repository.</param>
-        private static string GenerateWindowTitle(string workingDir, bool isWorkingDirValid)
+        private static string GenerateWindowTitle(string workingDir, bool isWorkingDirValid, string branchName)
         {
             const string defaultTitle = "Git Extensions";
-            const string repositoryTitleFormat = "{0} - Git Extensions";
-
+            const string repositoryTitleFormat = "{0} ({1}) - Git Extensions";
+            
             if (!isWorkingDirValid)
                 return defaultTitle;
             string repositoryDescription = GetRepositoryShortName(workingDir);
-            return string.Format(repositoryTitleFormat, repositoryDescription);
+            if (string.IsNullOrEmpty(branchName))
+                branchName = "no branch";
+            return string.Format(repositoryTitleFormat, repositoryDescription, branchName.Trim('(', ')'));
         }
 
         /// <summary>
@@ -2144,19 +2132,5 @@ namespace GitUI
             }
         }
         #endregion
-
-        private void toolPanelContextMenu_HideUserMenu_Click(object sender, EventArgs e)
-        {
-            if (((ToolStripMenuItem)sender).Checked)
-            {
-                this.UserMenuToolStrip.Show();
-                ((ToolStripMenuItem)sender).Checked = false;
-            }
-            else
-            {
-                this.UserMenuToolStrip.Hide();
-                ((ToolStripMenuItem)sender).Checked = true;
-            }
-        }
     }
 }
