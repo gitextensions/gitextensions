@@ -66,7 +66,12 @@ namespace GitUI
             UpdateLostObjects();
         }
 
-        private void mnuLostObjectCreateTag_Click(object sender, EventArgs e)
+        private void mnuLostObjectView_Click(object sender, EventArgs e)
+        {
+            ViewCurrentItem();
+        }
+
+        private void mnuLostObjectsCreateTag_Click(object sender, EventArgs e)
         {
             using (var frm = new FormTagSmall { Revision = GetCurrentGitRevision() })
             {
@@ -76,12 +81,7 @@ namespace GitUI
             }
         }
 
-        private void mnuLostObjectView_Click(object sender, EventArgs e)
-        {
-            ViewCurrentItem();
-        }
-
-        private void mnuLostObjectCreateBranch_Click(object sender, EventArgs e)
+        private void mnuLostObjectsCreateBranch_Click(object sender, EventArgs e)
         {
             using (var frm = new FormBranchSmall { Revision = GetCurrentGitRevision() })
             {
