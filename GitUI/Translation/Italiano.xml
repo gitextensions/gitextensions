@@ -105,9 +105,6 @@
         <TranslationItem Name="Unreachable" Property="Text">
           <Value>Elenca gli oggetti che esistono ma che non sono leggibili da alcuno dei nodi referenziati.</Value>
         </TranslationItem>
-        <TranslationItem Name="TagAllObjects" Property="Text">
-          <Value>Tagga tutti gli oggetti persi</Value>
-        </TranslationItem>
         <TranslationItem Name="DeleteAllLostAndFoundTags" Property="Text">
           <Value>Cancella tutti i tag LOST_AND_FOUND</Value>
         </TranslationItem>
@@ -119,7 +116,7 @@ ma anche quello trovate in pool di oggetti alternativi.
         <TranslationItem Name="NoReflogs" Property="Text">
           <Value>Non considerare raggiungibili commit che sono referenziati solo da un elemento in un reflog</Value>
         </TranslationItem>
-        <TranslationItem Name="TagAllCommits" Property="Text">
+        <TranslationItem Name="btnRestoreSelectedObjects" Property="Text">
           <Value>Tagga tutti i commit persi</Value>
         </TranslationItem>
         <TranslationItem Name="ShowOnlyCommits" Property="Text">

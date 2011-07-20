@@ -105,9 +105,6 @@
         <TranslationItem Name="Unreachable" Property="Text">
           <Value>ブランチやタグから到達できないオブジェクトを表示する</Value>
         </TranslationItem>
-        <TranslationItem Name="TagAllObjects" Property="Text">
-          <Value>全オブジェクトにタグを作成</Value>
-        </TranslationItem>
         <TranslationItem Name="DeleteAllLostAndFoundTags" Property="Text">
           <Value>LOST_AND_FOUNDタグを全削除</Value>
         </TranslationItem>
@@ -118,7 +115,7 @@
         <TranslationItem Name="NoReflogs" Property="Text">
           <Value>reflogのエントリによってのみ参照されるコミットを考慮しない</Value>
         </TranslationItem>
-        <TranslationItem Name="TagAllCommits" Property="Text">
+        <TranslationItem Name="btnRestoreSelectedObjects" Property="Text">
           <Value>全コミットにタグを作成</Value>
         </TranslationItem>
         <TranslationItem Name="ShowOnlyCommits" Property="Text">

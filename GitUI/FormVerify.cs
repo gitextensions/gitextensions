@@ -10,6 +10,8 @@ namespace GitUI
 {
     public sealed partial class FormVerify : GitExtensionsForm
     {
+        private const string RestoredObjectsTagPrefix = "LOST_FOUND_";
+
         private readonly TranslationString _removeDanglingObjectsCaption = new TranslationString("Remove");
 
         private readonly TranslationString _removeDanglingObjectsQuestion =
@@ -18,6 +20,9 @@ namespace GitUI
         private readonly TranslationString _xTagsCreated =
             new TranslationString("{0} Tags created." + Environment.NewLine + Environment.NewLine +
                                   "Do not forget to delete these tags when finished.");
+
+        private readonly TranslationString selectLostObjectsToRestoreMessage = new TranslationString("Select objects to restore.");
+        private readonly TranslationString selectLostObjectsToRestoreCaption = new TranslationString("Restore lost objects");
 
         private readonly List<LostObject> lostObjects = new List<LostObject>();
         private readonly SortableLostObjectsList filteredLostObjects = new SortableLostObjectsList();
@@ -91,24 +96,18 @@ namespace GitUI
             }
         }
 
-        private void TagAllObjectsClick(object sender, EventArgs e)
-        {
-            DeleteLostFoundTags();
-            CreateLostFoundTags(false);
-            UpdateLostObjects();
-        }
-
         private void DeleteAllLostAndFoundTagsClick(object sender, EventArgs e)
         {
             DeleteLostFoundTags();
             UpdateLostObjects();
         }
 
-        private void TagAllCommitsClick(object sender, EventArgs e)
+        private void btnRestoreSelectedObjects_Click(object sender, EventArgs e)
         {
             DeleteLostFoundTags();
-            CreateLostFoundTags(true);
-            UpdateLostObjects();
+            var hasRestoredObjects = CreateLostFoundTags();
+            if (hasRestoredObjects)
+                UpdateLostObjects();
         }
 
         private void UnreachableCheckedChanged(object sender, EventArgs e)
@@ -213,25 +212,36 @@ namespace GitUI
             new FormEdit(GitCommandHelpers.ShowSha1(currenItem.Hash)).ShowDialog();
         }
 
-        private void CreateLostFoundTags(bool onlyCommits)
+        private bool CreateLostFoundTags()
         {
-            var currentTag = 0;
-            foreach (var lostObject in filteredLostObjects)
+            var selectedLostObjects = Warnings.Rows
+                .Cast<DataGridViewRow>()
+                .Select(row => row.Cells[columnIsLostObjectSelected.Index])
+                .Where(cell => (bool)cell.Value)
+                .Select(cell => filteredLostObjects[cell.RowIndex])
+                .ToList();
+
+            if (selectedLostObjects.Count == 0)
             {
-                //if (onlyCommits && !warningString.Contains("commit"))
-                //    continue;
+                MessageBox.Show(selectLostObjectsToRestoreMessage.Text, selectLostObjectsToRestoreCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+            var currentTag = 0;
+            foreach (var lostObject in selectedLostObjects)
+            {
                 currentTag++;
-                GitCommandHelpers.Tag("LOST_FOUND_" + currentTag, lostObject.Hash, false);
+                GitCommandHelpers.Tag(RestoredObjectsTagPrefix + currentTag, lostObject.Hash, false);
             }
 
-            MessageBox.Show(string.Format(_xTagsCreated.Text, currentTag), "Tags created");
+            MessageBox.Show(string.Format(_xTagsCreated.Text, currentTag), "Tags created", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return true;
         }
 
         private static void DeleteLostFoundTags()
         {
             foreach (var head in GitCommandHelpers.GetHeads(true, false))
             {
-                if (head.Name.StartsWith("LOST_FOUND_"))
+                if (head.Name.StartsWith(RestoredObjectsTagPrefix))
                     GitCommandHelpers.DeleteTag(head.Name);
             }
         }
