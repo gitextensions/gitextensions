@@ -87,7 +87,7 @@ namespace GitUI.Blame
                 return;
 
             var newRevision = _blame.Lines[selectedLine].CommitGuid;
-            
+
             if (_lastRevision == newRevision)
                 return;
 
@@ -106,18 +106,19 @@ namespace GitUI.Blame
 
             var blameCommitter = new StringBuilder();
             var blameFile = new StringBuilder();
-			_revGrid = revGrid;
+            _revGrid = revGrid;
 
             _blame = GitCommandHelpers.Blame(fileName, guid);
 
-            for (int i = 0; i < _blame.Lines.Count; i++ )
+            for (int i = 0; i < _blame.Lines.Count; i++)
             {
                 GitBlameLine blameLine = _blame.Lines[i];
                 GitBlameHeader blameHeader = _blame.FindHeaderForCommitGuid(blameLine.CommitGuid);
-                if (i > 0 && _blame.Lines[i-1].CommitGuid == blameLine.CommitGuid)
+                if (i > 0 && _blame.Lines[i - 1].CommitGuid == blameLine.CommitGuid)
                 {
                     blameCommitter.AppendLine(new string(' ', 200));
-                } else
+                }
+                else
                 {
                     blameCommitter.AppendLine((blameHeader.Author + " - " + blameHeader.AuthorTime.ToString() + " - " + blameHeader.FileName + new string(' ', 100)).Trim(new char[] { '\r', '\n' }));
                 }
@@ -140,7 +141,7 @@ namespace GitUI.Blame
         {
             if (_revGrid != null)
             {
-                _revGrid.SetSelectedRevision(new GitRevision { Guid = _lastRevision, ParentGuids = new[] { _lastRevision + "^" } });
+                _revGrid.SetSelectedRevision(new GitRevision(_lastRevision) { ParentGuids = new[] { _lastRevision + "^" } });
             }
             else
             {

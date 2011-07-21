@@ -62,6 +62,7 @@ namespace GitUI
         private Label _quickSearchLabel;
         private string _quickSearchString;
         private RevisionGraph _revisionGraphCommand;
+        private bool _filterQuickSearchStringEnabled;
 
         private RevisionGridLayout layout;
         private int rowHeigth;
@@ -95,6 +96,7 @@ namespace GitUI
             InMemMessageFilter = "";
             AllowGraphWithFilter = false;
             _quickSearchString = "";
+            _filterQuickSearchStringEnabled = false;
             quickSearchTimer.Tick += QuickSearchTimerTick;
 
             Revisions.Loading += RevisionsLoading;
@@ -552,9 +554,8 @@ namespace GitUI
             string cmd = "log -n 1 --pretty=format:" + formatString + " " + CurrentCheckout;
             var RevInfo = GitCommandHelpers.RunCmd(Settings.GitCommand, cmd);
             string[] Infos = RevInfo.Split('\n');
-            var Revision = new GitRevision
+            var Revision = new GitRevision(CurrentCheckout)
             {
-                Guid = CurrentCheckout,
                 TreeGuid = Infos[0],
                 Author = Infos[1],
                 Committer = Infos[3],
@@ -896,17 +897,17 @@ namespace GitUI
             e.Handled = true;
 
             bool isRowSelected = ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected);
-            
+
             if (isRowSelected /*&& !showRevisionCards*/)
                 e.Graphics.FillRectangle(selectedItemBrush, e.CellBounds);
             else
                 e.Graphics.FillRectangle(new SolidBrush(Color.White), e.CellBounds);
 
             Color foreColor;
-            
+
             if (!Settings.RevisionGraphDrawNonRelativesGray || !Settings.RevisionGraphDrawNonRelativesTextGray || Revisions.RowIsRelative(e.RowIndex))
             {
-                foreColor = isRowSelected && IsFilledBranchesLayout() 
+                foreColor = isRowSelected && IsFilledBranchesLayout()
                     ? SystemColors.HighlightText
                     : e.CellStyle.ForeColor;
             }
@@ -917,7 +918,7 @@ namespace GitUI
 
             Brush foreBrush = new SolidBrush(foreColor);
             var rowFont = revision.Guid == CurrentCheckout /*&& !showRevisionCards*/ ? HeadFont : NormalFont;
-
+            
             switch (column)
             {
                 case 1: //Description!!
@@ -948,10 +949,10 @@ namespace GitUI
                             if ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
                                 e.Graphics.DrawRectangle(new Pen(Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor, 1), cellRectangle);
                         }
-                        
+
                         float offset = baseOffset;
                         var heads = revision.Heads;
-                        
+
                         if (heads.Count > 0)
                         {
                             heads.Sort(new Comparison<GitHead>(
@@ -1105,7 +1106,7 @@ namespace GitUI
 
         private float RoundToEven(float value)
         {
-            int result = ((int) value/2)*2;
+            int result = ((int)value / 2) * 2;
             return result < value ? result + 2 : result;
         }
 
@@ -1141,14 +1142,14 @@ namespace GitUI
         private static GraphicsPath CreateRoundRectPath(float x, float y, float width, float height, float radius)
         {
             var path = new GraphicsPath();
-            path.AddLine(x + radius, y, x + width - (radius*2), y);
-            path.AddArc(x + width - (radius*2), y, radius*2, radius*2, 270, 90);
-            path.AddLine(x + width, y + radius, x + width, y + height - (radius*2));
-            path.AddArc(x + width - (radius*2), y + height - (radius*2), radius*2, radius*2, 0, 90);
-            path.AddLine(x + width - (radius*2), y + height, x + radius, y + height);
-            path.AddArc(x, y + height - (radius*2), radius*2, radius*2, 90, 90);
-            path.AddLine(x, y + height - (radius*2), x, y + radius);
-            path.AddArc(x, y, radius*2, radius*2, 180, 90);
+            path.AddLine(x + radius, y, x + width - (radius * 2), y);
+            path.AddArc(x + width - (radius * 2), y, radius * 2, radius * 2, 270, 90);
+            path.AddLine(x + width, y + radius, x + width, y + height - (radius * 2));
+            path.AddArc(x + width - (radius * 2), y + height - (radius * 2), radius * 2, radius * 2, 0, 90);
+            path.AddLine(x + width - (radius * 2), y + height, x + radius, y + height);
+            path.AddArc(x, y + height - (radius * 2), radius * 2, radius * 2, 90, 90);
+            path.AddLine(x, y + height - (radius * 2), x, y + radius);
+            path.AddArc(x, y, radius * 2, radius * 2, 180, 90);
             path.CloseFigure();
             return path;
         }
@@ -1169,9 +1170,9 @@ namespace GitUI
             float er = to.R, eg = to.G, eb = to.B;
 
             // lerp the colours to get the difference
-            byte r = (byte) Lerp(sr, er, amount),
-                 g = (byte) Lerp(sg, eg, amount),
-                 b = (byte) Lerp(sb, eb, amount);
+            byte r = (byte)Lerp(sr, er, amount),
+                 g = (byte)Lerp(sg, eg, amount),
+                 b = (byte)Lerp(sb, eb, amount);
 
             // return the new colour
             return Color.FromArgb(r, g, b);
@@ -1627,9 +1628,8 @@ namespace GitUI
                     if (uncommittedChanges)
                     {
                         //Add working dir as virtual commit
-                        var workingDir = new GitRevision
+                        var workingDir = new GitRevision(GitRevision.UncommittedWorkingDirGuid)
                                              {
-                                                 Guid = GitRevision.UncommittedWorkingDirGuid,
                                                  Message = _currentWorkingDirChanges.Text,
                                                  ParentGuids =
                                                      stagedChanges
@@ -1642,9 +1642,8 @@ namespace GitUI
                     if (stagedChanges)
                     {
                         //Add index as virtual commit
-                        var index = new GitRevision
+                        var index = new GitRevision(GitRevision.IndexGuid)
                                         {
-                                            Guid = GitRevision.IndexGuid,
                                             Message = _currentIndex.Text,
                                             ParentGuids = new string[] { CurrentCheckout }
                                         };
@@ -1853,12 +1852,12 @@ namespace GitUI
 
         public void ToggleRevisionCardLayout()
         {
-            var layouts = new List<RevisionGridLayout>((RevisionGridLayout[]) Enum.GetValues(typeof (RevisionGridLayout)));
+            var layouts = new List<RevisionGridLayout>((RevisionGridLayout[])Enum.GetValues(typeof(RevisionGridLayout)));
             layouts.Sort();
-            var maxLayout = (int) layouts[layouts.Count - 1];
+            var maxLayout = (int)layouts[layouts.Count - 1];
 
             int nextLayout = Settings.RevisionGraphLayout + 1;
-            
+
             if (nextLayout > maxLayout)
                 nextLayout = 1;
 
@@ -1873,8 +1872,8 @@ namespace GitUI
 
         private void SetRevisionsLayout()
         {
-            layout = Enum.IsDefined(typeof (RevisionGridLayout), Settings.RevisionGraphLayout)
-                         ? (RevisionGridLayout) Settings.RevisionGraphLayout
+            layout = Enum.IsDefined(typeof(RevisionGridLayout), Settings.RevisionGraphLayout)
+                         ? (RevisionGridLayout)Settings.RevisionGraphLayout
                          : RevisionGridLayout.SmallWithGraph;
 
             showRevisionGraphToolStripMenuItem.Checked = IsGraphLayout();
@@ -1891,7 +1890,7 @@ namespace GitUI
 
             if (IsCardLayout())
             {
-                if (Settings.RevisionGraphLayout == (int)RevisionGridLayout.Card 
+                if (Settings.RevisionGraphLayout == (int)RevisionGridLayout.Card
                     || Settings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph)
                 {
                     rowHeigth = 45;
@@ -1918,7 +1917,7 @@ namespace GitUI
                         rowHeigth = (int)graphics.MeasureString("By", NormalFont).Height + 9;
                     }
 
-                    selectedItemBrush = SystemBrushes.Highlight; 
+                    selectedItemBrush = SystemBrushes.Highlight;
                 }
                 else
                 {
@@ -1981,7 +1980,26 @@ namespace GitUI
             ToggleShowGitNotes,
             ToggleRevisionCardLayout,
             ShowAllBranches,
-            ShowCurrentBranchOnly
+            ShowCurrentBranchOnly,
+            FilterQuickSearchString
+        }
+
+        private void FilterQuickSearchString()
+        {
+            _filterQuickSearchStringEnabled = !_filterQuickSearchStringEnabled;
+            Loading.Visible = true;
+            Revisions.Visible = false;
+            Revisions.SuspendLayout();
+            foreach (DataGridViewRow row in Revisions.Rows)
+            {
+                if (!_filterQuickSearchStringEnabled || ((GitRevision)Revisions.GetRowData(row.Index)).MatchesSearchString(_lastQuickSearchString))
+                    row.Visible = true;
+                else
+                    row.Visible = false;
+            }
+            Revisions.ResumeLayout();
+            Revisions.Visible = true;
+            Loading.Visible = false;
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -2000,10 +2018,11 @@ namespace GitUI
                 case Commands.ToggleRevisionCardLayout: ToggleRevisionCardLayout(); break;
                 case Commands.ShowAllBranches: ShowAllBranchesToolStripMenuItemClick(null, null); break;
                 case Commands.ShowCurrentBranchOnly: ShowCurrentBranchOnlyToolStripMenuItemClick(null, null); break;
+                case Commands.FilterQuickSearchString: FilterQuickSearchString(); break;
                 default: ExecuteScriptCommand(cmd, Keys.None); break;
             }
 
-            return true; 
+            return true;
         }
 
         #endregion
