@@ -104,18 +104,18 @@ Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geope
         <TranslationItem Name="Remove" Property="Text">
           <Value>Verwijdere alle rondzwevende objecten</Value>
         </TranslationItem>
-        <TranslationItem Name="TagSelectedObject" Property="Text">
+        <TranslationItem Name="mnuLostObjectsCreateTag" Property="Text">
           <Value>Label geselecteerde item</Value>
         </TranslationItem>
-        <TranslationItem Name="ViewObject" Property="Text">
+		<TranslationItem Name="mnuLostObjectsCreateBranch" Property="Text">
+          <Value>Vertakking aanmaken</Value>
+        </TranslationItem>
+        <TranslationItem Name="mnuLostObjectView" Property="Text">
           <Value>Toon geselecteerde object</Value>
         </TranslationItem>
         <TranslationItem Name="Unreachable" Property="Text">
           <Value>Toon alle objecten die  wel bestaan maar niet te bereiken zijn via een 
 andere node.</Value>
-        </TranslationItem>
-        <TranslationItem Name="TagAllObjects" Property="Text">
-          <Value>Label alle verloren objecten</Value>
         </TranslationItem>
         <TranslationItem Name="DeleteAllLostAndFoundTags" Property="Text">
           <Value>Verwijder allee LOST_AND_FOUND labels</Value>
@@ -128,7 +128,7 @@ andere node.</Value>
           <Value>Behandel commits waarnaar alleen verwezen word vanuit de reflog 
 als niet zichtbaar.</Value>
         </TranslationItem>
-        <TranslationItem Name="TagAllCommits" Property="Text">
+        <TranslationItem Name="btnRestoreSelectedObjects" Property="Text">
           <Value>Label alle commits</Value>
         </TranslationItem>
         <TranslationItem Name="ShowOnlyCommits" Property="Text">
