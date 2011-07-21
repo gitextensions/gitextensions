@@ -174,6 +174,7 @@ namespace GitUI
             this._NO_TRANSLATE_ColorBranchLabel = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.diffFontChangeButton = new System.Windows.Forms.Button();
             this.label43 = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_ColorRemovedLineDiffLabel = new System.Windows.Forms.Label();
             this.label45 = new System.Windows.Forms.Label();
@@ -181,6 +182,7 @@ namespace GitUI
             this.label27 = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_ColorSectionLabel = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_ColorRemovedLine = new System.Windows.Forms.Label();
+            this.label56 = new System.Windows.Forms.Label();
             this.label31 = new System.Windows.Forms.Label();
             this.label29 = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_ColorAddedLineLabel = new System.Windows.Forms.Label();
@@ -271,9 +273,7 @@ namespace GitUI
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
-            this.label56 = new System.Windows.Forms.Label();
-            this.fontDialog = new System.Windows.Forms.FontDialog();
-            this.diffFontChangeButton = new System.Windows.Forms.Button();
+            this.diffFontDialog = new System.Windows.Forms.FontDialog();
             this.LocalSettings.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
@@ -1638,7 +1638,7 @@ namespace GitUI
             this.ShowAuthorGravatar.AutoSize = true;
             this.ShowAuthorGravatar.Location = new System.Drawing.Point(7, 20);
             this.ShowAuthorGravatar.Name = "ShowAuthorGravatar";
-            this.ShowAuthorGravatar.Size = new System.Drawing.Size(220, 19);
+            this.ShowAuthorGravatar.Size = new System.Drawing.Size(195, 17);
             this.ShowAuthorGravatar.TabIndex = 0;
             this.ShowAuthorGravatar.Text = "Get author image from gravatar.com";
             this.ShowAuthorGravatar.UseVisualStyleBackColor = true;
@@ -2007,6 +2007,18 @@ namespace GitUI
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Difference view";
             // 
+            // diffFontChangeButton
+            // 
+            this.diffFontChangeButton.AutoSize = true;
+            this.diffFontChangeButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.diffFontChangeButton.Location = new System.Drawing.Point(132, 164);
+            this.diffFontChangeButton.Name = "diffFontChangeButton";
+            this.diffFontChangeButton.Size = new System.Drawing.Size(72, 25);
+            this.diffFontChangeButton.TabIndex = 14;
+            this.diffFontChangeButton.Text = "font name";
+            this.diffFontChangeButton.UseVisualStyleBackColor = true;
+            this.diffFontChangeButton.Click += new System.EventHandler(this.diffFontChangeButton_Click);
+            // 
             // label43
             // 
             this.label43.AutoSize = true;
@@ -2085,6 +2097,15 @@ namespace GitUI
             this._NO_TRANSLATE_ColorRemovedLine.TabIndex = 5;
             this._NO_TRANSLATE_ColorRemovedLine.Text = "Red";
             this._NO_TRANSLATE_ColorRemovedLine.Click += new System.EventHandler(this.ColorRemovedLine_Click);
+            // 
+            // label56
+            // 
+            this.label56.AutoSize = true;
+            this.label56.Location = new System.Drawing.Point(6, 169);
+            this.label56.Name = "label56";
+            this.label56.Size = new System.Drawing.Size(31, 15);
+            this.label56.TabIndex = 8;
+            this.label56.Text = "Font";
             // 
             // label31
             // 
@@ -3015,7 +3036,7 @@ namespace GitUI
             this.controlHotkeys.Location = new System.Drawing.Point(3, 3);
             this.controlHotkeys.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.controlHotkeys.Name = "controlHotkeys";
-            this.controlHotkeys.Size = new System.Drawing.Size(818, 474);
+            this.controlHotkeys.Size = new System.Drawing.Size(818, 472);
             this.controlHotkeys.TabIndex = 0;
             // 
             // splitContainer1
@@ -3083,24 +3104,10 @@ namespace GitUI
             // 
             this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository.Repository);
             // 
-            // label56
+            // diffFontDialog
             // 
-            this.label56.AutoSize = true;
-            this.label56.Location = new System.Drawing.Point(6, 169);
-            this.label56.Name = "label56";
-            this.label56.Size = new System.Drawing.Size(31, 15);
-            this.label56.TabIndex = 8;
-            this.label56.Text = "Font";
-            // 
-            // diffFontChangeButton
-            // 
-            this.diffFontChangeButton.Location = new System.Drawing.Point(115, 165);
-            this.diffFontChangeButton.Name = "diffFontChangeButton";
-            this.diffFontChangeButton.Size = new System.Drawing.Size(198, 23);
-            this.diffFontChangeButton.TabIndex = 14;
-            this.diffFontChangeButton.Text = "font name";
-            this.diffFontChangeButton.UseVisualStyleBackColor = true;
-            this.diffFontChangeButton.Click += new System.EventHandler(this.diffFontChangeButton_Click);
+            this.diffFontDialog.AllowVerticalFonts = false;
+            this.diffFontDialog.FixedPitchOnly = true;
             // 
             // FormSettings
             // 
@@ -3419,7 +3426,7 @@ namespace GitUI
         private Label label55;
         private Button diffFontChangeButton;
         private Label label56;
-        private FontDialog fontDialog;
+        private FontDialog diffFontDialog;
 
     }
 }
