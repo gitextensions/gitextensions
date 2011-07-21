@@ -21,6 +21,11 @@ namespace GitUI.Editor
             TextEditor.MouseMove += TextArea_MouseLeave;
         }
 
+        public new Font Font
+        {
+            set { TextEditor.Font = value; }
+        }
+
         public new event EventHandler MouseLeave;
 
         public void Find()

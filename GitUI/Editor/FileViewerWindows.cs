@@ -24,7 +24,11 @@ namespace GitUI.Editor
             TextEditor.KeyDown += BlameFileKeyUp;
             TextEditor.ActiveTextAreaControl.TextArea.KeyDown += BlameFileKeyUp;
             TextEditor.ActiveTextAreaControl.TextArea.DoubleClick += ActiveTextAreaControlDoubleClick;
-            TextEditor.Font = new Font("Consolas", 10);
+        }
+
+        public new Font Font 
+        {
+            set { TextEditor.Font = value; } 
         }
 
         public new event MouseEventHandler MouseMove;
