@@ -131,7 +131,7 @@ namespace GitCommands
                     formatString +=
                         /* Tree           */ "%T%n" +
                         /* Author Name    */ "%aN%n" +
-                        /* Author Email    */ "%aE%n" +                            
+                        /* Author Email    */ "%aE%n" +
                         /* Author Date    */ "%ai%n" +
                         /* Committer Name */ "%cN%n" +
                         /* Committer Date */ "%ci%n" +
@@ -232,7 +232,7 @@ namespace GitCommands
                     // Sanity check
                     if (line == COMMIT_BEGIN)
                     {
-                        revision = new GitRevision();
+                        revision = new GitRevision(null);
                     }
                     else
                     {

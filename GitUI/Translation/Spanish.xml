@@ -797,18 +797,18 @@ que hace seguimiento de esta rama remota?</Value>
         <TranslationItem Name="Remove" Property="Text">
           <Value>Eliminar todos los objetos colgados</Value>
         </TranslationItem>
-        <TranslationItem Name="TagSelectedObject" Property="Text">
+        <TranslationItem Name="mnuLostObjectsCreateTag" Property="Text">
           <Value>Etiquetar objeto seleccionado</Value>
         </TranslationItem>
-        <TranslationItem Name="ViewObject" Property="Text">
+        <TranslationItem Name="mnuLostObjectsCreateBranch" Property="Text">
+          <Value>Crear rama</Value>
+        </TranslationItem>		
+        <TranslationItem Name="mnuLostObjectView" Property="Text">
           <Value>Ver el objeto seleccionado</Value>
         </TranslationItem>
         <TranslationItem Name="Unreachable" Property="Text">
           <Value>Imprimir objetos que existen pero que no son leibles desde ninguno de los
 nodos de referencia.</Value>
-        </TranslationItem>
-        <TranslationItem Name="TagAllObjects" Property="Text">
-          <Value>Etiquetar todos los objetos perdidos</Value>
         </TranslationItem>
         <TranslationItem Name="DeleteAllLostAndFoundTags" Property="Text">
           <Value>Eliminar todas las etiquetas LOST_AND_FOUND</Value>
@@ -821,7 +821,7 @@ sino también los que se encuentran en las piscinas de objetos alternativas.</Va
           <Value>No considerar los commits que son referenciados sólo por una
 entrada en un reflog a ser alcanzado.</Value>
         </TranslationItem>
-        <TranslationItem Name="TagAllCommits" Property="Text">
+        <TranslationItem Name="btnRestoreSelectedObjects" Property="Text">
           <Value>Etiquetar todos los commits perdidos</Value>
         </TranslationItem>
         <TranslationItem Name="ShowOnlyCommits" Property="Text">
