@@ -2291,19 +2291,21 @@ namespace GitUI
 
         private void diffFontChangeButton_Click(object sender, EventArgs e)
         {
-            fontDialog.Font = diffFont;
-            DialogResult result = fontDialog.ShowDialog();
+            diffFontDialog.Font = diffFont;
+            DialogResult result = diffFontDialog.ShowDialog();
 
             if (result == DialogResult.OK || result == DialogResult.Yes)
             {
-                SetCurrentDiffFont(fontDialog.Font);
+                SetCurrentDiffFont(diffFontDialog.Font);
             }
         }
 
         private void SetCurrentDiffFont(Font font)
         {
             diffFont = font;
-            diffFontChangeButton.Text = string.Format("{0}, {1}", diffFont.FontFamily.Name, diffFont.Size);
+            
+            diffFontChangeButton.Text = 
+                string.Format("{0}, {1}", diffFont.FontFamily.Name, (int) diffFont.Size);
 
         }
     }

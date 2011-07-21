@@ -788,11 +788,7 @@ namespace GitCommands
 
         private static Font SafeGet(string key, Font defaultValue, ref Font field)
         {
-            return SafeGet(key, defaultValue, ref field, x =>
-                                                             {
-                                                                 string[] parts = x.Split(';');
-                                                                 return new Font(parts[0], float.Parse(parts[1]));
-                                                             });
+            return SafeGet(key, defaultValue, ref field, x => x.Parse(defaultValue));
         }
 
         private static bool SafeGet(string key, bool defaultValue, ref bool? field)
@@ -831,7 +827,7 @@ namespace GitCommands
         private static void SafeSet(string key, Font value, ref Font field)
         {
             field = value;
-            SetValue(key, string.Format("{0};{1}", field.FontFamily.Name, field.Size));
+            SetValue(key, field.AsString());
         }
 
         private static T GetValue<T>(string key, T defaultValue)
@@ -843,6 +839,34 @@ namespace GitCommands
         private static void SetValue<T>(string key, T value)
         {
             Application.UserAppDataRegistry.SetValue(key, value);
+        }
+    }
+
+    public static class FontParser
+    {
+        public static string AsString(this Font value)
+        {
+            return String.Format("{0};{1}", value.FontFamily.Name, value.Size);
+        }
+
+        public static Font Parse(this string value, Font defaultValue)
+        {
+            if (value == null)
+                return defaultValue;
+
+            string[] parts = value.Split(';');
+
+            if (parts.Length < 2)
+                return defaultValue;
+
+            try
+            {
+                return new Font(parts[0], Single.Parse(parts[1]));
+            }
+            catch(Exception)
+            {
+                return defaultValue;
+            }
         }
     }
 }
