@@ -1154,10 +1154,11 @@ namespace GitUI
 
                 using (var forePath = CreateRoundRectPath(x, y, width, height, radius))
                 {
-                    Color fillColor = Lerp(color, Color.White, 0.9F);
+                    float lightingAmount = isCurrentBranch ? 0.85F : 0.9F;
+                    Color fillColor = Lerp(color, Color.White, lightingAmount);
 
                     var fillBrush = new LinearGradientBrush(new RectangleF(x, y, width, height), fillColor,
-                        Lerp(fillColor, Color.White, 0.5F), 90);
+                                                            Lerp(fillColor, Color.White, 0.8F), 90);
 
                     graphics.FillPath(fillBrush, forePath);
                 }
