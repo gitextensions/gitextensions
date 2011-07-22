@@ -990,12 +990,25 @@ namespace GitUI
                                 }
                                 else
                                 {
+                                    Font font;
+                                    
+                                    if (IsFilledBranchesLayout())
+                                    {
+                                        font = head.Selected
+                                                   ? refsFont
+                                                   : new Font(refsFont, FontStyle.Regular);
+                                    }
+                                    else
+                                    {
+                                        font = refsFont;
+                                    }
+
                                     headName = IsFilledBranchesLayout()
                                                ? head.Name
                                                : string.Concat("[", head.Name, "] ");
 
                                     var headBounds = AdjustCellBounds(e.CellBounds, offset);
-                                    SizeF textSize = e.Graphics.MeasureString(headName, refsFont);
+                                    SizeF textSize = e.Graphics.MeasureString(headName, font);
                                     offset += textSize.Width;
 
                                     if (IsFilledBranchesLayout())
@@ -1006,9 +1019,12 @@ namespace GitUI
                                                            RoundToEven(textSize.Width + 3), RoundToEven(textSize.Height), 3);
 
                                         headBounds.Offset(1, 0);
+
+                                        
+
                                     }
 
-                                    DrawColumnText(e.Graphics, headName, refsFont, headColor, headBounds);
+                                    DrawColumnText(e.Graphics, headName, font, headColor, headBounds);
                                 }
                             }
                         }
