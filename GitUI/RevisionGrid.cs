@@ -957,20 +957,33 @@ namespace GitUI
                         {
                             heads.Sort(new Comparison<GitHead>(
                                            (left, right) =>
-                                           {
-                                               if (left.IsTag != right.IsTag)
-                                                   return right.IsTag.CompareTo(left.IsTag);
-                                               if (left.IsRemote != right.IsRemote)
-                                                   return left.IsRemote.CompareTo(right.IsRemote);
-                                               return left.Name.CompareTo(right.Name);
-                                           }));
-
-                            var refsFont = IsFilledBranchesLayout() ? rowFont : RefsFont;
+                                               {
+                                                   if (left.IsTag != right.IsTag)
+                                                       return right.IsTag.CompareTo(left.IsTag);
+                                                   if (left.IsRemote != right.IsRemote)
+                                                       return left.IsRemote.CompareTo(right.IsRemote);
+                                                   return left.Name.CompareTo(right.Name);
+                                               }));
 
                             foreach (var head in heads)
                             {
                                 if ((head.IsRemote && !ShowRemoteBranches.Checked))
                                     continue;
+
+                                Font refsFont;
+                              
+                                if (IsFilledBranchesLayout())
+                                {
+                                    //refsFont = head.Selected ? rowFont : new Font(rowFont, FontStyle.Regular);
+                                    
+                                    refsFont = !head.Selected
+                                        ? RefsFont
+                                        : new Font(rowFont, rowFont.Style | FontStyle.Bold);
+                                }
+                                else
+                                {
+                                    refsFont = RefsFont;
+                                }
 
                                 Color headColor = GetHeadColor(head);
                                 Brush textBrush = new SolidBrush(headColor);
@@ -983,48 +996,37 @@ namespace GitUI
                                     headName = head.Name;
                                     offset += e.Graphics.MeasureString(headName, refsFont).Width + 6;
                                     location = new PointF(e.CellBounds.Right - offset, e.CellBounds.Top + 4);
-                                    var size = new SizeF(e.Graphics.MeasureString(headName, refsFont).Width, e.Graphics.MeasureString(headName, RefsFont).Height);
-                                    e.Graphics.FillRectangle(new SolidBrush(SystemColors.Info), location.X - 1, location.Y - 1, size.Width + 3, size.Height + 2);
-                                    e.Graphics.DrawRectangle(new Pen(SystemColors.InfoText), location.X - 1, location.Y - 1, size.Width + 3, size.Height + 2);
+                                    var size = new SizeF(e.Graphics.MeasureString(headName, refsFont).Width,
+                                                         e.Graphics.MeasureString(headName, RefsFont).Height);
+                                    e.Graphics.FillRectangle(new SolidBrush(SystemColors.Info), location.X - 1,
+                                                             location.Y - 1, size.Width + 3, size.Height + 2);
+                                    e.Graphics.DrawRectangle(new Pen(SystemColors.InfoText), location.X - 1,
+                                                             location.Y - 1, size.Width + 3, size.Height + 2);
                                     e.Graphics.DrawString(headName, refsFont, textBrush, location);
                                 }
                                 else
                                 {
-                                    Font font;
-                                    
-                                    if (IsFilledBranchesLayout())
-                                    {
-                                        font = head.Selected
-                                                   ? refsFont
-                                                   : new Font(refsFont, FontStyle.Regular);
-                                    }
-                                    else
-                                    {
-                                        font = refsFont;
-                                    }
-
                                     headName = IsFilledBranchesLayout()
-                                               ? head.Name
-                                               : string.Concat("[", head.Name, "] ");
+                                                   ? head.Name
+                                                   : string.Concat("[", head.Name, "] ");
 
                                     var headBounds = AdjustCellBounds(e.CellBounds, offset);
-                                    SizeF textSize = e.Graphics.MeasureString(headName, font);
+                                    SizeF textSize = e.Graphics.MeasureString(headName, refsFont);
                                     offset += textSize.Width;
 
                                     if (IsFilledBranchesLayout())
                                     {
                                         offset += 9;
 
-                                        DrawHeadBackground(isRowSelected, e.Graphics, headColor, headBounds.X, headBounds.Y,
-                                                           RoundToEven(textSize.Width + 3), RoundToEven(textSize.Height), 3);
+                                        DrawHeadBackground(isRowSelected, e.Graphics, headColor, headBounds.X,
+                                                           headBounds.Y,
+                                                           RoundToEven(textSize.Width + 3), RoundToEven(textSize.Height),
+                                                           3, head.Selected);
 
                                         headBounds.Offset(1, 0);
-
-                                        
-
                                     }
 
-                                    DrawColumnText(e.Graphics, headName, font, headColor, headBounds);
+                                    DrawColumnText(e.Graphics, headName, refsFont, headColor, headBounds);
                                 }
                             }
                         }
@@ -1126,7 +1128,8 @@ namespace GitUI
             return result < value ? result + 2 : result;
         }
 
-        private void DrawHeadBackground(bool isSelected, Graphics graphics, Color color, float x, float y, float width, float height, float radius)
+        private void DrawHeadBackground(bool isSelected, Graphics graphics, Color color, 
+            float x, float y, float width, float height, float radius, bool isCurrentBranch)
         {
             var oldMode = graphics.SmoothingMode;
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -1135,7 +1138,18 @@ namespace GitUI
             {
                 using (var shadePath = CreateRoundRectPath(x + 1, y + 1, width, height, radius))
                 {
-                    graphics.FillPath(new SolidBrush(isSelected ? Color.Black : Color.Gray), shadePath);
+                    Color shadeColor;
+
+                    if (isSelected)
+                    {
+                        shadeColor = Color.Black;
+                    }
+                    else
+                    {
+                        shadeColor = isCurrentBranch ? Color.FromArgb(255, 50, 50, 50) : Color.Gray;
+                    }
+
+                    graphics.FillPath(new SolidBrush(shadeColor), shadePath);
                 }
 
                 using (var forePath = CreateRoundRectPath(x, y, width, height, radius))
@@ -1152,7 +1166,6 @@ namespace GitUI
             {
                 graphics.SmoothingMode = oldMode;
             }
-
         }
 
         private static GraphicsPath CreateRoundRectPath(float x, float y, float width, float height, float radius)
