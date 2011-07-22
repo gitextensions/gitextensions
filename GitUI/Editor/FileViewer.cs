@@ -32,6 +32,7 @@ namespace GitUI.Editor
             else
                 _internalFileViewer = new FileViewerMono();
 
+            Font = Settings.DiffFont;
             _internalFileViewer.MouseMove += new MouseEventHandler(_internalFileViewer_MouseMove);
 
             Control internalFileViewerControl = (Control)_internalFileViewer;
@@ -63,6 +64,11 @@ namespace GitUI.Editor
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
 
             ContextMenu.Opening += ContextMenu_Opening; 
+        }
+
+        public new Font Font
+        {
+            set { _internalFileViewer.Font = value; }
         }
 
         void ContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
