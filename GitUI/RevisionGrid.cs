@@ -975,10 +975,11 @@ namespace GitUI
                                 if (IsFilledBranchesLayout())
                                 {
                                     //refsFont = head.Selected ? rowFont : new Font(rowFont, FontStyle.Regular);
-                                    
-                                    refsFont = !head.Selected
-                                        ? RefsFont
-                                        : new Font(rowFont, rowFont.Style | FontStyle.Bold);
+                                    refsFont = rowFont;
+
+//                                    refsFont = head.Selected
+//                                        ? new Font(rowFont, rowFont.Style | FontStyle.Italic)
+//                                        : rowFont;
                                 }
                                 else
                                 {
@@ -1012,18 +1013,22 @@ namespace GitUI
 
                                     var headBounds = AdjustCellBounds(e.CellBounds, offset);
                                     SizeF textSize = e.Graphics.MeasureString(headName, refsFont);
+
                                     offset += textSize.Width;
 
                                     if (IsFilledBranchesLayout())
                                     {
                                         offset += 9;
 
-                                        DrawHeadBackground(isRowSelected, e.Graphics, headColor, headBounds.X,
-                                                           headBounds.Y,
-                                                           RoundToEven(textSize.Width + 3), RoundToEven(textSize.Height),
-                                                           3, head.Selected);
+                                        float extraOffset = DrawHeadBackground(isRowSelected, e.Graphics,
+                                                                               headColor, headBounds.X,
+                                                                               headBounds.Y,
+                                                                               RoundToEven(textSize.Width + 3),
+                                                                               RoundToEven(textSize.Height), 3,
+                                                                               head.Selected);
 
-                                        headBounds.Offset(1, 0);
+                                        offset += extraOffset;
+                                        headBounds.Offset((int) (extraOffset + 1), 0);
                                     }
 
                                     DrawColumnText(e.Graphics, headName, refsFont, headColor, headBounds);
@@ -1128,45 +1133,69 @@ namespace GitUI
             return result < value ? result + 2 : result;
         }
 
-        private void DrawHeadBackground(bool isSelected, Graphics graphics, Color color, 
+        private float DrawHeadBackground(bool isSelected, Graphics graphics, Color color, 
             float x, float y, float width, float height, float radius, bool isCurrentBranch)
         {
+            float additionalOffset = isCurrentBranch ? GetArrowSize(height) : 0;
+            width += additionalOffset;
             var oldMode = graphics.SmoothingMode;
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
             try
             {
+                // shade
                 using (var shadePath = CreateRoundRectPath(x + 1, y + 1, width, height, radius))
                 {
-                    Color shadeColor;
-
-                    if (isSelected)
-                    {
-                        shadeColor = Color.Black;
-                    }
-                    else
-                    {
-                        shadeColor = isCurrentBranch ? Color.FromArgb(255, 50, 50, 50) : Color.Gray;
-                    }
-
+                    Color shadeColor = isSelected ? Color.Black : Color.Gray;
                     graphics.FillPath(new SolidBrush(shadeColor), shadePath);
                 }
 
                 using (var forePath = CreateRoundRectPath(x, y, width, height, radius))
                 {
-                    float lightingAmount = isCurrentBranch ? 0.85F : 0.9F;
-                    Color fillColor = Lerp(color, Color.White, lightingAmount);
+                    Color fillColor = Lerp(color, Color.White, 0.92F);
 
                     var fillBrush = new LinearGradientBrush(new RectangleF(x, y, width, height), fillColor,
-                                                            Lerp(fillColor, Color.White, 0.8F), 90);
-
+                                                            Lerp(fillColor, Color.White, 0.9F), 90);
+                    
+                    // fore rectangle
                     graphics.FillPath(fillBrush, forePath);
+                    // frame
+                    graphics.DrawPath(new Pen(Lerp(color, Color.White, 0.83F)), forePath);
+
+                    // arrow if the head is the current branch 
+                    if (isCurrentBranch)
+                        DrawArrow(graphics, x, y, height, color);
                 }
             }
             finally
             {
                 graphics.SmoothingMode = oldMode;
             }
+
+            return additionalOffset;
+        }
+
+        private float GetArrowSize(float rowHeight)
+        {
+            return rowHeight - 6;
+        }
+
+        private void DrawArrow(Graphics graphics, float x, float y, float rowHeight, Color color)
+        {
+            const float horShift = 4;
+            const float verShift = 3;
+            float height = rowHeight - verShift * 2;
+            float width = height / 2;
+
+            var points = new[]
+                                 {
+                                     new PointF(x + horShift, y + verShift),
+                                     new PointF(x + horShift + width, y + verShift + height/2),
+                                     new PointF(x + horShift, y + verShift + height),
+                                     new PointF(x + horShift, y + verShift)
+                                 };
+
+            graphics.FillPolygon(new SolidBrush(color), points);
         }
 
         private static GraphicsPath CreateRoundRectPath(float x, float y, float width, float height, float radius)
