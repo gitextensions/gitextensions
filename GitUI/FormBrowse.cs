@@ -222,7 +222,7 @@ namespace GitUI
                 ShowRevisions();
             _NO_TRANSLATE_Workingdir.Text = Settings.WorkingDir;
             Text = GenerateWindowTitle(Settings.WorkingDir, validWorkingDir, branchSelect.Text);
-
+            DiffText.Font = Settings.DiffFont;
             UpdateJumplist(validWorkingDir);
 
             CheckForMergeConflicts();
@@ -890,12 +890,13 @@ namespace GitUI
 
         private void OpenToolStripMenuItemClick(object sender, EventArgs e)
         {
-            new Open().ShowDialog();
-
-            IndexWatcher.Clear();
-            RevisionGrid.ForceRefreshRevisions();
-            InternalInitialize(false);
-            IndexWatcher.Reset();
+            if (new Open().ShowDialog() == DialogResult.OK)
+            {
+                IndexWatcher.Clear();
+                RevisionGrid.ForceRefreshRevisions();
+                InternalInitialize(false);
+                IndexWatcher.Reset();
+            }
         }
 
         private void CheckoutToolStripMenuItemClick(object sender, EventArgs e)
