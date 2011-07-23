@@ -50,9 +50,9 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(314, 4);
+            this.btnCancel.Location = new System.Drawing.Point(272, 4);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(125, 25);
+            this.btnCancel.Size = new System.Drawing.Size(178, 25);
             this.btnCancel.TabIndex = 4;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
@@ -62,9 +62,9 @@
             // 
             this.Revert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Revert.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Revert.Location = new System.Drawing.Point(170, 4);
+            this.Revert.Location = new System.Drawing.Point(88, 4);
             this.Revert.Name = "Revert";
-            this.Revert.Size = new System.Drawing.Size(138, 25);
+            this.Revert.Size = new System.Drawing.Size(178, 25);
             this.Revert.TabIndex = 3;
             this.Revert.Text = "Revert changes";
             this.Revert.UseVisualStyleBackColor = true;
@@ -78,14 +78,14 @@
             this._NO_TRANSLATE_RevertLabel.MaximumSize = new System.Drawing.Size(460, 0);
             this._NO_TRANSLATE_RevertLabel.Name = "_NO_TRANSLATE_RevertLabel";
             this._NO_TRANSLATE_RevertLabel.Padding = new System.Windows.Forms.Padding(15);
-            this._NO_TRANSLATE_RevertLabel.Size = new System.Drawing.Size(68, 45);
+            this._NO_TRANSLATE_RevertLabel.Size = new System.Drawing.Size(65, 43);
             this._NO_TRANSLATE_RevertLabel.TabIndex = 5;
             this._NO_TRANSLATE_RevertLabel.Text = "label1";
             // 
             // FormRevert
             // 
             this.AcceptButton = this.Revert;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.CancelButton = this.btnCancel;

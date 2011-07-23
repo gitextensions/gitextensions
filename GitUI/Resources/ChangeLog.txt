@@ -3,17 +3,30 @@
 
 Version 2.23
 	Fixed issue 452: "Show repository status" always updates status every second
+	Fixed issue 455: Cannot initialize repository in Visual Studio solution root
 	Fixed issue 464: Added option to add custom script to toolbar in browse dialog
 	Fixed issue 465: "Create branch" dialog closes immediately after opening by enter key
-	Fixed issue 471: Implement option to use Patience algorithm
+	Fixed issue 471: Implement option to use "Patience diff" algorithm
 	Fixed issue 479: Added the 'keep index' option to the 'ApplyStash' form
+	Fixed issue 500: number of changed files is shown wrong on the browse form toolbar
+	Fixed issue 505: Visual Studio toolbar does not show current branch name
+	Fixed issue 512: Error when opening "Translate" dialog
 	Fixed short name creation for repositories located in root directories
+	Hotkeys can be assigned to custom scripts
+	Difference view font can be changed
+	Revision log style updated
+	The current branch is highlighted in commit log
+	The current branch is shown in caption
 	Added support for Windows 7 "Recent" Jumplist to quickly open repositories
 	Added 'ignore-whitespace' option when applying patches
 	Added option to save stash with custom message
+	Added setting to choose "Truncate long filenames" method
 	Save setting for 'ignore whitespace' checkbox on 'ApplyPatch' form
+	Optimized "Recover lost objects" dialogs
+	Clear FileViewer when only unstaged file is reverted
 	Updated msysgit to version 1.7.6
-	New logo
+	New application logo
+	Many bugfixes and minor changes
 
 Version 2.22
 	Fixed issue 142: Changed main window title to repository name instead of path
