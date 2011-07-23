@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormVerify));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.label2 = new System.Windows.Forms.Label();
@@ -50,11 +50,11 @@
             this.mnuLostObjectView = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuLostObjectsCreateTag = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuLostObjectsCreateBranch = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnCloseDialog = new System.Windows.Forms.Button();
             this.btnRestoreSelectedObjects = new System.Windows.Forms.Button();
             this.DeleteAllLostAndFoundTags = new System.Windows.Forms.Button();
             this.Remove = new System.Windows.Forms.Button();
             this.SaveObjects = new System.Windows.Forms.Button();
-            this.btnCloseDialog = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -117,7 +117,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(4, 3);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(320, 105);
+            this.label2.Size = new System.Drawing.Size(286, 91);
             this.label2.TabIndex = 5;
             this.label2.Text = resources.GetString("label2.Text");
             // 
@@ -128,7 +128,7 @@
             this.ShowOnlyCommits.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ShowOnlyCommits.Location = new System.Drawing.Point(430, 3);
             this.ShowOnlyCommits.Name = "ShowOnlyCommits";
-            this.ShowOnlyCommits.Size = new System.Drawing.Size(131, 19);
+            this.ShowOnlyCommits.Size = new System.Drawing.Size(116, 17);
             this.ShowOnlyCommits.TabIndex = 4;
             this.ShowOnlyCommits.Text = "Show only commits";
             this.ShowOnlyCommits.UseVisualStyleBackColor = true;
@@ -141,10 +141,10 @@
             this.NoReflogs.CheckState = System.Windows.Forms.CheckState.Checked;
             this.NoReflogs.Location = new System.Drawing.Point(430, 29);
             this.NoReflogs.Name = "NoReflogs";
-            this.NoReflogs.Size = new System.Drawing.Size(375, 34);
+            this.NoReflogs.Size = new System.Drawing.Size(345, 30);
             this.NoReflogs.TabIndex = 3;
             this.NoReflogs.Text = "Do not consider commits that are referenced only by an entry in a \r\nreflog to be " +
-    "reachable.";
+                "reachable.";
             this.NoReflogs.UseVisualStyleBackColor = true;
             this.NoReflogs.CheckedChanged += new System.EventHandler(this.NoReflogsCheckedChanged);
             // 
@@ -153,10 +153,10 @@
             this.FullCheck.AutoSize = true;
             this.FullCheck.Location = new System.Drawing.Point(430, 95);
             this.FullCheck.Name = "FullCheck";
-            this.FullCheck.Size = new System.Drawing.Size(397, 34);
+            this.FullCheck.Size = new System.Drawing.Size(376, 30);
             this.FullCheck.TabIndex = 2;
             this.FullCheck.Text = "Check not just objects in GIT_OBJECT_DIRECTORY ($GIT_DIR/objects), \r\nbut also the" +
-    " ones found in alternate object pools.\r\n";
+                " ones found in alternate object pools.\r\n";
             this.FullCheck.UseVisualStyleBackColor = true;
             this.FullCheck.CheckedChanged += new System.EventHandler(this.FullCheckCheckedChanged);
             // 
@@ -165,10 +165,10 @@
             this.Unreachable.AutoSize = true;
             this.Unreachable.Location = new System.Drawing.Point(430, 62);
             this.Unreachable.Name = "Unreachable";
-            this.Unreachable.Size = new System.Drawing.Size(429, 34);
+            this.Unreachable.Size = new System.Drawing.Size(403, 30);
             this.Unreachable.TabIndex = 1;
             this.Unreachable.Text = "Print out objects that exist but that aren\'t readable from any of the reference \r" +
-    "\nnodes.\r\n";
+                "\nnodes.\r\n";
             this.Unreachable.UseVisualStyleBackColor = true;
             this.Unreachable.CheckedChanged += new System.EventHandler(this.UnreachableCheckedChanged);
             // 
@@ -177,7 +177,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 116);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(299, 15);
+            this.label1.Size = new System.Drawing.Size(270, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Double-click on a row containing a sha1 to view object.";
             // 
@@ -207,8 +207,8 @@
             this.Warnings.ShowEditingIcon = false;
             this.Warnings.Size = new System.Drawing.Size(859, 325);
             this.Warnings.TabIndex = 0;
-            this.Warnings.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Warnings_CellMouseDoubleClick);
             this.Warnings.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Warnings_CellMouseDown);
+            this.Warnings.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Warnings_CellMouseDoubleClick);
             // 
             // columnIsLostObjectSelected
             // 
@@ -226,7 +226,7 @@
             this.columnDate.HeaderText = "Date";
             this.columnDate.Name = "columnDate";
             this.columnDate.ReadOnly = true;
-            this.columnDate.Width = 56;
+            this.columnDate.Width = 55;
             // 
             // columnType
             // 
@@ -235,15 +235,15 @@
             this.columnType.HeaderText = "Type";
             this.columnType.Name = "columnType";
             this.columnType.ReadOnly = true;
-            this.columnType.Width = 58;
+            this.columnType.Width = 56;
             // 
             // columnSubject
             // 
             this.columnSubject.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.columnSubject.DataPropertyName = "Subject";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.columnSubject.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.columnSubject.DefaultCellStyle = dataGridViewCellStyle3;
             this.columnSubject.HeaderText = "Subject";
             this.columnSubject.Name = "columnSubject";
             this.columnSubject.ReadOnly = true;
@@ -271,13 +271,13 @@
             this.mnuLostObjectsCreateTag,
             this.mnuLostObjectsCreateBranch});
             this.mnuLostObjects.Name = "mnuLostObjects";
-            this.mnuLostObjects.Size = new System.Drawing.Size(190, 70);
+            this.mnuLostObjects.Size = new System.Drawing.Size(193, 70);
             // 
             // mnuLostObjectView
             // 
-            this.mnuLostObjectView.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.mnuLostObjectView.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.mnuLostObjectView.Name = "mnuLostObjectView";
-            this.mnuLostObjectView.Size = new System.Drawing.Size(189, 22);
+            this.mnuLostObjectView.Size = new System.Drawing.Size(192, 22);
             this.mnuLostObjectView.Text = "View";
             this.mnuLostObjectView.Click += new System.EventHandler(this.mnuLostObjectView_Click);
             // 
@@ -285,7 +285,7 @@
             // 
             this.mnuLostObjectsCreateTag.Name = "mnuLostObjectsCreateTag";
             this.mnuLostObjectsCreateTag.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
-            this.mnuLostObjectsCreateTag.Size = new System.Drawing.Size(189, 22);
+            this.mnuLostObjectsCreateTag.Size = new System.Drawing.Size(192, 22);
             this.mnuLostObjectsCreateTag.Text = "Create tag";
             this.mnuLostObjectsCreateTag.Click += new System.EventHandler(this.mnuLostObjectsCreateTag_Click);
             // 
@@ -293,16 +293,28 @@
             // 
             this.mnuLostObjectsCreateBranch.Name = "mnuLostObjectsCreateBranch";
             this.mnuLostObjectsCreateBranch.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
-            this.mnuLostObjectsCreateBranch.Size = new System.Drawing.Size(189, 22);
+            this.mnuLostObjectsCreateBranch.Size = new System.Drawing.Size(192, 22);
             this.mnuLostObjectsCreateBranch.Text = "Create branch";
             this.mnuLostObjectsCreateBranch.Click += new System.EventHandler(this.mnuLostObjectsCreateBranch_Click);
+            // 
+            // btnCloseDialog
+            // 
+            this.btnCloseDialog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCloseDialog.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnCloseDialog.Location = new System.Drawing.Point(648, 29);
+            this.btnCloseDialog.Name = "btnCloseDialog";
+            this.btnCloseDialog.Size = new System.Drawing.Size(208, 25);
+            this.btnCloseDialog.TabIndex = 7;
+            this.btnCloseDialog.Text = "Cancel";
+            this.btnCloseDialog.UseVisualStyleBackColor = true;
             // 
             // btnRestoreSelectedObjects
             // 
             this.btnRestoreSelectedObjects.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnRestoreSelectedObjects.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRestoreSelectedObjects.Location = new System.Drawing.Point(299, 17);
             this.btnRestoreSelectedObjects.Name = "btnRestoreSelectedObjects";
-            this.btnRestoreSelectedObjects.Size = new System.Drawing.Size(271, 25);
+            this.btnRestoreSelectedObjects.Size = new System.Drawing.Size(317, 25);
             this.btnRestoreSelectedObjects.TabIndex = 6;
             this.btnRestoreSelectedObjects.Text = "Restore selected objects";
             this.btnRestoreSelectedObjects.UseVisualStyleBackColor = true;
@@ -341,20 +353,10 @@
             this.SaveObjects.UseVisualStyleBackColor = true;
             this.SaveObjects.Click += new System.EventHandler(this.SaveObjectsClick);
             // 
-            // btnCloseDialog
-            // 
-            this.btnCloseDialog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCloseDialog.Location = new System.Drawing.Point(648, 29);
-            this.btnCloseDialog.Name = "btnCloseDialog";
-            this.btnCloseDialog.Size = new System.Drawing.Size(208, 25);
-            this.btnCloseDialog.TabIndex = 7;
-            this.btnCloseDialog.Text = "Cancel";
-            this.btnCloseDialog.UseVisualStyleBackColor = true;
-            // 
             // FormVerify
             // 
             this.AcceptButton = this.btnRestoreSelectedObjects;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCloseDialog;
             this.ClientSize = new System.Drawing.Size(859, 524);
