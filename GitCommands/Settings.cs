@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands.Logging;
 using GitCommands.Repository;
+using Microsoft.Win32;
 
 namespace GitCommands
 {
@@ -31,9 +32,11 @@ namespace GitCommands
             }
 
             GitLog = new CommandLogger();
-            ApplicationDataPath = Application.UserAppDataPath + Settings.PathSeparator.ToString();
+
+            //Make applicationdatapath version dependent
+            ApplicationDataPath = Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
         }
-        
+
         private static int? _UserMenuLocationX;
         public static int UserMenuLocationX
         {
@@ -47,14 +50,14 @@ namespace GitCommands
             get { return SafeGet("usermenulocationy", -1, ref _UserMenuLocationY); }
             set { SafeSet("usermenulocationy", value, ref _UserMenuLocationY); }
         }
-        
+
         private static bool? _stashKeepIndex;
         public static bool StashKeepIndex
         {
             get { return SafeGet("stashkeepindex", false, ref _stashKeepIndex); }
-            set { SafeSet("stashkeepindex", value, ref _stashKeepIndex); } 
+            set { SafeSet("stashkeepindex", value, ref _stashKeepIndex); }
         }
-       
+
 
         private static bool? _applyPatchIgnoreWhitespace;
         public static bool ApplyPatchIgnoreWhitespace
@@ -584,7 +587,7 @@ namespace GitCommands
             get { return SafeGet("diffaddedextracolor", Color.FromArgb(135, 255, 135), ref _diffAddedExtraColor); }
             set { SafeSet("diffaddedextracolor", value, ref _diffAddedExtraColor); }
         }
-        
+
         private static Font _diffFont;
         public static Font DiffFont
         {
@@ -645,7 +648,7 @@ namespace GitCommands
         public static void SetInstallDir(string dir)
         {
             if (Application.UserAppDataRegistry != null)
-                Application.UserAppDataRegistry.SetValue("InstallDir", dir);
+                SetValue("InstallDir", dir);
         }
 
         public static bool ValidWorkingDir()
@@ -823,22 +826,55 @@ namespace GitCommands
             field = value;
             SetValue(key, ColorTranslator.ToHtml(field.Value));
         }
-        
+
         private static void SafeSet(string key, Font value, ref Font field)
         {
             field = value;
             SetValue(key, field.AsString());
         }
 
-        private static T GetValue<T>(string key, T defaultValue)
+        private static string VersionIndependentRegKey
         {
-            var value = (T)Application.UserAppDataRegistry.GetValue(key);
-            return value == null ? defaultValue : value;
+            get
+            {
+                return Application.UserAppDataRegistry.Name.Replace("\\" + Application.ProductVersion, string.Empty);
+            }
         }
 
-        private static void SetValue<T>(string key, T value)
+        public static T GetValue<T>(string name, T defaultValue)
         {
-            Application.UserAppDataRegistry.SetValue(key, value);
+            T value = (T)Registry.GetValue(VersionIndependentRegKey, name, null);
+
+            if (value != null)
+                return value;
+
+            /////////////////////////////////////////////////////////////////////////////////////
+            ///// BEGIN TEMPORARY CODE TO CONVERT OLD VERSION DEPENDENT REGISTRY TO NEW 
+            ///// VERSION INDEPENDENT REGISTRY KEY!
+            /////////////////////////////////////////////////////////////////////////////////////
+            value = (T)Registry.GetValue(Application.UserAppDataRegistry.Name.Replace(Application.ProductVersion, "1.0.0.0"), name, null);
+
+            if (value != null)
+            {
+                SetValue<T>(name, value);
+                return value;
+            }
+
+            if (defaultValue != null)
+            {
+                SetValue<T>(name, defaultValue);
+            }
+            /////////////////////////////////////////////////////////////////////////////////////
+            ///// END TEMPORARY CODE TO CONVERT OLD VERSION DEPENDENT REGISTRY TO NEW 
+            ///// VERSION INDEPENDENT REGISTRY KEY!
+            /////////////////////////////////////////////////////////////////////////////////////
+
+            return defaultValue;
+        }
+
+        public static void SetValue<T>(string name, T value)
+        {
+            Registry.SetValue(VersionIndependentRegKey, name, value);
         }
     }
 
@@ -863,7 +899,7 @@ namespace GitCommands
             {
                 return new Font(parts[0], Single.Parse(parts[1]));
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return defaultValue;
             }
