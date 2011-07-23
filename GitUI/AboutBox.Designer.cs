@@ -192,6 +192,7 @@
             this.thanksTo.Size = new System.Drawing.Size(58, 13);
             this.thanksTo.TabIndex = 27;
             this.thanksTo.Text = "Thanks to:";
+            this.thanksTo.Click += new System.EventHandler(this._NO_TRANSLATE_thanksToTicker_Click);
             // 
             // _NO_TRANSLATE_thanksToTicker
             // 
