@@ -584,6 +584,13 @@ namespace GitCommands
             get { return SafeGet("diffaddedextracolor", Color.FromArgb(135, 255, 135), ref _diffAddedExtraColor); }
             set { SafeSet("diffaddedextracolor", value, ref _diffAddedExtraColor); }
         }
+        
+        private static Font _diffFont;
+        public static Font DiffFont
+        {
+            get { return SafeGet("difffont", new Font("Courier New", 10), ref _diffFont); }
+            set { SafeSet("difffont", value, ref _diffFont); }
+        }
 
         #endregion
 
@@ -779,6 +786,11 @@ namespace GitCommands
             return SafeGet(key, defaultValue, ref field, x => x);
         }
 
+        private static Font SafeGet(string key, Font defaultValue, ref Font field)
+        {
+            return SafeGet(key, defaultValue, ref field, x => x.Parse(defaultValue));
+        }
+
         private static bool SafeGet(string key, bool defaultValue, ref bool? field)
         {
             return SafeGet(key, defaultValue, ref field, x => x == "True").Value;
@@ -811,6 +823,12 @@ namespace GitCommands
             field = value;
             SetValue(key, ColorTranslator.ToHtml(field.Value));
         }
+        
+        private static void SafeSet(string key, Font value, ref Font field)
+        {
+            field = value;
+            SetValue(key, field.AsString());
+        }
 
         private static T GetValue<T>(string key, T defaultValue)
         {
@@ -821,6 +839,34 @@ namespace GitCommands
         private static void SetValue<T>(string key, T value)
         {
             Application.UserAppDataRegistry.SetValue(key, value);
+        }
+    }
+
+    public static class FontParser
+    {
+        public static string AsString(this Font value)
+        {
+            return String.Format("{0};{1}", value.FontFamily.Name, value.Size);
+        }
+
+        public static Font Parse(this string value, Font defaultValue)
+        {
+            if (value == null)
+                return defaultValue;
+
+            string[] parts = value.Split(';');
+
+            if (parts.Length < 2)
+                return defaultValue;
+
+            try
+            {
+                return new Font(parts[0], Single.Parse(parts[1]));
+            }
+            catch(Exception)
+            {
+                return defaultValue;
+            }
         }
     }
 }
