@@ -132,10 +132,10 @@ namespace GitPlugin.Git
 
         private static string GetGitExRegValue(string key)
         {
-            string result = GetRegistryValue(Registry.CurrentUser, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", key);
+            string result = GetRegistryValue(Registry.CurrentUser, "Software\\GitExtensions\\GitExtensions", key);
 
             if (string.IsNullOrEmpty(result))
-                result = GetRegistryValue(Registry.Users, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", key);
+                result = GetRegistryValue(Registry.Users, "Software\\GitExtensions\\GitExtensions", key);
 
             return result;
         }
