@@ -33,11 +33,17 @@
             this.AddToIngore = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.FilePattern = new System.Windows.Forms.TextBox();
+            this.noMatchPanel = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
+            this.noMatchPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize) (this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.noMatchPanel);
             this.groupBox1.Controls.Add(this.Preview);
             this.groupBox1.Location = new System.Drawing.Point(15, 55);
             this.groupBox1.Name = "groupBox1";
@@ -83,6 +89,38 @@
             this.FilePattern.TabIndex = 6;
             this.FilePattern.TextChanged += new System.EventHandler(this.FilePattern_TextChanged);
             // 
+            // noMatchPanel
+            // 
+            this.noMatchPanel.BackColor = System.Drawing.Color.White;
+            this.noMatchPanel.Controls.Add(this.label2);
+            this.noMatchPanel.Controls.Add(this.pictureBox1);
+            this.noMatchPanel.Location = new System.Drawing.Point(160, 84);
+            this.noMatchPanel.Name = "noMatchPanel";
+            this.noMatchPanel.Size = new System.Drawing.Size(233, 26);
+            this.noMatchPanel.TabIndex = 2;
+            this.noMatchPanel.Visible = false;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::GitUI.Properties.Resources.Conflict;
+            this.pictureBox1.Location = new System.Drawing.Point(10, 5);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(16, 16);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte) (0)));
+            this.label2.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label2.Location = new System.Drawing.Point(25, 5);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(195, 15);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "No existing files match that pattern.";
+            // 
             // FormAddToGitIgnore
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -99,6 +137,9 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add files(s) to .gitIgnore";
             this.groupBox1.ResumeLayout(false);
+            this.noMatchPanel.ResumeLayout(false);
+            this.noMatchPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize) (this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -111,6 +152,9 @@
         private System.Windows.Forms.Button AddToIngore;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox FilePattern;
+        private System.Windows.Forms.Panel noMatchPanel;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.PictureBox pictureBox1;
 
     }
 }
