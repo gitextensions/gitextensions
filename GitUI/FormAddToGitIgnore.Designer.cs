@@ -71,6 +71,7 @@
             this.AddToIngore.TabIndex = 7;
             this.AddToIngore.Text = "Ignore";
             this.AddToIngore.UseVisualStyleBackColor = true;
+            this.AddToIngore.Click += new System.EventHandler(this.AddToIngoreClick);
             // 
             // label1
             // 
