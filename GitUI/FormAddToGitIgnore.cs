@@ -13,7 +13,7 @@ namespace GitUI
             InitializeComponent();
             Translate();
             FilePattern.Text = filePattern;
-            Height = 100;
+            UpdatePreviewPanel();
         }
 
         private void AddToIngoreClick(object sender, EventArgs e)
@@ -42,12 +42,14 @@ namespace GitUI
             Close();
         }
 
-        private void ShowPreviewClick(object sender, EventArgs e)
+        private void UpdatePreviewPanel()
         {
             Preview.DataSource = GitCommandHelpers.GetFiles(FilePattern.Text);
+        }
 
-            if (Height < 110)
-                Height = 300;
+        private void FilePattern_TextChanged(object sender, EventArgs e)
+        {
+            UpdatePreviewPanel();
         }
     }
 }
