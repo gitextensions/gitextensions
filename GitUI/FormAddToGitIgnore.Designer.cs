@@ -36,8 +36,8 @@
             this.noMatchPanel = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.NumMatches = new System.Windows.Forms.Label();
             this.filesWillBeIgnored = new System.Windows.Forms.Label();
+            this.NumMatches = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.noMatchPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize) (this.pictureBox1)).BeginInit();
@@ -46,13 +46,13 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.filesWillBeIgnored);
-            this.groupBox1.Controls.Add(this.NumMatches);
             this.groupBox1.Controls.Add(this.noMatchPanel);
+            this.groupBox1.Controls.Add(this.NumMatches);
             this.groupBox1.Controls.Add(this.Preview);
             this.groupBox1.Location = new System.Drawing.Point(15, 55);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(12, 32, 12, 12);
-            this.groupBox1.Size = new System.Drawing.Size(552, 200);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(12, 8, 12, 28);
+            this.groupBox1.Size = new System.Drawing.Size(552, 236);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Preview";
@@ -62,9 +62,9 @@
             this.Preview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Preview.FormattingEnabled = true;
             this.Preview.ItemHeight = 15;
-            this.Preview.Location = new System.Drawing.Point(12, 48);
+            this.Preview.Location = new System.Drawing.Point(12, 24);
             this.Preview.Name = "Preview";
-            this.Preview.Size = new System.Drawing.Size(528, 140);
+            this.Preview.Size = new System.Drawing.Size(528, 184);
             this.Preview.TabIndex = 1;
             // 
             // AddToIngore
@@ -99,7 +99,7 @@
             this.noMatchPanel.BackColor = System.Drawing.Color.White;
             this.noMatchPanel.Controls.Add(this.label2);
             this.noMatchPanel.Controls.Add(this.pictureBox1);
-            this.noMatchPanel.Location = new System.Drawing.Point(160, 87);
+            this.noMatchPanel.Location = new System.Drawing.Point(160, 93);
             this.noMatchPanel.Name = "noMatchPanel";
             this.noMatchPanel.Size = new System.Drawing.Size(233, 26);
             this.noMatchPanel.TabIndex = 2;
@@ -126,30 +126,31 @@
             this.label2.TabIndex = 1;
             this.label2.Text = "No existing files match that pattern.";
             // 
-            // NumMatches
-            // 
-            this.NumMatches.AutoSize = true;
-            this.NumMatches.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (0)));
-            this.NumMatches.Location = new System.Drawing.Point(14, 23);
-            this.NumMatches.Name = "NumMatches";
-            this.NumMatches.Size = new System.Drawing.Size(14, 15);
-            this.NumMatches.TabIndex = 3;
-            this.NumMatches.Text = "0";
-            // 
             // filesWillBeIgnored
             // 
+            this.filesWillBeIgnored.Anchor = ((System.Windows.Forms.AnchorStyles) ((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.filesWillBeIgnored.AutoSize = true;
-            this.filesWillBeIgnored.Location = new System.Drawing.Point(30, 23);
+            this.filesWillBeIgnored.Location = new System.Drawing.Point(452, 214);
             this.filesWillBeIgnored.Name = "filesWillBeIgnored";
-            this.filesWillBeIgnored.Size = new System.Drawing.Size(120, 15);
-            this.filesWillBeIgnored.TabIndex = 4;
-            this.filesWillBeIgnored.Text = "file(s) will be ignored:";
+            this.filesWillBeIgnored.Size = new System.Drawing.Size(86, 15);
+            this.filesWillBeIgnored.TabIndex = 11;
+            this.filesWillBeIgnored.Text = "file(s) matched";
+            // 
+            // NumMatches
+            // 
+            this.NumMatches.Anchor = ((System.Windows.Forms.AnchorStyles) ((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.NumMatches.AutoSize = true;
+            this.NumMatches.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (0)));
+            this.NumMatches.Location = new System.Drawing.Point(439, 214);
+            this.NumMatches.Name = "NumMatches";
+            this.NumMatches.Size = new System.Drawing.Size(14, 15);
+            this.NumMatches.TabIndex = 10;
+            this.NumMatches.Text = "0";
             // 
             // FormAddToGitIgnore
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(591, 267);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.ClientSize = new System.Drawing.Size(591, 312);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.AddToIngore);
             this.Controls.Add(this.label1);
