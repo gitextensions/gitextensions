@@ -45,6 +45,8 @@ namespace GitUI
         private void UpdatePreviewPanel()
         {
             Preview.DataSource = GitCommandHelpers.GetFiles(FilePattern.Text);
+            NumMatches.Text = Preview.Items.Count.ToString();
+            filesWillBeIgnored.Left = NumMatches.Left + NumMatches.Width - 3;
             noMatchPanel.Visible = (Preview.Items.Count == 0);
         }
 
