@@ -1,6 +1,9 @@
 ﻿Changelog
 =========
 
+Version 2.24
+	Fixed revision filter
+
 Version 2.23
 	Fixed issue 452: "Show repository status" always updates status every second
 	Fixed issue 455: Cannot initialize repository in Visual Studio solution root
