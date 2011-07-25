@@ -177,6 +177,12 @@ namespace GitUI
                 dialogResult = process.OutputString.ToString();
             }
 
+            if (FormProcess.IsOperationAborted(dialogResult))
+            {
+                DialogResult = DialogResult.Abort;
+                return;
+            }
+
             lostObjects.Clear();
             lostObjects.AddRange(dialogResult
                 .Split('\r', '\n')
