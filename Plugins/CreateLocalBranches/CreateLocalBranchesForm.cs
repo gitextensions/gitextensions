@@ -23,12 +23,20 @@ namespace CreateLocalBranches
 
         private void button1_Click(object sender, EventArgs e)
         {
-            foreach (string reference in m_gitUiCommands.GitCommands.RunGit("branch -a").Split('\n'))
+            var references = m_gitUiCommands.GitCommands.RunGit("branch -a").Split('\n')
+                .Where(r => !string.IsNullOrEmpty(r));
+
+            if (!references.Any())
+            {
+                MessageBox.Show("No remote branches found.");
+                DialogResult = DialogResult.Cancel;
+                return;
+            }
+
+            foreach (string reference in references)
             {
                 try
                 {
-                    if (string.IsNullOrEmpty(reference)) continue;
-
                     string branchName = reference.Trim('*', ' ', '\n', '\r');
 
                     if (branchName.StartsWith("remotes/" + Remote.Text + "/"))
@@ -38,6 +46,10 @@ namespace CreateLocalBranches
                 {
                 }
             }
+
+            MessageBox.Show(string.Format("{0} local tracking branches have been created/updated.",
+                                          references.Count()));
+            Close();
         }
     }
 }
