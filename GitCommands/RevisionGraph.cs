@@ -204,7 +204,15 @@ namespace GitCommands
             GitHead selectedHead = result.Find(head => head.Name == selectedBranchName);
 
             if (selectedHead != null)
+            {
                 selectedHead.Selected = true;
+
+                GitHead selectedHeadMergeSource =
+                    result.Find(head => head.IsRemote && selectedHead.MergeWith == head.LocalName);
+
+                if (selectedHeadMergeSource != null)
+                    selectedHeadMergeSource.SelectedHeadMergeSource = true;
+            }
 
             return result;
         }
