@@ -1,22 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GitCommands
 {
-    public class GitRevision : IGitItem
+    public sealed class GitRevision : IGitItem
     {
         public static string UncommittedWorkingDirGuid = "0000000000000000000000000000000000000000";
         public static string IndexGuid = "1111111111111111111111111111111111111111";
 
         public String[] ParentGuids;
         private List<IGitItem> _subItems;
+        private readonly List<GitHead> heads = new List<GitHead>();
 
-        public GitRevision()
+        public GitRevision(string guid)
         {
-            Heads = new List<GitHead>();
+            Guid = guid;
         }
 
-        public List<GitHead> Heads { get; set; }
+        public List<GitHead> Heads { get { return heads; } }
 
         public string TreeGuid { get; set; }
 
@@ -52,15 +54,11 @@ namespace GitCommands
 
         public bool MatchesSearchString(string searchString)
         {
-            foreach (var gitHead in Heads)
-            {
-                if (gitHead.Name.ToLower().Contains(searchString))
-                    return true;
-            }
+            if (Heads.Any(gitHead => gitHead.Name.ToLower().Contains(searchString)))
+                return true;
 
             if ((searchString.Length > 2) && Guid.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase))
                 return true;
-
 
             return
                 Author.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase) ||

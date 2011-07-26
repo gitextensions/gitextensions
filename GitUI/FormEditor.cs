@@ -9,11 +9,14 @@ namespace GitUI
     {
         private readonly TranslationString _saveChanges = new TranslationString("Do you want to save changes?");
         private readonly TranslationString _saveChangesCaption = new TranslationString("Save changes");
+        private bool _textIsChanged = false;
+
 
         public FormEditor()
         {
             InitializeComponent();
             Translate();
+            fileViewer.TextChanged += fileViewer_TextChanged;
         }
 
         public FormEditor(string fileName)
@@ -22,6 +25,22 @@ namespace GitUI
             Translate();
 
             OpenFile(fileName);
+            fileViewer.TextChanged += fileViewer_TextChanged;
+            fileViewer.TextLoaded += fileViewer_TextLoaded;
+        }
+
+        void fileViewer_TextChanged(object sender, EventArgs e)
+        {
+            // I don't care what the old value is, it ought to be set to true whatever the old value is.
+            _textIsChanged = true;
+            toolStripSaveButton.Enabled = _textIsChanged;
+        }
+
+        void fileViewer_TextLoaded(object sender, EventArgs e)
+        {
+            //reset 'changed' flag
+            _textIsChanged = false;
+            toolStripSaveButton.Enabled = _textIsChanged;
         }
 
         private string _fileName;
@@ -37,6 +56,9 @@ namespace GitUI
                 fileViewer.IsReadOnly = false;
                 fileViewer.EnableDiffContextMenu(false);
                 Text = _fileName;
+
+                // loading a new file from disk, the text hasn't been changed yet.
+                _textIsChanged = false;
             }
             catch (Exception ex)
             {
@@ -52,7 +74,17 @@ namespace GitUI
             {
                 this.DialogResult = DialogResult.No;
 
-                DialogResult result = MessageBox.Show(this, _saveChanges.Text, _saveChangesCaption.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                DialogResult result = DialogResult.No;
+                // only offer to save if there's something to save.
+                if (_textIsChanged)
+                {
+                    result = MessageBox.Show(this, _saveChanges.Text, _saveChangesCaption.Text,
+                                             MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+                }
+
+
+
                 if (result == DialogResult.Yes)
                 {
                     SaveChanges();
@@ -92,6 +124,9 @@ namespace GitUI
             if (!string.IsNullOrEmpty(_fileName))
             {
                 File.WriteAllText(_fileName, fileViewer.GetText(), GitCommands.Settings.Encoding);
+                
+                // we've written the changes out to disk now, nothing to save.
+                _textIsChanged = false;
             }
         }
     }

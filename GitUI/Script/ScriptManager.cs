@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using System.Xml.Serialization;
 using System.Xml;
@@ -94,6 +91,7 @@ namespace GitUI.Script
         private static void AddDefaultScripts()
         {
             ScriptInfo fetchAfterCommitScript = new ScriptInfo();
+            fetchAfterCommitScript.HotkeyCommandIdentifier = 9000;
             fetchAfterCommitScript.Name = "Fetch changes after commit";
             fetchAfterCommitScript.Command = "git";
             fetchAfterCommitScript.Arguments = "fetch";
@@ -104,6 +102,7 @@ namespace GitUI.Script
             Scripts.Add(fetchAfterCommitScript);
 
             ScriptInfo updateSubmodulesAfterPullScript = new ScriptInfo();
+            updateSubmodulesAfterPullScript.HotkeyCommandIdentifier = 9001;
             updateSubmodulesAfterPullScript.Name = "Update submodules after pull";
             updateSubmodulesAfterPullScript.Command = "git";
             updateSubmodulesAfterPullScript.Arguments = "submodule update";
@@ -114,6 +113,7 @@ namespace GitUI.Script
             Scripts.Add(updateSubmodulesAfterPullScript);
 
             ScriptInfo userMenuScript = new ScriptInfo();
+            userMenuScript.HotkeyCommandIdentifier = 9002;
             userMenuScript.Name = "Example";
             userMenuScript.Command = "c:\\windows\\system32\\calc.exe";
             userMenuScript.Arguments = "";

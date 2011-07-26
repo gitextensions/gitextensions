@@ -87,6 +87,11 @@ namespace GitUI
         private int visibleBottom;
         private int visibleTop;
 
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            Select();
+        }
+
         public void SetDimensions(int node_dimension, int lane_width, int lane_line_width, int row_height, Brush selectionBrush)
         {
             RowTemplate.Height = row_height;
@@ -262,9 +267,16 @@ namespace GitUI
         /// </summary>
         public event LoadingEventHandler Loading;
 
-        public void ShowHideRevisionGraph(bool show)
+        public void ShowRevisionGraph()
         {
-            Columns[0].Visible = show;
+            Columns[0].Visible = true;
+//            updateData();
+            backgroundEvent.Set();
+        }
+        
+        public void HideRevisionGraph()
+        {
+            Columns[0].Visible = false;
 //            updateData();
             backgroundEvent.Set();
         }

@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EnvDTE;
+﻿using EnvDTE;
 
 namespace GitPlugin.Commands
 {
-    public class Browse : ItemCommandBase
+    public sealed class Browse : ItemCommandBase
     {
-        public Browse()
-            : base(true, true)
-        {
-        }
-
-        public override void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane)
+        protected override void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane)
         {
             RunGitEx("browse", fileName);
+        }
+
+        protected override CommandTarget SupportedTargets
+        {
+            get { return CommandTarget.Any; }
         }
     }
 }

@@ -116,6 +116,10 @@ namespace GitCommands
 
         public static void SetEnvironmentVariable(bool reload)
         {
+            string path = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Process);
+            if (!string.IsNullOrEmpty(Settings.GitBinDir) && !path.Contains(Settings.GitBinDir))
+                Environment.SetEnvironmentVariable("PATH", string.Concat(path, ";", Settings.GitBinDir), EnvironmentVariableTarget.Process);
+
             if (!string.IsNullOrEmpty(Settings.CustomHomeDir))
             {
                 Environment.SetEnvironmentVariable(
@@ -529,13 +533,15 @@ namespace GitCommands
                 bool convertcrlf = false;
                 if (localConfig.HasValue("core.autocrlf"))
                 {
-                    convertcrlf = localConfig.GetValue("core.autocrlf").Equals("true",StringComparison.OrdinalIgnoreCase);
-                }else{
+                    convertcrlf = localConfig.GetValue("core.autocrlf").Equals("true", StringComparison.OrdinalIgnoreCase);
+                }
+                else
+                {
                     ConfigFile globalConfig = GetGlobalConfig();
-                    convertcrlf = globalConfig.GetValue("core.autocrlf").Equals("true",StringComparison.OrdinalIgnoreCase);
+                    convertcrlf = globalConfig.GetValue("core.autocrlf").Equals("true", StringComparison.OrdinalIgnoreCase);
                 }
 
-                buf = ms.ToArray();                
+                buf = ms.ToArray();
                 if (convertcrlf)
                 {
                     if (!FileHelper.IsBinaryFile(saveAs) &&
@@ -550,7 +556,7 @@ namespace GitCommands
                 }
 
                 using (FileStream fileOut = File.Create(saveAs))
-                {                    
+                {
                     fileOut.Write(buf, 0, buf.Length);
                 }
             }
@@ -737,9 +743,8 @@ namespace GitCommands
                 string cmd = "log -n 1 --format=format:" + formatString + " " + Parents[i];
                 var RevInfo = RunCmd(Settings.GitCommand, cmd);
                 string[] Infos = RevInfo.Split('\n');
-                var Revision = new GitRevision
+                var Revision = new GitRevision(Parents[i])
                 {
-                    Guid = Parents[i],
                     TreeGuid = Infos[0],
                     Author = Infos[1],
                     Committer = Infos[3],
@@ -1522,19 +1527,19 @@ namespace GitCommands
         }
 
         public static string PatchCmdIgnoreWhitespace(string patchFile)
-		{
-			return "am --3way --signoff --ignore-whitespace \"" + FixPath(patchFile) + "\"";
-		}
+        {
+            return "am --3way --signoff --ignore-whitespace \"" + FixPath(patchFile) + "\"";
+        }
 
-		public static string PatchDirCmd(string patchDir)
+        public static string PatchDirCmd(string patchDir)
         {
             return "am --3way --signoff --directory=\"" + FixPath(patchDir) + "\"";
         }
 
-		public static string PatchDirCmdIgnoreWhitespace(string patchDir)
-		{
-		    return "am --3way --signoff --ignore-whitespace --directory=\"" + FixPath(patchDir) + "\"";
-		}
+        public static string PatchDirCmdIgnoreWhitespace(string patchDir)
+        {
+            return "am --3way --signoff --ignore-whitespace --directory=\"" + FixPath(patchDir) + "\"";
+        }
 
         public static string UpdateRemotes()
         {
@@ -1705,7 +1710,7 @@ namespace GitCommands
             else
             {
                 result = RunCachableCmd(Settings.GitCommand, cmd);
-                
+
             }
             return GetAllChangedFilesFromString(result, true);
         }

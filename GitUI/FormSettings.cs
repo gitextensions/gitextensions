@@ -19,6 +19,7 @@ namespace GitUI
 {
     public partial class FormSettings : GitExtensionsForm
     {
+        private Font diffFont;
         private const string GitExtensionsShellExName = "GitExtensionsShellEx32.dll";
 
         public FormSettings()
@@ -36,6 +37,7 @@ namespace GitUI
             defaultHome.Text = string.Format(defaultHome.Text + " ({0})", GitCommandHelpers.GetDefaultHomeDir());
             userprofileHome.Text = string.Format(userprofileHome.Text + " ({0})",
                                                  Environment.GetEnvironmentVariable("USERPROFILE"));
+            SetCurrentDiffFont(Settings.DiffFont);
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -158,6 +160,7 @@ namespace GitUI
 
                 ShowGitStatusInToolbar.Checked = Settings.ShowGitStatusInBrowseToolbar;
 
+                _NO_TRANSLATE_truncatePathMethod.Text = Settings.TruncatePathMethod;
                 _NO_TRANSLATE_ColorGraphLabel.BackColor = Settings.GraphColor;
                 _NO_TRANSLATE_ColorGraphLabel.Text = Settings.GraphColor.Name;
                 _NO_TRANSLATE_ColorGraphLabel.ForeColor =
@@ -266,6 +269,8 @@ namespace GitUI
                 YellowIcon.Checked = Settings.IconColor.Equals("yellow", StringComparison.CurrentCultureIgnoreCase);
                 RandomIcon.Checked = Settings.IconColor.Equals("random", StringComparison.CurrentCultureIgnoreCase);
 
+                IconStyle.Text = Settings.IconStyle;
+
                 GlobalDiffTool.Text = GetGlobalDiffToolFromConfig();
 
                 if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
@@ -370,6 +375,8 @@ namespace GitUI
 
             Settings.UsePatienceDiffAlgorithm = usePatienceDiffAlgorithm.Checked;
 
+            Settings.TruncatePathMethod = _NO_TRANSLATE_truncatePathMethod.Text;
+
             Settings.ShowCurrentBranchInVisualStudio = showCurrentBranchInVisualStudio.Checked;
 
             Settings.ShowErrorsWhenStagingFiles = showErrorsWhenStagingFiles.Checked;
@@ -445,23 +452,13 @@ namespace GitUI
             Settings.DiffRemovedColor = _NO_TRANSLATE_ColorRemovedLine.BackColor;
             Settings.DiffAddedExtraColor = _NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor;
             Settings.DiffRemovedExtraColor = _NO_TRANSLATE_ColorRemovedLineDiffLabel.BackColor;
+            Settings.DiffFont = diffFont;
 
             Settings.DiffSectionColor = _NO_TRANSLATE_ColorSectionLabel.BackColor;
 
-            if (DefaultIcon.Checked)
-                Settings.IconColor = "default";
-            if (BlueIcon.Checked)
-                Settings.IconColor = "blue";
-            if (GreenIcon.Checked)
-                Settings.IconColor = "green";
-            if (PurpleIcon.Checked)
-                Settings.IconColor = "purple";
-            if (RedIcon.Checked)
-                Settings.IconColor = "red";
-            if (YellowIcon.Checked)
-                Settings.IconColor = "yellow";
-            if (RandomIcon.Checked)
-                Settings.IconColor = "random";
+            Settings.IconColor = GetSelectedApplicationIconColor();
+
+            Settings.IconStyle = IconStyle.Text;
 
             EnableSettings();
 
@@ -492,6 +489,25 @@ namespace GitUI
             Settings.SaveSettings();
 
             return true;
+        }
+
+        private string GetSelectedApplicationIconColor()
+        {
+            if (BlueIcon.Checked)
+                return "blue";
+            if (LightblueIcon.Checked)
+                return "lightblue";
+            if (GreenIcon.Checked)
+                return "green";
+            if (PurpleIcon.Checked)
+                return "purple";
+            if (RedIcon.Checked)
+                return "red";
+            if (YellowIcon.Checked)
+                return "yellow";
+            if (RandomIcon.Checked)
+                return "random";
+            return "default";
         }
 
         private void handleCanFindGitCommand()
@@ -917,7 +933,7 @@ namespace GitUI
 
         private void CheckAtStartup_CheckedChanged(object sender, EventArgs e)
         {
-            Application.UserAppDataRegistry.SetValue("checksettings", CheckAtStartup.Checked ? "true" : "false");
+            Settings.SetValue("checksettings", CheckAtStartup.Checked ? "true" : "false");
         }
 
         private void Rescan_Click(object sender, EventArgs e)
@@ -1582,6 +1598,9 @@ namespace GitUI
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if(((TabControl)sender).TabPages[((TabControl)sender).SelectedIndex].Name.ToLower() == "tabpagehotkeys")
+                controlHotkeys.ReloadSettings();
+
             if (GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
                 string.IsNullOrEmpty(MergeToolCmd.Text))
                 MergeToolCmd.Enabled = false;
@@ -1674,15 +1693,15 @@ namespace GitUI
         private static bool getCheckAtStartupChecked(bool bValid)
         {
             bool retValue = false;
-            if ((Application.UserAppDataRegistry.GetValue("checksettings") == null ||
-                 Application.UserAppDataRegistry.GetValue("checksettings").ToString() == "true"))
+            if ((Settings.GetValue<string>("checksettings", null) == null ||
+                 Settings.GetValue<string>("checksettings", null).ToString() == "true"))
             {
                 retValue = true;
             }
 
             if (bValid && retValue)
             {
-                Application.UserAppDataRegistry.SetValue("checksettings", false);
+                Settings.SetValue("checksettings", false);
                 retValue = false;
             }
             return retValue;
@@ -1930,14 +1949,14 @@ namespace GitUI
             if (string.IsNullOrEmpty(Settings.GetInstallDir()))
             {
                 GitExtensionsInstall.BackColor = Color.LightSalmon;
-                GitExtensionsInstall.Text = "Registry entry missing [Software\\GitExtensions\\GitExtensions\\1.0.0.0\\InstallDir].";
+                GitExtensionsInstall.Text = "Registry entry missing [Software\\GitExtensions\\GitExtensions\\InstallDir].";
                 GitExtensionsInstall_Fix.Visible = true;
                 return false;
             }
             if (Settings.GetInstallDir() != null && Settings.GetInstallDir().EndsWith(".exe"))
             {
                 GitExtensionsInstall.BackColor = Color.LightSalmon;
-                GitExtensionsInstall.Text = "Invalid installation directory stored in [Software\\GitExtensions\\GitExtensions\\1.0.0.0\\InstallDir].";
+                GitExtensionsInstall.Text = "Invalid installation directory stored in [Software\\GitExtensions\\GitExtensions\\InstallDir].";
                 GitExtensionsInstall_Fix.Visible = true;
                 return false;
             }
@@ -2064,6 +2083,7 @@ namespace GitUI
             if (ScriptList.SelectedRows.Count > 0)
             {
                 ScriptInfo selectedScriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
+                selectedScriptInfo.HotkeyCommandIdentifier = ScriptList.SelectedRows[0].Index+9000;
                 selectedScriptInfo.Name = nameTextBox.Text;
                 selectedScriptInfo.Command = commandTextBox.Text;
                 selectedScriptInfo.Arguments = argumentsTextBox.Text;
@@ -2171,6 +2191,122 @@ namespace GitUI
         private void ScriptList_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             ScriptList_SelectionChanged(null, null);//needed for linux
+        }
+
+
+
+        #region Hotkey commands
+
+        public const string HotkeySettingsName = "Scripts";
+
+        internal enum Commands : int
+        {
+            NothingYet
+        }
+
+        protected override bool ExecuteCommand(int cmd)
+        {
+            
+            Commands command = (Commands)cmd;
+
+            switch (command)
+            {
+                default: ExecuteScriptCommand(cmd, Keys.None); break;
+            }
+            return true;
+        }
+
+        #endregion
+
+
+
+        private void ShowIconPreview()
+        {
+            if (IconStyle.Text.Equals("Default", StringComparison.OrdinalIgnoreCase))
+            {
+                IconPreview.Image = GetApplicationIcon("Large", GetSelectedApplicationIconColor()).ToBitmap();
+                IconPreviewSmall.Image = GetApplicationIcon("Small", GetSelectedApplicationIconColor()).ToBitmap();
+            }
+            if (IconStyle.Text.Equals("Small", StringComparison.OrdinalIgnoreCase))
+            {
+                IconPreview.Image = GetApplicationIcon("Small", GetSelectedApplicationIconColor()).ToBitmap();
+                IconPreviewSmall.Image = IconPreview.Image;
+            }
+            if (IconStyle.Text.Equals("Large", StringComparison.OrdinalIgnoreCase))
+            {
+                IconPreview.Image = GetApplicationIcon("Large", GetSelectedApplicationIconColor()).ToBitmap();
+                IconPreviewSmall.Image = IconPreview.Image;
+            }
+            if (IconStyle.Text.Equals("Cow", StringComparison.OrdinalIgnoreCase))
+            {
+                IconPreview.Image = GetApplicationIcon("Cow", GetSelectedApplicationIconColor()).ToBitmap();
+                IconPreviewSmall.Image = IconPreview.Image;
+            }
+        }
+
+        private void IconStyle_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ShowIconPreview();
+        }
+
+        private void DefaultIcon_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowIconPreview();
+        }
+
+        private void LightblueIcon_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowIconPreview();
+        }
+
+        private void BlueIcon_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowIconPreview();
+        }
+
+        private void PurpleIcon_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowIconPreview();
+        }
+
+        private void GreenIcon_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowIconPreview();
+        }
+
+        private void RedIcon_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowIconPreview();
+        }
+
+        private void YellowIcon_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowIconPreview();
+        }
+
+        private void RandomIcon_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowIconPreview();
+        }
+
+        private void diffFontChangeButton_Click(object sender, EventArgs e)
+        {
+            diffFontDialog.Font = diffFont;
+            DialogResult result = diffFontDialog.ShowDialog();
+
+            if (result == DialogResult.OK || result == DialogResult.Yes)
+            {
+                SetCurrentDiffFont(diffFontDialog.Font);
+            }
+        }
+
+        private void SetCurrentDiffFont(Font font)
+        {
+            diffFont = font;
+            
+            diffFontChangeButton.Text = 
+                string.Format("{0}, {1}", diffFont.FontFamily.Name, (int) diffFont.Size);
+
         }
     }
 }
