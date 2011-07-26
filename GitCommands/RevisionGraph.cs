@@ -208,7 +208,9 @@ namespace GitCommands
                 selectedHead.Selected = true;
 
                 GitHead selectedHeadMergeSource =
-                    result.Find(head => head.IsRemote && selectedHead.MergeWith == head.LocalName);
+                    result.Find(head => head.IsRemote
+                                        && selectedHead.TrackingRemote == head.Remote
+                                        && selectedHead.MergeWith == head.LocalName);
 
                 if (selectedHeadMergeSource != null)
                     selectedHeadMergeSource.SelectedHeadMergeSource = true;
