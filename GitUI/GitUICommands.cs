@@ -205,7 +205,9 @@ namespace GitUI
                 return false;
 
             var form = new FormCheckoutBranch();
-            form.ShowDialog();
+
+            if (form.ShowDialog() != DialogResult.OK)
+                return false;
 
             InvokeEvent(PostCheckoutBranch);
 

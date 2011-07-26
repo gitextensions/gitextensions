@@ -41,7 +41,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\GitExtensions\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -51,7 +51,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\GitExtensions\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -88,11 +88,22 @@
     <Compile Include="AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataGridViewCheckBoxColumnHeaderCell.cs" />
+    <Compile Include="FormContributors.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormContributors.Designer.cs">
+      <DependentUpon>FormContributors.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormGoToCommit.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FormGoToCommit.Designer.cs">
       <DependentUpon>FormGoToCommit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormVerify.LostObject.cs">
+      <DependentUpon>FormVerify.cs</DependentUpon>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Hotkey\ControlHotkeys.cs">
       <SubType>UserControl</SubType>
@@ -113,6 +124,7 @@
     <Compile Include="Hotkey\TextboxHotkey.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="PathFormatter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Editor\FileViewer.cs">
       <SubType>UserControl</SubType>
@@ -687,6 +699,10 @@
       <DependentUpon>FileViewer.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormContributors.resx">
+      <DependentUpon>FormContributors.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormGoToCommit.resx">
       <DependentUpon>FormGoToCommit.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1057,6 +1073,7 @@
     <ProjectReference Include="..\GitCommands\GitCommands.csproj">
       <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
       <Name>GitCommands</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Gravatar\Gravatar.csproj">
       <Project>{4041B976-50D0-4C6E-ABAF-7E67458A1264}</Project>
@@ -1073,10 +1090,15 @@
     <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
       <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
       <Name>GitUIPluginInterfaces</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Compile Include="FormVerify.SortableLostObjectsList.cs">
+      <DependentUpon>FormVerify.cs</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
     <None Include="gituikey.snk.pfx" />
     <None Include="Properties\DataSources\GitCommands.GitItem.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitItemStatus.datasource" />
@@ -1084,6 +1106,28 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cow-head.ico" />
+    <None Include="Resources\git-extensions-logo-final.ico" />
+    <None Include="Resources\x-with-arrow_yellow.ico" />
+    <None Include="Resources\x-with-arrow.ico" />
+    <None Include="Resources\x-with-arrow_blue.ico" />
+    <None Include="Resources\x-with-arrow_green.ico" />
+    <None Include="Resources\x-with-arrow_lightblue.ico" />
+    <None Include="Resources\x-with-arrow_purple.ico" />
+    <None Include="Resources\x-with-arrow_red.ico" />
+    <None Include="Resources\git-extensions-logo-final_blue.ico" />
+    <None Include="Resources\git-extensions-logo-final_green.ico" />
+    <None Include="Resources\git-extensions-logo-final_lightblue.ico" />
+    <None Include="Resources\git-extensions-logo-final_purple.ico" />
+    <None Include="Resources\git-extensions-logo-final_red.ico" />
+    <None Include="Resources\git-extensions-logo-final_yellow.ico" />
+    <None Include="Resources\git-extensions-logo-final_mixed_yellow.ico" />
+    <None Include="Resources\git-extensions-logo-final_mixed.ico" />
+    <None Include="Resources\git-extensions-logo-final_mixed_blue.ico" />
+    <None Include="Resources\git-extensions-logo-final_mixed_green.ico" />
+    <None Include="Resources\git-extensions-logo-final_mixed_lightblue.ico" />
+    <None Include="Resources\git-extensions-logo-final_mixed_purple.ico" />
+    <None Include="Resources\git-extensions-logo-final_mixed_red.ico" />
+    <None Include="Resources\git-extensions-logo-final-128.png" />
     <Content Include="Translation\Traditional Chinese.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

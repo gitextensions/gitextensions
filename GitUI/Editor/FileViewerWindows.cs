@@ -26,6 +26,11 @@ namespace GitUI.Editor
             TextEditor.ActiveTextAreaControl.TextArea.DoubleClick += ActiveTextAreaControlDoubleClick;
         }
 
+        public new Font Font 
+        {
+            set { TextEditor.Font = value; } 
+        }
+
         public new event MouseEventHandler MouseMove;
         public new event EventHandler MouseLeave;
 
@@ -384,6 +389,11 @@ namespace GitUI.Editor
         public int TotalNumberOfLines
         {
             get { return TextEditor.Document.TotalNumberOfLines; }
+        }
+
+        public void FocusTextArea()
+        {
+            TextEditor.ActiveTextAreaControl.TextArea.Select();
         }
 
         public bool IsReadOnly 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -67,8 +68,7 @@ namespace GitUI
 
             this.HotkeysEnabled = true;
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
-
-            
+            this.toolPanel.SplitterDistance = this.ToolStrip.Height;
         }
 
         private void ShowDashboard()
@@ -77,7 +77,7 @@ namespace GitUI
             {
                 _dashboard = new Dashboard();
                 _dashboard.WorkingDirChanged += DashboardWorkingDirChanged;
-                Controls.Add(_dashboard);
+                toolPanel.Panel2.Controls.Add(_dashboard);
                 _dashboard.Dock = DockStyle.Fill;
             }
             _dashboard.Visible = true;
@@ -191,17 +191,13 @@ namespace GitUI
         private void InternalInitialize(bool hard)
         {
             Cursor.Current = Cursors.WaitCursor;
-
             bool validWorkingDir = Settings.ValidWorkingDir();
             bool hasWorkingDir = !string.IsNullOrEmpty(Settings.WorkingDir);
-
             branchSelect.Text = validWorkingDir ? GitCommandHelpers.GetSelectedBranch() : "";
-
             if (hasWorkingDir)
                 HideDashboard();
             else
                 ShowDashboard();
-
             tabControl1.Visible = validWorkingDir;
             commandsToolStripMenuItem.Enabled = validWorkingDir;
             manageRemoteRepositoriesToolStripMenuItem1.Enabled = validWorkingDir;
@@ -217,27 +213,20 @@ namespace GitUI
             commitcountPerUserToolStripMenuItem.Enabled = validWorkingDir;
             _createPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
             _viewPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
-
             //Only show "Repository hosts" menu item when there is at least 1 repository host plugin loaded
             _repositoryHostsToolStripMenuItem.Visible = RepoHosts.GitHosters.Count > 0;
             if (RepoHosts.GitHosters.Count == 1)
                 _repositoryHostsToolStripMenuItem.Text = RepoHosts.GitHosters[0].Description;
-
             InitToolStripBranchFilter(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
-
             if (hard)
                 ShowRevisions();
-
             _NO_TRANSLATE_Workingdir.Text = Settings.WorkingDir;
-            Text = GenerateWindowTitle(Settings.WorkingDir, validWorkingDir);
-
-
+            Text = GenerateWindowTitle(Settings.WorkingDir, validWorkingDir, branchSelect.Text);
+            DiffText.Font = Settings.DiffFont;
             UpdateJumplist(validWorkingDir);
-
 
             CheckForMergeConflicts();
             UpdateStashCount();
-
             // load custom user menu
             LoadUserMenu();
             Cursor.Current = Cursors.Default;
@@ -261,50 +250,42 @@ namespace GitUI
 
         private void LoadUserMenu()
         {
-            //menu strip must be visible to be able to move it
-            this.UserMenuToolStrip.Show();
-            if( GitCommands.Settings.UserMenuLocationX >= 0 && GitCommands.Settings.UserMenuLocationY >= 0)
-            {
-                this.UserMenuToolStrip.Location = new Point(
-                                    GitCommands.Settings.UserMenuLocationX,
-                                    GitCommands.Settings.UserMenuLocationY
-                                    );
-            }
-            // just hide the damn thing already!
-            this.UserMenuToolStrip.Hide();
-            this.UserMenuToolStrip.Items.Clear();
-            // disable context menu if no scripts are found/enabled
-            this.toolPanelContextMenu.Enabled = false;
+            var scripts = ScriptManager.GetScripts().Where(script => script.Enabled
+                && script.OnEvent == ScriptEvent.ShowInUserMenuBar).ToList();
 
-            foreach (ScriptInfo scriptInfo in ScriptManager.GetScripts())
-            {
-                if (scriptInfo.Enabled && scriptInfo.OnEvent == ScriptEvent.ShowInUserMenuBar)
-                {
+            for (int i = this.ToolStrip.Items.Count - 1; i >= 0; i--)
+                if (this.ToolStrip.Items[i].Tag != null &&
+                    this.ToolStrip.Items[i].Tag as String == "userscript")
+                    this.ToolStrip.Items.RemoveAt(i);
 
-                    ToolStripButton tempButton = new ToolStripButton();
-                    tempButton.Text = scriptInfo.Name;
-                    //store scriptname
-                    tempButton.Tag = scriptInfo.Name;
-                    //add handler
-                    tempButton.Click += new EventHandler(UserMenu_Click);
-                    tempButton.Enabled = true;
-                    tempButton.Visible = true;
-                    tempButton.Image = GitUI.Properties.Resources.bug;
-                    tempButton.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
-                    //add to toolstrip
-                    this.UserMenuToolStrip.Items.Add((ToolStripItem)tempButton);
-                    //set visible
-                    this.UserMenuToolStrip.Show();
-                    // enable context menu
-                    this.toolPanelContextMenu.Enabled = true;
-                    this.toolPanelContextMenu_HideUserMenu.Checked = false;
-                }
+
+            if (scripts.Count == 0)
+                return;
+
+            ToolStripSeparator toolstripseparator = new ToolStripSeparator();
+            toolstripseparator.Tag = "userscript";
+            this.ToolStrip.Items.Add(toolstripseparator);
+
+            foreach (ScriptInfo scriptInfo in scripts)
+            {
+                ToolStripButton tempButton = new ToolStripButton();
+                //store scriptname
+                tempButton.Text = scriptInfo.Name;                
+                tempButton.Tag = "userscript";
+                //add handler
+                tempButton.Click += new EventHandler(UserMenu_Click);
+                tempButton.Enabled = true;
+                tempButton.Visible = true;
+                tempButton.Image = GitUI.Properties.Resources.bug;
+                tempButton.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
+                //add to toolstrip
+                this.ToolStrip.Items.Add((ToolStripItem)tempButton);
             }
         }
 
         void UserMenu_Click(object sender, EventArgs e)
         {
-            ScriptRunner.RunScript(( (ToolStripButton) sender).Tag.ToString(), null);
+            ScriptRunner.RunScript(( (ToolStripButton) sender).Text, null);
         }
 
         private void UpdateJumplist(bool validWorkingDir)
@@ -313,12 +294,12 @@ namespace GitUI
             {
                 //Call this method using reflection.  This is a workaround to *not* reference WPF libraries, becuase of how the WindowsAPICodePack was implimented.  
                 TaskbarManager.Instance.GetType().InvokeMember("SetApplicationIdForSpecificWindow", System.Reflection.BindingFlags.InvokeMethod, null, TaskbarManager.Instance, new object[] { Handle, "GitExtensions" });
-            
-                if(validWorkingDir)
+
+                if (validWorkingDir)
                 {
                     string repositoryDescription = GetRepositoryShortName(Settings.WorkingDir);
                     string baseFolder = Path.Combine(Settings.ApplicationDataPath, "Recent");
-                    if(!Directory.Exists(baseFolder))
+                    if (!Directory.Exists(baseFolder))
                     {
                         Directory.CreateDirectory(baseFolder);
                     }
@@ -511,15 +492,17 @@ namespace GitUI
         /// </summary>
         /// <param name="workingDir">Path to repository.</param>
         /// <param name="isWorkingDirValid">If the given path contains valid repository.</param>
-        private static string GenerateWindowTitle(string workingDir, bool isWorkingDirValid)
+        private static string GenerateWindowTitle(string workingDir, bool isWorkingDirValid, string branchName)
         {
             const string defaultTitle = "Git Extensions";
-            const string repositoryTitleFormat = "{0} - Git Extensions";
-
+            const string repositoryTitleFormat = "{0} ({1}) - Git Extensions";
+            
             if (!isWorkingDirValid)
                 return defaultTitle;
             string repositoryDescription = GetRepositoryShortName(workingDir);
-            return string.Format(repositoryTitleFormat, repositoryDescription);
+            if (string.IsNullOrEmpty(branchName))
+                branchName = "no branch";
+            return string.Format(repositoryTitleFormat, repositoryDescription, branchName.Trim('(', ')'));
         }
 
         /// <summary>
@@ -653,7 +636,6 @@ namespace GitUI
             if (tabControl1.SelectedTab != Diff)
                 return;
 
-            DiffFiles.GitItemStatuses = null;
             var revisions = RevisionGrid.GetRevisions();
 
             DiffText.SaveCurrentScrollPos();
@@ -665,6 +647,7 @@ namespace GitUI
                         GitCommandHelpers.GetDiffFiles(revisions[0].Guid, revisions[1].Guid);
                     break;
                 case 0:
+                    DiffFiles.GitItemStatuses = null;
                     return;
                 default:
                     var revision = revisions[0];
@@ -907,12 +890,13 @@ namespace GitUI
 
         private void OpenToolStripMenuItemClick(object sender, EventArgs e)
         {
-            new Open().ShowDialog();
-
-            IndexWatcher.Clear();
-            RevisionGrid.ForceRefreshRevisions();
-            InternalInitialize(false);
-            IndexWatcher.Reset();
+            if (new Open().ShowDialog() == DialogResult.OK)
+            {
+                IndexWatcher.Clear();
+                RevisionGrid.ForceRefreshRevisions();
+                InternalInitialize(false);
+                IndexWatcher.Reset();
+            }
         }
 
         private void CheckoutToolStripMenuItemClick(object sender, EventArgs e)
@@ -1148,7 +1132,6 @@ namespace GitUI
             Initialize();
             RevisionGrid.ReloadHotkeys();
             RevisionGrid.ReloadTranslation();
-            RevisionGrid.ForceRefreshRevisions();
         }
 
         private void ArchiveToolStripMenuItemClick(object sender, EventArgs e)
@@ -1994,7 +1977,8 @@ namespace GitUI
             SelectCurrentRevision,
             CheckoutBranch,
             QuickFetch,
-            QuickPush
+            QuickPush,
+            RotateApplicationIcon,
         }
 
         private void AddNotes()
@@ -2021,6 +2005,7 @@ namespace GitUI
             Initialize();
         }
 
+
         protected override bool ExecuteCommand(int cmd)
         {
             Commands command = (Commands)cmd;
@@ -2037,10 +2022,12 @@ namespace GitUI
                 case Commands.Commit: CommitToolStripMenuItemClick(null, null); break;
                 case Commands.AddNotes: AddNotes(); break;
                 case Commands.FindFileInSelectedCommit: FindFileInSelectedCommit(); break;
-                case Commands.SelectCurrentRevision: RevisionGrid.SetSelectedRevision(new GitRevision() { Guid = RevisionGrid.CurrentCheckout }); break;
+                case Commands.SelectCurrentRevision: RevisionGrid.SetSelectedRevision(new GitRevision(RevisionGrid.CurrentCheckout)); break;
                 case Commands.CheckoutBranch: CheckoutBranchToolStripMenuItemClick(null, null); break;
                 case Commands.QuickFetch: QuickFetch(); break;
                 case Commands.QuickPush: GitUICommands.Instance.StartPushDialog(true); break;
+                case Commands.RotateApplicationIcon: RotateApplicationIcon(); break;
+                default: ExecuteScriptCommand(cmd, Keys.None); break;
             }
 
             return true;
@@ -2055,7 +2042,7 @@ namespace GitUI
             string revisionGuid = formGoToCommit.GetRevision();
             if (!string.IsNullOrEmpty(revisionGuid))
             {
-                RevisionGrid.SetSelectedRevision(new GitRevision { Guid = revisionGuid });
+                RevisionGrid.SetSelectedRevision(new GitRevision(revisionGuid));
             }
             else
             {
@@ -2113,6 +2100,11 @@ namespace GitUI
 
         void GitTree_MouseMove(object sender, MouseEventArgs e)
         {
+            TreeView gitTree = (TreeView)sender;
+
+            if (!gitTree.Focused)
+                gitTree.Focus();
+
             //DRAG
             // If the mouse moves outside the rectangle, start the drag.
             if (gitTreeDragBoxFromMouseDown != Rectangle.Empty &&
@@ -2121,9 +2113,9 @@ namespace GitUI
                 StringCollection fileList = new StringCollection();
 
                 //foreach (GitItemStatus item in SelectedItems)
-                if (GitTree.SelectedNode != null)
+                if (gitTree.SelectedNode != null)
                 {
-                    GitItem item = GitTree.SelectedNode.Tag as GitItem;
+                    GitItem item = gitTree.SelectedNode.Tag as GitItem;
                     if (item != null)
                     {
                         string fileName = GitCommands.Settings.WorkingDir + item.FileName;
@@ -2141,19 +2133,5 @@ namespace GitUI
             }
         }
         #endregion
-
-        private void toolPanelContextMenu_HideUserMenu_Click(object sender, EventArgs e)
-        {
-            if (((ToolStripMenuItem)sender).Checked)
-            {
-                this.UserMenuToolStrip.Show();
-                ((ToolStripMenuItem)sender).Checked = false;
-            }
-            else
-            {
-                this.UserMenuToolStrip.Hide();
-                ((ToolStripMenuItem)sender).Checked = true;
-            }
-        }
     }
 }

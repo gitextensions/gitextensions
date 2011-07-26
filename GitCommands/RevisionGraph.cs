@@ -18,6 +18,7 @@ namespace GitCommands
         public event EventHandler Exited;
         public event EventHandler Error;
         public event EventHandler Updated;
+        public event EventHandler BeginUpdate;
         public int RevisionCount { get; set; }
 
         public class RevisionGraphUpdatedEventArgs : EventArgs
@@ -94,6 +95,7 @@ namespace GitCommands
         public string LogParam = "HEAD --all";//--branches --remotes --tags";
         public string BranchFilter = String.Empty;
         public RevisionGraphInMemFilter InMemFilter = null;
+        private string selectedBranchName;
 
         public void Execute()
         {
@@ -118,8 +120,7 @@ namespace GitCommands
             try
             {
                 RevisionCount = 0;
-
-                heads = GitCommandHelpers.GetHeads(true);
+                heads = GetHeads();
 
                 string formatString =
                     /* <COMMIT>       */ COMMIT_BEGIN + "%n" +
@@ -130,7 +131,7 @@ namespace GitCommands
                     formatString +=
                         /* Tree           */ "%T%n" +
                         /* Author Name    */ "%aN%n" +
-                        /* Author Email    */ "%aE%n" +                            
+                        /* Author Email    */ "%aE%n" +
                         /* Author Date    */ "%ai%n" +
                         /* Committer Name */ "%cN%n" +
                         /* Committer Date */ "%ci%n" +
@@ -161,6 +162,9 @@ namespace GitCommands
                 gitGetGraphCommand.CollectOutput = false;
                 Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arguments);
 
+                if (BeginUpdate != null)
+                    BeginUpdate(this, EventArgs.Empty);
+
                 string line;
                 do
                 {
@@ -190,6 +194,19 @@ namespace GitCommands
 
             if (Exited != null)
                 Exited(this, EventArgs.Empty);
+        }
+
+        private List<GitHead> GetHeads()
+        {
+            var result = GitCommandHelpers.GetHeads(true);
+            bool validWorkingDir = Settings.ValidWorkingDir();
+            selectedBranchName = validWorkingDir ? GitCommandHelpers.GetSelectedBranch() : string.Empty;
+            GitHead selectedHead = result.Find(head => head.Name == selectedBranchName);
+
+            if (selectedHead != null)
+                selectedHead.Selected = true;
+
+            return result;
         }
 
         void finishRevision()
@@ -228,7 +245,7 @@ namespace GitCommands
                     // Sanity check
                     if (line == COMMIT_BEGIN)
                     {
-                        revision = new GitRevision();
+                        revision = new GitRevision(null);
                     }
                     else
                     {

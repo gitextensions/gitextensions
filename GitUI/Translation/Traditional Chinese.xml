@@ -104,17 +104,17 @@
         <TranslationItem Name="Remove" Property="Text">
           <Value>刪除所有未決定的目標</Value>
         </TranslationItem>
-        <TranslationItem Name="TagSelectedObject" Property="Text">
+        <TranslationItem Name="mnuLostObjectsCreateTag" Property="Text">
           <Value>標記選定的目標</Value>
         </TranslationItem>
-        <TranslationItem Name="ViewObject" Property="Text">
+        <TranslationItem Name="mnuLostObjectsCreateBranch" Property="Text">
+          <Value>建立分支</Value>
+        </TranslationItem>		
+        <TranslationItem Name="mnuLostObjectView" Property="Text">
           <Value>查看所選目標</Value>
         </TranslationItem>
         <TranslationItem Name="Unreachable" Property="Text">
           <Value>輸出所有存在但是不可讀的目標</Value>
-        </TranslationItem>
-        <TranslationItem Name="TagAllObjects" Property="Text">
-          <Value>標記所有丟失的目標</Value>
         </TranslationItem>
         <TranslationItem Name="DeleteAllLostAndFoundTags" Property="Text">
           <Value>刪除所有LOST_AND_FOUND標籤</Value>
@@ -126,7 +126,7 @@
         <TranslationItem Name="NoReflogs" Property="Text">
           <Value>不要認為在reflog中引用的提交是可取得的</Value>
         </TranslationItem>
-        <TranslationItem Name="TagAllCommits" Property="Text">
+        <TranslationItem Name="btnRestoreSelectedObjects" Property="Text">
           <Value>標記所有丟失的提交</Value>
         </TranslationItem>
         <TranslationItem Name="ShowOnlyCommits" Property="Text">
@@ -734,14 +734,15 @@ _ReSharper*/</Value>
         <TranslationItem Name="Revert" Property="Text">
           <Value>回復修改</Value>
         </TranslationItem>
-        <TranslationItem Name="button1" Property="Text">
+        <TranslationItem Name="btnCancel" Property="Text">
           <Value>取消</Value>
         </TranslationItem>
         <TranslationItem Name="_resetChangesCaption" Property="Text">
           <Value>重置修改</Value>
         </TranslationItem>
         <TranslationItem Name="_undoChangesIn" Property="Text">
-          <Value>回復修改：{0}？</Value>
+          <Value>回復修改：
+{0}？</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

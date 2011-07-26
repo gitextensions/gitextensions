@@ -134,7 +134,14 @@ namespace GitUI
             this.HotkeysEnabled = true;
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
 
+            SelectedDiff.ContextMenuOpening += SelectedDiff_ContextMenuOpening;
+
             Commit.Focus();
+        }
+
+        void SelectedDiff_ContextMenuOpening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _StageSelectedLinesToolStripMenuItem.Enabled = SelectedDiff.HasAnyPatches();
         }
 
         #region Hotkey commands
@@ -208,14 +215,16 @@ namespace GitUI
 
             switch (command)
             {
-                case Commands.FocusStagedFiles: return FocusStagedFiles(); 
-                case Commands.FocusUnstagedFiles: return FocusUnstagedFiles(); 
-                case Commands.FocusSelectedDiff: return FocusSelectedDiff(); 
-                case Commands.FocusCommitMessage: return FocusCommitMessage(); 
-                case Commands.StageSelectedFile: return StageSelectedFile(); 
+                case Commands.FocusStagedFiles: return FocusStagedFiles();
+                case Commands.FocusUnstagedFiles: return FocusUnstagedFiles();
+                case Commands.FocusSelectedDiff: return FocusSelectedDiff();
+                case Commands.FocusCommitMessage: return FocusCommitMessage();
+                case Commands.StageSelectedFile: return StageSelectedFile();
                 case Commands.UnStageSelectedFile: return UnStageSelectedFile();
-                default: return false;
+                //default: return false;
+                default: ExecuteScriptCommand(cmd, Keys.None); return true;
             }
+
         }
 
         #endregion
@@ -328,9 +337,14 @@ namespace GitUI
                     !showIgnoredFilesToolStripMenuItem.Checked,
                     showUntrackedFilesToolStripMenuItem.Checked);
             _gitGetUnstagedCommand.CmdStartProcess(Settings.GitCommand, allChangedFilesCmd);
- 
+
             Loading.Visible = true;
             LoadingStaged.Visible = true;
+
+            Commit.Enabled = false;
+            CommitAndPush.Enabled = false;
+            Amend.Enabled = false;
+            Reset.Enabled = false;
 
             Cursor.Current = Cursors.Default;
         }
@@ -371,6 +385,10 @@ namespace GitUI
 
             Loading.Visible = false;
             LoadingStaged.Visible = false;
+            Commit.Enabled = true;
+            CommitAndPush.Enabled = true;
+            Amend.Enabled = true;
+            Reset.Enabled = true;
 
             EnableStageButtons(true);
             workingToolStripMenuItem.Enabled = true;
@@ -379,7 +397,7 @@ namespace GitUI
             SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
         }
 
-        protected void ShowChanges(GitItemStatus item, bool staged)
+        private void ShowChanges(GitItemStatus item, bool staged)
         {
             _currentItem = item;
             _currentItemStaged = staged;
@@ -406,6 +424,8 @@ namespace GitUI
 
         private void TrackedSelectionChanged(object sender, EventArgs e)
         {
+            ClearDiffViewIfNoFilesLeft();
+
             if (Staged.SelectedItems.Count == 0)
                 return;
 
@@ -415,11 +435,19 @@ namespace GitUI
 
         private void UntrackedSelectionChanged(object sender, EventArgs e)
         {
+            ClearDiffViewIfNoFilesLeft();
+
             if (Unstaged.SelectedItems.Count == 0)
                 return;
 
             Staged.SelectedItem = null;
             ShowChanges(Unstaged.SelectedItems[0], false);
+        }
+
+        private void ClearDiffViewIfNoFilesLeft()
+        {
+            if (Staged.IsEmpty && Unstaged.IsEmpty)
+                SelectedDiff.Clear();
         }
 
         private void CommitClick(object sender, EventArgs e)
@@ -429,7 +457,7 @@ namespace GitUI
 
         private void CheckForStagedAndCommit(bool amend, bool push)
         {
-            if (Staged.GitItemStatuses.Count == 0)
+            if (Staged.IsEmpty)
             {
                 if (MessageBox.Show(_noFilesStaged.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) ==
                     DialogResult.No)
@@ -589,6 +617,11 @@ namespace GitUI
                 {
                     Loading.Visible = true;
                     LoadingStaged.Visible = true;
+                    Commit.Enabled = false;
+                    CommitAndPush.Enabled = false;
+                    Amend.Enabled = false;
+                    Reset.Enabled = false;
+
                     GitCommandHelpers.ResetMixed("HEAD");
                     Initialize();
                 }
@@ -684,23 +717,13 @@ namespace GitUI
                 DialogResult.Yes)
                 return;
 
-            var deleteNewFiles = false;
-            var askToDeleteNewFiles = true;
+            var deleteNewFiles = Unstaged.SelectedItems.Any(item => item.IsNew)
+                && MessageBox.Show(_alsoDeleteUntrackedFiles.Text, _alsoDeleteUntrackedFilesCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes;
             var output = new StringBuilder();
             foreach (var item in Unstaged.SelectedItems)
             {
                 if (item.IsNew)
                 {
-                    if (!deleteNewFiles && askToDeleteNewFiles)
-                    {
-                        var result = MessageBox.Show(_alsoDeleteUntrackedFiles.Text,
-                                                     _alsoDeleteUntrackedFilesCaption.Text, MessageBoxButtons.YesNo);
-                        if (result == DialogResult.Yes)
-                            deleteNewFiles = true;
-
-                        askToDeleteNewFiles = false;
-                    }
-
                     if (deleteNewFiles)
                         File.Delete(Settings.WorkingDir + item.Name);
                 }
@@ -720,7 +743,7 @@ namespace GitUI
         {
             try
             {
-                SelectedDiff.ViewText("", "");
+                SelectedDiff.Clear();
                 if (Unstaged.SelectedItem == null ||
                     MessageBox.Show(_deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo) !=
                     DialogResult.Yes)
@@ -938,7 +961,7 @@ namespace GitUI
             if (Unstaged.SelectedItems.Count == 0)
                 return;
 
-            SelectedDiff.ViewText("", "");
+            SelectedDiff.Clear();
             var item = Unstaged.SelectedItem;
             new FormAddToGitIgnore(item.Name).ShowDialog();
             Initialize();
