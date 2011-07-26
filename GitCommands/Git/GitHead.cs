@@ -30,13 +30,10 @@ namespace GitCommands
 
         public string CompleteName { get; private set; }
         public bool Selected { get; set; }
-
+        public bool SelectedHeadMergeSource { get; set; }
         public bool IsTag { get; private set; }
-
         public bool IsHead { get; private set; }
-
         public bool IsRemote { get; private set; }
-
         public bool IsBisect { get; private set; }
 
         public bool IsOther
