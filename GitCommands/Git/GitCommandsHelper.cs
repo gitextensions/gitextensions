@@ -1424,15 +1424,23 @@ namespace GitCommands
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);
 
-            return RunCmd(Settings.GitCommand, RebaseCmd(branch, false));
+            return RunCmd(Settings.GitCommand, RebaseCmd(branch, false, false));
         }
 
-        public static string RebaseCmd(string branch, bool interactive)
+        public static string RebaseCmd(string branch, bool interactive, bool autosquash)
         {
-            if (interactive)
-                return "rebase -i \"" + branch + "\"";
+            StringBuilder sb = new StringBuilder("rebase ");
 
-            return "rebase \"" + branch + "\"";
+            if (interactive)
+            {
+                sb.Append(" -i ");
+                sb.Append(autosquash ? "--autosquash " : "--no-autosquash ");
+            }
+
+            sb.Append('"');
+            sb.Append(branch);
+            sb.Append('"');
+            return sb.ToString();
         }
 
 
