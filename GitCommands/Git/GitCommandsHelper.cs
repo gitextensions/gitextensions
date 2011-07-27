@@ -1608,6 +1608,15 @@ namespace GitCommands
             return configFile.GetValue(setting);
         }
 
+        public static string GetEffectiveSetting(string setting)
+        {
+            var localConfig = GetLocalConfig();
+            if (localConfig.HasValue(setting))
+                return localConfig.GetValue(setting);
+
+            return GetGlobalConfig().GetValue(setting);
+        }
+
         public static void UnsetSetting(string setting)
         {
             var configFile = GetLocalConfig();
