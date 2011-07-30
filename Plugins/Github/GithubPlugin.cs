@@ -87,12 +87,12 @@ namespace Github
 
         public IList<IHostedRepository> GetMyRepos()
         {
-            if (GithubUser != null)
-            {
-                return GetRepositoriesOfUser(GithubUser.Name);
-            }
-
-            return new List<IHostedRepository>();
+            if (GithubUser == null) 
+                { throw new InvalidOperationException("No GitHub authorization credentials found!"); }
+            
+            return GetRepositoriesOfUser(GithubUser.Name);
+            
+            //return new List<IHostedRepository>();
         }
 
         public List<IHostedRemote> GetHostedRemotesForCurrentWorkingDirRepo()
