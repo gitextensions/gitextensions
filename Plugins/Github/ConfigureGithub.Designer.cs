@@ -41,6 +41,7 @@
             this._useHttpsRB = new System.Windows.Forms.RadioButton();
             this.label4 = new System.Windows.Forms.Label();
             this._notNeededWithSshLbl = new System.Windows.Forms.Label();
+            this._clearBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -154,6 +155,16 @@
             this._notNeededWithSshLbl.TabIndex = 8;
             this._notNeededWithSshLbl.Text = "(Not needed with SSH)";
             // 
+            // _clearBtn
+            // 
+            this._clearBtn.Location = new System.Drawing.Point(117, 163);
+            this._clearBtn.Name = "_clearBtn";
+            this._clearBtn.Size = new System.Drawing.Size(95, 23);
+            this._clearBtn.TabIndex = 4;
+            this._clearBtn.Text = "Clear";
+            this._clearBtn.UseVisualStyleBackColor = true;
+            this._clearBtn.Click += new System.EventHandler(this._clearBtn_Click);
+            // 
             // ConfigureGithub
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -166,6 +177,7 @@
             this.Controls.Add(this._getApiTokenBtn);
             this.Controls.Add(this._passwordTB);
             this.Controls.Add(this.label3);
+            this.Controls.Add(this._clearBtn);
             this.Controls.Add(this._saveBtn);
             this.Controls.Add(this._apitokenTB);
             this.Controls.Add(this._usernameTB);
@@ -195,5 +207,6 @@
         private System.Windows.Forms.RadioButton _useHttpsRB;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label _notNeededWithSshLbl;
+        private System.Windows.Forms.Button _clearBtn;
     }
 }

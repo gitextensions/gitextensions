@@ -173,6 +173,17 @@ namespace Github
             Settings.SetSetting("apitoken", apitoken);
         }
 
+        public void ClearAuth()
+        {
+            _githubUser = null;
+            _authInfo = null;
+            _configurationOk = null;
+            InvalidateCache();
+            Settings.SetSetting("username", "");
+            Settings.SetSetting("password", "");
+            Settings.SetSetting("apitoken", "");
+        }
+
         GithubLoginInfo _authInfo;
         public GithubLoginInfo Auth
         {
