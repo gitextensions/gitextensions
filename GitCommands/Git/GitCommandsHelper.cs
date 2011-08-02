@@ -2120,10 +2120,10 @@ namespace GitCommands
             return RunCmd(Settings.GitCommand, "reset HEAD -- \"" + FixPath(file) + "\"");
         }
 
-        public static string GetSelectedBranch()
+        public static string GetSelectedBranch(string repositoryPath)
         {
             string head;
-            string headFileName = Settings.WorkingDirGitDir() + "\\HEAD";
+            string headFileName = Path.Combine(GetGitDirectory(repositoryPath), "HEAD");
             if (File.Exists(headFileName))
             {
                 head = File.ReadAllText(headFileName);
@@ -2135,7 +2135,7 @@ namespace GitCommands
                 int exitcode;
                 head = RunCmd(Settings.GitCommand, "symbolic-ref HEAD", out exitcode);
                 if (exitcode == 1)
-                    head = "(no branch)";
+                    return "(no branch)";
             }
 
             if (!string.IsNullOrEmpty(head))
@@ -2144,6 +2144,11 @@ namespace GitCommands
             }
 
             return string.Empty;
+        }
+
+        public static string GetSelectedBranch()
+        {
+            return GetSelectedBranch(Settings.WorkingDir);
         }
 
         public static List<GitHead> GetRemoteHeads(string remote, bool tags, bool branches)
@@ -2536,6 +2541,12 @@ namespace GitCommands
                 return fileName.Substring(fileName.LastIndexOf('.') + 1);
 
             return null;
+        }
+
+        public static string GetGitDirectory(string repositoryPath)
+        {
+            var candidatePath = Path.Combine(repositoryPath, ".git");
+            return Directory.Exists(candidatePath) ? candidatePath : repositoryPath;
         }
 
         /// <summary>
