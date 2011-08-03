@@ -193,6 +193,7 @@ namespace GitUI
             this.donateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.mergeWithRemoteTracking = new System.Windows.Forms.ToolStripButton();
             this.toolPanel.Panel1.SuspendLayout();
             this.toolPanel.Panel2.SuspendLayout();
             this.toolPanel.SuspendLayout();
@@ -261,6 +262,7 @@ namespace GitUI
             this.toolStripSeparator17,
             this._NO_TRANSLATE_Workingdir,
             this.branchSelect,
+            this.mergeWithRemoteTracking,
             this.toolStripSeparator1,
             this.toolStripSplitStash,
             this.toolStripButton1,
@@ -1625,6 +1627,16 @@ namespace GitUI
             this.menuStrip1.TabIndex = 3;
             this.menuStrip1.Text = "menuStrip1";
             // 
+            // mergeWithRemoteTracking
+            // 
+            this.mergeWithRemoteTracking.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.mergeWithRemoteTracking.Image = ((System.Drawing.Image)(resources.GetObject("mergeWithRemoteTracking.Image")));
+            this.mergeWithRemoteTracking.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mergeWithRemoteTracking.Name = "mergeWithRemoteTracking";
+            this.mergeWithRemoteTracking.Size = new System.Drawing.Size(23, 22);
+            this.mergeWithRemoteTracking.Text = "Merge with remote tracking branch";
+            this.mergeWithRemoteTracking.ToolTipText = "Merge current branch with remote tracking one";
+            // 
             // FormBrowse
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1829,5 +1841,6 @@ namespace GitUI
         private ToolStripMenuItem donateToolStripMenuItem;
         private ToolStripMenuItem aboutToolStripMenuItem;
         private MenuStrip menuStrip1;
+        private ToolStripButton mergeWithRemoteTracking;
     }
 }
