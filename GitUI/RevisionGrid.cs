@@ -177,6 +177,7 @@ namespace GitUI
         }
 
         public event EventHandler ActionOnRepositoryPerformed;
+        public event EventHandler RevisionsRefreshed;
 
         public virtual void OnActionOnRepositoryPerformed()
         {
@@ -682,6 +683,7 @@ namespace GitUI
                 Loading.Visible = true;
                 Loading.BringToFront();
                 _isLoading = true;
+                revisionsWithHeads = new List<GitRevision>();
                 base.Refresh();
 
                 IndexWatcher.Reset();
@@ -735,6 +737,10 @@ namespace GitUI
         private void GitGetCommitsCommandUpdated(object sender, EventArgs e)
         {
             var updatedEvent = (RevisionGraph.RevisionGraphUpdatedEventArgs)e;
+
+            if (updatedEvent.Revision != null && updatedEvent.Revision.Heads != null && updatedEvent.Revision.Heads.Count != 0)
+                revisionsWithHeads.Add(updatedEvent.Revision);
+
             UpdateGraph(updatedEvent.Revision);
         }
 
@@ -797,6 +803,9 @@ namespace GitUI
                                           Loading.Visible = false;
                                           SelectInitialRevision();
                                           _isLoading = false;
+
+                                          if (RevisionsRefreshed != null)
+                                              RevisionsRefreshed(this, EventArgs.Empty);
                                       }, this);
             }
         }
@@ -1815,6 +1824,7 @@ namespace GitUI
         }
 
         private bool settingsLoaded;
+        private IList<GitRevision> revisionsWithHeads;
 
         private void runScript(object sender, EventArgs e)
         {
@@ -2064,5 +2074,33 @@ namespace GitUI
 
         #endregion
 
+        public bool IsCurrentBranchOutOfDateWithTrackingRemote()
+        {
+            var currentRevisionHavingBranch = GetCurrentRevisionHavingBranch();
+
+            if (currentRevisionHavingBranch == null)
+                return false;
+
+            var selectedBranch = currentRevisionHavingBranch.Heads.First(head => !head.IsRemote && head.Selected);
+            
+            return !string.IsNullOrEmpty(selectedBranch.MergeWith) && 
+                !currentRevisionHavingBranch.Heads.Any(selectedBranch.MergesWithRemote);
+        }
+
+        private GitRevision GetCurrentRevisionHavingBranch()
+        {
+            return revisionsWithHeads.FirstOrDefault(rev => rev.Heads != null && rev.Heads.Any(head => !head.IsRemote && head.Selected));
+        }
+
+        public string GetTrackingRemoteBranchMergingWithCurrent()
+        {
+            var currentRevisionHavingBranch = GetCurrentRevisionHavingBranch();
+
+            if (currentRevisionHavingBranch == null)
+                return null;
+
+            var selectedBranch = currentRevisionHavingBranch.Heads.First(head => !head.IsRemote && head.Selected);
+            return string.Format("{0}/{1}", selectedBranch.TrackingRemote, selectedBranch.MergeWith);
+        }
     }
 }
