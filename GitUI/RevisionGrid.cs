@@ -2076,31 +2076,49 @@ namespace GitUI
 
         public bool IsCurrentBranchOutOfDateWithTrackingRemote()
         {
-            var currentRevisionHavingBranch = GetCurrentRevisionHavingBranch();
+            Tuple<int, GitRevision> currentRevisionHavingBranch = GetCurrentRevisionHavingBranch();
 
             if (currentRevisionHavingBranch == null)
                 return false;
 
-            var selectedBranch = currentRevisionHavingBranch.Heads.First(head => !head.IsRemote && head.Selected);
-            
-            return !string.IsNullOrEmpty(selectedBranch.MergeWith) && 
-                !currentRevisionHavingBranch.Heads.Any(selectedBranch.MergesWithRemote);
-        }
+            GitHead selectedBranch = currentRevisionHavingBranch.Item2.Heads.First(head => !head.IsRemote && head.Selected);
 
-        private GitRevision GetCurrentRevisionHavingBranch()
-        {
-            return revisionsWithHeads.FirstOrDefault(rev => rev.Heads != null && rev.Heads.Any(head => !head.IsRemote && head.Selected));
+            if (string.IsNullOrEmpty(selectedBranch.MergeWith))
+                return false;
+
+            var remoteTrackingBranchRevision = FindRevision(rev => rev.Heads.Any(selectedBranch.MergesWithRemote));
+
+            return remoteTrackingBranchRevision != null
+                   && remoteTrackingBranchRevision.Item1 < currentRevisionHavingBranch.Item1;
         }
 
         public string GetTrackingRemoteBranchMergingWithCurrent()
         {
-            var currentRevisionHavingBranch = GetCurrentRevisionHavingBranch();
+            Tuple<int, GitRevision> currentRevisionHavingBranch = GetCurrentRevisionHavingBranch();
 
             if (currentRevisionHavingBranch == null)
                 return null;
 
-            var selectedBranch = currentRevisionHavingBranch.Heads.First(head => !head.IsRemote && head.Selected);
+            var selectedBranch = currentRevisionHavingBranch.Item2.Heads.First(head => !head.IsRemote && head.Selected);
             return string.Format("{0}/{1}", selectedBranch.TrackingRemote, selectedBranch.MergeWith);
+        }
+
+        private Tuple<int, GitRevision> GetCurrentRevisionHavingBranch()
+        {
+            return FindRevision(rev => rev.Heads != null && rev.Heads.Any(head => !head.IsRemote && head.Selected));
+        }
+
+        private Tuple<int, GitRevision> FindRevision(Func<GitRevision, bool> predicate)
+        {
+            for (int index = 0; index < revisionsWithHeads.Count; index++)
+            {
+                GitRevision rev = revisionsWithHeads[index];
+
+                if (predicate(rev))
+                    return new Tuple<int, GitRevision>(index, rev);
+            }
+
+            return null;
         }
     }
 }
