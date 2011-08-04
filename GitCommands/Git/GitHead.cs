@@ -84,6 +84,11 @@ namespace GitCommands
             }
         }
 
+        public string MergeWithFullName
+        {
+            get { return string.IsNullOrEmpty(MergeWith) ? MergeWith : string.Format("{0}/{1}", TrackingRemote, MergeWith); }
+        }
+
         public static GitHead NoHead
         {
             get { return new GitHead(null, ""); }

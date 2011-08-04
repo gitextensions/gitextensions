@@ -683,7 +683,7 @@ namespace GitUI
                 Loading.Visible = true;
                 Loading.BringToFront();
                 _isLoading = true;
-                revisionsWithHeads = new List<GitRevision>();
+                currentBranch = null;
                 base.Refresh();
 
                 IndexWatcher.Reset();
@@ -737,11 +737,15 @@ namespace GitUI
         private void GitGetCommitsCommandUpdated(object sender, EventArgs e)
         {
             var updatedEvent = (RevisionGraph.RevisionGraphUpdatedEventArgs)e;
+            GitRevision revision = updatedEvent.Revision;
 
-            if (updatedEvent.Revision != null && updatedEvent.Revision.Heads != null && updatedEvent.Revision.Heads.Count != 0)
-                revisionsWithHeads.Add(updatedEvent.Revision);
+            // remember current branch for further using
+            if (revision != null && revision.Heads != null && currentBranch == null)
+            {
+                currentBranch = revision.Heads.FirstOrDefault(head => !head.IsRemote && head.Selected);
+            }
 
-            UpdateGraph(updatedEvent.Revision);
+            UpdateGraph(revision);
         }
 
         private bool FilterIsApplied(bool inclBranchFilter)
@@ -1824,7 +1828,7 @@ namespace GitUI
         }
 
         private bool settingsLoaded;
-        private IList<GitRevision> revisionsWithHeads;
+        private GitHead currentBranch;
 
         private void runScript(object sender, EventArgs e)
         {
@@ -2076,49 +2080,23 @@ namespace GitUI
 
         public bool IsCurrentBranchOutOfDateWithTrackingRemote()
         {
-            Tuple<int, GitRevision> currentRevisionHavingBranch = GetCurrentRevisionHavingBranch();
-
-            if (currentRevisionHavingBranch == null)
+            if (currentBranch == null)
                 return false;
 
-            GitHead selectedBranch = currentRevisionHavingBranch.Item2.Heads.First(head => !head.IsRemote && head.Selected);
+            string mergeWithBranch = currentBranch.MergeWithFullName;
 
-            if (string.IsNullOrEmpty(selectedBranch.MergeWith))
+            if (string.IsNullOrEmpty(mergeWithBranch))
                 return false;
 
-            var remoteTrackingBranchRevision = FindRevision(rev => rev.Heads.Any(selectedBranch.MergesWithRemote));
-
-            return remoteTrackingBranchRevision != null
-                   && remoteTrackingBranchRevision.Item1 < currentRevisionHavingBranch.Item1;
+            return !GitCommandHelpers.IsOneBranchAncestorOfAnother(currentBranch.LocalName, mergeWithBranch);
         }
 
         public string GetTrackingRemoteBranchMergingWithCurrent()
         {
-            Tuple<int, GitRevision> currentRevisionHavingBranch = GetCurrentRevisionHavingBranch();
-
-            if (currentRevisionHavingBranch == null)
+            if (currentBranch == null)
                 return null;
 
-            var selectedBranch = currentRevisionHavingBranch.Item2.Heads.First(head => !head.IsRemote && head.Selected);
-            return string.Format("{0}/{1}", selectedBranch.TrackingRemote, selectedBranch.MergeWith);
-        }
-
-        private Tuple<int, GitRevision> GetCurrentRevisionHavingBranch()
-        {
-            return FindRevision(rev => rev.Heads != null && rev.Heads.Any(head => !head.IsRemote && head.Selected));
-        }
-
-        private Tuple<int, GitRevision> FindRevision(Func<GitRevision, bool> predicate)
-        {
-            for (int index = 0; index < revisionsWithHeads.Count; index++)
-            {
-                GitRevision rev = revisionsWithHeads[index];
-
-                if (predicate(rev))
-                    return new Tuple<int, GitRevision>(index, rev);
-            }
-
-            return null;
+            return currentBranch.MergeWithFullName;
         }
     }
 }
