@@ -18,7 +18,6 @@ namespace GitUI.Editor
         private int _currentScrollPos = -1;
         private bool _currentViewIsPatch;
         private readonly IFileViewer _internalFileViewer;
-        private Func<string> _fileIterator;
 
         public FileViewer()
         {
