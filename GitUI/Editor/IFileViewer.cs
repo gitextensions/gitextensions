@@ -43,5 +43,7 @@ namespace GitUI.Editor
         int TotalNumberOfLines { get; }
         Font Font { set; }
         void FocusTextArea();
+
+        void SetFileLoader(Func<Tuple<int, string>> fileLoader);
     }
 }

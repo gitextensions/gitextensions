@@ -18,6 +18,7 @@ namespace GitUI.Editor
         private int _currentScrollPos = -1;
         private bool _currentViewIsPatch;
         private readonly IFileViewer _internalFileViewer;
+        private Func<string> _fileIterator;
 
         public FileViewer()
         {
@@ -712,5 +713,10 @@ namespace GitUI.Editor
         {
             return (_internalFileViewer.GetText() != null && _internalFileViewer.GetText().Contains("@@"));
         }
+
+        public void SetFileLoader(Func<Tuple<int, string>> fileLoader){
+            _internalFileViewer.SetFileLoader(fileLoader);
+        }
+
     }
 }

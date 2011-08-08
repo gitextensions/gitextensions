@@ -36,6 +36,7 @@ namespace GitUI
         private ThumbnailToolBarButton _pushButton;
         private ThumbnailToolBarButton _pullButton;
         private bool _toolbarButtonsCreated;
+        private bool _dontUpdateOnIndexChange;
 
         public FormBrowse(string filter)
         {
@@ -57,6 +58,7 @@ namespace GitUI
             RevisionGrid.SelectionChanged += RevisionGridSelectionChanged;
             DiffText.ExtraDiffArgumentsChanged += DiffTextExtraDiffArgumentsChanged;
             SetFilter(filter);
+            DiffText.SetFileLoader(getNextPatchFile);
 
             GitTree.ImageList = new ImageList();
             GitTree.ImageList.Images.Add(Properties.Resources._21); //File
@@ -69,6 +71,7 @@ namespace GitUI
             this.HotkeysEnabled = true;
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             this.toolPanel.SplitterDistance = this.ToolStrip.Height;
+            this._dontUpdateOnIndexChange = false;
         }
 
         private void ShowDashboard()
@@ -1259,7 +1262,8 @@ namespace GitUI
 
         private void DiffFilesSelectedIndexChanged(object sender, EventArgs e)
         {
-            ShowSelectedFileDiff();
+            if (!_dontUpdateOnIndexChange)
+                ShowSelectedFileDiff();
         }
 
         private void ShowSelectedFileDiff()
@@ -2133,5 +2137,32 @@ namespace GitUI
             }
         }
         #endregion
+
+        private Tuple<int, string> getNextPatchFile()
+        {
+            var revisions = RevisionGrid.GetRevisions();
+            if (revisions.Count == 0)
+                return null;
+            int idx = DiffFiles.SelectedIndex;
+            if(idx == -1){
+                return new Tuple<int, string>(idx, null);
+            } else {
+                IList<GitItemStatus> items = DiffFiles.GitItemStatuses;
+                if (idx == items.Count - 1)
+                {
+                    idx = 0;
+                }
+                else
+                {
+                    idx++;
+                }
+                _dontUpdateOnIndexChange = true;
+                DiffFiles.SelectedIndex = idx;
+                _dontUpdateOnIndexChange = false;
+                Tuple<int, string> tuple = new Tuple<int, string>(idx, GetSelectedPatch(revisions, DiffFiles.SelectedItem));
+                return tuple;
+            }
+        }
+
     }
 }
