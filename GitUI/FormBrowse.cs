@@ -494,9 +494,13 @@ namespace GitUI
         /// <param name="isWorkingDirValid">If the given path contains valid repository.</param>
         private static string GenerateWindowTitle(string workingDir, bool isWorkingDirValid, string branchName)
         {
+#if DEBUG  
+            const string defaultTitle = "Git Extensions -> DEBUG <-";
+            const string repositoryTitleFormat = "{0} ({1}) - Git Extensions -> DEBUG <-";
+#else
             const string defaultTitle = "Git Extensions";
             const string repositoryTitleFormat = "{0} ({1}) - Git Extensions";
-            
+#endif
             if (!isWorkingDirValid)
                 return defaultTitle;
             string repositoryDescription = GetRepositoryShortName(workingDir);
