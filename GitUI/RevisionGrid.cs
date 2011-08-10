@@ -1439,44 +1439,52 @@ namespace GitUI
             var tagNameCopy = new ToolStripDropDown();
             var branchNameCopy = new ToolStripDropDown();
 
-            foreach (var head in revision.Heads)
+            foreach (var head in revision.Heads.Where(h => h.IsTag))
             {
-                if (head.IsTag)
+                ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
+                ToolStripItem tagName = new ToolStripMenuItem(head.Name);
+                toolStripItem.Click += ToolStripItemClick;
+                tagDropDown.Items.Add(toolStripItem);
+                tagName.Click += copyToClipBoard;
+                tagNameCopy.Items.Add(tagName);
+            }
+
+            var allBranches = revision.Heads.Where(h => !h.IsTag && (h.IsHead || h.IsRemote));
+            var localBranches = allBranches.Where(b => !b.IsRemote);
+
+            var branchesWithNoIdenticalRemotes = allBranches.Where(
+                b => !b.IsRemote || !localBranches.Any(lb => lb.TrackingRemote == b.Remote && lb.MergeWith == b.LocalName));
+
+            foreach (var head in branchesWithNoIdenticalRemotes)
+            {
+                ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
+                toolStripItem.Click += ToolStripItemClickMergeBranch;
+                mergeBranchDropDown.Items.Add(toolStripItem);
+
+                toolStripItem = new ToolStripMenuItem(head.Name);
+                toolStripItem.Click += ToolStripItemClickRebaseBranch;
+                rebaseDropDown.Items.Add(toolStripItem);
+            }
+
+            foreach (var head in allBranches)
+            {
+                ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
+                ToolStripItem branchName = new ToolStripMenuItem(head.Name);
+                branchName.Click += copyToClipBoard;
+                branchNameCopy.Items.Add(branchName);
+
+                //if (head.IsHead && !head.IsRemote)
                 {
-                    ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
-                    ToolStripItem tagName = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Click += ToolStripItemClick;
-                    tagDropDown.Items.Add(toolStripItem);
-                    tagName.Click += copyToClipBoard;
-                    tagNameCopy.Items.Add(tagName);
-                }
-                else if (head.IsHead || head.IsRemote)
-                {
-                    ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Click += ToolStripItemClickMergeBranch;
-                    mergeBranchDropDown.Items.Add(toolStripItem);
+                    toolStripItem = new ToolStripMenuItem(head.Name);
+                    toolStripItem.Click += ToolStripItemClickBranch;
+                    branchDropDown.Items.Add(toolStripItem);
 
                     toolStripItem = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Click += ToolStripItemClickRebaseBranch;
-                    rebaseDropDown.Items.Add(toolStripItem);
-
-                    ToolStripItem branchName = new ToolStripMenuItem(head.Name);
-                    branchName.Click += copyToClipBoard;
-                    branchNameCopy.Items.Add(branchName);
-
-                    //if (head.IsHead && !head.IsRemote)
-                    {
-                        toolStripItem = new ToolStripMenuItem(head.Name);
-                        toolStripItem.Click += ToolStripItemClickBranch;
-                        branchDropDown.Items.Add(toolStripItem);
-
-                        toolStripItem = new ToolStripMenuItem(head.Name);
-                        if (head.IsRemote)
-                            toolStripItem.Click += ToolStripItemClickCheckoutRemoteBranch;
-                        else
-                            toolStripItem.Click += ToolStripItemClickCheckoutBranch;
-                        checkoutBranchDropDown.Items.Add(toolStripItem);
-                    }
+                    if (head.IsRemote)
+                        toolStripItem.Click += ToolStripItemClickCheckoutRemoteBranch;
+                    else
+                        toolStripItem.Click += ToolStripItemClickCheckoutBranch;
+                    checkoutBranchDropDown.Items.Add(toolStripItem);
                 }
             }
 
