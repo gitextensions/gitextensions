@@ -1424,15 +1424,23 @@ namespace GitCommands
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);
 
-            return RunCmd(Settings.GitCommand, RebaseCmd(branch, false));
+            return RunCmd(Settings.GitCommand, RebaseCmd(branch, false, false));
         }
 
-        public static string RebaseCmd(string branch, bool interactive)
+        public static string RebaseCmd(string branch, bool interactive, bool autosquash)
         {
-            if (interactive)
-                return "rebase -i \"" + branch + "\"";
+            StringBuilder sb = new StringBuilder("rebase ");
 
-            return "rebase \"" + branch + "\"";
+            if (interactive)
+            {
+                sb.Append(" -i ");
+                sb.Append(autosquash ? "--autosquash " : "--no-autosquash ");
+            }
+
+            sb.Append('"');
+            sb.Append(branch);
+            sb.Append('"');
+            return sb.ToString();
         }
 
 
@@ -1606,6 +1614,15 @@ namespace GitCommands
         {
             var configFile = GetLocalConfig();
             return configFile.GetValue(setting);
+        }
+
+        public static string GetEffectiveSetting(string setting)
+        {
+            var localConfig = GetLocalConfig();
+            if (localConfig.HasValue(setting))
+                return localConfig.GetValue(setting);
+
+            return GetGlobalConfig().GetValue(setting);
         }
 
         public static void UnsetSetting(string setting)
