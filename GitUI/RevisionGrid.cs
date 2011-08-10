@@ -1295,9 +1295,12 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
             var frm = new FormBranchSmall { Revision = GetRevision(LastRow) };
-            frm.ShowDialog();
-            RefreshRevisions();
-            OnActionOnRepositoryPerformed();
+
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                RefreshRevisions();
+                OnActionOnRepositoryPerformed();
+            }
         }
 
         private void RevisionsMouseClick(object sender, MouseEventArgs e)
