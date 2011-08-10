@@ -2249,10 +2249,14 @@ namespace GitCommands
             return string.Empty;
         }
 
-        public static string[] GetFiles(string filePattern)
+        public static IList<string> GetFiles(string filePattern)
         {
-            return RunCmd(Settings.GitCommand, "ls-files -z -o -m -c \"" + filePattern + "\"")
-                .Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] allChangedFiles = RunCmd(Settings.GitCommand, "ls-files -z -o -m -c \"" + filePattern + "\"")
+                .Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+            // filter duplicates out of the result because options -c and -m may return 
+            // same files at times
+            return new HashSet<string>(allChangedFiles).ToList();
         }
 
         public static List<GitItem> GetFileChanges(string file)
