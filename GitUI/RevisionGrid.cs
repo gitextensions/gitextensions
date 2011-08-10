@@ -1023,7 +1023,8 @@ namespace GitUI
                                                                                headBounds.Y,
                                                                                RoundToEven(textSize.Width + 3),
                                                                                RoundToEven(textSize.Height), 3,
-                                                                               head.Selected);
+                                                                               head.Selected,
+                                                                               head.SelectedHeadMergeSource);
 
                                         offset += extraOffset;
                                         headBounds.Offset((int) (extraOffset + 1), 0);
@@ -1132,9 +1133,10 @@ namespace GitUI
         }
 
         private float DrawHeadBackground(bool isSelected, Graphics graphics, Color color, 
-            float x, float y, float width, float height, float radius, bool isCurrentBranch)
+            float x, float y, float width, float height, float radius, bool isCurrentBranch,
+            bool isCurentBranchMergeSource)
         {
-            float additionalOffset = isCurrentBranch ? GetArrowSize(height) : 0;
+            float additionalOffset = isCurrentBranch || isCurentBranchMergeSource ? GetArrowSize(height) : 0;
             width += additionalOffset;
             var oldMode = graphics.SmoothingMode;
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -1162,7 +1164,9 @@ namespace GitUI
 
                     // arrow if the head is the current branch 
                     if (isCurrentBranch)
-                        DrawArrow(graphics, x, y, height, color);
+                        DrawArrow(graphics, x, y, height, color, true);
+                    else if (isCurentBranchMergeSource)
+                        DrawArrow(graphics, x, y, height, color, false);
                 }
             }
             finally
@@ -1178,7 +1182,7 @@ namespace GitUI
             return rowHeight - 6;
         }
 
-        private void DrawArrow(Graphics graphics, float x, float y, float rowHeight, Color color)
+        private void DrawArrow(Graphics graphics, float x, float y, float rowHeight, Color color, bool filled)
         {
             const float horShift = 4;
             const float verShift = 3;
@@ -1193,7 +1197,10 @@ namespace GitUI
                                      new PointF(x + horShift, y + verShift)
                                  };
 
-            graphics.FillPolygon(new SolidBrush(color), points);
+            if (filled)
+                graphics.FillPolygon(new SolidBrush(color), points);
+            else
+                graphics.DrawPolygon(new Pen(color), points);
         }
 
         private static GraphicsPath CreateRoundRectPath(float x, float y, float width, float height, float radius)
