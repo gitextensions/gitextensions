@@ -1627,6 +1627,27 @@ namespace GitUI
             OnActionOnRepositoryPerformed();
         }
 
+        private void FixupCommitToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            PrepareCorrectionCommit(CommitKind.Fixup);
+        }
+
+        private void SquashCommitToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            PrepareCorrectionCommit(CommitKind.Squash);
+        }
+
+        private void PrepareCorrectionCommit(CommitKind commitKind)
+        {
+            if (Revisions.RowCount <= LastRow || LastRow < 0)
+                return;
+
+            var frm = new FormCommit(commitKind, GetRevision(LastRow));
+            frm.ShowDialog();
+            ForceRefreshRevisions();
+            OnActionOnRepositoryPerformed();
+        }
+
         private void ShowRelativeDateToolStripMenuItemClick(object sender, EventArgs e)
         {
             Settings.RelativeDate = !showRelativeDateToolStripMenuItem.Checked;
