@@ -16,6 +16,11 @@ namespace GitUI
             Translate();
             GitIgnoreFile = "";
 
+            LoadGitIgnore();
+        }
+
+        private void LoadGitIgnore()
+        {
             try
             {
                 if (File.Exists(Settings.WorkingDir + ".gitignore"))
@@ -31,22 +36,28 @@ namespace GitUI
 
         private void SaveClick(object sender, EventArgs e)
         {
+            SaveGitIgnore(true);
+        }
+
+        private void SaveGitIgnore(bool closeAfterSave)
+        {
             try
             {
                 FileInfoExtensions
                     .MakeFileTemporaryWritable(
                         Settings.WorkingDir + ".gitignore",
                         x =>
+                        {
+                            // Enter a newline to work around a wierd bug 
+                            // that causes the first line to include 3 extra bytes. (encoding marker??)
+                            GitIgnoreFile = Environment.NewLine + _NO_TRANSLATE_GitIgnoreEdit.GetText().Trim();
+                            using (var tw = new StreamWriter(x, false, Settings.Encoding))
                             {
-                                // Enter a newline to work around a wierd bug 
-                                // that causes the first line to include 3 extra bytes. (encoding marker??)
-                                GitIgnoreFile = Environment.NewLine + _NO_TRANSLATE_GitIgnoreEdit.GetText().Trim();
-                                using (var tw = new StreamWriter(x, false, Settings.Encoding))
-                                {
-                                    tw.Write(GitIgnoreFile);
-                                }
+                                tw.Write(GitIgnoreFile);
+                            }
+                            if (closeAfterSave)
                                 Close();
-                            });
+                        });
             }
             catch (Exception ex)
             {
@@ -100,6 +111,13 @@ namespace GitUI
                 Environment.NewLine + "_ReSharper*/" +
                 Environment.NewLine + "[Tt]est[Rr]esult*" +
                 Environment.NewLine + "");
+        }
+
+        private void AddPattern_Click(object sender, EventArgs e)
+        {
+            SaveGitIgnore(false);
+            new FormAddToGitIgnore("*.dll").ShowDialog();
+            LoadGitIgnore();
         }
     }
 }
