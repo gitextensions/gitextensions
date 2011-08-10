@@ -359,13 +359,13 @@ namespace GitUI
             // 
             this.mergeBranchToolStripMenuItem.Name = "mergeBranchToolStripMenuItem";
             this.mergeBranchToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.mergeBranchToolStripMenuItem.Text = "Merge with branch";
+            this.mergeBranchToolStripMenuItem.Text = "Merge current branch with";
             // 
             // rebaseOnToolStripMenuItem
             // 
             this.rebaseOnToolStripMenuItem.Name = "rebaseOnToolStripMenuItem";
             this.rebaseOnToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.rebaseOnToolStripMenuItem.Text = "Rebase on";
+            this.rebaseOnToolStripMenuItem.Text = "Rebase current branch on";
             // 
             // resetCurrentBranchToHereToolStripMenuItem
             // 
