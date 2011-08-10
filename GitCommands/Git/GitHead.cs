@@ -84,6 +84,11 @@ namespace GitCommands
             }
         }
 
+        public string MergeWithFullName
+        {
+            get { return string.IsNullOrEmpty(MergeWith) ? MergeWith : string.Format("{0}/{1}", TrackingRemote, MergeWith); }
+        }
+
         public static GitHead NoHead
         {
             get { return new GitHead(null, ""); }
@@ -140,6 +145,11 @@ namespace GitCommands
                 return;
             }
             Name = CompleteName.Substring(CompleteName.LastIndexOf("/") + 1);
+        }
+
+        public bool MergesWithRemote(GitHead head)
+        {
+            return head.IsRemote && head.Remote == TrackingRemote && head.LocalName == MergeWith;
         }
     }
 }

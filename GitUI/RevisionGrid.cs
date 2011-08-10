@@ -177,6 +177,7 @@ namespace GitUI
         }
 
         public event EventHandler ActionOnRepositoryPerformed;
+        public event EventHandler RevisionsRefreshed;
 
         public virtual void OnActionOnRepositoryPerformed()
         {
@@ -682,6 +683,7 @@ namespace GitUI
                 Loading.Visible = true;
                 Loading.BringToFront();
                 _isLoading = true;
+                currentBranch = null;
                 base.Refresh();
 
                 IndexWatcher.Reset();
@@ -735,7 +737,15 @@ namespace GitUI
         private void GitGetCommitsCommandUpdated(object sender, EventArgs e)
         {
             var updatedEvent = (RevisionGraph.RevisionGraphUpdatedEventArgs)e;
-            UpdateGraph(updatedEvent.Revision);
+            GitRevision revision = updatedEvent.Revision;
+
+            // remember current branch for further using
+            if (revision != null && revision.Heads != null && currentBranch == null)
+            {
+                currentBranch = revision.Heads.FirstOrDefault(head => !head.IsRemote && head.Selected);
+            }
+
+            UpdateGraph(revision);
         }
 
         private bool FilterIsApplied(bool inclBranchFilter)
@@ -797,6 +807,9 @@ namespace GitUI
                                           Loading.Visible = false;
                                           SelectInitialRevision();
                                           _isLoading = false;
+
+                                          if (RevisionsRefreshed != null)
+                                              RevisionsRefreshed(this, EventArgs.Empty);
                                       }, this);
             }
         }
@@ -1815,6 +1828,7 @@ namespace GitUI
         }
 
         private bool settingsLoaded;
+        private GitHead currentBranch;
 
         private void runScript(object sender, EventArgs e)
         {
@@ -2064,5 +2078,25 @@ namespace GitUI
 
         #endregion
 
+        public bool IsCurrentBranchOutOfDateWithTrackingRemote()
+        {
+            if (currentBranch == null)
+                return false;
+
+            string mergeWithBranch = currentBranch.MergeWithFullName;
+
+            if (string.IsNullOrEmpty(mergeWithBranch))
+                return false;
+
+            return !GitCommandHelpers.IsOneBranchAncestorOfAnother(currentBranch.LocalName, mergeWithBranch);
+        }
+
+        public string GetTrackingRemoteBranchMergingWithCurrent()
+        {
+            if (currentBranch == null)
+                return null;
+
+            return currentBranch.MergeWithFullName;
+        }
     }
 }

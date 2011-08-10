@@ -2509,6 +2509,16 @@ namespace GitCommands
             }
         }
 
+        public static bool IsOneBranchAncestorOfAnother(string ancestorCandidate, string branch)
+        {
+            string commandResult = RunCmd(Settings.GitCommand, "branch --contains " + branch);
+
+            string[] branches = commandResult.Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries)
+                .Select(branchName => branchName.Replace('*', ' ').Trim()).ToArray();
+            
+            return branches.Any(branchName => branchName == ancestorCandidate);
+        }
+
         public static string MergeBranchCmd(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy)
         {
             StringBuilder command = new StringBuilder("merge");

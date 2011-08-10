@@ -43,6 +43,7 @@ namespace GitUI
             this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
             this._NO_TRANSLATE_Workingdir = new System.Windows.Forms.ToolStripSplitButton();
             this.branchSelect = new System.Windows.Forms.ToolStripSplitButton();
+            this.mergeWithRemoteTracking = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSplitStash = new System.Windows.Forms.ToolStripSplitButton();
             this.stashChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -261,6 +262,7 @@ namespace GitUI
             this.toolStripSeparator17,
             this._NO_TRANSLATE_Workingdir,
             this.branchSelect,
+            this.mergeWithRemoteTracking,
             this.toolStripSeparator1,
             this.toolStripSplitStash,
             this.toolStripButton1,
@@ -321,6 +323,17 @@ namespace GitUI
             this.branchSelect.ToolTipText = "Change current branch";
             this.branchSelect.ButtonClick += new System.EventHandler(this.CurrentBranchClick);
             this.branchSelect.DropDownOpening += new System.EventHandler(this.CurrentBranchDropDownOpening);
+            // 
+            // mergeWithRemoteTracking
+            // 
+            this.mergeWithRemoteTracking.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.mergeWithRemoteTracking.Image = ((System.Drawing.Image)(resources.GetObject("mergeWithRemoteTracking.Image")));
+            this.mergeWithRemoteTracking.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mergeWithRemoteTracking.Name = "mergeWithRemoteTracking";
+            this.mergeWithRemoteTracking.Size = new System.Drawing.Size(23, 22);
+            this.mergeWithRemoteTracking.Text = "Merge with remote tracking branch";
+            this.mergeWithRemoteTracking.ToolTipText = "Merge current branch with remote tracking one";
+            this.mergeWithRemoteTracking.Click += new System.EventHandler(this.mergeWithRemoteTracking_Click);
             // 
             // toolStripSeparator1
             // 
@@ -1829,5 +1842,6 @@ namespace GitUI
         private ToolStripMenuItem donateToolStripMenuItem;
         private ToolStripMenuItem aboutToolStripMenuItem;
         private MenuStrip menuStrip1;
+        private ToolStripButton mergeWithRemoteTracking;
     }
 }

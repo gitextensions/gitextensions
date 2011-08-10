@@ -55,6 +55,7 @@ namespace GitUI
             }
 
             RevisionGrid.SelectionChanged += RevisionGridSelectionChanged;
+            RevisionGrid.RevisionsRefreshed += RevisionGridRevisionsRefreshed;
             DiffText.ExtraDiffArgumentsChanged += DiffTextExtraDiffArgumentsChanged;
             SetFilter(filter);
 
@@ -69,6 +70,11 @@ namespace GitUI
             this.HotkeysEnabled = true;
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             this.toolPanel.SplitterDistance = this.ToolStrip.Height;
+        }
+
+        private void RevisionGridRevisionsRefreshed(object sender, EventArgs e)
+        {
+            mergeWithRemoteTracking.Enabled = RevisionGrid.IsCurrentBranchOutOfDateWithTrackingRemote();
         }
 
         private void ShowDashboard()
@@ -194,10 +200,12 @@ namespace GitUI
             bool validWorkingDir = Settings.ValidWorkingDir();
             bool hasWorkingDir = !string.IsNullOrEmpty(Settings.WorkingDir);
             branchSelect.Text = validWorkingDir ? GitCommandHelpers.GetSelectedBranch() : "";
+            
             if (hasWorkingDir)
                 HideDashboard();
             else
                 ShowDashboard();
+            
             tabControl1.Visible = validWorkingDir;
             commandsToolStripMenuItem.Enabled = validWorkingDir;
             manageRemoteRepositoriesToolStripMenuItem1.Enabled = validWorkingDir;
@@ -215,11 +223,15 @@ namespace GitUI
             _viewPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
             //Only show "Repository hosts" menu item when there is at least 1 repository host plugin loaded
             _repositoryHostsToolStripMenuItem.Visible = RepoHosts.GitHosters.Count > 0;
+            
             if (RepoHosts.GitHosters.Count == 1)
                 _repositoryHostsToolStripMenuItem.Text = RepoHosts.GitHosters[0].Description;
+            
             InitToolStripBranchFilter(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
+            
             if (hard)
                 ShowRevisions();
+            
             _NO_TRANSLATE_Workingdir.Text = Settings.WorkingDir;
             Text = GenerateWindowTitle(Settings.WorkingDir, validWorkingDir, branchSelect.Text);
             DiffText.Font = Settings.DiffFont;
@@ -2133,5 +2145,13 @@ namespace GitUI
             }
         }
         #endregion
+
+        private void mergeWithRemoteTracking_Click(object sender, EventArgs e)
+        {
+            string trackingRemoteBranch = RevisionGrid.GetTrackingRemoteBranchMergingWithCurrent();
+            GitUICommands.Instance.StartMergeBranchDialog(trackingRemoteBranch);
+            RevisionGrid.ForceRefreshRevisions();
+            RevisionGrid.OnActionOnRepositoryPerformed();
+        }
     }
 }
