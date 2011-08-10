@@ -95,14 +95,21 @@ namespace GitUI
         public bool NeedRefresh;
         private GitItemStatus _currentItem;
         private bool _currentItemStaged;
+        private CommitKind _commitKind;
+        private GitRevision _editedCommit;
         private readonly ToolStripItem _StageSelectedLinesToolStripMenuItem;
         private readonly ToolStripItem _ResetSelectedLinesToolStripMenuItem;
 
         public FormCommit()
+            : this(CommitKind.Normal, null)
+        { }
+
+        public FormCommit(CommitKind commitKind, GitRevision editedCommit)
         {
             _syncContext = SynchronizationContext.Current;
 
             InitializeComponent();
+            
             splitRight.Panel2MinSize = 130;
             Translate();
 
@@ -116,6 +123,9 @@ namespace GitUI
             Unstaged.SetNoFilesText(_noUnstagedChanges.Text);
             Staged.SetNoFilesText(_noStagedChanges.Text);
             Message.SetEmptyMessage(_enterCommitMessageHint.Text);
+
+            _commitKind = commitKind;
+            _editedCommit = editedCommit;
 
             Unstaged.SelectedIndexChanged += UntrackedSelectionChanged;
             Staged.SelectedIndexChanged += TrackedSelectionChanged;
@@ -501,6 +511,7 @@ namespace GitUI
                 ScriptManager.RunEventScripts(ScriptEvent.AfterCommit);
 
                 Message.Text = string.Empty;
+                GitCommands.Commit.SetCommitMessage(string.Empty);
 
                 if (push)
                 {
@@ -826,10 +837,25 @@ namespace GitUI
 
             AcceptButton = Commit;
 
-            var message = GitCommandHelpers.GetMergeMessage();
+            string message;
 
-            if (string.IsNullOrEmpty(message) && File.Exists(GitCommands.Commit.GetCommitMessagePath()))
-                message = File.ReadAllText(GitCommands.Commit.GetCommitMessagePath(), Settings.Encoding);
+            switch (_commitKind)
+            {
+                case CommitKind.Fixup:
+                    message = string.Format("fixup! {0}", _editedCommit.Message);
+                    break;
+                case CommitKind.Squash:
+                    message = string.Format("squash! {0}", _editedCommit.Message);
+                    break;
+                case CommitKind.Normal:
+                default:
+                    message = GitCommandHelpers.GetMergeMessage();
+
+                    if (string.IsNullOrEmpty(message) && File.Exists(GitCommands.Commit.GetCommitMessagePath()))
+                        message = File.ReadAllText(GitCommands.Commit.GetCommitMessagePath(), Settings.Encoding);
+                    break;
+            }
+
             if (!string.IsNullOrEmpty(message))
                 Message.Text = message;
 
@@ -895,7 +921,11 @@ namespace GitUI
 
         private void FormCommitFormClosing(object sender, FormClosingEventArgs e)
         {
-            GitCommands.Commit.SetCommitMessage(Message.Text);
+            // Do not remember commit message of fixup or squash commits, since they have
+            // a special meaning, and can be dangerous if used inappropriately.
+            if (CommitKind.Normal == _commitKind)
+                GitCommands.Commit.SetCommitMessage(Message.Text);
+
             SavePosition("commit");
 
             Settings.CommitDialogSplitter = splitMain.SplitterDistance;
@@ -1188,5 +1218,15 @@ namespace GitUI
         {
 
         }
+    }
+
+    /// <summary>
+    /// Indicates the kind of commit being prepared. Used for adjusting the behavior of FormCommit.
+    /// </summary>
+    public enum CommitKind
+    {
+        Normal,
+        Fixup,
+        Squash
     }
 }
