@@ -408,6 +408,11 @@ namespace GitUI.Editor
             }
         }
 
+        public void SetFileLoader(Func<bool, Tuple<int, string>> fileLoader)
+        {
+            _findAndReplaceForm.SetFileLoader(fileLoader);
+        }
+
         #endregion
     }
 }
