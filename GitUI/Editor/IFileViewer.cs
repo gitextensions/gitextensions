@@ -44,6 +44,6 @@ namespace GitUI.Editor
         Font Font { set; }
         void FocusTextArea();
 
-        void SetFileLoader(Func<Tuple<int, string>> fileLoader);
+        void SetFileLoader(Func<bool, Tuple<int, string>> fileLoader);
     }
 }

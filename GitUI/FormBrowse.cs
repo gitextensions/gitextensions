@@ -2138,7 +2138,31 @@ namespace GitUI
         }
         #endregion
 
-        private Tuple<int, string> getNextPatchFile()
+        private int getNextIdx(int curIdx, int maxIdx, bool searchBackward)
+        {
+            if(searchBackward){
+                if (curIdx == 0)
+                {
+                    curIdx = maxIdx;
+                }
+                else
+                {
+                    curIdx--;
+                }
+            } else {
+                if (curIdx == maxIdx)
+                {
+                    curIdx = 0;
+                }
+                else
+                {
+                    curIdx++;
+                }
+            }
+            return curIdx;
+        }
+
+        private Tuple<int, string> getNextPatchFile(bool searchBackward)
         {
             var revisions = RevisionGrid.GetRevisions();
             if (revisions.Count == 0)
@@ -2148,14 +2172,7 @@ namespace GitUI
                 return new Tuple<int, string>(idx, null);
             } else {
                 IList<GitItemStatus> items = DiffFiles.GitItemStatuses;
-                if (idx == items.Count - 1)
-                {
-                    idx = 0;
-                }
-                else
-                {
-                    idx++;
-                }
+                idx = getNextIdx(idx, items.Count - 1, searchBackward);
                 _dontUpdateOnIndexChange = true;
                 DiffFiles.SelectedIndex = idx;
                 _dontUpdateOnIndexChange = false;
