@@ -408,7 +408,7 @@ namespace GitUI.Editor
             }
         }
 
-        public void SetFileLoader(Func<Tuple<int, string>> fileLoader)
+        public void SetFileLoader(Func<bool, Tuple<int, string>> fileLoader)
         {
             _findAndReplaceForm.SetFileLoader(fileLoader);
         }
