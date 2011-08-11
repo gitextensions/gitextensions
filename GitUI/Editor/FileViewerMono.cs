@@ -323,6 +323,11 @@ namespace GitUI.Editor
         {
         }
 
+        public void SetFileLoader(Func<bool, Tuple<int, string>> fileLoader)
+        {
+            // todo
+        }
+
         #endregion
     }
 }

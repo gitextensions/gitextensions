@@ -229,6 +229,19 @@ namespace GitUI
             }
         }
 
+        public int SelectedIndex
+        {
+            get
+            {
+                return FileStatusListBox.SelectedIndex;
+            }
+            set
+            {
+                FileStatusListBox.ClearSelected();
+                FileStatusListBox.SelectedIndex = value;
+            }
+        }
+
         public event EventHandler SelectedIndexChanged;
 
         public new event EventHandler DoubleClick;
