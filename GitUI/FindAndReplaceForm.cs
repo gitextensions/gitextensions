@@ -18,7 +18,7 @@ namespace GitUI
         private TextEditorControl _editor;
         private bool _lastSearchLoopedAround;
         private bool _lastSearchWasBackward;
-        private Func<Tuple<int, string>> _fileLoader;
+        private Func<bool, Tuple<int, string>> _fileLoader;
 
         public FindAndReplaceForm()
         {
@@ -137,6 +137,8 @@ namespace GitUI
                 }
 
                 int startFrom = caret.Offset - (searchBackward ? 1 : 0);
+                if (startFrom == -1)
+                    startFrom = _search.EndOffset;
                 range = _search.FindNext(startFrom, searchBackward, out _lastSearchLoopedAround);
                 if (range != null && (!_lastSearchLoopedAround || _fileLoader == null))
                 {
@@ -147,7 +149,7 @@ namespace GitUI
                     range = null;
                     if (currentIdx != -1 && startIdx == -1)
                         startIdx = currentIdx;
-                    Tuple<int, string> nextFile = _fileLoader.Invoke();
+                    Tuple<int, string> nextFile = _fileLoader.Invoke(searchBackward);
                     currentIdx = nextFile.Item1;
                     Editor.Text = nextFile.Item2;
                 }
@@ -292,7 +294,7 @@ namespace GitUI
         }
 
 
-        internal void SetFileLoader(Func<Tuple<int, string>> fileLoader)
+        internal void SetFileLoader(Func<bool, Tuple<int, string>> fileLoader)
         {
             _fileLoader = fileLoader;
         }
