@@ -712,5 +712,10 @@ namespace GitUI.Editor
         {
             return (_internalFileViewer.GetText() != null && _internalFileViewer.GetText().Contains("@@"));
         }
+
+        public void SetFileLoader(Func<bool, Tuple<int, string>> fileLoader){
+            _internalFileViewer.SetFileLoader(fileLoader);
+        }
+
     }
 }
