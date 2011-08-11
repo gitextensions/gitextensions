@@ -18,6 +18,7 @@ namespace GitUI
         private TextEditorControl _editor;
         private bool _lastSearchLoopedAround;
         private bool _lastSearchWasBackward;
+        private Func<Tuple<int, string>> _fileLoader;
 
         public FindAndReplaceForm()
         {
@@ -122,20 +123,36 @@ namespace GitUI
             _search.MatchCase = chkMatchCase.Checked;
             _search.MatchWholeWordOnly = chkMatchWholeWord.Checked;
 
-            Caret caret = _editor.ActiveTextAreaControl.Caret;
-            if (viaF3 && _search.HasScanRegion &&
-                !Globals.IsInRange(caret.Offset, _search.BeginOffset, _search.EndOffset))
-            {
-                // user moved outside of the originally selected region
-                _search.ClearScanRegion();
-                UpdateTitleBar();
-            }
+            int startIdx = -1;
+            int currentIdx = -1;
+            TextRange range = null;
+            do {
+                Caret caret = _editor.ActiveTextAreaControl.Caret;
+                if (viaF3 && _search.HasScanRegion &&
+                    !Globals.IsInRange(caret.Offset, _search.BeginOffset, _search.EndOffset))
+                {
+                    // user moved outside of the originally selected region
+                    _search.ClearScanRegion();
+                    UpdateTitleBar();
+                }
 
-            int startFrom = caret.Offset - (searchBackward ? 1 : 0);
-            TextRange range = _search.FindNext(startFrom, searchBackward, out _lastSearchLoopedAround);
-            if (range != null)
-                SelectResult(range);
-            else if (messageIfNotFound != null)
+                int startFrom = caret.Offset - (searchBackward ? 1 : 0);
+                range = _search.FindNext(startFrom, searchBackward, out _lastSearchLoopedAround);
+                if (range != null && (!_lastSearchLoopedAround || _fileLoader == null))
+                {
+                    SelectResult(range);
+                }
+                else if (_fileLoader != null)
+                {
+                    range = null;
+                    if (currentIdx != -1 && startIdx == -1)
+                        startIdx = currentIdx;
+                    Tuple<int, string> nextFile = _fileLoader.Invoke();
+                    currentIdx = nextFile.Item1;
+                    Editor.Text = nextFile.Item2;
+                }
+            } while (range == null && startIdx != currentIdx && currentIdx != -1);
+            if (range == null && messageIfNotFound != null)
                 MessageBox.Show(this, messageIfNotFound, " ", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return range;
         }
@@ -148,8 +165,7 @@ namespace GitUI
             _editor.ActiveTextAreaControl.ScrollTo(p1.Line, p1.Column);
             // Also move the caret to the end of the selection, because when the user 
             // presses F3, the caret is where we start searching next time.
-            _editor.ActiveTextAreaControl.Caret.Position =
-                _editor.Document.OffsetToPosition(range.Offset + range.Length);
+            _editor.ActiveTextAreaControl.Caret.Position = p2;
         }
 
         private void btnHighlightAll_Click(object sender, EventArgs e)
@@ -273,6 +289,12 @@ namespace GitUI
             {
                 textArea.Document.UndoStack.EndUndoGroup();
             }
+        }
+
+
+        internal void SetFileLoader(Func<Tuple<int, string>> fileLoader)
+        {
+            _fileLoader = fileLoader;
         }
     }
 
