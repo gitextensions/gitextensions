@@ -178,6 +178,13 @@ namespace GitExtensions
                     case "commit":
                         Commit(arguments);
                         return;
+                    case "filedifftool":
+                        if ( args.Length > 2 )
+                        {
+                            string fileName = args[2].Replace(Settings.WorkingDir, "").Replace('\\', '/');
+                            GitCommandHelpers.OpenWithDifftool(fileName);
+                        }
+                        return;
                     case "filehistory":
                         if (args.Length > 2)
                         {

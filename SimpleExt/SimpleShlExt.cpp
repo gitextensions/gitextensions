@@ -101,12 +101,13 @@ int CSimpleShlExt::PopulateMenu(HMENU hMenu, int id)
     AddMenuItem(hMenu, "Checkout revision", ++id, CheckoutRevisionId=5);
     AddMenuItem(hMenu, "Clone", ++id, CloneId=6);
     AddMenuItem(hMenu, "Commit", ++id, CommitId=7);
-	AddMenuItem(hMenu, "File history", ++id, FileHistoryId=8);
-   	AddMenuItem(hMenu, "Reset file changes", ++id, ResetFileChangesId=9);
-    AddMenuItem(hMenu, "Pull", ++id, PullId=10);
-    AddMenuItem(hMenu, "Push", ++id, PushId=11);
-    AddMenuItem(hMenu, "Settings", ++id, SettingsId=12);
-    AddMenuItem(hMenu, "View diff", ++id, ViewDiffId=13);
+    AddMenuItem(hMenu, "Difftool", ++id, FileDifftoolId=8);
+    AddMenuItem(hMenu, "File history", ++id, FileHistoryId=9);
+    AddMenuItem(hMenu, "Reset file changes", ++id, ResetFileChangesId=10);
+    AddMenuItem(hMenu, "Pull", ++id, PullId=11);
+    AddMenuItem(hMenu, "Push", ++id, PushId=12);
+    AddMenuItem(hMenu, "Settings", ++id, SettingsId=13);
+    AddMenuItem(hMenu, "View diff", ++id, ViewDiffId=14);
 
     return id++;
 }
@@ -216,6 +217,11 @@ STDMETHODIMP CSimpleShlExt::InvokeCommand ( LPCMINVOKECOMMANDINFO pCmdInfo )
 	if (invokeId == CommitId)
     {
 		RunGitEx(_T("commit"));
+        return S_OK;
+    } else
+	if (invokeId == FileDifftoolId)
+    {
+		RunGitEx(_T("filedifftool"));
         return S_OK;
     } else
 	if (invokeId == FileHistoryId)

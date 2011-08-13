@@ -32,6 +32,7 @@ public:
 	int CheckoutRevisionId;
 	int CloneId;
 	int CommitId;
+	int FileDifftoolId;
 	int FileHistoryId;
 	int PullId;
 	int PushId;
