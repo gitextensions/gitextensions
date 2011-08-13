@@ -36,6 +36,7 @@ namespace GitUI
         private ThumbnailToolBarButton _pushButton;
         private ThumbnailToolBarButton _pullButton;
         private bool _toolbarButtonsCreated;
+        private bool _dontUpdateOnIndexChange;
 
         public FormBrowse(string filter)
         {
@@ -57,6 +58,7 @@ namespace GitUI
             RevisionGrid.SelectionChanged += RevisionGridSelectionChanged;
             DiffText.ExtraDiffArgumentsChanged += DiffTextExtraDiffArgumentsChanged;
             SetFilter(filter);
+            DiffText.SetFileLoader(getNextPatchFile);
 
             GitTree.ImageList = new ImageList();
             GitTree.ImageList.Images.Add(Properties.Resources._21); //File
@@ -69,6 +71,7 @@ namespace GitUI
             this.HotkeysEnabled = true;
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             this.toolPanel.SplitterDistance = this.ToolStrip.Height;
+            this._dontUpdateOnIndexChange = false;
         }
 
         private void ShowDashboard()
@@ -494,9 +497,13 @@ namespace GitUI
         /// <param name="isWorkingDirValid">If the given path contains valid repository.</param>
         private static string GenerateWindowTitle(string workingDir, bool isWorkingDirValid, string branchName)
         {
+#if DEBUG  
+            const string defaultTitle = "Git Extensions -> DEBUG <-";
+            const string repositoryTitleFormat = "{0} ({1}) - Git Extensions -> DEBUG <-";
+#else
             const string defaultTitle = "Git Extensions";
             const string repositoryTitleFormat = "{0} ({1}) - Git Extensions";
-            
+#endif
             if (!isWorkingDirValid)
                 return defaultTitle;
             string repositoryDescription = GetRepositoryShortName(workingDir);
@@ -1259,7 +1266,8 @@ namespace GitUI
 
         private void DiffFilesSelectedIndexChanged(object sender, EventArgs e)
         {
-            ShowSelectedFileDiff();
+            if (!_dontUpdateOnIndexChange)
+                ShowSelectedFileDiff();
         }
 
         private void ShowSelectedFileDiff()
@@ -2133,5 +2141,49 @@ namespace GitUI
             }
         }
         #endregion
+
+        private int getNextIdx(int curIdx, int maxIdx, bool searchBackward)
+        {
+            if(searchBackward){
+                if (curIdx == 0)
+                {
+                    curIdx = maxIdx;
+                }
+                else
+                {
+                    curIdx--;
+                }
+            } else {
+                if (curIdx == maxIdx)
+                {
+                    curIdx = 0;
+                }
+                else
+                {
+                    curIdx++;
+                }
+            }
+            return curIdx;
+        }
+
+        private Tuple<int, string> getNextPatchFile(bool searchBackward)
+        {
+            var revisions = RevisionGrid.GetRevisions();
+            if (revisions.Count == 0)
+                return null;
+            int idx = DiffFiles.SelectedIndex;
+            if(idx == -1){
+                return new Tuple<int, string>(idx, null);
+            } else {
+                IList<GitItemStatus> items = DiffFiles.GitItemStatuses;
+                idx = getNextIdx(idx, items.Count - 1, searchBackward);
+                _dontUpdateOnIndexChange = true;
+                DiffFiles.SelectedIndex = idx;
+                _dontUpdateOnIndexChange = false;
+                Tuple<int, string> tuple = new Tuple<int, string>(idx, GetSelectedPatch(revisions, DiffFiles.SelectedItem));
+                return tuple;
+            }
+        }
+
     }
 }

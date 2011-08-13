@@ -1424,15 +1424,23 @@ namespace GitCommands
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);
 
-            return RunCmd(Settings.GitCommand, RebaseCmd(branch, false));
+            return RunCmd(Settings.GitCommand, RebaseCmd(branch, false, false));
         }
 
-        public static string RebaseCmd(string branch, bool interactive)
+        public static string RebaseCmd(string branch, bool interactive, bool autosquash)
         {
-            if (interactive)
-                return "rebase -i \"" + branch + "\"";
+            StringBuilder sb = new StringBuilder("rebase ");
 
-            return "rebase \"" + branch + "\"";
+            if (interactive)
+            {
+                sb.Append(" -i ");
+                sb.Append(autosquash ? "--autosquash " : "--no-autosquash ");
+            }
+
+            sb.Append('"');
+            sb.Append(branch);
+            sb.Append('"');
+            return sb.ToString();
         }
 
 
@@ -1606,6 +1614,15 @@ namespace GitCommands
         {
             var configFile = GetLocalConfig();
             return configFile.GetValue(setting);
+        }
+
+        public static string GetEffectiveSetting(string setting)
+        {
+            var localConfig = GetLocalConfig();
+            if (localConfig.HasValue(setting))
+                return localConfig.GetValue(setting);
+
+            return GetGlobalConfig().GetValue(setting);
         }
 
         public static void UnsetSetting(string setting)
@@ -2120,10 +2137,10 @@ namespace GitCommands
             return RunCmd(Settings.GitCommand, "reset HEAD -- \"" + FixPath(file) + "\"");
         }
 
-        public static string GetSelectedBranch()
+        public static string GetSelectedBranch(string repositoryPath)
         {
             string head;
-            string headFileName = Settings.WorkingDirGitDir() + "\\HEAD";
+            string headFileName = Path.Combine(GetGitDirectory(repositoryPath), "HEAD");
             if (File.Exists(headFileName))
             {
                 head = File.ReadAllText(headFileName);
@@ -2135,7 +2152,7 @@ namespace GitCommands
                 int exitcode;
                 head = RunCmd(Settings.GitCommand, "symbolic-ref HEAD", out exitcode);
                 if (exitcode == 1)
-                    head = "(no branch)";
+                    return "(no branch)";
             }
 
             if (!string.IsNullOrEmpty(head))
@@ -2144,6 +2161,11 @@ namespace GitCommands
             }
 
             return string.Empty;
+        }
+
+        public static string GetSelectedBranch()
+        {
+            return GetSelectedBranch(Settings.WorkingDir);
         }
 
         public static List<GitHead> GetRemoteHeads(string remote, bool tags, bool branches)
@@ -2227,10 +2249,14 @@ namespace GitCommands
             return string.Empty;
         }
 
-        public static string[] GetFiles(string filePattern)
+        public static IList<string> GetFiles(string filePattern)
         {
+            // filter duplicates out of the result because options -c and -m may return 
+            // same files at times
             return RunCmd(Settings.GitCommand, "ls-files -z -o -m -c \"" + filePattern + "\"")
-                .Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                .Split(new[] {'\0', '\n'}, StringSplitOptions.RemoveEmptyEntries)
+                .Distinct()
+                .ToList();
         }
 
         public static List<GitItem> GetFileChanges(string file)
@@ -2536,6 +2562,12 @@ namespace GitCommands
                 return fileName.Substring(fileName.LastIndexOf('.') + 1);
 
             return null;
+        }
+
+        public static string GetGitDirectory(string repositoryPath)
+        {
+            var candidatePath = Path.Combine(repositoryPath, ".git");
+            return Directory.Exists(candidatePath) ? candidatePath : repositoryPath;
         }
 
         /// <summary>

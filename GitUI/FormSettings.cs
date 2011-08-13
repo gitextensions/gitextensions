@@ -1267,7 +1267,7 @@ namespace GitUI
                     }
                 }
 
-                MergeToolCmd.Text = "\"" + MergetoolPath.Text + "\" \"$BASE\" \"$LOCAL\" \"$REMOTE\"";
+                MergeToolCmd.Text = "\"" + MergetoolPath.Text + "\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"";
                 return;
             }
 
