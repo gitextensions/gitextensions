@@ -6,34 +6,42 @@ using GitUI.Properties;
 
 namespace GitUI
 {
-    public sealed partial class DashboardItem : GitExtensionsControl
+    public partial class DashboardItem : GitExtensionsControl
     {
-        private ToolTip toolTip;
-
-        private DashboardItem()
-        {
-            InitializeComponent();
-            Translate();
-        }
-
         public DashboardItem(Repository repository)
-            : this()
         {
+            InitializeComponent(); Translate();
+
             if (repository == null)
                 return;
 
-            Bitmap icon = GetRepositoryIcon(repository);
+            Bitmap icon = null;
+            if (repository.RepositoryType == RepositoryType.RssFeed)
+                icon = Resources.rss.ToBitmap();
+            if (repository.RepositoryType == RepositoryType.Repository)
+                icon = Resources._14;
+            if (repository.RepositoryType == RepositoryType.History)
+                icon = Resources.history.ToBitmap();
 
-            var branchName = GitCommands.GitCommandHelpers.GetSelectedBranch(repository.Path);
-            Initialize(icon, repository.Path, repository.Title, repository.Description, branchName);
+            Initialize(icon, repository.Path, repository.Title, repository.Description);
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
         }
 
         public DashboardItem(Bitmap icon, string title)
-            : this()
         {
-            Initialize(icon, title, title, null, null);
+            InitializeComponent(); Translate();
+
+            Initialize(icon, title, title, null);
         }
+
+        public DashboardItem(Bitmap icon, string title, string text)
+        {
+            InitializeComponent(); Translate();
+
+            Initialize(icon, title, title, text);
+        }
+
+        ToolTip toolTip;
 
         public void Close()
         {
@@ -41,7 +49,7 @@ namespace GitUI
                 toolTip.RemoveAll();
         }
 
-        private void Initialize(Bitmap icon, string path, string title, string text, string branchName)
+        private void Initialize(Bitmap icon, string path, string title, string text)
         {
             _NO_TRANSLATE_Title.Text = title;
             _NO_TRANSLATE_Title.AutoEllipsis = true;
@@ -61,8 +69,6 @@ namespace GitUI
             //    Description.Height = ((int)size.Height) * lines;
             //}
 
-            _NO_TRANSLATE_BranchName.Visible = !string.IsNullOrEmpty(branchName);
-            _NO_TRANSLATE_BranchName.Text = branchName;
 
             Height = _NO_TRANSLATE_Title.Height + 6;
             if (_NO_TRANSLATE_Description.Visible)
@@ -70,6 +76,7 @@ namespace GitUI
                 _NO_TRANSLATE_Description.Top = _NO_TRANSLATE_Title.Height + 4;
                 Height += _NO_TRANSLATE_Description.Height + 2;
             }
+
 
 
             if (icon != null)
@@ -107,12 +114,32 @@ namespace GitUI
             }
         }
 
-        public string Path { get; private set; }
+        public string GetTitle()
+        {
+            return _NO_TRANSLATE_Title.Text;
+        }
+
+        public string Path { get; set; }
+
+        private void DashboardItem_Resize(object sender, EventArgs e)
+        {
+
+        }
 
         private void DashboardItem_SizeChanged(object sender, EventArgs e)
         {
             _NO_TRANSLATE_Title.Width = Width - _NO_TRANSLATE_Title.Location.X;
             _NO_TRANSLATE_Description.Width = Width - _NO_TRANSLATE_Title.Location.X;
+        }
+
+        private void DashboardItem_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void DashboardItem_Leave(object sender, EventArgs e)
+        {
+
         }
 
         private void DashboardItem_MouseEnter(object sender, EventArgs e)
@@ -123,21 +150,6 @@ namespace GitUI
         private void DashboardItem_MouseLeave(object sender, EventArgs e)
         {
             BackColor = SystemColors.Control;
-        }
-
-        private static Bitmap GetRepositoryIcon(Repository repository)
-        {
-            switch (repository.RepositoryType)
-            {
-                case RepositoryType.Repository:
-                    return Resources._14;
-                case RepositoryType.RssFeed:
-                    return Resources.rss.ToBitmap();
-                case RepositoryType.History:
-                    return Resources.history.ToBitmap();
-                default:
-                    throw new ArgumentException("Repository type is not supported.", "repository");
-            }
         }
     }
 }

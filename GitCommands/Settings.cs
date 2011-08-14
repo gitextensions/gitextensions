@@ -677,7 +677,15 @@ namespace GitCommands
 
         public static string WorkingDirGitDir()
         {
-            return GitCommandHelpers.GetGitDirectory(WorkingDir);
+            var workingDir = WorkingDir;
+
+            if (Directory.Exists(workingDir + ".git"))
+                return workingDir + ".git";
+
+            if (Directory.Exists(workingDir + PathSeparator + ".git"))
+                return workingDir + PathSeparator + ".git";
+
+            return WorkingDir;
         }
 
         public static bool RunningOnWindows()
