@@ -442,6 +442,7 @@ namespace GitUI
 
             var inTheMiddleOfConflictedMerge = GitCommandHelpers.InTheMiddleOfConflictedMerge();
             SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
+            Unstaged.SelectStoredNextIndex();
         }
 
         private void ShowChanges(GitItemStatus item, bool staged)
@@ -765,6 +766,9 @@ namespace GitUI
                 DialogResult.Yes)
                 return;
 
+            //remember max selected index
+            Unstaged.StoreNextIndexToSelect();
+            
             var deleteNewFiles = Unstaged.SelectedItems.Any(item => item.IsNew)
                 && MessageBox.Show(_alsoDeleteUntrackedFiles.Text, _alsoDeleteUntrackedFilesCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes;
             var output = new StringBuilder();
