@@ -1815,9 +1815,9 @@ namespace GitCommands
             int lastNewLinePos = trimmedStatus.LastIndexOfAny(new char[] { '\n', '\r' });
             if (lastNewLinePos > 0)
             {
-                if (trimmedStatus.IndexOf('\0') > lastNewLinePos) //Warning at beginning
+                if (trimmedStatus.IndexOf('\0') < lastNewLinePos) //Warning at end
                     trimmedStatus = trimmedStatus.Substring(0, lastNewLinePos).Trim(new char[] { '\n', '\r' });
-                else                                              //Warning at end
+                else                                              //Warning at beginning
                     trimmedStatus = trimmedStatus.Substring(lastNewLinePos).Trim(new char[] { '\n', '\r' });
             }
 
@@ -2482,9 +2482,19 @@ namespace GitCommands
             return null;
         }
 
+        public static string RecodeString(string s) {
+
+            Encoding logoutputEncoding = GitCommandHelpers.GetLogoutputEncoding();
+            if (logoutputEncoding != Settings.Encoding)
+                s = logoutputEncoding.GetString(Settings.Encoding.GetBytes(s));
+
+            return s;
+        }
+
         public static string GetPreviousCommitMessage(int numberBack)
         {
-            return RunCmd(Settings.GitCommand, "log -n 1 HEAD~" + numberBack + " --pretty=format:%s%n%n%b");
+            //+"--encoding=" + Settings.Encoding.HeaderName doesn't work
+            return RecodeString(RunCmd(Settings.GitCommand, "log -n 1 HEAD~" + numberBack + " --pretty=format:%s%n%n%b "));
         }
 
         public static string MergeBranch(string branch)
