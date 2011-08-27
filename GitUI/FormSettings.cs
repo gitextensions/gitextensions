@@ -1618,7 +1618,10 @@ namespace GitUI
             System.Resources.ResourceManager rm = 
                 new System.Resources.ResourceManager("GitUI.Properties.Resources",
                             System.Reflection.Assembly.GetExecutingAssembly());
-            var a = rm.GetObject("bug");
+            
+            // dummy request; for some strange reason the ResourceSets are not loaded untill after the first object request... bug?
+            var a = rm.GetObject("a");
+
             System.Resources.ResourceSet resourceSet = rm.GetResourceSet(System.Globalization.CultureInfo.CurrentUICulture, true, true);
 
             contextMenuStrip_SplitButton.Items.Clear();
@@ -1626,12 +1629,21 @@ namespace GitUI
             foreach (System.Collections.DictionaryEntry icon in resourceSet)
             {
                 //add entry to toolstrip
-                if(icon.Value.GetType() == typeof (System.Drawing.Icon))
-                    contextMenuStrip_SplitButton.Items.Add((Image) ((Icon)icon.Value).ToBitmap());
+                if (icon.Value.GetType() == typeof(System.Drawing.Icon))
+                {
+                    contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)((Icon)icon.Value).ToBitmap(), SplitButtonMenuItem_Click);
+                }
+                else if (icon.Value.GetType() == typeof(System.Drawing.Bitmap))
+                {
+                    contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image) icon.Value,SplitButtonMenuItem_Click);
+                }
                 //var aa = icon.Value.GetType();
             }
-            sbtn_icon.Visible = true;
 
+            resourceSet.Close();
+            rm.ReleaseAllResources();
+            
+            sbtn_icon.Visible = true;
         }
 
         private void ClearImageCache_Click(object sender, EventArgs e)
@@ -2333,6 +2345,25 @@ namespace GitUI
             diffFontChangeButton.Text = 
                 string.Format("{0}, {1}", diffFont.FontFamily.Name, (int) diffFont.Size);
 
+        }
+
+        private void SplitButtonMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ToolStripMenuItem a = contextMenuStrip_SplitButton.Items.OfType<ToolStripMenuItem>().First(s => s.Font.Bold == true);
+                a.Font = new Font(contextMenuStrip_SplitButton.Font, FontStyle.Regular);
+            }
+            catch
+            { 
+            
+            }
+            finally
+            {
+                ((ToolStripMenuItem)sender).Font = new Font(((ToolStripMenuItem)sender).Font, FontStyle.Bold);
+                
+                sbtn_icon.Image = ((ToolStripMenuItem)sender).Image;
+            }
         }
     }
 }
