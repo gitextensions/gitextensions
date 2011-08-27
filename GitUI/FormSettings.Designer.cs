@@ -2769,12 +2769,13 @@ namespace GitUI
             this.lbl_icon.Size = new System.Drawing.Size(32, 13);
             this.lbl_icon.TabIndex = 23;
             this.lbl_icon.Text = "Icon:";
+            this.lbl_icon.Visible = false;
             // 
             // sbtn_icon
             // 
             this.sbtn_icon.AutoSize = true;
             this.sbtn_icon.ContextMenuStrip = this.contextMenuStrip_SplitButton;
-            this.sbtn_icon.Location = new System.Drawing.Point(365, 411);
+            this.sbtn_icon.Location = new System.Drawing.Point(365, 412);
             this.sbtn_icon.Name = "sbtn_icon";
             this.sbtn_icon.Size = new System.Drawing.Size(92, 23);
             this.sbtn_icon.SplitMenuStrip = this.contextMenuStrip_SplitButton;
