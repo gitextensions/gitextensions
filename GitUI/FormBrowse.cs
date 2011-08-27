@@ -276,7 +276,9 @@ namespace GitUI
                 tempButton.Click += new EventHandler(UserMenu_Click);
                 tempButton.Enabled = true;
                 tempButton.Visible = true;
-                tempButton.Image = GitUI.Properties.Resources.bug;
+                //tempButton.Image = GitUI.Properties.Resources.bug;
+                //scriptInfo.Icon = "Cow";
+                tempButton.Image = scriptInfo.GetIcon();
                 tempButton.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
                 //add to toolstrip
                 this.ToolStrip.Items.Add((ToolStripItem)tempButton);

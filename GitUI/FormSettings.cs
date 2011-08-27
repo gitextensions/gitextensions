@@ -1600,12 +1600,38 @@ namespace GitUI
         {
             if(((TabControl)sender).TabPages[((TabControl)sender).SelectedIndex].Name.ToLower() == "tabpagehotkeys")
                 controlHotkeys.ReloadSettings();
+            else if(((TabControl)sender).TabPages[((TabControl)sender).SelectedIndex].Name.ToLower() == "scriptstab")    
+                populateSplitbutton();
+
+
 
             if (GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
                 string.IsNullOrEmpty(MergeToolCmd.Text))
                 MergeToolCmd.Enabled = false;
             else
                 MergeToolCmd.Enabled = true;
+        }
+
+        private void populateSplitbutton()
+        {
+
+            System.Resources.ResourceManager rm = 
+                new System.Resources.ResourceManager("GitUI.Properties.Resources",
+                            System.Reflection.Assembly.GetExecutingAssembly());
+            var a = rm.GetObject("bug");
+            System.Resources.ResourceSet resourceSet = rm.GetResourceSet(System.Globalization.CultureInfo.CurrentUICulture, true, true);
+
+            contextMenuStrip_SplitButton.Items.Clear();
+
+            foreach (System.Collections.DictionaryEntry icon in resourceSet)
+            {
+                //add entry to toolstrip
+                if(icon.Value.GetType() == typeof (System.Drawing.Icon))
+                    contextMenuStrip_SplitButton.Items.Add((Image) ((Icon)icon.Value).ToBitmap());
+                //var aa = icon.Value.GetType();
+            }
+            sbtn_icon.Visible = true;
+
         }
 
         private void ClearImageCache_Click(object sender, EventArgs e)
