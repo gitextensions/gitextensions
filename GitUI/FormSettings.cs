@@ -21,6 +21,7 @@ namespace GitUI
     {
         private Font diffFont;
         private const string GitExtensionsShellExName = "GitExtensionsShellEx32.dll";
+        private string IconName = "bug";
 
         public FormSettings()
         {
@@ -1633,17 +1634,23 @@ namespace GitUI
                 {
                     contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)((Icon)icon.Value).ToBitmap(), SplitButtonMenuItem_Click);
                 }
-                else if (icon.Value.GetType() == typeof(System.Drawing.Bitmap))
+                else if (icon.Value.GetType() == typeof(Bitmap))
                 {
-                    contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image) icon.Value,SplitButtonMenuItem_Click);
+                    contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image) icon.Value, SplitButtonMenuItem_Click);
                 }
                 //var aa = icon.Value.GetType();
             }
 
             resourceSet.Close();
             rm.ReleaseAllResources();
-            
-            sbtn_icon.Visible = true;
+        }
+
+        public Bitmap ResizeBitmap(Bitmap b, int nWidth, int nHeight)
+        {
+            Bitmap result = new Bitmap(nWidth, nHeight);
+            using (Graphics g = Graphics.FromImage((Image)result))
+                g.DrawImage(b, 0, 0, nWidth, nHeight);
+            return result;
         }
 
         private void ClearImageCache_Click(object sender, EventArgs e)
@@ -2095,6 +2102,9 @@ namespace GitUI
             scriptEnabled.Checked = scriptInfo.Enabled;
             scriptNeedsConfirmation.Checked = scriptInfo.AskConfirmation;
             scriptEvent.SelectedItem = scriptInfo.OnEvent;
+            sbtn_icon.Image = (Image) scriptInfo.GetIcon();
+            //sbtn_icon.Image= (Image) contextMenuStrip_SplitButton.Items[contextMenuStrip_SplitButton.Items.IndexOfKey(scriptInfo.Icon)].Image;
+            //TODO: highlight selected item
         }
 
         private void addScriptButton_Click(object sender, EventArgs e)
@@ -2129,6 +2139,7 @@ namespace GitUI
                 selectedScriptInfo.Enabled = scriptEnabled.Checked;
                 selectedScriptInfo.AskConfirmation = scriptNeedsConfirmation.Checked;
                 selectedScriptInfo.OnEvent = (ScriptEvent)scriptEvent.SelectedItem;
+                selectedScriptInfo.Icon = IconName;
             }
         }
 
@@ -2349,20 +2360,34 @@ namespace GitUI
 
         private void SplitButtonMenuItem_Click(object sender, EventArgs e)
         {
+            var aaaa = sender.GetType().ToString();
             try
             {
+                
                 ToolStripMenuItem a = contextMenuStrip_SplitButton.Items.OfType<ToolStripMenuItem>().First(s => s.Font.Bold == true);
                 a.Font = new Font(contextMenuStrip_SplitButton.Font, FontStyle.Regular);
             }
-            catch
-            { 
-            
-            }
+            catch { }
             finally
             {
                 ((ToolStripMenuItem)sender).Font = new Font(((ToolStripMenuItem)sender).Font, FontStyle.Bold);
-                
-                sbtn_icon.Image = ((ToolStripMenuItem)sender).Image;
+
+                sbtn_icon.Image = (Image) ResizeBitmap((Bitmap)((ToolStripMenuItem)sender).Image, 12, 12);
+                IconName = ((ToolStripMenuItem)sender).Text;
+            }
+        }
+
+        private void scriptEvent_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (scriptEvent.Text == ScriptEvent.ShowInUserMenuBar.ToString())
+            {
+                sbtn_icon.Visible = true;
+                lbl_icon.Visible = true;
+            }
+            else
+            {
+                sbtn_icon.Visible = false;
+                lbl_icon.Visible = false;
             }
         }
     }
