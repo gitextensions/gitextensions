@@ -42,9 +42,17 @@ namespace GitUI.Script
         public bool AskConfirmation { get; set; }
 
         public int HotkeyCommandIdentifier { get; set; }
-
-        public string Icon { set { _Icon = value; } }
-            
+        /// <summary>
+        /// Gets or sets the icon name.
+        /// </summary>
+        public string Icon {
+            get { return _Icon; }
+            set { _Icon = value; } 
+        }
+        /// <summary>
+        /// Gets the associated bitmap.
+        /// </summary>
+        /// <returns>Bitmap image</returns>
         public System.Drawing.Bitmap GetIcon() {
             // Get all resources
                     System.Resources.ResourceManager rm 

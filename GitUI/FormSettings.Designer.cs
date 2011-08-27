@@ -2774,6 +2774,7 @@ namespace GitUI
             // sbtn_icon
             // 
             this.sbtn_icon.AutoSize = true;
+            this.sbtn_icon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.sbtn_icon.ContextMenuStrip = this.contextMenuStrip_SplitButton;
             this.sbtn_icon.Location = new System.Drawing.Point(365, 412);
             this.sbtn_icon.Name = "sbtn_icon";
@@ -2781,6 +2782,8 @@ namespace GitUI
             this.sbtn_icon.SplitMenuStrip = this.contextMenuStrip_SplitButton;
             this.sbtn_icon.TabIndex = 22;
             this.sbtn_icon.Text = "Select icon";
+            this.sbtn_icon.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.sbtn_icon.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.sbtn_icon.UseVisualStyleBackColor = true;
             this.sbtn_icon.Visible = false;
             this.sbtn_icon.WholeButtonDropdown = true;
@@ -2792,7 +2795,7 @@ namespace GitUI
             this.toolStripMenuItem2,
             this.toolStripMenuItem3});
             this.contextMenuStrip_SplitButton.Name = "contextMenuStrip1";
-            this.contextMenuStrip_SplitButton.Size = new System.Drawing.Size(180, 92);
+            this.contextMenuStrip_SplitButton.Size = new System.Drawing.Size(180, 70);
             // 
             // toolStripMenuItem1
             // 
@@ -2844,6 +2847,7 @@ namespace GitUI
             this.scriptEvent.Size = new System.Drawing.Size(188, 21);
             this.scriptEvent.TabIndex = 19;
             this.scriptEvent.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
+            this.scriptEvent.SelectedIndexChanged += new System.EventHandler(this.scriptEvent_SelectedIndexChanged);
             // 
             // scriptEnabled
             // 
