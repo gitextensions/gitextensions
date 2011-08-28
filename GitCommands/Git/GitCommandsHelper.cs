@@ -2254,7 +2254,7 @@ namespace GitCommands
             // filter duplicates out of the result because options -c and -m may return 
             // same files at times
             return RunCmd(Settings.GitCommand, "ls-files -z -o -m -c \"" + filePattern + "\"")
-                .Split(new[] {'\0', '\n'}, StringSplitOptions.RemoveEmptyEntries)
+                .Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries)
                 .Distinct()
                 .ToList();
         }
@@ -2566,6 +2566,8 @@ namespace GitCommands
 
         public static string GetGitDirectory(string repositoryPath)
         {
+            if (string.IsNullOrEmpty(repositoryPath))
+                return repositoryPath;
             var candidatePath = Path.Combine(repositoryPath, ".git");
             return Directory.Exists(candidatePath) ? candidatePath : repositoryPath;
         }
