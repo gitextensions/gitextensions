@@ -1613,7 +1613,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
 Не забудьте удалить их, когда закончите.</Value>
         </TranslationItem>
         <TranslationItem Name="SaveObjects" Property="Text">
-          <Value>Сохранить обьекты в .git/lost-found</Value>
+          <Value>Сохранить в .git/lost-found</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Щёлкните дважды по строке, чтобы просмотреть объект</Value>
@@ -1649,6 +1649,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         </TranslationItem>
         <TranslationItem Name="ShowOnlyCommits" Property="Text">
           <Value>Показать только коммиты</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnCloseDialog" Property="Text">
+          <Value>Отмена</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
