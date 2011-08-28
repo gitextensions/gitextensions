@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormVerify));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.mnuLostObjects = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnuLostObjectView = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuLostObjectsCreateTag = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,13 +41,6 @@
             this.DeleteAllLostAndFoundTags = new System.Windows.Forms.Button();
             this.Remove = new System.Windows.Forms.Button();
             this.SaveObjects = new System.Windows.Forms.Button();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.label2 = new System.Windows.Forms.Label();
-            this.ShowOnlyCommits = new System.Windows.Forms.CheckBox();
-            this.NoReflogs = new System.Windows.Forms.CheckBox();
-            this.FullCheck = new System.Windows.Forms.CheckBox();
-            this.Unreachable = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.Warnings = new System.Windows.Forms.DataGridView();
             this.columnIsLostObjectSelected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.columnDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -55,12 +48,17 @@
             this.columnSubject = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.columnAuthor = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.columnHash = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
+            this.ShowOnlyCommits = new System.Windows.Forms.CheckBox();
+            this.NoReflogs = new System.Windows.Forms.CheckBox();
+            this.FullCheck = new System.Windows.Forms.CheckBox();
+            this.Unreachable = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.mnuLostObjects.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.splitContainer2.Panel1.SuspendLayout();
-            this.splitContainer2.Panel2.SuspendLayout();
-            this.splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Warnings)).BeginInit();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // mnuLostObjects
@@ -162,95 +160,6 @@
             this.SaveObjects.Text = "Save objects to .git/lost-found";
             this.SaveObjects.UseVisualStyleBackColor = true;
             // 
-            // splitContainer2
-            // 
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Name = "splitContainer2";
-            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer2.Panel1
-            // 
-            this.splitContainer2.Panel1.Controls.Add(this.label2);
-            this.splitContainer2.Panel1.Controls.Add(this.ShowOnlyCommits);
-            this.splitContainer2.Panel1.Controls.Add(this.NoReflogs);
-            this.splitContainer2.Panel1.Controls.Add(this.FullCheck);
-            this.splitContainer2.Panel1.Controls.Add(this.Unreachable);
-            this.splitContainer2.Panel1.Controls.Add(this.label1);
-            // 
-            // splitContainer2.Panel2
-            // 
-            this.splitContainer2.Panel2.Controls.Add(this.Warnings);
-            this.splitContainer2.Size = new System.Drawing.Size(859, 514);
-            this.splitContainer2.SplitterDistance = 137;
-            this.splitContainer2.TabIndex = 2;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(4, 3);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(335, 105);
-            this.label2.TabIndex = 5;
-            this.label2.Text = resources.GetString("label2.Text");
-            // 
-            // ShowOnlyCommits
-            // 
-            this.ShowOnlyCommits.AutoSize = true;
-            this.ShowOnlyCommits.Checked = true;
-            this.ShowOnlyCommits.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ShowOnlyCommits.Location = new System.Drawing.Point(430, 3);
-            this.ShowOnlyCommits.Name = "ShowOnlyCommits";
-            this.ShowOnlyCommits.Size = new System.Drawing.Size(131, 19);
-            this.ShowOnlyCommits.TabIndex = 4;
-            this.ShowOnlyCommits.Text = "Show only commits";
-            this.ShowOnlyCommits.UseVisualStyleBackColor = true;
-            // 
-            // NoReflogs
-            // 
-            this.NoReflogs.AutoSize = true;
-            this.NoReflogs.Checked = true;
-            this.NoReflogs.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.NoReflogs.Location = new System.Drawing.Point(430, 29);
-            this.NoReflogs.Name = "NoReflogs";
-            this.NoReflogs.Size = new System.Drawing.Size(375, 34);
-            this.NoReflogs.TabIndex = 3;
-            this.NoReflogs.Text = "Do not consider commits that are referenced only by an entry in a \r\nreflog to be " +
-    "reachable.";
-            this.NoReflogs.UseVisualStyleBackColor = true;
-            // 
-            // FullCheck
-            // 
-            this.FullCheck.AutoSize = true;
-            this.FullCheck.Location = new System.Drawing.Point(430, 95);
-            this.FullCheck.Name = "FullCheck";
-            this.FullCheck.Size = new System.Drawing.Size(397, 34);
-            this.FullCheck.TabIndex = 2;
-            this.FullCheck.Text = "Check not just objects in GIT_OBJECT_DIRECTORY ($GIT_DIR/objects), \r\nbut also the" +
-    " ones found in alternate object pools.\r\n";
-            this.FullCheck.UseVisualStyleBackColor = true;
-            // 
-            // Unreachable
-            // 
-            this.Unreachable.AutoSize = true;
-            this.Unreachable.Location = new System.Drawing.Point(430, 62);
-            this.Unreachable.Name = "Unreachable";
-            this.Unreachable.Size = new System.Drawing.Size(429, 34);
-            this.Unreachable.TabIndex = 1;
-            this.Unreachable.Text = "Print out objects that exist but that aren\'t readable from any of the reference \r" +
-    "\nnodes.\r\n";
-            this.Unreachable.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 116);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(200, 15);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Double-click on a row for quick view";
-            // 
             // Warnings
             // 
             this.Warnings.AllowUserToAddRows = false;
@@ -268,7 +177,7 @@
             this.columnHash});
             this.Warnings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Warnings.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.Warnings.Location = new System.Drawing.Point(0, 0);
+            this.Warnings.Location = new System.Drawing.Point(0, 141);
             this.Warnings.MultiSelect = false;
             this.Warnings.Name = "Warnings";
             this.Warnings.RowHeadersVisible = false;
@@ -276,7 +185,7 @@
             this.Warnings.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.Warnings.ShowEditingIcon = false;
             this.Warnings.Size = new System.Drawing.Size(859, 373);
-            this.Warnings.TabIndex = 0;
+            this.Warnings.TabIndex = 3;
             // 
             // columnIsLostObjectSelected
             // 
@@ -309,9 +218,9 @@
             // 
             this.columnSubject.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.columnSubject.DataPropertyName = "Subject";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.columnSubject.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.columnSubject.DefaultCellStyle = dataGridViewCellStyle3;
             this.columnSubject.HeaderText = "Subject";
             this.columnSubject.Name = "columnSubject";
             this.columnSubject.ReadOnly = true;
@@ -332,13 +241,93 @@
             this.columnHash.ReadOnly = true;
             this.columnHash.Width = 80;
             // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.label2);
+            this.panel2.Controls.Add(this.ShowOnlyCommits);
+            this.panel2.Controls.Add(this.NoReflogs);
+            this.panel2.Controls.Add(this.FullCheck);
+            this.panel2.Controls.Add(this.Unreachable);
+            this.panel2.Controls.Add(this.label1);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2.Location = new System.Drawing.Point(0, 0);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(859, 141);
+            this.panel2.TabIndex = 4;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(4, 9);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(335, 105);
+            this.label2.TabIndex = 11;
+            this.label2.Text = resources.GetString("label2.Text");
+            // 
+            // ShowOnlyCommits
+            // 
+            this.ShowOnlyCommits.AutoSize = true;
+            this.ShowOnlyCommits.Checked = true;
+            this.ShowOnlyCommits.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ShowOnlyCommits.Location = new System.Drawing.Point(430, 9);
+            this.ShowOnlyCommits.Name = "ShowOnlyCommits";
+            this.ShowOnlyCommits.Size = new System.Drawing.Size(131, 19);
+            this.ShowOnlyCommits.TabIndex = 10;
+            this.ShowOnlyCommits.Text = "Show only commits";
+            this.ShowOnlyCommits.UseVisualStyleBackColor = true;
+            // 
+            // NoReflogs
+            // 
+            this.NoReflogs.AutoSize = true;
+            this.NoReflogs.Checked = true;
+            this.NoReflogs.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.NoReflogs.Location = new System.Drawing.Point(430, 35);
+            this.NoReflogs.Name = "NoReflogs";
+            this.NoReflogs.Size = new System.Drawing.Size(375, 34);
+            this.NoReflogs.TabIndex = 9;
+            this.NoReflogs.Text = "Do not consider commits that are referenced only by an entry in a \r\nreflog to be " +
+    "reachable.";
+            this.NoReflogs.UseVisualStyleBackColor = true;
+            // 
+            // FullCheck
+            // 
+            this.FullCheck.AutoSize = true;
+            this.FullCheck.Location = new System.Drawing.Point(430, 101);
+            this.FullCheck.Name = "FullCheck";
+            this.FullCheck.Size = new System.Drawing.Size(397, 34);
+            this.FullCheck.TabIndex = 8;
+            this.FullCheck.Text = "Check not just objects in GIT_OBJECT_DIRECTORY ($GIT_DIR/objects), \r\nbut also the" +
+    " ones found in alternate object pools.\r\n";
+            this.FullCheck.UseVisualStyleBackColor = true;
+            // 
+            // Unreachable
+            // 
+            this.Unreachable.AutoSize = true;
+            this.Unreachable.Location = new System.Drawing.Point(430, 68);
+            this.Unreachable.Name = "Unreachable";
+            this.Unreachable.Size = new System.Drawing.Size(429, 34);
+            this.Unreachable.TabIndex = 7;
+            this.Unreachable.Text = "Print out objects that exist but that aren\'t readable from any of the reference \r" +
+    "\nnodes.\r\n";
+            this.Unreachable.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 122);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(200, 15);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "Double-click on a row for quick view";
+            // 
             // FormVerify
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = null;
             this.ClientSize = new System.Drawing.Size(859, 575);
-            this.Controls.Add(this.splitContainer2);
+            this.Controls.Add(this.Warnings);
+            this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.MinimizeBox = false;
             this.Name = "FormVerify";
@@ -347,11 +336,9 @@
             this.Shown += new System.EventHandler(this.FormVerifyShown);
             this.mnuLostObjects.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
-            this.splitContainer2.Panel1.ResumeLayout(false);
-            this.splitContainer2.Panel1.PerformLayout();
-            this.splitContainer2.Panel2.ResumeLayout(false);
-            this.splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.Warnings)).EndInit();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -368,13 +355,6 @@
         private System.Windows.Forms.Button DeleteAllLostAndFoundTags;
         private System.Windows.Forms.Button Remove;
         private System.Windows.Forms.Button SaveObjects;
-        private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.CheckBox ShowOnlyCommits;
-        private System.Windows.Forms.CheckBox NoReflogs;
-        private System.Windows.Forms.CheckBox FullCheck;
-        private System.Windows.Forms.CheckBox Unreachable;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridView Warnings;
         private System.Windows.Forms.DataGridViewCheckBoxColumn columnIsLostObjectSelected;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnDate;
@@ -382,5 +362,12 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn columnSubject;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnAuthor;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnHash;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.CheckBox ShowOnlyCommits;
+        private System.Windows.Forms.CheckBox NoReflogs;
+        private System.Windows.Forms.CheckBox FullCheck;
+        private System.Windows.Forms.CheckBox Unreachable;
+        private System.Windows.Forms.Label label1;
     }
 }
