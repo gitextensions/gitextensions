@@ -6,14 +6,15 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands.Logging;
 using GitCommands.Repository;
+using Microsoft.Win32;
 
 namespace GitCommands
 {
     public static class Settings
     {
         //Constants
-        public static readonly string GitExtensionsVersionString = "2.23 RC2";
-        public static readonly int GitExtensionsVersionInt = 223;
+        public static readonly string GitExtensionsVersionString = "2.24";
+        public static readonly int GitExtensionsVersionInt = 224;
 
         //semi-constants
         public static readonly char PathSeparator = '\\';
@@ -31,9 +32,11 @@ namespace GitCommands
             }
 
             GitLog = new CommandLogger();
-            ApplicationDataPath = Application.UserAppDataPath + Settings.PathSeparator.ToString();
+
+            //Make applicationdatapath version dependent
+            ApplicationDataPath = Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
         }
-        
+
         private static int? _UserMenuLocationX;
         public static int UserMenuLocationX
         {
@@ -47,14 +50,14 @@ namespace GitCommands
             get { return SafeGet("usermenulocationy", -1, ref _UserMenuLocationY); }
             set { SafeSet("usermenulocationy", value, ref _UserMenuLocationY); }
         }
-        
+
         private static bool? _stashKeepIndex;
         public static bool StashKeepIndex
         {
             get { return SafeGet("stashkeepindex", false, ref _stashKeepIndex); }
-            set { SafeSet("stashkeepindex", value, ref _stashKeepIndex); } 
+            set { SafeSet("stashkeepindex", value, ref _stashKeepIndex); }
         }
-       
+
 
         private static bool? _applyPatchIgnoreWhitespace;
         public static bool ApplyPatchIgnoreWhitespace
@@ -585,6 +588,13 @@ namespace GitCommands
             set { SafeSet("diffaddedextracolor", value, ref _diffAddedExtraColor); }
         }
 
+        private static Font _diffFont;
+        public static Font DiffFont
+        {
+            get { return SafeGet("difffont", new Font("Courier New", 10), ref _diffFont); }
+            set { SafeSet("difffont", value, ref _diffFont); }
+        }
+
         #endregion
 
         private static bool? _multicolorBranches;
@@ -638,7 +648,7 @@ namespace GitCommands
         public static void SetInstallDir(string dir)
         {
             if (Application.UserAppDataRegistry != null)
-                Application.UserAppDataRegistry.SetValue("InstallDir", dir);
+                SetValue("InstallDir", dir);
         }
 
         public static bool ValidWorkingDir()
@@ -667,15 +677,7 @@ namespace GitCommands
 
         public static string WorkingDirGitDir()
         {
-            var workingDir = WorkingDir;
-
-            if (Directory.Exists(workingDir + ".git"))
-                return workingDir + ".git";
-
-            if (Directory.Exists(workingDir + PathSeparator + ".git"))
-                return workingDir + PathSeparator + ".git";
-
-            return WorkingDir;
+            return GitCommandHelpers.GetGitDirectory(WorkingDir);
         }
 
         public static bool RunningOnWindows()
@@ -779,6 +781,11 @@ namespace GitCommands
             return SafeGet(key, defaultValue, ref field, x => x);
         }
 
+        private static Font SafeGet(string key, Font defaultValue, ref Font field)
+        {
+            return SafeGet(key, defaultValue, ref field, x => x.Parse(defaultValue));
+        }
+
         private static bool SafeGet(string key, bool defaultValue, ref bool? field)
         {
             return SafeGet(key, defaultValue, ref field, x => x == "True").Value;
@@ -812,15 +819,82 @@ namespace GitCommands
             SetValue(key, ColorTranslator.ToHtml(field.Value));
         }
 
-        private static T GetValue<T>(string key, T defaultValue)
+        private static void SafeSet(string key, Font value, ref Font field)
         {
-            var value = (T)Application.UserAppDataRegistry.GetValue(key);
-            return value == null ? defaultValue : value;
+            field = value;
+            SetValue(key, field.AsString());
         }
 
-        private static void SetValue<T>(string key, T value)
+        private static string VersionIndependentRegKey
         {
-            Application.UserAppDataRegistry.SetValue(key, value);
+            get
+            {
+                return Application.UserAppDataRegistry.Name.Replace("\\" + Application.ProductVersion, string.Empty);
+            }
+        }
+
+        public static T GetValue<T>(string name, T defaultValue)
+        {
+            T value = (T)Registry.GetValue(VersionIndependentRegKey, name, null);
+
+            if (value != null)
+                return value;
+
+            /////////////////////////////////////////////////////////////////////////////////////
+            ///// BEGIN TEMPORARY CODE TO CONVERT OLD VERSION DEPENDENT REGISTRY TO NEW 
+            ///// VERSION INDEPENDENT REGISTRY KEY!
+            /////////////////////////////////////////////////////////////////////////////////////
+            value = (T)Registry.GetValue(Application.UserAppDataRegistry.Name.Replace(Application.ProductVersion, "1.0.0.0"), name, null);
+
+            if (value != null)
+            {
+                SetValue<T>(name, value);
+                return value;
+            }
+
+            if (defaultValue != null)
+            {
+                SetValue<T>(name, defaultValue);
+            }
+            /////////////////////////////////////////////////////////////////////////////////////
+            ///// END TEMPORARY CODE TO CONVERT OLD VERSION DEPENDENT REGISTRY TO NEW 
+            ///// VERSION INDEPENDENT REGISTRY KEY!
+            /////////////////////////////////////////////////////////////////////////////////////
+
+            return defaultValue;
+        }
+
+        public static void SetValue<T>(string name, T value)
+        {
+            Registry.SetValue(VersionIndependentRegKey, name, value);
+        }
+    }
+
+    public static class FontParser
+    {
+        public static string AsString(this Font value)
+        {
+            return String.Format("{0};{1}", value.FontFamily.Name, value.Size);
+        }
+
+        public static Font Parse(this string value, Font defaultValue)
+        {
+            if (value == null)
+                return defaultValue;
+
+            string[] parts = value.Split(';');
+
+            if (parts.Length < 2)
+                return defaultValue;
+
+            try
+            {
+                return new Font(parts[0], Single.Parse(parts[1]));
+            }
+            catch (Exception)
+            {
+                return defaultValue;
+            }
         }
     }
 }

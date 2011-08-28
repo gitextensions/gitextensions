@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
+using GitCommands;
 
 namespace GitExtensions
 {
@@ -17,12 +18,12 @@ namespace GitExtensions
 
         public void AddSetting(string name, string defaultValue)
         {
-            var value = Application.UserAppDataRegistry.GetValue(pluginName + name) as string;
+            var value = Settings.GetValue<string>(pluginName + name, null);
 
             if (value == null)
             {
                 settings.Add(name, defaultValue);
-                Application.UserAppDataRegistry.SetValue(pluginName + name, defaultValue);
+                Settings.SetValue(pluginName + name, defaultValue);
             }
             else
             {
@@ -37,7 +38,7 @@ namespace GitExtensions
 
             settings[name] = value;
 
-            Application.UserAppDataRegistry.SetValue(pluginName + name, value);
+            Settings.SetValue(pluginName + name, value);
         }
 
         public string GetSetting(string name) 
@@ -45,7 +46,7 @@ namespace GitExtensions
             if (!settings.ContainsKey(name))
                 throw new ArgumentOutOfRangeException("name", "Cannot find setting. Dit you add the setting in the Register() function of the plugin?");
 
-            var value = Application.UserAppDataRegistry.GetValue(pluginName + name) as string;
+            var value = Settings.GetValue<string>(pluginName + name, null);
             
             if (value == null)
                 return settings[name];

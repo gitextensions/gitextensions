@@ -39,7 +39,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(13, 13);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(51, 13);
+            this.label1.Size = new System.Drawing.Size(55, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Directory";
             // 
@@ -50,7 +50,7 @@
             this._NO_TRANSLATE_Directory.FormattingEnabled = true;
             this._NO_TRANSLATE_Directory.Location = new System.Drawing.Point(85, 10);
             this._NO_TRANSLATE_Directory.Name = "_NO_TRANSLATE_Directory";
-            this._NO_TRANSLATE_Directory.Size = new System.Drawing.Size(266, 21);
+            this._NO_TRANSLATE_Directory.Size = new System.Drawing.Size(266, 23);
             this._NO_TRANSLATE_Directory.TabIndex = 1;
             this._NO_TRANSLATE_Directory.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.DirectoryKeyPress);
             // 
@@ -66,6 +66,7 @@
             // 
             // Load
             // 
+            this.Load.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.Load.Location = new System.Drawing.Point(360, 43);
             this.Load.Name = "Load";
             this.Load.Size = new System.Drawing.Size(75, 25);
@@ -77,7 +78,7 @@
             // Open
             // 
             this.AcceptButton = this.Load;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(446, 78);
             this.Controls.Add(this.Load);

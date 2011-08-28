@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormVerify));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.label2 = new System.Windows.Forms.Label();
@@ -50,11 +50,11 @@
             this.mnuLostObjectView = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuLostObjectsCreateTag = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuLostObjectsCreateBranch = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnCloseDialog = new System.Windows.Forms.Button();
             this.btnRestoreSelectedObjects = new System.Windows.Forms.Button();
             this.DeleteAllLostAndFoundTags = new System.Windows.Forms.Button();
             this.Remove = new System.Windows.Forms.Button();
             this.SaveObjects = new System.Windows.Forms.Button();
-            this.btnCloseDialog = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -215,9 +215,9 @@
             this.columnIsLostObjectSelected.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.columnIsLostObjectSelected.DataPropertyName = "IsSelected";
             this.columnIsLostObjectSelected.HeaderText = "";
-            this.columnIsLostObjectSelected.MinimumWidth = 10;
+            this.columnIsLostObjectSelected.MinimumWidth = 20;
             this.columnIsLostObjectSelected.Name = "columnIsLostObjectSelected";
-            this.columnIsLostObjectSelected.Width = 10;
+            this.columnIsLostObjectSelected.Width = 20;
             // 
             // columnDate
             // 
@@ -241,9 +241,9 @@
             // 
             this.columnSubject.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.columnSubject.DataPropertyName = "Subject";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.columnSubject.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.columnSubject.DefaultCellStyle = dataGridViewCellStyle1;
             this.columnSubject.HeaderText = "Subject";
             this.columnSubject.Name = "columnSubject";
             this.columnSubject.ReadOnly = true;
@@ -275,7 +275,7 @@
             // 
             // mnuLostObjectView
             // 
-            this.mnuLostObjectView.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.mnuLostObjectView.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.mnuLostObjectView.Name = "mnuLostObjectView";
             this.mnuLostObjectView.Size = new System.Drawing.Size(189, 22);
             this.mnuLostObjectView.Text = "View";
@@ -297,14 +297,27 @@
             this.mnuLostObjectsCreateBranch.Text = "Create branch";
             this.mnuLostObjectsCreateBranch.Click += new System.EventHandler(this.mnuLostObjectsCreateBranch_Click);
             // 
+            // btnCloseDialog
+            // 
+            this.btnCloseDialog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCloseDialog.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnCloseDialog.Location = new System.Drawing.Point(648, 29);
+            this.btnCloseDialog.Name = "btnCloseDialog";
+            this.btnCloseDialog.Size = new System.Drawing.Size(208, 25);
+            this.btnCloseDialog.TabIndex = 7;
+            this.btnCloseDialog.Text = "Cancel";
+            this.btnCloseDialog.UseVisualStyleBackColor = true;
+            // 
             // btnRestoreSelectedObjects
             // 
-            this.btnRestoreSelectedObjects.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnRestoreSelectedObjects.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRestoreSelectedObjects.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRestoreSelectedObjects.Location = new System.Drawing.Point(299, 17);
             this.btnRestoreSelectedObjects.Name = "btnRestoreSelectedObjects";
-            this.btnRestoreSelectedObjects.Size = new System.Drawing.Size(271, 25);
+            this.btnRestoreSelectedObjects.Size = new System.Drawing.Size(317, 25);
             this.btnRestoreSelectedObjects.TabIndex = 6;
-            this.btnRestoreSelectedObjects.Text = "Restore selected objects";
+            this.btnRestoreSelectedObjects.Text = "Recover selected objects";
             this.btnRestoreSelectedObjects.UseVisualStyleBackColor = true;
             this.btnRestoreSelectedObjects.Click += new System.EventHandler(this.btnRestoreSelectedObjects_Click);
             // 
@@ -321,7 +334,7 @@
             // 
             // Remove
             // 
-            this.Remove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.Remove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.Remove.Location = new System.Drawing.Point(4, 2);
             this.Remove.Name = "Remove";
             this.Remove.Size = new System.Drawing.Size(252, 25);
@@ -340,16 +353,6 @@
             this.SaveObjects.Text = "Save objects to .git/lost-found";
             this.SaveObjects.UseVisualStyleBackColor = true;
             this.SaveObjects.Click += new System.EventHandler(this.SaveObjectsClick);
-            // 
-            // btnCloseDialog
-            // 
-            this.btnCloseDialog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCloseDialog.Location = new System.Drawing.Point(648, 29);
-            this.btnCloseDialog.Name = "btnCloseDialog";
-            this.btnCloseDialog.Size = new System.Drawing.Size(208, 25);
-            this.btnCloseDialog.TabIndex = 7;
-            this.btnCloseDialog.Text = "Cancel";
-            this.btnCloseDialog.UseVisualStyleBackColor = true;
             // 
             // FormVerify
             // 
@@ -395,13 +398,13 @@
         private System.Windows.Forms.ContextMenuStrip mnuLostObjects;
         private System.Windows.Forms.ToolStripMenuItem mnuLostObjectsCreateTag;
         private System.Windows.Forms.ToolStripMenuItem mnuLostObjectView;
+        private System.Windows.Forms.ToolStripMenuItem mnuLostObjectsCreateBranch;
+        private System.Windows.Forms.Button btnCloseDialog;
         private System.Windows.Forms.DataGridViewCheckBoxColumn columnIsLostObjectSelected;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnDate;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnType;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnSubject;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnAuthor;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnHash;
-        private System.Windows.Forms.ToolStripMenuItem mnuLostObjectsCreateBranch;
-        private System.Windows.Forms.Button btnCloseDialog;
     }
 }

@@ -155,6 +155,8 @@ namespace GitUI
                 initialized = true;
             }
 
+            splitContainer7.Panel1MinSize = 1;
+            splitContainer7.Panel2MinSize = 1;
             splitContainer7.SplitterDistance = Math.Max(2, splitContainer7.Height - (DonateCategory.Height + 25));
 
             //Resize favourites

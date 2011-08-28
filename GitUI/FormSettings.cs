@@ -19,6 +19,7 @@ namespace GitUI
 {
     public partial class FormSettings : GitExtensionsForm
     {
+        private Font diffFont;
         private const string GitExtensionsShellExName = "GitExtensionsShellEx32.dll";
 
         public FormSettings()
@@ -36,6 +37,7 @@ namespace GitUI
             defaultHome.Text = string.Format(defaultHome.Text + " ({0})", GitCommandHelpers.GetDefaultHomeDir());
             userprofileHome.Text = string.Format(userprofileHome.Text + " ({0})",
                                                  Environment.GetEnvironmentVariable("USERPROFILE"));
+            SetCurrentDiffFont(Settings.DiffFont);
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -450,6 +452,7 @@ namespace GitUI
             Settings.DiffRemovedColor = _NO_TRANSLATE_ColorRemovedLine.BackColor;
             Settings.DiffAddedExtraColor = _NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor;
             Settings.DiffRemovedExtraColor = _NO_TRANSLATE_ColorRemovedLineDiffLabel.BackColor;
+            Settings.DiffFont = diffFont;
 
             Settings.DiffSectionColor = _NO_TRANSLATE_ColorSectionLabel.BackColor;
 
@@ -930,7 +933,7 @@ namespace GitUI
 
         private void CheckAtStartup_CheckedChanged(object sender, EventArgs e)
         {
-            Application.UserAppDataRegistry.SetValue("checksettings", CheckAtStartup.Checked ? "true" : "false");
+            Settings.SetValue("checksettings", CheckAtStartup.Checked ? "true" : "false");
         }
 
         private void Rescan_Click(object sender, EventArgs e)
@@ -1264,7 +1267,7 @@ namespace GitUI
                     }
                 }
 
-                MergeToolCmd.Text = "\"" + MergetoolPath.Text + "\" \"$BASE\" \"$LOCAL\" \"$REMOTE\"";
+                MergeToolCmd.Text = "\"" + MergetoolPath.Text + "\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"";
                 return;
             }
 
@@ -1690,15 +1693,15 @@ namespace GitUI
         private static bool getCheckAtStartupChecked(bool bValid)
         {
             bool retValue = false;
-            if ((Application.UserAppDataRegistry.GetValue("checksettings") == null ||
-                 Application.UserAppDataRegistry.GetValue("checksettings").ToString() == "true"))
+            if ((Settings.GetValue<string>("checksettings", null) == null ||
+                 Settings.GetValue<string>("checksettings", null).ToString() == "true"))
             {
                 retValue = true;
             }
 
             if (bValid && retValue)
             {
-                Application.UserAppDataRegistry.SetValue("checksettings", false);
+                Settings.SetValue("checksettings", false);
                 retValue = false;
             }
             return retValue;
@@ -1946,14 +1949,14 @@ namespace GitUI
             if (string.IsNullOrEmpty(Settings.GetInstallDir()))
             {
                 GitExtensionsInstall.BackColor = Color.LightSalmon;
-                GitExtensionsInstall.Text = "Registry entry missing [Software\\GitExtensions\\GitExtensions\\1.0.0.0\\InstallDir].";
+                GitExtensionsInstall.Text = "Registry entry missing [Software\\GitExtensions\\GitExtensions\\InstallDir].";
                 GitExtensionsInstall_Fix.Visible = true;
                 return false;
             }
             if (Settings.GetInstallDir() != null && Settings.GetInstallDir().EndsWith(".exe"))
             {
                 GitExtensionsInstall.BackColor = Color.LightSalmon;
-                GitExtensionsInstall.Text = "Invalid installation directory stored in [Software\\GitExtensions\\GitExtensions\\1.0.0.0\\InstallDir].";
+                GitExtensionsInstall.Text = "Invalid installation directory stored in [Software\\GitExtensions\\GitExtensions\\InstallDir].";
                 GitExtensionsInstall_Fix.Visible = true;
                 return false;
             }
@@ -2286,6 +2289,24 @@ namespace GitUI
             ShowIconPreview();
         }
 
+        private void diffFontChangeButton_Click(object sender, EventArgs e)
+        {
+            diffFontDialog.Font = diffFont;
+            DialogResult result = diffFontDialog.ShowDialog();
 
+            if (result == DialogResult.OK || result == DialogResult.Yes)
+            {
+                SetCurrentDiffFont(diffFontDialog.Font);
+            }
+        }
+
+        private void SetCurrentDiffFont(Font font)
+        {
+            diffFont = font;
+            
+            diffFontChangeButton.Text = 
+                string.Format("{0}, {1}", diffFont.FontFamily.Name, (int) diffFont.Size);
+
+        }
     }
 }

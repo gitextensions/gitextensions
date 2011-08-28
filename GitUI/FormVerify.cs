@@ -177,11 +177,17 @@ namespace GitUI
                 dialogResult = process.OutputString.ToString();
             }
 
+            if (FormProcess.IsOperationAborted(dialogResult))
+            {
+                DialogResult = DialogResult.Abort;
+                return;
+            }
+
             lostObjects.Clear();
             lostObjects.AddRange(dialogResult
                 .Split('\r', '\n')
                 .Where(s => !string.IsNullOrEmpty(s))
-                .Select(LostObject.TryParse)
+                .Select<string, LostObject>(LostObject.TryParse)
                 .Where(parsedLostObject => parsedLostObject != null));
 
             UpdateFilteredLostObjects();

@@ -28,7 +28,7 @@ namespace GitCommands.Repository
             {
                 if (_repositoryHistory == null)
                 {
-                    object setting = Application.UserAppDataRegistry.GetValue("history");
+                    object setting = Settings.GetValue<string>("history", null);
                     if (setting != null)
                     {
                         DeserializeHistoryFromXml(setting.ToString());
@@ -59,7 +59,7 @@ namespace GitCommands.Repository
             {
                 if (_repositoryCategories == null)
                 {
-                    object setting = Application.UserAppDataRegistry.GetValue("repositories");
+                    object setting = Settings.GetValue<string>("repositories", null);
                     if (setting != null)
                     {
                         DeserializeRepositories(setting.ToString());
