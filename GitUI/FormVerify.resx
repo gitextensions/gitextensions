@@ -121,10 +121,10 @@
     <value>By default only unreferenced objects that are older than 
 2 weeks are removed when cleaning up the database. All
 other object are only deleted when you run "Remove all
-dangling objects".
+dangling objects"
 
-To recover a lost commit, tag the commit and it will appear
-in the browse dialog again.</value>
+Check commits you want to recover and press Recover button
+Context menu for additional operations</value>
   </data>
   <metadata name="columnIsLostObjectSelected.UserAddedColumn" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>

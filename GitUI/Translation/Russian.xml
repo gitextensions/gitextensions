@@ -1616,7 +1616,18 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Сохранить обьекты в .git/lost-found</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
-          <Value>Щёлкните дважды по строке, содержащей хеш sha1, для того чтобы просмотреть объект</Value>
+          <Value>Щёлкните дважды по строке, чтобы просмотреть объект</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>По умолчанию потерянные объекты хранятся две недели,
+прежде чем будут удалены при сжатии базы.
+Их можно принудительно удалить,
+нажав на кнопку "Удалить все потерянные объекты"
+
+Отметьте коммиты, которые требуется восстановить,
+и нажмите на кнопку "Восстановить выделенные объекты"
+Используйте контекстное меню для дополнительных действий
+          </Value>
         </TranslationItem>
         <TranslationItem Name="Remove" Property="Text">
           <Value>Удалить все потерянные объекты</Value>
