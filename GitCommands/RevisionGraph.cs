@@ -95,6 +95,7 @@ namespace GitCommands
         public string LogParam = "HEAD --all";//--branches --remotes --tags";
         public string BranchFilter = String.Empty;
         public RevisionGraphInMemFilter InMemFilter = null;
+        private string selectedBranchName;
 
         public void Execute()
         {
@@ -119,8 +120,7 @@ namespace GitCommands
             try
             {
                 RevisionCount = 0;
-
-                heads = GitCommandHelpers.GetHeads(true);
+                heads = GetHeads();
 
                 string formatString =
                     /* <COMMIT>       */ COMMIT_BEGIN + "%n" +
@@ -194,6 +194,29 @@ namespace GitCommands
 
             if (Exited != null)
                 Exited(this, EventArgs.Empty);
+        }
+
+        private List<GitHead> GetHeads()
+        {
+            var result = GitCommandHelpers.GetHeads(true);
+            bool validWorkingDir = Settings.ValidWorkingDir();
+            selectedBranchName = validWorkingDir ? GitCommandHelpers.GetSelectedBranch() : string.Empty;
+            GitHead selectedHead = result.Find(head => head.Name == selectedBranchName);
+
+            if (selectedHead != null)
+            {
+                selectedHead.Selected = true;
+
+                GitHead selectedHeadMergeSource =
+                    result.Find(head => head.IsRemote
+                                        && selectedHead.TrackingRemote == head.Remote
+                                        && selectedHead.MergeWith == head.LocalName);
+
+                if (selectedHeadMergeSource != null)
+                    selectedHeadMergeSource.SelectedHeadMergeSource = true;
+            }
+
+            return result;
         }
 
         void finishRevision()

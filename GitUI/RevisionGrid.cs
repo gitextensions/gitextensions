@@ -916,7 +916,7 @@ namespace GitUI
 
             Brush foreBrush = new SolidBrush(foreColor);
             var rowFont = revision.Guid == CurrentCheckout /*&& !showRevisionCards*/ ? HeadFont : NormalFont;
-
+            
             switch (column)
             {
                 case 1: //Description!!
@@ -955,20 +955,34 @@ namespace GitUI
                         {
                             heads.Sort(new Comparison<GitHead>(
                                            (left, right) =>
-                                           {
-                                               if (left.IsTag != right.IsTag)
-                                                   return right.IsTag.CompareTo(left.IsTag);
-                                               if (left.IsRemote != right.IsRemote)
-                                                   return left.IsRemote.CompareTo(right.IsRemote);
-                                               return left.Name.CompareTo(right.Name);
-                                           }));
-
-                            var refsFont = IsFilledBranchesLayout() ? rowFont : RefsFont;
+                                               {
+                                                   if (left.IsTag != right.IsTag)
+                                                       return right.IsTag.CompareTo(left.IsTag);
+                                                   if (left.IsRemote != right.IsRemote)
+                                                       return left.IsRemote.CompareTo(right.IsRemote);
+                                                   return left.Name.CompareTo(right.Name);
+                                               }));
 
                             foreach (var head in heads)
                             {
                                 if ((head.IsRemote && !ShowRemoteBranches.Checked))
                                     continue;
+
+                                Font refsFont;
+                              
+                                if (IsFilledBranchesLayout())
+                                {
+                                    //refsFont = head.Selected ? rowFont : new Font(rowFont, FontStyle.Regular);
+                                    refsFont = rowFont;
+
+//                                    refsFont = head.Selected
+//                                        ? new Font(rowFont, rowFont.Style | FontStyle.Italic)
+//                                        : rowFont;
+                                }
+                                else
+                                {
+                                    refsFont = RefsFont;
+                                }
 
                                 Color headColor = GetHeadColor(head);
                                 Brush textBrush = new SolidBrush(headColor);
@@ -981,29 +995,39 @@ namespace GitUI
                                     headName = head.Name;
                                     offset += e.Graphics.MeasureString(headName, refsFont).Width + 6;
                                     location = new PointF(e.CellBounds.Right - offset, e.CellBounds.Top + 4);
-                                    var size = new SizeF(e.Graphics.MeasureString(headName, refsFont).Width, e.Graphics.MeasureString(headName, RefsFont).Height);
-                                    e.Graphics.FillRectangle(new SolidBrush(SystemColors.Info), location.X - 1, location.Y - 1, size.Width + 3, size.Height + 2);
-                                    e.Graphics.DrawRectangle(new Pen(SystemColors.InfoText), location.X - 1, location.Y - 1, size.Width + 3, size.Height + 2);
+                                    var size = new SizeF(e.Graphics.MeasureString(headName, refsFont).Width,
+                                                         e.Graphics.MeasureString(headName, RefsFont).Height);
+                                    e.Graphics.FillRectangle(new SolidBrush(SystemColors.Info), location.X - 1,
+                                                             location.Y - 1, size.Width + 3, size.Height + 2);
+                                    e.Graphics.DrawRectangle(new Pen(SystemColors.InfoText), location.X - 1,
+                                                             location.Y - 1, size.Width + 3, size.Height + 2);
                                     e.Graphics.DrawString(headName, refsFont, textBrush, location);
                                 }
                                 else
                                 {
                                     headName = IsFilledBranchesLayout()
-                                               ? head.Name
-                                               : string.Concat("[", head.Name, "] ");
+                                                   ? head.Name
+                                                   : string.Concat("[", head.Name, "] ");
 
                                     var headBounds = AdjustCellBounds(e.CellBounds, offset);
                                     SizeF textSize = e.Graphics.MeasureString(headName, refsFont);
+
                                     offset += textSize.Width;
 
                                     if (IsFilledBranchesLayout())
                                     {
                                         offset += 9;
 
-                                        DrawHeadBackground(isRowSelected, e.Graphics, headColor, headBounds.X, headBounds.Y,
-                                                           RoundToEven(textSize.Width + 3), RoundToEven(textSize.Height), 3);
+                                        float extraOffset = DrawHeadBackground(isRowSelected, e.Graphics,
+                                                                               headColor, headBounds.X,
+                                                                               headBounds.Y,
+                                                                               RoundToEven(textSize.Width + 3),
+                                                                               RoundToEven(textSize.Height), 3,
+                                                                               head.Selected,
+                                                                               head.SelectedHeadMergeSource);
 
-                                        headBounds.Offset(1, 0);
+                                        offset += extraOffset;
+                                        headBounds.Offset((int) (extraOffset + 1), 0);
                                     }
 
                                     DrawColumnText(e.Graphics, headName, refsFont, headColor, headBounds);
@@ -1108,26 +1132,41 @@ namespace GitUI
             return result < value ? result + 2 : result;
         }
 
-        private void DrawHeadBackground(bool isSelected, Graphics graphics, Color color, float x, float y, float width, float height, float radius)
+        private float DrawHeadBackground(bool isSelected, Graphics graphics, Color color, 
+            float x, float y, float width, float height, float radius, bool isCurrentBranch,
+            bool isCurentBranchMergeSource)
         {
+            float additionalOffset = isCurrentBranch || isCurentBranchMergeSource ? GetArrowSize(height) : 0;
+            width += additionalOffset;
             var oldMode = graphics.SmoothingMode;
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
             try
             {
+                // shade
                 using (var shadePath = CreateRoundRectPath(x + 1, y + 1, width, height, radius))
                 {
-                    graphics.FillPath(new SolidBrush(isSelected ? Color.Black : Color.Gray), shadePath);
+                    Color shadeColor = isSelected ? Color.Black : Color.Gray;
+                    graphics.FillPath(new SolidBrush(shadeColor), shadePath);
                 }
 
                 using (var forePath = CreateRoundRectPath(x, y, width, height, radius))
                 {
-                    Color fillColor = Lerp(color, Color.White, 0.9F);
+                    Color fillColor = Lerp(color, Color.White, 0.92F);
 
                     var fillBrush = new LinearGradientBrush(new RectangleF(x, y, width, height), fillColor,
-                        Lerp(fillColor, Color.White, 0.5F), 90);
-
+                                                            Lerp(fillColor, Color.White, 0.9F), 90);
+                    
+                    // fore rectangle
                     graphics.FillPath(fillBrush, forePath);
+                    // frame
+                    graphics.DrawPath(new Pen(Lerp(color, Color.White, 0.83F)), forePath);
+
+                    // arrow if the head is the current branch 
+                    if (isCurrentBranch)
+                        DrawArrow(graphics, x, y, height, color, true);
+                    else if (isCurentBranchMergeSource)
+                        DrawArrow(graphics, x, y, height, color, false);
                 }
             }
             finally
@@ -1135,6 +1174,33 @@ namespace GitUI
                 graphics.SmoothingMode = oldMode;
             }
 
+            return additionalOffset;
+        }
+
+        private float GetArrowSize(float rowHeight)
+        {
+            return rowHeight - 6;
+        }
+
+        private void DrawArrow(Graphics graphics, float x, float y, float rowHeight, Color color, bool filled)
+        {
+            const float horShift = 4;
+            const float verShift = 3;
+            float height = rowHeight - verShift * 2;
+            float width = height / 2;
+
+            var points = new[]
+                                 {
+                                     new PointF(x + horShift, y + verShift),
+                                     new PointF(x + horShift + width, y + verShift + height/2),
+                                     new PointF(x + horShift, y + verShift + height),
+                                     new PointF(x + horShift, y + verShift)
+                                 };
+
+            if (filled)
+                graphics.FillPolygon(new SolidBrush(color), points);
+            else
+                graphics.DrawPolygon(new Pen(color), points);
         }
 
         private static GraphicsPath CreateRoundRectPath(float x, float y, float width, float height, float radius)
@@ -1229,9 +1295,12 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
             var frm = new FormBranchSmall { Revision = GetRevision(LastRow) };
-            frm.ShowDialog();
-            RefreshRevisions();
-            OnActionOnRepositoryPerformed();
+
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                RefreshRevisions();
+                OnActionOnRepositoryPerformed();
+            }
         }
 
         private void RevisionsMouseClick(object sender, MouseEventArgs e)
@@ -1380,44 +1449,52 @@ namespace GitUI
             var tagNameCopy = new ToolStripDropDown();
             var branchNameCopy = new ToolStripDropDown();
 
-            foreach (var head in revision.Heads)
+            foreach (var head in revision.Heads.Where(h => h.IsTag))
             {
-                if (head.IsTag)
+                ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
+                ToolStripItem tagName = new ToolStripMenuItem(head.Name);
+                toolStripItem.Click += ToolStripItemClick;
+                tagDropDown.Items.Add(toolStripItem);
+                tagName.Click += copyToClipBoard;
+                tagNameCopy.Items.Add(tagName);
+            }
+
+            var allBranches = revision.Heads.Where(h => !h.IsTag && (h.IsHead || h.IsRemote));
+            var localBranches = allBranches.Where(b => !b.IsRemote);
+
+            var branchesWithNoIdenticalRemotes = allBranches.Where(
+                b => !b.IsRemote || !localBranches.Any(lb => lb.TrackingRemote == b.Remote && lb.MergeWith == b.LocalName));
+
+            foreach (var head in branchesWithNoIdenticalRemotes)
+            {
+                ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
+                toolStripItem.Click += ToolStripItemClickMergeBranch;
+                mergeBranchDropDown.Items.Add(toolStripItem);
+
+                toolStripItem = new ToolStripMenuItem(head.Name);
+                toolStripItem.Click += ToolStripItemClickRebaseBranch;
+                rebaseDropDown.Items.Add(toolStripItem);
+            }
+
+            foreach (var head in allBranches)
+            {
+                ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
+                ToolStripItem branchName = new ToolStripMenuItem(head.Name);
+                branchName.Click += copyToClipBoard;
+                branchNameCopy.Items.Add(branchName);
+
+                //if (head.IsHead && !head.IsRemote)
                 {
-                    ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
-                    ToolStripItem tagName = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Click += ToolStripItemClick;
-                    tagDropDown.Items.Add(toolStripItem);
-                    tagName.Click += copyToClipBoard;
-                    tagNameCopy.Items.Add(tagName);
-                }
-                else if (head.IsHead || head.IsRemote)
-                {
-                    ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Click += ToolStripItemClickMergeBranch;
-                    mergeBranchDropDown.Items.Add(toolStripItem);
+                    toolStripItem = new ToolStripMenuItem(head.Name);
+                    toolStripItem.Click += ToolStripItemClickBranch;
+                    branchDropDown.Items.Add(toolStripItem);
 
                     toolStripItem = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Click += ToolStripItemClickRebaseBranch;
-                    rebaseDropDown.Items.Add(toolStripItem);
-
-                    ToolStripItem branchName = new ToolStripMenuItem(head.Name);
-                    branchName.Click += copyToClipBoard;
-                    branchNameCopy.Items.Add(branchName);
-
-                    //if (head.IsHead && !head.IsRemote)
-                    {
-                        toolStripItem = new ToolStripMenuItem(head.Name);
-                        toolStripItem.Click += ToolStripItemClickBranch;
-                        branchDropDown.Items.Add(toolStripItem);
-
-                        toolStripItem = new ToolStripMenuItem(head.Name);
-                        if (head.IsRemote)
-                            toolStripItem.Click += ToolStripItemClickCheckoutRemoteBranch;
-                        else
-                            toolStripItem.Click += ToolStripItemClickCheckoutBranch;
-                        checkoutBranchDropDown.Items.Add(toolStripItem);
-                    }
+                    if (head.IsRemote)
+                        toolStripItem.Click += ToolStripItemClickCheckoutRemoteBranch;
+                    else
+                        toolStripItem.Click += ToolStripItemClickCheckoutBranch;
+                    checkoutBranchDropDown.Items.Add(toolStripItem);
                 }
             }
 
@@ -1556,6 +1633,27 @@ namespace GitUI
                 return;
 
             var frm = new FormCherryPickCommitSmall(GetRevision(LastRow));
+            frm.ShowDialog();
+            ForceRefreshRevisions();
+            OnActionOnRepositoryPerformed();
+        }
+
+        private void FixupCommitToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            PrepareCorrectionCommit(CommitKind.Fixup);
+        }
+
+        private void SquashCommitToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            PrepareCorrectionCommit(CommitKind.Squash);
+        }
+
+        private void PrepareCorrectionCommit(CommitKind commitKind)
+        {
+            if (Revisions.RowCount <= LastRow || LastRow < 0)
+                return;
+
+            var frm = new FormCommit(commitKind, GetRevision(LastRow));
             frm.ShowDialog();
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();

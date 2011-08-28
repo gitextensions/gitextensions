@@ -53,8 +53,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,1
- PRODUCTVERSION 1,0,0,1
+ FILEVERSION 2,24
+ PRODUCTVERSION 2,24
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -69,14 +69,14 @@ BEGIN
     BEGIN
         BLOCK "040904B0"
         BEGIN
-            VALUE "CompanyName", "\0"
-            VALUE "FileDescription", "SimpleExt Module\0"
-            VALUE "FileVersion", "1, 0, 0, 1\0"
-            VALUE "InternalName", "SimpleExt\0"
-            VALUE "LegalCopyright", "Copyright 2000\0"
-            VALUE "OriginalFilename", "SimpleExt.DLL\0"
-            VALUE "ProductName", "SimpleExt Module\0"
-            VALUE "ProductVersion", "1, 0, 0, 1\0"
+            VALUE "Git Extensions", "\0"
+            VALUE "FileDescription", "Git Extensions\0"
+            VALUE "FileVersion", "2, 24\0"
+            VALUE "InternalName", "Git Extensions\0"
+            VALUE "LegalCopyright", "Copyright 2011\0"
+            VALUE "OriginalFilename", "GitExtensionsShellExt.dll\0"
+            VALUE "ProductName", "Git Extensions\0"
+            VALUE "ProductVersion", "2, 24\0"
             VALUE "OLESelfRegister", "\0"
         END
     END

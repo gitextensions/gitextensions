@@ -69,9 +69,6 @@ namespace GitPlugin.Commands
 
         private static string GetSelectedFile(EnvDTE80.DTE2 application)
         {
-            if (application.SelectedItems.Count == 0)
-                return string.Empty;
-
             foreach (SelectedItem sel in application.SelectedItems)
             {
                 if (sel.ProjectItem != null)
@@ -86,6 +83,8 @@ namespace GitPlugin.Commands
                     if (sel.Project != null)
                         return sel.Project.FullName;
             }
+            if (application.Solution.IsOpen)
+                return application.Solution.FullName;
             return string.Empty;
         }
     }
