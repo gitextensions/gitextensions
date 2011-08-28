@@ -149,21 +149,24 @@ namespace GitUI
             if (CurrentStatus != WorkingStatus.Started)
                 return;
 
-            List<GitItemStatus> unstaged = GitCommandHelpers.GetAllChangedFilesFromString(gitGetUnstagedCommand.Output.ToString());
-            List<GitItemStatus> staged = GitCommandHelpers.GetStagedFiles();
+            List<GitItemStatus> allChangedFiles =
+                GitCommandHelpers.GetAllChangedFilesFromString(gitGetUnstagedCommand.Output.ToString());
 
-            if (staged.Count == 0 && unstaged.Count == 0)
+            var stagedCount = allChangedFiles.FindAll(status => status.IsStaged).Count;
+            var unstagedCount = allChangedFiles.FindAll(status => !status.IsStaged).Count;
+
+            if (stagedCount == 0 && unstagedCount == 0)
             {
                 Image = ICON_CLEAN;
             }
             else
             {
 
-                if (staged.Count == 0)
+                if (stagedCount == 0)
                 {
                     Image = ICON_DIRTY;
                 }
-                else if (unstaged.Count == 0)
+                else if (unstagedCount == 0)
                 {
                     Image = ICON_STAGED;
                 }
@@ -173,7 +176,7 @@ namespace GitUI
                 }
             }
 
-            Text = string.Format("{0} changes", staged.Count + unstaged.Count);
+            Text = string.Format("{0} changes", allChangedFiles.Count);
         }
 
         private void ScheduleNextRegularUpdate()

@@ -223,5 +223,10 @@ namespace GitUI
                 }
             }
         }
+
+        public static bool IsOperationAborted(string dialogResult)
+        {
+            return dialogResult.Trim('\r', '\n') == "Aborted";
+        }
     }
 }

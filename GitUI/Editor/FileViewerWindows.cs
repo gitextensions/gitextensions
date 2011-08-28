@@ -26,6 +26,11 @@ namespace GitUI.Editor
             TextEditor.ActiveTextAreaControl.TextArea.DoubleClick += ActiveTextAreaControlDoubleClick;
         }
 
+        public new Font Font 
+        {
+            set { TextEditor.Font = value; } 
+        }
+
         public new event MouseEventHandler MouseMove;
         public new event EventHandler MouseLeave;
 
@@ -401,6 +406,11 @@ namespace GitUI.Editor
             {
                 TextEditor.IsReadOnly = value;
             }
+        }
+
+        public void SetFileLoader(Func<bool, Tuple<int, string>> fileLoader)
+        {
+            _findAndReplaceForm.SetFileLoader(fileLoader);
         }
 
         #endregion

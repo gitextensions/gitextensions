@@ -32,9 +32,9 @@ namespace GitUI.Editor
             else
                 _internalFileViewer = new FileViewerMono();
 
-            _internalFileViewer.MouseMove += new MouseEventHandler(_internalFileViewer_MouseMove);
+            _internalFileViewer.MouseMove += _internalFileViewer_MouseMove;
 
-            Control internalFileViewerControl = (Control)_internalFileViewer;
+            var internalFileViewerControl = (Control)_internalFileViewer;
             internalFileViewerControl.Dock = DockStyle.Fill;
             Controls.Add(internalFileViewerControl);
 
@@ -63,6 +63,16 @@ namespace GitUI.Editor
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
 
             ContextMenu.Opening += ContextMenu_Opening; 
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            Font = Settings.DiffFont;
+        }
+
+        public new Font Font
+        {
+            set { _internalFileViewer.Font = value; }
         }
 
         void ContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -702,5 +712,10 @@ namespace GitUI.Editor
         {
             return (_internalFileViewer.GetText() != null && _internalFileViewer.GetText().Contains("@@"));
         }
+
+        public void SetFileLoader(Func<bool, Tuple<int, string>> fileLoader){
+            _internalFileViewer.SetFileLoader(fileLoader);
+        }
+
     }
 }

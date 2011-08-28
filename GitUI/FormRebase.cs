@@ -38,6 +38,10 @@ namespace GitUI
 
             splitContainer2.SplitterDistance = GitCommandHelpers.InTheMiddleOfRebase() ? 0 : 74;
             EnableButtons();
+
+            // Honor the rebase.autosquash configuration.
+            var autosquashSetting = GitCommandHelpers.GetEffectiveSetting("rebase.autosquash");
+            chkAutosquash.Checked = "true" == autosquashSetting.Trim().ToLower();
         }
 
         private void EnableButtons()
@@ -96,6 +100,11 @@ namespace GitUI
             EnableButtons();
         }
 
+        private void InteractiveRebaseClick(object sender, EventArgs e)
+        {
+            chkAutosquash.Enabled = chkInteractive.Checked;
+        }
+
         private void AddFilesClick(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartAddFilesDialog();
@@ -149,7 +158,7 @@ namespace GitUI
                 return;
             }
 
-            var form = new FormProcess(GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked));
+            var form = new FormProcess(GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked, chkAutosquash.Checked));
             form.ShowDialog();
             if (form.OutputString.ToString().Trim() == "Current branch a is up to date.")
                 MessageBox.Show("Current branch a is up to date." + Environment.NewLine + "Nothing to rebase.", "Rebase");
