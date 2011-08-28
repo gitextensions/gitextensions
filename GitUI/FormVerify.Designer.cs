@@ -179,7 +179,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(299, 15);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Double-click on a row containing a sha1 to view object.";
+            this.label1.Text = "Double-click on a row for quick view";
             // 
             // Warnings
             // 
