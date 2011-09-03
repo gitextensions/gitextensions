@@ -173,7 +173,7 @@ namespace GitUI
                 return;
             }
 
-            var form = new FormProcess(GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked, chkAutosquash.Checked));
+            var form = new FormProcess(GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked, chkPreserveMerges.Checked, chkAutosquash.Checked));
             form.ShowDialog(this);
             if (form.OutputString.ToString().Trim() == "Current branch a is up to date.")
                 MessageBox.Show(this, _branchUpToDateText.Text, _branchUpToDateCaption.Text);
