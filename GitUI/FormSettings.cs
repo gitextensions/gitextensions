@@ -2103,8 +2103,21 @@ namespace GitUI
             scriptNeedsConfirmation.Checked = scriptInfo.AskConfirmation;
             scriptEvent.SelectedItem = scriptInfo.OnEvent;
             sbtn_icon.Image = (Image) scriptInfo.GetIcon();
-            //sbtn_icon.Image= (Image) contextMenuStrip_SplitButton.Items[contextMenuStrip_SplitButton.Items.IndexOfKey(scriptInfo.Icon)].Image;
+
+            foreach (ToolStripItem item in contextMenuStrip_SplitButton.Items)
+	        {
+                if (item.Name == IconName)
+                {
+                    item.Font = new Font(item.Font, FontStyle.Bold);
+                }
+	        }
+
+            /*contextMenuStrip_SplitButton.Items[
+                contextMenuStrip_SplitButton.Items.IndexOfKey(scriptInfo.Icon)].Font =
+                new Font(contextMenuStrip_SplitButton.Items[
+                            contextMenuStrip_SplitButton.Items.IndexOfKey(scriptInfo.Icon)].Font, FontStyle.Bold);
             //TODO: highlight selected item
+             */ 
         }
 
         private void addScriptButton_Click(object sender, EventArgs e)
@@ -2360,12 +2373,16 @@ namespace GitUI
 
         private void SplitButtonMenuItem_Click(object sender, EventArgs e)
         {
-            var aaaa = sender.GetType().ToString();
             try
             {
                 
-                ToolStripMenuItem a = contextMenuStrip_SplitButton.Items.OfType<ToolStripMenuItem>().First(s => s.Font.Bold == true);
-                a.Font = new Font(contextMenuStrip_SplitButton.Font, FontStyle.Regular);
+                ToolStripMenuItem[] item =(ToolStripMenuItem[]) contextMenuStrip_SplitButton.Items.OfType<ToolStripMenuItem>().Where(s => s.Font.Bold == true);
+
+                foreach (ToolStripMenuItem i in item)
+                {
+                    i.Font = new Font(contextMenuStrip_SplitButton.Font, FontStyle.Regular); 
+                }
+
             }
             catch { }
             finally
@@ -2381,6 +2398,13 @@ namespace GitUI
         {
             if (scriptEvent.Text == ScriptEvent.ShowInUserMenuBar.ToString())
             {
+                string icon_name = IconName;
+                if (ScriptList.RowCount > 0)
+                {
+                    ScriptInfo scriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
+                    icon_name = scriptInfo.Icon;
+                }
+                
                 sbtn_icon.Visible = true;
                 lbl_icon.Visible = true;
             }
