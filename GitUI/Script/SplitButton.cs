@@ -31,7 +31,7 @@ using System.Windows.Forms.VisualStyles;
  */
 
 
-namespace wyDay.Controls
+namespace GitUI.Script
 {
     public class SplitButton : Button
     {
