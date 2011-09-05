@@ -2795,7 +2795,7 @@ namespace GitUI
             this.toolStripMenuItem2,
             this.toolStripMenuItem3});
             this.contextMenuStrip_SplitButton.Name = "contextMenuStrip1";
-            this.contextMenuStrip_SplitButton.Size = new System.Drawing.Size(180, 70);
+            this.contextMenuStrip_SplitButton.Size = new System.Drawing.Size(180, 92);
             // 
             // toolStripMenuItem1
             // 
