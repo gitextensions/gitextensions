@@ -239,7 +239,7 @@ namespace GitUI
             this.Putty = new System.Windows.Forms.RadioButton();
             this.scriptsTab = new System.Windows.Forms.TabPage();
             this.lbl_icon = new System.Windows.Forms.Label();
-            this.sbtn_icon = new wyDay.Controls.SplitButton();
+            this.sbtn_icon = new GitUI.Script.SplitButton();
             this.contextMenuStrip_SplitButton = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
@@ -3493,7 +3493,7 @@ namespace GitUI
         private Label label56;
         private FontDialog diffFontDialog;
         private Label lbl_icon;
-        private wyDay.Controls.SplitButton sbtn_icon;
+        private GitUI.Script.SplitButton sbtn_icon;
         private ContextMenuStrip contextMenuStrip_SplitButton;
         private ToolStripMenuItem toolStripMenuItem1;
         private ToolStripMenuItem toolStripMenuItem2;
