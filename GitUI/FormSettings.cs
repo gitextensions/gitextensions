@@ -1632,7 +1632,7 @@ namespace GitUI
                 //add entry to toolstrip
                 if (icon.Value.GetType() == typeof(System.Drawing.Icon))
                 {
-                    contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)((Icon)icon.Value).ToBitmap(), SplitButtonMenuItem_Click);
+                    //contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)((Icon)icon.Value).ToBitmap(), SplitButtonMenuItem_Click);
                 }
                 else if (icon.Value.GetType() == typeof(Bitmap))
                 {
@@ -1643,6 +1643,7 @@ namespace GitUI
 
             resourceSet.Close();
             rm.ReleaseAllResources();
+
         }
 
         public Bitmap ResizeBitmap(Bitmap b, int nWidth, int nHeight)
@@ -2103,10 +2104,11 @@ namespace GitUI
             scriptNeedsConfirmation.Checked = scriptInfo.AskConfirmation;
             scriptEvent.SelectedItem = scriptInfo.OnEvent;
             sbtn_icon.Image = (Image) scriptInfo.GetIcon();
+            IconName = scriptInfo.Icon;
 
             foreach (ToolStripItem item in contextMenuStrip_SplitButton.Items)
 	        {
-                if (item.Name == IconName)
+                if (item.ToString() == IconName)
                 {
                     item.Font = new Font(item.Font, FontStyle.Bold);
                 }
@@ -2373,43 +2375,40 @@ namespace GitUI
 
         private void SplitButtonMenuItem_Click(object sender, EventArgs e)
         {
-            try
-            {
-                
-                ToolStripMenuItem[] item =(ToolStripMenuItem[]) contextMenuStrip_SplitButton.Items.OfType<ToolStripMenuItem>().Where(s => s.Font.Bold == true);
+            //reset bold item to regular
+            ToolStripMenuItem item = (ToolStripMenuItem)contextMenuStrip_SplitButton.Items.OfType<ToolStripMenuItem>().First(s => s.Font.Bold == true);
+            item.Font = new Font(contextMenuStrip_SplitButton.Font, FontStyle.Regular);
+            
+            //make new item bold
+            ((ToolStripMenuItem)sender).Font = new Font(((ToolStripMenuItem)sender).Font, FontStyle.Bold);
 
-                foreach (ToolStripMenuItem i in item)
-                {
-                    i.Font = new Font(contextMenuStrip_SplitButton.Font, FontStyle.Regular); 
-                }
+            //set new image on button
+            sbtn_icon.Image = (Image) ResizeBitmap((Bitmap)((ToolStripMenuItem)sender).Image, 12, 12);
 
-            }
-            catch { }
-            finally
-            {
-                ((ToolStripMenuItem)sender).Font = new Font(((ToolStripMenuItem)sender).Font, FontStyle.Bold);
-
-                sbtn_icon.Image = (Image) ResizeBitmap((Bitmap)((ToolStripMenuItem)sender).Image, 12, 12);
-                IconName = ((ToolStripMenuItem)sender).Text;
-            }
+            IconName = ((ToolStripMenuItem)sender).Text;
+            
+            //store variables
+            ScriptInfoEdit_Validating(sender, new System.ComponentModel.CancelEventArgs());
         }
 
         private void scriptEvent_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (scriptEvent.Text == ScriptEvent.ShowInUserMenuBar.ToString())
             {
+                /*
                 string icon_name = IconName;
                 if (ScriptList.RowCount > 0)
                 {
                     ScriptInfo scriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
                     icon_name = scriptInfo.Icon;
-                }
+                }*/
                 
                 sbtn_icon.Visible = true;
                 lbl_icon.Visible = true;
             }
             else
             {
+                //not a menubar item, so hide the text label and dropdown button
                 sbtn_icon.Visible = false;
                 lbl_icon.Visible = false;
             }
