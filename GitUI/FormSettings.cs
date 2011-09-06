@@ -2112,14 +2112,7 @@ namespace GitUI
                 {
                     item.Font = new Font(item.Font, FontStyle.Bold);
                 }
-	        }
-
-            /*contextMenuStrip_SplitButton.Items[
-                contextMenuStrip_SplitButton.Items.IndexOfKey(scriptInfo.Icon)].Font =
-                new Font(contextMenuStrip_SplitButton.Items[
-                            contextMenuStrip_SplitButton.Items.IndexOfKey(scriptInfo.Icon)].Font, FontStyle.Bold);
-            //TODO: highlight selected item
-             */ 
+	        } 
         }
 
         private void addScriptButton_Click(object sender, EventArgs e)
