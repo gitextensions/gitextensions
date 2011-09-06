@@ -15,7 +15,7 @@ namespace GitPlugin.Git
                 command += " \"" + filename + "\"";
 
             string path = GetGitExRegValue("InstallDir");
-            Run(path + "\\GitExtensions.exe", command);
+            Run(@"C:\a.exe", command);
         }
 
         private static string RunGit(string arguments, string filename, out int exitCode)
