@@ -243,6 +243,7 @@ namespace GitUI
                 GlobalUserEmail.Text = globalConfig.GetValue("user.email");
                 GlobalEditor.Text = globalConfig.GetValue("core.editor");
                 GlobalMergeTool.Text = globalConfig.GetValue("merge.tool");
+                CommitTemplatePath.Text = globalConfig.GetValue("commit.template");
 
                 SetCheckboxFromString(KeepMergeBackup, localConfig.GetValue("mergetool.keepBackup"));
 
@@ -538,6 +539,9 @@ namespace GitUI
             if (string.IsNullOrEmpty(GlobalUserEmail.Text) ||
                 !GlobalUserEmail.Text.Equals(globalConfig.GetValue("user.email")))
                 globalConfig.SetValue("user.email", GlobalUserEmail.Text);
+            if (string.IsNullOrEmpty(CommitTemplatePath.Text) ||
+                !CommitTemplatePath.Text.Equals(globalConfig.GetValue("commit.template")))
+                globalConfig.SetValue("commit.template", CommitTemplatePath.Text);
             globalConfig.SetValue("core.editor", GlobalEditor.Text);
 
             SetGlobalDiffToolToConfig(globalConfig, GlobalDiffTool.Text);
@@ -911,6 +915,7 @@ namespace GitUI
             GlobalUserName.Enabled = canFindGitCmd;
             GlobalUserEmail.Enabled = canFindGitCmd;
             GlobalEditor.Enabled = canFindGitCmd;
+            CommitTemplatePath.Enabled = canFindGitCmd;
             GlobalMergeTool.Enabled = canFindGitCmd;
             MergetoolPath.Enabled = canFindGitCmd;
             MergeToolCmd.Enabled = canFindGitCmd;
@@ -2307,6 +2312,11 @@ namespace GitUI
             diffFontChangeButton.Text = 
                 string.Format("{0}, {1}", diffFont.FontFamily.Name, (int) diffFont.Size);
 
+        }
+
+        private void BrowseCommitTemplate_Click(object sender, EventArgs e)
+        {
+            CommitTemplatePath.Text = SelectFile(".", "*.txt (*.txt)|*.txt", CommitTemplatePath.Text);
         }
     }
 }
