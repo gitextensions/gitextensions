@@ -349,7 +349,6 @@ namespace GitUI
             this.toolbarUnstaged.Stretch = true;
             this.toolbarUnstaged.TabIndex = 12;
             this.toolbarUnstaged.Text = "toolStrip1";
-            this.toolbarUnstaged.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolbarUnstaged_ItemClicked);
             // 
             // toolRefreshItem
             // 
