@@ -12,9 +12,8 @@ namespace GitUI
                 if (MessageBox.Show("There are unresolved mergeconflicts, solve conflicts now?", "Merge conflicts", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     SolveMergeConflicts();
-                    return true;
-
                 }
+                return true;
             }
             return false;
         }
