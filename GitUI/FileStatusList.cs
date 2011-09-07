@@ -242,6 +242,23 @@ namespace GitUI
             }
         }
 
+        private int nextIndexToSelect = -1;
+
+        public void StoreNextIndexToSelect() {
+            nextIndexToSelect = -1;
+            foreach (int idx in FileStatusListBox.SelectedIndices)
+                if (idx > nextIndexToSelect)
+                    nextIndexToSelect = idx;
+            nextIndexToSelect = nextIndexToSelect - FileStatusListBox.SelectedIndices.Count + 1;
+        }
+
+        public void SelectStoredNextIndex() {
+            nextIndexToSelect = Math.Min(nextIndexToSelect, FileStatusListBox.Items.Count - 1);
+            if (nextIndexToSelect > -1)
+                SelectedIndex = nextIndexToSelect;
+            nextIndexToSelect = -1;
+        }
+
         public event EventHandler SelectedIndexChanged;
 
         public new event EventHandler DoubleClick;
