@@ -160,14 +160,38 @@ namespace GitUI
 
         internal enum Commands : int
         {
+            AddToGitIgnore,
+            DeleteSelectedFiles,
             FocusUnstagedFiles,
             FocusSelectedDiff,
             FocusStagedFiles,
             FocusCommitMessage,
+            ResetSelectedFiles,
             StageSelectedFile,
-            UnStageSelectedFile,
+            UnStageSelectedFile
+            
         }
 
+        private bool AddToGitIgnore()
+        {
+            if (Unstaged.Focused)
+            {
+                AddFileTogitignoreToolStripMenuItemClick(this, null);
+                return true;
+            }
+            return false;
+        }
+
+        private bool DeleteSelectedFiles()
+        {
+            if (Unstaged.Focused)
+            {
+                DeleteFileToolStripMenuItemClick(this, null);
+                return true;
+            }
+            return false;
+        }
+        
         private bool FocusStagedFiles()
         {
             FocusFileList(this.Staged);
@@ -199,6 +223,16 @@ namespace GitUI
             return true;
         }
 
+        private bool ResetSelectedFiles()
+        {
+            if (Unstaged.Focused)
+            {
+                ResetSoftClick(this, null);
+                return true;
+            }
+            return false;
+        }
+
         private bool StageSelectedFile()
         {
             if (Unstaged.Focused)
@@ -225,10 +259,13 @@ namespace GitUI
 
             switch (command)
             {
+                case Commands.AddToGitIgnore: return AddToGitIgnore();
+                case Commands.DeleteSelectedFiles: return DeleteSelectedFiles();
                 case Commands.FocusStagedFiles: return FocusStagedFiles();
                 case Commands.FocusUnstagedFiles: return FocusUnstagedFiles();
                 case Commands.FocusSelectedDiff: return FocusSelectedDiff();
                 case Commands.FocusCommitMessage: return FocusCommitMessage();
+                case Commands.ResetSelectedFiles: return ResetSelectedFiles();
                 case Commands.StageSelectedFile: return StageSelectedFile();
                 case Commands.UnStageSelectedFile: return UnStageSelectedFile();
                 //default: return false;
@@ -405,6 +442,7 @@ namespace GitUI
 
             var inTheMiddleOfConflictedMerge = GitCommandHelpers.InTheMiddleOfConflictedMerge();
             SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
+            Unstaged.SelectStoredNextIndex();
         }
 
         private void ShowChanges(GitItemStatus item, bool staged)
@@ -559,6 +597,7 @@ namespace GitUI
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
+                Unstaged.StoreNextIndexToSelect();
                 toolStripProgressBar1.Visible = true;
                 toolStripProgressBar1.Maximum = gitItemStatusses.Count * 2;
                 toolStripProgressBar1.Value = 0;
@@ -598,6 +637,7 @@ namespace GitUI
                 unStagedFiles.RemoveAll(item => stagedFiles.Exists(i => i.Name == item.Name || i.OldName == item.Name) && files.Exists(i => i.Name == item.Name));
 
                 Unstaged.GitItemStatuses = unStagedFiles;
+                Unstaged.SelectStoredNextIndex();
 
                 toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
 
@@ -728,6 +768,9 @@ namespace GitUI
                 DialogResult.Yes)
                 return;
 
+            //remember max selected index
+            Unstaged.StoreNextIndexToSelect();
+            
             var deleteNewFiles = Unstaged.SelectedItems.Any(item => item.IsNew)
                 && MessageBox.Show(_alsoDeleteUntrackedFiles.Text, _alsoDeleteUntrackedFilesCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes;
             var output = new StringBuilder();
@@ -1214,10 +1257,6 @@ namespace GitUI
             toolAuthorLabelItem.Enabled = toolAuthorLabelItem.Checked = false;
         }
 
-        private void toolbarUnstaged_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
-        }
     }
 
     /// <summary>
