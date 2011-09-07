@@ -254,8 +254,9 @@ namespace GitUI
 
         public void SelectStoredNextIndex() {
             nextIndexToSelect = Math.Min(nextIndexToSelect, FileStatusListBox.Items.Count - 1);
-            if (nextIndexToSelect > 0)
+            if (nextIndexToSelect > -1)
                 SelectedIndex = nextIndexToSelect;
+            nextIndexToSelect = -1;
         }
 
         public event EventHandler SelectedIndexChanged;
