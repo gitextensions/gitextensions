@@ -280,6 +280,9 @@ namespace GitUI
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             this.diffFontDialog = new System.Windows.Forms.FontDialog();
+            this.BrowseCommitTemplate = new System.Windows.Forms.Button();
+            this.label57 = new System.Windows.Forms.Label();
+            this.CommitTemplatePath = new System.Windows.Forms.TextBox();
             this.LocalSettings.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
@@ -2147,6 +2150,9 @@ namespace GitUI
             // 
             // GlobalSettingsPage
             // 
+            this.GlobalSettingsPage.Controls.Add(this.BrowseCommitTemplate);
+            this.GlobalSettingsPage.Controls.Add(this.label57);
+            this.GlobalSettingsPage.Controls.Add(this.CommitTemplatePath);
             this.GlobalSettingsPage.Controls.Add(this.groupBox9);
             this.GlobalSettingsPage.Controls.Add(this.DiffToolCmdSuggest);
             this.GlobalSettingsPage.Controls.Add(this.DifftoolCmd);
@@ -2188,7 +2194,7 @@ namespace GitUI
             this.groupBox9.Controls.Add(this.globalAutoCrlfFalse);
             this.groupBox9.Controls.Add(this.globalAutoCrlfInput);
             this.groupBox9.Controls.Add(this.globalAutoCrlfTrue);
-            this.groupBox9.Location = new System.Drawing.Point(6, 290);
+            this.groupBox9.Location = new System.Drawing.Point(6, 320);
             this.groupBox9.Name = "groupBox9";
             this.groupBox9.Size = new System.Drawing.Size(799, 105);
             this.groupBox9.TabIndex = 31;
@@ -3173,6 +3179,32 @@ namespace GitUI
             this.diffFontDialog.AllowVerticalFonts = false;
             this.diffFontDialog.FixedPitchOnly = true;
             // 
+            // BrowseCommitTemplate
+            // 
+            this.BrowseCommitTemplate.Location = new System.Drawing.Point(506, 285);
+            this.BrowseCommitTemplate.Name = "BrowseCommitTemplate";
+            this.BrowseCommitTemplate.Size = new System.Drawing.Size(75, 25);
+            this.BrowseCommitTemplate.TabIndex = 34;
+            this.BrowseCommitTemplate.Text = "Browse";
+            this.BrowseCommitTemplate.UseVisualStyleBackColor = true;
+            this.BrowseCommitTemplate.Click += new System.EventHandler(this.BrowseCommitTemplate_Click);
+            // 
+            // label57
+            // 
+            this.label57.AutoSize = true;
+            this.label57.Location = new System.Drawing.Point(9, 290);
+            this.label57.Name = "label57";
+            this.label57.Size = new System.Drawing.Size(140, 15);
+            this.label57.TabIndex = 33;
+            this.label57.Text = "Path to commit template";
+            // 
+            // CommitTemplatePath
+            // 
+            this.CommitTemplatePath.Location = new System.Drawing.Point(153, 286);
+            this.CommitTemplatePath.Name = "CommitTemplatePath";
+            this.CommitTemplatePath.Size = new System.Drawing.Size(347, 23);
+            this.CommitTemplatePath.TabIndex = 32;
+            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3495,6 +3527,9 @@ namespace GitUI
         private Label lbl_icon;
         private GitUI.Script.SplitButton sbtn_icon;
         private ContextMenuStrip contextMenuStrip_SplitButton;
+        private Button BrowseCommitTemplate;
+        private Label label57;
+        private TextBox CommitTemplatePath;
         private ToolStripMenuItem toolStripMenuItem1;
         private ToolStripMenuItem toolStripMenuItem2;
         private ToolStripMenuItem toolStripMenuItem3;
