@@ -41,7 +41,7 @@ namespace GitCommands
                 return;
             }
 
-            using (var textWriter = new StreamWriter(GetCommitMessagePath(), false))
+            using (var textWriter = new StreamWriter(GetCommitMessagePath(), false, Settings.Encoding))
             {
                 textWriter.Write(commitMessageText);
                 textWriter.Close();
