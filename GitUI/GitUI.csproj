@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -1098,6 +1098,9 @@
     <Compile Include="FormVerify.SortableLostObjectsList.cs">
       <DependentUpon>FormVerify.cs</DependentUpon>
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Script\SplitButton.cs">
+      <SubType>Component</SubType>
     </Compile>
     <None Include="gituikey.snk.pfx" />
     <None Include="Properties\DataSources\GitCommands.GitItem.datasource" />
