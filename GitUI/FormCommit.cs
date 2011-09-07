@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Config;
 using ResourceManager.Translation;
 using PatchApply;
 using GitUI.Hotkey;
@@ -99,6 +100,7 @@ namespace GitUI
         private GitRevision _editedCommit;
         private readonly ToolStripItem _StageSelectedLinesToolStripMenuItem;
         private readonly ToolStripItem _ResetSelectedLinesToolStripMenuItem;
+        private string commitTemplate;
 
         public FormCommit()
             : this(CommitKind.Normal, null)
@@ -348,6 +350,16 @@ namespace GitUI
                     showUntrackedFilesToolStripMenuItem.Checked);
             _gitGetUnstagedCommand.CmdStartProcess(Settings.GitCommand, allChangedFilesCmd);
 
+            // Check if commit.template is used
+            ConfigFile globalConfig = GitCommandHelpers.GetGlobalConfig();
+            string fileName = globalConfig.GetValue("commit.template");
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                StreamReader commitReader = new StreamReader(fileName);
+                commitTemplate = commitReader.ReadToEnd().Replace("\r","");
+                Message.Text = commitTemplate;
+            }
+
             Loading.Visible = true;
             LoadingStaged.Visible = true;
 
@@ -484,7 +496,7 @@ namespace GitUI
                 MessageBox.Show(_mergeConflicts.Text, _mergeConflictsCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            if (string.IsNullOrEmpty(Message.Text))
+            if (string.IsNullOrEmpty(Message.Text) || Message.Text == commitTemplate)
             {
                 MessageBox.Show(_enterCommitMessage.Text, _enterCommitMessageCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 return;
