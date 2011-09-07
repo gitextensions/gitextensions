@@ -21,6 +21,7 @@ namespace GitUI
     {
         private Font diffFont;
         private const string GitExtensionsShellExName = "GitExtensionsShellEx32.dll";
+        private string IconName = "bug";
 
         public FormSettings()
         {
@@ -1600,12 +1601,57 @@ namespace GitUI
         {
             if(((TabControl)sender).TabPages[((TabControl)sender).SelectedIndex].Name.ToLower() == "tabpagehotkeys")
                 controlHotkeys.ReloadSettings();
+            else if(((TabControl)sender).TabPages[((TabControl)sender).SelectedIndex].Name.ToLower() == "scriptstab")    
+                populateSplitbutton();
+
+
 
             if (GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
                 string.IsNullOrEmpty(MergeToolCmd.Text))
                 MergeToolCmd.Enabled = false;
             else
                 MergeToolCmd.Enabled = true;
+        }
+
+        private void populateSplitbutton()
+        {
+
+            System.Resources.ResourceManager rm = 
+                new System.Resources.ResourceManager("GitUI.Properties.Resources",
+                            System.Reflection.Assembly.GetExecutingAssembly());
+            
+            // dummy request; for some strange reason the ResourceSets are not loaded untill after the first object request... bug?
+            var dummy = rm.GetObject("dummy");
+
+            System.Resources.ResourceSet resourceSet = rm.GetResourceSet(System.Globalization.CultureInfo.CurrentUICulture, true, true);
+
+            contextMenuStrip_SplitButton.Items.Clear();
+
+            foreach (System.Collections.DictionaryEntry icon in resourceSet)
+            {
+                //add entry to toolstrip
+                if (icon.Value.GetType() == typeof(System.Drawing.Icon))
+                {
+                    //contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)((Icon)icon.Value).ToBitmap(), SplitButtonMenuItem_Click);
+                }
+                else if (icon.Value.GetType() == typeof(Bitmap))
+                {
+                    contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image) icon.Value, SplitButtonMenuItem_Click);
+                }
+                //var aa = icon.Value.GetType();
+            }
+
+            resourceSet.Close();
+            rm.ReleaseAllResources();
+
+        }
+
+        public Bitmap ResizeBitmap(Bitmap b, int nWidth, int nHeight)
+        {
+            Bitmap result = new Bitmap(nWidth, nHeight);
+            using (Graphics g = Graphics.FromImage((Image)result))
+                g.DrawImage(b, 0, 0, nWidth, nHeight);
+            return result;
         }
 
         private void ClearImageCache_Click(object sender, EventArgs e)
@@ -2057,6 +2103,16 @@ namespace GitUI
             scriptEnabled.Checked = scriptInfo.Enabled;
             scriptNeedsConfirmation.Checked = scriptInfo.AskConfirmation;
             scriptEvent.SelectedItem = scriptInfo.OnEvent;
+            sbtn_icon.Image = (Image) scriptInfo.GetIcon();
+            IconName = scriptInfo.Icon;
+
+            foreach (ToolStripItem item in contextMenuStrip_SplitButton.Items)
+	        {
+                if (item.ToString() == IconName)
+                {
+                    item.Font = new Font(item.Font, FontStyle.Bold);
+                }
+	        } 
         }
 
         private void addScriptButton_Click(object sender, EventArgs e)
@@ -2091,6 +2147,7 @@ namespace GitUI
                 selectedScriptInfo.Enabled = scriptEnabled.Checked;
                 selectedScriptInfo.AskConfirmation = scriptNeedsConfirmation.Checked;
                 selectedScriptInfo.OnEvent = (ScriptEvent)scriptEvent.SelectedItem;
+                selectedScriptInfo.Icon = IconName;
             }
         }
 
@@ -2307,6 +2364,47 @@ namespace GitUI
             diffFontChangeButton.Text = 
                 string.Format("{0}, {1}", diffFont.FontFamily.Name, (int) diffFont.Size);
 
+        }
+
+        private void SplitButtonMenuItem_Click(object sender, EventArgs e)
+        {
+            //reset bold item to regular
+            ToolStripMenuItem item = (ToolStripMenuItem)contextMenuStrip_SplitButton.Items.OfType<ToolStripMenuItem>().First(s => s.Font.Bold == true);
+            item.Font = new Font(contextMenuStrip_SplitButton.Font, FontStyle.Regular);
+            
+            //make new item bold
+            ((ToolStripMenuItem)sender).Font = new Font(((ToolStripMenuItem)sender).Font, FontStyle.Bold);
+
+            //set new image on button
+            sbtn_icon.Image = (Image) ResizeBitmap((Bitmap)((ToolStripMenuItem)sender).Image, 12, 12);
+
+            IconName = ((ToolStripMenuItem)sender).Text;
+            
+            //store variables
+            ScriptInfoEdit_Validating(sender, new System.ComponentModel.CancelEventArgs());
+        }
+
+        private void scriptEvent_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (scriptEvent.Text == ScriptEvent.ShowInUserMenuBar.ToString())
+            {
+                /*
+                string icon_name = IconName;
+                if (ScriptList.RowCount > 0)
+                {
+                    ScriptInfo scriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
+                    icon_name = scriptInfo.Icon;
+                }*/
+                
+                sbtn_icon.Visible = true;
+                lbl_icon.Visible = true;
+            }
+            else
+            {
+                //not a menubar item, so hide the text label and dropdown button
+                sbtn_icon.Visible = false;
+                lbl_icon.Visible = false;
+            }
         }
     }
 }
