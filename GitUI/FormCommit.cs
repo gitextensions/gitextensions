@@ -597,6 +597,7 @@ namespace GitUI
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
+                Unstaged.StoreNextIndexToSelect();
                 toolStripProgressBar1.Visible = true;
                 toolStripProgressBar1.Maximum = gitItemStatusses.Count * 2;
                 toolStripProgressBar1.Value = 0;
@@ -636,6 +637,7 @@ namespace GitUI
                 unStagedFiles.RemoveAll(item => stagedFiles.Exists(i => i.Name == item.Name || i.OldName == item.Name) && files.Exists(i => i.Name == item.Name));
 
                 Unstaged.GitItemStatuses = unStagedFiles;
+                Unstaged.SelectStoredNextIndex();
 
                 toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
 
