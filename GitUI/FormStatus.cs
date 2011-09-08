@@ -172,6 +172,9 @@ namespace GitUI
 
         private void FormStatus_Load(object sender, EventArgs e)
         {
+            if (DesignMode)
+                return;
+
             if (ProcessCallback == null)
             {
                 throw new InvalidOperationException("You can't load the form without a ProcessCallback");
