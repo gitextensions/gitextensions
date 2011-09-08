@@ -46,6 +46,11 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
+            //can't be set in OnLoad, because after PushAndShowDialogWhenFailed()
+            //they are reset to false
+            PushAllTags.Checked = Settings.PushAllTags;
+            AutoPullOnRejected.Checked = Settings.AutoPullOnRejected;
+
             _currentBranch = GitCommandHelpers.GetSelectedBranch();
 
             Remotes.DataSource = GitCommandHelpers.GetRemotes();
@@ -290,9 +295,6 @@ namespace GitUI
             Remotes.Select();
 
             Text = string.Concat(_pushCaption.Text, " (", Settings.WorkingDir, ")");
-
-            PushAllTags.Checked = Settings.PushAllTags;
-            AutoPullOnRejected.Checked = Settings.AutoPullOnRejected;
 
             var gitHoster = RepoHosts.TryGetGitHosterForCurrentWorkingDir();
             _createPullRequestCB.Enabled = gitHoster != null;
