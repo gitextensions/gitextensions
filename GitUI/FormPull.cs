@@ -214,7 +214,11 @@ namespace GitUI
             }
 
             if (process != null)
+            {
+                if (!PullAll())
+                    process.Remote = source;
                 process.ShowDialog();
+            }
 
             try
             {
