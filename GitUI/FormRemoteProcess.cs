@@ -96,17 +96,28 @@ namespace GitUI
                         return true;
                     }
                 }
-                if (OutputString.ToString().ToLower().Contains("the server's host key is not cached in the registry") && !string.IsNullOrEmpty(UrlTryingToConnect))
+                if (OutputString.ToString().ToLower().Contains("the server's host key is not cached in the registry"))
                 {
-                    if (MessageBox.Show("The server's host key is not cached in the registry.\n\nDo you want to trust this host key and then try again?", "SSH", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
-                    {
-                        GitCommandHelpers.RunRealCmdDetached(
-                            "cmd.exe",
-                            string.Format("/k \"\"{0}\" -T \"{1}\"\"", Settings.Plink, UrlTryingToConnect));
+                    string remoteUrl;
 
-                        Retry();
-                        return true;
+                    if (string.IsNullOrEmpty(UrlTryingToConnect))
+                    {
+                        remoteUrl = GitCommandHelpers.GetSetting("remote." + Remote + ".url");
+                        if (string.IsNullOrEmpty(remoteUrl))
+                            remoteUrl = Remote;
                     }
+                    else
+                        remoteUrl = UrlTryingToConnect;
+                    if (!string.IsNullOrEmpty(remoteUrl))
+                        if (MessageBox.Show("The server's host key is not cached in the registry.\n\nDo you want to trust this host key and then try again?", "SSH", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                        {
+                            GitCommandHelpers.RunRealCmd(
+                                "cmd.exe",
+                                string.Format("/k \"\"{0}\" -T \"{1}\"\"", Settings.Plink, remoteUrl));
+
+                            Retry();
+                            return true;
+                        }
 
                 }
             }
