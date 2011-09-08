@@ -374,17 +374,7 @@ namespace GitUI
 
         public bool StartPullDialog()
         {
-            if (!RequiresValidWorkingDir())
-                return false;
-
-            if (!InvokeEvent(PrePull))
-                return true;
-
-            new FormPull().ShowDialog();
-
-            InvokeEvent(PostPull);
-
-            return true;
+            return StartPullDialog(false);
         }
 
         public bool StartPullDialog(bool pullOnShow)
@@ -393,17 +383,20 @@ namespace GitUI
                 return false;
 
             if (!InvokeEvent(PrePull))
-                return true;
+                return false;
 
             FormPull formPull = new FormPull();
+            DialogResult dlgResult;
             if (pullOnShow)
-                formPull.PullAndShowDialogWhenFailed();
+                dlgResult = formPull.PullAndShowDialogWhenFailed();
             else
-                formPull.ShowDialog();
+                dlgResult = formPull.ShowDialog();
 
-            InvokeEvent(PostPull);
+            bool result = dlgResult == DialogResult.OK;
+            if (result)
+                 InvokeEvent(PostPull);
 
-            return true;
+            return result;
         }
                 
         public bool StartViewPatchDialog()
