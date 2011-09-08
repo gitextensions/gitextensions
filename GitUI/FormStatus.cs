@@ -148,6 +148,12 @@ namespace GitUI
             Ok.Enabled = false;
         }
 
+        public void Retry()
+        {
+            Reset();
+            ProcessCallback(this);
+        }
+
         public void ShowDialogOnError()
         {
             Visible = false;
