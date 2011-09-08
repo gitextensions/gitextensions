@@ -26,6 +26,13 @@ namespace GitUI
 
         private GitCommandsInstance gitCommand;
 
+        //constructor for VS designer
+        protected FormProcess()
+            : base()
+        {
+        }
+
+
         //Input does not work for password inputs. I don't know why, but it turned out not to be really necessary.
         //For other inputs, it is not tested.
         public FormProcess(string process, string arguments, string input)
