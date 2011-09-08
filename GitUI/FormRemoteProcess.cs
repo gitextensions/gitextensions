@@ -19,6 +19,11 @@ namespace GitUI
         public bool Plink { get; set; }
         private bool restart = false;
 
+        //constructor for VS designer
+        protected FormRemoteProcess()
+            : base()
+        {        
+        }
 
         public FormRemoteProcess(string process, string arguments, string input)
             : base(process, arguments, input)
