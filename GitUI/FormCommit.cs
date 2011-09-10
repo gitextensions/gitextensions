@@ -16,7 +16,7 @@ using GitUI.Script;
 
 namespace GitUI
 {
-    public partial class FormCommit : GitExtensionsForm //, IHotkeyable
+    public sealed partial class FormCommit : GitExtensionsForm //, IHotkeyable
     {
         #region Translation strings
         private readonly TranslationString _alsoDeleteUntrackedFiles =
@@ -55,8 +55,10 @@ namespace GitUI
 
         private readonly TranslationString _mergeConflictsCaption = new TranslationString("Merge conflicts");
 
-        private readonly TranslationString _noFilesStaged =
-            new TranslationString("There are no files staged for this commit. Are you sure you want to commit?");
+        private readonly TranslationString _noFilesStagedAndNothingToCommit =
+            new TranslationString("There are no files staged for this commit.");
+        private readonly TranslationString _noFilesStagedButSuggestToCommitAllUnstaged =
+            new TranslationString("There are no files staged for this commit. Stage and commit all unstaged files?");
 
         private readonly TranslationString _noStagedChanges = new TranslationString("There are no staged changes");
         private readonly TranslationString _noUnstagedChanges = new TranslationString("There are no unstaged changes");
@@ -96,8 +98,8 @@ namespace GitUI
         public bool NeedRefresh;
         private GitItemStatus _currentItem;
         private bool _currentItemStaged;
-        private CommitKind _commitKind;
-        private GitRevision _editedCommit;
+        private readonly CommitKind _commitKind;
+        private readonly GitRevision _editedCommit;
         private readonly ToolStripItem _StageSelectedLinesToolStripMenuItem;
         private readonly ToolStripItem _ResetSelectedLinesToolStripMenuItem;
         private string commitTemplate;
@@ -111,7 +113,7 @@ namespace GitUI
             _syncContext = SynchronizationContext.Current;
 
             InitializeComponent();
-            
+
             splitRight.Panel2MinSize = 130;
             Translate();
 
@@ -143,8 +145,8 @@ namespace GitUI
 
             splitMain.SplitterDistance = Settings.CommitDialogSplitter;
 
-            this.HotkeysEnabled = true;
-            this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            HotkeysEnabled = true;
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
 
             SelectedDiff.ContextMenuOpening += SelectedDiff_ContextMenuOpening;
 
@@ -160,7 +162,7 @@ namespace GitUI
 
         public const string HotkeySettingsName = "Commit";
 
-        internal enum Commands : int
+        internal enum Commands
         {
             AddToGitIgnore,
             DeleteSelectedFiles,
@@ -171,7 +173,7 @@ namespace GitUI
             ResetSelectedFiles,
             StageSelectedFile,
             UnStageSelectedFile
-            
+
         }
 
         private bool AddToGitIgnore()
@@ -193,16 +195,16 @@ namespace GitUI
             }
             return false;
         }
-        
+
         private bool FocusStagedFiles()
         {
-            FocusFileList(this.Staged);
+            FocusFileList(Staged);
             return true;
         }
 
         private bool FocusUnstagedFiles()
         {
-            FocusFileList(this.Unstaged);
+            FocusFileList(Unstaged);
             return true;
         }
 
@@ -215,13 +217,13 @@ namespace GitUI
 
         private bool FocusSelectedDiff()
         {
-            this.SelectedDiff.Focus();
+            SelectedDiff.Focus();
             return true;
         }
 
         private bool FocusCommitMessage()
         {
-            this.Message.StartEditing();
+            Message.StartEditing();
             return true;
         }
 
@@ -257,9 +259,7 @@ namespace GitUI
 
         protected override bool ExecuteCommand(int cmd)
         {
-            Commands command = (Commands)cmd;
-
-            switch (command)
+            switch ((Commands)cmd)
             {
                 case Commands.AddToGitIgnore: return AddToGitIgnore();
                 case Commands.DeleteSelectedFiles: return DeleteSelectedFiles();
@@ -273,7 +273,6 @@ namespace GitUI
                 //default: return false;
                 default: ExecuteScriptCommand(cmd, Keys.None); return true;
             }
-
         }
 
         #endregion
@@ -331,7 +330,7 @@ namespace GitUI
                 {
                     MessageBox.Show(output);
                 }
-                ScanClick(null, null);
+                RescanChanges();
             }
         }
 
@@ -355,7 +354,7 @@ namespace GitUI
                 {
                     MessageBox.Show(output);
                 }
-                ScanClick(null, null);
+                RescanChanges();
             }
         }
 
@@ -392,8 +391,10 @@ namespace GitUI
             string fileName = globalConfig.GetValue("commit.template");
             if (!string.IsNullOrEmpty(fileName))
             {
-                StreamReader commitReader = new StreamReader(fileName);
-                commitTemplate = commitReader.ReadToEnd().Replace("\r","");
+                using (var commitReader = new StreamReader(fileName))
+                {
+                    commitTemplate = commitReader.ReadToEnd().Replace("\r", "");
+                }
                 Message.Text = commitTemplate;
             }
 
@@ -519,8 +520,18 @@ namespace GitUI
         {
             if (Staged.IsEmpty)
             {
-                if (MessageBox.Show(_noFilesStaged.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) ==
-                    DialogResult.No)
+                if (Unstaged.IsEmpty)
+                {
+                    MessageBox.Show(_noFilesStagedAndNothingToCommit.Text, _noStagedChanges.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return;
+                }
+
+                // there are no staged files, but there are unstaged files. Most probably user forgot to stage them.
+                if (MessageBox.Show(_noFilesStagedButSuggestToCommitAllUnstaged.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                    return;
+                StageAll();
+                // if staging failed (i.e. line endings conflict), user already got error message, don't try to commit empty changeset.
+                if (Staged.IsEmpty)
                     return;
             }
 
@@ -591,7 +602,7 @@ namespace GitUI
             }
         }
 
-        private void ScanClick(object sender, EventArgs e)
+        private void RescanChanges()
         {
             toolRefreshItem.Enabled = false;
             Initialize();
@@ -601,6 +612,11 @@ namespace GitUI
         private void StageClick(object sender, EventArgs e)
         {
             Stage(Unstaged.SelectedItems);
+        }
+
+        private void StageAll()
+        {
+            Stage(Unstaged.GitItemStatuses);
         }
 
         private void Stage(ICollection<GitItemStatus> gitItemStatusses)
@@ -738,11 +754,13 @@ namespace GitUI
 
                         if (item.IsRenamed)
                         {
-                            GitItemStatus clone = new GitItemStatus();
-                            clone.Name = item.OldName;
-                            clone.IsDeleted = true;
-                            clone.IsTracked = true;
-                            clone.IsStaged = false;
+                            var clone = new GitItemStatus
+                            {
+                                Name = item.OldName,
+                                IsDeleted = true,
+                                IsTracked = true,
+                                IsStaged = false
+                            };
                             unStagedFiles.Add(clone);
 
                             item.IsRenamed = false;
@@ -782,7 +800,7 @@ namespace GitUI
 
             //remember max selected index
             Unstaged.StoreNextIndexToSelect();
-            
+
             var deleteNewFiles = Unstaged.SelectedItems.Any(item => item.IsNew)
                 && MessageBox.Show(_alsoDeleteUntrackedFiles.Text, _alsoDeleteUntrackedFilesCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes;
             var output = new StringBuilder();
@@ -876,7 +894,7 @@ namespace GitUI
 
         private void StageAllToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Stage(Unstaged.GitItemStatuses);
+            StageAll();
         }
 
         private void UnstageAllToolStripMenuItemClick(object sender, EventArgs e)
@@ -925,7 +943,7 @@ namespace GitUI
                 });
         }
 
-        public static void SetCommitMessageFromTextBox(string commitMessageText)
+        private static void SetCommitMessageFromTextBox(string commitMessageText)
         {
             //Save last commit message in settings. This way it can be used in multiple repositories.
             Settings.LastCommitMessage = commitMessageText;
@@ -1001,7 +1019,7 @@ namespace GitUI
         private void ShowIgnoredFilesToolStripMenuItemClick(object sender, EventArgs e)
         {
             showIgnoredFilesToolStripMenuItem.Checked = !showIgnoredFilesToolStripMenuItem.Checked;
-            ScanClick(null, null);
+            RescanChanges();
         }
 
         private void CommitMessageToolStripMenuItemDropDownOpening(object sender, EventArgs e)
@@ -1059,7 +1077,7 @@ namespace GitUI
 
         private void RescanChangesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            ScanClick(null, null);
+            RescanChanges();
         }
 
         private void OpenToolStripMenuItemClick(object sender, EventArgs e)
@@ -1169,7 +1187,7 @@ namespace GitUI
         private void ShowUntrackedFilesToolStripMenuItemClick(object sender, EventArgs e)
         {
             showUntrackedFilesToolStripMenuItem.Checked = !showUntrackedFilesToolStripMenuItem.Checked;
-            ScanClick(null, null);
+            RescanChanges();
         }
 
         private void editFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1190,7 +1208,7 @@ namespace GitUI
         private void FormCommitActivated(object sender, EventArgs e)
         {
             if (Settings.RefreshCommitDialogOnFormFocus)
-                ScanClick(null, null);
+                RescanChanges();
         }
 
         private void ViewFileHistoryMenuItem_Click(object sender, EventArgs e)
@@ -1253,7 +1271,7 @@ namespace GitUI
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (keyData == Keys.F5)
-                ScanClick(null, null);
+                RescanChanges();
 
             return base.ProcessCmdKey(ref msg, keyData);
         }
