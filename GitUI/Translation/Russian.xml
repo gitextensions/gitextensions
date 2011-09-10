@@ -215,7 +215,7 @@
           <Value>Удалить untracked файлы.</Value>
         </TranslationItem>
         <TranslationItem Name="_enterCommitMessage" Property="Text">
-          <Value>Пожалуйста, введите сообщение для коммита</Value>
+          <Value>Пожалуйста, введите сообщение для коммита.</Value>
         </TranslationItem>
         <TranslationItem Name="_enterCommitMessageCaption" Property="Text">
           <Value>Сообщение для коммита</Value>
@@ -229,8 +229,12 @@
         <TranslationItem Name="_mergeConflictsCaption" Property="Text">
           <Value>Конфликты слияния</Value>
         </TranslationItem>
-        <TranslationItem Name="_noFilesStaged" Property="Text">
-          <Value>Нет сохраненных файлов для этого коммита. Вы точно хотите коммитить?</Value>
+        <TranslationItem Name="_noFilesStagedAndNothingToCommit" Property="Text">
+          <Value>Нет сохранённых файлов для этого коммита.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noFilesStagedButSuggestToCommitAllUnstaged" Property="Text">
+          <Value>Нет сохраненных файлов для этого коммита.
+Сохранить и коммитить все изменённые файлы?</Value>
         </TranslationItem>
         <TranslationItem Name="_noStagedChanges" Property="Text">
           <Value>Сохраненных изменений нет</Value>
