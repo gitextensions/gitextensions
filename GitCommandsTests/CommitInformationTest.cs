@@ -32,7 +32,7 @@ namespace GitCommandsTests
                           "Notes (p4notes):\n" +
                           "\tP4@547123";
 
-            var expectedHeader = "Author:\tJohn Doe (Acme Inc) <John.Doe@test.com>\n" +
+            var expectedHeader = "Author:\t\tJohn Doe (Acme Inc) <John.Doe@test.com>\n" +
                                  "Author date:\t3 days ago (" + authorTime.ToLocalTime().ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")\n" +
                                  "Committer:\tJane Doe (Acme Inc) <Jane.Doe@test.com>\n" +
                                  "Commit date:\t2 days ago (" + commitTime.ToLocalTime().ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")\n" +
