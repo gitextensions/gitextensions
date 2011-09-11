@@ -237,6 +237,8 @@ namespace GitPlugin
                 AddContextMenuItemsToContextMenu("Script Context");
                 AddContextMenuItemsToContextMenu("ASPX Context");
 
+                GitPlugin.Git.GitCommands.StartGitExtensionsServer();
+
                 /*
                  * Uncomment the code block below to help find the name of commandbars in
                  * visual studio. All commandbars (and context menu's) will get a new entry

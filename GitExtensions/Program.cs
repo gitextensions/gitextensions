@@ -1,10 +1,13 @@
 ﻿using System;
 using System.IO;
+using System.IO.Pipes;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
 using GitUI;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading;
 
 namespace GitExtensions
 {
@@ -64,17 +67,7 @@ namespace GitExtensions
 
             if (args.Length >= 3)
             {
-                if (Directory.Exists(args[2]))
-                    Settings.WorkingDir = args[2];
-
-                if (string.IsNullOrEmpty(Settings.WorkingDir))
-                {
-                    if (args[2].Contains(Settings.PathSeparator.ToString()))
-                        Settings.WorkingDir = args[2].Substring(0, args[2].LastIndexOf(Settings.PathSeparator));
-                }
-
-                if (Settings.ValidWorkingDir())
-                    Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
+                CheckWorkingdir(args[2]);
             }
 
             if (string.IsNullOrEmpty(Settings.WorkingDir))
@@ -95,11 +88,40 @@ namespace GitExtensions
                 RunCommand(args);
             }
 
+
             Settings.SaveSettings();
         }
 
-        private static void RunCommand(string[] args)
+        private static void Main2()
         {
+
+            PipeServer Server = new PipeServer();
+
+            Thread ServerThread = new Thread(Server.StartServer);
+
+            ServerThread.Start();
+        }
+
+        public static void CheckWorkingdir(string dir)
+        {
+            if (Directory.Exists(dir))
+                Settings.WorkingDir = dir;
+
+            if (string.IsNullOrEmpty(Settings.WorkingDir))
+            {
+                if (dir.Contains(Settings.PathSeparator.ToString()))
+                    Settings.WorkingDir = dir.Substring(0, dir.LastIndexOf(Settings.PathSeparator));
+            }
+
+            if (Settings.ValidWorkingDir())
+                Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
+           
+        }
+
+        public static void RunCommand(string[] args)
+        {
+            CheckWorkingdir(args[2]);
+
             Dictionary<string, string> arguments = new Dictionary<string, string>();
 
             for (int i = 2; i < args.Length; i++)
@@ -115,11 +137,19 @@ namespace GitExtensions
             {
                 switch (args[1])
                 {
+                    case "startserver":
+                        PipeServer Server = new PipeServer();
+
+                        //Thread ServerThread = new Thread(Server.StartServer);
+
+                        //ServerThread.Start();
+                        Server.StartServer();
+                        return;
                     case "mergetool":
                     case "mergeconflicts":
                         if (!arguments.ContainsKey("quiet") || GitCommandHelpers.InTheMiddleOfConflictedMerge())
                             GitUICommands.Instance.StartResolveConflictsDialog();
-                        
+
                         return;
                     case "gitbash":
                         GitCommandHelpers.RunBash();
@@ -306,5 +336,6 @@ namespace GitExtensions
 
             return string.Empty;
         }
+
     }
 }

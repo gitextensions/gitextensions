@@ -1,21 +1,66 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Pipes;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using System.Threading;
 
 namespace GitPlugin.Git
 {
     public static class GitCommands
     {
+
+        public static void StartGitExtensionsServer()
+        {
+            string path = GetGitExRegValue("InstallDir");
+            Run(path + "\\GitExtensions.exe", @"startserver d:\ikke_gitextensions\gitui\formbrowse.cs");
+        }
+
         public static void RunGitEx(string command, string filename)
+        {
+            System.Windows.Forms.MessageBox.Show(command + " " + filename);
+            // Ensure that we only start the client after the server has created the pipe
+            //ManualResetEvent SyncClientServer = (ManualResetEvent)obj;
+
+            // Only continue after the server was created -- otherwise we just fail badly
+            // SyncClientServer.WaitOne();
+
+            using (NamedPipeClientStream pipeStream = new NamedPipeClientStream("GitExtensionsPipe"))
+            {
+                // The connect function will indefinately wait for the pipe to become available
+                // If that is not acceptable specify a maximum waiting time (in ms)
+                pipeStream.Connect();
+
+                Console.WriteLine("[Client] Pipe connection established");
+                using (StreamWriter sw = new StreamWriter(pipeStream))
+                {
+                    sw.AutoFlush = true;
+                    
+                    sw.WriteLine(command + " " + filename);
+                    /*
+                    string temp;
+                    sw.WriteLine(@"commit d:\ikke_gitextensions\gitui\browse.cs");
+                    Console.WriteLine("Please type a message and press [Enter], or type 'quit' to exit the program");
+                    while ((temp = Console.ReadLine()) != null)
+                    {
+                        if (temp == "quit") break;
+                        sw.WriteLine(temp);
+                    }
+                     */ 
+                }
+            }
+        }
+
+        public static void RunGitEx2(string command, string filename)
         {
             if (!string.IsNullOrEmpty(filename))
                 command += " \"" + filename + "\"";
 
             string path = GetGitExRegValue("InstallDir");
-            Run(@"C:\a.exe", command);
+            Run(path + "\\GitExtensions.exe", command);
+            //Run(@"C:\a.exe", command);
         }
 
         private static string RunGit(string arguments, string filename, out int exitCode)
