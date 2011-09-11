@@ -1095,6 +1095,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Compile Include="FormRemoteProcess.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormRemoteProcess.Designer.cs">
+      <DependentUpon>FormRemoteProcess.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormVerify.SortableLostObjectsList.cs">
       <DependentUpon>FormVerify.cs</DependentUpon>
       <SubType>Form</SubType>
