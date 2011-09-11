@@ -46,6 +46,11 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
+            //can't be set in OnLoad, because after PushAndShowDialogWhenFailed()
+            //they are reset to false
+            PushAllTags.Checked = Settings.PushAllTags;
+            AutoPullOnRejected.Checked = Settings.AutoPullOnRejected;
+
             _currentBranch = GitCommandHelpers.GetSelectedBranch();
 
             Remotes.DataSource = GitCommandHelpers.GetRemotes();
@@ -121,6 +126,7 @@ namespace GitUI
 
             Repositories.RepositoryHistory.AddMostRecentRepository(PushDestination.Text);
             Settings.PushAllTags = PushAllTags.Checked;
+            Settings.AutoPullOnRejected = AutoPullOnRejected.Checked;
 
             var remote = "";
             string destination;
@@ -178,10 +184,11 @@ namespace GitUI
 
             ScriptManager.RunEventScripts(ScriptEvent.BeforePush);
 
-        	var form = new FormProcess(pushCmd)
+            var form = new FormRemoteProcess(pushCmd)
                        {
                            Remote = remote,
-                           Text = string.Format(_pushToCaption.Text, destination)
+                           Text = string.Format(_pushToCaption.Text, destination),
+                           HandleOnExitCallback = new HandleOnExit(HandlePushOnExit)
                        };
 
             form.ShowDialog();
@@ -193,6 +200,25 @@ namespace GitUI
                 if (_createPullRequestCB.Checked)
                     GitUICommands.Instance.StartCreatePullRequest();
                 return true;
+            }
+
+            return false;
+        }
+
+        private bool HandlePushOnExit(ref bool isError, FormProcess form) 
+        {
+            if (isError) 
+            {
+
+                if (Settings.AutoPullOnRejected && 
+                    form.OutputString.ToString().Contains("To prevent you from losing history, non-fast-forward updates were rejected"))
+                {
+                    if (GitUICommands.Instance.StartPullDialog(true))
+                    {
+                        form.Retry();
+                        return true;
+                    }
+                }
             }
 
             return false;
@@ -270,10 +296,8 @@ namespace GitUI
 
             Text = string.Concat(_pushCaption.Text, " (", Settings.WorkingDir, ")");
 
-            PushAllTags.Checked = Settings.PushAllTags;
-
             var gitHoster = RepoHosts.TryGetGitHosterForCurrentWorkingDir();
-            _createPullRequestCB.Visible = gitHoster != null;
+            _createPullRequestCB.Enabled = gitHoster != null;
         }
 
         private void AddRemoteClick(object sender, EventArgs e)
