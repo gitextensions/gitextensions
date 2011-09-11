@@ -754,6 +754,13 @@ namespace GitCommands
             set { SafeSet("pushalltags", value, ref _pushAllTags); }
         }
 
+        private static bool? _AutoPullOnRejected;
+        public static bool AutoPullOnRejected
+        {
+            get { return SafeGet("AutoPullOnRejected", false, ref _AutoPullOnRejected); }
+            set { SafeSet("AutoPullOnRejected", value, ref _AutoPullOnRejected); }
+        }
+
         public static string GetGitExtensionsFullPath()
         {
             return GetGitExtensionsDirectory() + "\\GitExtensions.exe";

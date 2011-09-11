@@ -65,6 +65,7 @@
             this.ForceColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.DeleteColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.AutoPullOnRejected = new System.Windows.Forms.CheckBox();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -249,6 +250,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.AutoPullOnRejected);
             this.groupBox1.Controls.Add(this._createPullRequestCB);
             this.groupBox1.Controls.Add(this.labelTo);
             this.groupBox1.Controls.Add(this.RemoteBranch);
@@ -485,6 +487,17 @@
             this.DeleteColumn.Name = "DeleteColumn";
             this.DeleteColumn.Width = 108;
             // 
+            // AutoPullOnRejected
+            // 
+            this.AutoPullOnRejected.AutoSize = true;
+            this.AutoPullOnRejected.Location = new System.Drawing.Point(348, 74);
+            this.AutoPullOnRejected.Name = "AutoPullOnRejected";
+            this.AutoPullOnRejected.Size = new System.Drawing.Size(126, 17);
+            this.AutoPullOnRejected.TabIndex = 23;
+            this.AutoPullOnRejected.Text = "Auto pull on rejected";
+            this.toolTip1.SetToolTip(this.AutoPullOnRejected, "Auto pull onnon fast forward  rejected");
+            this.AutoPullOnRejected.UseVisualStyleBackColor = true;
+            // 
             // FormPush
             // 
             this.AcceptButton = this.Push;
@@ -557,5 +570,6 @@
 		private System.Windows.Forms.DataGridViewCheckBoxColumn ForceColumn;
 		private System.Windows.Forms.DataGridViewCheckBoxColumn DeleteColumn;
         private System.Windows.Forms.CheckBox _createPullRequestCB;
+        private System.Windows.Forms.CheckBox AutoPullOnRejected;
     }
 }
