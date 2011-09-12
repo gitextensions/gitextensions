@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormGitIgnore));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this._NO_TRANSLATE_GitIgnoreEdit = new GitUI.Editor.FileViewer();
+            this.AddPattern = new System.Windows.Forms.Button();
             this.AddDefault = new System.Windows.Forms.Button();
             this.Save = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -53,10 +53,11 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.AddPattern);
             this.splitContainer1.Panel2.Controls.Add(this.AddDefault);
             this.splitContainer1.Panel2.Controls.Add(this.Save);
             this.splitContainer1.Panel2.Controls.Add(this.label1);
-            this.splitContainer1.Size = new System.Drawing.Size(634, 473);
+            this.splitContainer1.Size = new System.Drawing.Size(634, 519);
             this.splitContainer1.SplitterDistance = 400;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -74,14 +75,25 @@
             this._NO_TRANSLATE_GitIgnoreEdit.ScrollPos = 0;
             this._NO_TRANSLATE_GitIgnoreEdit.ShowEntireFile = false;
             this._NO_TRANSLATE_GitIgnoreEdit.ShowLineNumbers = true;
-            this._NO_TRANSLATE_GitIgnoreEdit.Size = new System.Drawing.Size(400, 473);
+            this._NO_TRANSLATE_GitIgnoreEdit.Size = new System.Drawing.Size(400, 519);
             this._NO_TRANSLATE_GitIgnoreEdit.TabIndex = 0;
             this._NO_TRANSLATE_GitIgnoreEdit.TreatAllFilesAsText = false;
+            // 
+            // AddPattern
+            // 
+            this.AddPattern.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.AddPattern.Location = new System.Drawing.Point(88, 429);
+            this.AddPattern.Name = "AddPattern";
+            this.AddPattern.Size = new System.Drawing.Size(139, 25);
+            this.AddPattern.TabIndex = 3;
+            this.AddPattern.Text = "Add pattern";
+            this.AddPattern.UseVisualStyleBackColor = true;
+            this.AddPattern.Click += new System.EventHandler(this.AddPattern_Click);
             // 
             // AddDefault
             // 
             this.AddDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.AddDefault.Location = new System.Drawing.Point(6, 438);
+            this.AddDefault.Location = new System.Drawing.Point(88, 460);
             this.AddDefault.Name = "AddDefault";
             this.AddDefault.Size = new System.Drawing.Size(139, 25);
             this.AddDefault.TabIndex = 2;
@@ -92,9 +104,9 @@
             // Save
             // 
             this.Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Save.Location = new System.Drawing.Point(151, 438);
+            this.Save.Location = new System.Drawing.Point(88, 491);
             this.Save.Name = "Save";
-            this.Save.Size = new System.Drawing.Size(75, 25);
+            this.Save.Size = new System.Drawing.Size(139, 25);
             this.Save.TabIndex = 1;
             this.Save.Text = "Save";
             this.Save.UseVisualStyleBackColor = true;
@@ -105,7 +117,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(213, 390);
+            this.label1.Size = new System.Drawing.Size(213, 312);
             this.label1.TabIndex = 0;
             this.label1.Text = resources.GetString("label1.Text");
             // 
@@ -113,13 +125,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(634, 473);
+            this.ClientSize = new System.Drawing.Size(634, 519);
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormGitIgnore";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Edit .gitignore";
-            this.Load += new System.EventHandler(this.FormGitIgnoreLoad);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormGitIgnoreFormClosing);
+            this.Load += new System.EventHandler(this.FormGitIgnoreLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
@@ -135,6 +147,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button Save;
         private System.Windows.Forms.Button AddDefault;
+        private System.Windows.Forms.Button AddPattern;
 
     }
 }

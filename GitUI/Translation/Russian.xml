@@ -215,7 +215,7 @@
           <Value>Удалить untracked файлы.</Value>
         </TranslationItem>
         <TranslationItem Name="_enterCommitMessage" Property="Text">
-          <Value>Пожалуйста, введите сообщение для коммита</Value>
+          <Value>Пожалуйста, введите сообщение для коммита.</Value>
         </TranslationItem>
         <TranslationItem Name="_enterCommitMessageCaption" Property="Text">
           <Value>Сообщение для коммита</Value>
@@ -229,8 +229,12 @@
         <TranslationItem Name="_mergeConflictsCaption" Property="Text">
           <Value>Конфликты слияния</Value>
         </TranslationItem>
-        <TranslationItem Name="_noFilesStaged" Property="Text">
-          <Value>Нет сохраненных файлов для этого коммита. Вы точно хотите коммитить?</Value>
+        <TranslationItem Name="_noFilesStagedAndNothingToCommit" Property="Text">
+          <Value>Нет сохранённых файлов для этого коммита.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noFilesStagedButSuggestToCommitAllUnstaged" Property="Text">
+          <Value>Нет сохраненных файлов для этого коммита.
+Сохранить и коммитить все изменённые файлы?</Value>
         </TranslationItem>
         <TranslationItem Name="_noStagedChanges" Property="Text">
           <Value>Сохраненных изменений нет</Value>
@@ -1613,10 +1617,21 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
 Не забудьте удалить их, когда закончите.</Value>
         </TranslationItem>
         <TranslationItem Name="SaveObjects" Property="Text">
-          <Value>Сохранить обьекты в .git/lost-found</Value>
+          <Value>Сохранить в .git/lost-found</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
-          <Value>Щёлкните дважды по строке, содержащей хеш sha1, для того чтобы просмотреть объект</Value>
+          <Value>Щёлкните дважды по строке, чтобы просмотреть объект</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>По умолчанию потерянные объекты хранятся две недели,
+прежде чем будут удалены при сжатии базы.
+Их можно принудительно удалить,
+нажав на кнопку "Удалить все потерянные объекты"
+
+Отметьте коммиты, которые требуется восстановить,
+и нажмите на кнопку "Восстановить выделенные объекты"
+Используйте контекстное меню для дополнительных действий
+          </Value>
         </TranslationItem>
         <TranslationItem Name="Remove" Property="Text">
           <Value>Удалить все потерянные объекты</Value>
@@ -1638,6 +1653,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         </TranslationItem>
         <TranslationItem Name="ShowOnlyCommits" Property="Text">
           <Value>Показать только коммиты</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnCloseDialog" Property="Text">
+          <Value>Отмена</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
