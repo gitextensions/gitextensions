@@ -95,5 +95,15 @@ namespace Github
             _useHttpsRB.Enabled = _passwordTB.Text.Trim().Length > 0;
             //_saveBtn.Enabled = false;
         }
+        
+        public GitUIPluginInterfaces.IGitPluginSettingsContainer Settings { get; set; }
+        
+        private void _clearBtn_Click(object sender, EventArgs e)
+        {
+            GithubPlugin.Instance.ClearAuth();
+            _usernameTB.Text = "";
+            _passwordTB.Text = "";
+            _apitokenTB.Text = "";
+        }
     }
 }

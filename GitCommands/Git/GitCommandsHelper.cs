@@ -1424,15 +1424,23 @@ namespace GitCommands
         {
             Directory.SetCurrentDirectory(Settings.WorkingDir);
 
-            return RunCmd(Settings.GitCommand, RebaseCmd(branch, false));
+            return RunCmd(Settings.GitCommand, RebaseCmd(branch, false, false));
         }
 
-        public static string RebaseCmd(string branch, bool interactive)
+        public static string RebaseCmd(string branch, bool interactive, bool autosquash)
         {
-            if (interactive)
-                return "rebase -i \"" + branch + "\"";
+            StringBuilder sb = new StringBuilder("rebase ");
 
-            return "rebase \"" + branch + "\"";
+            if (interactive)
+            {
+                sb.Append(" -i ");
+                sb.Append(autosquash ? "--autosquash " : "--no-autosquash ");
+            }
+
+            sb.Append('"');
+            sb.Append(branch);
+            sb.Append('"');
+            return sb.ToString();
         }
 
 
@@ -1606,6 +1614,15 @@ namespace GitCommands
         {
             var configFile = GetLocalConfig();
             return configFile.GetValue(setting);
+        }
+
+        public static string GetEffectiveSetting(string setting)
+        {
+            var localConfig = GetLocalConfig();
+            if (localConfig.HasValue(setting))
+                return localConfig.GetValue(setting);
+
+            return GetGlobalConfig().GetValue(setting);
         }
 
         public static void UnsetSetting(string setting)
@@ -1798,9 +1815,9 @@ namespace GitCommands
             int lastNewLinePos = trimmedStatus.LastIndexOfAny(new char[] { '\n', '\r' });
             if (lastNewLinePos > 0)
             {
-                if (trimmedStatus.IndexOf('\0') > lastNewLinePos) //Warning at beginning
+                if (trimmedStatus.IndexOf('\0') < lastNewLinePos) //Warning at end
                     trimmedStatus = trimmedStatus.Substring(0, lastNewLinePos).Trim(new char[] { '\n', '\r' });
-                else                                              //Warning at end
+                else                                              //Warning at beginning
                     trimmedStatus = trimmedStatus.Substring(lastNewLinePos).Trim(new char[] { '\n', '\r' });
             }
 
@@ -2120,10 +2137,10 @@ namespace GitCommands
             return RunCmd(Settings.GitCommand, "reset HEAD -- \"" + FixPath(file) + "\"");
         }
 
-        public static string GetSelectedBranch()
+        public static string GetSelectedBranch(string repositoryPath)
         {
             string head;
-            string headFileName = Settings.WorkingDirGitDir() + "\\HEAD";
+            string headFileName = Path.Combine(GetGitDirectory(repositoryPath), "HEAD");
             if (File.Exists(headFileName))
             {
                 head = File.ReadAllText(headFileName);
@@ -2135,7 +2152,7 @@ namespace GitCommands
                 int exitcode;
                 head = RunCmd(Settings.GitCommand, "symbolic-ref HEAD", out exitcode);
                 if (exitcode == 1)
-                    head = "(no branch)";
+                    return "(no branch)";
             }
 
             if (!string.IsNullOrEmpty(head))
@@ -2144,6 +2161,11 @@ namespace GitCommands
             }
 
             return string.Empty;
+        }
+
+        public static string GetSelectedBranch()
+        {
+            return GetSelectedBranch(Settings.WorkingDir);
         }
 
         public static List<GitHead> GetRemoteHeads(string remote, bool tags, bool branches)
@@ -2227,10 +2249,14 @@ namespace GitCommands
             return string.Empty;
         }
 
-        public static string[] GetFiles(string filePattern)
+        public static IList<string> GetFiles(string filePattern)
         {
+            // filter duplicates out of the result because options -c and -m may return 
+            // same files at times
             return RunCmd(Settings.GitCommand, "ls-files -z -o -m -c \"" + filePattern + "\"")
-                .Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                .Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                .Distinct()
+                .ToList();
         }
 
         public static List<GitItem> GetFileChanges(string file)
@@ -2456,9 +2482,19 @@ namespace GitCommands
             return null;
         }
 
+        public static string RecodeString(string s) {
+
+            Encoding logoutputEncoding = GitCommandHelpers.GetLogoutputEncoding();
+            if (logoutputEncoding != Settings.Encoding)
+                s = logoutputEncoding.GetString(Settings.Encoding.GetBytes(s));
+
+            return s;
+        }
+
         public static string GetPreviousCommitMessage(int numberBack)
         {
-            return RunCmd(Settings.GitCommand, "log -n 1 HEAD~" + numberBack + " --pretty=format:%s%n%n%b");
+            //+"--encoding=" + Settings.Encoding.HeaderName doesn't work
+            return RecodeString(RunCmd(Settings.GitCommand, "log -n 1 HEAD~" + numberBack + " --pretty=format:%s%n%n%b "));
         }
 
         public static string MergeBranch(string branch)
@@ -2536,6 +2572,14 @@ namespace GitCommands
                 return fileName.Substring(fileName.LastIndexOf('.') + 1);
 
             return null;
+        }
+
+        public static string GetGitDirectory(string repositoryPath)
+        {
+            if (string.IsNullOrEmpty(repositoryPath))
+                return repositoryPath;
+            var candidatePath = Path.Combine(repositoryPath, ".git");
+            return Directory.Exists(candidatePath) ? candidatePath : repositoryPath;
         }
 
         /// <summary>

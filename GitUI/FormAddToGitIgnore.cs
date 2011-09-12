@@ -13,7 +13,7 @@ namespace GitUI
             InitializeComponent();
             Translate();
             FilePattern.Text = filePattern;
-            Height = 100;
+            UpdatePreviewPanel();
         }
 
         private void AddToIngoreClick(object sender, EventArgs e)
@@ -42,12 +42,17 @@ namespace GitUI
             Close();
         }
 
-        private void ShowPreviewClick(object sender, EventArgs e)
+        private void UpdatePreviewPanel()
         {
             Preview.DataSource = GitCommandHelpers.GetFiles(FilePattern.Text);
+            NumMatches.Text = Preview.Items.Count.ToString();
+            NumMatches.Left = filesWillBeIgnored.Left - NumMatches.Width + 3;
+            noMatchPanel.Visible = (Preview.Items.Count == 0);
+        }
 
-            if (Height < 110)
-                Height = 300;
+        private void FilePattern_TextChanged(object sender, EventArgs e)
+        {
+            UpdatePreviewPanel();
         }
     }
 }

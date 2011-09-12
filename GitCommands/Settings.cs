@@ -677,15 +677,7 @@ namespace GitCommands
 
         public static string WorkingDirGitDir()
         {
-            var workingDir = WorkingDir;
-
-            if (Directory.Exists(workingDir + ".git"))
-                return workingDir + ".git";
-
-            if (Directory.Exists(workingDir + PathSeparator + ".git"))
-                return workingDir + PathSeparator + ".git";
-
-            return WorkingDir;
+            return GitCommandHelpers.GetGitDirectory(WorkingDir);
         }
 
         public static bool RunningOnWindows()
@@ -760,6 +752,13 @@ namespace GitCommands
         {
             get { return SafeGet("pushalltags", false, ref _pushAllTags); }
             set { SafeSet("pushalltags", value, ref _pushAllTags); }
+        }
+
+        private static bool? _AutoPullOnRejected;
+        public static bool AutoPullOnRejected
+        {
+            get { return SafeGet("AutoPullOnRejected", false, ref _AutoPullOnRejected); }
+            set { SafeSet("AutoPullOnRejected", value, ref _AutoPullOnRejected); }
         }
 
         public static string GetGitExtensionsFullPath()

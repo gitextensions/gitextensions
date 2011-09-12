@@ -2734,8 +2734,8 @@ Vuoi continuare?</Value>
         <TranslationItem Name="_mergeConflictsCaption" Property="Text">
           <Value>Conflitti di merge</Value>
         </TranslationItem>
-        <TranslationItem Name="_noFilesStaged" Property="Text">
-          <Value>Non ci sono file nello stage per questo commit. Sei sicuro di volerlo effettuare?</Value>
+        <TranslationItem Name="_noFilesStagedAndNothingToCommit" Property="Text">
+          <Value>Non ci sono file nello stage per questo commit.</Value>
         </TranslationItem>
         <TranslationItem Name="_noStagedChanges" Property="Text">
           <Value>Non ci sono modifiche nello stage</Value>

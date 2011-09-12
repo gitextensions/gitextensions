@@ -87,12 +87,12 @@ namespace Github
 
         public IList<IHostedRepository> GetMyRepos()
         {
-            if (GithubUser != null)
-            {
-                return GetRepositoriesOfUser(GithubUser.Name);
-            }
-
-            return new List<IHostedRepository>();
+            if (GithubUser == null) 
+                { throw new InvalidOperationException("No GitHub authorization credentials found!"); }
+            
+            return GetRepositoriesOfUser(GithubUser.Name);
+            
+            //return new List<IHostedRepository>();
         }
 
         public List<IHostedRemote> GetHostedRemotesForCurrentWorkingDirRepo()
@@ -171,6 +171,17 @@ namespace Github
             Settings.SetSetting("username", username);
             Settings.SetSetting("password", password);
             Settings.SetSetting("apitoken", apitoken);
+        }
+
+        public void ClearAuth()
+        {
+            _githubUser = null;
+            _authInfo = null;
+            _configurationOk = null;
+            InvalidateCache();
+            Settings.SetSetting("username", "");
+            Settings.SetSetting("password", "");
+            Settings.SetSetting("apitoken", "");
         }
 
         GithubLoginInfo _authInfo;

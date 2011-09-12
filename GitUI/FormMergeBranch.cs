@@ -37,9 +37,9 @@ namespace GitUI
             var process = new FormProcess(GitCommandHelpers.MergeBranchCmd(Branches.Text, fastForward.Checked, squash.Checked, noCommit.Checked, _NO_TRANSLATE_mergeStrategy.Text));
             process.ShowDialog();
 
-            MergeConflictHandler.HandleMergeConflicts();
+            var wasConflict = MergeConflictHandler.HandleMergeConflicts();
 
-            if (!process.ErrorOccurred())
+            if (!process.ErrorOccurred() || wasConflict)
                 Close();
         }
 

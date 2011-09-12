@@ -40,6 +40,7 @@
             this.Mergetool = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.chkAutosquash = new System.Windows.Forms.CheckBox();
             this.chkInteractive = new System.Windows.Forms.CheckBox();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.label3 = new System.Windows.Forms.Label();
@@ -198,6 +199,7 @@
             // 
             // splitContainer2.Panel1
             // 
+            this.splitContainer2.Panel1.Controls.Add(this.chkAutosquash);
             this.splitContainer2.Panel1.Controls.Add(this.chkInteractive);
             this.splitContainer2.Panel1.Controls.Add(this.label1);
             this.splitContainer2.Panel1.Controls.Add(this.Currentbranch);
@@ -213,6 +215,17 @@
             this.splitContainer2.SplitterDistance = 74;
             this.splitContainer2.TabIndex = 0;
             // 
+            // chkAutosquash
+            // 
+            this.chkAutosquash.AutoSize = true;
+            this.chkAutosquash.Enabled = false;
+            this.chkAutosquash.Location = new System.Drawing.Point(431, 49);
+            this.chkAutosquash.Name = "chkAutosquash";
+            this.chkAutosquash.Size = new System.Drawing.Size(83, 17);
+            this.chkAutosquash.TabIndex = 7;
+            this.chkAutosquash.Text = "Autosquash";
+            this.chkAutosquash.UseVisualStyleBackColor = true;
+            // 
             // chkInteractive
             // 
             this.chkInteractive.AutoSize = true;
@@ -222,6 +235,7 @@
             this.chkInteractive.TabIndex = 7;
             this.chkInteractive.Text = "Interactive Rebase";
             this.chkInteractive.UseVisualStyleBackColor = true;
+            this.chkInteractive.Click += new System.EventHandler(this.InteractiveRebaseClick);
             // 
             // splitContainer3
             // 
@@ -377,5 +391,6 @@
         private System.Windows.Forms.Panel ContinuePanel;
         private System.Windows.Forms.Panel MergeToolPanel;
         private System.Windows.Forms.CheckBox chkInteractive;
+        private System.Windows.Forms.CheckBox chkAutosquash;
     }
 }
