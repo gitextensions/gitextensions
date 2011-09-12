@@ -138,7 +138,7 @@ namespace GitUI
         {
             if (!Settings.ValidWorkingDir())
             {
-                MessageBox.Show("The current directory is not a valid git repsoitory.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("The current directory is not a valid git repository.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
