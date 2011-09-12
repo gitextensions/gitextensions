@@ -1023,7 +1023,8 @@ namespace GitUI
                                                                                headBounds.Y,
                                                                                RoundToEven(textSize.Width + 3),
                                                                                RoundToEven(textSize.Height), 3,
-                                                                               head.Selected);
+                                                                               head.Selected,
+                                                                               head.SelectedHeadMergeSource);
 
                                         offset += extraOffset;
                                         headBounds.Offset((int) (extraOffset + 1), 0);
@@ -1132,9 +1133,10 @@ namespace GitUI
         }
 
         private float DrawHeadBackground(bool isSelected, Graphics graphics, Color color, 
-            float x, float y, float width, float height, float radius, bool isCurrentBranch)
+            float x, float y, float width, float height, float radius, bool isCurrentBranch,
+            bool isCurentBranchMergeSource)
         {
-            float additionalOffset = isCurrentBranch ? GetArrowSize(height) : 0;
+            float additionalOffset = isCurrentBranch || isCurentBranchMergeSource ? GetArrowSize(height) : 0;
             width += additionalOffset;
             var oldMode = graphics.SmoothingMode;
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -1162,7 +1164,9 @@ namespace GitUI
 
                     // arrow if the head is the current branch 
                     if (isCurrentBranch)
-                        DrawArrow(graphics, x, y, height, color);
+                        DrawArrow(graphics, x, y, height, color, true);
+                    else if (isCurentBranchMergeSource)
+                        DrawArrow(graphics, x, y, height, color, false);
                 }
             }
             finally
@@ -1178,7 +1182,7 @@ namespace GitUI
             return rowHeight - 6;
         }
 
-        private void DrawArrow(Graphics graphics, float x, float y, float rowHeight, Color color)
+        private void DrawArrow(Graphics graphics, float x, float y, float rowHeight, Color color, bool filled)
         {
             const float horShift = 4;
             const float verShift = 3;
@@ -1193,7 +1197,10 @@ namespace GitUI
                                      new PointF(x + horShift, y + verShift)
                                  };
 
-            graphics.FillPolygon(new SolidBrush(color), points);
+            if (filled)
+                graphics.FillPolygon(new SolidBrush(color), points);
+            else
+                graphics.DrawPolygon(new Pen(color), points);
         }
 
         private static GraphicsPath CreateRoundRectPath(float x, float y, float width, float height, float radius)
@@ -1288,9 +1295,12 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
             var frm = new FormBranchSmall { Revision = GetRevision(LastRow) };
-            frm.ShowDialog();
-            RefreshRevisions();
-            OnActionOnRepositoryPerformed();
+
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                RefreshRevisions();
+                OnActionOnRepositoryPerformed();
+            }
         }
 
         private void RevisionsMouseClick(object sender, MouseEventArgs e)
@@ -1439,44 +1449,52 @@ namespace GitUI
             var tagNameCopy = new ToolStripDropDown();
             var branchNameCopy = new ToolStripDropDown();
 
-            foreach (var head in revision.Heads)
+            foreach (var head in revision.Heads.Where(h => h.IsTag))
             {
-                if (head.IsTag)
+                ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
+                ToolStripItem tagName = new ToolStripMenuItem(head.Name);
+                toolStripItem.Click += ToolStripItemClick;
+                tagDropDown.Items.Add(toolStripItem);
+                tagName.Click += copyToClipBoard;
+                tagNameCopy.Items.Add(tagName);
+            }
+
+            var allBranches = revision.Heads.Where(h => !h.IsTag && (h.IsHead || h.IsRemote));
+            var localBranches = allBranches.Where(b => !b.IsRemote);
+
+            var branchesWithNoIdenticalRemotes = allBranches.Where(
+                b => !b.IsRemote || !localBranches.Any(lb => lb.TrackingRemote == b.Remote && lb.MergeWith == b.LocalName));
+
+            foreach (var head in branchesWithNoIdenticalRemotes)
+            {
+                ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
+                toolStripItem.Click += ToolStripItemClickMergeBranch;
+                mergeBranchDropDown.Items.Add(toolStripItem);
+
+                toolStripItem = new ToolStripMenuItem(head.Name);
+                toolStripItem.Click += ToolStripItemClickRebaseBranch;
+                rebaseDropDown.Items.Add(toolStripItem);
+            }
+
+            foreach (var head in allBranches)
+            {
+                ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
+                ToolStripItem branchName = new ToolStripMenuItem(head.Name);
+                branchName.Click += copyToClipBoard;
+                branchNameCopy.Items.Add(branchName);
+
+                //if (head.IsHead && !head.IsRemote)
                 {
-                    ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
-                    ToolStripItem tagName = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Click += ToolStripItemClick;
-                    tagDropDown.Items.Add(toolStripItem);
-                    tagName.Click += copyToClipBoard;
-                    tagNameCopy.Items.Add(tagName);
-                }
-                else if (head.IsHead || head.IsRemote)
-                {
-                    ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Click += ToolStripItemClickMergeBranch;
-                    mergeBranchDropDown.Items.Add(toolStripItem);
+                    toolStripItem = new ToolStripMenuItem(head.Name);
+                    toolStripItem.Click += ToolStripItemClickBranch;
+                    branchDropDown.Items.Add(toolStripItem);
 
                     toolStripItem = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Click += ToolStripItemClickRebaseBranch;
-                    rebaseDropDown.Items.Add(toolStripItem);
-
-                    ToolStripItem branchName = new ToolStripMenuItem(head.Name);
-                    branchName.Click += copyToClipBoard;
-                    branchNameCopy.Items.Add(branchName);
-
-                    //if (head.IsHead && !head.IsRemote)
-                    {
-                        toolStripItem = new ToolStripMenuItem(head.Name);
-                        toolStripItem.Click += ToolStripItemClickBranch;
-                        branchDropDown.Items.Add(toolStripItem);
-
-                        toolStripItem = new ToolStripMenuItem(head.Name);
-                        if (head.IsRemote)
-                            toolStripItem.Click += ToolStripItemClickCheckoutRemoteBranch;
-                        else
-                            toolStripItem.Click += ToolStripItemClickCheckoutBranch;
-                        checkoutBranchDropDown.Items.Add(toolStripItem);
-                    }
+                    if (head.IsRemote)
+                        toolStripItem.Click += ToolStripItemClickCheckoutRemoteBranch;
+                    else
+                        toolStripItem.Click += ToolStripItemClickCheckoutBranch;
+                    checkoutBranchDropDown.Items.Add(toolStripItem);
                 }
             }
 
@@ -1615,6 +1633,27 @@ namespace GitUI
                 return;
 
             var frm = new FormCherryPickCommitSmall(GetRevision(LastRow));
+            frm.ShowDialog();
+            ForceRefreshRevisions();
+            OnActionOnRepositoryPerformed();
+        }
+
+        private void FixupCommitToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            PrepareCorrectionCommit(CommitKind.Fixup);
+        }
+
+        private void SquashCommitToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            PrepareCorrectionCommit(CommitKind.Squash);
+        }
+
+        private void PrepareCorrectionCommit(CommitKind commitKind)
+        {
+            if (Revisions.RowCount <= LastRow || LastRow < 0)
+                return;
+
+            var frm = new FormCommit(commitKind, GetRevision(LastRow));
             frm.ShowDialog();
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();

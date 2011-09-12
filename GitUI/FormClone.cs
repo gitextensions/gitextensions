@@ -37,7 +37,7 @@ namespace GitUI
 
 
                 var fromProcess =
-                    new FormProcess(Settings.GitCommand,
+                    new FormRemoteProcess(Settings.GitCommand,
                                     GitCommandHelpers.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
                                                                      CentralRepository.Checked, Branches.Text, null));
                 fromProcess.SetUrlTryingToConnect(_NO_TRANSLATE_From.Text);
@@ -171,8 +171,10 @@ namespace GitUI
             var path = _NO_TRANSLATE_From.Text;
             path = path.TrimEnd(new[] { '\\', '/' });
 
-            if (path.EndsWith(".git"))
-                path = path.Replace(".git", "");
+            const string standardRepositorySuffix = ".git";
+
+            if (path.EndsWith(standardRepositorySuffix))
+                path = path.Substring(0, path.Length - standardRepositorySuffix.Length);
 
             if (path.Contains("\\") || path.Contains("/"))
                 _NO_TRANSLATE_NewDirectory.Text = path.Substring(path.LastIndexOfAny(new[] { '\\', '/' }) + 1);
