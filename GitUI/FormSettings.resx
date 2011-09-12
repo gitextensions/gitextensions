@@ -149,7 +149,10 @@ When OpenSSH is used, command line dialogs are shown!
     <value>678, 17</value>
   </metadata>
   <data name="argumentsTextBox.HelpString" xml:space="preserve">
-    <value>Selected Branch:
+    <value>User Input:
+{UserInput}
+
+Selected Branch:
 {sTag}
 {sBranch}
 {sLocalBranch}
