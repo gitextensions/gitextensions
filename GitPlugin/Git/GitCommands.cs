@@ -15,7 +15,7 @@ namespace GitPlugin.Git
         public static void StartGitExtensionsServer()
         {
             string path = GetGitExRegValue("InstallDir");
-            Run(path + "\\GitExtensions.exe", @"startserver d:\ikke_gitextensions\gitui\formbrowse.cs");
+            Run(path + "\\GitExtensions.exe", @"startserver " + Application.StartupPath);
         }
 
         public static void RunGitEx(string command, string filename)
