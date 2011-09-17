@@ -3018,6 +3018,9 @@ Utilice sólo modificar si el commit no está publicado todavía!
         <TranslationItem Name="_noFilesStagedAndNothingToCommit" Property="Text">
           <Value>No hay archivos planeados para este commit.</Value>
         </TranslationItem>
+        <TranslationItem Name="_noFilesStagedAndConfirmAnEmptyMergeCommit" Property="Text">
+          <Value>No hay archivos planeados para este commit. ¿Está seguro que quiere realizar commit?</Value>
+        </TranslationItem>
         <TranslationItem Name="_noStagedChanges" Property="Text">
           <Value>No se realizaron cambios planeados</Value>
         </TranslationItem>
