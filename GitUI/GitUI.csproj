@@ -815,6 +815,9 @@
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Script\SimplePrompt.resx">
+      <DependentUpon>SimplePrompt.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SpellChecker\EditNetSpell.resx">
       <DependentUpon>EditNetSpell.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1104,6 +1107,12 @@
     <Compile Include="FormVerify.SortableLostObjectsList.cs">
       <DependentUpon>FormVerify.cs</DependentUpon>
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Script\SimplePrompt.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Script\SimplePrompt.Designer.cs">
+      <DependentUpon>SimplePrompt.cs</DependentUpon>
     </Compile>
     <Compile Include="Script\SplitButton.cs">
       <SubType>Component</SubType>
