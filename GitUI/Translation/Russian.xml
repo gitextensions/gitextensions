@@ -232,6 +232,10 @@
         <TranslationItem Name="_noFilesStagedAndNothingToCommit" Property="Text">
           <Value>Нет сохранённых файлов для этого коммита.</Value>
         </TranslationItem>
+        <TranslationItem Name="_noFilesStagedAndConfirmAnEmptyMergeCommit" Property="Text">
+          <Value>Нет сохранённых файлов для этого коммита.
+Вы точно хотите коммитить?</Value>
+        </TranslationItem>
         <TranslationItem Name="_noFilesStagedButSuggestToCommitAllUnstaged" Property="Text">
           <Value>Нет сохраненных файлов для этого коммита.
 Сохранить и коммитить все изменённые файлы?</Value>
