@@ -983,10 +983,13 @@ namespace GitUI
                 var lineNumber = 0;
                 foreach (var line in commitMessageText.Split('\n'))
                 {
-                    if (lineNumber == 1 && !String.IsNullOrEmpty(line))
-                        textWriter.WriteLine();
+                    if (!line.StartsWith("#"))
+                    {
+                        if (lineNumber == 1 && !String.IsNullOrEmpty(line))
+                            textWriter.WriteLine();
 
-                    textWriter.WriteLine(line);
+                        textWriter.WriteLine(line);
+                    }
                     lineNumber++;
                 }
             }
