@@ -2737,6 +2737,9 @@ Vuoi continuare?</Value>
         <TranslationItem Name="_noFilesStagedAndNothingToCommit" Property="Text">
           <Value>Non ci sono file nello stage per questo commit.</Value>
         </TranslationItem>
+        <TranslationItem Name="_noFilesStagedAndConfirmAnEmptyMergeCommit" Property="Text">
+          <Value>Non ci sono file nello stage per questo commit. Sei sicuro di volerlo effettuare?</Value>
+        </TranslationItem>
         <TranslationItem Name="_noStagedChanges" Property="Text">
           <Value>Non ci sono modifiche nello stage</Value>
         </TranslationItem>
