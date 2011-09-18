@@ -65,7 +65,8 @@ namespace GitUI.Script
                     "{cCommitter}",
                     "{cAuthorDate}",
                     "{cCommitDate}",
-                    "{cDefaultRemote}"
+                    "{cDefaultRemote}",
+                    "{UserInput}"
                 };
 
             GitRevision selectedRevision = null;
@@ -279,6 +280,11 @@ namespace GitUI.Script
                                                             askToSpecify(currentBranches, "Current Revision Branch"))));
                             else
                                 argument = argument.Replace(option, "");
+                            break;
+                        case "{UserInput}":
+                            SimplePrompt Prompt = new SimplePrompt();
+                            Prompt.ShowDialog();
+                            argument = argument.Replace(option, Prompt.UserInput);
                             break;
                         default:
                             break;
