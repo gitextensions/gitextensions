@@ -100,7 +100,7 @@ namespace GitPlugin
                     _gitPlugin.RegisterCommand("GitExtensionsMerge", new ToolbarCommand<Merge>());
                     _gitPlugin.RegisterCommand("GitExtensionsCherryPick", new ToolbarCommand<Cherry>());
                     _gitPlugin.RegisterCommand("GitExtensionsStash", new ToolbarCommand<Stash>());
-                    _gitPlugin.RegisterCommand("GitExtensionsSettings", new ToolbarCommand<Settings>());
+                    _gitPlugin.RegisterCommand("GitExtensionsSettings", new ToolbarCommand<SettingsDialog>());
                     _gitPlugin.RegisterCommand("GitExtensionsSolveMergeConflicts",
                                               new ToolbarCommand<SolveMergeConflicts>());
                     _gitPlugin.RegisterCommand("GitExtensionsApplyPatch", new ToolbarCommand<ApplyPatch>());

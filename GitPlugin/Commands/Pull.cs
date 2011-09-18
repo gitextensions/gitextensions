@@ -1,4 +1,6 @@
 ﻿using EnvDTE;
+using GitExtensions;
+using GitUI;
 
 namespace GitPlugin.Commands
 {
@@ -6,7 +8,10 @@ namespace GitPlugin.Commands
     {
         protected override void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane)
         {
-            RunGitEx("pull", fileName);
+            //RunGitEx("pull", fileName);
+            ApplicationLoader.Load();
+            GitCommands.Settings.WorkingDir = fileName;
+            GitUICommands.Instance.StartPullDialog();
         }
 
         protected override CommandTarget SupportedTargets

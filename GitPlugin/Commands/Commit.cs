@@ -1,6 +1,9 @@
 ﻿using System;
 using EnvDTE;
 using GitPlugin.Git;
+using GitUI;
+using GitExtensions;
+using System.IO;
 
 namespace GitPlugin.Commands
 {
@@ -14,7 +17,7 @@ namespace GitPlugin.Commands
         {
             if (lastFile == null)
                 lastFile = string.Empty;
-            showCurrentBranch = GitCommands.GetShowCurrentBranchSetting();
+            showCurrentBranch = GitPluginCommands.GetShowCurrentBranchSetting();
         }
 
         public override bool IsEnabled(EnvDTE80.DTE2 application)
@@ -27,7 +30,7 @@ namespace GitPlugin.Commands
             {
                 if (enabled)
                 {
-                    string head = GitCommands.GetCurrentBranch(fileName);
+                    string head = GitPluginCommands.GetCurrentBranch(fileName);
                     if (!string.IsNullOrEmpty(head))
                     {
                         string headShort;
@@ -59,7 +62,14 @@ namespace GitPlugin.Commands
             const string saveAllCommandName = "File.SaveAll";
 
             item.DTE.ExecuteCommand(saveAllCommandName, string.Empty);
-            RunGitEx("commit", fileName);
+            
+            //RunGitEx("commit", fileName);
+
+            ApplicationLoader.Load();
+
+            GitCommands.Settings.WorkingDir = fileName;
+
+            GitUICommands.Instance.StartCommitDialog();
         }
 
         protected override CommandTarget SupportedTargets

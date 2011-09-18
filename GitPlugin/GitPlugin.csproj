@@ -92,7 +92,7 @@
     <Compile Include="Commands\Rebase.cs" />
     <Compile Include="Commands\Remotes.cs" />
     <Compile Include="Commands\Revert.cs" />
-    <Compile Include="Commands\Settings.cs" />
+    <Compile Include="Commands\SettingsDialog.cs" />
     <Compile Include="Commands\SolveMergeConflicts.cs" />
     <Compile Include="Commands\Stash.cs" />
     <Compile Include="Commands\SwitchBranch.cs" />
@@ -219,6 +219,24 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GitCommands\GitCommands.csproj">
+      <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
+      <Name>GitCommands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GitExtensions\GitExtensions.csproj">
+      <Project>{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}</Project>
+      <Name>GitExtensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GitUI\GitUI.csproj">
+      <Project>{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}</Project>
+      <Name>GitUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
+      <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
+      <Name>GitUIPluginInterfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.Targets" />
   <PropertyGroup>

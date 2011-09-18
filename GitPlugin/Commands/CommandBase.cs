@@ -12,7 +12,7 @@ namespace GitPlugin.Commands
 
         protected static void RunGitEx(string command, string filename)
         {
-            GitCommands.RunGitEx(command, filename);
+            GitPluginCommands.RunGitEx(command, filename);
         }
     }
 }

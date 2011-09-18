@@ -20,48 +20,6 @@ namespace GitExtensions
             Application.SetCompatibleTextRenderingDefault(false);
             
             string[] args = Environment.GetCommandLineArgs();
-            FormSplash.Show("Load settings");
-            Settings.LoadSettings();
-            if (Settings.RunningOnWindows())
-            {
-                //Quick HOME check:
-                FormSplash.SetAction("Check home path");
-                FormFixHome.CheckHomePath();
-            }
-            //Register plugins
-            FormSplash.SetAction("Load plugins");
-            PluginLoader.LoadAsync();
-
-            if (string.IsNullOrEmpty(Settings.Translation))
-            {
-                using (var formChoose = new FormChooseTranslation())
-                {
-                    formChoose.ShowDialog();
-                }
-            }
-
-            try
-            {
-                if (Application.UserAppDataRegistry == null ||
-                    Settings.GetValue<string>("checksettings", null) == null ||
-                    !Settings.GetValue<string>("checksettings", null).ToString().Equals("false", StringComparison.OrdinalIgnoreCase) ||
-                    string.IsNullOrEmpty(Settings.GitCommand))
-                {
-                    FormSplash.SetAction("Check settings");
-                    using (var settings = new FormSettings())
-                    {
-                        if (!settings.CheckSettings())
-                        {
-                            FormSettings.AutoSolveAllSettings();
-                            GitUICommands.Instance.StartSettingsDialog();
-                        }
-                    }
-                }
-            }
-            catch
-            {
-                // TODO: remove catch-all
-            }
 
             if (args.Length >= 3)
             {
@@ -80,15 +38,8 @@ namespace GitExtensions
                 //    Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
             }
 
-            if (string.IsNullOrEmpty(Settings.WorkingDir))
-            {
-                string findWorkingDir = GitCommandHelpers.FindGitWorkingDir(Directory.GetCurrentDirectory());
-                if (Settings.ValidWorkingDir(findWorkingDir))
-                    Settings.WorkingDir = findWorkingDir;
-            }
+            ApplicationLoader.Load();
 
-            FormSplash.Hide();
-            
             if (args.Length <= 1)
             {
                 GitUICommands.Instance.StartBrowseDialog();
