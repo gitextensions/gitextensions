@@ -18,6 +18,7 @@ namespace GitExtensions
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            
             string[] args = Environment.GetCommandLineArgs();
             FormSplash.Show("Load settings");
             Settings.LoadSettings();
@@ -73,8 +74,10 @@ namespace GitExtensions
                         Settings.WorkingDir = args[2].Substring(0, args[2].LastIndexOf(Settings.PathSeparator));
                 }
 
-                if (Settings.ValidWorkingDir())
-                    Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
+                //Do not add this working dir to the recent repositories. It is a nice feature, but it
+                //also increases the startup time
+                //if (Settings.ValidWorkingDir())
+                //    Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
             }
 
             if (string.IsNullOrEmpty(Settings.WorkingDir))
@@ -85,7 +88,7 @@ namespace GitExtensions
             }
 
             FormSplash.Hide();
-
+            
             if (args.Length <= 1)
             {
                 GitUICommands.Instance.StartBrowseDialog();
