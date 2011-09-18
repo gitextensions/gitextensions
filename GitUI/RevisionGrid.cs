@@ -579,6 +579,23 @@ namespace GitUI
                 ForceRefreshRevisions();
         }
 
+        private class RevisionGraphInMemFilterOr : RevisionGraphInMemFilter
+        {
+            private RevisionGraphInMemFilter fFilter1;
+            private RevisionGraphInMemFilter fFilter2;
+            public RevisionGraphInMemFilterOr(RevisionGraphInMemFilter aFilter1,
+                                              RevisionGraphInMemFilter aFilter2)
+            {
+                fFilter1 = aFilter1;
+                fFilter2 = aFilter2;
+            }
+
+            public override bool PassThru(GitRevision rev)
+            {
+                return fFilter1.PassThru(rev) || fFilter2.PassThru(rev);
+            }
+        }
+
         private class RevisionGridInMemFilter : RevisionGraphInMemFilter
         {
             private readonly bool _IgnoreCase;
@@ -625,6 +642,22 @@ namespace GitUI
                 return CheckCondition(_AuthorFilter, _AuthorFilterRegex, rev.Author) &&
                        CheckCondition(_CommitterFilter, _CommitterFilterRegex, rev.Committer) &&
                        CheckCondition(_MessageFilter, _MessageFilterRegex, rev.Message);
+            }
+
+            public static RevisionGridInMemFilter CreateIfNeeded(string authorFilter,
+                                                                 string committerFilter,
+                                                                 string messageFilter,
+                                                                 bool ignoreCase)
+            {
+                if (!(string.IsNullOrEmpty(authorFilter) &&
+                      string.IsNullOrEmpty(committerFilter) &&
+                      string.IsNullOrEmpty(messageFilter)))
+                    return new RevisionGridInMemFilter(authorFilter,
+                                                       committerFilter,
+                                                       messageFilter,
+                                                       ignoreCase);
+                else
+                    return null;
             }
         }
 
@@ -692,20 +725,28 @@ namespace GitUI
                 if (Settings.ShowGitNotes && LogParam.Contains(" --not --glob=notes --not"))
                     LogParam = LogParam.Replace("  --not --glob=notes --not", string.Empty);
 
+                RevisionGridInMemFilter revisionFilterIMF = RevisionGridInMemFilter.CreateIfNeeded(_revisionFilter.GetInMemAuthorFilter(),
+                                                                                                   _revisionFilter.GetInMemCommitterFilter(),
+                                                                                                   _revisionFilter.GetInMemMessageFilter(),
+                                                                                                   _revisionFilter.GetIgnoreCase());
+                RevisionGridInMemFilter filterBarIMF = RevisionGridInMemFilter.CreateIfNeeded(InMemAuthorFilter,
+                                                                                              InMemCommitterFilter,
+                                                                                              InMemMessageFilter,
+                                                                                              InMemFilterIgnoreCase);
+                RevisionGraphInMemFilter revGraphIMF;
+                if (revisionFilterIMF != null && filterBarIMF != null)
+                    revGraphIMF = new RevisionGraphInMemFilterOr(revisionFilterIMF, filterBarIMF);
+                else if (revisionFilterIMF != null)
+                    revGraphIMF = revisionFilterIMF;
+                else
+                    revGraphIMF = filterBarIMF;
+
                 _revisionGraphCommand = new RevisionGraph { BranchFilter = BranchFilter, LogParam = LogParam + Filter + _revisionFilter.GetFilter() };
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
                 _revisionGraphCommand.Error += _revisionGraphCommand_Error;
+                _revisionGraphCommand.InMemFilter = revGraphIMF;
                 //_revisionGraphCommand.BeginUpdate += ((s, e) => Revisions.Invoke((Action) (() => Revisions.Clear())));
-
-                if (!(string.IsNullOrEmpty(InMemAuthorFilter) &&
-                      string.IsNullOrEmpty(InMemCommitterFilter) &&
-                      string.IsNullOrEmpty(InMemMessageFilter)))
-                    _revisionGraphCommand.InMemFilter = new RevisionGridInMemFilter(InMemAuthorFilter,
-                                                                                    InMemCommitterFilter,
-                                                                                    InMemMessageFilter,
-                                                                                    InMemFilterIgnoreCase);
-
                 _revisionGraphCommand.Execute();
                 LoadRevisions();
                 SetRevisionsLayout();
@@ -1419,10 +1460,6 @@ namespace GitUI
 
         private void ApplyFilterFromRevisionFilterDialog()
         {
-            InMemAuthorFilter = _revisionFilter.GetInMemAuthorFilter();
-            InMemCommitterFilter = _revisionFilter.GetInMemCommitterFilter();
-            InMemMessageFilter = _revisionFilter.GetInMemMessageFilter();
-            InMemFilterIgnoreCase = _revisionFilter.GetIgnoreCase();
             BranchFilter = _revisionFilter.GetBranchFilter();
             SetShowBranches();
         }
