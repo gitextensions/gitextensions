@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
@@ -59,6 +60,8 @@ namespace GitUI
             new TranslationString("There are no files staged for this commit.");
         private readonly TranslationString _noFilesStagedButSuggestToCommitAllUnstaged =
             new TranslationString("There are no files staged for this commit. Stage and commit all unstaged files?");
+        private readonly TranslationString _noFilesStagedAndConfirmAnEmptyMergeCommit =
+            new TranslationString("There are no files staged for this commit.\nAre you sure you want to commit?");
 
         private readonly TranslationString _noStagedChanges = new TranslationString("There are no staged changes");
         private readonly TranslationString _noUnstagedChanges = new TranslationString("There are no unstaged changes");
@@ -103,6 +106,7 @@ namespace GitUI
         private readonly ToolStripItem _StageSelectedLinesToolStripMenuItem;
         private readonly ToolStripItem _ResetSelectedLinesToolStripMenuItem;
         private string commitTemplate;
+        private bool IsMergeCommit { get; set; }
 
         public FormCommit()
             : this(CommitKind.Normal, null)
@@ -386,6 +390,8 @@ namespace GitUI
                     showUntrackedFilesToolStripMenuItem.Checked);
             _gitGetUnstagedCommand.CmdStartProcess(Settings.GitCommand, allChangedFilesCmd);
 
+            UpdateMergeHead();
+
             // Check if commit.template is used
             ConfigFile globalConfig = GitCommandHelpers.GetGlobalConfig();
             string fileName = globalConfig.GetValue("commit.template");
@@ -407,6 +413,14 @@ namespace GitUI
             Reset.Enabled = false;
 
             Cursor.Current = Cursors.Default;
+        }
+
+        // TODO: unify with FormVerify, extract to common constants.
+        private const string Sha1HashPattern = @"[a-f\d]{40}";
+        private void UpdateMergeHead()
+        {
+            var mergeHead = GitCommandHelpers.RevParse("MERGE_HEAD");
+            IsMergeCommit = Regex.IsMatch(mergeHead, Sha1HashPattern);
         }
 
         private void InitializedStaged()
@@ -520,19 +534,29 @@ namespace GitUI
         {
             if (Staged.IsEmpty)
             {
-                if (Unstaged.IsEmpty)
+                if (IsMergeCommit)
                 {
-                    MessageBox.Show(_noFilesStagedAndNothingToCommit.Text, _noStagedChanges.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    return;
+                    // it is a merge commit, so user can commit just for merging two branches even the changeset is empty,
+                    // but also user may forget to add files, so only ask for confirmation that user really wants to commit an empty changeset
+                    if (MessageBox.Show(_noFilesStagedAndConfirmAnEmptyMergeCommit.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                        return;
                 }
+                else
+                {
+                    if (Unstaged.IsEmpty)
+                    {
+                        MessageBox.Show(_noFilesStagedAndNothingToCommit.Text, _noStagedChanges.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        return;
+                    }
 
-                // there are no staged files, but there are unstaged files. Most probably user forgot to stage them.
-                if (MessageBox.Show(_noFilesStagedButSuggestToCommitAllUnstaged.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
-                    return;
-                StageAll();
-                // if staging failed (i.e. line endings conflict), user already got error message, don't try to commit empty changeset.
-                if (Staged.IsEmpty)
-                    return;
+                    // there are no staged files, but there are unstaged files. Most probably user forgot to stage them.
+                    if (MessageBox.Show(_noFilesStagedButSuggestToCommitAllUnstaged.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                        return;
+                    StageAll();
+                    // if staging failed (i.e. line endings conflict), user already got error message, don't try to commit empty changeset.
+                    if (Staged.IsEmpty)
+                        return;
+                }
             }
 
             DoCommit(amend, push);
