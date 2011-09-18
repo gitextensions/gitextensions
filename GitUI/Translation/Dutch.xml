@@ -3273,6 +3273,9 @@ Weet u zeker dat u door wilt gaan?</Value>
         <TranslationItem Name="_noFilesStagedAndNothingToCommit" Property="Text">
           <Value>Er zijn geen bestanden klaargezet voor deze commit.</Value>
         </TranslationItem>
+        <TranslationItem Name="_noFilesStagedAndConfirmAnEmptyMergeCommit" Property="Text">
+          <Value>Er zijn geen bestanden klaargezet voor deze commit. Weet u zeker dat u wilt doorgaan?</Value>
+        </TranslationItem>
         <TranslationItem Name="_noStagedChanges" Property="Text">
           <Value>Er zijn geen klaargezette wijzigingen</Value>
         </TranslationItem>
