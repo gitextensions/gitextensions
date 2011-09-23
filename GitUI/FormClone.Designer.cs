@@ -85,6 +85,8 @@
             // 
             // Branches
             // 
+            this.Branches.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.Branches.FormattingEnabled = true;
             this.Branches.Location = new System.Drawing.Point(158, 99);
             this.Branches.Name = "Branches";
@@ -103,6 +105,8 @@
             // 
             // Info
             // 
+            this.Info.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.Info.BackColor = System.Drawing.SystemColors.Info;
             this.Info.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Info.Location = new System.Drawing.Point(12, 128);
@@ -132,6 +136,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.CentralRepository);
             this.groupBox1.Controls.Add(this.PersonalRepository);
             this.groupBox1.Location = new System.Drawing.Point(15, 173);
@@ -146,7 +152,7 @@
             this.CentralRepository.AutoSize = true;
             this.CentralRepository.Location = new System.Drawing.Point(6, 42);
             this.CentralRepository.Name = "CentralRepository";
-            this.CentralRepository.Size = new System.Drawing.Size(222, 17);
+            this.CentralRepository.Size = new System.Drawing.Size(213, 17);
             this.CentralRepository.TabIndex = 1;
             this.CentralRepository.Text = "Public repository, no working dir  (--bare)";
             this.CentralRepository.UseVisualStyleBackColor = true;
@@ -157,7 +163,7 @@
             this.PersonalRepository.Checked = true;
             this.PersonalRepository.Location = new System.Drawing.Point(6, 19);
             this.PersonalRepository.Name = "PersonalRepository";
-            this.PersonalRepository.Size = new System.Drawing.Size(118, 17);
+            this.PersonalRepository.Size = new System.Drawing.Size(114, 17);
             this.PersonalRepository.TabIndex = 0;
             this.PersonalRepository.TabStop = true;
             this.PersonalRepository.Text = "Personal repository";
@@ -165,6 +171,8 @@
             // 
             // _NO_TRANSLATE_From
             // 
+            this._NO_TRANSLATE_From.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this._NO_TRANSLATE_From.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this._NO_TRANSLATE_From.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this._NO_TRANSLATE_From.FormattingEnabled = true;
@@ -172,12 +180,14 @@
             this._NO_TRANSLATE_From.Name = "_NO_TRANSLATE_From";
             this._NO_TRANSLATE_From.Size = new System.Drawing.Size(255, 21);
             this._NO_TRANSLATE_From.TabIndex = 1;
+            this._NO_TRANSLATE_From.DropDown += new System.EventHandler(this.FromDropDown);
             this._NO_TRANSLATE_From.SelectedIndexChanged += new System.EventHandler(this.FromSelectedIndexChanged);
             this._NO_TRANSLATE_From.TextUpdate += new System.EventHandler(this.FromTextUpdate);
-            this._NO_TRANSLATE_From.DropDown += new System.EventHandler(this.FromDropDown);
             // 
             // _NO_TRANSLATE_To
             // 
+            this._NO_TRANSLATE_To.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this._NO_TRANSLATE_To.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this._NO_TRANSLATE_To.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this._NO_TRANSLATE_To.FormattingEnabled = true;
@@ -185,12 +195,13 @@
             this._NO_TRANSLATE_To.Name = "_NO_TRANSLATE_To";
             this._NO_TRANSLATE_To.Size = new System.Drawing.Size(255, 21);
             this._NO_TRANSLATE_To.TabIndex = 2;
+            this._NO_TRANSLATE_To.DropDown += new System.EventHandler(this.ToDropDown);
             this._NO_TRANSLATE_To.SelectedIndexChanged += new System.EventHandler(this.ToSelectedIndexChanged);
             this._NO_TRANSLATE_To.TextUpdate += new System.EventHandler(this.ToTextUpdate);
-            this._NO_TRANSLATE_To.DropDown += new System.EventHandler(this.ToDropDown);
             // 
             // ToBrowse
             // 
+            this.ToBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ToBrowse.Location = new System.Drawing.Point(425, 44);
             this.ToBrowse.Name = "ToBrowse";
             this.ToBrowse.Size = new System.Drawing.Size(75, 25);
@@ -201,6 +212,7 @@
             // 
             // FromBrowse
             // 
+            this.FromBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.FromBrowse.Location = new System.Drawing.Point(425, 16);
             this.FromBrowse.Name = "FromBrowse";
             this.FromBrowse.Size = new System.Drawing.Size(75, 25);
@@ -237,10 +249,11 @@
             this.LoadSSHKey.TabIndex = 25;
             this.LoadSSHKey.Text = "Load SSH key";
             this.LoadSSHKey.UseVisualStyleBackColor = true;
-            this.LoadSSHKey.Click += new System.EventHandler(LoadSshKeyClick);
+            this.LoadSSHKey.Click += new System.EventHandler(this.LoadSshKeyClick);
             // 
             // Ok
             // 
+            this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Ok.Location = new System.Drawing.Point(425, 2);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(75, 25);
@@ -277,9 +290,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(525, 300);
             this.Controls.Add(this.splitContainer1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(933, 327);
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(433, 327);
             this.Name = "FormClone";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Clone";
