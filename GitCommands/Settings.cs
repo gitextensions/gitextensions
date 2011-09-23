@@ -276,7 +276,7 @@ namespace GitCommands
             {
                 _encoding = value;
 
-                if (Application.UserAppDataRegistry == null)
+                if (VersionIndependentRegKey == null)
                     return;
 
                 string encoding = "";
@@ -647,7 +647,7 @@ namespace GitCommands
 
         public static void SetInstallDir(string dir)
         {
-            if (Application.UserAppDataRegistry != null)
+            if (VersionIndependentRegKey != null)
                 SetValue("InstallDir", dir);
         }
 
@@ -775,7 +775,7 @@ namespace GitCommands
 
         private static T SafeGet<T>(string key, T defaultValue, ref T field, Func<string, T> converter)
         {
-            if (field == null && Application.UserAppDataRegistry != null)
+            if (field == null && VersionIndependentRegKey != null)
             {
                 var value = GetValue<object>(key, null);
                 field = value == null ? defaultValue : converter(value.ToString());
@@ -836,7 +836,8 @@ namespace GitCommands
         {
             get
             {
-                return Application.UserAppDataRegistry.Name.Replace("\\" + Application.ProductVersion, string.Empty);
+                return string.Concat(Registry.CurrentUser, "\\Software\\GitExtensions\\GitExtensions");
+                //return Application.UserAppDataRegistry.Name.Replace("\\" + Application.ProductVersion, string.Empty);
             }
         }
 
@@ -851,7 +852,7 @@ namespace GitCommands
             ///// BEGIN TEMPORARY CODE TO CONVERT OLD VERSION DEPENDENT REGISTRY TO NEW 
             ///// VERSION INDEPENDENT REGISTRY KEY!
             /////////////////////////////////////////////////////////////////////////////////////
-            value = (T)Registry.GetValue(Application.UserAppDataRegistry.Name.Replace(Application.ProductVersion, "1.0.0.0"), name, null);
+            value = (T)Registry.GetValue(VersionIndependentRegKey + "\\1.0.0.0", name, null);
 
             if (value != null)
             {
