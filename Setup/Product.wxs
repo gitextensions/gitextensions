@@ -576,7 +576,7 @@
     </Feature>
 
     <?if $(var.IncludeRequiredSoftware) = 1 ?>
-    <Binary Id="KDiff" SourceFile="..\Bin\KDiff3Setup_0.9.95-2.exe"/>
+    <Binary Id="KDiff" SourceFile="..\Bin\KDiff3Setup_0.9.96.exe"/>
     <CustomAction Id="KDiff" Impersonate="no" BinaryKey="KDiff" Execute="deferred" ExeCommand="" Return="ignore"/>
 
     <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.7.6-preview20110708.exe"/>
