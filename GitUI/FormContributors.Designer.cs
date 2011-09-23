@@ -50,7 +50,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 225);
+            this.label2.Location = new System.Drawing.Point(3, 318);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(65, 13);
             this.label2.TabIndex = 1;
@@ -59,18 +59,18 @@
             // translatorsLabel
             // 
             this.translatorsLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.translatorsLabel.Location = new System.Drawing.Point(120, 225);
+            this.translatorsLabel.Location = new System.Drawing.Point(160, 318);
             this.translatorsLabel.Name = "translatorsLabel";
-            this.translatorsLabel.Size = new System.Drawing.Size(336, 50);
+            this.translatorsLabel.Size = new System.Drawing.Size(455, 86);
             this.translatorsLabel.TabIndex = 2;
             this.translatorsLabel.Text = "Translators";
             // 
             // codersLabel
             // 
             this.codersLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.codersLabel.Location = new System.Drawing.Point(120, 0);
+            this.codersLabel.Location = new System.Drawing.Point(160, 0);
             this.codersLabel.Name = "codersLabel";
-            this.codersLabel.Size = new System.Drawing.Size(336, 225);
+            this.codersLabel.Size = new System.Drawing.Size(455, 318);
             this.codersLabel.TabIndex = 3;
             this.codersLabel.Text = "Coders";
             // 
@@ -89,25 +89,25 @@
             this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 12);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 225F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(459, 332);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 318F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 86F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 11F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(618, 464);
             this.tableLayoutPanel1.TabIndex = 4;
             // 
             // designersLabel
             // 
             this.designersLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.designersLabel.Location = new System.Drawing.Point(120, 275);
+            this.designersLabel.Location = new System.Drawing.Point(160, 404);
             this.designersLabel.Name = "designersLabel";
-            this.designersLabel.Size = new System.Drawing.Size(336, 57);
+            this.designersLabel.Size = new System.Drawing.Size(455, 60);
             this.designersLabel.TabIndex = 5;
             this.designersLabel.Text = "Designers";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 275);
+            this.label4.Location = new System.Drawing.Point(3, 404);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(68, 13);
             this.label4.TabIndex = 4;
@@ -117,7 +117,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(482, 356);
+            this.ClientSize = new System.Drawing.Size(642, 488);
             this.Controls.Add(this.tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;

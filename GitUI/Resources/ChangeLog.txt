@@ -1,6 +1,27 @@
 ﻿Changelog
 =========
 
+Version 2.25
+	Fixed issue 543: Show current branch in main screen
+	Fixed issue 533: UI/translation bugs on lost commits recover form
+	Fixed issue 587: do not try to commit empty changeset
+	Fixed issue: 'clone/fork GitHub repo' throws an exception if no GitHub credentials are known
+	Fixed issue: remove '.git' from targer directory if the original repository ends with '.git'
+	Fixed issue: in some cases warnings are shown in the commit dialog instead of the staged files
+	Fixed issue: the merge dialog does not close after all merge conflicts are solved
+	The keep progress dialog open option is now per dialog
+	Updated command for Beyond Compare's 3-way merge
+	Exclude remote tracking branch from the "merge with" and "rebase on" menu items
+	Highlight remote tracking branch in the browse dialog
+	When searching in the diff view, all files are searched
+	Added option to GitHub plugin to clear account info
+	Added a new variable '{UserInput}' which can be used in scripts to ask user for input
+	Added "Add filepattern to .gitignore" dialog 
+	Added support for global configuration commit.template
+	Added more hotkeys
+	Added menu in revision grid to manipulate commit (revert, cherry pick, squash, fixup)
+	Many bugfixes and minor changes
+
 Version 2.24
 	Fixed revision filter
 
