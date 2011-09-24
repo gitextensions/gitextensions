@@ -391,8 +391,7 @@ namespace GitCommands
             get { return SafeGet("showauthordate", true, ref _showAuthorDate); }
             set { SafeSet("showauthordate", value, ref _showAuthorDate); }
         }
-
-        private static bool? _closeProcessDialog;
+        
         public static bool? GlobalCloseProcessDialog
         {
             get { return GetCloseProcessDialog(null); }
