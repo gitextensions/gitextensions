@@ -2137,7 +2137,17 @@ namespace GitCommands
             return RunCmd(Settings.GitCommand, "reset HEAD -- \"" + FixPath(file) + "\"");
         }
 
-        public static string GetSelectedBranch(string repositoryPath)
+
+        public static bool IsBareRepository(string repositoryPath)
+        {
+            return !Directory.Exists(repositoryPath + Settings.PathSeparator + ".git");
+        }
+
+
+        /// <summary>
+        /// Dirty but fast. This sometimes fails.
+        /// </summary>
+        public static string GetSelectedBranchFast(string repositoryPath)
         {
             string head;
             string headFileName = Path.Combine(GetGitDirectory(repositoryPath), "HEAD");
@@ -2145,9 +2155,26 @@ namespace GitCommands
             {
                 head = File.ReadAllText(headFileName);
                 if (!head.Contains("ref:"))
-                    head = "(no branch)";
+                    return "(no branch)";
             }
             else
+            {
+                return string.Empty;
+            }
+            
+            if (!string.IsNullOrEmpty(head))
+            {
+                return head.Replace("ref:", "").Replace("refs/heads/", string.Empty).Trim();
+            }
+
+            return string.Empty;
+        }
+
+        public static string GetSelectedBranch(string repositoryPath)
+        {
+            string head = GetSelectedBranchFast(repositoryPath);
+
+            if (string.IsNullOrEmpty(head))
             {
                 int exitcode;
                 head = RunCmd(Settings.GitCommand, "symbolic-ref HEAD", out exitcode);
@@ -2155,12 +2182,7 @@ namespace GitCommands
                     return "(no branch)";
             }
 
-            if (!string.IsNullOrEmpty(head))
-            {
-                return head.Replace("ref:", "").Replace("refs/heads/", string.Empty).Trim();
-            }
-
-            return string.Empty;
+            return head;
         }
 
         public static string GetSelectedBranch()
