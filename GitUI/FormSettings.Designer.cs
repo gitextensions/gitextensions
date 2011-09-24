@@ -1499,6 +1499,7 @@ namespace GitUI
             this.CloseProcessDialog.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.CloseProcessDialog.Size = new System.Drawing.Size(15, 14);
             this.CloseProcessDialog.TabIndex = 9;
+            this.CloseProcessDialog.ThreeState = true;
             this.CloseProcessDialog.UseVisualStyleBackColor = true;
             // 
             // _NO_TRANSLATE_MaxCommits

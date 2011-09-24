@@ -239,19 +239,21 @@ namespace GitUI
 
         private bool GetCloseProcessDialog()
         {
-            if (GitCommands.Settings.GlobalCloseProcessDialog)
+
+            bool? gcpd = GitCommands.Settings.GlobalCloseProcessDialog;
+            if (gcpd.HasValue)
+                return gcpd.Value;
+            else
                 if (string.IsNullOrEmpty(SettingsName))
-                    return true;
+                    return false;
                 else
                 {
                     bool? cpd = GitCommands.Settings.GetCloseProcessDialog(SettingsName);
                     if (cpd.HasValue)
                         return cpd.Value;
                     else
-                        return true;
+                        return false;
                 }
-            else//local settings can override only the case when GlobalCloseProcessDialog is set to true
-                return false;
         }
 
         private void RefreshKeepDialogOpen()         
@@ -261,10 +263,7 @@ namespace GitUI
             else
             {
                 bool? cpd = GitCommands.Settings.GetCloseProcessDialog(SettingsName);
-                if (cpd.HasValue)
-                    KeepDialogOpen.Checked = !cpd.Value;
-                else
-                    KeepDialogOpen.CheckState = CheckState.Indeterminate;
+                KeepDialogOpen.SetNullableChecked(!cpd);
                 KeepDialogOpen.Visible = true;
             }
         }
@@ -274,11 +273,7 @@ namespace GitUI
 
             if (!string.IsNullOrEmpty(SettingsName))
             {
-                bool? cpd;
-                if (KeepDialogOpen.CheckState == CheckState.Indeterminate)
-                    cpd = null;
-                else
-                    cpd = !KeepDialogOpen.Checked;
+                bool? cpd = !KeepDialogOpen.GetNullableChecked();
                 GitCommands.Settings.SetCloseProcessDialog(SettingsName, cpd);
             }
         }

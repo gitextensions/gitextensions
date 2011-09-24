@@ -393,10 +393,10 @@ namespace GitCommands
         }
 
         private static bool? _closeProcessDialog;
-        public static bool GlobalCloseProcessDialog
+        public static bool? GlobalCloseProcessDialog
         {
-            get { return SafeGet("closeprocessdialog", false, ref _closeProcessDialog); }
-            set { SafeSet("closeprocessdialog", value, ref _closeProcessDialog); }
+            get { return GetCloseProcessDialog(null); }
+            set { SetCloseProcessDialog(null, value); }
         }
 
         public static bool? GetCloseProcessDialog(string name)
@@ -753,6 +753,13 @@ namespace GitCommands
         {
             try
             {
+                TransferVerDependentReg();
+            }
+            catch
+            { }
+
+            try
+            {
                 GitCommandHelpers.SetSsh(GetValue<string>("gitssh", null));
             }
             catch
@@ -876,29 +883,37 @@ namespace GitCommands
 
             if (value != null)
                 return value;
-
-            /////////////////////////////////////////////////////////////////////////////////////
-            ///// BEGIN TEMPORARY CODE TO CONVERT OLD VERSION DEPENDENT REGISTRY TO NEW 
-            ///// VERSION INDEPENDENT REGISTRY KEY!
-            /////////////////////////////////////////////////////////////////////////////////////
-            value = (T)Registry.GetValue(VersionIndependentRegKey + "\\1.0.0.0", name, null);
-
-            if (value != null)
-            {
-                SetValue<T>(name, value);
-                return value;
-            }
-
-            if (defaultValue != null)
-            {
-                SetValue<T>(name, defaultValue);
-            }
-            /////////////////////////////////////////////////////////////////////////////////////
-            ///// END TEMPORARY CODE TO CONVERT OLD VERSION DEPENDENT REGISTRY TO NEW 
-            ///// VERSION INDEPENDENT REGISTRY KEY!
-            /////////////////////////////////////////////////////////////////////////////////////
-
+          
             return defaultValue;
+        }
+
+        //temporary code to transfer version dependent registry caused that there was no way to set value to null
+        //if there was the same named key in version dependent registry
+        private static void TransferVerDependentReg()
+        {
+            bool? transfered = GetBool("TransferedVerDependentReg", false);
+            if (!transfered.Value)
+            {
+                string r = Application.UserAppDataRegistry.Name.Replace(Application.ProductVersion, "1.0.0.0");
+                r = r.Substring(Registry.CurrentUser.Name.Length + 1, r.Length - Registry.CurrentUser.Name.Length - 1);
+                RegistryKey versionDependentRegKey = Registry.CurrentUser.OpenSubKey(r, true);
+                try
+                {
+                    foreach (string key in versionDependentRegKey.GetValueNames())
+                    {
+                        object val = versionDependentRegKey.GetValue(key);
+                        object independentVal = VersionIndependentRegKey.GetValue(key, null);
+                        if (independentVal == null)
+                            SetValue<object>(key, val);
+                    }
+                }
+                finally
+                {
+                    versionDependentRegKey.Close();
+                }
+                SetBool("TransferedVerDependentReg", true);
+            }
+            
         }
 
         public static void SetValue<T>(string name, T value)
@@ -956,7 +971,7 @@ namespace GitCommands
 
         public static string PrefixedName(string prefix, string name) 
         {
-            return prefix + '_' + name;
+            return prefix == null ? name : prefix + '_' + name;
         }
 
     }
