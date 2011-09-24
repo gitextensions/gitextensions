@@ -24,13 +24,18 @@ namespace GitUI
 
         protected readonly SynchronizationContext syncContext;
 
-        public FormStatus(string ASettingsName)
+        //constructor for VS designer
+        protected FormStatus()
         {
             syncContext = SynchronizationContext.Current;
+            InitializeComponent();            
+        }
 
-            InitializeComponent();
+        public FormStatus(string ASettingsName)
+            : this()
+        {
             Translate();
-            SettingsName = ASettingsName;
+            SettingsName = ASettingsName;            
         }
 
         public FormStatus(ProcessStart process, ProcessAbort abort, string ASettingsName)
@@ -188,7 +193,7 @@ namespace GitUI
 
             if (ProcessCallback == null)
             {
-                throw new InvalidOperationException("You can't load the form without a ProcessCallback");
+                throw new InvalidOperationException("You can't load the form without a ProcessCallback " + DesignMode);
             }
 
             if (AbortCallback == null)
