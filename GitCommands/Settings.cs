@@ -923,7 +923,7 @@ namespace GitCommands
                 VersionIndependentRegKey.SetValue(name, value);
         }
 
-        public static T GetByName<T>(string name, T defaultValue, Func<object, T> convert)
+        public static T GetByName<T>(string name, T defaultValue, Func<object, T> decode)
         {
             object o;
             if (byNameMap.TryGetValue(name, out o))
@@ -940,21 +940,24 @@ namespace GitCommands
                 if (o == null)
                     result = defaultValue;
                 else
-                    result = convert(o);
+                    result = decode(o);
 
                 byNameMap[name] = result;
                 return result;
             }
         }
 
-        public static void SetByName<T>(string name, T value)
+        public static void SetByName<T>(string name, T value, Func<T, object> encode)
         {
             object o;
             if (byNameMap.TryGetValue(name, out o))
                 if (Object.Equals(o, value))
                     return;
-
-            SetValue<T>(name, value);
+            if (value == null)
+                o = null;
+            else
+                o = encode(value);
+            SetValue<object>(name, o);
             byNameMap[name] = value;
         }
 
@@ -965,7 +968,7 @@ namespace GitCommands
 
         public static void SetBool(string name, bool? value)
         {
-            SetByName<bool?>(name, value);
+            SetByName<bool?>(name, value, (bool? b) => b.Value ? bool.TrueString : bool.FalseString);
         }
 
         public static string PrefixedName(string prefix, string name) 
