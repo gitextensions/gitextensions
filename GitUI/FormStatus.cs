@@ -11,19 +11,30 @@ namespace GitUI
         public delegate void ProcessStart(FormStatus form);
         public delegate void ProcessAbort(FormStatus form);
 
+        private string _SettingsName;
+        public string SettingsName
+        {
+            get { return _SettingsName; }
+            set
+            {
+                _SettingsName = value;
+                RefreshKeepDialogOpen();                
+            }
+        }
+
         protected readonly SynchronizationContext syncContext;
 
-        public FormStatus()
+        public FormStatus(string ASettingsName)
         {
             syncContext = SynchronizationContext.Current;
 
             InitializeComponent();
             Translate();
-            KeepDialogOpen.Checked = !GitCommands.Settings.CloseProcessDialog;
+            SettingsName = ASettingsName;
         }
 
-        public FormStatus(ProcessStart process, ProcessAbort abort)
-            : this()
+        public FormStatus(ProcessStart process, ProcessAbort abort, string ASettingsName)
+            : this(ASettingsName)
         {
             ProcessCallback = process;
             AbortCallback = abort;
@@ -134,7 +145,7 @@ namespace GitUI
                 Visible = true;
             }
 
-            if (isSuccess && (showOnError || GitCommands.Settings.CloseProcessDialog))
+            if (isSuccess && (showOnError || GetCloseProcessDialog()))
             {
                 Close();
             }
@@ -226,9 +237,50 @@ namespace GitUI
             catch { }
         }
 
-        private void KeepDialogOpen_CheckedChanged(object sender, EventArgs e)
+        private bool GetCloseProcessDialog()
         {
-            GitCommands.Settings.CloseProcessDialog = !KeepDialogOpen.Checked;
+            if (GitCommands.Settings.GlobalCloseProcessDialog)
+                if (string.IsNullOrEmpty(SettingsName))
+                    return true;
+                else
+                {
+                    bool? cpd = GitCommands.Settings.GetCloseProcessDialog(SettingsName);
+                    if (cpd.HasValue)
+                        return cpd.Value;
+                    else
+                        return true;
+                }
+            else//local settings can override only the case when GlobalCloseProcessDialog is set to true
+                return false;
+        }
+
+        private void RefreshKeepDialogOpen()         
+        {
+            if (string.IsNullOrEmpty(SettingsName))
+                KeepDialogOpen.Visible = false;
+            else
+            {
+                bool? cpd = GitCommands.Settings.GetCloseProcessDialog(SettingsName);
+                if (cpd.HasValue)
+                    KeepDialogOpen.Checked = !cpd.Value;
+                else
+                    KeepDialogOpen.CheckState = CheckState.Indeterminate;
+                KeepDialogOpen.Visible = true;
+            }
+        }
+
+        private void KeepDialogOpen_CheckStateChanged(object sender, EventArgs e)
+        {
+
+            if (!string.IsNullOrEmpty(SettingsName))
+            {
+                bool? cpd;
+                if (KeepDialogOpen.CheckState == CheckState.Indeterminate)
+                    cpd = null;
+                else
+                    cpd = !KeepDialogOpen.Checked;
+                GitCommands.Settings.SetCloseProcessDialog(SettingsName, cpd);
+            }
         }
     }
 }

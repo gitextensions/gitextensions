@@ -292,7 +292,7 @@ namespace GitUI.Script
                 }
             }
 
-            new FormProcess(command, argument).ShowDialog();
+            new FormProcess(command, argument, script).ShowDialog();
         }
 
         private static string askToSpecify(IEnumerable<GitHead> options, string title)

@@ -308,5 +308,15 @@ namespace GitUI
 
             return null;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>name prefix for per form settings</returns>
+        public virtual string PerFormSettingsName()
+        {
+            return GetType().FullName;
+        }
+
     }
 }

@@ -147,14 +147,16 @@ namespace GitUI
 
         public bool StartCommandLineProcessDialog(string command, string arguments)
         {
-            var process = new FormProcess(command, arguments);
+            //I don't know if I can change StartCommandLineProcessDialog method signature
+            //or if I can add overloaded method
+            var process = new FormProcess(command, arguments, null);
             process.ShowDialog();
             return true;
         }
 
         public bool StartGitCommandProcessDialog(string arguments)
         {
-            var process = new FormProcess(arguments);
+            var process = new FormProcess(arguments, null);
             process.ShowDialog();
             return true;
         }
@@ -679,7 +681,7 @@ namespace GitUI
             if (!InvokeEvent(PreUpdateSubmodules))
                 return true;
 
-            var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(""));
+            var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(""), "SubmoduleUpdate");
             process.ShowDialog();
 
             InvokeEvent(PostUpdateSubmodules);
@@ -695,7 +697,7 @@ namespace GitUI
             if (!InvokeEvent(PreUpdateSubmodulesRecursive))
                 return true;
 
-            var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(""));
+            var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(""), "SubmoduleUpdate");
             process.ShowDialog();
             UpdateSubmodulesRecursive();
 
@@ -811,7 +813,7 @@ namespace GitUI
 
                     if (Settings.WorkingDir != oldworkingdir && File.Exists(Settings.WorkingDir + ".gitmodules"))
                     {
-                        var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(""));
+                        var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(""), "SubmoduleUpdate");
                         process.ShowDialog();
 
                         UpdateSubmodulesRecursive();

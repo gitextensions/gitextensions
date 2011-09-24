@@ -25,20 +25,20 @@ namespace GitUI
         {        
         }
 
-        public FormRemoteProcess(string process, string arguments, string input)
-            : base(process, arguments, input)
+        public FormRemoteProcess(string process, string arguments, string input, string ASettingsName)
+            : base(process, arguments, input, ASettingsName)
         {
             
         }
 
-        public FormRemoteProcess(string process, string arguments)
-            : base(process, arguments)
+        public FormRemoteProcess(string process, string arguments, string ASettingsName)
+            : base(process, arguments, ASettingsName)
         {
             
         }
 
-        public FormRemoteProcess(string arguments)
-            : base(arguments)
+        public FormRemoteProcess(string arguments, string ASettingsName)
+            : base(arguments, ASettingsName)
         {
             
         }

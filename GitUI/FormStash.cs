@@ -157,7 +157,7 @@ namespace GitUI
             if (StashKeepIndex.Checked){ Arguments += " --keep-index"; }
             if (toolStripButton_customMessage.Checked) { Msg = " " + StashMessage.Text.Trim(); }
 
-            new FormProcess(String.Format("stash save{0}{1}",Arguments,Msg)).ShowDialog();
+            new FormProcess(String.Format("stash save{0}{1}", Arguments, Msg), "StashSave").ShowDialog();
             NeedRefresh = true;
             Initialize();
             Cursor.Current = Cursors.Default;
@@ -166,7 +166,7 @@ namespace GitUI
         private void ClearClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(string.Format("stash drop {0}", Stashes.Text)).ShowDialog();
+            new FormProcess(string.Format("stash drop {0}", Stashes.Text), "StashDrop").ShowDialog();
             NeedRefresh = true;
             Initialize();
             Cursor.Current = Cursors.Default;
@@ -174,7 +174,7 @@ namespace GitUI
 
         private void ApplyClick(object sender, EventArgs e)
         {
-            new FormProcess(string.Format("stash apply {0}", Stashes.Text)).ShowDialog();
+            new FormProcess(string.Format("stash apply {0}", Stashes.Text), "StashApply").ShowDialog();
 
             MergeConflictHandler.HandleMergeConflicts();
 

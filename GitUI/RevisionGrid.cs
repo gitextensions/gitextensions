@@ -1569,7 +1569,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            new FormProcess(GitCommandHelpers.DeleteTagCmd(toolStripItem.Text)).ShowDialog();
+            new FormProcess(GitCommandHelpers.DeleteTagCmd(toolStripItem.Text), "DeleteTag").ShowDialog();
             ForceRefreshRevisions();
         }
 
@@ -1592,7 +1592,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            new FormProcess("checkout \"" + toolStripItem.Text + "\"").ShowDialog();
+            new FormProcess("checkout \"" + toolStripItem.Text + "\"", "Checkout").ShowDialog();
 
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
@@ -1646,7 +1646,7 @@ namespace GitUI
             if (MessageBox.Show("Are you sure to checkout the selected revision", "Checkout revision",
                                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
-            new FormProcess(string.Format("checkout \"{0}\"", GetRevision(LastRow).Guid)).ShowDialog();
+            new FormProcess(string.Format("checkout \"{0}\"", GetRevision(LastRow).Guid), "Checkout").ShowDialog();
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
         }
@@ -1828,8 +1828,7 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
 
-            Settings.CloseProcessDialog = false;
-            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(false, GetRevision(LastRow).Guid)).ShowDialog();
+            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(false, GetRevision(LastRow).Guid), FormBisect.FormSettingsName()).ShowDialog();
             RefreshRevisions();
         }
 
@@ -1838,14 +1837,13 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
 
-            Settings.CloseProcessDialog = false;
-            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(true, GetRevision(LastRow).Guid)).ShowDialog();
+            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(true, GetRevision(LastRow).Guid), FormBisect.FormSettingsName()).ShowDialog();
             RefreshRevisions();
         }
 
         private void stopBisectToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormProcess(GitCommandHelpers.StopBisectCmd()).ShowDialog();
+            new FormProcess(GitCommandHelpers.StopBisectCmd(), FormBisect.FormSettingsName()).ShowDialog();
             RefreshRevisions();
         }
 

@@ -194,14 +194,14 @@ namespace GitUI
             var stashed = false;
             if (!Fetch.Checked && AutoStash.Checked && GitCommandHelpers.GitStatus(false).Count > 0)
             {
-                new FormProcess("stash save").ShowDialog();
+                new FormProcess("stash save", "PullStash").ShowDialog();
                 stashed = true;
             }
 
             FormProcess process = null;
             if (Fetch.Checked)
             {
-                process = new FormRemoteProcess(GitCommandHelpers.FetchCmd(source, Branches.Text, null));
+                process = new FormRemoteProcess(GitCommandHelpers.FetchCmd(source, Branches.Text, null), PerFormSettingsName());
             }
             else
             {
@@ -210,9 +210,9 @@ namespace GitUI
                     localBranch = null;
 
                 if (Merge.Checked)
-                    process = new FormRemoteProcess(GitCommandHelpers.PullCmd(source, Branches.Text, localBranch, false));
+                    process = new FormRemoteProcess(GitCommandHelpers.PullCmd(source, Branches.Text, localBranch, false), PerFormSettingsName());
                 else if (Rebase.Checked)
-                    process = new FormRemoteProcess(GitCommandHelpers.PullCmd(source, Branches.Text, localBranch, true));
+                    process = new FormRemoteProcess(GitCommandHelpers.PullCmd(source, Branches.Text, localBranch, true), PerFormSettingsName());
             }
 
             if (process != null)
@@ -268,7 +268,7 @@ namespace GitUI
                     !GitCommandHelpers.InTheMiddleOfRebase() &&
                     MessageBox.Show(_applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    new FormProcess("stash pop").ShowDialog();
+                    new FormProcess("stash pop", "PullStash").ShowDialog();
                     MergeConflictHandler.HandleMergeConflicts();
                 }               
 

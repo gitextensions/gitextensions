@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using GitCommands.Logging;
 using GitCommands.Repository;
 using Microsoft.Win32;
+using System.Collections.Generic;
 
 namespace GitCommands
 {
@@ -20,6 +21,7 @@ namespace GitCommands
         public static readonly char PathSeparator = '\\';
         public static readonly char PathSeparatorWrong = '/';
 
+        private static Dictionary<String, object> byNameMap = new Dictionary<String, object>();
 
 
 
@@ -391,11 +393,21 @@ namespace GitCommands
         }
 
         private static bool? _closeProcessDialog;
-        public static bool CloseProcessDialog
+        public static bool GlobalCloseProcessDialog
         {
             get { return SafeGet("closeprocessdialog", false, ref _closeProcessDialog); }
             set { SafeSet("closeprocessdialog", value, ref _closeProcessDialog); }
         }
+
+        public static bool? GetCloseProcessDialog(string name)
+        {
+            return GetBool(PrefixedName(name, "closeprocessdialog"), null);
+        }
+        public static void SetCloseProcessDialog(string name, bool? value)
+        {
+            SetBool(PrefixedName(name, "closeprocessdialog"), value);
+        }
+
 
         private static bool? _showCurrentBranchOnly;
         public static bool ShowCurrentBranchOnly
@@ -846,18 +858,21 @@ namespace GitCommands
             SetValue(key, field.AsString());
         }
 
-        private static string VersionIndependentRegKey
+        private static RegistryKey _VersionIndependentRegKey;
+
+        private static RegistryKey VersionIndependentRegKey
         {
             get
             {
-                return string.Concat(Registry.CurrentUser, "\\Software\\GitExtensions\\GitExtensions");
-                //return Application.UserAppDataRegistry.Name.Replace("\\" + Application.ProductVersion, string.Empty);
+                if (_VersionIndependentRegKey == null)
+                    _VersionIndependentRegKey = Registry.CurrentUser.OpenSubKey("Software\\GitExtensions\\GitExtensions", true);
+                return _VersionIndependentRegKey;
             }
         }
 
         public static T GetValue<T>(string name, T defaultValue)
         {
-            T value = (T)Registry.GetValue(VersionIndependentRegKey, name, null);
+            T value = (T)VersionIndependentRegKey.GetValue(name, null);
 
             if (value != null)
                 return value;
@@ -888,8 +903,62 @@ namespace GitCommands
 
         public static void SetValue<T>(string name, T value)
         {
-            Registry.SetValue(VersionIndependentRegKey, name, value);
+            if (value == null)
+                VersionIndependentRegKey.DeleteValue(name);
+            else
+                VersionIndependentRegKey.SetValue(name, value);
         }
+
+        public static T GetByName<T>(string name, T defaultValue, Func<object, T> convert)
+        {
+            object o;
+            if (byNameMap.TryGetValue(name, out o))
+            {
+                if( o == null || o is T)
+                    return (T)o;
+                else
+                    throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
+            }
+            else
+            {
+                T result;
+                o = GetValue<object>(name, null);
+                if (o == null)
+                    result = defaultValue;
+                else
+                    result = convert(o);
+
+                byNameMap[name] = result;
+                return result;
+            }
+        }
+
+        public static void SetByName<T>(string name, T value)
+        {
+            object o;
+            if (byNameMap.TryGetValue(name, out o))
+                if (Object.Equals(o, value))
+                    return;
+
+            SetValue<T>(name, value);
+            byNameMap[name] = value;
+        }
+
+        public static bool? GetBool(string name, bool? defaultValue)
+        {
+            return GetByName<bool?>(name, defaultValue, x => x.ToString().Equals(bool.TrueString));
+        }
+
+        public static void SetBool(string name, bool? value)
+        {
+            SetByName<bool?>(name, value);
+        }
+
+        public static string PrefixedName(string prefix, string name) 
+        {
+            return prefix + '_' + name;
+        }
+
     }
 
     public static class FontParser
