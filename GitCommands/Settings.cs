@@ -672,7 +672,7 @@ namespace GitCommands
 
         public static bool IsBareRepository()
         {
-            return !Directory.Exists(WorkingDir + PathSeparator + ".git");
+            return GitCommandHelpers.IsBareRepository(WorkingDir);
         }
 
         public static string WorkingDirGitDir()
@@ -738,6 +738,13 @@ namespace GitCommands
             }
             catch
             { }
+        }
+
+        public static bool? _dashboardShowCurrentBranch;
+        public static bool DashboardShowCurrentBranch
+        {
+            get { return SafeGet("dashboardshowcurrentbranch", true, ref _dashboardShowCurrentBranch); }
+            set { SafeSet("dashboardshowcurrentbranch", value, ref _dashboardShowCurrentBranch); }
         }
 
         public static string _ownScripts;

@@ -90,10 +90,22 @@ namespace GitUI
                         editMenuItem.Click += editMenuItem_Click;
                         contextMenu.Items.Add(editMenuItem);
 
+
+                        var showCurrentBranchMenuItem = new ToolStripMenuItem("Show curren branch");
+                        showCurrentBranchMenuItem.Click += new EventHandler(showCurrentBranchMenuItem_Click);
+                        showCurrentBranchMenuItem.Checked = GitCommands.Settings.DashboardShowCurrentBranch;
+                        contextMenu.Items.Add(showCurrentBranchMenuItem);
+
                         dashboardItem.ContextMenuStrip = contextMenu;
                     }
                 }
             }
+        }
+
+        void showCurrentBranchMenuItem_Click(object sender, EventArgs e)
+        {
+            GitCommands.Settings.DashboardShowCurrentBranch = !GitCommands.Settings.DashboardShowCurrentBranch;
+            dashboardCategoryChanged(null, null);
         }
 
         private void moveUpMenuItem_Click(object sender, EventArgs e)
