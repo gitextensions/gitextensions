@@ -967,7 +967,7 @@ namespace GitUI
                 });
         }
 
-        private static void SetCommitMessageFromTextBox(string commitMessageText)
+        private void SetCommitMessageFromTextBox(string commitMessageText)
         {
             //Save last commit message in settings. This way it can be used in multiple repositories.
             Settings.LastCommitMessage = commitMessageText;
@@ -1007,7 +1007,10 @@ namespace GitUI
                 var lineNumber = 0;
                 foreach (var line in commitMessageText.Split('\n'))
                 {
-                    if (!line.StartsWith("#"))
+                    //When a committemplate is used, skip comments
+                    //otherwise: "#" is probably not used for comment but for issue number
+                    if (!line.StartsWith("#") || 
+                        string.IsNullOrEmpty(commitTemplate))
                     {
                         if (lineNumber == 1 && !String.IsNullOrEmpty(line))
                             textWriter.WriteLine();
