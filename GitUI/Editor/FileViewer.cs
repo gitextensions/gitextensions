@@ -84,7 +84,9 @@ namespace GitUI.Editor
         void _internalFileViewer_MouseMove(object sender, MouseEventArgs e)
         {
             this.OnMouseMove(e);
-            _internalFileViewer.FocusTextArea();
+
+            if (Settings.FocusControlOnHover)
+                _internalFileViewer.FocusTextArea();
         }
 
         void _internalFileViewer_SelectedLineChanged(object sender, int selectedLine)

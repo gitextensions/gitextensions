@@ -140,7 +140,7 @@ namespace GitUI
         {
             ListBox listBox = sender as ListBox;
 
-            if (listBox != null)
+            if (listBox != null && GitCommands.Settings.FocusControlOnHover)
             {
                 listBox.Select();
             }

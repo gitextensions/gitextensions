@@ -89,7 +89,8 @@ namespace GitUI
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            Select();
+            if (Settings.FocusControlOnHover)
+                Select();
         }
 
         public void SetDimensions(int node_dimension, int lane_width, int lane_line_width, int row_height, Brush selectionBrush)
