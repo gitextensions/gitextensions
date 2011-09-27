@@ -129,6 +129,8 @@ namespace GitUI
                 else if (Settings.Encoding == Encoding.Default)
                     _NO_TRANSLATE_Encoding.Text = "Default (" + Encoding.Default.HeaderName + ")";
 
+                focusControlOnHover.Checked = Settings.FocusControlOnHover;
+
                 usePatienceDiffAlgorithm.Checked = Settings.UsePatienceDiffAlgorithm;
 
                 showCurrentBranchInVisualStudio.Checked = Settings.ShowCurrentBranchInVisualStudio;
@@ -374,6 +376,8 @@ namespace GitUI
             }
 
             GitCommandHelpers.SetEnvironmentVariable(true);
+
+            Settings.FocusControlOnHover = focusControlOnHover.Checked;
 
             Settings.UsePatienceDiffAlgorithm = usePatienceDiffAlgorithm.Checked;
 

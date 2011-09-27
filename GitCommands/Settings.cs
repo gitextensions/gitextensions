@@ -37,6 +37,13 @@ namespace GitCommands
             ApplicationDataPath = Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
         }
 
+        private static bool? _focusControlOnHover;
+        public static bool FocusControlOnHover
+        {
+            get { return SafeGet("focuscontrolonhover", true, ref _focusControlOnHover); }
+            set { SafeSet("focuscontrolonhover", value, ref _focusControlOnHover); }
+        }
+
         private static int? _UserMenuLocationX;
         public static int UserMenuLocationX
         {
