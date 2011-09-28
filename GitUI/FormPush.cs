@@ -213,10 +213,17 @@ namespace GitUI
                 if (Settings.AutoPullOnRejected && 
                     form.OutputString.ToString().Contains("To prevent you from losing history, non-fast-forward updates were rejected"))
                 {
-                    if (GitUICommands.Instance.StartPullDialog(true))
+                    if (Settings.PullMerge == "fetch")
+                        form.OutputString.Append("\nCan not perform auto pull, when merge option is set to fetch.");
+                    else 
                     {
-                        form.Retry();
-                        return true;
+                        bool pullCompleted;
+                        GitUICommands.Instance.StartPullDialog(true, out pullCompleted);
+                        if (pullCompleted)
+                        {
+                            form.Retry();
+                            return true;
+                        }
                     }
                 }
             }
