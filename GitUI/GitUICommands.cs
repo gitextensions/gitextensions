@@ -379,11 +379,25 @@ namespace GitUI
 
         public bool StartPullDialog(bool pullOnShow)
         {
+            bool errorOccurred;
+            return StartPullDialog(pullOnShow, out errorOccurred);
+        }
+
+        /// <summary>
+        /// Starts pull dialog
+        /// </summary>
+        /// <param name="pullOnShow"></param>
+        /// <param name="pullCompleted">true if pull completed with no errors</param>
+        /// <returns>if revision grid should be refreshed</returns>
+        public bool StartPullDialog(bool pullOnShow, out bool pullCompleted)
+        {
+            pullCompleted = false;
+
             if (!RequiresValidWorkingDir())
                 return false;
 
             if (!InvokeEvent(PrePull))
-                return false;
+                return true;
 
             FormPull formPull = new FormPull();
             DialogResult dlgResult;
@@ -392,13 +406,16 @@ namespace GitUI
             else
                 dlgResult = formPull.ShowDialog();
 
-            bool result = dlgResult == DialogResult.OK;
-            if (result)
-                 InvokeEvent(PostPull);
+            if (dlgResult == DialogResult.OK)
+            {
+                InvokeEvent(PostPull);
+                pullCompleted = !formPull.ErrorOccurred;                
+            }
 
-            return result;
+            return true;//maybe InvokeEvent should have 'needRefresh' out parameter?
         }
-                
+
+        
         public bool StartViewPatchDialog()
         {
             if (!InvokeEvent(PreViewPatch))
