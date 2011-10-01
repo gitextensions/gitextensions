@@ -1146,6 +1146,12 @@
     <None Include="Resources\git-extensions-logo-final_mixed_purple.ico" />
     <None Include="Resources\git-extensions-logo-final_mixed_red.ico" />
     <None Include="Resources\git-extensions-logo-final-128.png" />
+    <Content Include="Translation\German.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Translation\German.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Translation\Traditional Chinese.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
