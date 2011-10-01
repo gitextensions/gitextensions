@@ -639,6 +639,77 @@ Wenn Sie einen Branch holen und mergen wollen, wählen Sie einen speziellen Bran
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormRebase">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Rebase</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Rebase bei aktuellem Branch auf einen anderen Branch durchführen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Currentbranch" Property="Text">
+          <Value>Aktuell</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Rebase</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Rebase auf</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddFiles" Property="Text">
+          <Value>Dateien hinzufügen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Resolved" Property="Text">
+          <Value>Rebase fortsetzen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Abort" Property="Text">
+          <Value>Abbrechen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Skip" Property="Text">
+          <Value>Diesen Commit überspringen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Mergetool" Property="Text">
+          <Value>Konflikte lösen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>Wiederanzuwendende Commits:</Value>
+        </TranslationItem>
+        <TranslationItem Name="SolveMergeconflicts" Property="Text">
+          <Value>Es liegen unaufgelöste Merge-Konflikte vor</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkInteractive" Property="Text">
+          <Value>Interaktiver Rebase</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkAutosquash" Property="Text">
+          <Value>Autosquash</Value>
+        </TranslationItem>
+        <TranslationItem Name="_currentBranchText" Property="Text">
+          <Value>Aktueller Branch:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_continueRebaseText" Property="Text">
+          <Value>Rebase fortsetzen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_solveConflictsText" Property="Text">
+          <Value>Konflikte auflösen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_solveConflictsText2" Property="Text">
+          <Value>&gt;Konflikte auflösen&lt;</Value>
+        </TranslationItem>
+        <TranslationItem Name="_continueRebaseText2" Property="Text">
+          <Value>&gt;Rebase fortsetzen&lt;</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noBranchSelectedText" Property="Text">
+          <Value>Bitte einen Branch auswählen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_branchUpToDateText" Property="Text">
+          <Value>Aktueller Branch ist up-to-date.
+Kein Rebase möglich.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_branchUpToDateCaption" Property="Text">
+          <Value>Rebase</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormCommit">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
