@@ -324,6 +324,13 @@ Wenn Sie einen Branch holen und mergen wollen, wählen Sie einen speziellen Bran
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormDiff">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Vergleich</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="ViewPatch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
