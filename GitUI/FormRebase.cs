@@ -2,11 +2,26 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormRebase : GitExtensionsForm
     {
+        private readonly TranslationString _currentBranchText = new TranslationString("Current branch:");
+
+        private readonly TranslationString _continueRebaseText = new TranslationString("Continue rebase");
+        private readonly TranslationString _solveConflictsText = new TranslationString("Solve conflicts");
+
+        private readonly TranslationString _solveConflictsText2 = new TranslationString(">Solve conflicts<");
+        private readonly TranslationString _continueRebaseText2 = new TranslationString(">Continue rebase<");
+
+        private readonly TranslationString _noBranchSelectedText = new TranslationString("Please select a branch");
+
+        private readonly TranslationString _branchUpToDateText = 
+            new TranslationString("Current branch a is up to date." + Environment.NewLine + "Nothing to rebase.");
+        private readonly TranslationString _branchUpToDateCaption = new TranslationString("Rebase");
+
         private readonly string _defaultBranch;
 
         public FormRebase(string defaultBranch)
@@ -26,7 +41,7 @@ namespace GitUI
             RestorePosition("rebase");
 
             var selectedHead = GitCommandHelpers.GetSelectedBranch();
-            Currentbranch.Text = "Current branch: " + selectedHead;
+            Currentbranch.Text = _currentBranchText.Text + " " + selectedHead;
 
             Branches.DisplayMember = "Name";
             Branches.DataSource = GitCommandHelpers.GetHeads(true, true);
@@ -73,8 +88,8 @@ namespace GitUI
 
             SolveMergeconflicts.Visible = GitCommandHelpers.InTheMiddleOfConflictedMerge();
 
-            Resolved.Text = "Continue rebase";
-            Mergetool.Text = "Solve conflicts";
+            Resolved.Text = _continueRebaseText.Text;
+            Mergetool.Text = _solveConflictsText.Text;
             ContinuePanel.BackColor = Color.Transparent;
             MergeToolPanel.BackColor = Color.Transparent;
 
@@ -82,14 +97,14 @@ namespace GitUI
             {
                 AcceptButton = Mergetool;
                 Mergetool.Focus();
-                Mergetool.Text = ">Solve conflicts<";
+                Mergetool.Text = _solveConflictsText2.Text;
                 MergeToolPanel.BackColor = Color.Black;
             }
             else if (GitCommandHelpers.InTheMiddleOfRebase())
             {
                 AcceptButton = Resolved;
                 Resolved.Focus();
-                Resolved.Text = ">Continue rebase<";
+                Resolved.Text = _continueRebaseText2.Text;
                 ContinuePanel.BackColor = Color.Black;
             }
         }
@@ -154,14 +169,14 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             if (string.IsNullOrEmpty(Branches.Text))
             {
-                MessageBox.Show("Please select a branch");
+                MessageBox.Show(_noBranchSelectedText.Text);
                 return;
             }
 
             var form = new FormProcess(GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked, chkAutosquash.Checked));
             form.ShowDialog();
             if (form.OutputString.ToString().Trim() == "Current branch a is up to date.")
-                MessageBox.Show("Current branch a is up to date." + Environment.NewLine + "Nothing to rebase.", "Rebase");
+                MessageBox.Show(_branchUpToDateText.Text, _branchUpToDateCaption.Text);
 
             if (!GitCommandHelpers.InTheMiddleOfConflictedMerge() &&
                 !GitCommandHelpers.InTheMiddleOfRebase() &&
