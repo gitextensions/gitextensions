@@ -242,6 +242,46 @@ der diesen Remote Branch verfolgt?</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormStash">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Stash</Value>
+        </TranslationItem>
+        <TranslationItem Name="Clear" Property="Text">
+          <Value>Gewählten Stash verwerfen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Stash" Property="Text">
+          <Value>Alle Änderungen stashen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Apply" Property="Text">
+          <Value>Gewählten Stash anwenden</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButton1" Property="Text">
+          <Value>Aktualisieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButton1" Property="ToolTipText">
+          <Value>Aktualsieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripLabel1" Property="Text">
+          <Value>Zeige:</Value>
+        </TranslationItem>
+        <TranslationItem Name="StashKeepIndex" Property="Text">
+          <Value>Index beibehalten</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButton_customMessage" Property="Text">
+          <Value>Benutzerdefinierte Stash-Nachricht</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButton_customMessage" Property="ToolTipText">
+          <Value>Benutzerdefinierte Stash-Nachricht</Value>
+        </TranslationItem>
+        <TranslationItem Name="currentWorkingDirChanges" Property="Text">
+          <Value>Aktuelle Änderungen im Arbeitsverzeichnis</Value>
+        </TranslationItem>
+        <TranslationItem Name="noStashes" Property="Text">
+          <Value>Es sind keine Stashes vorhanden</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormPull">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
