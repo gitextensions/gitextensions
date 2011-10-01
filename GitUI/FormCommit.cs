@@ -88,11 +88,15 @@ namespace GitUI
         private readonly TranslationString _stageDetails = new TranslationString("Stage Details");
         private readonly TranslationString _stageFiles = new TranslationString("Stage {0} files");
         private readonly TranslationString _selectOnlyOneFile = new TranslationString("You must have only one file selected.");
+        private readonly TranslationString _selectOnlyOneFileCaption = new TranslationString("Error");
 
         private readonly TranslationString _stageSelectedLines = new TranslationString("Stage selected line(s)");
         private readonly TranslationString _unstageSelectedLines = new TranslationString("Unstage selected line(s)");
         private readonly TranslationString _resetSelectedLines = new TranslationString("Reset selected line(s)");
         private readonly TranslationString _resetSelectedLinesConfirmation = new TranslationString("Are you sure you want to reset the changes to the selected lines?");
+
+        private readonly TranslationString _formTitle = new TranslationString("Commit to {0} ({1})");
+
 
         #endregion
 
@@ -960,7 +964,7 @@ namespace GitUI
                 o =>
                 {
                     var text =
-                        string.Format("Commit to {0} ({1})", GitCommandHelpers.GetSelectedBranch(),
+                        string.Format(_formTitle.Text, GitCommandHelpers.GetSelectedBranch(),
                                       Settings.WorkingDir);
 
                     _syncContext.Post(state1 => Text = text, null);
@@ -1248,7 +1252,7 @@ namespace GitUI
                 GitUICommands.Instance.StartFileHistoryDialog(Unstaged.SelectedItem.Name, null);
             }
             else
-                MessageBox.Show(this, _selectOnlyOneFile.Text, "Error");
+                MessageBox.Show(this, _selectOnlyOneFile.Text, _selectOnlyOneFileCaption.Text);
         }
 
         void Unstaged_DoubleClick(object sender, EventArgs e)
