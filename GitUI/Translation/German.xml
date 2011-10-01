@@ -105,6 +105,260 @@ Wenn Sie einen Branch holen und mergen wollen, wählen Sie einen speziellen Bran
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormCommit">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Commiten</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Commiten</Value>
+        </TranslationItem>
+        <TranslationItem Name="ResetChanges" Property="Text">
+          <Value>Dateiänderungen zurücksetzen</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteFileToolStripMenuItem" Property="Text">
+          <Value>Datei löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="SolveMergeconflicts" Property="Text">
+          <Value>Es liegen unaufgelöste Merge-Konflikte vor</Value>
+        </TranslationItem>
+        <TranslationItem Name="addFileTogitignoreToolStripMenuItem" Property="Text">
+          <Value>Datei zu .gitignore hinzufügen</Value>
+        </TranslationItem>
+        <TranslationItem Name="openToolStripMenuItem" Property="Text">
+          <Value>Öffnen</Value>
+        </TranslationItem>
+        <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
+          <Value>Öffnen mit</Value>
+        </TranslationItem>
+        <TranslationItem Name="filenameToClipboardToolStripMenuItem" Property="Text">
+          <Value>Dateiname kopieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
+          <Value>Mit Vergleichswerkzeug öffnen</Value>
+        </TranslationItem>
+        <TranslationItem Name="resetPartOfFileToolStripMenuItem" Property="Text">
+          <Value>Änderungen teilweise zurücksetzen</Value>
+        </TranslationItem>
+        <TranslationItem Name="editFileToolStripMenuItem" Property="Text">
+          <Value>Datei editieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="ViewFileHistoryToolStripItem" Property="Text">
+          <Value>Dateihistorie ansehen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Commit" Property="Text">
+          <Value>&amp;Commiten</Value>
+        </TranslationItem>
+        <TranslationItem Name="CommitAndPush" Property="Text">
+          <Value>Commiten &amp;&amp; &amp;Pushen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Amend" Property="Text">
+          <Value>Letzen Commit anpassen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Reset" Property="Text">
+          <Value>Änderungen zurücksetzen</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitMessageToolStripMenuItem" Property="Text">
+          <Value>Commit &amp;Nachricht</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitMessageToolStripMenuItem" Property="ToolTipText">
+          <Value>Commit Nachricht</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripMenuItem3" Property="Text">
+          <Value>Optionen</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripMenuItem3" Property="ToolTipText">
+          <Value>Optionen</Value>
+        </TranslationItem>
+        <TranslationItem Name="closeDialogAfterEachCommitToolStripMenuItem" Property="Text">
+          <Value>Dialog nach jedem Commit schließen</Value>
+        </TranslationItem>
+        <TranslationItem Name="closeDialogAfterAllFilesCommittedToolStripMenuItem" Property="Text">
+          <Value>Dialog schließen wenn alle Änderungen commitet wurden</Value>
+        </TranslationItem>
+        <TranslationItem Name="refreshDialogOnFormFocusToolStripMenuItem" Property="Text">
+          <Value>Bei Fokus Dialog aktualisieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="workingToolStripMenuItem" Property="Text">
+          <Value>Änderungen im Arbeitsverzeichnis</Value>
+        </TranslationItem>
+        <TranslationItem Name="workingToolStripMenuItem" Property="ToolTipText">
+          <Value>Änderungen im Arbeitsverzeichnis</Value>
+        </TranslationItem>
+        <TranslationItem Name="showIgnoredFilesToolStripMenuItem" Property="Text">
+          <Value>Ignorierte Dateien anzeigen</Value>
+        </TranslationItem>
+        <TranslationItem Name="showUntrackedFilesToolStripMenuItem" Property="Text">
+          <Value>Nicht verfolgte Dateien anzeigen</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteSelectedFilesToolStripMenuItem" Property="Text">
+          <Value>Ausgewählte Dateien löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="resetSelectedFilesToolStripMenuItem" Property="Text">
+          <Value>Ausgewählte Dateien zurücksetzen</Value>
+        </TranslationItem>
+        <TranslationItem Name="resetAlltrackedChangesToolStripMenuItem" Property="Text">
+          <Value>Alle (verfolgten) Änderungen zurücksetzen</Value>
+        </TranslationItem>
+        <TranslationItem Name="editGitIgnoreToolStripMenuItem" Property="Text">
+          <Value>Ignorierte Dateien editieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteAllUntrackedFilesToolStripMenuItem" Property="Text">
+          <Value>Alle nicht verfolgten Dateien löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Cancel" Property="Text">
+          <Value>Abbrechen</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStageItem" Property="Text">
+          <Value>&amp;Stage</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStageItem" Property="ToolTipText">
+          <Value>Stage</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolUnstageItem" Property="Text">
+          <Value>&amp;Unstage</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolUnstageItem" Property="ToolTipText">
+          <Value>Unstage</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStageAllItem" Property="Text">
+          <Value>Alle Dateien stagen</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStageAllItem" Property="ToolTipText">
+          <Value>Alle Dateien stagen</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolUnstageAllItem" Property="Text">
+          <Value>Alle Dateien unstagen</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolUnstageAllItem" Property="ToolTipText">
+          <Value>Alle Dateien unstagen</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolAuthorLabelItem" Property="Text">
+          <Value>Autor: (Format: "Name &lt;E-Mail&gt;")</Value>
+        </TranslationItem>
+        <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text">
+          <Value>Wollen Sie auch die neuen Dateien, die in der Auswahl enthalten sind, löschen?
+
+Wählen Sie 'Nein' um alle neuen Dateien beizubehalten.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_alsoDeleteUntrackedFilesCaption" Property="Text">
+          <Value>Löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_amendCommit" Property="Text">
+          <Value>Mit diesem Vorgang ändern Sie die Historie.
+Korrigieren Sie einen Commit bitte nur, wenn dieser noch nicht veröffentlicht ist!
+
+Möchten Sie den Vorgang fortsetzen?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_amendCommitCaption" Property="Text">
+          <Value>Commit anpassen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteFailed" Property="Text">
+          <Value>Datei löschen fehlgeschlagen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteSelectedFiles" Property="Text">
+          <Value>Sind Sie sich sicher, dass Sie die ausgewählte(n) Datei(en) löschen wollen?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteSelectedFilesCaption" Property="Text">
+          <Value>Löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteUntrackedFiles" Property="Text">
+          <Value>Sind Sie sich sicher, dass Sie die nicht verfolgten Datei(en) löschen wollen?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteUntrackedFilesCaption" Property="Text">
+          <Value>Nicht verfolgte Dateien löschen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_enterCommitMessage" Property="Text">
+          <Value>Bitte Commit-Nachricht eingeben</Value>
+        </TranslationItem>
+        <TranslationItem Name="_enterCommitMessageCaption" Property="Text">
+          <Value>Commit-Nachricht</Value>
+        </TranslationItem>
+        <TranslationItem Name="_enterCommitMessageHint" Property="Text">
+          <Value>Commit-Nachricht eingeben</Value>
+        </TranslationItem>
+        <TranslationItem Name="_mergeConflicts" Property="Text">
+          <Value>Es liegen unaufgelöste Merge-Konflikte vor. Lösen Sie die Merge-Konflikte vor einem Commit auf.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_mergeConflictsCaption" Property="Text">
+          <Value>Konflikte mergen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noFilesStagedAndNothingToCommit" Property="Text">
+          <Value>Es gibt keine gestagten Dateien für diesen Commit.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noFilesStagedButSuggestToCommitAllUnstaged" Property="Text">
+          <Value>Es gibt keine gestagten Dateien für diesen Commit. Wollen Sie alle Dateien stagen und commiten?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noFilesStagedAndConfirmAnEmptyMergeCommit" Property="Text">
+          <Value>Es gibt keine gestagten Dateien für diesen Commit. Wollen sie wirklich commiten?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noStagedChanges" Property="Text">
+          <Value>Es gibt keine gestagten Änderungen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noUnstagedChanges" Property="Text">
+          <Value>Es gibt keine nicht gestagten Änderungen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_notOnBranch" Property="Text">
+          <Value>Sie arbeiten nicht auf einem Branch. 
+Dieser Commit wird über keine Referenz verfügen, wenn Sie in einen anderen Branch wechseln und kann damit Commit verloren gehen.
+
+Möchten Sie trotzdem fortfahren?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_notOnBranchCaption" Property="Text">
+          <Value>Sie arbeiten nicht auf einem Branch.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_onlyStageChunkOfSingleFileError" Property="Text">
+          <Value>Sie können diese Option nur verwenden, wenn Sie eine einzelne Datei ausgewählt haben</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetChanges" Property="Text">
+          <Value>Sind Sie sich sicher, dass Sie die Änderungen an den ausgewählten Dateien zurücksetzen wollen?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetChangesCaption" Property="Text">
+          <Value>Änderungen zurücksetzen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetSelectedChanges" Property="Text">
+          <Value>Sind Sie sich sicher, dass Sie alle selektierten Dateien zurücksetzen wollen?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetStageChunkOfFileCaption" Property="Text">
+          <Value>Teile einer Datei unstagen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_stageDetails" Property="Text">
+          <Value>Stage Details
+</Value>
+        </TranslationItem>
+        <TranslationItem Name="_stageFiles" Property="Text">
+          <Value>{0} Dateien stagen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectOnlyOneFile" Property="Text">
+          <Value>Sie dürfen nur eine einzelne Datei auswählen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectOnlyOneFileCaption" Property="Text">
+          <Value>Fehler</Value>
+        </TranslationItem>
+        <TranslationItem Name="_stageSelectedLines" Property="Text">
+          <Value>Ausgewählte Zeile(n) stagen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_unstageSelectedLines" Property="Text">
+          <Value>Ausgewählte Zeile(n) unstagen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetSelectedLines" Property="Text">
+          <Value>Ausgewählte Zeile(n) zurücksetzen
+</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetSelectedLinesConfirmation" Property="Text">
+          <Value>Sind Sie sich sicher, dass Sie die Änderungen an den ausgewählten Zeilen zurücksetzen wollen?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_formTitle" Property="Text">
+          <Value>Commit in {0} ({1})</Value>
+        </TranslationItem>
+        <TranslationItem Name="_StageSelectedLinesToolStripMenuItem" Property="Text">
+          <Value>Ausgewählte Zeile(n) stagen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_ResetSelectedLinesToolStripMenuItem" Property="Text">
+          <Value>Ausgewählte Zeile(n) zurücksetzen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormInit">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
