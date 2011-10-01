@@ -179,25 +179,50 @@ namespace Gravatar
             return MD5.CalcMD5(email.Trim().ToLowerInvariant());
         }
 
+        /// <summary>
+        /// Builds a <see cref="System.Uri"/> corresponding to a given email address.
+        /// </summary>
+        /// <param name="email">The email address for which to build the <see cref="System.Uri"/>.</param>
+        /// <param name="size">The size of the image to request.  The default is 32.</param>
+        /// <param name="useHttps">Indicates whether or not the request should be performed over Secure HTTP.</param>
+        /// <param name="rating">The mazimum rating of the returned image.</param>
+        /// <param name="fallBack">The Gravatar service that will be used for fall-back.</param>
+        /// <returns>The constructed <see cref="System.Uri"/>.</returns>
+        private static Uri BuildGravatarUrl(string email, int size = 32, bool useHttps = false, Rating rating = Rating.G, FallBackService fallBack = FallBackService.None)
+        {
+            var builder = new UriBuilder("http://www.gravatar.com/avatar/");
+
+            if (useHttps)
+            {
+                builder.Scheme = "https";
+            }
+
+            builder.Path += HashEmail(email);
+
+            var query = string.Format("s={0}&r={1}",
+                size,
+                rating.ToString().ToLowerInvariant());
+
+            string d;
+            if (fallBack != FallBackService.None &&
+                fallBackStrings.TryGetValue(fallBack, out d))
+            {
+                query += "&d=" + d;
+            }
+
+            builder.Query = query;
+
+            return builder.Uri;
+        }
+
         public static void GetImageFromGravatar(string imageFileName, string email, int authorImageSize, FallBackService fallBack)
         {
             try
             {
-                var baseUrl = String.Concat("http://www.gravatar.com/avatar/{0}?d=identicon&s=",
-                                            authorImageSize, "&r=g");
-
-                if (fallBack == FallBackService.Identicon)
-                    baseUrl += "&d=identicon";
-                if (fallBack == FallBackService.MonsterId)
-                    baseUrl += "&d=monsterid";
-                if (fallBack == FallBackService.Wavatar)
-                    baseUrl += "&d=wavatar";
-
-                //hash the email address
-                var emailHash = HashEmail(email);
-
-                //format our url to the Gravatar
-                var imageUrl = String.Format(baseUrl, emailHash);
+                var imageUrl = BuildGravatarUrl(email,
+                    size: authorImageSize,
+                    useHttps: false,
+                    fallBack: fallBack);
 
                 var webClient = new WebClient { Proxy = WebRequest.DefaultWebProxy };
                 webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
