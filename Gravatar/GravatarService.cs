@@ -14,9 +14,12 @@ namespace Gravatar
 
         public enum FallBackService
         {
+            None,
+            MysteryMan,
             MonsterId,
             Wavatar,
-            Identicon
+            Identicon,
+            Retro,
         }
 
         public static void ClearImageCache()
