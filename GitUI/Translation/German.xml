@@ -491,6 +491,16 @@ Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möc
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormGoToCommit">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Zu Commit springen</Value>
+        </TranslationItem>
+        <TranslationItem Name="goButton" Property="Text">
+          <Value>Los</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormStash">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
