@@ -242,6 +242,255 @@ der diesen Remote Branch verfolgt?</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormResolveConflicts">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Merge-Konflikte auflösen</Value>
+        </TranslationItem>
+        <TranslationItem Name="uskUseCustomMergeScript" Property="Text">
+          <Value>Für diesen Dateityp ist ein benutzerdefiniertes Merge-Skript ({0}) vorhanden.
+
+Wollen Sie dieses Skript verwenden?</Value>
+        </TranslationItem>
+        <TranslationItem Name="uskUseCustomMergeScriptCaption" Property="Text">
+          <Value>Benutzerdefiniertes Merge-Skript</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileUnchangedAfterMerge" Property="Text">
+          <Value>Diese Datei wurde vom Merge-Prozess nicht verändert. Gewöhnlich deutet dies darauf hin, dass die Datei an eine falsche Stelle gespeichert wurde.
+
+Der Merge-Konflikt wird als nicht-gelöst markiert. Bitte versuchen Sie es noch einmal.</Value>
+        </TranslationItem>
+        <TranslationItem Name="allConflictsResolved" Property="Text">
+          <Value>Alle Merge-Konflikte wurden gelöst, Sie können nun commiten.
+Wollen Sie nun commiten?
+</Value>
+        </TranslationItem>
+        <TranslationItem Name="allConflictsResolvedCaption" Property="Text">
+          <Value>Commiten</Value>
+        </TranslationItem>
+        <TranslationItem Name="mergeConflictIsSubmodule" Property="Text">
+          <Value>Der ausgewählte Merge-Konflikt ist ein Untermodul. Konflikt als gelöst markieren?</Value>
+        </TranslationItem>
+        <TranslationItem Name="mergeConflictIsSubmoduleCaption" Property="Text">
+          <Value>Untermodul</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileIsBinary" Property="Text">
+          <Value>Die ausgewählte Datei scheint eine Binärdatei zu sein.
+Wollen Sie die Datei wirklich mit {0} öffnen?</Value>
+        </TranslationItem>
+        <TranslationItem Name="askMergeConflictSolvedAfterCustomMergeScript" Property="Text">
+          <Value>Der Merge-Konflikt muss aufgelöst und das Resultat gespeichert werden als:
+{0}
+
+Ist der Mergekonflikt behoben?</Value>
+        </TranslationItem>
+        <TranslationItem Name="askMergeConflictSolved" Property="Text">
+          <Value>Ist der Merge-Konflikt behoben?</Value>
+        </TranslationItem>
+        <TranslationItem Name="askMergeConflictSolvedCaption" Property="Text">
+          <Value>Konflikt behoben?</Value>
+        </TranslationItem>
+        <TranslationItem Name="noMergeTool" Property="Text">
+          <Value>Kein Vergleichsprogramm für den Mergeprozess konfiguriert. Bitte gehen Sie zu den Einstellungen und konfigurieren ein Vergleichsprogramm!</Value>
+        </TranslationItem>
+        <TranslationItem Name="stageFilename" Property="Text">
+          <Value>Stage {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="noBaseRevision" Property="Text">
+          <Value>Es gibt keine Basis-Version für {0}. Auf einen 2-Wege-Merge wechseln?</Value>
+        </TranslationItem>
+        <TranslationItem Name="ours" Property="Text">
+          <Value>Unseres</Value>
+        </TranslationItem>
+        <TranslationItem Name="theirs" Property="Text">
+          <Value>Ihres</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileBinairyChooseLocalBaseRemote" Property="Text">
+          <Value>Datei ({0}) scheint eine Binärdatei zu sein.
+Wählen Sie, ob Sie die lokale ({1}), die Remote-({2}) oder die Basis-Datei behalten möchten.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileChangeLocallyAndRemotely" Property="Text">
+          <Value>Die Datei wurde lokal ({0}) und auch beim Remote ({1}) geändert. Bitte mergen Sie die Änderungen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileCreatedLocallyAndRemotely" Property="Text">
+          <Value>Eine Datei mit dem selben Namen wurde lokal ({0}) und beim Remote ({1}) erzeugt. Wählen Sie die Datei aus, die sie behalten möchten oder mergen Sie die Dateien.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileCreatedLocallyAndRemotelyLong" Property="Text">
+          <Value>Die Datei {0} hat keine Basis-Revision.
+Der Konflikt tritt auf, weil eine Datei mit dem selben Namen lokal ({1}) und auch beim Remote ({2}) erzeugt wurde.
+
+Bitte wählen Sie die Datei aus, die sie behalten möchten, mergen Sie die Dateien oder löschen Sie die Datei?</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileDeletedLocallyAndModifiedRemotely" Property="Text">
+          <Value>Die Datei wurde lokal ({0}) gelöscht und beim Remote ({1}) verändert. Bitte löschen Sie die Datei oder behalten die geänderte Version.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileDeletedLocallyAndModifiedRemotelyLong" Property="Text">
+          <Value>Die Datei {0} besitzt keine lokale Revision.
+Die Datei wurde lokal ({1}) gelöscht, aber beim Remote ({2}) geändert.
+
+Wählen Sie, ob Sie die Datei löschen oder die geänderte Datei behalten möchten.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileModifiedLocallyAndDelededRemotely" Property="Text">
+          <Value>Die Datei wurde lokal ({0}) geändert und beim Remote ({1}) gelöscht. Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möchten.</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileModifiedLocallyAndDelededRemotelyLong" Property="Text">
+          <Value>Die Datei {0} hat beim Remote keine Revision.
+Die Datei wurde lokal ({1}) bearbeitet, aber beim Remote ({2}) gelöscht.
+
+Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möchten.</Value>
+        </TranslationItem>
+        <TranslationItem Name="noBase" Property="Text">
+          <Value>Keine Basis</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleted" Property="Text">
+          <Value>Gelöscht</Value>
+        </TranslationItem>
+        <TranslationItem Name="chooseLocalButtonText" Property="Text">
+          <Value>Lokal wählen</Value>
+        </TranslationItem>
+        <TranslationItem Name="chooseRemoteButtonText" Property="Text">
+          <Value>Remote wählen</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteFileButtonText" Property="Text">
+          <Value>Datei löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="keepModifiedButtonText" Property="Text">
+          <Value>Geänderte Datei behalten</Value>
+        </TranslationItem>
+        <TranslationItem Name="keepBaseButtonText" Property="Text">
+          <Value>Basis-Datei behalten</Value>
+        </TranslationItem>
+        <TranslationItem Name="_conflictedFilesContextMenuText" Property="Text">
+          <Value>Auflösen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_openMergeToolItemText" Property="Text">
+          <Value>Öffnen in</Value>
+        </TranslationItem>
+        <TranslationItem Name="_button1Text" Property="Text">
+          <Value>Öffnen in</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetItemRebaseText" Property="Text">
+          <Value>Rebase abbrechen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_contextChooseLocalRebaseText" Property="Text">
+          <Value>Lokal wählen (theirs)</Value>
+        </TranslationItem>
+        <TranslationItem Name="_contextChooseRemoteRebaseText" Property="Text">
+          <Value>Remote wählen (ours)</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetItemMergeText" Property="Text">
+          <Value>Merge abbrechen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_contextChooseLocalMergeText" Property="Text">
+          <Value>Lokal wählen (theirs)</Value>
+        </TranslationItem>
+        <TranslationItem Name="_contextChooseRemoteMergeText" Property="Text">
+          <Value>Remote wählen (ours)</Value>
+        </TranslationItem>
+        <TranslationItem Name="_binaryFileWarningCaption" Property="Text">
+          <Value>Warnung</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noBaseFileMergeCaption" Property="Text">
+          <Value>Mergen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_chooseBaseFileFailedText" Property="Text">
+          <Value>Basis-Datei auswählen fehlgeschlagen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_chooseLocalFileFailedText" Property="Text">
+          <Value>Lokale Datei auswählen fehlgeschlagen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_chooseRemoteFileFailedText" Property="Text">
+          <Value>Remote Datei auswählen fehlgeschlagen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_currentFormatFilter" Property="Text">
+          <Value>Aktuelles Format (*.{0})</Value>
+        </TranslationItem>
+        <TranslationItem Name="_allFilesFilter" Property="Text">
+          <Value>Alle Dateien (*.*)</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Unaufgelöste Merge-Konflikte</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextChooseBase" Property="Text">
+          <Value>Basis wählen</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextChooseLocal" Property="Text">
+          <Value>Lokal wählen</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextChooseRemote" Property="Text">
+          <Value>Remote wählen</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextOpenBaseWith" Property="Text">
+          <Value>Basis öffnen mit</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextOpenLocalWith" Property="Text">
+          <Value>Lokal öffnen mit</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextOpenRemoteWith" Property="Text">
+          <Value>Remote öffnen mit</Value>
+        </TranslationItem>
+        <TranslationItem Name="OpenMergetool" Property="Text">
+          <Value>Öffnen mit Vergleichsprogrammm</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextSaveBaseAs" Property="Text">
+          <Value>Basis speichern als</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextSaveLocalAs" Property="Text">
+          <Value>Lokal speichern als</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextSaveRemoteAs" Property="Text">
+          <Value>Remote speichern als</Value>
+        </TranslationItem>
+        <TranslationItem Name="ContextMarkAsSolved" Property="Text">
+          <Value>Konflikt als gelöst markieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
+          <Value>Öffnen mit</Value>
+        </TranslationItem>
+        <TranslationItem Name="openToolStripMenuItem" Property="Text">
+          <Value>Öffnen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label7" Property="Text">
+          <Value>Lokal</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Basis</Value>
+        </TranslationItem>
+        <TranslationItem Name="localFileName" Property="Text">
+          <Value>...</Value>
+        </TranslationItem>
+        <TranslationItem Name="baseFileName" Property="Text">
+          <Value>...</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Value>Remote</Value>
+        </TranslationItem>
+        <TranslationItem Name="remoteFileName" Property="Text">
+          <Value>...</Value>
+        </TranslationItem>
+        <TranslationItem Name="conflictDescription" Property="Text">
+          <Value>Datei auswählen</Value>
+        </TranslationItem>
+        <TranslationItem Name="button1" Property="Text">
+          <Value>Öffnen in Vergleichsprogramm</Value>
+        </TranslationItem>
+        <TranslationItem Name="Rescan" Property="Text">
+          <Value>Konflikte neu prüfen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Reset" Property="Text">
+          <Value>Abbrechen</Value>
+        </TranslationItem>
+        <TranslationItem Name="startMergetool" Property="Text">
+          <Value>Vergleichsprogramm öffnen</Value>
+        </TranslationItem>
+        <TranslationItem Name="merge" Property="Text">
+          <Value>Mergen</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileHistoryToolStripMenuItem" Property="Text">
+          <Value>Datei-Historie</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormStash">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
