@@ -1147,7 +1147,7 @@ namespace GitUI
 
         private void DrawColumnText(IDeviceContext dc, string text, Font font, Color color, Rectangle bounds)
         {
-            TextRenderer.DrawText(dc, text, font, bounds, color, TextFormatFlags.EndEllipsis);
+            TextRenderer.DrawText(dc, text, font, bounds, color, TextFormatFlags.EndEllipsis | TextFormatFlags.NoPrefix);
         }
 
         private static Rectangle AdjustCellBounds(Rectangle cellBounds, float offset)
