@@ -23,6 +23,119 @@
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormPush">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Push</Value>
+        </TranslationItem>
+        <TranslationItem Name="_branchNewForRemote" Property="Text">
+          <Value>Der Branch den Sie gerade pushen wollen, scheint ein neuer Branch beim Remote zu sein.
+Sind Sie sich sicher, dass Sie diesen Branch pushen wollen?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cannotLoadPutty" Property="Text">
+          <Value>Laden des SSH-Schlüssels fehlgeschlagen, PuTTY ist nicht korrekt konfiguriert.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pushCaption" Property="Text">
+          <Value>Push</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pushToCaption" Property="Text">
+          <Value>Pushen nach {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectDestinationDirectory" Property="Text">
+          <Value>Bitte wählen Sie ein Zielverzeichnis aus</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectRemote" Property="Text">
+          <Value>Bitte wählen Sie ein Remote Repository aus</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectTag" Property="Text">
+          <Value>Sie müssen einen Tag auswählen um einen Push durchzuführen oder wählen Sie "Alle Tags pushen" aus.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_yes" Property="Text">
+          <Value>Ja</Value>
+        </TranslationItem>
+        <TranslationItem Name="_no" Property="Text">
+          <Value>Nein</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseSource" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Push" Property="Text">
+          <Value>&amp;Push</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Zu pushender Branch</Value>
+        </TranslationItem>
+        <TranslationItem Name="PushAllBranches" Property="Text">
+          <Value>&amp;Alle Branches pushen</Value>
+        </TranslationItem>
+        <TranslationItem Name="ForcePushBranches" Property="Text">
+          <Value>Push &amp;erzwingen</Value>
+        </TranslationItem>
+        <TranslationItem Name="ForcePushTags" Property="Text">
+          <Value>Push &amp;erzwingen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Pull" Property="Text">
+          <Value>Pull</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox2" Property="Text">
+          <Value>Pushen nach</Value>
+        </TranslationItem>
+        <TranslationItem Name="PullFromUrl" Property="Text">
+          <Value>Url</Value>
+        </TranslationItem>
+        <TranslationItem Name="PullFromRemote" Property="Text">
+          <Value>Remote</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddRemote" Property="Text">
+          <Value>Remotes verwalten</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Branch</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>SSH-Schlüssel laden</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox3" Property="Text">
+          <Value>Tag</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Zu pushender Tag</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchTab" Property="Text">
+          <Value>Branches pushen</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchTab" Property="ToolTipText">
+          <Value>Branches und Commits zu Remote Repository pushen</Value>
+        </TranslationItem>
+        <TranslationItem Name="TagTab" Property="Text">
+          <Value>Tags pushen</Value>
+        </TranslationItem>
+        <TranslationItem Name="TagTab" Property="ToolTipText">
+          <Value>Tags nach Remote Repository pushen</Value>
+        </TranslationItem>
+        <TranslationItem Name="PushAllTags" Property="Text">
+          <Value>Alle Tags pushen</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelTo" Property="Text">
+          <Value>nach</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoteBranch" Property="Text">
+          <Value>Fataler Fehler: Kein Git Verzeichnis vorhanden (auch nicht in einem übergeordneten Verzeichnis)</Value>
+        </TranslationItem>
+        <TranslationItem Name="MultipleBranchTab" Property="Text">
+          <Value>Mehrere Branches pushen</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox4" Property="Text">
+          <Value>Wählen Sie die zu pushenden Branches</Value>
+        </TranslationItem>
+        <TranslationItem Name="_createPullRequestCB" Property="Text">
+          <Value>Pull Request nach Push erzeugen</Value>
+        </TranslationItem>
+        <TranslationItem Name="AutoPullOnRejected" Property="Text">
+          <Value>Automatischer Pull wenn Push verweigert wird</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormPull">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
