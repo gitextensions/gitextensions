@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.IO.IsolatedStorage;
 using System.Net;
+using System.Collections.Generic;
 
 namespace Gravatar
 {
@@ -47,6 +48,48 @@ namespace Gravatar
             /// Return an 8-bit-style face based on the email hash.
             /// </summary>
             Retro,
+        }
+
+        /// <summary>
+        /// Provides a mapping for the image defaults.
+        /// </summary>
+        private static Dictionary<FallBackService, string> fallBackStrings = new Dictionary<FallBackService, string>
+        {
+            { FallBackService.None, "404" },
+            { FallBackService.MysteryMan, "mm" },
+            { FallBackService.Identicon, "identicon" },
+            { FallBackService.MonsterId, "monsterid" },
+            { FallBackService.Wavatar, "wavatar" },
+            { FallBackService.Retro, "retro" },
+        };
+
+        /// <summary>
+        /// Specifies the maximum rating of a given gravatar image request.
+        /// </summary>
+        public enum Rating
+        {
+            /// <summary>
+            /// Suitable for all audiences.
+            /// </summary>
+            G,
+
+            /// <summary>
+            /// May contain rude gestures, provocatively dressed indiviiduals,
+            /// the lesser swear words, or mild violence
+            /// </summary>
+            PG,
+
+            /// <summary>
+            /// May contain such things as harsh profanity, intense violence,
+            /// nudity, or hard drug use.
+            /// </summary>
+            R,
+
+            /// <summary>
+            /// May contain hardcore sexual imagery or extremely disturbing
+            /// violence.
+            /// </summary>
+            X,
         }
 
         public static void ClearImageCache()
