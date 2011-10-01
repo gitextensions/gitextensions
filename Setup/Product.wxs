@@ -266,6 +266,12 @@
       <Component Id="Dutch.gif" Guid="*">
         <File Source="..\GitUI\Translation\Dutch.gif"/>
       </Component>
+      <Component Id="German.xml" Guid="*">
+        <File Source="..\GitUI\Translation\German.xml"/>
+      </Component>
+      <Component Id="German.gif" Guid="*">
+        <File Source="..\GitUI\Translation\German.gif"/>
+      </Component>
       <Component Id="SimplifiedChinese.xml" Guid="*">
         <File Source="..\GitUI\Translation\Simplified Chinese.xml"/>
       </Component>
@@ -533,6 +539,10 @@
         <Feature Id="Dutch" Title="Dutch" Level="1">
           <ComponentRef Id="Dutch.xml"/>
           <ComponentRef Id="Dutch.gif"/>
+        </Feature>
+        <Feature Id="German" Title="German" Level="1">
+          <ComponentRef Id="German.xml"/>
+          <ComponentRef Id="German.gif"/>
         </Feature>
         <Feature Id="Japanese" Title="Japanese" Level="1">
           <ComponentRef Id="Japanese.xml"/>
