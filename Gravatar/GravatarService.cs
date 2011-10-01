@@ -93,6 +93,19 @@ namespace Gravatar
             }
         }
 
+        /// <summary>
+        /// Generates an email hash as per the Gravatar specifications.
+        /// </summary>
+        /// <param name="email">The email to hash.</param>
+        /// <returns>The hash of the email.</returns>
+        /// <remarks>
+        /// The process of creating the hash are specified at http://en.gravatar.com/site/implement/hash/
+        /// </remarks>
+        private static string HashEmail(string email)
+        {
+            return MD5.CalcMD5(email.Trim().ToLowerInvariant());
+        }
+
         public static void GetImageFromGravatar(string imageFileName, string email, int authorImageSize, FallBackService fallBack)
         {
             try
@@ -108,7 +121,7 @@ namespace Gravatar
                     baseUrl += "&d=wavatar";
 
                 //hash the email address
-                var emailHash = MD5.CalcMD5(email.ToLower());
+                var emailHash = HashEmail(email);
 
                 //format our url to the Gravatar
                 var imageUrl = String.Format(baseUrl, emailHash);
