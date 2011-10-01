@@ -1,6 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Translation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <translationCategories>
+    <TranslationCategory Name="FormMergeBranch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Branches mergen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Branch zu aktuellen Branch mergen
+</Value>
+        </TranslationItem>
+        <TranslationItem Name="Currentbranch" Property="Text">
+          <Value>Aktueller Branch</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Mergen mit</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>&amp;Merge</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Merge</Value>
+        </TranslationItem>
+        <TranslationItem Name="noFastForward" Property="Text">
+          <Value>Immer einen eigenständingen Merge-Commit erzeugen</Value>
+        </TranslationItem>
+        <TranslationItem Name="fastForward" Property="Text">
+          <Value>Wenn möglich einen einzelnen, geradlinigen Zweig beibehalten (Fast Forward)</Value>
+        </TranslationItem>
+        <TranslationItem Name="currentBranchLabel" Property="Text">
+          <Value>?</Value>
+        </TranslationItem>
+        <TranslationItem Name="strategyHelp" Property="Text">
+          <Value>Hilfe</Value>
+        </TranslationItem>
+        <TranslationItem Name="squash" Property="Text">
+          <Value>Squash Commits</Value>
+        </TranslationItem>
+        <TranslationItem Name="advanced" Property="Text">
+          <Value>Zeige erweiterte Optionen</Value>
+        </TranslationItem>
+        <TranslationItem Name="NonDefaultMergeStrategy" Property="Text">
+          <Value>Eine alternative Merge-Strategie verwenden</Value>
+        </TranslationItem>
+        <TranslationItem Name="noCommit" Property="Text">
+          <Value>Nicht commiten</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strategyTooltipText" Property="Text">
+          <Value>resolve
+Diese Option kann nur zwei Branches (Nämlich der aktuelle Branch und der Branch von dem Sie gepullt haben) mit Hilfe eines 
+3-Wege-Merge-Verfahren auflösen. Mit dieser Option wird versucht Merge-Mehrdeutigkeiten zu erkennen. Die Option gilt 
+im Allgemeinen als sicher und schnell.
+
+recursive
+Diese Option kann nur zwei Branches mit Hilfe eines 3-Wege-Merge-Verfahren auflösen. Wenn es mehr als einen gemeinsamen 
+Vorfahren gibt, der für einen 3-Wege Merge verwendet werden kann, erzeugt diese Optionen einen gemergten Zweig der 
+gemeinsamen Vorfahren und benutzt diesen als Referenz-Zweig für den 3-Wege-Merge. Zusätzlich kann diese Option
+umbenannte Dateien und Verzeichnisse erkennen, verwalten und mergen. Dies ist die Standard Merge-Strategie wenn von einem 
+Branch gepullt oder gemergt wird.
+
+octopus
+Diese Option kann Fälle mit mehr als zwei Zweigen auflösen, dafür aber keine komplexen Merge-Prozesse, die eine manuelle Auflösung
+erfordern. Diese Option ist primär für das Zusammenführen von Topic-Branches gedacht. Dies ist die Standard Merge-Strategie
+wenn von mehreren Branches gepullt oder gemergt wird.
+
+ours
+Diese Option kann eine beliebige Anzahl von Zweigen auflösen, aber der resultiernde Zweig beim Merge ist immer der vom aktuellen Branch.
+Die Option ignoriert alle Änderungen der anderen Branches. Diese Merge-Strategie ist dafür gedacht die Historie von alten Branches 
+zu überschrieben.
+
+subtree 
+This is a modified recursive strategy. When merging trees A and B, if B corresponds to a subtree of A, B is first adjusted to 
+match the tree structure of A, instead of reading the trees at the same level. This adjustment is also done to the common 
+ancestor tree.</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="Open">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
