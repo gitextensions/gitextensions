@@ -25,10 +25,10 @@ SimpleExt_p.c
 #ignore some unwanted files
 *.ncb
 *.suo
-*.csproj.user
 *.orig
 *.msi
 *.user
+*.[Cc]ache
 Thumbs.db
 GitPlugin/bin/*
 Setup/GitExtensions207.zip
