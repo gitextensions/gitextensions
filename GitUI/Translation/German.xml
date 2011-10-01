@@ -23,6 +23,88 @@
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormPull">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Pull</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseSource" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Remote Branch</Value>
+        </TranslationItem>
+        <TranslationItem Name="Pull" Property="Text">
+          <Value>&amp;Pull</Value>
+        </TranslationItem>
+        <TranslationItem Name="Mergetool" Property="Text">
+          <Value>Konflikte lösen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Merge" Property="Text">
+          <Value>Remote Branch in aktuellen Branch &amp;mergen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Rebase" Property="Text">
+          <Value>&amp;Rebase von aktuellen Branch auf Remote Branch durchführen. Folge: lineare Historie (Nur für fortgeschrittene Benutzer empfohlen)</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Merge-Optionen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Fetch" Property="Text">
+          <Value>Nicht mergen, nur die Änderungen vom Remote holen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Stash" Property="Text">
+          <Value>Änderungen stashen</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddRemote" Property="Text">
+          <Value>Remotes verwalten</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox2" Property="Text">
+          <Value>Pull von
+</Value>
+        </TranslationItem>
+        <TranslationItem Name="PullFromUrl" Property="Text">
+          <Value>Url</Value>
+        </TranslationItem>
+        <TranslationItem Name="PullFromRemote" Property="Text">
+          <Value>Remote</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox3" Property="Text">
+          <Value>Branch</Value>
+        </TranslationItem>
+        <TranslationItem Name="AutoStash" Property="Text">
+          <Value>Auto-Stash</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Lokaler Branch</Value>
+        </TranslationItem>
+        <TranslationItem Name="_allMergeConflictSolvedQuestion" Property="Text">
+          <Value>Sind alle Merge-Konflikte behoben? Wollen Sie commiten?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_allMergeConflictSolvedQuestionCaption" Property="Text">
+          <Value>Konflikte gelöst</Value>
+        </TranslationItem>
+        <TranslationItem Name="_applyShashedItemsAgain" Property="Text">
+          <Value>Wollen Sie die gestashten Objekte wieder auf das Arbeitsverzeichnis anwenden?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_applyShashedItemsAgainCaption" Property="Text">
+          <Value>Automatischer Stash</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cannotLoadPutty" Property="Text">
+          <Value>Laden des SSH-Schlüssels fehlgeschlagen. PuTTY ist nicht korrekt konfiguriert.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_fetchAllBranchesCanOnlyWithFetch" Property="Text">
+          <Value>Sie können alle Remote Branches (*) nur holen aber keinen Merge- oder Rebase-Prozess durchführen.
+Wenn Sie alle Remote Branches holen wollen, wählen Sie die dritte Option.
+Wenn Sie einen Branch holen und mergen wollen, wählen Sie einen speziellen Branch aus.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectRemoteRepository" Property="Text">
+          <Value>Bitte wählen Sie ein Remote Repository aus</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectSourceDirectory" Property="Text">
+          <Value>Bitte wählen Sie ein Quellverzeichnis aus</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormInit">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
