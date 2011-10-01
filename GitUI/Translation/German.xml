@@ -720,6 +720,67 @@ Kein Rebase möglich.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormFormatPatch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Patch erzeugen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_currentBranchText" Property="Text">
+          <Value>Aktueller Branch:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noOutputPathEnteredText" Property="Text">
+          <Value>Sie müssen ein Zielverzeichnis angeben.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noEmailEnteredText" Property="Text">
+          <Value>Sie müssen eine E-Mail-Adresse angeben.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noSubjectEnteredText" Property="Text">
+          <Value>Sie müssen einen E-Mail-Text angeben.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_wrongSmtpSettingsText" Property="Text">
+          <Value>Sie müssen einen gültigen SMTP-Server im Einstellungen-Dialog angeben.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_twoRevisionsNeededText" Property="Text">
+          <Value>Sie müssen zwei Revisionen angeben</Value>
+        </TranslationItem>
+        <TranslationItem Name="_twoRevisionsNeededCaption" Property="Text">
+          <Value>Patch Fehler</Value>
+        </TranslationItem>
+        <TranslationItem Name="_sendMailResult" Property="Text">
+          <Value>Senden an:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_sendMailResultFailed" Property="Text">
+          <Value>E-Mail senden fehlgeschlagen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_patchResultCaption" Property="Text">
+          <Value>Patch Resultat</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noGitMailConfigured" Property="Text">
+          <Value>Es ist keine Git E-Mail Adresse im Einstellungen-Dialog eingetragen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="SelectedBranch" Property="Text">
+          <Value>Branch</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="FormatPatch" Property="Text">
+          <Value>Patch(es) erzeugen</Value>
+        </TranslationItem>
+        <TranslationItem Name="SendToMail" Property="Text">
+          <Value>Patches mailen an</Value>
+        </TranslationItem>
+        <TranslationItem Name="SaveToDir" Property="Text">
+          <Value>Patch in Verzeichnis speichern</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Text</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Betreff</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormCommit">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
