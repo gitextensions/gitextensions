@@ -23,6 +23,43 @@
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormInit">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Neues Repository initialisieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Pfad</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Repository-Typ</Value>
+        </TranslationItem>
+        <TranslationItem Name="Central" Property="Text">
+          <Value>Zentrales Repository, kein Arbeitsverzeichnis (--bare --shared=all)</Value>
+        </TranslationItem>
+        <TranslationItem Name="Personal" Property="Text">
+          <Value>Persönliches Repository</Value>
+        </TranslationItem>
+        <TranslationItem Name="Init" Property="Text">
+          <Value>Initialisieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="_chooseDirectory" Property="Text">
+          <Value>Bitte geben Sie ein Verzeichnis an.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_chooseDirectoryNotFile" Property="Text">
+          <Value>Bitte geben Sie ein Verzeichnis und keine Datei an. Ein Repository kann nicht in einer Datei initialisiert werden.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_chooseDirectoryNotFileCaption" Property="Text">
+          <Value>Fehler</Value>
+        </TranslationItem>
+        <TranslationItem Name="_initMsgBoxCaption" Property="Text">
+          <Value>Neues Repository initialisieren</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
   </translationCategories>
   <LanguageCode>de</LanguageCode>
 </Translation>
