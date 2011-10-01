@@ -12,13 +12,40 @@ namespace Gravatar
         static IImageCache cache;
         static object gravatarServiceLock = new object();
 
+        /// <summary>
+        /// Services that gravatar provides in order to provide avatars in
+        /// the absence of a user-uploaded image.
+        /// </summary>
         public enum FallBackService
         {
+            /// <summary>
+            /// Return an HTTP 404 respose.
+            /// </summary>
             None,
+
+            /// <summary>
+            /// Return a cartoon-style silhouette.
+            /// </summary>
             MysteryMan,
+
+            /// <summary>
+            /// Return a generated monster based on the email hash.
+            /// </summary>
             MonsterId,
+
+            /// <summary>
+            /// Return a generated face based on the email hash.
+            /// </summary>
             Wavatar,
+
+            /// <summary>
+            /// Return a geometric pattern based on the email hash.
+            /// </summary>
             Identicon,
+
+            /// <summary>
+            /// Return an 8-bit-style face based on the email hash.
+            /// </summary>
             Retro,
         }
 
