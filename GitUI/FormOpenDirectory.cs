@@ -3,11 +3,18 @@ using System.IO;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class Open : GitExtensionsForm
     {
+        private readonly TranslationString _warningOpenFailed =
+            new TranslationString("Directory does not exist.");
+
+        private readonly TranslationString _warningOpenFailedCaption =
+            new TranslationString("Error");
+
         public Open()
         {
             InitializeComponent();
@@ -44,7 +51,7 @@ namespace GitUI
             }
             else
             {
-                MessageBox.Show("Directory does not exist.", "Error");
+                MessageBox.Show(_warningOpenFailed.Text, _warningOpenFailedCaption.Text);
             }
         }
 
