@@ -859,6 +859,61 @@ Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möc
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="ViewPullRequestsForm">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Pull Requests anzeigen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strFailedToFetchPullData" Property="Text">
+          <Value>Pull-Daten holen fehlgeschlagen!</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strFailedToLoadDiscussionItem" Property="Text">
+          <Value>Senden des Diskussionspunktes fehlgeschlagen!</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strFailedToClosePullRequest" Property="Text">
+          <Value>Schließen des Pull Requests fehlgeschlagen!</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strFailedToLoadDiffData" Property="Text">
+          <Value>Laden der Vergleichsdaten fehlgeschlagen!</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strCouldNotLoadDiscussion" Property="Text">
+          <Value>Laden der Diskussion fehlgeschlagen!</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strError" Property="Text">
+          <Value>Fehler</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strLoading" Property="Text">
+          <Value>: Lade :</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader1" Property="Text">
+          <Value>#</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader2" Property="Text">
+          <Value>Titel</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader3" Property="Text">
+          <Value>Von</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader4" Property="Text">
+          <Value>Datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="_chooseRepo" Property="Text">
+          <Value>Repository wählen:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_fetchBtn" Property="Text">
+          <Value>Holen und Überprüfen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_postComment" Property="Text">
+          <Value>Kommentar senden</Value>
+        </TranslationItem>
+        <TranslationItem Name="_closePullRequestBtn" Property="Text">
+          <Value>Pull Request schließen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_refreshCommentsBtn" Property="Text">
+          <Value>Aktualisieren</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormPull">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
