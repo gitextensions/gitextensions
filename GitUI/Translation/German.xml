@@ -2063,6 +2063,42 @@ Wollen Sie automatisch das Standard Push- und Pull-Verhalten für diesen Remote 
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormCommandlineHelp">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Kommandozeilen Argumente</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Unterstütze Kommandozeilen Argumente:
+
+browse
+add
+addfiles
+apply
+applypatch
+branch
+checkout
+checkoutbranch
+checkoutrevision
+cleanup
+clone [path]
+commit [--quiet]
+filehistory [file]
+formatpatch
+init
+pull [--rebase] [--merge] [--fetch] [--quiet]
+push [--quiet]
+settings
+viewdiff
+rebase [--branch name]
+merge [--branch name]
+cherry
+tag
+stash
+synchronize [--rebase] [--merge] [--fetch] [--quiet]</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormChooseTranslation">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
