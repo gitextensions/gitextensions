@@ -82,9 +82,9 @@
             // AddPattern
             // 
             this.AddPattern.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.AddPattern.Location = new System.Drawing.Point(88, 429);
+            this.AddPattern.Location = new System.Drawing.Point(67, 429);
             this.AddPattern.Name = "AddPattern";
-            this.AddPattern.Size = new System.Drawing.Size(139, 25);
+            this.AddPattern.Size = new System.Drawing.Size(160, 25);
             this.AddPattern.TabIndex = 3;
             this.AddPattern.Text = "Add pattern";
             this.AddPattern.UseVisualStyleBackColor = true;
@@ -93,9 +93,9 @@
             // AddDefault
             // 
             this.AddDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.AddDefault.Location = new System.Drawing.Point(88, 460);
+            this.AddDefault.Location = new System.Drawing.Point(67, 460);
             this.AddDefault.Name = "AddDefault";
-            this.AddDefault.Size = new System.Drawing.Size(139, 25);
+            this.AddDefault.Size = new System.Drawing.Size(160, 25);
             this.AddDefault.TabIndex = 2;
             this.AddDefault.Text = "Add default ignores";
             this.AddDefault.UseVisualStyleBackColor = true;
@@ -104,9 +104,9 @@
             // Save
             // 
             this.Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Save.Location = new System.Drawing.Point(88, 491);
+            this.Save.Location = new System.Drawing.Point(67, 491);
             this.Save.Name = "Save";
-            this.Save.Size = new System.Drawing.Size(139, 25);
+            this.Save.Size = new System.Drawing.Size(160, 25);
             this.Save.TabIndex = 1;
             this.Save.Text = "Save";
             this.Save.UseVisualStyleBackColor = true;
