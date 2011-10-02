@@ -727,6 +727,9 @@ Sie können nicht pushen, solange Sie kein Mitarbeiter des Projektes sind. {2}</
         <TranslationItem Name="aboutToolStripMenuItem" Property="Text">
           <Value>Info</Value>
         </TranslationItem>
+        <TranslationItem Name="_noBranchTitle" Property="Text">
+          <Value>kein Branch</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="Open">
