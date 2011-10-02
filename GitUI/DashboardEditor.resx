@@ -128,13 +128,19 @@
   <data name="_NO_TRANSLATE_Categories.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Bottom, Left, Right</value>
   </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_NO_TRANSLATE_Categories.IntegralHeight" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="_NO_TRANSLATE_Categories.ItemHeight" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
   <data name="_NO_TRANSLATE_Categories.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 23</value>
+    <value>3, 27</value>
   </data>
   <data name="_NO_TRANSLATE_Categories.Size" type="System.Drawing.Size, System.Drawing">
-    <value>153, 225</value>
+    <value>178, 259</value>
   </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="_NO_TRANSLATE_Categories.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
@@ -154,7 +160,7 @@
     <value>3, 3</value>
   </data>
   <data name="CategoriesLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>153, 22</value>
+    <value>178, 25</value>
   </data>
   <data name="CategoriesLabel.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -181,10 +187,10 @@
     <value>GrowAndShrink</value>
   </data>
   <data name="Remove.Location" type="System.Drawing.Point, System.Drawing">
-    <value>82, 253</value>
+    <value>96, 292</value>
   </data>
   <data name="Remove.Size" type="System.Drawing.Size, System.Drawing">
-    <value>74, 25</value>
+    <value>86, 29</value>
   </data>
   <data name="Remove.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -211,10 +217,10 @@
     <value>GrowAndShrink</value>
   </data>
   <data name="Add.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 253</value>
+    <value>7, 292</value>
   </data>
   <data name="Add.Size" type="System.Drawing.Size, System.Drawing">
-    <value>73, 25</value>
+    <value>85, 29</value>
   </data>
   <data name="Add.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -271,10 +277,10 @@
     <value>17, 17</value>
   </metadata>
   <data name="RepositoriesGrid.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 103</value>
+    <value>3, 119</value>
   </data>
   <data name="RepositoriesGrid.Size" type="System.Drawing.Size, System.Drawing">
-    <value>399, 174</value>
+    <value>466, 201</value>
   </data>
   <data name="RepositoriesGrid.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -295,10 +301,10 @@
     <value>True</value>
   </data>
   <data name="RepositoriesType.Location" type="System.Drawing.Point, System.Drawing">
-    <value>108, 54</value>
+    <value>126, 62</value>
   </data>
   <data name="RepositoriesType.Size" type="System.Drawing.Size, System.Drawing">
-    <value>84, 17</value>
+    <value>89, 19</value>
   </data>
   <data name="RepositoriesType.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -322,10 +328,10 @@
     <value>Top, Left, Right</value>
   </data>
   <data name="_NO_TRANSLATE_RssFeed.Location" type="System.Drawing.Point, System.Drawing">
-    <value>108, 77</value>
+    <value>126, 89</value>
   </data>
   <data name="_NO_TRANSLATE_RssFeed.Size" type="System.Drawing.Size, System.Drawing">
-    <value>294, 21</value>
+    <value>343, 23</value>
   </data>
   <data name="_NO_TRANSLATE_RssFeed.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
@@ -346,10 +352,10 @@
     <value>True</value>
   </data>
   <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 85</value>
+    <value>3, 98</value>
   </data>
   <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>51, 13</value>
+    <value>52, 15</value>
   </data>
   <data name="label3.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -373,10 +379,10 @@
     <value>True</value>
   </data>
   <data name="RssFeedType.Location" type="System.Drawing.Point, System.Drawing">
-    <value>108, 31</value>
+    <value>126, 36</value>
   </data>
   <data name="RssFeedType.Size" type="System.Drawing.Size, System.Drawing">
-    <value>71, 17</value>
+    <value>72, 19</value>
   </data>
   <data name="RssFeedType.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -400,10 +406,10 @@
     <value>True</value>
   </data>
   <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>2, 31</value>
+    <value>2, 36</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>31, 13</value>
+    <value>33, 15</value>
   </data>
   <data name="label2.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -427,10 +433,10 @@
     <value>Top, Left, Right</value>
   </data>
   <data name="_NO_TRANSLATE_Caption.Location" type="System.Drawing.Point, System.Drawing">
-    <value>108, 4</value>
+    <value>126, 5</value>
   </data>
   <data name="_NO_TRANSLATE_Caption.Size" type="System.Drawing.Size, System.Drawing">
-    <value>294, 21</value>
+    <value>343, 23</value>
   </data>
   <data name="_NO_TRANSLATE_Caption.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -454,7 +460,7 @@
     <value>3, 3</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 13</value>
+    <value>49, 15</value>
   </data>
   <data name="label1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -487,10 +493,13 @@
     <value>1</value>
   </data>
   <data name="splitContainer2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>568, 281</value>
+    <value>663, 324</value>
   </data>
   <data name="splitContainer2.SplitterDistance" type="System.Int32, mscorlib">
-    <value>159</value>
+    <value>185</value>
+  </data>
+  <data name="splitContainer2.SplitterWidth" type="System.Int32, mscorlib">
+    <value>5</value>
   </data>
   <data name="splitContainer2.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -511,10 +520,10 @@
     <value>True</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
+    <value>7, 15</value>
   </data>
   <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
-    <value>568, 281</value>
+    <value>663, 324</value>
   </data>
   <data name="&gt;&gt;pathDataGridViewTextBoxColumn.Name" xml:space="preserve">
     <value>pathDataGridViewTextBoxColumn</value>
@@ -544,6 +553,6 @@
     <value>DashboardEditor</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>GitUI.GitExtensionsControl, GitUI, Version=2.12.0.0, Culture=neutral, PublicKeyToken=null</value>
+    <value>GitUI.GitExtensionsControl, GitUI, Version=2.25.0.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
 </root>
