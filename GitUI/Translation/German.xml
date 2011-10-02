@@ -952,7 +952,7 @@ Sind Sie sich sicher, dass Sie diesen Branch pushen wollen?</Value>
           <Value>Entfernen</Value>
         </TranslationItem>
         <TranslationItem Name="Add" Property="Text">
-          <Value>Hinzuf�gen</Value>
+          <Value>Hinzufügen</Value>
         </TranslationItem>
         <TranslationItem Name="CategoriesLabel" Property="Text">
           <Value>Kategorien</Value>
@@ -1071,7 +1071,7 @@ der diesen Remote Branch verfolgt?</Value>
     <TranslationCategory Name="FileStatusList">
       <translationItems>
         <TranslationItem Name="NoFiles" Property="Text">
-          <Value>Keine �nderungen</Value>
+          <Value>Keine Änderungen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2633,10 +2633,10 @@ _ReSharper*/</Value>
           <Value>Suchen</Value>
         </TranslationItem>
         <TranslationItem Name="ignoreWhitespaceChangesToolStripMenuItem" Property="Text">
-          <Value>Leerzeichen�nderungen ignorieren</Value>
+          <Value>Leerzeichenänderungen ignorieren</Value>
         </TranslationItem>
         <TranslationItem Name="increaseNumberOfLinesToolStripMenuItem" Property="Text">
-          <Value>Anzahl sichtbarer Zeilen erh�hen</Value>
+          <Value>Anzahl sichtbarer Zeilen erhöhen</Value>
         </TranslationItem>
         <TranslationItem Name="descreaseNumberOfLinesToolStripMenuItem" Property="Text">
           <Value>Anzahl sichtbarer Zeilen verringern</Value>
@@ -2654,13 +2654,13 @@ _ReSharper*/</Value>
           <Value>Patch kopieren</Value>
         </TranslationItem>
         <TranslationItem Name="nextChangeButton" Property="ToolTipText">
-          <Value>N�chste �nderung</Value>
+          <Value>Nächste Änderung</Value>
         </TranslationItem>
         <TranslationItem Name="previousChangeButton" Property="ToolTipText">
-          <Value>Vorherige �nderung</Value>
+          <Value>Vorherige Änderung</Value>
         </TranslationItem>
         <TranslationItem Name="increaseNumberOfLines" Property="ToolTipText">
-          <Value>Anzahl sichtbarer Zeilen erh�hen</Value>
+          <Value>Anzahl sichtbarer Zeilen erhöhen</Value>
         </TranslationItem>
         <TranslationItem Name="DecreaseNumberOfLines" Property="ToolTipText">
           <Value>Anzahl sichtbarer Zeilen verringern</Value>
@@ -2676,6 +2676,34 @@ _ReSharper*/</Value>
         </TranslationItem>
         <TranslationItem Name="ignoreWhiteSpaces" Property="ToolTipText">
           <Value>Leerzeichen ignorieren</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="GravatarControl">
+      <translationItems>
+        <TranslationItem Name="refreshToolStripMenuItem" Property="Text">
+          <Value>Bild aktualisieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="registerAtGravatarcomToolStripMenuItem" Property="Text">
+          <Value>Bei gravatar.com registrieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="clearImagecacheToolStripMenuItem" Property="Text">
+          <Value>Bilder-Cache leeren</Value>
+        </TranslationItem>
+        <TranslationItem Name="imageSizeToolStripMenuItem" Property="Text">
+          <Value>Bildgröße</Value>
+        </TranslationItem>
+        <TranslationItem Name="noImageGeneratorToolStripMenuItem" Property="Text">
+          <Value>Bei Bild nicht verfügbar</Value>
+        </TranslationItem>
+        <TranslationItem Name="identiconToolStripMenuItem" Property="Text">
+          <Value>Identicon</Value>
+        </TranslationItem>
+        <TranslationItem Name="monsterIdToolStripMenuItem" Property="Text">
+          <Value>Monster Id</Value>
+        </TranslationItem>
+        <TranslationItem Name="wavatarToolStripMenuItem" Property="Text">
+          <Value>Wavatar</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2853,6 +2881,188 @@ Wenn Sie einen Branch holen und mergen wollen, wählen Sie einen speziellen Bran
         </TranslationItem>
         <TranslationItem Name="CheckoutAfterCreate" Property="Text">
           <Value>Auschecken nach Erzeugen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="RevisionGrid">
+      <translationItems>
+        <TranslationItem Name="createTagToolStripMenuItem" Property="Text">
+          <Value>Neuen Tag erzeugen</Value>
+        </TranslationItem>
+        <TranslationItem Name="createNewBranchToolStripMenuItem" Property="Text">
+          <Value>Neuen Branch erzeugen</Value>
+        </TranslationItem>
+        <TranslationItem Name="resetCurrentBranchToHereToolStripMenuItem" Property="Text">
+          <Value>Aktuellen Branch hierhin zurücksetzen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Bei diesem Repository sind bisher keine Commits vorhanden.
+
+Wenn dies ein normales Repository ist, werden folgende Schritte empfohlen:
+- Stellen Sie sicher, dass sie eine gültige .gitignore Datei im Repository haben
+- Commiten Sie die Dateien mit Commiten
+
+Wenn dies ein zentralisiertes Repository ist (Ein sogenanntes Bare Repository):
+- Pushen Sie Ihre Änderungen von einem anderen Repository</Value>
+        </TranslationItem>
+        <TranslationItem Name="Commit" Property="Text">
+          <Value>Commiten</Value>
+        </TranslationItem>
+        <TranslationItem Name="GitIgnore" Property="Text">
+          <Value>.gitignore bearbeiten</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowRemoteBranches" Property="Text">
+          <Value>Zeige Remote Branches</Value>
+        </TranslationItem>
+        <TranslationItem Name="showBranchesToolStripMenuItem" Property="Text">
+          <Value>Zeige Branches</Value>
+        </TranslationItem>
+        <TranslationItem Name="revertCommitToolStripMenuItem" Property="Text">
+          <Value>Commit zurücknehmen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Das aktuelle Arbeitsverzeichnis ist kein Git Repository.</Value>
+        </TranslationItem>
+        <TranslationItem Name="filterToolStripMenuItem" Property="Text">
+          <Value>Setze erweiterten Filter</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteTagToolStripMenuItem" Property="Text">
+          <Value>Tag löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
+          <Value>Branch löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="checkoutRevisionToolStripMenuItem" Property="Text">
+          <Value>Revision auschecken</Value>
+        </TranslationItem>
+        <TranslationItem Name="checkoutBranchToolStripMenuItem" Property="Text">
+          <Value>Branch auschecken</Value>
+        </TranslationItem>
+        <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
+          <Value>Mit aktuellen Branch mergen</Value>
+        </TranslationItem>
+        <TranslationItem Name="cherryPickCommitToolStripMenuItem" Property="Text">
+          <Value>Cherry Pick Commiten</Value>
+        </TranslationItem>
+        <TranslationItem Name="rebaseOnToolStripMenuItem" Property="Text">
+          <Value>Rebase durchführen</Value>
+        </TranslationItem>
+        <TranslationItem Name="showAllBranchesToolStripMenuItem" Property="Text">
+          <Value>Zeige alle Branches</Value>
+        </TranslationItem>
+        <TranslationItem Name="showCurrentBranchOnlyToolStripMenuItem" Property="Text">
+          <Value>Zeige nur aktuellen Branch</Value>
+        </TranslationItem>
+        <TranslationItem Name="showFilteredBranchesToolStripMenuItem" Property="Text">
+          <Value>Zeige gefilterte Branches</Value>
+        </TranslationItem>
+        <TranslationItem Name="copyToClipboardToolStripMenuItem" Property="Text">
+          <Value>In Zwischenablage kopieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="branchNameToolStripMenuItem" Property="Text">
+          <Value>Branch Name</Value>
+        </TranslationItem>
+        <TranslationItem Name="tagToolStripMenuItem" Property="Text">
+          <Value>Tag</Value>
+        </TranslationItem>
+        <TranslationItem Name="messageToolStripMenuItem" Property="Text">
+          <Value>Nachricht</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorToolStripMenuItem" Property="Text">
+          <Value>Autor</Value>
+        </TranslationItem>
+        <TranslationItem Name="dateToolStripMenuItem" Property="Text">
+          <Value>Datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="markRevisionAsBadToolStripMenuItem" Property="Text">
+          <Value>Revision als Schlecht markieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="markRevisionAsGoodToolStripMenuItem" Property="Text">
+          <Value>Revision als Gut markieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="stopBisectToolStripMenuItem" Property="Text">
+          <Value>Bisect stoppen</Value>
+        </TranslationItem>
+        <TranslationItem Name="runScriptToolStripMenuItem" Property="Text">
+          <Value>Skript ausführen</Value>
+        </TranslationItem>
+        <TranslationItem Name="InitRepository" Property="Text">
+          <Value>Repository initialisieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="showRevisionGraphToolStripMenuItem" Property="Text">
+          <Value>Zeige Revisionsgraph</Value>
+        </TranslationItem>
+        <TranslationItem Name="drawNonrelativesGrayToolStripMenuItem" Property="Text">
+          <Value>Graphen ohne Bezug grau zeichen</Value>
+        </TranslationItem>
+        <TranslationItem Name="orderRevisionsByDateToolStripMenuItem" Property="Text">
+          <Value>Revision nach Datum sortieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="showAuthorDateToolStripMenuItem" Property="Text">
+          <Value>Zeige Autor Datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="showRelativeDateToolStripMenuItem" Property="Text">
+          <Value>Zeige relatives Datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="showGitNotesToolStripMenuItem" Property="Text">
+          <Value>Zeige Git Kommentare</Value>
+        </TranslationItem>
+        <TranslationItem Name="manipulateCommitToolStripMenuItem" Property="Text">
+          <Value>Commit manipulieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="fixupCommitToolStripMenuItem" Property="Text">
+          <Value>Commit reparieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="squashCommitToolStripMenuItem" Property="Text">
+          <Value>Commit squashen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_authorCaption" Property="Text">
+          <Value>Autor</Value>
+        </TranslationItem>
+        <TranslationItem Name="_authorDateCaption" Property="Text">
+          <Value>Autor Datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="_commitDateCaption" Property="Text">
+          <Value>Commit Datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="_messageCaption" Property="Text">
+          <Value>Nachricht</Value>
+        </TranslationItem>
+        <TranslationItem Name="_currentWorkingDirChanges" Property="Text">
+          <Value>Aktuell nicht commitete Änderungen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_currentIndex" Property="Text">
+          <Value>Commit Index</Value>
+        </TranslationItem>
+        <TranslationItem Name="_secondsAgo" Property="Text">
+          <Value>vor {0} Sekunde(n)</Value>
+        </TranslationItem>
+        <TranslationItem Name="_minutesAgo" Property="Text">
+          <Value>vor {0} Minute(n)</Value>
+        </TranslationItem>
+        <TranslationItem Name="_hourAgo" Property="Text">
+          <Value>vor {0} Stunde</Value>
+        </TranslationItem>
+        <TranslationItem Name="_hoursAgo" Property="Text">
+          <Value>vor {0} Stunden</Value>
+        </TranslationItem>
+        <TranslationItem Name="_dayAgo" Property="Text">
+          <Value>vor {0} Tag</Value>
+        </TranslationItem>
+        <TranslationItem Name="_daysAgo" Property="Text">
+          <Value>vor {0} Tagen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_monthAgo" Property="Text">
+          <Value>vor {0} Monat</Value>
+        </TranslationItem>
+        <TranslationItem Name="_monthsAgo" Property="Text">
+          <Value>vor {0} Monaten</Value>
+        </TranslationItem>
+        <TranslationItem Name="_yearsAgo" Property="Text">
+          <Value>vor {0} Jahr(en)</Value>
+        </TranslationItem>
+        <TranslationItem Name="_revisionFilter" Property="Text">
+          <Value>Filter</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3267,6 +3477,51 @@ cherry
 tag
 stash
 synchronize [--rebase] [--merge] [--fetch] [--quiet]</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="Dashboard">
+      <translationItems>
+        <TranslationItem Name="cloneFork" Property="Text">
+          <Value>Repository {0} klonen</Value>
+        </TranslationItem>
+        <TranslationItem Name="cloneRepository" Property="Text">
+          <Value>Repository klonen</Value>
+        </TranslationItem>
+        <TranslationItem Name="createRepository" Property="Text">
+          <Value>Neues Repository erzeugen</Value>
+        </TranslationItem>
+        <TranslationItem Name="develop" Property="Text">
+          <Value>Weiterentwickeln</Value>
+        </TranslationItem>
+        <TranslationItem Name="donate" Property="Text">
+          <Value>Beitragen</Value>
+        </TranslationItem>
+        <TranslationItem Name="issues" Property="Text">
+          <Value>Issues</Value>
+        </TranslationItem>
+        <TranslationItem Name="openRepository" Property="Text">
+          <Value>Repository öffnen</Value>
+        </TranslationItem>
+        <TranslationItem Name="translate" Property="Text">
+          <Value>Übersetzen</Value>
+        </TranslationItem>
+        <TranslationItem Name="directoryIsNotAValidRepositoryCaption" Property="Text">
+          <Value>Öffnen</Value>
+        </TranslationItem>
+        <TranslationItem Name="directoryIsNotAValidRepository" Property="Text">
+          <Value>Das ausgewählte Objekt ist kein gültiges Git Repository.
+
+Wollen Sie abbrechen und es von den zuletzt verwendeten Repositorys streichen?</Value>
+        </TranslationItem>
+        <TranslationItem Name="RecentRepositories" Property="Title">
+          <Value>Kürzlich geöffnete Repositorys</Value>
+        </TranslationItem>
+        <TranslationItem Name="CommonActions" Property="Title">
+          <Value>Häufig verwendete Aktionen</Value>
+        </TranslationItem>
+        <TranslationItem Name="DonateCategory" Property="Title">
+          <Value>Beitragen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3748,6 +4003,40 @@ Möchten Sie trotzdem fortfahren?</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="CommitInfo">
+      <translationItems>
+        <TranslationItem Name="showContainedInBranchesToolStripMenuItem" Property="Text">
+          <Value>Zeige lokale Branches, die diesen Commit enthalten</Value>
+        </TranslationItem>
+        <TranslationItem Name="showContainedInTagsToolStripMenuItem" Property="Text">
+          <Value>Zeige Tags, die den Commit enthalten</Value>
+        </TranslationItem>
+        <TranslationItem Name="copyCommitInfoToolStripMenuItem" Property="Text">
+          <Value>Kopiere Commit-Info</Value>
+        </TranslationItem>
+        <TranslationItem Name="showContainedInBranchesRemoteToolStripMenuItem" Property="Text">
+          <Value>Zeige Remote Branches, die diesen Commit enthalten</Value>
+        </TranslationItem>
+        <TranslationItem Name="showContainedInBranchesRemoteIfNoLocalToolStripMenuItem" Property="Text">
+          <Value>Zeige Remote Branches nur, wenn kein lokaler Branch diesen Commit enthält</Value>
+        </TranslationItem>
+        <TranslationItem Name="addNoteToolStripMenuItem" Property="Text">
+          <Value>Notiz hinzufügen</Value>
+        </TranslationItem>
+        <TranslationItem Name="containedInBranches" Property="Text">
+          <Value>Enthalten in folgenden Branches:</Value>
+        </TranslationItem>
+        <TranslationItem Name="containedInNoBranch" Property="Text">
+          <Value>In keinem Branch enthalten</Value>
+        </TranslationItem>
+        <TranslationItem Name="containedInTags" Property="Text">
+          <Value>Enthalten in folgenden Tags:</Value>
+        </TranslationItem>
+        <TranslationItem Name="containedInNoTag" Property="Text">
+          <Value>In keinem Tag enthalten</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormInit">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -3785,6 +4074,56 @@ Möchten Sie trotzdem fortfahren?</Value>
         </TranslationItem>
         <TranslationItem Name="_initMsgBoxCaption" Property="Text">
           <Value>Neues Repository initialisieren</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="EditNetSpell">
+      <translationItems>
+        <TranslationItem Name="EmptyLabel" Property="Text">
+          <Value>Nachricht eingeben</Value>
+        </TranslationItem>
+        <TranslationItem Name="translateEntireText" Property="Text">
+          <Value>Übersetze gesamten Text nach {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="translateCurrentWord" Property="Text">
+          <Value>Übersetze '{0}' nach {1}</Value>
+        </TranslationItem>
+        <TranslationItem Name="addToDictionaryText" Property="Text">
+          <Value>Zu Wörterbuch hinzufügen</Value>
+        </TranslationItem>
+        <TranslationItem Name="ignoreWordText" Property="Text">
+          <Value>Wort ignorieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="removeWordText" Property="Text">
+          <Value>Wort entfernen</Value>
+        </TranslationItem>
+        <TranslationItem Name="dictionaryText" Property="Text">
+          <Value>Wörterbuch</Value>
+        </TranslationItem>
+        <TranslationItem Name="markIllFormedLinesText" Property="Text">
+          <Value>Markiere nicht korrekt formatierte Zeilen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="Strings">
+      <translationItems>
+        <TranslationItem Name="dateText" Property="Text">
+          <Value>Datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorText" Property="Text">
+          <Value>Autor</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorDateText" Property="Text">
+          <Value>Autor Datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="committerText" Property="Text">
+          <Value>Commiter</Value>
+        </TranslationItem>
+        <TranslationItem Name="committerDateText" Property="Text">
+          <Value>Commit Datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitHashText" Property="Text">
+          <Value>Commit Hash</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
