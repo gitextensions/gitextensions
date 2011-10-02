@@ -946,6 +946,13 @@ der diesen Remote Branch verfolgt?</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormHotkeys">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Tastenkombinationen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormResolveConflicts">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
