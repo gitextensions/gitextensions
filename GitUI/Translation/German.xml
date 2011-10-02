@@ -1267,6 +1267,9 @@ Wenn Sie einen Branch holen und mergen wollen, wählen Sie einen speziellen Bran
         <TranslationItem Name="$this" Property="Text">
           <Value>Branch erzeugen</Value>
         </TranslationItem>
+        <TranslationItem Name="_noRevisionSelected" Property="Text">
+          <Value>Wählen Sie eine Revision aus worauf der Branch basieren soll.</Value>
+        </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Branch Name</Value>
         </TranslationItem>
