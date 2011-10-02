@@ -643,6 +643,40 @@ Wenn Sie einen Branch holen und mergen wollen, wählen Sie einen speziellen Bran
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormDeleteBranch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Branch löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Branch auswählen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Sie können ein Branch nur löschen wenn er komplett mit HEAD gemergt ist. 
+Wenn Sie einen Branch löschen, können Commits verlorgen gehen, weil nichts 
+mehr auf diese zeigt. Wenn Sie einen nicht vollständig gemergten Branch 
+löschen wollen, können Sie dies mit der Option 'Löschen erzwingen' erreichen.
+</Value>
+        </TranslationItem>
+        <TranslationItem Name="ForceDelete" Property="Text">
+          <Value>Löschen erzwingen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_branchDeleted" Property="Text">
+          <Value>Befehl ausgeführt</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteBranchCaption" Property="Text">
+          <Value>Branch löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteBranchQuestion" Property="Text">
+          <Value>Sind Sie sich sicher, dass Sie diesen Branch löschen möchten?
+Ein Branch zu löschen kann zu gelöschten Commits führen!
+Bitte beachten Sie den Hinweis.</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormTranslate">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
