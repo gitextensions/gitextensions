@@ -987,6 +987,108 @@ Bitte beachten Sie den Hinweis.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormRemotes">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Remote Repositorys</Value>
+        </TranslationItem>
+        <TranslationItem Name="_remoteBranchDataError" Property="Text">
+          <Value>Fehler '{1}' gefunden bei Branch {0}.
+Wert wurde mit leerem Wert ersetzt.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_questionAutoPullBehaviour" Property="Text">
+          <Value>Sie haben ein neues Remote Repository hinzugefügt.
+Wollen Sie automatisch das Standard Push- und Pull-Verhalten für diesen Remote festlegen lassen?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_questionAutoPullBehaviourCaption" Property="Text">
+          <Value>Neuer Remote</Value>
+        </TranslationItem>
+        <TranslationItem Name="_warningValidRemote" Property="Text">
+          <Value>Sie müssen eine gültige Url für diesen Remote angeben</Value>
+        </TranslationItem>
+        <TranslationItem Name="_warningValidRemoteCaption" Property="Text">
+          <Value>Url notwendig</Value>
+        </TranslationItem>
+        <TranslationItem Name="_hintDelete" Property="Text">
+          <Value>Löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_questionDeleteRemote" Property="Text">
+          <Value>Wollen Sie wirklich diesen Remote löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_questionDeleteRemoteCaption" Property="Text">
+          <Value>Löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_sshKeyOpenFilter" Property="Text">
+          <Value>Private Schlüsseldatei (*.ppk)</Value>
+        </TranslationItem>
+        <TranslationItem Name="_sshKeyOpenCaption" Property="Text">
+          <Value>Wähle SSH-Schlüsseldatei</Value>
+        </TranslationItem>
+        <TranslationItem Name="_warningNoKeyEntered" Property="Text">
+          <Value>Keine SSH-Schlüsseldatei angegeben</Value>
+        </TranslationItem>
+        <TranslationItem Name="tabPage1" Property="Text">
+          <Value>Remote Repositorys</Value>
+        </TranslationItem>
+        <TranslationItem Name="tabPage2" Property="Text">
+          <Value>Standard Pull-Verhalten (Holen &amp;&amp; Mergen)</Value>
+        </TranslationItem>
+        <TranslationItem Name="UpdateBranch" Property="Text">
+          <Value>Alle Remote Branch Infos aktualisieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="Prune" Property="Text">
+          <Value>Prune Remote Branches</Value>
+        </TranslationItem>
+        <TranslationItem Name="label6" Property="Text">
+          <Value>Mergen mit (Standard)</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Value>Remote Repository</Value>
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text">
+          <Value>Lokaler Branch</Value>
+        </TranslationItem>
+        <TranslationItem Name="SaveDefaultPushPull" Property="Text">
+          <Value>Speichern</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Details</Value>
+        </TranslationItem>
+        <TranslationItem Name="PuTTYSSH" Property="Text">
+          <Value>PuTTY SSH</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>SSH-Schlüssel laden</Value>
+        </TranslationItem>
+        <TranslationItem Name="TestConnection" Property="Text">
+          <Value>Prüfe Verbindung</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>Private Schlüsseldatei</Value>
+        </TranslationItem>
+        <TranslationItem Name="SshBrowse" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Delete" Property="Text">
+          <Value>Löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="New" Property="Text">
+          <Value>Neu</Value>
+        </TranslationItem>
+        <TranslationItem Name="Save" Property="Text">
+          <Value>Speichern</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Name</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Url</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormRebase">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
