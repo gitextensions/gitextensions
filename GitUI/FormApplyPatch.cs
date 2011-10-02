@@ -1,13 +1,37 @@
 ﻿using System;
-
 using System.Windows.Forms;
 using GitCommands;
 using System.Drawing;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormApplyPatch : GitExtensionsForm
     {
+        #region TranslationStrings
+
+        private readonly TranslationString _conflictResolvedText =
+            new TranslationString("Conflicts resolved");
+        private readonly TranslationString _conflictMergetoolText =
+            new TranslationString("Solve conflicts");
+        private readonly TranslationString _conflictMergetoolText2 =
+            new TranslationString(">Solve conflicts<");
+        private readonly TranslationString _conflictResolvedText2 = 
+            new TranslationString(">Conflicts resolved<");
+
+        private readonly TranslationString _selectPatchFileFilter =
+            new TranslationString("Patch file (*.Patch)");
+        private readonly TranslationString _selectPatchFileCaption =
+            new TranslationString("Select patch file");
+
+        private readonly TranslationString _noFileSelectedText =
+            new TranslationString("Please select a patch to apply");
+
+        private readonly TranslationString _applyPatchMsgBox =
+            new TranslationString("Apply patch");
+                    
+        #endregion
+
         public FormApplyPatch()
         {
             InitializeComponent(); Translate();
@@ -64,14 +88,14 @@ namespace GitUI
 
             SolveMergeconflicts.Visible = GitCommandHelpers.InTheMiddleOfConflictedMerge();
 
-            Resolved.Text = "Conflicts resolved";
-            Mergetool.Text = "Solve conflicts";
+            Resolved.Text = _conflictResolvedText.Text;
+            Mergetool.Text = _conflictMergetoolText.Text;
             ContinuePanel.BackColor = Color.Transparent;
             MergeToolPanel.BackColor = Color.Transparent;
 
             if (GitCommandHelpers.InTheMiddleOfConflictedMerge())
             {
-                Mergetool.Text = ">Solve conflicts<";
+                Mergetool.Text = _conflictMergetoolText2.Text;
                 Mergetool.Focus();
                 AcceptButton = Mergetool;
                 MergeToolPanel.BackColor = Color.Black;
@@ -79,7 +103,7 @@ namespace GitUI
             else
                 if (GitCommandHelpers.InTheMiddleOfPatch())
                 {
-                    Resolved.Text = ">Conflicts resolved<";
+                    Resolved.Text = _conflictResolvedText2.Text;
                     Resolved.Focus();
                     AcceptButton = Resolved;
                     ContinuePanel.BackColor = Color.Black;
@@ -91,9 +115,9 @@ namespace GitUI
         {
             var dialog = new OpenFileDialog
                              {
-                                 Filter = "Patch file (*.Patch)|*.Patch",
+                                 Filter = _selectPatchFileFilter.Text + "|*.Patch",
                                  InitialDirectory = initialDirectory,
-                                 Title = "Select patch file"
+                                 Title = _selectPatchFileCaption.Text
                              };
             return (dialog.ShowDialog() == DialogResult.OK) ? dialog.FileName : PatchFile.Text;
         }
@@ -108,7 +132,7 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(PatchFile.Text) && string.IsNullOrEmpty(PatchDir.Text))
             {
-                MessageBox.Show("Please select a patch to apply");
+                MessageBox.Show(_noFileSelectedText.Text);
                 return;
             }
             Cursor.Current = Cursors.WaitCursor;
@@ -182,7 +206,7 @@ namespace GitUI
         {
             PatchFile.Select();
             RestorePosition("merge-patch");
-            Text = "Apply patch (" + Settings.WorkingDir + ")";
+            Text = _applyPatchMsgBox.Text + " (" + Settings.WorkingDir + ")";
             IgnoreWhitespace.Checked = Settings.ApplyPatchIgnoreWhitespace;
         }
 
