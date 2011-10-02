@@ -861,6 +861,9 @@ Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möc
         <TranslationItem Name="_noOccurrencesFoundString" Property="Text">
           <Value>Keine Übereinstimmung gefunden.</Value>
         </TranslationItem>
+        <TranslationItem Name="_replacedOccurrencesString" Property="Text">
+          <Value>{0} Übereinstimmungen ersetzt.</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormBisect">
