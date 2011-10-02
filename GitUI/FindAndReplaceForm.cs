@@ -6,11 +6,31 @@ using System.IO;
 using System.Windows.Forms;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FindAndReplaceForm : GitExtensionsForm
     {
+        private readonly TranslationString _findAndReplaceString =
+            new TranslationString("Find & replace");
+        private readonly TranslationString _findString =
+            new TranslationString("Find");
+        private readonly TranslationString _selectionOnlyString =
+            new TranslationString("selection only");
+        private readonly TranslationString _textNotFoundString =
+            new TranslationString("Text not found");
+        private readonly TranslationString _noSearchString =
+            new TranslationString("No string specified to look for!");
+        private readonly TranslationString _textNotFoundString2 =
+            new TranslationString("Search text not found.");
+        private readonly TranslationString _notFoundString =
+            new TranslationString("Not found");
+        private readonly TranslationString _noOccurrencesFoundString =
+            new TranslationString("No occurrences found.");
+        private readonly TranslationString _replacedOccurrencesString =
+            new TranslationString("Replaced {0} occurrences.");
+
         private readonly Dictionary<TextEditorControl, HighlightGroup> _highlightGroups =
             new Dictionary<TextEditorControl, HighlightGroup>();
 
@@ -60,11 +80,11 @@ namespace GitUI
 
         private void UpdateTitleBar()
         {
-            string text = ReplaceMode ? "Find & replace" : "Find";
+            string text = ReplaceMode ? _findAndReplaceString.Text : _findString.Text;
             if (_editor != null && _editor.FileName != null)
                 text += " - " + Path.GetFileName(_editor.FileName);
             if (_search.HasScanRegion)
-                text += " (selection only)";
+                text += " (" + _selectionOnlyString.Text + ")";
             Text = text;
         }
 
@@ -102,19 +122,19 @@ namespace GitUI
 
         private void btnFindPrevious_Click(object sender, EventArgs e)
         {
-            FindNext(false, true, "Text not found");
+            FindNext(false, true, _textNotFoundString.Text);
         }
 
         private void btnFindNext_Click(object sender, EventArgs e)
         {
-            FindNext(false, false, "Text not found");
+            FindNext(false, false, _textNotFoundString.Text);
         }
 
         public TextRange FindNext(bool viaF3, bool searchBackward, string messageIfNotFound)
         {
             if (string.IsNullOrEmpty(txtLookFor.Text))
             {
-                MessageBox.Show(this, "No string specified to look for!", "Find", MessageBoxButtons.OK,
+                MessageBox.Show(this, _noSearchString.Text, Text, MessageBoxButtons.OK,
                                 MessageBoxIcon.Information);
                 return null;
             }
@@ -201,7 +221,7 @@ namespace GitUI
                     group.AddMarker(m);
                 }
                 if (count == 0)
-                    MessageBox.Show(this, "Search text not found.", "Not found", MessageBoxButtons.OK,
+                    MessageBox.Show(this, _textNotFoundString2.Text, _notFoundString.Text, MessageBoxButtons.OK,
                                     MessageBoxIcon.Information);
                 else
                     Close();
@@ -235,7 +255,7 @@ namespace GitUI
             SelectionManager sm = _editor.ActiveTextAreaControl.SelectionManager;
             if (string.Equals(sm.SelectedText, txtLookFor.Text, StringComparison.OrdinalIgnoreCase))
                 InsertText(txtReplaceWith.Text);
-            FindNext(false, _lastSearchWasBackward, "Text not found.");
+            FindNext(false, _lastSearchWasBackward, _textNotFoundString.Text);
         }
 
         private void btnReplaceAll_Click(object sender, EventArgs e)
@@ -266,10 +286,10 @@ namespace GitUI
                 _editor.Document.UndoStack.EndUndoGroup();
             }
             if (count == 0)
-                MessageBox.Show("No occurrences found.");
+                MessageBox.Show(_noOccurrencesFoundString.Text);
             else
             {
-                MessageBox.Show(string.Format("Replaced {0} occurrences.", count));
+                MessageBox.Show(string.Format(_replacedOccurrencesString.Text, count));
                 Close();
             }
         }
