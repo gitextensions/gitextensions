@@ -1440,6 +1440,9 @@ Sie in der Git Hilfe nach</Value>
         <TranslationItem Name="goButton" Property="Text">
           <Value>Los</Value>
         </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Commit Ausdruck:</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="AboutBox">
