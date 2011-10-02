@@ -1,54 +1,83 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.IO.IsolatedStorage;
 using System.Net;
-using System.Collections.Generic;
 
 namespace Gravatar
 {
+    /// <summary>
+    /// Services that gravatar provides in order to provide avatars in
+    /// the absence of a user-uploaded image.
+    /// </summary>
+    public enum FallBackService
+    {
+        /// <summary>
+        /// Return an HTTP 404 respose.
+        /// </summary>
+        None,
+
+        /// <summary>
+        /// Return a cartoon-style silhouette.
+        /// </summary>
+        MysteryMan,
+
+        /// <summary>
+        /// Return a generated monster based on the email hash.
+        /// </summary>
+        MonsterId,
+
+        /// <summary>
+        /// Return a generated face based on the email hash.
+        /// </summary>
+        Wavatar,
+
+        /// <summary>
+        /// Return a geometric pattern based on the email hash.
+        /// </summary>
+        Identicon,
+
+        /// <summary>
+        /// Return an 8-bit-style face based on the email hash.
+        /// </summary>
+        Retro,
+    }
+
+    /// <summary>
+    /// Specifies the maximum rating of a given gravatar image request.
+    /// </summary>
+    public enum Rating
+    {
+        /// <summary>
+        /// Suitable for all audiences.
+        /// </summary>
+        G,
+
+        /// <summary>
+        /// May contain rude gestures, provocatively dressed indiviiduals,
+        /// the lesser swear words, or mild violence
+        /// </summary>
+        PG,
+
+        /// <summary>
+        /// May contain such things as harsh profanity, intense violence,
+        /// nudity, or hard drug use.
+        /// </summary>
+        R,
+
+        /// <summary>
+        /// May contain hardcore sexual imagery or extremely disturbing
+        /// violence.
+        /// </summary>
+        X,
+    }
+
     public class GravatarService
     {
         static IImageCache cache;
         static object gravatarServiceLock = new object();
-
-        /// <summary>
-        /// Services that gravatar provides in order to provide avatars in
-        /// the absence of a user-uploaded image.
-        /// </summary>
-        public enum FallBackService
-        {
-            /// <summary>
-            /// Return an HTTP 404 respose.
-            /// </summary>
-            None,
-
-            /// <summary>
-            /// Return a cartoon-style silhouette.
-            /// </summary>
-            MysteryMan,
-
-            /// <summary>
-            /// Return a generated monster based on the email hash.
-            /// </summary>
-            MonsterId,
-
-            /// <summary>
-            /// Return a generated face based on the email hash.
-            /// </summary>
-            Wavatar,
-
-            /// <summary>
-            /// Return a geometric pattern based on the email hash.
-            /// </summary>
-            Identicon,
-
-            /// <summary>
-            /// Return an 8-bit-style face based on the email hash.
-            /// </summary>
-            Retro,
-        }
 
         /// <summary>
         /// Provides a mapping for the image defaults.
@@ -62,35 +91,6 @@ namespace Gravatar
             { FallBackService.Wavatar, "wavatar" },
             { FallBackService.Retro, "retro" },
         };
-
-        /// <summary>
-        /// Specifies the maximum rating of a given gravatar image request.
-        /// </summary>
-        public enum Rating
-        {
-            /// <summary>
-            /// Suitable for all audiences.
-            /// </summary>
-            G,
-
-            /// <summary>
-            /// May contain rude gestures, provocatively dressed indiviiduals,
-            /// the lesser swear words, or mild violence
-            /// </summary>
-            PG,
-
-            /// <summary>
-            /// May contain such things as harsh profanity, intense violence,
-            /// nudity, or hard drug use.
-            /// </summary>
-            R,
-
-            /// <summary>
-            /// May contain hardcore sexual imagery or extremely disturbing
-            /// violence.
-            /// </summary>
-            X,
-        }
 
         public static void ClearImageCache()
         {
