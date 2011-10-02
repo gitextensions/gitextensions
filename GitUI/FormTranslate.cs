@@ -147,92 +147,98 @@ namespace GitUI
 
                 foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
                 {
+                    if ((assembly.FullName.StartsWith("mscorlib", StringComparison.OrdinalIgnoreCase)) ||
+                        (assembly.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase)) ||
+                        (assembly.FullName.StartsWith("ICSharpCode", StringComparison.OrdinalIgnoreCase)) ||
+                        (assembly.FullName.StartsWith("System.", StringComparison.OrdinalIgnoreCase)) ||
+                        (assembly.FullName.StartsWith("vshost", StringComparison.OrdinalIgnoreCase)))
+                    {
+                        continue;
+                    }
                     try
                     {
-                        if (!assembly.FullName.StartsWith("ICSharpCode", StringComparison.OrdinalIgnoreCase))
-                            foreach (Type type in assembly.GetTypes())
-                            {
-                                if (typeof(GitExtensionsControl).IsAssignableFrom(type) ||
-                                    typeof(GitExtensionsForm).IsAssignableFrom(type) ||
-                                    typeof(ITranslate).IsAssignableFrom(type))
-                                {
-                                    object control = null;
+                        foreach (Type type in assembly.GetTypes())
+                        {
+                            if (typeof(GitExtensionsControl).IsAssignableFrom(type) ||
+                                typeof(GitExtensionsForm).IsAssignableFrom(type) ||
+                                typeof(ITranslate).IsAssignableFrom(type))
+                            { // if (typeof)
+                                object control = null;
 
 
-                                    if (type == GetType())
-                                        control = this;
-                                    else
-                                        // try to find parameter less constructor first
-                                        foreach (ConstructorInfo constructor in type.GetConstructors())
-                                        {
-                                            if (constructor.GetParameters().Length == 0)
-                                                control = Activator.CreateInstance(type);
-                                        }
-
-                                    if (control == null && type.GetConstructors().Length > 0)
+                                if (type == GetType())
+                                    control = this;
+                                else
+                                    // try to find parameter less constructor first
+                                    foreach (ConstructorInfo constructor in type.GetConstructors())
                                     {
-                                        ConstructorInfo parameterConstructor = type.GetConstructors()[0];
-                                        var parameters = new List<object>(parameterConstructor.GetParameters().Length);
-                                        for (int i = 0; i < parameterConstructor.GetParameters().Length; i++)
-                                            parameters.Add(null);
-                                        control = parameterConstructor.Invoke(parameters.ToArray());
+                                        if (constructor.GetParameters().Length == 0)
+                                            control = Activator.CreateInstance(type);
                                     }
 
-                                    if (control == null)
+                                if (control == null && type.GetConstructors().Length > 0)
+                                {
+                                    ConstructorInfo parameterConstructor = type.GetConstructors()[0];
+                                    var parameters = new List<object>(parameterConstructor.GetParameters().Length);
+                                    for (int i = 0; i < parameterConstructor.GetParameters().Length; i++)
+                                        parameters.Add(null);
+                                    control = parameterConstructor.Invoke(parameters.ToArray());
+                                }
+
+                                if (control == null)
+                                    continue;
+
+                                string name;
+
+                                if (control is Control)
+                                    name = ((Control)control).Name;
+                                else
+                                    name = control.GetType().Name;
+
+                                if (control is Form && !string.IsNullOrEmpty(name))
+                                {
+                                    if (!translateCategories.Items.Contains(name))
+                                        translateCategories.Items.Add(name);
+
+                                    AddTranslationItem(name, "$this", "Text", ((Form)control).Text);
+                                }
+
+                                foreach (FieldInfo fieldInfo in control.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static))
+                                {
+                                    //Skip controls with a name started with "_NO_TRANSLATE_"
+                                    //this is a naming convention, these are not translated
+                                    if (fieldInfo.Name.StartsWith("_NO_TRANSLATE_"))
                                         continue;
 
-                                    string name;
+                                    var component = fieldInfo.GetValue(control) as Component;
 
-                                    if (control is Control)
-                                        name = ((Control)control).Name;
-                                    else
-                                        name = control.GetType().Name;
-
-                                    if (control is Form && !string.IsNullOrEmpty(name))
+                                    if (component != null)
                                     {
-                                        if (!translateCategories.Items.Contains(name))
-                                            translateCategories.Items.Add(name);
-
-                                        AddTranslationItem(name, "$this", "Text", ((Form)control).Text);
-                                    }
-
-                                    foreach (FieldInfo fieldInfo in control.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance))
-                                    {
-                                        //Skip controls with a name started with "_NO_TRANSLATE_"
-                                        //this is a naming convention, these are not translated
-                                        if (fieldInfo.Name.StartsWith("_NO_TRANSLATE_"))
-                                            continue;
-
-                                        var component = fieldInfo.GetValue(control) as Component;
-
-                                        if (component != null)
+                                        foreach (PropertyInfo propertyInfo in fieldInfo.FieldType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static))
                                         {
-                                            foreach (PropertyInfo propertyInfo in fieldInfo.FieldType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+                                            if (propertyInfo.PropertyType == typeof(string) && ShouldBeTranslated(propertyInfo))
                                             {
-                                                if (propertyInfo.PropertyType == typeof(string) && ShouldBeTranslated(propertyInfo))
+                                                var value = (string)propertyInfo.GetValue(component, null);
+
+                                                //Only translate properties that have a neutral value
+                                                if (!string.IsNullOrEmpty(value))
                                                 {
-                                                    var value = (string)propertyInfo.GetValue(component, null);
-
-                                                    //Only translate properties that have a neutral value
-                                                    if (!string.IsNullOrEmpty(value))
-                                                    {
-                                                        AddTranslationItem(name, fieldInfo.Name, propertyInfo.Name, value);
-                                                    }
+                                                    AddTranslationItem(name, fieldInfo.Name, propertyInfo.Name, value);
                                                 }
-
-                                                /*
-                                                var t = propertyInfo.GetCustomAttributes(true);
-                                                if (t.Length > 0)
-                                                {
-
-                                                }
-                                                */
                                             }
+
+                                            /*
+                                            var t = propertyInfo.GetCustomAttributes(true);
+                                            if (t.Length > 0)
+                                            {
+
+                                            }
+                                            */
                                         }
                                     }
                                 }
                             }
-
+                        }
                     }
                     catch (Exception)
                     {
