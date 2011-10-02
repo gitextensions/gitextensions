@@ -2027,6 +2027,36 @@ Bitte beachten Sie den Hinweis.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormFixHome">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Home</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox8" Property="Text">
+          <Value>Umgebung</Value>
+        </TranslationItem>
+        <TranslationItem Name="otherHomeBrowse" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="otherHome" Property="Text">
+          <Value>Andere</Value>
+        </TranslationItem>
+        <TranslationItem Name="userprofileHome" Property="Text">
+          <Value>Setze HOME in USERPROFILE</Value>
+        </TranslationItem>
+        <TranslationItem Name="defaultHome" Property="Text">
+          <Value>Verwende HOME</Value>
+        </TranslationItem>
+        <TranslationItem Name="label51" Property="Text">
+          <Value>Die globale Git Konfigurationsdatei wird gespeichert in dem unter der Umgebungsvariable %HOME% angegebenen Verzeichnis.
+Standardmäßig wird %HOME% zu %HOMEDRIVE%%HOMEPATH% gesetzt, falls diese leer ist. Ändern Sie die Standardeinstellung
+nur, wenn Sie mit dieser Probleme auftreten.</Value>
+        </TranslationItem>
+        <TranslationItem Name="ok" Property="Text">
+          <Value>Ok</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="ViewPatch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">

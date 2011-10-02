@@ -59,7 +59,7 @@
             // 
             this.otherHomeBrowse.Location = new System.Drawing.Point(618, 100);
             this.otherHomeBrowse.Name = "otherHomeBrowse";
-            this.otherHomeBrowse.Size = new System.Drawing.Size(75, 25);
+            this.otherHomeBrowse.Size = new System.Drawing.Size(100, 25);
             this.otherHomeBrowse.TabIndex = 10;
             this.otherHomeBrowse.Text = "Browse";
             this.otherHomeBrowse.UseVisualStyleBackColor = true;
@@ -69,7 +69,7 @@
             // 
             this.otherHomeDir.Location = new System.Drawing.Point(88, 102);
             this.otherHomeDir.Name = "otherHomeDir";
-            this.otherHomeDir.Size = new System.Drawing.Size(527, 21);
+            this.otherHomeDir.Size = new System.Drawing.Size(527, 23);
             this.otherHomeDir.TabIndex = 4;
             // 
             // otherHome
@@ -77,7 +77,7 @@
             this.otherHome.AutoSize = true;
             this.otherHome.Location = new System.Drawing.Point(11, 103);
             this.otherHome.Name = "otherHome";
-            this.otherHome.Size = new System.Drawing.Size(53, 17);
+            this.otherHome.Size = new System.Drawing.Size(55, 19);
             this.otherHome.TabIndex = 3;
             this.otherHome.TabStop = true;
             this.otherHome.Text = "Other";
@@ -88,7 +88,7 @@
             this.userprofileHome.AutoSize = true;
             this.userprofileHome.Location = new System.Drawing.Point(11, 80);
             this.userprofileHome.Name = "userprofileHome";
-            this.userprofileHome.Size = new System.Drawing.Size(157, 17);
+            this.userprofileHome.Size = new System.Drawing.Size(167, 19);
             this.userprofileHome.TabIndex = 2;
             this.userprofileHome.TabStop = true;
             this.userprofileHome.Text = "Set HOME to USERPROFILE";
@@ -99,7 +99,7 @@
             this.defaultHome.AutoSize = true;
             this.defaultHome.Location = new System.Drawing.Point(11, 57);
             this.defaultHome.Name = "defaultHome";
-            this.defaultHome.Size = new System.Drawing.Size(129, 17);
+            this.defaultHome.Size = new System.Drawing.Size(140, 19);
             this.defaultHome.TabIndex = 1;
             this.defaultHome.TabStop = true;
             this.defaultHome.Text = "Use default for HOME";
@@ -110,7 +110,7 @@
             this.label51.AutoSize = true;
             this.label51.Location = new System.Drawing.Point(8, 19);
             this.label51.Name = "label51";
-            this.label51.Size = new System.Drawing.Size(568, 26);
+            this.label51.Size = new System.Drawing.Size(624, 30);
             this.label51.TabIndex = 0;
             this.label51.Text = resources.GetString("label51.Text");
             // 
@@ -126,7 +126,7 @@
             // 
             // FormFixHome
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(754, 226);
             this.ControlBox = false;
