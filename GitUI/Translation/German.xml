@@ -1988,6 +1988,19 @@ Wollen Sie automatisch das Standard Push- und Pull-Verhalten für diesen Remote 
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormChooseTranslation">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Sprache wählen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Wählen Sie Ihre Sprache</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Sie können die Sprache jederzeit bei den Einstellugen ändern</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormRebase">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
