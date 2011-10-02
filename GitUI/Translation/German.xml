@@ -864,6 +864,19 @@ Sind Sie sich sicher, dass Sie diesen Branch pushen wollen?</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormDashboardCategoryTitle">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Begriff eingeben</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Begriff eingeben</Value>
+        </TranslationItem>
+        <TranslationItem Name="OkButton" Property="Text">
+          <Value>Ok</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormCherryPick">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
