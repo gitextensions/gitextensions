@@ -2,11 +2,15 @@
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormAddSubmodule : GitExtensionsForm
     {
+        private readonly TranslationString _remoteAndLocalPathRequired
+            = new TranslationString("A remote path and local path are required");
+
         public FormAddSubmodule()
         {
             InitializeComponent();
@@ -25,7 +29,7 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(Directory.Text) || string.IsNullOrEmpty(LocalPath.Text))
             {
-                MessageBox.Show("A remote path and local path are required");
+                MessageBox.Show(_remoteAndLocalPathRequired.Text,Text);
                 return;
             }
 
