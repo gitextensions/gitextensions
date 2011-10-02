@@ -179,6 +179,28 @@ ancestor tree.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormAddFiles">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Dateien hinzufügen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Filter" Property="Text">
+          <Value>.</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Filter</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddFiles" Property="Text">
+          <Value>Dateien hinzufügen</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowFiles" Property="Text">
+          <Value>Dateien anzeigen</Value>
+        </TranslationItem>
+        <TranslationItem Name="force" Property="Text">
+          <Value>Erzwingen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="ForkAndCloneForm">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
