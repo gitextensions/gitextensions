@@ -560,6 +560,25 @@ Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möc
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormBisect">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Bisect</Value>
+        </TranslationItem>
+        <TranslationItem Name="Start" Property="Text">
+          <Value>Bisect starten</Value>
+        </TranslationItem>
+        <TranslationItem Name="Good" Property="Text">
+          <Value>Revision als Gut markieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="Bad" Property="Text">
+          <Value>Revision als Schlecht markieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="Stop" Property="Text">
+          <Value>Bisect stoppen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormGoToCommit">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
