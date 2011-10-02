@@ -864,6 +864,13 @@ Sind Sie sich sicher, dass Sie diesen Branch pushen wollen?</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormEdit">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Anzeigen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormDashboardCategoryTitle">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -1182,6 +1189,13 @@ Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möc
         </TranslationItem>
         <TranslationItem Name="fileHistoryToolStripMenuItem" Property="Text">
           <Value>Datei-Historie</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormDiffSmall">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Vergleichen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1785,6 +1799,13 @@ Wenn Sie einen Branch holen und mergen wollen, wählen Sie einen speziellen Bran
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormDashboardEditor">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Startseite</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormCleanupRepository">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -1851,6 +1872,9 @@ Wenn Sie einen Branch holen und mergen wollen, wählen Sie einen speziellen Bran
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Tag auswählen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteTagMessageBoxCaption" Property="Text">
+          <Value>Tag löschen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2286,6 +2310,20 @@ Kein Rebase möglich.</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Betreff</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormDonate">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Spenden</Value>
+        </TranslationItem>
+        <TranslationItem Name="richTextBox1" Property="Text">
+          <Value>Spenden
+
+Sie können das Projekt unterstützen indem Sie einen finanziellen Beitrag dazu leisten. Ihre Zuwendung hilft die laufenden Kosten für die Homepage zu decken und wird in Resourcen investiert, die helfen das Projekt am Leben zu erhalten und weiterzuentwickeln.
+
+Klicken Sie auf die Schaltfläche "Support this project" um mehr Informationen zu erhalten, wie Sie Ihren Beitrag leisten können.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
