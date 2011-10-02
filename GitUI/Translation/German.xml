@@ -501,6 +501,34 @@ Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möc
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormTag">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Taggen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Tag Name</Value>
+        </TranslationItem>
+        <TranslationItem Name="CreateTag" Property="Text">
+          <Value>Tag erzeugen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Nachricht</Value>
+        </TranslationItem>
+        <TranslationItem Name="annotate" Property="Text">
+          <Value>Annotated Tag erzeugen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_messageCaption" Property="Text">
+          <Value>Taggen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noRevisionSelected" Property="Text">
+          <Value>Wählen Sie eine Revision aus, die Sie taggen möchten.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noTagMessage" Property="Text">
+          <Value>Bitte geben Sie eine Tag-Nachricht ein</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormStash">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
