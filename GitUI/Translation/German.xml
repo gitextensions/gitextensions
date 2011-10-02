@@ -1,6 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Translation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <translationCategories>
+    <TranslationCategory Name="FormSubmodules">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Untermodul</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddSubmodule" Property="Text">
+          <Value>Untermodul hinzufügen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label6" Property="Text">
+          <Value>Status</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Name</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Remote Pfad</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Value>Branch</Value>
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text">
+          <Value>Commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>Lokaler Pfad</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Details</Value>
+        </TranslationItem>
+        <TranslationItem Name="SynchronizeSubmodule" Property="Text">
+          <Value>Synchronisieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="InitSubmodule" Property="Text">
+          <Value>Initialisieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="UpdateSubmodule" Property="Text">
+          <Value>Aktualisieren</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormMergeBranch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
