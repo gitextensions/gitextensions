@@ -1206,6 +1206,36 @@ Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möc
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormGitAttributes">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>.gitattributes bearbeiten</Value>
+        </TranslationItem>
+        <TranslationItem Name="noWorkingDir" Property="Text">
+          <Value>Zum Bearbeiten der .gitattributes muss ein Arbeitsverzeichnis vorhanden sein.</Value>
+        </TranslationItem>
+        <TranslationItem Name="Save" Property="Text">
+          <Value>Speichern</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Git Attribute bearbeiten
+Attribute pro Pfad definieren
+
+Beispiele
+Alle jpg-Dateien als Binärdateien kennzeichnen
+*.jpg binary
+
+Alle sln-Dateien als Binärdateien kennzeichen
+*.sln binary
+
+Einzelne Datei als Textdatei kennzeichnen
+bloedezeichen.txt text
+
+Für nähere Informationen schauen
+Sie in der Git Hilfe nach</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormApplyPatch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
