@@ -16,10 +16,10 @@ namespace GitUI
 
         private void FormRevertCommitSmall_Load(object sender, EventArgs e)
         {
-            Commit.Text = string.Format("Commit: {0}", Revision.Guid);
-            Author.Text = string.Format("Author: {0}", Revision.Author);
-            Date.Text = string.Format("Commit date: {0}", Revision.CommitDate);
-            Message.Text = string.Format("Message: {0}", Revision.Message);
+            Commit.Text = string.Format(Commit.Text, Revision.Guid);
+            Author.Text = string.Format(Author.Text, Revision.Author);
+            Date.Text = string.Format(Date.Text, Revision.CommitDate);
+            Message.Text = string.Format(Message.Text, Revision.Message);
         }
 
         private void Revert_Click(object sender, EventArgs e)
