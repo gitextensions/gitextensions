@@ -3,11 +3,15 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormGitIgnore : GitExtensionsForm
     {
+        private readonly TranslationString _gitignoreOnlyInWorkingDirSupported =
+            new TranslationString(".gitignore is only supported when there is a working dir.");
+
         public string GitIgnoreFile;
 
         public FormGitIgnore()
@@ -74,7 +78,7 @@ namespace GitUI
         {
             RestorePosition("edit-git-ignore");
             if (!Settings.IsBareRepository()) return;
-            MessageBox.Show(".gitignore is only supported when there is a working dir.");
+            MessageBox.Show(_gitignoreOnlyInWorkingDirSupported.Text);
             Close();
         }
 

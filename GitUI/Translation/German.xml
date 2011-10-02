@@ -1687,6 +1687,54 @@ Dies wird alle Untermodule rekursiv initialisieren und aktualisieren.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormGitIgnore">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>.gitignore bearbeiten</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Spezifizieren Sie Dateimuster, die Git ignorieren soll.
+
+Beispiel:
+#Windows Thumbnails ignorieren
+Thumbs.db
+#Visual Studio Dateien ignorieren
+*.obj
+*.exe
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+[Bb]in
+[Dd]ebug*/
+*.lib
+*.sbr
+obj/
+[Rr]elease*/
+_ReSharper*/</Value>
+        </TranslationItem>
+        <TranslationItem Name="Save" Property="Text">
+          <Value>Speichern</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddDefault" Property="Text">
+          <Value>Beispiel-Dateien ignorieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddPattern" Property="Text">
+          <Value>Muster ignorieren</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormChangeLog">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
