@@ -914,6 +914,55 @@ Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möc
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="CreatePullRequestForm">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Pull Request erzeugen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strLoading" Property="Text">
+          <Value>Laden...</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strCouldNotLocateARemoteThatBelongsToYourUser" Property="Text">
+          <Value>Konnte keinen Remote finden, der dem Benutzer zugeordnet ist!</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strYouMustSpecifyATitleAndABody" Property="Text">
+          <Value>Sie müssen den Titel und den Text ausfüllen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strPullRequest" Property="Text">
+          <Value>Pull Request</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strFailedToCreatePullRequest" Property="Text">
+          <Value>Fehler beim Erzeugen des Pull Requests.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strDone" Property="Text">
+          <Value>Abgeschlossen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strError" Property="Text">
+          <Value>Fehler</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Titel:</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Text:</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Pull Request Daten</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>Ziel Repository:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_createBtn" Property="Text">
+          <Value>Erzeugen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text">
+          <Value>Ihr Branch:</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Value>Ziel-Branch:</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormPull">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
