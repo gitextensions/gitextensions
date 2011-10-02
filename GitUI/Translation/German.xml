@@ -4,7 +4,7 @@
     <TranslationCategory Name="FormSubmodules">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Untermodul</Value>
+          <Value>Untermodule</Value>
         </TranslationItem>
         <TranslationItem Name="AddSubmodule" Property="Text">
           <Value>Untermodul hinzufügen</Value>
@@ -1326,6 +1326,31 @@ Bitte beachten Sie den Hinweis.</Value>
         </TranslationItem>
         <TranslationItem Name="saveAsText" Property="Text">
           <Value>Speichern als</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormAddSubmodule">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Untermodule hinzufügen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_remoteAndLocalPathRequired" Property="Text">
+          <Value>Sie müssen den Remote und den lokalen Pfad angeben</Value>
+        </TranslationItem>
+        <TranslationItem Name="Add" Property="Text">
+          <Value>Hinzufügen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Pfad zum Untermodul</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Lokaler Pfad</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>Branch</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
