@@ -2262,6 +2262,19 @@ Wenn Sie einen Branch holen und mergen wollen, wählen Sie einen speziellen Bran
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="GitLogForm">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Log</Value>
+        </TranslationItem>
+        <TranslationItem Name="tabPageCommandLog" Property="Text">
+          <Value>Kommando Log</Value>
+        </TranslationItem>
+        <TranslationItem Name="tabPageCommandCache" Property="Text">
+          <Value>Kommando Cache</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormTagSmall">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
