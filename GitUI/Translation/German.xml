@@ -76,6 +76,22 @@ ancestor tree.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormCheckout">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Revision auschecken</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Auschecken</Value>
+        </TranslationItem>
+        <TranslationItem Name="Force" Property="Text">
+          <Value>Auschecken erzwingen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noRevisionSelectedMsgBox" Property="Text">
+          <Value>Wählen Sie eine Revision aus, die Sie auschecken möchten.</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormBranch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
