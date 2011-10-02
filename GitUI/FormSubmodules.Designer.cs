@@ -175,7 +175,7 @@
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.splitContainer4);
-            this.splitContainer3.Size = new System.Drawing.Size(355, 263);
+            this.splitContainer3.Size = new System.Drawing.Size(355, 268);
             this.splitContainer3.SplitterDistance = 228;
             this.splitContainer3.TabIndex = 13;
             // 
@@ -328,21 +328,22 @@
             this.splitContainer4.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.splitContainer4.Location = new System.Drawing.Point(0, 0);
             this.splitContainer4.Name = "splitContainer4";
+
             // 
             // splitContainer4.Panel2
             // 
             this.splitContainer4.Panel2.Controls.Add(this.SynchronizeSubmodule);
             this.splitContainer4.Panel2.Controls.Add(this.InitSubmodule);
             this.splitContainer4.Panel2.Controls.Add(this.UpdateSubmodule);
-            this.splitContainer4.Size = new System.Drawing.Size(355, 31);
-            this.splitContainer4.SplitterDistance = 88;
+            this.splitContainer4.Size = new System.Drawing.Size(380, 31);
+            this.splitContainer4.SplitterDistance = 10;
             this.splitContainer4.TabIndex = 0;
             // 
             // SynchronizeSubmodule
             // 
             this.SynchronizeSubmodule.Location = new System.Drawing.Point(3, 2);
             this.SynchronizeSubmodule.Name = "SynchronizeSubmodule";
-            this.SynchronizeSubmodule.Size = new System.Drawing.Size(100, 25);
+            this.SynchronizeSubmodule.Size = new System.Drawing.Size(115, 25);
             this.SynchronizeSubmodule.TabIndex = 5;
             this.SynchronizeSubmodule.Text = "Synchronize";
             this.SynchronizeSubmodule.UseVisualStyleBackColor = true;
@@ -350,9 +351,9 @@
             // 
             // InitSubmodule
             // 
-            this.InitSubmodule.Location = new System.Drawing.Point(107, 2);
+            this.InitSubmodule.Location = new System.Drawing.Point(122, 2);
             this.InitSubmodule.Name = "InitSubmodule";
-            this.InitSubmodule.Size = new System.Drawing.Size(75, 25);
+            this.InitSubmodule.Size = new System.Drawing.Size(115, 25);
             this.InitSubmodule.TabIndex = 4;
             this.InitSubmodule.Text = "Initialize";
             this.InitSubmodule.UseVisualStyleBackColor = true;
@@ -360,9 +361,9 @@
             // 
             // UpdateSubmodule
             // 
-            this.UpdateSubmodule.Location = new System.Drawing.Point(185, 2);
+            this.UpdateSubmodule.Location = new System.Drawing.Point(241, 2);
             this.UpdateSubmodule.Name = "UpdateSubmodule";
-            this.UpdateSubmodule.Size = new System.Drawing.Size(75, 25);
+            this.UpdateSubmodule.Size = new System.Drawing.Size(115, 25);
             this.UpdateSubmodule.TabIndex = 3;
             this.UpdateSubmodule.Text = "Update";
             this.UpdateSubmodule.UseVisualStyleBackColor = true;
