@@ -2302,6 +2302,40 @@ Wollen Sie automatisch das Standard Push- und Pull-Verhalten für diesen Remote 
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormLoadPuttySshKey">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>PuTTY SSH Schlüssel in Authentifizierungsprogramm laden</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>Laden</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Private Schlüsseldatei</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pageantNotFound" Property="Text">
+          <Value>Laden von SSH Schlüssel fehlgeschlagen. PuTTY ist nicht korrekt eingerichtet.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pageantNotFoundCaption" Property="Text">
+          <Value>PuTTY</Value>
+        </TranslationItem>
+        <TranslationItem Name="_loadKeyFailed" Property="Text">
+          <Value>Schlüssel laden fehlgeschlagen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_loadKeyFailedCaption" Property="Text">
+          <Value>PuTTY</Value>
+        </TranslationItem>
+        <TranslationItem Name="_browsePrivateKeyFilter" Property="Text">
+          <Value>Privater Schlüssel</Value>
+        </TranslationItem>
+        <TranslationItem Name="_browsePrivateKeyCaption" Property="Text">
+          <Value>Wählen sie den privaten SSH Schlüssel aus</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormCommandlineHelp">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
