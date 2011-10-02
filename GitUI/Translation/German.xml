@@ -236,6 +236,34 @@ Sind Sie sich sicher, dass Sie diesen Branch pushen wollen?</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormCherryPick">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Cherry Pick</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Wählen Sie für den Cherry Pick einen Commit aus. Der Commit wird nocheinmal commitet.</Value>
+        </TranslationItem>
+        <TranslationItem Name="CherryPick" Property="Text">
+          <Value>Cherry Pick</Value>
+        </TranslationItem>
+        <TranslationItem Name="AutoCommit" Property="Text">
+          <Value>Automatisch einen Commit erzeugen, wenn keine Merge-Konflikte vorliegen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noRevisionSelectedMsgBox" Property="Text">
+          <Value>Wählen Sie eine Revision aus für den Cherry Pick</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noRevisionSelectedMsgBoxCaption" Property="Text">
+          <Value>Cherry Pick</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cmdExecutedMsgBox" Property="Text">
+          <Value>Kommando ausgeführt</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cmdExecutedMsgBoxCaption" Property="Text">
+          <Value>Cherry Pick</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormCheckoutBranch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
