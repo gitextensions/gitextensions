@@ -1262,6 +1262,22 @@ Wenn Sie einen Branch holen und mergen wollen, wählen Sie einen speziellen Bran
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormBranchSmall">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Branch erzeugen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Branch Name</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Branch erzeugen</Value>
+        </TranslationItem>
+        <TranslationItem Name="CheckoutAfterCreate" Property="Text">
+          <Value>Auschecken nach Erzeugen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormDeleteTag">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
