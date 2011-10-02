@@ -130,6 +130,9 @@ ancestor tree.</Value>
         <TranslationItem Name="_noRevisionSelectedMsgBox" Property="Text">
           <Value>Wählen Sie eine Revision aus, die Sie auschecken möchten.</Value>
         </TranslationItem>
+        <TranslationItem Name="_noRevisionSelectedMsgBoxCaption" Property="Text">
+          <Value>Checkout</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormBranch">
@@ -1496,6 +1499,13 @@ Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen vo
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Datei Historie</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormChangeLog">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Changelog</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
