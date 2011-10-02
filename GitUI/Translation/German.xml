@@ -630,6 +630,55 @@ Wenn Sie einen Branch holen und mergen wollen, wählen Sie einen speziellen Bran
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormTranslate">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Übersetzen</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveAs" Property="ToolTipText">
+          <Value>Übersetzung speichern</Value>
+        </TranslationItem>
+        <TranslationItem Name="previousButton" Property="Text">
+          <Value>Vorheriger Text</Value>
+        </TranslationItem>
+        <TranslationItem Name="nextButton" Property="Text">
+          <Value>Nächster Text</Value>
+        </TranslationItem>
+        <TranslationItem Name="googleTranslate" Property="Text">
+          <Value>Google Übersetzung</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripTranslationLabel" Property="Text">
+          <Value>Gewählte Übersetzung:</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripTranslationLanguageCode" Property="Text">
+          <Value>Ländercode:</Value>
+        </TranslationItem>
+        <TranslationItem Name="googleAll" Property="Text">
+          <Value>Alle Leeren googlen</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButtonNew" Property="Text">
+          <Value>Neu</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButtonNew" Property="ToolTipText">
+          <Value>Neue Übersetzung erzeugen</Value>
+        </TranslationItem>
+        <TranslationItem Name="translateProgressText" Property="Text">
+          <Value>{0} von {1} übersetzt</Value>
+        </TranslationItem>
+        <TranslationItem Name="allText" Property="Text">
+          <Value>Alle</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveCurrentChangesText" Property="Text">
+          <Value>Wollen Sie die Änderungen speichern?</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveCurrentChangesCaption" Property="Text">
+          <Value>Änderungen speichern</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveAsText" Property="Text">
+          <Value>Speichern als</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="ViewPatch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
