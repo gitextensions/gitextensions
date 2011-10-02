@@ -1693,11 +1693,13 @@ Dies wird alle Untermodule rekursiv initialisieren und aktualisieren.</Value>
           <Value>.gitignore bearbeiten</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
-          <Value>Spezifizieren Sie Dateimuster, die Git ignorieren soll.
+          <Value>Geben Sie Dateimuster an,
+die Git ignorieren soll.
 
 Beispiel:
 #Windows Thumbnails ignorieren
 Thumbs.db
+
 #Visual Studio Dateien ignorieren
 *.obj
 *.exe
@@ -1732,6 +1734,9 @@ _ReSharper*/</Value>
         </TranslationItem>
         <TranslationItem Name="AddPattern" Property="Text">
           <Value>Muster ignorieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="_gitignoreOnlyInWorkingDirSupported" Property="Text">
+          <Value>.gitignore wird nur unterstützt wenn ein Arbeitsverzeichnis vorhanden ist.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
