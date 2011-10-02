@@ -1808,6 +1808,31 @@ Wenn Sie einen Branch holen und mergen wollen, wählen Sie einen speziellen Bran
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormFileHistory">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Datei-Historie</Value>
+        </TranslationItem>
+        <TranslationItem Name="ViewTab" Property="Text">
+          <Value>Anzeigen</Value>
+        </TranslationItem>
+        <TranslationItem Name="DiffTab" Property="Text">
+          <Value>Vergleichen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Blame" Property="Text">
+          <Value>Blame</Value>
+        </TranslationItem>
+        <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
+          <Value>Öffnen mit Vergleichswerkzeug</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveAsToolStripMenuItem" Property="Text">
+          <Value>Speichern als</Value>
+        </TranslationItem>
+        <TranslationItem Name="followFileHistoryToolStripMenuItem" Property="Text">
+          <Value>Umbenennungen erkennen und verfolgen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormDiff">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
