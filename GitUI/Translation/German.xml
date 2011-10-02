@@ -2319,6 +2319,9 @@ Dies wird alle Untermodule rekursiv initialisieren und aktualisieren.</Value>
         <TranslationItem Name="$this" Property="Text">
           <Value>Datei(en) zu .gitignore hinzufügen</Value>
         </TranslationItem>
+        <TranslationItem Name="_matchingFilesString" Property="Text">
+          <Value>{0} Datei(en) stimmen überein</Value>
+        </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Value>Vorschau</Value>
         </TranslationItem>
