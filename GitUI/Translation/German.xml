@@ -407,7 +407,7 @@ Sie können nicht pushen, solange Sie kein Mitarbeiter des Projektes sind. {2}</
           <Value>Push</Value>
         </TranslationItem>
         <TranslationItem Name="CommitInfo" Property="Text">
-          <Value>Commiten</Value>
+          <Value>Commit</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripLabel2" Property="Text">
           <Value>Filter:</Value>
