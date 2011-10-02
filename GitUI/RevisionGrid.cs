@@ -4,20 +4,21 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
-using GitUI.Tag;
-using ResourceManager.Translation;
-using System.Text.RegularExpressions;
 using GitUI.Hotkey;
 using GitUI.Script;
+using GitUI.Tag;
+using Gravatar;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public enum RevisionGridLayout
     {
-        FilledBranchesSmall = 1, 
+        FilledBranchesSmall = 1,
         FilledBranchesSmallWithGraph = 2,
         Small = 3,
         SmallWithGraph = 4,
@@ -76,7 +77,7 @@ namespace GitUI
 
             NormalFont = SystemFonts.DefaultFont;
             Loading.Paint += Loading_Paint;
-            
+
             Revisions.CellPainting += RevisionsCellPainting;
             Revisions.KeyDown += RevisionsKeyDown;
 
@@ -957,7 +958,7 @@ namespace GitUI
 
             Brush foreBrush = new SolidBrush(foreColor);
             var rowFont = revision.Guid == CurrentCheckout /*&& !showRevisionCards*/ ? HeadFont : NormalFont;
-            
+
             switch (column)
             {
                 case 1: //Description!!
@@ -996,13 +997,13 @@ namespace GitUI
                         {
                             heads.Sort(new Comparison<GitHead>(
                                            (left, right) =>
-                                               {
-                                                   if (left.IsTag != right.IsTag)
-                                                       return right.IsTag.CompareTo(left.IsTag);
-                                                   if (left.IsRemote != right.IsRemote)
-                                                       return left.IsRemote.CompareTo(right.IsRemote);
-                                                   return left.Name.CompareTo(right.Name);
-                                               }));
+                                           {
+                                               if (left.IsTag != right.IsTag)
+                                                   return right.IsTag.CompareTo(left.IsTag);
+                                               if (left.IsRemote != right.IsRemote)
+                                                   return left.IsRemote.CompareTo(right.IsRemote);
+                                               return left.Name.CompareTo(right.Name);
+                                           }));
 
                             foreach (var head in heads)
                             {
@@ -1010,15 +1011,15 @@ namespace GitUI
                                     continue;
 
                                 Font refsFont;
-                              
+
                                 if (IsFilledBranchesLayout())
                                 {
                                     //refsFont = head.Selected ? rowFont : new Font(rowFont, FontStyle.Regular);
                                     refsFont = rowFont;
 
-//                                    refsFont = head.Selected
-//                                        ? new Font(rowFont, rowFont.Style | FontStyle.Italic)
-//                                        : rowFont;
+                                    //refsFont = head.Selected
+                                    //    ? new Font(rowFont, rowFont.Style | FontStyle.Italic)
+                                    //    : rowFont;
                                 }
                                 else
                                 {
@@ -1068,7 +1069,7 @@ namespace GitUI
                                                                                head.SelectedHeadMergeSource);
 
                                         offset += extraOffset;
-                                        headBounds.Offset((int) (extraOffset + 1), 0);
+                                        headBounds.Offset((int)(extraOffset + 1), 0);
                                     }
 
                                     DrawColumnText(e.Graphics, headName, refsFont, headColor, headBounds);
@@ -1091,12 +1092,12 @@ namespace GitUI
                             int gravatarLeft = e.CellBounds.Left + baseOffset + 2;
 
 
-                            Image gravatar = Gravatar.GravatarService.GetImageFromCache(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, Settings.AuthorImageCacheDays, gravatarSize, Settings.ApplicationDataPath + "Images\\", Gravatar.GravatarService.FallBackService.MonsterId);
+                            Image gravatar = Gravatar.GravatarService.GetImageFromCache(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, Settings.AuthorImageCacheDays, gravatarSize, Settings.ApplicationDataPath + "Images\\", FallBackService.MonsterId);
 
                             if (gravatar == null && !string.IsNullOrEmpty(revision.AuthorEmail))
                             {
                                 ThreadPool.QueueUserWorkItem(o =>
-                                        Gravatar.GravatarService.LoadCachedImage(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, null, Settings.AuthorImageCacheDays, gravatarSize, Settings.ApplicationDataPath + "Images\\", RefreshGravatar, Gravatar.GravatarService.FallBackService.MonsterId));
+                                        Gravatar.GravatarService.LoadCachedImage(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, null, Settings.AuthorImageCacheDays, gravatarSize, Settings.ApplicationDataPath + "Images\\", RefreshGravatar, FallBackService.MonsterId));
                             }
 
                             if (gravatar != null)
@@ -1173,7 +1174,7 @@ namespace GitUI
             return result < value ? result + 2 : result;
         }
 
-        private float DrawHeadBackground(bool isSelected, Graphics graphics, Color color, 
+        private float DrawHeadBackground(bool isSelected, Graphics graphics, Color color,
             float x, float y, float width, float height, float radius, bool isCurrentBranch,
             bool isCurentBranchMergeSource)
         {
@@ -1197,7 +1198,7 @@ namespace GitUI
 
                     var fillBrush = new LinearGradientBrush(new RectangleF(x, y, width, height), fillColor,
                                                             Lerp(fillColor, Color.White, 0.9F), 90);
-                    
+
                     // fore rectangle
                     graphics.FillPath(fillBrush, forePath);
                     // frame
