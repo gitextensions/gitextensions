@@ -946,6 +946,31 @@ Sind Sie sich sicher, dass Sie diesen Branch pushen wollen?</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="DashboardEditor">
+      <translationItems>
+        <TranslationItem Name="Remove" Property="Text">
+          <Value>Entfernen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Add" Property="Text">
+          <Value>Hinzufügen</Value>
+        </TranslationItem>
+        <TranslationItem Name="CategoriesLabel" Property="Text">
+          <Value>Kategorien</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Typ</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>RSS Feed</Value>
+        </TranslationItem>
+        <TranslationItem Name="RssFeedType" Property="Text">
+          <Value>RSS Feed</Value>
+        </TranslationItem>
+        <TranslationItem Name="RepositoriesType" Property="Text">
+          <Value>Repositorys</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormPluginSettings">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -1040,6 +1065,13 @@ der diesen Remote Branch verfolgt?</Value>
         </TranslationItem>
         <TranslationItem Name="Force" Property="Text">
           <Value>Auschecken erzwingen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FileStatusList">
+      <translationItems>
+        <TranslationItem Name="NoFiles" Property="Text">
+          <Value>Keine Änderungen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1310,6 +1342,22 @@ WÃ¤hlen Sie, ob Sie die Datei lÃ¶schen oder die geÃ¤nderte Version behalten mÃ¶c
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Commit Anzahl</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="DashboardCategory">
+      <translationItems>
+        <TranslationItem Name="moveUpToolStripMenuItem" Property="Text">
+          <Value>Hoch</Value>
+        </TranslationItem>
+        <TranslationItem Name="moveDownToolStripMenuItem" Property="Text">
+          <Value>Runter</Value>
+        </TranslationItem>
+        <TranslationItem Name="removeToolStripMenuItem" Property="Text">
+          <Value>Entfernen</Value>
+        </TranslationItem>
+        <TranslationItem Name="editToolStripMenuItem" Property="Text">
+          <Value>Bearbeiten</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2098,6 +2146,13 @@ bei der Benutzung auftreten.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FileViewerWindows">
+      <translationItems>
+        <TranslationItem Name="_findAndReplaceForm" Property="Text">
+          <Value>Suchen und Ersetzen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormGoToCommit">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -2569,6 +2624,58 @@ _ReSharper*/</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripSaveButton" Property="ToolTipText">
           <Value>Speichern</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FileViewer">
+      <translationItems>
+        <TranslationItem Name="findToolStripMenuItem" Property="Text">
+          <Value>Suchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="ignoreWhitespaceChangesToolStripMenuItem" Property="Text">
+          <Value>Leerzeichenänderungen ignorieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="increaseNumberOfLinesToolStripMenuItem" Property="Text">
+          <Value>Anzahl sichtbarer Zeilen erhöhen</Value>
+        </TranslationItem>
+        <TranslationItem Name="descreaseNumberOfLinesToolStripMenuItem" Property="Text">
+          <Value>Anzahl sichtbarer Zeilen verringern</Value>
+        </TranslationItem>
+        <TranslationItem Name="showEntireFileToolStripMenuItem" Property="Text">
+          <Value>Zeige gesamte Datei</Value>
+        </TranslationItem>
+        <TranslationItem Name="treatAllFilesAsTextToolStripMenuItem" Property="Text">
+          <Value>Alle Dateien als Textdateien behandeln</Value>
+        </TranslationItem>
+        <TranslationItem Name="copyToolStripMenuItem" Property="Text">
+          <Value>Kopieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="copyPatchToolStripMenuItem" Property="Text">
+          <Value>Patch kopieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="nextChangeButton" Property="ToolTipText">
+          <Value>Nächste Änderung</Value>
+        </TranslationItem>
+        <TranslationItem Name="previousChangeButton" Property="ToolTipText">
+          <Value>Vorherige Änderung</Value>
+        </TranslationItem>
+        <TranslationItem Name="increaseNumberOfLines" Property="ToolTipText">
+          <Value>Anzahl sichtbarer Zeilen erhöhen</Value>
+        </TranslationItem>
+        <TranslationItem Name="DecreaseNumberOfLines" Property="ToolTipText">
+          <Value>Anzahl sichtbarer Zeilen verringern</Value>
+        </TranslationItem>
+        <TranslationItem Name="showEntireFileButton" Property="ToolTipText">
+          <Value>Zeige gesamte Datei</Value>
+        </TranslationItem>
+        <TranslationItem Name="showNonPrintChars" Property="ToolTipText">
+          <Value>Zeige nicht-anzeigbare Zeichen</Value>
+        </TranslationItem>
+        <TranslationItem Name="showNonprintableCharactersToolStripMenuItem" Property="Text">
+          <Value>Zeige nicht-anzeigbare Zeichen</Value>
+        </TranslationItem>
+        <TranslationItem Name="ignoreWhiteSpaces" Property="ToolTipText">
+          <Value>Leerzeichen ignorieren</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
