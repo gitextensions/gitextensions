@@ -33,7 +33,6 @@
             this.noMatchPanel = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.NumMatches = new System.Windows.Forms.Label();
             this.Preview = new System.Windows.Forms.ListBox();
             this.AddToIngore = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -47,7 +46,6 @@
             // 
             this.groupBox1.Controls.Add(this.filesWillBeIgnored);
             this.groupBox1.Controls.Add(this.noMatchPanel);
-            this.groupBox1.Controls.Add(this.NumMatches);
             this.groupBox1.Controls.Add(this.Preview);
             this.groupBox1.Location = new System.Drawing.Point(15, 55);
             this.groupBox1.Name = "groupBox1";
@@ -61,11 +59,10 @@
             // 
             this.filesWillBeIgnored.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.filesWillBeIgnored.AutoSize = true;
-            this.filesWillBeIgnored.Location = new System.Drawing.Point(452, 214);
+            this.filesWillBeIgnored.Location = new System.Drawing.Point(449, 211);
             this.filesWillBeIgnored.Name = "filesWillBeIgnored";
-            this.filesWillBeIgnored.Size = new System.Drawing.Size(78, 13);
+            this.filesWillBeIgnored.Size = new System.Drawing.Size(0, 15);
             this.filesWillBeIgnored.TabIndex = 11;
-            this.filesWillBeIgnored.Text = "file(s) matched";
             // 
             // noMatchPanel
             // 
@@ -99,24 +96,14 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
-            // NumMatches
-            // 
-            this.NumMatches.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.NumMatches.AutoSize = true;
-            this.NumMatches.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NumMatches.Location = new System.Drawing.Point(439, 214);
-            this.NumMatches.Name = "NumMatches";
-            this.NumMatches.Size = new System.Drawing.Size(14, 15);
-            this.NumMatches.TabIndex = 10;
-            this.NumMatches.Text = "0";
-            // 
             // Preview
             // 
             this.Preview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Preview.FormattingEnabled = true;
-            this.Preview.Location = new System.Drawing.Point(12, 21);
+            this.Preview.ItemHeight = 15;
+            this.Preview.Location = new System.Drawing.Point(12, 24);
             this.Preview.Name = "Preview";
-            this.Preview.Size = new System.Drawing.Size(528, 187);
+            this.Preview.Size = new System.Drawing.Size(528, 184);
             this.Preview.TabIndex = 1;
             // 
             // AddToIngore
@@ -134,7 +121,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 19);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(148, 13);
+            this.label1.Size = new System.Drawing.Size(157, 15);
             this.label1.TabIndex = 5;
             this.label1.Text = "Enter a file pattern to ignore:";
             // 
@@ -142,7 +129,7 @@
             // 
             this.FilePattern.Location = new System.Drawing.Point(266, 16);
             this.FilePattern.Name = "FilePattern";
-            this.FilePattern.Size = new System.Drawing.Size(202, 21);
+            this.FilePattern.Size = new System.Drawing.Size(202, 23);
             this.FilePattern.TabIndex = 6;
             this.FilePattern.TextChanged += new System.EventHandler(this.FilePattern_TextChanged);
             // 
@@ -181,7 +168,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label filesWillBeIgnored;
-        private System.Windows.Forms.Label NumMatches;
 
     }
 }

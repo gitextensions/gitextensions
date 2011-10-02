@@ -1003,6 +1003,28 @@ Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen vo
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormAddToGitIgnore">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Datei(en) zu .gitignore hinzufügen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_matchingFilesString" Property="Text">
+          <Value>{0} Datei(en) stimmen überein</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Vorschau</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddToIngore" Property="Text">
+          <Value>Ignorieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Geben Sie das zu ignorierende Dateimuster an:</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Keine Dateien, die zum Muster passen.</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="ViewPullRequestsForm">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
