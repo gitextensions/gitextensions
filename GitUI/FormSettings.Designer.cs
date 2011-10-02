@@ -95,6 +95,8 @@ namespace GitUI
             this.BrowseGitPath = new System.Windows.Forms.Button();
             this.GitBinPath = new System.Windows.Forms.TextBox();
             this.TabPageGitExtensions = new System.Windows.Forms.TabPage();
+            this.label58 = new System.Windows.Forms.Label();
+            this.focusControlOnHover = new System.Windows.Forms.CheckBox();
             this.truncatePathMethod = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_truncatePathMethod = new System.Windows.Forms.ComboBox();
             this.label37 = new System.Windows.Forms.Label();
@@ -283,8 +285,6 @@ namespace GitUI
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             this.diffFontDialog = new System.Windows.Forms.FontDialog();
-            this.label58 = new System.Windows.Forms.Label();
-            this.focusControlOnHover = new System.Windows.Forms.CheckBox();
             this.LocalSettings.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
@@ -352,8 +352,8 @@ namespace GitUI
             // 
             // groupBox10
             // 
-            this.groupBox10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox10.Controls.Add(this.localAutoCrlfFalse);
             this.groupBox10.Controls.Add(this.localAutoCrlfInput);
             this.groupBox10.Controls.Add(this.localAutoCrlfTrue);
@@ -384,7 +384,7 @@ namespace GitUI
             this.localAutoCrlfInput.TabIndex = 1;
             this.localAutoCrlfInput.TabStop = true;
             this.localAutoCrlfInput.Text = "Checkout as-is, commit Unix-style line endings (\"core.autocrlf\"  is set to \"input" +
-                "\")";
+    "\")";
             this.localAutoCrlfInput.UseVisualStyleBackColor = true;
             // 
             // localAutoCrlfTrue
@@ -396,7 +396,7 @@ namespace GitUI
             this.localAutoCrlfTrue.TabIndex = 0;
             this.localAutoCrlfTrue.TabStop = true;
             this.localAutoCrlfTrue.Text = "Checkout Windows-style, commit Unix-style line endings (\"core.autocrlf\"  is set t" +
-                "o \"true\")";
+    "o \"true\")";
             this.localAutoCrlfTrue.UseVisualStyleBackColor = true;
             // 
             // label30
@@ -428,7 +428,7 @@ namespace GitUI
             this.label21.Size = new System.Drawing.Size(180, 39);
             this.label21.TabIndex = 19;
             this.label21.Text = "You need to set the correct path to \r\ngit before you can change\r\nlocal settings.\r" +
-                "\n";
+    "\n";
             // 
             // pictureBox3
             // 
@@ -459,7 +459,7 @@ namespace GitUI
             this.label20.Size = new System.Drawing.Size(152, 54);
             this.label20.TabIndex = 11;
             this.label20.Text = "You only need local settings\r\nif you want to override the \r\nglobal settings for t" +
-                "he current\r\nrepository.";
+    "he current\r\nrepository.";
             // 
             // MergeTool
             // 
@@ -717,8 +717,8 @@ namespace GitUI
             // 
             // translationConfig
             // 
-            this.translationConfig.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.translationConfig.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.translationConfig.BackColor = System.Drawing.Color.Gray;
             this.translationConfig.Cursor = System.Windows.Forms.Cursors.Hand;
             this.translationConfig.FlatAppearance.BorderSize = 0;
@@ -735,8 +735,8 @@ namespace GitUI
             // 
             // DiffTool2
             // 
-            this.DiffTool2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.DiffTool2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.DiffTool2.BackColor = System.Drawing.Color.Gray;
             this.DiffTool2.Cursor = System.Windows.Forms.Cursors.Hand;
             this.DiffTool2.FlatAppearance.BorderSize = 0;
@@ -753,8 +753,8 @@ namespace GitUI
             // 
             // SshConfig
             // 
-            this.SshConfig.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.SshConfig.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.SshConfig.BackColor = System.Drawing.Color.Gray;
             this.SshConfig.Cursor = System.Windows.Forms.Cursors.Hand;
             this.SshConfig.FlatAppearance.BorderSize = 0;
@@ -771,8 +771,8 @@ namespace GitUI
             // 
             // GitBinFound
             // 
-            this.GitBinFound.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.GitBinFound.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.GitBinFound.BackColor = System.Drawing.Color.Gray;
             this.GitBinFound.Cursor = System.Windows.Forms.Cursors.Hand;
             this.GitBinFound.FlatAppearance.BorderSize = 0;
@@ -818,12 +818,12 @@ namespace GitUI
             this.label11.Size = new System.Drawing.Size(442, 13);
             this.label11.TabIndex = 6;
             this.label11.Text = "The checklist below validates the basic settings needed for GitExtensions to work" +
-                " properly.";
+    " properly.";
             // 
             // GitFound
             // 
-            this.GitFound.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.GitFound.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.GitFound.BackColor = System.Drawing.Color.Gray;
             this.GitFound.Cursor = System.Windows.Forms.Cursors.Hand;
             this.GitFound.FlatAppearance.BorderSize = 0;
@@ -840,8 +840,8 @@ namespace GitUI
             // 
             // DiffTool
             // 
-            this.DiffTool.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.DiffTool.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.DiffTool.BackColor = System.Drawing.Color.Gray;
             this.DiffTool.Cursor = System.Windows.Forms.Cursors.Hand;
             this.DiffTool.FlatAppearance.BorderSize = 0;
@@ -858,8 +858,8 @@ namespace GitUI
             // 
             // UserNameSet
             // 
-            this.UserNameSet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.UserNameSet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.UserNameSet.BackColor = System.Drawing.Color.Gray;
             this.UserNameSet.Cursor = System.Windows.Forms.Cursors.Hand;
             this.UserNameSet.FlatAppearance.BorderSize = 0;
@@ -876,8 +876,8 @@ namespace GitUI
             // 
             // ShellExtensionsRegistered
             // 
-            this.ShellExtensionsRegistered.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.ShellExtensionsRegistered.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ShellExtensionsRegistered.BackColor = System.Drawing.Color.Gray;
             this.ShellExtensionsRegistered.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ShellExtensionsRegistered.FlatAppearance.BorderSize = 0;
@@ -894,8 +894,8 @@ namespace GitUI
             // 
             // GitExtensionsInstall
             // 
-            this.GitExtensionsInstall.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.GitExtensionsInstall.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.GitExtensionsInstall.BackColor = System.Drawing.Color.Gray;
             this.GitExtensionsInstall.Cursor = System.Windows.Forms.Cursors.Hand;
             this.GitExtensionsInstall.FlatAppearance.BorderSize = 0;
@@ -923,8 +923,8 @@ namespace GitUI
             // 
             // groupBox8
             // 
-            this.groupBox8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox8.Controls.Add(this.otherHomeBrowse);
             this.groupBox8.Controls.Add(this.otherHomeDir);
             this.groupBox8.Controls.Add(this.otherHome);
@@ -951,8 +951,8 @@ namespace GitUI
             // 
             // otherHomeDir
             // 
-            this.otherHomeDir.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.otherHomeDir.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.otherHomeDir.Location = new System.Drawing.Point(88, 102);
             this.otherHomeDir.Name = "otherHomeDir";
             this.otherHomeDir.Size = new System.Drawing.Size(641, 21);
@@ -1003,8 +1003,8 @@ namespace GitUI
             // 
             // groupBox7
             // 
-            this.groupBox7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox7.Controls.Add(this.label50);
             this.groupBox7.Controls.Add(this.BrowseGitBinPath);
             this.groupBox7.Controls.Add(this.label13);
@@ -1027,7 +1027,7 @@ namespace GitUI
             this.label50.Size = new System.Drawing.Size(469, 13);
             this.label50.TabIndex = 9;
             this.label50.Text = "Git Extensions can use msysgit or cygwin to access git repositories. Set the corr" +
-                "ect paths below.";
+    "ect paths below.";
             // 
             // BrowseGitBinPath
             // 
@@ -1060,8 +1060,8 @@ namespace GitUI
             // 
             // GitPath
             // 
-            this.GitPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.GitPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.GitPath.Location = new System.Drawing.Point(373, 39);
             this.GitPath.Name = "GitPath";
             this.GitPath.Size = new System.Drawing.Size(356, 21);
@@ -1081,8 +1081,8 @@ namespace GitUI
             // 
             // GitBinPath
             // 
-            this.GitBinPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.GitBinPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.GitBinPath.Location = new System.Drawing.Point(373, 65);
             this.GitBinPath.Name = "GitBinPath";
             this.GitBinPath.Size = new System.Drawing.Size(356, 21);
@@ -1137,6 +1137,25 @@ namespace GitUI
             this.TabPageGitExtensions.Text = "Git extensions";
             this.TabPageGitExtensions.UseVisualStyleBackColor = true;
             this.TabPageGitExtensions.Click += new System.EventHandler(this.TabPageGitExtensions_Click);
+            // 
+            // label58
+            // 
+            this.label58.AutoSize = true;
+            this.label58.Location = new System.Drawing.Point(32, 376);
+            this.label58.Name = "label58";
+            this.label58.Size = new System.Drawing.Size(301, 13);
+            this.label58.TabIndex = 48;
+            this.label58.Text = "Focus control on hover to enable scroll without having to click";
+            // 
+            // focusControlOnHover
+            // 
+            this.focusControlOnHover.AutoSize = true;
+            this.focusControlOnHover.Location = new System.Drawing.Point(11, 376);
+            this.focusControlOnHover.Name = "focusControlOnHover";
+            this.focusControlOnHover.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.focusControlOnHover.Size = new System.Drawing.Size(15, 14);
+            this.focusControlOnHover.TabIndex = 47;
+            this.focusControlOnHover.UseVisualStyleBackColor = true;
             // 
             // truncatePathMethod
             // 
@@ -1272,7 +1291,7 @@ namespace GitUI
             this.showGitStatusInToolbarLabel.Size = new System.Drawing.Size(432, 13);
             this.showGitStatusInToolbarLabel.TabIndex = 32;
             this.showGitStatusInToolbarLabel.Text = "Show repository status in browse dialog (number of changes in toolbar, restart re" +
-                "quired)";
+    "quired)";
             // 
             // ShowGitStatusInToolbar
             // 
@@ -1567,11 +1586,8 @@ namespace GitUI
             // 
             // noImageService
             // 
+            this.noImageService.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.noImageService.FormattingEnabled = true;
-            this.noImageService.Items.AddRange(new object[] {
-            "Identicon",
-            "Wavatar",
-            "MonsterId"});
             this.noImageService.Location = new System.Drawing.Point(149, 101);
             this.noImageService.Name = "noImageService";
             this.noImageService.Size = new System.Drawing.Size(142, 21);
@@ -1652,7 +1668,7 @@ namespace GitUI
             this.ShowAuthorGravatar.AutoSize = true;
             this.ShowAuthorGravatar.Location = new System.Drawing.Point(7, 20);
             this.ShowAuthorGravatar.Name = "ShowAuthorGravatar";
-            this.ShowAuthorGravatar.Size = new System.Drawing.Size(195, 17);
+            this.ShowAuthorGravatar.Size = new System.Drawing.Size(202, 17);
             this.ShowAuthorGravatar.TabIndex = 0;
             this.ShowAuthorGravatar.Text = "Get author image from gravatar.com";
             this.ShowAuthorGravatar.UseVisualStyleBackColor = true;
@@ -2219,8 +2235,8 @@ namespace GitUI
             // 
             // groupBox9
             // 
-            this.groupBox9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox9.Controls.Add(this.globalAutoCrlfFalse);
             this.groupBox9.Controls.Add(this.globalAutoCrlfInput);
             this.groupBox9.Controls.Add(this.globalAutoCrlfTrue);
@@ -2251,7 +2267,7 @@ namespace GitUI
             this.globalAutoCrlfInput.TabIndex = 1;
             this.globalAutoCrlfInput.TabStop = true;
             this.globalAutoCrlfInput.Text = "Checkout as-is, commit Unix-style line endings (\"core.autocrlf\"  is set to \"input" +
-                "\")";
+    "\")";
             this.globalAutoCrlfInput.UseVisualStyleBackColor = true;
             // 
             // globalAutoCrlfTrue
@@ -2263,7 +2279,7 @@ namespace GitUI
             this.globalAutoCrlfTrue.TabIndex = 0;
             this.globalAutoCrlfTrue.TabStop = true;
             this.globalAutoCrlfTrue.Text = "Checkout Windows-style, commit Unix-style line endings (\"core.autocrlf\"  is set t" +
-                "o \"true\")";
+    "o \"true\")";
             this.globalAutoCrlfTrue.UseVisualStyleBackColor = true;
             // 
             // DiffToolCmdSuggest
@@ -2390,7 +2406,7 @@ namespace GitUI
             this.label9.Size = new System.Drawing.Size(180, 39);
             this.label9.TabIndex = 19;
             this.label9.Text = "You need to set the correct path to \r\ngit before you can change\r\nglobal settings." +
-                "\r\n";
+    "\r\n";
             // 
             // pictureBox1
             // 
@@ -2502,8 +2518,8 @@ namespace GitUI
             // 
             // GlobalEditor
             // 
-            this.GlobalEditor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.GlobalEditor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.GlobalEditor.Location = new System.Drawing.Point(153, 65);
             this.GlobalEditor.Name = "GlobalEditor";
             this.GlobalEditor.Size = new System.Drawing.Size(648, 21);
@@ -2564,8 +2580,8 @@ namespace GitUI
             // 
             // groupBox2
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.AutostartPageant);
             this.groupBox2.Controls.Add(this.PageantPath);
             this.groupBox2.Controls.Add(this.PageantBrowse);
@@ -2593,14 +2609,14 @@ namespace GitUI
             this.AutostartPageant.Size = new System.Drawing.Size(542, 51);
             this.AutostartPageant.TabIndex = 11;
             this.AutostartPageant.Text = "Automatically start authentication client when a private key is configured for a " +
-                "remote";
+    "remote";
             this.AutostartPageant.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.AutostartPageant.UseVisualStyleBackColor = true;
             // 
             // PageantPath
             // 
-            this.PageantPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.PageantPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.PageantPath.Location = new System.Drawing.Point(143, 76);
             this.PageantPath.Name = "PageantPath";
             this.PageantPath.Size = new System.Drawing.Size(575, 21);
@@ -2628,8 +2644,8 @@ namespace GitUI
             // 
             // PuttygenPath
             // 
-            this.PuttygenPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.PuttygenPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.PuttygenPath.Location = new System.Drawing.Point(143, 46);
             this.PuttygenPath.Name = "PuttygenPath";
             this.PuttygenPath.Size = new System.Drawing.Size(575, 21);
@@ -2666,8 +2682,8 @@ namespace GitUI
             // 
             // PlinkPath
             // 
-            this.PlinkPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.PlinkPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.PlinkPath.Location = new System.Drawing.Point(143, 17);
             this.PlinkPath.Name = "PlinkPath";
             this.PlinkPath.Size = new System.Drawing.Size(575, 21);
@@ -2686,8 +2702,8 @@ namespace GitUI
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.OtherSsh);
             this.groupBox1.Controls.Add(this.OtherSshBrowse);
             this.groupBox1.Controls.Add(this.Other);
@@ -2703,8 +2719,8 @@ namespace GitUI
             // 
             // OtherSsh
             // 
-            this.OtherSsh.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.OtherSsh.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.OtherSsh.Location = new System.Drawing.Point(143, 80);
             this.OtherSsh.Name = "OtherSsh";
             this.OtherSsh.Size = new System.Drawing.Size(575, 21);
@@ -2857,7 +2873,7 @@ namespace GitUI
             this.scriptNeedsConfirmation.AutoSize = true;
             this.scriptNeedsConfirmation.Location = new System.Drawing.Point(107, 445);
             this.scriptNeedsConfirmation.Name = "scriptNeedsConfirmation";
-            this.scriptNeedsConfirmation.Size = new System.Drawing.Size(122, 17);
+            this.scriptNeedsConfirmation.Size = new System.Drawing.Size(119, 17);
             this.scriptNeedsConfirmation.TabIndex = 21;
             this.scriptNeedsConfirmation.Text = "Ask for confirmation";
             this.scriptNeedsConfirmation.UseVisualStyleBackColor = true;
@@ -2889,9 +2905,9 @@ namespace GitUI
             // 
             this.scriptEnabled.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.scriptEnabled.AutoSize = true;
-            this.scriptEnabled.Location = new System.Drawing.Point(460, 246);
+            this.scriptEnabled.Location = new System.Drawing.Point(459, 246);
             this.scriptEnabled.Name = "scriptEnabled";
-            this.scriptEnabled.Size = new System.Drawing.Size(64, 17);
+            this.scriptEnabled.Size = new System.Drawing.Size(65, 17);
             this.scriptEnabled.TabIndex = 18;
             this.scriptEnabled.Text = "Enabled";
             this.scriptEnabled.UseVisualStyleBackColor = true;
@@ -2901,8 +2917,8 @@ namespace GitUI
             // 
             this.ScriptList.AllowUserToAddRows = false;
             this.ScriptList.AllowUserToDeleteRows = false;
-            this.ScriptList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.ScriptList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ScriptList.AutoGenerateColumns = false;
             this.ScriptList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.ScriptList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -2992,7 +3008,7 @@ namespace GitUI
             this.inMenuCheckBox.AutoSize = true;
             this.inMenuCheckBox.Location = new System.Drawing.Point(107, 468);
             this.inMenuCheckBox.Name = "inMenuCheckBox";
-            this.inMenuCheckBox.Size = new System.Drawing.Size(188, 17);
+            this.inMenuCheckBox.Size = new System.Drawing.Size(183, 17);
             this.inMenuCheckBox.TabIndex = 15;
             this.inMenuCheckBox.Text = "Add to revision grid context menu";
             this.inMenuCheckBox.UseVisualStyleBackColor = true;
@@ -3038,9 +3054,9 @@ namespace GitUI
             // 
             // argumentsTextBox
             // 
-            this.argumentsTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.argumentsTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.helpProvider1.SetHelpString(this.argumentsTextBox, resources.GetString("argumentsTextBox.HelpString"));
             this.argumentsTextBox.Location = new System.Drawing.Point(107, 299);
             this.argumentsTextBox.Name = "argumentsTextBox";
@@ -3054,8 +3070,8 @@ namespace GitUI
             // 
             // commandTextBox
             // 
-            this.commandTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.commandTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.commandTextBox.Location = new System.Drawing.Point(107, 271);
             this.commandTextBox.Name = "commandTextBox";
             this.commandTextBox.Size = new System.Drawing.Size(529, 21);
@@ -3064,8 +3080,8 @@ namespace GitUI
             // 
             // nameTextBox
             // 
-            this.nameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.nameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.nameTextBox.Location = new System.Drawing.Point(107, 243);
             this.nameTextBox.Name = "nameTextBox";
             this.nameTextBox.Size = new System.Drawing.Size(248, 21);
@@ -3189,7 +3205,7 @@ namespace GitUI
             this.label10.Size = new System.Drawing.Size(175, 39);
             this.label10.TabIndex = 19;
             this.label10.Text = "You need to set the correct path to \r\ngit.cmd before you can change\r\nany global s" +
-                "etting.\r\n";
+    "etting.\r\n";
             // 
             // pictureBox2
             // 
@@ -3208,25 +3224,6 @@ namespace GitUI
             // 
             this.diffFontDialog.AllowVerticalFonts = false;
             this.diffFontDialog.FixedPitchOnly = true;
-            // 
-            // label58
-            // 
-            this.label58.AutoSize = true;
-            this.label58.Location = new System.Drawing.Point(32, 376);
-            this.label58.Name = "label58";
-            this.label58.Size = new System.Drawing.Size(301, 13);
-            this.label58.TabIndex = 48;
-            this.label58.Text = "Focus control on hover to enable scroll without having to click";
-            // 
-            // focusControlOnHover
-            // 
-            this.focusControlOnHover.AutoSize = true;
-            this.focusControlOnHover.Location = new System.Drawing.Point(11, 376);
-            this.focusControlOnHover.Name = "focusControlOnHover";
-            this.focusControlOnHover.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.focusControlOnHover.Size = new System.Drawing.Size(15, 14);
-            this.focusControlOnHover.TabIndex = 47;
-            this.focusControlOnHover.UseVisualStyleBackColor = true;
             // 
             // FormSettings
             // 

@@ -28,6 +28,11 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
+            noImageService.Items.AddRange(
+                (from FallBackService g in Enum.GetValues(typeof(FallBackService))
+                 where g != FallBackService.None
+                 select g as object).ToArray());
+
             _NO_TRANSLATE_Encoding.Items.AddRange(new Object[]
                                                       {
                                                           "Default (" + Encoding.Default.HeaderName + ")", "ASCII",
@@ -1608,9 +1613,9 @@ namespace GitUI
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(((TabControl)sender).TabPages[((TabControl)sender).SelectedIndex].Name.ToLower() == "tabpagehotkeys")
+            if (((TabControl)sender).TabPages[((TabControl)sender).SelectedIndex].Name.ToLower() == "tabpagehotkeys")
                 controlHotkeys.ReloadSettings();
-            else if(((TabControl)sender).TabPages[((TabControl)sender).SelectedIndex].Name.ToLower() == "scriptstab")    
+            else if (((TabControl)sender).TabPages[((TabControl)sender).SelectedIndex].Name.ToLower() == "scriptstab")
                 populateSplitbutton();
 
 
@@ -1625,10 +1630,10 @@ namespace GitUI
         private void populateSplitbutton()
         {
 
-            System.Resources.ResourceManager rm = 
+            System.Resources.ResourceManager rm =
                 new System.Resources.ResourceManager("GitUI.Properties.Resources",
                             System.Reflection.Assembly.GetExecutingAssembly());
-            
+
             // dummy request; for some strange reason the ResourceSets are not loaded untill after the first object request... bug?
             var dummy = rm.GetObject("dummy");
 
@@ -1645,7 +1650,7 @@ namespace GitUI
                 }
                 else if (icon.Value.GetType() == typeof(Bitmap))
                 {
-                    contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image) icon.Value, SplitButtonMenuItem_Click);
+                    contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)icon.Value, SplitButtonMenuItem_Click);
                 }
                 //var aa = icon.Value.GetType();
             }
@@ -2087,7 +2092,7 @@ namespace GitUI
         private void LoadScripts()
         {
             ScriptList.DataSource = ScriptManager.GetScripts();
-           
+
         }
 
         private void ClearScriptDetails()
@@ -2112,16 +2117,16 @@ namespace GitUI
             scriptEnabled.Checked = scriptInfo.Enabled;
             scriptNeedsConfirmation.Checked = scriptInfo.AskConfirmation;
             scriptEvent.SelectedItem = scriptInfo.OnEvent;
-            sbtn_icon.Image = (Image) scriptInfo.GetIcon();
+            sbtn_icon.Image = (Image)scriptInfo.GetIcon();
             IconName = scriptInfo.Icon;
 
             foreach (ToolStripItem item in contextMenuStrip_SplitButton.Items)
-	        {
+            {
                 if (item.ToString() == IconName)
                 {
                     item.Font = new Font(item.Font, FontStyle.Bold);
                 }
-	        } 
+            }
         }
 
         private void addScriptButton_Click(object sender, EventArgs e)
@@ -2148,7 +2153,7 @@ namespace GitUI
             if (ScriptList.SelectedRows.Count > 0)
             {
                 ScriptInfo selectedScriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
-                selectedScriptInfo.HotkeyCommandIdentifier = ScriptList.SelectedRows[0].Index+9000;
+                selectedScriptInfo.HotkeyCommandIdentifier = ScriptList.SelectedRows[0].Index + 9000;
                 selectedScriptInfo.Name = nameTextBox.Text;
                 selectedScriptInfo.Command = commandTextBox.Text;
                 selectedScriptInfo.Arguments = argumentsTextBox.Text;
@@ -2231,7 +2236,7 @@ namespace GitUI
             {
                 ScriptInfo selectedScriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
                 RefreshScriptDetails();
-                
+
                 removeScriptButton.Enabled = true;
                 moveDownButton.Enabled = moveUpButton.Enabled = false;
                 if (ScriptList.SelectedRows[0].Index > 0)
@@ -2272,7 +2277,7 @@ namespace GitUI
 
         protected override bool ExecuteCommand(int cmd)
         {
-            
+
             Commands command = (Commands)cmd;
 
             switch (command)
@@ -2369,12 +2374,12 @@ namespace GitUI
         private void SetCurrentDiffFont(Font font)
         {
             diffFont = font;
-            
-            diffFontChangeButton.Text = 
-                string.Format("{0}, {1}", diffFont.FontFamily.Name, (int) diffFont.Size);
+
+            diffFontChangeButton.Text =
+                string.Format("{0}, {1}", diffFont.FontFamily.Name, (int)diffFont.Size);
 
         }
-        
+
         private void BrowseCommitTemplate_Click(object sender, EventArgs e)
         {
             CommitTemplatePath.Text = SelectFile(".", "*.txt (*.txt)|*.txt", CommitTemplatePath.Text);
@@ -2385,15 +2390,15 @@ namespace GitUI
             //reset bold item to regular
             ToolStripMenuItem item = (ToolStripMenuItem)contextMenuStrip_SplitButton.Items.OfType<ToolStripMenuItem>().First(s => s.Font.Bold == true);
             item.Font = new Font(contextMenuStrip_SplitButton.Font, FontStyle.Regular);
-            
+
             //make new item bold
             ((ToolStripMenuItem)sender).Font = new Font(((ToolStripMenuItem)sender).Font, FontStyle.Bold);
 
             //set new image on button
-            sbtn_icon.Image = (Image) ResizeBitmap((Bitmap)((ToolStripMenuItem)sender).Image, 12, 12);
+            sbtn_icon.Image = (Image)ResizeBitmap((Bitmap)((ToolStripMenuItem)sender).Image, 12, 12);
 
             IconName = ((ToolStripMenuItem)sender).Text;
-            
+
             //store variables
             ScriptInfoEdit_Validating(sender, new System.ComponentModel.CancelEventArgs());
         }
@@ -2409,7 +2414,7 @@ namespace GitUI
                     ScriptInfo scriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
                     icon_name = scriptInfo.Icon;
                 }*/
-                
+
                 sbtn_icon.Visible = true;
                 lbl_icon.Visible = true;
             }
