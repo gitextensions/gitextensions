@@ -139,6 +139,119 @@ ancestor tree.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="ForkAndCloneForm">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Fork und Klonen von Remote Repository</Value>
+        </TranslationItem>
+        <TranslationItem Name="_searchBtn" Property="Text">
+          <Value>Suchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_forkBtn" Property="Text">
+          <Value>Fork!</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cloneBtn" Property="Text">
+          <Value>Klonen</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader2" Property="Text">
+          <Value>Privat</Value>
+        </TranslationItem>
+        <TranslationItem Name="_browseForCloneToDirbtn" Property="Text">
+          <Value>Durchsuchen...</Value>
+        </TranslationItem>
+        <TranslationItem Name="_descriptionLbl" Property="Text">
+          <Value>Beschreibung:</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Zielverzeichnis:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_openGitupPageBtn" Property="Text">
+          <Value>Öffne GitHub Seite</Value>
+        </TranslationItem>
+        <TranslationItem Name="_closeBtn" Property="Text">
+          <Value>Schließen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_createDirectoryLbl" Property="Text">
+          <Value>Verzeichnis erstellen:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_myReposPage" Property="Text">
+          <Value>Meine Repositorys</Value>
+        </TranslationItem>
+        <TranslationItem Name="_searchReposPage" Property="Text">
+          <Value>Nach Repositorys suchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cloneSetupGB" Property="Text">
+          <Value>Klonen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_helpTextLbl" Property="Text">
+          <Value>Wenn Sie ein Repository forken möchten, welches jemanden anderem gehört wechseln Sie auf den 'Nach Repositorys suchen" Tab.</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>Remote hinzufügen als:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_getFromUserBtn" Property="Text">
+          <Value>Benutzer abfragen</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader6" Property="Text">
+          <Value>Fork?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_orLbl" Property="Text">
+          <Value>oder</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strError" Property="Text">
+          <Value>Fehler</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strLoading" Property="Text">
+          <Value> : LADEN :</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strYes" Property="Text">
+          <Value>Ja</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strNo" Property="Text">
+          <Value>Nein</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strFailedToGetRepos" Property="Text">
+          <Value>Fehler beim Abfragen des Repositorys. Benutzername/ApiToken korrekt?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strWillCloneWithPushAccess" Property="Text">
+          <Value>Klonen von {0} nach {1}. Sie werden Push-Rechte besitzen. {2}</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strWillCloneInfo" Property="Text">
+          <Value>Klonen von {0} nach {1}. 
+Sie können nicht pushen, solange Sie kein Mitarbeiter des Projektes sind. {2}</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strWillBeAddedAsARemote" Property="Text">
+          <Value>"{0}" wird als Remote hinzugefügt.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strCouldNotAddRemote" Property="Text">
+          <Value>Remote hinzufügen fehlgeschlagen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strNoHomepageDefined" Property="Text">
+          <Value>Keine Homepage angegeben</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strFailedToFork" Property="Text">
+          <Value>Fork fehlgeschlagen:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strSearchFailed" Property="Text">
+          <Value>Suche fehlgeschlagen!</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strUserNotFound" Property="Text">
+          <Value>Benutzer nicht gefunden!</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strCouldNotFetchReposOfUser" Property="Text">
+          <Value>Fetch der Repositorys des Benutzers fehlgeschlagen!</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strSearching" Property="Text">
+          <Value>: SUCHE :</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strSelectOneItem" Property="Text">
+          <Value>Sie müssen exakt ein Element wählen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strCloneFolderCanNotBeEmpty" Property="Text">
+          <Value>Zu klonendes Verzeichnis darf nicht leer sein</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="Open">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
