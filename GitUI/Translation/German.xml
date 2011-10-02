@@ -2062,6 +2062,25 @@ Bitte beachten Sie den Hinweis.</Value>
         <TranslationItem Name="$this" Property="Text">
           <Value>Home</Value>
         </TranslationItem>
+        <TranslationItem Name="_gitconfigFoundHome" Property="Text">
+          <Value>.gitconfig in %HOME% ({0}) gefunden. Diese Einstellung wurde automatisch übernommen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_gitconfigFoundHomedrive" Property="Text">
+          <Value>.gitconfig in %HOMEDRIVE%%HOMEPATH% ({0}) gefunden. Diese Einstellung wurde automatisch übernommen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_gitconfigFoundUserprofile" Property="Text">
+          <Value>.gitconfig in %USERPROFILE% ({0}) gefunden. Diese Einstellung wurde automatisch übernommen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_gitconfigFoundPersonalFolder" Property="Text">
+          <Value>.gitconfig in persönlichem Ordner ({0}) gefunden. Diese Einstellung wurde automatisch übernommen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noHomeDirectorySpecified" Property="Text">
+          <Value>Bitte geben Sie eine HOME-Verzeichnis an.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_homeNotAccessible" Property="Text">
+          <Value>Die Umgebunsvariable HOME zeigt auf ein Verzeichnis auf welches nicht zugegriffen werden kann:
+"{0}"</Value>
+        </TranslationItem>
         <TranslationItem Name="groupBox8" Property="Text">
           <Value>Umgebung</Value>
         </TranslationItem>
@@ -2084,6 +2103,15 @@ nur, wenn Sie mit dieser Probleme auftreten.</Value>
         </TranslationItem>
         <TranslationItem Name="ok" Property="Text">
           <Value>Ok</Value>
+        </TranslationItem>
+        <TranslationItem Name="_gitGlobalConfigNotFound" Property="Text">
+          <Value>Die Umgebungsvariable HOME zeigt auf kein Verzeichnis, welches eine Git Konfigurationsdatei beinhaltet:
+" {0} "
+
+Wollen Sie dass Git Extensions Ihnen hilft das korrekte Verzeichnis zu finden?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_gitGlobalConfigNotFoundCaption" Property="Text">
+          <Value>Globale Konfigurationsdatei</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
