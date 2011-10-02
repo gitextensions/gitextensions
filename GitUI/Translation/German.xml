@@ -1008,9 +1008,6 @@ Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen vo
         <TranslationItem Name="$this" Property="Text">
           <Value>Datei(en) zu .gitignore hinzufügen</Value>
         </TranslationItem>
-        <TranslationItem Name="_matchingFilesString" Property="Text">
-          <Value>{0} Datei(en) stimmen überein</Value>
-        </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Value>Vorschau</Value>
         </TranslationItem>
@@ -1022,6 +1019,9 @@ Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen vo
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Value>Keine Dateien, die zum Muster passen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="filesWillBeIgnored" Property="Text">
+          <Value>Datei(en) stimmen überein</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1077,6 +1077,13 @@ Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen vo
         </TranslationItem>
         <TranslationItem Name="_refreshCommentsBtn" Property="Text">
           <Value>Aktualisieren</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormBlame">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Datei Historie</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
