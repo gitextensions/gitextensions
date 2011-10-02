@@ -41,7 +41,7 @@
             // Ok
             // 
             this.Ok.ForeColor = System.Drawing.Color.Black;
-            this.Ok.Location = new System.Drawing.Point(368, 90);
+            this.Ok.Location = new System.Drawing.Point(407, 91);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(75, 25);
             this.Ok.TabIndex = 5;
@@ -56,7 +56,7 @@
             this.Branches.FormattingEnabled = true;
             this.Branches.Location = new System.Drawing.Point(146, 93);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(212, 21);
+            this.Branches.Size = new System.Drawing.Size(255, 23);
             this.Branches.TabIndex = 4;
             // 
             // label1
@@ -65,7 +65,7 @@
             this.label1.ForeColor = System.Drawing.Color.Black;
             this.label1.Location = new System.Drawing.Point(7, 96);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(72, 13);
+            this.label1.Size = new System.Drawing.Size(78, 15);
             this.label1.TabIndex = 3;
             this.label1.Text = "Select branch";
             // 
@@ -75,7 +75,7 @@
             this.label2.ForeColor = System.Drawing.Color.Black;
             this.label2.Location = new System.Drawing.Point(37, 9);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(406, 52);
+            this.label2.Size = new System.Drawing.Size(449, 60);
             this.label2.TabIndex = 6;
             this.label2.Text = resources.GetString("label2.Text");
             // 
@@ -94,7 +94,7 @@
             this.ForceDelete.AutoSize = true;
             this.ForceDelete.Location = new System.Drawing.Point(146, 120);
             this.ForceDelete.Name = "ForceDelete";
-            this.ForceDelete.Size = new System.Drawing.Size(86, 17);
+            this.ForceDelete.Size = new System.Drawing.Size(90, 19);
             this.ForceDelete.TabIndex = 8;
             this.ForceDelete.Text = "Force delete";
             this.ForceDelete.UseVisualStyleBackColor = true;
@@ -102,9 +102,9 @@
             // FormDeleteBranch
             // 
             this.AcceptButton = this.Ok;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(457, 153);
+            this.ClientSize = new System.Drawing.Size(494, 153);
             this.Controls.Add(this.ForceDelete);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.label2);
