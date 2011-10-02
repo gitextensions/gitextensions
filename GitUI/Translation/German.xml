@@ -76,6 +76,31 @@ ancestor tree.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormBranch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Branch erzeugen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Branch Name</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Branch erzeugen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Checkout" Property="Text">
+          <Value>Branch auschecken</Value>
+        </TranslationItem>
+        <TranslationItem Name="CheckoutAfterCreate" Property="Text">
+          <Value>Auschecken nach Erzeugen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectOneRevision" Property="Text">
+          <Value>Wählen Sie eine Revision auf der der Branch erzeugt werden soll</Value>
+        </TranslationItem>
+        <TranslationItem Name="_branchCaption" Property="Text">
+          <Value>Branch</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="Open">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
