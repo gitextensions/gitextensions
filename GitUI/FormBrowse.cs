@@ -19,11 +19,62 @@ using System.Drawing;
 using System.Collections.Specialized;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using GitUI.Script;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormBrowse : GitExtensionsForm
     {
+        #region Translations
+
+        private readonly TranslationString _stashCount =
+            new TranslationString("{0} saved {1}");
+        private readonly TranslationString _stashPlural =
+            new TranslationString("stashes");
+        private readonly TranslationString _stashSingular =
+            new TranslationString("stash");
+
+        private readonly TranslationString _warningMiddleOfBisect =
+            new TranslationString("Your are in the middle of a bisect");
+        private readonly TranslationString _warningMiddleOfRebase =
+            new TranslationString("You are in the middle of a rebase");
+        private readonly TranslationString _warningMiddleOfPatchApply =
+            new TranslationString("You are in the middle of a patch apply");
+
+        private readonly TranslationString _hintUnresolvedMergeConflicts =
+            new TranslationString("There are unresolved merge conflicts!");
+
+        private static readonly TranslationString _noBranchTitle =
+            new TranslationString("no branch");
+
+        private readonly TranslationString _noSubmodulesPresent =
+            new TranslationString("No submodules");
+
+        private readonly TranslationString _saveFileFilterCurrentFormat =
+            new TranslationString("Current format");
+        private readonly TranslationString _saveFileFilterAllFiles =
+            new TranslationString("All files");
+
+        private readonly TranslationString _indexLockDeleted =
+            new TranslationString("index.lock deleted.");
+        private readonly TranslationString _indexLockNotFound =
+            new TranslationString("index.lock not found at:");
+
+        private readonly TranslationString _noReposHostPluginLoaded =
+            new TranslationString("No repository host plugin loaded.");
+        private readonly TranslationString _noReposHostPluginLoadedCaption =
+            new TranslationString("Error");
+
+        private readonly TranslationString _noReposHostFound =
+            new TranslationString("Could not find any relevant repository hosts for the currently open repository.");
+        private readonly TranslationString _noReposHostFoundCaption =
+            new TranslationString("Error");
+
+        private readonly TranslationString _noRevisionFoundError =
+            new TranslationString("No revision found.");
+
+        #endregion
+
         private readonly SynchronizationContext syncContext;
         private readonly IndexWatcher _indexWatcher = new IndexWatcher();
 
@@ -406,8 +457,8 @@ namespace GitUI
             if (Settings.ShowStashCount)
             {
                 int stashCount = GitCommandHelpers.GetStashes().Count;
-                toolStripSplitStash.Text = string.Format("{0} saved {1}", stashCount,
-                                                         stashCount != 1 ? "stashes" : "stash");
+                toolStripSplitStash.Text = string.Format(_stashCount.Text, stashCount,
+                                                         stashCount != 1 ? _stashPlural.Text : _stashSingular.Text);
             }
             else
             {
@@ -424,7 +475,7 @@ namespace GitUI
 
                 if (_bisect == null)
                 {
-                    _bisect = new WarningToolStripItem { Text = "Your are in the middle of a bisect" };
+                    _bisect = new WarningToolStripItem { Text = _warningMiddleOfBisect.Text};
                     _bisect.Click += BisectClick;
                     statusStrip.Items.Add(_bisect);
                 }
@@ -447,8 +498,8 @@ namespace GitUI
                     _rebase = new WarningToolStripItem
                                   {
                                       Text = GitCommandHelpers.InTheMiddleOfRebase()
-                                                 ? "You are in the middle of a rebase"
-                                                 : "You are in the middle of a patch apply"
+                                                 ? _warningMiddleOfRebase.Text
+                                                 : _warningMiddleOfPatchApply.Text
                                   };
                     _rebase.Click += RebaseClick;
                     statusStrip.Items.Add(_rebase);
@@ -469,7 +520,7 @@ namespace GitUI
             {
                 if (_warning == null)
                 {
-                    _warning = new WarningToolStripItem { Text = "There are unresolved merge conflicts!" };
+                    _warning = new WarningToolStripItem { Text = _hintUnresolvedMergeConflicts.Text };
                     _warning.Click += WarningClick;
                     statusStrip.Items.Add(_warning);
                 }
@@ -510,7 +561,7 @@ namespace GitUI
                 return defaultTitle;
             string repositoryDescription = GetRepositoryShortName(workingDir);
             if (string.IsNullOrEmpty(branchName))
-                branchName = "no branch";
+                branchName = _noBranchTitle.Text;
             return string.Format(repositoryTitleFormat, repositoryDescription, branchName.Trim('(', ')'));
         }
 
@@ -1494,7 +1545,7 @@ namespace GitUI
             }
 
             if (openSubmoduleToolStripMenuItem.DropDownItems.Count == 0)
-                openSubmoduleToolStripMenuItem.DropDownItems.Add("No submodules");
+                openSubmoduleToolStripMenuItem.DropDownItems.Add(_noSubmodulesPresent.Text);
             Cursor.Current = Cursors.Default;
         }
 
@@ -1698,10 +1749,10 @@ namespace GitUI
                     };
             fileDialog.DefaultExt = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
             fileDialog.Filter =
-                "Current format (*." +
+                _saveFileFilterCurrentFormat.Text + " (*." +
                 GitCommandHelpers.GetFileExtension(fileDialog.FileName) + ")|*." +
                 GitCommandHelpers.GetFileExtension(fileDialog.FileName) +
-                "|All files (*.*)|*.*";
+                "|" + _saveFileFilterAllFiles.Text + " (*.*)|*.*";
 
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
@@ -1789,10 +1840,10 @@ namespace GitUI
             if (File.Exists(fileName))
             {
                 File.Delete(fileName);
-                MessageBox.Show("index.lock deleted.");
+                MessageBox.Show(_indexLockDeleted.Text);
             }
             else
-                MessageBox.Show("index.lock not found at: " + fileName);
+                MessageBox.Show(_indexLockNotFound.Text + " " + fileName);
         }
 
         private void saveAsToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -1817,10 +1868,10 @@ namespace GitUI
                 };
             fileDialog.DefaultExt = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
             fileDialog.Filter =
-                "Current format (*." +
+                _saveFileFilterCurrentFormat.Text + " (*." +
                 GitCommandHelpers.GetFileExtension(fileDialog.FileName) + ")|*." +
                 GitCommandHelpers.GetFileExtension(fileDialog.FileName) +
-                "|All files (*.*)|*.*";
+                "|" + _saveFileFilterAllFiles.Text + " (*.*)|*.*";
 
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
@@ -1938,7 +1989,7 @@ namespace GitUI
             }
             else
             {
-                MessageBox.Show(this, "No repository host plugin loaded.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _noReposHostPluginLoaded.Text, _noReposHostPluginLoadedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -1947,7 +1998,7 @@ namespace GitUI
             var repoHost = RepoHosts.TryGetGitHosterForCurrentWorkingDir();
             if (repoHost == null)
             {
-                MessageBox.Show(this, "Could not find any relevant repository hosts for the currently open repository.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _noReposHostFound.Text, _noReposHostFoundCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -1960,7 +2011,7 @@ namespace GitUI
             var repoHost = RepoHosts.TryGetGitHosterForCurrentWorkingDir();
             if (repoHost == null)
             {
-                MessageBox.Show(this, "Could not find any relevant repository hosts for the currently open repository.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _noReposHostFound.Text, _noReposHostFoundCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -2056,7 +2107,7 @@ namespace GitUI
             }
             else
             {
-                MessageBox.Show("No revision found.");
+                MessageBox.Show(_noRevisionFoundError.Text);
             }
         }
 
