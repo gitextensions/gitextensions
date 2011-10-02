@@ -4,11 +4,39 @@ using System.IO;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormClone : GitExtensionsForm
     {
+        private readonly TranslationString _infoNewRepositoryLocation = 
+            new TranslationString("The repository will be cloned to a new directory located here:"  + Environment.NewLine +
+                                  "{0}");
+
+        private readonly TranslationString _infoDirectoryExists =
+            new TranslationString("(Directory already exists)");
+
+        private readonly TranslationString _infoDirectoryNew =
+            new TranslationString("(New directory)");
+
+
+        private readonly TranslationString _questionOpenRepo =
+            new TranslationString("The repository has been cloned successfully." + Environment.NewLine +
+                                  "Do you want to open the new repository \"{0}\" now?");
+        
+        private readonly TranslationString _questionOpenRepoCaption = 
+            new TranslationString("Open");
+
+        private readonly TranslationString _questionInitSubmodules =
+            new TranslationString("The cloned has submodules configured." + Environment.NewLine +
+                                  "Do you want to initialize the submodules?" + Environment.NewLine +
+                                  "This will initialize and update all submodules recursive.");
+        
+        private readonly TranslationString _questionInitSubmodulesCaption =
+            new TranslationString("Submodules");
+
+
         public FormClone()
         {
             InitializeComponent();
@@ -62,21 +90,15 @@ namespace GitUI
             }
         }
 
-        private static bool AskIfNewRepositoryShouldBeOpened(string dirTo)
+        private bool AskIfNewRepositoryShouldBeOpened(string dirTo)
         {
-            return MessageBox.Show(
-                "The repository has been cloned successfully." + Environment.NewLine +
-                "Do you want to open the new repository \"" + dirTo + "\" now?", "Open",
+            return MessageBox.Show(string.Format(_questionOpenRepo.Text, dirTo), _questionOpenRepoCaption.Text,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
         }
 
-        private static bool AskIfSubmodulesShouldBeInitialized()
+        private bool AskIfSubmodulesShouldBeInitialized()
         {
-            return MessageBox.Show(
-                "The cloned has submodules configured." + Environment.NewLine +
-                "Do you want to initialize the submodules?" + Environment.NewLine +
-                Environment.NewLine +
-                "This will initialize and update all submodules recursive.", "Submodules",
+            return MessageBox.Show(_questionInitSubmodules.Text, _questionInitSubmodulesCaption.Text,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
         }
 
@@ -184,21 +206,21 @@ namespace GitUI
 
         private void ToTextUpdate(object sender, EventArgs e)
         {
-            var destinationPath = "";
+            string destinationPath = string.Empty;                
 
-            Info.Text = "The repository will be cloned to a new directory located here:" + Environment.NewLine;
             if (string.IsNullOrEmpty(_NO_TRANSLATE_To.Text))
-                destinationPath += "[destination]";
+                destinationPath += "[" + label2.Text + "]";
             else
                 destinationPath += _NO_TRANSLATE_To.Text.TrimEnd(new[] { '\\', '/' });
-            destinationPath += "\\";
 
+            destinationPath += "\\";
+            
             if (string.IsNullOrEmpty(_NO_TRANSLATE_NewDirectory.Text))
-                destinationPath += "[directory]";
+                destinationPath += "[" + label3.Text + "]";
             else
                 destinationPath += _NO_TRANSLATE_NewDirectory.Text;
 
-            Info.Text += "     " + destinationPath;
+            Info.Text = string.Format(_infoNewRepositoryLocation.Text, destinationPath);
 
             if (destinationPath.Contains("[") || destinationPath.Contains("]"))
             {
@@ -210,7 +232,7 @@ namespace GitUI
             {
                 if (Directory.GetDirectories(destinationPath).Length > 0 || Directory.GetFiles(destinationPath).Length > 0)
                 {
-                    Info.Text += " (directory already exists)";
+                    Info.Text += " " + _infoDirectoryExists.Text;
                     Info.ForeColor = Color.Red;
                 }
                 else
@@ -220,7 +242,7 @@ namespace GitUI
             }
             else
             {
-                Info.Text += " (new directory)";
+                Info.Text += " " + _infoDirectoryNew.Text;
                 Info.ForeColor = Color.Black;
             }
         }
