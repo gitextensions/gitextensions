@@ -823,10 +823,10 @@ Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möc
           <Value>&amp;Alle ersetzen</Value>
         </TranslationItem>
         <TranslationItem Name="chkMatchWholeWord" Property="Text">
-          <Value>Nur ganze W�rter</Value>
+          <Value>Nur ganze Wörter</Value>
         </TranslationItem>
         <TranslationItem Name="chkMatchCase" Property="Text">
-          <Value>Gro�-/Kleinschreibung</Value>
+          <Value>Groß-/Kleinschreibung</Value>
         </TranslationItem>
         <TranslationItem Name="btnHighlightAll" Property="Text">
           <Value>Suchen &amp;&amp; &amp;alle hervorheben</Value>
@@ -859,7 +859,7 @@ Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möc
           <Value>Nicht gefunden</Value>
         </TranslationItem>
         <TranslationItem Name="_noOccurrencesFoundString" Property="Text">
-          <Value>Keine �bereinstimmung gefunden.</Value>
+          <Value>Keine Übereinstimmung gefunden.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -889,6 +889,24 @@ Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möc
         </TranslationItem>
         <TranslationItem Name="goButton" Property="Text">
           <Value>Los</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="AboutBox">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Info</Value>
+        </TranslationItem>
+        <TranslationItem Name="textBoxDescription" Property="Text">
+          <Value>Git extions - Visual Studio und Shell Explorer Erweiterung für Git
+
+Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen von Nutzen sein wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der GNU General Public License.</Value>
+        </TranslationItem>
+        <TranslationItem Name="okButton" Property="Text">
+          <Value>Ok</Value>
+        </TranslationItem>
+        <TranslationItem Name="thanksTo" Property="Text">
+          <Value>Danke an:</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
