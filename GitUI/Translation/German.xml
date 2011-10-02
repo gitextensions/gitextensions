@@ -2802,6 +2802,9 @@ Möchten Sie trotzdem fortfahren?</Value>
         <TranslationItem Name="_chooseDirectory" Property="Text">
           <Value>Bitte geben Sie ein Verzeichnis an.</Value>
         </TranslationItem>
+        <TranslationItem Name="_chooseDirectoryCaption" Property="Text">
+          <Value>Verzeichnis wählen</Value>
+        </TranslationItem>
         <TranslationItem Name="_chooseDirectoryNotFile" Property="Text">
           <Value>Bitte geben Sie ein Verzeichnis und keine Datei an. Ein Repository kann nicht in einer Datei initialisiert werden.</Value>
         </TranslationItem>
