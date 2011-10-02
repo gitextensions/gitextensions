@@ -307,7 +307,7 @@ der diesen Remote Branch verfolgt?</Value>
           <Value>Remote Branch</Value>
         </TranslationItem>
         <TranslationItem Name="Force" Property="Text">
-          <Value>Erzwingen</Value>
+          <Value>Auschecken erzwingen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
