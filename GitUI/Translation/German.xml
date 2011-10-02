@@ -802,6 +802,67 @@ W√§hlen Sie, ob Sie die Datei l√∂schen oder die ge√§nderte Version behalten m√∂c
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FindAndReplaceForm">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Suchen und Ersetzen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>&amp;Suchen:</Value>
+        </TranslationItem>
+        <TranslationItem Name="lblReplaceWith" Property="Text">
+          <Value>E&amp;rsetzen mit:</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnFindNext" Property="Text">
+          <Value>&amp;Weitersuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnReplace" Property="Text">
+          <Value>&amp;Ersetzen</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnReplaceAll" Property="Text">
+          <Value>&amp;Alle ersetzen</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkMatchWholeWord" Property="Text">
+          <Value>Nur ganze Wˆrter</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkMatchCase" Property="Text">
+          <Value>Groﬂ-/Kleinschreibung</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnHighlightAll" Property="Text">
+          <Value>Suchen &amp;&amp; &amp;alle hervorheben</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnCancel" Property="Text">
+          <Value>Abbrechen</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnFindPrevious" Property="Text">
+          <Value>Vorherigen suchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_findAndReplaceString" Property="Text">
+          <Value>Suchen &amp;&amp; Ersetzen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_findString" Property="Text">
+          <Value>Suchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectionOnlyString" Property="Text">
+          <Value>Nur in Auswahl</Value>
+        </TranslationItem>
+        <TranslationItem Name="_textNotFoundString" Property="Text">
+          <Value>Text nicht gefunden</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noSearchString" Property="Text">
+          <Value>Kein Text zum Suchen angegeben</Value>
+        </TranslationItem>
+        <TranslationItem Name="_textNotFoundString2" Property="Text">
+          <Value>Text nicht gefunden.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_notFoundString" Property="Text">
+          <Value>Nicht gefunden</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noOccurrencesFoundString" Property="Text">
+          <Value>Keine ‹bereinstimmung gefunden.</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormBisect">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
