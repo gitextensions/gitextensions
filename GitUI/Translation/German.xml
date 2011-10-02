@@ -874,6 +874,13 @@ Sind Sie sich sicher, dass Sie diesen Branch pushen wollen?</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormPluginSettings">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Plugin Einstellungen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormMailMap">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
