@@ -3,11 +3,15 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormAddToGitIgnore : GitExtensionsForm
     {
+        private readonly TranslationString _matchingFilesString =
+            new TranslationString("{0} file(s) matched");
+            
         public FormAddToGitIgnore(string filePattern)
         {
             InitializeComponent();
@@ -45,8 +49,7 @@ namespace GitUI
         private void UpdatePreviewPanel()
         {
             Preview.DataSource = GitCommandHelpers.GetFiles(FilePattern.Text);
-            NumMatches.Text = Preview.Items.Count.ToString();
-            NumMatches.Left = filesWillBeIgnored.Left - NumMatches.Width + 3;
+            filesWillBeIgnored.Text = string.Format(_matchingFilesString.Text,Preview.Items.Count.ToString());
             noMatchPanel.Visible = (Preview.Items.Count == 0);
         }
 
