@@ -1241,6 +1241,46 @@ Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möc
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormStatus">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Fortschritt</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Ok</Value>
+        </TranslationItem>
+        <TranslationItem Name="KeepDialogOpen" Property="Text">
+          <Value>Dialog nicht schließen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Abort" Property="Text">
+          <Value>Abbrechen</Value>
+        </TranslationItem>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Fortschritt</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Ok</Value>
+        </TranslationItem>
+        <TranslationItem Name="KeepDialogOpen" Property="Text">
+          <Value>Dialog nicht schließen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Abort" Property="Text">
+          <Value>Abbrechen</Value>
+        </TranslationItem>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Fortschritt</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Ok</Value>
+        </TranslationItem>
+        <TranslationItem Name="KeepDialogOpen" Property="Text">
+          <Value>Dialog nicht schließen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Abort" Property="Text">
+          <Value>Abbrechen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormGitAttributes">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
