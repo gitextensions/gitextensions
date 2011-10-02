@@ -120,8 +120,8 @@ namespace GitUI
             this.RepositoriesGrid.RowHeadersVisible = false;
             this.RepositoriesGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.RepositoriesGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.RepositoriesGrid.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.RepositoriesGrid_UserDeletingRow);
             this.RepositoriesGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.RepositoriesGrid_CellValidating);
+            this.RepositoriesGrid.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.RepositoriesGrid_UserDeletingRow);
             // 
             // pathDataGridViewTextBoxColumn
             // 
@@ -152,8 +152,8 @@ namespace GitUI
             this.RepositoriesType.Name = "RepositoriesType";
             this.RepositoriesType.TabStop = true;
             this.RepositoriesType.UseVisualStyleBackColor = true;
-            this.RepositoriesType.Validating += new System.ComponentModel.CancelEventHandler(this.RepositoriesType_Validating);
             this.RepositoriesType.CheckedChanged += new System.EventHandler(this.RepositoriesType_CheckedChanged);
+            this.RepositoriesType.Validating += new System.ComponentModel.CancelEventHandler(this.RepositoriesType_Validating);
             // 
             // _NO_TRANSLATE_RssFeed
             // 
@@ -174,8 +174,8 @@ namespace GitUI
             this.RssFeedType.Name = "RssFeedType";
             this.RssFeedType.TabStop = true;
             this.RssFeedType.UseVisualStyleBackColor = true;
-            this.RssFeedType.Validating += new System.ComponentModel.CancelEventHandler(this.RssFeedType_Validating);
             this.RssFeedType.CheckedChanged += new System.EventHandler(this.RssFeedType_CheckedChanged);
+            this.RssFeedType.Validating += new System.ComponentModel.CancelEventHandler(this.RssFeedType_Validating);
             // 
             // label2
             // 
