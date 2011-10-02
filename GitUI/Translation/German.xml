@@ -683,6 +683,43 @@ Wenn Sie einen Branch holen und mergen wollen, wählen Sie einen speziellen Bran
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormCleanupRepository">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Repository säubern</Value>
+        </TranslationItem>
+        <TranslationItem Name="Preview" Property="Text">
+          <Value>Vorschau</Value>
+        </TranslationItem>
+        <TranslationItem Name="Cleanup" Property="Text">
+          <Value>Säubern</Value>
+        </TranslationItem>
+        <TranslationItem Name="Cancel" Property="Text">
+          <Value>Abbrechen</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Repository säubern</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoveIngnored" Property="Text">
+          <Value>Nur ignorierte nicht-verfolgte Dateien löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoveNonIgnored" Property="Text">
+          <Value>Nur nicht-ignorierte nicht-verfolgte Dateien löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoveAll" Property="Text">
+          <Value>Alle nicht-verfolgten Dateien löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoveDirectories" Property="Text">
+          <Value>Nicht-verfolgte Verzeichnisse löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_reallyCleanupQuestion" Property="Text">
+          <Value>Sind Sie sich sicher, dass Sie das Repository säubern möchten?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_reallyCleanupQuestionCaption" Property="Text">
+          <Value>Säubern</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormDeleteTag">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
