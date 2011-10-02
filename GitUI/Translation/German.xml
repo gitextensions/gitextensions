@@ -1172,6 +1172,13 @@ Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möc
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormCommitCount">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Commit Anzahl</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormApplyPatch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -2109,6 +2116,31 @@ synchronize [--rebase] [--merge] [--fetch] [--quiet]</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Value>Sie können die Sprache jederzeit bei den Einstellugen ändern</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormContributors">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Unterstützer</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Programmierer:</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Übersetzer:</Value>
+        </TranslationItem>
+        <TranslationItem Name="translatorsLabel" Property="Text">
+          <Value>Übersetzer</Value>
+        </TranslationItem>
+        <TranslationItem Name="codersLabel" Property="Text">
+          <Value>Programmierer</Value>
+        </TranslationItem>
+        <TranslationItem Name="designersLabel" Property="Text">
+          <Value>Designer</Value>
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text">
+          <Value>Logo Design:</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
