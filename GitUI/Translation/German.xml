@@ -1303,6 +1303,49 @@ Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möc
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormCherryPickCommitSmall">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Cherry Pick Commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="Date" Property="Text">
+          <Value>Commit Datum:</Value>
+        </TranslationItem>
+        <TranslationItem Name="Message" Property="Text">
+          <Value>Nachricht:</Value>
+        </TranslationItem>
+        <TranslationItem Name="Author" Property="Text">
+          <Value>Autor:</Value>
+        </TranslationItem>
+        <TranslationItem Name="Commit" Property="Text">
+          <Value>Commit:</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchInfo" Property="Text">
+          <Value>Diesen Commit Cherry Picken</Value>
+        </TranslationItem>
+        <TranslationItem Name="Pick" Property="Text">
+          <Value>Ausführen</Value>
+        </TranslationItem>
+        <TranslationItem Name="AutoCommit" Property="Text">
+          <Value>Automatisch ein Commit erzeugen</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader1" Property="Text">
+          <Value>Nein.</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader2" Property="Text">
+          <Value>Nachricht</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader3" Property="Text">
+          <Value>Autor</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader4" Property="Text">
+          <Value>Datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="ParentsLabel" Property="Text">
+          <Value>Dieser Commit ist ein Merge, übergeordnetes Element auswählen:</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormBisect">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
