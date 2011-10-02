@@ -582,6 +582,73 @@ Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möc
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormApplyPatch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Patch anwenden</Value>
+        </TranslationItem>
+        <TranslationItem Name="_conflictResolvedText" Property="Text">
+          <Value>Konflikt gelöst</Value>
+        </TranslationItem>
+        <TranslationItem Name="_conflictMergetoolText" Property="Text">
+          <Value>Konflike lösen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_conflictMergetoolText2" Property="Text">
+          <Value>&gt;Konflikte lösen&lt;</Value>
+        </TranslationItem>
+        <TranslationItem Name="_conflictResolvedText2" Property="Text">
+          <Value>&gt;Konflikt gelöst&lt;</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectPatchFileFilter" Property="Text">
+          <Value>Patch-Datei (*.Patch)</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectPatchFileCaption" Property="Text">
+          <Value>Patch-Datei auswählen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noFileSelectedText" Property="Text">
+          <Value>Bitte wählen Sie eine Patch-Datei aus</Value>
+        </TranslationItem>
+        <TranslationItem Name="_applyPatchMsgBox" Property="Text">
+          <Value>Patch anwenden</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowsePatch" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Apply" Property="Text">
+          <Value>Patch anwenden</Value>
+        </TranslationItem>
+        <TranslationItem Name="Mergetool" Property="Text">
+          <Value>Konflikte lösen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Skip" Property="Text">
+          <Value>Patch überspringen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Abort" Property="Text">
+          <Value>Patch abbrechen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Resolved" Property="Text">
+          <Value>Konflikte gelöst</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddFiles" Property="Text">
+          <Value>Dateien hinzufügen</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseDir" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="PatchDirMode" Property="Text">
+          <Value>Patch-Verzeichnis</Value>
+        </TranslationItem>
+        <TranslationItem Name="PatchFileMode" Property="Text">
+          <Value>Patch-Datei</Value>
+        </TranslationItem>
+        <TranslationItem Name="SolveMergeconflicts" Property="Text">
+          <Value>Es liegen nicht gelöste Mergekonflikte vor</Value>
+        </TranslationItem>
+        <TranslationItem Name="IgnoreWhitespace" Property="Text">
+          <Value>Leerzeichen ignor.</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormBisect">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
