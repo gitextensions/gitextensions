@@ -43,7 +43,7 @@
             // Preview
             // 
             this.Preview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Preview.Location = new System.Drawing.Point(296, 12);
+            this.Preview.Location = new System.Drawing.Point(365, 12);
             this.Preview.Name = "Preview";
             this.Preview.Size = new System.Drawing.Size(88, 25);
             this.Preview.TabIndex = 0;
@@ -54,7 +54,7 @@
             // Cleanup
             // 
             this.Cleanup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Cleanup.Location = new System.Drawing.Point(296, 42);
+            this.Cleanup.Location = new System.Drawing.Point(365, 42);
             this.Cleanup.Name = "Cleanup";
             this.Cleanup.Size = new System.Drawing.Size(88, 25);
             this.Cleanup.TabIndex = 1;
@@ -66,7 +66,7 @@
             // 
             this.Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Cancel.Location = new System.Drawing.Point(296, 71);
+            this.Cancel.Location = new System.Drawing.Point(365, 71);
             this.Cancel.Name = "Cancel";
             this.Cancel.Size = new System.Drawing.Size(88, 25);
             this.Cancel.TabIndex = 2;
@@ -83,7 +83,7 @@
             this.groupBox1.Controls.Add(this.RemoveAll);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(278, 100);
+            this.groupBox1.Size = new System.Drawing.Size(347, 100);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Cleanup repository";
@@ -93,7 +93,7 @@
             this.RemoveIngnored.AutoSize = true;
             this.RemoveIngnored.Location = new System.Drawing.Point(7, 67);
             this.RemoveIngnored.Name = "RemoveIngnored";
-            this.RemoveIngnored.Size = new System.Drawing.Size(205, 17);
+            this.RemoveIngnored.Size = new System.Drawing.Size(225, 19);
             this.RemoveIngnored.TabIndex = 2;
             this.RemoveIngnored.Text = "Remove only ingnored untracked files";
             this.RemoveIngnored.UseVisualStyleBackColor = true;
@@ -103,7 +103,7 @@
             this.RemoveNonIgnored.AutoSize = true;
             this.RemoveNonIgnored.Location = new System.Drawing.Point(7, 43);
             this.RemoveNonIgnored.Name = "RemoveNonIgnored";
-            this.RemoveNonIgnored.Size = new System.Drawing.Size(221, 17);
+            this.RemoveNonIgnored.Size = new System.Drawing.Size(244, 19);
             this.RemoveNonIgnored.TabIndex = 1;
             this.RemoveNonIgnored.Text = "Remove only non-ignored untracked files";
             this.RemoveNonIgnored.UseVisualStyleBackColor = true;
@@ -114,7 +114,7 @@
             this.RemoveAll.Checked = true;
             this.RemoveAll.Location = new System.Drawing.Point(7, 20);
             this.RemoveAll.Name = "RemoveAll";
-            this.RemoveAll.Size = new System.Drawing.Size(150, 17);
+            this.RemoveAll.Size = new System.Drawing.Size(163, 19);
             this.RemoveAll.TabIndex = 0;
             this.RemoveAll.TabStop = true;
             this.RemoveAll.Text = "Remove all untracked files";
@@ -127,7 +127,7 @@
             this.RemoveDirectories.CheckState = System.Windows.Forms.CheckState.Checked;
             this.RemoveDirectories.Location = new System.Drawing.Point(19, 119);
             this.RemoveDirectories.Name = "RemoveDirectories";
-            this.RemoveDirectories.Size = new System.Drawing.Size(169, 17);
+            this.RemoveDirectories.Size = new System.Drawing.Size(183, 19);
             this.RemoveDirectories.TabIndex = 4;
             this.RemoveDirectories.Text = "Remove untracked directories";
             this.RemoveDirectories.UseVisualStyleBackColor = true;
@@ -141,16 +141,16 @@
             this.PreviewOutput.Multiline = true;
             this.PreviewOutput.Name = "PreviewOutput";
             this.PreviewOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.PreviewOutput.Size = new System.Drawing.Size(372, 207);
+            this.PreviewOutput.Size = new System.Drawing.Size(441, 207);
             this.PreviewOutput.TabIndex = 5;
             // 
             // FormCleanupRepository
             // 
             this.AcceptButton = this.Preview;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.Cancel;
-            this.ClientSize = new System.Drawing.Size(396, 361);
+            this.ClientSize = new System.Drawing.Size(465, 361);
             this.Controls.Add(this.PreviewOutput);
             this.Controls.Add(this.RemoveDirectories);
             this.Controls.Add(this.groupBox1);
