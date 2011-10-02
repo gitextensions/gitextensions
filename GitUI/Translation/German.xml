@@ -1461,6 +1461,81 @@ Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen vo
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormClone">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Klonen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Ziel</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Zu klonendes Repository</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Jetzt klonen</Value>
+        </TranslationItem>
+        <TranslationItem Name="ToBrowse" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="FromBrowse" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Art des Repositorys</Value>
+        </TranslationItem>
+        <TranslationItem Name="CentralRepository" Property="Text">
+          <Value>Öffentliches Repository, kein Arbeitsverzeichnis (--bare)</Value>
+        </TranslationItem>
+        <TranslationItem Name="PersonalRepository" Property="Text">
+          <Value>Privates Repository</Value>
+        </TranslationItem>
+        <TranslationItem Name="Central" Property="Text">
+          <Value>Zentrales Repository, kein Arbeitsverzeichnis (--bare --shared=all)</Value>
+        </TranslationItem>
+        <TranslationItem Name="Personal" Property="Text">
+          <Value>Privates Repository</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>SSH-Schlüssel laden</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>Unterverzeichnis</Value>
+        </TranslationItem>
+        <TranslationItem Name="Info" Property="Text">
+          <Value>Das Repository wird an folgender Stelle in einem neuen Verzeichnis geklont:
+[Destination]\[Subdirectory to create]</Value>
+        </TranslationItem>
+        <TranslationItem Name="brachLabel" Property="Text">
+          <Value>Branch</Value>
+        </TranslationItem>
+        <TranslationItem Name="_infoNewRepositoryLocation" Property="Text">
+          <Value>Das Repository wird an folgender Stelle in ein neues Verzeichnis geklont:
+{0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="_infoDirectoryExists" Property="Text">
+          <Value>(Verzeichnis existiert bereits)</Value>
+        </TranslationItem>
+        <TranslationItem Name="_infoDirectoryNew" Property="Text">
+          <Value>(Neues Verzeichnis)</Value>
+        </TranslationItem>
+        <TranslationItem Name="_questionOpenRepo" Property="Text">
+          <Value>Das Repository wurde erfolgreich geklont.
+Wollen Sie das neue Repository "{0}" jetzt öffnen?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_questionOpenRepoCaption" Property="Text">
+          <Value>Öffnen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_questionInitSubmodules" Property="Text">
+          <Value>Das geklone Repository enthält Untermodule.
+Wollen Sie die Untermodule initialisieren?
+Dies wird alle Untermodule rekursiv initialisieren und aktualisieren.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_questionInitSubmodulesCaption" Property="Text">
+          <Value>Untermodule</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormAddToGitIgnore">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
