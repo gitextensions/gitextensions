@@ -1450,6 +1450,490 @@ Sie in der Git Hilfe nach</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormSettings">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Einstellungen</Value>
+        </TranslationItem>
+        <TranslationItem Name="LocalSettings" Property="Text">
+          <Value>Lokale Einstellungen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Benutzer E-Mail</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Benutzername</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Ok</Value>
+        </TranslationItem>
+        <TranslationItem Name="GlobalSettingsPage" Property="Text">
+          <Value>Globale Einstellungen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>Benutzername</Value>
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text">
+          <Value>Benutzer E-Mail</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Value>Editor</Value>
+        </TranslationItem>
+        <TranslationItem Name="label6" Property="Text">
+          <Value>Editor</Value>
+        </TranslationItem>
+        <TranslationItem Name="label7" Property="Text">
+          <Value>Mergeprogramm</Value>
+        </TranslationItem>
+        <TranslationItem Name="label8" Property="Text">
+          <Value>Mergeprogramm</Value>
+        </TranslationItem>
+        <TranslationItem Name="tabPage3" Property="Text">
+          <Value>Checkliste</Value>
+        </TranslationItem>
+        <TranslationItem Name="label11" Property="Text">
+          <Value>Die folgende Checkliste überprüft alle Grundeinstellungen, damit GitExtensions korrekt arbeitet.</Value>
+        </TranslationItem>
+        <TranslationItem Name="CheckAtStartup" Property="Text">
+          <Value>Einstellungen beim Start überprüfen (Wird automatisch deaktiviert, wenn alle Einstellungen korrekt sind)</Value>
+        </TranslationItem>
+        <TranslationItem Name="Rescan" Property="Text">
+          <Value>Speichern und neu einlesen</Value>
+        </TranslationItem>
+        <TranslationItem Name="TabPageGitExtensions" Property="Text">
+          <Value>Git Extensions</Value>
+        </TranslationItem>
+        <TranslationItem Name="label12" Property="Text">
+          <Value>Anzahl der Commits, die beim Start geladen werden, beschränken auf</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseGitPath" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label13" Property="Text">
+          <Value>Kommando, welches für Git verwendet wird (git.cmd oder git.exe)</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseGitBinPath" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label14" Property="Text">
+          <Value>Pfad zu den Linux Tools (sh)</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ssh" Property="Text">
+          <Value>SSH</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>SSH-Client</Value>
+        </TranslationItem>
+        <TranslationItem Name="PlinkBrowse" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="OpenSSH" Property="Text">
+          <Value>OpenSSH</Value>
+        </TranslationItem>
+        <TranslationItem Name="Putty" Property="Text">
+          <Value>PuTTY</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox2" Property="Text">
+          <Value>PuTTY konfigurieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="label15" Property="Text">
+          <Value>Pfad zur plink.exe</Value>
+        </TranslationItem>
+        <TranslationItem Name="PageantBrowse" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label17" Property="Text">
+          <Value>Pfad zur pageant.exe</Value>
+        </TranslationItem>
+        <TranslationItem Name="PuttygenBrowse" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label16" Property="Text">
+          <Value>Pfad zu puttygen.exe</Value>
+        </TranslationItem>
+        <TranslationItem Name="label18" Property="Text">
+          <Value>OpenSSH ist ein Kommandozeilenprogramm. PuTTY ist benutzerfreundlicher für Windows-Benutzer, 
+setzt aber voraus das Pageant im Hintergrund läuft.
+Wenn Sie OpenSSH verwenden, werden Kommandozeilendialoge angezeigt!´</Value>
+        </TranslationItem>
+        <TranslationItem Name="OtherSshBrowse" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Other" Property="Text">
+          <Value>Anderer SSH Client</Value>
+        </TranslationItem>
+        <TranslationItem Name="AutostartPageant" Property="Text">
+          <Value>Automatisch den Authentifizierungsclient starten wenn ein privater Schlüssel für einen Remote konfiguriert ist</Value>
+        </TranslationItem>
+        <TranslationItem Name="PathToKDiff3" Property="Text">
+          <Value>Pfad zu Mergeprogramm</Value>
+        </TranslationItem>
+        <TranslationItem Name="label20" Property="Text">
+          <Value>Sie benötigen die lokalen 
+Einstellungen nur, wenn
+Sie die globalen Einstellungen
+beim aktuellen Repository
+ändern möchten.</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseMergeTool" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label19" Property="Text">
+          <Value>Kommando</Value>
+        </TranslationItem>
+        <TranslationItem Name="button1" Property="Text">
+          <Value>Vorschlagen</Value>
+        </TranslationItem>
+        <TranslationItem Name="NoGitRepo" Property="Text">
+          <Value>Kein Git Repository</Value>
+        </TranslationItem>
+        <TranslationItem Name="label9" Property="Text">
+          <Value>Sie müssen den korrekten Pfad
+zu Git angeben bevor Sie die
+globalen Einstellungen ändern
+können.</Value>
+        </TranslationItem>
+        <TranslationItem Name="label21" Property="Text">
+          <Value>Sie müssen den korrekten Pfad
+zu Git angeben bevor Sie die
+lokalen Einstellungen ändern
+können.</Value>
+        </TranslationItem>
+        <TranslationItem Name="label10" Property="Text">
+          <Value>Sie müssen den korrekten Pfad
+zu git.cmd angeben bevor Sie die
+globalen Einstellungen ändern
+können.</Value>
+        </TranslationItem>
+        <TranslationItem Name="label22" Property="Text">
+          <Value>Wörterbuch für Rechtschreibprüfung</Value>
+        </TranslationItem>
+        <TranslationItem Name="label23" Property="Text">
+          <Value>SMTP Server  um Patches per E-Mail zu senden</Value>
+        </TranslationItem>
+        <TranslationItem Name="EncodingLabel" Property="Text">
+          <Value>Kodierung</Value>
+        </TranslationItem>
+        <TranslationItem Name="AppearancePage" Property="Text">
+          <Value>Erscheinungsbild</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox4" Property="Text">
+          <Value>Revisionsgraph</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox3" Property="Text">
+          <Value>Vergleichsansicht</Value>
+        </TranslationItem>
+        <TranslationItem Name="label27" Property="Text">
+          <Value>Farbe für gelöschte Zeilen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label31" Property="Text">
+          <Value>Farbe für Bereich</Value>
+        </TranslationItem>
+        <TranslationItem Name="label29" Property="Text">
+          <Value>Farbe für hinzugefügte Zeilen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label33" Property="Text">
+          <Value>Farbe für Remote Branches</Value>
+        </TranslationItem>
+        <TranslationItem Name="label36" Property="Text">
+          <Value>Farbe für andere Beschriftungen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label25" Property="Text">
+          <Value>Farbe für Tags</Value>
+        </TranslationItem>
+        <TranslationItem Name="label32" Property="Text">
+          <Value>Farbe für Branches</Value>
+        </TranslationItem>
+        <TranslationItem Name="label30" Property="Text">
+          <Value>Orginaldatei beibehalten nach Merge (.orig)</Value>
+        </TranslationItem>
+        <TranslationItem Name="label28" Property="Text">
+          <Value>Orginaldatei beibehalten nach Merge (.orig)</Value>
+        </TranslationItem>
+        <TranslationItem Name="label35" Property="Text">
+          <Value>Git Kommandozeilendialoge anzeigen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label34" Property="Text">
+          <Value>Kommandozeilendialoge automatisch schließen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label39" Property="Text">
+          <Value>Relatives Datum statt absolutes Datum anzeigen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label38" Property="Text">
+          <Value>Benutze FileSystemWatchter um Änderungen am Index festzustellen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label40" Property="Text">
+          <Value>Verfolge Umbenennen in der Datei-Historie (Experimentell)</Value>
+        </TranslationItem>
+        <TranslationItem Name="label41" Property="Text">
+          <Value>Vergleichsprogramm</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseDiffTool" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label42" Property="Text">
+          <Value>Pfad zu Vergleichsprog.</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox5" Property="Text">
+          <Value>Applikationicon</Value>
+        </TranslationItem>
+        <TranslationItem Name="GreenIcon" Property="Text">
+          <Value>Grün</Value>
+        </TranslationItem>
+        <TranslationItem Name="PurpleIcon" Property="Text">
+          <Value>Lila</Value>
+        </TranslationItem>
+        <TranslationItem Name="BlueIcon" Property="Text">
+          <Value>Blau</Value>
+        </TranslationItem>
+        <TranslationItem Name="DefaultIcon" Property="Text">
+          <Value>Standard</Value>
+        </TranslationItem>
+        <TranslationItem Name="YellowIcon" Property="Text">
+          <Value>Gelb</Value>
+        </TranslationItem>
+        <TranslationItem Name="RedIcon" Property="Text">
+          <Value>Rot</Value>
+        </TranslationItem>
+        <TranslationItem Name="RandomIcon" Property="Text">
+          <Value>Zufällig</Value>
+        </TranslationItem>
+        <TranslationItem Name="label43" Property="Text">
+          <Value>Farbe für hervorgehobene gelöschte Zeilen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label45" Property="Text">
+          <Value>Farbe für hervorgehobene hinzugefügte Zeilen</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox6" Property="Text">
+          <Value>Autor Bild</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowAuthorGravatar" Property="Text">
+          <Value>Autor Bild von gravatar.com laden</Value>
+        </TranslationItem>
+        <TranslationItem Name="ClearImageCache" Property="Text">
+          <Value>Bilder Cache löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label44" Property="Text">
+          <Value>Bild Größe</Value>
+        </TranslationItem>
+        <TranslationItem Name="StartPage" Property="Text">
+          <Value>Startseite</Value>
+        </TranslationItem>
+        <TranslationItem Name="label47" Property="Text">
+          <Value>Tage</Value>
+        </TranslationItem>
+        <TranslationItem Name="label46" Property="Text">
+          <Value>Bilder zwischenspeichern</Value>
+        </TranslationItem>
+        <TranslationItem Name="DiffToolCmdSuggest" Property="Text">
+          <Value>Vorschlagen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label48" Property="Text">
+          <Value>Kommando</Value>
+        </TranslationItem>
+        <TranslationItem Name="label49" Property="Text">
+          <Value>Sprache (Neustart erforderlich)</Value>
+        </TranslationItem>
+        <TranslationItem Name="helpTranslate" Property="Text">
+          <Value>Helfen Sie beim Übersetzen</Value>
+        </TranslationItem>
+        <TranslationItem Name="TabPageGit" Property="Text">
+          <Value>Git</Value>
+        </TranslationItem>
+        <TranslationItem Name="MulticolorBranches" Property="Text">
+          <Value>Mehrfarbige Branches</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox7" Property="Text">
+          <Value>Git</Value>
+        </TranslationItem>
+        <TranslationItem Name="label50" Property="Text">
+          <Value>Git Extension kann msysgit oder cygwin verwenden um auf Git Repositorys zuzugreifen. Setzen Sie hier die korrekten Pfade.</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox8" Property="Text">
+          <Value>Umgebung</Value>
+        </TranslationItem>
+        <TranslationItem Name="otherHomeBrowse" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="otherHome" Property="Text">
+          <Value>Anderes</Value>
+        </TranslationItem>
+        <TranslationItem Name="userprofileHome" Property="Text">
+          <Value>Setze HOME zu USERPROFILE</Value>
+        </TranslationItem>
+        <TranslationItem Name="defaultHome" Property="Text">
+          <Value>Standardmäßig HOME verwenden</Value>
+        </TranslationItem>
+        <TranslationItem Name="label51" Property="Text">
+          <Value>Die globale Konfigurationsdatei ist im Verzeichnis %HOME% gespeichert. Standardmäßig wird %HOME% auf 
+%HOMEDRIVE%%HOMEPATH% gesetzt, wenn diese leer ist. Ändern Sie das Standardverhalten nur, wenn Probleme 
+bei der Benutzung auftreten.</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchBorders" Property="Text">
+          <Value>Zeichne Branch Ränder</Value>
+        </TranslationItem>
+        <TranslationItem Name="StripedBanchChange" Property="Text">
+          <Value>Branch Änderungen stricheln</Value>
+        </TranslationItem>
+        <TranslationItem Name="showGitStatusInToolbarLabel" Property="Text">
+          <Value>Zeige Repository Status im Durchsuchen Dialog (Anzahl der Änderungen in der Toolbar, Neustart erforderlich)</Value>
+        </TranslationItem>
+        <TranslationItem Name="RevisionGridQuickSearchTimeout" Property="Text">
+          <Value>1000</Value>
+        </TranslationItem>
+        <TranslationItem Name="label24" Property="Text">
+          <Value>Timeout in ms bei der Revision Schnellsuche</Value>
+        </TranslationItem>
+        <TranslationItem Name="showErrorsWhenStagingFilesLabel" Property="Text">
+          <Value>Zeige Fehler beim Stagen von Dateien an</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox9" Property="Text">
+          <Value>Zeilenumbrüche
+</Value>
+        </TranslationItem>
+        <TranslationItem Name="globalAutoCrlfFalse" Property="Text">
+          <Value>Keine Änderung beim Auschecken und Commiten ("core.autocrlf" = false)</Value>
+        </TranslationItem>
+        <TranslationItem Name="globalAutoCrlfInput" Property="Text">
+          <Value>Keine Änderung beim Auschecken, Zeilenumbrüche im Unix-Format commmiten ("core.autocrlf" = input)</Value>
+        </TranslationItem>
+        <TranslationItem Name="globalAutoCrlfTrue" Property="Text">
+          <Value>Zeilenumbrüche im Windows-Format auschecken, im Unix-Format commiten ("core.autocrlf" = true)</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox10" Property="Text">
+          <Value>Zeilenumbrüche</Value>
+        </TranslationItem>
+        <TranslationItem Name="localAutoCrlfFalse" Property="Text">
+          <Value>Keine Änderung beim Auschecken und Commiten ("core.autocrlf" = false)</Value>
+        </TranslationItem>
+        <TranslationItem Name="localAutoCrlfInput" Property="Text">
+          <Value>Keine Änderung beim Auschecken, Zeilenumbrüche im Unix-Format commmiten ("core.autocrlf" = input)</Value>
+        </TranslationItem>
+        <TranslationItem Name="localAutoCrlfTrue" Property="Text">
+          <Value>Zeilenumbrüche im Windows-Format auschecken, im Unix-Format commiten ("core.autocrlf" = true)</Value>
+        </TranslationItem>
+        <TranslationItem Name="DrawNonRelativesGray" Property="Text">
+          <Value>Graphen ohne Bezug grau zeichnen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label26" Property="Text">
+          <Value>Änderungen im Arbeitsverzeichnis im Graphen darstellen (langsam)</Value>
+        </TranslationItem>
+        <TranslationItem Name="label52" Property="Text">
+          <Value>Anzahl der Stashes in der Statuszeile im Hauptfenster anzeigen</Value>
+        </TranslationItem>
+        <TranslationItem Name="scriptsTab" Property="Text">
+          <Value>Skripte</Value>
+        </TranslationItem>
+        <TranslationItem Name="inMenuCheckBox" Property="Text">
+          <Value>Zum Kontextmenü der Revision-Übersicht hinzufügen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label53" Property="Text">
+          <Value>Bei Bild nicht verfügbar</Value>
+        </TranslationItem>
+        <TranslationItem Name="argumentsLabel" Property="Text">
+          <Value>Parameter:</Value>
+        </TranslationItem>
+        <TranslationItem Name="commandLabel" Property="Text">
+          <Value>Kommando:</Value>
+        </TranslationItem>
+        <TranslationItem Name="nameLabel" Property="Text">
+          <Value>Name:</Value>
+        </TranslationItem>
+        <TranslationItem Name="browseScriptButton" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="removeScriptButton" Property="Text">
+          <Value>Entfernen</Value>
+        </TranslationItem>
+        <TranslationItem Name="addScriptButton" Property="Text">
+          <Value>Hinzufügen</Value>
+        </TranslationItem>
+        <TranslationItem Name="helpLabel" Property="Text">
+          <Value>Drücken Sie F1 um alle Einstellungen anzuzeigen</Value>
+        </TranslationItem>
+        <TranslationItem Name="downloadDictionary" Property="Text">
+          <Value>Download-Verzeichnis</Value>
+        </TranslationItem>
+        <TranslationItem Name="DrawNonRelativesTextGray" Property="Text">
+          <Value>Texte ohne Bezug grau zeichnen</Value>
+        </TranslationItem>
+        <TranslationItem Name="translationConfig_Fix" Property="Text">
+          <Value>Reparieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="SshConfig_Fix" Property="Text">
+          <Value>Reparieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="GitExtensionsInstall_Fix" Property="Text">
+          <Value>Reparieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="GitBinFound_Fix" Property="Text">
+          <Value>Reparieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShellExtensionsRegistered_Fix" Property="Text">
+          <Value>Reparieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="DiffTool2_Fix" Property="Text">
+          <Value>Reparieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="DiffTool_Fix" Property="Text">
+          <Value>Reparieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="UserNameSet_Fix" Property="Text">
+          <Value>Reparieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="GitFound_Fix" Property="Text">
+          <Value>Reparieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="tabPageHotkeys" Property="Text">
+          <Value>Tastenkombination</Value>
+        </TranslationItem>
+        <TranslationItem Name="scriptEnabled" Property="Text">
+          <Value>Aktiviert</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelOnEvent" Property="Text">
+          <Value>Bei Ereignis:</Value>
+        </TranslationItem>
+        <TranslationItem Name="scriptNeedsConfirmation" Property="Text">
+          <Value>Bestätigung anfordern</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelShowCurrentBranchInVisualStudio" Property="Text">
+          <Value>Zeige aktuellen Branch in Visual Studio</Value>
+        </TranslationItem>
+        <TranslationItem Name="label37" Property="Text">
+          <Value>Patience-Parameter beim Vergleich verwenden</Value>
+        </TranslationItem>
+        <TranslationItem Name="truncatePathMethod" Property="Text">
+          <Value>Lange Dateinamen abschneiden</Value>
+        </TranslationItem>
+        <TranslationItem Name="LightblueIcon" Property="Text">
+          <Value>Hellblau</Value>
+        </TranslationItem>
+        <TranslationItem Name="label54" Property="Text">
+          <Value>Icon-Style</Value>
+        </TranslationItem>
+        <TranslationItem Name="label55" Property="Text">
+          <Value>Icon-Farbe</Value>
+        </TranslationItem>
+        <TranslationItem Name="diffFontChangeButton" Property="Text">
+          <Value>Courier New, 10</Value>
+        </TranslationItem>
+        <TranslationItem Name="label56" Property="Text">
+          <Value>Schriftart</Value>
+        </TranslationItem>
+        <TranslationItem Name="lbl_icon" Property="Text">
+          <Value>Icon:</Value>
+        </TranslationItem>
+        <TranslationItem Name="sbtn_icon" Property="Text">
+          <Value>Icon auswählen</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseCommitTemplate" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label57" Property="Text">
+          <Value>Pfad zu Commit-Template</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormRevertCommitSmall">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
