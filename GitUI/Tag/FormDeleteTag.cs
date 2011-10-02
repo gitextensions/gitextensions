@@ -2,11 +2,14 @@
 using System.Diagnostics;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI.Tag
 {
     public partial class FormDeleteTag : GitExtensionsForm
     {
+        private readonly TranslationString _deleteTagMessageBoxCaption = new TranslationString("Delete Tag");
+
         public FormDeleteTag()
         {
             InitializeComponent(); Translate();
@@ -25,7 +28,7 @@ namespace GitUI.Tag
                 string s = GitCommandHelpers.DeleteTag(Tags.Text);
 
                 if (!string.IsNullOrEmpty(s))
-                    MessageBox.Show(s, "Delete tag");
+                    MessageBox.Show(s, _deleteTagMessageBoxCaption.Text);
 
                 Close();
             }

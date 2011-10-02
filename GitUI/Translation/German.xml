@@ -630,6 +630,19 @@ Wenn Sie einen Branch holen und mergen wollen, wählen Sie einen speziellen Bran
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormDeleteTag">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Tag löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Tag auswählen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormTranslate">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
