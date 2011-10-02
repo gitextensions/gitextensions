@@ -1710,6 +1710,22 @@ Dies wird alle Untermodule rekursiv initialisieren und aktualisieren.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormEditor">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Editor</Value>
+        </TranslationItem>
+        <TranslationItem Name="_saveChanges" Property="Text">
+          <Value>Wollen Sie Ihre Änderungen speichern</Value>
+        </TranslationItem>
+        <TranslationItem Name="_saveChangesCaption" Property="Text">
+          <Value>Speichern</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripSaveButton" Property="ToolTipText">
+          <Value>Speichern</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormPull">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -1795,7 +1811,7 @@ Wenn Sie einen Branch holen und mergen wollen, wählen Sie einen speziellen Bran
     <TranslationCategory Name="FormDiff">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Vergleich</Value>
+          <Value>Vergleichen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
