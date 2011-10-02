@@ -2,11 +2,15 @@
 using System.Diagnostics;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public sealed partial class FormBranchSmall : GitExtensionsForm
     {
+        private readonly TranslationString _noRevisionSelected =
+            new TranslationString("Select 1 revision to create the branch on.");
+
         public FormBranchSmall()
         {
             InitializeComponent();
@@ -21,7 +25,7 @@ namespace GitUI
             {
                 if (Revision == null)
                 {
-                    MessageBox.Show("Select 1 revision to create the branch on.", "Branch");
+                    MessageBox.Show(_noRevisionSelected.Text, Text);
                     return;
                 }
                 var branchCmd = GitCommandHelpers.BranchCmd(BranchNameTextBox.Text, Revision.Guid,
