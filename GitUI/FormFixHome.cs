@@ -2,11 +2,34 @@
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormFixHome : GitExtensionsForm
     {
+        private static readonly TranslationString _gitGlobalConfigNotFound =
+            new TranslationString("The environment variable HOME does not point to a directory that contains the global git config file:" + Environment.NewLine +
+                "\" {0} \"" + Environment.NewLine + Environment.NewLine + "Do you want Git Extensions to help locate the correct folder?");
+        private static readonly TranslationString _gitGlobalConfigNotFoundCaption =
+            new TranslationString("Global config");
+
+        private readonly TranslationString _gitconfigFoundHome =
+            new TranslationString("Located .gitconfig in %HOME% ({0}). This setting has been chosen automatically.");
+        private readonly TranslationString _gitconfigFoundHomedrive =
+            new TranslationString("Located .gitconfig in %HOMEDRIVE%%HOMEPATH% ({0}). This setting has been chosen automatically.");
+        private readonly TranslationString _gitconfigFoundUserprofile =
+            new TranslationString("Located .gitconfig in %USERPROFILE% ({0}). This setting has been chosen automatically.");
+        private readonly TranslationString _gitconfigFoundPersonalFolder =
+            new TranslationString("Located .gitconfig in personal folder ({0}). This setting has been chosen automatically.");
+
+        private readonly TranslationString _noHomeDirectorySpecified =
+            new TranslationString("Please enter a HOME directory.");
+        private readonly TranslationString _homeNotAccessible =
+            new TranslationString("The environment variable HOME points to a directory that is not accessible:" + Environment.NewLine +
+                                "\"{0}\"");
+
+
         private static bool IsFixHome()
         {
             try
@@ -55,9 +78,8 @@ namespace GitUI
 
             if (IsFixHome())
             {
-                if (MessageBox.Show("The environment variable HOME does not point to a directory that contains the global git config file:" + Environment.NewLine +
-                                "\"" + Environment.GetEnvironmentVariable("HOME") + "\"" + Environment.NewLine + Environment.NewLine +
-                                "Do you want Git Extensions to help locate the correct folder?", "Global config", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(string.Format(_gitGlobalConfigNotFound.Text,Environment.GetEnvironmentVariable("HOME")),
+                        _gitGlobalConfigNotFoundCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                     new FormFixHome().ShowDialog();
             }
         }
@@ -99,7 +121,7 @@ namespace GitUI
             {
                 if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)) && File.Exists(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User) + Settings.PathSeparator + ".gitconfig"))
                 {
-                    MessageBox.Show("Located .gitconfig in %HOME% (" + Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User) + "). This setting has been chosen automatically.");
+                    MessageBox.Show(string.Format(_gitconfigFoundHome.Text, Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)));
                     defaultHome.Checked = true;
                     return;
                 }
@@ -114,7 +136,7 @@ namespace GitUI
             {
                 if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH")) && File.Exists(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH") + Settings.PathSeparator + ".gitconfig"))
                 {
-                    MessageBox.Show("Located .gitconfig in %HOMEDRIVE%%HOMEPATH% (" + Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH") + "). This setting has been chosen automatically.");
+                    MessageBox.Show(string.Format(_gitconfigFoundHomedrive.Text, Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH")));
                     defaultHome.Checked = true;
                     return;
                 }
@@ -129,7 +151,7 @@ namespace GitUI
             {
                 if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("USERPROFILE")) && File.Exists(Environment.GetEnvironmentVariable("USERPROFILE") + Settings.PathSeparator + ".gitconfig"))
                 {
-                    MessageBox.Show("Located .gitconfig in %USERPROFILE% (" + Environment.GetEnvironmentVariable("USERPROFILE") + "). This setting has been chosen automatically.");
+                    MessageBox.Show(string.Format(_gitconfigFoundUserprofile.Text, Environment.GetEnvironmentVariable("USERPROFILE")));
                     userprofileHome.Checked = true;
                     return;
                 }
@@ -144,7 +166,7 @@ namespace GitUI
             {
                 if (!string.IsNullOrEmpty(Environment.GetFolderPath(Environment.SpecialFolder.Personal)) && File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + Settings.PathSeparator + ".gitconfig"))
                 {
-                    MessageBox.Show("Located .gitconfig in personal folder (" + Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "). This setting has been chosen automatically.");
+                    MessageBox.Show(string.Format(_gitconfigFoundPersonalFolder.Text, Environment.GetFolderPath(Environment.SpecialFolder.Personal)));
                     otherHome.Checked = true;
                     otherHomeDir.Text = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
                     return;
@@ -166,7 +188,7 @@ namespace GitUI
             {
                 if (string.IsNullOrEmpty(otherHomeDir.Text))
                 {
-                    MessageBox.Show("Please enter a HOME directory.");
+                    MessageBox.Show(_noHomeDirectorySpecified.Text);
                     return;
                 }
                 Settings.CustomHomeDir = otherHomeDir.Text;
@@ -179,8 +201,7 @@ namespace GitUI
             GitCommandHelpers.SetEnvironmentVariable(true);
             if (!Directory.Exists(Environment.GetEnvironmentVariable("HOME")) || string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME")))
             {
-                MessageBox.Show("The environment variable HOME points to a directory that is not accessible:" + Environment.NewLine +
-                                "\"" + Environment.GetEnvironmentVariable("HOME") + "\"");
+                MessageBox.Show(string.Format(_homeNotAccessible.Text, Environment.GetEnvironmentVariable("HOME")));
 
                 return;
             }
