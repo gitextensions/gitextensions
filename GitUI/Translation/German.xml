@@ -1,6 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Translation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <translationCategories>
+    <TranslationCategory Name="FormVerify">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Datenbank überprüfen</Value>
+        </TranslationItem>
+        <TranslationItem Name="mnuLostObjectsCreateTag" Property="Text">
+          <Value>Tag erzeugen</Value>
+        </TranslationItem>
+        <TranslationItem Name="mnuLostObjectView" Property="Text">
+          <Value>Anzeigen</Value>
+        </TranslationItem>
+        <TranslationItem Name="mnuLostObjectsCreateBranch" Property="Text">
+          <Value>Branch erzeugen</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnCloseDialog" Property="Text">
+          <Value>Abbrechen</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnRestoreSelectedObjects" Property="Text">
+          <Value>Ausgewählte Objekte wiederherstellen</Value>
+        </TranslationItem>
+        <TranslationItem Name="DeleteAllLostAndFoundTags" Property="Text">
+          <Value>LOST_AND_FOUND Tags löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Remove" Property="Text">
+          <Value>Alle toten Objekte entfernen</Value>
+        </TranslationItem>
+        <TranslationItem Name="SaveObjects" Property="Text">
+          <Value>Objekt in .git/lost-found speichern</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowOnlyCommits" Property="Text">
+          <Value>Nur Commits anzeigen</Value>
+        </TranslationItem>
+        <TranslationItem Name="FullCheck" Property="Text">
+          <Value>Nicht nur in GIT_OBJECT_DIRECTORY ($GIT_DIR/objects) befindliche Objekte prüfen,
+sondern auch die, die in alternative Objektpools vorhanden sind.</Value>
+        </TranslationItem>
+        <TranslationItem Name="Unreachable" Property="Text">
+          <Value>Alle existierenden Objekte anzeigen, die nicht von einer anderem Knoten refernziert werden.</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Standardmäßig werden alle nicht referenzierten Objekte
+aus der Datenbank entfernt, die älter als 2 Wochen sind.
+Alle anderen Objekte werden nur gelöscht, wenn Sie
+"Alle toten Objekte entfernen" ausführen.
+
+Wählen Sie alle Commits aus, die Sie wiederherstellen
+möchten und drücken Sie Wiederherstellen.
+Mehr Optionen im Kontextmenü</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Doppelklick auf eine Zeile mit SHA1-Hash zeigt das Objekt an.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_removeDanglingObjectsCaption" Property="Text">
+          <Value>Entfernen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_removeDanglingObjectsQuestion" Property="Text">
+          <Value>Sind Sie sich sicher, dass Sie alle toten Objekte löschen möchten?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_xTagsCreated" Property="Text">
+          <Value>{0} Tags erzeugt.
+
+Vergessen Sie nicht diese Tags zu löschen, wenn Sie fertig sind.</Value>
+        </TranslationItem>
+        <TranslationItem Name="selectLostObjectsToRestoreMessage" Property="Text">
+          <Value>Objekt zum Wiederherstellen wählen
+</Value>
+        </TranslationItem>
+        <TranslationItem Name="selectLostObjectsToRestoreCaption" Property="Text">
+          <Value>Verlorene Objekte wiederherstellen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormSubmodules">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
