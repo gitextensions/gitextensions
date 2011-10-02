@@ -1573,6 +1573,29 @@ Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen vo
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormPuttyError">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Authentifizierungsfehler</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Beim Ausführen des Kommandos trat ein Fehler auf. Meist deutet
+dies auf ein nicht gestartetes Authentifizierungsprogramm hin oder dass der private
+Schlüssel (noch) nicht geladen wurde.
+
+Wenn Sie den Schlüssel geladen haben, drücken Sie Wiederholen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>SSH Schlüssel laden</Value>
+        </TranslationItem>
+        <TranslationItem Name="Retry" Property="Text">
+          <Value>Wiederholen</Value>
+        </TranslationItem>
+        <TranslationItem Name="button1" Property="Text">
+          <Value>Abbrechen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormClone">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
