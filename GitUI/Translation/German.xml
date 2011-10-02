@@ -314,6 +314,418 @@ Sie können nicht pushen, solange Sie kein Mitarbeiter des Projektes sind. {2}</
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormBrowse">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Git Extensions</Value>
+        </TranslationItem>
+        <TranslationItem Name="_stashCount" Property="Text">
+          <Value>{0} gespeicherte {1}</Value>
+        </TranslationItem>
+        <TranslationItem Name="_stashPlural" Property="Text">
+          <Value>Stashes</Value>
+        </TranslationItem>
+        <TranslationItem Name="_stashSingular" Property="Text">
+          <Value>Stashes</Value>
+        </TranslationItem>
+        <TranslationItem Name="_warningMiddleOfBisect" Property="Text">
+          <Value>Sie sind gerade bei einem Bisect-Vorgang</Value>
+        </TranslationItem>
+        <TranslationItem Name="_warningMiddleOfRebase" Property="Text">
+          <Value>Sie sind gerade bei einem Rebase-Vorgang</Value>
+        </TranslationItem>
+        <TranslationItem Name="_warningMiddleOfPatchApply" Property="Text">
+          <Value>Sie sing gerade dabei einen Patch anzuwenden</Value>
+        </TranslationItem>
+        <TranslationItem Name="_hintUnresolvedMergeConflicts" Property="Text">
+          <Value>Es liegen nicht aufgelöste Mergekonflikte vor!</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noSubmodulesPresent" Property="Text">
+          <Value>Keine Untermodule</Value>
+        </TranslationItem>
+        <TranslationItem Name="_saveFileFilterCurrentFormat" Property="Text">
+          <Value>Aktuelles Format</Value>
+        </TranslationItem>
+        <TranslationItem Name="_saveFileFilterAllFiles" Property="Text">
+          <Value>Alle Dateien</Value>
+        </TranslationItem>
+        <TranslationItem Name="_indexLockDeleted" Property="Text">
+          <Value>index.lock gelöscht.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_indexLockNotFound" Property="Text">
+          <Value>index.lock nicht gefunden in:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noReposHostPluginLoaded" Property="Text">
+          <Value>Kein Repository Host Plugin geladen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noReposHostPluginLoadedCaption" Property="Text">
+          <Value>Fehler</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noReposHostFound" Property="Text">
+          <Value>Kein relevanter Repository Host für das aktuell geöffnete Repository gefunden.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noReposHostFoundCaption" Property="Text">
+          <Value>Fehler</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noRevisionFoundError" Property="Text">
+          <Value>Keine Revision gefunden</Value>
+        </TranslationItem>
+        <TranslationItem Name="Tree" Property="Text">
+          <Value>Dateibaum</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButton1" Property="Text">
+          <Value>Commiten</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButton1" Property="ToolTipText">
+          <Value>Commiten</Value>
+        </TranslationItem>
+        <TranslationItem Name="GitBash" Property="ToolTipText">
+          <Value>Git Bash</Value>
+        </TranslationItem>
+        <TranslationItem Name="EditSettings" Property="ToolTipText">
+          <Value>Einstellungen</Value>
+        </TranslationItem>
+        <TranslationItem Name="RefreshButton" Property="ToolTipText">
+          <Value>Aktualisieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="Diff" Property="Text">
+          <Value>Vergleichen</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButtonPull" Property="Text">
+          <Value>Pull</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButtonPull" Property="ToolTipText">
+          <Value>Pull</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButtonPush" Property="Text">
+          <Value>Push</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButtonPush" Property="ToolTipText">
+          <Value>Push</Value>
+        </TranslationItem>
+        <TranslationItem Name="CommitInfo" Property="Text">
+          <Value>Commiten</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripLabel2" Property="Text">
+          <Value>Filter:</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripSplitStash" Property="ToolTipText">
+          <Value>Änderungen stashen</Value>
+        </TranslationItem>
+        <TranslationItem Name="stashChangesToolStripMenuItem" Property="Text">
+          <Value>Stashen</Value>
+        </TranslationItem>
+        <TranslationItem Name="stashChangesToolStripMenuItem" Property="ToolTipText">
+          <Value>Änderungen stashen</Value>
+        </TranslationItem>
+        <TranslationItem Name="stashPopToolStripMenuItem" Property="Text">
+          <Value>Stash Pop</Value>
+        </TranslationItem>
+        <TranslationItem Name="stashPopToolStripMenuItem" Property="ToolTipText">
+          <Value>Einzelnen Stash anwenden und verwerfen</Value>
+        </TranslationItem>
+        <TranslationItem Name="viewStashToolStripMenuItem" Property="Text">
+          <Value>Stash anzeigen</Value>
+        </TranslationItem>
+        <TranslationItem Name="viewStashToolStripMenuItem" Property="ToolTipText">
+          <Value>Stash anzeigen</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveToolStripMenuItem" Property="Text">
+          <Value>Speichern</Value>
+        </TranslationItem>
+        <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
+          <Value>Mit Vergleichswerkzeug öffnen</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveAsToolStripMenuItem" Property="Text">
+          <Value>Speichern als</Value>
+        </TranslationItem>
+        <TranslationItem Name="openFileToolStripMenuItem" Property="Text">
+          <Value>Diese Revision öffnen (Temporäre Datei)</Value>
+        </TranslationItem>
+        <TranslationItem Name="openFileWithToolStripMenuItem" Property="Text">
+          <Value>Diese Revision öffnen mit... (Temporäre Datei)</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileHistoryToolStripMenuItem" Property="Text">
+          <Value>Datei-Historie</Value>
+        </TranslationItem>
+        <TranslationItem Name="findToolStripMenuItem" Property="Text">
+          <Value>Suchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem" Property="Text">
+          <Value>Dateiname in Zwischenablage kopieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem1" Property="Text">
+          <Value>Dateiname in Zwischenablage kopieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveAsToolStripMenuItem1" Property="Text">
+          <Value>Speichern als</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripLabel1" Property="Text">
+          <Value>Branches:</Value>
+        </TranslationItem>
+        <TranslationItem Name="localToolStripMenuItem" Property="Text">
+          <Value>Lokal</Value>
+        </TranslationItem>
+        <TranslationItem Name="remoteToolStripMenuItem" Property="Text">
+          <Value>Remote</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitToolStripMenuItem1" Property="Text">
+          <Value>Commiten</Value>
+        </TranslationItem>
+        <TranslationItem Name="committerToolStripMenuItem" Property="Text">
+          <Value>Committer</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorToolStripMenuItem" Property="Text">
+          <Value>Autor</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripStatusLabel1" Property="Text">
+          <Value>X</Value>
+        </TranslationItem>
+        <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
+          <Value>Ausgecheckte Datei öffnen mit...</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileHistoryDiffToolstripMenuItem" Property="Text">
+          <Value>Datei-Historie</Value>
+        </TranslationItem>
+        <TranslationItem Name="branchSelect" Property="Text">
+          <Value>Branch</Value>
+        </TranslationItem>
+        <TranslationItem Name="branchSelect" Property="ToolTipText">
+          <Value>Aktuellen Branch wechseln</Value>
+        </TranslationItem>
+        <TranslationItem Name="diffContainsToolStripMenuItem" Property="Text">
+          <Value>Vergleichsinhalt (Langsam)</Value>
+        </TranslationItem>
+        <TranslationItem Name="toggleSplitViewLayout" Property="ToolTipText">
+          <Value>Geteilte Ansicht wechseln</Value>
+        </TranslationItem>
+        <TranslationItem Name="editCheckedOutFileToolStripMenuItem" Property="Text">
+          <Value>Ausgecheckte Datei bearbeiten</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileToolStripMenuItem" Property="Text">
+          <Value>Datei</Value>
+        </TranslationItem>
+        <TranslationItem Name="openToolStripMenuItem" Property="Text">
+          <Value>Öffnen</Value>
+        </TranslationItem>
+        <TranslationItem Name="closeToolStripMenuItem" Property="Text">
+          <Value>Schließen</Value>
+        </TranslationItem>
+        <TranslationItem Name="refreshToolStripMenuItem" Property="Text">
+          <Value>Aktualisieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="recentToolStripMenuItem" Property="Text">
+          <Value>Kürzlich verwendete Repositorys</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripMenuItem2" Property="Text">
+          <Value>...</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileExplorerToolStripMenuItem" Property="Text">
+          <Value>Datei-Explorer</Value>
+        </TranslationItem>
+        <TranslationItem Name="exitToolStripMenuItem" Property="Text">
+          <Value>Beenden</Value>
+        </TranslationItem>
+        <TranslationItem Name="gitToolStripMenuItem" Property="Text">
+          <Value>Git</Value>
+        </TranslationItem>
+        <TranslationItem Name="gitBashToolStripMenuItem" Property="Text">
+          <Value>Git Bash</Value>
+        </TranslationItem>
+        <TranslationItem Name="gitGUIToolStripMenuItem" Property="Text">
+          <Value>Git GUI</Value>
+        </TranslationItem>
+        <TranslationItem Name="kGitToolStripMenuItem" Property="Text">
+          <Value>GitK</Value>
+        </TranslationItem>
+        <TranslationItem Name="commandsToolStripMenuItem" Property="Text">
+          <Value>Befehle</Value>
+        </TranslationItem>
+        <TranslationItem Name="applyPatchToolStripMenuItem" Property="Text">
+          <Value>Patch anwenden</Value>
+        </TranslationItem>
+        <TranslationItem Name="archiveToolStripMenuItem" Property="Text">
+          <Value>Archivieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="bisectToolStripMenuItem" Property="Text">
+          <Value>Bisect</Value>
+        </TranslationItem>
+        <TranslationItem Name="checkoutBranchToolStripMenuItem" Property="Text">
+          <Value>Branch auschecken</Value>
+        </TranslationItem>
+        <TranslationItem Name="checkoutToolStripMenuItem" Property="Text">
+          <Value>Revision auschecken</Value>
+        </TranslationItem>
+        <TranslationItem Name="cherryPickToolStripMenuItem" Property="Text">
+          <Value>Cherry Pick</Value>
+        </TranslationItem>
+        <TranslationItem Name="cleanupToolStripMenuItem" Property="Text">
+          <Value>Aufräumen</Value>
+        </TranslationItem>
+        <TranslationItem Name="cloneToolStripMenuItem" Property="Text">
+          <Value>Repository klonen</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitToolStripMenuItem" Property="Text">
+          <Value>Commiten</Value>
+        </TranslationItem>
+        <TranslationItem Name="branchToolStripMenuItem" Property="Text">
+          <Value>Branch erzeugen</Value>
+        </TranslationItem>
+        <TranslationItem Name="tagToolStripMenuItem" Property="Text">
+          <Value>Tag erzeugen</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
+          <Value>Branch löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteTagToolStripMenuItem" Property="Text">
+          <Value>Tag löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="formatPatchToolStripMenuItem" Property="Text">
+          <Value>Patch erzeugen</Value>
+        </TranslationItem>
+        <TranslationItem Name="goToToolStripMenuItem" Property="Text">
+          <Value>Commit suchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="initNewRepositoryToolStripMenuItem" Property="Text">
+          <Value>Neues Repository initialisieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
+          <Value>Branches mergen</Value>
+        </TranslationItem>
+        <TranslationItem Name="pullToolStripMenuItem" Property="Text">
+          <Value>Pull</Value>
+        </TranslationItem>
+        <TranslationItem Name="pushToolStripMenuItem" Property="Text">
+          <Value>Push</Value>
+        </TranslationItem>
+        <TranslationItem Name="rebaseToolStripMenuItem" Property="Text">
+          <Value>Rebase</Value>
+        </TranslationItem>
+        <TranslationItem Name="runMergetoolToolStripMenuItem" Property="Text">
+          <Value>Merge-Konflikte auflösen</Value>
+        </TranslationItem>
+        <TranslationItem Name="stashToolStripMenuItem" Property="Text">
+          <Value>Änderungen stashen</Value>
+        </TranslationItem>
+        <TranslationItem Name="viewDiffToolStripMenuItem" Property="Text">
+          <Value>Vergleich anzeigen</Value>
+        </TranslationItem>
+        <TranslationItem Name="patchToolStripMenuItem" Property="Text">
+          <Value>Patch-Datei anzeigen</Value>
+        </TranslationItem>
+        <TranslationItem Name="remotesToolStripMenuItem" Property="Text">
+          <Value>Remotes</Value>
+        </TranslationItem>
+        <TranslationItem Name="manageRemoteRepositoriesToolStripMenuItem1" Property="Text">
+          <Value>Remote Repositorys verwalten</Value>
+        </TranslationItem>
+        <TranslationItem Name="PuTTYToolStripMenuItem" Property="Text">
+          <Value>PuTTY</Value>
+        </TranslationItem>
+        <TranslationItem Name="startAuthenticationAgentToolStripMenuItem" Property="Text">
+          <Value>Authentifizierungsagent starten</Value>
+        </TranslationItem>
+        <TranslationItem Name="generateOrImportKeyToolStripMenuItem" Property="Text">
+          <Value>Schlüssel generieren oder importieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="_repositoryHostsToolStripMenuItem" Property="Text">
+          <Value>Repository Hosts</Value>
+        </TranslationItem>
+        <TranslationItem Name="_forkCloneRepositoryToolStripMenuItem" Property="Text">
+          <Value>Repository klonen / forken</Value>
+        </TranslationItem>
+        <TranslationItem Name="_viewPullRequestsToolStripMenuItem" Property="Text">
+          <Value>Pull Requests anzeigen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_createPullRequestsToolStripMenuItem" Property="Text">
+          <Value>Pull Request erzeugen</Value>
+        </TranslationItem>
+        <TranslationItem Name="submodulesToolStripMenuItem" Property="Text">
+          <Value>Untermodule</Value>
+        </TranslationItem>
+        <TranslationItem Name="manageSubmodulesToolStripMenuItem" Property="Text">
+          <Value>Untermodule verwalten</Value>
+        </TranslationItem>
+        <TranslationItem Name="updateAllSubmodulesRecursiveToolStripMenuItem" Property="Text">
+          <Value>Alle Untermodule rekursiv aktualisieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="initializeAllSubmodulesRecursiveToolStripMenuItem" Property="Text">
+          <Value>Alle Untermodule rekursiv initialisieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="synchronizeAllSubmodulesRecursiveToolStripMenuItem" Property="Text">
+          <Value>Alle Untermodule rekursiv synchronisieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="updateAllSubmodulesToolStripMenuItem" Property="Text">
+          <Value>Alle Untermodule aktualisieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="initializeAllSubmodulesToolStripMenuItem" Property="Text">
+          <Value>Alle Untermodule initialisieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="syncronizeAllSubmodulesToolStripMenuItem" Property="Text">
+          <Value>Alle Untermodule synchronisieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="openSubmoduleToolStripMenuItem" Property="Text">
+          <Value>Untermodule verwalten</Value>
+        </TranslationItem>
+        <TranslationItem Name="pluginsToolStripMenuItem" Property="Text">
+          <Value>Plugins</Value>
+        </TranslationItem>
+        <TranslationItem Name="settingsToolStripMenuItem" Property="Text">
+          <Value>Einstellungen</Value>
+        </TranslationItem>
+        <TranslationItem Name="settingsToolStripMenuItem1" Property="Text">
+          <Value>Einstellungen</Value>
+        </TranslationItem>
+        <TranslationItem Name="gitMaintenanceToolStripMenuItem" Property="Text">
+          <Value>Git Verwaltung</Value>
+        </TranslationItem>
+        <TranslationItem Name="compressGitDatabaseToolStripMenuItem" Property="Text">
+          <Value>Git Datenbank komprimieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="verifyGitDatabaseToolStripMenuItem" Property="Text">
+          <Value>Verlorene Objekte wiederherstellen</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteIndexlockToolStripMenuItem" Property="Text">
+          <Value>index.lock löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="editgitignoreToolStripMenuItem1" Property="Text">
+          <Value>.gitignore bearbeiten</Value>
+        </TranslationItem>
+        <TranslationItem Name="editgitattributesToolStripMenuItem" Property="Text">
+          <Value>.gitattributes bearbeiten</Value>
+        </TranslationItem>
+        <TranslationItem Name="editmailmapToolStripMenuItem" Property="Text">
+          <Value>.mailmap bearbeiten</Value>
+        </TranslationItem>
+        <TranslationItem Name="settingsToolStripMenuItem2" Property="Text">
+          <Value>Einstellungen</Value>
+        </TranslationItem>
+        <TranslationItem Name="helpToolStripMenuItem" Property="Text">
+          <Value>Hilfe</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitcountPerUserToolStripMenuItem" Property="Text">
+          <Value>Commits pro Benutzer</Value>
+        </TranslationItem>
+        <TranslationItem Name="gitcommandLogToolStripMenuItem" Property="Text">
+          <Value>Git Kommandozeilen Log</Value>
+        </TranslationItem>
+        <TranslationItem Name="userManualToolStripMenuItem" Property="Text">
+          <Value>Benutzerhandbuch</Value>
+        </TranslationItem>
+        <TranslationItem Name="changelogToolStripMenuItem" Property="Text">
+          <Value>Changelog</Value>
+        </TranslationItem>
+        <TranslationItem Name="translateToolStripMenuItem" Property="Text">
+          <Value>Übersetzen</Value>
+        </TranslationItem>
+        <TranslationItem Name="donateToolStripMenuItem" Property="Text">
+          <Value>Beitragen</Value>
+        </TranslationItem>
+        <TranslationItem Name="aboutToolStripMenuItem" Property="Text">
+          <Value>Info</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="Open">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
