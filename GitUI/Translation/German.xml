@@ -117,6 +117,28 @@ ancestor tree.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormArchive">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Archivieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Wählen Sie eine Revision aus, die Sie archivieren möchten</Value>
+        </TranslationItem>
+        <TranslationItem Name="Save" Property="Text">
+          <Value>Archivieren</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noRevisionSelectedMsgBox" Property="Text">
+          <Value>Wählen Sie eine Revision aus, die Sie archivieren möchten</Value>
+        </TranslationItem>
+        <TranslationItem Name="_saveFileDialogFilter" Property="Text">
+          <Value>ZIP-Datei (*.zip)</Value>
+        </TranslationItem>
+        <TranslationItem Name="_saveFileDialogCaption" Property="Text">
+          <Value>Archiv speichern als</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="Open">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
