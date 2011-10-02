@@ -38,9 +38,9 @@
             this._searchTB = new System.Windows.Forms.TextBox();
             this._forkBtn = new System.Windows.Forms.Button();
             this._myReposLV = new System.Windows.Forms.ListView();
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
             this._searchResultsLV = new System.Windows.Forms.ListView();
-            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader6 = new System.Windows.Forms.ColumnHeader();
             this._cloneBtn = new System.Windows.Forms.Button();
             this._destinationTB = new System.Windows.Forms.TextBox();
             this._browseForCloneToDirbtn = new System.Windows.Forms.Button();
@@ -61,12 +61,12 @@
             this._addRemoteAsTB = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this._cloneInfoText = new System.Windows.Forms.Label();
-            columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            columnHeader1 = new System.Windows.Forms.ColumnHeader();
+            columnHeader3 = new System.Windows.Forms.ColumnHeader();
+            columnHeader4 = new System.Windows.Forms.ColumnHeader();
+            columnHeader5 = new System.Windows.Forms.ColumnHeader();
+            columnHeader7 = new System.Windows.Forms.ColumnHeader();
+            columnHeader8 = new System.Windows.Forms.ColumnHeader();
             this._tabControl.SuspendLayout();
             this._myReposPage.SuspendLayout();
             this._searchReposPage.SuspendLayout();
@@ -107,7 +107,7 @@
             // 
             this._searchBtn.Location = new System.Drawing.Point(230, 9);
             this._searchBtn.Name = "_searchBtn";
-            this._searchBtn.Size = new System.Drawing.Size(75, 23);
+            this._searchBtn.Size = new System.Drawing.Size(93, 23);
             this._searchBtn.TabIndex = 1;
             this._searchBtn.Text = "Search";
             this._searchBtn.UseVisualStyleBackColor = true;
@@ -119,8 +119,8 @@
             this._searchTB.Name = "_searchTB";
             this._searchTB.Size = new System.Drawing.Size(198, 23);
             this._searchTB.TabIndex = 0;
-            this._searchTB.Enter += new System.EventHandler(this._searchTB_Enter);
             this._searchTB.Leave += new System.EventHandler(this._searchTB_Leave);
+            this._searchTB.Enter += new System.EventHandler(this._searchTB_Enter);
             // 
             // _forkBtn
             // 
@@ -206,7 +206,7 @@
             // 
             this._browseForCloneToDirbtn.Location = new System.Drawing.Point(310, 31);
             this._browseForCloneToDirbtn.Name = "_browseForCloneToDirbtn";
-            this._browseForCloneToDirbtn.Size = new System.Drawing.Size(75, 23);
+            this._browseForCloneToDirbtn.Size = new System.Drawing.Size(102, 23);
             this._browseForCloneToDirbtn.TabIndex = 1;
             this._browseForCloneToDirbtn.Text = "Browse...";
             this._browseForCloneToDirbtn.UseVisualStyleBackColor = true;
@@ -292,9 +292,9 @@
             // 
             // _helpTextLbl
             // 
-            this._helpTextLbl.Location = new System.Drawing.Point(360, 103);
+            this._helpTextLbl.Location = new System.Drawing.Point(360, 50);
             this._helpTextLbl.Name = "_helpTextLbl";
-            this._helpTextLbl.Size = new System.Drawing.Size(266, 35);
+            this._helpTextLbl.Size = new System.Drawing.Size(266, 140);
             this._helpTextLbl.TabIndex = 10;
             this._helpTextLbl.Text = "If you want to fork a repository owned by somebody else, go to the Search for rep" +
                 "ositories tab.";
@@ -320,8 +320,10 @@
             // 
             // _orLbl
             // 
+            this._orLbl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this._orLbl.AutoSize = true;
-            this._orLbl.Location = new System.Drawing.Point(309, 14);
+            this._orLbl.Location = new System.Drawing.Point(329, 14);
             this._orLbl.Name = "_orLbl";
             this._orLbl.Size = new System.Drawing.Size(18, 15);
             this._orLbl.TabIndex = 22;
@@ -329,9 +331,9 @@
             // 
             // _getFromUserBtn
             // 
-            this._getFromUserBtn.Location = new System.Drawing.Point(327, 9);
+            this._getFromUserBtn.Location = new System.Drawing.Point(364, 9);
             this._getFromUserBtn.Name = "_getFromUserBtn";
-            this._getFromUserBtn.Size = new System.Drawing.Size(93, 23);
+            this._getFromUserBtn.Size = new System.Drawing.Size(124, 23);
             this._getFromUserBtn.TabIndex = 2;
             this._getFromUserBtn.Text = "Get from user";
             this._getFromUserBtn.UseVisualStyleBackColor = true;
@@ -373,7 +375,7 @@
             // 
             this._addRemoteAsTB.Location = new System.Drawing.Point(212, 71);
             this._addRemoteAsTB.Name = "_addRemoteAsTB";
-            this._addRemoteAsTB.Size = new System.Drawing.Size(181, 23);
+            this._addRemoteAsTB.Size = new System.Drawing.Size(200, 23);
             this._addRemoteAsTB.TabIndex = 3;
             this._addRemoteAsTB.TextChanged += new System.EventHandler(this._addRemoteAsTB_TextChanged);
             // 
