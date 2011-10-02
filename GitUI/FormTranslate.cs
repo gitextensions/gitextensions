@@ -60,7 +60,8 @@ namespace GitUI
 
             GetPropertiesToTranslate();
             LoadTranslation();
-            FillTranslateGrid(allText.Text);
+            translateCategories.SelectedItem = allText.Text;
+            FillTranslateGrid(translateCategories.SelectedItem.ToString());
 
             foreach (CultureInfo cultureInfo in CultureInfo.GetCultures(CultureTypes.AllCultures))
             {
@@ -322,7 +323,7 @@ namespace GitUI
 
             translator = new Translator(translations.Text);
             LoadTranslation();
-            FillTranslateGrid(allText.Text);
+            FillTranslateGrid(translateCategories.SelectedItem.ToString());
 
             try
             {
@@ -337,7 +338,7 @@ namespace GitUI
 
         private void hideTranslatedItems_CheckedChanged(object sender, EventArgs e)
         {
-            FillTranslateGrid(allText.Text);
+            FillTranslateGrid(translateCategories.SelectedItem.ToString());
         }
 
         private void AskForSave()
