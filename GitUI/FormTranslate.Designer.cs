@@ -226,6 +226,7 @@ namespace GitUI
             this.translateCategories.Size = new System.Drawing.Size(151, 420);
             this.translateCategories.TabIndex = 0;
             this.translateCategories.SelectedIndexChanged += new System.EventHandler(this.translateCategories_SelectedIndexChanged);
+            this.translateCategories.Sorted = true;
             // 
             // splitContainer2
             // 

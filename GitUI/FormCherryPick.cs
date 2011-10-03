@@ -1,12 +1,21 @@
 ﻿using System;
-
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormCherryPick : GitExtensionsForm
     {
+        private readonly TranslationString _noRevisionSelectedMsgBox =
+            new TranslationString("Select 1 revision to pick.");
+        private readonly TranslationString _noRevisionSelectedMsgBoxCaption =
+            new TranslationString("Cherry pick");
+        private readonly TranslationString _cmdExecutedMsgBox =
+            new TranslationString("Command executed");
+        private readonly TranslationString _cmdExecutedMsgBoxCaption =
+            new TranslationString("Cherry pick");
+
         public FormCherryPick()
         {
             InitializeComponent(); Translate();
@@ -29,7 +38,7 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             if (RevisionGrid.GetRevisions().Count != 1)
             {
-                MessageBox.Show("Select 1 revision to pick.", "Cherry pick");
+                MessageBox.Show(_noRevisionSelectedMsgBox.Text, _noRevisionSelectedMsgBoxCaption.Text);
                 return;
             }
             bool formClosed = false;
@@ -50,7 +59,7 @@ namespace GitUI
 
             if (!formClosed)
             {
-                MessageBox.Show("Command executed " + Environment.NewLine + GitCommandHelpers.CherryPick(RevisionGrid.GetRevisions()[0].Guid, AutoCommit.Checked, arguments), "Cherry pick");
+                MessageBox.Show(_cmdExecutedMsgBox.Text + " " + Environment.NewLine + GitCommandHelpers.CherryPick(RevisionGrid.GetRevisions()[0].Guid, AutoCommit.Checked, arguments), _cmdExecutedMsgBoxCaption.Text);
 
                 MergeConflictHandler.HandleMergeConflicts();
 

@@ -3,11 +3,27 @@ using System.IO;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormLoadPuttySshKey : GitExtensionsForm
     {
+        private readonly TranslationString _pageantNotFound =
+            new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");
+        private readonly TranslationString _pageantNotFoundCaption =
+            new TranslationString("PuTTY");
+
+        private readonly TranslationString _loadKeyFailed =
+            new TranslationString("Could not load key.");
+        private readonly TranslationString _loadKeyFailedCaption =
+            new TranslationString("PuTTY");
+
+        private readonly TranslationString _browsePrivateKeyFilter =
+            new TranslationString("Private key");
+        private readonly TranslationString _browsePrivateKeyCaption =
+            new TranslationString("Select SSH key file");
+
         public FormLoadPuttySshKey()
         {
             InitializeComponent();
@@ -24,13 +40,13 @@ namespace GitUI
         {
             if (!File.Exists(Settings.Pageant))
             {
-                MessageBox.Show("Cannot load SSH key. PuTTY is not configured properly.", "PuTTY");
+                MessageBox.Show(_pageantNotFound.Text, _pageantNotFoundCaption.Text);
                 return;
             }
 
             if (string.IsNullOrEmpty(PrivateKeypath.Text))
             {
-                MessageBox.Show("Could not load key.", "PuTTY");
+                MessageBox.Show(_loadKeyFailed.Text, _loadKeyFailedCaption.Text);
                 return;
             }
 
@@ -42,9 +58,9 @@ namespace GitUI
         {
             var dialog = new OpenFileDialog
                              {
-                                 Filter = "Private key (*.ppk)|*.ppk",
+                                 Filter = _browsePrivateKeyFilter.Text + " (*.ppk)|*.ppk",
                                  InitialDirectory = ".",
-                                 Title = "Select ssh key file"
+                                 Title = _browsePrivateKeyCaption.Text
                              };
             if (dialog.ShowDialog() == DialogResult.OK)
                 PrivateKeypath.Text = dialog.FileName;

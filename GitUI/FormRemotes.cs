@@ -2,12 +2,49 @@
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormRemotes : GitExtensionsForm
     {
         private string _remote = "";
+
+        private readonly TranslationString _remoteBranchDataError =
+            new TranslationString("Invalid ´{1}´ found for branch ´{0}´." + Environment.NewLine +
+                                  "Value has been reset to empty value.");
+
+        private readonly TranslationString _questionAutoPullBehaviour =
+            new TranslationString("You have added a new remote repository." + Environment.NewLine +
+                                  "Do you want to automatically configure the default push and pull behavior for this remote?");
+
+        private readonly TranslationString _questionAutoPullBehaviourCaption =
+            new TranslationString("New remote");
+
+        private readonly TranslationString _warningValidRemote = 
+            new TranslationString("You need to configure a valid url for this remote");
+        
+        private readonly TranslationString _warningValidRemoteCaption =
+            new TranslationString("Url needed");
+
+        private readonly TranslationString _hintDelete =
+            new TranslationString("Delete");
+
+        private readonly TranslationString _questionDeleteRemote = 
+            new TranslationString("Are you sure you want to delete this remote?");
+        
+        private readonly TranslationString _questionDeleteRemoteCaption = 
+            new TranslationString("Delete");
+
+        private readonly TranslationString _sshKeyOpenFilter =
+            new TranslationString("Private key (*.ppk)");
+
+        private readonly TranslationString _sshKeyOpenCaption =
+            new TranslationString("Select ssh key file");
+
+        private readonly TranslationString _warningNoKeyEntered =
+            new TranslationString("No SSH key file entered");
+
 
         public FormRemotes()
         {
@@ -24,9 +61,7 @@ namespace GitUI
         private void RemoteBranchesDataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             MessageBox.Show(
-                string.Format(
-                    "Invalid ´{1}´ found for branch ´{0}´." + Environment.NewLine +
-                    "Value has been reset to empty value.", RemoteBranches.Rows[e.RowIndex].Cells[0].Value,
+                string.Format(_remoteBranchDataError.Text, RemoteBranches.Rows[e.RowIndex].Cells[0].Value,
                     RemoteBranches.Columns[e.ColumnIndex].HeaderText));
 
             RemoteBranches.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = "";
@@ -68,10 +103,8 @@ namespace GitUI
 
                 output = GitCommandHelpers.AddRemote(RemoteName.Text, Url.Text);
 
-                if (MessageBox.Show(
-                        "You have added a new remote repository." + Environment.NewLine +
-                        "Do you want to automatically configure the default push and pull behavior for this remote?",
-                        "New remote", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(_questionAutoPullBehaviour.Text, _questionAutoPullBehaviourCaption.Text,
+                    MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     var remoteUrl = Url.Text;
 
@@ -81,7 +114,7 @@ namespace GitUI
                         ConfigureRemotes();
                     }
                     else
-                        MessageBox.Show("You need to configure a valid url for this remote", "Url needed");
+                        MessageBox.Show(_warningValidRemote.Text,_warningValidRemoteCaption.Text);
                 }
             }
             else
@@ -96,7 +129,7 @@ namespace GitUI
             }
 
             if (!string.IsNullOrEmpty(output))
-                MessageBox.Show(output, "Delete");
+                MessageBox.Show(output, _hintDelete.Text);
 
             Initialize();
         }
@@ -126,7 +159,7 @@ namespace GitUI
         {
             var output = GitCommandHelpers.AddRemote("<new>", "");
             if (!string.IsNullOrEmpty(output))
-                MessageBox.Show(output, "Delete");
+                MessageBox.Show(output, _hintDelete.Text);
             Initialize();
         }
 
@@ -135,12 +168,12 @@ namespace GitUI
             if (string.IsNullOrEmpty(_remote))
                 return;
 
-            if (MessageBox.Show("Are you sure you want to delete this remote?", "Delete", MessageBoxButtons.YesNo) ==
+            if (MessageBox.Show(_questionDeleteRemote.Text, _questionDeleteRemoteCaption.Text, MessageBoxButtons.YesNo) ==
                 DialogResult.Yes)
             {
                 var output = GitCommandHelpers.RemoveRemote(_remote);
                 if (!string.IsNullOrEmpty(output))
-                    MessageBox.Show(output, "Delete");
+                    MessageBox.Show(output, _hintDelete.Text);
             }
 
             Initialize();
@@ -151,9 +184,9 @@ namespace GitUI
             var dialog =
                 new OpenFileDialog
                     {
-                        Filter = "Private key (*.ppk)|*.ppk",
+                        Filter = _sshKeyOpenFilter.Text + "|*.ppk",
                         InitialDirectory = ".",
-                        Title = "Select ssh key file"
+                        Title = _sshKeyOpenCaption.Text
                     };
             if (dialog.ShowDialog() == DialogResult.OK)
                 PuttySshKey.Text = dialog.FileName;
@@ -162,7 +195,7 @@ namespace GitUI
         private void LoadSshKeyClick(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(PuttySshKey.Text))
-                MessageBox.Show("No SSH key file entered");
+                MessageBox.Show(_warningNoKeyEntered.Text);
             else
                 GitCommandHelpers.StartPageantWithKey(PuttySshKey.Text);
         }

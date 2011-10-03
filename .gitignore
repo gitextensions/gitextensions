@@ -29,6 +29,7 @@ SimpleExt_p.c
 *.orig
 *.msi
 *.user
+*.bak
 Thumbs.db
 GitPlugin/bin/*
 Setup/GitExtensions207.zip

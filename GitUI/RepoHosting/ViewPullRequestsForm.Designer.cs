@@ -62,7 +62,7 @@
             // 
             this._selectHostedRepoCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._selectHostedRepoCB.FormattingEnabled = true;
-            this._selectHostedRepoCB.Location = new System.Drawing.Point(112, 6);
+            this._selectHostedRepoCB.Location = new System.Drawing.Point(130, 6);
             this._selectHostedRepoCB.Name = "_selectHostedRepoCB";
             this._selectHostedRepoCB.Size = new System.Drawing.Size(258, 21);
             this._selectHostedRepoCB.TabIndex = 0;
@@ -144,9 +144,9 @@
             // _postComment
             // 
             this._postComment.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this._postComment.Location = new System.Drawing.Point(168, 654);
+            this._postComment.Location = new System.Drawing.Point(150, 654);
             this._postComment.Name = "_postComment";
-            this._postComment.Size = new System.Drawing.Size(113, 23);
+            this._postComment.Size = new System.Drawing.Size(131, 23);
             this._postComment.TabIndex = 1;
             this._postComment.Text = "Post comment";
             this._postComment.UseVisualStyleBackColor = true;
@@ -256,7 +256,7 @@
             this._refreshCommentsBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this._refreshCommentsBtn.Location = new System.Drawing.Point(3, 654);
             this._refreshCommentsBtn.Name = "_refreshCommentsBtn";
-            this._refreshCommentsBtn.Size = new System.Drawing.Size(75, 23);
+            this._refreshCommentsBtn.Size = new System.Drawing.Size(100, 23);
             this._refreshCommentsBtn.TabIndex = 9;
             this._refreshCommentsBtn.Text = "Refresh";
             this._refreshCommentsBtn.UseVisualStyleBackColor = true;

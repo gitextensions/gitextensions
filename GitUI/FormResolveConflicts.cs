@@ -46,6 +46,30 @@ namespace GitUI
         readonly TranslationString keepModifiedButtonText = new TranslationString("Keep modified");
         readonly TranslationString keepBaseButtonText = new TranslationString("Keep base file");
 
+        private readonly TranslationString _conflictedFilesContextMenuText = new TranslationString("Solve");
+        private readonly TranslationString _openMergeToolItemText = new TranslationString("Open in");
+        private readonly TranslationString _button1Text = new TranslationString("Open in");
+
+        private readonly TranslationString _resetItemRebaseText = new TranslationString("Abort rebase");
+        private readonly TranslationString _contextChooseLocalRebaseText = new TranslationString("Choose local (theirs)");
+        private readonly TranslationString _contextChooseRemoteRebaseText = new TranslationString("Choose remote (ours)");
+
+        private readonly TranslationString _resetItemMergeText = new TranslationString("Abort merge");
+        private readonly TranslationString _contextChooseLocalMergeText = new TranslationString("Choose local (theirs)");
+        private readonly TranslationString _contextChooseRemoteMergeText = new TranslationString("Choose remote (ours)");
+
+        private readonly TranslationString _binaryFileWarningCaption = new TranslationString("Warning");
+
+        private readonly TranslationString _noBaseFileMergeCaption = new TranslationString("Merge");
+        
+        private readonly TranslationString _chooseBaseFileFailedText = new TranslationString("Choose base file failed.");
+        private readonly TranslationString _chooseLocalFileFailedText = new TranslationString("Choose local file failed.");
+        private readonly TranslationString _chooseRemoteFileFailedText = new TranslationString("Choose remote file failed.");
+
+        private readonly TranslationString _currentFormatFilter = 
+            new TranslationString("Current format (*.{0})");
+        private readonly TranslationString _allFilesFilter = 
+            new TranslationString("All files (*.*)");
 
 
         public FormResolveConflicts()
@@ -102,21 +126,21 @@ namespace GitUI
 
             InitMergetool();
 
-            ConflictedFilesContextMenu.Text = "Solve";
-            OpenMergetool.Text = "Open in " + mergetool;
-            button1.Text = "Open in " + mergetool;
+            ConflictedFilesContextMenu.Text = _conflictedFilesContextMenuText.Text;
+            OpenMergetool.Text = _openMergeToolItemText.Text + " " + mergetool;
+            button1.Text = _button1Text.Text + " " + mergetool;
 
             if (GitCommandHelpers.InTheMiddleOfRebase())
             {
-                Reset.Text = "Abort rebase";
-                ContextChooseLocal.Text = "Choose local (theirs)";
-                ContextChooseRemote.Text = "Choose remote (ours)";
+                Reset.Text = _resetItemRebaseText.Text;
+                ContextChooseLocal.Text = _contextChooseLocalRebaseText.Text;
+                ContextChooseRemote.Text = _contextChooseRemoteRebaseText.Text;
             }
             else
             {
-                Reset.Text = "Abort merge";
-                ContextChooseLocal.Text = "Choose local (ours)";
-                ContextChooseRemote.Text = "Choose remote (theirs)";
+                Reset.Text = _resetItemMergeText.Text;
+                ContextChooseLocal.Text = _contextChooseLocalMergeText.Text;
+                ContextChooseRemote.Text = _contextChooseRemoteMergeText.Text;
             }
 
             if (!GitCommandHelpers.InTheMiddleOfPatch() && !GitCommandHelpers.InTheMiddleOfRebase() && !GitCommandHelpers.InTheMiddleOfConflictedMerge() && ThereWhereMergeConflicts)
@@ -259,7 +283,7 @@ namespace GitUI
 
                     if (FileHelper.IsBinaryFile(filename))
                     {
-                        if (MessageBox.Show(string.Format(fileIsBinary.Text, mergetool), "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
+                        if (MessageBox.Show(string.Format(fileIsBinary.Text, mergetool), _binaryFileWarningCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
                         {
                             BinairyFilesChooseLocalBaseRemote(filename);
                             return;
@@ -273,7 +297,7 @@ namespace GitUI
                     //quotes also. For tortoise and araxis a little bit more magic is needed.
                     if (filenames[0] == null)
                     {
-                        DialogResult result = MessageBox.Show(string.Format(noBaseRevision.Text, filename), "Merge", MessageBoxButtons.YesNoCancel);
+                        DialogResult result = MessageBox.Show(string.Format(noBaseRevision.Text, filename), _noBaseFileMergeCaption.Text, MessageBoxButtons.YesNoCancel);
                         if (result == DialogResult.Yes)
                         {
                             arguments = arguments.Replace("-merge -3", "-merge");
@@ -423,7 +447,7 @@ namespace GitUI
             if (CheckForBaseRevision(filename))
             {
                 if (!GitCommandHelpers.HandleConflictSelectBase(filename))
-                    MessageBox.Show("Choose base file failed.");
+                    MessageBox.Show(_chooseBaseFileFailedText.Text);
             }
             Initialize();
             Cursor.Current = Cursors.Default;
@@ -437,7 +461,7 @@ namespace GitUI
             if (CheckForLocalRevision(filename))
             {
                 if (!GitCommandHelpers.HandleConflictSelectLocal(GetFileName()))
-                    MessageBox.Show("Choose local file failed.");
+                    MessageBox.Show(_chooseLocalFileFailedText.Text);
             }
             Initialize();
             Cursor.Current = Cursors.Default;
@@ -450,7 +474,7 @@ namespace GitUI
             if (CheckForRemoteRevision(filename))
             {
                 if (!GitCommandHelpers.HandleConflictSelectRemote(GetFileName()))
-                    MessageBox.Show("Choose remote file failed.");
+                    MessageBox.Show(_chooseRemoteFileFailedText.Text);
             }
             Initialize();
 
@@ -645,8 +669,9 @@ namespace GitUI
                                      AddExtension = true
                                  };
             fileDialog.DefaultExt = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
-            fileDialog.Filter = "Current format (*." + GitCommandHelpers.GetFileExtension(fileDialog.FileName) + ")|*." + GitCommandHelpers.GetFileExtension(fileDialog.FileName) + "|All files (*.*)|*.*";
-
+            fileDialog.Filter = string.Format(_currentFormatFilter.Text, GitCommandHelpers.GetFileExtension(fileDialog.FileName)) + "|*." + 
+                                GitCommandHelpers.GetFileExtension(fileDialog.FileName) + "|" + _allFilesFilter.Text + "|*.*";
+            
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
                 GitCommandHelpers.HandleConflictsSaveSide(GetFileName(), fileDialog.FileName, side);

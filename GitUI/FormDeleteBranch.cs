@@ -16,7 +16,7 @@ namespace GitUI
 
         private readonly TranslationString _deleteBranchQuestion =
             new TranslationString(
-                "Are you sure you want to delete this branch?\nDeleting a branch can cause commits to be deleted too!");
+                "Are you sure you want to delete this branch?" + Environment.NewLine + "Deleting a branch can cause commits to be deleted too!");
 
         private List<GitHead> Heads;
 
