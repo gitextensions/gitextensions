@@ -28,10 +28,7 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
-            noImageService.Items.AddRange(
-                (from FallBackService g in Enum.GetValues(typeof(FallBackService))
-                 where g != FallBackService.None
-                 select g as object).ToArray());
+            noImageService.Items.AddRange(GravatarService.DynamicServices.Cast<object>().ToArray());
 
             _NO_TRANSLATE_Encoding.Items.AddRange(new Object[]
                                                       {
