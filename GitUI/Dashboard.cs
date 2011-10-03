@@ -40,7 +40,13 @@ namespace GitUI
 
             Bitmap image = Lemmings.GetPictureBoxImage(DateTime.Now);
             if (image != null)
+            {
                 pictureBox1.Image = image;
+            }
+
+            // Do this at runtime, because it is difficult to keep consistent at design time.
+            pictureBox1.BringToFront();
+            pictureBox1.Location = new Point(this.Width - 145, this.Height - 145);
 
             Load += Dashboard_Load;
         }
@@ -99,21 +105,13 @@ namespace GitUI
                 WorkingDirChanged(this, null);
         }
 
-        private int AddDashboardEntry(int y, RepositoryCategory entry)
+        private void AddDashboardEntry(RepositoryCategory entry)
         {
-            var dashboardCategory = new DashboardCategory(entry.Description, entry)
-                                        {
-                                            Location = new Point(0, y),
-                                            Width = splitContainer5.Panel2.Width
-                                        };
-            splitContainer5.Panel2.Controls.Add(dashboardCategory);
-            dashboardCategory.BringToFront();
-            y += dashboardCategory.Height;
+            var dashboardCategory = new DashboardCategory(entry.Description, entry);
+            this.groupLayoutPanel.Controls.Add(dashboardCategory);
 
             dashboardCategory.DashboardItemClick += dashboardItem_Click;
             dashboardCategory.DashboardCategoryChanged += dashboardCategory_DashboardCategoryChanged;
-
-            return y;
         }
 
         private void dashboardCategory_DashboardCategoryChanged(object sender, EventArgs e)
@@ -133,24 +131,26 @@ namespace GitUI
             {
                 return;
             }
-            //Make sure the dashboard is only initialized once
+
+            // Make sure the dashboard is only initialized once
             if (!initialized)
             {
-                //Remove favourites
-                for (int i = splitContainer5.Panel2.Controls.Count; i > 0; i--)
+                // Remove favorites
+                var categories = (from DashboardCategory i in this.groupLayoutPanel.Controls
+                                  select i).ToList();
+                this.groupLayoutPanel.Controls.Clear();
+                foreach (var category in categories)
                 {
-                    DashboardCategory dashboarCategory = splitContainer5.Panel2.Controls[i - 1] as DashboardCategory;
-                    if (dashboarCategory != null)
-                    {
-                        dashboarCategory.DashboardCategoryChanged -= dashboardCategory_DashboardCategoryChanged;
-                        dashboarCategory.DashboardItemClick -= dashboardItem_Click;
-                        dashboarCategory.Clear();
-                        splitContainer5.Panel2.Controls.RemoveAt(i - 1);
-                    }
+                    category.DashboardCategoryChanged -= dashboardCategory_DashboardCategoryChanged;
+                    category.DashboardItemClick -= dashboardItem_Click;
+                    category.Clear();
                 }
 
-                //Show favourites
-                Repositories.RepositoryCategories.Aggregate(0, AddDashboardEntry);
+                // Show favorites
+                foreach (var category in Repositories.RepositoryCategories)
+                {
+                    AddDashboardEntry(category);
+                }
 
                 initialized = true;
             }
@@ -159,22 +159,12 @@ namespace GitUI
             splitContainer7.Panel2MinSize = 1;
             splitContainer7.SplitterDistance = Math.Max(2, splitContainer7.Height - (DonateCategory.Height + 25));
 
-            //Resize favourites
-            for (int i = splitContainer5.Panel2.Controls.Count; i > 0; i--)
-            {
-                DashboardCategory dashboarCategory = splitContainer5.Panel2.Controls[i - 1] as DashboardCategory;
-                if (dashboarCategory != null)
-                {
-                    dashboarCategory.Width = splitContainer5.Panel2.Width;
-                }
-            }
-
             RecentRepositories.Clear();
 
             RepositoryCategory filteredRecentRepositoryHistory = new RepositoryCategory();
             filteredRecentRepositoryHistory.Description = Repositories.RepositoryHistory.Description;
             filteredRecentRepositoryHistory.CategoryType = Repositories.RepositoryHistory.CategoryType;
-            
+
             foreach (Repository repository in Repositories.RepositoryHistory.Repositories)
             {
                 if (!Repositories.RepositoryCategories.Any(c => c.Repositories.Any(r => r.Path != null && r.Path.Equals(repository.Path, StringComparison.CurrentCultureIgnoreCase))))
@@ -279,8 +269,6 @@ namespace GitUI
         {
             base.OnResize(e);
             ShowRecentRepositories();
-            pictureBox1.BringToFront();
-            pictureBox1.Location = new Point(this.Width - 145, this.Height - 145);
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
