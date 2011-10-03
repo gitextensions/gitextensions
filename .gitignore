@@ -30,6 +30,7 @@ SimpleExt_p.c
 *.msi
 *.user
 *.bak
+*.[Cc]ache
 Thumbs.db
 GitPlugin/bin/*
 Setup/GitExtensions207.zip
