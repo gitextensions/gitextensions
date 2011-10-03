@@ -85,12 +85,28 @@ namespace Gravatar
         private static Dictionary<FallBackService, string> fallBackStrings = new Dictionary<FallBackService, string>
         {
             { FallBackService.None, "404" },
-            { FallBackService.MysteryMan, "mm" },
             { FallBackService.Identicon, "identicon" },
             { FallBackService.MonsterId, "monsterid" },
             { FallBackService.Wavatar, "wavatar" },
             { FallBackService.Retro, "retro" },
         };
+
+        /// <summary>
+        /// Gets a collection of <see cref="FallBackService"/> for which
+        /// the <see cref="GravatarService"/> will provide dynamically
+        /// generated avatars.
+        /// </summary>
+        /// <remarks>
+        /// This collection will also contain <see cref="FallBackService.None"/>,
+        /// so it is suitable for display directly to end users.
+        /// </remarks>
+        public static ICollection<FallBackService> DynamicServices
+        {
+            get
+            {
+                return fallBackStrings.Keys;
+            }
+        }
 
         public static void ClearImageCache()
         {
@@ -199,16 +215,16 @@ namespace Gravatar
 
             builder.Path += HashEmail(email);
 
-            var query = string.Format("s={0}&r={1}",
-                size,
-                rating.ToString().ToLowerInvariant());
-
             string d;
-            if (fallBack != FallBackService.None &&
-                fallBackStrings.TryGetValue(fallBack, out d))
+            if (!fallBackStrings.TryGetValue(fallBack, out d))
             {
-                query += "&d=" + d;
+                d = "404";
             }
+
+            var query = string.Format("s={0}&r={1}&d={2}",
+                size,
+                rating.ToString().ToLowerInvariant(),
+                d);
 
             builder.Query = query;
 
