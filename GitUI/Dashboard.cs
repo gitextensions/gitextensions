@@ -109,7 +109,6 @@ namespace GitUI
         {
             var dashboardCategory = new DashboardCategory(entry.Description, entry);
             this.groupLayoutPanel.Controls.Add(dashboardCategory);
-            dashboardCategory.BringToFront();
 
             dashboardCategory.DashboardItemClick += dashboardItem_Click;
             dashboardCategory.DashboardCategoryChanged += dashboardCategory_DashboardCategoryChanged;
