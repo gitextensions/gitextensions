@@ -2163,7 +2163,7 @@ namespace GitUI
         {
             TreeView gitTree = (TreeView)sender;
 
-            if (!gitTree.Focused)
+            if (!gitTree.Focused && Settings.FocusControlOnHover)
                 gitTree.Focus();
 
             //DRAG

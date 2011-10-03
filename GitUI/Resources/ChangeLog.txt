@@ -5,6 +5,8 @@ Version 2.25
 	Fixed issue 543: Show current branch in main screen
 	Fixed issue 533: UI/translation bugs on lost commits recover form
 	Fixed issue 587: do not try to commit empty changeset
+	Fixed issue 628: the start page settings page has improper alignment
+	Fixed issue 632: RSS Feeds on the Start Page scroll unnecessarily	
 	Fixed issue: 'clone/fork GitHub repo' throws an exception if no GitHub credentials are known
 	Fixed issue: remove '.git' from targer directory if the original repository ends with '.git'
 	Fixed issue: in some cases warnings are shown in the commit dialog instead of the staged files
@@ -20,6 +22,7 @@ Version 2.25
 	Added support for global configuration commit.template
 	Added more hotkeys
 	Added menu in revision grid to manipulate commit (revert, cherry pick, squash, fixup)
+	Added new gravatar fallback option Retro and None
 	Many bugfixes and minor changes
 
 Version 2.24

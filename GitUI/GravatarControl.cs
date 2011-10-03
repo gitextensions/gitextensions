@@ -130,5 +130,19 @@ namespace GitUI
             GravatarService.ClearImageCache();
             UpdateGravatar();
         }
+
+        private void retroToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.GravatarFallbackService = FallBackService.Retro.ToString();
+            GravatarService.ClearImageCache();
+            UpdateGravatar();
+        }
+
+        private void noneToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.GravatarFallbackService = FallBackService.None.ToString();
+            GravatarService.ClearImageCache();
+            UpdateGravatar();
+        }
     }
 }
