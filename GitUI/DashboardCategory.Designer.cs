@@ -39,14 +39,14 @@
             this.CategoryContextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // Caption
+            // _NO_TRANSLATE_Caption
             // 
             this._NO_TRANSLATE_Caption.AutoSize = true;
             this._NO_TRANSLATE_Caption.ContextMenuStrip = this.CategoryContextMenuStrip1;
             this._NO_TRANSLATE_Caption.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this._NO_TRANSLATE_Caption.Location = new System.Drawing.Point(3, 2);
-            this._NO_TRANSLATE_Caption.Name = "Caption";
-            this._NO_TRANSLATE_Caption.Size = new System.Drawing.Size(58, 17);
+            this._NO_TRANSLATE_Caption.Name = "_NO_TRANSLATE_Caption";
+            this._NO_TRANSLATE_Caption.Size = new System.Drawing.Size(44, 15);
             this._NO_TRANSLATE_Caption.TabIndex = 8;
             this._NO_TRANSLATE_Caption.Text = "##Title";
             // 
@@ -90,26 +90,24 @@
             // 
             // flowLayoutPanel
             // 
-            this.flowLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.flowLayoutPanel.AutoSize = true;
             this.flowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel.Location = new System.Drawing.Point(0, 20);
+            this.flowLayoutPanel.Location = new System.Drawing.Point(0, 23);
             this.flowLayoutPanel.Name = "flowLayoutPanel";
-            this.flowLayoutPanel.Size = new System.Drawing.Size(835, 19);
+            this.flowLayoutPanel.Size = new System.Drawing.Size(256, 22);
             this.flowLayoutPanel.TabIndex = 9;
             this.flowLayoutPanel.WrapContents = false;
             // 
             // DashboardCategory
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Controls.Add(this.flowLayoutPanel);
             this.Controls.Add(this._NO_TRANSLATE_Caption);
             this.Name = "DashboardCategory";
-            this.Size = new System.Drawing.Size(835, 42);
+            this.Size = new System.Drawing.Size(259, 48);
             this.CategoryContextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
