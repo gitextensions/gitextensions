@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -7,16 +8,104 @@ using System.Net;
 
 namespace Gravatar
 {
+    /// <summary>
+    /// Services that gravatar provides in order to provide avatars in
+    /// the absence of a user-uploaded image.
+    /// </summary>
+    public enum FallBackService
+    {
+        /// <summary>
+        /// Return an HTTP 404 respose.
+        /// </summary>
+        None,
+
+        /// <summary>
+        /// Return a cartoon-style silhouette.
+        /// </summary>
+        MysteryMan,
+
+        /// <summary>
+        /// Return a generated monster based on the email hash.
+        /// </summary>
+        MonsterId,
+
+        /// <summary>
+        /// Return a generated face based on the email hash.
+        /// </summary>
+        Wavatar,
+
+        /// <summary>
+        /// Return a geometric pattern based on the email hash.
+        /// </summary>
+        Identicon,
+
+        /// <summary>
+        /// Return an 8-bit-style face based on the email hash.
+        /// </summary>
+        Retro,
+    }
+
+    /// <summary>
+    /// Specifies the maximum rating of a given gravatar image request.
+    /// </summary>
+    public enum Rating
+    {
+        /// <summary>
+        /// Suitable for all audiences.
+        /// </summary>
+        G,
+
+        /// <summary>
+        /// May contain rude gestures, provocatively dressed indiviiduals,
+        /// the lesser swear words, or mild violence
+        /// </summary>
+        PG,
+
+        /// <summary>
+        /// May contain such things as harsh profanity, intense violence,
+        /// nudity, or hard drug use.
+        /// </summary>
+        R,
+
+        /// <summary>
+        /// May contain hardcore sexual imagery or extremely disturbing
+        /// violence.
+        /// </summary>
+        X,
+    }
+
     public class GravatarService
     {
         static IImageCache cache;
         static object gravatarServiceLock = new object();
 
-        public enum FallBackService
+        /// <summary>
+        /// Provides a mapping for the image defaults.
+        /// </summary>
+        private static Dictionary<FallBackService, string> fallBackStrings = new Dictionary<FallBackService, string>
         {
-            MonsterId,
-            Wavatar,
-            Identicon
+            { FallBackService.None, "404" },
+            { FallBackService.Identicon, "identicon" },
+            { FallBackService.MonsterId, "monsterid" },
+            { FallBackService.Wavatar, "wavatar" },
+            { FallBackService.Retro, "retro" },
+        };
+
+        /// <summary>
+        /// Gets a collection of <see cref="FallBackService"/> for which
+        /// the <see cref="GravatarService"/> will provide dynamically
+        /// generated avatars.
+        /// </summary>
+        /// <remarks>
+        /// This collection will also contain <see cref="FallBackService.None"/>,
+        /// so it is suitable for display directly to end users.
+        /// </remarks>
+        public static ICollection<FallBackService> DynamicServices
+        {
+            get
+            {
+                return fallBackStrings.Keys;
+            }
         }
 
         public static void ClearImageCache()
@@ -93,25 +182,63 @@ namespace Gravatar
             }
         }
 
+        /// <summary>
+        /// Generates an email hash as per the Gravatar specifications.
+        /// </summary>
+        /// <param name="email">The email to hash.</param>
+        /// <returns>The hash of the email.</returns>
+        /// <remarks>
+        /// The process of creating the hash are specified at http://en.gravatar.com/site/implement/hash/
+        /// </remarks>
+        private static string HashEmail(string email)
+        {
+            return MD5.CalcMD5(email.Trim().ToLowerInvariant());
+        }
+
+        /// <summary>
+        /// Builds a <see cref="System.Uri"/> corresponding to a given email address.
+        /// </summary>
+        /// <param name="email">The email address for which to build the <see cref="System.Uri"/>.</param>
+        /// <param name="size">The size of the image to request.  The default is 32.</param>
+        /// <param name="useHttps">Indicates whether or not the request should be performed over Secure HTTP.</param>
+        /// <param name="rating">The mazimum rating of the returned image.</param>
+        /// <param name="fallBack">The Gravatar service that will be used for fall-back.</param>
+        /// <returns>The constructed <see cref="System.Uri"/>.</returns>
+        private static Uri BuildGravatarUrl(string email, int size = 32, bool useHttps = false, Rating rating = Rating.G, FallBackService fallBack = FallBackService.None)
+        {
+            var builder = new UriBuilder("http://www.gravatar.com/avatar/");
+
+            if (useHttps)
+            {
+                builder.Scheme = "https";
+            }
+
+            builder.Path += HashEmail(email);
+
+            string d;
+            if (!fallBackStrings.TryGetValue(fallBack, out d))
+            {
+                d = "404";
+            }
+
+            var query = string.Format("s={0}&r={1}&d={2}",
+                size,
+                rating.ToString().ToLowerInvariant(),
+                d);
+
+            builder.Query = query;
+
+            return builder.Uri;
+        }
+
         public static void GetImageFromGravatar(string imageFileName, string email, int authorImageSize, FallBackService fallBack)
         {
             try
             {
-                var baseUrl = String.Concat("http://www.gravatar.com/avatar/{0}?d=identicon&s=",
-                                            authorImageSize, "&r=g");
-
-                if (fallBack == FallBackService.Identicon)
-                    baseUrl += "&d=identicon";
-                if (fallBack == FallBackService.MonsterId)
-                    baseUrl += "&d=monsterid";
-                if (fallBack == FallBackService.Wavatar)
-                    baseUrl += "&d=wavatar";
-
-                //hash the email address
-                var emailHash = MD5.CalcMD5(email.ToLower());
-
-                //format our url to the Gravatar
-                var imageUrl = String.Format(baseUrl, emailHash);
+                var imageUrl = BuildGravatarUrl(email,
+                    size: authorImageSize,
+                    useHttps: false,
+                    fallBack: fallBack);
 
                 var webClient = new WebClient { Proxy = WebRequest.DefaultWebProxy };
                 webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
