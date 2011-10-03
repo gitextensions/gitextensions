@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands.Repository;
@@ -8,24 +9,24 @@ namespace GitUI
     public partial class DashboardCategory : GitExtensionsControl
     {
         private RepositoryCategory m_repositoryCategory;
-        private int top = 26;
 
         public DashboardCategory()
         {
             InitializeComponent();
+
+            // Do this here, so that at design time, the form will keep its size.
+            this.flowLayoutPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+
             SetUpFonts();
             Translate();
         }
 
         public DashboardCategory(string title, RepositoryCategory repositoryCategory)
+            : this()
         {
-            InitializeComponent();
-            SetUpFonts();
-            Translate();
-
             Title = title;
             RepositoryCategory = repositoryCategory;
-            AutoSizeMode = AutoSizeMode.GrowAndShrink;
         }
 
         public RepositoryCategory RepositoryCategory
@@ -63,7 +64,6 @@ namespace GitUI
         {
             if (m_repositoryCategory != null)
             {
-                Height = top = 26;
                 foreach (Repository repository in m_repositoryCategory.Repositories)
                 {
                     var dashboardItem = new DashboardItem(repository);
@@ -257,35 +257,21 @@ namespace GitUI
 
         public void AddItem(DashboardItem dashboardItem)
         {
-            dashboardItem.Location = new Point(10, top);
-            dashboardItem.Width = Width - 13;
-            Controls.Add(dashboardItem);
-            top += dashboardItem.Height;
-            Height = top;
+            dashboardItem.Margin = new Padding(10, 0, 0, 0);
+            this.flowLayoutPanel.Controls.Add(dashboardItem);
         }
 
         public void Clear()
         {
-            for (int i = Controls.Count; i > 0; i--)
-            {
-                var dashboardItem = Controls[i - 1] as DashboardItem;
-                if (dashboardItem != null)
-                {
-                    dashboardItem.Click -= dashboardItem_Click;
-                    dashboardItem.Close();
-                    Controls.RemoveAt(i - 1);
-                }
-            }
-            top = 26;
-            Height = top;
-        }
+            var items = (from DashboardItem i in this.flowLayoutPanel.Controls
+                         select i).ToList();
 
-        private void DashboardCategory_SizeChanged(object sender, EventArgs e)
-        {
-            for (int i = Controls.Count; i > 0; i--)
+            this.flowLayoutPanel.Controls.Clear();
+
+            foreach (var item in items)
             {
-                if (Controls[i - 1] is DashboardItem)
-                    Controls[i - 1].Width = Width - 13;
+                item.Click -= dashboardItem_Click;
+                item.Close();
             }
         }
 
