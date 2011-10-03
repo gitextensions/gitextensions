@@ -34,7 +34,6 @@ namespace GitUI
             }
 
             Initialize(icon, repository.Path, repository.Title, repository.Description, branchName);
-            AutoSizeMode = AutoSizeMode.GrowAndShrink;
         }
 
         public DashboardItem(Bitmap icon, string title)
