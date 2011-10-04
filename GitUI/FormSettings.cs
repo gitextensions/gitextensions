@@ -2422,5 +2422,10 @@ namespace GitUI
                 lbl_icon.Visible = false;
             }
         }
+
+        private void downloadMsysgit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(@"http://code.google.com/p/msysgit/");
+        }
     }
 }

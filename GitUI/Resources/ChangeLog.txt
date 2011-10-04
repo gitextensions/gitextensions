@@ -23,6 +23,7 @@ Version 2.25
 	Added more hotkeys
 	Added menu in revision grid to manipulate commit (revert, cherry pick, squash, fixup)
 	Added new gravatar fallback option Retro and None
+	Added German translation
 	Many bugfixes and minor changes
 
 Version 2.24
