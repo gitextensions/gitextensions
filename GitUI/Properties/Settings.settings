@@ -8,5 +8,11 @@
     <Setting Name="Hotkeys" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="FormBrowse_FileTreeSplitContainer_SplitterDistance" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">215</Value>
+    </Setting>
+    <Setting Name="FormBrowse_DiffSplitContainer_SplitterDistance" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">215</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -70,13 +70,13 @@ namespace GitUI
             this.committerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.authorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.diffContainsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.MainSplitContainer = new System.Windows.Forms.SplitContainer();
             this.RevisionGrid = new GitUI.RevisionGrid();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.CommitInfoTabControl = new System.Windows.Forms.TabControl();
             this.CommitInfo = new System.Windows.Forms.TabPage();
             this.RevisionInfo = new GitUI.CommitInfo();
             this.Tree = new System.Windows.Forms.TabPage();
-            this.splitContainer4 = new System.Windows.Forms.SplitContainer();
+            this.FileTreeSplitContainer = new System.Windows.Forms.SplitContainer();
             this.GitTree = new System.Windows.Forms.TreeView();
             this.FileTreeContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -91,7 +91,7 @@ namespace GitUI
             this.findToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.FileText = new GitUI.Editor.FileViewer();
             this.Diff = new System.Windows.Forms.TabPage();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.DiffSplitContainer = new System.Windows.Forms.SplitContainer();
             this.DiffFiles = new GitUI.FileStatusList();
             this.DiffContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -197,20 +197,20 @@ namespace GitUI
             this.toolPanel.Panel2.SuspendLayout();
             this.toolPanel.SuspendLayout();
             this.ToolStrip.SuspendLayout();
-            this.splitContainer3.Panel1.SuspendLayout();
-            this.splitContainer3.Panel2.SuspendLayout();
-            this.splitContainer3.SuspendLayout();
-            this.tabControl1.SuspendLayout();
+            this.MainSplitContainer.Panel1.SuspendLayout();
+            this.MainSplitContainer.Panel2.SuspendLayout();
+            this.MainSplitContainer.SuspendLayout();
+            this.CommitInfoTabControl.SuspendLayout();
             this.CommitInfo.SuspendLayout();
             this.Tree.SuspendLayout();
-            this.splitContainer4.Panel1.SuspendLayout();
-            this.splitContainer4.Panel2.SuspendLayout();
-            this.splitContainer4.SuspendLayout();
+            this.FileTreeSplitContainer.Panel1.SuspendLayout();
+            this.FileTreeSplitContainer.Panel2.SuspendLayout();
+            this.FileTreeSplitContainer.SuspendLayout();
             this.FileTreeContextMenu.SuspendLayout();
             this.Diff.SuspendLayout();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
+            this.DiffSplitContainer.Panel1.SuspendLayout();
+            this.DiffSplitContainer.Panel2.SuspendLayout();
+            this.DiffSplitContainer.SuspendLayout();
             this.DiffContextMenu.SuspendLayout();
             this.TreeContextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
@@ -235,7 +235,7 @@ namespace GitUI
             // 
             // toolPanel.Panel2
             // 
-            this.toolPanel.Panel2.Controls.Add(this.splitContainer3);
+            this.toolPanel.Panel2.Controls.Add(this.MainSplitContainer);
             this.toolPanel.Size = new System.Drawing.Size(814, 527);
             this.toolPanel.SplitterDistance = 25;
             this.toolPanel.SplitterWidth = 1;
@@ -545,25 +545,25 @@ namespace GitUI
             this.diffContainsToolStripMenuItem.Text = "Diff contains (SLOW)";
             this.diffContainsToolStripMenuItem.Click += new System.EventHandler(this.diffContainsToolStripMenuItem_Click);
             // 
-            // splitContainer3
+            // MainSplitContainer
             // 
-            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer3.Name = "splitContainer3";
-            this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.MainSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MainSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.MainSplitContainer.Name = "MainSplitContainer";
+            this.MainSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // splitContainer3.Panel1
+            // MainSplitContainer.Panel1
             // 
-            this.splitContainer3.Panel1.Controls.Add(this.RevisionGrid);
+            this.MainSplitContainer.Panel1.Controls.Add(this.RevisionGrid);
             // 
-            // splitContainer3.Panel2
+            // MainSplitContainer.Panel2
             // 
-            this.splitContainer3.Panel2.Controls.Add(this.tabControl1);
-            this.splitContainer3.Panel2MinSize = 0;
-            this.splitContainer3.Size = new System.Drawing.Size(814, 501);
-            this.splitContainer3.SplitterDistance = 215;
-            this.splitContainer3.TabIndex = 1;
-            this.splitContainer3.TabStop = false;
+            this.MainSplitContainer.Panel2.Controls.Add(this.CommitInfoTabControl);
+            this.MainSplitContainer.Panel2MinSize = 0;
+            this.MainSplitContainer.Size = new System.Drawing.Size(814, 501);
+            this.MainSplitContainer.SplitterDistance = 215;
+            this.MainSplitContainer.TabIndex = 1;
+            this.MainSplitContainer.TabStop = false;
             // 
             // RevisionGrid
             // 
@@ -586,18 +586,18 @@ namespace GitUI
             this.RevisionGrid.TabIndex = 0;
             this.RevisionGrid.DoubleClick += new System.EventHandler(this.RevisionGridDoubleClick);
             // 
-            // tabControl1
+            // CommitInfoTabControl
             // 
-            this.tabControl1.Controls.Add(this.CommitInfo);
-            this.tabControl1.Controls.Add(this.Tree);
-            this.tabControl1.Controls.Add(this.Diff);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 0);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(814, 282);
-            this.tabControl1.TabIndex = 0;
-            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.TabControl1SelectedIndexChanged);
+            this.CommitInfoTabControl.Controls.Add(this.CommitInfo);
+            this.CommitInfoTabControl.Controls.Add(this.Tree);
+            this.CommitInfoTabControl.Controls.Add(this.Diff);
+            this.CommitInfoTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CommitInfoTabControl.Location = new System.Drawing.Point(0, 0);
+            this.CommitInfoTabControl.Name = "CommitInfoTabControl";
+            this.CommitInfoTabControl.SelectedIndex = 0;
+            this.CommitInfoTabControl.Size = new System.Drawing.Size(814, 282);
+            this.CommitInfoTabControl.TabIndex = 0;
+            this.CommitInfoTabControl.SelectedIndexChanged += new System.EventHandler(this.TabControl1SelectedIndexChanged);
             // 
             // CommitInfo
             // 
@@ -624,7 +624,7 @@ namespace GitUI
             // 
             // Tree
             // 
-            this.Tree.Controls.Add(this.splitContainer4);
+            this.Tree.Controls.Add(this.FileTreeSplitContainer);
             this.Tree.Location = new System.Drawing.Point(4, 24);
             this.Tree.Name = "Tree";
             this.Tree.Padding = new System.Windows.Forms.Padding(3);
@@ -633,23 +633,24 @@ namespace GitUI
             this.Tree.Text = "File tree";
             this.Tree.UseVisualStyleBackColor = true;
             // 
-            // splitContainer4
+            // FileTreeSplitContainer
             // 
-            this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer4.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer4.Location = new System.Drawing.Point(3, 3);
-            this.splitContainer4.Name = "splitContainer4";
+            this.FileTreeSplitContainer.DataBindings.Add(new System.Windows.Forms.Binding("SplitterDistance", global::GitUI.Properties.Settings.Default, "FormBrowse_FileTreeSplitContainer_SplitterDistance", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.FileTreeSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FileTreeSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.FileTreeSplitContainer.Location = new System.Drawing.Point(3, 3);
+            this.FileTreeSplitContainer.Name = "FileTreeSplitContainer";
             // 
-            // splitContainer4.Panel1
+            // FileTreeSplitContainer.Panel1
             // 
-            this.splitContainer4.Panel1.Controls.Add(this.GitTree);
+            this.FileTreeSplitContainer.Panel1.Controls.Add(this.GitTree);
             // 
-            // splitContainer4.Panel2
+            // FileTreeSplitContainer.Panel2
             // 
-            this.splitContainer4.Panel2.Controls.Add(this.FileText);
-            this.splitContainer4.Size = new System.Drawing.Size(800, 250);
-            this.splitContainer4.SplitterDistance = 213;
-            this.splitContainer4.TabIndex = 1;
+            this.FileTreeSplitContainer.Panel2.Controls.Add(this.FileText);
+            this.FileTreeSplitContainer.Size = new System.Drawing.Size(800, 248);
+            this.FileTreeSplitContainer.SplitterDistance = global::GitUI.Properties.Settings.Default.FormBrowse_FileTreeSplitContainer_SplitterDistance;
+            this.FileTreeSplitContainer.TabIndex = 1;
             // 
             // GitTree
             // 
@@ -658,7 +659,7 @@ namespace GitUI
             this.GitTree.HideSelection = false;
             this.GitTree.Location = new System.Drawing.Point(0, 0);
             this.GitTree.Name = "GitTree";
-            this.GitTree.Size = new System.Drawing.Size(213, 250);
+            this.GitTree.Size = new System.Drawing.Size(215, 248);
             this.GitTree.TabIndex = 0;
             this.GitTree.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.GitTreeBeforeExpand);
             this.GitTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView1AfterSelect);
@@ -679,27 +680,27 @@ namespace GitUI
             this.toolStripSeparator18,
             this.findToolStripMenuItem});
             this.FileTreeContextMenu.Name = "FileTreeContextMenu";
-            this.FileTreeContextMenu.Size = new System.Drawing.Size(265, 192);
+            this.FileTreeContextMenu.Size = new System.Drawing.Size(269, 192);
             this.FileTreeContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.FileTreeContextMenu_Opening);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.saveAsToolStripMenuItem.Text = "Save as";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveAsOnClick);
             // 
             // openFileToolStripMenuItem
             // 
             this.openFileToolStripMenuItem.Name = "openFileToolStripMenuItem";
-            this.openFileToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
+            this.openFileToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.openFileToolStripMenuItem.Text = "Open this revision (temp file)";
             this.openFileToolStripMenuItem.Click += new System.EventHandler(this.OpenOnClick);
             // 
             // openFileWithToolStripMenuItem
             // 
             this.openFileWithToolStripMenuItem.Name = "openFileWithToolStripMenuItem";
-            this.openFileWithToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
+            this.openFileWithToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.openFileWithToolStripMenuItem.Text = "Open this revision with... (temp file)";
             this.openFileWithToolStripMenuItem.Click += new System.EventHandler(this.OpenWithOnClick);
             // 
@@ -707,47 +708,47 @@ namespace GitUI
             // 
             this.openWithToolStripMenuItem.Name = "openWithToolStripMenuItem";
             this.openWithToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openWithToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
+            this.openWithToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.openWithToolStripMenuItem.Text = "Open checked out file with...";
             this.openWithToolStripMenuItem.Click += new System.EventHandler(this.openWithToolStripMenuItem_Click);
             // 
             // editCheckedOutFileToolStripMenuItem
             // 
             this.editCheckedOutFileToolStripMenuItem.Name = "editCheckedOutFileToolStripMenuItem";
-            this.editCheckedOutFileToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
+            this.editCheckedOutFileToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.editCheckedOutFileToolStripMenuItem.Text = "Edit checked out file";
             this.editCheckedOutFileToolStripMenuItem.Click += new System.EventHandler(this.editCheckedOutFileToolStripMenuItem_Click);
             // 
             // toolStripSeparator20
             // 
             this.toolStripSeparator20.Name = "toolStripSeparator20";
-            this.toolStripSeparator20.Size = new System.Drawing.Size(261, 6);
+            this.toolStripSeparator20.Size = new System.Drawing.Size(265, 6);
             // 
             // copyFilenameToClipboardToolStripMenuItem
             // 
             this.copyFilenameToClipboardToolStripMenuItem.Name = "copyFilenameToClipboardToolStripMenuItem";
             this.copyFilenameToClipboardToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.copyFilenameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
+            this.copyFilenameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.copyFilenameToClipboardToolStripMenuItem.Text = "Copy filename to clipboard";
             this.copyFilenameToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyFilenameToClipboardToolStripMenuItem_Click);
             // 
             // fileHistoryToolStripMenuItem
             // 
             this.fileHistoryToolStripMenuItem.Name = "fileHistoryToolStripMenuItem";
-            this.fileHistoryToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
+            this.fileHistoryToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.fileHistoryToolStripMenuItem.Text = "File history";
             this.fileHistoryToolStripMenuItem.Click += new System.EventHandler(this.FileHistoryOnClick);
             // 
             // toolStripSeparator18
             // 
             this.toolStripSeparator18.Name = "toolStripSeparator18";
-            this.toolStripSeparator18.Size = new System.Drawing.Size(261, 6);
+            this.toolStripSeparator18.Size = new System.Drawing.Size(265, 6);
             // 
             // findToolStripMenuItem
             // 
             this.findToolStripMenuItem.Name = "findToolStripMenuItem";
             this.findToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
-            this.findToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
+            this.findToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.findToolStripMenuItem.Text = "Find";
             this.findToolStripMenuItem.Click += new System.EventHandler(this.FindFileOnClick);
             // 
@@ -764,13 +765,13 @@ namespace GitUI
             this.FileText.ScrollPos = 0;
             this.FileText.ShowEntireFile = false;
             this.FileText.ShowLineNumbers = true;
-            this.FileText.Size = new System.Drawing.Size(583, 250);
+            this.FileText.Size = new System.Drawing.Size(581, 248);
             this.FileText.TabIndex = 0;
             this.FileText.TreatAllFilesAsText = false;
             // 
             // Diff
             // 
-            this.Diff.Controls.Add(this.splitContainer1);
+            this.Diff.Controls.Add(this.DiffSplitContainer);
             this.Diff.Location = new System.Drawing.Point(4, 24);
             this.Diff.Name = "Diff";
             this.Diff.Size = new System.Drawing.Size(806, 254);
@@ -778,23 +779,24 @@ namespace GitUI
             this.Diff.Text = "Diff";
             this.Diff.UseVisualStyleBackColor = true;
             // 
-            // splitContainer1
+            // DiffSplitContainer
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
+            this.DiffSplitContainer.DataBindings.Add(new System.Windows.Forms.Binding("SplitterDistance", global::GitUI.Properties.Settings.Default, "FormBrowse_DiffSplitContainer_SplitterDistance", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.DiffSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DiffSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.DiffSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.DiffSplitContainer.Name = "DiffSplitContainer";
             // 
-            // splitContainer1.Panel1
+            // DiffSplitContainer.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.DiffFiles);
+            this.DiffSplitContainer.Panel1.Controls.Add(this.DiffFiles);
             // 
-            // splitContainer1.Panel2
+            // DiffSplitContainer.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.DiffText);
-            this.splitContainer1.Size = new System.Drawing.Size(806, 256);
-            this.splitContainer1.SplitterDistance = 217;
-            this.splitContainer1.TabIndex = 0;
+            this.DiffSplitContainer.Panel2.Controls.Add(this.DiffText);
+            this.DiffSplitContainer.Size = new System.Drawing.Size(806, 254);
+            this.DiffSplitContainer.SplitterDistance = global::GitUI.Properties.Settings.Default.FormBrowse_DiffSplitContainer_SplitterDistance;
+            this.DiffSplitContainer.TabIndex = 0;
             // 
             // DiffFiles
             // 
@@ -806,8 +808,9 @@ namespace GitUI
             this.DiffFiles.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DiffFiles.Name = "DiffFiles";
             this.DiffFiles.Revision = null;
+            this.DiffFiles.SelectedIndex = -1;
             this.DiffFiles.SelectedItem = null;
-            this.DiffFiles.Size = new System.Drawing.Size(217, 256);
+            this.DiffFiles.Size = new System.Drawing.Size(215, 254);
             this.DiffFiles.TabIndex = 1;
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFilesSelectedIndexChanged);
             this.DiffFiles.DoubleClick += new System.EventHandler(this.DiffFilesDoubleClick);
@@ -820,13 +823,13 @@ namespace GitUI
             this.saveAsToolStripMenuItem1,
             this.fileHistoryDiffToolstripMenuItem});
             this.DiffContextMenu.Name = "DiffContextMenu";
-            this.DiffContextMenu.Size = new System.Drawing.Size(252, 92);
+            this.DiffContextMenu.Size = new System.Drawing.Size(261, 92);
             // 
             // openWithDifftoolToolStripMenuItem
             // 
             this.openWithDifftoolToolStripMenuItem.Name = "openWithDifftoolToolStripMenuItem";
             this.openWithDifftoolToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
-            this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.openWithDifftoolToolStripMenuItem.Text = "Open with difftool";
             this.openWithDifftoolToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
@@ -834,7 +837,7 @@ namespace GitUI
             // 
             this.copyFilenameToClipboardToolStripMenuItem1.Name = "copyFilenameToClipboardToolStripMenuItem1";
             this.copyFilenameToClipboardToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.copyFilenameToClipboardToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
+            this.copyFilenameToClipboardToolStripMenuItem1.Size = new System.Drawing.Size(260, 22);
             this.copyFilenameToClipboardToolStripMenuItem1.Text = "Copy filename to clipboard";
             this.copyFilenameToClipboardToolStripMenuItem1.Click += new System.EventHandler(this.copyFilenameToClipboardToolStripMenuItem1_Click);
             // 
@@ -842,14 +845,14 @@ namespace GitUI
             // 
             this.saveAsToolStripMenuItem1.Name = "saveAsToolStripMenuItem1";
             this.saveAsToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveAsToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
+            this.saveAsToolStripMenuItem1.Size = new System.Drawing.Size(260, 22);
             this.saveAsToolStripMenuItem1.Text = "Save as";
             this.saveAsToolStripMenuItem1.Click += new System.EventHandler(this.saveAsToolStripMenuItem1_Click);
             // 
             // fileHistoryDiffToolstripMenuItem
             // 
             this.fileHistoryDiffToolstripMenuItem.Name = "fileHistoryDiffToolstripMenuItem";
-            this.fileHistoryDiffToolstripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.fileHistoryDiffToolstripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.fileHistoryDiffToolstripMenuItem.Text = "File history";
             this.fileHistoryDiffToolstripMenuItem.Click += new System.EventHandler(this.fileHistoryDiffToolstripMenuItem_Click);
             // 
@@ -866,7 +869,7 @@ namespace GitUI
             this.DiffText.ScrollPos = 0;
             this.DiffText.ShowEntireFile = false;
             this.DiffText.ShowLineNumbers = true;
-            this.DiffText.Size = new System.Drawing.Size(585, 256);
+            this.DiffText.Size = new System.Drawing.Size(587, 254);
             this.DiffText.TabIndex = 0;
             this.DiffText.TreatAllFilesAsText = false;
             // 
@@ -875,12 +878,12 @@ namespace GitUI
             this.TreeContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveToolStripMenuItem});
             this.TreeContextMenu.Name = "TreeContextMenu";
-            this.TreeContextMenu.Size = new System.Drawing.Size(110, 26);
+            this.TreeContextMenu.Size = new System.Drawing.Size(99, 26);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
             this.saveToolStripMenuItem.Text = "Save";
             // 
             // gitItemBindingSource
@@ -1165,8 +1168,8 @@ namespace GitUI
             // 
             this.goToToolStripMenuItem.Image = global::GitUI.Properties.Resources._75;
             this.goToToolStripMenuItem.Name = "goToToolStripMenuItem";
-            this.goToToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.G)));
+            this.goToToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+                        | System.Windows.Forms.Keys.G)));
             this.goToToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.goToToolStripMenuItem.Text = "Go to commit";
             this.goToToolStripMenuItem.Click += new System.EventHandler(this.goToToolStripMenuItem_Click);
@@ -1643,20 +1646,20 @@ namespace GitUI
             this.toolPanel.ResumeLayout(false);
             this.ToolStrip.ResumeLayout(false);
             this.ToolStrip.PerformLayout();
-            this.splitContainer3.Panel1.ResumeLayout(false);
-            this.splitContainer3.Panel2.ResumeLayout(false);
-            this.splitContainer3.ResumeLayout(false);
-            this.tabControl1.ResumeLayout(false);
+            this.MainSplitContainer.Panel1.ResumeLayout(false);
+            this.MainSplitContainer.Panel2.ResumeLayout(false);
+            this.MainSplitContainer.ResumeLayout(false);
+            this.CommitInfoTabControl.ResumeLayout(false);
             this.CommitInfo.ResumeLayout(false);
             this.Tree.ResumeLayout(false);
-            this.splitContainer4.Panel1.ResumeLayout(false);
-            this.splitContainer4.Panel2.ResumeLayout(false);
-            this.splitContainer4.ResumeLayout(false);
+            this.FileTreeSplitContainer.Panel1.ResumeLayout(false);
+            this.FileTreeSplitContainer.Panel2.ResumeLayout(false);
+            this.FileTreeSplitContainer.ResumeLayout(false);
             this.FileTreeContextMenu.ResumeLayout(false);
             this.Diff.ResumeLayout(false);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.ResumeLayout(false);
+            this.DiffSplitContainer.Panel1.ResumeLayout(false);
+            this.DiffSplitContainer.Panel2.ResumeLayout(false);
+            this.DiffSplitContainer.ResumeLayout(false);
             this.DiffContextMenu.ResumeLayout(false);
             this.TreeContextMenu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
@@ -1673,13 +1676,13 @@ namespace GitUI
         #endregion
 
         private System.Windows.Forms.TreeView GitTree;
-        private System.Windows.Forms.SplitContainer splitContainer3;
-        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.SplitContainer MainSplitContainer;
+        private System.Windows.Forms.TabControl CommitInfoTabControl;
         private System.Windows.Forms.TabPage Tree;
         private System.Windows.Forms.BindingSource gitRevisionBindingSource;
         private System.Windows.Forms.BindingSource gitItemBindingSource;
-        private RevisionGrid RevisionGrid;
-        private System.Windows.Forms.SplitContainer splitContainer4;
+        private GitUI.RevisionGrid RevisionGrid;
+        private System.Windows.Forms.SplitContainer FileTreeSplitContainer;
         private System.Windows.Forms.ToolStrip ToolStrip;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripSplitButton _NO_TRANSLATE_Workingdir;
@@ -1691,7 +1694,7 @@ namespace GitUI
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripTextBox toolStripTextBoxFilter;
         private System.Windows.Forms.TabPage Diff;
-        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.SplitContainer DiffSplitContainer;
         private FileStatusList DiffFiles;
         private System.Windows.Forms.ToolStripButton toolStripButtonPull;
         private System.Windows.Forms.ToolStripButton toolStripButtonPush;
