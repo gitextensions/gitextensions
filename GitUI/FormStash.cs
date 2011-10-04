@@ -122,7 +122,7 @@ namespace GitUI
             if (stashedItem != null && 
                 gitStash == currentWorkingDirStashItem) //current working dir
             {
-                View.ViewCurrentChanges(stashedItem.Name, stashedItem.OldName, !stashedItem.IsStaged);
+                View.ViewCurrentChanges(stashedItem.Name, stashedItem.OldName, stashedItem.IsStaged);
             }
             else
             if (stashedItem != null)
