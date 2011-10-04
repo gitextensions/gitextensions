@@ -195,6 +195,17 @@ namespace Gravatar
             return MD5.CalcMD5(email.Trim().ToLowerInvariant());
         }
 
+
+        /// <summary>
+        /// BuildGravatarUrl with default parameters
+        /// </summary>
+        /// <param name="email">The email address for which to build the <see cref="System.Uri"/>.</param>
+        /// <returns>The constructed <see cref="System.Uri"/>.</returns>
+        private static Uri BuildGravatarUrl(string email)
+        {
+            return BuildGravatarUrl(email, 32, false, Rating.G, FallBackService.None);
+        }
+
         /// <summary>
         /// Builds a <see cref="System.Uri"/> corresponding to a given email address.
         /// </summary>
@@ -204,7 +215,7 @@ namespace Gravatar
         /// <param name="rating">The mazimum rating of the returned image.</param>
         /// <param name="fallBack">The Gravatar service that will be used for fall-back.</param>
         /// <returns>The constructed <see cref="System.Uri"/>.</returns>
-        private static Uri BuildGravatarUrl(string email, int size = 32, bool useHttps = false, Rating rating = Rating.G, FallBackService fallBack = FallBackService.None)
+        private static Uri BuildGravatarUrl(string email, int size, bool useHttps, Rating rating, FallBackService fallBack)
         {
             var builder = new UriBuilder("http://www.gravatar.com/avatar/");
 
@@ -236,9 +247,10 @@ namespace Gravatar
             try
             {
                 var imageUrl = BuildGravatarUrl(email,
-                    size: authorImageSize,
-                    useHttps: false,
-                    fallBack: fallBack);
+                    authorImageSize,
+                    false,
+                    Rating.G,
+                    fallBack);
 
                 var webClient = new WebClient { Proxy = WebRequest.DefaultWebProxy };
                 webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
