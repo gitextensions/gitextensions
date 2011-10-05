@@ -35,14 +35,17 @@ namespace GitUI
                 .MakeFileTemporaryWritable(
                     Settings.WorkingDir + ".mailmap",
                     x =>
+                    {
+                        this.MailMapFile = _NO_TRANSLATE_MailMapText.GetText();
+
+                        using (var file = File.OpenWrite(x))
                         {
-                            // Enter a newline to work around a wierd bug 
-                            // that causes the first line to include 3 extra bytes. (encoding marker??)
-                            MailMapFile = Environment.NewLine + _NO_TRANSLATE_MailMapText.GetText().Trim();
-                            using (TextWriter tw = new StreamWriter(x, false, Settings.Encoding))
-                                tw.Write(MailMapFile);
-                            Close();
-                        });
+                            var contents = Settings.Encoding.GetBytes(this.MailMapFile);
+                            file.Write(contents, 0, contents.Length);
+                        }
+
+                        Close();
+                    });
         }
 
         private void FormMailMapFormClosing(object sender, FormClosingEventArgs e)
