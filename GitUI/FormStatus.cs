@@ -263,20 +263,33 @@ namespace GitUI
 
         private void RefreshKeepDialogOpen()         
         {
-            if (string.IsNullOrEmpty(SettingsName))
-                KeepDialogOpen.Visible = false;
-            else
+            bool? gcpd = GitCommands.Settings.GlobalCloseProcessDialog; 
+            //if there is a value, program works in global mode
+            if (gcpd.HasValue)
             {
-                bool? cpd = GitCommands.Settings.GetCloseProcessDialog(SettingsName);
-                KeepDialogOpen.SetNullableChecked(!cpd);
                 KeepDialogOpen.Visible = true;
+                KeepDialogOpen.ThreeState = false;
+                KeepDialogOpen.Checked = !gcpd.Value;
             }
+            else //if global value is unspecified program works in local mode
+                if (string.IsNullOrEmpty(SettingsName))
+                    KeepDialogOpen.Visible = false;
+                else
+                {
+                    bool? cpd = GitCommands.Settings.GetCloseProcessDialog(SettingsName);
+                    KeepDialogOpen.SetNullableChecked(!cpd);
+                    KeepDialogOpen.Visible = true;
+                }
         }
 
         private void KeepDialogOpen_CheckStateChanged(object sender, EventArgs e)
         {
-
-            if (!string.IsNullOrEmpty(SettingsName))
+            bool? gcpd = GitCommands.Settings.GlobalCloseProcessDialog;
+            if (gcpd.HasValue)
+            {
+                GitCommands.Settings.GlobalCloseProcessDialog = !KeepDialogOpen.Checked;
+            }
+            else if (!string.IsNullOrEmpty(SettingsName))
             {
                 bool? cpd = !KeepDialogOpen.GetNullableChecked();
                 GitCommands.Settings.SetCloseProcessDialog(SettingsName, cpd);
