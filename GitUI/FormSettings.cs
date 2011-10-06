@@ -1335,27 +1335,40 @@ namespace GitUI
 
             if (GlobalMergeTool.Text.Equals("TortoiseMerge", StringComparison.CurrentCultureIgnoreCase))
             {
+                string command = "";
+
                 if (MergetoolPath.Text.ToLower().Contains("kdiff3") || MergetoolPath.Text.ToLower().Contains("p4merge"))
                     MergetoolPath.Text = "";
                 if (string.IsNullOrEmpty(MergetoolPath.Text) || !File.Exists(MergetoolPath.Text))
                 {
-                    MergetoolPath.Text = FindFileInFolders("TortoiseMerge.exe",
+                    string path = FindFileInFolders("TortoiseMerge.exe",
                                                            @"c:\Program Files (x86)\TortoiseSVN\bin\",
-                                                           @"c:\Program Files\TortoiseSVN\bin\",
+                                                           @"c:\Program Files\TortoiseSVN\bin\");
+                    command = "\"" + path +
+                                    "\" /base:\"$BASE\" /mine:\"$LOCAL\" /theirs:\"$REMOTE\" /merged:\"$MERGED\"";
+                    if (string.IsNullOrEmpty(path))
+                    {
+                        path = FindFileInFolders("TortoiseMerge.exe",
                                                            @"c:\Program Files (x86)\TortoiseGit\bin\",
                                                            @"c:\Program Files\TortoiseGit\bin\");
+                        command = "\"" + path +
+                                    "\" -base:\"$BASE\" -mine:\"$LOCAL\" -theirs:\"$REMOTE\" -merged:\"$MERGED\"";
+                    }
 
-                    if (!File.Exists(MergetoolPath.Text))
+                    if (!File.Exists(path))
                     {
                         MergetoolPath.Text = "";
                         MessageBox.Show("Please enter the path to TortoiseMerge.exe and press suggest.",
                                         "Suggest mergetool cmd");
                         return;
                     }
+                    else
+                    {
+                        MergetoolPath.Text = path;
+                    }
                 }
 
-                MergeToolCmd.Text = "\"" + MergetoolPath.Text +
-                                    "\" /base:\"$BASE\" /mine:\"$LOCAL\" /theirs:\"$REMOTE\" /merged:\"$MERGED\"";
+                MergeToolCmd.Text = command;
                 return;
             }
 
