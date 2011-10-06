@@ -39,14 +39,17 @@ namespace GitUI
                 .MakeFileTemporaryWritable(
                     Settings.WorkingDir + ".gitattributes",
                     x =>
+                    {
+                        this.GitAttributesFile = _NO_TRANSLATE_GitAttributesText.GetText();
+
+                        using (var file = File.OpenWrite(x))
                         {
-                            // Enter a newline to work around a wierd bug 
-                            // that causes the first line to include 3 extra bytes. (encoding marker??)
-                            GitAttributesFile = Environment.NewLine + _NO_TRANSLATE_GitAttributesText.GetText().Trim();
-                            using (TextWriter tw = new StreamWriter(x, false, Settings.Encoding))
-                                tw.Write(GitAttributesFile);
-                            Close();
-                        });
+                            var contents = Settings.Encoding.GetBytes(this.GitAttributesFile);
+                            file.Write(contents, 0, contents.Length);
+                        }
+
+                        Close();
+                    });
         }
 
         private void FormMailMapFormClosing(object sender, FormClosingEventArgs e)
