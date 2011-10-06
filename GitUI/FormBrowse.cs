@@ -252,7 +252,7 @@ namespace GitUI
                 HideDashboard();
             else
                 ShowDashboard();
-            tabControl1.Visible = validWorkingDir;
+            CommitInfoTabControl.Visible = validWorkingDir;
             commandsToolStripMenuItem.Enabled = validWorkingDir;
             manageRemoteRepositoriesToolStripMenuItem1.Enabled = validWorkingDir;
             branchSelect.Enabled = validWorkingDir;
@@ -646,7 +646,7 @@ namespace GitUI
 
         private void FillFileTree()
         {
-            if (tabControl1.SelectedTab != Tree)
+            if (CommitInfoTabControl.SelectedTab != Tree)
                 return;
 
             try
@@ -693,7 +693,7 @@ namespace GitUI
 
         private void FillDiff()
         {
-            if (tabControl1.SelectedTab != Diff)
+            if (CommitInfoTabControl.SelectedTab != Diff)
                 return;
 
             var revisions = RevisionGrid.GetRevisions();
@@ -734,7 +734,7 @@ namespace GitUI
 
         private void FillCommitInfo()
         {
-            if (tabControl1.SelectedTab != CommitInfo)
+            if (CommitInfoTabControl.SelectedTab != CommitInfo)
                 return;
 
             if (RevisionGrid.GetRevisions().Count == 0)
@@ -923,17 +923,17 @@ namespace GitUI
                     (RevisionGrid.GetRevisions()[0].Guid == GitRevision.UncommittedWorkingDirGuid ||
                      RevisionGrid.GetRevisions()[0].Guid == GitRevision.IndexGuid))
                 {
-                    if (tabControl1.TabPages.Contains(CommitInfo))
-                        tabControl1.TabPages.Remove(CommitInfo);
-                    if (tabControl1.TabPages.Contains(Tree))
-                        tabControl1.TabPages.Remove(Tree);
+                    if (CommitInfoTabControl.TabPages.Contains(CommitInfo))
+                        CommitInfoTabControl.TabPages.Remove(CommitInfo);
+                    if (CommitInfoTabControl.TabPages.Contains(Tree))
+                        CommitInfoTabControl.TabPages.Remove(Tree);
                 }
                 else
                 {
-                    if (!tabControl1.TabPages.Contains(CommitInfo))
-                        tabControl1.TabPages.Insert(0, CommitInfo);
-                    if (!tabControl1.TabPages.Contains(Tree))
-                        tabControl1.TabPages.Insert(1, Tree);
+                    if (!CommitInfoTabControl.TabPages.Contains(CommitInfo))
+                        CommitInfoTabControl.TabPages.Insert(0, CommitInfo);
+                    if (!CommitInfoTabControl.TabPages.Contains(Tree))
+                        CommitInfoTabControl.TabPages.Insert(1, Tree);
                 }
 
 
@@ -2054,7 +2054,7 @@ namespace GitUI
 
         private void FindFileInSelectedCommit()
         {
-            tabControl1.SelectedTab = Tree;
+            CommitInfoTabControl.SelectedTab = Tree;
             EnabledSplitViewLayout(true);
             GitTree.Focus();
             FindFileOnClick(null, null);
@@ -2077,9 +2077,9 @@ namespace GitUI
                 case Commands.GitGui: GitCommandHelpers.RunGui(); break;
                 case Commands.GitGitK: GitCommandHelpers.RunGitK(); break;
                 case Commands.FocusRevisionGrid: RevisionGrid.Focus(); break;
-                case Commands.FocusCommitInfo: tabControl1.SelectedTab = CommitInfo; break;
-                case Commands.FocusFileTree: tabControl1.SelectedTab = Tree; GitTree.Focus(); break;
-                case Commands.FocusDiff: tabControl1.SelectedTab = Diff; DiffFiles.Focus(); break;
+                case Commands.FocusCommitInfo: CommitInfoTabControl.SelectedTab = CommitInfo; break;
+                case Commands.FocusFileTree: CommitInfoTabControl.SelectedTab = Tree; GitTree.Focus(); break;
+                case Commands.FocusDiff: CommitInfoTabControl.SelectedTab = Diff; DiffFiles.Focus(); break;
                 case Commands.Commit: CommitToolStripMenuItemClick(null, null); break;
                 case Commands.AddNotes: AddNotes(); break;
                 case Commands.FindFileInSelectedCommit: FindFileInSelectedCommit(); break;
@@ -2113,15 +2113,15 @@ namespace GitUI
 
         private void toggleSplitViewLayout_Click(object sender, EventArgs e)
         {
-            EnabledSplitViewLayout(splitContainer3.Panel2.Height == 0 && splitContainer3.Height > 0);
+            EnabledSplitViewLayout(MainSplitContainer.Panel2.Height == 0 && MainSplitContainer.Height > 0);
         }
 
         private void EnabledSplitViewLayout(bool enabled)
         {
             if (enabled)
-                splitContainer3.SplitterDistance = (splitContainer3.Height / 5) * 2;
+                MainSplitContainer.SplitterDistance = (MainSplitContainer.Height / 5) * 2;
             else
-                splitContainer3.SplitterDistance = splitContainer3.Height;
+                MainSplitContainer.SplitterDistance = MainSplitContainer.Height;
         }
 
         private void editCheckedOutFileToolStripMenuItem_Click(object sender, EventArgs e)
