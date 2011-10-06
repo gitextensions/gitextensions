@@ -52,13 +52,14 @@ namespace GitUI
                         Settings.WorkingDir + ".gitignore",
                         x =>
                         {
-                            // Enter a newline to work around a wierd bug 
-                            // that causes the first line to include 3 extra bytes. (encoding marker??)
-                            GitIgnoreFile = Environment.NewLine + _NO_TRANSLATE_GitIgnoreEdit.GetText().Trim();
-                            using (var tw = new StreamWriter(x, false, Settings.Encoding))
+                            this.GitIgnoreFile = _NO_TRANSLATE_GitIgnoreEdit.GetText();
+
+                            using (var file = File.OpenWrite(x))
                             {
-                                tw.Write(GitIgnoreFile);
+                                var contents = Settings.Encoding.GetBytes(this.GitIgnoreFile);
+                                file.Write(contents, 0, contents.Length);
                             }
+
                             if (closeAfterSave)
                                 Close();
                         });
@@ -84,7 +85,7 @@ namespace GitUI
 
         private void AddDefaultClick(object sender, EventArgs e)
         {
-            _NO_TRANSLATE_GitIgnoreEdit.ViewText(".gitignore", 
+            _NO_TRANSLATE_GitIgnoreEdit.ViewText(".gitignore",
                 _NO_TRANSLATE_GitIgnoreEdit.GetText() +
                 Environment.NewLine + "#ignore thumbnails created by windows" +
                 Environment.NewLine + "Thumbs.db" +
