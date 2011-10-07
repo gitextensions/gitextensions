@@ -39,14 +39,14 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(13, 13);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(54, 21);
+            this.label1.Size = new System.Drawing.Size(55, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Directory";
             // 
             // _NO_TRANSLATE_Directory
             // 
-            this._NO_TRANSLATE_Directory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this._NO_TRANSLATE_Directory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this._NO_TRANSLATE_Directory.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this._NO_TRANSLATE_Directory.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this._NO_TRANSLATE_Directory.FormattingEnabled = true;
@@ -71,7 +71,7 @@
             // 
             this.Load.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Load.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Load.Location = new System.Drawing.Point(317, 41);
+            this.Load.Location = new System.Drawing.Point(317, 39);
             this.Load.Name = "Load";
             this.Load.Size = new System.Drawing.Size(102, 25);
             this.Load.TabIndex = 3;
@@ -84,15 +84,15 @@
             this.AcceptButton = this.Load;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(431, 65);
+            this.ClientSize = new System.Drawing.Size(431, 72);
             this.Controls.Add(this.Load);
             this.Controls.Add(this.Browse);
             this.Controls.Add(this._NO_TRANSLATE_Directory);
             this.Controls.Add(this.label1);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(1000, 103);
+            this.MaximumSize = new System.Drawing.Size(1000, 110);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(335, 103);
+            this.MinimumSize = new System.Drawing.Size(335, 110);
             this.Name = "Open";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Open repository";
