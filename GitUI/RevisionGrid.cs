@@ -692,6 +692,11 @@ namespace GitUI
                 {
                     LastSelectedRows = Revisions.SelectedIds;
                 }
+                else
+                {
+                    // This is a new checkout, so ensure the variable is cleared out.
+                    LastSelectedRows = null;
+                }
 
                 Revisions.ClearSelection();
                 CurrentCheckout = newCurrentCheckout;
