@@ -302,7 +302,9 @@ namespace GitUI.Editor
             set
             {
                 var scrollBar = TextEditor.ActiveTextAreaControl.VScrollBar;
-                scrollBar.Value = scrollBar.Maximum > value ? value : scrollBar.Maximum;
+                int max = scrollBar.Maximum - scrollBar.LargeChange;
+                max = Math.Max(max, scrollBar.Minimum);
+                scrollBar.Value = max > value ? value : max;
             }
         }
 
