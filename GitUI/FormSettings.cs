@@ -911,6 +911,9 @@ namespace GitUI
 
         private void FormSettings_Load(object sender, EventArgs e)
         {
+            if (DesignMode)
+                return;
+
             EnableSettings();
 
             WindowState = FormWindowState.Normal;
