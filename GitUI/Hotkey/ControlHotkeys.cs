@@ -12,7 +12,7 @@ namespace GitUI.Hotkey
     /// <summary>
     /// ControlHotkeys enables editing of HotkeySettings
     /// </summary>
-    public partial class ControlHotkeys : UserControl
+    public partial class ControlHotkeys : GitExtensionsControl
     {
         #region Properties
 
@@ -61,6 +61,7 @@ namespace GitUI.Hotkey
         public ControlHotkeys()
         {
             InitializeComponent();
+            Translate();
         }
 
         #region Methods
