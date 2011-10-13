@@ -18,6 +18,10 @@ namespace GitUI
         readonly TranslationString saveCurrentChangesText = new TranslationString("Do you want to save the current changes?");
         readonly TranslationString saveCurrentChangesCaption = new TranslationString("Save changes");
         readonly TranslationString saveAsText = new TranslationString("Save as");
+        readonly TranslationString selectLanguageCode = new TranslationString("Select a language code first.");
+        readonly TranslationString noLanguageCodeSelected = new TranslationString("There is no languagecode selected." + 
+            Environment.NewLine + "Do you want to select a language code first?");
+        readonly TranslationString noLanguageCodeSelectedCaption = new TranslationString("Language code");
 
         public class TranslateItem : INotifyPropertyChanged
         {
@@ -284,7 +288,7 @@ namespace GitUI
         private void saveAs_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_NO_TRANSLATE_languageCode.Text))
-                if (MessageBox.Show("There is no languagecode selected." + Environment.NewLine + "Do you want to select a language code first?", "Language code", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(noLanguageCodeSelected.Text, noLanguageCodeSelectedCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                     return;
 
             SaveAs();
@@ -450,7 +454,7 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(_NO_TRANSLATE_languageCode.Text))
             {
-                MessageBox.Show("Select a language code first.");
+                MessageBox.Show(selectLanguageCode.Text);
                 return;
             }
 
@@ -469,7 +473,7 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(_NO_TRANSLATE_languageCode.Text))
             {
-                MessageBox.Show("Select a language code first.");
+                MessageBox.Show(selectLanguageCode.Text);
                 return;
             }
 
