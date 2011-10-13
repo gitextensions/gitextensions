@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace GitUI.Blame
 {
-    public partial class BlameControl : UserControl
+    public partial class BlameControl : GitExtensionsControl
     {
         private GitBlame _blame;
         private string _lastRevision;
@@ -16,6 +16,7 @@ namespace GitUI.Blame
         public BlameControl()
         {
             InitializeComponent();
+            Translate();
 
             BlameCommitter.IsReadOnly = true;
             BlameCommitter.EnableScrollBars(false);
