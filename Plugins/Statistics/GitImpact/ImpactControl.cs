@@ -11,7 +11,7 @@ using GitCommands.Statistics;
 
 namespace GitImpact
 {
-    public class ImpactControl : UserControl
+    public class ImpactControl : GitExtensionsControl
     {
         private const int block_width = 60;
         private const int transition_width = 50;
@@ -57,6 +57,7 @@ namespace GitImpact
             week_labels = new List<Tuple<PointF,DateTime>>();
 
             InitializeComponent();
+            Translate();
 
             // Set DoubleBuffer flag for flicker-free drawing
             this.SetStyle(ControlStyles.AllPaintingInWmPaint |
