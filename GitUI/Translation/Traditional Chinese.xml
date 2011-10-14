@@ -1596,7 +1596,7 @@ _ReSharper*/</Value>
           <Value>顯示版本圖</Value>
         </TranslationItem>
         <TranslationItem Name="drawNonrelativesGrayToolStripMenuItem" Property="Text">
-          <Value>畫無關的灰色</Value>
+          <Value>淡化顯示非同系分支</Value>
         </TranslationItem>
         <TranslationItem Name="orderRevisionsByDateToolStripMenuItem" Property="Text">
           <Value>按日期順序調整</Value>
@@ -3363,7 +3363,7 @@ stash</Value>
     <TranslationCategory Name="ViewPullRequestsForm">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>檢是拉取請求</Value>
+          <Value>檢視拉取請求</Value>
         </TranslationItem>
         <TranslationItem Name="columnHeader1" Property="Text">
           <Value>#</Value>
@@ -3387,7 +3387,7 @@ stash</Value>
           <Value>發表意見</Value>
         </TranslationItem>
         <TranslationItem Name="_closePullRequestBtn" Property="Text">
-          <Value>官畢拉取請求</Value>
+          <Value>關閉拉取請求</Value>
         </TranslationItem>
         <TranslationItem Name="_refreshCommentsBtn" Property="Text">
           <Value>重新整理</Value>
@@ -3402,7 +3402,7 @@ stash</Value>
           <Value>無法關閉拉取請求</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToLoadDiffData" Property="Text">
-          <Value>無法在入差異資料</Value>
+          <Value>無法載入差異資料</Value>
         </TranslationItem>
         <TranslationItem Name="_strCouldNotLoadDiscussion" Property="Text">
           <Value>無法載入討論</Value>
