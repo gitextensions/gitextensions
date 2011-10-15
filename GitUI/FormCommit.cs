@@ -158,7 +158,14 @@ namespace GitUI
 
             SelectedDiff.ContextMenuOpening += SelectedDiff_ContextMenuOpening;
 
+            LoadRefreshCommitDialogOnFormFocus();
+
             Commit.Focus();
+        }
+
+        void LoadRefreshCommitDialogOnFormFocus()
+        {
+            refreshDialogOnFormFocusToolStripMenuItem.Checked = Settings.RefreshCommitDialogOnFormFocus;
         }
 
         void SelectedDiff_ContextMenuOpening(object sender, System.ComponentModel.CancelEventArgs e)
