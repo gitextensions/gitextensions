@@ -68,6 +68,7 @@
             // 
             this.Impact.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.Impact.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Impact.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.Impact.Location = new System.Drawing.Point(0, 32);
             this.Impact.Name = "Impact";
             this.Impact.Size = new System.Drawing.Size(863, 452);
