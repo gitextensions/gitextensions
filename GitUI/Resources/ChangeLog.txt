@@ -2,17 +2,24 @@
 =========
 
 Version 2.25
+	Fixed issue 283: Splitter position on dashboard is not remembered
 	Fixed issue 543: Show current branch in main screen
 	Fixed issue 533: UI/translation bugs on lost commits recover form
 	Fixed issue 587: do not try to commit empty changeset
+	Fixes issue 616: Suggested command for TortoiseMerge is incorrect
 	Fixed issue 628: the start page settings page has improper alignment
 	Fixed issue 632: RSS Feeds on the Start Page scroll unnecessarily	
+	Fixed issue 652: Opening a new repository does not reset the current commit view
+	Fixed issue 656: Error viewing Blame Tab on binary file	
+	Fixed issue 661: "Refresh on form focus" option in the Commit dialog does not display its setting.
 	Fixed issue: 'clone/fork GitHub repo' throws an exception if no GitHub credentials are known
 	Fixed issue: remove '.git' from targer directory if the original repository ends with '.git'
 	Fixed issue: in some cases warnings are shown in the commit dialog instead of the staged files
 	Fixed issue: the merge dialog does not close after all merge conflicts are solved
 	The keep progress dialog open option is now per dialog
 	Updated command for Beyond Compare's 3-way merge
+	Updated Dutch translation
+	Updated Italian translation
 	Exclude remote tracking branch from the "merge with" and "rebase on" menu items
 	Highlight remote tracking branch in the browse dialog
 	When searching in the diff view, all files are searched

@@ -47,6 +47,21 @@ Vergeet niet deze labels weet te verwijderen wanneer u klaar bent.</Value>
         <TranslationItem Name="SaveObjects" Property="Text">
           <Value>Sla alles op in .git/lost-found</Value>
         </TranslationItem>
+        <TranslationItem Name="columnDate" Property="HeaderText">
+          <Value>Datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnType" Property="HeaderText">
+          <Value>Type</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnSubject" Property="HeaderText">
+          <Value>Onderwerp</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnAuthor" Property="HeaderText">
+          <Value>Auteur</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHash" Property="HeaderText">
+          <Value>Hash</Value>
+        </TranslationItem>
         <TranslationItem Name="ShowOnlyCommits" Property="Text">
           <Value>Toon alleen commits</Value>
         </TranslationItem>
@@ -73,6 +88,25 @@ and deze zal weer in het commit overzicht zichtbaar worden.</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Dubbel-klik op een rij om het object te bekijken</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="PatchGrid">
+      <translationItems>
+        <TranslationItem Name="FileName" Property="HeaderText">
+          <Value>Naam</Value>
+        </TranslationItem>
+        <TranslationItem Name="subjectDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Onderwerp</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Auteur</Value>
+        </TranslationItem>
+        <TranslationItem Name="dateDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="Status" Property="HeaderText">
+          <Value>Status</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -184,6 +218,12 @@ and deze zal weer in het commit overzicht zichtbaar worden.</Value>
         </TranslationItem>
         <TranslationItem Name="AddSubmodule" Property="Text">
           <Value>Submodule toevoegen</Value>
+        </TranslationItem>
+        <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Naam</Value>
+        </TranslationItem>
+        <TranslationItem Name="Status" Property="HeaderText">
+          <Value>Status</Value>
         </TranslationItem>
         <TranslationItem Name="label6" Property="Text">
           <Value>Status</Value>
@@ -362,6 +402,16 @@ and deze zal weer in het commit overzicht zichtbaar worden.</Value>
         <TranslationItem Name="saveAsText" Property="Text">
           <Value>Opslaan als</Value>
         </TranslationItem>
+        <TranslationItem Name="selectLanguageCode" Property="Text">
+          <Value>Selecteer eerst een taalcode.</Value>
+        </TranslationItem>
+        <TranslationItem Name="noLanguageCodeSelected" Property="Text">
+          <Value>Er is geen taalcode geselecteerd.
+Wilt u eerst een taalcode selecteren?</Value>
+        </TranslationItem>
+        <TranslationItem Name="noLanguageCodeSelectedCaption" Property="Text">
+          <Value>Taalcode</Value>
+        </TranslationItem>
         <TranslationItem Name="toolStrip1" Property="Text">
           <Value>toolStrip1</Value>
         </TranslationItem>
@@ -373,6 +423,21 @@ and deze zal weer in het commit overzicht zichtbaar worden.</Value>
         </TranslationItem>
         <TranslationItem Name="nextButton" Property="Text">
           <Value>&amp;Volgende</Value>
+        </TranslationItem>
+        <TranslationItem Name="categoryDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Categorie</Value>
+        </TranslationItem>
+        <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Naam</Value>
+        </TranslationItem>
+        <TranslationItem Name="propertyDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Eigenschap</Value>
+        </TranslationItem>
+        <TranslationItem Name="neutralValueDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Neutrale waarde</Value>
+        </TranslationItem>
+        <TranslationItem Name="translatedValueDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Vertaalde waarde</Value>
         </TranslationItem>
         <TranslationItem Name="googleTranslate" Property="Text">
           <Value>Google Translate</Value>
@@ -496,6 +561,15 @@ Wilt u dat Git Extensions helpt met het vinden van de juiste directorie?</Value>
         </TranslationItem>
         <TranslationItem Name="labelPatch" Property="Text">
           <Value>Patch</Value>
+        </TranslationItem>
+        <TranslationItem Name="FileNameA" Property="HeaderText">
+          <Value>Bestandsnaam</Value>
+        </TranslationItem>
+        <TranslationItem Name="typeDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Wijziging</Value>
+        </TranslationItem>
+        <TranslationItem Name="File" Property="HeaderText">
+          <Value>Type</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -845,6 +919,34 @@ U  heeft alleen rechten om commits te verzenden als u een 'collaborator' bent. {
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="ControlHotkeys">
+      <translationItems>
+        <TranslationItem Name="txtHotkey" Property="Text">
+          <Value>Geen</Value>
+        </TranslationItem>
+        <TranslationItem Name="lHotkey" Property="Text">
+          <Value>Sneltoets</Value>
+        </TranslationItem>
+        <TranslationItem Name="bApply" Property="Text">
+          <Value>Toepassen</Value>
+        </TranslationItem>
+        <TranslationItem Name="bClear" Property="Text">
+          <Value>Leegmaken</Value>
+        </TranslationItem>
+        <TranslationItem Name="lHotkeyableItems" Property="Text">
+          <Value>Items met sneltoetsen</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnCommand" Property="Text">
+          <Value>Commando</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnKey" Property="Text">
+          <Value>Toets</Value>
+        </TranslationItem>
+        <TranslationItem Name="bResetToDefaults" Property="Text">
+          <Value>Reset sneltoetsen naar standaard</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormStatus">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -859,26 +961,34 @@ U  heeft alleen rechten om commits te verzenden als u een 'collaborator' bent. {
         <TranslationItem Name="Abort" Property="Text">
           <Value>Annuleren</Value>
         </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormProcess">
+      <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Proces</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
-          <Value>Ok</Value>
+          <Value>OK</Value>
         </TranslationItem>
         <TranslationItem Name="KeepDialogOpen" Property="Text">
-          <Value>Dialoog openlaten</Value>
+          <Value>Laat dialoog open</Value>
         </TranslationItem>
         <TranslationItem Name="Abort" Property="Text">
           <Value>Annuleren</Value>
         </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormRemoteProcess">
+      <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Proces</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
-          <Value>Ok</Value>
+          <Value>OK</Value>
         </TranslationItem>
         <TranslationItem Name="KeepDialogOpen" Property="Text">
-          <Value>Dialoog openlaten</Value>
+          <Value>Laat dialoog open</Value>
         </TranslationItem>
         <TranslationItem Name="Abort" Property="Text">
           <Value>Annuleren</Value>
@@ -1365,6 +1475,9 @@ U  heeft alleen rechten om commits te verzenden als u een 'collaborator' bent. {
         <TranslationItem Name="menuStrip1" Property="Text">
           <Value>menustrip1</Value>
         </TranslationItem>
+        <TranslationItem Name="_stashCount" Property="Text">
+          <Value>{0} opgeslagen {1}</Value>
+        </TranslationItem>
         <TranslationItem Name="_warningMiddleOfPatchApply" Property="Text">
           <Value>U zit middenin het toepassen van een patch</Value>
         </TranslationItem>
@@ -1373,6 +1486,9 @@ U  heeft alleen rechten om commits te verzenden als u een 'collaborator' bent. {
         </TranslationItem>
         <TranslationItem Name="_noSubmodulesPresent" Property="Text">
           <Value>Geen submodules</Value>
+        </TranslationItem>
+        <TranslationItem Name="_saveFileFilterCurrentFormat" Property="Text">
+          <Value>Huidig formaat</Value>
         </TranslationItem>
         <TranslationItem Name="_saveFileFilterAllFiles" Property="Text">
           <Value>Alle bestanden</Value>
@@ -1848,6 +1964,15 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         </TranslationItem>
         <TranslationItem Name="markRevisionAsGoodToolStripMenuItem" Property="Text">
           <Value>Markeer revisie als goed</Value>
+        </TranslationItem>
+        <TranslationItem Name="Message" Property="HeaderText">
+          <Value>Bericht</Value>
+        </TranslationItem>
+        <TranslationItem Name="Author" Property="HeaderText">
+          <Value>Auteur</Value>
+        </TranslationItem>
+        <TranslationItem Name="Date" Property="HeaderText">
+          <Value>Datum</Value>
         </TranslationItem>
         <TranslationItem Name="stopBisectToolStripMenuItem" Property="Text">
           <Value>Stop verdeel en heers</Value>
@@ -2330,6 +2455,21 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="label37" Property="Text">
           <Value>Gebruik 'patience diff' algoritme</Value>
         </TranslationItem>
+        <TranslationItem Name="Enabled" Property="HeaderText">
+          <Value>Ingeschakeld</Value>
+        </TranslationItem>
+        <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Naam</Value>
+        </TranslationItem>
+        <TranslationItem Name="OnEvent" Property="HeaderText">
+          <Value>OnEvent</Value>
+        </TranslationItem>
+        <TranslationItem Name="AskConfirmation" Property="HeaderText">
+          <Value>Bevestiging</Value>
+        </TranslationItem>
+        <TranslationItem Name="addToRevisionGridContextMenuDataGridViewCheckBoxColumn" Property="HeaderText">
+          <Value>Context menu</Value>
+        </TranslationItem>
         <TranslationItem Name="truncatePathMethod" Property="Text">
           <Value>Truncate lange bestandsnamen</Value>
         </TranslationItem>
@@ -2356,6 +2496,12 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         </TranslationItem>
         <TranslationItem Name="label57" Property="Text">
           <Value>Pad naar commit template</Value>
+        </TranslationItem>
+        <TranslationItem Name="label58" Property="Text">
+          <Value>Zet focus op userinterface element bij muis-over.</Value>
+        </TranslationItem>
+        <TranslationItem Name="downloadMsysgit" Property="Text">
+          <Value>Download msysgit</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2511,6 +2657,12 @@ Kies of u het gewijzigde bestand wilt bewaren of het bestand wilt verwijderen.</
         <TranslationItem Name="_noBaseFileMergeCaption" Property="Text">
           <Value>Samenvoegen</Value>
         </TranslationItem>
+        <TranslationItem Name="_currentFormatFilter" Property="Text">
+          <Value>Huidige formaat (*.{0})</Value>
+        </TranslationItem>
+        <TranslationItem Name="_allFilesFilter" Property="Text">
+          <Value>Alle bestanden (*.*)</Value>
+        </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Niet opgeloste samenvoeg conflicten</Value>
         </TranslationItem>
@@ -2546,6 +2698,9 @@ Kies of u het gewijzigde bestand wilt bewaren of het bestand wilt verwijderen.</
         </TranslationItem>
         <TranslationItem Name="ContextMarkAsSolved" Property="Text">
           <Value>Markeer conflict als opgelost</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitGuidDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>CommitGuid</Value>
         </TranslationItem>
         <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
           <Value>Openen met</Value>
@@ -2879,6 +3034,24 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="groupBox4" Property="Text">
           <Value>Selecteer vertakkingen om te verzenden</Value>
+        </TranslationItem>
+        <TranslationItem Name="LocalColumn" Property="HeaderText">
+          <Value>Locale vertakking</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoteColumn" Property="HeaderText">
+          <Value>Externe vertakking</Value>
+        </TranslationItem>
+        <TranslationItem Name="NewColumn" Property="HeaderText">
+          <Value>Nieuw in externe opslagplaats</Value>
+        </TranslationItem>
+        <TranslationItem Name="PushColumn" Property="HeaderText">
+          <Value>Push</Value>
+        </TranslationItem>
+        <TranslationItem Name="ForceColumn" Property="HeaderText">
+          <Value>Push (Force Rewind)</Value>
+        </TranslationItem>
+        <TranslationItem Name="DeleteColumn" Property="HeaderText">
+          <Value>Verwijder externe vertakking</Value>
         </TranslationItem>
         <TranslationItem Name="_createPullRequestCB" Property="Text">
           <Value>Maak binnenhaal verzoek na verzenden</Value>
@@ -3730,6 +3903,15 @@ Bij het verwijderen van een vertakking kunnen commits verloren gaan!</Value>
         <TranslationItem Name="RepositoriesType" Property="Text">
           <Value>Opslagplaatsen</Value>
         </TranslationItem>
+        <TranslationItem Name="pathDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Pad</Value>
+        </TranslationItem>
+        <TranslationItem Name="Title" Property="HeaderText">
+          <Value>Titel</Value>
+        </TranslationItem>
+        <TranslationItem Name="descriptionDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Omschrijving</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormRemotes">
@@ -3778,6 +3960,15 @@ Wilt u automatisch het standaard push/pull gedrag installen?</Value>
         <TranslationItem Name="tabPage2" Property="Text">
           <Value>Standaard ophaal gedrag (ophalen &amp; samenvoegen)</Value>
         </TranslationItem>
+        <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Vertakking</Value>
+        </TranslationItem>
+        <TranslationItem Name="BName" Property="HeaderText">
+          <Value>Naam</Value>
+        </TranslationItem>
+        <TranslationItem Name="dataGridViewTextBoxColumn1" Property="HeaderText">
+          <Value>Naam</Value>
+        </TranslationItem>
         <TranslationItem Name="UpdateBranch" Property="Text">
           <Value>Alle vertakkings informatie ophalen</Value>
         </TranslationItem>
@@ -3795,6 +3986,15 @@ Wilt u automatisch het standaard push/pull gedrag installen?</Value>
         </TranslationItem>
         <TranslationItem Name="SaveDefaultPushPull" Property="Text">
           <Value>Opslaan</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchName" Property="HeaderText">
+          <Value>Lokale vertakking naam</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoteCombo" Property="HeaderText">
+          <Value>Externe opslagplaats</Value>
+        </TranslationItem>
+        <TranslationItem Name="MergeWith" Property="HeaderText">
+          <Value>Standaard samenvoegen met</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Value>Details</Value>
