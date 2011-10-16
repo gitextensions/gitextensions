@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace GitUI.Blame
 {
-    public partial class BlameControl : UserControl
+    public partial class BlameControl : GitExtensionsControl
     {
         private GitBlame _blame;
         private string _lastRevision;
@@ -16,6 +16,7 @@ namespace GitUI.Blame
         public BlameControl()
         {
             InitializeComponent();
+            Translate();
 
             BlameCommitter.IsReadOnly = true;
             BlameCommitter.EnableScrollBars(false);
@@ -122,7 +123,10 @@ namespace GitUI.Blame
                 {
                     blameCommitter.AppendLine((blameHeader.Author + " - " + blameHeader.AuthorTime.ToString() + " - " + blameHeader.FileName + new string(' ', 100)).Trim(new char[] { '\r', '\n' }));
                 }
-                blameFile.AppendLine(blameLine.LineText.Trim(new char[] { '\r', '\n' }));
+                if (!String.IsNullOrEmpty(blameLine.LineText))
+                {
+                    blameFile.AppendLine(blameLine.LineText.Trim(new char[] { '\r', '\n' }));
+                }
             }
 
             BlameCommitter.ViewText("committer.txt", blameCommitter.ToString());

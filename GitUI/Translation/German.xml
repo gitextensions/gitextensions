@@ -30,6 +30,21 @@
         <TranslationItem Name="SaveObjects" Property="Text">
           <Value>Objekt in .git/lost-found speichern</Value>
         </TranslationItem>
+        <TranslationItem Name="columnDate" Property="HeaderText">
+          <Value>Datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnType" Property="HeaderText">
+          <Value>Typ</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnSubject" Property="HeaderText">
+          <Value>Betreff</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnAuthor" Property="HeaderText">
+          <Value>Autor</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHash" Property="HeaderText">
+          <Value>Hash</Value>
+        </TranslationItem>
         <TranslationItem Name="ShowOnlyCommits" Property="Text">
           <Value>Nur Commits anzeigen</Value>
         </TranslationItem>
@@ -80,6 +95,12 @@ Vergessen Sie nicht diese Tags zu löschen, wenn Sie fertig sind.</Value>
         </TranslationItem>
         <TranslationItem Name="AddSubmodule" Property="Text">
           <Value>Untermodul hinzufügen</Value>
+        </TranslationItem>
+        <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Name</Value>
+        </TranslationItem>
+        <TranslationItem Name="Status" Property="HeaderText">
+          <Value>Status</Value>
         </TranslationItem>
         <TranslationItem Name="label6" Property="Text">
           <Value>Status</Value>
@@ -931,6 +952,24 @@ Sind Sie sich sicher, dass Sie diesen Branch pushen wollen?</Value>
         <TranslationItem Name="groupBox4" Property="Text">
           <Value>Wählen Sie die zu pushenden Branches</Value>
         </TranslationItem>
+        <TranslationItem Name="LocalColumn" Property="HeaderText">
+          <Value>Lokaler Branch</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoteColumn" Property="HeaderText">
+          <Value>Remote Branch</Value>
+        </TranslationItem>
+        <TranslationItem Name="NewColumn" Property="HeaderText">
+          <Value>Neu bei Remote</Value>
+        </TranslationItem>
+        <TranslationItem Name="PushColumn" Property="HeaderText">
+          <Value>Push</Value>
+        </TranslationItem>
+        <TranslationItem Name="ForceColumn" Property="HeaderText">
+          <Value>Push (Rewind erzwingen)</Value>
+        </TranslationItem>
+        <TranslationItem Name="DeleteColumn" Property="HeaderText">
+          <Value>Remote Branch löschen</Value>
+        </TranslationItem>
         <TranslationItem Name="_createPullRequestCB" Property="Text">
           <Value>Pull Request nach Push erzeugen</Value>
         </TranslationItem>
@@ -968,6 +1007,15 @@ Sind Sie sich sicher, dass Sie diesen Branch pushen wollen?</Value>
         </TranslationItem>
         <TranslationItem Name="RepositoriesType" Property="Text">
           <Value>Repositorys</Value>
+        </TranslationItem>
+        <TranslationItem Name="pathDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Pfad</Value>
+        </TranslationItem>
+        <TranslationItem Name="Title" Property="HeaderText">
+          <Value>Titel</Value>
+        </TranslationItem>
+        <TranslationItem Name="descriptionDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Beschreibung</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1284,6 +1332,30 @@ Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möc
         <TranslationItem Name="ContextMarkAsSolved" Property="Text">
           <Value>Konflikt als gelöst markieren</Value>
         </TranslationItem>
+        <TranslationItem Name="guidDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Guid</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitGuidDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Commit Guid</Value>
+        </TranslationItem>
+        <TranslationItem Name="itemTypeDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Typ</Value>
+        </TranslationItem>
+        <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Name</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Autor</Value>
+        </TranslationItem>
+        <TranslationItem Name="dateDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileNameDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Dateiname</Value>
+        </TranslationItem>
+        <TranslationItem Name="modeDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Modus</Value>
+        </TranslationItem>
         <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
           <Value>Öffnen mit</Value>
         </TranslationItem>
@@ -1328,6 +1400,9 @@ Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möc
         </TranslationItem>
         <TranslationItem Name="fileHistoryToolStripMenuItem" Property="Text">
           <Value>Datei-Historie</Value>
+        </TranslationItem>
+        <TranslationItem Name="Namex" Property="HeaderText">
+          <Value>Dateiname</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1375,30 +1450,6 @@ Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möc
         <TranslationItem Name="Abort" Property="Text">
           <Value>Abbrechen</Value>
         </TranslationItem>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Fortschritt</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>Ok</Value>
-        </TranslationItem>
-        <TranslationItem Name="KeepDialogOpen" Property="Text">
-          <Value>Dialog nicht schließen</Value>
-        </TranslationItem>
-        <TranslationItem Name="Abort" Property="Text">
-          <Value>Abbrechen</Value>
-        </TranslationItem>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Fortschritt</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>Ok</Value>
-        </TranslationItem>
-        <TranslationItem Name="KeepDialogOpen" Property="Text">
-          <Value>Dialog nicht schließen</Value>
-        </TranslationItem>
-        <TranslationItem Name="Abort" Property="Text">
-          <Value>Abbrechen</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormGitAttributes">
@@ -1428,6 +1479,38 @@ bloedezeichen.txt text
 
 Für nähere Informationen schauen
 Sie in der Git Hilfe nach</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormProcess">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Fortschritt</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Ok</Value>
+        </TranslationItem>
+        <TranslationItem Name="KeepDialogOpen" Property="Text">
+          <Value>Dialog nicht schließen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Abort" Property="Text">
+          <Value>Abbrechen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormRemoteProcess">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Fortschritt</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Ok</Value>
+        </TranslationItem>
+        <TranslationItem Name="KeepDialogOpen" Property="Text">
+          <Value>Dialog nicht schließen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Abort" Property="Text">
+          <Value>Abbrechen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1950,6 +2033,24 @@ bei der Benutzung auftreten.</Value>
         <TranslationItem Name="label37" Property="Text">
           <Value>Patience-Parameter beim Vergleich verwenden</Value>
         </TranslationItem>
+        <TranslationItem Name="HotkeyCommandIdentifier" Property="HeaderText">
+          <Value>#</Value>
+        </TranslationItem>
+        <TranslationItem Name="Enabled" Property="HeaderText">
+          <Value>Aktiviert</Value>
+        </TranslationItem>
+        <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Name</Value>
+        </TranslationItem>
+        <TranslationItem Name="OnEvent" Property="HeaderText">
+          <Value>Bei Event</Value>
+        </TranslationItem>
+        <TranslationItem Name="AskConfirmation" Property="HeaderText">
+          <Value>Bestätigung</Value>
+        </TranslationItem>
+        <TranslationItem Name="addToRevisionGridContextMenuDataGridViewCheckBoxColumn" Property="HeaderText">
+          <Value>Kontextmenü</Value>
+        </TranslationItem>
         <TranslationItem Name="truncatePathMethod" Property="Text">
           <Value>Lange Dateinamen abschneiden</Value>
         </TranslationItem>
@@ -1979,6 +2080,9 @@ bei der Benutzung auftreten.</Value>
         </TranslationItem>
         <TranslationItem Name="label57" Property="Text">
           <Value>Pfad zu Commit-Template</Value>
+        </TranslationItem>
+        <TranslationItem Name="downloadMsysgit" Property="Text">
+          <Value>msysgit herunterladen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2111,7 +2215,7 @@ bei der Benutzung auftreten.</Value>
           <Value>Automatisch ein Commit erzeugen</Value>
         </TranslationItem>
         <TranslationItem Name="columnHeader1" Property="Text">
-          <Value>Nein.</Value>
+          <Value>Nr.</Value>
         </TranslationItem>
         <TranslationItem Name="columnHeader2" Property="Text">
           <Value>Nachricht</Value>
@@ -2980,6 +3084,15 @@ Wenn dies ein zentralisiertes Repository ist (Ein sogenanntes Bare Repository):
         <TranslationItem Name="markRevisionAsGoodToolStripMenuItem" Property="Text">
           <Value>Revision als Gut markieren</Value>
         </TranslationItem>
+        <TranslationItem Name="Message" Property="HeaderText">
+          <Value>Nachricht</Value>
+        </TranslationItem>
+        <TranslationItem Name="Author" Property="HeaderText">
+          <Value>Autor</Value>
+        </TranslationItem>
+        <TranslationItem Name="Date" Property="HeaderText">
+          <Value>Datum</Value>
+        </TranslationItem>
         <TranslationItem Name="stopBisectToolStripMenuItem" Property="Text">
           <Value>Bisect stoppen</Value>
         </TranslationItem>
@@ -3171,6 +3284,21 @@ Bitte beachten Sie den Hinweis.</Value>
         <TranslationItem Name="nextButton" Property="Text">
           <Value>Nächster Text</Value>
         </TranslationItem>
+        <TranslationItem Name="categoryDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Kategorie</Value>
+        </TranslationItem>
+        <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Name</Value>
+        </TranslationItem>
+        <TranslationItem Name="propertyDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Typ</Value>
+        </TranslationItem>
+        <TranslationItem Name="neutralValueDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Text aus Code</Value>
+        </TranslationItem>
+        <TranslationItem Name="translatedValueDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Übersetzer Text</Value>
+        </TranslationItem>
         <TranslationItem Name="googleTranslate" Property="Text">
           <Value>Google Übersetzung</Value>
         </TranslationItem>
@@ -3203,6 +3331,25 @@ Bitte beachten Sie den Hinweis.</Value>
         </TranslationItem>
         <TranslationItem Name="saveAsText" Property="Text">
           <Value>Speichern als</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="PatchGrid">
+      <translationItems>
+        <TranslationItem Name="FileName" Property="HeaderText">
+          <Value>Name</Value>
+        </TranslationItem>
+        <TranslationItem Name="subjectDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Betreff</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Autor</Value>
+        </TranslationItem>
+        <TranslationItem Name="dateDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="Status" Property="HeaderText">
+          <Value>Status</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3300,6 +3447,15 @@ Wollen Sie dass Git Extensions Ihnen hilft das korrekte Verzeichnis zu finden?</
         <TranslationItem Name="labelPatch" Property="Text">
           <Value>Patchen</Value>
         </TranslationItem>
+        <TranslationItem Name="FileNameA" Property="HeaderText">
+          <Value>Dateiname</Value>
+        </TranslationItem>
+        <TranslationItem Name="typeDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Änderung</Value>
+        </TranslationItem>
+        <TranslationItem Name="File" Property="HeaderText">
+          <Value>Typ</Value>
+        </TranslationItem>
         <TranslationItem Name="_patchFileFilterString" Property="Text">
           <Value>Patch-Datei (*.Patch)</Value>
         </TranslationItem>
@@ -3354,6 +3510,15 @@ Wollen Sie automatisch das Standard Push- und Pull-Verhalten für diesen Remote 
         <TranslationItem Name="tabPage2" Property="Text">
           <Value>Standard Pull-Verhalten (Holen &amp;&amp; Mergen)</Value>
         </TranslationItem>
+        <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Branch</Value>
+        </TranslationItem>
+        <TranslationItem Name="BName" Property="HeaderText">
+          <Value>Name</Value>
+        </TranslationItem>
+        <TranslationItem Name="dataGridViewTextBoxColumn1" Property="HeaderText">
+          <Value>Name</Value>
+        </TranslationItem>
         <TranslationItem Name="UpdateBranch" Property="Text">
           <Value>Alle Remote Branch Infos aktualisieren</Value>
         </TranslationItem>
@@ -3371,6 +3536,15 @@ Wollen Sie automatisch das Standard Push- und Pull-Verhalten für diesen Remote 
         </TranslationItem>
         <TranslationItem Name="SaveDefaultPushPull" Property="Text">
           <Value>Speichern</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchName" Property="HeaderText">
+          <Value>Lokaler Branch</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoteCombo" Property="HeaderText">
+          <Value>Remote Repository</Value>
+        </TranslationItem>
+        <TranslationItem Name="MergeWith" Property="HeaderText">
+          <Value>Standardmäßig mergen mit</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Value>Details</Value>
@@ -3535,6 +3709,34 @@ Wollen Sie abbrechen und es von den zuletzt verwendeten Repositorys streichen?</
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Value>Sie können die Sprache jederzeit bei den Einstellugen ändern</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="ControlHotkeys">
+      <translationItems>
+        <TranslationItem Name="txtHotkey" Property="Text">
+          <Value>Keiner</Value>
+        </TranslationItem>
+        <TranslationItem Name="lHotkey" Property="Text">
+          <Value>Tastenkombination</Value>
+        </TranslationItem>
+        <TranslationItem Name="bApply" Property="Text">
+          <Value>Übernehmen</Value>
+        </TranslationItem>
+        <TranslationItem Name="bClear" Property="Text">
+          <Value>Löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="lHotkeyableItems" Property="Text">
+          <Value>Mögliche Befehle</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnCommand" Property="Text">
+          <Value>Kommando</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnKey" Property="Text">
+          <Value>Taste(n)</Value>
+        </TranslationItem>
+        <TranslationItem Name="bResetToDefaults" Property="Text">
+          <Value>Alle Tastenkombinationen zurücksetzen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
