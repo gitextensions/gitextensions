@@ -16,7 +16,6 @@ Version 2.25
 	Fixed issue: remove '.git' from targer directory if the original repository ends with '.git'
 	Fixed issue: in some cases warnings are shown in the commit dialog instead of the staged files
 	Fixed issue: the merge dialog does not close after all merge conflicts are solved
-	The keep progress dialog open option is now per dialog
 	Updated msysgit to version 1.7.7
 	Updated command for Beyond Compare's 3-way merge
 	Updated Dutch translation
