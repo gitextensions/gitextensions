@@ -229,12 +229,17 @@ namespace GitUI.Editor
             _currentScrollPos = ScrollPos;
         }
 
+        public void ResetCurrentScrollPos()
+        {
+            _currentScrollPos = 0;
+        }
+
         private void RestoreCurrentScrollPos()
         {
             if (_currentScrollPos < 0)
                 return;
             ScrollPos = _currentScrollPos;
-            _currentScrollPos = 0;
+            ResetCurrentScrollPos();
         }
 
 
