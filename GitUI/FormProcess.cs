@@ -172,13 +172,18 @@ namespace GitUI
                 //{
                 //    AddOutput(e.Data);
                 //}
-                OutputString.AppendLine(e.Data);
-
-                AddToTimer(e.Data);
-                AddToTimer(Environment.NewLine);
+                AppendOutputLine(e.Data);
             }
 
             DataReceived(sender, e);
+        }
+
+        public void AppendOutputLine(string line)
+        {
+            OutputString.AppendLine(line);
+
+            AddToTimer(line);
+            AddToTimer(Environment.NewLine);
         }
 
         public static bool IsOperationAborted(string dialogResult)
