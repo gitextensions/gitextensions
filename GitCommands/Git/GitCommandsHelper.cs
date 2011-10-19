@@ -830,6 +830,13 @@ namespace GitCommands
                     : 0;
         }
 
+        public static bool IsMergeCommit(string commitId)
+        {
+            string parents = RunCmd(Settings.GitCommand, "rev-list --parents --no-walk " + commitId);
+            string[] parentsTab = parents.Split(' ');
+            return parentsTab.Length > 2;
+        }
+
         public static string GetSubmoduleRemotePath(string name)
         {
             var configFile = new ConfigFile(Settings.WorkingDir + Settings.PathSeparator + ".gitmodules");
