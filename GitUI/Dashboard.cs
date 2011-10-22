@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -209,30 +210,34 @@ namespace GitUI
             }
             else
             {
-                Settings.WorkingDir = label.Path;
-
-                if (!Settings.ValidWorkingDir())
-                {
-                    DialogResult dialogResult = MessageBox.Show(directoryIsNotAValidRepository.Text, directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
-                    if (dialogResult == DialogResult.Cancel)
-                    {
-                        Settings.WorkingDir = string.Empty;
-                        return;
-                    }
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        Settings.WorkingDir = string.Empty;
-                        Repositories.RepositoryHistory.RemoveRecentRepository(label.Path);
-                        Refresh();
-                        return;
-                    }
-                }
-
-                Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
-                OnWorkingDirChanged();
+                OpenPath(label.Path);
             }
         }
 
+        private void OpenPath(string path)
+        {
+            Settings.WorkingDir = path;
+
+            if (!Settings.ValidWorkingDir())
+            {
+                DialogResult dialogResult = MessageBox.Show(directoryIsNotAValidRepository.Text, directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                if (dialogResult == DialogResult.Cancel)
+                {
+                    Settings.WorkingDir = string.Empty;
+                    return;
+                }
+                if (dialogResult == DialogResult.Yes)
+                {
+                    Settings.WorkingDir = string.Empty;
+                    Repositories.RepositoryHistory.RemoveRecentRepository(path);
+                    Refresh();
+                    return;
+                }
+            }
+
+            Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
+            OnWorkingDirChanged();
+        }
 
         private void openItem_Click(object sender, EventArgs e)
         {
@@ -275,6 +280,66 @@ namespace GitUI
         {
             new FormDashboardEditor().ShowDialog();
             Refresh();
+        }
+
+        private void groupLayoutPanel_DragDrop(object sender, DragEventArgs e)
+        {
+            var fileNameArray = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (fileNameArray != null)
+            {
+                if (fileNameArray.Length != 1)
+                    return;
+                
+                string dir = fileNameArray[0];
+                if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
+                {
+                    OpenPath(dir);
+                }
+                return;
+            }
+            var text = e.Data.GetData(DataFormats.UnicodeText) as string;
+            if (!string.IsNullOrEmpty(text))
+            {
+                var lines = text.Split('\n');
+                if (lines.Length != 1)
+                    return;
+                string url = lines[0];
+                if (!string.IsNullOrEmpty(url))
+                {
+                    if (GitUICommands.Instance.StartCloneDialog(url))
+                        OnWorkingDirChanged();
+                }
+            }
+        }
+
+        private void groupLayoutPanel_DragEnter(object sender, DragEventArgs e)
+        {
+            var fileNameArray = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (fileNameArray != null)
+            {
+                if (fileNameArray.Length != 1)
+                    return;
+                string dir = fileNameArray[0];
+                if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
+                {
+                    //Allow drop (copy, not move) patch files
+                    e.Effect = DragDropEffects.Copy;
+                }
+                return;
+            }
+            var text = e.Data.GetData(DataFormats.UnicodeText) as string;
+            if (!string.IsNullOrEmpty(text))
+            {
+                var lines = text.Split('\n');
+                if (lines.Length != 1)
+                    return;
+                string url = lines[0];
+                if (!string.IsNullOrEmpty(url))
+                {
+                    //Allow drop (copy, not move) patch files
+                    e.Effect = DragDropEffects.Copy;
+                }
+            }
         }
     }
 }

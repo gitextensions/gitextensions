@@ -62,44 +62,48 @@ namespace GitUI
 
         private void InitRepositoryCategory()
         {
-            if (m_repositoryCategory != null)
+            if (m_repositoryCategory == null)
+                return;
+
+            flowLayoutPanel.SuspendLayout();
+
+            foreach (Repository repository in m_repositoryCategory.Repositories)
             {
-                foreach (Repository repository in m_repositoryCategory.Repositories)
+                var dashboardItem = new DashboardItem(repository);
+                dashboardItem.Click += dashboardItem_Click;
+
+                if (m_repositoryCategory.CategoryType == RepositoryCategoryType.Repositories)
                 {
-                    var dashboardItem = new DashboardItem(repository);
-                    dashboardItem.Click += dashboardItem_Click;
-                    AddItem(dashboardItem);
-                    
-                    if (m_repositoryCategory.CategoryType == RepositoryCategoryType.Repositories)
-                    {
-                        var contextMenu = new ContextMenuStrip();
-                        var moveToMenuItem = new ToolStripMenuItem("Move To Category", null,
-                                                                   new ToolStripMenuItem("moveto")) {Tag = repository};
-                        moveToMenuItem.DropDownOpening += moveToMenuItem_DropDownOpening;
-                        contextMenu.Items.Add(moveToMenuItem);
-                        var moveUpMenuItem = new ToolStripMenuItem("Move Up") {Tag = repository};
-                        moveUpMenuItem.Click += moveUpMenuItem_Click;
-                        contextMenu.Items.Add(moveUpMenuItem);
-                        var moveDownMenuItem = new ToolStripMenuItem("Move Down") {Tag = repository};
-                        moveDownMenuItem.Click += moveDownMenuItem_Click;
-                        contextMenu.Items.Add(moveDownMenuItem);
-                        var removeMenuItem = new ToolStripMenuItem("Remove") {Tag = repository};
-                        removeMenuItem.Click += removeMenuItem_Click;
-                        contextMenu.Items.Add(removeMenuItem);
-                        var editMenuItem = new ToolStripMenuItem("Edit");
-                        editMenuItem.Click += editMenuItem_Click;
-                        contextMenu.Items.Add(editMenuItem);
+                    var contextMenu = new ContextMenuStrip();
+                    var moveToMenuItem = new ToolStripMenuItem("Move To Category", null,
+                                                               new ToolStripMenuItem("moveto")) { Tag = repository };
+                    moveToMenuItem.DropDownOpening += moveToMenuItem_DropDownOpening;
+                    contextMenu.Items.Add(moveToMenuItem);
+                    var moveUpMenuItem = new ToolStripMenuItem("Move Up") { Tag = repository };
+                    moveUpMenuItem.Click += moveUpMenuItem_Click;
+                    contextMenu.Items.Add(moveUpMenuItem);
+                    var moveDownMenuItem = new ToolStripMenuItem("Move Down") { Tag = repository };
+                    moveDownMenuItem.Click += moveDownMenuItem_Click;
+                    contextMenu.Items.Add(moveDownMenuItem);
+                    var removeMenuItem = new ToolStripMenuItem("Remove") { Tag = repository };
+                    removeMenuItem.Click += removeMenuItem_Click;
+                    contextMenu.Items.Add(removeMenuItem);
+                    var editMenuItem = new ToolStripMenuItem("Edit");
+                    editMenuItem.Click += editMenuItem_Click;
+                    contextMenu.Items.Add(editMenuItem);
 
 
-                        var showCurrentBranchMenuItem = new ToolStripMenuItem("Show curren branch");
-                        showCurrentBranchMenuItem.Click += new EventHandler(showCurrentBranchMenuItem_Click);
-                        showCurrentBranchMenuItem.Checked = GitCommands.Settings.DashboardShowCurrentBranch;
-                        contextMenu.Items.Add(showCurrentBranchMenuItem);
+                    var showCurrentBranchMenuItem = new ToolStripMenuItem("Show curren branch");
+                    showCurrentBranchMenuItem.Click += new EventHandler(showCurrentBranchMenuItem_Click);
+                    showCurrentBranchMenuItem.Checked = GitCommands.Settings.DashboardShowCurrentBranch;
+                    contextMenu.Items.Add(showCurrentBranchMenuItem);
 
-                        dashboardItem.ContextMenuStrip = contextMenu;
-                    }
+                    dashboardItem.ContextMenuStrip = contextMenu;
                 }
+                AddItem(dashboardItem);
             }
+
+            flowLayoutPanel.ResumeLayout();
         }
 
         void showCurrentBranchMenuItem_Click(object sender, EventArgs e)
@@ -253,7 +257,6 @@ namespace GitUI
             if (RepositoryRemoved != null)
                 RepositoryRemoved(repository);
         }
-
 
         public void AddItem(DashboardItem dashboardItem)
         {

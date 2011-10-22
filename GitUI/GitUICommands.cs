@@ -284,12 +284,12 @@ namespace GitUI
             return true;
         }
 
-        public bool StartCloneDialog()
+        public bool StartCloneDialog(string url = null)
         {
             if (!InvokeEvent(PreClone))
                 return false;
 
-            var form = new FormClone();
+			var form = new FormClone(url);
             form.ShowDialog();
 
             InvokeEvent(PostClone);
