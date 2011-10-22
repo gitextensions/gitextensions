@@ -37,15 +37,24 @@ namespace GitUI
             new TranslationString("Submodules");
 
 
-        public FormClone()
+        public FormClone(string url = null)
         {
             InitializeComponent();
             Translate();
 
-            if (Settings.ValidWorkingDir())
-                _NO_TRANSLATE_From.Text = Settings.WorkingDir;
+            if (url != null)
+            {
+                _NO_TRANSLATE_From.Text = url;
+                if (!Settings.ValidWorkingDir())
+                    _NO_TRANSLATE_To.Text = Settings.WorkingDir;
+            }
             else
-                _NO_TRANSLATE_To.Text = Settings.WorkingDir;
+            {
+                if (Settings.ValidWorkingDir())
+                    _NO_TRANSLATE_From.Text = Settings.WorkingDir;
+                else
+                    _NO_TRANSLATE_To.Text = Settings.WorkingDir;
+            }
 
             FromTextUpdate(null, null);
         }

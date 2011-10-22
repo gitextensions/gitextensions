@@ -176,7 +176,10 @@ namespace GitExtensions
                             GitUICommands.Instance.StartInitializeDialog();
                         return;
                     case "clone":
-                        GitUICommands.Instance.StartCloneDialog();
+						if (args.Length > 2)
+							GitUICommands.Instance.StartCloneDialog(args[2]);
+						else
+							GitUICommands.Instance.StartCloneDialog();
                         return;
                     case "commit":
                         Commit(arguments);
