@@ -209,7 +209,7 @@ namespace GitUI
             this.InvalidGitPathGlobal = new System.Windows.Forms.Panel();
             this.label9 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.MergeToolCmdSuggest = new System.Windows.Forms.Button();
             this.MergeToolCmd = new System.Windows.Forms.ComboBox();
             this.label19 = new System.Windows.Forms.Label();
             this.BrowseMergeTool = new System.Windows.Forms.Button();
@@ -2197,7 +2197,7 @@ namespace GitUI
             this.GlobalSettingsPage.Controls.Add(this.label41);
             this.GlobalSettingsPage.Controls.Add(this.label28);
             this.GlobalSettingsPage.Controls.Add(this.InvalidGitPathGlobal);
-            this.GlobalSettingsPage.Controls.Add(this.button1);
+            this.GlobalSettingsPage.Controls.Add(this.MergeToolCmdSuggest);
             this.GlobalSettingsPage.Controls.Add(this.MergeToolCmd);
             this.GlobalSettingsPage.Controls.Add(this.label19);
             this.GlobalSettingsPage.Controls.Add(this.BrowseMergeTool);
@@ -2361,20 +2361,21 @@ namespace GitUI
             // 
             this.GlobalDiffTool.FormattingEnabled = true;
             this.GlobalDiffTool.Items.AddRange(new object[] {
+            "Araxis",
+            "BeyondCompare3",
+            "diffuse",
+            "ecmerge",
+            "emerge",
+            "gvimdiff",
             "kdiff3",
             "kompare",
-            "tkdiff",
             "meld",
-            "xxdiff",
-            "emerge",
-            "vimdiff",
-            "gvimdiff",
-            "ecmerge",
-            "diffuse",
             "opendiff",
-            "araxis",
-            "beyondcompare3",
-            "winmerge"});
+            "tkdiff",
+            "TortoiseMerge",
+            "vimdiff",
+            "WinMerge",
+            "xxdiff"});
             this.GlobalDiffTool.Location = new System.Drawing.Point(153, 205);
             this.GlobalDiffTool.Name = "GlobalDiffTool";
             this.GlobalDiffTool.Size = new System.Drawing.Size(164, 28);
@@ -2430,15 +2431,15 @@ namespace GitUI
             this.pictureBox1.TabIndex = 18;
             this.pictureBox1.TabStop = false;
             // 
-            // button1
+            // MergeToolCmdSuggest
             // 
-            this.button1.Location = new System.Drawing.Point(506, 145);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(108, 25);
-            this.button1.TabIndex = 16;
-            this.button1.Text = "Suggest command";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            this.MergeToolCmdSuggest.Location = new System.Drawing.Point(506, 145);
+            this.MergeToolCmdSuggest.Name = "MergeToolCmdSuggest";
+            this.MergeToolCmdSuggest.Size = new System.Drawing.Size(108, 25);
+            this.MergeToolCmdSuggest.TabIndex = 16;
+            this.MergeToolCmdSuggest.Text = "Suggest command";
+            this.MergeToolCmdSuggest.UseVisualStyleBackColor = true;
+            this.MergeToolCmdSuggest.Click += new System.EventHandler(this.MergeToolCmdSuggest_Click);
             // 
             // MergeToolCmd
             // 
@@ -2748,7 +2749,7 @@ namespace GitUI
             this.OtherSshBrowse.TabIndex = 5;
             this.OtherSshBrowse.Text = "Browse";
             this.OtherSshBrowse.UseVisualStyleBackColor = true;
-            this.OtherSshBrowse.Click += new System.EventHandler(this.button1_Click);
+            this.OtherSshBrowse.Click += new System.EventHandler(this.OtherSshBrowse_Click);
             // 
             // Other
             // 
@@ -2884,7 +2885,7 @@ namespace GitUI
             // 
             this.scriptNeedsConfirmation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.scriptNeedsConfirmation.AutoSize = true;
-            this.scriptNeedsConfirmation.Location = new System.Drawing.Point(107, 437);
+            this.scriptNeedsConfirmation.Location = new System.Drawing.Point(107, 445);
             this.scriptNeedsConfirmation.Name = "scriptNeedsConfirmation";
             this.scriptNeedsConfirmation.Size = new System.Drawing.Size(166, 24);
             this.scriptNeedsConfirmation.TabIndex = 21;
@@ -2896,7 +2897,7 @@ namespace GitUI
             // 
             this.labelOnEvent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelOnEvent.AutoSize = true;
-            this.labelOnEvent.Location = new System.Drawing.Point(8, 416);
+            this.labelOnEvent.Location = new System.Drawing.Point(8, 424);
             this.labelOnEvent.Name = "labelOnEvent";
             this.labelOnEvent.Size = new System.Drawing.Size(71, 20);
             this.labelOnEvent.TabIndex = 20;
@@ -2907,7 +2908,7 @@ namespace GitUI
             this.scriptEvent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.scriptEvent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.scriptEvent.FormattingEnabled = true;
-            this.scriptEvent.Location = new System.Drawing.Point(107, 411);
+            this.scriptEvent.Location = new System.Drawing.Point(107, 419);
             this.scriptEvent.Name = "scriptEvent";
             this.scriptEvent.Size = new System.Drawing.Size(188, 28);
             this.scriptEvent.TabIndex = 19;
@@ -3008,7 +3009,7 @@ namespace GitUI
             this.helpLabel.AutoSize = true;
             this.helpLabel.BackColor = System.Drawing.SystemColors.Info;
             this.helpLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.helpLabel.Location = new System.Drawing.Point(561, 413);
+            this.helpLabel.Location = new System.Drawing.Point(561, 421);
             this.helpLabel.Name = "helpLabel";
             this.helpLabel.Size = new System.Drawing.Size(225, 22);
             this.helpLabel.TabIndex = 16;
@@ -3019,7 +3020,7 @@ namespace GitUI
             // 
             this.inMenuCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.inMenuCheckBox.AutoSize = true;
-            this.inMenuCheckBox.Location = new System.Drawing.Point(107, 460);
+            this.inMenuCheckBox.Location = new System.Drawing.Point(107, 468);
             this.inMenuCheckBox.Name = "inMenuCheckBox";
             this.inMenuCheckBox.Size = new System.Drawing.Size(257, 24);
             this.inMenuCheckBox.TabIndex = 15;
@@ -3074,7 +3075,7 @@ namespace GitUI
             this.argumentsTextBox.Location = new System.Drawing.Point(107, 299);
             this.argumentsTextBox.Name = "argumentsTextBox";
             this.helpProvider1.SetShowHelp(this.argumentsTextBox, true);
-            this.argumentsTextBox.Size = new System.Drawing.Size(620, 108);
+            this.argumentsTextBox.Size = new System.Drawing.Size(620, 116);
             this.argumentsTextBox.TabIndex = 8;
             this.argumentsTextBox.Text = "";
             this.argumentsTextBox.Enter += new System.EventHandler(this.argumentsTextBox_Enter);
@@ -3387,7 +3388,7 @@ namespace GitUI
         private System.Windows.Forms.Button BrowseMergeTool;
         private System.Windows.Forms.ComboBox MergeToolCmd;
         private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button MergeToolCmdSuggest;
         private System.Windows.Forms.CheckBox CloseProcessDialog;
         private System.Windows.Forms.CheckBox ShowGitCommandLine;
         private System.Windows.Forms.CheckBox UseFastChecks;

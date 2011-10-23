@@ -883,10 +883,10 @@ namespace GitUI
                         {
                             File.Delete(Settings.WorkingDir + item.Name);
                         }
-                        catch (System.IO.FileNotFoundException ex)
+                        catch (System.IO.FileNotFoundException)
                         {
                         }
-                        catch (System.IO.DirectoryNotFoundException ex)
+                        catch (System.IO.DirectoryNotFoundException)
                         {
                         }
                     }
