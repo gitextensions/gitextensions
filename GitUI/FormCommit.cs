@@ -845,7 +845,18 @@ namespace GitUI
                 if (item.IsNew)
                 {
                     if (deleteNewFiles)
-                        File.Delete(Settings.WorkingDir + item.Name);
+                    {
+                        try
+                        {
+                            File.Delete(Settings.WorkingDir + item.Name);
+                        }
+                        catch (System.IO.FileNotFoundException ex)
+                        {
+                        }
+                        catch (System.IO.DirectoryNotFoundException ex)
+                        {
+                        }
+                    }
                 }
                 else
                 {
