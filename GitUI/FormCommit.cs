@@ -492,6 +492,41 @@ namespace GitUI
             if (item == null)
                 return;
 
+            long length = GetItemLength(item.Name);
+            if (length < 5 * 1024 * 1024) // 5Mb
+                SetSelectedDiff(item, staged);
+            else
+            {
+                SelectedDiff.Clear();
+                llShowPreview.Show();
+            }
+
+            _StageSelectedLinesToolStripMenuItem.Text = staged ? _unstageSelectedLines.Text : _stageSelectedLines.Text;
+            _ResetSelectedLinesToolStripMenuItem.Enabled = staged;
+        }
+
+        private long GetItemLength(string fileName)
+        {
+            long length = -1;
+            string path = fileName;
+            if (!File.Exists(fileName))
+                path = GitCommands.Settings.WorkingDir + fileName;
+            if (File.Exists(path))
+            {
+                FileInfo fi = new FileInfo(path);
+                length = fi.Length;
+            }
+            return length;
+        }
+
+        private void llShowPreview_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            llShowPreview.Hide();
+            SetSelectedDiff(_currentItem, _currentItemStaged);
+        }
+
+        private void SetSelectedDiff(GitItemStatus item, bool staged)
+        {
             if (item.Name.EndsWith(".png"))
             {
                 SelectedDiff.ViewFile(item.Name);
@@ -504,9 +539,6 @@ namespace GitUI
             {
                 SelectedDiff.ViewFile(item.Name);
             }
-
-            _StageSelectedLinesToolStripMenuItem.Text = staged ? _unstageSelectedLines.Text : _stageSelectedLines.Text;
-            _ResetSelectedLinesToolStripMenuItem.Enabled = staged;
         }
 
         private void TrackedSelectionChanged(object sender, EventArgs e)
@@ -533,6 +565,7 @@ namespace GitUI
 
         private void ClearDiffViewIfNoFilesLeft()
         {
+            llShowPreview.Hide();
             if (Staged.IsEmpty && Unstaged.IsEmpty)
                 SelectedDiff.Clear();
         }
@@ -1300,7 +1333,6 @@ namespace GitUI
             if (e.Control && e.KeyCode == Keys.Enter)
                 e.Handled = true;
         }
-
 
         private void closeDialogAfterEachCommitToolStripMenuItem_Click(object sender, EventArgs e)
         {

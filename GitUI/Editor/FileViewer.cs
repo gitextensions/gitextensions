@@ -242,7 +242,6 @@ namespace GitUI.Editor
             ResetCurrentScrollPos();
         }
 
-
         public void ViewFile(string fileName)
         {
             ViewItem(fileName, () => GetImage(fileName), () => GetFileText(fileName));
@@ -252,8 +251,6 @@ namespace GitUI.Editor
         {
             return _internalFileViewer.GetText();
         }
-
-
 
         public void ViewCurrentChanges(string fileName, string oldFileName, bool staged)
         {
