@@ -134,6 +134,8 @@ namespace GitUI
                 toolPanel.Panel2.Controls.Add(_dashboard);
                 _dashboard.Dock = DockStyle.Fill;
             }
+            else
+                _dashboard.Refresh();
             _dashboard.Visible = true;
             _dashboard.BringToFront();
             _dashboard.ShowRecentRepositories();
