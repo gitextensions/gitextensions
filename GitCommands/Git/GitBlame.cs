@@ -77,5 +77,21 @@ namespace GitCommands
 
             return toStringValue.ToString().Trim();
         }
+
+        public static bool operator ==(GitBlameHeader x, GitBlameHeader y)
+        {
+            if (Object.ReferenceEquals(x, y))
+                return true;
+            if (Object.ReferenceEquals(x, null) || Object.ReferenceEquals(y, null))
+                return false;
+            return x.Author == y.Author && x.AuthorTime == y.AuthorTime &&
+                x.Committer == y.Committer && x.CommitterTime == y.CommitterTime &&
+                x.Summary == y.Summary && x.FileName == y.FileName;
+        }
+
+        public static bool operator !=(GitBlameHeader x, GitBlameHeader y)
+        {
+            return !(x == y);
+        }
     }
 }
