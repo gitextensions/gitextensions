@@ -123,7 +123,7 @@ namespace GitUI
         }
 
 
-        private void button1_Click(object sender, EventArgs e)
+        private void BrowsePatch_Click(object sender, EventArgs e)
         {
             PatchFile.Text = SelectPatchFile(@".");
         }
@@ -176,7 +176,7 @@ namespace GitUI
             Cursor.Current = Cursors.Default;
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        private void Resolved_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
             new FormProcess(GitCommandHelpers.ResolvedCmd()).ShowDialog();

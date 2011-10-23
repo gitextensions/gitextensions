@@ -128,7 +128,7 @@ namespace GitUI
 
             ConflictedFilesContextMenu.Text = _conflictedFilesContextMenuText.Text;
             OpenMergetool.Text = _openMergeToolItemText.Text + " " + mergetool;
-            button1.Text = _button1Text.Text + " " + mergetool;
+            openMergeToolBtn.Text = _button1Text.Text + " " + mergetool;
 
             if (GitCommandHelpers.InTheMiddleOfRebase())
             {

@@ -1140,7 +1140,7 @@ namespace GitUI
             return (dialog.ShowDialog() == DialogResult.OK) ? dialog.FileName : prev;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void OtherSshBrowse_Click(object sender, EventArgs e)
         {
             OtherSsh.Text = SelectFile(".", "Executable file (*.exe)|*.exe", OtherSsh.Text);
         }
@@ -1219,7 +1219,7 @@ namespace GitUI
                 MergetoolPath.Text = SelectFile(".", "*.exe (*.exe)|*.exe", MergetoolPath.Text);
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        private void MergeToolCmdSuggest_Click(object sender, EventArgs e)
         {
             if (!Settings.RunningOnWindows())
                 return;
@@ -1234,7 +1234,7 @@ namespace GitUI
                                                        @"c:\Program Files (x86)\KDiff3\",
                                                        regkdiff3path);
             }
-            if (GlobalMergeTool.Text.Equals("winmerge", StringComparison.CurrentCultureIgnoreCase))
+            else if (GlobalMergeTool.Text.Equals("winmerge", StringComparison.CurrentCultureIgnoreCase))
             {
                 string winmergepath = GitCommandHelpers.GetGlobalSetting("mergetool.winmerge.path");
 
@@ -1509,7 +1509,7 @@ namespace GitUI
             else
                 MergeToolCmd.Enabled = true;
 
-            button1_Click_1(null, null);
+            MergeToolCmdSuggest_Click(null, null);
         }
 
         private void ColorAddedLineDiffLabel_Click(object sender, EventArgs e)
@@ -1703,8 +1703,7 @@ namespace GitUI
                 if (File.Exists(DifftoolPath.Text))
                     DifftoolCmd.Text = "\"" + DifftoolPath.Text + "\" \"$LOCAL\" \"$REMOTE\"";
             }
-
-            if (GlobalDiffTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
+            else if (GlobalDiffTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
             {
                 string kdiff3path = GitCommandHelpers.GetGlobalSetting("difftool.kdiff3.path");
                 string regkdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "") + "\\kdiff3.exe";
@@ -1714,7 +1713,20 @@ namespace GitUI
                                                       @"c:\Program Files (x86)\KDiff3\",
                                                       regkdiff3path);
             }
-            if (GlobalDiffTool.Text.Equals("winmerge", StringComparison.CurrentCultureIgnoreCase))
+            else if (GlobalDiffTool.Text.Equals("tortoisemerge", StringComparison.CurrentCultureIgnoreCase))
+            {
+                string tortoisemergepath = FindFileInFolders("TortoiseMerge.exe",
+                                                       @"c:\Program Files (x86)\TortoiseSVN\bin\",
+                                                       @"c:\Program Files\TortoiseSVN\bin\");
+                if (string.IsNullOrEmpty(tortoisemergepath))
+                {
+                    tortoisemergepath = FindFileInFolders("TortoiseMerge.exe",
+                                                       @"c:\Program Files (x86)\TortoiseGit\bin\",
+                                                       @"c:\Program Files\TortoiseGit\bin\");
+                }
+                DifftoolPath.Text = tortoisemergepath;
+            }
+            else if (GlobalDiffTool.Text.Equals("winmerge", StringComparison.CurrentCultureIgnoreCase))
             {
                 string winmergepath = GitCommandHelpers.GetGlobalSetting("difftool.winmerge.path");
 
@@ -2277,8 +2289,6 @@ namespace GitUI
             ScriptList_SelectionChanged(null, null);//needed for linux
         }
 
-
-
         #region Hotkey commands
 
         public const string HotkeySettingsName = "Scripts";
@@ -2301,8 +2311,6 @@ namespace GitUI
         }
 
         #endregion
-
-
 
         private void ShowIconPreview()
         {
