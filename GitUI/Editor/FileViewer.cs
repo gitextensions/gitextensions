@@ -23,6 +23,7 @@ namespace GitUI.Editor
         {
             TreatAllFilesAsText = false;
             ShowEntireFile = false;
+            DisableFocusControlOnHover = false;
             NumberOfVisibleLines = 3;
             InitializeComponent();
             Translate();
@@ -32,6 +33,7 @@ namespace GitUI.Editor
             else
                 _internalFileViewer = new FileViewerMono();
 
+            _internalFileViewer.MouseLeave += _internalFileViewer_MouseLeave;
             _internalFileViewer.MouseMove += _internalFileViewer_MouseMove;
 
             var internalFileViewerControl = (Control)_internalFileViewer;
@@ -85,8 +87,13 @@ namespace GitUI.Editor
         {
             this.OnMouseMove(e);
 
-            if (Settings.FocusControlOnHover)
+            if (!DisableFocusControlOnHover && Settings.FocusControlOnHover)
                 _internalFileViewer.FocusTextArea();
+        }
+
+        void _internalFileViewer_MouseLeave(object sender, EventArgs e)
+        {
+            this.OnMouseLeave(e);
         }
 
         void _internalFileViewer_SelectedLineChanged(object sender, int selectedLine)
@@ -163,6 +170,7 @@ namespace GitUI.Editor
         public int NumberOfVisibleLines { get; set; }
         public bool ShowEntireFile { get; set; }
         public bool TreatAllFilesAsText { get; set; }
+        public bool DisableFocusControlOnHover { get; set; }
 
         public int ScrollPos
         {
