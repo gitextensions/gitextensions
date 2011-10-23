@@ -434,6 +434,17 @@ namespace GitUI.SpellChecker
 
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
+            if (e.Control && e.KeyCode == Keys.V)
+            {
+                if (!Clipboard.ContainsText())
+                {
+                    e.Handled = true;                
+                    return;
+                }
+                // remove image data from clipboard
+                string text = Clipboard.GetText();
+                Clipboard.SetText(text);
+            }
             OnKeyDown(e);
         }
 
