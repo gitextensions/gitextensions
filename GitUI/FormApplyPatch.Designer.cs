@@ -63,7 +63,7 @@
             this.BrowsePatch.TabIndex = 2;
             this.BrowsePatch.Text = "Browse";
             this.BrowsePatch.UseVisualStyleBackColor = true;
-            this.BrowsePatch.Click += new System.EventHandler(this.button1_Click);
+            this.BrowsePatch.Click += new System.EventHandler(this.BrowsePatch_Click);
             // 
             // PatchFile
             // 
@@ -127,7 +127,7 @@
             this.Resolved.TabIndex = 9;
             this.Resolved.Text = "Conflicts resolved";
             this.Resolved.UseVisualStyleBackColor = true;
-            this.Resolved.Click += new System.EventHandler(this.button1_Click_1);
+            this.Resolved.Click += new System.EventHandler(this.Resolved_Click);
             // 
             // AddFiles
             // 
