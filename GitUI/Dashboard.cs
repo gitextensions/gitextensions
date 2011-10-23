@@ -322,7 +322,7 @@ namespace GitUI
                 string dir = fileNameArray[0];
                 if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
                 {
-                    //Allow drop (copy, not move) patch files
+                    //Allow drop (copy, not move) folders
                     e.Effect = DragDropEffects.Copy;
                 }
                 return;
@@ -336,7 +336,7 @@ namespace GitUI
                 string url = lines[0];
                 if (!string.IsNullOrEmpty(url))
                 {
-                    //Allow drop (copy, not move) patch files
+                    //Allow drop (copy, not move) folders
                     e.Effect = DragDropEffects.Copy;
                 }
             }
