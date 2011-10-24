@@ -25,7 +25,7 @@
           <Value>LOST_AND_FOUND Tags löschen</Value>
         </TranslationItem>
         <TranslationItem Name="Remove" Property="Text">
-          <Value>Alle toten Objekte entfernen</Value>
+          <Value>Alle verwaisten Objekte entfernen</Value>
         </TranslationItem>
         <TranslationItem Name="SaveObjects" Property="Text">
           <Value>Objekt in .git/lost-found speichern</Value>
@@ -48,6 +48,9 @@
         <TranslationItem Name="ShowOnlyCommits" Property="Text">
           <Value>Nur Commits anzeigen</Value>
         </TranslationItem>
+        <TranslationItem Name="NoReflogs" Property="Text">
+          <Value>Commits, die nur über einen Eintrag im Reflog referenziert sind, nicht beachten.</Value>
+        </TranslationItem>
         <TranslationItem Name="FullCheck" Property="Text">
           <Value>Nicht nur in GIT_OBJECT_DIRECTORY ($GIT_DIR/objects) befindliche Objekte prüfen,
 sondern auch die, die in alternative Objektpools vorhanden sind.</Value>
@@ -59,7 +62,7 @@ sondern auch die, die in alternative Objektpools vorhanden sind.</Value>
           <Value>Standardmäßig werden alle nicht referenzierten Objekte
 aus der Datenbank entfernt, die älter als 2 Wochen sind.
 Alle anderen Objekte werden nur gelöscht, wenn Sie
-"Alle toten Objekte entfernen" ausführen.
+"Alle verwaisten Objekte entfernen" ausführen.
 
 Wählen Sie alle Commits aus, die Sie wiederherstellen
 möchten und drücken Sie Wiederherstellen.
@@ -72,7 +75,7 @@ Mehr Optionen im Kontextmenü</Value>
           <Value>Entfernen</Value>
         </TranslationItem>
         <TranslationItem Name="_removeDanglingObjectsQuestion" Property="Text">
-          <Value>Sind Sie sich sicher, dass Sie alle toten Objekte löschen möchten?</Value>
+          <Value>Sind Sie sich sicher, dass Sie alle verwaisten Objekte löschen möchten?</Value>
         </TranslationItem>
         <TranslationItem Name="_xTagsCreated" Property="Text">
           <Value>{0} Tags erzeugt.
@@ -80,7 +83,7 @@ Mehr Optionen im Kontextmenü</Value>
 Vergessen Sie nicht diese Tags zu löschen, wenn Sie fertig sind.</Value>
         </TranslationItem>
         <TranslationItem Name="selectLostObjectsToRestoreMessage" Property="Text">
-          <Value>Objekt zum Wiederherstellen wählen
+          <Value>Objekt zum Wiederherstellen wählen.
 </Value>
         </TranslationItem>
         <TranslationItem Name="selectLostObjectsToRestoreCaption" Property="Text">
@@ -140,7 +143,7 @@ Vergessen Sie nicht diese Tags zu löschen, wenn Sie fertig sind.</Value>
           <Value>Branches mergen</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
-          <Value>Branch zu aktuellen Branch mergen
+          <Value>Branch mit aktuellem Branch mergen
 </Value>
         </TranslationItem>
         <TranslationItem Name="Currentbranch" Property="Text">
@@ -300,7 +303,7 @@ ancestor tree.</Value>
     <TranslationCategory Name="ForkAndCloneForm">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Fork und Klonen von Remote Repository</Value>
+          <Value>Remote Repository forken und klonen</Value>
         </TranslationItem>
         <TranslationItem Name="_searchBtn" Property="Text">
           <Value>Suchen</Value>
@@ -342,7 +345,7 @@ ancestor tree.</Value>
           <Value>Klonen</Value>
         </TranslationItem>
         <TranslationItem Name="_helpTextLbl" Property="Text">
-          <Value>Wenn Sie ein Repository forken möchten, welches jemanden anderem gehört wechseln Sie auf den 'Nach Repositorys suchen" Tab.</Value>
+          <Value>Wenn Sie ein Repository forken möchten, welches jemanden anderem gehört, wechseln Sie auf den 'Nach Repositorys suchen" Tab.</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
           <Value>Remote hinzufügen als:</Value>
@@ -360,7 +363,7 @@ ancestor tree.</Value>
           <Value>Fehler</Value>
         </TranslationItem>
         <TranslationItem Name="_strLoading" Property="Text">
-          <Value> : LADEN :</Value>
+          <Value> : LADE :</Value>
         </TranslationItem>
         <TranslationItem Name="_strYes" Property="Text">
           <Value>Ja</Value>
@@ -369,13 +372,13 @@ ancestor tree.</Value>
           <Value>Nein</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToGetRepos" Property="Text">
-          <Value>Fehler beim Abfragen des Repositorys. Benutzername/ApiToken korrekt?</Value>
+          <Value>Fehler bei Abfrage des Repositorys. Benutzername/ApiToken korrekt?</Value>
         </TranslationItem>
         <TranslationItem Name="_strWillCloneWithPushAccess" Property="Text">
-          <Value>Klonen von {0} nach {1}. Sie werden Push-Rechte besitzen. {2}</Value>
+          <Value>Klone von {0} nach {1}. Sie werden Push-Rechte besitzen. {2}</Value>
         </TranslationItem>
         <TranslationItem Name="_strWillCloneInfo" Property="Text">
-          <Value>Klonen von {0} nach {1}. 
+          <Value>Klone von {0} nach {1}. 
 Sie können nicht pushen, solange Sie kein Mitarbeiter des Projektes sind. {2}</Value>
         </TranslationItem>
         <TranslationItem Name="_strWillBeAddedAsARemote" Property="Text">
@@ -388,7 +391,7 @@ Sie können nicht pushen, solange Sie kein Mitarbeiter des Projektes sind. {2}</
           <Value>Keine Homepage angegeben</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToFork" Property="Text">
-          <Value>Fork fehlgeschlagen:</Value>
+          <Value>Forken fehlgeschlagen:</Value>
         </TranslationItem>
         <TranslationItem Name="_strSearchFailed" Property="Text">
           <Value>Suche fehlgeschlagen!</Value>
@@ -996,6 +999,9 @@ Sind Sie sich sicher, dass Sie diesen Branch pushen wollen?</Value>
         <TranslationItem Name="CategoriesLabel" Property="Text">
           <Value>Kategorien</Value>
         </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Titel</Value>
+        </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Value>Typ</Value>
         </TranslationItem>
@@ -1063,7 +1069,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
           <Value>Cherry Pick</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
-          <Value>Wählen Sie für den Cherry Pick einen Commit aus. Der Commit wird nocheinmal commitet.</Value>
+          <Value>Wählen Sie für den Cherry Pick einen Commit aus. Der Commit wird auf den aktuellen HEAD commitet.</Value>
         </TranslationItem>
         <TranslationItem Name="CherryPick" Property="Text">
           <Value>Cherry Pick</Value>
@@ -1188,10 +1194,10 @@ Ist der Mergekonflikt behoben?</Value>
           <Value>Es gibt keine Basis-Version für {0}. Auf einen 2-Wege-Merge wechseln?</Value>
         </TranslationItem>
         <TranslationItem Name="ours" Property="Text">
-          <Value>Unseres</Value>
+          <Value>ours</Value>
         </TranslationItem>
         <TranslationItem Name="theirs" Property="Text">
-          <Value>Ihres</Value>
+          <Value>theirs</Value>
         </TranslationItem>
         <TranslationItem Name="fileBinairyChooseLocalBaseRemote" Property="Text">
           <Value>Datei ({0}) scheint eine Binärdatei zu sein.
@@ -1234,10 +1240,10 @@ Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möc
           <Value>Gelöscht</Value>
         </TranslationItem>
         <TranslationItem Name="chooseLocalButtonText" Property="Text">
-          <Value>Lokal wählen</Value>
+          <Value>Lokale Datei wählen</Value>
         </TranslationItem>
         <TranslationItem Name="chooseRemoteButtonText" Property="Text">
-          <Value>Remote wählen</Value>
+          <Value>Remote-Datei wählen</Value>
         </TranslationItem>
         <TranslationItem Name="deleteFileButtonText" Property="Text">
           <Value>Datei löschen</Value>
@@ -1261,19 +1267,19 @@ Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möc
           <Value>Rebase abbrechen</Value>
         </TranslationItem>
         <TranslationItem Name="_contextChooseLocalRebaseText" Property="Text">
-          <Value>Lokal wählen (theirs)</Value>
+          <Value>Lokale Datei wählen (theirs)</Value>
         </TranslationItem>
         <TranslationItem Name="_contextChooseRemoteRebaseText" Property="Text">
-          <Value>Remote wählen (ours)</Value>
+          <Value>Remote-Datei wählen (ours)</Value>
         </TranslationItem>
         <TranslationItem Name="_resetItemMergeText" Property="Text">
           <Value>Merge abbrechen</Value>
         </TranslationItem>
         <TranslationItem Name="_contextChooseLocalMergeText" Property="Text">
-          <Value>Lokal wählen (theirs)</Value>
+          <Value>Lokale Datei wählen (theirs)</Value>
         </TranslationItem>
         <TranslationItem Name="_contextChooseRemoteMergeText" Property="Text">
-          <Value>Remote wählen (ours)</Value>
+          <Value>Remote-Datei wählen (ours)</Value>
         </TranslationItem>
         <TranslationItem Name="_binaryFileWarningCaption" Property="Text">
           <Value>Warnung</Value>
@@ -1282,13 +1288,13 @@ Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möc
           <Value>Mergen</Value>
         </TranslationItem>
         <TranslationItem Name="_chooseBaseFileFailedText" Property="Text">
-          <Value>Basis-Datei auswählen fehlgeschlagen.</Value>
+          <Value>Auswählen der Basis-Datei fehlgeschlagen.</Value>
         </TranslationItem>
         <TranslationItem Name="_chooseLocalFileFailedText" Property="Text">
-          <Value>Lokale Datei auswählen fehlgeschlagen.</Value>
+          <Value>Auswählen der lokalen Datei fehlgeschlagen.</Value>
         </TranslationItem>
         <TranslationItem Name="_chooseRemoteFileFailedText" Property="Text">
-          <Value>Remote Datei auswählen fehlgeschlagen.</Value>
+          <Value>Auswahl der Remote-Datei fehlgeschlagen.</Value>
         </TranslationItem>
         <TranslationItem Name="_currentFormatFilter" Property="Text">
           <Value>Aktuelles Format (*.{0})</Value>
@@ -1300,34 +1306,34 @@ Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möc
           <Value>Unaufgelöste Merge-Konflikte</Value>
         </TranslationItem>
         <TranslationItem Name="ContextChooseBase" Property="Text">
-          <Value>Basis wählen</Value>
+          <Value>Basis-Datei wählen</Value>
         </TranslationItem>
         <TranslationItem Name="ContextChooseLocal" Property="Text">
-          <Value>Lokal wählen</Value>
+          <Value>Lokale Datei wählen</Value>
         </TranslationItem>
         <TranslationItem Name="ContextChooseRemote" Property="Text">
-          <Value>Remote wählen</Value>
+          <Value>Remote-Datei wählen</Value>
         </TranslationItem>
         <TranslationItem Name="ContextOpenBaseWith" Property="Text">
-          <Value>Basis öffnen mit</Value>
+          <Value>Basis-Datei öffnen mit</Value>
         </TranslationItem>
         <TranslationItem Name="ContextOpenLocalWith" Property="Text">
-          <Value>Lokal öffnen mit</Value>
+          <Value>Lokale Datei öffnen mit</Value>
         </TranslationItem>
         <TranslationItem Name="ContextOpenRemoteWith" Property="Text">
-          <Value>Remote öffnen mit</Value>
+          <Value>Remote-Datei öffnen mit</Value>
         </TranslationItem>
         <TranslationItem Name="OpenMergetool" Property="Text">
           <Value>Öffnen mit Vergleichsprogrammm</Value>
         </TranslationItem>
         <TranslationItem Name="ContextSaveBaseAs" Property="Text">
-          <Value>Basis speichern als</Value>
+          <Value>Basis-Datei speichern als</Value>
         </TranslationItem>
         <TranslationItem Name="ContextSaveLocalAs" Property="Text">
-          <Value>Lokal speichern als</Value>
+          <Value>Lokale Datei speichern als</Value>
         </TranslationItem>
         <TranslationItem Name="ContextSaveRemoteAs" Property="Text">
-          <Value>Remote speichern als</Value>
+          <Value>Remote-Datei speichern als</Value>
         </TranslationItem>
         <TranslationItem Name="ContextMarkAsSolved" Property="Text">
           <Value>Konflikt als gelöst markieren</Value>
@@ -1387,7 +1393,7 @@ Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möc
           <Value>Öffnen in Vergleichsprogramm</Value>
         </TranslationItem>
         <TranslationItem Name="Rescan" Property="Text">
-          <Value>Konflikte neu prüfen</Value>
+          <Value>Mergekonflikte neu prüfen</Value>
         </TranslationItem>
         <TranslationItem Name="Reset" Property="Text">
           <Value>Abbrechen</Value>
@@ -1684,8 +1690,8 @@ Sie in der Git Hilfe nach</Value>
         </TranslationItem>
         <TranslationItem Name="label18" Property="Text">
           <Value>OpenSSH ist ein Kommandozeilenprogramm. PuTTY ist benutzerfreundlicher für Windows-Benutzer, 
-setzt aber voraus das Pageant im Hintergrund läuft.
-Wenn Sie OpenSSH verwenden, werden Kommandozeilendialoge angezeigt!´</Value>
+setzt aber voraus das PuTTY Pageant im Hintergrund läuft.
+Wenn Sie OpenSSH verwenden, werden Kommandozeilendialoge angezeigt!</Value>
         </TranslationItem>
         <TranslationItem Name="OtherSshBrowse" Property="Text">
           <Value>Durchsuchen</Value>
@@ -1878,7 +1884,7 @@ können.</Value>
           <Value>Git</Value>
         </TranslationItem>
         <TranslationItem Name="label50" Property="Text">
-          <Value>Git Extension kann msysgit oder cygwin verwenden um auf Git Repositorys zuzugreifen. Setzen Sie hier die korrekten Pfade.</Value>
+          <Value>Git Extensions kann msysgit oder cygwin verwenden um auf Git Repositorys zuzugreifen. Setzen Sie hier die korrekten Pfade.</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox8" Property="Text">
           <Value>Umgebung</Value>
@@ -1983,7 +1989,7 @@ bei der Benutzung auftreten.</Value>
           <Value>Drücken Sie F1 um alle Einstellungen anzuzeigen</Value>
         </TranslationItem>
         <TranslationItem Name="downloadDictionary" Property="Text">
-          <Value>Download-Verzeichnis</Value>
+          <Value>Wörterbuch herunterladen</Value>
         </TranslationItem>
         <TranslationItem Name="DrawNonRelativesTextGray" Property="Text">
           <Value>Texte ohne Bezug grau zeichnen</Value>
@@ -2206,7 +2212,7 @@ bei der Benutzung auftreten.</Value>
           <Value>Commit:</Value>
         </TranslationItem>
         <TranslationItem Name="BranchInfo" Property="Text">
-          <Value>Diesen Commit Cherry Picken</Value>
+          <Value>Mit diesem Commit Cherry Pick durchführen</Value>
         </TranslationItem>
         <TranslationItem Name="Pick" Property="Text">
           <Value>Ausführen</Value>
@@ -2276,7 +2282,7 @@ bei der Benutzung auftreten.</Value>
           <Value>Info</Value>
         </TranslationItem>
         <TranslationItem Name="textBoxDescription" Property="Text">
-          <Value>Git extions - Visual Studio und Shell Explorer Erweiterung für Git
+          <Value>Git extensions - Visual Studio und Shell Explorer Erweiterung für Git
 
 Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen von Nutzen sein wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der GNU General Public License.</Value>
         </TranslationItem>
@@ -2334,7 +2340,7 @@ Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen vo
           <Value>Aktualisieren</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripButton1" Property="ToolTipText">
-          <Value>Aktualsieren</Value>
+          <Value>Aktualisieren</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripLabel1" Property="Text">
           <Value>Zeige:</Value>
@@ -2359,19 +2365,20 @@ Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen vo
     <TranslationCategory Name="FormRevert">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Dateiänderungen zurücksetzen</Value>
+          <Value>Dateiänderungen zurücknehmen</Value>
         </TranslationItem>
         <TranslationItem Name="btnCancel" Property="Text">
           <Value>Abbrechen</Value>
         </TranslationItem>
         <TranslationItem Name="Revert" Property="Text">
-          <Value>Änderungen zurücksetzen</Value>
+          <Value>Änderungen zurücknehmen</Value>
         </TranslationItem>
         <TranslationItem Name="_resetChangesCaption" Property="Text">
           <Value>Änderungen zurücksetzen</Value>
         </TranslationItem>
         <TranslationItem Name="_undoChangesIn" Property="Text">
-          <Value>Änderungen zurücksetzen in: {0}?</Value>
+          <Value>Änderungen zurücknehmen in: 
+{0}?</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2382,7 +2389,7 @@ Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen vo
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Beim Ausführen des Kommandos trat ein Fehler auf. Meist deutet
-dies auf ein nicht gestartetes Authentifizierungsprogramm hin oder dass der private
+dies auf ein nicht gestartetes Authentifizierungsprogramm PuTTY (Pageant) hin oder dass der private
 Schlüssel (noch) nicht geladen wurde.
 
 Wenn Sie den Schlüssel geladen haben, drücken Sie Wiederholen.</Value>
@@ -2672,10 +2679,10 @@ _ReSharper*/</Value>
           <Value>Pull Request erzeugen</Value>
         </TranslationItem>
         <TranslationItem Name="_strLoading" Property="Text">
-          <Value>Laden...</Value>
+          <Value>Lade...</Value>
         </TranslationItem>
         <TranslationItem Name="_strCouldNotLocateARemoteThatBelongsToYourUser" Property="Text">
-          <Value>Konnte keinen Remote finden, der dem Benutzer zugeordnet ist!</Value>
+          <Value>Konnte keinen Remote finden, der ihrem Benutzername zugeordnet ist!</Value>
         </TranslationItem>
         <TranslationItem Name="_strYouMustSpecifyATitleAndABody" Property="Text">
           <Value>Sie müssen den Titel und den Text ausfüllen.</Value>
@@ -2809,6 +2816,12 @@ _ReSharper*/</Value>
         <TranslationItem Name="wavatarToolStripMenuItem" Property="Text">
           <Value>Wavatar</Value>
         </TranslationItem>
+        <TranslationItem Name="noneToolStripMenuItem" Property="Text">
+          <Value>Keine Aktion</Value>
+        </TranslationItem>
+        <TranslationItem Name="retroToolStripMenuItem" Property="Text">
+          <Value>Retro</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormPull">
@@ -2882,7 +2895,7 @@ _ReSharper*/</Value>
         </TranslationItem>
         <TranslationItem Name="_fetchAllBranchesCanOnlyWithFetch" Property="Text">
           <Value>Sie können alle Remote Branches (*) nur holen aber keinen Merge- oder Rebase-Prozess durchführen.
-Wenn Sie alle Remote Branches holen wollen, wählen Sie die dritte Option.
+Wenn Sie alle Remote Branches holen wollen, wählen Sie die dritte Option (Änderungen vom Remote holen).
 Wenn Sie einen Branch holen und mergen wollen, wählen Sie einen speziellen Branch aus.</Value>
         </TranslationItem>
         <TranslationItem Name="_selectRemoteRepository" Property="Text">
@@ -3004,10 +3017,10 @@ Wenn Sie einen Branch holen und mergen wollen, wählen Sie einen speziellen Bran
 
 Wenn dies ein normales Repository ist, werden folgende Schritte empfohlen:
 - Stellen Sie sicher, dass sie eine gültige .gitignore Datei im Repository haben
-- Commiten Sie die Dateien mit Commiten
+- Commiten Sie die Dateien mit dem Befehl Commiten
 
-Wenn dies ein zentralisiertes Repository ist (Ein sogenanntes Bare Repository):
-- Pushen Sie Ihre Änderungen von einem anderen Repository</Value>
+Wenn dies ein zentralisiertes Repository ist (ein sogenanntes Bare Repository):
+- Pushen Sie Ihre Änderungen von einem anderen Repository aus</Value>
         </TranslationItem>
         <TranslationItem Name="Commit" Property="Text">
           <Value>Commiten</Value>
@@ -3043,13 +3056,13 @@ Wenn dies ein zentralisiertes Repository ist (Ein sogenanntes Bare Repository):
           <Value>Branch auschecken</Value>
         </TranslationItem>
         <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
-          <Value>Mit aktuellen Branch mergen</Value>
+          <Value>Mit aktuellem Branch mergen</Value>
         </TranslationItem>
         <TranslationItem Name="cherryPickCommitToolStripMenuItem" Property="Text">
-          <Value>Cherry Pick Commiten</Value>
+          <Value>Cherry Pick Commit</Value>
         </TranslationItem>
         <TranslationItem Name="rebaseOnToolStripMenuItem" Property="Text">
-          <Value>Rebase durchführen</Value>
+          <Value>Rebase mit aktuellen Branch auf</Value>
         </TranslationItem>
         <TranslationItem Name="showAllBranchesToolStripMenuItem" Property="Text">
           <Value>Zeige alle Branches</Value>
@@ -3109,7 +3122,7 @@ Wenn dies ein zentralisiertes Repository ist (Ein sogenanntes Bare Repository):
           <Value>Graphen ohne Bezug grau zeichen</Value>
         </TranslationItem>
         <TranslationItem Name="orderRevisionsByDateToolStripMenuItem" Property="Text">
-          <Value>Revision nach Datum sortieren</Value>
+          <Value>Revisionen nach Datum sortieren</Value>
         </TranslationItem>
         <TranslationItem Name="showAuthorDateToolStripMenuItem" Property="Text">
           <Value>Zeige Autor Datum</Value>
@@ -3332,6 +3345,16 @@ Bitte beachten Sie den Hinweis.</Value>
         <TranslationItem Name="saveAsText" Property="Text">
           <Value>Speichern als</Value>
         </TranslationItem>
+        <TranslationItem Name="selectLanguageCode" Property="Text">
+          <Value>Bitte wählen Sie zuerst eine Sprache aus.</Value>
+        </TranslationItem>
+        <TranslationItem Name="noLanguageCodeSelected" Property="Text">
+          <Value>Es ist keine Ländercode ausgewählt.
+Wollen Sie zuerst einen Ländercode auswählen?</Value>
+        </TranslationItem>
+        <TranslationItem Name="noLanguageCodeSelectedCaption" Property="Text">
+          <Value>Ländercode</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="PatchGrid">
@@ -3490,7 +3513,7 @@ Wollen Sie automatisch das Standard Push- und Pull-Verhalten für diesen Remote 
           <Value>Löschen</Value>
         </TranslationItem>
         <TranslationItem Name="_questionDeleteRemote" Property="Text">
-          <Value>Wollen Sie wirklich diesen Remote löschen</Value>
+          <Value>Wollen Sie wirklich diesen Remote löschen?</Value>
         </TranslationItem>
         <TranslationItem Name="_questionDeleteRemoteCaption" Property="Text">
           <Value>Löschen</Value>
@@ -3538,7 +3561,7 @@ Wollen Sie automatisch das Standard Push- und Pull-Verhalten für diesen Remote 
           <Value>Speichern</Value>
         </TranslationItem>
         <TranslationItem Name="BranchName" Property="HeaderText">
-          <Value>Lokaler Branch</Value>
+          <Value>Lokaler Branch Name</Value>
         </TranslationItem>
         <TranslationItem Name="RemoteCombo" Property="HeaderText">
           <Value>Remote Repository</Value>
@@ -3686,7 +3709,7 @@ synchronize [--rebase] [--merge] [--fetch] [--quiet]</Value>
         <TranslationItem Name="directoryIsNotAValidRepository" Property="Text">
           <Value>Das ausgewählte Objekt ist kein gültiges Git Repository.
 
-Wollen Sie abbrechen und es von den zuletzt verwendeten Repositorys streichen?</Value>
+Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys streichen?</Value>
         </TranslationItem>
         <TranslationItem Name="RecentRepositories" Property="Title">
           <Value>Kürzlich geöffnete Repositorys</Value>
@@ -3736,7 +3759,7 @@ Wollen Sie abbrechen und es von den zuletzt verwendeten Repositorys streichen?</
           <Value>Taste(n)</Value>
         </TranslationItem>
         <TranslationItem Name="bResetToDefaults" Property="Text">
-          <Value>Alle Tastenkombinationen zurücksetzen</Value>
+          <Value>Tastenkombinationen zurücksetzen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4136,7 +4159,8 @@ Möchten Sie den Vorgang fortsetzen?</Value>
           <Value>Es gibt keine gestagten Dateien für diesen Commit. Wollen Sie alle Dateien stagen und commiten?</Value>
         </TranslationItem>
         <TranslationItem Name="_noFilesStagedAndConfirmAnEmptyMergeCommit" Property="Text">
-          <Value>Es gibt keine gestagten Dateien für diesen Commit. Wollen sie wirklich commiten?</Value>
+          <Value>Es gibt keine gestagten Dateien für diesen Commit. 
+Wollen sie wirklich commiten?</Value>
         </TranslationItem>
         <TranslationItem Name="_noStagedChanges" Property="Text">
           <Value>Es gibt keine gestagten Änderungen</Value>
@@ -4146,7 +4170,7 @@ Möchten Sie den Vorgang fortsetzen?</Value>
         </TranslationItem>
         <TranslationItem Name="_notOnBranch" Property="Text">
           <Value>Sie arbeiten nicht auf einem Branch. 
-Dieser Commit wird über keine Referenz verfügen, wenn Sie in einen anderen Branch wechseln und kann damit Commit verloren gehen.
+Dieser Commit wird über keine Referenz verfügen, wenn Sie in einen anderen Branch wechseln und kann damit verloren gehen.
 
 Möchten Sie trotzdem fortfahren?</Value>
         </TranslationItem>
@@ -4291,7 +4315,7 @@ Möchten Sie trotzdem fortfahren?</Value>
           <Value>Übersetze '{0}' nach {1}</Value>
         </TranslationItem>
         <TranslationItem Name="addToDictionaryText" Property="Text">
-          <Value>Zu Wörterbuch hinzufügen</Value>
+          <Value>Zum Wörterbuch hinzufügen</Value>
         </TranslationItem>
         <TranslationItem Name="ignoreWordText" Property="Text">
           <Value>Wort ignorieren</Value>
@@ -4319,7 +4343,7 @@ Möchten Sie trotzdem fortfahren?</Value>
           <Value>Autor Datum</Value>
         </TranslationItem>
         <TranslationItem Name="committerText" Property="Text">
-          <Value>Commiter</Value>
+          <Value>Committer</Value>
         </TranslationItem>
         <TranslationItem Name="committerDateText" Property="Text">
           <Value>Commit Datum</Value>
