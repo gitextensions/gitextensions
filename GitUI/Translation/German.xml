@@ -3504,6 +3504,12 @@ Wollen Sie automatisch das Standard Push- und Pull-Verhalten für diesen Remote 
         <TranslationItem Name="_warningNoKeyEntered" Property="Text">
           <Value>Keine SSH-Schlüsseldatei angegeben</Value>
         </TranslationItem>
+        <TranslationItem Name="_labelUrlAsFetch" Property="Text">
+          <Value>Fetch Url</Value>
+        </TranslationItem>
+        <TranslationItem Name="_labelUrlAsFetchPush" Property="Text">
+          <Value>Url</Value>
+        </TranslationItem>
         <TranslationItem Name="tabPage1" Property="Text">
           <Value>Remote Repositorys</Value>
         </TranslationItem>
@@ -3580,6 +3586,15 @@ Wollen Sie automatisch das Standard Push- und Pull-Verhalten für diesen Remote 
           <Value>Url</Value>
         </TranslationItem>
         <TranslationItem Name="Browse" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="checkBoxSepPushUrl" Property="Text">
+          <Value>Separate Push Url</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelPushUrl" Property="Text">
+          <Value>Push Url</Value>
+        </TranslationItem>
+        <TranslationItem Name="buttonBrowsePushUrl" Property="Text">
           <Value>Durchsuchen</Value>
         </TranslationItem>
       </translationItems>
