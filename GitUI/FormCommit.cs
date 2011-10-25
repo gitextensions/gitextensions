@@ -1342,11 +1342,23 @@ namespace GitUI
 				{
 				    if (NoUserInput(timerLastChanged))
 				    {
-				        if (Unstaged.SetSelectionFilter(selectionFilter.Text) > 0)
-				        {
-				        	AddToSelectionFilter(selectionFilter.Text);
-				        }
-				    	timer.Stop();
+				    	var selectionCount = 0;
+				    	try
+				    	{
+				    		selectionCount = Unstaged.SetSelectionFilter(selectionFilter.Text);
+				    		selectionFilter.ToolTipText = "Enter a regular expression to select unstaged files.";
+				    	}
+				    	catch (ArgumentException ae)
+				    	{
+				    		selectionFilter.ToolTipText = string.Format("Error: {0}", ae.Message);
+				    	}
+
+						if (selectionCount > 0)
+						{
+							AddToSelectionFilter(selectionFilter.Text);
+						}
+
+						timer.Stop();
 				        lastUserInputTime = 0;
 					}
 					timerLastChanged = lastUserInputTime;
