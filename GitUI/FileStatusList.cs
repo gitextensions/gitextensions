@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -396,35 +395,27 @@ namespace GitUI
                 
         }
 
-		public string SelectionFilter
+		public int SetSelectionFilter(string filter)
 		{
-			set
-			{
-				try
-				{
-					FilterFiles(RegexFor(value));
-				}
-				catch (Exception ex)
-				{
-					Debug.Write(ex.ToString());
-				}
-			}
+			return FilterFiles(RegexFor(filter));
 		}
 
-		private static Regex RegexFor(string value)
+    	private static Regex RegexFor(string value)
 		{
 			return string.IsNullOrEmpty(value)
 				? new Regex("^$", RegexOptions.Compiled)
 				: new Regex(value, RegexOptions.Compiled);
 		}
 
-		private void FilterFiles(Regex filter)
+		private int FilterFiles(Regex filter)
 		{
 			var items = FileStatusListBox.Items.Cast<GitItemStatus>().ToList();
 			for (var i = 0; i < items.Count; i++)
 			{
 				FileStatusListBox.SetSelected(i, filter.IsMatch(items[i].Name));
 			}
+
+			return FileStatusListBox.SelectedIndices.Count;
 		}
     }
 
