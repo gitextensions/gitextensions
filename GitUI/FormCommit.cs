@@ -1342,9 +1342,11 @@ namespace GitUI
 				{
 				    if (NoUserInput(timerLastChanged))
 				    {
-				        Unstaged.SelectionFilter = selectionFilter.Text;
-				    	AddToSelectionFilter(selectionFilter.Text);
-						timer.Stop();
+				        if (Unstaged.SetSelectionFilter(selectionFilter.Text) > 0)
+				        {
+				        	AddToSelectionFilter(selectionFilter.Text);
+				        }
+				    	timer.Stop();
 				        lastUserInputTime = 0;
 					}
 					timerLastChanged = lastUserInputTime;
@@ -1365,13 +1367,18 @@ namespace GitUI
     	{
     		if (!selectionFilter.Items.Cast<string>().Any(candiate  => candiate == filter))
     		{
+    			const int SelectionFilterMaxLength = 10;
+				if (selectionFilter.Items.Count == SelectionFilterMaxLength)
+				{
+					selectionFilter.Items.RemoveAt(SelectionFilterMaxLength - 1);
+				}
     			selectionFilter.Items.Insert(0, filter);
     		}
     	}
 
     	private void FilterIndexChanged(object sender, EventArgs e)
 		{
-			Unstaged.SelectionFilter = selectionFilter.Text;
+			Unstaged.SetSelectionFilter(selectionFilter.Text);
 		}
 
     	private void ToogleShowSelectionFilter(object sender, EventArgs e)

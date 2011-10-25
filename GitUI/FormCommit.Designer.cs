@@ -319,7 +319,7 @@ namespace GitUI
 			// 
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.Loading);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.Unstaged);
-			this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(397, 234);
+			this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(397, 259);
 			this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
 			this.toolStripContainer1.Name = "toolStripContainer1";
@@ -340,7 +340,7 @@ namespace GitUI
 			this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
 			this.Loading.Location = new System.Drawing.Point(0, 0);
 			this.Loading.Name = "Loading";
-			this.Loading.Size = new System.Drawing.Size(397, 234);
+			this.Loading.Size = new System.Drawing.Size(397, 259);
 			this.Loading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
 			this.Loading.TabIndex = 11;
 			this.Loading.TabStop = false;
@@ -357,7 +357,7 @@ namespace GitUI
 			this.Unstaged.Revision = null;
 			this.Unstaged.SelectedIndex = -1;
 			this.Unstaged.SelectedItem = null;
-			this.Unstaged.Size = new System.Drawing.Size(397, 234);
+			this.Unstaged.Size = new System.Drawing.Size(397, 259);
 			this.Unstaged.TabIndex = 10;
 			// 
 			// toolbarUnstaged
@@ -504,7 +504,7 @@ namespace GitUI
             this.selectionFilter});
 			this.toolbarSelectionFilter.Location = new System.Drawing.Point(3, 25);
 			this.toolbarSelectionFilter.Name = "toolbarSelectionFilter";
-			this.toolbarSelectionFilter.Size = new System.Drawing.Size(252, 25);
+			this.toolbarSelectionFilter.Size = new System.Drawing.Size(219, 25);
 			this.toolbarSelectionFilter.TabIndex = 13;
 			this.toolbarSelectionFilter.Visible = false;
 			// 
@@ -692,8 +692,8 @@ namespace GitUI
 			this.Message.Name = "Message";
 			this.Message.Size = new System.Drawing.Size(342, 110);
 			this.Message.TabIndex = 4;
-			this.Message.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Message_KeyUp);
 			this.Message.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Message_KeyDown);
+			this.Message.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Message_KeyUp);
 			// 
 			// toolbarCommit
 			// 
@@ -718,8 +718,8 @@ namespace GitUI
 			this.commitMessageToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.No;
 			this.commitMessageToolStripMenuItem.Size = new System.Drawing.Size(129, 23);
 			this.commitMessageToolStripMenuItem.Text = "Commit &message";
-			this.commitMessageToolStripMenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.CommitMessageToolStripMenuItemDropDownItemClicked);
 			this.commitMessageToolStripMenuItem.DropDownOpening += new System.EventHandler(this.CommitMessageToolStripMenuItemDropDownOpening);
+			this.commitMessageToolStripMenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.CommitMessageToolStripMenuItemDropDownItemClicked);
 			// 
 			// toolStripMenuItem3
 			// 
@@ -850,10 +850,10 @@ namespace GitUI
 			this.Name = "FormCommit";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Commit";
-			this.Load += new System.EventHandler(this.FormCommitLoad);
-			this.Shown += new System.EventHandler(this.FormCommitShown);
 			this.Activated += new System.EventHandler(this.FormCommitActivated);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCommitFormClosing);
+			this.Load += new System.EventHandler(this.FormCommitLoad);
+			this.Shown += new System.EventHandler(this.FormCommitShown);
 			this.UnstagedFileContext.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).EndInit();
 			this.splitMain.Panel1.ResumeLayout(false);
