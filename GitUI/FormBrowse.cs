@@ -518,7 +518,7 @@ namespace GitUI
             }
 
             if (validWorkingDir && GitCommandHelpers.InTheMiddleOfConflictedMerge() &&
-                !Directory.Exists(Settings.WorkingDir + ".git\\rebase-apply\\"))
+                !Directory.Exists(Settings.GetGitDirectory() + "rebase-apply\\"))
             {
                 if (_warning == null)
                 {
@@ -575,10 +575,9 @@ namespace GitUI
         private static string ReadRepositoryDescription(string workingDir)
         {
             const string repositoryDescriptionFileName = "description";
-            const string repositoryDirectoryName = ".git";
             const string defaultDescription = "Unnamed repository; edit this file 'description' to name the repository.";
 
-            var repositoryPath = Path.Combine(workingDir, repositoryDirectoryName);
+            var repositoryPath = GitCommandHelpers.GetGitDirectory(workingDir);
             var repositoryDescriptionFilePath = Path.Combine(repositoryPath, repositoryDescriptionFileName);
             if (!File.Exists(repositoryDescriptionFilePath))
                 return null;
