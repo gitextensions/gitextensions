@@ -658,9 +658,26 @@ namespace GitCommands
             return fileNames;
         }
 
+        public static string GetGitDirectory(string repositoryPath)
+        {
+            if (File.Exists(repositoryPath + ".git"))
+            {
+                var lines = File.ReadAllLines(repositoryPath + ".git");
+                foreach(string line in lines)
+                {
+                    if (line.StartsWith("gitdir:"))
+                    {
+                        string path = line.Substring(7).Trim().Replace('/','\\');
+                        return path + Settings.PathSeparator;
+                    }
+                }
+            }
+            return repositoryPath + ".git" + Settings.PathSeparator;
+        }
+
         public static string GetMergeMessage()
         {
-            var file = Settings.WorkingDir + ".git" + Settings.PathSeparator + "MERGE_MSG";
+            var file = Settings.GetGitDirectory() + "MERGE_MSG";
 
             return
                 File.Exists(file)
@@ -1298,12 +1315,13 @@ namespace GitCommands
 
         public static string GetRebaseDir()
         {
-            if (Directory.Exists(Settings.WorkingDir + ".git" + Settings.PathSeparator + "rebase-merge" + Settings.PathSeparator))
-                return Settings.WorkingDir + ".git" + Settings.PathSeparator + "rebase-merge" + Settings.PathSeparator;
-            if (Directory.Exists(Settings.WorkingDir + ".git" + Settings.PathSeparator + "rebase-apply" + Settings.PathSeparator))
-                return Settings.WorkingDir + ".git" + Settings.PathSeparator + "rebase-apply" + Settings.PathSeparator;
-            if (Directory.Exists(Settings.WorkingDir + ".git" + Settings.PathSeparator + "rebase" + Settings.PathSeparator))
-                return Settings.WorkingDir + ".git" + Settings.PathSeparator + "rebase" + Settings.PathSeparator;
+            string gitDirectory = Settings.GetGitDirectory();
+            if (Directory.Exists(gitDirectory + "rebase-merge" + Settings.PathSeparator))
+                return gitDirectory + "rebase-merge" + Settings.PathSeparator;
+            if (Directory.Exists(gitDirectory + "rebase-apply" + Settings.PathSeparator))
+                return gitDirectory + "rebase-apply" + Settings.PathSeparator;
+            if (Directory.Exists(gitDirectory + "rebase" + Settings.PathSeparator))
+                return gitDirectory + "rebase" + Settings.PathSeparator;
 
             return "";
         }
@@ -2140,7 +2158,7 @@ namespace GitCommands
 
         public static bool IsBareRepository(string repositoryPath)
         {
-            return !Directory.Exists(repositoryPath + Settings.PathSeparator + ".git");
+            return !Directory.Exists(GetGitDirectory(repositoryPath));
         }
 
 
@@ -2150,7 +2168,7 @@ namespace GitCommands
         public static string GetSelectedBranchFast(string repositoryPath)
         {
             string head;
-            string headFileName = Path.Combine(GetGitDirectory(repositoryPath), "HEAD");
+            string headFileName = Path.Combine(WorkingDirGitDir(repositoryPath), "HEAD");
             if (File.Exists(headFileName))
             {
                 head = File.ReadAllText(headFileName);
@@ -2596,11 +2614,11 @@ namespace GitCommands
             return null;
         }
 
-        public static string GetGitDirectory(string repositoryPath)
+        public static string WorkingDirGitDir(string repositoryPath)
         {
             if (string.IsNullOrEmpty(repositoryPath))
                 return repositoryPath;
-            var candidatePath = Path.Combine(repositoryPath, ".git");
+            var candidatePath = GetGitDirectory(repositoryPath);
             return Directory.Exists(candidatePath) ? candidatePath : repositoryPath;
         }
 

@@ -96,7 +96,7 @@ namespace GitPlugin.Git
             if (string.IsNullOrEmpty(dir))
                 return false;
 
-            if (Directory.Exists(dir + "\\" + ".git"))
+            if (Directory.Exists(dir + "\\" + ".git") || File.Exists(dir + "\\" + ".git"))
                 return true;
 
             return !dir.Contains(".git") &&
