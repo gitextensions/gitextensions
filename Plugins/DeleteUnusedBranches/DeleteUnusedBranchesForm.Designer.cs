@@ -37,10 +37,10 @@
             this.Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.branchBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.Cancel = new System.Windows.Forms.Button();
             this.Delete = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.BranchesGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.branchBindingSource)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
@@ -125,16 +125,6 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(760, 421);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
-            // label1
-            // 
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 6);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(340, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Choose branches to delete. Only fully merged branches will be deleted.";
-            // 
             // tableLayoutPanel2
             // 
             this.tableLayoutPanel2.ColumnCount = 2;
@@ -171,6 +161,16 @@
             this.Delete.Text = "Delete";
             this.Delete.UseVisualStyleBackColor = true;
             this.Delete.Click += new System.EventHandler(this.Delete_Click);
+            // 
+            // label1
+            // 
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 6);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(340, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Choose branches to delete. Only fully merged branches will be deleted.";
             // 
             // DeleteUnusedBranchesForm
             // 
