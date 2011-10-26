@@ -1042,6 +1042,19 @@ Beispiel:
 Henk Westhuis &lt;Henk@.(none)&gt;
 Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         </TranslationItem>
+        <TranslationItem Name="_mailmapOnlyInWorkingDirSupported" Property="Text">
+          <Value>.mailmap wird nur unterstützt wenn ein Arbeitsverzeichnis vorhanden ist.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_mailmapOnlyInWorkingDirSupportedCaption" Property="Text">
+          <Value>Kein Arbeitsverzeichnis</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cannotAccessMailmap" Property="Text">
+          <Value>Fehler beim Schreiben von .mailmap. 
+Bitte prüfen Sie, ob auf die Datei zugegriffen werden kann.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cannotAccessMailmapCaption" Property="Text">
+          <Value>Fehler beim Schreiben von .mailmap</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormDashboardCategoryTitle">
@@ -1458,7 +1471,17 @@ Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möc
           <Value>.gitattributes bearbeiten</Value>
         </TranslationItem>
         <TranslationItem Name="noWorkingDir" Property="Text">
-          <Value>Zum Bearbeiten der .gitattributes muss ein Arbeitsverzeichnis vorhanden sein.</Value>
+          <Value>.gitattributes wird nur unterstützt wenn ein Arbeitsverzeichnis vorhanden ist.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noWorkingDirCaption" Property="Text">
+          <Value>Kein Arbeitsverzeichnis</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cannotAccessGitattributes" Property="Text">
+          <Value>Fehler beim Schreiben von .gitattributes. 
+Bitte prüfen Sie, ob auf die Datei zugegriffen werden kann.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cannotAccessGitattributesCaption" Property="Text">
+          <Value>Fehler beim Schreiben von .gitattributes</Value>
         </TranslationItem>
         <TranslationItem Name="Save" Property="Text">
           <Value>Speichern</Value>
@@ -2656,6 +2679,16 @@ _ReSharper*/</Value>
         </TranslationItem>
         <TranslationItem Name="_gitignoreOnlyInWorkingDirSupported" Property="Text">
           <Value>.gitignore wird nur unterstützt wenn ein Arbeitsverzeichnis vorhanden ist.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_gitignoreOnlyInWorkingDirSupportedCaption" Property="Text">
+          <Value>Kein Arbeitsverzeichnis</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cannotAccessGitignore" Property="Text">
+          <Value>Fehler beim Schreiben von .gitignore. 
+Bitte prüfen Sie, ob auf die Datei zugegriffen werden kann.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cannotAccessGitignoreCaption" Property="Text">
+          <Value>Fehler beim Schreiben von .gitignore</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
