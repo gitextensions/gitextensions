@@ -123,10 +123,10 @@ namespace GitUI.Blame
                 {
                     blameCommitter.AppendLine((blameHeader.Author + " - " + blameHeader.AuthorTime.ToString() + " - " + blameHeader.FileName + new string(' ', 100)).Trim(new char[] { '\r', '\n' }));
                 }
-                if (!String.IsNullOrEmpty(blameLine.LineText))
-                {
+                if (blameLine.LineText == null )
+                    blameFile.AppendLine("");
+                else
                     blameFile.AppendLine(blameLine.LineText.Trim(new char[] { '\r', '\n' }));
-                }
             }
 
             BlameCommitter.ViewText("committer.txt", blameCommitter.ToString());
