@@ -668,13 +668,18 @@ namespace GitCommands
             if (string.IsNullOrEmpty(dir))
                 return false;
 
-            if (Directory.Exists(dir + PathSeparator + ".git"))
+            if (Directory.Exists(dir + PathSeparator + ".git") || File.Exists(dir + PathSeparator + ".git"))
                 return true;
 
             return !dir.Contains(".git") &&
                    Directory.Exists(dir + PathSeparator + "info") &&
                    Directory.Exists(dir + PathSeparator + "objects") &&
                    Directory.Exists(dir + PathSeparator + "refs");
+        }
+
+        public static string GetGitDirectory()
+        {
+            return GitCommandHelpers.GetGitDirectory(WorkingDir);
         }
 
         public static bool IsBareRepository()
@@ -684,7 +689,7 @@ namespace GitCommands
 
         public static string WorkingDirGitDir()
         {
-            return GitCommandHelpers.GetGitDirectory(WorkingDir);
+            return GitCommandHelpers.WorkingDirGitDir(WorkingDir);
         }
 
         public static bool RunningOnWindows()
