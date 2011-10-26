@@ -644,6 +644,9 @@ namespace GitUI
             IndexWatcher.Reset();
         }
 
+        //store strings to not keep references to nodes
+        private Stack<string>  lastSelectedNodes = new Stack<string>();
+     
         private void FillFileTree()
         {
             if (CommitInfoTabControl.SelectedTab != Tree)
@@ -652,35 +655,56 @@ namespace GitUI
             try
             {
                 GitTree.SuspendLayout();
+                // Save state only when there is selected node                
+                if (GitTree.SelectedNode != null)
+                {
+                    TreeNode node = GitTree.SelectedNode;
+                    FileText.SaveCurrentScrollPos();
+                    lastSelectedNodes.Clear();
+                    while (node != null)
+                    {
+                        lastSelectedNodes.Push(node.Text);
+                        node = node.Parent;
+                    }
+                }
 
-                // Save state
-                var lastSelectedNodes = new Stack<TreeNode>();
-                lastSelectedNodes.Push(GitTree.SelectedNode);
-                while (lastSelectedNodes.Peek() != null && lastSelectedNodes.Peek().Parent != null)
-                    lastSelectedNodes.Push((lastSelectedNodes.Peek()).Parent);
-
-                FileText.SaveCurrentScrollPos();
 
                 // Refresh tree
                 GitTree.Nodes.Clear();
+                //restore selected file and scroll position when new selection is done
                 if (RevisionGrid.GetRevisions().Count > 0)
-                    LoadInTree(RevisionGrid.GetRevisions()[0].SubItems, GitTree.Nodes);
-                //GitTree.Sort();
-
-                // Load state
-                var currenNodes = GitTree.Nodes;
-                while (lastSelectedNodes.Count > 0 && lastSelectedNodes.Peek() != null)
                 {
-                    var next = (lastSelectedNodes.Pop()).Text;
-                    foreach (TreeNode node in currenNodes)
+                    LoadInTree(RevisionGrid.GetRevisions()[0].SubItems, GitTree.Nodes);
+                    //GitTree.Sort();
+                    TreeNode lastMatchedNode = null;
+                    // Load state
+                    var currenNodes = GitTree.Nodes;
+                    TreeNode matchedNode = null;
+                    while (lastSelectedNodes.Count > 0 && currenNodes != null)
                     {
-                        if (node.Text != next && next.Length != 40)
-                            continue;
+                        var next = lastSelectedNodes.Pop();
+                        foreach (TreeNode node in currenNodes)
+                        {
+                            if (node.Text != next && next.Length != 40)
+                                continue;
 
-                        node.Expand();
-                        GitTree.SelectedNode = node;
-                        currenNodes = node.Nodes;
+                            node.Expand();
+                            matchedNode = node;
+                            break;                            
+                        }
+                        if (matchedNode == null)
+                            currenNodes = null;
+                        else
+                        {
+                            lastMatchedNode = matchedNode;
+                            currenNodes = matchedNode.Nodes;
+                        }
                     }
+                    //if there is no exact match, don't restore scroll position
+                    if (lastMatchedNode != matchedNode)
+                        FileText.ResetCurrentScrollPos();
+                    GitTree.SelectedNode = lastMatchedNode;
+
                 }
             }
             finally

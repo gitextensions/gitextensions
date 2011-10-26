@@ -131,7 +131,8 @@ namespace GitUI
 
             closeDialogAfterEachCommitToolStripMenuItem.Checked = Settings.CloseCommitDialogAfterCommit;
             closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked = Settings.CloseCommitDialogAfterLastCommit;
-
+            refreshDialogOnFormFocusToolStripMenuItem.Checked = Settings.RefreshCommitDialogOnFormFocus;
+			
             Unstaged.SetNoFilesText(_noUnstagedChanges.Text);
             Staged.SetNoFilesText(_noStagedChanges.Text);
             Message.SetEmptyMessage(_enterCommitMessageHint.Text);
@@ -158,7 +159,14 @@ namespace GitUI
 
             SelectedDiff.ContextMenuOpening += SelectedDiff_ContextMenuOpening;
 
+            LoadRefreshCommitDialogOnFormFocus();
+
             Commit.Focus();
+        }
+
+        void LoadRefreshCommitDialogOnFormFocus()
+        {
+            refreshDialogOnFormFocusToolStripMenuItem.Checked = Settings.RefreshCommitDialogOnFormFocus;
         }
 
         void SelectedDiff_ContextMenuOpening(object sender, System.ComponentModel.CancelEventArgs e)
