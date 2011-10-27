@@ -98,6 +98,8 @@ namespace GitUI
 
         private readonly TranslationString _formTitle = new TranslationString("Commit to {0} ({1})");
 
+		private readonly TranslationString _selectionFilterToolTip = new TranslationString("Enter a regular expression to select unstaged files.");
+
 
         #endregion
 
@@ -1346,7 +1348,7 @@ namespace GitUI
 				    	try
 				    	{
 				    		selectionCount = Unstaged.SetSelectionFilter(selectionFilter.Text);
-				    		selectionFilter.ToolTipText = "Enter a regular expression to select unstaged files.";
+				    		selectionFilter.ToolTipText = _selectionFilterToolTip.Text;
 				    	}
 				    	catch (ArgumentException ae)
 				    	{
