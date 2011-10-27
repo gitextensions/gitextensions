@@ -350,5 +350,17 @@ namespace GitUI.RepoHosting
             targetDir = Path.Combine(targetDir, _createDirTB.Text);
             return targetDir;
         }
+
+        private void _destinationTB_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (_destinationTB.Text.IndexOfAny(Path.GetInvalidPathChars()) != -1)
+                e.Cancel = true;
+        }
+
+        private void _createDirTB_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (_createDirTB.Text.IndexOfAny(Path.GetInvalidPathChars()) != -1)
+                e.Cancel = true;
+        }
     }
 }
