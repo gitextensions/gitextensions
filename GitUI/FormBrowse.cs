@@ -779,7 +779,10 @@ namespace GitUI
                 return;
 
             if (item.ItemType == "blob" || item.ItemType == "tree")
+            {
+                // TODO: Find lastest revison when file was changed based on RevisionGrid.GetRevisions();
                 GitUICommands.Instance.StartFileHistoryDialog(item.FileName);
+            }
         }
 
         public void FindFileOnClick(object sender, EventArgs e)
@@ -1970,7 +1973,14 @@ namespace GitUI
             GitItemStatus item = DiffFiles.SelectedItem;
 
             if (item.IsTracked)
-                GitUICommands.Instance.StartFileHistoryDialog(item.Name);
+            {
+                IList<GitRevision> revisions = RevisionGrid.GetRevisions();
+
+                if (revisions.Count == 0)
+                    GitUICommands.Instance.StartFileHistoryDialog(item.Name);
+                else
+                    GitUICommands.Instance.StartFileHistoryDialog(item.Name, revisions[0]);
+            }
         }
 
         private void CurrentBranchDropDownOpening(object sender, EventArgs e)

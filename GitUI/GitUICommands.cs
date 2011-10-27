@@ -232,7 +232,6 @@ namespace GitUI
 
         public bool StartFileHistoryDialog(string fileName)
         {
-
             return StartFileHistoryDialog(fileName, null);
         }
 

@@ -490,6 +490,9 @@ namespace GitUI
 
         public void SetSelectedIndex(int index)
         {
+            if (Revisions.Rows[index].Selected)
+                return;
+
             Revisions.ClearSelection();
 
             Revisions.Rows[index].Selected = true;
@@ -500,8 +503,6 @@ namespace GitUI
 
         public void SetSelectedRevision(GitRevision revision)
         {
-            Revisions.ClearSelection();
-
             if (revision != null)
             {
                 for (var i = 0; i < Revisions.RowCount; i++)
@@ -509,10 +510,12 @@ namespace GitUI
                     if (((GitRevision)Revisions.GetRowData(i)).Guid == revision.Guid)
                     {
                         SetSelectedIndex(i);
-                        break;
+                        return;
                     }
                 }
             }
+
+            Revisions.ClearSelection();
             Revisions.Select();
         }
 
