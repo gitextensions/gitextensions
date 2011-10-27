@@ -60,7 +60,7 @@ namespace GitUI
         private void FormMailMapLoad(object sender, EventArgs e)
         {
             RestorePosition("edit-gitattributes");
-            if (!Settings.IsBareRepository()) return;
+            if (!Settings.Module.IsBareRepository()) return;
             MessageBox.Show(noWorkingDir.Text);
             Close();
         }

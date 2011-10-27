@@ -262,12 +262,81 @@ namespace GitUI.Editor
 
         public void ViewCurrentChanges(string fileName, string oldFileName, bool staged)
         {
-            _async.Load(() => GitCommandHelpers.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments()), ViewStagingPatch);
+            _async.Load(() => Settings.Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments()), ViewStagingPatch);
         }
 
         public void ViewStagingPatch(string text)
         {
             ViewPatch(text);
+            Reset(true, true, true);
+        }
+
+        public void ViewSubmoduleChanges(string fileName, string oldFileName, bool staged)
+        {
+            _async.Load(() => Settings.Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments()), ViewSubmodulePatch);
+        }
+
+        private string ProcessSubmodulePatch(string text)
+        {
+            StringBuilder sb = new StringBuilder();
+            using (StringReader reader = new StringReader(text))
+            {
+                string line = reader.ReadLine();
+                const string gitstr = "--git ";
+                string module = "";
+                int pos = line.IndexOf(gitstr);
+                if (pos >= 0)
+                {
+                    module = line.Substring(pos + gitstr.Length);
+                    var list = module.Split(new char[] {' '},2);
+                    module = list.Length > 0 ? list[0] : "";
+                    if (module.StartsWith("a/"))
+                        module = module.Substring(2);
+                }
+                sb.AppendLine("Submodule " + module + " Change");
+                while ((line = reader.ReadLine()) != null)
+                {
+                    if (line.Contains("Subproject"))
+                    {
+                        sb.AppendLine();
+                        char c = line[0];
+                        const string commit = "commit ";
+                        string hash = "";
+                        pos = line.IndexOf(commit);
+                        if (pos >= 0)
+                            hash = line.Substring(pos + commit.Length);
+                        bool bdirty = hash.EndsWith("-dirty");
+                        hash = hash.Replace("-dirty", "");
+                        string dirty = !bdirty ? "" : " (dirty)";
+                        if (c == '-')
+                            sb.AppendLine("From:\t" + hash + dirty);
+                        else if (c == '+')
+                            sb.AppendLine("To:\t\t" + hash + dirty);
+
+                        string path = Settings.Module.GetSubmoduleFullPath(module);
+                        GitModule gitmodule = new GitModule(path);
+                        if (gitmodule.ValidWorkingDir())
+                        {
+                            CommitInformation commitInformation = CommitInformation.GetCommitInfo(gitmodule, hash);
+                            sb.AppendLine("\t\t\t\t\t" + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, commitInformation.CommitDate.UtcDateTime) + commitInformation.CommitDate.LocalDateTime.ToString(" (ddd MMM dd HH':'mm':'ss yyyy)"));
+                            sb.AppendLine("\t\t" + commitInformation.Body.Trim('\n'));
+                        }
+                        else
+                            sb.AppendLine();
+                    }
+                }
+            }
+            return sb.ToString();
+        }
+
+        public void ViewSubmodulePatch(string text)
+        {
+            ResetForText(null);
+            text = ProcessSubmodulePatch(text);
+            _internalFileViewer.SetText(text);
+            if (TextLoaded != null)
+                TextLoaded(this, null);
+            RestoreCurrentScrollPos();
             Reset(true, true, true);
         }
 
@@ -313,12 +382,12 @@ namespace GitUI.Editor
 
         public void ViewGitItemRevision(string fileName, string guid)
         {
-            ViewItem(fileName, () => GetImage(fileName, guid), () => GitCommandHelpers.GetFileRevisionText(fileName, guid));
+            ViewItem(fileName, () => GetImage(fileName, guid), () => Settings.Module.GetFileRevisionText(fileName, guid));
         }
 
         public void ViewGitItem(string fileName, string guid)
         {
-            ViewItem(fileName, () => GetImage(fileName, guid), () => GitCommandHelpers.GetFileText(guid));
+            ViewItem(fileName, () => GetImage(fileName, guid), () => Settings.Module.GetFileText(guid));
         }
 
         private void ViewItem(string fileName, Func<Image> getImage, Func<string> getFileText)
@@ -374,7 +443,7 @@ namespace GitUI.Editor
         {
             try
             {
-                using (var stream = GitCommandHelpers.GetFileStream(guid))
+                using (var stream = Settings.Module.GetFileStream(guid))
                 {
                     return CreateImage(fileName, stream);
                 }

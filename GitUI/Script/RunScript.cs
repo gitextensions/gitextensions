@@ -121,8 +121,8 @@ namespace GitUI.Script
                         if (RevisionGrid == null)
                         {
                             heads = new List<GitHead>();
-                            string currentRevisionGuid = GitCommandHelpers.GetCurrentCheckout();
-                            foreach (GitHead head in GitCommandHelpers.GetHeads(true, true))
+                            string currentRevisionGuid = Settings.Module.GetCurrentCheckout();
+                            foreach (GitHead head in Settings.Module.GetHeads(true, true))
                             {
                                 if (head.Guid == currentRevisionGuid)
                                     heads.Add(head);
@@ -274,9 +274,9 @@ namespace GitUI.Script
                             break;
                         case "{cDefaultRemote}":
                             if (currentBranches.Count == 1)
-                                argument = argument.Replace(option, GitCommandHelpers.GetSetting(string.Format("branch.{0}.remote", currentBranches[0].Name)));
+                                argument = argument.Replace(option, Settings.Module.GetSetting(string.Format("branch.{0}.remote", currentBranches[0].Name)));
                             else if (currentBranches.Count != 0)
-                                argument = argument.Replace(option, GitCommandHelpers.GetSetting(string.Format("branch.{0}.remote", 
+                                argument = argument.Replace(option, Settings.Module.GetSetting(string.Format("branch.{0}.remote", 
                                                             askToSpecify(currentBranches, "Current Revision Branch"))));
                             else
                                 argument = argument.Replace(option, "");

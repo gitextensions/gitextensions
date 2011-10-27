@@ -125,18 +125,18 @@ namespace GitUI
 
         public string GitCommand(string arguments)
         {
-            return GitCommandHelpers.RunCmd(Settings.GitCommand, arguments);
+            return Settings.Module.RunGitCmd(arguments);
         }
 
         public string CommandLineCommand(string cmd, string arguments)
         {
-            return GitCommandHelpers.RunCmd(cmd, arguments);
+            return Settings.Module.RunCmd(cmd, arguments);
         }
 
 
         private bool RequiresValidWorkingDir()
         {
-            if (!Settings.ValidWorkingDir())
+            if (!Settings.Module.ValidWorkingDir())
             {
                 MessageBox.Show("The current directory is not a valid git repository.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
@@ -345,7 +345,7 @@ namespace GitUI
             if (!InvokeEvent(PreInitialize))
                 return true;
 
-            if (!Settings.ValidWorkingDir())
+            if (!Settings.Module.ValidWorkingDir())
                 new FormInit(Settings.WorkingDir).ShowDialog();
             else
                 new FormInit().ShowDialog();

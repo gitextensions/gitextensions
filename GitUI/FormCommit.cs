@@ -341,7 +341,7 @@ namespace GitUI
 
             if (!string.IsNullOrEmpty(patch))
             {
-                string output = GitCommandHelpers.RunCmd(Settings.GitCommand, args, patch);
+                string output = Settings.Module.RunGitCmd(args, patch);
                 if (!string.IsNullOrEmpty(output))
                 {
                     MessageBox.Show(output);
@@ -365,7 +365,7 @@ namespace GitUI
 
             if (!string.IsNullOrEmpty(patch))
             {
-                string output = GitCommandHelpers.RunCmd(Settings.GitCommand, args, patch);
+                string output = Settings.Module.RunGitCmd(args, patch);
                 if (!string.IsNullOrEmpty(output))
                 {
                     MessageBox.Show(output);
@@ -431,7 +431,7 @@ namespace GitUI
         private const string Sha1HashPattern = @"[a-f\d]{40}";
         private void UpdateMergeHead()
         {
-            var mergeHead = GitCommandHelpers.RevParse("MERGE_HEAD");
+            var mergeHead = Settings.Module.RevParse("MERGE_HEAD");
             IsMergeCommit = Regex.IsMatch(mergeHead, Sha1HashPattern);
         }
 
@@ -439,8 +439,8 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
             Staged.GitItemStatuses = null;
-            SolveMergeconflicts.Visible = GitCommandHelpers.InTheMiddleOfConflictedMerge();
-            Staged.GitItemStatuses = GitCommandHelpers.GetStagedFiles();
+            SolveMergeconflicts.Visible = Settings.Module.InTheMiddleOfConflictedMerge();
+            Staged.GitItemStatuses = Settings.Module.GetStagedFiles();
             Cursor.Current = Cursors.Default;
         }
 
@@ -479,7 +479,7 @@ namespace GitUI
             EnableStageButtons(true);
             workingToolStripMenuItem.Enabled = true;
 
-            var inTheMiddleOfConflictedMerge = GitCommandHelpers.InTheMiddleOfConflictedMerge();
+            var inTheMiddleOfConflictedMerge = Settings.Module.InTheMiddleOfConflictedMerge();
             SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
             Unstaged.SelectStoredNextIndex();
         }
@@ -525,6 +525,8 @@ namespace GitUI
             SetSelectedDiff(_currentItem, _currentItemStaged);
         }
 
+        private IList<string> Submodules = null;
+
         private void SetSelectedDiff(GitItemStatus item, bool staged)
         {
             if (item.Name.EndsWith(".png"))
@@ -533,7 +535,12 @@ namespace GitUI
             }
             else if (item.IsTracked)
             {
-                SelectedDiff.ViewCurrentChanges(item.Name, item.OldName, staged);
+                if (Submodules == null)
+                    Submodules = Settings.Module.GetSubmodulesNames();
+                if (!Submodules.Contains(item.Name))
+                    SelectedDiff.ViewCurrentChanges(item.Name, item.OldName, staged);
+                else
+                    SelectedDiff.ViewSubmoduleChanges(item.Name, item.OldName, staged);
             }
             else
             {
@@ -609,7 +616,7 @@ namespace GitUI
 
         private void DoCommit(bool amend, bool push)
         {
-            if (GitCommandHelpers.InTheMiddleOfConflictedMerge())
+            if (Settings.Module.InTheMiddleOfConflictedMerge())
             {
                 MessageBox.Show(_mergeConflicts.Text, _mergeConflictsCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -620,7 +627,7 @@ namespace GitUI
                 return;
             }
 
-            if (GitCommandHelpers.GetSelectedBranch().Equals("(no branch)", StringComparison.OrdinalIgnoreCase) &&
+            if (Settings.Module.GetSelectedBranch().Equals("(no branch)", StringComparison.OrdinalIgnoreCase) &&
                 MessageBox.Show(_notOnBranch.Text, _notOnBranchCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
                 return;
 
@@ -630,7 +637,7 @@ namespace GitUI
 
                 ScriptManager.RunEventScripts(ScriptEvent.BeforeCommit);
 
-                var form = new FormProcess(GitCommandHelpers.CommitCmd(amend, toolAuthor.Text));
+                var form = new FormProcess(Settings.Module.CommitCmd(amend, toolAuthor.Text));
                 form.ShowDialog();
 
                 NeedRefresh = true;
@@ -770,7 +777,7 @@ namespace GitUI
                     Amend.Enabled = false;
                     Reset.Enabled = false;
 
-                    GitCommandHelpers.ResetMixed("HEAD");
+                    Settings.Module.ResetMixed("HEAD");
                     Initialize();
                 }
                 else
@@ -788,10 +795,10 @@ namespace GitUI
                         if (!item.IsNew)
                         {
                             toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
-                            GitCommandHelpers.UnstageFileToRemove(item.Name);
+                            Settings.Module.UnstageFileToRemove(item.Name);
 
                             if (item.IsRenamed)
-                                GitCommandHelpers.UnstageFileToRemove(item.OldName);
+                                Settings.Module.UnstageFileToRemove(item.OldName);
                         }
                         else
                         {
@@ -893,7 +900,7 @@ namespace GitUI
                 }
                 else
                 {
-                    output.Append(GitCommandHelpers.ResetFile(item.Name));
+                    output.Append(Settings.Module.ResetFile(item.Name));
                 }
             }
 
@@ -956,7 +963,7 @@ namespace GitUI
 
             foreach (var gitItemStatus in Unstaged.SelectedItems)
             {
-                GitCommandHelpers.ResetFile(gitItemStatus.Name);
+                Settings.Module.ResetFile(gitItemStatus.Name);
             }
             Initialize();
         }
@@ -979,7 +986,7 @@ namespace GitUI
 
         private void UnstageAllToolStripMenuItemClick(object sender, EventArgs e)
         {
-            GitCommandHelpers.ResetMixed("HEAD");
+            Settings.Module.ResetMixed("HEAD");
             Initialize();
         }
 
@@ -1002,7 +1009,7 @@ namespace GitUI
                     break;
                 case CommitKind.Normal:
                 default:
-                    message = GitCommandHelpers.GetMergeMessage();
+                    message = Settings.Module.GetMergeMessage();
 
                     if (string.IsNullOrEmpty(message) && File.Exists(GitCommands.Commit.GetCommitMessagePath()))
                         message = File.ReadAllText(GitCommands.Commit.GetCommitMessagePath(), Settings.Encoding);
@@ -1016,7 +1023,7 @@ namespace GitUI
                 o =>
                 {
                     var text =
-                        string.Format(_formTitle.Text, GitCommandHelpers.GetSelectedBranch(),
+                        string.Format(_formTitle.Text, Settings.Module.GetSelectedBranch(),
                                       Settings.WorkingDir);
 
                     _syncContext.Post(state1 => Text = text, null);
@@ -1028,7 +1035,7 @@ namespace GitUI
             //Save last commit message in settings. This way it can be used in multiple repositories.
             Settings.LastCommitMessage = commitMessageText;
 
-            var path = Settings.WorkingDirGitDir() + Settings.PathSeparator + "COMMITMESSAGE";
+            var path = Settings.Module.WorkingDirGitDir() + Settings.PathSeparator + "COMMITMESSAGE";
 
             //Commit messages are UTF-8 by default unless otherwise in the config file.
             //The git manual states:
@@ -1037,7 +1044,7 @@ namespace GitUI
             //  explicitly say your project uses a legacy encoding. The way to say 
             //  this is to have i18n.commitencoding in .git/config file, like this:...
             Encoding encoding;
-            string encodingString = GitCommandHelpers.GetLocalConfig().GetValue("i18n.commitencoding");
+            string encodingString = Settings.Module.GetLocalConfig().GetValue("i18n.commitencoding");
             if (string.IsNullOrEmpty(encodingString))
                 encodingString = GitCommandHelpers.GetGlobalConfig().GetValue("i18n.commitencoding");
 
@@ -1113,12 +1120,12 @@ namespace GitUI
             commitMessageToolStripMenuItem.DropDownItems.Clear();
             AddCommitMessageToMenu(Settings.LastCommitMessage);
 
-            string localLastCommitMessage = GitCommandHelpers.GetPreviousCommitMessage(0);
+            string localLastCommitMessage = Settings.Module.GetPreviousCommitMessage(0);
             if (!localLastCommitMessage.Trim().Equals(Settings.LastCommitMessage.Trim()))
                 AddCommitMessageToMenu(localLastCommitMessage);
-            AddCommitMessageToMenu(GitCommandHelpers.GetPreviousCommitMessage(1));
-            AddCommitMessageToMenu(GitCommandHelpers.GetPreviousCommitMessage(2));
-            AddCommitMessageToMenu(GitCommandHelpers.GetPreviousCommitMessage(3));
+            AddCommitMessageToMenu(Settings.Module.GetPreviousCommitMessage(1));
+            AddCommitMessageToMenu(Settings.Module.GetPreviousCommitMessage(2));
+            AddCommitMessageToMenu(Settings.Module.GetPreviousCommitMessage(3));
         }
 
         private void AddCommitMessageToMenu(string commitMessage)
@@ -1214,7 +1221,7 @@ namespace GitUI
             var item = Unstaged.SelectedItem;
             var fileName = item.Name;
 
-            var cmdOutput = GitCommandHelpers.OpenWithDifftool(fileName);
+            var cmdOutput = Settings.Module.OpenWithDifftool(fileName);
 
             if (!string.IsNullOrEmpty(cmdOutput))
                 MessageBox.Show(cmdOutput);
@@ -1231,8 +1238,7 @@ namespace GitUI
 
             foreach (var gitItemStatus in Unstaged.SelectedItems)
             {
-                GitCommandHelpers.RunRealCmd
-                    (Settings.GitCommand,
+                Settings.Module.RunGitRealCmd(
                      string.Format("checkout -p \"{0}\"", gitItemStatus.Name));
                 Initialize();
             }
@@ -1261,7 +1267,7 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(Message.Text))
             {
-                Message.Text = GitCommandHelpers.GetPreviousCommitMessage(0).Trim();
+                Message.Text = Settings.Module.GetPreviousCommitMessage(0).Trim();
                 return;
             }
 

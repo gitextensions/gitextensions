@@ -43,10 +43,10 @@ namespace GitUI
             }
             bool formClosed = false;
             string arguments = "";
-            bool IsMerge = GitCommandHelpers.IsMerge(RevisionGrid.GetRevisions()[0].Guid);
+            bool IsMerge = Settings.Module.IsMerge(RevisionGrid.GetRevisions()[0].Guid);
             if (IsMerge && !autoParent.Checked)
             {
-                GitRevision[] ParentsRevisions = GitCommandHelpers.GetParents(RevisionGrid.GetRevisions()[0].Guid);
+                GitRevision[] ParentsRevisions = Settings.Module.GetParents(RevisionGrid.GetRevisions()[0].Guid);
                 var choose = new FormCherryPickMerge(ParentsRevisions);
                 choose.ShowDialog();
                 if (choose.OkClicked)
@@ -59,7 +59,7 @@ namespace GitUI
 
             if (!formClosed)
             {
-                MessageBox.Show(_cmdExecutedMsgBox.Text + " " + Environment.NewLine + GitCommandHelpers.CherryPick(RevisionGrid.GetRevisions()[0].Guid, AutoCommit.Checked, arguments), _cmdExecutedMsgBoxCaption.Text);
+                MessageBox.Show(_cmdExecutedMsgBox.Text + " " + Environment.NewLine + Settings.Module.CherryPick(RevisionGrid.GetRevisions()[0].Guid, AutoCommit.Checked, arguments), _cmdExecutedMsgBoxCaption.Text);
 
                 MergeConflictHandler.HandleMergeConflicts();
 

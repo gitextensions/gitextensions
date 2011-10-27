@@ -218,7 +218,7 @@ namespace GitUI
         {
             Settings.WorkingDir = path;
 
-            if (!Settings.ValidWorkingDir())
+            if (!Settings.Module.ValidWorkingDir())
             {
                 DialogResult dialogResult = MessageBox.Show(directoryIsNotAValidRepository.Text, directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 if (dialogResult == DialogResult.Cancel)

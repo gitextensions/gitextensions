@@ -198,9 +198,9 @@ namespace GitCommands
 
         private List<GitHead> GetHeads()
         {
-            var result = GitCommandHelpers.GetHeads(true);
-            bool validWorkingDir = Settings.ValidWorkingDir();
-            selectedBranchName = validWorkingDir ? GitCommandHelpers.GetSelectedBranch() : string.Empty;
+            var result = Settings.Module.GetHeads(true);
+            bool validWorkingDir = Settings.Module.ValidWorkingDir();
+            selectedBranchName = validWorkingDir ? Settings.Module.GetSelectedBranch() : string.Empty;
             GitHead selectedHead = result.Find(head => head.Name == selectedBranchName);
 
             if (selectedHead != null)
@@ -319,7 +319,7 @@ namespace GitCommands
                     //We cannot let git recode the message to Settings.Encoding which is
                     //needed to allow the "git log" to print the filename in Settings.Encoding
                     if (logoutputEncoding == null)
-                        logoutputEncoding = GitCommandHelpers.GetLogoutputEncoding();
+                        logoutputEncoding = Settings.Module.GetLogoutputEncoding();
 
                     if (!logoutputEncoding.Equals(Settings.Encoding))
                         revision.Message = logoutputEncoding.GetString(Settings.Encoding.GetBytes(line));

@@ -27,7 +27,7 @@ namespace GitCommands
             {
                 if (subItems == null)
                 {
-                    subItems = GitCommandHelpers.GetTree(Guid);
+                    subItems = Settings.Module.GetTree(Guid);
 
                     foreach (GitItem item in subItems)
                     {

@@ -89,7 +89,7 @@ namespace GitUI
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SelecctionTimer = new System.Windows.Forms.Timer(this.components);
+            this.SelectionTimer = new System.Windows.Forms.Timer(this.components);
             this.NoCommits = new System.Windows.Forms.Panel();
             this.NoGit = new System.Windows.Forms.Panel();
             this.InitRepository = new System.Windows.Forms.Button();
@@ -520,10 +520,10 @@ namespace GitUI
             this.dataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.dataGridViewTextBoxColumn1.Width = 70;
             // 
-            // SelecctionTimer
+            // SelectionTimer
             // 
-            this.SelecctionTimer.Interval = 200;
-            this.SelecctionTimer.Tick += new System.EventHandler(this.SelecctionTimerTick);
+            this.SelectionTimer.Interval = 200;
+            this.SelectionTimer.Tick += new System.EventHandler(this.SelectionTimerTick);
             // 
             // NoCommits
             // 
@@ -708,7 +708,7 @@ namespace GitUI
         private DvcsGraph Revisions;
         private System.Windows.Forms.BindingSource gitRevisionBindingSource;
         private System.Windows.Forms.PictureBox Loading;
-        private System.Windows.Forms.Timer SelecctionTimer;
+        private System.Windows.Forms.Timer SelectionTimer;
         public System.Windows.Forms.PictureBox Error;
         private System.Windows.Forms.ContextMenuStrip CreateTag;
         private System.Windows.Forms.ToolStripMenuItem createTagToolStripMenuItem;

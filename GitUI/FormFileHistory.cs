@@ -200,7 +200,7 @@ namespace GitUI
                             Diff.ViewPatch(
                                 () =>
                                 {
-                                    Patch diff = GitCommandHelpers.GetSingleDiff(revision1.Guid, revision1.Guid + "^", fileName,
+                                    Patch diff = Settings.Module.GetSingleDiff(revision1.Guid, revision1.Guid + "^", fileName,
                                                                           Diff.GetExtraDiffArguments());
                                     if (diff == null)
                                         return string.Empty;
@@ -219,7 +219,7 @@ namespace GitUI
                         {
                             Diff.ViewPatch(
                                 () =>
-                                GitCommandHelpers.GetSingleDiff(revision1.Guid, revision2.Guid, fileName,
+                                Settings.Module.GetSingleDiff(revision1.Guid, revision2.Guid, fileName,
                                                                       Diff.GetExtraDiffArguments()).Text);
                         }
                     }
@@ -280,7 +280,7 @@ namespace GitUI
                     break;
             }
 
-            var output = GitCommandHelpers.OpenWithDifftool(FileName, rev1, rev2);
+            var output = Settings.Module.OpenWithDifftool(FileName, rev1, rev2);
             if (!string.IsNullOrEmpty(output))
                 MessageBox.Show(output);
         }
@@ -309,7 +309,7 @@ namespace GitUI
                     "|All files (*.*)|*.*";
                 if (fileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    GitCommandHelpers.SaveBlobAs(fileDialog.FileName, selectedRows[0].Guid + ":\"" + orgFileName + "\"");
+                    Settings.Module.SaveBlobAs(fileDialog.FileName, selectedRows[0].Guid + ":\"" + orgFileName + "\"");
                 }
             }
         }
