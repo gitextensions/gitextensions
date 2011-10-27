@@ -44,17 +44,21 @@ namespace GitUI.RepoHosting
             _createBtn.Enabled = false;
             _yourBranchesCB.Text = _strLoading.Text;
             _hostedRemotes = _repoHost.GetHostedRemotesForCurrentWorkingDirRepo();
-            LoadRemotes();
+            IHostedRemote[] foreignHostedRemotes = _hostedRemotes.Where(r => !r.IsOwnedByMe).ToArray();
+            if (foreignHostedRemotes.Length == 0)
+            {
+                MessageBox.Show(this, _strFailedToCreatePullRequest.Text + "Please clone GitHub repository before pull request.", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Close();
+                return;
+            }
+            LoadRemotes(foreignHostedRemotes);
             LoadMyBranches();
         }
 
-        private void LoadRemotes()
+        private void LoadRemotes(IHostedRemote[] foreignHostedRemotes)
         {
-            var foreignHostedRemotes = _hostedRemotes.Where(r => !r.IsOwnedByMe);
-
             _pullReqTargetsCB.Items.Clear();
-            foreach (var pra in foreignHostedRemotes)
-                _pullReqTargetsCB.Items.Add(pra);
+            _pullReqTargetsCB.Items.AddRange(foreignHostedRemotes);
 
             if (_chooseRemote != null)
             {
