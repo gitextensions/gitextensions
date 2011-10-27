@@ -76,14 +76,14 @@ namespace GitExtensions
 
                 //Do not add this working dir to the recent repositories. It is a nice feature, but it
                 //also increases the startup time
-                //if (Settings.ValidWorkingDir())
+                //if (Settings.Module.ValidWorkingDir())
                 //    Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
             }
 
             if (string.IsNullOrEmpty(Settings.WorkingDir))
             {
-                string findWorkingDir = GitCommandHelpers.FindGitWorkingDir(Directory.GetCurrentDirectory());
-                if (Settings.ValidWorkingDir(findWorkingDir))
+                string findWorkingDir = GitModule.FindGitWorkingDir(Directory.GetCurrentDirectory());
+                if (GitModule.ValidWorkingDir(findWorkingDir))
                     Settings.WorkingDir = findWorkingDir;
             }
 
@@ -120,12 +120,12 @@ namespace GitExtensions
                 {
                     case "mergetool":
                     case "mergeconflicts":
-                        if (!arguments.ContainsKey("quiet") || GitCommandHelpers.InTheMiddleOfConflictedMerge())
+                        if (!arguments.ContainsKey("quiet") || Settings.Module.InTheMiddleOfConflictedMerge())
                             GitUICommands.Instance.StartResolveConflictsDialog();
                         
                         return;
                     case "gitbash":
-                        GitCommandHelpers.RunBash();
+                        Settings.Module.RunBash();
                         return;
                     case "gitignore":
                         GitUICommands.Instance.StartEditGitIgnoreDialog();

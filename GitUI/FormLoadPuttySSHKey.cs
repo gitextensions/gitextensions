@@ -50,7 +50,7 @@ namespace GitUI
                 return;
             }
 
-            GitCommandHelpers.StartPageantWithKey(PrivateKeypath.Text);
+            Settings.Module.StartPageantWithKey(PrivateKeypath.Text);
             Close();
         }
 

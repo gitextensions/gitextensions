@@ -54,11 +54,11 @@ namespace GitUI.Tag
                         return;
                     }
 
-                    File.WriteAllText(Settings.WorkingDirGitDir() + "\\TAGMESSAGE", tagMessage.Text);
+                    File.WriteAllText(Settings.Module.WorkingDirGitDir() + "\\TAGMESSAGE", tagMessage.Text);
                 }
 
 
-                var s = GitCommandHelpers.Tag(Tagname.Text, GitRevisions.GetRevisions()[0].Guid,
+                var s = Settings.Module.Tag(Tagname.Text, GitRevisions.GetRevisions()[0].Guid,
                                                     annotate.Checked);
 
                 if (!string.IsNullOrEmpty(s))

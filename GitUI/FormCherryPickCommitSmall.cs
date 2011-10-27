@@ -19,10 +19,10 @@ namespace GitUI
         {
             base.OnLoad(e);
 
-            IsMerge = GitCommandHelpers.IsMerge(Revision.Guid);
+            IsMerge = Settings.Module.IsMerge(Revision.Guid);
             if (IsMerge)
             {
-                GitRevision[] Parents = GitCommandHelpers.GetParents(Revision.Guid);
+                GitRevision[] Parents = Settings.Module.GetParents(Revision.Guid);
                 for (int i = 0; i < Parents.Length; i++)
                 {
                     ParentsList.Items.Add(i + 1 + "");

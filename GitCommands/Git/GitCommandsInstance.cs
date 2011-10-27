@@ -95,7 +95,7 @@ namespace GitCommands
 
         public string RunGit(string arguments)
         {
-            return GitCommandHelpers.RunCmd(Settings.GitCommand, arguments);
+            return Settings.Module.RunGitCmd(arguments);
         }
 
         public event DataReceivedEventHandler DataReceived;
@@ -148,7 +148,7 @@ namespace GitCommands
 
         public IList<IGitSubmodule> GetSubmodules()
         {
-            var submodules = GitCommandHelpers.RunCmd(Settings.GitCommand, "submodule status").Split('\n');
+            var submodules = Settings.Module.RunGitCmd("submodule status").Split('\n');
 
             IList<IGitSubmodule> submoduleList = new List<IGitSubmodule>();
 
@@ -164,7 +164,7 @@ namespace GitCommands
 
                 lastLine = submodule;
 
-                submoduleList.Add(GitCommandHelpers.CreateGitSubmodule(submodule));
+                submoduleList.Add(GitModule.CreateGitSubmodule(submodule));
             }
 
             return submoduleList;

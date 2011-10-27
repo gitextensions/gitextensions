@@ -48,7 +48,7 @@ namespace GitUI
 
         private void UpdatePreviewPanel()
         {
-            Preview.DataSource = GitCommandHelpers.GetFiles(FilePattern.Text);
+            Preview.DataSource = Settings.Module.GetFiles(FilePattern.Text);
             filesWillBeIgnored.Text = string.Format(_matchingFilesString.Text,Preview.Items.Count.ToString());
             noMatchPanel.Visible = (Preview.Items.Count == 0);
         }

@@ -51,12 +51,12 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
-            IList<string> remotes = new List<string>(GitCommandHelpers.GetRemotes());
+            IList<string> remotes = new List<string>(Settings.Module.GetRemotes());
             remotes.Insert(0, "[ All ]");
             Remotes.DataSource = remotes;
 
-            string branch = GitCommandHelpers.GetSelectedBranch();
-            Remotes.Text = GitCommandHelpers.GetSetting(string.Format("branch.{0}.remote", branch));
+            string branch = Settings.Module.GetSelectedBranch();
+            Remotes.Text = Settings.Module.GetSetting(string.Format("branch.{0}.remote", branch));
             _NO_TRANSLATE_localBranch.Text = branch;
 
             Merge.Checked = Settings.PullMerge == "merge";
@@ -83,7 +83,7 @@ namespace GitUI
 
         private void MergetoolClick(object sender, EventArgs e)
         {
-            GitCommandHelpers.RunRealCmd(Settings.GitCommand, "mergetool");
+            Settings.Module.RunGitRealCmd("mergetool");
 
             if (MessageBox.Show(_allMergeConflictSolvedQuestion.Text, _allMergeConflictSolvedQuestionCaption.Text,
                                 MessageBoxButtons.YesNo) != DialogResult.Yes)
@@ -107,7 +107,7 @@ namespace GitUI
             {
                 if (PullFromUrl.Checked)
                 {
-                    _heads = GitCommandHelpers.GetHeads(false, true);
+                    _heads = Settings.Module.GetHeads(false, true);
                 }
                 else
                 {
@@ -120,7 +120,7 @@ namespace GitUI
                     // doesn't return heads that are new on the server. This can be updated using
                     // update branch info in the manage remotes dialog.
                     _heads = new List<GitHead>();
-                    foreach (var head in GitCommandHelpers.GetHeads(true, true))
+                    foreach (var head in Settings.Module.GetHeads(true, true))
                     {
                         if (!head.IsRemote ||
                             !head.Name.StartsWith(Remotes.Text, StringComparison.CurrentCultureIgnoreCase))
@@ -192,7 +192,7 @@ namespace GitUI
             ScriptManager.RunEventScripts(ScriptEvent.BeforePull);
 
             var stashed = false;
-            if (!Fetch.Checked && AutoStash.Checked && GitCommandHelpers.GitStatus(false).Count > 0)
+            if (!Fetch.Checked && AutoStash.Checked && Settings.Module.GitStatus(false).Count > 0)
             {
                 new FormProcess("stash save").ShowDialog();
                 stashed = true;
@@ -201,18 +201,18 @@ namespace GitUI
             FormProcess process = null;
             if (Fetch.Checked)
             {
-                process = new FormRemoteProcess(GitCommandHelpers.FetchCmd(source, Branches.Text, null));
+                process = new FormRemoteProcess(Settings.Module.FetchCmd(source, Branches.Text, null));
             }
             else
             {
-                string localBranch = GitCommandHelpers.GetSelectedBranch();
+                string localBranch = Settings.Module.GetSelectedBranch();
                 if (localBranch.Equals("(no branch)", StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty(Branches.Text))
                     localBranch = null;
 
                 if (Merge.Checked)
-                    process = new FormRemoteProcess(GitCommandHelpers.PullCmd(source, Branches.Text, localBranch, false));
+                    process = new FormRemoteProcess(Settings.Module.PullCmd(source, Branches.Text, localBranch, false));
                 else if (Rebase.Checked)
-                    process = new FormRemoteProcess(GitCommandHelpers.PullCmd(source, Branches.Text, localBranch, true));
+                    process = new FormRemoteProcess(Settings.Module.PullCmd(source, Branches.Text, localBranch, true));
             }
 
             if (process != null)
@@ -225,19 +225,19 @@ namespace GitUI
 
             try
             {
-                if (!GitCommandHelpers.InTheMiddleOfConflictedMerge() &&
-                    !GitCommandHelpers.InTheMiddleOfRebase() &&
+                if (!Settings.Module.InTheMiddleOfConflictedMerge() &&
+                    !Settings.Module.InTheMiddleOfRebase() &&
                     (process != null && !process.ErrorOccurred()))
                 {
                     return true;
                 }
 
                 // Rebase failed -> special 'rebase' merge conflict
-                if (Rebase.Checked && GitCommandHelpers.InTheMiddleOfRebase())
+                if (Rebase.Checked && Settings.Module.InTheMiddleOfRebase())
                 {
                     GitUICommands.Instance.StartRebaseDialog(null);
-                    if (!GitCommandHelpers.InTheMiddleOfConflictedMerge() &&
-                        !GitCommandHelpers.InTheMiddleOfRebase())
+                    if (!Settings.Module.InTheMiddleOfConflictedMerge() &&
+                        !Settings.Module.InTheMiddleOfRebase())
                     {
                         return true;
                     }
@@ -245,15 +245,15 @@ namespace GitUI
                 else
                 {
                     MergeConflictHandler.HandleMergeConflicts();
-                    if (!GitCommandHelpers.InTheMiddleOfConflictedMerge() &&
-                        !GitCommandHelpers.InTheMiddleOfRebase())
+                    if (!Settings.Module.InTheMiddleOfConflictedMerge() &&
+                        !Settings.Module.InTheMiddleOfRebase())
                     {
                         return true;
                     }
                 }
 
-                if (!AutoStash.Checked || !stashed || GitCommandHelpers.InTheMiddleOfConflictedMerge() ||
-                    GitCommandHelpers.InTheMiddleOfRebase())
+                if (!AutoStash.Checked || !stashed || Settings.Module.InTheMiddleOfConflictedMerge() ||
+                    Settings.Module.InTheMiddleOfRebase())
                 {
                     return true;
                 }
@@ -264,8 +264,8 @@ namespace GitUI
                 if (stashed && 
                     process != null && 
                     !process.ErrorOccurred() &&
-                    !GitCommandHelpers.InTheMiddleOfConflictedMerge() && 
-                    !GitCommandHelpers.InTheMiddleOfRebase() &&
+                    !Settings.Module.InTheMiddleOfConflictedMerge() &&
+                    !Settings.Module.InTheMiddleOfRebase() &&
                     MessageBox.Show(_applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     new FormProcess("stash pop").ShowDialog();
@@ -284,7 +284,7 @@ namespace GitUI
                 return;
 
             if (File.Exists(Settings.Pageant))
-                GitCommandHelpers.StartPageantForRemote(Remotes.Text);
+                Settings.Module.StartPageantForRemote(Remotes.Text);
             else
                 MessageBox.Show(_cannotLoadPutty.Text, PuttyCaption);
         }

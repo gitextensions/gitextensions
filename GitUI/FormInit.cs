@@ -38,7 +38,7 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
-            if (!Settings.ValidWorkingDir())
+            if (!Settings.Module.ValidWorkingDir())
                 Directory.Text = Settings.WorkingDir;
         }
 
@@ -67,7 +67,7 @@ namespace GitUI
             if (!System.IO.Directory.Exists(Settings.WorkingDir))
                 System.IO.Directory.CreateDirectory(Settings.WorkingDir);
 
-            MessageBox.Show(GitCommandHelpers.Init(Central.Checked, Central.Checked), _initMsgBoxCaption.Text);
+            MessageBox.Show(Settings.Module.Init(Central.Checked, Central.Checked), _initMsgBoxCaption.Text);
 
             Repositories.RepositoryHistory.AddMostRecentRepository(Directory.Text);
 

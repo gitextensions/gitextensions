@@ -51,16 +51,16 @@ namespace GitUI
             PushAllTags.Checked = Settings.PushAllTags;
             AutoPullOnRejected.Checked = Settings.AutoPullOnRejected;
 
-            _currentBranch = GitCommandHelpers.GetSelectedBranch();
+            _currentBranch = Settings.Module.GetSelectedBranch();
 
-            Remotes.DataSource = GitCommandHelpers.GetRemotes();
+            Remotes.DataSource = Settings.Module.GetRemotes();
 
             UpdateBranchDropDown();
             UpdateRemoteBranchDropDown();
 
             Push.Focus();
 
-            Remotes.Text = GitCommandHelpers.GetSetting(string.Format("branch.{0}.remote", _currentBranch));
+            Remotes.Text = Settings.Module.GetSetting(string.Format("branch.{0}.remote", _currentBranch));
             RemotesUpdated(null, null);
         }
 
@@ -111,7 +111,7 @@ namespace GitUI
             if (TabControlTagBranch.SelectedTab == BranchTab && PullFromRemote.Checked)
             {
                 //The current branch is not known by the remote (as far as we now since we are disconnected....)
-                if (!GitCommandHelpers.GetHeads(true, true).Exists(x => x.Remote == Remotes.Text && x.LocalName == RemoteBranch.Text))
+                if (!Settings.Module.GetHeads(true, true).Exists(x => x.Remote == Remotes.Text && x.LocalName == RemoteBranch.Text))
                     //Ask if this is what the user wants
                     if (MessageBox.Show(_branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo) ==
                         DialogResult.No)
@@ -141,7 +141,7 @@ namespace GitUI
                     if (!File.Exists(Settings.Pageant))
                         MessageBox.Show(_cannotLoadPutty.Text, PuttyText);
                     else
-                        GitCommandHelpers.StartPageantForRemote(Remotes.Text);
+                        Settings.Module.StartPageantForRemote(Remotes.Text);
                 }
 
                 destination = Remotes.Text;
@@ -193,8 +193,8 @@ namespace GitUI
 
             form.ShowDialog();
 
-            if (!GitCommandHelpers.InTheMiddleOfConflictedMerge() &&
-                !GitCommandHelpers.InTheMiddleOfRebase() && !form.ErrorOccurred())
+            if (!Settings.Module.InTheMiddleOfConflictedMerge() &&
+                !Settings.Module.InTheMiddleOfRebase() && !form.ErrorOccurred())
             {
                 ScriptManager.RunEventScripts(ScriptEvent.AfterPush);
                 if (_createPullRequestCB.Checked)
@@ -252,7 +252,7 @@ namespace GitUI
                     curBranch = HeadText;
             }
 
-            foreach (var head in GitCommandHelpers.GetHeads(false, true))
+            foreach (var head in Settings.Module.GetHeads(false, true))
                 Branch.Items.Add(head);
 
             Branch.Text = curBranch;
@@ -271,7 +271,7 @@ namespace GitUI
             if (!string.IsNullOrEmpty(Branch.Text))
                 RemoteBranch.Items.Add(Branch.Text);
 
-            foreach (var head in GitCommandHelpers.GetHeads(false, true))
+            foreach (var head in Settings.Module.GetHeads(false, true))
                 if (!RemoteBranch.Items.Contains(head))
                     RemoteBranch.Items.Add(head);
         }
@@ -344,7 +344,7 @@ namespace GitUI
 
 			EnableLoadSshButton();
 
-            var pushSettingValue = GitCommandHelpers.GetSetting("remote." + Remotes.Text + ".push");
+            var pushSettingValue = Settings.Module.GetSetting("remote." + Remotes.Text + ".push");
 
             if (PullFromRemote.Checked && !string.IsNullOrEmpty(pushSettingValue))
             {
@@ -378,7 +378,7 @@ namespace GitUI
 
         private void EnableLoadSshButton()
         {
-            LoadSSHKey.Visible = !string.IsNullOrEmpty(GitCommandHelpers.GetPuttyKeyFileForRemote(Remotes.Text));
+            LoadSSHKey.Visible = !string.IsNullOrEmpty(Settings.Module.GetPuttyKeyFileForRemote(Remotes.Text));
         }
 
         private void LoadSshKeyClick(object sender, EventArgs e)
@@ -386,7 +386,7 @@ namespace GitUI
             if (!File.Exists(Settings.Pageant))
                 MessageBox.Show(_cannotLoadPutty.Text, PuttyText);
             else
-                GitCommandHelpers.StartPageantForRemote(Remotes.Text);
+                Settings.Module.StartPageantForRemote(Remotes.Text);
         }
 
         private void RemotesValidated(object sender, EventArgs e)
@@ -397,7 +397,7 @@ namespace GitUI
         private void FillTagDropDown()
         {
             TagComboBox.DisplayMember = "Name";
-            var tags = GitCommandHelpers.GetHeads(true, false);
+            var tags = Settings.Module.GetHeads(true, false);
             TagComboBox.DataSource = tags;
         }
 
@@ -438,8 +438,8 @@ namespace GitUI
 			if (remote == "")
 				return;
 
-			List<GitHead> localHeads = GitCommandHelpers.GetHeads(false, true);
-			List<GitHead> remoteHeads = GitCommandHelpers.GetRemoteHeads(remote, false, true);
+			List<GitHead> localHeads = Settings.Module.GetHeads(false, true);
+			List<GitHead> remoteHeads = Settings.Module.GetRemoteHeads(remote, false, true);
 
 			// Add all the local branches.
 			foreach (var head in localHeads)

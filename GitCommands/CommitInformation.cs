@@ -18,11 +18,40 @@ namespace GitCommands
         /// <summary>
         /// Private constructor
         /// </summary>
-        private CommitInformation (string header, string body)
+        private CommitInformation(string header, string body)
         {
             Header = header;
             Body = body;
         }
+
+        /// <summary>
+        /// Private constructor
+        /// </summary>
+        private CommitInformation(string author, DateTimeOffset authorDate,
+            string committer, DateTimeOffset commitDate,
+            string guid, string body)
+        {
+            Author = author;
+            AuthorDate = authorDate;
+            Committer = committer;
+            CommitDate = commitDate;
+            Guid = guid;
+
+            var header = FillToLenght(Strings.GetAuthorText() + ":", COMMITHEADER_STRING_LENGTH) + author + "\n" +
+                 FillToLenght(Strings.GetAuthorDateText() + ":", COMMITHEADER_STRING_LENGTH) + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, authorDate.UtcDateTime) + " (" + authorDate.LocalDateTime.ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")\n" +
+                 FillToLenght(Strings.GetCommitterText() + ":", COMMITHEADER_STRING_LENGTH) + committer + "\n" +
+                 FillToLenght(Strings.GetCommitterDateText() + ":", COMMITHEADER_STRING_LENGTH) + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, commitDate.UtcDateTime) + " (" + commitDate.LocalDateTime.ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")\n" +
+                 FillToLenght(Strings.GetCommitHashText() + ":", COMMITHEADER_STRING_LENGTH) + guid;
+
+            Header = RemoveRedundancies(header);
+            Body = body;
+        }
+
+        public string Author { get; private set; }
+        public DateTimeOffset AuthorDate { get; private set; }
+        public string Committer { get; private set; }
+        public DateTimeOffset CommitDate { get; private set; }
+        public string Guid { get; private set; }
 
         public string Header {get; private set;}
         public string Body{get; private set;}
@@ -45,7 +74,7 @@ namespace GitCommands
                 args = "-r "+args;
             else if (!getLocal)
                 return new string[]{};
-            string info = GitCommandHelpers.RunCmd(Settings.GitCommand, "branch "+args);
+            string info = Settings.Module.RunGitCmd("branch " + args);
             if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
                 return new List<string>();
 
@@ -73,7 +102,7 @@ namespace GitCommands
         /// <returns></returns>
         public static IEnumerable<string> GetAllTagsWhichContainGivenCommit(string sha1)
         {
-            string info = GitCommandHelpers.RunCmd(Settings.GitCommand, "tag --contains " + sha1);
+            string info = Settings.Module.RunGitCmd("tag --contains " + sha1);
 
 
             if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
@@ -89,8 +118,36 @@ namespace GitCommands
         public static CommitInformation GetCommitInfo(string sha1)
         {
             //Do not cache this command, since notes can be added
-            string info = GitCommandHelpers.RunCmd(
-                Settings.GitCommand,
+            string info = Settings.Module.RunGitCmd(
+                string.Format(
+                    "log -1 --pretty=raw --show-notes=* {0}", sha1));
+
+            if (info.Trim().StartsWith("fatal"))
+                return new CommitInformation("Cannot find commit" + sha1, "");
+
+            info = RemoveRedundancies(info);
+
+            int index = info.IndexOf(sha1) + sha1.Length;
+
+            if (index < 0)
+                return new CommitInformation("Cannot find commit" + sha1, "");
+            if (index >= info.Length)
+                return new CommitInformation(info, "");
+
+            CommitInformation commitInformation = CreateFromRawData(info);
+
+            return commitInformation;
+        }
+
+        /// <summary>
+        /// Gets the commit info for submodule.
+        /// </summary>
+        /// <param name="sha1">The sha1.</param>
+        /// <returns></returns>
+        public static CommitInformation GetCommitInfo(GitModule module, string sha1)
+        {
+            //Do not cache this command, since notes can be added
+            string info = module.RunGitCmd(
                 string.Format(
                     "log -1 --pretty=raw --show-notes=* {0}", sha1));
 
@@ -154,19 +211,12 @@ namespace GitCommands
             //We need to recode the commit message because of a bug in Git.
             //We cannot let git recode the message to Settings.Encoding which is
             //needed to allow the "git log" to print the filename in Settings.Encoding
-            Encoding logoutputEncoding = GitCommandHelpers.GetLogoutputEncoding();
+            Encoding logoutputEncoding = Settings.Module.GetLogoutputEncoding();
             if (logoutputEncoding != Settings.Encoding)
                 body = logoutputEncoding.GetString(Settings.Encoding.GetBytes(body));
 
-            var header = FillToLenght(Strings.GetAuthorText() + ":", COMMITHEADER_STRING_LENGTH) + author + "\n" +
-                         FillToLenght(Strings.GetAuthorDateText() + ":", COMMITHEADER_STRING_LENGTH) + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, authorDate.UtcDateTime) + " (" + authorDate.LocalDateTime.ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")\n" +
-                         FillToLenght(Strings.GetCommitterText() + ":", COMMITHEADER_STRING_LENGTH) + committer + "\n" +
-                         FillToLenght(Strings.GetCommitterDateText() + ":", COMMITHEADER_STRING_LENGTH) + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, commitDate.UtcDateTime) + " (" + commitDate.LocalDateTime.ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")\n" +
-                         FillToLenght(Strings.GetCommitHashText() + ":", COMMITHEADER_STRING_LENGTH) + guid;
-
-            header = RemoveRedundancies(header);
-
-            var commitInformation = new CommitInformation(header, body);
+            var commitInformation = new CommitInformation(author, authorDate,
+                committer, commitDate, guid, body);
 
             return commitInformation;
         }

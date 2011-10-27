@@ -14,7 +14,7 @@ namespace GitUI
 
         private void Initialize()
         {
-            bool inTheMiddleOfBisect = GitCommandHelpers.InTheMiddleOfBisect();
+            bool inTheMiddleOfBisect = Settings.Module.InTheMiddleOfBisect();
             Start.Enabled = !inTheMiddleOfBisect;
             Good.Enabled = inTheMiddleOfBisect;
             Bad.Enabled = inTheMiddleOfBisect;

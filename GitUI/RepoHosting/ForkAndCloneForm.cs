@@ -279,7 +279,7 @@ namespace GitUI.RepoHosting
 
             if (_addRemoteAsTB.Text.Trim().Length > 0)
             {
-                var error = GitCommandHelpers.AddRemote(_addRemoteAsTB.Text.Trim(), repo.ParentReadOnlyUrl);
+                var error = Settings.Module.AddRemote(_addRemoteAsTB.Text.Trim(), repo.ParentReadOnlyUrl);
                 if (!string.IsNullOrEmpty(error))
                     MessageBox.Show(this, error, _strCouldNotAddRemote.Text);
             }

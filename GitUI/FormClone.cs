@@ -45,12 +45,12 @@ namespace GitUI
             if (url != null)
             {
                 _NO_TRANSLATE_From.Text = url;
-                if (!Settings.ValidWorkingDir())
+                if (!Settings.Module.ValidWorkingDir())
                     _NO_TRANSLATE_To.Text = Settings.WorkingDir;
             }
             else
             {
-                if (Settings.ValidWorkingDir())
+                if (Settings.Module.ValidWorkingDir())
                     _NO_TRANSLATE_From.Text = Settings.WorkingDir;
                 else
                     _NO_TRANSLATE_To.Text = Settings.WorkingDir;
@@ -75,12 +75,12 @@ namespace GitUI
 
                 var fromProcess =
                     new FormRemoteProcess(Settings.GitCommand,
-                                    GitCommandHelpers.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
+                                    GitModule.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
                                                                      CentralRepository.Checked, Branches.Text, null));
                 fromProcess.SetUrlTryingToConnect(_NO_TRANSLATE_From.Text);
                 fromProcess.ShowDialog();
 
-                if (fromProcess.ErrorOccurred() || GitCommandHelpers.InTheMiddleOfPatch())
+                if (fromProcess.ErrorOccurred() || Settings.Module.InTheMiddleOfPatch())
                     return;
 
                 if (ShowInTaskbar == false && AskIfNewRepositoryShouldBeOpened(dirTo))
@@ -269,7 +269,7 @@ namespace GitUI
         private void Branches_DropDown(object sender, EventArgs e)
         {
             Branches.DisplayMember = "LocalName";
-            Branches.DataSource = GitCommandHelpers.GetRemoteHeads(_NO_TRANSLATE_From.Text, false, true);
+            Branches.DataSource = Settings.Module.GetRemoteHeads(_NO_TRANSLATE_From.Text, false, true);
         }
     }
 }
