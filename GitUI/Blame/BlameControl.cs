@@ -162,7 +162,7 @@ namespace GitUI.Blame
             var blameFile = new StringBuilder();
             _revGrid = revGrid;
 
-            _blame = GitCommandHelpers.Blame(fileName, guid);
+            _blame = Settings.Module.Blame(fileName, guid);
 
             for (int i = 0; i < _blame.Lines.Count; i++)
             {

@@ -59,7 +59,7 @@ namespace GitUI
             var realWorkingDir = Settings.WorkingDir;
             Settings.WorkingDir = Directory.Text;
 
-            var heads = GitCommandHelpers.GetHeads(false);
+            var heads = Settings.Module.GetHeads(false);
 
             heads.Insert(0, GitHead.NoHead);
 

@@ -29,8 +29,8 @@ namespace GitUI
 
             if (GitCommands.Settings.DashboardShowCurrentBranch)
             {
-                if (!GitCommands.GitCommandHelpers.IsBareRepository(repository.Path))
-                    branchName = GitCommands.GitCommandHelpers.GetSelectedBranchFast(repository.Path);
+                if (!GitCommands.GitModule.IsBareRepository(repository.Path))
+                    branchName = GitCommands.GitModule.GetSelectedBranchFast(repository.Path);
             }
 
             Initialize(icon, repository.Path, repository.Title, repository.Description, branchName);

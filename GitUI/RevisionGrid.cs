@@ -521,10 +521,10 @@ namespace GitUI
             if (Revisions.SelectedRows.Count > 0)
                 LastRow = Revisions.SelectedRows[0].Index;
 
-            SelecctionTimer.Enabled = false;
-            SelecctionTimer.Stop();
-            SelecctionTimer.Enabled = true;
-            SelecctionTimer.Start();
+            SelectionTimer.Enabled = false;
+            SelectionTimer.Stop();
+            SelectionTimer.Enabled = true;
+            SelectionTimer.Start();
         }
 
         public List<GitRevision> GetRevisions()
@@ -551,7 +551,7 @@ namespace GitUI
                 /* Committer Date */ "%ci%n" +
                 /* Commit Message */ "%s";
             string cmd = "log -n 1 --pretty=format:" + formatString + " " + CurrentCheckout;
-            var RevInfo = GitCommandHelpers.RunCmd(Settings.GitCommand, cmd);
+            var RevInfo = Settings.Module.RunGitCmd(cmd);
             string[] Infos = RevInfo.Split('\n');
             var Revision = new GitRevision(CurrentCheckout)
             {
@@ -565,7 +565,7 @@ namespace GitUI
             Revision.AuthorDate = date;
             DateTime.TryParse(Infos[4], out date);
             Revision.CommitDate = date;
-            List<GitHead> heads = GitCommandHelpers.GetHeads(true, true);
+            List<GitHead> heads = Settings.Module.GetHeads(true, true);
             foreach (GitHead head in heads)
             {
                 if (head.Guid.Equals(Revision.Guid))
@@ -684,7 +684,7 @@ namespace GitUI
 
                 DisposeRevisionGraphCommand();
 
-                var newCurrentCheckout = GitCommandHelpers.GetCurrentCheckout();
+                var newCurrentCheckout = Settings.Module.GetCurrentCheckout();
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
@@ -703,7 +703,7 @@ namespace GitUI
                 Revisions.Clear();
                 Error.Visible = false;
 
-                if (!Settings.ValidWorkingDir())
+                if (!Settings.Module.ValidWorkingDir())
                 {
                     Revisions.Visible = false;
                     NoCommits.Visible = true;
@@ -905,10 +905,10 @@ namespace GitUI
                 return;
 
             _initialLoad = false;
-            SelecctionTimer.Enabled = false;
-            SelecctionTimer.Stop();
-            SelecctionTimer.Enabled = true;
-            SelecctionTimer.Start();
+            SelectionTimer.Enabled = false;
+            SelectionTimer.Stop();
+            SelectionTimer.Enabled = true;
+            SelectionTimer.Start();
         }
 
         private void RevisionsCellPainting(object sender, DataGridViewCellPaintingEventArgs e)
@@ -1308,10 +1308,10 @@ namespace GitUI
                 GitUICommands.Instance.StartCompareRevisionsDialog();
         }
 
-        private void SelecctionTimerTick(object sender, EventArgs e)
+        private void SelectionTimerTick(object sender, EventArgs e)
         {
-            SelecctionTimer.Enabled = false;
-            SelecctionTimer.Stop();
+            SelectionTimer.Enabled = false;
+            SelectionTimer.Stop();
             if (SelectionChanged != null)
                 SelectionChanged(this, e);
         }
@@ -1475,7 +1475,7 @@ namespace GitUI
             if (Revisions.RowCount < LastRow || LastRow < 0 || Revisions.RowCount == 0)
                 return;
 
-            var inTheMiddleOfBisect = GitCommandHelpers.InTheMiddleOfBisect();
+            var inTheMiddleOfBisect = Settings.Module.InTheMiddleOfBisect();
             markRevisionAsBadToolStripMenuItem.Visible = inTheMiddleOfBisect;
             markRevisionAsGoodToolStripMenuItem.Visible = inTheMiddleOfBisect;
             stopBisectToolStripMenuItem.Visible = inTheMiddleOfBisect;
@@ -1759,9 +1759,9 @@ namespace GitUI
                     bool stagedChanges = false;
                     //Only check for tracked files. This usually makes more sense and it performs a lot
                     //better then checking for untrackd files.
-                    if (GitCommandHelpers.GetTrackedChangedFiles().Count > 0)
+                    if (Settings.Module.GetTrackedChangedFiles().Count > 0)
                         uncommittedChanges = true;
-                    if (GitCommandHelpers.GetStagedFiles().Count > 0)
+                    if (Settings.Module.GetStagedFiles().Count > 0)
                         stagedChanges = true;
 
                     if (uncommittedChanges)

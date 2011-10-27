@@ -231,7 +231,7 @@ namespace GitUI
             var currenItem = CurrentItem;
             if (currenItem == null)
                 return;
-            new FormEdit(GitCommandHelpers.ShowSha1(currenItem.Hash)).ShowDialog();
+            new FormEdit(Settings.Module.ShowSha1(currenItem.Hash)).ShowDialog();
         }
 
         private int CreateLostFoundTags()
@@ -252,7 +252,7 @@ namespace GitUI
             foreach (var lostObject in selectedLostObjects)
             {
                 currentTag++;
-                GitCommandHelpers.Tag(RestoredObjectsTagPrefix + currentTag, lostObject.Hash, false);
+                Settings.Module.Tag(RestoredObjectsTagPrefix + currentTag, lostObject.Hash, false);
             }
 
             return currentTag;
@@ -260,10 +260,10 @@ namespace GitUI
 
         private static void DeleteLostFoundTags()
         {
-            foreach (var head in GitCommandHelpers.GetHeads(true, false))
+            foreach (var head in Settings.Module.GetHeads(true, false))
             {
                 if (head.Name.StartsWith(RestoredObjectsTagPrefix))
-                    GitCommandHelpers.DeleteTag(head.Name);
+                    Settings.Module.DeleteTag(head.Name);
             }
         }
 

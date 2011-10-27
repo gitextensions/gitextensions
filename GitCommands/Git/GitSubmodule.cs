@@ -12,7 +12,7 @@ namespace GitCommands
         {
             get
             {
-                return GitCommandHelpers.GetSubmoduleRemotePath(Name);
+                return Settings.Module.GetSubmoduleRemotePath(Name);
             }
             set
             {
@@ -22,7 +22,7 @@ namespace GitCommands
         {
             get
             {
-                return GitCommandHelpers.GetSubmoduleLocalPath(Name);
+                return Settings.Module.GetSubmoduleLocalPath(Name);
             }
             set
             {

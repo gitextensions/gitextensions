@@ -78,7 +78,7 @@ namespace GitUI
         private void FormGitIgnoreLoad(object sender, EventArgs e)
         {
             RestorePosition("edit-git-ignore");
-            if (!Settings.IsBareRepository()) return;
+            if (!Settings.Module.IsBareRepository()) return;
             MessageBox.Show(_gitignoreOnlyInWorkingDirSupported.Text);
             Close();
         }

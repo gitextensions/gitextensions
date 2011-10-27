@@ -45,15 +45,15 @@ namespace GitUI
 
         private void EnableButtons()
         {
-            if (GitCommandHelpers.InTheMiddleOfPatch())
+            if (Settings.Module.InTheMiddleOfPatch())
             {
                 Apply.Enabled = false;
                 IgnoreWhitespace.Enabled = false;
                 PatchFileMode.Enabled = false;
                 PatchDirMode.Enabled = false;
                 AddFiles.Enabled = true;
-                Resolved.Enabled = !GitCommandHelpers.InTheMiddleOfConflictedMerge();
-                Mergetool.Enabled = GitCommandHelpers.InTheMiddleOfConflictedMerge();
+                Resolved.Enabled = !Settings.Module.InTheMiddleOfConflictedMerge();
+                Mergetool.Enabled = Settings.Module.InTheMiddleOfConflictedMerge();
                 Skip.Enabled = true;
                 Abort.Enabled = true;
 
@@ -86,14 +86,14 @@ namespace GitUI
 
             patchGrid1.Initialize();
 
-            SolveMergeconflicts.Visible = GitCommandHelpers.InTheMiddleOfConflictedMerge();
+            SolveMergeconflicts.Visible = Settings.Module.InTheMiddleOfConflictedMerge();
 
             Resolved.Text = _conflictResolvedText.Text;
             Mergetool.Text = _conflictMergetoolText.Text;
             ContinuePanel.BackColor = Color.Transparent;
             MergeToolPanel.BackColor = Color.Transparent;
 
-            if (GitCommandHelpers.InTheMiddleOfConflictedMerge())
+            if (Settings.Module.InTheMiddleOfConflictedMerge())
             {
                 Mergetool.Text = _conflictMergetoolText2.Text;
                 Mergetool.Focus();
@@ -101,7 +101,7 @@ namespace GitUI
                 MergeToolPanel.BackColor = Color.Black;
             }
             else
-                if (GitCommandHelpers.InTheMiddleOfPatch())
+                if (Settings.Module.InTheMiddleOfPatch())
                 {
                     Resolved.Text = _conflictResolvedText2.Text;
                     Resolved.Focus();
@@ -157,7 +157,7 @@ namespace GitUI
 
             EnableButtons();
 
-            if (!GitCommandHelpers.InTheMiddleOfConflictedMerge() && !GitCommandHelpers.InTheMiddleOfRebase() && !GitCommandHelpers.InTheMiddleOfPatch())
+            if (!Settings.Module.InTheMiddleOfConflictedMerge() && !Settings.Module.InTheMiddleOfRebase() && !Settings.Module.InTheMiddleOfPatch())
                 Close();
             Cursor.Current = Cursors.Default;
         }

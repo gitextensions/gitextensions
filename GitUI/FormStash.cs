@@ -49,7 +49,7 @@ namespace GitUI
 
         private void Initialize()
         {
-            IList<GitStash> stashedItems = GitCommandHelpers.GetStashes();
+            IList<GitStash> stashedItems = Settings.Module.GetStashes();
 
             currentWorkingDirStashItem = new GitStash();
             currentWorkingDirStashItem.Name = currentWorkingDirChanges.Text;
@@ -90,7 +90,7 @@ namespace GitUI
                 ThreadPool.QueueUserWorkItem(
                 o =>
                 {
-                    IList<GitItemStatus> gitItemStatuses = GitCommandHelpers.GetAllChangedFiles();
+                    IList<GitItemStatus> gitItemStatuses = Settings.Module.GetAllChangedFiles();
                     _syncContext.Post(state1 => LoadGitItemStatuses(gitItemStatuses), null);
                 });
             }
@@ -99,7 +99,7 @@ namespace GitUI
                 ThreadPool.QueueUserWorkItem(
                 o =>
                 {
-                    IList<GitItemStatus> gitItemStatuses = GitCommandHelpers.GetDiffFiles(gitStash.Name, gitStash.Name + "^", true);
+                    IList<GitItemStatus> gitItemStatuses = Settings.Module.GetDiffFiles(gitStash.Name, gitStash.Name + "^", true);
                     _syncContext.Post(state1 => LoadGitItemStatuses(gitItemStatuses), null);
                 });
             }
@@ -130,7 +130,7 @@ namespace GitUI
                 string extraDiffArguments = View.GetExtraDiffArguments();
                 View.ViewPatch(() =>
                 {
-                    PatchApply.Patch patch = GitCommandHelpers.GetSingleDiff(gitStash.Name, gitStash.Name + "^", stashedItem.Name, stashedItem.OldName, extraDiffArguments);
+                    PatchApply.Patch patch = Settings.Module.GetSingleDiff(gitStash.Name, gitStash.Name + "^", stashedItem.Name, stashedItem.OldName, extraDiffArguments);
                     if (patch == null)
                         return String.Empty;
                     return patch.Text;

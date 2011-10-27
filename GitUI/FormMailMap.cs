@@ -56,7 +56,7 @@ namespace GitUI
         private void FormMailMapLoad(object sender, EventArgs e)
         {
             RestorePosition("edit-mail-map");
-            if (!Settings.IsBareRepository()) return;
+            if (!Settings.Module.IsBareRepository()) return;
             MessageBox.Show(".mailmap is only supported when there is a working dir.");
             Close();
         }

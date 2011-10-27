@@ -46,7 +46,7 @@ namespace GitUI
         private void FormFormatPath_Load(object sender, EventArgs e)
         {
             OutputPath.Text = Settings.LastFormatPatchDir;
-            string selectedHead = GitCommandHelpers.GetSelectedBranch();
+            string selectedHead = Settings.Module.GetSelectedBranch();
             SelectedBranch.Text = _currentBranchText.Text + " " + selectedHead;
 
             SaveToDir_CheckedChanged(null, null);
@@ -90,7 +90,7 @@ namespace GitUI
 
             if (!SaveToDir.Checked)
             {
-                savePatchesToDir = Settings.WorkingDirGitDir() + "\\PatchesToMail";
+                savePatchesToDir = Settings.Module.WorkingDirGitDir() + "\\PatchesToMail";
                 if (Directory.Exists(savePatchesToDir))
                 {
                     foreach (string file in Directory.GetFiles(savePatchesToDir, "*.patch"))
@@ -112,14 +112,14 @@ namespace GitUI
                 {
                     rev1 = RevisionGrid.GetRevisions()[0].ParentGuids[0];
                     rev2 = RevisionGrid.GetRevisions()[0].Guid;
-                    result = GitCommandHelpers.FormatPatch(rev1, rev2, savePatchesToDir);
+                    result = Settings.Module.FormatPatch(rev1, rev2, savePatchesToDir);
                 }
 
                 if (RevisionGrid.GetRevisions().Count == 2)
                 {
                     rev1 = RevisionGrid.GetRevisions()[0].ParentGuids[0];
                     rev2 = RevisionGrid.GetRevisions()[1].Guid;
-                    result = GitCommandHelpers.FormatPatch(rev1, rev2, savePatchesToDir);
+                    result = Settings.Module.FormatPatch(rev1, rev2, savePatchesToDir);
                 }
 
                 if (RevisionGrid.GetRevisions().Count > 2)
@@ -130,7 +130,7 @@ namespace GitUI
                         n++;
                         rev1 = revision.ParentGuids[0];
                         rev2 = revision.Guid;
-                        result += GitCommandHelpers.FormatPatch(rev1, rev2, savePatchesToDir, n);
+                        result += Settings.Module.FormatPatch(rev1, rev2, savePatchesToDir, n);
                     }
                 }
             }
@@ -165,10 +165,10 @@ namespace GitUI
         {
             try
             {
-                string from = GitCommandHelpers.GetSetting("user.email");
+                string from = Settings.Module.GetSetting("user.email");
 
                 if (string.IsNullOrEmpty(from))
-                    from = GitCommandHelpers.GetGlobalSetting("user.email");
+                    from = Settings.Module.GetGlobalSetting("user.email");
 
                 if (string.IsNullOrEmpty(from))
                     MessageBox.Show(_noGitMailConfigured.Text);
