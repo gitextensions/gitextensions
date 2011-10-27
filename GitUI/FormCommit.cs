@@ -10,10 +10,10 @@ using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
-using ResourceManager.Translation;
-using PatchApply;
 using GitUI.Hotkey;
 using GitUI.Script;
+using PatchApply;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
@@ -132,7 +132,7 @@ namespace GitUI
             closeDialogAfterEachCommitToolStripMenuItem.Checked = Settings.CloseCommitDialogAfterCommit;
             closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked = Settings.CloseCommitDialogAfterLastCommit;
             refreshDialogOnFormFocusToolStripMenuItem.Checked = Settings.RefreshCommitDialogOnFormFocus;
-			
+            
             Unstaged.SetNoFilesText(_noUnstagedChanges.Text);
             Staged.SetNoFilesText(_noStagedChanges.Text);
             Message.SetEmptyMessage(_enterCommitMessageHint.Text);
