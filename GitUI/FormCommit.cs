@@ -99,6 +99,7 @@ namespace GitUI
         private readonly TranslationString _formTitle = new TranslationString("Commit to {0} ({1})");
 
 		private readonly TranslationString _selectionFilterToolTip = new TranslationString("Enter a regular expression to select unstaged files.");
+		private readonly TranslationString _selectionFilterErrorToolTip = new TranslationString("Error {0}");
 
 
         #endregion
@@ -1352,7 +1353,7 @@ namespace GitUI
 				    	}
 				    	catch (ArgumentException ae)
 				    	{
-				    		selectionFilter.ToolTipText = string.Format("Error: {0}", ae.Message);
+				    		selectionFilter.ToolTipText = string.Format(_selectionFilterErrorToolTip.Text, ae.Message);
 				    	}
 
 						if (selectionCount > 0)
