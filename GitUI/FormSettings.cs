@@ -10,10 +10,10 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitUI.Editor;
+using GitUI.Script;
 using Gravatar;
 using Microsoft.Win32;
 using ResourceManager.Translation;
-using GitUI.Script;
 
 namespace GitUI
 {

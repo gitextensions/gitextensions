@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
-using System.IO;
 using System.Security.Permissions;
 using System.Text;
-using System.Windows.Forms;
 using GitCommands.Config;
-using PatchApply;
 
 namespace GitCommands
 {
