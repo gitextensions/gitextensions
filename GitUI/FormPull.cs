@@ -16,6 +16,14 @@ namespace GitUI
     {
         private const string PuttyCaption = "PuTTY";
 
+        private readonly TranslationString _areYouSureYouWantToRebaseMerge =
+            new TranslationString("The current commit is a merge." + Environment.NewLine +
+                                  //"." + Environment.NewLine +
+                                  "Are you sure you want to rebase this merge?");
+
+        private readonly TranslationString _areYouSureYouWantToRebaseMergeCaption =
+                        new TranslationString("Rebase merge commit?");
+
         private readonly TranslationString _allMergeConflictSolvedQuestion =
             new TranslationString("Are all merge conflicts solved? Do you want to commit?");
 
@@ -176,6 +184,12 @@ namespace GitUI
                 Settings.PullMerge = "fetch";
 
             Settings.AutoStash = AutoStash.Checked;
+
+            if (Rebase.Checked && GitCommandHelpers.IsMergeCommit("HEAD"))
+            {
+                if (MessageBox.Show(_areYouSureYouWantToRebaseMerge.Text, _areYouSureYouWantToRebaseMergeCaption.Text, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                    return false;
+            }
 
             Repositories.RepositoryHistory.AddMostRecentRepository(PullSource.Text);
 
