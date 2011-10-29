@@ -1,10 +1,17 @@
 ﻿using System;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormRevertCommitSmall : GitExtensionsForm
     {
+        readonly TranslationString commitInfo = new TranslationString("Commit: {0}");
+        readonly TranslationString authorInfo = new TranslationString("Author: {0}");
+        readonly TranslationString dateInfo = new TranslationString("Commit date: {0}");
+        readonly TranslationString commitMessage = new TranslationString("Message: {0}");
+
+
         public FormRevertCommitSmall(GitRevision Revision)
         {
             this.Revision = Revision;
@@ -16,10 +23,10 @@ namespace GitUI
 
         private void FormRevertCommitSmall_Load(object sender, EventArgs e)
         {
-            Commit.Text = string.Format(Commit.Text, Revision.Guid);
-            Author.Text = string.Format(Author.Text, Revision.Author);
-            Date.Text = string.Format(Date.Text, Revision.CommitDate);
-            Message.Text = string.Format(Message.Text, Revision.Message);
+            Commit.Text = string.Format(commitInfo.Text, Revision.Guid);
+            Author.Text = string.Format(authorInfo.Text, Revision.Author);
+            Date.Text = string.Format(dateInfo.Text, Revision.CommitDate);
+            Message.Text = string.Format(commitMessage.Text, Revision.Message);
         }
 
         private void Revert_Click(object sender, EventArgs e)
