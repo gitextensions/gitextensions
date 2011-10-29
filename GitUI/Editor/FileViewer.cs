@@ -6,7 +6,6 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using ICSharpCode.TextEditor.Util;
-using PatchApply;
 using GitUI.Hotkey;
 
 namespace GitUI.Editor

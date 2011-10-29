@@ -14,6 +14,7 @@ using ResourceManager.Translation;
 using PatchApply;
 using GitUI.Hotkey;
 using GitUI.Script;
+using Timer = System.Windows.Forms.Timer;
 
 namespace GitUI
 {
@@ -96,6 +97,9 @@ namespace GitUI
         private readonly TranslationString _resetSelectedLinesConfirmation = new TranslationString("Are you sure you want to reset the changes to the selected lines?");
 
         private readonly TranslationString _formTitle = new TranslationString("Commit to {0} ({1})");
+
+		private readonly TranslationString _selectionFilterToolTip = new TranslationString("Enter a regular expression to select unstaged files.");
+		private readonly TranslationString _selectionFilterErrorToolTip = new TranslationString("Error {0}");
 
 
         #endregion
@@ -523,7 +527,7 @@ namespace GitUI
 
         private void UntrackedSelectionChanged(object sender, EventArgs e)
         {
-            ClearDiffViewIfNoFilesLeft();
+			ClearDiffViewIfNoFilesLeft();
 
             if (Unstaged.SelectedItems.Count == 0)
                 return;
@@ -1340,6 +1344,73 @@ namespace GitUI
             toolAuthorLabelItem.Enabled = toolAuthorLabelItem.Checked = false;
         }
 
+		private long lastUserInputTime;
+		private void FilterChanged(object sender, EventArgs e)
+		{
+			var currentTime = DateTime.Now.Ticks;
+			if (lastUserInputTime == 0)
+			{
+				long timerLastChanged = currentTime;
+				var timer = new Timer { Interval = 250 };
+				timer.Tick += (s, a) =>
+				{
+				    if (NoUserInput(timerLastChanged))
+				    {
+				    	var selectionCount = 0;
+				    	try
+				    	{
+				    		selectionCount = Unstaged.SetSelectionFilter(selectionFilter.Text);
+				    		selectionFilter.ToolTipText = _selectionFilterToolTip.Text;
+				    	}
+				    	catch (ArgumentException ae)
+				    	{
+				    		selectionFilter.ToolTipText = string.Format(_selectionFilterErrorToolTip.Text, ae.Message);
+				    	}
+
+						if (selectionCount > 0)
+						{
+							AddToSelectionFilter(selectionFilter.Text);
+						}
+
+						timer.Stop();
+				        lastUserInputTime = 0;
+					}
+					timerLastChanged = lastUserInputTime;
+				};
+
+				timer.Start();
+			}
+
+			lastUserInputTime = currentTime;
+		}
+
+    	private bool NoUserInput(long timerLastChanged)
+    	{
+    		return timerLastChanged == lastUserInputTime;
+    	}
+
+    	private void AddToSelectionFilter(string filter)
+    	{
+    		if (!selectionFilter.Items.Cast<string>().Any(candiate  => candiate == filter))
+    		{
+    			const int SelectionFilterMaxLength = 10;
+				if (selectionFilter.Items.Count == SelectionFilterMaxLength)
+				{
+					selectionFilter.Items.RemoveAt(SelectionFilterMaxLength - 1);
+				}
+    			selectionFilter.Items.Insert(0, filter);
+    		}
+    	}
+
+    	private void FilterIndexChanged(object sender, EventArgs e)
+		{
+			Unstaged.SetSelectionFilter(selectionFilter.Text);
+		}
+
+    	private void ToogleShowSelectionFilter(object sender, EventArgs e)
+		{
+			toolbarSelectionFilter.Visible = selectionFilterToolStripMenuItem.Checked;
+		}
     }
 
     /// <summary>
