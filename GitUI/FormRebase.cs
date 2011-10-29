@@ -128,7 +128,7 @@ namespace GitUI
         private void ResolvedClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommandHelpers.ContinueRebaseCmd()).ShowDialog();
+            new FormProcess(GitCommandHelpers.ContinueRebaseCmd(), PerFormSettingsName()+"Resolved").ShowDialog();
 
             if (!GitCommandHelpers.InTheMiddleOfRebase())
                 Close();
@@ -141,7 +141,7 @@ namespace GitUI
         private void SkipClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommandHelpers.SkipRebaseCmd()).ShowDialog();
+            new FormProcess(GitCommandHelpers.SkipRebaseCmd(), PerFormSettingsName()+"Skip").ShowDialog();
 
             if (!GitCommandHelpers.InTheMiddleOfRebase())
                 Close();
@@ -154,7 +154,7 @@ namespace GitUI
         private void AbortClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommandHelpers.AbortRebaseCmd()).ShowDialog();
+            new FormProcess(GitCommandHelpers.AbortRebaseCmd(), PerFormSettingsName()+"Abort").ShowDialog();
 
             if (!GitCommandHelpers.InTheMiddleOfRebase())
                 Close();
@@ -173,7 +173,7 @@ namespace GitUI
                 return;
             }
 
-            var form = new FormProcess(GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked, chkAutosquash.Checked));
+            var form = new FormProcess(GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked, chkAutosquash.Checked), PerFormSettingsName());
             form.ShowDialog();
             if (form.OutputString.ToString().Trim() == "Current branch a is up to date.")
                 MessageBox.Show(_branchUpToDateText.Text, _branchUpToDateCaption.Text);

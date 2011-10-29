@@ -1117,6 +1117,7 @@
     <Compile Include="Script\SplitButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ControlExtensions.cs" />
     <None Include="gituikey.snk.pfx" />
     <None Include="Properties\DataSources\GitCommands.GitItem.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitItemStatus.datasource" />

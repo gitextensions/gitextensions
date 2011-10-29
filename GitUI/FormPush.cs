@@ -184,7 +184,7 @@ namespace GitUI
 
             ScriptManager.RunEventScripts(ScriptEvent.BeforePush);
 
-            var form = new FormRemoteProcess(pushCmd)
+            var form = new FormRemoteProcess(pushCmd, PerFormSettingsName())
                        {
                            Remote = remote,
                            Text = string.Format(_pushToCaption.Text, destination),

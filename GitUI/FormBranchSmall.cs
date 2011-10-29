@@ -30,7 +30,7 @@ namespace GitUI
                 }
                 var branchCmd = GitCommandHelpers.BranchCmd(BranchNameTextBox.Text, Revision.Guid,
                                                                   CheckoutAfterCreate.Checked);
-                using (var formProcess = new FormProcess(branchCmd))
+                using (var formProcess = new FormProcess(branchCmd, PerFormSettingsName()))
                 {
                     formProcess.ShowDialog();
                 }

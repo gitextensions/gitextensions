@@ -252,7 +252,7 @@ namespace GitUI.RepoHosting
             var localBranchName = string.Format("pr/n{0}_{1}", _currentPullRequestInfo.Id, _currentPullRequestInfo.Owner);
 
             var cmd = string.Format("fetch --no-tags --progress {0} {1}:{2}", _currentPullRequestInfo.HeadRepo.CloneReadOnlyUrl, _currentPullRequestInfo.HeadRef, localBranchName);
-            var formProcess = new FormProcess(Settings.GitCommand, cmd);
+            var formProcess = new FormProcess(Settings.GitCommand, cmd, PerFormSettingsName());
             formProcess.ShowDialog();
 
             if (formProcess.ErrorOccurred())

@@ -5,6 +5,13 @@ namespace GitUI
 {
     public partial class FormBisect : GitExtensionsForm
     {
+        static FormBisect()
+        {
+            bool? cpd = Settings.GetCloseProcessDialog(FormSettingsName());
+            if (!cpd.HasValue)
+                Settings.SetCloseProcessDialog(FormSettingsName(), false);
+        }
+
         public FormBisect()
         {
             InitializeComponent();
@@ -23,28 +30,38 @@ namespace GitUI
 
         private void Start_Click(object sender, EventArgs e)
         {
-            new FormProcess(GitCommandHelpers.StartBisectCmd()).ShowDialog();
+            new FormProcess(GitCommandHelpers.StartBisectCmd(), PerFormSettingsName()).ShowDialog();
             Initialize();
         }
 
         private void Good_Click(object sender, EventArgs e)
         {
-            Settings.CloseProcessDialog = false;
-            new FormProcess(GitCommandHelpers.ContinueBisectCmd(true)).ShowDialog();
+            new FormProcess(GitCommandHelpers.ContinueBisectCmd(true), PerFormSettingsName()).ShowDialog();
             Close();
         }
 
         private void Bad_Click(object sender, EventArgs e)
         {
-            Settings.CloseProcessDialog = false;
-            new FormProcess(GitCommandHelpers.ContinueBisectCmd(false)).ShowDialog();
+            new FormProcess(GitCommandHelpers.ContinueBisectCmd(false), PerFormSettingsName()).ShowDialog();
             Close();
         }
 
         private void Stop_Click(object sender, EventArgs e)
         {
-            new FormProcess(GitCommandHelpers.StopBisectCmd()).ShowDialog();
+            new FormProcess(GitCommandHelpers.StopBisectCmd(), PerFormSettingsName()).ShowDialog();
             Close();
         }
+
+
+        public override string PerFormSettingsName()
+        {
+            return FormSettingsName();
+        }
+
+        public static string FormSettingsName()
+        {
+            return typeof(FormBisect).FullName;
+        }
+
     }
 }

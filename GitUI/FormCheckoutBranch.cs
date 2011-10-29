@@ -94,7 +94,7 @@ namespace GitUI
                 if (Force.Checked)
                     command += " --force";
                 command += " \"" + Branches.Text + "\"";
-                var form = new FormProcess(command);
+                var form = new FormProcess(command, PerFormSettingsName());
                 form.ShowDialog();
                 if (!form.ErrorOccurred())
                     Close();

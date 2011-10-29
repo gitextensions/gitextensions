@@ -11,19 +11,35 @@ namespace GitUI
         public delegate void ProcessStart(FormStatus form);
         public delegate void ProcessAbort(FormStatus form);
 
-        protected readonly SynchronizationContext syncContext;
-
-        public FormStatus()
+        private string _SettingsName;
+        public string SettingsName
         {
-            syncContext = SynchronizationContext.Current;
-
-            InitializeComponent();
-            Translate();
-            KeepDialogOpen.Checked = !GitCommands.Settings.CloseProcessDialog;
+            get { return _SettingsName; }
+            set
+            {
+                _SettingsName = value;
+                RefreshKeepDialogOpen();                
+            }
         }
 
-        public FormStatus(ProcessStart process, ProcessAbort abort)
+        protected readonly SynchronizationContext syncContext;
+
+        //constructor for VS designer
+        protected FormStatus()
+        {
+            syncContext = SynchronizationContext.Current;
+            InitializeComponent();            
+        }
+
+        public FormStatus(string ASettingsName)
             : this()
+        {
+            Translate();
+            SettingsName = ASettingsName;            
+        }
+
+        public FormStatus(ProcessStart process, ProcessAbort abort, string ASettingsName)
+            : this(ASettingsName)
         {
             ProcessCallback = process;
             AbortCallback = abort;
@@ -134,7 +150,7 @@ namespace GitUI
                 Visible = true;
             }
 
-            if (isSuccess && (showOnError || GitCommands.Settings.CloseProcessDialog))
+            if (isSuccess && (showOnError || GetCloseProcessDialog()))
             {
                 Close();
             }
@@ -177,7 +193,7 @@ namespace GitUI
 
             if (ProcessCallback == null)
             {
-                throw new InvalidOperationException("You can't load the form without a ProcessCallback");
+                throw new InvalidOperationException("You can't load the form without a ProcessCallback " + DesignMode);
             }
 
             if (AbortCallback == null)
@@ -226,9 +242,58 @@ namespace GitUI
             catch { }
         }
 
-        private void KeepDialogOpen_CheckedChanged(object sender, EventArgs e)
+        private bool GetCloseProcessDialog()
         {
-            GitCommands.Settings.CloseProcessDialog = !KeepDialogOpen.Checked;
+
+            bool? gcpd = GitCommands.Settings.GlobalCloseProcessDialog;
+            if (gcpd.HasValue)
+                return gcpd.Value;
+            else
+                if (string.IsNullOrEmpty(SettingsName))
+                    return false;
+                else
+                {
+                    bool? cpd = GitCommands.Settings.GetCloseProcessDialog(SettingsName);
+                    if (cpd.HasValue)
+                        return cpd.Value;
+                    else
+                        return false;
+                }
+        }
+
+        private void RefreshKeepDialogOpen()         
+        {
+            bool? gcpd = GitCommands.Settings.GlobalCloseProcessDialog; 
+            //if there is a value, program works in global mode
+            if (gcpd.HasValue)
+            {
+                KeepDialogOpen.Visible = true;
+                KeepDialogOpen.ThreeState = false;
+                KeepDialogOpen.Checked = !gcpd.Value;
+            }
+            else //if global value is unspecified program works in local mode
+                if (string.IsNullOrEmpty(SettingsName))
+                    KeepDialogOpen.Visible = false;
+                else
+                {
+                    bool? cpd = GitCommands.Settings.GetCloseProcessDialog(SettingsName);
+                    KeepDialogOpen.SetNullableChecked(!cpd);
+                    KeepDialogOpen.Visible = true;
+                }
+        }
+
+        private void KeepDialogOpen_CheckStateChanged(object sender, EventArgs e)
+        {
+            bool? gcpd = GitCommands.Settings.GlobalCloseProcessDialog;
+            if (gcpd.HasValue)
+            {
+                GitCommands.Settings.GlobalCloseProcessDialog = !KeepDialogOpen.Checked;
+            }
+            else if (!string.IsNullOrEmpty(SettingsName))
+            {
+                bool? cpd = !KeepDialogOpen.GetNullableChecked();
+                GitCommands.Settings.SetCloseProcessDialog(SettingsName, cpd);
+            }
         }
     }
 }

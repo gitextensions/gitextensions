@@ -73,7 +73,7 @@ namespace GitUI
             }
             if (CanExecute)
             {
-                new FormProcess(GitCommandHelpers.CherryPickCmd(Revision.Guid, AutoCommit.Checked, arguments)).ShowDialog();
+                new FormProcess(GitCommandHelpers.CherryPickCmd(Revision.Guid, AutoCommit.Checked, arguments), PerFormSettingsName()).ShowDialog();
                 MergeConflictHandler.HandleMergeConflicts();
                 Close();
             }            

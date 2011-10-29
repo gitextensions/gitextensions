@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using GitCommands.Logging;
 using GitCommands.Repository;
 using Microsoft.Win32;
+using System.Collections.Generic;
 
 namespace GitCommands
 {
@@ -20,6 +21,7 @@ namespace GitCommands
         public static readonly char PathSeparator = '\\';
         public static readonly char PathSeparatorWrong = '/';
 
+        private static Dictionary<String, object> byNameMap = new Dictionary<String, object>();
 
 
 
@@ -389,13 +391,22 @@ namespace GitCommands
             get { return SafeGet("showauthordate", true, ref _showAuthorDate); }
             set { SafeSet("showauthordate", value, ref _showAuthorDate); }
         }
-
-        private static bool? _closeProcessDialog;
-        public static bool CloseProcessDialog
+        
+        public static bool? GlobalCloseProcessDialog
         {
-            get { return SafeGet("closeprocessdialog", false, ref _closeProcessDialog); }
-            set { SafeSet("closeprocessdialog", value, ref _closeProcessDialog); }
+            get { return GetCloseProcessDialog(null); }
+            set { SetCloseProcessDialog(null, value); }
         }
+
+        public static bool? GetCloseProcessDialog(string name)
+        {
+            return GetBool(PrefixedName(name, "closeprocessdialog"), null);
+        }
+        public static void SetCloseProcessDialog(string name, bool? value)
+        {
+            SetBool(PrefixedName(name, "closeprocessdialog"), value);
+        }
+
 
         private static bool? _showCurrentBranchOnly;
         public static bool ShowCurrentBranchOnly
@@ -741,6 +752,13 @@ namespace GitCommands
         {
             try
             {
+                TransferVerDependentReg();
+            }
+            catch
+            { }
+
+            try
+            {
                 GitCommandHelpers.SetSsh(GetValue<string>("gitssh", null));
             }
             catch
@@ -846,50 +864,118 @@ namespace GitCommands
             SetValue(key, field.AsString());
         }
 
-        private static string VersionIndependentRegKey
+        private static RegistryKey _VersionIndependentRegKey;
+
+        private static RegistryKey VersionIndependentRegKey
         {
             get
             {
-                return string.Concat(Registry.CurrentUser, "\\Software\\GitExtensions\\GitExtensions");
-                //return Application.UserAppDataRegistry.Name.Replace("\\" + Application.ProductVersion, string.Empty);
+                if (_VersionIndependentRegKey == null)
+                    _VersionIndependentRegKey = Registry.CurrentUser.OpenSubKey("Software\\GitExtensions\\GitExtensions", true);
+                return _VersionIndependentRegKey;
             }
         }
 
         public static T GetValue<T>(string name, T defaultValue)
         {
-            T value = (T)Registry.GetValue(VersionIndependentRegKey, name, null);
+            T value = (T)VersionIndependentRegKey.GetValue(name, null);
 
             if (value != null)
                 return value;
-
-            /////////////////////////////////////////////////////////////////////////////////////
-            ///// BEGIN TEMPORARY CODE TO CONVERT OLD VERSION DEPENDENT REGISTRY TO NEW 
-            ///// VERSION INDEPENDENT REGISTRY KEY!
-            /////////////////////////////////////////////////////////////////////////////////////
-            value = (T)Registry.GetValue(VersionIndependentRegKey + "\\1.0.0.0", name, null);
-
-            if (value != null)
-            {
-                SetValue<T>(name, value);
-                return value;
-            }
-
-            if (defaultValue != null)
-            {
-                SetValue<T>(name, defaultValue);
-            }
-            /////////////////////////////////////////////////////////////////////////////////////
-            ///// END TEMPORARY CODE TO CONVERT OLD VERSION DEPENDENT REGISTRY TO NEW 
-            ///// VERSION INDEPENDENT REGISTRY KEY!
-            /////////////////////////////////////////////////////////////////////////////////////
-
+          
             return defaultValue;
+        }
+
+        //temporary code to transfer version dependent registry caused that there was no way to set value to null
+        //if there was the same named key in version dependent registry
+        private static void TransferVerDependentReg()
+        {
+            bool? transfered = GetBool("TransferedVerDependentReg", false);
+            if (!transfered.Value)
+            {
+                string r = Application.UserAppDataRegistry.Name.Replace(Application.ProductVersion, "1.0.0.0");
+                r = r.Substring(Registry.CurrentUser.Name.Length + 1, r.Length - Registry.CurrentUser.Name.Length - 1);
+                RegistryKey versionDependentRegKey = Registry.CurrentUser.OpenSubKey(r, true);
+                try
+                {
+                    foreach (string key in versionDependentRegKey.GetValueNames())
+                    {
+                        object val = versionDependentRegKey.GetValue(key);
+                        object independentVal = VersionIndependentRegKey.GetValue(key, null);
+                        if (independentVal == null)
+                            SetValue<object>(key, val);
+                    }
+                }
+                finally
+                {
+                    versionDependentRegKey.Close();
+                }
+                SetBool("TransferedVerDependentReg", true);
+            }
+            
         }
 
         public static void SetValue<T>(string name, T value)
         {
-            Registry.SetValue(VersionIndependentRegKey, name, value);
+            if (value == null)
+                VersionIndependentRegKey.DeleteValue(name);
+            else
+                VersionIndependentRegKey.SetValue(name, value);
         }
+
+        public static T GetByName<T>(string name, T defaultValue, Func<object, T> decode)
+        {
+            object o;
+            if (byNameMap.TryGetValue(name, out o))
+            {
+                if( o == null || o is T)
+                    return (T)o;
+                else
+                    throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
+            }
+            else
+            {
+                T result;
+                o = GetValue<object>(name, null);
+                if (o == null)
+                    result = defaultValue;
+                else
+                    result = decode(o);
+
+                byNameMap[name] = result;
+                return result;
+            }
+        }
+
+        public static void SetByName<T>(string name, T value, Func<T, object> encode)
+        {
+            object o;
+            if (byNameMap.TryGetValue(name, out o))
+                if (Object.Equals(o, value))
+                    return;
+            if (value == null)
+                o = null;
+            else
+                o = encode(value);
+            SetValue<object>(name, o);
+            byNameMap[name] = value;
+        }
+
+        public static bool? GetBool(string name, bool? defaultValue)
+        {
+            return GetByName<bool?>(name, defaultValue, x => x.ToString().Equals(bool.TrueString));
+        }
+
+        public static void SetBool(string name, bool? value)
+        {
+            SetByName<bool?>(name, value, (bool? b) => b.Value ? bool.TrueString : bool.FalseString);
+        }
+
+        public static string PrefixedName(string prefix, string name) 
+        {
+            return prefix == null ? name : prefix + '_' + name;
+        }
+
     }
 
     public static class FontParser

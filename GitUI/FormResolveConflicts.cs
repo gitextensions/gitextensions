@@ -734,7 +734,7 @@ namespace GitUI
                         form.Done(string.IsNullOrEmpty(output));
                     }
                 );
-            var process = new FormStatus(processStart, null) { Text = string.Format(stageFilename.Text, filename) };
+            var process = new FormStatus(processStart, null, "StageFiles") { Text = string.Format(stageFilename.Text, filename) };
             process.ShowDialogOnError();
         }
 

@@ -603,7 +603,7 @@ namespace GitUI
 
                 ScriptManager.RunEventScripts(ScriptEvent.BeforeCommit);
 
-                var form = new FormProcess(GitCommandHelpers.CommitCmd(amend, toolAuthor.Text));
+                var form = new FormProcess(GitCommandHelpers.CommitCmd(amend, toolAuthor.Text), PerFormSettingsName());
                 form.ShowDialog();
 
                 NeedRefresh = true;
@@ -694,7 +694,7 @@ namespace GitUI
                             form.AddOutput(output);
                             form.Done(string.IsNullOrEmpty(output));
                         };
-                    var process = new FormStatus(processStart, null) { Text = _stageDetails.Text };
+                    var process = new FormStatus(processStart, null, "StageFiles") { Text = _stageDetails.Text };
                     process.ShowDialogOnError();
                 }
                 else
@@ -1070,7 +1070,7 @@ namespace GitUI
                 MessageBoxButtons.YesNo) !=
                 DialogResult.Yes)
                 return;
-            new FormProcess("clean -f").ShowDialog();
+            new FormProcess("clean -f", "Clean").ShowDialog();
             Initialize();
         }
 
