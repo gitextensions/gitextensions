@@ -111,6 +111,7 @@ namespace GitUI
         private readonly ToolStripItem _ResetSelectedLinesToolStripMenuItem;
         private string commitTemplate;
         private bool IsMergeCommit { get; set; }
+        private bool shouldRescanChanges = true;
 
         public FormCommit()
             : this(CommitKind.Normal, null)
@@ -640,9 +641,12 @@ namespace GitUI
 
         private void RescanChanges()
         {
-            toolRefreshItem.Enabled = false;
-            Initialize();
-            toolRefreshItem.Enabled = true;
+            if (shouldRescanChanges)
+            {
+                toolRefreshItem.Enabled = false;
+                Initialize();
+                toolRefreshItem.Enabled = true;
+            }
         }
 
         private void StageClick(object sender, EventArgs e)
@@ -829,33 +833,40 @@ namespace GitUI
 
         private void ResetSoftClick(object sender, EventArgs e)
         {
-            if (Unstaged.SelectedItem == null ||
-                MessageBox.Show(_resetChanges.Text, _resetChangesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) !=
-                DialogResult.Yes)
-                return;
-
-            //remember max selected index
-            Unstaged.StoreNextIndexToSelect();
-
-            var deleteNewFiles = Unstaged.SelectedItems.Any(item => item.IsNew)
-                && MessageBox.Show(_alsoDeleteUntrackedFiles.Text, _alsoDeleteUntrackedFilesCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes;
-            var output = new StringBuilder();
-            foreach (var item in Unstaged.SelectedItems)
+            shouldRescanChanges = false;
+            try
             {
-                if (item.IsNew)
+                if (Unstaged.SelectedItem == null ||
+                    MessageBox.Show(_resetChanges.Text, _resetChangesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) !=
+                    DialogResult.Yes)
+                    return;
+
+                //remember max selected index
+                Unstaged.StoreNextIndexToSelect();
+
+                var deleteNewFiles = Unstaged.SelectedItems.Any(item => item.IsNew)
+                    && MessageBox.Show(_alsoDeleteUntrackedFiles.Text, _alsoDeleteUntrackedFilesCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes;
+                var output = new StringBuilder();
+                foreach (var item in Unstaged.SelectedItems)
                 {
-                    if (deleteNewFiles)
-                        File.Delete(Settings.WorkingDir + item.Name);
+                    if (item.IsNew)
+                    {
+                        if (deleteNewFiles)
+                            File.Delete(Settings.WorkingDir + item.Name);
+                    }
+                    else
+                    {
+                        output.Append(GitCommandHelpers.ResetFile(item.Name));
+                    }
                 }
-                else
-                {
-                    output.Append(GitCommandHelpers.ResetFile(item.Name));
-                }
+
+                if (!string.IsNullOrEmpty(output.ToString()))
+                    MessageBox.Show(output.ToString(), _resetChangesCaption.Text);
             }
-
-            if (!string.IsNullOrEmpty(output.ToString()))
-                MessageBox.Show(output.ToString(), _resetChangesCaption.Text);
-
+            finally
+            {
+                shouldRescanChanges = true;
+            }
             Initialize();
         }
 
