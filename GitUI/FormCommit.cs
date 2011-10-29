@@ -193,8 +193,8 @@ namespace GitUI
             FocusCommitMessage,
             ResetSelectedFiles,
             StageSelectedFile,
-            UnStageSelectedFile
-
+            UnStageSelectedFile,
+            ToggleSelectionFilter
         }
 
         private bool AddToGitIgnore()
@@ -278,6 +278,13 @@ namespace GitUI
             return false;
         }
 
+        private bool ToggleSelectionFilter()
+        {
+            selectionFilterToolStripMenuItem.Checked = !selectionFilterToolStripMenuItem.Checked;
+            toolbarSelectionFilter.Visible = selectionFilterToolStripMenuItem.Checked;
+            return true;
+        }
+
         protected override bool ExecuteCommand(int cmd)
         {
             switch ((Commands)cmd)
@@ -291,6 +298,7 @@ namespace GitUI
                 case Commands.ResetSelectedFiles: return ResetSelectedFiles();
                 case Commands.StageSelectedFile: return StageSelectedFile();
                 case Commands.UnStageSelectedFile: return UnStageSelectedFile();
+                case Commands.ToggleSelectionFilter: return ToggleSelectionFilter();
                 //default: return false;
                 default: ExecuteScriptCommand(cmd, Keys.None); return true;
             }
@@ -1409,7 +1417,7 @@ namespace GitUI
 
     	private void ToogleShowSelectionFilter(object sender, EventArgs e)
 		{
-			toolbarSelectionFilter.Visible = selectionFilterToolStripMenuItem.Checked;
+            toolbarSelectionFilter.Visible = selectionFilterToolStripMenuItem.Checked;
 		}
     }
 
