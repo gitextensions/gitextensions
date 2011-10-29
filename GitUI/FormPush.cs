@@ -214,8 +214,10 @@ namespace GitUI
                     form.OutputString.ToString().Contains("To prevent you from losing history, non-fast-forward updates were rejected"))
                 {
                     if (Settings.PullMerge == "fetch")
-                        form.OutputString.Append("\nCan not perform auto pull, when merge option is set to fetch.");
-                    else 
+                        form.AppendOutputLine("\nCan not perform auto pull, when merge option is set to fetch.");
+                    else if (Settings.PullMerge == "rebase" && GitCommandHelpers.IsMergeCommit(_currentBranch))
+                        form.AppendOutputLine("\nCan not perform auto pull, when merge option is set to rebase and pushed commit is merge commit.");
+                    else
                     {
                         bool pullCompleted;
                         GitUICommands.Instance.StartPullDialog(true, out pullCompleted);
