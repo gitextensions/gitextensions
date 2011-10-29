@@ -1200,7 +1200,7 @@ _ReSharper*/</Value>
           <Value>拉取</Value>
         </TranslationItem>
         <TranslationItem Name="_allMergeConflictSolvedQuestion" Property="Text">
-          <Value>所有的合併衝突都解決了麼？要不要提交？ </Value>
+          <Value>所有的合併衝突都解決了嗎？要不要提交？ </Value>
         </TranslationItem>
         <TranslationItem Name="_allMergeConflictSolvedQuestionCaption" Property="Text">
           <Value>衝突解決了</Value>
@@ -1596,7 +1596,7 @@ _ReSharper*/</Value>
           <Value>顯示版本圖</Value>
         </TranslationItem>
         <TranslationItem Name="drawNonrelativesGrayToolStripMenuItem" Property="Text">
-          <Value>畫無關的灰色</Value>
+          <Value>淡化顯示非同系分支</Value>
         </TranslationItem>
         <TranslationItem Name="orderRevisionsByDateToolStripMenuItem" Property="Text">
           <Value>按日期順序調整</Value>
@@ -2826,7 +2826,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         <TranslationItem Name="richTextBox1" Property="Text">
           <Value>捐贈 
 
-你可以通過捐贈對此項目作出財政方面的貢獻。捐款將用於支付架設網站的成本和該項目保持運行的資源。點擊“支持這一項目”按鈕來獲取有關捐贈的更多信息。 </Value>
+你可以通過捐贈對此專案作出財務方面的貢獻。捐款將用於支付架設網站的成本和該專案保持運行的資源。點擊“支持本專案”按鈕來獲取有關捐贈的更多訊息。 </Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3024,20 +3024,19 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
           <Value>沒有未提交的修改</Value>
         </TranslationItem>
         <TranslationItem Name="_notOnBranch" Property="Text">
-          <Value>您沒有在一個分支下工作。 
+          <Value>您尚未位於任何一個分支下工作。 
 當切換到另一分支時，此次提交將變得不會被任何分支引用且有可能丟失。 
 
 您想繼續嗎？ </Value>
         </TranslationItem>
         <TranslationItem Name="_notOnBranchCaption" Property="Text">
-          <Value>不在一個分支。 </Value>
+          <Value>未於任何分支。 </Value>
         </TranslationItem>
         <TranslationItem Name="_onlyStageChunkOfSingleFileError" Property="Text">
           <Value>只有在選擇單一檔案的時候，您才能使用此選項。 </Value>
         </TranslationItem>
         <TranslationItem Name="_resetChanges" Property="Text">
-          <Value>您確定要重設對選定檔案的更改？ 
-</Value>
+          <Value>您確定要重設對選定檔案的更改？</Value>
         </TranslationItem>
         <TranslationItem Name="_resetChangesCaption" Property="Text">
           <Value>回復修改</Value>
@@ -3363,7 +3362,7 @@ stash</Value>
     <TranslationCategory Name="ViewPullRequestsForm">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>檢是拉取請求</Value>
+          <Value>檢視拉取請求</Value>
         </TranslationItem>
         <TranslationItem Name="columnHeader1" Property="Text">
           <Value>#</Value>
@@ -3387,7 +3386,7 @@ stash</Value>
           <Value>發表意見</Value>
         </TranslationItem>
         <TranslationItem Name="_closePullRequestBtn" Property="Text">
-          <Value>官畢拉取請求</Value>
+          <Value>關閉拉取請求</Value>
         </TranslationItem>
         <TranslationItem Name="_refreshCommentsBtn" Property="Text">
           <Value>重新整理</Value>
@@ -3402,7 +3401,7 @@ stash</Value>
           <Value>無法關閉拉取請求</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToLoadDiffData" Property="Text">
-          <Value>無法在入差異資料</Value>
+          <Value>無法載入差異資料</Value>
         </TranslationItem>
         <TranslationItem Name="_strCouldNotLoadDiscussion" Property="Text">
           <Value>無法載入討論</Value>
