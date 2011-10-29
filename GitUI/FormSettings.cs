@@ -19,6 +19,8 @@ namespace GitUI
 {
     public partial class FormSettings : GitExtensionsForm
     {
+        private readonly TranslationString _homeIsSetToString = new TranslationString("HOME is set to:");
+
         private Font diffFont;
         private const string GitExtensionsShellExName = "GitExtensionsShellEx32.dll";
         private string IconName = "bug";
@@ -37,9 +39,6 @@ namespace GitUI
                                                       });
             GlobalEditor.Items.AddRange(new Object[] { "\"" + GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad" });
 
-            defaultHome.Text = string.Format(defaultHome.Text + " ({0})", GitCommandHelpers.GetDefaultHomeDir());
-            userprofileHome.Text = string.Format(userprofileHome.Text + " ({0})",
-                                                 Environment.GetEnvironmentVariable("USERPROFILE"));
             SetCurrentDiffFont(Settings.DiffFont);
         }
 
@@ -116,6 +115,9 @@ namespace GitUI
         {
             try
             {
+                GitCommandHelpers.SetEnvironmentVariable();
+                homeIsSetToLabel.Text = string.Concat(_homeIsSetToString.Text, " ", GitCommandHelpers.GetHomeDir());
+
                 scriptEvent.DataSource = Enum.GetValues(typeof(ScriptEvent));
 
                 if (Settings.Encoding.GetType() == typeof(ASCIIEncoding))
@@ -210,22 +212,6 @@ namespace GitUI
                 _NO_TRANSLATE_ColorSectionLabel.ForeColor =
                     ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorSectionLabel.BackColor);
 
-                if (!string.IsNullOrEmpty(Settings.CustomHomeDir))
-                {
-                    defaultHome.Checked = userprofileHome.Checked = false;
-                    otherHome.Checked = true;
-                    otherHomeDir.Text = Settings.CustomHomeDir;
-                }
-                else if (Settings.UserProfileHomeDir)
-                {
-                    defaultHome.Checked = otherHome.Checked = false;
-                    userprofileHome.Checked = true;
-                }
-                else
-                {
-                    userprofileHome.Checked = otherHome.Checked = false;
-                    defaultHome.Checked = true;
-                }
 
                 SmtpServer.Text = Settings.Smtp;
 
@@ -357,22 +343,6 @@ namespace GitUI
 
             if (Settings.RunningOnWindows())
             {
-                if (otherHome.Checked)
-                {
-                    Settings.UserProfileHomeDir = false;
-                    if (string.IsNullOrEmpty(otherHomeDir.Text))
-                    {
-                        MessageBox.Show("Please enter a valid HOME directory.");
-                        new FormFixHome().ShowDialog();
-                    }
-                    else
-                        Settings.CustomHomeDir = otherHomeDir.Text;
-                }
-                else
-                {
-                    Settings.CustomHomeDir = "";
-                    Settings.UserProfileHomeDir = userprofileHome.Checked;
-                }
 
                 FormFixHome.CheckHomePath();
             }
@@ -1731,24 +1701,6 @@ namespace GitUI
             new FormTranslate().ShowDialog();
         }
 
-        private void otherHomeBrowse_Click(object sender, EventArgs e)
-        {
-            var browseDialog = new FolderBrowserDialog
-                    {
-                        SelectedPath = Environment.GetEnvironmentVariable("USERPROFILE")
-                    };
-
-            if (browseDialog.ShowDialog() == DialogResult.OK)
-            {
-                otherHomeDir.Text = browseDialog.SelectedPath;
-            }
-        }
-
-        private void otherHome_CheckedChanged(object sender, EventArgs e)
-        {
-            otherHomeDir.ReadOnly = !otherHome.Checked;
-        }
-
         private void MulticolorBranches_CheckedChanged(object sender, EventArgs e)
         {
             if (MulticolorBranches.Checked)
@@ -2442,6 +2394,14 @@ namespace GitUI
         private void downloadMsysgit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start(@"http://code.google.com/p/msysgit/");
+        }
+
+        private void ChangeHomeButton_Click(object sender, EventArgs e)
+        {
+            Save();
+            new FormFixHome().ShowDialog();
+            LoadSettings();
+            Rescan_Click(null, null);
         }
     }
 }

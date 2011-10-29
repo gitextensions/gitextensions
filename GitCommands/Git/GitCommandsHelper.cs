@@ -147,6 +147,11 @@ namespace GitCommands
             Environment.SetEnvironmentVariable("HOME", GetDefaultHomeDir());
         }
 
+        public static string GetHomeDir()
+        {
+            return Environment.GetEnvironmentVariable("HOME");
+        }
+
         public static string GetDefaultHomeDir()
         {
             if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)))
@@ -1609,7 +1614,7 @@ namespace GitCommands
 
         public static ConfigFile GetGlobalConfig()
         {
-            return new ConfigFile(GitCommandHelpers.GetDefaultHomeDir() + Settings.PathSeparator + ".gitconfig");
+            return new ConfigFile(GitCommandHelpers.GetHomeDir() + Settings.PathSeparator + ".gitconfig");
         }
 
         public static ConfigFile GetLocalConfig()
