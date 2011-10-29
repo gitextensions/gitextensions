@@ -45,6 +45,10 @@ namespace GitUI
         private readonly TranslationString _warningNoKeyEntered =
             new TranslationString("No SSH key file entered");
 
+        private readonly TranslationString _labelUrlAsFetch =
+            new TranslationString("Fetch Url");
+        private readonly TranslationString _labelUrlAsFetchPush =
+            new TranslationString("Url");
 
         public FormRemotes()
         {
@@ -85,6 +89,12 @@ namespace GitUI
             Url.DisplayMember = "Path";
         }
 
+        private void comboBoxPushUrl_DropDown(object sender, EventArgs e)
+        {
+            comboBoxPushUrl.DataSource = Repositories.RepositoryHistory.Repositories;
+            comboBoxPushUrl.DisplayMember = "Path";
+        }
+
         private void BrowseClick(object sender, EventArgs e)
         {
             var dialog = new FolderBrowserDialog();
@@ -92,9 +102,21 @@ namespace GitUI
                 Url.Text = dialog.SelectedPath;
         }
 
+        private void buttonBrowsePushUrl_Click(object sender, EventArgs e)
+        {
+            var dialog = new FolderBrowserDialog();
+            if (dialog.ShowDialog() == DialogResult.OK)
+                comboBoxPushUrl.Text = dialog.SelectedPath;
+
+        }
+
         private void SaveClick(object sender, EventArgs e)
         {
             var output = "";
+
+            if ((string.IsNullOrEmpty(comboBoxPushUrl.Text) && checkBoxSepPushUrl.Checked) ||
+                (comboBoxPushUrl.Text == Url.Text))
+                checkBoxSepPushUrl.Checked = false;
 
             if (string.IsNullOrEmpty(_remote))
             {
@@ -102,6 +124,9 @@ namespace GitUI
                     return;
 
                 output = GitCommandHelpers.AddRemote(RemoteName.Text, Url.Text);
+
+                if (checkBoxSepPushUrl.Checked)
+                    GitCommandHelpers.SetSetting(string.Format("remote.{0}.pushurl", RemoteName.Text), comboBoxPushUrl.Text);
 
                 if (MessageBox.Show(_questionAutoPullBehaviour.Text, _questionAutoPullBehaviourCaption.Text,
                     MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -126,6 +151,10 @@ namespace GitUI
 
                 GitCommandHelpers.SetSetting(string.Format("remote.{0}.url", RemoteName.Text), Url.Text);
                 GitCommandHelpers.SetSetting(string.Format("remote.{0}.puttykeyfile", RemoteName.Text), PuttySshKey.Text);
+                if (checkBoxSepPushUrl.Checked)
+                    GitCommandHelpers.SetSetting(string.Format("remote.{0}.pushurl", RemoteName.Text), comboBoxPushUrl.Text);
+                else
+                    GitCommandHelpers.UnsetSetting(string.Format("remote.{0}.pushurl", RemoteName.Text));
             }
 
             if (!string.IsNullOrEmpty(output))
@@ -303,7 +332,15 @@ namespace GitUI
 
             _remote = (string)Remotes.SelectedItem;
             RemoteName.Text = _remote;
+            
             Url.Text = GitCommandHelpers.GetSetting(string.Format("remote.{0}.url", _remote));
+            
+            comboBoxPushUrl.Text = GitCommandHelpers.GetSetting(string.Format("remote.{0}.pushurl", _remote));
+            if (string.IsNullOrEmpty(comboBoxPushUrl.Text))
+                checkBoxSepPushUrl.Checked = false;
+            else
+                checkBoxSepPushUrl.Checked = true;
+
             PuttySshKey.Text =
                 GitCommandHelpers.GetSetting(string.Format("remote.{0}.puttykeyfile", RemoteName.Text));
         }
@@ -317,6 +354,23 @@ namespace GitUI
         {
             SavePosition("remotes");
         }
+
+        private void checkBoxSepPushUrl_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowSeperatePushUrl(checkBoxSepPushUrl.Checked);
+        }
+
+        private void ShowSeperatePushUrl(bool visible)
+        {
+            labelPushUrl.Visible = visible;
+            comboBoxPushUrl.Visible = visible;
+            buttonBrowsePushUrl.Visible = visible;
+            if (!visible)
+                label2.Text = _labelUrlAsFetchPush.Text;
+            else
+                label2.Text = _labelUrlAsFetch.Text;
+        }
+
 
     }
 }
