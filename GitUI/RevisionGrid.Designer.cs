@@ -93,6 +93,7 @@ namespace GitUI
             this.NoCommits = new System.Windows.Forms.Panel();
             this.NoGit = new System.Windows.Forms.Panel();
             this.InitRepository = new System.Windows.Forms.Button();
+            this.CloneRepository = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.GitIgnore = new System.Windows.Forms.Button();
             this.Commit = new System.Windows.Forms.Button();
@@ -534,12 +535,13 @@ namespace GitUI
             this.NoCommits.Dock = System.Windows.Forms.DockStyle.Fill;
             this.NoCommits.Location = new System.Drawing.Point(0, 0);
             this.NoCommits.Name = "NoCommits";
-            this.NoCommits.Size = new System.Drawing.Size(585, 204);
+            this.NoCommits.Size = new System.Drawing.Size(682, 235);
             this.NoCommits.TabIndex = 3;
             // 
             // NoGit
             // 
             this.NoGit.Controls.Add(this.InitRepository);
+            this.NoGit.Controls.Add(this.CloneRepository);
             this.NoGit.Controls.Add(this.label2);
             this.NoGit.Location = new System.Drawing.Point(0, 0);
             this.NoGit.Name = "NoGit";
@@ -549,13 +551,24 @@ namespace GitUI
             // 
             // InitRepository
             // 
-            this.InitRepository.Location = new System.Drawing.Point(16, 36);
+            this.InitRepository.Location = new System.Drawing.Point(19, 42);
             this.InitRepository.Name = "InitRepository";
-            this.InitRepository.Size = new System.Drawing.Size(143, 23);
+            this.InitRepository.Size = new System.Drawing.Size(167, 27);
             this.InitRepository.TabIndex = 2;
             this.InitRepository.Text = "Initialize repository";
             this.InitRepository.UseVisualStyleBackColor = true;
             this.InitRepository.Click += new System.EventHandler(this.InitRepository_Click);
+            // 
+            // CloneRepository
+            // 
+            this.CloneRepository.Location = new System.Drawing.Point(192, 42);
+            this.CloneRepository.Name = "CloneRepository";
+            this.CloneRepository.Size = new System.Drawing.Size(167, 27);
+            this.CloneRepository.TabIndex = 3;
+            this.CloneRepository.Text = "Clone repository";
+            this.CloneRepository.UseVisualStyleBackColor = true;
+            this.CloneRepository.Visible = false;
+            this.CloneRepository.Click += new System.EventHandler(this.CloneRepository_Click);
             // 
             // label2
             // 
@@ -760,6 +773,7 @@ namespace GitUI
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem runScriptToolStripMenuItem;
         private System.Windows.Forms.Button InitRepository;
+        private System.Windows.Forms.Button CloneRepository;
         private System.Windows.Forms.ToolStripMenuItem showRevisionGraphToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem drawNonrelativesGrayToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem orderRevisionsByDateToolStripMenuItem;
