@@ -124,19 +124,7 @@
     <Compile Include="Dictionary\Affix\AffixEntry.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Dictionary\Affix\AffixEntryCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Dictionary\Affix\AffixEntryEnumerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Dictionary\Affix\AffixRule.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Dictionary\Affix\AffixRuleCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Dictionary\Affix\AffixRuleEnumerator.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Dictionary\Affix\AffixUtility.cs">

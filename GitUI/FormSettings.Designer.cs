@@ -256,7 +256,7 @@ namespace GitUI
             this.scriptEnabled = new System.Windows.Forms.CheckBox();
             this.ScriptList = new System.Windows.Forms.DataGridView();
             this.HotkeyCommandIdentifier = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Enabled = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.EnabledColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.OnEvent = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AskConfirmation = new System.Windows.Forms.DataGridViewCheckBoxColumn();
@@ -2923,7 +2923,7 @@ namespace GitUI
             this.scriptEnabled.Name = "scriptEnabled";
             this.scriptEnabled.Size = new System.Drawing.Size(85, 24);
             this.scriptEnabled.TabIndex = 18;
-            this.scriptEnabled.Text = "Enabled";
+            this.scriptEnabled.Text = "EnabledColumn";
             this.scriptEnabled.UseVisualStyleBackColor = true;
             this.scriptEnabled.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
             // 
@@ -2937,7 +2937,7 @@ namespace GitUI
             this.ScriptList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.ScriptList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.HotkeyCommandIdentifier,
-            this.Enabled,
+            this.EnabledColumn,
             this.nameDataGridViewTextBoxColumn,
             this.OnEvent,
             this.AskConfirmation,
@@ -2963,12 +2963,12 @@ namespace GitUI
             this.HotkeyCommandIdentifier.ReadOnly = true;
             this.HotkeyCommandIdentifier.Width = 43;
             // 
-            // Enabled
+            // EnabledColumn
             // 
-            this.Enabled.DataPropertyName = "Enabled";
-            this.Enabled.HeaderText = "Enabled";
-            this.Enabled.Name = "Enabled";
-            this.Enabled.ReadOnly = true;
+            this.EnabledColumn.DataPropertyName = "EnabledColumn";
+            this.EnabledColumn.HeaderText = "EnabledColumn";
+            this.EnabledColumn.Name = "EnabledColumn";
+            this.EnabledColumn.ReadOnly = true;
             // 
             // nameDataGridViewTextBoxColumn
             // 
@@ -3543,7 +3543,7 @@ namespace GitUI
         private Label label37;
         private CheckBox usePatienceDiffAlgorithm;
         private DataGridViewTextBoxColumn HotkeyCommandIdentifier;
-        private DataGridViewCheckBoxColumn Enabled;
+        private DataGridViewCheckBoxColumn EnabledColumn;
         private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn OnEvent;
         private DataGridViewCheckBoxColumn AskConfirmation;

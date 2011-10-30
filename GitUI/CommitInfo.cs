@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using GitCommands;
 using System.Threading;
 using ResourceManager.Translation;
+using GitUI.Editor.RichTextBoxExtension;
 
 namespace GitUI
 {
@@ -72,6 +73,7 @@ namespace GitUI
             _RevisionHeader.Refresh();
             CommitInformation commitInformation = CommitInformation.GetCommitInfo(_revision);
             _RevisionHeader.Text = commitInformation.Header;
+            //_RevisionHeader.SetXHTMLText(commitInformation.Header);
             splitContainer1.SplitterDistance = _RevisionHeader.GetPreferredSize(new System.Drawing.Size(0, 0)).Height;
             _revisionInfo = commitInformation.Body;
             updateText();
@@ -99,6 +101,7 @@ namespace GitUI
         private void updateText()
         {
             RevisionInfo.Text = _revisionInfo + _branchInfo + _tagInfo;
+            //RevisionInfo.SetXHTMLText(_revisionInfo + _branchInfo + _tagInfo);
             RevisionInfo.Refresh();
         }
 

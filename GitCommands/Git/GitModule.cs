@@ -287,7 +287,8 @@ namespace GitCommands
                 arguments = arguments.Replace("$QUOTE$", "\\\"");
 
                 string output, error;
-                exitCode = CreateAndStartProcess(arguments, cmd, out output, out error, stdInput);
+                exitCode = GitCommandHelpers.CreateAndStartProcess(arguments, cmd, _workingdir, 
+                    out output, out error, stdInput);
 
                 if (!string.IsNullOrEmpty(error))
                 {
@@ -310,39 +311,6 @@ namespace GitCommands
         public string RunGitCmd(string arguments)
         {
             return RunCmd(Settings.GitCommand, arguments, null);
-        }
-
-        private int CreateAndStartProcess(string arguments, string cmd, out string stdOutput, out string stdError, string stdInput)
-        {
-            if (string.IsNullOrEmpty(cmd))
-            {
-                stdOutput = stdError = "";
-                return -1;
-            }
-
-            Settings.GitLog.Log(cmd + " " + arguments);
-            //process used to execute external commands
-
-            var startInfo = GitCommandHelpers.CreateProcessStartInfo();
-            startInfo.CreateNoWindow = true;
-            startInfo.FileName = cmd;
-            startInfo.Arguments = arguments;
-            startInfo.WorkingDirectory = _workingdir;
-            startInfo.LoadUserProfile = true;
-
-            using (var process = Process.Start(startInfo))
-            {
-                if (!string.IsNullOrEmpty(stdInput))
-                {
-                    process.StandardInput.Write(stdInput);
-                    process.StandardInput.Close();
-                }
-
-                stdOutput = process.StandardOutput.ReadToEnd();
-                stdError = process.StandardError.ReadToEnd();
-                process.WaitForExit();
-                return process.ExitCode;
-            }
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]

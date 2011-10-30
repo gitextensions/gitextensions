@@ -44,7 +44,6 @@ namespace GitCommands
             using (var textWriter = new StreamWriter(GetCommitMessagePath(), false, Settings.Encoding))
             {
                 textWriter.Write(commitMessageText);
-                textWriter.Close();
             }
         }
 
