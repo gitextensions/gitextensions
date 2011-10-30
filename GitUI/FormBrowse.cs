@@ -1040,7 +1040,8 @@ namespace GitUI
 
         private void PullToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (GitUICommands.Instance.StartPullDialog())
+            bool bSilent = (Control.ModifierKeys & Keys.Shift) != 0;
+            if (GitUICommands.Instance.StartPullDialog(bSilent))
                 Initialize();
         }
 
