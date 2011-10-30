@@ -13,6 +13,7 @@ using GitUI.Script;
 using GitUI.Tag;
 using Gravatar;
 using ResourceManager.Translation;
+using System.IO;
 
 namespace GitUI
 {
@@ -712,6 +713,13 @@ namespace GitUI
                     NoCommits.Visible = true;
                     Loading.Visible = false;
                     NoGit.Visible = true;
+                    string dir = Settings.Module.WorkingDir;
+                    if (String.IsNullOrEmpty(dir) || !Directory.Exists(dir) ||
+                        Directory.GetDirectories(dir).Length == 0 &&
+                        Directory.GetFiles(dir).Length == 0)
+                        CloneRepository.Show();
+                    else
+                        CloneRepository.Hide();
                     NoGit.BringToFront();
                     return;
                 }
@@ -1975,7 +1983,12 @@ namespace GitUI
         {
             if (GitUICommands.Instance.StartInitializeDialog(Settings.WorkingDir))
                 ForceRefreshRevisions();
+        }
 
+        private void CloneRepository_Click(object sender, EventArgs e)
+        {
+            if (GitUICommands.Instance.StartCloneDialog())
+                ForceRefreshRevisions();
         }
 
         private void ShowRevisionGraphToolStripMenuItemClick(object sender, EventArgs e)
