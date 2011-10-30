@@ -317,9 +317,13 @@ namespace GitUI.Editor
                         GitModule gitmodule = new GitModule(path);
                         if (gitmodule.ValidWorkingDir())
                         {
-                            CommitInformation commitInformation = CommitInformation.GetCommitInfo(gitmodule, hash);
-                            sb.AppendLine("\t\t\t\t\t" + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, commitInformation.CommitDate.UtcDateTime) + commitInformation.CommitDate.LocalDateTime.ToString(" (ddd MMM dd HH':'mm':'ss yyyy)"));
-                            sb.AppendLine("\t\t" + commitInformation.Body.Trim('\n'));
+                            string error = "";
+                            CommitData commitData = CommitData.GetCommitData(gitmodule, hash, ref error);
+                            if (commitData != null)
+                            {
+                                sb.AppendLine("\t\t\t\t\t" + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + commitData.CommitDate.LocalDateTime.ToString(" (ddd MMM dd HH':'mm':'ss yyyy)"));
+                                sb.AppendLine("\t\t" + commitData.Body.Trim('\n'));
+                            }
                         }
                         else
                             sb.AppendLine();

@@ -42,7 +42,8 @@ namespace GitCommandsTests
                                "Notes (p4notes):\n" +
                                "\tP4@547123\n\n";
 
-            var commitInformation = CommitInformation.CreateFromRawData(rawData);
+            var commitData = CommitData.CreateFromRawData(rawData);
+            var commitInformation = CommitInformation.GetCommitInfo(commitData);
             
             Assert.AreEqual(expectedHeader,commitInformation.Header);
             Assert.AreEqual(expectedBody, commitInformation.Body);

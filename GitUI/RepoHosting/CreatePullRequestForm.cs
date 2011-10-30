@@ -15,6 +15,7 @@ namespace GitUI.RepoHosting
         private readonly TranslationString _strYouMustSpecifyATitleAndABody = new TranslationString("You must specify a title and a body.");
         private readonly TranslationString _strPullRequest = new TranslationString("Pull request");
         private readonly TranslationString _strFailedToCreatePullRequest = new TranslationString("Failed to create pull request.\r\n");
+        private readonly TranslationString _strPleaseCloneGitHubRep = new TranslationString("Please clone GitHub repository before pull request.");
         private readonly TranslationString _strDone = new TranslationString("Done");
         private readonly TranslationString _strError = new TranslationString("Error");
         #endregion
@@ -47,7 +48,8 @@ namespace GitUI.RepoHosting
             IHostedRemote[] foreignHostedRemotes = _hostedRemotes.Where(r => !r.IsOwnedByMe).ToArray();
             if (foreignHostedRemotes.Length == 0)
             {
-                MessageBox.Show(this, _strFailedToCreatePullRequest.Text + "Please clone GitHub repository before pull request.", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _strFailedToCreatePullRequest.Text + _strPleaseCloneGitHubRep.Text, "", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Close();
                 return;
             }

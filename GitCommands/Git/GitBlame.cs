@@ -31,6 +31,7 @@ namespace GitCommands
 
         public string LineText { get; set; }
     }
+
     public class GitBlameHeader
     {
         //Header
@@ -76,6 +77,16 @@ namespace GitCommands
             toStringValue.AppendLine("FileName: " + FileName);
 
             return toStringValue.ToString().Trim();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this == (GitBlameHeader)obj;
+        }
+
+        public override int GetHashCode()
+        {
+            return ToString().GetHashCode();
         }
 
         public static bool operator ==(GitBlameHeader x, GitBlameHeader y)
