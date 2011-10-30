@@ -260,17 +260,6 @@ namespace GitUI
                 @"https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=WAL2SSDV8ND54&lc=US&item_name=GitExtensions&no_note=1&no_shipping=1&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted");
         }
 
-        private void splitContainer5_SplitterMoved(object sender, SplitterEventArgs e)
-        {
-            ShowRecentRepositories();
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            ShowRecentRepositories();
-        }
-
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             new FormDashboardEditor().ShowDialog();
