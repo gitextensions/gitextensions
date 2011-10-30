@@ -89,6 +89,7 @@
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
     <Compile Include="DataGridViewCheckBoxColumnHeaderCell.cs" />
+    <Compile Include="Editor\XHTML2RTF.cs" />
     <Compile Include="FormContributors.cs">
       <SubType>Form</SubType>
     </Compile>

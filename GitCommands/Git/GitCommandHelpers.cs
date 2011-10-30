@@ -113,7 +113,7 @@ namespace GitCommands
                    (arguments.Contains("pull"));
         }
 
-        private static int CreateAndStartProcess(string arguments, string cmd, out string stdOutput, out string stdError)
+        internal static int CreateAndStartProcess(string arguments, string cmd, string workDir, out string stdOutput, out string stdError, string stdInput)
         {
             if (string.IsNullOrEmpty(cmd))
             {
@@ -128,10 +128,17 @@ namespace GitCommands
             startInfo.CreateNoWindow = true;
             startInfo.FileName = cmd;
             startInfo.Arguments = arguments;
+            startInfo.WorkingDirectory = workDir;
             startInfo.LoadUserProfile = true;
 
             using (var process = Process.Start(startInfo))
             {
+                if (!string.IsNullOrEmpty(stdInput))
+                {
+                    process.StandardInput.Write(stdInput);
+                    process.StandardInput.Close();
+                }
+
                 stdOutput = process.StandardOutput.ReadToEnd();
                 stdError = process.StandardError.ReadToEnd();
                 process.WaitForExit();
@@ -149,7 +156,7 @@ namespace GitCommands
                 arguments = arguments.Replace("$QUOTE$", "\\\"");
 
                 string output, error;
-                CreateAndStartProcess(arguments, cmd, out output, out error);
+                CreateAndStartProcess(arguments, cmd, "", out output, out error, null);
 
                 if (!string.IsNullOrEmpty(error))
                 {
