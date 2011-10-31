@@ -95,6 +95,7 @@ namespace GitUI
             InMemAuthorFilter = "";
             InMemCommitterFilter = "";
             InMemMessageFilter = "";
+            InMemHashFilter = "";
             AllowGraphWithFilter = false;
             _quickSearchString = "";
             quickSearchTimer.Tick += QuickSearchTimerTick;
@@ -141,6 +142,7 @@ namespace GitUI
         public string InMemAuthorFilter { get; set; }
         public string InMemCommitterFilter { get; set; }
         public string InMemMessageFilter { get; set; }
+        public string InMemHashFilter { get; set; }
 
         public string BranchFilter { get; set; }
         private Font _normalFont;
@@ -409,15 +411,18 @@ namespace GitUI
                                       out string revListArgs,
                                       out string inMemMessageFilter,
                                       out string inMemCommitterFilter,
-                                      out string inMemAuthorFilter)
+                                      out string inMemAuthorFilter,
+                                      out string inMemHashFilter)
         {
             revListArgs = string.Empty;
             inMemMessageFilter = string.Empty;
             inMemCommitterFilter = string.Empty;
             inMemAuthorFilter = string.Empty;
+            inMemHashFilter = string.Empty;
             if (!string.IsNullOrEmpty(filter))
             {
-                var cmdLineSafe = GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(filter);
+                // hash filtering only possible in memory
+                var cmdLineSafe = !parameters[4] && GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(filter);
                 revListArgs = " --regexp-ignore-case ";
                 if (parameters[0])
                     if (cmdLineSafe)
@@ -439,6 +444,8 @@ namespace GitUI
                         revListArgs += "\"-S" + filter + "\" ";
                     else
                         throw new InvalidOperationException("Filter text not valid for \"Diff contains\" filter.");
+                if (parameters[4])
+                    inMemHashFilter = filter;
             }
         }
 
@@ -610,13 +617,16 @@ namespace GitUI
             private readonly Regex _CommitterFilterRegex;
             private readonly string _MessageFilter;
             private readonly Regex _MessageFilterRegex;
+            private readonly string _HashFilter;
+            private readonly Regex _HashFilterRegex;
 
-            public RevisionGridInMemFilter(string authorFilter, string committerFilter, string messageFilter, bool ignoreCase)
+            public RevisionGridInMemFilter(string authorFilter, string committerFilter, string messageFilter, string hashFilter, bool ignoreCase)
             {
                 _IgnoreCase = ignoreCase;
                 SetUpVars(authorFilter, ref _AuthorFilter, ref _AuthorFilterRegex);
                 SetUpVars(committerFilter, ref _CommitterFilter, ref _CommitterFilterRegex);
                 SetUpVars(messageFilter, ref _MessageFilter, ref _MessageFilterRegex);
+                SetUpVars(hashFilter, ref _HashFilter, ref _HashFilterRegex);
             }
 
             private void SetUpVars(string filterValue,
@@ -646,20 +656,24 @@ namespace GitUI
             {
                 return CheckCondition(_AuthorFilter, _AuthorFilterRegex, rev.Author) &&
                        CheckCondition(_CommitterFilter, _CommitterFilterRegex, rev.Committer) &&
-                       CheckCondition(_MessageFilter, _MessageFilterRegex, rev.Message);
+                       CheckCondition(_MessageFilter, _MessageFilterRegex, rev.Message) &&
+                       CheckCondition(_HashFilter, _HashFilterRegex, rev.Guid);
             }
 
             public static RevisionGridInMemFilter CreateIfNeeded(string authorFilter,
                                                                  string committerFilter,
                                                                  string messageFilter,
+                                                                 string hashFilter,
                                                                  bool ignoreCase)
             {
                 if (!(string.IsNullOrEmpty(authorFilter) &&
                       string.IsNullOrEmpty(committerFilter) &&
-                      string.IsNullOrEmpty(messageFilter)))
+                      string.IsNullOrEmpty(messageFilter) &&
+                      string.IsNullOrEmpty(hashFilter)))
                     return new RevisionGridInMemFilter(authorFilter,
                                                        committerFilter,
                                                        messageFilter,
+                                                       hashFilter,
                                                        ignoreCase);
                 else
                     return null;
@@ -745,10 +759,12 @@ namespace GitUI
                 RevisionGridInMemFilter revisionFilterIMF = RevisionGridInMemFilter.CreateIfNeeded(_revisionFilter.GetInMemAuthorFilter(),
                                                                                                    _revisionFilter.GetInMemCommitterFilter(),
                                                                                                    _revisionFilter.GetInMemMessageFilter(),
+                                                                                                   _revisionFilter.GetInMemHashFilter(),
                                                                                                    _revisionFilter.GetIgnoreCase());
                 RevisionGridInMemFilter filterBarIMF = RevisionGridInMemFilter.CreateIfNeeded(InMemAuthorFilter,
                                                                                               InMemCommitterFilter,
                                                                                               InMemMessageFilter,
+                                                                                              InMemHashFilter,
                                                                                               InMemFilterIgnoreCase);
                 RevisionGraphInMemFilter revGraphIMF;
                 if (revisionFilterIMF != null && filterBarIMF != null)
@@ -803,7 +819,8 @@ namespace GitUI
                      !_revisionFilter.FilterEnabled() &&
                      string.IsNullOrEmpty(InMemAuthorFilter) &&
                      string.IsNullOrEmpty(InMemCommitterFilter) &&
-                     string.IsNullOrEmpty(InMemMessageFilter));
+                     string.IsNullOrEmpty(InMemMessageFilter) &&
+                     string.IsNullOrEmpty(InMemHashFilter));
         }
 
         private bool ShouldHideGraph(bool inclBranchFilter)
@@ -812,7 +829,8 @@ namespace GitUI
                    !(!_revisionFilter.ShouldHideGraph() &&
                      string.IsNullOrEmpty(InMemAuthorFilter) &&
                      string.IsNullOrEmpty(InMemCommitterFilter) &&
-                     string.IsNullOrEmpty(InMemMessageFilter));
+                     string.IsNullOrEmpty(InMemMessageFilter) &&
+                     string.IsNullOrEmpty(InMemHashFilter));
         }
 
         private void DisposeRevisionGraphCommand()
