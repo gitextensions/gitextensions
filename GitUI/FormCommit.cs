@@ -15,6 +15,8 @@ using GitUI.Script;
 using PatchApply;
 using ResourceManager.Translation;
 
+using Timer = System.Windows.Forms.Timer;
+
 namespace GitUI
 {
     public sealed partial class FormCommit : GitExtensionsForm //, IHotkeyable
@@ -97,6 +99,9 @@ namespace GitUI
 
         private readonly TranslationString _formTitle = new TranslationString("Commit to {0} ({1})");
 
+		private readonly TranslationString _selectionFilterToolTip = new TranslationString("Enter a regular expression to select unstaged files.");
+		private readonly TranslationString _selectionFilterErrorToolTip = new TranslationString("Error {0}");
+
 
         #endregion
 
@@ -111,6 +116,7 @@ namespace GitUI
         private readonly ToolStripItem _ResetSelectedLinesToolStripMenuItem;
         private string commitTemplate;
         private bool IsMergeCommit { get; set; }
+        private bool shouldRescanChanges = true;
 
         public FormCommit()
             : this(CommitKind.Normal, null)
@@ -132,7 +138,7 @@ namespace GitUI
             closeDialogAfterEachCommitToolStripMenuItem.Checked = Settings.CloseCommitDialogAfterCommit;
             closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked = Settings.CloseCommitDialogAfterLastCommit;
             refreshDialogOnFormFocusToolStripMenuItem.Checked = Settings.RefreshCommitDialogOnFormFocus;
-            
+
             Unstaged.SetNoFilesText(_noUnstagedChanges.Text);
             Staged.SetNoFilesText(_noStagedChanges.Text);
             Message.SetEmptyMessage(_enterCommitMessageHint.Text);
@@ -159,14 +165,7 @@ namespace GitUI
 
             SelectedDiff.ContextMenuOpening += SelectedDiff_ContextMenuOpening;
 
-            LoadRefreshCommitDialogOnFormFocus();
-
             Commit.Focus();
-        }
-
-        void LoadRefreshCommitDialogOnFormFocus()
-        {
-            refreshDialogOnFormFocusToolStripMenuItem.Checked = Settings.RefreshCommitDialogOnFormFocus;
         }
 
         void SelectedDiff_ContextMenuOpening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -188,8 +187,8 @@ namespace GitUI
             FocusCommitMessage,
             ResetSelectedFiles,
             StageSelectedFile,
-            UnStageSelectedFile
-
+            UnStageSelectedFile,
+            ToggleSelectionFilter
         }
 
         private bool AddToGitIgnore()
@@ -273,6 +272,13 @@ namespace GitUI
             return false;
         }
 
+        private bool ToggleSelectionFilter()
+        {
+            selectionFilterToolStripMenuItem.Checked = !selectionFilterToolStripMenuItem.Checked;
+            toolbarSelectionFilter.Visible = selectionFilterToolStripMenuItem.Checked;
+            return true;
+        }
+
         protected override bool ExecuteCommand(int cmd)
         {
             switch ((Commands)cmd)
@@ -286,6 +292,7 @@ namespace GitUI
                 case Commands.ResetSelectedFiles: return ResetSelectedFiles();
                 case Commands.StageSelectedFile: return StageSelectedFile();
                 case Commands.UnStageSelectedFile: return UnStageSelectedFile();
+                case Commands.ToggleSelectionFilter: return ToggleSelectionFilter();
                 //default: return false;
                 default: ExecuteScriptCommand(cmd, Keys.None); return true;
             }
@@ -680,9 +687,12 @@ namespace GitUI
 
         private void RescanChanges()
         {
-            toolRefreshItem.Enabled = false;
-            Initialize();
-            toolRefreshItem.Enabled = true;
+            if (shouldRescanChanges)
+            {
+            	toolRefreshItem.Enabled = false;
+            	Initialize();
+            	toolRefreshItem.Enabled = true;
+        	}
         }
 
         private void StageClick(object sender, EventArgs e)
@@ -869,44 +879,51 @@ namespace GitUI
 
         private void ResetSoftClick(object sender, EventArgs e)
         {
-            if (Unstaged.SelectedItem == null ||
-                MessageBox.Show(_resetChanges.Text, _resetChangesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) !=
-                DialogResult.Yes)
-                return;
-
-            //remember max selected index
-            Unstaged.StoreNextIndexToSelect();
-
-            var deleteNewFiles = Unstaged.SelectedItems.Any(item => item.IsNew)
-                && MessageBox.Show(_alsoDeleteUntrackedFiles.Text, _alsoDeleteUntrackedFilesCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes;
-            var output = new StringBuilder();
-            foreach (var item in Unstaged.SelectedItems)
+            shouldRescanChanges = false;
+            try
             {
-                if (item.IsNew)
-                {
-                    if (deleteNewFiles)
-                    {
-                        try
-                        {
-                            File.Delete(Settings.WorkingDir + item.Name);
-                        }
-                        catch (System.IO.FileNotFoundException)
-                        {
-                        }
-                        catch (System.IO.DirectoryNotFoundException)
-                        {
-                        }
-                    }
-                }
-                else
-                {
-                    output.Append(Settings.Module.ResetFile(item.Name));
-                }
+	            if (Unstaged.SelectedItem == null ||
+	                MessageBox.Show(_resetChanges.Text, _resetChangesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) !=
+	                DialogResult.Yes)
+	                return;
+	
+	            //remember max selected index
+	            Unstaged.StoreNextIndexToSelect();
+	
+	            var deleteNewFiles = Unstaged.SelectedItems.Any(item => item.IsNew)
+	                && MessageBox.Show(_alsoDeleteUntrackedFiles.Text, _alsoDeleteUntrackedFilesCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes;
+	            var output = new StringBuilder();
+	            foreach (var item in Unstaged.SelectedItems)
+	            {
+	                if (item.IsNew)
+	                {
+	                    if (deleteNewFiles)
+	                    {
+	                        try
+	                        {
+	                            File.Delete(Settings.WorkingDir + item.Name);
+	                        }
+	                        catch (System.IO.IOException)
+	                        {
+	                        }
+	                        catch (System.UnauthorizedAccessException)
+	                        {
+	                        }
+	                    }
+	                }
+	                else
+	                {
+	                    output.Append(Settings.Module.ResetFile(item.Name));
+	                }
+	            }
+	
+	            if (!string.IsNullOrEmpty(output.ToString()))
+	                MessageBox.Show(output.ToString(), _resetChangesCaption.Text);
             }
-
-            if (!string.IsNullOrEmpty(output.ToString()))
-                MessageBox.Show(output.ToString(), _resetChangesCaption.Text);
-
+            finally
+            {
+                shouldRescanChanges = true;
+            }
             Initialize();
         }
 
@@ -1378,6 +1395,73 @@ namespace GitUI
             toolAuthorLabelItem.Enabled = toolAuthorLabelItem.Checked = false;
         }
 
+		private long lastUserInputTime;
+		private void FilterChanged(object sender, EventArgs e)
+		{
+			var currentTime = DateTime.Now.Ticks;
+			if (lastUserInputTime == 0)
+			{
+				long timerLastChanged = currentTime;
+				var timer = new Timer { Interval = 250 };
+				timer.Tick += (s, a) =>
+				{
+				    if (NoUserInput(timerLastChanged))
+				    {
+				    	var selectionCount = 0;
+				    	try
+				    	{
+				    		selectionCount = Unstaged.SetSelectionFilter(selectionFilter.Text);
+				    		selectionFilter.ToolTipText = _selectionFilterToolTip.Text;
+    }
+				    	catch (ArgumentException ae)
+				    	{
+				    		selectionFilter.ToolTipText = string.Format(_selectionFilterErrorToolTip.Text, ae.Message);
+				    	}
+
+						if (selectionCount > 0)
+						{
+							AddToSelectionFilter(selectionFilter.Text);
+						}
+
+						timer.Stop();
+				        lastUserInputTime = 0;
+					}
+					timerLastChanged = lastUserInputTime;
+				};
+
+				timer.Start();
+			}
+
+			lastUserInputTime = currentTime;
+		}
+
+    	private bool NoUserInput(long timerLastChanged)
+    	{
+    		return timerLastChanged == lastUserInputTime;
+    	}
+
+    	private void AddToSelectionFilter(string filter)
+    	{
+    		if (!selectionFilter.Items.Cast<string>().Any(candiate  => candiate == filter))
+    		{
+    			const int SelectionFilterMaxLength = 10;
+				if (selectionFilter.Items.Count == SelectionFilterMaxLength)
+				{
+					selectionFilter.Items.RemoveAt(SelectionFilterMaxLength - 1);
+				}
+    			selectionFilter.Items.Insert(0, filter);
+    		}
+    	}
+
+    	private void FilterIndexChanged(object sender, EventArgs e)
+		{
+			Unstaged.SetSelectionFilter(selectionFilter.Text);
+		}
+
+    	private void ToogleShowSelectionFilter(object sender, EventArgs e)
+		{
+            toolbarSelectionFilter.Visible = selectionFilterToolStripMenuItem.Checked;
+		}
     }
 
     /// <summary>
