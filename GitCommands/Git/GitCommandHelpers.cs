@@ -48,6 +48,11 @@ namespace GitCommands
             Environment.SetEnvironmentVariable("HOME", GetDefaultHomeDir());
         }
 
+        public static string GetHomeDir()
+        {
+            return Environment.GetEnvironmentVariable("HOME");
+        }
+
         public static string GetDefaultHomeDir()
         {
             if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)))
@@ -524,7 +529,7 @@ namespace GitCommands
 
         public static ConfigFile GetGlobalConfig()
         {
-            return new ConfigFile(GetDefaultHomeDir() + Settings.PathSeparator + ".gitconfig");
+            return new ConfigFile(GetHomeDir() + Settings.PathSeparator + ".gitconfig");
         }
         
         public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, bool showUntrackedFiles)

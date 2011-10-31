@@ -352,7 +352,9 @@ namespace GitCommands
             if (GitCommandHelpers.GetGlobalConfig().GetValue("core.editor").ToLower().Contains("gitextensions") ||
                 GetLocalConfig().GetValue("core.editor").ToLower().Contains("gitextensions") ||
                 GitCommandHelpers.GetGlobalConfig().GetValue("core.editor").ToLower().Contains("notepad") ||
-                GetLocalConfig().GetValue("core.editor").ToLower().Contains("notepad"))
+                GetLocalConfig().GetValue("core.editor").ToLower().Contains("notepad") ||
+                GitCommandHelpers.GetGlobalConfig().GetValue("core.editor").ToLower().Contains("notepad++") ||
+                GetLocalConfig().GetValue("core.editor").ToLower().Contains("notepad++"))
             {
                 RunCmd(Settings.GitCommand, "notes edit " + revision);
             }
@@ -740,6 +742,13 @@ namespace GitCommands
                 int.TryParse(RunCmd("cmd.exe", arguments), out count)
                     ? count
                     : 0;
+        }
+
+        public bool IsMergeCommit(string commitId)
+        {
+            string parents = RunCmd(Settings.GitCommand, "rev-list --parents --no-walk " + commitId);
+            string[] parentsTab = parents.Split(' ');
+            return parentsTab.Length > 2;
         }
 
         public string GetSubmoduleRemotePath(string name)
@@ -1780,7 +1789,7 @@ namespace GitCommands
 
                     //The contents of the actual line is output after the above header, prefixed by a TAB. This is to allow adding more header elements later.
                     if (line.StartsWith("\t"))
-                        blameLine.LineText = line.Substring(1).Trim(new char[] { '\r' });//trim first tab
+                        blameLine.LineText = line.Substring(1).Trim(new char[] { '\t' });//trim first tab
                     else if (line.StartsWith("author-mail"))
                         blameHeader.AuthorMail = line.Substring("author-mail".Length).Trim();
                     else if (line.StartsWith("author-time"))
