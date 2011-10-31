@@ -564,20 +564,25 @@ namespace GitCommands
             if (string.IsNullOrEmpty(statusString))
                 return diffFiles;
 
-            /*The status string can show warnings. This is a text blok at the start or at the beginning
+            /*The status string can show warnings. This is a text block at the start or at the beginning
               of the file status. Strip it. Example:
                 warning: LF will be replaced by CRLF in CustomDictionary.xml.
                 The file will have its original line endings in your working directory.
                 warning: LF will be replaced by CRLF in FxCop.targets.
                 The file will have its original line endings in your working directory.*/
-            string trimmedStatus = statusString.Trim(new char[] { '\n', '\r' });
-            int lastNewLinePos = trimmedStatus.LastIndexOfAny(new char[] { '\n', '\r' });
+            var nl = new char[] { '\n', '\r' };
+            string trimmedStatus = statusString.Trim(nl);
+            int lastNewLinePos = trimmedStatus.LastIndexOfAny(nl);
             if (lastNewLinePos > 0)
             {
-                if (trimmedStatus.IndexOf('\0') < lastNewLinePos) //Warning at end
-                    trimmedStatus = trimmedStatus.Substring(0, lastNewLinePos).Trim(new char[] { '\n', '\r' });
+                int ind = trimmedStatus.IndexOf('\0');
+                if (ind < lastNewLinePos) //Warning at end
+                {
+                    lastNewLinePos = trimmedStatus.IndexOfAny(nl, ind >= 0 ? ind: 0);
+                    trimmedStatus = trimmedStatus.Substring(0, lastNewLinePos).Trim(nl);
+                }
                 else                                              //Warning at beginning
-                    trimmedStatus = trimmedStatus.Substring(lastNewLinePos).Trim(new char[] { '\n', '\r' });
+                    trimmedStatus = trimmedStatus.Substring(lastNewLinePos).Trim(nl);
             }
 
             //Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)

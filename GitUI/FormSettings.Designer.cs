@@ -2311,20 +2311,21 @@ namespace GitUI
             // 
             this.GlobalDiffTool.FormattingEnabled = true;
             this.GlobalDiffTool.Items.AddRange(new object[] {
+            "Araxis",
+            "BeyondCompare3",
+            "diffuse",
+            "ecmerge",
+            "emerge",
+            "gvimdiff",
             "kdiff3",
             "kompare",
-            "tkdiff",
             "meld",
-            "xxdiff",
-            "emerge",
-            "vimdiff",
-            "gvimdiff",
-            "ecmerge",
-            "diffuse",
             "opendiff",
-            "araxis",
-            "beyondcompare3",
-            "winmerge"});
+            "tkdiff",
+            "TortoiseMerge",
+            "vimdiff",
+            "WinMerge",
+            "xxdiff"});
             this.GlobalDiffTool.Location = new System.Drawing.Point(153, 205);
             this.GlobalDiffTool.Name = "GlobalDiffTool";
             this.GlobalDiffTool.Size = new System.Drawing.Size(164, 21);
