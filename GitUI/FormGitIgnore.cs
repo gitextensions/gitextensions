@@ -11,6 +11,13 @@ namespace GitUI
     {
         private readonly TranslationString _gitignoreOnlyInWorkingDirSupported =
             new TranslationString(".gitignore is only supported when there is a working dir.");
+        private readonly TranslationString _gitignoreOnlyInWorkingDirSupportedCaption =
+            new TranslationString("No working dir");
+
+        private readonly TranslationString _cannotAccessGitignore =
+            new TranslationString("Failed to save .gitignore." + Environment.NewLine + "Check if file is accessible.");
+        private readonly TranslationString _cannotAccessGitignoreCaption =
+            new TranslationString("Failed to save .gitignore");
 
         public string GitIgnoreFile;
 
@@ -53,21 +60,15 @@ namespace GitUI
                         x =>
                         {
                             this.GitIgnoreFile = _NO_TRANSLATE_GitIgnoreEdit.GetText();
-
-                            using (var file = File.OpenWrite(x))
-                            {
-                                var contents = Settings.Encoding.GetBytes(this.GitIgnoreFile);
-                                file.Write(contents, 0, contents.Length);
-                            }
-
-                            if (closeAfterSave)
-                                Close();
+                            File.WriteAllBytes(x,Settings.Encoding.GetBytes(this.GitIgnoreFile));
                         });
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(_cannotAccessGitignore.Text + Environment.NewLine + ex.Message, 
+                    _cannotAccessGitignoreCaption.Text);
             }
+            Close();
         }
 
         private void FormGitIgnoreFormClosing(object sender, FormClosingEventArgs e)
@@ -79,7 +80,7 @@ namespace GitUI
         {
             RestorePosition("edit-git-ignore");
             if (!Settings.Module.IsBareRepository()) return;
-            MessageBox.Show(_gitignoreOnlyInWorkingDirSupported.Text);
+            MessageBox.Show(_gitignoreOnlyInWorkingDirSupported.Text, _gitignoreOnlyInWorkingDirSupportedCaption.Text);
             Close();
         }
 

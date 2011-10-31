@@ -9,7 +9,15 @@ namespace GitUI
 {
     public partial class FormGitAttributes : GitExtensionsForm
     {
-        readonly TranslationString noWorkingDir = new TranslationString(".gitattributes is only supported when there is a working dir.");
+        private readonly TranslationString noWorkingDir = 
+            new TranslationString(".gitattributes is only supported when there is a working dir.");
+        private readonly TranslationString _noWorkingDirCaption =
+            new TranslationString("No working dir");
+
+        private readonly TranslationString _cannotAccessGitattributes =
+            new TranslationString("Failed to save .gitattributes." + Environment.NewLine + "Check if file is accessible.");
+        private readonly TranslationString _cannotAccessGitattributesCaption =
+            new TranslationString("Failed to save .gitattributes");
 
         public string GitAttributesFile;
 
@@ -35,21 +43,23 @@ namespace GitUI
 
         private void SaveClick(object sender, EventArgs e)
         {
-            FileInfoExtensions
-                .MakeFileTemporaryWritable(
-                    Settings.WorkingDir + ".gitattributes",
-                    x =>
-                    {
-                        this.GitAttributesFile = _NO_TRANSLATE_GitAttributesText.GetText();
-
-                        using (var file = File.OpenWrite(x))
+            try
+            {
+                FileInfoExtensions
+                    .MakeFileTemporaryWritable(
+                        Settings.WorkingDir + ".gitattributes",
+                        x =>
                         {
-                            var contents = Settings.Encoding.GetBytes(this.GitAttributesFile);
-                            file.Write(contents, 0, contents.Length);
-                        }
-
-                        Close();
-                    });
+                            this.GitAttributesFile = _NO_TRANSLATE_GitAttributesText.GetText();
+                            File.WriteAllBytes(x,Settings.Encoding.GetBytes(this.GitAttributesFile));
+                        });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(_cannotAccessGitattributes.Text + Environment.NewLine + ex.Message,
+                    _cannotAccessGitattributesCaption.Text);
+            }
+            Close();
         }
 
         private void FormMailMapFormClosing(object sender, FormClosingEventArgs e)
@@ -61,7 +71,7 @@ namespace GitUI
         {
             RestorePosition("edit-gitattributes");
             if (!Settings.Module.IsBareRepository()) return;
-            MessageBox.Show(noWorkingDir.Text);
+            MessageBox.Show(noWorkingDir.Text, _noWorkingDirCaption.Text);
             Close();
         }
     }

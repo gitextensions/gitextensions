@@ -1,6 +1,17 @@
 ﻿Changelog
 =========
 
+Version 2.26
+	Fixed issue 629: Support of separate Fetch/Pull Urls for remotes
+	Fixed issue 685: Unable to set location of global git config file in Environment tab
+	Fixed revert commit dialog
+	Added selection filter for unstaged files in commit dialog (ctrl+f)
+	When trying to pull-rebase a merge commit a warning is given
+	Updated msysgit to version 1.7.7.1
+	Traditional Chinese translation updated
+	German transation updated
+	Many bugfixes and minor changes
+
 Version 2.25
 	Fixed issue 283: Splitter position on dashboard is not remembered
 	Fixed issue 543: Show current branch in main screen

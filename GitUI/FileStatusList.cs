@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Drawing;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Properties;
@@ -393,6 +395,28 @@ namespace GitUI
                 
         }
 
+		public int SetSelectionFilter(string filter)
+		{
+			return FilterFiles(RegexFor(filter));
+		}
 
+    	private static Regex RegexFor(string value)
+		{
+			return string.IsNullOrEmpty(value)
+				? new Regex("^$", RegexOptions.Compiled)
+				: new Regex(value, RegexOptions.Compiled);
+		}
+
+		private int FilterFiles(Regex filter)
+		{
+			var items = FileStatusListBox.Items.Cast<GitItemStatus>().ToList();
+			for (var i = 0; i < items.Count; i++)
+			{
+				FileStatusListBox.SetSelected(i, filter.IsMatch(items[i].Name));
+			}
+
+			return FileStatusListBox.SelectedIndices.Count;
+		}
     }
+
 }
