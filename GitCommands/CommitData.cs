@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Collections.ObjectModel;
+using System.Web;
 
 namespace GitCommands
 {
@@ -52,13 +53,31 @@ namespace GitCommands
         /// <returns></returns>
         public string GetHeader()
         {
-            string header = FillToLength(Strings.GetAuthorText() + ":", COMMITHEADER_STRING_LENGTH) + Author + "\n" +
-                 FillToLength(Strings.GetAuthorDateText() + ":", COMMITHEADER_STRING_LENGTH) + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, AuthorDate.UtcDateTime) + " (" + AuthorDate.LocalDateTime.ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")\n" +
-                 FillToLength(Strings.GetCommitterText() + ":", COMMITHEADER_STRING_LENGTH) + Committer + "\n" +
-                 FillToLength(Strings.GetCommitterDateText() + ":", COMMITHEADER_STRING_LENGTH) + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, CommitDate.UtcDateTime) + " (" + CommitDate.LocalDateTime.ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")\n" +
-                 FillToLength(Strings.GetCommitHashText() + ":", COMMITHEADER_STRING_LENGTH) + Guid;
+            StringBuilder header = new StringBuilder();
+            string authorEmail = GetEmail(Author);
+            header.AppendLine(FillToLength(HttpUtility.HtmlEncode(Strings.GetAuthorText()) + ":", COMMITHEADER_STRING_LENGTH) +
+                "<a href='mailto:" + authorEmail  + "'>" + HttpUtility.HtmlEncode(Author) + "</a>");
+            header.AppendLine(FillToLength(HttpUtility.HtmlEncode(Strings.GetAuthorDateText()) + ":", COMMITHEADER_STRING_LENGTH) +
+                HttpUtility.HtmlEncode(GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, AuthorDate.UtcDateTime) + " (" + AuthorDate.LocalDateTime.ToString("ddd MMM dd HH':'mm':'ss yyyy")) + ")");
+            string committerEmail = GetEmail(Committer);
+            header.AppendLine(FillToLength(HttpUtility.HtmlEncode(Strings.GetCommitterText()) + ":", COMMITHEADER_STRING_LENGTH) +
+                "<a href='mailto:" + committerEmail + "'>" + HttpUtility.HtmlEncode(Committer) + "</a>");
+            header.AppendLine(FillToLength(HttpUtility.HtmlEncode(Strings.GetCommitterDateText()) + ":", COMMITHEADER_STRING_LENGTH) + 
+                HttpUtility.HtmlEncode(GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, CommitDate.UtcDateTime) + " (" + CommitDate.LocalDateTime.ToString("ddd MMM dd HH':'mm':'ss yyyy")) + ")");
+            header.AppendLine(FillToLength(HttpUtility.HtmlEncode(Strings.GetCommitHashText()) + ":", COMMITHEADER_STRING_LENGTH) + 
+                HttpUtility.HtmlEncode(Guid));
 
-            return RemoveRedundancies(header);
+            return RemoveRedundancies(header.ToString());
+        }
+
+        private string GetEmail(string author)
+        {
+            if (String.IsNullOrEmpty(Author))
+                return "";
+            int ind = Author.IndexOf("<") + 1;
+            if (ind == -1)
+                return "";
+            return Author.Substring(ind, Author.LastIndexOf(">") - ind);
         }
 
         /// <summary>
@@ -170,12 +189,15 @@ namespace GitCommands
             return commitInformation;
         }
 
-        private static string FillToLength(string input, int length)
+        private static string FillToLength(string input, int length, int skip = 0)
         {
             // length
             const int tabsize = 8;
-            if (input.Length < length)
-                return input + new string('\t', ((length - input.Length) / tabsize) + (((length - input.Length) % tabsize) == 0 ? 0 : 1));
+            if ((input.Length - skip) < length)
+            {
+                int l = length - (input.Length - skip);
+                return input + new string('\t', (l / tabsize) + ((l % tabsize) == 0 ? 0 : 1));
+            }
 
             return input;
         }
