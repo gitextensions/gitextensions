@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Web;
 
 namespace GitCommands
 {
@@ -105,7 +106,7 @@ namespace GitCommands
                 return new CommitInformation(error, "");
 
             string header = data.GetHeader();
-            string body = "\n\n" + data.Body.Trim() + "\n\n";
+            string body = "\n\n" + HttpUtility.HtmlEncode(data.Body.Trim()) + "\n\n";
 
             return new CommitInformation(header, body);
         }
@@ -120,7 +121,7 @@ namespace GitCommands
                 throw new ArgumentNullException("data");
 
             string header = data.GetHeader();
-            string body = "\n\n" + data.Body.Trim() + "\n\n";
+            string body = "\n\n" + HttpUtility.HtmlEncode(data.Body.Trim()) + "\n\n";
 
             return new CommitInformation(header, body);
         }

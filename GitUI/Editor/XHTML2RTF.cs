@@ -7,6 +7,7 @@ using System.IO;
 using System.Xml;
 using System.Runtime.InteropServices;
 using System.Drawing;
+using System.Diagnostics;
 
 namespace GitUI.Editor.RichTextBoxExtension
 {
@@ -560,6 +561,33 @@ namespace GitUI.Editor.RichTextBoxExtension
             return GetCOLORREF(r, g, b);
         }
         #endregion
+        
+        public static string GetLinkUrl(this LinkClickedEventArgs e)
+        {
+            var v = e.LinkText.Split(new char[] {'#'}, 2);
+            if (v.Length == 0)
+                return "";
+            else if (v.Length == 1)
+                return v[0];
+            else
+                return v[1];
+        }
+
+        public static void GetLinkText(this LinkClickedEventArgs e, out string url, out string text)
+        {
+            var v = e.LinkText.Split(new char[] {'#'}, 2);
+            if (v.Length == 0)
+            {
+                url = "";
+                text = "";
+                return;
+            }
+            text = v[0];
+            if (v.Length == 1)
+                url = v[0];
+            else
+                url = v[1];
+        }
 
         public static void SetXHTMLText(this RichTextBox rtb, string xhtmlText)
         {
@@ -766,6 +794,8 @@ namespace GitUI.Editor.RichTextBoxExtension
                                 }
                                 break;
                             case XmlNodeType.Text:
+                            case XmlNodeType.Whitespace:
+                            case XmlNodeType.SignificantWhitespace:
                                 string strData = reader.Value;
                                 bool bNewParagraph = (strData.IndexOf("\r\n", 0) >= 0) || (strData.IndexOf("\n", 0) >= 0);
 
@@ -805,8 +835,9 @@ namespace GitUI.Editor.RichTextBoxExtension
                     }
                 }
             }
-            catch
+            catch (System.Xml.XmlException ex)
             {
+                Debug.WriteLine(ex.Message);
             }
             rtb.HideSelection = false;
             // apply links style
