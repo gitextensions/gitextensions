@@ -1383,7 +1383,6 @@ namespace GitCommands
             else
             {
                 result = RunCachableCmd(Settings.GitCommand, cmd);
-
             }
             return GitCommandHelpers.GetAllChangedFilesFromString(result, true);
         }
