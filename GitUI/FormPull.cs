@@ -50,10 +50,8 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
-
-            IList<string> remotes = new List<string>(Settings.Module.GetRemotes());
-            remotes.Insert(0, "[ All ]");
-            Remotes.DataSource = remotes;
+            
+            UpdateRemotesList();
 
             string branch = Settings.Module.GetSelectedBranch();
             Remotes.Text = Settings.Module.GetSetting(string.Format("branch.{0}.remote", branch));
@@ -64,6 +62,13 @@ namespace GitUI
             Fetch.Checked = Settings.PullMerge == "fetch";
             AutoStash.Checked = Settings.AutoStash;
             ErrorOccurred = false;
+        }
+
+        private void UpdateRemotesList()
+        {
+            IList<string> remotes = new List<string>(Settings.Module.GetRemotes());
+            remotes.Insert(0, "[ All ]");
+            Remotes.DataSource = remotes;
         }
 
         public DialogResult PullAndShowDialogWhenFailed()
@@ -115,8 +120,8 @@ namespace GitUI
                     // all remote branches but it is also the slowest.
                     // Heads = GitCommands.GitCommands.GetRemoteHeads(Remotes.Text, false, true);
 
-                    // The code below is a quick way to get a list containg all remote branches.
-                    // It only returns the heads that are allready known to the repository. This
+                    // The code below is a quick way to get a list contains all remote branches.
+                    // It only returns the heads that are already known to the repository. This
                     // doesn't return heads that are new on the server. This can be updated using
                     // update branch info in the manage remotes dialog.
                     _heads = new List<GitHead>();
@@ -347,9 +352,17 @@ namespace GitUI
             Rebase.Enabled = true;
         }
 
+        private bool bInternalUpdate = false;
+
         private void AddRemoteClick(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartRemotesDialog();
+
+            bInternalUpdate = true;
+            string text = Remotes.Text;
+            UpdateRemotesList();
+            Remotes.Text = text;
+            bInternalUpdate = false;
         }
 
         private void MergeCheckedChanged(object sender, EventArgs e)
@@ -374,7 +387,8 @@ namespace GitUI
 
         private void Remotes_TextChanged(object sender, EventArgs e)
         {
-            RemotesValidating(null, null);
+            if (!bInternalUpdate)
+                RemotesValidating(null, null);
         }
 
         private void RemotesValidating(object sender, CancelEventArgs e)
