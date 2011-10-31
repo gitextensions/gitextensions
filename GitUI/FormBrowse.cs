@@ -1280,11 +1280,13 @@ namespace GitUI
             string inMemMessageFilter;
             string inMemCommitterFilter;
             string inMemAuthorFilter;
-            var filterParams = new bool[4];
+            string inMemHashFilter;
+            var filterParams = new bool[5];
             filterParams[0] = commitToolStripMenuItem1.Checked;
             filterParams[1] = committerToolStripMenuItem.Checked;
             filterParams[2] = authorToolStripMenuItem.Checked;
             filterParams[3] = diffContainsToolStripMenuItem.Checked;
+            filterParams[4] = hashToolStripMenuItem.Checked;
             try
             {
                 RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text,
@@ -1292,7 +1294,8 @@ namespace GitUI
                                                out revListArgs,
                                                out inMemMessageFilter,
                                                out inMemCommitterFilter,
-                                               out inMemAuthorFilter);
+                                               out inMemAuthorFilter,
+                                               out inMemHashFilter);
             }
             catch (InvalidOperationException ex)
             {
@@ -1305,12 +1308,14 @@ namespace GitUI
                 (RevisionGrid.InMemMessageFilter == inMemMessageFilter) &&
                 (RevisionGrid.InMemCommitterFilter == inMemCommitterFilter) &&
                 (RevisionGrid.InMemAuthorFilter == inMemAuthorFilter) &&
+                (RevisionGrid.InMemHashFilter == inMemHashFilter) &&
                 (RevisionGrid.InMemFilterIgnoreCase))
                 return;
             RevisionGrid.Filter = revListArgs;
             RevisionGrid.InMemMessageFilter = inMemMessageFilter;
             RevisionGrid.InMemCommitterFilter = inMemCommitterFilter;
             RevisionGrid.InMemAuthorFilter = inMemAuthorFilter;
+            RevisionGrid.InMemHashFilter = inMemHashFilter;
             RevisionGrid.InMemFilterIgnoreCase = true;
             RevisionGrid.ForceRefreshRevisions();
         }
@@ -2010,6 +2015,7 @@ namespace GitUI
                 commitToolStripMenuItem1.Checked = false;
                 committerToolStripMenuItem.Checked = false;
                 authorToolStripMenuItem.Checked = false;
+                hashToolStripMenuItem.Checked = false;
             }
             else
                 commitToolStripMenuItem1.Checked = true;
@@ -2019,7 +2025,7 @@ namespace GitUI
         {
             if (RepoHosts.GitHosters.Count > 0)
             {
-                GitUICommands.Instance.StartCloneForkFromHoster(RepoHosts.GitHosters[0]); //FIXME: Works untill we have > 1 repo hoster
+                GitUICommands.Instance.StartCloneForkFromHoster(RepoHosts.GitHosters[0]); //FIXME: Works until we have > 1 repo hoster
                 Initialize();
             }
             else

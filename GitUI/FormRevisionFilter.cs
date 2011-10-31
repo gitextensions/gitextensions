@@ -119,6 +119,13 @@ namespace GitUI
             return string.Empty;
         }
 
+        public string GetInMemHashFilter()
+        {
+            //if (HashCheck.Checked && !GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(CommitHash.Text))
+            //    return CommitHash.Text;
+            return string.Empty;
+        }
+
         public bool GetIgnoreCase()
         {
             return IgnoreCase.Checked;
