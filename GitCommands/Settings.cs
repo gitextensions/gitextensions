@@ -1,6 +1,5 @@
 using System;
 using System.Drawing;
-using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
@@ -748,6 +747,13 @@ namespace GitCommands
         {
             get { return SafeGet("AutoPullOnRejected", false, ref _AutoPullOnRejected); }
             set { SafeSet("AutoPullOnRejected", value, ref _AutoPullOnRejected); }
+        }
+
+        private static bool? _RecursiveSubmodulesCheck;
+        public static bool RecursiveSubmodulesCheck
+        {
+            get { return SafeGet("RecursiveSubmodulesCheck", true, ref _RecursiveSubmodulesCheck); }
+            set { SafeSet("RecursiveSubmodulesCheck", value, ref _RecursiveSubmodulesCheck); }
         }
 
         public static string GetGitExtensionsFullPath()

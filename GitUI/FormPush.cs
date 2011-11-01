@@ -38,8 +38,8 @@ namespace GitUI
         private readonly TranslationString _selectTag =
             new TranslationString("You need to select a tag to push or select \"Push all tags\".");
 
-		private readonly TranslationString _yes = new TranslationString("Yes");
-		private readonly TranslationString _no = new TranslationString("No");
+        private readonly TranslationString _yes = new TranslationString("Yes");
+        private readonly TranslationString _no = new TranslationString("No");
 
         public FormPush()
         {
@@ -50,6 +50,16 @@ namespace GitUI
             //they are reset to false
             PushAllTags.Checked = Settings.PushAllTags;
             AutoPullOnRejected.Checked = Settings.AutoPullOnRejected;
+            if (GitCommandHelpers.VersionInUse.SupportPushWithRecursiveSubmodulesCheck)
+            {
+                RecursiveSubmodulesCheck.Enabled = true;
+                RecursiveSubmodulesCheck.Checked = Settings.RecursiveSubmodulesCheck;
+            }
+            else
+            {
+                RecursiveSubmodulesCheck.Enabled = false;
+                RecursiveSubmodulesCheck.Checked = false;
+            }
 
             _currentBranch = Settings.Module.GetSelectedBranch();
 
@@ -127,6 +137,8 @@ namespace GitUI
             Repositories.RepositoryHistory.AddMostRecentRepository(PushDestination.Text);
             Settings.PushAllTags = PushAllTags.Checked;
             Settings.AutoPullOnRejected = AutoPullOnRejected.Checked;
+            if (RecursiveSubmodulesCheck.Enabled)
+                Settings.RecursiveSubmodulesCheck = RecursiveSubmodulesCheck.Checked;
 
             var remote = "";
             string destination;
@@ -160,7 +172,7 @@ namespace GitUI
 
 
                 pushCmd = GitCommandHelpers.PushCmd(destination, Branch.Text, RemoteBranch.Text,
-                                                          PushAllBranches.Checked, ForcePushBranches.Checked, track);
+                    PushAllBranches.Checked, ForcePushBranches.Checked, track, RecursiveSubmodulesCheck.Checked);
             }
             else if (TabControlTagBranch.SelectedTab == TagTab)
                 pushCmd = GitCommandHelpers.PushTagCmd(destination, TagComboBox.Text, PushAllTags.Checked,
@@ -341,10 +353,10 @@ namespace GitUI
 
         private void RemotesUpdated(object sender, EventArgs e)
         {
-			if (TabControlTagBranch.SelectedTab == MultipleBranchTab)
-				UpdateMultiBranchView();
+            if (TabControlTagBranch.SelectedTab == MultipleBranchTab)
+                UpdateMultiBranchView();
 
-			EnableLoadSshButton();
+            EnableLoadSshButton();
 
             var pushSettingValue = Settings.Module.GetSetting("remote." + Remotes.Text + ".push");
 
@@ -419,91 +431,91 @@ namespace GitUI
             RemoteBranch.Enabled = !PushAllBranches.Checked;
         }
 
-		#region Multi-Branch Methods
+        #region Multi-Branch Methods
 
-    	private DataTable _branchTable;
+        private DataTable _branchTable;
 
-		private void UpdateMultiBranchView()
-		{
-			_branchTable = new DataTable();
-			_branchTable.Columns.Add("Local", typeof (string));
-			_branchTable.Columns.Add("Remote", typeof (string));
-			_branchTable.Columns.Add("New", typeof (string));
-			_branchTable.Columns.Add("Push", typeof(bool));
-			_branchTable.Columns.Add("Force", typeof(bool));
-			_branchTable.Columns.Add("Delete", typeof(bool));
-			_branchTable.ColumnChanged += BranchTable_ColumnChanged;
-			var bs = new BindingSource {DataSource = _branchTable};
-		    BranchGrid.DataSource = bs;
+        private void UpdateMultiBranchView()
+        {
+            _branchTable = new DataTable();
+            _branchTable.Columns.Add("Local", typeof (string));
+            _branchTable.Columns.Add("Remote", typeof (string));
+            _branchTable.Columns.Add("New", typeof (string));
+            _branchTable.Columns.Add("Push", typeof(bool));
+            _branchTable.Columns.Add("Force", typeof(bool));
+            _branchTable.Columns.Add("Delete", typeof(bool));
+            _branchTable.ColumnChanged += BranchTable_ColumnChanged;
+            var bs = new BindingSource {DataSource = _branchTable};
+            BranchGrid.DataSource = bs;
 
-			string remote = Remotes.Text.Trim();
-			if (remote == "")
-				return;
+            string remote = Remotes.Text.Trim();
+            if (remote == "")
+                return;
 
-			List<GitHead> localHeads = Settings.Module.GetHeads(false, true);
-			List<GitHead> remoteHeads = Settings.Module.GetRemoteHeads(remote, false, true);
+            List<GitHead> localHeads = Settings.Module.GetHeads(false, true);
+            List<GitHead> remoteHeads = Settings.Module.GetRemoteHeads(remote, false, true);
 
-			// Add all the local branches.
-			foreach (var head in localHeads)
-			{
-				DataRow row = _branchTable.NewRow();
-				row["Force"] = false;
-				row["Delete"] = false;
-				row["Local"] = head.Name;
+            // Add all the local branches.
+            foreach (var head in localHeads)
+            {
+                DataRow row = _branchTable.NewRow();
+                row["Force"] = false;
+                row["Delete"] = false;
+                row["Local"] = head.Name;
 
-				string remoteName;
-				if (head.Remote == remote)
-					remoteName = head.MergeWith ?? head.Name;
-				else
-					remoteName = head.Name;
+                string remoteName;
+                if (head.Remote == remote)
+                    remoteName = head.MergeWith ?? head.Name;
+                else
+                    remoteName = head.Name;
 
-				row["Remote"] = remoteName;
-				bool newAtRemote = remoteHeads.Any(h => h.Name == remoteName);
-				row["New"] =  newAtRemote ? _no.Text : _yes.Text;
-				row["Push"] = newAtRemote;
+                row["Remote"] = remoteName;
+                bool newAtRemote = remoteHeads.Any(h => h.Name == remoteName);
+                row["New"] =  newAtRemote ? _no.Text : _yes.Text;
+                row["Push"] = newAtRemote;
 
-				_branchTable.Rows.Add(row);
-			}
+                _branchTable.Rows.Add(row);
+            }
 
-			// Offer to delete all the left over remote branches.
-			foreach (var remoteHead in remoteHeads)
-			{
-			    GitHead head = remoteHead;
-			    if (!localHeads.Any(h => h.Name == head.Name))
-				{
-					DataRow row = _branchTable.NewRow();
-					row["Local"] = null;
-					row["Remote"] = remoteHead.Name;
-					row["New"] = _no.Text;
-					row["Push"] = false;
-					row["Force"] = false;
-					row["Delete"] = false;
-					_branchTable.Rows.Add(row);
-				}
-			}
-		}
+            // Offer to delete all the left over remote branches.
+            foreach (var remoteHead in remoteHeads)
+            {
+                GitHead head = remoteHead;
+                if (!localHeads.Any(h => h.Name == head.Name))
+                {
+                    DataRow row = _branchTable.NewRow();
+                    row["Local"] = null;
+                    row["Remote"] = remoteHead.Name;
+                    row["New"] = _no.Text;
+                    row["Push"] = false;
+                    row["Force"] = false;
+                    row["Delete"] = false;
+                    _branchTable.Rows.Add(row);
+                }
+            }
+        }
 
         static void BranchTable_ColumnChanged(object sender, DataColumnChangeEventArgs e)
-		{
-			if (e.Column.ColumnName == "Push" && (bool)e.ProposedValue)
-			{
-				e.Row["Force"] = false;
-				e.Row["Delete"] = false;
-			}
-			if (e.Column.ColumnName == "Force" && (bool)e.ProposedValue)
-			{
-				e.Row["Push"] = false;
-				e.Row["Delete"] = false;
-			}
-			if (e.Column.ColumnName == "Delete" && (bool)e.ProposedValue)
-			{
-				e.Row["Push"] = false;
-				e.Row["Force"] = false;
-			}
-		}
+        {
+            if (e.Column.ColumnName == "Push" && (bool)e.ProposedValue)
+            {
+                e.Row["Force"] = false;
+                e.Row["Delete"] = false;
+            }
+            if (e.Column.ColumnName == "Force" && (bool)e.ProposedValue)
+            {
+                e.Row["Push"] = false;
+                e.Row["Delete"] = false;
+            }
+            if (e.Column.ColumnName == "Delete" && (bool)e.ProposedValue)
+            {
+                e.Row["Push"] = false;
+                e.Row["Force"] = false;
+            }
+        }
 
-		private void TabControlTagBranch_Selected(object sender, TabControlEventArgs e)
-		{
+        private void TabControlTagBranch_Selected(object sender, TabControlEventArgs e)
+        {
             if (TabControlTagBranch.SelectedTab == MultipleBranchTab)
                 UpdateMultiBranchView();
             else if (TabControlTagBranch.SelectedTab == TagTab)
@@ -513,19 +525,19 @@ namespace GitUI
                 UpdateBranchDropDown();
                 UpdateRemoteBranchDropDown();
             }
-		}
+        }
 
-		private void BranchGrid_CurrentCellDirtyStateChanged(object sender, EventArgs e)
-		{
-			// Push grid checkbox changes immediately into the underlying data table.
-			if (BranchGrid.CurrentCell is DataGridViewCheckBoxCell)
-			{
-				BranchGrid.EndEdit();
-				((BindingSource)BranchGrid.DataSource).EndEdit();
-			}
-		}
+        private void BranchGrid_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            // Push grid checkbox changes immediately into the underlying data table.
+            if (BranchGrid.CurrentCell is DataGridViewCheckBoxCell)
+            {
+                BranchGrid.EndEdit();
+                ((BindingSource)BranchGrid.DataSource).EndEdit();
+            }
+        }
 
-		#endregion
+        #endregion
 
         private void FormPush_FormClosing(object sender, FormClosingEventArgs e)
         {

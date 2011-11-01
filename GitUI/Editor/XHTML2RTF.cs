@@ -562,7 +562,7 @@ namespace GitUI.Editor.RichTextBoxExtension
         }
         #endregion
         
-        public static string GetLinkUrl(this LinkClickedEventArgs e)
+        public static string GetUrl(this LinkClickedEventArgs e)
         {
             var v = e.LinkText.Split(new char[] {'#'}, 2);
             if (v.Length == 0)

@@ -350,10 +350,11 @@ namespace GitCommands
 
         public static string PushCmd(string path, string branch, bool all)
         {
-            return PushCmd(path, null, branch, all, false, true);
+            return PushCmd(path, null, branch, all, false, true, false);
         }
 
-        public static string PushCmd(string path, string fromBranch, string toBranch, bool all, bool force, bool track)
+        public static string PushCmd(string path, string fromBranch, string toBranch, 
+            bool all, bool force, bool track, bool recursiveSubmodulesCheck)
         {
             path = FixPath(path);
 
@@ -370,13 +371,17 @@ namespace GitCommands
             if (track)
                 strack = "-u ";
 
+            var srecursiveSubmodulesCheck = "";
+            if (recursiveSubmodulesCheck)
+                srecursiveSubmodulesCheck = "--recurse-submodules=check ";
+
             if (all)
-                return string.Format("push {0}{1}--all \"{2}\"", sforce, strack, path.Trim());
+                return string.Format("push {0}{1}{2}--all \"{3}\"", sforce, strack, srecursiveSubmodulesCheck, path.Trim());
 
             if (!string.IsNullOrEmpty(toBranch) && !string.IsNullOrEmpty(fromBranch))
-                return string.Format("push {0}{1}\"{2}\" {3}:{4}", sforce, strack, path.Trim(), fromBranch, toBranch);
+                return string.Format("push {0}{1}{2}\"{3}\" {4}:{5}", sforce, strack, srecursiveSubmodulesCheck, path.Trim(), fromBranch, toBranch);
 
-            return string.Format("push {0}{1}\"{2}\" {3}", sforce, strack, path.Trim(), fromBranch);
+            return string.Format("push {0}{1}{2}\"{3}\" {4}", sforce, strack, srecursiveSubmodulesCheck, path.Trim(), fromBranch);
         }
 
         public static string PushMultipleCmd(string path, IEnumerable<GitPushAction> pushActions)
