@@ -38,7 +38,7 @@ namespace GitUI
         {
             try
             {
-                string url = e.GetLinkUrl();
+                string url = e.GetUrl();
                 new Process
                     {
                         EnableRaisingEvents = false,
