@@ -409,13 +409,22 @@ namespace GitUI
 
 		private int FilterFiles(Regex filter)
 		{
-			var items = FileStatusListBox.Items.Cast<GitItemStatus>().ToList();
-			for (var i = 0; i < items.Count; i++)
+			try
 			{
-				FileStatusListBox.SetSelected(i, filter.IsMatch(items[i].Name));
-			}
+				SuspendLayout();
 
-			return FileStatusListBox.SelectedIndices.Count;
+				var items = FileStatusListBox.Items.Cast<GitItemStatus>().ToList();
+				for (var i = 0; i < items.Count; i++)
+				{
+					FileStatusListBox.SetSelected(i, filter.IsMatch(items[i].Name));
+				}
+
+				return FileStatusListBox.SelectedIndices.Count;
+			}
+			finally
+			{
+				ResumeLayout(true);
+			}
 		}
     }
 
