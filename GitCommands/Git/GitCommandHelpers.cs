@@ -580,7 +580,7 @@ namespace GitCommands
             int lastNewLinePos = trimmedStatus.LastIndexOfAny(nl);
             if (lastNewLinePos > 0)
             {
-                int ind = trimmedStatus.IndexOf('\0');
+                int ind = trimmedStatus.LastIndexOf('\0');
                 if (ind < lastNewLinePos) //Warning at end
                 {
                     lastNewLinePos = trimmedStatus.IndexOfAny(nl, ind >= 0 ? ind: 0);

@@ -136,7 +136,7 @@
     <value>False</value>
   </data>
   <data name="_NO_TRANSLATE_Categories.ItemHeight" type="System.Int32, mscorlib">
-    <value>20</value>
+    <value>16</value>
   </data>
   <data name="_NO_TRANSLATE_Categories.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 33</value>
@@ -145,7 +145,7 @@
     <value>3, 4, 3, 4</value>
   </data>
   <data name="_NO_TRANSLATE_Categories.Size" type="System.Drawing.Size, System.Drawing">
-    <value>211, 331</value>
+    <value>200, 343</value>
   </data>
   <data name="_NO_TRANSLATE_Categories.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -172,13 +172,13 @@
     <value>NoControl</value>
   </data>
   <data name="Remove.Location" type="System.Drawing.Point, System.Drawing">
-    <value>105, 15</value>
+    <value>103, 15</value>
   </data>
   <data name="Remove.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 4, 3, 4</value>
   </data>
   <data name="Remove.Size" type="System.Drawing.Size, System.Drawing">
-    <value>98, 39</value>
+    <value>90, 28</value>
   </data>
   <data name="Remove.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -208,13 +208,13 @@
     <value>NoControl</value>
   </data>
   <data name="Add.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 15</value>
+    <value>7, 15</value>
   </data>
   <data name="Add.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 4, 3, 4</value>
   </data>
   <data name="Add.Size" type="System.Drawing.Size, System.Drawing">
-    <value>97, 39</value>
+    <value>90, 28</value>
   </data>
   <data name="Add.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -238,10 +238,10 @@
     <value>Bottom</value>
   </data>
   <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 364</value>
+    <value>0, 376</value>
   </data>
   <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>211, 68</value>
+    <value>200, 56</value>
   </data>
   <data name="panel1.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -261,11 +261,14 @@
   <data name="CategoriesLabel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Top</value>
   </data>
+  <data name="CategoriesLabel.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="CategoriesLabel.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
   <data name="CategoriesLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>211, 33</value>
+    <value>200, 33</value>
   </data>
   <data name="CategoriesLabel.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -328,7 +331,7 @@
     <value>3, 4, 3, 4</value>
   </data>
   <data name="RepositoriesGrid.Size" type="System.Drawing.Size, System.Drawing">
-    <value>533, 268</value>
+    <value>544, 268</value>
   </data>
   <data name="RepositoriesGrid.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -348,6 +351,9 @@
   <data name="RepositoriesType.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="RepositoriesType.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="RepositoriesType.Location" type="System.Drawing.Point, System.Drawing">
     <value>144, 83</value>
   </data>
@@ -355,7 +361,7 @@
     <value>3, 4, 3, 4</value>
   </data>
   <data name="RepositoriesType.Size" type="System.Drawing.Size, System.Drawing">
-    <value>112, 24</value>
+    <value>108, 21</value>
   </data>
   <data name="RepositoriesType.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -385,7 +391,7 @@
     <value>3, 5, 3, 5</value>
   </data>
   <data name="_NO_TRANSLATE_RssFeed.Size" type="System.Drawing.Size, System.Drawing">
-    <value>391, 27</value>
+    <value>402, 22</value>
   </data>
   <data name="_NO_TRANSLATE_RssFeed.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
@@ -405,11 +411,14 @@
   <data name="label3.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="label3.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 131</value>
+    <value>11, 122</value>
   </data>
   <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>68, 20</value>
+    <value>68, 17</value>
   </data>
   <data name="label3.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -432,6 +441,9 @@
   <data name="RssFeedType.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="RssFeedType.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="RssFeedType.Location" type="System.Drawing.Point, System.Drawing">
     <value>144, 48</value>
   </data>
@@ -439,7 +451,7 @@
     <value>3, 4, 3, 4</value>
   </data>
   <data name="RssFeedType.Size" type="System.Drawing.Size, System.Drawing">
-    <value>91, 24</value>
+    <value>93, 21</value>
   </data>
   <data name="RssFeedType.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -462,11 +474,14 @@
   <data name="label2.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="label2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>2, 48</value>
+    <value>11, 50</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>41, 20</value>
+    <value>40, 17</value>
   </data>
   <data name="label2.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -496,7 +511,7 @@
     <value>3, 5, 3, 5</value>
   </data>
   <data name="_NO_TRANSLATE_Caption.Size" type="System.Drawing.Size, System.Drawing">
-    <value>391, 27</value>
+    <value>402, 22</value>
   </data>
   <data name="_NO_TRANSLATE_Caption.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -516,11 +531,14 @@
   <data name="label1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="label1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 4</value>
+    <value>11, 10</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>61, 20</value>
+    <value>56, 17</value>
   </data>
   <data name="label1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -559,7 +577,7 @@
     <value>758, 432</value>
   </data>
   <data name="splitContainer2.SplitterDistance" type="System.Int32, mscorlib">
-    <value>211</value>
+    <value>200</value>
   </data>
   <data name="splitContainer2.SplitterWidth" type="System.Int32, mscorlib">
     <value>6</value>
@@ -583,7 +601,10 @@
     <value>True</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>8, 20</value>
+    <value>8, 16</value>
+  </data>
+  <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 7.8pt</value>
   </data>
   <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 4, 3, 4</value>
@@ -619,6 +640,6 @@
     <value>DashboardEditor</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>GitUI.GitExtensionsControl, GitUI, Version=2.25.0.0, Culture=neutral, PublicKeyToken=null</value>
+    <value>GitUI.GitExtensionsControl, GitUI, Version=2.26.0.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
 </root>
