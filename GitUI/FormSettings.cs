@@ -1461,7 +1461,7 @@ namespace GitUI
             }
             else if (GlobalDiffTool.Text.Equals("p4merge", StringComparison.CurrentCultureIgnoreCase))
                 DifftoolPath.Text = SelectFile(".", "p4merge.exe (p4merge.exe)|p4merge.exe", DifftoolPath.Text);
-            else if (GlobalDiffTool.Text.Equals("TortoiseMerge", StringComparison.CurrentCultureIgnoreCase))
+            else if (GlobalDiffTool.Text.Equals("tmerge", StringComparison.CurrentCultureIgnoreCase))
                 DifftoolPath.Text = SelectFile(".", "TortoiseMerge.exe (TortoiseMerge.exe)|TortoiseMerge.exe",
                                                DifftoolPath.Text);
             else
@@ -1683,7 +1683,7 @@ namespace GitUI
                                                       @"c:\Program Files (x86)\KDiff3\",
                                                       regkdiff3path);
             }
-            else if (GlobalDiffTool.Text.Equals("tortoisemerge", StringComparison.CurrentCultureIgnoreCase))
+            else if (GlobalDiffTool.Text.Equals("tmerge", StringComparison.CurrentCultureIgnoreCase))
             {
                 string tortoisemergepath = FindFileInFolders("TortoiseMerge.exe",
                                                        @"c:\Program Files (x86)\TortoiseSVN\bin\",
@@ -1898,7 +1898,7 @@ namespace GitUI
                 }
                 string mergetool = Settings.Module.GetGlobalSetting("merge.tool");
                 if (mergetool.Equals("p4merge", StringComparison.CurrentCultureIgnoreCase) ||
-                    mergetool.Equals("TortoiseMerge", StringComparison.CurrentCultureIgnoreCase))
+                    mergetool.Equals("tmerge", StringComparison.CurrentCultureIgnoreCase))
                 {
                     string p = Settings.Module.GetGlobalSetting("mergetool." + mergetool + ".cmd");
                     if (string.IsNullOrEmpty(p))
