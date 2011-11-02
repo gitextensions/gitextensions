@@ -9,6 +9,7 @@ using GitUI.Properties;
 using ResourceManager.Translation;
 using Settings = GitCommands.Settings;
 using GitUI.Script;
+using System.Linq;
 
 namespace GitUI
 {
@@ -53,6 +54,8 @@ namespace GitUI
 
         private List<GitHead> _heads;
         public bool ErrorOccurred { get; private set; }
+        private string branchRemote;
+        private string branch;
 
         public FormPull()
         {
@@ -63,8 +66,9 @@ namespace GitUI
             remotes.Insert(0, "[ All ]");
             Remotes.DataSource = remotes;
 
-            string branch = GitCommandHelpers.GetSelectedBranch();
-            Remotes.Text = GitCommandHelpers.GetSetting(string.Format("branch.{0}.remote", branch));
+            branch = GitCommandHelpers.GetSelectedBranch();
+            branchRemote = GitCommandHelpers.GetSetting(string.Format("branch.{0}.remote", branch));
+            Remotes.Text = branchRemote;
             _NO_TRANSLATE_localBranch.Text = branch;
 
             Merge.Checked = Settings.PullMerge == "merge";
@@ -187,8 +191,19 @@ namespace GitUI
 
             if (Rebase.Checked && GitCommandHelpers.IsMergeCommit("HEAD"))
             {
-                if (MessageBox.Show(_areYouSureYouWantToRebaseMerge.Text, _areYouSureYouWantToRebaseMergeCaption.Text, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
-                    return false;
+                bool isPushedToRemote;
+                if (string.IsNullOrEmpty(branchRemote))
+                    isPushedToRemote = false;
+                else
+                {
+                    string remoteBranchName = branchRemote + "/" + branch; 
+                    IEnumerable<string> branches = CommitInformation.GetAllBranchesWhichContainGivenCommit("HEAD", false, true);
+                    isPushedToRemote = branches.Count(b => remoteBranchName.Equals(b)) > 0;
+                }
+                //ask only when commit is not pushed to remote yet
+                if (!isPushedToRemote)
+                    if (MessageBox.Show(_areYouSureYouWantToRebaseMerge.Text, _areYouSureYouWantToRebaseMergeCaption.Text, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                        return false;
             }
 
             Repositories.RepositoryHistory.AddMostRecentRepository(PullSource.Text);
