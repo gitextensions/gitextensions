@@ -45,6 +45,12 @@ namespace GitCommandsTests
                 Assert.IsTrue(status.Count == 1);
                 Assert.IsTrue(status[0].Name == "testfile.txt");
             }
+            {//git diff -M -C -z --cached --name-status
+                string statusString = "M  testfile.txt\0\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in FxCop.targets.\nThe file will have its original line endings in your working directory.\n";
+                List<GitItemStatus> status = GitCommandHelpers.GetAllChangedFilesFromString(statusString, true);
+                Assert.IsTrue(status.Count == 1);
+                Assert.IsTrue(status[0].Name == "testfile.txt");
+            }
             { //git status --porcelain --untracked-files=no -z
                 string statusString = "M  adfs.h\0M  dir.c\0\r\nwarning: LF will be replaced by CRLF in adfs.h.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in dir.c.\nThe file will have its original line endings in your working directory.";
                 List<GitItemStatus> status = GitCommandHelpers.GetAllChangedFilesFromString(statusString, false);
@@ -52,7 +58,6 @@ namespace GitCommandsTests
                 Assert.IsTrue(status[0].Name == "adfs.h");
                 Assert.IsTrue(status[1].Name == "dir.c");
             }
-            
         }
     }
 }
