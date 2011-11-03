@@ -837,11 +837,22 @@ namespace GitCommands
 
         public static bool IsMergeCommit(string commitId)
         {
-            string parents = RunCmd(Settings.GitCommand, "rev-list --parents --no-walk " + commitId);
-            string[] parentsTab = parents.Split(' ');
-            return parentsTab.Length > 2;
+            return ExistsMergeCommit(commitId+"~1", commitId);
         }
 
+        public static bool ExistsMergeCommit(string startRev, string endRev)
+        {
+            string revisions = RunCmd(Settings.GitCommand, "rev-list --parents --no-walk " + startRev + ".." + endRev);
+            string[] revisionsTab = revisions.Split('\n');
+            foreach (string parents in revisionsTab)
+            {
+                string[] parentsTab = parents.Split(' ');
+                if (parentsTab.Length > 2)
+                    return true;
+            }
+            return false;
+        }
+        
         public static string GetSubmoduleRemotePath(string name)
         {
             var configFile = new ConfigFile(Settings.WorkingDir + Settings.PathSeparator + ".gitmodules");

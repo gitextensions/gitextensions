@@ -189,21 +189,18 @@ namespace GitUI
 
             Settings.AutoStash = AutoStash.Checked;
 
-            if (Rebase.Checked && GitCommandHelpers.IsMergeCommit("HEAD"))
+            string remoteBranchName = branchRemote + "/" + branch;
+            //ask only if exists commit not pushed to remote yet
+            if (Rebase.Checked && GitCommandHelpers.ExistsMergeCommit(remoteBranchName, branch))
             {
-                bool isPushedToRemote;
-                if (string.IsNullOrEmpty(branchRemote))
-                    isPushedToRemote = false;
-                else
+                DialogResult dr = MessageBox.Show(_areYouSureYouWantToRebaseMerge.Text, _areYouSureYouWantToRebaseMergeCaption.Text, MessageBoxButtons.YesNoCancel);
+                if (dr == DialogResult.Cancel) 
                 {
-                    string remoteBranchName = branchRemote + "/" + branch; 
-                    IEnumerable<string> branches = CommitInformation.GetAllBranchesWhichContainGivenCommit("HEAD", false, true);
-                    isPushedToRemote = branches.Count(b => remoteBranchName.Equals(b)) > 0;
+                    Close();
+                    return false;
                 }
-                //ask only when commit is not pushed to remote yet
-                if (!isPushedToRemote)
-                    if (MessageBox.Show(_areYouSureYouWantToRebaseMerge.Text, _areYouSureYouWantToRebaseMergeCaption.Text, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
-                        return false;
+                else if (dr != DialogResult.Yes)
+                    return false;
             }
 
             Repositories.RepositoryHistory.AddMostRecentRepository(PullSource.Text);
