@@ -9,7 +9,6 @@ using GitUI.Properties;
 using ResourceManager.Translation;
 using Settings = GitCommands.Settings;
 using GitUI.Script;
-using System.Linq;
 
 namespace GitUI
 {
