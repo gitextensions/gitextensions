@@ -75,7 +75,7 @@ namespace GitUI
 
                 var fromProcess =
                     new FormRemoteProcess(Settings.GitCommand,
-                                    GitModule.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
+                                    GitCommandHelpers.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
                                                                      CentralRepository.Checked, Branches.Text, null));
                 fromProcess.SetUrlTryingToConnect(_NO_TRANSLATE_From.Text);
                 fromProcess.ShowDialog();

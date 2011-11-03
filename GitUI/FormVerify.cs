@@ -231,7 +231,7 @@ namespace GitUI
             var currenItem = CurrentItem;
             if (currenItem == null)
                 return;
-            new FormEdit(Settings.Module.ShowSha1(currenItem.Hash)).ShowDialog();
+            new FormEdit(Settings.Module.ShowSha1(currenItem.Hash)).ShowDialog(this);
         }
 
         private int CreateLostFoundTags()

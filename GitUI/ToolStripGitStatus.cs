@@ -132,7 +132,7 @@ namespace GitUI
 
             if (Environment.TickCount > nextUpdateTime)
             {
-                string command = GitModule.GetAllChangedFilesCmd(true, true);
+                string command = GitCommandHelpers.GetAllChangedFilesCmd(true, true);
                 gitGetUnstagedCommand.CmdStartProcess(Settings.GitCommand, command);
 
                 if (hasDeferredUpdateRequests)

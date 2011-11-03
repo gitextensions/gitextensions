@@ -16,6 +16,7 @@ namespace GitCommands
             IsConflict = false;
             IsNew = false;
             IsStaged = true;
+            IsSubmodule = false;
         }
 
         public string Name { get; set; }
@@ -44,6 +45,7 @@ namespace GitCommands
         public bool IsCopied { get; set; }
         public bool IsConflict { get; set; }
         public bool IsStaged { get; set; }
+        public bool IsSubmodule { get; set; }
         public string RenameCopyPercentage { get; set; }
 
         public override string ToString()
