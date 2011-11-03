@@ -99,8 +99,8 @@ namespace GitUI
 
         private readonly TranslationString _formTitle = new TranslationString("Commit to {0} ({1})");
 
-		private readonly TranslationString _selectionFilterToolTip = new TranslationString("Enter a regular expression to select unstaged files.");
-		private readonly TranslationString _selectionFilterErrorToolTip = new TranslationString("Error {0}");
+        private readonly TranslationString _selectionFilterToolTip = new TranslationString("Enter a regular expression to select unstaged files.");
+        private readonly TranslationString _selectionFilterErrorToolTip = new TranslationString("Error {0}");
 
 
         #endregion
@@ -570,11 +570,19 @@ namespace GitUI
         {
             ClearDiffViewIfNoFilesLeft();
 
+            Unstaged.ContextMenuStrip = null;
+
             if (Unstaged.SelectedItems.Count == 0)
                 return;
 
             Staged.SelectedItem = null;
             ShowChanges(Unstaged.SelectedItems[0], false);
+
+            GitItemStatus item = Unstaged.SelectedItems[0];
+            if (!item.IsSubmodule)
+                Unstaged.ContextMenuStrip = UnstagedFileContext;
+            else
+                Unstaged.ContextMenuStrip = UnstagedSubmoduleContext;
         }
 
         private void ClearDiffViewIfNoFilesLeft()
@@ -689,10 +697,10 @@ namespace GitUI
         {
             if (shouldRescanChanges)
             {
-            	toolRefreshItem.Enabled = false;
-            	Initialize();
-            	toolRefreshItem.Enabled = true;
-        	}
+                toolRefreshItem.Enabled = false;
+                Initialize();
+                toolRefreshItem.Enabled = true;
+            }
         }
 
         private void StageClick(object sender, EventArgs e)
@@ -882,43 +890,43 @@ namespace GitUI
             shouldRescanChanges = false;
             try
             {
-	            if (Unstaged.SelectedItem == null ||
-	                MessageBox.Show(_resetChanges.Text, _resetChangesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) !=
-	                DialogResult.Yes)
-	                return;
-	
-	            //remember max selected index
-	            Unstaged.StoreNextIndexToSelect();
-	
-	            var deleteNewFiles = Unstaged.SelectedItems.Any(item => item.IsNew)
-	                && MessageBox.Show(_alsoDeleteUntrackedFiles.Text, _alsoDeleteUntrackedFilesCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes;
-	            var output = new StringBuilder();
-	            foreach (var item in Unstaged.SelectedItems)
-	            {
-	                if (item.IsNew)
-	                {
-	                    if (deleteNewFiles)
-	                    {
-	                        try
-	                        {
-	                            File.Delete(Settings.WorkingDir + item.Name);
-	                        }
-	                        catch (System.IO.IOException)
-	                        {
-	                        }
-	                        catch (System.UnauthorizedAccessException)
-	                        {
-	                        }
-	                    }
-	                }
-	                else
-	                {
-	                    output.Append(Settings.Module.ResetFile(item.Name));
-	                }
-	            }
-	
-	            if (!string.IsNullOrEmpty(output.ToString()))
-	                MessageBox.Show(output.ToString(), _resetChangesCaption.Text);
+                if (Unstaged.SelectedItem == null ||
+                    MessageBox.Show(_resetChanges.Text, _resetChangesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) !=
+                    DialogResult.Yes)
+                    return;
+    
+                //remember max selected index
+                Unstaged.StoreNextIndexToSelect();
+    
+                var deleteNewFiles = Unstaged.SelectedItems.Any(item => item.IsNew)
+                    && MessageBox.Show(_alsoDeleteUntrackedFiles.Text, _alsoDeleteUntrackedFilesCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes;
+                var output = new StringBuilder();
+                foreach (var item in Unstaged.SelectedItems)
+                {
+                    if (item.IsNew)
+                    {
+                        if (deleteNewFiles)
+                        {
+                            try
+                            {
+                                File.Delete(Settings.WorkingDir + item.Name);
+                            }
+                            catch (System.IO.IOException)
+                            {
+                            }
+                            catch (System.UnauthorizedAccessException)
+                            {
+                            }
+                        }
+                    }
+                    else
+                    {
+                        output.Append(Settings.Module.ResetFile(item.Name));
+                    }
+                }
+    
+                if (!string.IsNullOrEmpty(output.ToString()))
+                    MessageBox.Show(output.ToString(), _resetChangesCaption.Text);
             }
             finally
             {
@@ -1395,73 +1403,114 @@ namespace GitUI
             toolAuthorLabelItem.Enabled = toolAuthorLabelItem.Checked = false;
         }
 
-		private long lastUserInputTime;
-		private void FilterChanged(object sender, EventArgs e)
-		{
-			var currentTime = DateTime.Now.Ticks;
-			if (lastUserInputTime == 0)
-			{
-				long timerLastChanged = currentTime;
-				var timer = new Timer { Interval = 250 };
-				timer.Tick += (s, a) =>
-				{
-				    if (NoUserInput(timerLastChanged))
-				    {
-				    	var selectionCount = 0;
-				    	try
-				    	{
-				    		selectionCount = Unstaged.SetSelectionFilter(selectionFilter.Text);
-				    		selectionFilter.ToolTipText = _selectionFilterToolTip.Text;
-    }
-				    	catch (ArgumentException ae)
-				    	{
-				    		selectionFilter.ToolTipText = string.Format(_selectionFilterErrorToolTip.Text, ae.Message);
-				    	}
+        private long lastUserInputTime;
+        private void FilterChanged(object sender, EventArgs e)
+        {
+            var currentTime = DateTime.Now.Ticks;
+            if (lastUserInputTime == 0)
+            {
+                long timerLastChanged = currentTime;
+                var timer = new Timer { Interval = 250 };
+                timer.Tick += (s, a) =>
+                {
+                    if (NoUserInput(timerLastChanged))
+                    {
+                        var selectionCount = 0;
+                        try
+                        {
+                            selectionCount = Unstaged.SetSelectionFilter(selectionFilter.Text);
+                            selectionFilter.ToolTipText = _selectionFilterToolTip.Text;
+                        }
+                        catch (ArgumentException ae)
+                        {
+                            selectionFilter.ToolTipText = string.Format(_selectionFilterErrorToolTip.Text, ae.Message);
+                        }
 
-						if (selectionCount > 0)
-						{
-							AddToSelectionFilter(selectionFilter.Text);
-						}
+                        if (selectionCount > 0)
+                        {
+                            AddToSelectionFilter(selectionFilter.Text);
+                        }
 
-						timer.Stop();
-				        lastUserInputTime = 0;
-					}
-					timerLastChanged = lastUserInputTime;
-				};
+                        timer.Stop();
+                        lastUserInputTime = 0;
+                    }
+                    timerLastChanged = lastUserInputTime;
+                };
 
-				timer.Start();
-			}
+                timer.Start();
+            }
 
-			lastUserInputTime = currentTime;
-		}
+            lastUserInputTime = currentTime;
+        }
 
-    	private bool NoUserInput(long timerLastChanged)
-    	{
-    		return timerLastChanged == lastUserInputTime;
-    	}
+        private bool NoUserInput(long timerLastChanged)
+        {
+            return timerLastChanged == lastUserInputTime;
+        }
 
-    	private void AddToSelectionFilter(string filter)
-    	{
-    		if (!selectionFilter.Items.Cast<string>().Any(candiate  => candiate == filter))
-    		{
-    			const int SelectionFilterMaxLength = 10;
-				if (selectionFilter.Items.Count == SelectionFilterMaxLength)
-				{
-					selectionFilter.Items.RemoveAt(SelectionFilterMaxLength - 1);
-				}
-    			selectionFilter.Items.Insert(0, filter);
-    		}
-    	}
+        private void AddToSelectionFilter(string filter)
+        {
+            if (!selectionFilter.Items.Cast<string>().Any(candiate  => candiate == filter))
+            {
+                const int SelectionFilterMaxLength = 10;
+                if (selectionFilter.Items.Count == SelectionFilterMaxLength)
+                {
+                    selectionFilter.Items.RemoveAt(SelectionFilterMaxLength - 1);
+                }
+                selectionFilter.Items.Insert(0, filter);
+            }
+        }
 
-    	private void FilterIndexChanged(object sender, EventArgs e)
-		{
-			Unstaged.SetSelectionFilter(selectionFilter.Text);
-		}
+        private void FilterIndexChanged(object sender, EventArgs e)
+        {
+            Unstaged.SetSelectionFilter(selectionFilter.Text);
+        }
 
-    	private void ToogleShowSelectionFilter(object sender, EventArgs e)
-		{
+        private void ToogleShowSelectionFilter(object sender, EventArgs e)
+        {
             toolbarSelectionFilter.Visible = selectionFilterToolStripMenuItem.Checked;
-		}
+        }
+
+        private void openSubmoduleMenuItem_Click(object sender, EventArgs e)
+        {
+            Process process = new Process();
+            process.StartInfo.FileName = Application.ExecutablePath;
+            process.StartInfo.Arguments = "browse";
+            process.StartInfo.WorkingDirectory = Settings.WorkingDir + _currentItem.Name + Settings.PathSeparator;
+            process.Start();
+        }
+
+        private void updateSubmoduleMenuItem_Click(object sender, EventArgs e)
+        {
+            var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(_currentItem.Name));
+            process.ShowDialog();
+        }
+
+        private void submoduleSummaryMenuItem_Click(object sender, EventArgs e)
+        {
+            string summary = Settings.Module.GetSubmoduleSummary(_currentItem.Name);
+            new FormEdit(summary).ShowDialog(this);
+        }
+
+        private void viewHistoryMenuItem_Click(object sender, EventArgs e)
+        {
+            ViewFileHistoryMenuItem_Click(sender, e);
+        }
+
+        private void openFolderMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenToolStripMenuItemClick(sender, e);
+        }
+
+        private void openDiffMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenWithDifftoolToolStripMenuItemClick(sender, e);
+        }
+
+        private void copyFolderNameMenuItem_Click(object sender, EventArgs e)
+        {
+            FilenameToClipboardToolStripMenuItemClick(sender, e);
+        }
     }
 
     /// <summary>

@@ -789,6 +789,12 @@ namespace GitCommands
             return gitSubmodule;
         }
 
+        public string GetSubmoduleSummary(string submodule)
+        {
+            var arguments = string.Format("submodule summary {0}", submodule);
+            return RunCmd(Settings.GitCommand, arguments);
+        }
+
         public string Stash()
         {
             return RunCmd(Settings.GitCommand, "stash save");
@@ -856,25 +862,6 @@ namespace GitCommands
                 args += " -- \"" + file + "\"";
 
             return RunCmd(Settings.GitCommand, args);
-        }
-
-        public static string CloneCmd(string fromPath, string toPath, bool central, string branch, int? depth)
-        {
-            var from = FixPath(fromPath);
-            var to = FixPath(toPath);
-            var options = new List<string> { "-v" };
-            if (central)
-                options.Add("--bare");
-            if (depth.HasValue)
-                options.Add("--depth " + depth);
-            if (GitCommandHelpers.VersionInUse.CloneCanAskForProgress)
-                options.Add("--progress");
-            if (!string.IsNullOrEmpty(branch))
-                options.Add("--branch " + branch);
-            options.Add(string.Format("\"{0}\"", from.Trim()));
-            options.Add(string.Format("\"{0}\"", to.Trim()));
-
-            return "clone " + string.Join(" ", options.ToArray());
         }
 
         public string ResetFile(string file)
@@ -1349,7 +1336,6 @@ namespace GitCommands
             return patchManager.Patches.Count > 0 ? patchManager.Patches[0] : null;
         }
 
-
         public Patch GetSingleDiff(string from, string to, string fileName, string extraDiffArguments)
         {
             return GetSingleDiff(from, to, fileName, null, extraDiffArguments);
@@ -1414,33 +1400,16 @@ namespace GitCommands
             return gitItemStatusList;
         }
 
-        public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, bool showUntrackedFiles)
-        {
-            if (!GitCommandHelpers.VersionInUse.SupportGitStatusPorcelain)
-                throw new Exception("The version of git you are using is not supported for this action. Please upgrade to git 1.7.3 or newer.");
-
-            StringBuilder stringBuilder = new StringBuilder("status --porcelain -z");
-
-            if (!showUntrackedFiles)
-                stringBuilder.Append(" --untracked-files=no");
-            if (showUntrackedFiles)
-                stringBuilder.Append(" --untracked-files");
-            if (!excludeIgnoredFiles)
-                stringBuilder.Append(" --ignored");
-
-            return stringBuilder.ToString();
-        }
-
         public List<GitItemStatus> GetAllChangedFiles()
         {
-            var status = RunCmd(Settings.GitCommand, GetAllChangedFilesCmd(true, true));
+            var status = RunCmd(Settings.GitCommand, GitCommandHelpers.GetAllChangedFilesCmd(true, true));
 
             return GitCommandHelpers.GetAllChangedFilesFromString(status);
         }
 
         public List<GitItemStatus> GetTrackedChangedFiles()
         {
-            var status = RunCmd(Settings.GitCommand, GetAllChangedFilesCmd(true, false));
+            var status = RunCmd(Settings.GitCommand, GitCommandHelpers.GetAllChangedFilesCmd(true, false));
 
             return GitCommandHelpers.GetAllChangedFilesFromString(status);
         }
