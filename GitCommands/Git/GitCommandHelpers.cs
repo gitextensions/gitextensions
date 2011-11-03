@@ -590,6 +590,8 @@ namespace GitCommands
                     trimmedStatus = trimmedStatus.Substring(lastNewLinePos).Trim(nl);
             }
 
+            IList<string> Submodules = Settings.Module.GetSubmodulesNames();
+
             //Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)
             var files = trimmedStatus.Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
             for (int n = 0; n < files.Length; n++)
@@ -617,7 +619,7 @@ namespace GitCommands
                 char x = status[0];
                 char y = status.Length > 1 ? status[1] : ' ';
 
-                GitItemStatus gitItemStatus;
+                GitItemStatus gitItemStatus = null;
 
                 if (x != '?' && x != '!')
                 {
@@ -638,6 +640,9 @@ namespace GitCommands
                         diffFiles.Add(gitItemStatus);
                     }
                 }
+
+                if (gitItemStatus != null && Submodules.Contains(gitItemStatus.Name))
+                    gitItemStatus.IsSubmodule = true;
             }
 
             return diffFiles;
