@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager.Translation;
+using GitCommands.Config;
 
 namespace GitUI
 {
     public partial class FormSubmodules : GitExtensionsForm
     {
+        private readonly TranslationString _removeSelectedSubmodule =
+             new TranslationString("Are you sure you want remove the selected submodule?");
+
+        private readonly TranslationString _removeSelectedSubmoduleCaption = new TranslationString("Remove");
+
         public FormSubmodules()
         {
             InitializeComponent();
@@ -43,7 +50,6 @@ namespace GitUI
 
         private void SubmodulesSelectionChanged(object sender, EventArgs e)
         {
-
             if (Submodules.SelectedRows.Count != 1)
                 return;
 
@@ -82,8 +88,31 @@ namespace GitUI
         private void UpdateSubmoduleClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            GitUICommands.Instance.StartUpdateSubmodulesDialog();
+            var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(SubModuleName.Text));
+            process.ShowDialog(this);
             Initialize();
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void RemoveSubmoduleClick(object sender, EventArgs e)
+        {
+            if (Submodules.SelectedRows.Count != 1 ||
+                MessageBox.Show(this, _removeSelectedSubmodule.Text, _removeSelectedSubmoduleCaption.Text, MessageBoxButtons.YesNo) !=
+                DialogResult.Yes)
+                return;
+
+            Cursor.Current = Cursors.WaitCursor;
+            var process = new FormProcess("rm --cached \"" + SubModuleName.Text + "\"");
+            process.ShowDialog(this);
+
+            var modules = new ConfigFile(Settings.WorkingDir + ".gitmodules");
+            modules.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
+            modules.Save();
+
+            var configFile = Settings.Module.GetLocalConfig();
+            configFile.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
+            configFile.Save();
+
             Cursor.Current = Cursors.Default;
         }
     }
