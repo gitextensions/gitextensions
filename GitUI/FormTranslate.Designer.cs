@@ -120,7 +120,7 @@ namespace GitUI
             this.toolStripButtonNew.Image = global::GitUI.Properties.Resources._21;
             this.toolStripButtonNew.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonNew.Name = "toolStripButtonNew";
-            this.toolStripButtonNew.Size = new System.Drawing.Size(48, 27);
+            this.toolStripButtonNew.Size = new System.Drawing.Size(59, 27);
             this.toolStripButtonNew.Text = "New";
             this.toolStripButtonNew.ToolTipText = "Create new translation";
             this.toolStripButtonNew.Click += new System.EventHandler(this.toolStripButtonNew_Click);
@@ -143,7 +143,7 @@ namespace GitUI
             // toolStripTranslationLabel
             // 
             this.toolStripTranslationLabel.Name = "toolStripTranslationLabel";
-            this.toolStripTranslationLabel.Size = new System.Drawing.Size(102, 27);
+            this.toolStripTranslationLabel.Size = new System.Drawing.Size(134, 27);
             this.toolStripTranslationLabel.Text = "Current translation:";
             // 
             // translations
@@ -158,7 +158,7 @@ namespace GitUI
             // toolStripTranslationLanguageCode
             // 
             this.toolStripTranslationLanguageCode.Name = "toolStripTranslationLanguageCode";
-            this.toolStripTranslationLanguageCode.Size = new System.Drawing.Size(84, 27);
+            this.toolStripTranslationLanguageCode.Size = new System.Drawing.Size(114, 27);
             this.toolStripTranslationLanguageCode.Text = "Language code:";
             // 
             // _NO_TRANSLATE_languageCode
@@ -221,12 +221,13 @@ namespace GitUI
             // 
             this.translateCategories.Dock = System.Windows.Forms.DockStyle.Fill;
             this.translateCategories.FormattingEnabled = true;
+            this.translateCategories.ItemHeight = 20;
             this.translateCategories.Location = new System.Drawing.Point(0, 0);
             this.translateCategories.Name = "translateCategories";
-            this.translateCategories.Size = new System.Drawing.Size(151, 420);
+            this.translateCategories.Size = new System.Drawing.Size(151, 427);
+            this.translateCategories.Sorted = true;
             this.translateCategories.TabIndex = 0;
             this.translateCategories.SelectedIndexChanged += new System.EventHandler(this.translateCategories_SelectedIndexChanged);
-            this.translateCategories.Sorted = true;
             // 
             // splitContainer2
             // 
@@ -259,6 +260,7 @@ namespace GitUI
             this.translatedValueDataGridViewTextBoxColumn});
             this.translateGrid.DataSource = this.translateItemBindingSource;
             this.translateGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.translateGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.translateGrid.Location = new System.Drawing.Point(0, 0);
             this.translateGrid.MultiSelect = false;
             this.translateGrid.Name = "translateGrid";
@@ -375,6 +377,7 @@ namespace GitUI
             this.translatedText.TabIndex = 0;
             this.translatedText.Text = "";
             this.translatedText.TextChanged += new System.EventHandler(this.translatedText_TextChanged);
+            this.translatedText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.translatedText_KeyDown);
             // 
             // googleAll
             // 
@@ -418,11 +421,12 @@ namespace GitUI
             // 
             // FormTranslate
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(756, 463);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "FormTranslate";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Translate";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
