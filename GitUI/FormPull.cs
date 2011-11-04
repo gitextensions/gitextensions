@@ -51,6 +51,14 @@ namespace GitUI
         private readonly TranslationString _selectSourceDirectory =
             new TranslationString("Please select a source directory");
 
+        private readonly TranslationString _questionInitSubmodules =
+             new TranslationString("The cloned has submodules configured." + Environment.NewLine +
+                                   "Do you want to initialize the submodules?" + Environment.NewLine +
+                                   "This will initialize and update all submodules recursive.");
+
+        private readonly TranslationString _questionInitSubmodulesCaption =
+            new TranslationString("Submodules");
+
         private List<GitHead> _heads;
         public bool ErrorOccurred { get; private set; }
 
@@ -162,6 +170,12 @@ namespace GitUI
             }
         }
 
+        private bool AskIfSubmodulesShouldBeInitialized()
+        {
+            return MessageBox.Show(this, _questionInitSubmodules.Text, _questionInitSubmodulesCaption.Text,
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
+        }
+
         public bool PullChanges()
         {
             if (PullFromUrl.Checked && string.IsNullOrEmpty(PullSource.Text))
@@ -248,6 +262,10 @@ namespace GitUI
                     !Settings.Module.InTheMiddleOfRebase() &&
                     (process != null && !process.ErrorOccurred()))
                 {
+                    if (File.Exists(Settings.WorkingDir + ".gitmodules") &&
+                        AskIfSubmodulesShouldBeInitialized())
+                        GitUICommands.Instance.StartInitSubmodulesRecursiveDialog();
+
                     return true;
                 }
 

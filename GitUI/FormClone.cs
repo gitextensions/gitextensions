@@ -89,7 +89,7 @@ namespace GitUI
 
                     if (File.Exists(Settings.WorkingDir + ".gitmodules") &&
                         AskIfSubmodulesShouldBeInitialized())
-                        InitSubmodules();
+                        GitUICommands.Instance.StartInitSubmodulesRecursiveDialog();
                 }
                 Close();
             }
@@ -110,35 +110,7 @@ namespace GitUI
             return MessageBox.Show(this, _questionInitSubmodules.Text, _questionInitSubmodulesCaption.Text,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
         }
-
-        private static void InitSubmodules()
-        {
-            var process = new FormProcess(GitCommandHelpers.SubmoduleInitCmd(""));
-            process.ShowDialog();
-            InitializeSubmodulesRecursive();
-        }
-
-        private static void InitializeSubmodulesRecursive()
-        {
-            var oldworkingdir = Settings.WorkingDir;
-
-            foreach (GitSubmodule submodule in (new GitCommandsInstance()).GetSubmodules())
-            {
-                if (string.IsNullOrEmpty(submodule.LocalPath))
-                    continue;
-
-                Settings.WorkingDir = oldworkingdir + submodule.LocalPath;
-
-                if (Settings.WorkingDir != oldworkingdir &&
-                    File.Exists(Settings.WorkingDir + ".gitmodules"))
-                    InitSubmodules();
-
-                Settings.WorkingDir = oldworkingdir;
-            }
-
-            Settings.WorkingDir = oldworkingdir;
-        }
-
+        
         private void FromBrowseClick(object sender, EventArgs e)
         {
             var dialog = new FolderBrowserDialog { SelectedPath = _NO_TRANSLATE_From.Text };
