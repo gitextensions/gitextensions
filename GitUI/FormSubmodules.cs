@@ -115,6 +115,7 @@ namespace GitUI
             configFile.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
             configFile.Save();
 
+            Initialize();
             Cursor.Current = Cursors.Default;
         }
     }
