@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Windows.Forms;
-using System.Reflection;
-using ResourceManager.Translation;
-using ResourceManager;
+using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using System.Windows.Forms;
+using ResourceManager;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
@@ -460,6 +461,7 @@ namespace GitUI
 
                 if (translateItem == null) return;
 
+                Debug.Assert(translateItem == (TranslateItem)translateItemBindingSource.Current);
                 neutralTekst.Text = translateItem.NeutralValue;
                 translatedText.Text = translateItem.TranslatedValue;
             }
@@ -478,12 +480,8 @@ namespace GitUI
         {
             if (translateGrid.SelectedRows.Count == 1)
             {
-                if (translateGrid.SelectedRows[0].Index < translateGrid.Rows.Count - 1)
-                {
-                    int newIndex = translateGrid.SelectedRows[0].Index + 1;
-                    translateGrid.SelectedRows[0].Selected = false;
-                    translateGrid.Rows[newIndex].Selected = true;
-                }
+                if (translateGrid.CurrentCell.RowIndex < translateGrid.Rows.Count - 1)
+                    translateItemBindingSource.MoveNext();
             }
             else
                 if (translateGrid.Rows.Count > 0)
@@ -496,12 +494,8 @@ namespace GitUI
         {
             if (translateGrid.SelectedRows.Count == 1)
             {
-                if (translateGrid.SelectedRows[0].Index > 0)
-                {
-                    int newIndex = translateGrid.SelectedRows[0].Index - 1;
-                    translateGrid.SelectedRows[0].Selected = false;
-                    translateGrid.Rows[newIndex].Selected = true;
-                }
+                if (translateGrid.CurrentCell.RowIndex > 0)
+                    translateItemBindingSource.MovePrevious();
             }
             else
                 if (translateGrid.Rows.Count > 0)
@@ -553,6 +547,28 @@ namespace GitUI
         {
             translations.Text = "";
             translations_SelectedIndexChanged(null, null);
+        }
+
+        private void translatedText_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Alt && e.KeyCode == Keys.Up)
+            {
+                e.Handled = true;
+                previousButton_Click(sender, e);
+            }
+            else if (e.Alt && e.KeyCode == Keys.Down ||
+                e.Control && e.KeyCode == Keys.Enter)
+            {
+                e.Handled = true;
+                nextButton_Click(sender, e);
+            }
+            else if (e.Control && e.KeyCode == Keys.Down)
+            {
+                e.Handled = true;
+                translatedText.SelectionStart = 0;
+                translatedText.SelectionLength = translatedText.TextLength;
+                translatedText.SelectedText = neutralTekst.Text;
+            }
         }
     }
 }
