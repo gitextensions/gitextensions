@@ -19,7 +19,7 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(Title.Text))
             {
-                MessageBox.Show("You need to enter a caption.", "Enter caption", MessageBoxButtons.OK);
+                MessageBox.Show(this, "You need to enter a caption.", "Enter caption", MessageBoxButtons.OK);
                 return;
             }
 

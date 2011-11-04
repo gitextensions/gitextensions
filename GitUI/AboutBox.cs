@@ -66,7 +66,7 @@ namespace GitUI
         {
             FormContributors formContributors = new FormContributors();
             formContributors.LoadContributors(coders, translators, designers, other);
-            formContributors.ShowDialog();
+            formContributors.ShowDialog(this);
         }
     }
 }

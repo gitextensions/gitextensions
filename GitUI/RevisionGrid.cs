@@ -788,7 +788,7 @@ namespace GitUI
             {
                 Error.Visible = true;
                 Error.BringToFront();
-                MessageBox.Show(exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -1331,7 +1331,7 @@ namespace GitUI
             {
                 var form = new FormDiffSmall();
                 form.SetRevision(r[0]);
-                form.ShowDialog();
+                form.ShowDialog(this);
             }
             else
                 GitUICommands.Instance.StartCompareRevisionsDialog();
@@ -1351,7 +1351,7 @@ namespace GitUI
                 return;
 
             var frm = new FormTagSmall { Revision = GetRevision(LastRow) };
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             RefreshRevisions();
         }
 
@@ -1361,7 +1361,7 @@ namespace GitUI
                 return;
 
             var frm = new FormResetCurrentBranch(GetRevision(LastRow));
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             RefreshRevisions();
             OnActionOnRepositoryPerformed();
         }
@@ -1372,7 +1372,7 @@ namespace GitUI
                 return;
             var frm = new FormBranchSmall { Revision = GetRevision(LastRow) };
 
-            if (frm.ShowDialog() == DialogResult.OK)
+            if (frm.ShowDialog(this) == DialogResult.OK)
             {
                 RefreshRevisions();
                 OnActionOnRepositoryPerformed();
@@ -1483,13 +1483,13 @@ namespace GitUI
                 return;
 
             var frm = new FormRevertCommitSmall(GetRevision(LastRow));
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             RefreshRevisions();
         }
 
         private void FilterToolStripMenuItemClick(object sender, EventArgs e)
         {
-            _revisionFilter.ShowDialog();
+            _revisionFilter.ShowDialog(this);
             ForceRefreshRevisions();
         }
 
@@ -1603,7 +1603,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            new FormProcess(GitCommandHelpers.DeleteTagCmd(toolStripItem.Text)).ShowDialog();
+            new FormProcess(GitCommandHelpers.DeleteTagCmd(toolStripItem.Text)).ShowDialog(this);
             ForceRefreshRevisions();
         }
 
@@ -1626,7 +1626,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            new FormProcess("checkout \"" + toolStripItem.Text + "\"").ShowDialog();
+            new FormProcess("checkout \"" + toolStripItem.Text + "\"").ShowDialog(this);
 
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
@@ -1677,10 +1677,10 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
 
-            if (MessageBox.Show("Are you sure to checkout the selected revision", "Checkout revision",
+            if (MessageBox.Show(this, "Are you sure to checkout the selected revision", "Checkout revision",
                                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
-            new FormProcess(string.Format("checkout \"{0}\"", GetRevision(LastRow).Guid)).ShowDialog();
+            new FormProcess(string.Format("checkout \"{0}\"", GetRevision(LastRow).Guid)).ShowDialog(this);
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
         }
@@ -1705,7 +1705,7 @@ namespace GitUI
                 return;
 
             var frm = new FormCherryPickCommitSmall(GetRevision(LastRow));
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
         }
@@ -1726,7 +1726,7 @@ namespace GitUI
                 return;
 
             var frm = new FormCommit(commitKind, GetRevision(LastRow));
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
         }
@@ -1863,7 +1863,7 @@ namespace GitUI
                 return;
 
             Settings.CloseProcessDialog = false;
-            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(false, GetRevision(LastRow).Guid)).ShowDialog();
+            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(false, GetRevision(LastRow).Guid)).ShowDialog(this);
             RefreshRevisions();
         }
 
@@ -1873,13 +1873,13 @@ namespace GitUI
                 return;
 
             Settings.CloseProcessDialog = false;
-            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(true, GetRevision(LastRow).Guid)).ShowDialog();
+            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(true, GetRevision(LastRow).Guid)).ShowDialog(this);
             RefreshRevisions();
         }
 
         private void stopBisectToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormProcess(GitCommandHelpers.StopBisectCmd()).ShowDialog();
+            new FormProcess(GitCommandHelpers.StopBisectCmd()).ShowDialog(this);
             RefreshRevisions();
         }
 

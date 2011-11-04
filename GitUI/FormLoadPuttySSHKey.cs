@@ -40,13 +40,13 @@ namespace GitUI
         {
             if (!File.Exists(Settings.Pageant))
             {
-                MessageBox.Show(_pageantNotFound.Text, _pageantNotFoundCaption.Text);
+                MessageBox.Show(this, _pageantNotFound.Text, _pageantNotFoundCaption.Text);
                 return;
             }
 
             if (string.IsNullOrEmpty(PrivateKeypath.Text))
             {
-                MessageBox.Show(_loadKeyFailed.Text, _loadKeyFailedCaption.Text);
+                MessageBox.Show(this, _loadKeyFailed.Text, _loadKeyFailedCaption.Text);
                 return;
             }
 
@@ -62,7 +62,7 @@ namespace GitUI
                                  InitialDirectory = ".",
                                  Title = _browsePrivateKeyCaption.Text
                              };
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog(this) == DialogResult.OK)
                 PrivateKeypath.Text = dialog.FileName;
         }
     }

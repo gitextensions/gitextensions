@@ -300,8 +300,7 @@ namespace GitUI
 
         #endregion
 
-
-        public void ShowDialogWhenChanges()
+        public void ShowDialogWhenChanges(IWin32Window owner = null)
         {
             Initialize();
             while (_gitGetUnstagedCommand.IsRunning)
@@ -312,7 +311,7 @@ namespace GitUI
             var allChangedFiles = GitCommandHelpers.GetAllChangedFilesFromString(_gitGetUnstagedCommand.Output.ToString());
             if (allChangedFiles.Count > 0)
             {
-                ShowDialog();
+                ShowDialog(owner);
             }
             else
             {
@@ -351,7 +350,7 @@ namespace GitUI
                 string output = Settings.Module.RunGitCmd(args, patch);
                 if (!string.IsNullOrEmpty(output))
                 {
-                    MessageBox.Show(output);
+                    MessageBox.Show(this, output);
                 }
                 RescanChanges();
             }
@@ -359,7 +358,7 @@ namespace GitUI
 
         private void ResetSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (MessageBox.Show(_resetSelectedLinesConfirmation.Text, _resetChangesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            if (MessageBox.Show(this, _resetSelectedLinesConfirmation.Text, _resetChangesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                 return;
 
             // Prepare git command
@@ -375,7 +374,7 @@ namespace GitUI
                 string output = Settings.Module.RunGitCmd(args, patch);
                 if (!string.IsNullOrEmpty(output))
                 {
-                    MessageBox.Show(output);
+                    MessageBox.Show(this, output);
                 }
                 RescanChanges();
             }
@@ -605,19 +604,19 @@ namespace GitUI
                 {
                     // it is a merge commit, so user can commit just for merging two branches even the changeset is empty,
                     // but also user may forget to add files, so only ask for confirmation that user really wants to commit an empty changeset
-                    if (MessageBox.Show(_noFilesStagedAndConfirmAnEmptyMergeCommit.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                    if (MessageBox.Show(this, _noFilesStagedAndConfirmAnEmptyMergeCommit.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                         return;
                 }
                 else
                 {
                     if (Unstaged.IsEmpty)
                     {
-                        MessageBox.Show(_noFilesStagedAndNothingToCommit.Text, _noStagedChanges.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        MessageBox.Show(this, _noFilesStagedAndNothingToCommit.Text, _noStagedChanges.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         return;
                     }
 
                     // there are no staged files, but there are unstaged files. Most probably user forgot to stage them.
-                    if (MessageBox.Show(_noFilesStagedButSuggestToCommitAllUnstaged.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                    if (MessageBox.Show(this, _noFilesStagedButSuggestToCommitAllUnstaged.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                         return;
                     StageAll();
                     // if staging failed (i.e. line endings conflict), user already got error message, don't try to commit empty changeset.
@@ -633,17 +632,17 @@ namespace GitUI
         {
             if (Settings.Module.InTheMiddleOfConflictedMerge())
             {
-                MessageBox.Show(_mergeConflicts.Text, _mergeConflictsCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _mergeConflicts.Text, _mergeConflictsCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             if (string.IsNullOrEmpty(Message.Text) || Message.Text == commitTemplate)
             {
-                MessageBox.Show(_enterCommitMessage.Text, _enterCommitMessageCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                MessageBox.Show(this, _enterCommitMessage.Text, _enterCommitMessageCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 return;
             }
 
             if (Settings.Module.GetSelectedBranch().Equals("(no branch)", StringComparison.OrdinalIgnoreCase) &&
-                MessageBox.Show(_notOnBranch.Text, _notOnBranchCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
+                MessageBox.Show(this, _notOnBranch.Text, _notOnBranchCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
                 return;
 
             try
@@ -653,7 +652,7 @@ namespace GitUI
                 ScriptManager.RunEventScripts(ScriptEvent.BeforeCommit);
 
                 var form = new FormProcess(Settings.Module.CommitCmd(amend, toolAuthor.Text));
-                form.ShowDialog();
+                form.ShowDialog(this);
 
                 NeedRefresh = true;
 
@@ -689,7 +688,7 @@ namespace GitUI
             }
             catch (Exception e)
             {
-                MessageBox.Show(string.Format("Exception: {0}", e.Message));
+                MessageBox.Show(this, string.Format("Exception: {0}", e.Message));
             }
         }
 
@@ -744,7 +743,7 @@ namespace GitUI
                             form.Done(string.IsNullOrEmpty(output));
                         };
                     var process = new FormStatus(processStart, null) { Text = _stageDetails.Text };
-                    process.ShowDialogOnError();
+                    process.ShowDialogOnError(this);
                 }
                 else
                 {
@@ -891,7 +890,7 @@ namespace GitUI
             try
             {
                 if (Unstaged.SelectedItem == null ||
-                    MessageBox.Show(_resetChanges.Text, _resetChangesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) !=
+                    MessageBox.Show(this, _resetChanges.Text, _resetChangesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) !=
                     DialogResult.Yes)
                     return;
     
@@ -899,7 +898,7 @@ namespace GitUI
                 Unstaged.StoreNextIndexToSelect();
     
                 var deleteNewFiles = Unstaged.SelectedItems.Any(item => item.IsNew)
-                    && MessageBox.Show(_alsoDeleteUntrackedFiles.Text, _alsoDeleteUntrackedFilesCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes;
+                    && MessageBox.Show(this, _alsoDeleteUntrackedFiles.Text, _alsoDeleteUntrackedFilesCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes;
                 var output = new StringBuilder();
                 foreach (var item in Unstaged.SelectedItems)
                 {
@@ -926,7 +925,7 @@ namespace GitUI
                 }
     
                 if (!string.IsNullOrEmpty(output.ToString()))
-                    MessageBox.Show(output.ToString(), _resetChangesCaption.Text);
+                    MessageBox.Show(this, output.ToString(), _resetChangesCaption.Text);
             }
             finally
             {
@@ -941,7 +940,7 @@ namespace GitUI
             {
                 SelectedDiff.Clear();
                 if (Unstaged.SelectedItem == null ||
-                    MessageBox.Show(_deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo) !=
+                    MessageBox.Show(this, _deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo) !=
                     DialogResult.Yes)
                     return;
 
@@ -952,7 +951,7 @@ namespace GitUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(_deleteFailed.Text + Environment.NewLine + ex.Message);
+                MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex.Message);
             }
         }
 
@@ -964,7 +963,7 @@ namespace GitUI
 
         private void DeleteSelectedFilesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (MessageBox.Show(_deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo) !=
+            if (MessageBox.Show(this, _deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo) !=
                 DialogResult.Yes)
                 return;
 
@@ -975,14 +974,14 @@ namespace GitUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(_deleteFailed.Text + Environment.NewLine + ex);
+                MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex);
             }
             Initialize();
         }
 
         private void ResetSelectedFilesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (MessageBox.Show(_resetSelectedChanges.Text, _resetChangesCaption.Text, MessageBoxButtons.YesNo) !=
+            if (MessageBox.Show(this, _resetSelectedChanges.Text, _resetChangesCaption.Text, MessageBoxButtons.YesNo) !=
                 DialogResult.Yes)
                 return;
 
@@ -1081,7 +1080,7 @@ namespace GitUI
                 }
                 catch (ArgumentException ex)
                 {
-                    MessageBox.Show(ex.Message + Environment.NewLine + "Unsupported encoding set in git config file: " + encodingString + Environment.NewLine + "Please check the setting i18n.commitencoding in your local and/or global config files. Commit aborted.");
+                    MessageBox.Show(this, ex.Message + Environment.NewLine + "Unsupported encoding set in git config file: " + encodingString + Environment.NewLine + "Please check the setting i18n.commitencoding in your local and/or global config files. Commit aborted.");
                     return;
                 }
             }
@@ -1124,13 +1123,13 @@ namespace GitUI
 
         private void DeleteAllUntrackedFilesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (MessageBox.Show(
+            if (MessageBox.Show(this, 
                 _deleteUntrackedFiles.Text,
                 _deleteUntrackedFilesCaption.Text,
                 MessageBoxButtons.YesNo) !=
                 DialogResult.Yes)
                 return;
-            new FormProcess("clean -f").ShowDialog();
+            new FormProcess("clean -f").ShowDialog(this);
             Initialize();
         }
 
@@ -1184,7 +1183,7 @@ namespace GitUI
 
             SelectedDiff.Clear();
             var item = Unstaged.SelectedItem;
-            new FormAddToGitIgnore(item.Name).ShowDialog();
+            new FormAddToGitIgnore(item.Name).ShowDialog(this);
             Initialize();
         }
 
@@ -1249,7 +1248,7 @@ namespace GitUI
             var cmdOutput = Settings.Module.OpenWithDifftool(fileName);
 
             if (!string.IsNullOrEmpty(cmdOutput))
-                MessageBox.Show(cmdOutput);
+                MessageBox.Show(this, cmdOutput);
         }
 
 
@@ -1257,7 +1256,7 @@ namespace GitUI
         {
             if (Unstaged.SelectedItems.Count != 1)
             {
-                MessageBox.Show(_onlyStageChunkOfSingleFileError.Text, _resetStageChunkOfFileCaption.Text);
+                MessageBox.Show(this, _onlyStageChunkOfSingleFileError.Text, _resetStageChunkOfFileCaption.Text);
                 return;
             }
 
@@ -1296,7 +1295,7 @@ namespace GitUI
                 return;
             }
 
-            if (MessageBox.Show(_amendCommit.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo) ==
+            if (MessageBox.Show(this, _amendCommit.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo) ==
                 DialogResult.Yes)
                 DoCommit(true, false);
         }
@@ -1312,7 +1311,7 @@ namespace GitUI
             var item = Unstaged.SelectedItem;
             var fileName = Settings.WorkingDir + item.Name;
 
-            new FormEditor(fileName).ShowDialog();
+            new FormEditor(fileName).ShowDialog(this);
 
             UntrackedSelectionChanged(null, null);
         }
@@ -1483,7 +1482,7 @@ namespace GitUI
         private void updateSubmoduleMenuItem_Click(object sender, EventArgs e)
         {
             var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(_currentItem.Name));
-            process.ShowDialog();
+            process.ShowDialog(this);
         }
 
         private void submoduleSummaryMenuItem_Click(object sender, EventArgs e)

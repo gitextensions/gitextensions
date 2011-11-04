@@ -16,7 +16,7 @@ namespace GitUI
 
         private void LoadSSHKey_Click(object sender, EventArgs e)
         {
-            new FormLoadPuttySshKey().ShowDialog();
+            new FormLoadPuttySshKey().ShowDialog(this);
         }
 
         public bool RetryProcess;

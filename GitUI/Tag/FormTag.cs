@@ -43,14 +43,14 @@ namespace GitUI.Tag
             {
                 if (GitRevisions.GetRevisions().Count != 1)
                 {
-                    MessageBox.Show(_noRevisionSelected.Text, _messageCaption.Text);
+                    MessageBox.Show(this, _noRevisionSelected.Text, _messageCaption.Text);
                     return;
                 }
                 if (annotate.Checked)
                 {
                     if (string.IsNullOrEmpty(tagMessage.Text))
                     {
-                        MessageBox.Show(_noTagMessage.Text, _messageCaption.Text);
+                        MessageBox.Show(this, _noTagMessage.Text, _messageCaption.Text);
                         return;
                     }
 
@@ -62,12 +62,12 @@ namespace GitUI.Tag
                                                     annotate.Checked);
 
                 if (!string.IsNullOrEmpty(s))
-                    MessageBox.Show(s, _messageCaption.Text);
+                    MessageBox.Show(this, s, _messageCaption.Text);
                 Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(this, ex.Message);
             }
         }
 

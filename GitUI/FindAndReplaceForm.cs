@@ -286,10 +286,10 @@ namespace GitUI
                 _editor.Document.UndoStack.EndUndoGroup();
             }
             if (count == 0)
-                MessageBox.Show(_noOccurrencesFoundString.Text);
+                MessageBox.Show(this, _noOccurrencesFoundString.Text);
             else
             {
-                MessageBox.Show(string.Format(_replacedOccurrencesString.Text, count));
+                MessageBox.Show(this, string.Format(_replacedOccurrencesString.Text, count));
                 Close();
             }
         }

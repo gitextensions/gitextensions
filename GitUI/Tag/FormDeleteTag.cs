@@ -28,7 +28,7 @@ namespace GitUI.Tag
                 string s = Settings.Module.DeleteTag(Tags.Text);
 
                 if (!string.IsNullOrEmpty(s))
-                    MessageBox.Show(s, _deleteTagMessageBoxCaption.Text);
+                    MessageBox.Show(this, s, _deleteTagMessageBoxCaption.Text);
 
                 Close();
             }

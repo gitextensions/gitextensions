@@ -199,7 +199,7 @@ namespace GitUI.Blame
             {
                 var frm = new FormDiffSmall();
                 frm.SetRevision(_lastRevision);
-                frm.ShowDialog();
+                frm.ShowDialog(this);
             }
         }
     }

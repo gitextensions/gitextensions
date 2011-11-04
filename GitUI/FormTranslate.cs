@@ -348,7 +348,7 @@ namespace GitUI
         private void saveAs_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_NO_TRANSLATE_languageCode.Text))
-                if (MessageBox.Show(noLanguageCodeSelected.Text, noLanguageCodeSelectedCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(this, noLanguageCodeSelected.Text, noLanguageCodeSelectedCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                     return;
 
             SaveAs();
@@ -379,7 +379,7 @@ namespace GitUI
 
             var fileDialog = new SaveFileDialog { Title = saveAsText.Text, FileName = translations.Text + ".xml" };
 
-            if (fileDialog.ShowDialog() == DialogResult.OK)
+            if (fileDialog.ShowDialog(this) == DialogResult.OK)
             {
                 TranslationSerializer.Serialize(foreignTranslation, fileDialog.FileName);
                 changesMade = false;
@@ -415,7 +415,7 @@ namespace GitUI
         {
             if (changesMade)
             {
-                if (MessageBox.Show(saveCurrentChangesText.Text, saveCurrentChangesCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(this, saveCurrentChangesText.Text, saveCurrentChangesCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     SaveAs();
                 }
@@ -514,7 +514,7 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(_NO_TRANSLATE_languageCode.Text))
             {
-                MessageBox.Show(selectLanguageCode.Text);
+                MessageBox.Show(this, selectLanguageCode.Text);
                 return;
             }
 
@@ -533,7 +533,7 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(_NO_TRANSLATE_languageCode.Text))
             {
-                MessageBox.Show(selectLanguageCode.Text);
+                MessageBox.Show(this, selectLanguageCode.Text);
                 return;
             }
 

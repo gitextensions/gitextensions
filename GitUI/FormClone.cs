@@ -78,7 +78,7 @@ namespace GitUI
                                     GitCommandHelpers.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
                                                                      CentralRepository.Checked, Branches.Text, null));
                 fromProcess.SetUrlTryingToConnect(_NO_TRANSLATE_From.Text);
-                fromProcess.ShowDialog();
+                fromProcess.ShowDialog(this);
 
                 if (fromProcess.ErrorOccurred() || Settings.Module.InTheMiddleOfPatch())
                     return;
@@ -101,13 +101,13 @@ namespace GitUI
 
         private bool AskIfNewRepositoryShouldBeOpened(string dirTo)
         {
-            return MessageBox.Show(string.Format(_questionOpenRepo.Text, dirTo), _questionOpenRepoCaption.Text,
+            return MessageBox.Show(this, string.Format(_questionOpenRepo.Text, dirTo), _questionOpenRepoCaption.Text,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
         }
 
         private bool AskIfSubmodulesShouldBeInitialized()
         {
-            return MessageBox.Show(_questionInitSubmodules.Text, _questionInitSubmodulesCaption.Text,
+            return MessageBox.Show(this, _questionInitSubmodules.Text, _questionInitSubmodulesCaption.Text,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
         }
 
@@ -142,7 +142,7 @@ namespace GitUI
         private void FromBrowseClick(object sender, EventArgs e)
         {
             var dialog = new FolderBrowserDialog { SelectedPath = _NO_TRANSLATE_From.Text };
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog(this) == DialogResult.OK)
                 _NO_TRANSLATE_From.Text = dialog.SelectedPath;
 
             FromTextUpdate(sender, e);
@@ -151,7 +151,7 @@ namespace GitUI
         private void ToBrowseClick(object sender, EventArgs e)
         {
             var dialog = new FolderBrowserDialog { SelectedPath = _NO_TRANSLATE_To.Text };
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog(this) == DialogResult.OK)
                 _NO_TRANSLATE_To.Text = dialog.SelectedPath;
 
             ToTextUpdate(sender, e);
@@ -182,7 +182,7 @@ namespace GitUI
 
         private void LoadSshKeyClick(object sender, EventArgs e)
         {
-            new FormLoadPuttySshKey().ShowDialog();
+            new FormLoadPuttySshKey().ShowDialog(this);
         }
 
         private void FormCloneLoad(object sender, EventArgs e)
