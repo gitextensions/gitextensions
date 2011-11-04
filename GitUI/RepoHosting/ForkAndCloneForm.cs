@@ -277,7 +277,7 @@ namespace GitUI.RepoHosting
             Repositories.RepositoryHistory.AddMostRecentRepository(targetDir);
             Settings.WorkingDir = targetDir;
 
-            if (_addRemoteAsTB.Text.Trim().Length > 0)
+            if (_addRemoteAsTB.Text.Trim().Length > 0 && !string.IsNullOrEmpty(repo.ParentReadOnlyUrl))
             {
                 var error = GitCommandHelpers.AddRemote(_addRemoteAsTB.Text.Trim(), repo.ParentReadOnlyUrl);
                 if (!string.IsNullOrEmpty(error))
@@ -320,6 +320,7 @@ namespace GitUI.RepoHosting
                 {
                     _createDirTB.Text = repo.Name;
                     _addRemoteAsTB.Text = repo.ParentOwner ?? "";
+                    _addRemoteAsTB.Enabled = repo.ParentOwner != null;
                 }
 
                 _cloneBtn.Enabled = true;
