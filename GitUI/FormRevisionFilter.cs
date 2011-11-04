@@ -142,7 +142,6 @@ namespace GitUI
         public void SetBranchFilter(string filter)
         {
             BranchFilter.Text = filter;
-        
         }
 
         private void OkClick(object sender, EventArgs e)
