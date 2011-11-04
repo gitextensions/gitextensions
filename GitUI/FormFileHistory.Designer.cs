@@ -229,6 +229,7 @@ namespace GitUI
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(748, 444);
             this.Controls.Add(this.splitContainer1);
+            this.MinimumSize = new System.Drawing.Size(300, 200);
             this.Name = "FormFileHistory";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "File History";

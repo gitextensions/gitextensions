@@ -123,6 +123,7 @@ namespace GitUI
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(750, 529);
             this.Controls.Add(this.splitContainer1);
+            this.MinimumSize = new System.Drawing.Size(250, 250);
             this.Name = "FormDiff";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Diff";

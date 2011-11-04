@@ -34,7 +34,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.ConflictedFiles = new System.Windows.Forms.DataGridView();
-            this.Namex = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ConflictedFilesContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.OpenMergetool = new System.Windows.Forms.ToolStripMenuItem();
             this.ContextMarkAsSolved = new System.Windows.Forms.ToolStripMenuItem();
@@ -80,14 +79,8 @@
             this.fileNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.modeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.subItemsBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.guidDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.commitGuidDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.itemTypeDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.authorDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dateDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.fileNameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.modeDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -122,8 +115,8 @@
             this.splitContainer1.Panel2.Controls.Add(this.openMergeToolBtn);
             this.splitContainer1.Panel2.Controls.Add(this.Rescan);
             this.splitContainer1.Panel2.Controls.Add(this.Reset);
-            this.splitContainer1.Size = new System.Drawing.Size(652, 396);
-            this.splitContainer1.SplitterDistance = 477;
+            this.splitContainer1.Size = new System.Drawing.Size(620, 388);
+            this.splitContainer1.SplitterDistance = 445;
             this.splitContainer1.TabIndex = 1;
             // 
             // splitContainer2
@@ -142,7 +135,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.tableLayoutPanel2);
-            this.splitContainer2.Size = new System.Drawing.Size(477, 396);
+            this.splitContainer2.Size = new System.Drawing.Size(445, 388);
             this.splitContainer2.SplitterDistance = 25;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -169,26 +162,21 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 53F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 75F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(477, 367);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(445, 359);
             this.tableLayoutPanel2.TabIndex = 3;
             // 
             // ConflictedFiles
             // 
             this.ConflictedFiles.AllowUserToAddRows = false;
             this.ConflictedFiles.AllowUserToDeleteRows = false;
+            this.ConflictedFiles.AllowUserToResizeColumns = false;
+            this.ConflictedFiles.AllowUserToResizeRows = false;
             this.ConflictedFiles.AutoGenerateColumns = false;
             this.ConflictedFiles.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.ConflictedFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.ConflictedFiles.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Namex,
-            this.guidDataGridViewTextBoxColumn1,
-            this.commitGuidDataGridViewTextBoxColumn1,
-            this.itemTypeDataGridViewTextBoxColumn1,
-            this.nameDataGridViewTextBoxColumn1,
-            this.authorDataGridViewTextBoxColumn1,
-            this.dateDataGridViewTextBoxColumn1,
-            this.fileNameDataGridViewTextBoxColumn1,
-            this.modeDataGridViewTextBoxColumn1});
+            this.FileName,
+            this.authorDataGridViewTextBoxColumn1});
             this.ConflictedFiles.ContextMenuStrip = this.ConflictedFilesContextMenu;
             this.ConflictedFiles.DataSource = this.gitItemBindingSource;
             this.ConflictedFiles.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -198,20 +186,12 @@
             this.ConflictedFiles.ReadOnly = true;
             this.ConflictedFiles.RowHeadersVisible = false;
             this.ConflictedFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.ConflictedFiles.Size = new System.Drawing.Size(471, 233);
+            this.ConflictedFiles.Size = new System.Drawing.Size(439, 225);
             this.ConflictedFiles.TabIndex = 5;
             this.ConflictedFiles.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.ConflictedFiles_CellMouseDown);
             this.ConflictedFiles.SelectionChanged += new System.EventHandler(this.ConflictedFiles_SelectionChanged);
             this.ConflictedFiles.DoubleClick += new System.EventHandler(this.ConflictedFiles_DoubleClick);
             this.ConflictedFiles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ConflictedFiles_KeyDown);
-            // 
-            // Namex
-            // 
-            this.Namex.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Namex.DataPropertyName = "FileName";
-            this.Namex.HeaderText = "Filename";
-            this.Namex.Name = "Namex";
-            this.Namex.ReadOnly = true;
             // 
             // ConflictedFilesContextMenu
             // 
@@ -378,14 +358,14 @@
             this.tableLayoutPanel1.Controls.Add(this.label5, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.remoteFileName, 1, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 292);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 284);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 3;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(477, 75);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(445, 75);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // label7
@@ -452,12 +432,12 @@
             this.tableLayoutPanel3.Controls.Add(this.conflictDescription, 1, 0);
             this.tableLayoutPanel3.Controls.Add(this.pictureBox1, 0, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 239);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 231);
             this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 1;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(477, 53);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(445, 53);
             this.tableLayoutPanel3.TabIndex = 6;
             // 
             // merge
@@ -465,7 +445,7 @@
             this.merge.ContextMenuStrip = this.ConflictedFilesContextMenu;
             this.merge.Image = global::GitUI.Properties.Resources._90;
             this.merge.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.merge.Location = new System.Drawing.Point(347, 0);
+            this.merge.Location = new System.Drawing.Point(315, 0);
             this.merge.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.merge.Name = "merge";
             this.merge.Size = new System.Drawing.Size(130, 25);
@@ -481,7 +461,7 @@
             this.conflictDescription.Dock = System.Windows.Forms.DockStyle.Fill;
             this.conflictDescription.Location = new System.Drawing.Point(19, 0);
             this.conflictDescription.Name = "conflictDescription";
-            this.conflictDescription.Size = new System.Drawing.Size(325, 53);
+            this.conflictDescription.Size = new System.Drawing.Size(293, 53);
             this.conflictDescription.TabIndex = 2;
             this.conflictDescription.Text = "Select file";
             this.conflictDescription.Click += new System.EventHandler(this.conflictDescription_Click);
@@ -599,33 +579,13 @@
             this.subItemsBindingSource.DataMember = "SubItems";
             this.subItemsBindingSource.DataSource = this.gitItemBindingSource;
             // 
-            // guidDataGridViewTextBoxColumn1
+            // FileName
             // 
-            this.guidDataGridViewTextBoxColumn1.DataPropertyName = "Guid";
-            this.guidDataGridViewTextBoxColumn1.HeaderText = "Guid";
-            this.guidDataGridViewTextBoxColumn1.Name = "guidDataGridViewTextBoxColumn1";
-            this.guidDataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // commitGuidDataGridViewTextBoxColumn1
-            // 
-            this.commitGuidDataGridViewTextBoxColumn1.DataPropertyName = "CommitGuid";
-            this.commitGuidDataGridViewTextBoxColumn1.HeaderText = "CommitGuid";
-            this.commitGuidDataGridViewTextBoxColumn1.Name = "commitGuidDataGridViewTextBoxColumn1";
-            this.commitGuidDataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // itemTypeDataGridViewTextBoxColumn1
-            // 
-            this.itemTypeDataGridViewTextBoxColumn1.DataPropertyName = "ItemType";
-            this.itemTypeDataGridViewTextBoxColumn1.HeaderText = "ItemType";
-            this.itemTypeDataGridViewTextBoxColumn1.Name = "itemTypeDataGridViewTextBoxColumn1";
-            this.itemTypeDataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // nameDataGridViewTextBoxColumn1
-            // 
-            this.nameDataGridViewTextBoxColumn1.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn1.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn1.Name = "nameDataGridViewTextBoxColumn1";
-            this.nameDataGridViewTextBoxColumn1.ReadOnly = true;
+            this.FileName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.FileName.DataPropertyName = "FileName";
+            this.FileName.HeaderText = "Filename";
+            this.FileName.Name = "FileName";
+            this.FileName.ReadOnly = true;
             // 
             // authorDataGridViewTextBoxColumn1
             // 
@@ -633,35 +593,16 @@
             this.authorDataGridViewTextBoxColumn1.HeaderText = "Author";
             this.authorDataGridViewTextBoxColumn1.Name = "authorDataGridViewTextBoxColumn1";
             this.authorDataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // dateDataGridViewTextBoxColumn1
-            // 
-            this.dateDataGridViewTextBoxColumn1.DataPropertyName = "Date";
-            this.dateDataGridViewTextBoxColumn1.HeaderText = "Date";
-            this.dateDataGridViewTextBoxColumn1.Name = "dateDataGridViewTextBoxColumn1";
-            this.dateDataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // fileNameDataGridViewTextBoxColumn1
-            // 
-            this.fileNameDataGridViewTextBoxColumn1.DataPropertyName = "FileName";
-            this.fileNameDataGridViewTextBoxColumn1.HeaderText = "FileName";
-            this.fileNameDataGridViewTextBoxColumn1.Name = "fileNameDataGridViewTextBoxColumn1";
-            this.fileNameDataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // modeDataGridViewTextBoxColumn1
-            // 
-            this.modeDataGridViewTextBoxColumn1.DataPropertyName = "Mode";
-            this.modeDataGridViewTextBoxColumn1.HeaderText = "Mode";
-            this.modeDataGridViewTextBoxColumn1.Name = "modeDataGridViewTextBoxColumn1";
-            this.modeDataGridViewTextBoxColumn1.ReadOnly = true;
+            this.authorDataGridViewTextBoxColumn1.Visible = false;
             // 
             // FormResolveConflicts
             // 
             this.AcceptButton = this.merge;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(652, 396);
+            this.ClientSize = new System.Drawing.Size(620, 388);
             this.Controls.Add(this.splitContainer1);
+            this.MinimumSize = new System.Drawing.Size(450, 300);
             this.Name = "FormResolveConflicts";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Resolve merge conflicts";
@@ -739,14 +680,7 @@
         private System.Windows.Forms.BindingSource subItemsBindingSource;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem fileHistoryToolStripMenuItem;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Namex;
-        private System.Windows.Forms.DataGridViewTextBoxColumn guidDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn commitGuidDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn itemTypeDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FileName;
         private System.Windows.Forms.DataGridViewTextBoxColumn authorDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dateDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn fileNameDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn modeDataGridViewTextBoxColumn1;
     }
 }

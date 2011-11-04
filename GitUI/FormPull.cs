@@ -52,7 +52,7 @@ namespace GitUI
             new TranslationString("Please select a source directory");
 
         private readonly TranslationString _questionInitSubmodules =
-             new TranslationString("The cloned has submodules configured." + Environment.NewLine +
+             new TranslationString("The pulled has submodules configured." + Environment.NewLine +
                                    "Do you want to initialize the submodules?" + Environment.NewLine +
                                    "This will initialize and update all submodules recursive.");
 
@@ -262,9 +262,11 @@ namespace GitUI
                     !Settings.Module.InTheMiddleOfRebase() &&
                     (process != null && !process.ErrorOccurred()))
                 {
-                    if (File.Exists(Settings.WorkingDir + ".gitmodules") &&
-                        AskIfSubmodulesShouldBeInitialized())
-                        GitUICommands.Instance.StartInitSubmodulesRecursiveDialog();
+                    if (!Fetch.Checked && File.Exists(Settings.WorkingDir + ".gitmodules"))
+                    {
+                        if (!IsSubmodulesIntialized() && AskIfSubmodulesShouldBeInitialized())
+                            GitUICommands.Instance.StartInitSubmodulesRecursiveDialog();
+                    }
 
                     return true;
                 }
@@ -313,6 +315,20 @@ namespace GitUI
             }
 
             return false;
+        }
+
+        private bool IsSubmodulesIntialized()
+        {
+            // Fast submodules check
+            var submodules = Settings.Module.GetSubmodulesNames();
+            GitModule submodule = new GitModule();
+            foreach (var submoduleName in submodules)
+            {
+                submodule.WorkingDir = Settings.Module.WorkingDir + submoduleName + Settings.PathSeparator;
+                if (!submodule.ValidWorkingDir())
+                    return false;
+            }
+            return true;
         }
 
         private void LoadPuttyKey()
