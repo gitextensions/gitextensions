@@ -159,6 +159,7 @@
             this.Controls.Add(this.Preview);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(450, 250);
             this.Name = "FormCleanupRepository";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Cleanup repository";
