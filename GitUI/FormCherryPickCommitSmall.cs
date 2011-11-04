@@ -63,7 +63,7 @@ namespace GitUI
             {
                 if (ParentsList.SelectedItems.Count == 0)
                 {
-                    MessageBox.Show("None parent is selected!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, "None parent is selected!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     CanExecute = false;
                 }                  
                 else
@@ -73,7 +73,7 @@ namespace GitUI
             }
             if (CanExecute)
             {
-                new FormProcess(GitCommandHelpers.CherryPickCmd(Revision.Guid, AutoCommit.Checked, arguments)).ShowDialog();
+                new FormProcess(GitCommandHelpers.CherryPickCmd(Revision.Guid, AutoCommit.Checked, arguments)).ShowDialog(this);
                 MergeConflictHandler.HandleMergeConflicts();
                 Close();
             }            

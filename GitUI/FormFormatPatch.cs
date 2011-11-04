@@ -39,7 +39,7 @@ namespace GitUI
         private void Browse_Click(object sender, EventArgs e)
         {
             var dialog = new FolderBrowserDialog();
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog(this) == DialogResult.OK)
                 OutputPath.Text = dialog.SelectedPath;
         }
 
@@ -64,25 +64,25 @@ namespace GitUI
         {
             if (SaveToDir.Checked && string.IsNullOrEmpty(OutputPath.Text))
             {
-                MessageBox.Show(_noOutputPathEnteredText.Text);
+                MessageBox.Show(this, _noOutputPathEnteredText.Text);
                 return;
             }
 
             if (!SaveToDir.Checked && string.IsNullOrEmpty(MailAddress.Text))
             {
-                MessageBox.Show(_noEmailEnteredText.Text);
+                MessageBox.Show(this, _noEmailEnteredText.Text);
                 return;
             }
 
             if (!SaveToDir.Checked && string.IsNullOrEmpty(MailSubject.Text))
             {
-                MessageBox.Show(_noSubjectEnteredText.Text);
+                MessageBox.Show(this, _noSubjectEnteredText.Text);
                 return;
             }
 
             if (!SaveToDir.Checked && string.IsNullOrEmpty(Settings.Smtp))
             {
-                MessageBox.Show(_wrongSmtpSettingsText.Text);
+                MessageBox.Show(this, _wrongSmtpSettingsText.Text);
                 return;
             }
 
@@ -137,7 +137,7 @@ namespace GitUI
             else
                 if (string.IsNullOrEmpty(rev1) || string.IsNullOrEmpty(rev2))
                 {
-                    MessageBox.Show(_twoRevisionsNeededText.Text, _twoRevisionsNeededCaption.Text);
+                    MessageBox.Show(this, _twoRevisionsNeededText.Text, _twoRevisionsNeededCaption.Text);
                     return;
                 }
 
@@ -157,7 +157,7 @@ namespace GitUI
                 }
             }
 
-            MessageBox.Show(result, _patchResultCaption.Text);
+            MessageBox.Show(this, result, _patchResultCaption.Text);
             Close();
         }
 
@@ -171,7 +171,7 @@ namespace GitUI
                     from = Settings.Module.GetGlobalSetting("user.email");
 
                 if (string.IsNullOrEmpty(from))
-                    MessageBox.Show(_noGitMailConfigured.Text);
+                    MessageBox.Show(this, _noGitMailConfigured.Text);
 
                 string to = MailAddress.Text;
 
@@ -189,7 +189,7 @@ namespace GitUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(this, ex.Message);
                 return false;
             }
             return true;

@@ -64,7 +64,7 @@ namespace GitUI
 
         private void RemoteBranchesDataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-            MessageBox.Show(
+            MessageBox.Show(this, 
                 string.Format(_remoteBranchDataError.Text, RemoteBranches.Rows[e.RowIndex].Cells[0].Value,
                     RemoteBranches.Columns[e.ColumnIndex].HeaderText));
 
@@ -98,14 +98,14 @@ namespace GitUI
         private void BrowseClick(object sender, EventArgs e)
         {
             var dialog = new FolderBrowserDialog();
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog(this) == DialogResult.OK)
                 Url.Text = dialog.SelectedPath;
         }
 
         private void buttonBrowsePushUrl_Click(object sender, EventArgs e)
         {
             var dialog = new FolderBrowserDialog();
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog(this) == DialogResult.OK)
                 comboBoxPushUrl.Text = dialog.SelectedPath;
 
         }
@@ -128,18 +128,18 @@ namespace GitUI
                 if (checkBoxSepPushUrl.Checked)
                     Settings.Module.SetSetting(string.Format("remote.{0}.pushurl", RemoteName.Text), comboBoxPushUrl.Text);
 
-                if (MessageBox.Show(_questionAutoPullBehaviour.Text, _questionAutoPullBehaviourCaption.Text,
+                if (MessageBox.Show(this, _questionAutoPullBehaviour.Text, _questionAutoPullBehaviourCaption.Text,
                     MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     var remoteUrl = Url.Text;
 
                     if (!string.IsNullOrEmpty(remoteUrl))
                     {
-                        new FormRemoteProcess("remote update").ShowDialog();
+                        new FormRemoteProcess("remote update").ShowDialog(this);
                         ConfigureRemotes();
                     }
                     else
-                        MessageBox.Show(_warningValidRemote.Text,_warningValidRemoteCaption.Text);
+                        MessageBox.Show(this, _warningValidRemote.Text,_warningValidRemoteCaption.Text);
                 }
             }
             else
@@ -158,7 +158,7 @@ namespace GitUI
             }
 
             if (!string.IsNullOrEmpty(output))
-                MessageBox.Show(output, _hintDelete.Text);
+                MessageBox.Show(this, output, _hintDelete.Text);
 
             Initialize();
         }
@@ -188,7 +188,7 @@ namespace GitUI
         {
             var output = Settings.Module.AddRemote("<new>", "");
             if (!string.IsNullOrEmpty(output))
-                MessageBox.Show(output, _hintDelete.Text);
+                MessageBox.Show(this, output, _hintDelete.Text);
             Initialize();
         }
 
@@ -197,12 +197,12 @@ namespace GitUI
             if (string.IsNullOrEmpty(_remote))
                 return;
 
-            if (MessageBox.Show(_questionDeleteRemote.Text, _questionDeleteRemoteCaption.Text, MessageBoxButtons.YesNo) ==
+            if (MessageBox.Show(this, _questionDeleteRemote.Text, _questionDeleteRemoteCaption.Text, MessageBoxButtons.YesNo) ==
                 DialogResult.Yes)
             {
                 var output = Settings.Module.RemoveRemote(_remote);
                 if (!string.IsNullOrEmpty(output))
-                    MessageBox.Show(output, _hintDelete.Text);
+                    MessageBox.Show(this, output, _hintDelete.Text);
             }
 
             Initialize();
@@ -217,14 +217,14 @@ namespace GitUI
                         InitialDirectory = ".",
                         Title = _sshKeyOpenCaption.Text
                     };
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog(this) == DialogResult.OK)
                 PuttySshKey.Text = dialog.FileName;
         }
 
         private void LoadSshKeyClick(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(PuttySshKey.Text))
-                MessageBox.Show(_warningNoKeyEntered.Text);
+                MessageBox.Show(this, _warningNoKeyEntered.Text);
             else
                 Settings.Module.StartPageantWithKey(PuttySshKey.Text);
         }
@@ -238,7 +238,7 @@ namespace GitUI
 
         private void PruneClick(object sender, EventArgs e)
         {
-            new FormRemoteProcess("remote prune " + _remote).ShowDialog();
+            new FormRemoteProcess("remote prune " + _remote).ShowDialog(this);
         }
 
         private void RemoteBranchesSelectionChanged(object sender, EventArgs e)
@@ -347,7 +347,7 @@ namespace GitUI
 
         private void UpdateBranchClick(object sender, EventArgs e)
         {
-            new FormRemoteProcess("remote update").ShowDialog();
+            new FormRemoteProcess("remote update").ShowDialog(this);
         }
 
         private void FormRemotes_FormClosing(object sender, FormClosingEventArgs e)

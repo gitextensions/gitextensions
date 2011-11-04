@@ -56,7 +56,7 @@ namespace GitUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(_cannotAccessGitattributes.Text + Environment.NewLine + ex.Message,
+                MessageBox.Show(this, _cannotAccessGitattributes.Text + Environment.NewLine + ex.Message,
                     _cannotAccessGitattributesCaption.Text);
             }
             Close();
@@ -71,7 +71,7 @@ namespace GitUI
         {
             RestorePosition("edit-gitattributes");
             if (!Settings.Module.IsBareRepository()) return;
-            MessageBox.Show(noWorkingDir.Text, _noWorkingDirCaption.Text);
+            MessageBox.Show(this, noWorkingDir.Text, _noWorkingDirCaption.Text);
             Close();
         }
     }

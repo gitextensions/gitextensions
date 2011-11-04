@@ -56,7 +56,7 @@ namespace GitUI
             }
             catch (Exception ex)
                         {
-                MessageBox.Show(_cannotAccessMailmap.Text + Environment.NewLine + ex.Message, 
+                MessageBox.Show(this, _cannotAccessMailmap.Text + Environment.NewLine + ex.Message, 
                     _cannotAccessMailmapCaption.Text);
                         }
                         Close();
@@ -71,7 +71,7 @@ namespace GitUI
         {
             RestorePosition("edit-mail-map");
             if (!Settings.Module.IsBareRepository()) return;
-            MessageBox.Show(_mailmapOnlyInWorkingDirSupported.Text,_mailmapOnlyInWorkingDirSupportedCaption.Text);
+            MessageBox.Show(this, _mailmapOnlyInWorkingDirSupported.Text,_mailmapOnlyInWorkingDirSupportedCaption.Text);
             Close();
         }
     }

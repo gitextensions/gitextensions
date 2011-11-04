@@ -151,7 +151,7 @@ namespace GitUI
 
         private void editMenuItem_Click(object sender, EventArgs e)
         {
-            new FormDashboardEditor().ShowDialog();
+            new FormDashboardEditor().ShowDialog(this);
             dashboardCategoryChanged(this, null);
         }
 
@@ -216,7 +216,7 @@ namespace GitUI
                 return;
 
             var formDashboardCategoryTitle = new FormDashboardCategoryTitle();
-            formDashboardCategoryTitle.ShowDialog();
+            formDashboardCategoryTitle.ShowDialog(this);
 
             if (string.IsNullOrEmpty(formDashboardCategoryTitle.GetTitle()))
                 return;
@@ -305,7 +305,7 @@ namespace GitUI
 
         private void editToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormDashboardEditor().ShowDialog();
+            new FormDashboardEditor().ShowDialog(this);
             dashboardCategoryChanged(this, null);
         }
 

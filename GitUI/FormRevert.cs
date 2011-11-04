@@ -29,7 +29,7 @@ namespace GitUI
             string output = Settings.Module.ResetFile(fileName);
 
             if (!string.IsNullOrEmpty(output))
-                MessageBox.Show(output, _resetChangesCaption.Text);
+                MessageBox.Show(this, output, _resetChangesCaption.Text);
             Close();
             Cursor.Current = Cursors.Default;
         }

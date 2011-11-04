@@ -62,7 +62,7 @@ namespace GitUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Cannot open file: " + Environment.NewLine + ex.Message, "Error");
+                MessageBox.Show(this, "Cannot open file: " + Environment.NewLine + ex.Message, "Error");
                 _fileName = string.Empty;
                 Close();
             }
@@ -100,7 +100,7 @@ namespace GitUI
             }
             catch (Exception ex)
             {
-                if (MessageBox.Show("Cannot save file: " + Environment.NewLine + ex.Message, "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.Cancel)
+                if (MessageBox.Show(this, "Cannot save file: " + Environment.NewLine + ex.Message, "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.Cancel)
                 {
                     e.Cancel = true;
                 }
@@ -115,7 +115,7 @@ namespace GitUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Cannot save file: " + Environment.NewLine + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, "Cannot save file: " + Environment.NewLine + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
