@@ -82,7 +82,7 @@ namespace GitUI
                         icon = MessageBoxIcon.Exclamation;
                     }
 
-                    var result = MessageBox.Show(string.Format(trackRemoteBranch.Text, localBranchName), trackRemoteBranchCaption.Text, MessageBoxButtons.YesNoCancel, icon);
+                    var result = MessageBox.Show(this, string.Format(trackRemoteBranch.Text, localBranchName), trackRemoteBranchCaption.Text, MessageBoxButtons.YesNoCancel, icon);
 
                     if (result == DialogResult.Cancel)
                         return;
@@ -95,7 +95,7 @@ namespace GitUI
                     command += " --force";
                 command += " \"" + Branches.Text + "\"";
                 var form = new FormProcess(command);
-                form.ShowDialog();
+                form.ShowDialog(this);
                 if (!form.ErrorOccurred())
                     Close();
             }

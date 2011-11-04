@@ -41,7 +41,7 @@ namespace GitUI
 
             var viewPatch = new ViewPatch();
             viewPatch.LoadPatch(patchFile.FullName);
-            viewPatch.ShowDialog();
+            viewPatch.ShowDialog(this);
         }
     }
 }

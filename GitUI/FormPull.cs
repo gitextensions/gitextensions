@@ -90,7 +90,7 @@ namespace GitUI
         private void BrowseSourceClick(object sender, EventArgs e)
         {
             var dialog = new FolderBrowserDialog { SelectedPath = PullSource.Text };
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog(this) == DialogResult.OK)
                 PullSource.Text = dialog.SelectedPath;
         }
 
@@ -98,10 +98,10 @@ namespace GitUI
         {
             Settings.Module.RunGitRealCmd("mergetool");
 
-            if (MessageBox.Show(_allMergeConflictSolvedQuestion.Text, _allMergeConflictSolvedQuestionCaption.Text,
+            if (MessageBox.Show(this, _allMergeConflictSolvedQuestion.Text, _allMergeConflictSolvedQuestionCaption.Text,
                                 MessageBoxButtons.YesNo) != DialogResult.Yes)
                 return;
-            new FormCommit().ShowDialog();
+            new FormCommit().ShowDialog(this);
         }
 
         private void BranchesDropDown(object sender, EventArgs e)
@@ -166,18 +166,18 @@ namespace GitUI
         {
             if (PullFromUrl.Checked && string.IsNullOrEmpty(PullSource.Text))
             {
-                MessageBox.Show(_selectSourceDirectory.Text);
+                MessageBox.Show(this, _selectSourceDirectory.Text);
                 return false;
             }
             if (PullFromRemote.Checked && string.IsNullOrEmpty(Remotes.Text) && !PullAll())
             {
-                MessageBox.Show(_selectRemoteRepository.Text);
+                MessageBox.Show(this, _selectRemoteRepository.Text);
                 return false;
             }
 
             if (!Fetch.Checked && Branches.Text == "*")
             {
-                MessageBox.Show(_fetchAllBranchesCanOnlyWithFetch.Text);
+                MessageBox.Show(this, _fetchAllBranchesCanOnlyWithFetch.Text);
                 return false;
             }
 
@@ -192,7 +192,7 @@ namespace GitUI
 
             if (Rebase.Checked && Settings.Module.IsMergeCommit("HEAD"))
             {
-                if (MessageBox.Show(_areYouSureYouWantToRebaseMerge.Text, _areYouSureYouWantToRebaseMergeCaption.Text, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                if (MessageBox.Show(this, _areYouSureYouWantToRebaseMerge.Text, _areYouSureYouWantToRebaseMergeCaption.Text, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                     return false;
             }
 
@@ -213,7 +213,7 @@ namespace GitUI
             var stashed = false;
             if (!Fetch.Checked && AutoStash.Checked && Settings.Module.GitStatus(false).Count > 0)
             {
-                new FormProcess("stash save").ShowDialog();
+                new FormProcess("stash save").ShowDialog(this);
                 stashed = true;
             }
 
@@ -238,7 +238,7 @@ namespace GitUI
             {
                 if (!PullAll())
                     process.Remote = source;
-                process.ShowDialog();
+                process.ShowDialog(this);
                 ErrorOccurred = process.ErrorOccurred();
             }
 
@@ -285,9 +285,9 @@ namespace GitUI
                     !process.ErrorOccurred() &&
                     !Settings.Module.InTheMiddleOfConflictedMerge() &&
                     !Settings.Module.InTheMiddleOfRebase() &&
-                    MessageBox.Show(_applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    MessageBox.Show(this, _applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    new FormProcess("stash pop").ShowDialog();
+                    new FormProcess("stash pop").ShowDialog(this);
                     MergeConflictHandler.HandleMergeConflicts();
                 }               
 
@@ -305,7 +305,7 @@ namespace GitUI
             if (File.Exists(Settings.Pageant))
                 Settings.Module.StartPageantForRemote(Remotes.Text);
             else
-                MessageBox.Show(_cannotLoadPutty.Text, PuttyCaption);
+                MessageBox.Show(this, _cannotLoadPutty.Text, PuttyCaption);
         }
 
         private void FormPullLoad(object sender, EventArgs e)

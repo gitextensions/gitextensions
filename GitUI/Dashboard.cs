@@ -181,9 +181,9 @@ namespace GitUI
 
         }
 
-        private static void TranslateItem_Click(object sender, EventArgs e)
+        private void TranslateItem_Click(object sender, EventArgs e)
         {
-            new FormTranslate().ShowDialog();
+            new FormTranslate().ShowDialog(this);
         }
 
         private static void GitHubItem_Click(object sender, EventArgs e)
@@ -220,7 +220,7 @@ namespace GitUI
 
             if (!Settings.Module.ValidWorkingDir())
             {
-                DialogResult dialogResult = MessageBox.Show(directoryIsNotAValidRepository.Text, directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepository.Text, directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 if (dialogResult == DialogResult.Cancel)
                 {
                     Settings.WorkingDir = string.Empty;
@@ -242,7 +242,7 @@ namespace GitUI
         private void openItem_Click(object sender, EventArgs e)
         {
             var open = new Open();
-            open.ShowDialog();
+            open.ShowDialog(this);
             OnWorkingDirChanged();
         }
 
@@ -278,7 +278,7 @@ namespace GitUI
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            new FormDashboardEditor().ShowDialog();
+            new FormDashboardEditor().ShowDialog(this);
             Refresh();
         }
 

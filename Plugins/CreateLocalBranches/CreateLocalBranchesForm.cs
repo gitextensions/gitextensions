@@ -28,7 +28,7 @@ namespace CreateLocalBranches
 
             if (references.Length == 0)
             {
-                MessageBox.Show("No remote branches found.");
+                MessageBox.Show(this, "No remote branches found.");
                 DialogResult = DialogResult.Cancel;
                 return;
             }
@@ -47,7 +47,7 @@ namespace CreateLocalBranches
                 }
             }
 
-            MessageBox.Show(string.Format("{0} local tracking branches have been created/updated.",
+            MessageBox.Show(this, string.Format("{0} local tracking branches have been created/updated.",
                                           references.Length));
             Close();
         }

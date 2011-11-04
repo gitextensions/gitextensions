@@ -128,7 +128,7 @@ namespace GitUI
         private void ResolvedClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommandHelpers.ContinueRebaseCmd()).ShowDialog();
+            new FormProcess(GitCommandHelpers.ContinueRebaseCmd()).ShowDialog(this);
 
             if (!Settings.Module.InTheMiddleOfRebase())
                 Close();
@@ -141,7 +141,7 @@ namespace GitUI
         private void SkipClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommandHelpers.SkipRebaseCmd()).ShowDialog();
+            new FormProcess(GitCommandHelpers.SkipRebaseCmd()).ShowDialog(this);
 
             if (!Settings.Module.InTheMiddleOfRebase())
                 Close();
@@ -154,7 +154,7 @@ namespace GitUI
         private void AbortClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommandHelpers.AbortRebaseCmd()).ShowDialog();
+            new FormProcess(GitCommandHelpers.AbortRebaseCmd()).ShowDialog(this);
 
             if (!Settings.Module.InTheMiddleOfRebase())
                 Close();
@@ -169,14 +169,14 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             if (string.IsNullOrEmpty(Branches.Text))
             {
-                MessageBox.Show(_noBranchSelectedText.Text);
+                MessageBox.Show(this, _noBranchSelectedText.Text);
                 return;
             }
 
             var form = new FormProcess(GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked, chkAutosquash.Checked));
-            form.ShowDialog();
+            form.ShowDialog(this);
             if (form.OutputString.ToString().Trim() == "Current branch a is up to date.")
-                MessageBox.Show(_branchUpToDateText.Text, _branchUpToDateCaption.Text);
+                MessageBox.Show(this, _branchUpToDateText.Text, _branchUpToDateCaption.Text);
 
             if (!Settings.Module.InTheMiddleOfConflictedMerge() &&
                 !Settings.Module.InTheMiddleOfRebase() &&

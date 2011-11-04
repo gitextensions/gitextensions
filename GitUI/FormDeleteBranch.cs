@@ -41,7 +41,7 @@ namespace GitUI
         {
             try
             {
-                if (MessageBox.Show(_deleteBranchQuestion.Text, _deleteBranchCaption.Text, MessageBoxButtons.YesNo) ==
+                if (MessageBox.Show(this, _deleteBranchQuestion.Text, _deleteBranchCaption.Text, MessageBoxButtons.YesNo) ==
                     DialogResult.Yes)
                 {
                     GitHead head = Heads.Find(h => h.Name.Equals(Branches.Text));
@@ -50,7 +50,7 @@ namespace GitUI
                     isRemote = head != null && head.IsRemote;
 
                     var deleteBranchResult = Settings.Module.DeleteBranch(Branches.Text, ForceDelete.Checked, isRemote);
-                    MessageBox.Show(_branchDeleted.Text + Environment.NewLine + deleteBranchResult,
+                    MessageBox.Show(this, _branchDeleted.Text + Environment.NewLine + deleteBranchResult,
                                     _deleteBranchCaption.Text);
                 }
             }

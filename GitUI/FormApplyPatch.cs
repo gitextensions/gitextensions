@@ -119,7 +119,7 @@ namespace GitUI
                                  InitialDirectory = initialDirectory,
                                  Title = _selectPatchFileCaption.Text
                              };
-            return (dialog.ShowDialog() == DialogResult.OK) ? dialog.FileName : PatchFile.Text;
+            return (dialog.ShowDialog(this) == DialogResult.OK) ? dialog.FileName : PatchFile.Text;
         }
 
 
@@ -132,27 +132,27 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(PatchFile.Text) && string.IsNullOrEmpty(PatchDir.Text))
             {
-                MessageBox.Show(_noFileSelectedText.Text);
+                MessageBox.Show(this, _noFileSelectedText.Text);
                 return;
             }
             Cursor.Current = Cursors.WaitCursor;
             if (PatchFileMode.Checked)
                 if (IgnoreWhitespace.Checked)
                 {
-                    new FormProcess(GitCommandHelpers.PatchCmdIgnoreWhitespace(PatchFile.Text)).ShowDialog();
+                    new FormProcess(GitCommandHelpers.PatchCmdIgnoreWhitespace(PatchFile.Text)).ShowDialog(this);
                 }
                 else
                 {
-                    new FormProcess(GitCommandHelpers.PatchCmd(PatchFile.Text)).ShowDialog();
+                    new FormProcess(GitCommandHelpers.PatchCmd(PatchFile.Text)).ShowDialog(this);
                 }
             else
                 if (IgnoreWhitespace.Checked)
                 {
-                    new FormProcess(GitCommandHelpers.PatchDirCmdIgnoreWhitespace(PatchDir.Text)).ShowDialog();
+                    new FormProcess(GitCommandHelpers.PatchDirCmdIgnoreWhitespace(PatchDir.Text)).ShowDialog(this);
                 }
                 else
                 {
-                    new FormProcess(GitCommandHelpers.PatchDirCmd(PatchDir.Text)).ShowDialog();
+                    new FormProcess(GitCommandHelpers.PatchDirCmd(PatchDir.Text)).ShowDialog(this);
                 }
 
             EnableButtons();
@@ -171,7 +171,7 @@ namespace GitUI
         private void Skip_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommandHelpers.SkipCmd()).ShowDialog();
+            new FormProcess(GitCommandHelpers.SkipCmd()).ShowDialog(this);
             EnableButtons();
             Cursor.Current = Cursors.Default;
         }
@@ -179,7 +179,7 @@ namespace GitUI
         private void Resolved_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommandHelpers.ResolvedCmd()).ShowDialog();
+            new FormProcess(GitCommandHelpers.ResolvedCmd()).ShowDialog(this);
             EnableButtons();
             Cursor.Current = Cursors.Default;
         }
@@ -187,7 +187,7 @@ namespace GitUI
         private void Abort_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommandHelpers.AbortCmd()).ShowDialog();
+            new FormProcess(GitCommandHelpers.AbortCmd()).ShowDialog(this);
             EnableButtons();
             Cursor.Current = Cursors.Default;
         }
@@ -214,7 +214,7 @@ namespace GitUI
         {
             var browseDialog = new FolderBrowserDialog();
 
-            if (browseDialog.ShowDialog() == DialogResult.OK)
+            if (browseDialog.ShowDialog(this) == DialogResult.OK)
             {
                 PatchDir.Text = browseDialog.SelectedPath;
             }

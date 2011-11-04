@@ -84,7 +84,7 @@ namespace GitUI
         private void BrowseSourceClick(object sender, EventArgs e)
         {
             var dialog = new FolderBrowserDialog { SelectedPath = PushDestination.Text };
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog(this) == DialogResult.OK)
                 PushDestination.Text = dialog.SelectedPath;
         }
 
@@ -98,18 +98,18 @@ namespace GitUI
         {
             if (PullFromUrl.Checked && string.IsNullOrEmpty(PushDestination.Text))
             {
-                MessageBox.Show(_selectDestinationDirectory.Text);
+                MessageBox.Show(this, _selectDestinationDirectory.Text);
                 return false;
             }
             if (PullFromRemote.Checked && string.IsNullOrEmpty(Remotes.Text))
             {
-                MessageBox.Show(_selectRemote.Text);
+                MessageBox.Show(this, _selectRemote.Text);
                 return false;
             }
             if (TabControlTagBranch.SelectedTab == TagTab && string.IsNullOrEmpty(TagComboBox.Text) &&
                 !PushAllTags.Checked)
             {
-                MessageBox.Show(_selectTag.Text);
+                MessageBox.Show(this, _selectTag.Text);
                 return false;
             }
 
@@ -123,7 +123,7 @@ namespace GitUI
                 //The current branch is not known by the remote (as far as we now since we are disconnected....)
                 if (!Settings.Module.GetHeads(true, true).Exists(x => x.Remote == Remotes.Text && x.LocalName == RemoteBranch.Text))
                     //Ask if this is what the user wants
-                    if (MessageBox.Show(_branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo) ==
+                    if (MessageBox.Show(this, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo) ==
                         DialogResult.No)
                     {
                         return false;
@@ -151,7 +151,7 @@ namespace GitUI
                 if (GitCommandHelpers.Plink())
                 {
                     if (!File.Exists(Settings.Pageant))
-                        MessageBox.Show(_cannotLoadPutty.Text, PuttyText);
+                        MessageBox.Show(this, _cannotLoadPutty.Text, PuttyText);
                     else
                         Settings.Module.StartPageantForRemote(Remotes.Text);
                 }
@@ -203,7 +203,7 @@ namespace GitUI
                            HandleOnExitCallback = new HandleOnExit(HandlePushOnExit)
                        };
 
-            form.ShowDialog();
+            form.ShowDialog(this);
 
             if (!Settings.Module.InTheMiddleOfConflictedMerge() &&
                 !Settings.Module.InTheMiddleOfRebase() && !form.ErrorOccurred())
@@ -398,7 +398,7 @@ namespace GitUI
         private void LoadSshKeyClick(object sender, EventArgs e)
         {
             if (!File.Exists(Settings.Pageant))
-                MessageBox.Show(_cannotLoadPutty.Text, PuttyText);
+                MessageBox.Show(this, _cannotLoadPutty.Text, PuttyText);
             else
                 Settings.Module.StartPageantForRemote(Remotes.Text);
         }

@@ -253,7 +253,7 @@ namespace GitUI.RepoHosting
 
             var cmd = string.Format("fetch --no-tags --progress {0} {1}:{2}", _currentPullRequestInfo.HeadRepo.CloneReadOnlyUrl, _currentPullRequestInfo.HeadRef, localBranchName);
             var formProcess = new FormProcess(Settings.GitCommand, cmd);
-            formProcess.ShowDialog();
+            formProcess.ShowDialog(this);
 
             if (formProcess.ErrorOccurred())
                 return;
@@ -291,14 +291,14 @@ namespace GitUI.RepoHosting
 
             var cmd = string.Format("fetch --no-tags --progress {0} {1}:{0}/{1}", remoteName, remoteRef);
             var formProcess = new FormProcess(Settings.GitCommand, cmd);
-            formProcess.ShowDialog();
+            formProcess.ShowDialog(this);
 
             if (formProcess.ErrorOccurred())
                 return;
 
             cmd = string.Format("checkout {0}/{1}", remoteName, remoteRef);
             formProcess = new FormProcess(Settings.GitCommand, cmd);
-            formProcess.ShowDialog();
+            formProcess.ShowDialog(this);
 
             Close();
         }
