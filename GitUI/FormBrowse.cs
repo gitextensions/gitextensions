@@ -1471,7 +1471,6 @@ namespace GitUI
         private void UpdateAllSubmodulesRecursiveToolStripMenuItemClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-
             if (GitUICommands.Instance.StartUpdateSubmodulesRecursiveDialog())
                 Initialize();
             Cursor.Current = Cursors.Default;
@@ -1479,89 +1478,32 @@ namespace GitUI
 
         private void InitializeAllSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var process = new FormProcess(GitCommandHelpers.SubmoduleInitCmd(""));
-            process.ShowDialog(this);
-            Initialize();
+            if (GitUICommands.Instance.StartInitSubmodulesDialog())
+                Initialize();
         }
 
         private void InitializeAllSubmodulesRecursiveToolStripMenuItemClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            var process = new FormProcess(GitCommandHelpers.SubmoduleInitCmd(""));
-            process.ShowDialog(this);
-            InitSubmodulesRecursive();
-            Initialize();
+            if (GitUICommands.Instance.StartInitSubmodulesRecursiveDialog())
+                Initialize();
             Cursor.Current = Cursors.Default;
-        }
-
-        private void InitSubmodulesRecursive()
-        {
-            var oldworkingdir = Settings.WorkingDir;
-
-            foreach (GitSubmodule submodule in (new GitCommandsInstance()).GetSubmodules())
-            {
-                if (string.IsNullOrEmpty(submodule.LocalPath))
-                    continue;
-
-                Settings.WorkingDir = oldworkingdir + submodule.LocalPath;
-
-                if (Settings.WorkingDir != oldworkingdir && File.Exists(Settings.WorkingDir + ".gitmodules"))
-                {
-                    var process = new FormProcess(GitCommandHelpers.SubmoduleInitCmd(""));
-                    process.ShowDialog(this);
-
-                    InitSubmodulesRecursive();
-                }
-
-                Settings.WorkingDir = oldworkingdir;
-            }
-
-            Settings.WorkingDir = oldworkingdir;
         }
 
         private void SyncronizeAllSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var process = new FormProcess(GitCommandHelpers.SubmoduleSyncCmd(""));
-            process.ShowDialog(this);
-            Initialize();
+            if (GitUICommands.Instance.StartSyncSubmodulesDialog())
+                Initialize();
         }
 
         private void SynchronizeAllSubmodulesRecursiveToolStripMenuItemClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            var process = new FormProcess(GitCommandHelpers.SubmoduleSyncCmd(""));
-            process.ShowDialog(this);
-            SyncSubmodulesRecursive();
-            Initialize();
+            if (GitUICommands.Instance.StartSyncSubmodulesRecursiveDialog())
+                Initialize();
             Cursor.Current = Cursors.Default;
         }
-
-        private void SyncSubmodulesRecursive()
-        {
-            var oldworkingdir = Settings.WorkingDir;
-
-            foreach (GitSubmodule submodule in (new GitCommandsInstance()).GetSubmodules())
-            {
-                if (string.IsNullOrEmpty(submodule.LocalPath))
-                    continue;
-
-                Settings.WorkingDir = oldworkingdir + submodule.LocalPath;
-
-                if (Settings.WorkingDir != oldworkingdir && File.Exists(Settings.WorkingDir + ".gitmodules"))
-                {
-                    var process = new FormProcess(GitCommandHelpers.SubmoduleSyncCmd(""));
-                    process.ShowDialog(this);
-
-                    SyncSubmodulesRecursive();
-                }
-
-                Settings.WorkingDir = oldworkingdir;
-            }
-
-            Settings.WorkingDir = oldworkingdir;
-        }
-
-
+                
         private void ToolStripSplitStashButtonClick(object sender, EventArgs e)
         {
             if (GitUICommands.Instance.StartStashDialog())

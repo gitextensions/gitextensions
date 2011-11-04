@@ -102,12 +102,14 @@ namespace GitUI
                 return;
 
             Cursor.Current = Cursors.WaitCursor;
-            var process = new FormProcess("rm --cached \"" + SubModuleName.Text + "\"");
-            process.ShowDialog(this);
+            Settings.Module.RunGitCmd("rm --cached \"" + SubModuleName.Text + "\"");
 
             var modules = new ConfigFile(Settings.WorkingDir + ".gitmodules");
             modules.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
-            modules.Save();
+            if (modules.GetConfigSections().Count > 0)
+                modules.Save();
+            else
+                Settings.Module.RunGitCmd("rm --cached \".gitmodules\"");
 
             var configFile = Settings.Module.GetLocalConfig();
             configFile.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
