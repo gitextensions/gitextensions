@@ -753,13 +753,13 @@ namespace GitCommands
 
         public string GetSubmoduleRemotePath(string name)
         {
-            var configFile = new ConfigFile(_workingdir + Settings.PathSeparator + ".gitmodules");
+            var configFile = new ConfigFile(_workingdir + ".gitmodules");
             return configFile.GetValue("submodule." + name.Trim() + ".url").Trim();
         }
 
         public string GetSubmoduleLocalPath(string name)
         {
-            var configFile = new ConfigFile(_workingdir + Settings.PathSeparator + ".gitmodules");
+            var configFile = new ConfigFile(_workingdir + ".gitmodules");
             return configFile.GetValue("submodule." + name.Trim() + ".path").Trim();
         }
 
