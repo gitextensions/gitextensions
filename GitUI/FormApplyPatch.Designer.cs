@@ -294,6 +294,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(764, 391);
             this.Controls.Add(this.splitContainer1);
+            this.MinimumSize = new System.Drawing.Size(720, 400);
             this.Name = "FormApplyPatch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Apply patch";

@@ -958,6 +958,7 @@ namespace GitUI
             this.CancelButton = this.Cancel;
             this.ClientSize = new System.Drawing.Size(918, 644);
             this.Controls.Add(this.splitMain);
+            this.MinimumSize = new System.Drawing.Size(600, 300);
             this.Name = "FormCommit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Commit";

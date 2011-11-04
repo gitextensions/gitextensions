@@ -105,6 +105,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(699, 456);
             this.Controls.Add(this.splitContainer1);
+            this.MinimumSize = new System.Drawing.Size(400, 200);
             this.Name = "FormCheckout";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Checkout revision";
