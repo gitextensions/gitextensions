@@ -882,7 +882,7 @@ namespace GitUI
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(
+                    MessageBox.Show( 
                         string.Format("ERROR: {0} failed. Message: {1}\r\n\r\n{2}", name, ex.Message, ex.StackTrace),
                         "Error! :(");
                 }

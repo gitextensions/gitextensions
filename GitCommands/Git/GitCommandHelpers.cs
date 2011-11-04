@@ -590,6 +590,7 @@ namespace GitCommands
                     trimmedStatus = trimmedStatus.Substring(lastNewLinePos).Trim(nl);
             }
 
+            // Doesn't work with removed submodules
             IList<string> Submodules = Settings.Module.GetSubmodulesNames();
 
             //Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)

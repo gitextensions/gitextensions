@@ -531,8 +531,6 @@ namespace GitUI
             SetSelectedDiff(_currentItem, _currentItemStaged);
         }
 
-        private IList<string> Submodules = null;
-
         private void SetSelectedDiff(GitItemStatus item, bool staged)
         {
             if (item.Name.EndsWith(".png"))
@@ -541,9 +539,7 @@ namespace GitUI
             }
             else if (item.IsTracked)
             {
-                if (Submodules == null)
-                    Submodules = Settings.Module.GetSubmodulesNames();
-                if (!Submodules.Contains(item.Name))
+                if (!item.IsSubmodule)
                     SelectedDiff.ViewCurrentChanges(item.Name, item.OldName, staged);
                 else
                     SelectedDiff.ViewSubmoduleChanges(item.Name, item.OldName, staged);

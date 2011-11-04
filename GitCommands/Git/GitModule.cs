@@ -781,7 +781,7 @@ namespace GitCommands
             var name = submodule.Substring(42).Trim();
             if (name.Contains("("))
             {
-                gitSubmodule.Name = name.Substring(0, name.IndexOf("("));
+                gitSubmodule.Name = name.Substring(0, name.IndexOf("(")).TrimEnd();
                 gitSubmodule.Branch = name.Substring(name.IndexOf("(")).Trim(new[] { '(', ')', ' ' });
             }
             else
