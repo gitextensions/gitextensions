@@ -14,6 +14,7 @@ namespace GitCommands
 {
     /// <summary>
     /// Class provide non-static methods for manipulation with git module.
+    /// You can create several instances for submodules.
     /// </summary>
     public class GitModule
     {
