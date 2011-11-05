@@ -285,7 +285,6 @@ namespace GitUI
             this.ToolStrip.Padding = new System.Windows.Forms.Padding(0);
             this.ToolStrip.Size = new System.Drawing.Size(923, 25);
             this.ToolStrip.TabIndex = 4;
-            this.ToolStrip.Text = "toolStrip1";
             // 
             // RefreshButton
             // 
@@ -516,7 +515,7 @@ namespace GitUI
             this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
             this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-            this.toolStripDropDownButton1.Size = new System.Drawing.Size(29, 20);
+            this.toolStripDropDownButton1.Size = new System.Drawing.Size(29, 22);
             // 
             // commitToolStripMenuItem1
             // 
@@ -917,7 +916,6 @@ namespace GitUI
             this.statusStrip.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.statusStrip.Size = new System.Drawing.Size(923, 25);
             this.statusStrip.TabIndex = 4;
-            this.statusStrip.Text = "statusStrip";
             // 
             // toolStripStatusLabel1
             // 
@@ -1640,7 +1638,6 @@ namespace GitUI
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(923, 28);
             this.menuStrip1.TabIndex = 3;
-            this.menuStrip1.Text = "menuStrip1";
             // 
             // FormBrowse
             // 
