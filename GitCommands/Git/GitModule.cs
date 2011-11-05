@@ -12,6 +12,9 @@ using PatchApply;
 
 namespace GitCommands
 {
+    /// <summary>
+    /// Class provide non-static methods for manipulation with git module.
+    /// </summary>
     public class GitModule
     {
         public GitModule()
