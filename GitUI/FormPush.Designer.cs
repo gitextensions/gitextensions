@@ -30,12 +30,14 @@
         {
             this.components = new System.ComponentModel.Container();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.AutoPullOnRejected = new System.Windows.Forms.CheckBox();
+            this.PullFromUrl = new System.Windows.Forms.RadioButton();
+            this.PullFromRemote = new System.Windows.Forms.RadioButton();
             this.Push = new System.Windows.Forms.Button();
             this.TabControlTagBranch = new System.Windows.Forms.TabControl();
             this.BranchTab = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.RecursiveSubmodulesCheck = new System.Windows.Forms.CheckBox();
-            this.AutoPullOnRejected = new System.Windows.Forms.CheckBox();
             this._createPullRequestCB = new System.Windows.Forms.CheckBox();
             this.labelTo = new System.Windows.Forms.Label();
             this.RemoteBranch = new System.Windows.Forms.ComboBox();
@@ -60,8 +62,6 @@
             this.DeleteColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.LoadSSHKey = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.PullFromUrl = new System.Windows.Forms.RadioButton();
-            this.PullFromRemote = new System.Windows.Forms.RadioButton();
             this.AddRemote = new System.Windows.Forms.Button();
             this.Remotes = new System.Windows.Forms.ComboBox();
             this.BrowseSource = new System.Windows.Forms.Button();
@@ -77,6 +77,43 @@
             ((System.ComponentModel.ISupportInitialize)(this.BranchGrid)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // AutoPullOnRejected
+            // 
+            this.AutoPullOnRejected.AutoSize = true;
+            this.AutoPullOnRejected.Location = new System.Drawing.Point(348, 74);
+            this.AutoPullOnRejected.Name = "AutoPullOnRejected";
+            this.AutoPullOnRejected.Size = new System.Drawing.Size(171, 24);
+            this.AutoPullOnRejected.TabIndex = 23;
+            this.AutoPullOnRejected.Text = "Auto pull on rejected";
+            this.toolTip1.SetToolTip(this.AutoPullOnRejected, "Auto pull on non fast forward  rejected");
+            this.AutoPullOnRejected.UseVisualStyleBackColor = true;
+            // 
+            // PullFromUrl
+            // 
+            this.PullFromUrl.AutoSize = true;
+            this.PullFromUrl.Location = new System.Drawing.Point(7, 49);
+            this.PullFromUrl.Name = "PullFromUrl";
+            this.PullFromUrl.Size = new System.Drawing.Size(49, 24);
+            this.PullFromUrl.TabIndex = 1;
+            this.PullFromUrl.Text = "Url";
+            this.toolTip1.SetToolTip(this.PullFromUrl, "Url to push to");
+            this.PullFromUrl.UseVisualStyleBackColor = true;
+            this.PullFromUrl.CheckedChanged += new System.EventHandler(this.PullFromUrlCheckedChanged);
+            // 
+            // PullFromRemote
+            // 
+            this.PullFromRemote.AutoSize = true;
+            this.PullFromRemote.Checked = true;
+            this.PullFromRemote.Location = new System.Drawing.Point(7, 19);
+            this.PullFromRemote.Name = "PullFromRemote";
+            this.PullFromRemote.Size = new System.Drawing.Size(82, 24);
+            this.PullFromRemote.TabIndex = 0;
+            this.PullFromRemote.TabStop = true;
+            this.PullFromRemote.Text = "Remote";
+            this.toolTip1.SetToolTip(this.PullFromRemote, "Remote repository to push to");
+            this.PullFromRemote.UseVisualStyleBackColor = true;
+            this.PullFromRemote.CheckedChanged += new System.EventHandler(this.PullFromRemoteCheckedChanged);
             // 
             // Push
             // 
@@ -153,17 +190,6 @@
             this.RecursiveSubmodulesCheck.TabIndex = 24;
             this.RecursiveSubmodulesCheck.Text = "Recursive submodules check";
             this.RecursiveSubmodulesCheck.UseVisualStyleBackColor = true;
-            // 
-            // AutoPullOnRejected
-            // 
-            this.AutoPullOnRejected.AutoSize = true;
-            this.AutoPullOnRejected.Location = new System.Drawing.Point(348, 74);
-            this.AutoPullOnRejected.Name = "AutoPullOnRejected";
-            this.AutoPullOnRejected.Size = new System.Drawing.Size(171, 24);
-            this.AutoPullOnRejected.TabIndex = 23;
-            this.AutoPullOnRejected.Text = "Auto pull on rejected";
-            this.toolTip1.SetToolTip(this.AutoPullOnRejected, "Auto pull on non fast forward  rejected");
-            this.AutoPullOnRejected.UseVisualStyleBackColor = true;
             // 
             // _createPullRequestCB
             // 
@@ -245,7 +271,7 @@
             this.TagTab.Location = new System.Drawing.Point(4, 22);
             this.TagTab.Name = "TagTab";
             this.TagTab.Padding = new System.Windows.Forms.Padding(3);
-            this.TagTab.Size = new System.Drawing.Size(612, 129);
+            this.TagTab.Size = new System.Drawing.Size(616, 128);
             this.TagTab.TabIndex = 1;
             this.TagTab.Text = "Push tags";
             this.TagTab.ToolTipText = "Push tags to remote repository";
@@ -260,7 +286,7 @@
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox3.Location = new System.Drawing.Point(3, 3);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(606, 123);
+            this.groupBox3.Size = new System.Drawing.Size(610, 122);
             this.groupBox3.TabIndex = 23;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Tag";
@@ -311,7 +337,7 @@
             this.MultipleBranchTab.Location = new System.Drawing.Point(4, 22);
             this.MultipleBranchTab.Name = "MultipleBranchTab";
             this.MultipleBranchTab.Padding = new System.Windows.Forms.Padding(3);
-            this.MultipleBranchTab.Size = new System.Drawing.Size(612, 129);
+            this.MultipleBranchTab.Size = new System.Drawing.Size(616, 128);
             this.MultipleBranchTab.TabIndex = 2;
             this.MultipleBranchTab.Text = "Push multiple branches";
             this.MultipleBranchTab.UseVisualStyleBackColor = true;
@@ -322,7 +348,7 @@
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox4.Location = new System.Drawing.Point(3, 3);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(606, 123);
+            this.groupBox4.Size = new System.Drawing.Size(610, 122);
             this.groupBox4.TabIndex = 0;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Select Branches to Push";
@@ -343,7 +369,7 @@
             this.BranchGrid.Location = new System.Drawing.Point(3, 23);
             this.BranchGrid.Name = "BranchGrid";
             this.BranchGrid.RowHeadersVisible = false;
-            this.BranchGrid.Size = new System.Drawing.Size(600, 97);
+            this.BranchGrid.Size = new System.Drawing.Size(604, 96);
             this.BranchGrid.TabIndex = 0;
             this.BranchGrid.CurrentCellDirtyStateChanged += new System.EventHandler(this.BranchGrid_CurrentCellDirtyStateChanged);
             // 
@@ -423,32 +449,6 @@
             this.groupBox2.TabIndex = 21;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Push to";
-            // 
-            // PullFromUrl
-            // 
-            this.PullFromUrl.AutoSize = true;
-            this.PullFromUrl.Location = new System.Drawing.Point(7, 49);
-            this.PullFromUrl.Name = "PullFromUrl";
-            this.PullFromUrl.Size = new System.Drawing.Size(49, 24);
-            this.PullFromUrl.TabIndex = 1;
-            this.PullFromUrl.Text = "Url";
-            this.toolTip1.SetToolTip(this.PullFromUrl, "Url to push to");
-            this.PullFromUrl.UseVisualStyleBackColor = true;
-            this.PullFromUrl.CheckedChanged += new System.EventHandler(this.PullFromUrlCheckedChanged);
-            // 
-            // PullFromRemote
-            // 
-            this.PullFromRemote.AutoSize = true;
-            this.PullFromRemote.Checked = true;
-            this.PullFromRemote.Location = new System.Drawing.Point(7, 19);
-            this.PullFromRemote.Name = "PullFromRemote";
-            this.PullFromRemote.Size = new System.Drawing.Size(82, 24);
-            this.PullFromRemote.TabIndex = 0;
-            this.PullFromRemote.TabStop = true;
-            this.PullFromRemote.Text = "Remote";
-            this.toolTip1.SetToolTip(this.PullFromRemote, "Remote repository to push to");
-            this.PullFromRemote.UseVisualStyleBackColor = true;
-            this.PullFromRemote.CheckedChanged += new System.EventHandler(this.PullFromRemoteCheckedChanged);
             // 
             // AddRemote
             // 

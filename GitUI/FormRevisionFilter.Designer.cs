@@ -68,7 +68,7 @@
             // Ok
             // 
             this.Ok.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.Ok.Location = new System.Drawing.Point(374, 3);
+            this.Ok.Location = new System.Drawing.Point(375, 3);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(75, 25);
             this.Ok.TabIndex = 19;
@@ -78,7 +78,7 @@
             // 
             // _NO_TRANSLATE_Limit
             // 
-            this._NO_TRANSLATE_Limit.Location = new System.Drawing.Point(208, 153);
+            this._NO_TRANSLATE_Limit.Location = new System.Drawing.Point(209, 153);
             this._NO_TRANSLATE_Limit.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -90,21 +90,21 @@
             // 
             // Message
             // 
-            this.Message.Location = new System.Drawing.Point(208, 103);
+            this.Message.Location = new System.Drawing.Point(209, 103);
             this.Message.Name = "Message";
             this.Message.Size = new System.Drawing.Size(241, 27);
             this.Message.TabIndex = 14;
             // 
             // Author
             // 
-            this.Author.Location = new System.Drawing.Point(208, 53);
+            this.Author.Location = new System.Drawing.Point(209, 53);
             this.Author.Name = "Author";
             this.Author.Size = new System.Drawing.Size(241, 27);
             this.Author.TabIndex = 9;
             // 
             // Since
             // 
-            this.Since.Location = new System.Drawing.Point(208, 3);
+            this.Since.Location = new System.Drawing.Point(209, 3);
             this.Since.Name = "Since";
             this.Since.Size = new System.Drawing.Size(200, 27);
             this.Since.TabIndex = 3;
@@ -129,7 +129,7 @@
             // 
             // Until
             // 
-            this.Until.Location = new System.Drawing.Point(208, 28);
+            this.Until.Location = new System.Drawing.Point(209, 28);
             this.Until.Name = "Until";
             this.Until.Size = new System.Drawing.Size(200, 27);
             this.Until.TabIndex = 7;
@@ -154,7 +154,7 @@
             // 
             // Committer
             // 
-            this.Committer.Location = new System.Drawing.Point(208, 78);
+            this.Committer.Location = new System.Drawing.Point(209, 78);
             this.Committer.Name = "Committer";
             this.Committer.Size = new System.Drawing.Size(241, 27);
             this.Committer.TabIndex = 12;
@@ -190,7 +190,7 @@
             // 
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 184F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 22F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 395F));
             this.tableLayoutPanel1.Controls.Add(this.LimitCheck, 1, 6);
             this.tableLayoutPanel1.Controls.Add(this.IgnoreCase, 1, 5);
@@ -233,7 +233,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 14F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(454, 248);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(457, 255);
             this.tableLayoutPanel1.TabIndex = 4;
             // 
             // LimitCheck
@@ -241,7 +241,7 @@
             this.LimitCheck.AutoSize = true;
             this.LimitCheck.Location = new System.Drawing.Point(187, 153);
             this.LimitCheck.Name = "LimitCheck";
-            this.LimitCheck.Size = new System.Drawing.Size(15, 17);
+            this.LimitCheck.Size = new System.Drawing.Size(16, 17);
             this.LimitCheck.TabIndex = 27;
             this.LimitCheck.UseVisualStyleBackColor = true;
             this.LimitCheck.CheckedChanged += new System.EventHandler(this.SinceCheckCheckedChanged);
@@ -253,7 +253,7 @@
             this.IgnoreCase.CheckState = System.Windows.Forms.CheckState.Checked;
             this.IgnoreCase.Location = new System.Drawing.Point(187, 128);
             this.IgnoreCase.Name = "IgnoreCase";
-            this.IgnoreCase.Size = new System.Drawing.Size(15, 17);
+            this.IgnoreCase.Size = new System.Drawing.Size(16, 17);
             this.IgnoreCase.TabIndex = 26;
             this.IgnoreCase.UseVisualStyleBackColor = true;
             // 
@@ -262,7 +262,7 @@
             this.MessageCheck.AutoSize = true;
             this.MessageCheck.Location = new System.Drawing.Point(187, 103);
             this.MessageCheck.Name = "MessageCheck";
-            this.MessageCheck.Size = new System.Drawing.Size(15, 17);
+            this.MessageCheck.Size = new System.Drawing.Size(16, 17);
             this.MessageCheck.TabIndex = 25;
             this.MessageCheck.UseVisualStyleBackColor = true;
             this.MessageCheck.CheckedChanged += new System.EventHandler(this.SinceCheckCheckedChanged);
@@ -272,7 +272,7 @@
             this.CommitterCheck.AutoSize = true;
             this.CommitterCheck.Location = new System.Drawing.Point(187, 78);
             this.CommitterCheck.Name = "CommitterCheck";
-            this.CommitterCheck.Size = new System.Drawing.Size(15, 17);
+            this.CommitterCheck.Size = new System.Drawing.Size(16, 17);
             this.CommitterCheck.TabIndex = 24;
             this.CommitterCheck.UseVisualStyleBackColor = true;
             this.CommitterCheck.CheckedChanged += new System.EventHandler(this.SinceCheckCheckedChanged);
@@ -282,7 +282,7 @@
             this.AuthorCheck.AutoSize = true;
             this.AuthorCheck.Location = new System.Drawing.Point(187, 53);
             this.AuthorCheck.Name = "AuthorCheck";
-            this.AuthorCheck.Size = new System.Drawing.Size(15, 17);
+            this.AuthorCheck.Size = new System.Drawing.Size(16, 17);
             this.AuthorCheck.TabIndex = 23;
             this.AuthorCheck.UseVisualStyleBackColor = true;
             this.AuthorCheck.CheckedChanged += new System.EventHandler(this.SinceCheckCheckedChanged);
@@ -292,7 +292,7 @@
             this.CheckUntil.AutoSize = true;
             this.CheckUntil.Location = new System.Drawing.Point(187, 28);
             this.CheckUntil.Name = "CheckUntil";
-            this.CheckUntil.Size = new System.Drawing.Size(15, 17);
+            this.CheckUntil.Size = new System.Drawing.Size(16, 17);
             this.CheckUntil.TabIndex = 22;
             this.CheckUntil.UseVisualStyleBackColor = true;
             this.CheckUntil.CheckedChanged += new System.EventHandler(this.SinceCheckCheckedChanged);
@@ -302,7 +302,7 @@
             this.SinceCheck.AutoSize = true;
             this.SinceCheck.Location = new System.Drawing.Point(187, 3);
             this.SinceCheck.Name = "SinceCheck";
-            this.SinceCheck.Size = new System.Drawing.Size(15, 17);
+            this.SinceCheck.Size = new System.Drawing.Size(16, 17);
             this.SinceCheck.TabIndex = 21;
             this.SinceCheck.UseVisualStyleBackColor = true;
             this.SinceCheck.CheckedChanged += new System.EventHandler(this.SinceCheckCheckedChanged);
@@ -321,14 +321,14 @@
             this.FileFilterCheck.AutoSize = true;
             this.FileFilterCheck.Location = new System.Drawing.Point(187, 178);
             this.FileFilterCheck.Name = "FileFilterCheck";
-            this.FileFilterCheck.Size = new System.Drawing.Size(15, 17);
+            this.FileFilterCheck.Size = new System.Drawing.Size(16, 17);
             this.FileFilterCheck.TabIndex = 29;
             this.FileFilterCheck.UseVisualStyleBackColor = true;
             this.FileFilterCheck.CheckedChanged += new System.EventHandler(this.SinceCheckCheckedChanged);
             // 
             // FileFilter
             // 
-            this.FileFilter.Location = new System.Drawing.Point(208, 178);
+            this.FileFilter.Location = new System.Drawing.Point(209, 178);
             this.FileFilter.Name = "FileFilter";
             this.FileFilter.Size = new System.Drawing.Size(241, 27);
             this.FileFilter.TabIndex = 30;
@@ -344,7 +344,7 @@
             // 
             // BranchFilter
             // 
-            this.BranchFilter.Location = new System.Drawing.Point(208, 203);
+            this.BranchFilter.Location = new System.Drawing.Point(209, 203);
             this.BranchFilter.Name = "BranchFilter";
             this.BranchFilter.Size = new System.Drawing.Size(241, 27);
             this.BranchFilter.TabIndex = 32;
@@ -352,9 +352,9 @@
             // CurrentBranchOnlyCheck
             // 
             this.CurrentBranchOnlyCheck.AutoSize = true;
-            this.CurrentBranchOnlyCheck.Location = new System.Drawing.Point(208, 228);
+            this.CurrentBranchOnlyCheck.Location = new System.Drawing.Point(209, 228);
             this.CurrentBranchOnlyCheck.Name = "CurrentBranchOnlyCheck";
-            this.CurrentBranchOnlyCheck.Size = new System.Drawing.Size(198, 17);
+            this.CurrentBranchOnlyCheck.Size = new System.Drawing.Size(198, 24);
             this.CurrentBranchOnlyCheck.TabIndex = 33;
             this.CurrentBranchOnlyCheck.Text = "Show current branch only";
             this.CurrentBranchOnlyCheck.UseVisualStyleBackColor = true;
@@ -365,9 +365,8 @@
             this.BranchFilterCheck.AutoSize = true;
             this.BranchFilterCheck.Location = new System.Drawing.Point(187, 203);
             this.BranchFilterCheck.Name = "BranchFilterCheck";
-            this.BranchFilterCheck.Size = new System.Drawing.Size(15, 19);
+            this.BranchFilterCheck.Size = new System.Drawing.Size(16, 17);
             this.BranchFilterCheck.TabIndex = 34;
-            this.BranchFilterCheck.Text = "checkBox1";
             this.BranchFilterCheck.UseVisualStyleBackColor = true;
             this.BranchFilterCheck.CheckedChanged += new System.EventHandler(this.OnBranchFilterCheckedChanged);
             // 
@@ -386,15 +385,15 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.Ok);
-            this.splitContainer1.Size = new System.Drawing.Size(454, 281);
-            this.splitContainer1.SplitterDistance = 248;
+            this.splitContainer1.Size = new System.Drawing.Size(457, 288);
+            this.splitContainer1.SplitterDistance = 255;
             this.splitContainer1.TabIndex = 21;
             // 
             // FormRevisionFilter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(454, 281);
+            this.ClientSize = new System.Drawing.Size(457, 288);
             this.Controls.Add(this.splitContainer1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;

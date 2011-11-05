@@ -339,7 +339,6 @@ namespace GitUI
             this.toolStripContainer1.Name = "toolStripContainer1";
             this.toolStripContainer1.Size = new System.Drawing.Size(397, 284);
             this.toolStripContainer1.TabIndex = 13;
-            this.toolStripContainer1.Text = "toolStripContainer1";
             // 
             // toolStripContainer1.TopToolStripPanel
             // 
@@ -391,7 +390,6 @@ namespace GitUI
             this.toolbarUnstaged.Size = new System.Drawing.Size(397, 29);
             this.toolbarUnstaged.Stretch = true;
             this.toolbarUnstaged.TabIndex = 12;
-            this.toolbarUnstaged.Text = "toolStrip1";
             // 
             // toolRefreshItem
             // 
@@ -881,7 +879,7 @@ namespace GitUI
             this.toolStripSeparator16,
             this.copyFolderNameMenuItem});
             this.UnstagedSubmoduleContext.Name = "UnstagedFileContext";
-            this.UnstagedSubmoduleContext.Size = new System.Drawing.Size(252, 212);
+            this.UnstagedSubmoduleContext.Size = new System.Drawing.Size(252, 190);
             // 
             // openSubmoduleMenuItem
             // 
