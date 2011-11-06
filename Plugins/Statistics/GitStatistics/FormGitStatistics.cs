@@ -262,7 +262,7 @@ namespace GitStatistics
             }
             catch(Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show(this, ex.ToString());
             }
         }
     }

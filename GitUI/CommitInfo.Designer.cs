@@ -41,9 +41,9 @@ namespace GitUI
             this.showContainedInBranchesRemoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showContainedInTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.RevisionInfo = new System.Windows.Forms.RichTextBox();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.addNoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.RevisionInfo = new System.Windows.Forms.RichTextBox();
             this.tableLayout.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -65,7 +65,7 @@ namespace GitUI
             this.tableLayout.Name = "tableLayout";
             this.tableLayout.RowCount = 1;
             this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayout.Size = new System.Drawing.Size(766, 334);
+            this.tableLayout.Size = new System.Drawing.Size(1021, 514);
             this.tableLayout.TabIndex = 3;
             this.tableLayout.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayout_Paint);
             // 
@@ -77,7 +77,7 @@ namespace GitUI
             this.gravatar1.Location = new System.Drawing.Point(0, 0);
             this.gravatar1.Margin = new System.Windows.Forms.Padding(0);
             this.gravatar1.Name = "gravatar1";
-            this.gravatar1.Size = new System.Drawing.Size(90, 334);
+            this.gravatar1.Size = new System.Drawing.Size(120, 514);
             this.gravatar1.TabIndex = 1;
             // 
             // splitContainer1
@@ -85,8 +85,8 @@ namespace GitUI
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.IsSplitterFixed = true;
-            this.splitContainer1.Location = new System.Drawing.Point(93, 2);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.splitContainer1.Location = new System.Drawing.Point(124, 3);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -97,9 +97,9 @@ namespace GitUI
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.RevisionInfo);
-            this.splitContainer1.Size = new System.Drawing.Size(670, 330);
+            this.splitContainer1.Size = new System.Drawing.Size(893, 508);
             this.splitContainer1.SplitterDistance = 115;
-            this.splitContainer1.SplitterWidth = 1;
+            this.splitContainer1.SplitterWidth = 2;
             this.splitContainer1.TabIndex = 2;
             // 
             // _RevisionHeader
@@ -109,12 +109,11 @@ namespace GitUI
             this._RevisionHeader.ContextMenuStrip = this.commitInfoContextMenuStrip;
             this._RevisionHeader.Dock = System.Windows.Forms.DockStyle.Fill;
             this._RevisionHeader.Font = new System.Drawing.Font("Tahoma", 9.75F);
-            this._RevisionHeader.LanguageOption = RichTextBoxLanguageOptions.UIFonts;
             this._RevisionHeader.Location = new System.Drawing.Point(0, 0);
-            this._RevisionHeader.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this._RevisionHeader.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this._RevisionHeader.Name = "_RevisionHeader";
             this._RevisionHeader.ReadOnly = true;
-            this._RevisionHeader.Size = new System.Drawing.Size(670, 115);
+            this._RevisionHeader.Size = new System.Drawing.Size(893, 115);
             this._RevisionHeader.TabIndex = 0;
             this._RevisionHeader.Text = "";
             // 
@@ -130,47 +129,59 @@ namespace GitUI
             this.toolStripSeparator2,
             this.addNoteToolStripMenuItem});
             this.commitInfoContextMenuStrip.Name = "commitInfoContextMenuStrip";
-            this.commitInfoContextMenuStrip.Size = new System.Drawing.Size(422, 170);
+            this.commitInfoContextMenuStrip.Size = new System.Drawing.Size(548, 160);
             // 
             // copyCommitInfoToolStripMenuItem
             // 
             this.copyCommitInfoToolStripMenuItem.Name = "copyCommitInfoToolStripMenuItem";
-            this.copyCommitInfoToolStripMenuItem.Size = new System.Drawing.Size(421, 22);
+            this.copyCommitInfoToolStripMenuItem.Size = new System.Drawing.Size(547, 24);
             this.copyCommitInfoToolStripMenuItem.Text = "Copy commit info";
             this.copyCommitInfoToolStripMenuItem.Click += new System.EventHandler(this.copyCommitInfoToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(418, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(544, 6);
             // 
             // showContainedInBranchesToolStripMenuItem
             // 
             this.showContainedInBranchesToolStripMenuItem.Name = "showContainedInBranchesToolStripMenuItem";
-            this.showContainedInBranchesToolStripMenuItem.Size = new System.Drawing.Size(421, 22);
+            this.showContainedInBranchesToolStripMenuItem.Size = new System.Drawing.Size(547, 24);
             this.showContainedInBranchesToolStripMenuItem.Text = "Show local branches containing this commit";
             this.showContainedInBranchesToolStripMenuItem.Click += new System.EventHandler(this.showContainedInBranchesToolStripMenuItem_Click);
             // 
             // showContainedInBranchesRemoteToolStripMenuItem
             // 
             this.showContainedInBranchesRemoteToolStripMenuItem.Name = "showContainedInBranchesRemoteToolStripMenuItem";
-            this.showContainedInBranchesRemoteToolStripMenuItem.Size = new System.Drawing.Size(421, 22);
+            this.showContainedInBranchesRemoteToolStripMenuItem.Size = new System.Drawing.Size(547, 24);
             this.showContainedInBranchesRemoteToolStripMenuItem.Text = "Show remote branches containing this commit";
             this.showContainedInBranchesRemoteToolStripMenuItem.Click += new System.EventHandler(this.showContainedInBranchesRemoteToolStripMenuItem_Click);
             // 
             // showContainedInBranchesRemoteIfNoLocalToolStripMenuItem
             // 
             this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Name = "showContainedInBranchesRemoteIfNoLocalToolStripMenuItem";
-            this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Size = new System.Drawing.Size(421, 22);
+            this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Size = new System.Drawing.Size(547, 24);
             this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Text = "Show remote branches only when no local branch contains this commit";
             this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Click += new System.EventHandler(this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem_Click);
             // 
             // showContainedInTagsToolStripMenuItem
             // 
             this.showContainedInTagsToolStripMenuItem.Name = "showContainedInTagsToolStripMenuItem";
-            this.showContainedInTagsToolStripMenuItem.Size = new System.Drawing.Size(421, 22);
+            this.showContainedInTagsToolStripMenuItem.Size = new System.Drawing.Size(547, 24);
             this.showContainedInTagsToolStripMenuItem.Text = "Show tags containing this commit";
             this.showContainedInTagsToolStripMenuItem.Click += new System.EventHandler(this.showContainedInTagsToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(544, 6);
+            // 
+            // addNoteToolStripMenuItem
+            // 
+            this.addNoteToolStripMenuItem.Name = "addNoteToolStripMenuItem";
+            this.addNoteToolStripMenuItem.Size = new System.Drawing.Size(547, 24);
+            this.addNoteToolStripMenuItem.Text = "Add notes";
+            this.addNoteToolStripMenuItem.Click += new System.EventHandler(this.addNoteToolStripMenuItem_Click);
             // 
             // RevisionInfo
             // 
@@ -178,34 +189,22 @@ namespace GitUI
             this.RevisionInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.RevisionInfo.ContextMenuStrip = this.commitInfoContextMenuStrip;
             this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RevisionInfo.LanguageOption = RichTextBoxLanguageOptions.UIFonts;
             this.RevisionInfo.Location = new System.Drawing.Point(0, 0);
-            this.RevisionInfo.Margin = new System.Windows.Forms.Padding(4);
+            this.RevisionInfo.Margin = new System.Windows.Forms.Padding(7, 9, 7, 9);
             this.RevisionInfo.Name = "RevisionInfo";
             this.RevisionInfo.ReadOnly = true;
-            this.RevisionInfo.Size = new System.Drawing.Size(670, 214);
+            this.RevisionInfo.Size = new System.Drawing.Size(893, 391);
             this.RevisionInfo.TabIndex = 0;
             this.RevisionInfo.Text = "";
             // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(418, 6);
-            // 
-            // addNoteToolStripMenuItem
-            // 
-            this.addNoteToolStripMenuItem.Name = "addNoteToolStripMenuItem";
-            this.addNoteToolStripMenuItem.Size = new System.Drawing.Size(421, 22);
-            this.addNoteToolStripMenuItem.Text = "Add notes";
-            this.addNoteToolStripMenuItem.Click += new System.EventHandler(this.addNoteToolStripMenuItem_Click);
-            // 
             // CommitInfo
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tableLayout);
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "CommitInfo";
-            this.Size = new System.Drawing.Size(766, 334);
+            this.Size = new System.Drawing.Size(1021, 514);
             this.tableLayout.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);

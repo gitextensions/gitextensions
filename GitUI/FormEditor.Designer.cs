@@ -39,6 +39,7 @@
             // 
             // fileViewer
             // 
+            this.fileViewer.DisableFocusControlOnHover = false;
             this.fileViewer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.fileViewer.Font = new System.Drawing.Font("Tahoma", 9.75F);
             this.fileViewer.IgnoreWhitespaceChanges = false;
@@ -62,7 +63,6 @@
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(659, 25);
             this.toolStrip1.TabIndex = 1;
-            this.toolStrip1.Text = "toolStrip1";
             // 
             // toolStripSaveButton
             // 
@@ -92,7 +92,7 @@
             // 
             // FormEditor
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(659, 543);
             this.Controls.Add(this.tableLayoutPanel1);

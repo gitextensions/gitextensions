@@ -15,6 +15,7 @@ using System.Globalization;
 using NetSpell.SpellChecker.Dictionary;
 using NetSpell.SpellChecker.Dictionary.Affix;
 using NetSpell.SpellChecker.Dictionary.Phonetic;
+using System.Collections.Generic;
 
 
 namespace NetSpell.SpellChecker
@@ -319,7 +320,7 @@ namespace NetSpell.SpellChecker
 		///		swap out each char one by one and try all the tryme
 		///		chars in its place to see if that makes a good word
 		/// </summary>
-		private void BadChar(ref ArrayList tempSuggestion)
+        private void BadChar(ref List<Word> tempSuggestion)
 		{
 			for (int i = 0; i < this.CurrentWord.Length; i++)
 			{
@@ -343,7 +344,7 @@ namespace NetSpell.SpellChecker
 		/// <summary>
 		///     try omitting one char of word at a time
 		/// </summary>
-		private void ExtraChar(ref ArrayList tempSuggestion)
+        private void ExtraChar(ref List<Word> tempSuggestion)
 		{
 			if (this.CurrentWord.Length > 1) 
 			{
@@ -368,7 +369,7 @@ namespace NetSpell.SpellChecker
 		/// <summary>
 		///     try inserting a tryme character before every letter
 		/// </summary>
-		private void ForgotChar(ref ArrayList tempSuggestion)
+        private void ForgotChar(ref List<Word> tempSuggestion)
 		{
 			char[] tryme = this.Dictionary.TryCharacters.ToCharArray();
 				
@@ -395,9 +396,9 @@ namespace NetSpell.SpellChecker
 		///     suggestions for a typical fault of spelling, that
 		///		differs with more, than 1 letter from the right form.
 		/// </summary>
-		private void ReplaceChars(ref ArrayList tempSuggestion)
+        private void ReplaceChars(ref List<Word> tempSuggestion)
 		{
-			ArrayList replacementChars = this.Dictionary.ReplaceCharacters;
+			List<string> replacementChars = this.Dictionary.ReplaceCharacters;
 			for (int i = 0; i < replacementChars.Count; i++)
 			{
 				int split = ((string)replacementChars[i]).IndexOf(' ');
@@ -427,7 +428,7 @@ namespace NetSpell.SpellChecker
 		/// <summary>
 		///     try swapping adjacent chars one by one
 		/// </summary>
-		private void SwapChar(ref ArrayList tempSuggestion)
+        private void SwapChar(ref List<Word> tempSuggestion)
 		{
 			for (int i = 0; i < this.CurrentWord.Length - 1; i++)
 			{
@@ -453,7 +454,7 @@ namespace NetSpell.SpellChecker
 		///     split the string into two pieces after every char
 		///		if both pieces are good words make them a suggestion
 		/// </summary>
-		private void TwoWords(ref ArrayList tempSuggestion)
+        private void TwoWords(ref List<Word> tempSuggestion)
 		{
 			for (int i = 1; i < this.CurrentWord.Length - 1; i++)
 			{
@@ -1022,7 +1023,7 @@ namespace NetSpell.SpellChecker
 
 			this.Initialize();
 
-			ArrayList tempSuggestion = new ArrayList();
+            List<Word> tempSuggestion = new List<Word>();
 
 			if ((_suggestionMode == SuggestionEnum.PhoneticNearMiss 
 				|| _suggestionMode == SuggestionEnum.Phonetic)
@@ -1046,7 +1047,7 @@ namespace NetSpell.SpellChecker
 					{
 						if (codes.ContainsKey(word.PhoneticCode))
 						{
-							ArrayList words = _dictionary.ExpandWord(word);
+							List<string> words = _dictionary.ExpandWord(word);
 							// add expanded words
 							foreach (string expandedWord in words)
 							{

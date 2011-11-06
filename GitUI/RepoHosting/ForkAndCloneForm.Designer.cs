@@ -38,9 +38,9 @@
             this._searchTB = new System.Windows.Forms.TextBox();
             this._forkBtn = new System.Windows.Forms.Button();
             this._myReposLV = new System.Windows.Forms.ListView();
-            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this._searchResultsLV = new System.Windows.Forms.ListView();
-            this.columnHeader6 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this._cloneBtn = new System.Windows.Forms.Button();
             this._destinationTB = new System.Windows.Forms.TextBox();
             this._browseForCloneToDirbtn = new System.Windows.Forms.Button();
@@ -61,12 +61,12 @@
             this._addRemoteAsTB = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this._cloneInfoText = new System.Windows.Forms.Label();
-            columnHeader1 = new System.Windows.Forms.ColumnHeader();
-            columnHeader3 = new System.Windows.Forms.ColumnHeader();
-            columnHeader4 = new System.Windows.Forms.ColumnHeader();
-            columnHeader5 = new System.Windows.Forms.ColumnHeader();
-            columnHeader7 = new System.Windows.Forms.ColumnHeader();
-            columnHeader8 = new System.Windows.Forms.ColumnHeader();
+            columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this._tabControl.SuspendLayout();
             this._myReposPage.SuspendLayout();
             this._searchReposPage.SuspendLayout();
@@ -117,10 +117,10 @@
             // 
             this._searchTB.Location = new System.Drawing.Point(15, 11);
             this._searchTB.Name = "_searchTB";
-            this._searchTB.Size = new System.Drawing.Size(198, 23);
+            this._searchTB.Size = new System.Drawing.Size(198, 27);
             this._searchTB.TabIndex = 0;
-            this._searchTB.Leave += new System.EventHandler(this._searchTB_Leave);
             this._searchTB.Enter += new System.EventHandler(this._searchTB_Enter);
+            this._searchTB.Leave += new System.EventHandler(this._searchTB_Leave);
             // 
             // _forkBtn
             // 
@@ -134,9 +134,9 @@
             // 
             // _myReposLV
             // 
-            this._myReposLV.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this._myReposLV.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this._myReposLV.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             columnHeader1,
             columnHeader3,
@@ -198,9 +198,10 @@
             // 
             this._destinationTB.Location = new System.Drawing.Point(10, 32);
             this._destinationTB.Name = "_destinationTB";
-            this._destinationTB.Size = new System.Drawing.Size(294, 23);
+            this._destinationTB.Size = new System.Drawing.Size(294, 27);
             this._destinationTB.TabIndex = 0;
             this._destinationTB.TextChanged += new System.EventHandler(this._destinationTB_TextChanged);
+            this._destinationTB.Validating += new System.ComponentModel.CancelEventHandler(this._destinationTB_Validating);
             // 
             // _browseForCloneToDirbtn
             // 
@@ -216,16 +217,17 @@
             // 
             this._createDirTB.Location = new System.Drawing.Point(11, 71);
             this._createDirTB.Name = "_createDirTB";
-            this._createDirTB.Size = new System.Drawing.Size(183, 23);
+            this._createDirTB.Size = new System.Drawing.Size(183, 27);
             this._createDirTB.TabIndex = 2;
             this._createDirTB.TextChanged += new System.EventHandler(this._createDirTB_TextChanged);
+            this._createDirTB.Validating += new System.ComponentModel.CancelEventHandler(this._createDirTB_Validating);
             // 
             // _createDirectoryLbl
             // 
             this._createDirectoryLbl.AutoSize = true;
             this._createDirectoryLbl.Location = new System.Drawing.Point(9, 55);
             this._createDirectoryLbl.Name = "_createDirectoryLbl";
-            this._createDirectoryLbl.Size = new System.Drawing.Size(94, 15);
+            this._createDirectoryLbl.Size = new System.Drawing.Size(118, 20);
             this._createDirectoryLbl.TabIndex = 13;
             this._createDirectoryLbl.Text = "Create directory:";
             // 
@@ -234,7 +236,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(7, 16);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(104, 15);
+            this.label1.Size = new System.Drawing.Size(132, 20);
             this.label1.TabIndex = 12;
             this.label1.Text = "Destination folder:";
             // 
@@ -253,7 +255,7 @@
             this._descriptionLbl.AutoSize = true;
             this._descriptionLbl.Location = new System.Drawing.Point(418, 45);
             this._descriptionLbl.Name = "_descriptionLbl";
-            this._descriptionLbl.Size = new System.Drawing.Size(70, 15);
+            this._descriptionLbl.Size = new System.Drawing.Size(88, 20);
             this._descriptionLbl.TabIndex = 17;
             this._descriptionLbl.Text = "Description:";
             // 
@@ -282,10 +284,10 @@
             // 
             this._myReposPage.Controls.Add(this._helpTextLbl);
             this._myReposPage.Controls.Add(this._myReposLV);
-            this._myReposPage.Location = new System.Drawing.Point(4, 24);
+            this._myReposPage.Location = new System.Drawing.Point(4, 29);
             this._myReposPage.Name = "_myReposPage";
             this._myReposPage.Padding = new System.Windows.Forms.Padding(3);
-            this._myReposPage.Size = new System.Drawing.Size(648, 262);
+            this._myReposPage.Size = new System.Drawing.Size(648, 257);
             this._myReposPage.TabIndex = 0;
             this._myReposPage.Text = "My repositories";
             this._myReposPage.UseVisualStyleBackColor = true;
@@ -297,7 +299,7 @@
             this._helpTextLbl.Size = new System.Drawing.Size(266, 140);
             this._helpTextLbl.TabIndex = 10;
             this._helpTextLbl.Text = "If you want to fork a repository owned by somebody else, go to the Search for rep" +
-                "ositories tab.";
+    "ositories tab.";
             // 
             // _searchReposPage
             // 
@@ -310,22 +312,22 @@
             this._searchReposPage.Controls.Add(this._descriptionLbl);
             this._searchReposPage.Controls.Add(this._forkBtn);
             this._searchReposPage.Controls.Add(this._searchResultsLV);
-            this._searchReposPage.Location = new System.Drawing.Point(4, 24);
+            this._searchReposPage.Location = new System.Drawing.Point(4, 29);
             this._searchReposPage.Name = "_searchReposPage";
             this._searchReposPage.Padding = new System.Windows.Forms.Padding(3);
-            this._searchReposPage.Size = new System.Drawing.Size(648, 262);
+            this._searchReposPage.Size = new System.Drawing.Size(648, 257);
             this._searchReposPage.TabIndex = 1;
             this._searchReposPage.Text = "Search for repositories";
             this._searchReposPage.UseVisualStyleBackColor = true;
             // 
             // _orLbl
             // 
-            this._orLbl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this._orLbl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this._orLbl.AutoSize = true;
             this._orLbl.Location = new System.Drawing.Point(329, 14);
             this._orLbl.Name = "_orLbl";
-            this._orLbl.Size = new System.Drawing.Size(18, 15);
+            this._orLbl.Size = new System.Drawing.Size(23, 20);
             this._orLbl.TabIndex = 22;
             this._orLbl.Text = "or";
             // 
@@ -341,9 +343,9 @@
             // 
             // _searchResultItemDescription
             // 
-            this._searchResultItemDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this._searchResultItemDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this._searchResultItemDescription.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this._searchResultItemDescription.Location = new System.Drawing.Point(418, 63);
             this._searchResultItemDescription.Multiline = true;
@@ -375,7 +377,7 @@
             // 
             this._addRemoteAsTB.Location = new System.Drawing.Point(212, 71);
             this._addRemoteAsTB.Name = "_addRemoteAsTB";
-            this._addRemoteAsTB.Size = new System.Drawing.Size(200, 23);
+            this._addRemoteAsTB.Size = new System.Drawing.Size(200, 27);
             this._addRemoteAsTB.TabIndex = 3;
             this._addRemoteAsTB.TextChanged += new System.EventHandler(this._addRemoteAsTB_TextChanged);
             // 
@@ -384,7 +386,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(211, 55);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(87, 15);
+            this.label3.Size = new System.Drawing.Size(110, 20);
             this.label3.TabIndex = 23;
             this.label3.Text = "Add remote as:";
             // 
@@ -397,7 +399,7 @@
             // 
             // ForkAndCloneForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(663, 475);
             this.Controls.Add(this._tabControl);

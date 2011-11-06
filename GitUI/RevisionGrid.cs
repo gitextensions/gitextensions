@@ -13,6 +13,7 @@ using GitUI.Script;
 using GitUI.Tag;
 using Gravatar;
 using ResourceManager.Translation;
+using System.IO;
 
 namespace GitUI
 {
@@ -94,6 +95,7 @@ namespace GitUI
             InMemAuthorFilter = "";
             InMemCommitterFilter = "";
             InMemMessageFilter = "";
+            InMemHashFilter = "";
             AllowGraphWithFilter = false;
             _quickSearchString = "";
             quickSearchTimer.Tick += QuickSearchTimerTick;
@@ -140,6 +142,7 @@ namespace GitUI
         public string InMemAuthorFilter { get; set; }
         public string InMemCommitterFilter { get; set; }
         public string InMemMessageFilter { get; set; }
+        public string InMemHashFilter { get; set; }
 
         public string BranchFilter { get; set; }
         private Font _normalFont;
@@ -408,15 +411,18 @@ namespace GitUI
                                       out string revListArgs,
                                       out string inMemMessageFilter,
                                       out string inMemCommitterFilter,
-                                      out string inMemAuthorFilter)
+                                      out string inMemAuthorFilter,
+                                      out string inMemHashFilter)
         {
             revListArgs = string.Empty;
             inMemMessageFilter = string.Empty;
             inMemCommitterFilter = string.Empty;
             inMemAuthorFilter = string.Empty;
+            inMemHashFilter = string.Empty;
             if (!string.IsNullOrEmpty(filter))
             {
-                var cmdLineSafe = GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(filter);
+                // hash filtering only possible in memory
+                var cmdLineSafe = !parameters[4] && GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(filter);
                 revListArgs = " --regexp-ignore-case ";
                 if (parameters[0])
                     if (cmdLineSafe)
@@ -438,6 +444,8 @@ namespace GitUI
                         revListArgs += "\"-S" + filter + "\" ";
                     else
                         throw new InvalidOperationException("Filter text not valid for \"Diff contains\" filter.");
+                if (parameters[4])
+                    inMemHashFilter = filter;
             }
         }
 
@@ -490,6 +498,9 @@ namespace GitUI
 
         public void SetSelectedIndex(int index)
         {
+            if (Revisions.Rows[index].Selected)
+                return;
+
             Revisions.ClearSelection();
 
             Revisions.Rows[index].Selected = true;
@@ -500,8 +511,6 @@ namespace GitUI
 
         public void SetSelectedRevision(GitRevision revision)
         {
-            Revisions.ClearSelection();
-
             if (revision != null)
             {
                 for (var i = 0; i < Revisions.RowCount; i++)
@@ -509,10 +518,12 @@ namespace GitUI
                     if (((GitRevision)Revisions.GetRowData(i)).Guid == revision.Guid)
                     {
                         SetSelectedIndex(i);
-                        break;
+                        return;
                     }
                 }
             }
+
+            Revisions.ClearSelection();
             Revisions.Select();
         }
 
@@ -521,10 +532,10 @@ namespace GitUI
             if (Revisions.SelectedRows.Count > 0)
                 LastRow = Revisions.SelectedRows[0].Index;
 
-            SelecctionTimer.Enabled = false;
-            SelecctionTimer.Stop();
-            SelecctionTimer.Enabled = true;
-            SelecctionTimer.Start();
+            SelectionTimer.Enabled = false;
+            SelectionTimer.Stop();
+            SelectionTimer.Enabled = true;
+            SelectionTimer.Start();
         }
 
         public List<GitRevision> GetRevisions()
@@ -551,7 +562,7 @@ namespace GitUI
                 /* Committer Date */ "%ci%n" +
                 /* Commit Message */ "%s";
             string cmd = "log -n 1 --pretty=format:" + formatString + " " + CurrentCheckout;
-            var RevInfo = GitCommandHelpers.RunCmd(Settings.GitCommand, cmd);
+            var RevInfo = Settings.Module.RunGitCmd(cmd);
             string[] Infos = RevInfo.Split('\n');
             var Revision = new GitRevision(CurrentCheckout)
             {
@@ -565,7 +576,7 @@ namespace GitUI
             Revision.AuthorDate = date;
             DateTime.TryParse(Infos[4], out date);
             Revision.CommitDate = date;
-            List<GitHead> heads = GitCommandHelpers.GetHeads(true, true);
+            List<GitHead> heads = Settings.Module.GetHeads(true, true);
             foreach (GitHead head in heads)
             {
                 if (head.Guid.Equals(Revision.Guid))
@@ -606,13 +617,16 @@ namespace GitUI
             private readonly Regex _CommitterFilterRegex;
             private readonly string _MessageFilter;
             private readonly Regex _MessageFilterRegex;
+            private readonly string _HashFilter;
+            private readonly Regex _HashFilterRegex;
 
-            public RevisionGridInMemFilter(string authorFilter, string committerFilter, string messageFilter, bool ignoreCase)
+            public RevisionGridInMemFilter(string authorFilter, string committerFilter, string messageFilter, string hashFilter, bool ignoreCase)
             {
                 _IgnoreCase = ignoreCase;
                 SetUpVars(authorFilter, ref _AuthorFilter, ref _AuthorFilterRegex);
                 SetUpVars(committerFilter, ref _CommitterFilter, ref _CommitterFilterRegex);
                 SetUpVars(messageFilter, ref _MessageFilter, ref _MessageFilterRegex);
+                SetUpVars(hashFilter, ref _HashFilter, ref _HashFilterRegex);
             }
 
             private void SetUpVars(string filterValue,
@@ -642,20 +656,24 @@ namespace GitUI
             {
                 return CheckCondition(_AuthorFilter, _AuthorFilterRegex, rev.Author) &&
                        CheckCondition(_CommitterFilter, _CommitterFilterRegex, rev.Committer) &&
-                       CheckCondition(_MessageFilter, _MessageFilterRegex, rev.Message);
+                       CheckCondition(_MessageFilter, _MessageFilterRegex, rev.Message) &&
+                       CheckCondition(_HashFilter, _HashFilterRegex, rev.Guid);
             }
 
             public static RevisionGridInMemFilter CreateIfNeeded(string authorFilter,
                                                                  string committerFilter,
                                                                  string messageFilter,
+                                                                 string hashFilter,
                                                                  bool ignoreCase)
             {
                 if (!(string.IsNullOrEmpty(authorFilter) &&
                       string.IsNullOrEmpty(committerFilter) &&
-                      string.IsNullOrEmpty(messageFilter)))
+                      string.IsNullOrEmpty(messageFilter) &&
+                      string.IsNullOrEmpty(hashFilter)))
                     return new RevisionGridInMemFilter(authorFilter,
                                                        committerFilter,
                                                        messageFilter,
+                                                       hashFilter,
                                                        ignoreCase);
                 else
                     return null;
@@ -684,7 +702,7 @@ namespace GitUI
 
                 DisposeRevisionGraphCommand();
 
-                var newCurrentCheckout = GitCommandHelpers.GetCurrentCheckout();
+                var newCurrentCheckout = Settings.Module.GetCurrentCheckout();
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
@@ -703,12 +721,19 @@ namespace GitUI
                 Revisions.Clear();
                 Error.Visible = false;
 
-                if (!Settings.ValidWorkingDir())
+                if (!Settings.Module.ValidWorkingDir())
                 {
                     Revisions.Visible = false;
                     NoCommits.Visible = true;
                     Loading.Visible = false;
                     NoGit.Visible = true;
+                    string dir = Settings.Module.WorkingDir;
+                    if (String.IsNullOrEmpty(dir) || !Directory.Exists(dir) ||
+                        Directory.GetDirectories(dir).Length == 0 &&
+                        Directory.GetFiles(dir).Length == 0)
+                        CloneRepository.Show();
+                    else
+                        CloneRepository.Hide();
                     NoGit.BringToFront();
                     return;
                 }
@@ -734,10 +759,12 @@ namespace GitUI
                 RevisionGridInMemFilter revisionFilterIMF = RevisionGridInMemFilter.CreateIfNeeded(_revisionFilter.GetInMemAuthorFilter(),
                                                                                                    _revisionFilter.GetInMemCommitterFilter(),
                                                                                                    _revisionFilter.GetInMemMessageFilter(),
+                                                                                                   _revisionFilter.GetInMemHashFilter(),
                                                                                                    _revisionFilter.GetIgnoreCase());
                 RevisionGridInMemFilter filterBarIMF = RevisionGridInMemFilter.CreateIfNeeded(InMemAuthorFilter,
                                                                                               InMemCommitterFilter,
                                                                                               InMemMessageFilter,
+                                                                                              InMemHashFilter,
                                                                                               InMemFilterIgnoreCase);
                 RevisionGraphInMemFilter revGraphIMF;
                 if (revisionFilterIMF != null && filterBarIMF != null)
@@ -761,7 +788,7 @@ namespace GitUI
             {
                 Error.Visible = true;
                 Error.BringToFront();
-                MessageBox.Show(exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -792,7 +819,8 @@ namespace GitUI
                      !_revisionFilter.FilterEnabled() &&
                      string.IsNullOrEmpty(InMemAuthorFilter) &&
                      string.IsNullOrEmpty(InMemCommitterFilter) &&
-                     string.IsNullOrEmpty(InMemMessageFilter));
+                     string.IsNullOrEmpty(InMemMessageFilter) &&
+                     string.IsNullOrEmpty(InMemHashFilter));
         }
 
         private bool ShouldHideGraph(bool inclBranchFilter)
@@ -801,7 +829,8 @@ namespace GitUI
                    !(!_revisionFilter.ShouldHideGraph() &&
                      string.IsNullOrEmpty(InMemAuthorFilter) &&
                      string.IsNullOrEmpty(InMemCommitterFilter) &&
-                     string.IsNullOrEmpty(InMemMessageFilter));
+                     string.IsNullOrEmpty(InMemMessageFilter) &&
+                     string.IsNullOrEmpty(InMemHashFilter));
         }
 
         private void DisposeRevisionGraphCommand()
@@ -905,10 +934,10 @@ namespace GitUI
                 return;
 
             _initialLoad = false;
-            SelecctionTimer.Enabled = false;
-            SelecctionTimer.Stop();
-            SelecctionTimer.Enabled = true;
-            SelecctionTimer.Start();
+            SelectionTimer.Enabled = false;
+            SelectionTimer.Stop();
+            SelectionTimer.Enabled = true;
+            SelectionTimer.Start();
         }
 
         private void RevisionsCellPainting(object sender, DataGridViewCellPaintingEventArgs e)
@@ -1302,16 +1331,16 @@ namespace GitUI
             {
                 var form = new FormDiffSmall();
                 form.SetRevision(r[0]);
-                form.ShowDialog();
+                form.ShowDialog(this);
             }
             else
                 GitUICommands.Instance.StartCompareRevisionsDialog();
         }
 
-        private void SelecctionTimerTick(object sender, EventArgs e)
+        private void SelectionTimerTick(object sender, EventArgs e)
         {
-            SelecctionTimer.Enabled = false;
-            SelecctionTimer.Stop();
+            SelectionTimer.Enabled = false;
+            SelectionTimer.Stop();
             if (SelectionChanged != null)
                 SelectionChanged(this, e);
         }
@@ -1322,7 +1351,7 @@ namespace GitUI
                 return;
 
             var frm = new FormTagSmall { Revision = GetRevision(LastRow) };
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             RefreshRevisions();
         }
 
@@ -1332,7 +1361,7 @@ namespace GitUI
                 return;
 
             var frm = new FormResetCurrentBranch(GetRevision(LastRow));
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             RefreshRevisions();
             OnActionOnRepositoryPerformed();
         }
@@ -1343,7 +1372,7 @@ namespace GitUI
                 return;
             var frm = new FormBranchSmall { Revision = GetRevision(LastRow) };
 
-            if (frm.ShowDialog() == DialogResult.OK)
+            if (frm.ShowDialog(this) == DialogResult.OK)
             {
                 RefreshRevisions();
                 OnActionOnRepositoryPerformed();
@@ -1454,13 +1483,13 @@ namespace GitUI
                 return;
 
             var frm = new FormRevertCommitSmall(GetRevision(LastRow));
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             RefreshRevisions();
         }
 
         private void FilterToolStripMenuItemClick(object sender, EventArgs e)
         {
-            _revisionFilter.ShowDialog();
+            _revisionFilter.ShowDialog(this);
             ForceRefreshRevisions();
         }
 
@@ -1475,7 +1504,7 @@ namespace GitUI
             if (Revisions.RowCount < LastRow || LastRow < 0 || Revisions.RowCount == 0)
                 return;
 
-            var inTheMiddleOfBisect = GitCommandHelpers.InTheMiddleOfBisect();
+            var inTheMiddleOfBisect = Settings.Module.InTheMiddleOfBisect();
             markRevisionAsBadToolStripMenuItem.Visible = inTheMiddleOfBisect;
             markRevisionAsGoodToolStripMenuItem.Visible = inTheMiddleOfBisect;
             stopBisectToolStripMenuItem.Visible = inTheMiddleOfBisect;
@@ -1574,7 +1603,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            new FormProcess(GitCommandHelpers.DeleteTagCmd(toolStripItem.Text)).ShowDialog();
+            new FormProcess(GitCommandHelpers.DeleteTagCmd(toolStripItem.Text)).ShowDialog(this);
             ForceRefreshRevisions();
         }
 
@@ -1597,7 +1626,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            new FormProcess("checkout \"" + toolStripItem.Text + "\"").ShowDialog();
+            new FormProcess("checkout \"" + toolStripItem.Text + "\"").ShowDialog(this);
 
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
@@ -1648,10 +1677,10 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
 
-            if (MessageBox.Show("Are you sure to checkout the selected revision", "Checkout revision",
+            if (MessageBox.Show(this, "Are you sure to checkout the selected revision", "Checkout revision",
                                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
-            new FormProcess(string.Format("checkout \"{0}\"", GetRevision(LastRow).Guid)).ShowDialog();
+            new FormProcess(string.Format("checkout \"{0}\"", GetRevision(LastRow).Guid)).ShowDialog(this);
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
         }
@@ -1676,7 +1705,7 @@ namespace GitUI
                 return;
 
             var frm = new FormCherryPickCommitSmall(GetRevision(LastRow));
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
         }
@@ -1697,7 +1726,7 @@ namespace GitUI
                 return;
 
             var frm = new FormCommit(commitKind, GetRevision(LastRow));
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
         }
@@ -1759,9 +1788,9 @@ namespace GitUI
                     bool stagedChanges = false;
                     //Only check for tracked files. This usually makes more sense and it performs a lot
                     //better then checking for untrackd files.
-                    if (GitCommandHelpers.GetTrackedChangedFiles().Count > 0)
+                    if (Settings.Module.GetTrackedChangedFiles().Count > 0)
                         uncommittedChanges = true;
-                    if (GitCommandHelpers.GetStagedFiles().Count > 0)
+                    if (Settings.Module.GetStagedFiles().Count > 0)
                         stagedChanges = true;
 
                     if (uncommittedChanges)
@@ -1834,7 +1863,7 @@ namespace GitUI
                 return;
 
             Settings.CloseProcessDialog = false;
-            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(false, GetRevision(LastRow).Guid)).ShowDialog();
+            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(false, GetRevision(LastRow).Guid)).ShowDialog(this);
             RefreshRevisions();
         }
 
@@ -1844,13 +1873,13 @@ namespace GitUI
                 return;
 
             Settings.CloseProcessDialog = false;
-            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(true, GetRevision(LastRow).Guid)).ShowDialog();
+            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(true, GetRevision(LastRow).Guid)).ShowDialog(this);
             RefreshRevisions();
         }
 
         private void stopBisectToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormProcess(GitCommandHelpers.StopBisectCmd()).ShowDialog();
+            new FormProcess(GitCommandHelpers.StopBisectCmd()).ShowDialog(this);
             RefreshRevisions();
         }
 
@@ -1972,7 +2001,12 @@ namespace GitUI
         {
             if (GitUICommands.Instance.StartInitializeDialog(Settings.WorkingDir))
                 ForceRefreshRevisions();
+        }
 
+        private void CloneRepository_Click(object sender, EventArgs e)
+        {
+            if (GitUICommands.Instance.StartCloneDialog())
+                ForceRefreshRevisions();
         }
 
         private void ShowRevisionGraphToolStripMenuItemClick(object sender, EventArgs e)

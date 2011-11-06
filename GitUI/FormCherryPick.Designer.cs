@@ -105,6 +105,7 @@
             this.RevisionGrid.InMemCommitterFilter = "";
             this.RevisionGrid.InMemFilterIgnoreCase = false;
             this.RevisionGrid.InMemMessageFilter = "";
+            this.RevisionGrid.InMemHashFilter = "";
             this.RevisionGrid.LastRow = 0;
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Name = "RevisionGrid";
@@ -152,6 +153,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(638, 387);
             this.Controls.Add(this.splitContainer1);
+            this.MinimumSize = new System.Drawing.Size(400, 200);
             this.Name = "FormCherryPick";
             this.Text = "Cherry pick";
             this.Load += new System.EventHandler(this.FormCherryPick_Load);

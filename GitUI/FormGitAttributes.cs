@@ -56,7 +56,7 @@ namespace GitUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(_cannotAccessGitattributes.Text + Environment.NewLine + ex.Message,
+                MessageBox.Show(this, _cannotAccessGitattributes.Text + Environment.NewLine + ex.Message,
                     _cannotAccessGitattributesCaption.Text);
             }
             Close();
@@ -70,8 +70,8 @@ namespace GitUI
         private void FormMailMapLoad(object sender, EventArgs e)
         {
             RestorePosition("edit-gitattributes");
-            if (!Settings.IsBareRepository()) return;
-            MessageBox.Show(noWorkingDir.Text, _noWorkingDirCaption.Text);
+            if (!Settings.Module.IsBareRepository()) return;
+            MessageBox.Show(this, noWorkingDir.Text, _noWorkingDirCaption.Text);
             Close();
         }
     }

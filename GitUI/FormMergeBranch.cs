@@ -20,11 +20,11 @@ namespace GitUI
 
         private void FormMergeBranchLoad(object sender, EventArgs e)
         {
-            var selectedHead = GitCommandHelpers.GetSelectedBranch();
+            var selectedHead = Settings.Module.GetSelectedBranch();
             currentBranchLabel.Text = selectedHead;
 
             Branches.DisplayMember = "Name";
-            Branches.DataSource = GitCommandHelpers.GetHeads(true, true);
+            Branches.DataSource = Settings.Module.GetHeads(true, true);
 
             if (_defaultBranch != null)
                 Branches.Text = _defaultBranch;
@@ -35,7 +35,7 @@ namespace GitUI
         private void OkClick(object sender, EventArgs e)
         {
             var process = new FormProcess(GitCommandHelpers.MergeBranchCmd(Branches.Text, fastForward.Checked, squash.Checked, noCommit.Checked, _NO_TRANSLATE_mergeStrategy.Text));
-            process.ShowDialog();
+            process.ShowDialog(this);
 
             var wasConflict = MergeConflictHandler.HandleMergeConflicts();
 

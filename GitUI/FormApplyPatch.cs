@@ -45,15 +45,15 @@ namespace GitUI
 
         private void EnableButtons()
         {
-            if (GitCommandHelpers.InTheMiddleOfPatch())
+            if (Settings.Module.InTheMiddleOfPatch())
             {
                 Apply.Enabled = false;
                 IgnoreWhitespace.Enabled = false;
                 PatchFileMode.Enabled = false;
                 PatchDirMode.Enabled = false;
                 AddFiles.Enabled = true;
-                Resolved.Enabled = !GitCommandHelpers.InTheMiddleOfConflictedMerge();
-                Mergetool.Enabled = GitCommandHelpers.InTheMiddleOfConflictedMerge();
+                Resolved.Enabled = !Settings.Module.InTheMiddleOfConflictedMerge();
+                Mergetool.Enabled = Settings.Module.InTheMiddleOfConflictedMerge();
                 Skip.Enabled = true;
                 Abort.Enabled = true;
 
@@ -86,14 +86,14 @@ namespace GitUI
 
             patchGrid1.Initialize();
 
-            SolveMergeconflicts.Visible = GitCommandHelpers.InTheMiddleOfConflictedMerge();
+            SolveMergeconflicts.Visible = Settings.Module.InTheMiddleOfConflictedMerge();
 
             Resolved.Text = _conflictResolvedText.Text;
             Mergetool.Text = _conflictMergetoolText.Text;
             ContinuePanel.BackColor = Color.Transparent;
             MergeToolPanel.BackColor = Color.Transparent;
 
-            if (GitCommandHelpers.InTheMiddleOfConflictedMerge())
+            if (Settings.Module.InTheMiddleOfConflictedMerge())
             {
                 Mergetool.Text = _conflictMergetoolText2.Text;
                 Mergetool.Focus();
@@ -101,7 +101,7 @@ namespace GitUI
                 MergeToolPanel.BackColor = Color.Black;
             }
             else
-                if (GitCommandHelpers.InTheMiddleOfPatch())
+                if (Settings.Module.InTheMiddleOfPatch())
                 {
                     Resolved.Text = _conflictResolvedText2.Text;
                     Resolved.Focus();
@@ -119,11 +119,11 @@ namespace GitUI
                                  InitialDirectory = initialDirectory,
                                  Title = _selectPatchFileCaption.Text
                              };
-            return (dialog.ShowDialog() == DialogResult.OK) ? dialog.FileName : PatchFile.Text;
+            return (dialog.ShowDialog(this) == DialogResult.OK) ? dialog.FileName : PatchFile.Text;
         }
 
 
-        private void button1_Click(object sender, EventArgs e)
+        private void BrowsePatch_Click(object sender, EventArgs e)
         {
             PatchFile.Text = SelectPatchFile(@".");
         }
@@ -132,32 +132,32 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(PatchFile.Text) && string.IsNullOrEmpty(PatchDir.Text))
             {
-                MessageBox.Show(_noFileSelectedText.Text);
+                MessageBox.Show(this, _noFileSelectedText.Text);
                 return;
             }
             Cursor.Current = Cursors.WaitCursor;
             if (PatchFileMode.Checked)
                 if (IgnoreWhitespace.Checked)
                 {
-                    new FormProcess(GitCommandHelpers.PatchCmdIgnoreWhitespace(PatchFile.Text)).ShowDialog();
+                    new FormProcess(GitCommandHelpers.PatchCmdIgnoreWhitespace(PatchFile.Text)).ShowDialog(this);
                 }
                 else
                 {
-                    new FormProcess(GitCommandHelpers.PatchCmd(PatchFile.Text)).ShowDialog();
+                    new FormProcess(GitCommandHelpers.PatchCmd(PatchFile.Text)).ShowDialog(this);
                 }
             else
                 if (IgnoreWhitespace.Checked)
                 {
-                    new FormProcess(GitCommandHelpers.PatchDirCmdIgnoreWhitespace(PatchDir.Text)).ShowDialog();
+                    new FormProcess(GitCommandHelpers.PatchDirCmdIgnoreWhitespace(PatchDir.Text)).ShowDialog(this);
                 }
                 else
                 {
-                    new FormProcess(GitCommandHelpers.PatchDirCmd(PatchDir.Text)).ShowDialog();
+                    new FormProcess(GitCommandHelpers.PatchDirCmd(PatchDir.Text)).ShowDialog(this);
                 }
 
             EnableButtons();
 
-            if (!GitCommandHelpers.InTheMiddleOfConflictedMerge() && !GitCommandHelpers.InTheMiddleOfRebase() && !GitCommandHelpers.InTheMiddleOfPatch())
+            if (!Settings.Module.InTheMiddleOfConflictedMerge() && !Settings.Module.InTheMiddleOfRebase() && !Settings.Module.InTheMiddleOfPatch())
                 Close();
             Cursor.Current = Cursors.Default;
         }
@@ -171,15 +171,15 @@ namespace GitUI
         private void Skip_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommandHelpers.SkipCmd()).ShowDialog();
+            new FormProcess(GitCommandHelpers.SkipCmd()).ShowDialog(this);
             EnableButtons();
             Cursor.Current = Cursors.Default;
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        private void Resolved_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommandHelpers.ResolvedCmd()).ShowDialog();
+            new FormProcess(GitCommandHelpers.ResolvedCmd()).ShowDialog(this);
             EnableButtons();
             Cursor.Current = Cursors.Default;
         }
@@ -187,7 +187,7 @@ namespace GitUI
         private void Abort_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommandHelpers.AbortCmd()).ShowDialog();
+            new FormProcess(GitCommandHelpers.AbortCmd()).ShowDialog(this);
             EnableButtons();
             Cursor.Current = Cursors.Default;
         }
@@ -214,7 +214,7 @@ namespace GitUI
         {
             var browseDialog = new FolderBrowserDialog();
 
-            if (browseDialog.ShowDialog() == DialogResult.OK)
+            if (browseDialog.ShowDialog(this) == DialogResult.OK)
             {
                 PatchDir.Text = browseDialog.SelectedPath;
             }

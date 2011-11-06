@@ -8,9 +8,9 @@ using GitUIPluginInterfaces.RepositoryHosts;
 
 namespace GitExtensions
 {
-    public class PluginExtraction
+    static public class PluginExtraction
     {
-        public void ExtractPluginTypes(IEnumerable<Type> pluginTypes)
+        static public void ExtractPluginTypes(IEnumerable<Type> pluginTypes)
         {
             foreach (var type in pluginTypes)
             {

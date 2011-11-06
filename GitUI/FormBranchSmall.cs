@@ -25,14 +25,14 @@ namespace GitUI
             {
                 if (Revision == null)
                 {
-                    MessageBox.Show(_noRevisionSelected.Text, Text);
+                    MessageBox.Show(this, _noRevisionSelected.Text, Text);
                     return;
                 }
                 var branchCmd = GitCommandHelpers.BranchCmd(BranchNameTextBox.Text, Revision.Guid,
                                                                   CheckoutAfterCreate.Checked);
                 using (var formProcess = new FormProcess(branchCmd))
                 {
-                    formProcess.ShowDialog();
+                    formProcess.ShowDialog(this);
                 }
 
                 DialogResult = DialogResult.OK;
