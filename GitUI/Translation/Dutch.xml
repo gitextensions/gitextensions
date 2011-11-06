@@ -255,6 +255,15 @@ and deze zal weer in het commit overzicht zichtbaar worden.</Value>
         <TranslationItem Name="UpdateSubmodule" Property="Text">
           <Value>Update</Value>
         </TranslationItem>
+        <TranslationItem Name="RemoveSubmodule" Property="Text">
+          <Value>Verwijder</Value>
+        </TranslationItem>
+        <TranslationItem Name="_removeSelectedSubmodule" Property="Text">
+          <Value>Weet u zeker dat u de geselecteerde submodule wilt verwijderen?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_removeSelectedSubmoduleCaption" Property="Text">
+          <Value>Verwijder</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormDiff">
@@ -1118,9 +1127,6 @@ U  heeft alleen rechten om commits te verzenden als u een 'collaborator' bent. {
         <TranslationItem Name="Tree" Property="Text">
           <Value>Bestands boom</Value>
         </TranslationItem>
-        <TranslationItem Name="ToolStrip" Property="Text">
-          <Value>toolStrip1</Value>
-        </TranslationItem>
         <TranslationItem Name="toolStripButton1" Property="Text">
           <Value>Commit</Value>
         </TranslationItem>
@@ -1472,9 +1478,6 @@ U  heeft alleen rechten om commits te verzenden als u een 'collaborator' bent. {
         <TranslationItem Name="aboutToolStripMenuItem" Property="Text">
           <Value>Over</Value>
         </TranslationItem>
-        <TranslationItem Name="menuStrip1" Property="Text">
-          <Value>menustrip1</Value>
-        </TranslationItem>
         <TranslationItem Name="_stashCount" Property="Text">
           <Value>{0} opgeslagen {1}</Value>
         </TranslationItem>
@@ -1593,9 +1596,6 @@ U  heeft alleen rechten om commits te verzenden als u een 'collaborator' bent. {
         </TranslationItem>
         <TranslationItem Name="CurrentBranchOnlyCheck" Property="Text">
           <Value>Toon alleen de huidige vertakking</Value>
-        </TranslationItem>
-        <TranslationItem Name="BranchFilterCheck" Property="Text">
-          <Value>checkbox1</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2309,18 +2309,6 @@ te kunnen wijzigen.</Value>
         <TranslationItem Name="groupBox8" Property="Text">
           <Value>Omgeving</Value>
         </TranslationItem>
-        <TranslationItem Name="otherHomeBrowse" Property="Text">
-          <Value>Bladeren</Value>
-        </TranslationItem>
-        <TranslationItem Name="otherHome" Property="Text">
-          <Value>Anders</Value>
-        </TranslationItem>
-        <TranslationItem Name="userprofileHome" Property="Text">
-          <Value>Zet HOME naar USERPROFILE</Value>
-        </TranslationItem>
-        <TranslationItem Name="defaultHome" Property="Text">
-          <Value>Gebruik standaard voor HOME</Value>
-        </TranslationItem>
         <TranslationItem Name="label51" Property="Text">
           <Value>Het globale configuratie bestand is opgeslagen in de directory %HOME%. Standaard is %HOME% gezet naar %HOMEDRIVE%%HOMEPATH%
 wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen optreden. </Value>
@@ -2455,21 +2443,6 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="label37" Property="Text">
           <Value>Gebruik 'patience diff' algoritme</Value>
         </TranslationItem>
-        <TranslationItem Name="Enabled" Property="HeaderText">
-          <Value>Ingeschakeld</Value>
-        </TranslationItem>
-        <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
-          <Value>Naam</Value>
-        </TranslationItem>
-        <TranslationItem Name="OnEvent" Property="HeaderText">
-          <Value>OnEvent</Value>
-        </TranslationItem>
-        <TranslationItem Name="AskConfirmation" Property="HeaderText">
-          <Value>Bevestiging</Value>
-        </TranslationItem>
-        <TranslationItem Name="addToRevisionGridContextMenuDataGridViewCheckBoxColumn" Property="HeaderText">
-          <Value>Context menu</Value>
-        </TranslationItem>
         <TranslationItem Name="truncatePathMethod" Property="Text">
           <Value>Truncate lange bestandsnamen</Value>
         </TranslationItem>
@@ -2502,6 +2475,18 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         </TranslationItem>
         <TranslationItem Name="downloadMsysgit" Property="Text">
           <Value>Download msysgit</Value>
+        </TranslationItem>
+        <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Naam</Value>
+        </TranslationItem>
+        <TranslationItem Name="OnEvent" Property="HeaderText">
+          <Value>OnEvent</Value>
+        </TranslationItem>
+        <TranslationItem Name="AskConfirmation" Property="HeaderText">
+          <Value>Bevestiging</Value>
+        </TranslationItem>
+        <TranslationItem Name="addToRevisionGridContextMenuDataGridViewCheckBoxColumn" Property="HeaderText">
+          <Value>Context menu</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2728,9 +2713,6 @@ Kies of u het gewijzigde bestand wilt bewaren of het bestand wilt verwijderen.</
         </TranslationItem>
         <TranslationItem Name="conflictDescription" Property="Text">
           <Value>Selecteer bestand</Value>
-        </TranslationItem>
-        <TranslationItem Name="button1" Property="Text">
-          <Value>Openen in samenvoeg tool</Value>
         </TranslationItem>
         <TranslationItem Name="Rescan" Property="Text">
           <Value>Verversen</Value>
@@ -2972,15 +2954,6 @@ _ReSharper*/
         <TranslationItem Name="Push" Property="Text">
           <Value>&amp;Verzenden</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>Vertakking</Value>
-        </TranslationItem>
-        <TranslationItem Name="PushAllBranches" Property="Text">
-          <Value>Verzend &amp;alle vertakkingen</Value>
-        </TranslationItem>
-        <TranslationItem Name="ForcePushBranches" Property="Text">
-          <Value>&amp;Forceer verzenden</Value>
-        </TranslationItem>
         <TranslationItem Name="ForcePushTags" Property="Text">
           <Value>&amp;Forceer verzenden</Value>
         </TranslationItem>
@@ -2998,9 +2971,6 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="AddRemote" Property="Text">
           <Value>Beheer externen</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text">
-          <Value>Vertakking</Value>
         </TranslationItem>
         <TranslationItem Name="LoadSSHKey" Property="Text">
           <Value>Laad SSH sleutel</Value>
@@ -3026,9 +2996,6 @@ _ReSharper*/
         <TranslationItem Name="PushAllTags" Property="Text">
           <Value>Verzend &amp;alle labels</Value>
         </TranslationItem>
-        <TranslationItem Name="labelTo" Property="Text">
-          <Value>naar</Value>
-        </TranslationItem>
         <TranslationItem Name="MultipleBranchTab" Property="Text">
           <Value>Verzend meerdere vertakkingen</Value>
         </TranslationItem>
@@ -3053,8 +3020,29 @@ _ReSharper*/
         <TranslationItem Name="DeleteColumn" Property="HeaderText">
           <Value>Verwijder externe vertakking</Value>
         </TranslationItem>
+        <TranslationItem Name="ShowTagOptions" Property="Text">
+          <Value>Toon opties</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Vertakking</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowOptions" Property="Text">
+          <Value>Toon opties</Value>
+        </TranslationItem>
+        <TranslationItem Name="PushAllBranches" Property="Text">
+          <Value>Verzend &amp;alle vertakkingen</Value>
+        </TranslationItem>
+        <TranslationItem Name="ForcePushBranches" Property="Text">
+          <Value>&amp;Forceer verzenden</Value>
+        </TranslationItem>
         <TranslationItem Name="_createPullRequestCB" Property="Text">
           <Value>Maak binnenhaal verzoek na verzenden</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelTo" Property="Text">
+          <Value>naar</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Vertakking</Value>
         </TranslationItem>
         <TranslationItem Name="_branchNewForRemote" Property="Text">
           <Value>U staat op het punt een vertakking te verzenden die nog niet bekend is op de externe opslagplaats.
@@ -3403,9 +3391,6 @@ Wanneer de juiste geheime sleutel is geladen kunt u op herhalen drukken.</Value>
         <TranslationItem Name="Retry" Property="Text">
           <Value>Herhalen</Value>
         </TranslationItem>
-        <TranslationItem Name="button1" Property="Text">
-          <Value>Afbreken</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormDonate">
@@ -3504,8 +3489,8 @@ Wilt u deze submodules initializeren?</Value>
         <TranslationItem Name="Ok" Property="Text">
           <Value>Commit</Value>
         </TranslationItem>
-        <TranslationItem Name="ResetChanges" Property="Text">
-          <Value>Wijzigingen ongedaan maken</Value>
+        <TranslationItem Name="resetChanges" Property="Text">
+          <Value>Weet u zeker dat u de wijzigingen in de geselecteerde bestanden ongedaan wilt maken?</Value>
         </TranslationItem>
         <TranslationItem Name="deleteFileToolStripMenuItem" Property="Text">
           <Value>Verwijder bestand</Value>
@@ -3533,9 +3518,6 @@ Wilt u deze submodules initializeren?</Value>
         </TranslationItem>
         <TranslationItem Name="editFileToolStripMenuItem" Property="Text">
           <Value>Wijzig bestand</Value>
-        </TranslationItem>
-        <TranslationItem Name="ViewFileHistoryToolStripItem" Property="Text">
-          <Value>Bekijk bestands geschiedenis</Value>
         </TranslationItem>
         <TranslationItem Name="Commit" Property="Text">
           <Value>&amp;Commit</Value>
@@ -3626,6 +3608,12 @@ Wilt u deze submodules initializeren?</Value>
         </TranslationItem>
         <TranslationItem Name="toolAuthorLabelItem" Property="Text">
           <Value>Auteur: (formaat: "naam &lt;email&gt;")</Value>
+        </TranslationItem>
+        <TranslationItem Name="viewHistoryMenuItem" Property="Text">
+          <Value>Versie geschiedenis</Value>
+        </TranslationItem>
+        <TranslationItem Name="openFolderMenuItem" Property="Text">
+          <Value>Open directorie</Value>
         </TranslationItem>
         <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text">
           <Value>Wilt u ook de nieuwe bestanden in de selectie verwijderen?
@@ -3879,12 +3867,6 @@ Bij het verwijderen van een vertakking kunnen commits verloren gaan!</Value>
     </TranslationCategory>
     <TranslationCategory Name="DashboardEditor">
       <translationItems>
-        <TranslationItem Name="Remove" Property="Text">
-          <Value>Verwijderen</Value>
-        </TranslationItem>
-        <TranslationItem Name="Add" Property="Text">
-          <Value>Toevoegen</Value>
-        </TranslationItem>
         <TranslationItem Name="CategoriesLabel" Property="Text">
           <Value>Categorie</Value>
         </TranslationItem>
@@ -3911,6 +3893,12 @@ Bij het verwijderen van een vertakking kunnen commits verloren gaan!</Value>
         </TranslationItem>
         <TranslationItem Name="descriptionDataGridViewTextBoxColumn" Property="HeaderText">
           <Value>Omschrijving</Value>
+        </TranslationItem>
+        <TranslationItem Name="Remove" Property="Text">
+          <Value>Verwijderen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Add" Property="Text">
+          <Value>Toevoegen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4030,6 +4018,9 @@ Wilt u automatisch het standaard push/pull gedrag installen?</Value>
           <Value>Url</Value>
         </TranslationItem>
         <TranslationItem Name="Browse" Property="Text">
+          <Value>Bladeren</Value>
+        </TranslationItem>
+        <TranslationItem Name="buttonBrowsePushUrl" Property="Text">
           <Value>Bladeren</Value>
         </TranslationItem>
       </translationItems>
