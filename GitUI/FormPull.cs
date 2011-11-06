@@ -61,6 +61,8 @@ namespace GitUI
 
         private List<GitHead> _heads;
         public bool ErrorOccurred { get; private set; }
+        private string branchRemote;
+        private string branch;
 
         public FormPull()
         {
@@ -69,8 +71,9 @@ namespace GitUI
             
             UpdateRemotesList();
 
-            string branch = Settings.Module.GetSelectedBranch();
-            Remotes.Text = Settings.Module.GetSetting(string.Format("branch.{0}.remote", branch));
+            branch = Settings.Module.GetSelectedBranch();
+            branchRemote = Settings.Module.GetSetting(string.Format("branch.{0}.remote", branch));
+            Remotes.Text = branchRemote;
             _NO_TRANSLATE_localBranch.Text = branch;
 
             Merge.Checked = Settings.PullMerge == "merge";
@@ -204,9 +207,17 @@ namespace GitUI
 
             Settings.AutoStash = AutoStash.Checked;
 
-            if (Rebase.Checked && Settings.Module.IsMergeCommit("HEAD"))
+            string remoteBranchName = branchRemote + "/" + branch;
+            //ask only if exists commit not pushed to remote yet
+            if (Rebase.Checked && Settings.Module.ExistsMergeCommit(remoteBranchName, branch))
             {
-                if (MessageBox.Show(this, _areYouSureYouWantToRebaseMerge.Text, _areYouSureYouWantToRebaseMergeCaption.Text, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                DialogResult dr = MessageBox.Show(this, _areYouSureYouWantToRebaseMerge.Text, _areYouSureYouWantToRebaseMergeCaption.Text, MessageBoxButtons.YesNoCancel);
+                if (dr == DialogResult.Cancel) 
+                {
+                    Close();
+                    return false;
+                }
+                else if (dr != DialogResult.Yes)
                     return false;
             }
 
