@@ -504,6 +504,7 @@ namespace GitUI
             else
             {
                 SelectedDiff.Clear();
+                SelectedDiff.Refresh();
                 llShowPreview.Show();
             }
 
