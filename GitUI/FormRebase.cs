@@ -51,7 +51,7 @@ namespace GitUI
 
             Branches.Select();
 
-            splitContainer2.SplitterDistance = Settings.Module.InTheMiddleOfRebase() ? 0 : 74;
+            splitContainer2.SplitterDistance = Settings.Module.InTheMiddleOfRebase() ? 0 : 99;
             EnableButtons();
 
             // Honor the rebase.autosquash configuration.
