@@ -2567,6 +2567,9 @@ _ReSharper*/
         <TranslationItem Name="chkInteractive" Property="Text">
           <Value>Интерактивный rebase</Value>
         </TranslationItem>
+        <TranslationItem Name="chkPreserveMerges" Property="Text">
+          <Value>Сохранить слияния</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="Strings">
