@@ -89,7 +89,7 @@ namespace GitUI
                 if (OutputString.ToString().Contains("FATAL ERROR") && OutputString.ToString().Contains("authentication"))
                 {
                     var puttyError = new FormPuttyError();
-                    puttyError.ShowDialog();
+                    puttyError.ShowDialog(this);
                     if (puttyError.RetryProcess)
                     {
                         Retry();
@@ -102,16 +102,16 @@ namespace GitUI
 
                     if (string.IsNullOrEmpty(UrlTryingToConnect))
                     {
-                        remoteUrl = GitCommandHelpers.GetSetting("remote." + Remote + ".url");
+                        remoteUrl = Settings.Module.GetSetting("remote." + Remote + ".url");
                         if (string.IsNullOrEmpty(remoteUrl))
                             remoteUrl = Remote;
                     }
                     else
                         remoteUrl = UrlTryingToConnect;
                     if (!string.IsNullOrEmpty(remoteUrl))
-                        if (MessageBox.Show("The server's host key is not cached in the registry.\n\nDo you want to trust this host key and then try again?", "SSH", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                        if (MessageBox.Show(this, "The server's host key is not cached in the registry.\n\nDo you want to trust this host key and then try again?", "SSH", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
                         {
-                            GitCommandHelpers.RunRealCmd(
+                            Settings.Module.RunRealCmd(
                                 "cmd.exe",
                                 string.Format("/k \"\"{0}\" -T \"{1}\"\"", Settings.Plink, remoteUrl));
 
@@ -131,14 +131,14 @@ namespace GitUI
             {
                 if (e.Data.StartsWith("If you trust this host, enter \"y\" to add the key to"))
                 {
-                    if (MessageBox.Show("The fingerprint of this host is not registered by PuTTY." + Environment.NewLine + "This causes this process to hang, and that why it is automatically stopped." + Environment.NewLine + Environment.NewLine + "When the connection is opened detached from Git and GitExtensions, the host's fingerprint can be registered." + Environment.NewLine + "You could also manually add the host's fingerprint or run Test Connection from the remotes dialog." + Environment.NewLine + Environment.NewLine + "Do you want to register the host's fingerprint and restart the process?", "Host Fingerprint not registered", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show(this, "The fingerprint of this host is not registered by PuTTY." + Environment.NewLine + "This causes this process to hang, and that why it is automatically stopped." + Environment.NewLine + Environment.NewLine + "When the connection is opened detached from Git and GitExtensions, the host's fingerprint can be registered." + Environment.NewLine + "You could also manually add the host's fingerprint or run Test Connection from the remotes dialog." + Environment.NewLine + Environment.NewLine + "Do you want to register the host's fingerprint and restart the process?", "Host Fingerprint not registered", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        string remoteUrl = GitCommandHelpers.GetSetting("remote." + Remote + ".url");
+                        string remoteUrl = Settings.Module.GetSetting("remote." + Remote + ".url");
 
                         if (string.IsNullOrEmpty(remoteUrl))
-                            GitCommandHelpers.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + Remote + "\"");
+                            Settings.Module.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + Remote + "\"");
                         else
-                            GitCommandHelpers.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + remoteUrl + "\"");
+                            Settings.Module.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + remoteUrl + "\"");
 
                         restart = true;
                     }

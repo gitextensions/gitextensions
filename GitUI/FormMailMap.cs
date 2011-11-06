@@ -45,21 +45,21 @@ namespace GitUI
         {
             try
             {
-                FileInfoExtensions
-                    .MakeFileTemporaryWritable(
-                        Settings.WorkingDir + ".mailmap",
-                        x =>
-                        {
-                            this.MailMapFile = _NO_TRANSLATE_MailMapText.GetText();
+            FileInfoExtensions
+                .MakeFileTemporaryWritable(
+                    Settings.WorkingDir + ".mailmap",
+                    x =>
+                    {
+                        this.MailMapFile = _NO_TRANSLATE_MailMapText.GetText();
                             File.WriteAllBytes(x, Settings.Encoding.GetBytes(this.MailMapFile));
                         });
             }
             catch (Exception ex)
-            {
-                MessageBox.Show(_cannotAccessMailmap.Text + Environment.NewLine + ex.Message, 
+                        {
+                MessageBox.Show(this, _cannotAccessMailmap.Text + Environment.NewLine + ex.Message, 
                     _cannotAccessMailmapCaption.Text);
-            }
-            Close();
+                        }
+                        Close();
         }
 
         private void FormMailMapFormClosing(object sender, FormClosingEventArgs e)
@@ -70,8 +70,8 @@ namespace GitUI
         private void FormMailMapLoad(object sender, EventArgs e)
         {
             RestorePosition("edit-mail-map");
-            if (!Settings.IsBareRepository()) return;
-            MessageBox.Show(_mailmapOnlyInWorkingDirSupported.Text,_mailmapOnlyInWorkingDirSupportedCaption.Text);
+            if (!Settings.Module.IsBareRepository()) return;
+            MessageBox.Show(this, _mailmapOnlyInWorkingDirSupported.Text,_mailmapOnlyInWorkingDirSupportedCaption.Text);
             Close();
         }
     }

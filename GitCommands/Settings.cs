@@ -1,6 +1,5 @@
 using System;
 using System.Drawing;
-using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
@@ -19,9 +18,6 @@ namespace GitCommands
         //semi-constants
         public static readonly char PathSeparator = '\\';
         public static readonly char PathSeparatorWrong = '/';
-
-
-
 
         static Settings()
         {
@@ -470,20 +466,28 @@ namespace GitCommands
         public delegate void WorkingDirChangedEventHandler(string oldDir, string newDir);
         public static event WorkingDirChangedEventHandler WorkingDirChanged;
 
-        private static string _workingdir;
+        private static GitModule _module = new GitModule();
+        public static GitModule Module
+        {
+            get
+            {
+                return _module;
+            }
+        }
+
         public static string WorkingDir
         {
             get
             {
-                return _workingdir;
+                return _module.WorkingDir;
             }
             set
             {
-                string old = _workingdir;
-                _workingdir = GitCommandHelpers.FindGitWorkingDir(value.Trim());
+                string old = _module.WorkingDir;
+                _module.WorkingDir = value;
                 if (WorkingDirChanged != null)
                 {
-                    WorkingDirChanged(old, _workingdir);
+                    WorkingDirChanged(old, _module.WorkingDir);
                 }
             }
         }
@@ -646,7 +650,6 @@ namespace GitCommands
             return GetInstallDir() + "\\Dictionaries\\";
         }
 
-
         public static string GetInstallDir()
         {
             return GetValue("InstallDir", "");
@@ -656,35 +659,6 @@ namespace GitCommands
         {
             if (VersionIndependentRegKey != null)
                 SetValue("InstallDir", dir);
-        }
-
-        public static bool ValidWorkingDir()
-        {
-            return ValidWorkingDir(WorkingDir);
-        }
-
-        public static bool ValidWorkingDir(string dir)
-        {
-            if (string.IsNullOrEmpty(dir))
-                return false;
-
-            if (Directory.Exists(dir + PathSeparator + ".git"))
-                return true;
-
-            return !dir.Contains(".git") &&
-                   Directory.Exists(dir + PathSeparator + "info") &&
-                   Directory.Exists(dir + PathSeparator + "objects") &&
-                   Directory.Exists(dir + PathSeparator + "refs");
-        }
-
-        public static bool IsBareRepository()
-        {
-            return GitCommandHelpers.IsBareRepository(WorkingDir);
-        }
-
-        public static string WorkingDirGitDir()
-        {
-            return GitCommandHelpers.GetGitDirectory(WorkingDir);
         }
 
         public static bool RunningOnWindows()
@@ -773,6 +747,13 @@ namespace GitCommands
         {
             get { return SafeGet("AutoPullOnRejected", false, ref _AutoPullOnRejected); }
             set { SafeSet("AutoPullOnRejected", value, ref _AutoPullOnRejected); }
+        }
+
+        private static bool? _RecursiveSubmodulesCheck;
+        public static bool RecursiveSubmodulesCheck
+        {
+            get { return SafeGet("RecursiveSubmodulesCheck", true, ref _RecursiveSubmodulesCheck); }
+            set { SafeSet("RecursiveSubmodulesCheck", value, ref _RecursiveSubmodulesCheck); }
         }
 
         public static string GetGitExtensionsFullPath()

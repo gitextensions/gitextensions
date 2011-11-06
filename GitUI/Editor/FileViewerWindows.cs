@@ -217,7 +217,6 @@ namespace GitUI.Editor
             TextEditor.ActiveTextAreaControl.VScrollBar.Width = 0;
             TextEditor.ActiveTextAreaControl.VScrollBar.Visible = enable;
             TextEditor.ActiveTextAreaControl.TextArea.Dock = DockStyle.Fill;
-            TextEditor.Enabled = enable;
         }
 
         public void AddPatchHighlighting()

@@ -63,7 +63,7 @@
             this.BrowsePatch.TabIndex = 2;
             this.BrowsePatch.Text = "Browse";
             this.BrowsePatch.UseVisualStyleBackColor = true;
-            this.BrowsePatch.Click += new System.EventHandler(this.button1_Click);
+            this.BrowsePatch.Click += new System.EventHandler(this.BrowsePatch_Click);
             // 
             // PatchFile
             // 
@@ -127,7 +127,7 @@
             this.Resolved.TabIndex = 9;
             this.Resolved.Text = "Conflicts resolved";
             this.Resolved.UseVisualStyleBackColor = true;
-            this.Resolved.Click += new System.EventHandler(this.button1_Click_1);
+            this.Resolved.Click += new System.EventHandler(this.Resolved_Click);
             // 
             // AddFiles
             // 
@@ -294,6 +294,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(764, 391);
             this.Controls.Add(this.splitContainer1);
+            this.MinimumSize = new System.Drawing.Size(720, 400);
             this.Name = "FormApplyPatch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Apply patch";

@@ -32,17 +32,18 @@ namespace GitCommandsTests
                           "Notes (p4notes):\n" +
                           "\tP4@547123";
 
-            var expectedHeader = "Author:\t\tJohn Doe (Acme Inc) <John.Doe@test.com>\n" +
-                                 "Author date:\t3 days ago (" + authorTime.ToLocalTime().ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")\n" +
-                                 "Committer:\tJane Doe (Acme Inc) <Jane.Doe@test.com>\n" +
-                                 "Commit date:\t2 days ago (" + commitTime.ToLocalTime().ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")\n" +
-                                 "Commit hash:\t" + commitGuid;
+            var expectedHeader = "Author:\t\t<a href='mailto:John.Doe@test.com'>John Doe (Acme Inc) &lt;John.Doe@test.com&gt;</a>" + Environment.NewLine +
+                                 "Author date:\t3 days ago (" + authorTime.ToLocalTime().ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")" + Environment.NewLine +
+                                 "Committer:\t<a href='mailto:John.Doe@test.com'>Jane Doe (Acme Inc) &lt;Jane.Doe@test.com&gt;</a>" + Environment.NewLine +
+                                 "Commit date:\t2 days ago (" + commitTime.ToLocalTime().ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")" + Environment.NewLine +
+                                 "Commit hash:\t" + commitGuid + Environment.NewLine;
 
-            var expectedBody = "\n\nI made a really neato change.\n\n" +
-                               "Notes (p4notes):\n" +
+            var expectedBody = "\n\nI made a really neato change." + Environment.NewLine + Environment.NewLine +
+                               "Notes (p4notes):" + Environment.NewLine +
                                "\tP4@547123\n\n";
 
-            var commitInformation = CommitInformation.CreateFromRawData(rawData);
+            var commitData = CommitData.CreateFromRawData(rawData);
+            var commitInformation = CommitInformation.GetCommitInfo(commitData);
             
             Assert.AreEqual(expectedHeader,commitInformation.Header);
             Assert.AreEqual(expectedBody, commitInformation.Body);

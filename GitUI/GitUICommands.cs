@@ -123,20 +123,32 @@ namespace GitUI
         public event GitUIEventHandler PreUpdateSubmodulesRecursive;
         public event GitUIEventHandler PostUpdateSubmodulesRecursive;
 
+        public event GitUIEventHandler PreInitSubmodules;
+        public event GitUIEventHandler PostInitSubmodules;
+
+        public event GitUIEventHandler PreInitSubmodulesRecursive;
+        public event GitUIEventHandler PostInitSubmodulesRecursive;
+
+        public event GitUIEventHandler PreSyncSubmodules;
+        public event GitUIEventHandler PostSyncSubmodules;
+
+        public event GitUIEventHandler PreSyncSubmodulesRecursive;
+        public event GitUIEventHandler PostSyncSubmodulesRecursive;
+
         public string GitCommand(string arguments)
         {
-            return GitCommandHelpers.RunCmd(Settings.GitCommand, arguments);
+            return Settings.Module.RunGitCmd(arguments);
         }
 
         public string CommandLineCommand(string cmd, string arguments)
         {
-            return GitCommandHelpers.RunCmd(cmd, arguments);
+            return Settings.Module.RunCmd(cmd, arguments);
         }
 
 
         private bool RequiresValidWorkingDir()
         {
-            if (!Settings.ValidWorkingDir())
+            if (!Settings.Module.ValidWorkingDir())
             {
                 MessageBox.Show("The current directory is not a valid git repository.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
@@ -232,7 +244,6 @@ namespace GitUI
 
         public bool StartFileHistoryDialog(string fileName)
         {
-
             return StartFileHistoryDialog(fileName, null);
         }
 
@@ -284,12 +295,12 @@ namespace GitUI
             return true;
         }
 
-        public bool StartCloneDialog()
+        public bool StartCloneDialog(string url = null)
         {
             if (!InvokeEvent(PreClone))
                 return false;
 
-            var form = new FormClone();
+            var form = new FormClone(url);
             form.ShowDialog();
 
             InvokeEvent(PostClone);
@@ -345,7 +356,7 @@ namespace GitUI
             if (!InvokeEvent(PreInitialize))
                 return true;
 
-            if (!Settings.ValidWorkingDir())
+            if (!Settings.Module.ValidWorkingDir())
                 new FormInit(Settings.WorkingDir).ShowDialog();
             else
                 new FormInit().ShowDialog();
@@ -697,9 +708,75 @@ namespace GitUI
 
             var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(""));
             process.ShowDialog();
-            UpdateSubmodulesRecursive();
+            ForEachSubmodulesRecursive(GitCommandHelpers.SubmoduleUpdateCmd(""));
 
             InvokeEvent(PostUpdateSubmodulesRecursive);
+
+            return true;
+        }
+
+        public bool StartInitSubmodulesDialog()
+        {
+            if (!RequiresValidWorkingDir())
+                return false;
+
+            if (!InvokeEvent(PreInitSubmodules))
+                return true;
+
+            var process = new FormProcess(GitCommandHelpers.SubmoduleInitCmd(""));
+            process.ShowDialog();
+
+            InvokeEvent(PostInitSubmodules);
+
+            return true;
+        }
+
+        public bool StartInitSubmodulesRecursiveDialog()
+        {
+            if (!RequiresValidWorkingDir())
+                return false;
+
+            if (!InvokeEvent(PreInitSubmodulesRecursive))
+                return true;
+
+            var process = new FormProcess(GitCommandHelpers.SubmoduleInitCmd(""));
+            process.ShowDialog();
+            ForEachSubmodulesRecursive(GitCommandHelpers.SubmoduleInitCmd(""));
+
+            InvokeEvent(PostInitSubmodulesRecursive);
+
+            return true;
+        }
+
+        public bool StartSyncSubmodulesDialog()
+        {
+            if (!RequiresValidWorkingDir())
+                return false;
+
+            if (!InvokeEvent(PreSyncSubmodules))
+                return true;
+
+            var process = new FormProcess(GitCommandHelpers.SubmoduleSyncCmd(""));
+            process.ShowDialog();
+
+            InvokeEvent(PostSyncSubmodules);
+
+            return true;
+        }
+
+        public bool StartSyncSubmodulesRecursiveDialog()
+        {
+            if (!RequiresValidWorkingDir())
+                return false;
+
+            if (!InvokeEvent(PreSyncSubmodulesRecursive))
+                return true;
+
+            var process = new FormProcess(GitCommandHelpers.SubmoduleSyncCmd(""));
+            process.ShowDialog();
+            ForEachSubmodulesRecursive(GitCommandHelpers.SubmoduleSyncCmd(""));
+
+            InvokeEvent(PostSyncSubmodulesRecursive);
 
             return true;
         }
@@ -798,32 +875,31 @@ namespace GitUI
             return false;
         }
 
-
-        private static void UpdateSubmodulesRecursive()
+        private static void ForEachSubmodulesRecursive(string cmd)
         {
-            string oldworkingdir = Settings.WorkingDir;
+            var oldworkingdir = Settings.WorkingDir;
 
             foreach (GitSubmodule submodule in (new GitCommandsInstance()).GetSubmodules())
             {
-                if (!string.IsNullOrEmpty(submodule.LocalPath))
+                if (string.IsNullOrEmpty(submodule.LocalPath))
+                    continue;
+
+                Settings.WorkingDir = oldworkingdir + submodule.LocalPath;
+
+                if (Settings.WorkingDir != oldworkingdir && File.Exists(Settings.WorkingDir + ".gitmodules"))
                 {
-                    Settings.WorkingDir = oldworkingdir + submodule.LocalPath;
+                    var process = new FormProcess(cmd);
+                    process.ShowDialog();
 
-                    if (Settings.WorkingDir != oldworkingdir && File.Exists(Settings.WorkingDir + ".gitmodules"))
-                    {
-                        var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(""));
-                        process.ShowDialog();
-
-                        UpdateSubmodulesRecursive();
-                    }
-
-                    Settings.WorkingDir = oldworkingdir;
+                    ForEachSubmodulesRecursive(cmd);
                 }
+
+                Settings.WorkingDir = oldworkingdir;
             }
 
             Settings.WorkingDir = oldworkingdir;
         }
-
+        
         private bool InvokeEvent(GitUIEventHandler gitUIEventHandler)
         {
             return InvokeEvent(this, gitUIEventHandler);
@@ -883,7 +959,7 @@ namespace GitUI
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(
+                    MessageBox.Show( 
                         string.Format("ERROR: {0} failed. Message: {1}\r\n\r\n{2}", name, ex.Message, ex.StackTrace),
                         "Error! :(");
                 }

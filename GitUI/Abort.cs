@@ -12,7 +12,7 @@ namespace GitUI
             {
                 if (MessageBox.Show("Are you sure you want to DELETE all changes?" + Environment.NewLine + Environment.NewLine + "This action cannot be made undone.", "WARNING!", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
-                    GitCommandHelpers.ResetHard("");
+                    Settings.Module.ResetHard("");
                     return true;
                 }
             }

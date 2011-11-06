@@ -7,6 +7,7 @@ namespace GitCommands
     {
         private static readonly GitVersion v1_7_0 = new GitVersion("1.7.0");
         private static readonly GitVersion v1_7_1 = new GitVersion("1.7.1");
+        private static readonly GitVersion v1_7_7 = new GitVersion("1.7.7");
 
         public static readonly GitVersion LastSupportedVersion = v1_7_0;
 
@@ -47,6 +48,11 @@ namespace GitCommands
         public bool GuiDiffToolExist
         {
             get { return this >= v1_7_0; }
+        }
+
+        public bool SupportPushWithRecursiveSubmodulesCheck
+        {
+            get { return this >= v1_7_7; }
         }
 
         public bool IsUnknown

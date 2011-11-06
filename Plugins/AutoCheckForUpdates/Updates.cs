@@ -90,7 +90,7 @@ namespace AutoCheckForUpdates
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Exception");
+                MessageBox.Show(this, ex.Message, "Exception");
                 Done();
             }
         }

@@ -210,6 +210,7 @@ namespace GitUI
             this.RevisionGrid.InMemCommitterFilter = "";
             this.RevisionGrid.InMemFilterIgnoreCase = false;
             this.RevisionGrid.InMemMessageFilter = "";
+            this.RevisionGrid.InMemHashFilter = "";
             this.RevisionGrid.LastRow = 0;
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Name = "RevisionGrid";
@@ -262,6 +263,7 @@ namespace GitUI
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(450, 325);
             this.Name = "FormFormatPatch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Format patch";

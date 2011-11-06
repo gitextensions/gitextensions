@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CreatePullRequestForm));
             this._titleTB = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -46,11 +45,11 @@
             // 
             // _titleTB
             // 
-            this._titleTB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this._titleTB.Location = new System.Drawing.Point(46, 19);
+            this._titleTB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this._titleTB.Location = new System.Drawing.Point(58, 19);
             this._titleTB.Name = "_titleTB";
-            this._titleTB.Size = new System.Drawing.Size(464, 20);
+            this._titleTB.Size = new System.Drawing.Size(462, 27);
             this._titleTB.TabIndex = 0;
             // 
             // label1
@@ -58,7 +57,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(6, 22);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(30, 13);
+            this.label1.Size = new System.Drawing.Size(41, 20);
             this.label1.TabIndex = 1;
             this.label1.Text = "Title:";
             // 
@@ -67,34 +66,37 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(6, 48);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(34, 13);
+            this.label2.Size = new System.Drawing.Size(46, 20);
             this.label2.TabIndex = 2;
             this.label2.Text = "Body:";
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this._bodyTB);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this._titleTB);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Location = new System.Drawing.Point(12, 92);
+            this.groupBox1.Location = new System.Drawing.Point(12, 100);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(516, 167);
+            this.groupBox1.Size = new System.Drawing.Size(526, 175);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Pull request data";
             // 
             // _bodyTB
             // 
-            this._bodyTB.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this._bodyTB.Location = new System.Drawing.Point(46, 45);
+            this._bodyTB.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this._bodyTB.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this._bodyTB.Location = new System.Drawing.Point(58, 45);
+            this._bodyTB.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this._bodyTB.MistakeFont = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Underline);
             this._bodyTB.Name = "_bodyTB";
-            this._bodyTB.Size = new System.Drawing.Size(464, 116);
+            this._bodyTB.Size = new System.Drawing.Size(462, 124);
             this._bodyTB.TabIndex = 1;
             // 
             // _pullReqTargetsCB
@@ -102,9 +104,9 @@
             this._pullReqTargetsCB.DisplayMember = "DisplayData";
             this._pullReqTargetsCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._pullReqTargetsCB.FormattingEnabled = true;
-            this._pullReqTargetsCB.Location = new System.Drawing.Point(118, 12);
+            this._pullReqTargetsCB.Location = new System.Drawing.Point(141, 12);
             this._pullReqTargetsCB.Name = "_pullReqTargetsCB";
-            this._pullReqTargetsCB.Size = new System.Drawing.Size(246, 21);
+            this._pullReqTargetsCB.Size = new System.Drawing.Size(246, 28);
             this._pullReqTargetsCB.TabIndex = 3;
             this._pullReqTargetsCB.SelectedIndexChanged += new System.EventHandler(this._pullReqTargetsCB_SelectedIndexChanged);
             // 
@@ -113,14 +115,14 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(9, 15);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(89, 13);
+            this.label3.Size = new System.Drawing.Size(126, 20);
             this.label3.TabIndex = 5;
             this.label3.Text = "Target repository:";
             // 
             // _createBtn
             // 
             this._createBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this._createBtn.Location = new System.Drawing.Point(416, 265);
+            this._createBtn.Location = new System.Drawing.Point(426, 281);
             this._createBtn.Name = "_createBtn";
             this._createBtn.Size = new System.Drawing.Size(112, 33);
             this._createBtn.TabIndex = 2;
@@ -133,7 +135,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(9, 42);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(68, 13);
+            this.label4.Size = new System.Drawing.Size(91, 20);
             this.label4.TabIndex = 7;
             this.label4.Text = "Your branch:";
             // 
@@ -142,7 +144,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(9, 69);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(77, 13);
+            this.label5.Size = new System.Drawing.Size(104, 20);
             this.label5.TabIndex = 8;
             this.label5.Text = "Target branch:";
             // 
@@ -150,9 +152,9 @@
             // 
             this._yourBranchesCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._yourBranchesCB.FormattingEnabled = true;
-            this._yourBranchesCB.Location = new System.Drawing.Point(118, 39);
+            this._yourBranchesCB.Location = new System.Drawing.Point(141, 39);
             this._yourBranchesCB.Name = "_yourBranchesCB";
-            this._yourBranchesCB.Size = new System.Drawing.Size(160, 21);
+            this._yourBranchesCB.Size = new System.Drawing.Size(246, 28);
             this._yourBranchesCB.TabIndex = 0;
             this._yourBranchesCB.SelectedIndexChanged += new System.EventHandler(this._yourBranchCB_SelectedIndexChanged);
             // 
@@ -160,17 +162,17 @@
             // 
             this._remoteBranchesCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._remoteBranchesCB.FormattingEnabled = true;
-            this._remoteBranchesCB.Location = new System.Drawing.Point(118, 66);
+            this._remoteBranchesCB.Location = new System.Drawing.Point(141, 66);
             this._remoteBranchesCB.Name = "_remoteBranchesCB";
-            this._remoteBranchesCB.Size = new System.Drawing.Size(160, 21);
+            this._remoteBranchesCB.Size = new System.Drawing.Size(246, 28);
             this._remoteBranchesCB.TabIndex = 1;
             this._remoteBranchesCB.SelectedIndexChanged += new System.EventHandler(this._yourBranchCB_SelectedIndexChanged);
             // 
             // CreatePullRequestForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(536, 307);
+            this.ClientSize = new System.Drawing.Size(546, 323);
             this.Controls.Add(this._remoteBranchesCB);
             this.Controls.Add(this._yourBranchesCB);
             this.Controls.Add(this.label5);
@@ -181,7 +183,6 @@
             this.Controls.Add(this.groupBox1);
             this.MinimumSize = new System.Drawing.Size(552, 345);
             this.Name = "CreatePullRequestForm";
-            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Create Pull Request";
             this.Load += new System.EventHandler(this.CreatePullRequestForm_Load);

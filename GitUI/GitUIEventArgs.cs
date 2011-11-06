@@ -25,7 +25,7 @@ namespace GitUI
 
         public override bool IsValidGitWorkingDir(string workingDir)
         {
-            return Settings.ValidWorkingDir(workingDir);
+            return GitModule.ValidWorkingDir(workingDir);
         }
 
         public override string GitCommand
