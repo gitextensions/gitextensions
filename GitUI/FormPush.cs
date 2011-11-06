@@ -25,6 +25,7 @@ namespace GitUI
             new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");
 
         private readonly string _currentBranch;
+        private readonly string _currentBranchRemote;
 
         private readonly TranslationString _pushCaption = new TranslationString("Push");
 
@@ -70,7 +71,8 @@ namespace GitUI
 
             Push.Focus();
 
-            Remotes.Text = Settings.Module.GetSetting(string.Format("branch.{0}.remote", _currentBranch));
+            _currentBranchRemote = Settings.Module.GetSetting(string.Format("branch.{0}.remote", _currentBranch));
+            Remotes.Text = _currentBranchRemote;
             RemotesUpdated(null, null);
         }
 
@@ -226,9 +228,10 @@ namespace GitUI
                     form.OutputString.ToString().Contains("To prevent you from losing history, non-fast-forward updates were rejected"))
                 {
                     if (Settings.PullMerge == "fetch")
-                        form.AppendOutputLine("\nCan not perform auto pull, when merge option is set to fetch.");
-                    else if (Settings.PullMerge == "rebase" && Settings.Module.IsMergeCommit(_currentBranch))
-                        form.AppendOutputLine("\nCan not perform auto pull, when merge option is set to rebase and pushed commit is merge commit.");
+                        form.AppendOutputLine(Environment.NewLine + "Can not perform auto pull, when merge option is set to fetch.");
+                    else if (Settings.PullMerge == "rebase" && Settings.Module.ExistsMergeCommit(_currentBranchRemote + "/" + _currentBranch, _currentBranch))
+                        form.AppendOutputLine(Environment.NewLine + "Can not perform auto pull, when merge option is set to rebase " + Environment.NewLine 
+                                            + "and one of the commits that are about to be rebased is a merge.");
                     else
                     {
                         bool pullCompleted;
