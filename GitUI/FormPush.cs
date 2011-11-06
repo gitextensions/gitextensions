@@ -546,5 +546,17 @@ namespace GitUI
         {
             SavePosition("push");
         }
+
+        private void ShowOptions_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            PushOptionsPanel.Visible = true;
+            ShowOptions.Visible = false;
+        }
+
+        private void ShowTagOptions_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            TagOptionsPanel.Visible = true;
+            ShowTagOptions.Visible = false;
+        }
     }
 }
