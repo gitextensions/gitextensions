@@ -269,7 +269,7 @@ namespace GitUI.RepoHosting
 
             string cmd = GitCommandHelpers.CloneCmd(repoSrc, targetDir, false, string.Empty, null);
             var formProcess = new FormProcess(Settings.GitCommand, cmd);
-            formProcess.ShowDialog();
+            formProcess.ShowDialog(this);
 
             if (formProcess.ErrorOccurred())
                 return;
@@ -279,7 +279,7 @@ namespace GitUI.RepoHosting
 
             if (_addRemoteAsTB.Text.Trim().Length > 0)
             {
-                var error = GitCommandHelpers.AddRemote(_addRemoteAsTB.Text.Trim(), repo.ParentReadOnlyUrl);
+                var error = Settings.Module.AddRemote(_addRemoteAsTB.Text.Trim(), repo.ParentReadOnlyUrl);
                 if (!string.IsNullOrEmpty(error))
                     MessageBox.Show(this, error, _strCouldNotAddRemote.Text);
             }
@@ -349,6 +349,18 @@ namespace GitUI.RepoHosting
 
             targetDir = Path.Combine(targetDir, _createDirTB.Text);
             return targetDir;
+        }
+
+        private void _destinationTB_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (_destinationTB.Text.IndexOfAny(Path.GetInvalidPathChars()) != -1)
+                e.Cancel = true;
+        }
+
+        private void _createDirTB_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (_createDirTB.Text.IndexOfAny(Path.GetInvalidPathChars()) != -1)
+                e.Cancel = true;
         }
     }
 }

@@ -253,7 +253,7 @@ namespace GitUI.RepoHosting
 
             var cmd = string.Format("fetch --no-tags --progress {0} {1}:{2}", _currentPullRequestInfo.HeadRepo.CloneReadOnlyUrl, _currentPullRequestInfo.HeadRef, localBranchName);
             var formProcess = new FormProcess(Settings.GitCommand, cmd);
-            formProcess.ShowDialog();
+            formProcess.ShowDialog(this);
 
             if (formProcess.ErrorOccurred())
                 return;
@@ -281,7 +281,7 @@ namespace GitUI.RepoHosting
             }
             else
             {
-                var error = GitCommandHelpers.AddRemote(remoteName, remoteUrl);
+                var error = Settings.Module.AddRemote(remoteName, remoteUrl);
                 if (!string.IsNullOrEmpty(error))
                 {
                     MessageBox.Show(this, error, string.Format("Could not add remote with name {0} and URL {1}", remoteName, remoteUrl));
@@ -291,14 +291,14 @@ namespace GitUI.RepoHosting
 
             var cmd = string.Format("fetch --no-tags --progress {0} {1}:{0}/{1}", remoteName, remoteRef);
             var formProcess = new FormProcess(Settings.GitCommand, cmd);
-            formProcess.ShowDialog();
+            formProcess.ShowDialog(this);
 
             if (formProcess.ErrorOccurred())
                 return;
 
             cmd = string.Format("checkout {0}/{1}", remoteName, remoteRef);
             formProcess = new FormProcess(Settings.GitCommand, cmd);
-            formProcess.ShowDialog();
+            formProcess.ShowDialog(this);
 
             Close();
         }

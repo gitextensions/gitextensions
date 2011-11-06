@@ -121,7 +121,7 @@ namespace GitUI
             {
                 if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)) && File.Exists(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User) + Settings.PathSeparator + ".gitconfig"))
                 {
-                    MessageBox.Show(string.Format(_gitconfigFoundHome.Text, Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)));
+                    MessageBox.Show(this, string.Format(_gitconfigFoundHome.Text, Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)));
                     defaultHome.Checked = true;
                     return;
                 }
@@ -136,7 +136,7 @@ namespace GitUI
             {
                 if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH")) && File.Exists(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH") + Settings.PathSeparator + ".gitconfig"))
                 {
-                    MessageBox.Show(string.Format(_gitconfigFoundHomedrive.Text, Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH")));
+                    MessageBox.Show(this, string.Format(_gitconfigFoundHomedrive.Text, Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH")));
                     defaultHome.Checked = true;
                     return;
                 }
@@ -151,7 +151,7 @@ namespace GitUI
             {
                 if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("USERPROFILE")) && File.Exists(Environment.GetEnvironmentVariable("USERPROFILE") + Settings.PathSeparator + ".gitconfig"))
                 {
-                    MessageBox.Show(string.Format(_gitconfigFoundUserprofile.Text, Environment.GetEnvironmentVariable("USERPROFILE")));
+                    MessageBox.Show(this, string.Format(_gitconfigFoundUserprofile.Text, Environment.GetEnvironmentVariable("USERPROFILE")));
                     userprofileHome.Checked = true;
                     return;
                 }
@@ -166,7 +166,7 @@ namespace GitUI
             {
                 if (!string.IsNullOrEmpty(Environment.GetFolderPath(Environment.SpecialFolder.Personal)) && File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + Settings.PathSeparator + ".gitconfig"))
                 {
-                    MessageBox.Show(string.Format(_gitconfigFoundPersonalFolder.Text, Environment.GetFolderPath(Environment.SpecialFolder.Personal)));
+                    MessageBox.Show(this, string.Format(_gitconfigFoundPersonalFolder.Text, Environment.GetFolderPath(Environment.SpecialFolder.Personal)));
                     otherHome.Checked = true;
                     otherHomeDir.Text = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
                     return;
@@ -188,7 +188,7 @@ namespace GitUI
             {
                 if (string.IsNullOrEmpty(otherHomeDir.Text))
                 {
-                    MessageBox.Show(_noHomeDirectorySpecified.Text);
+                    MessageBox.Show(this, _noHomeDirectorySpecified.Text);
                     return;
                 }
                 Settings.CustomHomeDir = otherHomeDir.Text;
@@ -201,7 +201,7 @@ namespace GitUI
             GitCommandHelpers.SetEnvironmentVariable(true);
             if (!Directory.Exists(Environment.GetEnvironmentVariable("HOME")) || string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME")))
             {
-                MessageBox.Show(string.Format(_homeNotAccessible.Text, Environment.GetEnvironmentVariable("HOME")));
+                MessageBox.Show(this, string.Format(_homeNotAccessible.Text, Environment.GetEnvironmentVariable("HOME")));
 
                 return;
             }
@@ -214,7 +214,7 @@ namespace GitUI
             FolderBrowserDialog browseDialog = new FolderBrowserDialog();
             browseDialog.SelectedPath = Environment.GetEnvironmentVariable("USERPROFILE");
 
-            if (browseDialog.ShowDialog() == DialogResult.OK)
+            if (browseDialog.ShowDialog(this) == DialogResult.OK)
             {
                 otherHomeDir.Text = browseDialog.SelectedPath;
             }

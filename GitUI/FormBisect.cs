@@ -14,7 +14,7 @@ namespace GitUI
 
         private void Initialize()
         {
-            bool inTheMiddleOfBisect = GitCommandHelpers.InTheMiddleOfBisect();
+            bool inTheMiddleOfBisect = Settings.Module.InTheMiddleOfBisect();
             Start.Enabled = !inTheMiddleOfBisect;
             Good.Enabled = inTheMiddleOfBisect;
             Bad.Enabled = inTheMiddleOfBisect;
@@ -23,27 +23,27 @@ namespace GitUI
 
         private void Start_Click(object sender, EventArgs e)
         {
-            new FormProcess(GitCommandHelpers.StartBisectCmd()).ShowDialog();
+            new FormProcess(GitCommandHelpers.StartBisectCmd()).ShowDialog(this);
             Initialize();
         }
 
         private void Good_Click(object sender, EventArgs e)
         {
             Settings.CloseProcessDialog = false;
-            new FormProcess(GitCommandHelpers.ContinueBisectCmd(true)).ShowDialog();
+            new FormProcess(GitCommandHelpers.ContinueBisectCmd(true)).ShowDialog(this);
             Close();
         }
 
         private void Bad_Click(object sender, EventArgs e)
         {
             Settings.CloseProcessDialog = false;
-            new FormProcess(GitCommandHelpers.ContinueBisectCmd(false)).ShowDialog();
+            new FormProcess(GitCommandHelpers.ContinueBisectCmd(false)).ShowDialog(this);
             Close();
         }
 
         private void Stop_Click(object sender, EventArgs e)
         {
-            new FormProcess(GitCommandHelpers.StopBisectCmd()).ShowDialog();
+            new FormProcess(GitCommandHelpers.StopBisectCmd()).ShowDialog(this);
             Close();
         }
     }

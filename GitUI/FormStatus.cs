@@ -154,7 +154,7 @@ namespace GitUI
             ProcessCallback(this);
         }
 
-        public void ShowDialogOnError()
+        public void ShowDialogOnError(IWin32Window owner = null)
         {
             Visible = false;
             KeepDialogOpen.Visible = false;
@@ -162,7 +162,7 @@ namespace GitUI
             showOnError = true;
             // Just hiding it still seems to draw one frame of the control
             WindowState = FormWindowState.Minimized;
-            ShowDialog();
+            ShowDialog(owner);
         }
 
         private void Ok_Click(object sender, EventArgs e)

@@ -26,10 +26,10 @@ namespace GitUI
         private void Revert_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            string output = GitCommandHelpers.ResetFile(fileName);
+            string output = Settings.Module.ResetFile(fileName);
 
             if (!string.IsNullOrEmpty(output))
-                MessageBox.Show(output, _resetChangesCaption.Text);
+                MessageBox.Show(this, output, _resetChangesCaption.Text);
             Close();
             Cursor.Current = Cursors.Default;
         }

@@ -89,6 +89,7 @@
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
     <Compile Include="DataGridViewCheckBoxColumnHeaderCell.cs" />
+    <Compile Include="Editor\XHTML2RTF.cs" />
     <Compile Include="FormContributors.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1195,6 +1196,7 @@
     </Content>
     <Content Include="Translation\Dutch.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Translation\English.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -42,9 +42,9 @@ namespace GitUI
 
             var saveFileDialog = new SaveFileDialog {Filter = _saveFileDialogFilter.Text + "|*.zip", Title = _saveFileDialogCaption.Text};
 
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
             {
-							new FormProcess("archive --format=zip " + revision + " --output \"" + saveFileDialog.FileName + "\"").ShowDialog();
+                new FormProcess("archive --format=zip " + revision + " --output \"" + saveFileDialog.FileName + "\"").ShowDialog(this);
                 Close();
             }
         }

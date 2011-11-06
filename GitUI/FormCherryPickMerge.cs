@@ -24,7 +24,7 @@ namespace GitUI
         private void OK_Click(object sender, EventArgs e)
         {
             if (ParentsList.SelectedItems.Count == 0)
-                MessageBox.Show("None parent is selected!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, "None parent is selected!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else
             {
                 OkClicked = true;

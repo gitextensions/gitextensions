@@ -65,7 +65,7 @@ namespace GitUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(_cannotAccessGitignore.Text + Environment.NewLine + ex.Message, 
+                MessageBox.Show(this, _cannotAccessGitignore.Text + Environment.NewLine + ex.Message, 
                     _cannotAccessGitignoreCaption.Text);
             }
             Close();
@@ -79,8 +79,8 @@ namespace GitUI
         private void FormGitIgnoreLoad(object sender, EventArgs e)
         {
             RestorePosition("edit-git-ignore");
-            if (!Settings.IsBareRepository()) return;
-            MessageBox.Show(_gitignoreOnlyInWorkingDirSupported.Text, _gitignoreOnlyInWorkingDirSupportedCaption.Text);
+            if (!Settings.Module.IsBareRepository()) return;
+            MessageBox.Show(this, _gitignoreOnlyInWorkingDirSupported.Text, _gitignoreOnlyInWorkingDirSupportedCaption.Text);
             Close();
         }
 
@@ -122,7 +122,7 @@ namespace GitUI
         private void AddPattern_Click(object sender, EventArgs e)
         {
             SaveGitIgnore(false);
-            new FormAddToGitIgnore("*.dll").ShowDialog();
+            new FormAddToGitIgnore("*.dll").ShowDialog(this);
             LoadGitIgnore();
         }
     }

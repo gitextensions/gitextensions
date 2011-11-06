@@ -13,11 +13,11 @@ namespace GitUI
 
         public string GetRevision()
         {
-            return GitCommandHelpers.RevParse(commitExpression.Text);
+            return Settings.Module.RevParse(commitExpression.Text);
         }
 
 
-        private void button1_Click(object sender, EventArgs e)
+        private void goButton_Click(object sender, EventArgs e)
         {
             Close();
         }

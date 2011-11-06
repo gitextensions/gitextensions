@@ -33,7 +33,7 @@ namespace GitUI
         {
             var browseDialog = new FolderBrowserDialog {SelectedPath = _NO_TRANSLATE_Directory.Text};
 
-            if (browseDialog.ShowDialog() == DialogResult.OK)
+            if (browseDialog.ShowDialog(this) == DialogResult.OK)
             {
                 _NO_TRANSLATE_Directory.Text = browseDialog.SelectedPath;
             }
@@ -51,7 +51,7 @@ namespace GitUI
             }
             else
             {
-                MessageBox.Show(_warningOpenFailed.Text, _warningOpenFailedCaption.Text);
+                MessageBox.Show(this, _warningOpenFailed.Text, _warningOpenFailedCaption.Text);
             }
         }
 
