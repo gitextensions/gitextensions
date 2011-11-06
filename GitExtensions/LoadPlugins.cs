@@ -9,7 +9,6 @@ namespace GitExtensions
 {
     internal static class PluginLoader
     {
-        private static readonly PluginExtraction extractor = new PluginExtraction();
         public static void LoadAsync()
         {
             // Create the thread object, passing in the Alpha.Beta method
@@ -41,7 +40,7 @@ namespace GitExtensions
                 try
                 {
                     var types = Assembly.LoadFile(pluginFile.FullName).GetTypes();
-                    extractor.ExtractPluginTypes(types);
+                    PluginExtraction.ExtractPluginTypes(types);
                 }
                 catch (Exception ex)
                 {

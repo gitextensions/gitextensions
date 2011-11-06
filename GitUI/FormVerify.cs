@@ -55,19 +55,19 @@ namespace GitUI
             var options = GetOptions();
 
             var process = new FormProcess("fsck-objects --lost-found" + options);
-            process.ShowDialog();
+            process.ShowDialog(this);
             UpdateLostObjects();
         }
 
         private void RemoveClick(object sender, EventArgs e)
         {
-            if (MessageBox.Show(
+            if (MessageBox.Show(this, 
                 _removeDanglingObjectsQuestion.Text,
                 _removeDanglingObjectsCaption.Text,
                 MessageBoxButtons.YesNo) != DialogResult.Yes)
                 return;
 
-            new FormProcess("prune").ShowDialog();
+            new FormProcess("prune").ShowDialog(this);
             UpdateLostObjects();
         }
 
@@ -80,7 +80,7 @@ namespace GitUI
         {
             using (var frm = new FormTagSmall { Revision = GetCurrentGitRevision() })
             {
-                var dialogResult = frm.ShowDialog();
+                var dialogResult = frm.ShowDialog(this);
                 if (dialogResult == DialogResult.OK)
                     UpdateLostObjects();
             }
@@ -90,7 +90,7 @@ namespace GitUI
         {
             using (var frm = new FormBranchSmall { Revision = GetCurrentGitRevision() })
             {
-                var dialogResult = frm.ShowDialog();
+                var dialogResult = frm.ShowDialog(this);
                 if (dialogResult == DialogResult.OK)
                     UpdateLostObjects();
             }
@@ -110,7 +110,7 @@ namespace GitUI
             if (restoredObjectsCount == 0)
                 return;
 
-            MessageBox.Show(string.Format(_xTagsCreated.Text, restoredObjectsCount), "Tags created", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(this, string.Format(_xTagsCreated.Text, restoredObjectsCount), "Tags created", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             // if user restored all items, nothing else to do in this form. 
             // User wants to see restored commits, so close this dialog and return to the main window.
@@ -173,7 +173,7 @@ namespace GitUI
             string dialogResult;
             using (var process = new FormProcess("fsck-objects" + GetOptions()))
             {
-                process.ShowDialog();
+                process.ShowDialog(this);
                 dialogResult = process.OutputString.ToString();
             }
 
@@ -231,7 +231,7 @@ namespace GitUI
             var currenItem = CurrentItem;
             if (currenItem == null)
                 return;
-            new FormEdit(GitCommandHelpers.ShowSha1(currenItem.Hash)).ShowDialog();
+            new FormEdit(Settings.Module.ShowSha1(currenItem.Hash)).ShowDialog(this);
         }
 
         private int CreateLostFoundTags()
@@ -245,14 +245,14 @@ namespace GitUI
 
             if (selectedLostObjects.Count == 0)
             {
-                MessageBox.Show(selectLostObjectsToRestoreMessage.Text, selectLostObjectsToRestoreCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(this, selectLostObjectsToRestoreMessage.Text, selectLostObjectsToRestoreCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return 0;
             }
             var currentTag = 0;
             foreach (var lostObject in selectedLostObjects)
             {
                 currentTag++;
-                GitCommandHelpers.Tag(RestoredObjectsTagPrefix + currentTag, lostObject.Hash, false);
+                Settings.Module.Tag(RestoredObjectsTagPrefix + currentTag, lostObject.Hash, false);
             }
 
             return currentTag;
@@ -260,10 +260,10 @@ namespace GitUI
 
         private static void DeleteLostFoundTags()
         {
-            foreach (var head in GitCommandHelpers.GetHeads(true, false))
+            foreach (var head in Settings.Module.GetHeads(true, false))
             {
                 if (head.Name.StartsWith(RestoredObjectsTagPrefix))
-                    GitCommandHelpers.DeleteTag(head.Name);
+                    Settings.Module.DeleteTag(head.Name);
             }
         }
 

@@ -21,7 +21,7 @@ namespace GitUI
         {
             var browseDialog = new FolderBrowserDialog { SelectedPath = Directory.Text };
 
-            if (browseDialog.ShowDialog() == DialogResult.OK)
+            if (browseDialog.ShowDialog(this) == DialogResult.OK)
                 Directory.Text = browseDialog.SelectedPath;
         }
 
@@ -29,13 +29,13 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(Directory.Text) || string.IsNullOrEmpty(LocalPath.Text))
             {
-                MessageBox.Show(_remoteAndLocalPathRequired.Text,Text);
+                MessageBox.Show(this, _remoteAndLocalPathRequired.Text,Text);
                 return;
             }
 
             Cursor.Current = Cursors.WaitCursor;
             var addSubmoduleCmd = GitCommandHelpers.AddSubmoduleCmd(Directory.Text, LocalPath.Text, Branch.Text);
-            new FormProcess(addSubmoduleCmd).ShowDialog();
+            new FormProcess(addSubmoduleCmd).ShowDialog(this);
 
             Close();
             Cursor.Current = Cursors.Default;
@@ -59,7 +59,7 @@ namespace GitUI
             var realWorkingDir = Settings.WorkingDir;
             Settings.WorkingDir = Directory.Text;
 
-            var heads = GitCommandHelpers.GetHeads(false);
+            var heads = Settings.Module.GetHeads(false);
 
             heads.Insert(0, GitHead.NoHead);
 

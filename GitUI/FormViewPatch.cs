@@ -66,7 +66,7 @@ namespace PatchApply
                                  InitialDirectory = initialDirectory,
                                  Title = _patchFileFilterTitle.Text
                              };
-            return (dialog.ShowDialog() == DialogResult.OK) ? dialog.FileName : PatchFileNameEdit.Text;
+            return (dialog.ShowDialog(this) == DialogResult.OK) ? dialog.FileName : PatchFileNameEdit.Text;
         }
 
         private void BrowsePatch_Click(object sender, EventArgs e)

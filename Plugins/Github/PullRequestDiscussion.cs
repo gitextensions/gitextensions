@@ -34,7 +34,7 @@ namespace Github
             {
                 Load();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Entries = new List<IDiscussionEntry>();
                 throw;

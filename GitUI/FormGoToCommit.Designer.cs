@@ -42,7 +42,7 @@
             this.goButton.TabIndex = 1;
             this.goButton.Text = "Go";
             this.goButton.UseVisualStyleBackColor = true;
-            this.goButton.Click += new System.EventHandler(this.button1_Click);
+            this.goButton.Click += new System.EventHandler(this.goButton_Click);
             // 
             // commitExpression
             // 

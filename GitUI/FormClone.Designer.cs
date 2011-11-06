@@ -289,9 +289,9 @@
             this.ClientSize = new System.Drawing.Size(525, 289);
             this.Controls.Add(this.splitContainer1);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(933, 327);
+            this.MaximumSize = new System.Drawing.Size(933, 330);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(433, 327);
+            this.MinimumSize = new System.Drawing.Size(430, 330);
             this.Name = "FormClone";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Clone";

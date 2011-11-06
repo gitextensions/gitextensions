@@ -48,7 +48,7 @@ namespace Gource
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(this, e.Message);
             }
         }
 
@@ -56,7 +56,7 @@ namespace Gource
         {
             if (!File.Exists(GourcePath.Text))
             {
-                MessageBox.Show("Cannot find \"gource\".\nPlease download \"gource\" and set the correct path.");
+                MessageBox.Show(this, "Cannot find \"gource\".\nPlease download \"gource\" and set the correct path.");
                 return;
             }
 
@@ -76,7 +76,7 @@ namespace Gource
                         Filter = "Gource (gource.exe)|gource.exe",
                         FileName = GourcePath.Text
                     };
-            fileDialog.ShowDialog();
+            fileDialog.ShowDialog(this);
 
             GourcePath.Text = fileDialog.FileName;
         }
@@ -84,7 +84,7 @@ namespace Gource
         private void WorkingDirBrowseClick(object sender, EventArgs e)
         {
             var folderDialog = new FolderBrowserDialog {SelectedPath = WorkingDir.Text};
-            folderDialog.ShowDialog();
+            folderDialog.ShowDialog(this);
             WorkingDir.Text = folderDialog.SelectedPath;
         }
 

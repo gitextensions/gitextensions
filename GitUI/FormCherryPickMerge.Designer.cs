@@ -32,10 +32,10 @@
             this.OK = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.ParentsList = new System.Windows.Forms.ListView();
-            this.No = new System.Windows.Forms.ColumnHeader();
-            this.Message = new System.Windows.Forms.ColumnHeader();
-            this.Author = new System.Windows.Forms.ColumnHeader();
-            this.CommitDate = new System.Windows.Forms.ColumnHeader();
+            this.No = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Message = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Author = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.CommitDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -44,9 +44,11 @@
             // 
             // OK
             // 
-            this.OK.Location = new System.Drawing.Point(242, 104);
+            this.OK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.OK.Location = new System.Drawing.Point(429, 118);
+            this.OK.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.OK.Name = "OK";
-            this.OK.Size = new System.Drawing.Size(75, 25);
+            this.OK.Size = new System.Drawing.Size(100, 31);
             this.OK.TabIndex = 1;
             this.OK.Text = "OK";
             this.OK.UseVisualStyleBackColor = true;
@@ -55,14 +57,18 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(1, 9);
+            this.label1.Location = new System.Drawing.Point(1, 11);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(233, 13);
+            this.label1.Size = new System.Drawing.Size(313, 17);
             this.label1.TabIndex = 3;
             this.label1.Text = "This commit is a merge, please select the parent";
             // 
             // ParentsList
             // 
+            this.ParentsList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ParentsList.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ParentsList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.No,
@@ -73,11 +79,11 @@
             this.ParentsList.FullRowSelect = true;
             this.ParentsList.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.ParentsList.HideSelection = false;
-            this.ParentsList.Location = new System.Drawing.Point(4, 27);
-            this.ParentsList.Margin = new System.Windows.Forms.Padding(5);
+            this.ParentsList.Location = new System.Drawing.Point(5, 33);
+            this.ParentsList.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.ParentsList.MultiSelect = false;
             this.ParentsList.Name = "ParentsList";
-            this.ParentsList.Size = new System.Drawing.Size(550, 69);
+            this.ParentsList.Size = new System.Drawing.Size(534, 75);
             this.ParentsList.TabIndex = 3;
             this.ParentsList.TileSize = new System.Drawing.Size(168, 50);
             this.ParentsList.UseCompatibleStateImageBehavior = false;
@@ -97,12 +103,12 @@
             // Author
             // 
             this.Author.Text = "Author";
-            this.Author.Width = 120;
+            this.Author.Width = 121;
             // 
             // CommitDate
             // 
             this.CommitDate.Text = "Date";
-            this.CommitDate.Width = 80;
+            this.CommitDate.Width = 81;
             // 
             // Column1
             // 
@@ -134,13 +140,15 @@
             // 
             // FormCherryPickMerge
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(559, 132);
+            this.ClientSize = new System.Drawing.Size(542, 155);
             this.Controls.Add(this.ParentsList);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.OK);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.MinimumSize = new System.Drawing.Size(560, 200);
             this.Name = "FormCherryPickMerge";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Choose parent";
