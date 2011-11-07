@@ -41,6 +41,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.chkAutosquash = new System.Windows.Forms.CheckBox();
+            this.chkPreserveMerges = new System.Windows.Forms.CheckBox();
             this.chkInteractive = new System.Windows.Forms.CheckBox();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.label3 = new System.Windows.Forms.Label();
@@ -200,6 +201,7 @@
             // splitContainer2.Panel1
             // 
             this.splitContainer2.Panel1.Controls.Add(this.chkAutosquash);
+            this.splitContainer2.Panel1.Controls.Add(this.chkPreserveMerges);
             this.splitContainer2.Panel1.Controls.Add(this.chkInteractive);
             this.splitContainer2.Panel1.Controls.Add(this.label1);
             this.splitContainer2.Panel1.Controls.Add(this.Currentbranch);
@@ -212,24 +214,35 @@
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
             this.splitContainer2.Panel2MinSize = 0;
             this.splitContainer2.Size = new System.Drawing.Size(544, 368);
-            this.splitContainer2.SplitterDistance = 74;
+            this.splitContainer2.SplitterDistance = 99;
             this.splitContainer2.TabIndex = 0;
             // 
             // chkAutosquash
             // 
             this.chkAutosquash.AutoSize = true;
             this.chkAutosquash.Enabled = false;
-            this.chkAutosquash.Location = new System.Drawing.Point(439, 49);
+            this.chkAutosquash.Location = new System.Drawing.Point(297, 76);
             this.chkAutosquash.Name = "chkAutosquash";
             this.chkAutosquash.Size = new System.Drawing.Size(89, 19);
             this.chkAutosquash.TabIndex = 7;
             this.chkAutosquash.Text = "Autosquash";
             this.chkAutosquash.UseVisualStyleBackColor = true;
             // 
+            // chkPreserveMerges
+            // 
+            this.chkPreserveMerges.AutoSize = true;
+            this.chkPreserveMerges.Location = new System.Drawing.Point(155, 76);
+            this.chkPreserveMerges.Name = "chkPreserveMerges";
+            this.chkPreserveMerges.Size = new System.Drawing.Size(112, 19);
+            this.chkPreserveMerges.TabIndex = 7;
+            this.chkPreserveMerges.Text = "Preserve Merges";
+            this.chkPreserveMerges.UseVisualStyleBackColor = true;
+            this.chkPreserveMerges.Click += new System.EventHandler(this.InteractiveRebaseClick);
+            // 
             // chkInteractive
             // 
             this.chkInteractive.AutoSize = true;
-            this.chkInteractive.Location = new System.Drawing.Point(312, 49);
+            this.chkInteractive.Location = new System.Drawing.Point(7, 76);
             this.chkInteractive.Name = "chkInteractive";
             this.chkInteractive.Size = new System.Drawing.Size(121, 19);
             this.chkInteractive.TabIndex = 7;
@@ -254,7 +267,7 @@
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.patchGrid1);
-            this.splitContainer3.Size = new System.Drawing.Size(544, 290);
+            this.splitContainer3.Size = new System.Drawing.Size(544, 265);
             this.splitContainer3.SplitterDistance = 16;
             this.splitContainer3.TabIndex = 0;
             // 
@@ -273,7 +286,7 @@
             this.patchGrid1.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.patchGrid1.Location = new System.Drawing.Point(0, 0);
             this.patchGrid1.Name = "patchGrid1";
-            this.patchGrid1.Size = new System.Drawing.Size(544, 270);
+            this.patchGrid1.Size = new System.Drawing.Size(544, 245);
             this.patchGrid1.TabIndex = 16;
             // 
             // SolveMergeconflicts
@@ -392,5 +405,6 @@
         private System.Windows.Forms.Panel MergeToolPanel;
         private System.Windows.Forms.CheckBox chkInteractive;
         private System.Windows.Forms.CheckBox chkAutosquash;
+        private System.Windows.Forms.CheckBox chkPreserveMerges;
     }
 }

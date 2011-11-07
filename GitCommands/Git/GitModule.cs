@@ -1162,7 +1162,7 @@ namespace GitCommands
         {
             Directory.SetCurrentDirectory(_workingdir);
 
-            return RunCmd(Settings.GitCommand, GitCommandHelpers.RebaseCmd(branch, false, false));
+            return RunCmd(Settings.GitCommand, GitCommandHelpers.RebaseCmd(branch, false, false, false));
         }
 
         public string AbortRebase()
