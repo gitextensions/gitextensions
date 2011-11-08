@@ -67,7 +67,6 @@
             resources.ApplyResources(this.splitContainer5.Panel2, "splitContainer5.Panel2");
             this.splitContainer5.Panel2.Controls.Add(this.groupLayoutPanel);
             this.splitContainer5.SplitterDistance = global::GitUI.Properties.Settings.Default.Dashboard_MainSplitContainer_SplitterDistance;
-            this.splitContainer5.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer5_SplitterMoved);
             // 
             // splitContainer6
             // 

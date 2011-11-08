@@ -295,7 +295,12 @@ namespace GitUI
             return true;
         }
 
-        public bool StartCloneDialog(string url = null)
+        public bool StartCloneDialog()
+        {
+            return StartCloneDialog(null);
+        }
+
+        public bool StartCloneDialog(string url)
         {
             if (!InvokeEvent(PreClone))
                 return false;
