@@ -300,7 +300,12 @@ namespace GitUI
 
         #endregion
 
-        public void ShowDialogWhenChanges(IWin32Window owner = null)
+        public void ShowDialogWhenChanges()
+        {
+            ShowDialogWhenChanges(null);
+        }
+
+        public void ShowDialogWhenChanges(IWin32Window owner)
         {
             Initialize();
             while (_gitGetUnstagedCommand.IsRunning)
@@ -504,6 +509,7 @@ namespace GitUI
             else
             {
                 SelectedDiff.Clear();
+                SelectedDiff.Refresh();
                 llShowPreview.Show();
             }
 
