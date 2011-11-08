@@ -37,7 +37,11 @@ namespace GitUI
             new TranslationString("Submodules");
 
 
-        public FormClone(string url = null)
+        public FormClone(): this(null)
+        {
+        }
+
+        public FormClone(string url)
         {
             InitializeComponent();
             Translate();
