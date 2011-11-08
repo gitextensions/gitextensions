@@ -772,8 +772,14 @@ namespace GitUI.Editor.RichTextBoxExtension
                                             if (hyperlink != rtb.SelectedText)
                                             {
                                                 string text = rtb.SelectedText;
-                                                rtb.SelectedRtf = @"{\rtf1\ansi " + text + @"\v #" + hyperlink + @"\v0}";
-                                                length = rtb.TextLength - hyperlinkStart;
+                                                int idx = rtb.SelectedRtf.LastIndexOf('}');
+                                                if (idx != -1) 
+                                                {
+                                                    string head = rtb.SelectedRtf.Substring(0, idx);
+                                                    string tail = rtb.SelectedRtf.Substring(idx);
+                                                    rtb.SelectedRtf = head + @"\v #" + hyperlink + @"\v0" + tail;
+                                                    length = rtb.TextLength - hyperlinkStart;
+                                                }                                                 
                                             }
                                             // reposition to final
                                             rtb.Select(rtb.TextLength + 1, 0);
