@@ -189,7 +189,12 @@ namespace GitCommands
             return commitInformation;
         }
 
-        private static string FillToLength(string input, int length, int skip = 0)
+        private static string FillToLength(string input, int length)
+        {
+            return FillToLength(input, length, 0);
+        }
+
+        private static string FillToLength(string input, int length, int skip)
         {
             // length
             const int tabsize = 8;
