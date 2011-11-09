@@ -171,6 +171,17 @@ namespace GitUI
             return true;
         }
 
+        public bool StartCommandLineProcessDialog(GitCommand cmd, Form parentForm)
+        {
+            FormProcess process;
+            if (cmd.AccessesRemote())
+                process = new FormRemoteProcess(cmd.ToLine());
+            else
+                process = new FormProcess(cmd.ToLine());
+            process.ShowDialog(parentForm);
+            return true;
+        }
+
         public bool StartBrowseDialog()
         {
             return StartBrowseDialog("");
