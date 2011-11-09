@@ -55,11 +55,11 @@
             this.LoadSSHKey = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.AddRemote = new System.Windows.Forms.Button();
-            this.Remotes = new System.Windows.Forms.ComboBox();
+            this._NO_TRANSLATE_Remotes = new System.Windows.Forms.ComboBox();
             this.BrowseSource = new System.Windows.Forms.Button();
             this.PushDestination = new System.Windows.Forms.ComboBox();
             this.Pull = new System.Windows.Forms.Button();
-            this.Branch = new System.Windows.Forms.ComboBox();
+            this._NO_TRANSLATE_Branch = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.RemoteBranch = new System.Windows.Forms.ComboBox();
             this.labelTo = new System.Windows.Forms.Label();
@@ -355,7 +355,7 @@
             this.groupBox2.Controls.Add(this.PullFromUrl);
             this.groupBox2.Controls.Add(this.PullFromRemote);
             this.groupBox2.Controls.Add(this.AddRemote);
-            this.groupBox2.Controls.Add(this.Remotes);
+            this.groupBox2.Controls.Add(this._NO_TRANSLATE_Remotes);
             this.groupBox2.Controls.Add(this.BrowseSource);
             this.groupBox2.Controls.Add(this.PushDestination);
             this.groupBox2.Location = new System.Drawing.Point(12, 12);
@@ -376,20 +376,20 @@
             this.AddRemote.UseVisualStyleBackColor = true;
             this.AddRemote.Click += new System.EventHandler(this.AddRemoteClick);
             // 
-            // Remotes
+            // _NO_TRANSLATE_Remotes
             // 
-            this.Remotes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this._NO_TRANSLATE_Remotes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.Remotes.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.Remotes.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.Remotes.FormattingEnabled = true;
-            this.Remotes.Location = new System.Drawing.Point(128, 19);
-            this.Remotes.Name = "Remotes";
-            this.Remotes.Size = new System.Drawing.Size(380, 21);
-            this.Remotes.TabIndex = 2;
-            this.Remotes.SelectedIndexChanged += new System.EventHandler(this.RemotesUpdated);
-            this.Remotes.TextUpdate += new System.EventHandler(this.RemotesUpdated);
-            this.Remotes.Validated += new System.EventHandler(this.RemotesValidated);
+            this._NO_TRANSLATE_Remotes.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this._NO_TRANSLATE_Remotes.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this._NO_TRANSLATE_Remotes.FormattingEnabled = true;
+            this._NO_TRANSLATE_Remotes.Location = new System.Drawing.Point(128, 19);
+            this._NO_TRANSLATE_Remotes.Name = "Remotes";
+            this._NO_TRANSLATE_Remotes.Size = new System.Drawing.Size(380, 21);
+            this._NO_TRANSLATE_Remotes.TabIndex = 2;
+            this._NO_TRANSLATE_Remotes.SelectedIndexChanged += new System.EventHandler(this.RemotesUpdated);
+            this._NO_TRANSLATE_Remotes.TextUpdate += new System.EventHandler(this.RemotesUpdated);
+            this._NO_TRANSLATE_Remotes.Validated += new System.EventHandler(this.RemotesValidated);
             // 
             // BrowseSource
             // 
@@ -427,16 +427,16 @@
             this.Pull.UseVisualStyleBackColor = true;
             this.Pull.Click += new System.EventHandler(this.PullClick);
             // 
-            // Branch
+            // _NO_TRANSLATE_Branch
             // 
-            this.Branch.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.Branch.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.Branch.FormattingEnabled = true;
-            this.Branch.Location = new System.Drawing.Point(127, 19);
-            this.Branch.Name = "Branch";
-            this.Branch.Size = new System.Drawing.Size(173, 21);
-            this.Branch.TabIndex = 0;
-            this.Branch.SelectedValueChanged += new System.EventHandler(this.BranchSelectedValueChanged);
+            this._NO_TRANSLATE_Branch.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this._NO_TRANSLATE_Branch.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this._NO_TRANSLATE_Branch.FormattingEnabled = true;
+            this._NO_TRANSLATE_Branch.Location = new System.Drawing.Point(127, 19);
+            this._NO_TRANSLATE_Branch.Name = "Branch";
+            this._NO_TRANSLATE_Branch.Size = new System.Drawing.Size(173, 21);
+            this._NO_TRANSLATE_Branch.TabIndex = 0;
+            this._NO_TRANSLATE_Branch.SelectedValueChanged += new System.EventHandler(this.BranchSelectedValueChanged);
             // 
             // label2
             // 
@@ -557,7 +557,7 @@
             this.groupBox1.Controls.Add(this.labelTo);
             this.groupBox1.Controls.Add(this.RemoteBranch);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.Branch);
+            this.groupBox1.Controls.Add(this._NO_TRANSLATE_Branch);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
@@ -615,7 +615,7 @@
         private System.Windows.Forms.RadioButton PullFromUrl;
         private System.Windows.Forms.RadioButton PullFromRemote;
         private System.Windows.Forms.Button AddRemote;
-        private System.Windows.Forms.ComboBox Remotes;
+        private System.Windows.Forms.ComboBox _NO_TRANSLATE_Remotes;
         private System.Windows.Forms.Button LoadSSHKey;
         private System.Windows.Forms.ComboBox TagComboBox;
         private System.Windows.Forms.GroupBox groupBox3;
@@ -647,6 +647,6 @@
         private System.Windows.Forms.Label labelTo;
         private System.Windows.Forms.ComboBox RemoteBranch;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox Branch;
+        private System.Windows.Forms.ComboBox _NO_TRANSLATE_Branch;
     }
 }
