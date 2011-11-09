@@ -9,14 +9,12 @@ namespace GitUI
 {
     public partial class FormDeleteBranch : GitExtensionsForm
     {
-        private readonly TranslationString _branchDeleted = new TranslationString("Command executed");
-
         private readonly string _defaultBranch;
-        private readonly TranslationString _deleteBranchCaption = new TranslationString("Delete branch");
+        private readonly TranslationString _deleteBranchCaption = new TranslationString("Delete branches");
 
         private readonly TranslationString _deleteBranchQuestion =
             new TranslationString(
-                "Are you sure you want to delete this branch?" + Environment.NewLine + "Deleting a branch can cause commits to be deleted too!");
+                "Are you sure you want to delete selected branches?" + Environment.NewLine + "Deleting a branch can cause commits to be deleted too!");
 
         private List<GitHead> Heads;
 
@@ -31,10 +29,15 @@ namespace GitUI
         {
             Branches.DisplayMember = "Name";
             Heads = Settings.Module.GetHeads(true, true);
-            Branches.DataSource = Heads.FindAll(h => h.IsHead == true && h.IsRemote == false);
+            List<GitHead> branchList = Heads.FindAll(h => h.IsHead == true && h.IsRemote == false);
+            Branches.Items.AddRange(branchList.ToArray());
 
             if (_defaultBranch != null)
-                Branches.Text = _defaultBranch;
+            {
+                Branches.SelectedItem = branchList.Find(h => _defaultBranch.Equals(h.Name));
+                if (Branches.SelectedItem != null)
+                    Branches.SetItemChecked(Branches.SelectedIndex, true);
+            }
         }
 
         private void OkClick(object sender, EventArgs e)
@@ -44,14 +47,14 @@ namespace GitUI
                 if (MessageBox.Show(this, _deleteBranchQuestion.Text, _deleteBranchCaption.Text, MessageBoxButtons.YesNo) ==
                     DialogResult.Yes)
                 {
-                    GitHead head = Heads.Find(h => h.Name.Equals(Branches.Text));
-                    
-                    bool isRemote;
-                    isRemote = head != null && head.IsRemote;
 
-                    var deleteBranchResult = Settings.Module.DeleteBranch(Branches.Text, ForceDelete.Checked, isRemote);
-                    MessageBox.Show(this, _branchDeleted.Text + Environment.NewLine + deleteBranchResult,
-                                    _deleteBranchCaption.Text);
+                    GitDeleteBranchCmd cmd = new GitDeleteBranchCmd();
+                    cmd.Force = ForceDelete.Checked;
+                    foreach (GitHead head in Branches.CheckedItems)
+                        cmd.AddBranch(head.Name, head.IsRemote);
+
+                    GitUICommands.Instance.StartCommandLineProcessDialog(cmd);    
+
                 }
             }
             catch (Exception ex)
