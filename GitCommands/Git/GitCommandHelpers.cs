@@ -910,5 +910,23 @@ namespace GitCommands
             int years = Convert.ToInt32(Math.Floor((double)ts.Days / 365));
             return years <= 1 ? "1 year ago" : years + " years ago";
         }
+
+
+        public static bool IsNullOrEmpty(this string s)
+        {
+            return string.IsNullOrEmpty(s);
+        }
+
+
+        public static string Join(this string left, string sep, string right)
+        {
+            if (left.IsNullOrEmpty())
+                return right;
+            else if (right.IsNullOrEmpty())
+                return left;
+            else
+                return left + sep + right;
+
+        }
     }
 }
