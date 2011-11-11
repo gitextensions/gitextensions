@@ -578,7 +578,7 @@
             this.Controls.Add(this.Push);
             this.Controls.Add(this.Pull);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(660, 321);
+            this.MinimumSize = new System.Drawing.Size(660, 290);
             this.Name = "FormPush";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Push";
