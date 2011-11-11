@@ -76,6 +76,8 @@ namespace GitUI
                 Repositories.RepositoryHistory.AddMostRecentRepository(_NO_TRANSLATE_From.Text);
                 Repositories.RepositoryHistory.AddMostRecentRepository(dirTo);
 
+                if (!Directory.Exists(dirTo))
+                    Directory.CreateDirectory(dirTo);
 
                 var fromProcess =
                     new FormRemoteProcess(Settings.GitCommand,
