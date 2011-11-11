@@ -401,9 +401,10 @@ namespace GitUI.Editor.RichTextBoxExtension
  
             rtb.SelectionStart = position;
             rtb.SelectedText = text;
-            rtb.Select(position, text.Length);
+            int length = rtb.SelectionStart - position;
+            rtb.Select(position, length);
             rtb.SetLink(true);
-            rtb.Select(position + text.Length, 0);
+            rtb.Select(position + length, 0);
         }
 
         static void AddLink(this RichTextBox rtb, string text, string hyperlink)
@@ -413,6 +414,18 @@ namespace GitUI.Editor.RichTextBoxExtension
                 throw new ArgumentOutOfRangeException("position");
  
             rtb.SelectionStart = position;
+            rtb.SelectedText = text;
+            int length = rtb.SelectionStart - position;
+            rtb.Select(position, length);
+            string rtfText = rtb.SelectedRtf;
+            int idx = rtfText.LastIndexOf('}');
+            if (idx != -1)
+            {
+                string head = rtfText.Substring(0, idx);
+                string tail = rtfText.Substring(idx);
+                rtb.SelectedRtf = head + @"\v #" + hyperlink + @"\v0" + tail;
+                length = rtb.SelectionStart - position;
+            }
             rtb.SelectedRtf = ("{\rtf1\ansi " + text + "\v #") + hyperlink + "\v0}";
             rtb.Select(position, text.Length + hyperlink.Length + 1);
             rtb.SetLink(true);
@@ -771,9 +784,15 @@ namespace GitUI.Editor.RichTextBoxExtension
                                             rtb.Select(hyperlinkStart, length);
                                             if (hyperlink != rtb.SelectedText)
                                             {
-                                                string text = rtb.SelectedText;
-                                                rtb.SelectedRtf = @"{\rtf1\ansi " + text + @"\v #" + hyperlink + @"\v0}";
-                                                length = rtb.TextLength - hyperlinkStart;
+                                                string rtfText = rtb.SelectedRtf;
+                                                int idx = rtfText.LastIndexOf('}');
+                                                if (idx != -1) 
+                                                {
+                                                    string head = rtfText.Substring(0, idx);
+                                                    string tail = rtfText.Substring(idx);
+                                                    rtb.SelectedRtf = head + @"\v #" + hyperlink + @"\v0" + tail;
+                                                    length = rtb.TextLength - hyperlinkStart;
+                                                }
                                             }
                                             // reposition to final
                                             rtb.Select(rtb.TextLength + 1, 0);
