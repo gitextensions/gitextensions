@@ -40,9 +40,11 @@
             this.Mergetool = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.chkAutosquash = new System.Windows.Forms.CheckBox();
-            this.chkPreserveMerges = new System.Windows.Forms.CheckBox();
+            this.OptionsPanel = new System.Windows.Forms.Panel();
             this.chkInteractive = new System.Windows.Forms.CheckBox();
+            this.chkPreserveMerges = new System.Windows.Forms.CheckBox();
+            this.chkAutosquash = new System.Windows.Forms.CheckBox();
+            this.ShowOptions = new System.Windows.Forms.LinkLabel();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.label3 = new System.Windows.Forms.Label();
             this.patchGrid1 = new GitUI.PatchGrid();
@@ -57,6 +59,7 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.OptionsPanel.SuspendLayout();
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
@@ -71,7 +74,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 3);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(261, 15);
+            this.label1.Size = new System.Drawing.Size(241, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Rebase current branch on top of another branch";
             // 
@@ -80,7 +83,7 @@
             this.Currentbranch.AutoSize = true;
             this.Currentbranch.Location = new System.Drawing.Point(4, 26);
             this.Currentbranch.Name = "Currentbranch";
-            this.Currentbranch.Size = new System.Drawing.Size(47, 15);
+            this.Currentbranch.Size = new System.Drawing.Size(44, 13);
             this.Currentbranch.TabIndex = 2;
             this.Currentbranch.Text = "Current";
             // 
@@ -101,7 +104,7 @@
             this.Branches.FormattingEnabled = true;
             this.Branches.Location = new System.Drawing.Point(88, 47);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(218, 23);
+            this.Branches.Size = new System.Drawing.Size(218, 21);
             this.Branches.TabIndex = 6;
             // 
             // label2
@@ -109,7 +112,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(3, 50);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(61, 15);
+            this.label2.Size = new System.Drawing.Size(58, 13);
             this.label2.TabIndex = 5;
             this.label2.Text = "Rebase on";
             // 
@@ -200,9 +203,8 @@
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.chkAutosquash);
-            this.splitContainer2.Panel1.Controls.Add(this.chkPreserveMerges);
-            this.splitContainer2.Panel1.Controls.Add(this.chkInteractive);
+            this.splitContainer2.Panel1.Controls.Add(this.OptionsPanel);
+            this.splitContainer2.Panel1.Controls.Add(this.ShowOptions);
             this.splitContainer2.Panel1.Controls.Add(this.label1);
             this.splitContainer2.Panel1.Controls.Add(this.Currentbranch);
             this.splitContainer2.Panel1.Controls.Add(this.label2);
@@ -214,41 +216,64 @@
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
             this.splitContainer2.Panel2MinSize = 0;
             this.splitContainer2.Size = new System.Drawing.Size(544, 368);
-            this.splitContainer2.SplitterDistance = 99;
+            this.splitContainer2.SplitterDistance = 100;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // OptionsPanel
+            // 
+            this.OptionsPanel.Controls.Add(this.chkInteractive);
+            this.OptionsPanel.Controls.Add(this.chkPreserveMerges);
+            this.OptionsPanel.Controls.Add(this.chkAutosquash);
+            this.OptionsPanel.Location = new System.Drawing.Point(7, 72);
+            this.OptionsPanel.Name = "OptionsPanel";
+            this.OptionsPanel.Size = new System.Drawing.Size(519, 26);
+            this.OptionsPanel.TabIndex = 28;
+            this.OptionsPanel.Visible = false;
+            // 
+            // chkInteractive
+            // 
+            this.chkInteractive.AutoSize = true;
+            this.chkInteractive.Location = new System.Drawing.Point(1, 3);
+            this.chkInteractive.Name = "chkInteractive";
+            this.chkInteractive.Size = new System.Drawing.Size(118, 17);
+            this.chkInteractive.TabIndex = 7;
+            this.chkInteractive.Text = "Interactive Rebase";
+            this.chkInteractive.UseVisualStyleBackColor = true;
+            this.chkInteractive.Click += new System.EventHandler(this.InteractiveRebaseClick);
+            // 
+            // chkPreserveMerges
+            // 
+            this.chkPreserveMerges.AutoSize = true;
+            this.chkPreserveMerges.Location = new System.Drawing.Point(162, 3);
+            this.chkPreserveMerges.Name = "chkPreserveMerges";
+            this.chkPreserveMerges.Size = new System.Drawing.Size(107, 17);
+            this.chkPreserveMerges.TabIndex = 7;
+            this.chkPreserveMerges.Text = "Preserve Merges";
+            this.chkPreserveMerges.UseVisualStyleBackColor = true;
+            this.chkPreserveMerges.CheckedChanged += new System.EventHandler(this.chkPreserveMerges_CheckedChanged);
+            this.chkPreserveMerges.Click += new System.EventHandler(this.InteractiveRebaseClick);
             // 
             // chkAutosquash
             // 
             this.chkAutosquash.AutoSize = true;
             this.chkAutosquash.Enabled = false;
-            this.chkAutosquash.Location = new System.Drawing.Point(297, 76);
+            this.chkAutosquash.Location = new System.Drawing.Point(330, 3);
             this.chkAutosquash.Name = "chkAutosquash";
-            this.chkAutosquash.Size = new System.Drawing.Size(89, 19);
+            this.chkAutosquash.Size = new System.Drawing.Size(83, 17);
             this.chkAutosquash.TabIndex = 7;
             this.chkAutosquash.Text = "Autosquash";
             this.chkAutosquash.UseVisualStyleBackColor = true;
             // 
-            // chkPreserveMerges
+            // ShowOptions
             // 
-            this.chkPreserveMerges.AutoSize = true;
-            this.chkPreserveMerges.Location = new System.Drawing.Point(155, 76);
-            this.chkPreserveMerges.Name = "chkPreserveMerges";
-            this.chkPreserveMerges.Size = new System.Drawing.Size(112, 19);
-            this.chkPreserveMerges.TabIndex = 7;
-            this.chkPreserveMerges.Text = "Preserve Merges";
-            this.chkPreserveMerges.UseVisualStyleBackColor = true;
-            this.chkPreserveMerges.Click += new System.EventHandler(this.InteractiveRebaseClick);
-            // 
-            // chkInteractive
-            // 
-            this.chkInteractive.AutoSize = true;
-            this.chkInteractive.Location = new System.Drawing.Point(7, 76);
-            this.chkInteractive.Name = "chkInteractive";
-            this.chkInteractive.Size = new System.Drawing.Size(121, 19);
-            this.chkInteractive.TabIndex = 7;
-            this.chkInteractive.Text = "Interactive Rebase";
-            this.chkInteractive.UseVisualStyleBackColor = true;
-            this.chkInteractive.Click += new System.EventHandler(this.InteractiveRebaseClick);
+            this.ShowOptions.AutoSize = true;
+            this.ShowOptions.Location = new System.Drawing.Point(312, 50);
+            this.ShowOptions.Name = "ShowOptions";
+            this.ShowOptions.Size = new System.Drawing.Size(71, 13);
+            this.ShowOptions.TabIndex = 27;
+            this.ShowOptions.TabStop = true;
+            this.ShowOptions.Text = "Show options";
+            this.ShowOptions.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ShowOptions_LinkClicked);
             // 
             // splitContainer3
             // 
@@ -267,7 +292,7 @@
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.patchGrid1);
-            this.splitContainer3.Size = new System.Drawing.Size(544, 265);
+            this.splitContainer3.Size = new System.Drawing.Size(544, 264);
             this.splitContainer3.SplitterDistance = 16;
             this.splitContainer3.TabIndex = 0;
             // 
@@ -276,7 +301,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(3, 1);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(120, 15);
+            this.label3.Size = new System.Drawing.Size(107, 13);
             this.label3.TabIndex = 0;
             this.label3.Text = "Commits to re-apply:";
             // 
@@ -286,7 +311,7 @@
             this.patchGrid1.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.patchGrid1.Location = new System.Drawing.Point(0, 0);
             this.patchGrid1.Name = "patchGrid1";
-            this.patchGrid1.Size = new System.Drawing.Size(544, 245);
+            this.patchGrid1.Size = new System.Drawing.Size(544, 244);
             this.patchGrid1.TabIndex = 16;
             // 
             // SolveMergeconflicts
@@ -352,7 +377,7 @@
             // FormRebase
             // 
             this.AcceptButton = this.Ok;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(803, 368);
@@ -360,8 +385,8 @@
             this.Name = "FormRebase";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Rebase";
-            this.Load += new System.EventHandler(this.FormRebaseLoad);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormRebaseFormClosing);
+            this.Load += new System.EventHandler(this.FormRebaseLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
@@ -369,6 +394,8 @@
             this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
+            this.OptionsPanel.ResumeLayout(false);
+            this.OptionsPanel.PerformLayout();
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel1.PerformLayout();
             this.splitContainer3.Panel2.ResumeLayout(false);
@@ -406,5 +433,7 @@
         private System.Windows.Forms.CheckBox chkInteractive;
         private System.Windows.Forms.CheckBox chkAutosquash;
         private System.Windows.Forms.CheckBox chkPreserveMerges;
+        private System.Windows.Forms.Panel OptionsPanel;
+        private System.Windows.Forms.LinkLabel ShowOptions;
     }
 }
