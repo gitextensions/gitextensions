@@ -1682,11 +1682,21 @@ namespace GitUI
                 return;
 
             string output;
-            if (revisions.Count == 1)   // single item selected
-                output = Settings.Module.OpenWithDifftool(selectedItem, revisions[0].Guid,
-                                                                  revisions[0].ParentGuids[0]);
-            else                        // multiple items selected
-                output = Settings.Module.OpenWithDifftool(selectedItem, revisions[0].Guid,
+            if (sender == diffBaseLocalToolStripMenuItem)
+            {
+                if (revisions[0].ParentGuids.Length == 0)
+                    return;
+                output = Settings.Module.OpenWithDifftool(selectedItem, revisions[0].ParentGuids[0]);
+
+            }
+            else if (sender == difftoolRemoteLocalToolStripMenuItem)
+                output = Settings.Module.OpenWithDifftool(selectedItem, revisions[0].Guid);
+            else
+                if (revisions.Count == 1)   // single item selected
+                    output = Settings.Module.OpenWithDifftool(selectedItem, revisions[0].Guid,
+                                                                      revisions[0].ParentGuids[0]);
+                else                        // multiple items selected
+                    output = Settings.Module.OpenWithDifftool(selectedItem, revisions[0].Guid,
                                                                   revisions[revisions.Count - 1].Guid);
 
             if (!string.IsNullOrEmpty(output))
