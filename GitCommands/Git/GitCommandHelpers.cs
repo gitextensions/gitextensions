@@ -945,23 +945,5 @@ namespace GitCommands
                 return left + sep + right;
 
         }
-
-
-        public static bool IsNullOrEmpty(this string s)
-        {
-            return string.IsNullOrEmpty(s);
-        }
-
-
-        public static string Join(this string left, string sep, string right)
-        {
-            if (left.IsNullOrEmpty())
-                return right;
-            else if (right.IsNullOrEmpty())
-                return left;
-            else
-                return left + sep + right;
-
-        }
     }
 }
