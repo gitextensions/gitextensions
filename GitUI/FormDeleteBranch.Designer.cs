@@ -30,34 +30,24 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormDeleteBranch));
             this.Ok = new System.Windows.Forms.Button();
-            this.Branches = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.ForceDelete = new System.Windows.Forms.CheckBox();
+            this.Branches = new System.Windows.Forms.CheckedListBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // Ok
             // 
             this.Ok.ForeColor = System.Drawing.Color.Black;
-            this.Ok.Location = new System.Drawing.Point(407, 91);
+            this.Ok.Location = new System.Drawing.Point(283, 324);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(75, 25);
-            this.Ok.TabIndex = 5;
+            this.Ok.TabIndex = 3;
             this.Ok.Text = "Delete";
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.OkClick);
-            // 
-            // Branches
-            // 
-            this.Branches.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.Branches.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.Branches.FormattingEnabled = true;
-            this.Branches.Location = new System.Drawing.Point(146, 93);
-            this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(255, 23);
-            this.Branches.TabIndex = 4;
             // 
             // label1
             // 
@@ -65,9 +55,9 @@
             this.label1.ForeColor = System.Drawing.Color.Black;
             this.label1.Location = new System.Drawing.Point(7, 96);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(78, 15);
+            this.label1.Size = new System.Drawing.Size(83, 13);
             this.label1.TabIndex = 3;
-            this.label1.Text = "Select branch";
+            this.label1.Text = "Select branches";
             // 
             // label2
             // 
@@ -92,24 +82,33 @@
             // ForceDelete
             // 
             this.ForceDelete.AutoSize = true;
-            this.ForceDelete.Location = new System.Drawing.Point(146, 120);
+            this.ForceDelete.Location = new System.Drawing.Point(146, 328);
             this.ForceDelete.Name = "ForceDelete";
             this.ForceDelete.Size = new System.Drawing.Size(90, 19);
-            this.ForceDelete.TabIndex = 8;
+            this.ForceDelete.TabIndex = 2;
             this.ForceDelete.Text = "Force delete";
             this.ForceDelete.UseVisualStyleBackColor = true;
+            // 
+            // Branches
+            // 
+            this.Branches.CheckOnClick = true;
+            this.Branches.FormattingEnabled = true;
+            this.Branches.Location = new System.Drawing.Point(146, 90);
+            this.Branches.Name = "Branches";
+            this.Branches.Size = new System.Drawing.Size(212, 228);
+            this.Branches.TabIndex = 1;
             // 
             // FormDeleteBranch
             // 
             this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(494, 153);
+            this.ClientSize = new System.Drawing.Size(457, 353);
+            this.Controls.Add(this.Branches);
             this.Controls.Add(this.ForceDelete);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.Ok);
-            this.Controls.Add(this.Branches);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -127,10 +126,10 @@
         #endregion
 
         private System.Windows.Forms.Button Ok;
-        private System.Windows.Forms.ComboBox Branches;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.CheckBox ForceDelete;
+        private System.Windows.Forms.CheckedListBox Branches;
     }
 }
