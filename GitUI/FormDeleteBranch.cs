@@ -53,7 +53,7 @@ namespace GitUI
                     foreach (GitHead head in Branches.CheckedItems)
                         cmd.AddBranch(head.Name, head.IsRemote);
 
-                    GitUICommands.Instance.StartCommandLineProcessDialog(cmd);    
+                    GitUICommands.Instance.StartCommandLineProcessDialog(cmd, this);    
 
                 }
             }
