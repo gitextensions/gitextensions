@@ -123,6 +123,7 @@ namespace GitUI
             this.openDiffMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
             this.copyFolderNameMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetSubmoduleChanges = new System.Windows.Forms.ToolStripMenuItem();
             this.UnstagedFileContext.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -869,6 +870,7 @@ namespace GitUI
             // 
             this.UnstagedSubmoduleContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openSubmoduleMenuItem,
+            this.resetSubmoduleChanges,
             this.updateSubmoduleMenuItem,
             this.submoduleSummaryMenuItem,
             this.toolStripSeparator13,
@@ -879,7 +881,7 @@ namespace GitUI
             this.toolStripSeparator16,
             this.copyFolderNameMenuItem});
             this.UnstagedSubmoduleContext.Name = "UnstagedFileContext";
-            this.UnstagedSubmoduleContext.Size = new System.Drawing.Size(252, 190);
+            this.UnstagedSubmoduleContext.Size = new System.Drawing.Size(252, 236);
             // 
             // openSubmoduleMenuItem
             // 
@@ -948,6 +950,13 @@ namespace GitUI
             this.copyFolderNameMenuItem.Size = new System.Drawing.Size(251, 24);
             this.copyFolderNameMenuItem.Text = "Copy folder name";
             this.copyFolderNameMenuItem.Click += new System.EventHandler(this.copyFolderNameMenuItem_Click);
+            // 
+            // resetSubmoduleChanges
+            // 
+            this.resetSubmoduleChanges.Name = "resetSubmoduleChanges";
+            this.resetSubmoduleChanges.Size = new System.Drawing.Size(251, 24);
+            this.resetSubmoduleChanges.Text = "Reset submodule changes";
+            this.resetSubmoduleChanges.Click += new System.EventHandler(this.resetSubmoduleChanges_Click);
             // 
             // FormCommit
             // 
@@ -1083,5 +1092,6 @@ namespace GitUI
         private ToolStripSeparator toolStripSeparator16;
         private ToolStripMenuItem copyFolderNameMenuItem;
         private ToolStripMenuItem submoduleSummaryMenuItem;
+        private ToolStripMenuItem resetSubmoduleChanges;
     }
 }
