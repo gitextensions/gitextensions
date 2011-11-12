@@ -366,7 +366,9 @@ namespace GitUI
                 Settings.AuthorImageSize = (int)_NO_TRANSLATE_authorImageSize.Value;
                 GravatarService.ClearImageCache();
             }
+
             Settings.Translation = Language.Text;
+            Strings.Reinit();
 
             Settings.ShowGitStatusInBrowseToolbar = ShowGitStatusInToolbar.Checked;
 

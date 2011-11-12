@@ -31,22 +31,10 @@ namespace GitUI
 
     public partial class RevisionGrid : GitExtensionsControl
     {
-        private readonly TranslationString _authorCaption = new TranslationString("Author");
-        private readonly TranslationString _authorDateCaption = new TranslationString("Author date");
-        private readonly TranslationString _commitDateCaption = new TranslationString("Commit date");
         private readonly IndexWatcher _indexWatcher = new IndexWatcher();
         private readonly TranslationString _messageCaption = new TranslationString("Message");
         private readonly TranslationString _currentWorkingDirChanges = new TranslationString("Current uncommitted changes");
         private readonly TranslationString _currentIndex = new TranslationString("Commit index");
-        private readonly TranslationString _secondsAgo = new TranslationString("{0} seconds ago");
-        private readonly TranslationString _minutesAgo = new TranslationString("{0} minutes ago");
-        private readonly TranslationString _hourAgo = new TranslationString("{0} hour ago");
-        private readonly TranslationString _hoursAgo = new TranslationString("{0} hours ago");
-        private readonly TranslationString _dayAgo = new TranslationString("{0} day ago");
-        private readonly TranslationString _daysAgo = new TranslationString("{0} days ago");
-        private readonly TranslationString _monthAgo = new TranslationString("{0} month ago");
-        private readonly TranslationString _monthsAgo = new TranslationString("{0} months ago");
-        private readonly TranslationString _yearsAgo = new TranslationString("{0} years ago");
 
         private const int NODE_DIMENSION = 8;
         private const int LANE_WIDTH = 13;
@@ -890,7 +878,7 @@ namespace GitUI
 
         private string GetDateHeaderText()
         {
-            return Settings.ShowAuthorDate ? _authorDateCaption.Text : _commitDateCaption.Text;
+            return Settings.ShowAuthorDate ? Strings.GetAuthorDateText() : Strings.GetCommitDateText();
         }
 
         private void LoadRevisions()
@@ -903,7 +891,7 @@ namespace GitUI
             Revisions.SuspendLayout();
 
             Revisions.Columns[1].HeaderText = _messageCaption.Text;
-            Revisions.Columns[2].HeaderText = _authorCaption.Text;
+            Revisions.Columns[2].HeaderText = Strings.GetAuthorText();
             Revisions.Columns[3].HeaderText = GetDateHeaderText();
 
             Revisions.SelectionChanged -= RevisionsSelectionChanged;
@@ -1749,30 +1737,43 @@ namespace GitUI
             var span = DateTime.Now - time;
 
             if (span.Minutes < 0)
-                return string.Format(_secondsAgo.Text, span.Seconds);
+            {
+                if (span.Seconds == 1)
+                    return string.Format(Strings.Get1SecondAgoText(), span.Seconds);
+                else
+                    return string.Format(Strings.GetNSecondsAgoText(), span.Seconds);
+            }
 
             if (span.TotalHours < 1)
-                return string.Format(_minutesAgo.Text, span.Minutes + Math.Round(span.Seconds / 60.0, 0));
+            {
+                if (span.Minutes == 1)
+                    return string.Format(Strings.Get1MinuteAgoText(), span.Seconds);
+                else
+                    return string.Format(Strings.GetNMinutesAgoText(), span.Minutes + Math.Round(span.Seconds / 60.0, 0));
+            }
 
             if (span.TotalHours + Math.Round(span.Minutes / 60.0, 0) < 2)
-                return string.Format(_hourAgo.Text, (int)span.TotalHours + Math.Round(span.Minutes / 60.0, 0));
+                return string.Format(Strings.Get1HourAgoText(), (int)span.TotalHours + Math.Round(span.Minutes / 60.0, 0));
 
             if (span.TotalHours < 24)
-                return string.Format(_hoursAgo.Text, (int)span.TotalHours + Math.Round(span.Minutes / 60.0, 0));
+                return string.Format(Strings.GetNHoursAgoText(), (int)span.TotalHours + Math.Round(span.Minutes / 60.0, 0));
 
             if (span.TotalDays + Math.Round(span.Hours / 24.0, 0) < 2)
-                return string.Format(_dayAgo.Text, (int)span.TotalDays + Math.Round(span.Hours / 24.0, 0));
+                return string.Format(Strings.Get1DayAgoText(), (int)span.TotalDays + Math.Round(span.Hours / 24.0, 0));
 
             if (span.TotalDays < 30)
-                return string.Format(_daysAgo.Text, (int)span.TotalDays + Math.Round(span.Hours / 24.0, 0));
+                return string.Format(Strings.GetNDaysAgoText(), (int)span.TotalDays + Math.Round(span.Hours / 24.0, 0));
 
             if (span.TotalDays < 45)
-                return string.Format(_monthAgo.Text, "1");
+                return string.Format(Strings.Get1MonthAgoText(), "1");
 
             if (span.TotalDays < 365)
-                return string.Format(_monthsAgo.Text, (int)Math.Round(span.TotalDays / 30, 0));
+                return string.Format(Strings.GetNMonthsAgoText(), (int)Math.Round(span.TotalDays / 30, 0));
 
-            return string.Format(_yearsAgo.Text, string.Format("{0:#.#} ", Math.Round(span.TotalDays / 365)));
+            if (span.TotalDays == 365)
+                return string.Format(Strings.Get1YearAgoText(), string.Format("{0:#.#} ", Math.Round(span.TotalDays / 365)));
+            else
+                return string.Format(Strings.GetNYearsAgoText(), string.Format("{0:#.#} ", Math.Round(span.TotalDays / 365)));
         }
 
         private void UpdateGraph(GitRevision rev)
