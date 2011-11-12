@@ -1162,7 +1162,7 @@ namespace GitCommands
         {
             Directory.SetCurrentDirectory(_workingdir);
 
-            return RunCmd(Settings.GitCommand, GitCommandHelpers.RebaseCmd(branch, false, false));
+            return RunCmd(Settings.GitCommand, GitCommandHelpers.RebaseCmd(branch, false, false, false));
         }
 
         public string AbortRebase()
@@ -1906,23 +1906,24 @@ namespace GitCommands
 
         public string OpenWithDifftool(string filename)
         {
-            var output = "";
-            if (GitCommandHelpers.VersionInUse.GuiDiffToolExist)
-                RunCmdAsync(Settings.GitCommand, "difftool --gui --no-prompt \"" + filename + "\"");
-            else
-                output = RunCmd(Settings.GitCommand, "difftool --no-prompt \"" + filename + "\"");
-            return output;
+            return OpenWithDifftool(filename, null, null);
+        }
+
+        public string OpenWithDifftool(string filename, string revision1)
+        {
+            return OpenWithDifftool(filename, revision1, null);
         }
 
         public string OpenWithDifftool(string filename, string revision1, string revision2)
         {
             var output = "";
+            string args = revision2.Join(" ", revision1).Join(" ", "-- \"" + filename + "\"");
             if (GitCommandHelpers.VersionInUse.GuiDiffToolExist)
                 RunCmdAsync(Settings.GitCommand,
-                            "difftool --gui --no-prompt " + revision2 + " " + revision1 + " -- \"" + filename + "\"");
+                            "difftool --gui --no-prompt " + args);
             else
                 output = RunCmd(Settings.GitCommand,
-                                "difftool --no-prompt " + revision2 + " " + revision1 + " -- \"" + filename + "\"");
+                                "difftool --no-prompt " + args);
             return output;
         }
 
