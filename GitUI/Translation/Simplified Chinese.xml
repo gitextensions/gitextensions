@@ -2924,22 +2924,22 @@ stash</Value>
     </TranslationCategory>
     <TranslationCategory Name="Strings">
       <translationItems>
-        <TranslationItem Name="dateText" Property="Text">
+        <TranslationItem Name="_dateText" Property="Text">
           <Value>日期</Value>
         </TranslationItem>
-        <TranslationItem Name="authorText" Property="Text">
+        <TranslationItem Name="_authorText" Property="Text">
           <Value>作者</Value>
         </TranslationItem>
-        <TranslationItem Name="authorDateText" Property="Text">
+        <TranslationItem Name="_authorDateText" Property="Text">
           <Value>作者日期</Value>
         </TranslationItem>
-        <TranslationItem Name="committerText" Property="Text">
+        <TranslationItem Name="_committerText" Property="Text">
           <Value>提交者</Value>
         </TranslationItem>
-        <TranslationItem Name="committerDateText" Property="Text">
+        <TranslationItem Name="_commitDateText" Property="Text">
           <Value>提交日期</Value>
         </TranslationItem>
-        <TranslationItem Name="commitHashText" Property="Text">
+        <TranslationItem Name="_commitHashText" Property="Text">
           <Value>提交哈希</Value>
         </TranslationItem>
       </translationItems>

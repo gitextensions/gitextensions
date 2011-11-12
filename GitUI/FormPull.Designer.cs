@@ -35,7 +35,7 @@
             this.PullFromUrl = new System.Windows.Forms.RadioButton();
             this.PullFromRemote = new System.Windows.Forms.RadioButton();
             this.AddRemote = new System.Windows.Forms.Button();
-            this.Remotes = new System.Windows.Forms.ComboBox();
+            this._NO_TRANSLATE_Remotes = new System.Windows.Forms.ComboBox();
             this.BrowseSource = new System.Windows.Forms.Button();
             this.PullSource = new System.Windows.Forms.ComboBox();
             this.Pull = new System.Windows.Forms.Button();
@@ -104,7 +104,7 @@
             this.groupBox2.Controls.Add(this.PullFromUrl);
             this.groupBox2.Controls.Add(this.PullFromRemote);
             this.groupBox2.Controls.Add(this.AddRemote);
-            this.groupBox2.Controls.Add(this.Remotes);
+            this.groupBox2.Controls.Add(this._NO_TRANSLATE_Remotes);
             this.groupBox2.Controls.Add(this.BrowseSource);
             this.groupBox2.Controls.Add(this.PullSource);
             this.groupBox2.Location = new System.Drawing.Point(3, 3);
@@ -150,17 +150,17 @@
             this.AddRemote.UseVisualStyleBackColor = true;
             this.AddRemote.Click += new System.EventHandler(this.AddRemoteClick);
             // 
-            // Remotes
+            // _NO_TRANSLATE_Remotes
             // 
-            this.Remotes.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.Remotes.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.Remotes.FormattingEnabled = true;
-            this.Remotes.Location = new System.Drawing.Point(148, 16);
-            this.Remotes.Name = "Remotes";
-            this.Remotes.Size = new System.Drawing.Size(244, 28);
-            this.Remotes.TabIndex = 1;
-            this.Remotes.TextChanged += new System.EventHandler(this.Remotes_TextChanged);
-            this.Remotes.Validating += new System.ComponentModel.CancelEventHandler(this.RemotesValidating);
+            this._NO_TRANSLATE_Remotes.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this._NO_TRANSLATE_Remotes.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this._NO_TRANSLATE_Remotes.FormattingEnabled = true;
+            this._NO_TRANSLATE_Remotes.Location = new System.Drawing.Point(148, 16);
+            this._NO_TRANSLATE_Remotes.Name = "_NO_TRANSLATE_Remotes";
+            this._NO_TRANSLATE_Remotes.Size = new System.Drawing.Size(244, 28);
+            this._NO_TRANSLATE_Remotes.TabIndex = 1;
+            this._NO_TRANSLATE_Remotes.TextChanged += new System.EventHandler(this.Remotes_TextChanged);
+            this._NO_TRANSLATE_Remotes.Validating += new System.ComponentModel.CancelEventHandler(this.RemotesValidating);
             // 
             // BrowseSource
             // 
@@ -365,7 +365,7 @@
         private System.Windows.Forms.RadioButton Fetch;
         private System.Windows.Forms.ComboBox PullSource;
         private System.Windows.Forms.Button Stash;
-        private System.Windows.Forms.ComboBox Remotes;
+        private System.Windows.Forms.ComboBox _NO_TRANSLATE_Remotes;
         private System.Windows.Forms.Button AddRemote;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.RadioButton PullFromUrl;
