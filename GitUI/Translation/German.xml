@@ -3193,33 +3193,6 @@ Wenn dies ein zentralisiertes Repository ist (ein sogenanntes Bare Repository):
         <TranslationItem Name="_currentIndex" Property="Text">
           <Value>Commit Index</Value>
         </TranslationItem>
-        <TranslationItem Name="_secondsAgo" Property="Text">
-          <Value>vor {0} Sekunde(n)</Value>
-        </TranslationItem>
-        <TranslationItem Name="_minutesAgo" Property="Text">
-          <Value>vor {0} Minute(n)</Value>
-        </TranslationItem>
-        <TranslationItem Name="_hourAgo" Property="Text">
-          <Value>vor {0} Stunde</Value>
-        </TranslationItem>
-        <TranslationItem Name="_hoursAgo" Property="Text">
-          <Value>vor {0} Stunden</Value>
-        </TranslationItem>
-        <TranslationItem Name="_dayAgo" Property="Text">
-          <Value>vor {0} Tag</Value>
-        </TranslationItem>
-        <TranslationItem Name="_daysAgo" Property="Text">
-          <Value>vor {0} Tagen</Value>
-        </TranslationItem>
-        <TranslationItem Name="_monthAgo" Property="Text">
-          <Value>vor {0} Monat</Value>
-        </TranslationItem>
-        <TranslationItem Name="_monthsAgo" Property="Text">
-          <Value>vor {0} Monaten</Value>
-        </TranslationItem>
-        <TranslationItem Name="_yearsAgo" Property="Text">
-          <Value>vor {0} Jahr(en)</Value>
-        </TranslationItem>
         <TranslationItem Name="_revisionFilter" Property="Text">
           <Value>Filter</Value>
         </TranslationItem>
@@ -4381,23 +4354,59 @@ Möchten Sie trotzdem fortfahren?</Value>
     </TranslationCategory>
     <TranslationCategory Name="Strings">
       <translationItems>
-        <TranslationItem Name="dateText" Property="Text">
+        <TranslationItem Name="_dateText" Property="Text">
           <Value>Datum</Value>
         </TranslationItem>
-        <TranslationItem Name="authorText" Property="Text">
+        <TranslationItem Name="_authorText" Property="Text">
           <Value>Autor</Value>
         </TranslationItem>
-        <TranslationItem Name="authorDateText" Property="Text">
+        <TranslationItem Name="_authorDateText" Property="Text">
           <Value>Autor Datum</Value>
         </TranslationItem>
-        <TranslationItem Name="committerText" Property="Text">
+        <TranslationItem Name="_committerText" Property="Text">
           <Value>Committer</Value>
         </TranslationItem>
-        <TranslationItem Name="committerDateText" Property="Text">
+        <TranslationItem Name="_commitDateText" Property="Text">
           <Value>Commit Datum</Value>
         </TranslationItem>
-        <TranslationItem Name="commitHashText" Property="Text">
+        <TranslationItem Name="_commitHashText" Property="Text">
           <Value>Commit Hash</Value>
+        </TranslationItem>
+        <TranslationItem Name="_secondsAgo" Property="Text">
+          <Value>vor {0} Sekunde(n)</Value>
+        </TranslationItem>
+        <TranslationItem Name="_secondAgo" Property="Text">
+          <Value>vor {0} Sekunde(n)</Value>
+        </TranslationItem>
+        <TranslationItem Name="_minuteAgo" Property="Text">
+          <Value>vor {0} Minute(n)</Value>
+        </TranslationItem>
+        <TranslationItem Name="_minutesAgo" Property="Text">
+          <Value>vor {0} Minute(n)</Value>
+        </TranslationItem>
+        <TranslationItem Name="_hourAgo" Property="Text">
+          <Value>vor {0} Stunde</Value>
+        </TranslationItem>
+        <TranslationItem Name="_hoursAgo" Property="Text">
+          <Value>vor {0} Stunden</Value>
+        </TranslationItem>
+        <TranslationItem Name="_dayAgo" Property="Text">
+          <Value>vor {0} Tag</Value>
+        </TranslationItem>
+        <TranslationItem Name="_daysAgo" Property="Text">
+          <Value>vor {0} Tagen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_monthAgo" Property="Text">
+          <Value>vor {0} Monat</Value>
+        </TranslationItem>
+        <TranslationItem Name="_monthsAgo" Property="Text">
+          <Value>vor {0} Monaten</Value>
+        </TranslationItem>
+        <TranslationItem Name="_yearAgo" Property="Text">
+          <Value>vor {0} Jahr(en)</Value>
+        </TranslationItem>
+        <TranslationItem Name="_yearsAgo" Property="Text">
+          <Value>vor {0} Jahr(en)</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
