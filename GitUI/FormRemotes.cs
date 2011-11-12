@@ -231,9 +231,19 @@ namespace GitUI
 
         private void TestConnectionClick(object sender, EventArgs e)
         {
+            System.Uri uri = new System.Uri(Url.Text);
+            string sshURL = "";
+            if (uri.Scheme == "ssh")
+            {
+                if (!string.IsNullOrEmpty(uri.UserInfo))
+                    sshURL = uri.UserInfo + "@";
+                sshURL += uri.Host + ":" + uri.LocalPath.Substring(1);
+            }
+            else
+                sshURL = Url.Text;
             Settings.Module.RunRealCmdDetached(
                 "cmd.exe",
-                string.Format("/k \"\"{0}\" -T \"{1}\"\"", Settings.Plink, Url.Text));
+                string.Format("/k \"\"{0}\" -T \"{1}\"\"", Settings.Plink, sshURL));
         }
 
         private void PruneClick(object sender, EventArgs e)
