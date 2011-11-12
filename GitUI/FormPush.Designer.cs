@@ -32,9 +32,21 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.PullFromUrl = new System.Windows.Forms.RadioButton();
             this.PullFromRemote = new System.Windows.Forms.RadioButton();
+            this.AutoPullOnRejected = new System.Windows.Forms.CheckBox();
             this.Push = new System.Windows.Forms.Button();
             this.TabControlTagBranch = new System.Windows.Forms.TabControl();
             this.BranchTab = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.ShowOptions = new System.Windows.Forms.LinkLabel();
+            this.PushOptionsPanel = new System.Windows.Forms.Panel();
+            this.PushAllBranches = new System.Windows.Forms.CheckBox();
+            this.RecursiveSubmodulesCheck = new System.Windows.Forms.CheckBox();
+            this.ForcePushBranches = new System.Windows.Forms.CheckBox();
+            this._createPullRequestCB = new System.Windows.Forms.CheckBox();
+            this.labelTo = new System.Windows.Forms.Label();
+            this.RemoteBranch = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_Branch = new System.Windows.Forms.ComboBox();
             this.TagTab = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.TagOptionsPanel = new System.Windows.Forms.Panel();
@@ -55,24 +67,14 @@
             this.LoadSSHKey = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.AddRemote = new System.Windows.Forms.Button();
-            this.Remotes = new System.Windows.Forms.ComboBox();
+            this._NO_TRANSLATE_Remotes = new System.Windows.Forms.ComboBox();
             this.BrowseSource = new System.Windows.Forms.Button();
             this.PushDestination = new System.Windows.Forms.ComboBox();
             this.Pull = new System.Windows.Forms.Button();
-            this.Branch = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.RemoteBranch = new System.Windows.Forms.ComboBox();
-            this.labelTo = new System.Windows.Forms.Label();
-            this.PushOptionsPanel = new System.Windows.Forms.Panel();
-            this._createPullRequestCB = new System.Windows.Forms.CheckBox();
-            this.AutoPullOnRejected = new System.Windows.Forms.CheckBox();
-            this.ForcePushBranches = new System.Windows.Forms.CheckBox();
-            this.RecursiveSubmodulesCheck = new System.Windows.Forms.CheckBox();
-            this.PushAllBranches = new System.Windows.Forms.CheckBox();
-            this.ShowOptions = new System.Windows.Forms.LinkLabel();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.TabControlTagBranch.SuspendLayout();
             this.BranchTab.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.PushOptionsPanel.SuspendLayout();
             this.TagTab.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.TagOptionsPanel.SuspendLayout();
@@ -80,8 +82,6 @@
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.BranchGrid)).BeginInit();
             this.groupBox2.SuspendLayout();
-            this.PushOptionsPanel.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // PullFromUrl
@@ -109,6 +109,17 @@
             this.toolTip1.SetToolTip(this.PullFromRemote, "Remote repository to push to");
             this.PullFromRemote.UseVisualStyleBackColor = true;
             this.PullFromRemote.CheckedChanged += new System.EventHandler(this.PullFromRemoteCheckedChanged);
+            // 
+            // AutoPullOnRejected
+            // 
+            this.AutoPullOnRejected.AutoSize = true;
+            this.AutoPullOnRejected.Location = new System.Drawing.Point(235, 28);
+            this.AutoPullOnRejected.Name = "AutoPullOnRejected";
+            this.AutoPullOnRejected.Size = new System.Drawing.Size(126, 17);
+            this.AutoPullOnRejected.TabIndex = 23;
+            this.AutoPullOnRejected.Text = "Auto pull on rejected";
+            this.toolTip1.SetToolTip(this.AutoPullOnRejected, "Auto pull on non fast forward  rejected");
+            this.AutoPullOnRejected.UseVisualStyleBackColor = true;
             // 
             // Push
             // 
@@ -154,6 +165,134 @@
             this.BranchTab.Text = "Push branches";
             this.BranchTab.ToolTipText = "Push branches and commits to remote repository.";
             this.BranchTab.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.ShowOptions);
+            this.groupBox1.Controls.Add(this.PushOptionsPanel);
+            this.groupBox1.Controls.Add(this.labelTo);
+            this.groupBox1.Controls.Add(this.RemoteBranch);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this._NO_TRANSLATE_Branch);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox1.Location = new System.Drawing.Point(3, 3);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(610, 119);
+            this.groupBox1.TabIndex = 0;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Branch";
+            // 
+            // ShowOptions
+            // 
+            this.ShowOptions.AutoSize = true;
+            this.ShowOptions.Location = new System.Drawing.Point(124, 46);
+            this.ShowOptions.Name = "ShowOptions";
+            this.ShowOptions.Size = new System.Drawing.Size(71, 13);
+            this.ShowOptions.TabIndex = 26;
+            this.ShowOptions.TabStop = true;
+            this.ShowOptions.Text = "Show options";
+            this.ShowOptions.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ShowOptions_LinkClicked);
+            // 
+            // PushOptionsPanel
+            // 
+            this.PushOptionsPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.PushOptionsPanel.Controls.Add(this.PushAllBranches);
+            this.PushOptionsPanel.Controls.Add(this.RecursiveSubmodulesCheck);
+            this.PushOptionsPanel.Controls.Add(this.ForcePushBranches);
+            this.PushOptionsPanel.Controls.Add(this.AutoPullOnRejected);
+            this.PushOptionsPanel.Controls.Add(this._createPullRequestCB);
+            this.PushOptionsPanel.Location = new System.Drawing.Point(127, 46);
+            this.PushOptionsPanel.Name = "PushOptionsPanel";
+            this.PushOptionsPanel.Size = new System.Drawing.Size(479, 70);
+            this.PushOptionsPanel.TabIndex = 25;
+            this.PushOptionsPanel.Visible = false;
+            // 
+            // PushAllBranches
+            // 
+            this.PushAllBranches.AutoSize = true;
+            this.PushAllBranches.Location = new System.Drawing.Point(0, 5);
+            this.PushAllBranches.Name = "PushAllBranches";
+            this.PushAllBranches.Size = new System.Drawing.Size(109, 17);
+            this.PushAllBranches.TabIndex = 2;
+            this.PushAllBranches.Text = "Push &all branches";
+            this.PushAllBranches.UseVisualStyleBackColor = true;
+            this.PushAllBranches.CheckedChanged += new System.EventHandler(this.PushAllBranchesCheckedChanged);
+            // 
+            // RecursiveSubmodulesCheck
+            // 
+            this.RecursiveSubmodulesCheck.AutoSize = true;
+            this.RecursiveSubmodulesCheck.Checked = true;
+            this.RecursiveSubmodulesCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.RecursiveSubmodulesCheck.Location = new System.Drawing.Point(0, 50);
+            this.RecursiveSubmodulesCheck.Name = "RecursiveSubmodulesCheck";
+            this.RecursiveSubmodulesCheck.Size = new System.Drawing.Size(162, 17);
+            this.RecursiveSubmodulesCheck.TabIndex = 24;
+            this.RecursiveSubmodulesCheck.Text = "Recursive submodules check";
+            this.RecursiveSubmodulesCheck.UseVisualStyleBackColor = true;
+            // 
+            // ForcePushBranches
+            // 
+            this.ForcePushBranches.AutoSize = true;
+            this.ForcePushBranches.Location = new System.Drawing.Point(0, 28);
+            this.ForcePushBranches.Name = "ForcePushBranches";
+            this.ForcePushBranches.Size = new System.Drawing.Size(79, 17);
+            this.ForcePushBranches.TabIndex = 3;
+            this.ForcePushBranches.Text = "&Force Push";
+            this.ForcePushBranches.UseVisualStyleBackColor = true;
+            this.ForcePushBranches.CheckedChanged += new System.EventHandler(this.ForcePushBranchesCheckedChanged);
+            // 
+            // _createPullRequestCB
+            // 
+            this._createPullRequestCB.AutoSize = true;
+            this._createPullRequestCB.Location = new System.Drawing.Point(235, 5);
+            this._createPullRequestCB.Name = "_createPullRequestCB";
+            this._createPullRequestCB.Size = new System.Drawing.Size(171, 17);
+            this._createPullRequestCB.TabIndex = 22;
+            this._createPullRequestCB.Text = "Create pull request after push";
+            this._createPullRequestCB.UseVisualStyleBackColor = true;
+            // 
+            // labelTo
+            // 
+            this.labelTo.AutoSize = true;
+            this.labelTo.Location = new System.Drawing.Point(306, 21);
+            this.labelTo.Name = "labelTo";
+            this.labelTo.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.labelTo.Size = new System.Drawing.Size(17, 13);
+            this.labelTo.TabIndex = 21;
+            this.labelTo.Text = "to";
+            this.labelTo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // RemoteBranch
+            // 
+            this.RemoteBranch.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.RemoteBranch.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.RemoteBranch.FormattingEnabled = true;
+            this.RemoteBranch.Location = new System.Drawing.Point(348, 19);
+            this.RemoteBranch.Name = "RemoteBranch";
+            this.RemoteBranch.Size = new System.Drawing.Size(252, 21);
+            this.RemoteBranch.TabIndex = 1;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 22);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(79, 13);
+            this.label2.TabIndex = 17;
+            this.label2.Text = "Branch to push";
+            // 
+            // _NO_TRANSLATE_Branch
+            // 
+            this._NO_TRANSLATE_Branch.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this._NO_TRANSLATE_Branch.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this._NO_TRANSLATE_Branch.FormattingEnabled = true;
+            this._NO_TRANSLATE_Branch.Location = new System.Drawing.Point(127, 19);
+            this._NO_TRANSLATE_Branch.Name = "_NO_TRANSLATE_Branch";
+            this._NO_TRANSLATE_Branch.Size = new System.Drawing.Size(173, 21);
+            this._NO_TRANSLATE_Branch.TabIndex = 0;
+            this._NO_TRANSLATE_Branch.SelectedValueChanged += new System.EventHandler(this.BranchSelectedValueChanged);
             // 
             // TagTab
             // 
@@ -210,7 +349,7 @@
             this.ForcePushTags.AutoSize = true;
             this.ForcePushTags.Location = new System.Drawing.Point(0, 26);
             this.ForcePushTags.Name = "ForcePushTags";
-            this.ForcePushTags.Size = new System.Drawing.Size(79, 17);
+            this.ForcePushTags.Size = new System.Drawing.Size(80, 17);
             this.ForcePushTags.TabIndex = 22;
             this.ForcePushTags.Text = "&Force Push";
             this.ForcePushTags.UseVisualStyleBackColor = true;
@@ -355,7 +494,7 @@
             this.groupBox2.Controls.Add(this.PullFromUrl);
             this.groupBox2.Controls.Add(this.PullFromRemote);
             this.groupBox2.Controls.Add(this.AddRemote);
-            this.groupBox2.Controls.Add(this.Remotes);
+            this.groupBox2.Controls.Add(this._NO_TRANSLATE_Remotes);
             this.groupBox2.Controls.Add(this.BrowseSource);
             this.groupBox2.Controls.Add(this.PushDestination);
             this.groupBox2.Location = new System.Drawing.Point(12, 12);
@@ -376,20 +515,20 @@
             this.AddRemote.UseVisualStyleBackColor = true;
             this.AddRemote.Click += new System.EventHandler(this.AddRemoteClick);
             // 
-            // Remotes
+            // _NO_TRANSLATE_Remotes
             // 
-            this.Remotes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this._NO_TRANSLATE_Remotes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.Remotes.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.Remotes.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.Remotes.FormattingEnabled = true;
-            this.Remotes.Location = new System.Drawing.Point(128, 19);
-            this.Remotes.Name = "Remotes";
-            this.Remotes.Size = new System.Drawing.Size(380, 21);
-            this.Remotes.TabIndex = 2;
-            this.Remotes.SelectedIndexChanged += new System.EventHandler(this.RemotesUpdated);
-            this.Remotes.TextUpdate += new System.EventHandler(this.RemotesUpdated);
-            this.Remotes.Validated += new System.EventHandler(this.RemotesValidated);
+            this._NO_TRANSLATE_Remotes.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this._NO_TRANSLATE_Remotes.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this._NO_TRANSLATE_Remotes.FormattingEnabled = true;
+            this._NO_TRANSLATE_Remotes.Location = new System.Drawing.Point(128, 19);
+            this._NO_TRANSLATE_Remotes.Name = "_NO_TRANSLATE_Remotes";
+            this._NO_TRANSLATE_Remotes.Size = new System.Drawing.Size(380, 21);
+            this._NO_TRANSLATE_Remotes.TabIndex = 2;
+            this._NO_TRANSLATE_Remotes.SelectedIndexChanged += new System.EventHandler(this.RemotesUpdated);
+            this._NO_TRANSLATE_Remotes.TextUpdate += new System.EventHandler(this.RemotesUpdated);
+            this._NO_TRANSLATE_Remotes.Validated += new System.EventHandler(this.RemotesValidated);
             // 
             // BrowseSource
             // 
@@ -427,145 +566,6 @@
             this.Pull.UseVisualStyleBackColor = true;
             this.Pull.Click += new System.EventHandler(this.PullClick);
             // 
-            // Branch
-            // 
-            this.Branch.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.Branch.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.Branch.FormattingEnabled = true;
-            this.Branch.Location = new System.Drawing.Point(127, 19);
-            this.Branch.Name = "Branch";
-            this.Branch.Size = new System.Drawing.Size(173, 21);
-            this.Branch.TabIndex = 0;
-            this.Branch.SelectedValueChanged += new System.EventHandler(this.BranchSelectedValueChanged);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 22);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(79, 13);
-            this.label2.TabIndex = 17;
-            this.label2.Text = "Branch to push";
-            // 
-            // RemoteBranch
-            // 
-            this.RemoteBranch.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.RemoteBranch.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.RemoteBranch.FormattingEnabled = true;
-            this.RemoteBranch.Location = new System.Drawing.Point(348, 19);
-            this.RemoteBranch.Name = "RemoteBranch";
-            this.RemoteBranch.Size = new System.Drawing.Size(252, 21);
-            this.RemoteBranch.TabIndex = 1;
-            // 
-            // labelTo
-            // 
-            this.labelTo.AutoSize = true;
-            this.labelTo.Location = new System.Drawing.Point(306, 21);
-            this.labelTo.Name = "labelTo";
-            this.labelTo.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.labelTo.Size = new System.Drawing.Size(17, 13);
-            this.labelTo.TabIndex = 21;
-            this.labelTo.Text = "to";
-            this.labelTo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // PushOptionsPanel
-            // 
-            this.PushOptionsPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.PushOptionsPanel.Controls.Add(this.PushAllBranches);
-            this.PushOptionsPanel.Controls.Add(this.RecursiveSubmodulesCheck);
-            this.PushOptionsPanel.Controls.Add(this.ForcePushBranches);
-            this.PushOptionsPanel.Controls.Add(this.AutoPullOnRejected);
-            this.PushOptionsPanel.Controls.Add(this._createPullRequestCB);
-            this.PushOptionsPanel.Location = new System.Drawing.Point(127, 46);
-            this.PushOptionsPanel.Name = "PushOptionsPanel";
-            this.PushOptionsPanel.Size = new System.Drawing.Size(479, 70);
-            this.PushOptionsPanel.TabIndex = 25;
-            this.PushOptionsPanel.Visible = false;
-            // 
-            // _createPullRequestCB
-            // 
-            this._createPullRequestCB.AutoSize = true;
-            this._createPullRequestCB.Location = new System.Drawing.Point(235, 5);
-            this._createPullRequestCB.Name = "_createPullRequestCB";
-            this._createPullRequestCB.Size = new System.Drawing.Size(171, 17);
-            this._createPullRequestCB.TabIndex = 22;
-            this._createPullRequestCB.Text = "Create pull request after push";
-            this._createPullRequestCB.UseVisualStyleBackColor = true;
-            // 
-            // AutoPullOnRejected
-            // 
-            this.AutoPullOnRejected.AutoSize = true;
-            this.AutoPullOnRejected.Location = new System.Drawing.Point(235, 28);
-            this.AutoPullOnRejected.Name = "AutoPullOnRejected";
-            this.AutoPullOnRejected.Size = new System.Drawing.Size(126, 17);
-            this.AutoPullOnRejected.TabIndex = 23;
-            this.AutoPullOnRejected.Text = "Auto pull on rejected";
-            this.toolTip1.SetToolTip(this.AutoPullOnRejected, "Auto pull on non fast forward  rejected");
-            this.AutoPullOnRejected.UseVisualStyleBackColor = true;
-            // 
-            // ForcePushBranches
-            // 
-            this.ForcePushBranches.AutoSize = true;
-            this.ForcePushBranches.Location = new System.Drawing.Point(0, 28);
-            this.ForcePushBranches.Name = "ForcePushBranches";
-            this.ForcePushBranches.Size = new System.Drawing.Size(79, 17);
-            this.ForcePushBranches.TabIndex = 3;
-            this.ForcePushBranches.Text = "&Force Push";
-            this.ForcePushBranches.UseVisualStyleBackColor = true;
-            this.ForcePushBranches.CheckedChanged += new System.EventHandler(this.ForcePushBranchesCheckedChanged);
-            // 
-            // RecursiveSubmodulesCheck
-            // 
-            this.RecursiveSubmodulesCheck.AutoSize = true;
-            this.RecursiveSubmodulesCheck.Checked = true;
-            this.RecursiveSubmodulesCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.RecursiveSubmodulesCheck.Location = new System.Drawing.Point(0, 50);
-            this.RecursiveSubmodulesCheck.Name = "RecursiveSubmodulesCheck";
-            this.RecursiveSubmodulesCheck.Size = new System.Drawing.Size(162, 17);
-            this.RecursiveSubmodulesCheck.TabIndex = 24;
-            this.RecursiveSubmodulesCheck.Text = "Recursive submodules check";
-            this.RecursiveSubmodulesCheck.UseVisualStyleBackColor = true;
-            // 
-            // PushAllBranches
-            // 
-            this.PushAllBranches.AutoSize = true;
-            this.PushAllBranches.Location = new System.Drawing.Point(0, 5);
-            this.PushAllBranches.Name = "PushAllBranches";
-            this.PushAllBranches.Size = new System.Drawing.Size(109, 17);
-            this.PushAllBranches.TabIndex = 2;
-            this.PushAllBranches.Text = "Push &all branches";
-            this.PushAllBranches.UseVisualStyleBackColor = true;
-            this.PushAllBranches.CheckedChanged += new System.EventHandler(this.PushAllBranchesCheckedChanged);
-            // 
-            // ShowOptions
-            // 
-            this.ShowOptions.AutoSize = true;
-            this.ShowOptions.Location = new System.Drawing.Point(124, 46);
-            this.ShowOptions.Name = "ShowOptions";
-            this.ShowOptions.Size = new System.Drawing.Size(71, 13);
-            this.ShowOptions.TabIndex = 26;
-            this.ShowOptions.TabStop = true;
-            this.ShowOptions.Text = "Show options";
-            this.ShowOptions.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ShowOptions_LinkClicked);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.ShowOptions);
-            this.groupBox1.Controls.Add(this.PushOptionsPanel);
-            this.groupBox1.Controls.Add(this.labelTo);
-            this.groupBox1.Controls.Add(this.RemoteBranch);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.Branch);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(3, 3);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(610, 119);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Branch";
-            // 
             // FormPush
             // 
             this.AcceptButton = this.Push;
@@ -586,6 +586,10 @@
             this.Load += new System.EventHandler(this.FormPushLoad);
             this.TabControlTagBranch.ResumeLayout(false);
             this.BranchTab.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.PushOptionsPanel.ResumeLayout(false);
+            this.PushOptionsPanel.PerformLayout();
             this.TagTab.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
@@ -596,10 +600,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.BranchGrid)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.PushOptionsPanel.ResumeLayout(false);
-            this.PushOptionsPanel.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -615,7 +615,7 @@
         private System.Windows.Forms.RadioButton PullFromUrl;
         private System.Windows.Forms.RadioButton PullFromRemote;
         private System.Windows.Forms.Button AddRemote;
-        private System.Windows.Forms.ComboBox Remotes;
+        private System.Windows.Forms.ComboBox _NO_TRANSLATE_Remotes;
         private System.Windows.Forms.Button LoadSSHKey;
         private System.Windows.Forms.ComboBox TagComboBox;
         private System.Windows.Forms.GroupBox groupBox3;
@@ -647,6 +647,6 @@
         private System.Windows.Forms.Label labelTo;
         private System.Windows.Forms.ComboBox RemoteBranch;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox Branch;
+        private System.Windows.Forms.ComboBox _NO_TRANSLATE_Branch;
     }
 }

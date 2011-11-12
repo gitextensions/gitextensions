@@ -51,7 +51,7 @@ namespace GitUI
 
             Branches.Select();
 
-            splitContainer2.SplitterDistance = Settings.Module.InTheMiddleOfRebase() ? 0 : 74;
+            splitContainer2.SplitterDistance = Settings.Module.InTheMiddleOfRebase() ? 0 : 70;
             EnableButtons();
 
             // Honor the rebase.autosquash configuration.
@@ -173,7 +173,7 @@ namespace GitUI
                 return;
             }
 
-            var form = new FormProcess(GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked, chkAutosquash.Checked));
+            var form = new FormProcess(GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked, chkPreserveMerges.Checked, chkAutosquash.Checked));
             form.ShowDialog(this);
             if (form.OutputString.ToString().Trim() == "Current branch a is up to date.")
                 MessageBox.Show(this, _branchUpToDateText.Text, _branchUpToDateCaption.Text);
@@ -191,6 +191,18 @@ namespace GitUI
         private void SolveMergeconflictsClick(object sender, EventArgs e)
         {
             MergetoolClick(sender, e);
+        }
+
+        private void chkPreserveMerges_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ShowOptions_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ShowOptions.Visible = false;
+            OptionsPanel.Visible = true;
+            splitContainer2.SplitterDistance = 100;
         }
     }
 }
