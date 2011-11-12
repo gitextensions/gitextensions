@@ -458,7 +458,7 @@ namespace GitCommands
             return "bisect reset";
         }
 
-        public static string RebaseCmd(string branch, bool interactive, bool autosquash)
+        public static string RebaseCmd(string branch, bool interactive, bool preserveMerges, bool autosquash)
         {
             StringBuilder sb = new StringBuilder("rebase ");
 
@@ -466,6 +466,11 @@ namespace GitCommands
             {
                 sb.Append(" -i ");
                 sb.Append(autosquash ? "--autosquash " : "--no-autosquash ");
+            }
+
+            if (preserveMerges)
+            {
+               sb.Append("--preserve-merges ");
             }
 
             sb.Append('"');
@@ -921,6 +926,24 @@ namespace GitCommands
                 return String.Format(Strings.Get1YearAgoText(), 1);
             else
                 return String.Format(Strings.GetNYearsAgoText(), years);
+        }
+
+
+        public static bool IsNullOrEmpty(this string s)
+        {
+            return string.IsNullOrEmpty(s);
+        }
+
+
+        public static string Join(this string left, string sep, string right)
+        {
+            if (left.IsNullOrEmpty())
+                return right;
+            else if (right.IsNullOrEmpty())
+                return left;
+            else
+                return left + sep + right;
+
         }
     }
 }
