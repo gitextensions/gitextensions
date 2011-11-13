@@ -111,7 +111,7 @@ namespace GitUI
 
         private void MergetoolClick(object sender, EventArgs e)
         {
-            GitUICommands.Instance.StartResolveConflictsDialog();
+            GitUICommands.Instance.StartResolveConflictsDialog(this);
             EnableButtons();
         }
 
@@ -122,7 +122,7 @@ namespace GitUI
 
         private void AddFilesClick(object sender, EventArgs e)
         {
-            GitUICommands.Instance.StartAddFilesDialog();
+            GitUICommands.Instance.StartAddFilesDialog(this);
         }
 
         private void ResolvedClick(object sender, EventArgs e)

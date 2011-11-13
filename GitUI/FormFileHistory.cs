@@ -240,7 +240,7 @@ namespace GitUI
         {
             if (FileChanges.GetRevisions().Count == 0)
             {
-                GitUICommands.Instance.StartCompareRevisionsDialog();
+                GitUICommands.Instance.StartCompareRevisionsDialog(this);
                 return;
             }
 
