@@ -1312,7 +1312,7 @@ No podrá hacer Push a menos que sea un colaborador. {2}</Value>
           <Value>Comandos</Value>
         </TranslationItem>
         <TranslationItem Name="applyPatchToolStripMenuItem" Property="Text">
-          <Value>Aplique parche</Value>
+          <Value>Aplicar parche</Value>
         </TranslationItem>
         <TranslationItem Name="archiveToolStripMenuItem" Property="Text">
           <Value>Archivo</Value>
