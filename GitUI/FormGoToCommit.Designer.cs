@@ -36,9 +36,10 @@
             // 
             // goButton
             // 
+            this.goButton.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.goButton.Location = new System.Drawing.Point(437, 22);
             this.goButton.Name = "goButton";
-            this.goButton.Size = new System.Drawing.Size(75, 23);
+            this.goButton.Size = new System.Drawing.Size(75, 28);
             this.goButton.TabIndex = 1;
             this.goButton.Text = "Go";
             this.goButton.UseVisualStyleBackColor = true;
@@ -46,9 +47,9 @@
             // 
             // commitExpression
             // 
-            this.commitExpression.Location = new System.Drawing.Point(139, 23);
+            this.commitExpression.Location = new System.Drawing.Point(157, 23);
             this.commitExpression.Name = "commitExpression";
-            this.commitExpression.Size = new System.Drawing.Size(292, 21);
+            this.commitExpression.Size = new System.Drawing.Size(274, 27);
             this.commitExpression.TabIndex = 0;
             // 
             // label1
@@ -56,14 +57,14 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 27);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(101, 13);
+            this.label1.Size = new System.Drawing.Size(139, 20);
             this.label1.TabIndex = 2;
             this.label1.Text = "Commit expression:";
             // 
             // FormGoToCommit
             // 
             this.AcceptButton = this.goButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(524, 69);
             this.Controls.Add(this.label1);
