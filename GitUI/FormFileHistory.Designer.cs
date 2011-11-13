@@ -88,7 +88,6 @@ namespace GitUI
             this.FileChanges.InMemCommitterFilter = "";
             this.FileChanges.InMemFilterIgnoreCase = false;
             this.FileChanges.InMemMessageFilter = "";
-            this.FileChanges.InMemHashFilter = "";
             this.FileChanges.LastRow = 0;
             this.FileChanges.Location = new System.Drawing.Point(0, 0);
             this.FileChanges.Name = "FileChanges";
