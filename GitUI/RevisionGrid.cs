@@ -83,7 +83,6 @@ namespace GitUI
             InMemAuthorFilter = "";
             InMemCommitterFilter = "";
             InMemMessageFilter = "";
-            InMemHashFilter = "";
             AllowGraphWithFilter = false;
             _quickSearchString = "";
             quickSearchTimer.Tick += QuickSearchTimerTick;
@@ -130,7 +129,6 @@ namespace GitUI
         public string InMemAuthorFilter { get; set; }
         public string InMemCommitterFilter { get; set; }
         public string InMemMessageFilter { get; set; }
-        public string InMemHashFilter { get; set; }
 
         public string BranchFilter { get; set; }
         private Font _normalFont;
@@ -338,9 +336,7 @@ namespace GitUI
             Revisions.Rows[searchResult.Value].Selected = true;
 
             Revisions.CurrentCell = Revisions.Rows[searchResult.Value].Cells[1];
-
         }
-
 
         private int? SearchForward(int startIndex, string searchString)
         {
@@ -351,14 +347,14 @@ namespace GitUI
 
             for (index = startIndex; index < Revisions.RowCount; ++index)
             {
-                if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
+                if (GetRevision(index).MatchesSearchString(searchString))
                     return index;
             }
 
             // We didn't find it so start searching from the top
             for (index = 0; index < startIndex; ++index)
             {
-                if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
+                if (GetRevision(index).MatchesSearchString(searchString))
                     return index;
             }
 
@@ -374,14 +370,14 @@ namespace GitUI
 
             for (index = startIndex; index >= 0; --index)
             {
-                if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
+                if (GetRevision(index).MatchesSearchString(searchString))
                     return index;
             }
 
             // We didn't find it so start searching from the bottom
             for (index = Revisions.RowCount - 1; index > startIndex; --index)
             {
-                if (((GitRevision)Revisions.GetRowData(index)).MatchesSearchString(searchString))
+                if (GetRevision(index).MatchesSearchString(searchString))
                     return index;
             }
 
@@ -399,14 +395,12 @@ namespace GitUI
                                       out string revListArgs,
                                       out string inMemMessageFilter,
                                       out string inMemCommitterFilter,
-                                      out string inMemAuthorFilter,
-                                      out string inMemHashFilter)
+                                      out string inMemAuthorFilter)
         {
             revListArgs = string.Empty;
             inMemMessageFilter = string.Empty;
             inMemCommitterFilter = string.Empty;
             inMemAuthorFilter = string.Empty;
-            inMemHashFilter = string.Empty;
             if (!string.IsNullOrEmpty(filter))
             {
                 // hash filtering only possible in memory
@@ -432,8 +426,6 @@ namespace GitUI
                         revListArgs += "\"-S" + filter + "\" ";
                     else
                         throw new InvalidOperationException("Filter text not valid for \"Diff contains\" filter.");
-                if (parameters[4])
-                    inMemHashFilter = filter;
             }
         }
 
@@ -503,7 +495,7 @@ namespace GitUI
             {
                 for (var i = 0; i < Revisions.RowCount; i++)
                 {
-                    if (((GitRevision)Revisions.GetRowData(i)).Guid == revision.Guid)
+                    if (GetRevision(i).Guid == revision.Guid)
                     {
                         SetSelectedIndex(i);
                         return;
@@ -605,16 +597,13 @@ namespace GitUI
             private readonly Regex _CommitterFilterRegex;
             private readonly string _MessageFilter;
             private readonly Regex _MessageFilterRegex;
-            private readonly string _HashFilter;
-            private readonly Regex _HashFilterRegex;
 
-            public RevisionGridInMemFilter(string authorFilter, string committerFilter, string messageFilter, string hashFilter, bool ignoreCase)
+            public RevisionGridInMemFilter(string authorFilter, string committerFilter, string messageFilter, bool ignoreCase)
             {
                 _IgnoreCase = ignoreCase;
                 SetUpVars(authorFilter, ref _AuthorFilter, ref _AuthorFilterRegex);
                 SetUpVars(committerFilter, ref _CommitterFilter, ref _CommitterFilterRegex);
                 SetUpVars(messageFilter, ref _MessageFilter, ref _MessageFilterRegex);
-                SetUpVars(hashFilter, ref _HashFilter, ref _HashFilterRegex);
             }
 
             private void SetUpVars(string filterValue,
@@ -644,24 +633,20 @@ namespace GitUI
             {
                 return CheckCondition(_AuthorFilter, _AuthorFilterRegex, rev.Author) &&
                        CheckCondition(_CommitterFilter, _CommitterFilterRegex, rev.Committer) &&
-                       CheckCondition(_MessageFilter, _MessageFilterRegex, rev.Message) &&
-                       CheckCondition(_HashFilter, _HashFilterRegex, rev.Guid);
+                       CheckCondition(_MessageFilter, _MessageFilterRegex, rev.Message);
             }
 
             public static RevisionGridInMemFilter CreateIfNeeded(string authorFilter,
                                                                  string committerFilter,
                                                                  string messageFilter,
-                                                                 string hashFilter,
                                                                  bool ignoreCase)
             {
                 if (!(string.IsNullOrEmpty(authorFilter) &&
                       string.IsNullOrEmpty(committerFilter) &&
-                      string.IsNullOrEmpty(messageFilter) &&
-                      string.IsNullOrEmpty(hashFilter)))
+                      string.IsNullOrEmpty(messageFilter)))
                     return new RevisionGridInMemFilter(authorFilter,
                                                        committerFilter,
                                                        messageFilter,
-                                                       hashFilter,
                                                        ignoreCase);
                 else
                     return null;
@@ -747,12 +732,10 @@ namespace GitUI
                 RevisionGridInMemFilter revisionFilterIMF = RevisionGridInMemFilter.CreateIfNeeded(_revisionFilter.GetInMemAuthorFilter(),
                                                                                                    _revisionFilter.GetInMemCommitterFilter(),
                                                                                                    _revisionFilter.GetInMemMessageFilter(),
-                                                                                                   _revisionFilter.GetInMemHashFilter(),
                                                                                                    _revisionFilter.GetIgnoreCase());
                 RevisionGridInMemFilter filterBarIMF = RevisionGridInMemFilter.CreateIfNeeded(InMemAuthorFilter,
                                                                                               InMemCommitterFilter,
                                                                                               InMemMessageFilter,
-                                                                                              InMemHashFilter,
                                                                                               InMemFilterIgnoreCase);
                 RevisionGraphInMemFilter revGraphIMF;
                 if (revisionFilterIMF != null && filterBarIMF != null)
@@ -807,8 +790,7 @@ namespace GitUI
                      !_revisionFilter.FilterEnabled() &&
                      string.IsNullOrEmpty(InMemAuthorFilter) &&
                      string.IsNullOrEmpty(InMemCommitterFilter) &&
-                     string.IsNullOrEmpty(InMemMessageFilter) &&
-                     string.IsNullOrEmpty(InMemHashFilter));
+                     string.IsNullOrEmpty(InMemMessageFilter));
         }
 
         private bool ShouldHideGraph(bool inclBranchFilter)
@@ -817,8 +799,7 @@ namespace GitUI
                    !(!_revisionFilter.ShouldHideGraph() &&
                      string.IsNullOrEmpty(InMemAuthorFilter) &&
                      string.IsNullOrEmpty(InMemCommitterFilter) &&
-                     string.IsNullOrEmpty(InMemMessageFilter) &&
-                     string.IsNullOrEmpty(InMemHashFilter));
+                     string.IsNullOrEmpty(InMemMessageFilter));
         }
 
         private void DisposeRevisionGraphCommand()
@@ -871,7 +852,7 @@ namespace GitUI
 
             for (var i = 0; i < Revisions.RowCount; i++)
             {
-                if (((GitRevision)Revisions.GetRowData(i)).Guid == _initialSelectedRevision)
+                if (GetRevision(i).Guid == _initialSelectedRevision)
                     SetSelectedIndex(i);
             }
         }
