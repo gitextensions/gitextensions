@@ -530,7 +530,7 @@ por defecto sólo si tiene problemas.</Value>
     <TranslationCategory Name="FormBisect">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Bisectar</Value>
+          <Value>Bisecar</Value>
         </TranslationItem>
         <TranslationItem Name="Start" Property="Text">
           <Value>Empezar bisección</Value>
