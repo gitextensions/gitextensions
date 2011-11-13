@@ -1902,7 +1902,7 @@ Compruebe que el archivo esté accesible.</Value>
           <Value>Acerca de</Value>
         </TranslationItem>
         <TranslationItem Name="textBoxDescription" Property="Text">
-          <Value>Git extensions - Extensiones de Visual Studio y Explorador Shell para Git 
+          <Value>Git Extensions - Extensiones de Visual Studio y Explorador Shell para Git 
 Este programa es distribuido con la esperanza de que sea útil, pero SIN NINGUNA GARANTÍA; incluso sin la garantía implícita de COMERCIABILIDAD o IDONEIDAD PARA UN PROPÓSITO PARTICULAR.</Value>
         </TranslationItem>
         <TranslationItem Name="okButton" Property="Text">
@@ -2146,7 +2146,7 @@ Si se trata de un repositorio central (repositorio sin un directorio de trabajo)
           <Value>Checklist</Value>
         </TranslationItem>
         <TranslationItem Name="label11" Property="Text">
-          <Value>La siguiente lista valida la configuración básica necesaria para que GitExtensions funcione correctamente.</Value>
+          <Value>La siguiente lista comprueba la configuración básica necesaria para que Git Extensions funcione correctamente.</Value>
         </TranslationItem>
         <TranslationItem Name="CheckAtStartup" Property="Text">
           <Value>Compruebe la configuración en el arranque (se desactiva automáticamente si la configuración es correcta)</Value>
@@ -2155,7 +2155,7 @@ Si se trata de un repositorio central (repositorio sin un directorio de trabajo)
           <Value>Guardar y volver a examinar</Value>
         </TranslationItem>
         <TranslationItem Name="TabPageGitExtensions" Property="Text">
-          <Value>Git extensions</Value>
+          <Value>Git Extensions</Value>
         </TranslationItem>
         <TranslationItem Name="label12" Property="Text">
           <Value>Limitar el número de commits que se cargan al inicio.</Value>
@@ -2174,7 +2174,7 @@ Si se trata de un repositorio central (repositorio sin un directorio de trabajo)
 Dejar en blanco cuando están en el PATH.</Value>
         </TranslationItem>
         <TranslationItem Name="Ssh" Property="Text">
-          <Value>Ssh</Value>
+          <Value>SSH</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Value>Especifique qué cliente SSH utilizar</Value>
@@ -2348,13 +2348,13 @@ cualquier configuración global.</Value>
           <Value>Al azar</Value>
         </TranslationItem>
         <TranslationItem Name="label43" Property="Text">
-          <Value>Color destacando línea removida </Value>
+          <Value>Color destacado línea removida</Value>
         </TranslationItem>
         <TranslationItem Name="label45" Property="Text">
-          <Value>Color destacando línea agregada</Value>
+          <Value>Color destacado línea agregada</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox6" Property="Text">
-          <Value>Imágenes del Autor</Value>
+          <Value>Imágenes de autor</Value>
         </TranslationItem>
         <TranslationItem Name="ShowAuthorGravatar" Property="Text">
           <Value>Obtener la imagen del autor de gravatar.com</Value>
