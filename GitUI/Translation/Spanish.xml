@@ -624,13 +624,13 @@ predeterminado sólo si tiene problemas.</Value>
         <TranslationItem Name="_strategyTooltipText" Property="Text">
           <Value>resolver
 Este sólo puede manejar dos cabezas (ej: la rama actual y otra rama de la que se hizo un pull) usando algoritmos de mezcla
-3-way.
+de 3-vías.
 Trata de detectar cuidadosamente mezclas ambigüas y es considerado generalmente rápido y seguro.
 
 recursivo
-Este sólo puede resolver dos cabezas usando un algoritmo de mezcla 3-way. Cuando hay más de un ancestro común que
-puede ser usado para una mezcla 3-way, crea un árbol mezclado de los ancestros comunes y usa este como el árbol de
-referencia para la mezcla 3-way. Adicionalmente éste puede detectar y manejar mezclas que involucran renombramientos.
+Este sólo puede resolver dos cabezas usando un algoritmo de mezcla de 3-vías. Cuando hay más de un ancestro común que
+puede ser usado para una mezcla de 3-vías, crea un árbol mezclado de los ancestros comunes y usa este como el árbol de
+referencia para la mezcla de 3-vías. Adicionalmente éste puede detectar y manejar mezclas que involucran renombramientos.
 Ésta es la mezcla por defecto cuando se realiza un Pull o cuando se mezcla una rama.
 
 octopus 
@@ -1077,8 +1077,7 @@ No podrá hacer Push a menos que sea un colaborador. {2}</Value>
           <Value>Reem&amp;plazar con:</Value>
         </TranslationItem>
         <TranslationItem Name="btnFindNext" Property="Text">
-          <Value>Buscar siguiente
-</Value>
+          <Value>Buscar siguiente</Value>
         </TranslationItem>
         <TranslationItem Name="btnReplace" Property="Text">
           <Value>&amp;Reemplazar</Value>
