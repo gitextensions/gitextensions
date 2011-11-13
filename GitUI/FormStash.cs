@@ -176,7 +176,7 @@ namespace GitUI
         {
             new FormProcess(string.Format("stash apply {0}", Stashes.Text)).ShowDialog(this);
 
-            MergeConflictHandler.HandleMergeConflicts();
+            MergeConflictHandler.HandleMergeConflicts(this);
 
             Initialize();
         }

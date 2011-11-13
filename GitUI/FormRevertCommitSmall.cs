@@ -33,7 +33,7 @@ namespace GitUI
         {
             new FormProcess(GitCommandHelpers.RevertCmd(Revision.Guid, AutoCommit.Checked)).ShowDialog(this);
 
-            MergeConflictHandler.HandleMergeConflicts();
+            MergeConflictHandler.HandleMergeConflicts(this);
 
             Close();
         }

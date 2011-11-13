@@ -61,7 +61,7 @@ namespace GitUI
             {
                 MessageBox.Show(this, _cmdExecutedMsgBox.Text + " " + Environment.NewLine + Settings.Module.CherryPick(RevisionGrid.GetRevisions()[0].Guid, AutoCommit.Checked, arguments), _cmdExecutedMsgBoxCaption.Text);
 
-                MergeConflictHandler.HandleMergeConflicts();
+                MergeConflictHandler.HandleMergeConflicts(this);
 
                 RevisionGrid.RefreshRevisions();
 
