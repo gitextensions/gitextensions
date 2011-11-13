@@ -2120,15 +2120,17 @@ namespace GitUI
         private void goToToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormGoToCommit formGoToCommit = new FormGoToCommit();
-            formGoToCommit.ShowDialog(this);
-            string revisionGuid = formGoToCommit.GetRevision();
-            if (!string.IsNullOrEmpty(revisionGuid))
+            if (formGoToCommit.ShowDialog(this) == DialogResult.OK)
             {
-                RevisionGrid.SetSelectedRevision(new GitRevision(revisionGuid));
-            }
-            else
-            {
-                MessageBox.Show(this, _noRevisionFoundError.Text);
+                string revisionGuid = formGoToCommit.GetRevision();
+                if (!string.IsNullOrEmpty(revisionGuid))
+                {
+                    RevisionGrid.SetSelectedRevision(new GitRevision(revisionGuid));
+                }
+                else
+                {
+                    MessageBox.Show(this, _noRevisionFoundError.Text);
+                }
             }
         }
 
