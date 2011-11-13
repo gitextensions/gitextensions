@@ -1303,7 +1303,7 @@ namespace GitUI
                 form.ShowDialog(this);
             }
             else
-                GitUICommands.Instance.StartCompareRevisionsDialog();
+                GitUICommands.Instance.StartCompareRevisionsDialog(this);
         }
 
         private void SelectionTimerTick(object sender, EventArgs e)
@@ -1375,14 +1375,14 @@ namespace GitUI
 
         private void CommitClick(object sender, EventArgs e)
         {
-            GitUICommands.Instance.StartCommitDialog();
+            GitUICommands.Instance.StartCommitDialog(this);
             OnActionOnRepositoryPerformed();
             RefreshRevisions();
         }
 
         private void GitIgnoreClick(object sender, EventArgs e)
         {
-            GitUICommands.Instance.StartEditGitIgnoreDialog();
+            GitUICommands.Instance.StartEditGitIgnoreDialog(this);
         }
 
         private void ShowRemoteBranchesClick(object sender, EventArgs e)
@@ -1583,7 +1583,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            GitUICommands.Instance.StartDeleteBranchDialog(toolStripItem.Text);
+            GitUICommands.Instance.StartDeleteBranchDialog(this, toolStripItem.Text);
 
             ForceRefreshRevisions();
         }
@@ -1609,7 +1609,7 @@ namespace GitUI
                 return;
 
 
-            GitUICommands.Instance.StartCheckoutBranchDialog(toolStripItem.Text, true);
+            GitUICommands.Instance.StartCheckoutBranchDialog(this, toolStripItem.Text, true);
 
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
@@ -1622,7 +1622,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            GitUICommands.Instance.StartMergeBranchDialog(toolStripItem.Text);
+            GitUICommands.Instance.StartMergeBranchDialog(this, toolStripItem.Text);
 
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
@@ -1635,7 +1635,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            GitUICommands.Instance.StartRebaseDialog(toolStripItem.Text);
+            GitUICommands.Instance.StartRebaseDialog(this, toolStripItem.Text);
 
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
@@ -1922,7 +1922,7 @@ namespace GitUI
 
         #region Drag/drop patch files on revision grid
 
-        static void Revisions_DragDrop(object sender, DragEventArgs e)
+        void Revisions_DragDrop(object sender, DragEventArgs e)
         {
             var fileNameArray = e.Data.GetData(DataFormats.FileDrop) as Array;
             if (fileNameArray != null)
@@ -1930,7 +1930,7 @@ namespace GitUI
                 if (fileNameArray.Length > 10)
                 {
                     //Some users need to be protected against themselves!
-                    MessageBox.Show("For you own protection dropping more than 10 patch files at once is blocked!");
+                    MessageBox.Show(this, "For you own protection dropping more than 10 patch files at once is blocked!");
                     return;
                 }
 
@@ -1941,7 +1941,7 @@ namespace GitUI
                     if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
                     {
                         //Start apply patch dialog for each dropped patch file...
-                        GitUICommands.Instance.StartApplyPatchDialog(fileName);
+                        GitUICommands.Instance.StartApplyPatchDialog(this, fileName);
                     }
                 }
             }
@@ -1981,13 +1981,13 @@ namespace GitUI
         }
         private void InitRepository_Click(object sender, EventArgs e)
         {
-            if (GitUICommands.Instance.StartInitializeDialog(Settings.WorkingDir))
+            if (GitUICommands.Instance.StartInitializeDialog(this, Settings.WorkingDir))
                 ForceRefreshRevisions();
         }
 
         private void CloneRepository_Click(object sender, EventArgs e)
         {
-            if (GitUICommands.Instance.StartCloneDialog())
+            if (GitUICommands.Instance.StartCloneDialog(this))
                 ForceRefreshRevisions();
         }
 

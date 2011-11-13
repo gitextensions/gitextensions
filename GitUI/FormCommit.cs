@@ -668,7 +668,7 @@ namespace GitUI
 
                 if (push)
                 {
-                    GitUICommands.Instance.StartPushDialog(true);
+                    GitUICommands.Instance.StartPushDialog(this, true);
                 }
 
                 if (Settings.CloseCommitDialogAfterCommit)
@@ -959,7 +959,7 @@ namespace GitUI
 
         private void SolveMergeConflictsClick(object sender, EventArgs e)
         {
-            if (GitUICommands.Instance.StartResolveConflictsDialog())
+            if (GitUICommands.Instance.StartResolveConflictsDialog(this))
                 Initialize();
         }
 
@@ -1001,7 +1001,7 @@ namespace GitUI
 
         private void EditGitIgnoreToolStripMenuItemClick(object sender, EventArgs e)
         {
-            GitUICommands.Instance.StartEditGitIgnoreDialog();
+            GitUICommands.Instance.StartEditGitIgnoreDialog(this);
             Initialize();
         }
 
@@ -1333,7 +1333,7 @@ namespace GitUI
         {
             if (Unstaged.SelectedItems.Count == 1)
             {
-                GitUICommands.Instance.StartFileHistoryDialog(Unstaged.SelectedItem.Name, null);
+                GitUICommands.Instance.StartFileHistoryDialog(this, Unstaged.SelectedItem.Name, null);
             }
             else
                 MessageBox.Show(this, _selectOnlyOneFile.Text, _selectOnlyOneFileCaption.Text);

@@ -75,7 +75,7 @@ namespace GitUI
             {
                 IRepositoryHostPlugin gitHoster = el;
                 var di = new DashboardItem(Resources._46, string.Format(cloneFork.Text, el.Description));
-                di.Click += (repoSender, eventArgs) => GitUICommands.Instance.StartCloneForkFromHoster(gitHoster);
+                di.Click += (repoSender, eventArgs) => GitUICommands.Instance.StartCloneForkFromHoster(this, gitHoster);
                 CommonActions.AddItem(di);
             }
 
@@ -248,13 +248,13 @@ namespace GitUI
 
         private void cloneItem_Click(object sender, EventArgs e)
         {
-            if (GitUICommands.Instance.StartCloneDialog())
+            if (GitUICommands.Instance.StartCloneDialog(this))
                 OnWorkingDirChanged();
         }
 
         private void createItem_Click(object sender, EventArgs e)
         {
-            GitUICommands.Instance.StartInitializeDialog(Settings.WorkingDir);
+            GitUICommands.Instance.StartInitializeDialog(this, Settings.WorkingDir);
 
             OnWorkingDirChanged();
         }
@@ -295,7 +295,7 @@ namespace GitUI
                 string url = lines[0];
                 if (!string.IsNullOrEmpty(url))
                 {
-                    if (GitUICommands.Instance.StartCloneDialog(url))
+                    if (GitUICommands.Instance.StartCloneDialog(this, url))
                         OnWorkingDirChanged();
                 }
             }
