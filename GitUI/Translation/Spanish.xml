@@ -3835,7 +3835,7 @@ Utilice sólo modificar si el commit no está publicado todavía!
           <Value>No hay archivos staged para este commit.</Value>
         </TranslationItem>
         <TranslationItem Name="_noFilesStagedButSuggestToCommitAllUnstaged" Property="Text">
-          <Value>No hay archivos staged para este commit. ¿Stage y commitear todos los archivos desorganizados?</Value>
+          <Value>No hay archivos staged para este commit. ¿Realizar stage y commit de todos los archivos unstaged?</Value>
         </TranslationItem>
         <TranslationItem Name="_noFilesStagedAndConfirmAnEmptyMergeCommit" Property="Text">
           <Value>No hay archivos staged para este commit. ¿Está seguro que quiere realizar commit?</Value>
