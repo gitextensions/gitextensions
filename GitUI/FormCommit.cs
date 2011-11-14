@@ -78,12 +78,12 @@ namespace GitUI
         private readonly TranslationString _onlyStageChunkOfSingleFileError =
             new TranslationString("You can only use this option when selecting a single file");
 
-        private readonly TranslationString _resetChanges =
+        private readonly TranslationString _resetChangesText =
             new TranslationString("Are you sure you want to reset the changes to the selected files?");
 
         private readonly TranslationString _resetChangesCaption = new TranslationString("Reset changes");
 
-        private readonly TranslationString _resetSelectedChanges =
+        private readonly TranslationString _resetSelectedChangesText =
             new TranslationString("Are you sure you want to reset all selected files?");
 
         private readonly TranslationString _resetStageChunkOfFileCaption = new TranslationString("Unstage chunk of file");
@@ -892,7 +892,7 @@ namespace GitUI
             try
             {
                 if (Unstaged.SelectedItem == null ||
-                    MessageBox.Show(this, _resetChanges.Text, _resetChangesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) !=
+                    MessageBox.Show(this, _resetChangesText.Text, _resetChangesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) !=
                     DialogResult.Yes)
                     return;
     
@@ -983,7 +983,7 @@ namespace GitUI
 
         private void ResetSelectedFilesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, _resetSelectedChanges.Text, _resetChangesCaption.Text, MessageBoxButtons.YesNo) !=
+            if (MessageBox.Show(this, _resetSelectedChangesText.Text, _resetChangesCaption.Text, MessageBoxButtons.YesNo) !=
                 DialogResult.Yes)
                 return;
 

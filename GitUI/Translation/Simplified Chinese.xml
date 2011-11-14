@@ -2567,14 +2567,14 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         <TranslationItem Name="_onlyStageChunkOfSingleFileError" Property="Text">
           <Value>只有在选择单一文件的时候，您才能使用此选项。</Value>
         </TranslationItem>
-        <TranslationItem Name="_resetChanges" Property="Text">
+        <TranslationItem Name="_resetChangesText" Property="Text">
           <Value>您确定要重置对选定文件的更改？
 </Value>
         </TranslationItem>
         <TranslationItem Name="_resetChangesCaption" Property="Text">
           <Value>复位变化</Value>
         </TranslationItem>
-        <TranslationItem Name="_resetSelectedChanges" Property="Text">
+        <TranslationItem Name="_resetSelectedChangesText" Property="Text">
           <Value>你确定要重置所有选定的文件？</Value>
         </TranslationItem>
         <TranslationItem Name="_resetStageChunkOfFileCaption" Property="Text">
@@ -2941,6 +2941,9 @@ stash</Value>
         </TranslationItem>
         <TranslationItem Name="_commitHashText" Property="Text">
           <Value>提交哈希</Value>
+        </TranslationItem>
+        <TranslationItem Name="_messageText" Property="Text">
+          <Value>消息</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

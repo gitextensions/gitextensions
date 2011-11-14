@@ -3008,13 +3008,13 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         <TranslationItem Name="_onlyStageChunkOfSingleFileError" Property="Text">
           <Value>只有在選擇單一檔案的時候，您才能使用此選項。 </Value>
         </TranslationItem>
-        <TranslationItem Name="_resetChanges" Property="Text">
+        <TranslationItem Name="_resetChangesText" Property="Text">
           <Value>您確定要重設對選定檔案的更改？</Value>
         </TranslationItem>
         <TranslationItem Name="_resetChangesCaption" Property="Text">
           <Value>回復修改</Value>
         </TranslationItem>
-        <TranslationItem Name="_resetSelectedChanges" Property="Text">
+        <TranslationItem Name="_resetSelectedChangesText" Property="Text">
           <Value>你確定要回復所有選定的檔案？ </Value>
         </TranslationItem>
         <TranslationItem Name="_resetStageChunkOfFileCaption" Property="Text">
@@ -3573,6 +3573,9 @@ stash</Value>
         </TranslationItem>
         <TranslationItem Name="_commitHashText" Property="Text">
           <Value>提交Hash</Value>
+        </TranslationItem>
+        <TranslationItem Name="_messageText" Property="Text">
+          <Value>訊息</Value>
         </TranslationItem>
         <TranslationItem Name="_secondAgo" Property="Text">
           <Value>{0}秒前</Value>

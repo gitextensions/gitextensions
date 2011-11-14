@@ -64,12 +64,18 @@ namespace GitCommands
             return Instance._commitHashText.Text;
         }
 
+        public static string GetMessageText()
+        {
+            return Instance._messageText.Text;
+        }
+
         private readonly TranslationString _dateText       = new TranslationString("Date");
         private readonly TranslationString _authorText     = new TranslationString("Author");
         private readonly TranslationString _authorDateText = new TranslationString("Author date");
         private readonly TranslationString _committerText  = new TranslationString("Committer");
         private readonly TranslationString _commitDateText = new TranslationString("Commit date");
         private readonly TranslationString _commitHashText = new TranslationString("Commit hash");
+        private readonly TranslationString _messageText    = new TranslationString("Message");
 
         public static string Get1SecondAgoText()
         {

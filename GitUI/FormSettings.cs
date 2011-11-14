@@ -574,7 +574,7 @@ namespace GitUI
             return value ?? string.Empty;
         }
 
-        protected void SetRegistryValue(RegistryKey root, string subkey, string key, string value)
+        protected static void SetRegistryValue(RegistryKey root, string subkey, string key, string value)
         {
             try
             {
@@ -589,7 +589,7 @@ namespace GitUI
             }
             catch (UnauthorizedAccessException)
             {
-                MessageBox.Show(this, "GitExtensions has insufficient permissions to modify the registry." +
+                MessageBox.Show("GitExtensions has insufficient permissions to modify the registry." +
                                 Environment.NewLine + "Please add this key to the registry manually." +
                                 Environment.NewLine + "Path:   " + root + "\\" + subkey + Environment.NewLine +
                                 "Value:  " + key + " = " + value);

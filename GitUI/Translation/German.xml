@@ -1010,13 +1010,13 @@ Möchten Sie trotzdem fortfahren?</Value>
         <TranslationItem Name="_onlyStageChunkOfSingleFileError" Property="Text">
           <Value>Sie können diese Option nur verwenden, wenn Sie eine einzelne Datei ausgewählt haben</Value>
         </TranslationItem>
-        <TranslationItem Name="_resetChanges" Property="Text">
+        <TranslationItem Name="_resetChangesText" Property="Text">
           <Value>Sind Sie sich sicher, dass Sie die Änderungen an den ausgewählten Dateien zurücksetzen wollen?</Value>
         </TranslationItem>
         <TranslationItem Name="_resetChangesCaption" Property="Text">
           <Value>Änderungen zurücksetzen</Value>
         </TranslationItem>
-        <TranslationItem Name="_resetSelectedChanges" Property="Text">
+        <TranslationItem Name="_resetSelectedChangesText" Property="Text">
           <Value>Sind Sie sich sicher, dass Sie alle selektierten Dateien zurücksetzen wollen?</Value>
         </TranslationItem>
         <TranslationItem Name="_resetStageChunkOfFileCaption" Property="Text">
@@ -1066,8 +1066,8 @@ Möchten Sie trotzdem fortfahren?</Value>
         <TranslationItem Name="Ok" Property="Text">
           <Value>Commiten</Value>
         </TranslationItem>
-        <TranslationItem Name="resetChanges" Property="Text">
-          <Value>Sind Sie sich sicher, dass Sie die Änderungen an den ausgewählten Dateien zurücksetzen wollen?</Value>
+        <TranslationItem Name="ResetChanges" Property="Text">
+          <Value>Dateiänderungen zurücksetzen</Value>
         </TranslationItem>
         <TranslationItem Name="deleteFileToolStripMenuItem" Property="Text">
           <Value>Datei löschen</Value>
@@ -4457,6 +4457,9 @@ Wenn dies ein zentralisiertes Repository ist (ein sogenanntes Bare Repository):
         </TranslationItem>
         <TranslationItem Name="_commitHashText" Property="Text">
           <Value>Commit Hash</Value>
+        </TranslationItem>
+        <TranslationItem Name="_messageText" Property="Text">
+          <Value>Nachricht</Value>
         </TranslationItem>
         <TranslationItem Name="_secondAgo" Property="Text">
           <Value>vor {0} Sekunde(n)</Value>
