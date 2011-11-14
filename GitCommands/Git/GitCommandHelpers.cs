@@ -876,44 +876,56 @@ namespace GitCommands
 
             if (delta < 60)
             {
-                return ts.Seconds == 1 ? "1 second ago" : ts.Seconds + " seconds ago";
+                if (ts.Seconds == 1)
+                    return String.Format(Strings.Get1SecondAgoText(), 1);
+                else
+                    return String.Format(Strings.GetNSecondsAgoText(), ts.Seconds);
             }
             if (delta < 120)
             {
-                return "1 minute ago";
+                return String.Format(Strings.Get1MinuteAgoText(), 1);
             }
             if (delta < 2700) // 45 * 60
             {
-                return ts.Minutes + " minutes ago";
+                return String.Format(Strings.GetNMinutesAgoText(), ts.Minutes);
             }
             if (delta < 5400) // 90 * 60
             {
-                return "1 hour ago";
+                return String.Format(Strings.Get1HourAgoText(), 1);
             }
             if (delta < 86400) // 24 * 60 * 60
             {
-                return ts.Hours + " hours ago";
+                return String.Format(Strings.GetNHoursAgoText(), ts.Hours);
             }
             if (delta < 172800) // 48 * 60 * 60
             {
-                return "1 day ago";
+                return String.Format(Strings.Get1DayAgoText(), 1);
             }
             if (delta < 604800) // 7 * 24 * 60 * 60
             {
-                return ts.Days + " days ago";
+                return String.Format(Strings.GetNDaysAgoText(), ts.Days);
             }
             if (delta < 2592000) // 30 * 24 * 60 * 60
             {
                 int weeks = Convert.ToInt32(Math.Floor((double)ts.Days / 7));
-                return weeks <= 1 ? "1 week ago" : weeks + " weeks ago";
+                if (weeks <= 1)
+                    return String.Format(Strings.Get1WeekAgoText(), 1);
+                else
+                    return String.Format(Strings.GetNWeeksAgoText(), weeks);
             }
             if (delta < 31104000) // 12 * 30 * 24 * 60 * 60
             {
                 int months = Convert.ToInt32(Math.Floor((double)ts.Days / 30));
-                return months <= 1 ? "1 month ago" : months + " months ago";
+                if (months <= 1)
+                    return String.Format(Strings.Get1MonthAgoText(), 1);
+                else
+                    return String.Format(Strings.GetNMonthsAgoText(), months);
             }
             int years = Convert.ToInt32(Math.Floor((double)ts.Days / 365));
-            return years <= 1 ? "1 year ago" : years + " years ago";
+            if (years <= 1)
+                return String.Format(Strings.Get1YearAgoText(), 1);
+            else
+                return String.Format(Strings.GetNYearsAgoText(), years);
         }
 
 

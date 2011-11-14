@@ -489,33 +489,6 @@ Se è un repository centrale (repository senza cartella di lavoro):
         <TranslationItem Name="_currentIndex" Property="Text">
           <Value>Indice commit</Value>
         </TranslationItem>
-        <TranslationItem Name="_secondsAgo" Property="Text">
-          <Value>{0} secondi fa</Value>
-        </TranslationItem>
-        <TranslationItem Name="_minutesAgo" Property="Text">
-          <Value>{0} minuti fa</Value>
-        </TranslationItem>
-        <TranslationItem Name="_hourAgo" Property="Text">
-          <Value>{0} ora fa</Value>
-        </TranslationItem>
-        <TranslationItem Name="_hoursAgo" Property="Text">
-          <Value>{0} ore fa</Value>
-        </TranslationItem>
-        <TranslationItem Name="_dayAgo" Property="Text">
-          <Value>{0} giorni fa</Value>
-        </TranslationItem>
-        <TranslationItem Name="_daysAgo" Property="Text">
-          <Value>{0} giorni fa</Value>
-        </TranslationItem>
-        <TranslationItem Name="_monthAgo" Property="Text">
-          <Value>{0} mese fa</Value>
-        </TranslationItem>
-        <TranslationItem Name="_monthsAgo" Property="Text">
-          <Value>{0} mesi fa</Value>
-        </TranslationItem>
-        <TranslationItem Name="_yearsAgo" Property="Text">
-          <Value>{0} anni fa</Value>
-        </TranslationItem>
         <TranslationItem Name="_revisionFilter" Property="Text">
           <Value>Filtro</Value>
         </TranslationItem>
@@ -3652,23 +3625,59 @@ _ReSharper*/
     </TranslationCategory>
     <TranslationCategory Name="Strings">
       <translationItems>
-        <TranslationItem Name="dateText" Property="Text">
+        <TranslationItem Name="_dateText" Property="Text">
           <Value>Data</Value>
         </TranslationItem>
-        <TranslationItem Name="authorText" Property="Text">
+        <TranslationItem Name="_authorText" Property="Text">
           <Value>Autore</Value>
         </TranslationItem>
-        <TranslationItem Name="authorDateText" Property="Text">
+        <TranslationItem Name="_authorDateText" Property="Text">
           <Value>Data modifiche</Value>
         </TranslationItem>
-        <TranslationItem Name="committerText" Property="Text">
+        <TranslationItem Name="_committerText" Property="Text">
           <Value>Autore commit</Value>
         </TranslationItem>
-        <TranslationItem Name="committerDateText" Property="Text">
+        <TranslationItem Name="_commitDateText" Property="Text">
           <Value>Data commit</Value>
         </TranslationItem>
-        <TranslationItem Name="commitHashText" Property="Text">
+        <TranslationItem Name="_commitHashText" Property="Text">
           <Value>Hash</Value>
+        </TranslationItem>
+        <TranslationItem Name="_secondAgo" Property="Text">
+          <Value>{0} secondi fa</Value>
+        </TranslationItem>
+        <TranslationItem Name="_secondsAgo" Property="Text">
+          <Value>{0} secondi fa</Value>
+        </TranslationItem>
+        <TranslationItem Name="_minuteAgo" Property="Text">
+          <Value>{0} minuti fa</Value>
+        </TranslationItem>
+        <TranslationItem Name="_minutesAgo" Property="Text">
+          <Value>{0} minuti fa</Value>
+        </TranslationItem>
+        <TranslationItem Name="_hourAgo" Property="Text">
+          <Value>{0} ora fa</Value>
+        </TranslationItem>
+        <TranslationItem Name="_hoursAgo" Property="Text">
+          <Value>{0} ore fa</Value>
+        </TranslationItem>
+        <TranslationItem Name="_dayAgo" Property="Text">
+          <Value>{0} giorni fa</Value>
+        </TranslationItem>
+        <TranslationItem Name="_daysAgo" Property="Text">
+          <Value>{0} giorni fa</Value>
+        </TranslationItem>
+        <TranslationItem Name="_monthAgo" Property="Text">
+          <Value>{0} mese fa</Value>
+        </TranslationItem>
+        <TranslationItem Name="_monthsAgo" Property="Text">
+          <Value>{0} mesi fa</Value>
+        </TranslationItem>
+        <TranslationItem Name="_yearAgo" Property="Text">
+          <Value>{0} anni fa</Value>
+        </TranslationItem>
+        <TranslationItem Name="_yearsAgo" Property="Text">
+          <Value>{0} anni fa</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

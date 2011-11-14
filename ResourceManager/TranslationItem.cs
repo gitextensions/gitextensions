@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Diagnostics;
 using System.Xml.Serialization;
 
 namespace ResourceManager.Translation
 {
+    [DebuggerDisplay("{name}.{property}={value}")]
     public class TranslationItem
     {
         public TranslationItem()
