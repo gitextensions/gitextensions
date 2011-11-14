@@ -367,7 +367,7 @@ objetos colgados".</Value>
           <Value>Datos del pedido de Pull</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
-          <Value>Repositorio destino:</Value>
+          <Value>Repositorio destino</Value>
         </TranslationItem>
         <TranslationItem Name="_createBtn" Property="Text">
           <Value>Crear</Value>
