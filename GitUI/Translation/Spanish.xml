@@ -364,7 +364,7 @@ objetos colgados".</Value>
           <Value>Cuerpo:</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
-          <Value>Datos del pedido de Pull.</Value>
+          <Value>Datos del pedido de Pull</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
           <Value>Repositorio destino:</Value>
