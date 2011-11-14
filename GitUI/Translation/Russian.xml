@@ -670,20 +670,20 @@
         <TranslationItem Name="_onlyStageChunkOfSingleFileError" Property="Text">
           <Value>Эта опция доступна только когда выбран один файл</Value>
         </TranslationItem>
-        <TranslationItem Name="_resetChanges" Property="Text">
+        <TranslationItem Name="_resetChangesText" Property="Text">
           <Value>Вы точно хотите отменить изменения выделенного файла?</Value>
         </TranslationItem>
         <TranslationItem Name="_resetChangesCaption" Property="Text">
           <Value>Отменить изменения</Value>
         </TranslationItem>
-        <TranslationItem Name="_resetSelectedChanges" Property="Text">
+        <TranslationItem Name="_resetSelectedChangesText" Property="Text">
           <Value>Вы точно хотите отменить изменения во всех отмеченных файлах?</Value>
         </TranslationItem>
         <TranslationItem Name="_selectOnlyOneFile" Property="Text">
           <Value>Возможно выбрать только один файл.</Value>
         </TranslationItem>
-        <TranslationItem Name="resetChanges" Property="Text">
-          <Value>Вы точно хотите отменить изменения выделенного файла?</Value>
+        <TranslationItem Name="ResetChanges" Property="Text">
+          <Value>Отменить изменения</Value>
         </TranslationItem>
         <TranslationItem Name="deleteFileToolStripMenuItem" Property="Text">
           <Value>Удалить файл</Value>
@@ -1605,19 +1605,6 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Настройки модуля</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormProcess">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Процесс</Value>
-        </TranslationItem>
-        <TranslationItem Name="KeepDialogOpen" Property="Text">
-          <Value>Оставить окно открытым</Value>
-        </TranslationItem>
-        <TranslationItem Name="Abort" Property="Text">
-          <Value>Отменить</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2751,9 +2738,6 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
     </TranslationCategory>
     <TranslationCategory Name="RevisionGrid">
       <translationItems>
-        <TranslationItem Name="_messageCaption" Property="Text">
-          <Value>Сообщение</Value>
-        </TranslationItem>
         <TranslationItem Name="_currentWorkingDirChanges" Property="Text">
           <Value>Текущие незакоммиченные изменения</Value>
         </TranslationItem>
@@ -2900,19 +2884,6 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormRemoteProcess">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Процесс</Value>
-        </TranslationItem>
-        <TranslationItem Name="KeepDialogOpen" Property="Text">
-          <Value>Оставить окно открытым</Value>
-        </TranslationItem>
-        <TranslationItem Name="Abort" Property="Text">
-          <Value>Отменить</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
     <TranslationCategory Name="Strings">
       <translationItems>
         <TranslationItem Name="_dateText" Property="Text">
@@ -2932,6 +2903,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         </TranslationItem>
         <TranslationItem Name="_commitHashText" Property="Text">
           <Value>Хеш коммита</Value>
+        </TranslationItem>
+        <TranslationItem Name="_messageText" Property="Text">
+          <Value>Сообщение</Value>
         </TranslationItem>
         <TranslationItem Name="_secondAgo" Property="Text">
           <Value>{0} секунда назад</Value>

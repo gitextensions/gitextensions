@@ -17,6 +17,7 @@ namespace GitUI
         private const string PuttyText = "PuTTY";
         private const string HeadText = "HEAD";
 
+        #region Translation
         private readonly TranslationString _branchNewForRemote =
             new TranslationString("The branch you are about to push seems to be a new branch for the remote." +
                                   Environment.NewLine + "Are you sure you want to push this branch?");
@@ -41,6 +42,7 @@ namespace GitUI
 
         private readonly TranslationString _yes = new TranslationString("Yes");
         private readonly TranslationString _no = new TranslationString("No");
+        #endregion
 
         public FormPush()
         {

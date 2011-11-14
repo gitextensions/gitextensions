@@ -32,15 +32,6 @@ namespace GitUI
         {
         }
 
-
-        //Input does not work for password inputs. I don't know why, but it turned out not to be really necessary.
-        //For other inputs, it is not tested.
-        public FormProcess(string process, string arguments, string input)
-            : this(process, arguments)
-        {
-            ProcessInput = input;
-        }
-
         public FormProcess(string process, string arguments)
         {
             ProcessCallback = new ProcessStart(processStart);
@@ -49,6 +40,14 @@ namespace GitUI
             ProcessArguments = arguments;
             Remote = "";
             ProcessInput = null;
+        }
+
+        //Input does not work for password inputs. I don't know why, but it turned out not to be really necessary.
+        //For other inputs, it is not tested.
+        public FormProcess(string process, string arguments, string input)
+            : this(process, arguments)
+        {
+            ProcessInput = input;
         }
 
         public FormProcess(string arguments)

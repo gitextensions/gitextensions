@@ -267,15 +267,17 @@ namespace GitUI
 
                 foreach (Type type in translatableTypes)
                 {
-                    string className = type.Name;
-                    if (!translateCategories.Items.Contains(className))
-                        translateCategories.Items.Add(className);
-
                     object obj = CreateInstanceOfClass(type);
                     if (obj == null)
                     {
                         continue;
                     }
+
+                    string className = type.Name;
+                    if (obj is Component)
+                        className = ((Control)obj).Name;
+                    if (!translateCategories.Items.Contains(className))
+                        translateCategories.Items.Add(className);
 
                     if (obj is Form)
                     {
@@ -338,7 +340,7 @@ namespace GitUI
                 neutralTranslation.AddTranslationCategory(new TranslationCategory(category));
 
 
-            neutralTranslation.GetTranslationCategory(category).AddTranslationItem(new TranslationItem(item, property, neutralValue));
+            neutralTranslation.GetTranslationCategory(category).AddTranslationItemIfNotExist(new TranslationItem(item, property, neutralValue));
         }
 
         private void translateCategories_SelectedIndexChanged(object sender, EventArgs e)

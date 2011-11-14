@@ -32,9 +32,11 @@ namespace GitUI
     public partial class RevisionGrid : GitExtensionsControl
     {
         private readonly IndexWatcher _indexWatcher = new IndexWatcher();
-        private readonly TranslationString _messageCaption = new TranslationString("Message");
         private readonly TranslationString _currentWorkingDirChanges = new TranslationString("Current uncommitted changes");
         private readonly TranslationString _currentIndex = new TranslationString("Commit index");
+        private readonly TranslationString _areYouSureYouWantCheckout = new TranslationString("Are you sure to checkout the selected revision");
+        private readonly TranslationString _areYouSureYouWantCheckoutCaption = new TranslationString("Checkout revision");
+        private readonly TranslationString _droppingFilesBlocked = new TranslationString("For you own protection dropping more than 10 patch files at once is blocked!");
 
         private const int NODE_DIMENSION = 8;
         private const int LANE_WIDTH = 13;
@@ -871,7 +873,7 @@ namespace GitUI
 
             Revisions.SuspendLayout();
 
-            Revisions.Columns[1].HeaderText = _messageCaption.Text;
+            Revisions.Columns[1].HeaderText = Strings.GetMessageText();
             Revisions.Columns[2].HeaderText = Strings.GetAuthorText();
             Revisions.Columns[3].HeaderText = GetDateHeaderText();
 
@@ -1646,7 +1648,7 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
 
-            if (MessageBox.Show(this, "Are you sure to checkout the selected revision", "Checkout revision",
+            if (MessageBox.Show(this, _areYouSureYouWantCheckout.Text, _areYouSureYouWantCheckoutCaption.Text,
                                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
             new FormProcess(string.Format("checkout \"{0}\"", GetRevision(LastRow).Guid)).ShowDialog(this);
@@ -1930,7 +1932,7 @@ namespace GitUI
                 if (fileNameArray.Length > 10)
                 {
                     //Some users need to be protected against themselves!
-                    MessageBox.Show(this, "For you own protection dropping more than 10 patch files at once is blocked!");
+                    MessageBox.Show(this, _droppingFilesBlocked.Text);
                     return;
                 }
 

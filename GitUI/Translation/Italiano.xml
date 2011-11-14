@@ -2370,7 +2370,7 @@ git help
           <Value>Commit</Value>
         </TranslationItem>
         <TranslationItem Name="ResetChanges" Property="Text">
-          <Value>Annulla le modifiche ai file</Value>
+          <Value>Ripristina modifiche</Value>
         </TranslationItem>
         <TranslationItem Name="deleteFileToolStripMenuItem" Property="Text">
           <Value>Cancella file</Value>
@@ -2560,13 +2560,13 @@ Vuoi continuare?</Value>
         <TranslationItem Name="_onlyStageChunkOfSingleFileError" Property="Text">
           <Value>Puoi usare questa opzione solo selezionando un singolo file</Value>
         </TranslationItem>
-        <TranslationItem Name="_resetChanges" Property="Text">
+        <TranslationItem Name="_resetChangesText" Property="Text">
           <Value>Sei sicuro di voler ripristinare tutte le modifiche ai file selezionati?</Value>
         </TranslationItem>
         <TranslationItem Name="_resetChangesCaption" Property="Text">
           <Value>Ripristina modifiche</Value>
         </TranslationItem>
-        <TranslationItem Name="_resetSelectedChanges" Property="Text">
+        <TranslationItem Name="_resetSelectedChangesText" Property="Text">
           <Value>Sei sicuro di voler ripristinare tutti i file selezionati?</Value>
         </TranslationItem>
         <TranslationItem Name="_resetStageChunkOfFileCaption" Property="Text">
@@ -3642,6 +3642,9 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="_commitHashText" Property="Text">
           <Value>Hash</Value>
+        </TranslationItem>
+        <TranslationItem Name="_messageText" Property="Text">
+          <Value>Messaggio</Value>
         </TranslationItem>
         <TranslationItem Name="_secondAgo" Property="Text">
           <Value>{0} secondi fa</Value>
