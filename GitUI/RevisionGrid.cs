@@ -1520,7 +1520,7 @@ namespace GitUI
                 rebaseDropDown.Items.Add(toolStripItem);
 
                 toolStripItem = new ToolStripMenuItem(head.Name);
-                //toolStripItem.Click += ToolStripItemClickRebaseBranch;
+                toolStripItem.Click += ToolStripItemClickRenameBranch;
                 renameDropDown.Items.Add(toolStripItem);
             }
 
@@ -1646,6 +1646,19 @@ namespace GitUI
                 return;
 
             GitUICommands.Instance.StartRebaseDialog(this, toolStripItem.Text);
+
+            ForceRefreshRevisions();
+            OnActionOnRepositoryPerformed();
+        }
+
+        private void ToolStripItemClickRenameBranch(object sender, EventArgs e)
+        {
+            var toolStripItem = sender as ToolStripItem;
+
+            if (toolStripItem == null)
+                return;
+
+            GitUICommands.Instance.StartRenameDialog(toolStripItem.Text);
 
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
