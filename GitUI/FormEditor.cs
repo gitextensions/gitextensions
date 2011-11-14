@@ -9,6 +9,9 @@ namespace GitUI
     {
         private readonly TranslationString _saveChanges = new TranslationString("Do you want to save changes?");
         private readonly TranslationString _saveChangesCaption = new TranslationString("Save changes");
+        private readonly TranslationString _cannotOpenFile = new TranslationString("Cannot open file: ");
+        private readonly TranslationString _cannotSaveFile = new TranslationString("Cannot save file: ");
+        private readonly TranslationString _error = new TranslationString("Error");
         private bool _textIsChanged = false;
 
 
@@ -62,7 +65,7 @@ namespace GitUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, "Cannot open file: " + Environment.NewLine + ex.Message, "Error");
+                MessageBox.Show(this, _cannotOpenFile.Text + Environment.NewLine + ex.Message, _error.Text);
                 _fileName = string.Empty;
                 Close();
             }
@@ -100,7 +103,7 @@ namespace GitUI
             }
             catch (Exception ex)
             {
-                if (MessageBox.Show(this, "Cannot save file: " + Environment.NewLine + ex.Message, "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.Cancel)
+                if (MessageBox.Show(this, _cannotSaveFile.Text + Environment.NewLine + ex.Message, _error.Text, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.Cancel)
                 {
                     e.Cancel = true;
                 }
@@ -115,7 +118,7 @@ namespace GitUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, "Cannot save file: " + Environment.NewLine + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _cannotSaveFile.Text + Environment.NewLine + ex.Message, _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

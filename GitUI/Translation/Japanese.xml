@@ -2473,13 +2473,13 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         <TranslationItem Name="_onlyStageChunkOfSingleFileError" Property="Text">
           <Value>ファイルを1つ選択したときのみこのオプションは使用できます</Value>
         </TranslationItem>
-        <TranslationItem Name="_resetChanges" Property="Text">
+        <TranslationItem Name="_resetChangesText" Property="Text">
           <Value>選択したファイルへの変更を取り消してもよろしいですか？</Value>
         </TranslationItem>
         <TranslationItem Name="_resetChangesCaption" Property="Text">
           <Value>変更の取り消し</Value>
         </TranslationItem>
-        <TranslationItem Name="_resetSelectedChanges" Property="Text">
+        <TranslationItem Name="_resetSelectedChangesText" Property="Text">
           <Value>選択したファイルへの変更を取り消してもよろしいですか？</Value>
         </TranslationItem>
         <TranslationItem Name="_resetStageChunkOfFileCaption" Property="Text">
@@ -2802,6 +2802,9 @@ stash</Value>
         </TranslationItem>
         <TranslationItem Name="_commitHashText" Property="Text">
           <Value>コミットハッシュ</Value>
+        </TranslationItem>
+        <TranslationItem Name="_messageText" Property="Text">
+          <Value>メッセージ</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

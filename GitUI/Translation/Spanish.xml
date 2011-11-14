@@ -3012,13 +3012,13 @@ Este commit no tendrá referencia al cambiar a otro rama y se puede perder.
         <TranslationItem Name="_onlyStageChunkOfSingleFileError" Property="Text">
           <Value>Sólo puede utilizar esta opción cuando se selecciona un solo archivo</Value>
         </TranslationItem>
-        <TranslationItem Name="_resetChanges" Property="Text">
+        <TranslationItem Name="_resetChangesText" Property="Text">
           <Value>¿Estás seguro de que deseas restablecer los cambios en los archivos seleccionados?</Value>
         </TranslationItem>
         <TranslationItem Name="_resetChangesCaption" Property="Text">
           <Value>Restablecer los cambios</Value>
         </TranslationItem>
-        <TranslationItem Name="_resetSelectedChanges" Property="Text">
+        <TranslationItem Name="_resetSelectedChangesText" Property="Text">
           <Value>¿Estás seguro de que desea restablecer todos los archivos seleccionados?</Value>
         </TranslationItem>
         <TranslationItem Name="_resetStageChunkOfFileCaption" Property="Text">
@@ -3148,6 +3148,9 @@ Por favor, elija un directorio.</Value>
         </TranslationItem>
         <TranslationItem Name="_commitHashText" Property="Text">
           <Value>Hash de Commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="_messageText" Property="Text">
+          <Value>Mensaje</Value>
         </TranslationItem>
         <TranslationItem Name="_secondAgo" Property="Text">
           <Value>hace {0} segundos</Value>

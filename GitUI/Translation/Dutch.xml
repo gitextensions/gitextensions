@@ -3453,8 +3453,8 @@ Wilt u deze submodules initializeren?</Value>
         <TranslationItem Name="Ok" Property="Text">
           <Value>Commit</Value>
         </TranslationItem>
-        <TranslationItem Name="resetChanges" Property="Text">
-          <Value>Weet u zeker dat u de wijzigingen in de geselecteerde bestanden ongedaan wilt maken?</Value>
+        <TranslationItem Name="ResetChanges" Property="Text">
+          <Value>Wijzigingen ongedaan maken</Value>
         </TranslationItem>
         <TranslationItem Name="deleteFileToolStripMenuItem" Property="Text">
           <Value>Verwijder bestand</Value>
@@ -3653,13 +3653,13 @@ Weet u zeker dat u wilt doorgaan?</Value>
         <TranslationItem Name="_onlyStageChunkOfSingleFileError" Property="Text">
           <Value>U kunt deze optie alleen gebruiken op een enkel bestand</Value>
         </TranslationItem>
-        <TranslationItem Name="_resetChanges" Property="Text">
+        <TranslationItem Name="_resetChangesText" Property="Text">
           <Value>Weet u zeker dat u de wijzigingen in de geselecteerde bestanden ongedaan wilt maken?</Value>
         </TranslationItem>
         <TranslationItem Name="_resetChangesCaption" Property="Text">
           <Value>Alle wijzigingen ongedaan maken</Value>
         </TranslationItem>
-        <TranslationItem Name="_resetSelectedChanges" Property="Text">
+        <TranslationItem Name="_resetSelectedChangesText" Property="Text">
           <Value>Weet u zeker dat u de wijzigingen in de alle bestanden ongedaan wilt maken?</Value>
         </TranslationItem>
         <TranslationItem Name="_resetStageChunkOfFileCaption" Property="Text">
@@ -4160,6 +4160,9 @@ Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geope
         </TranslationItem>
         <TranslationItem Name="_commitHashText" Property="Text">
           <Value>Commit hash</Value>
+        </TranslationItem>
+        <TranslationItem Name="_messageText" Property="Text">
+          <Value>Bericht</Value>
         </TranslationItem>
         <TranslationItem Name="_secondAgo" Property="Text">
           <Value>{0} seconden geleden</Value>
