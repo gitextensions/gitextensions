@@ -28,6 +28,12 @@ namespace GitUI
 
             if (_defaultBranch != null)
                 Branches.Text = _defaultBranch;
+            else
+            {
+                string merge = Settings.Module.GetRemoteBranch(selectedHead);
+                if (!String.IsNullOrEmpty(merge))
+                    Branches.Text = merge;
+            }
 
             Branches.Select();
         }
