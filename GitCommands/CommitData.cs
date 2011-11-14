@@ -62,7 +62,7 @@ namespace GitCommands
             string committerEmail = GetEmail(Committer);
             header.AppendLine(FillToLength(HttpUtility.HtmlEncode(Strings.GetCommitterText()) + ":", COMMITHEADER_STRING_LENGTH) +
                 "<a href='mailto:" + committerEmail + "'>" + HttpUtility.HtmlEncode(Committer) + "</a>");
-            header.AppendLine(FillToLength(HttpUtility.HtmlEncode(Strings.GetCommitterDateText()) + ":", COMMITHEADER_STRING_LENGTH) + 
+            header.AppendLine(FillToLength(HttpUtility.HtmlEncode(Strings.GetCommitDateText()) + ":", COMMITHEADER_STRING_LENGTH) + 
                 HttpUtility.HtmlEncode(GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, CommitDate.UtcDateTime) + " (" + CommitDate.LocalDateTime.ToString("ddd MMM dd HH':'mm':'ss yyyy")) + ")");
             header.AppendLine(FillToLength(HttpUtility.HtmlEncode(Strings.GetCommitHashText()) + ":", COMMITHEADER_STRING_LENGTH) + 
                 HttpUtility.HtmlEncode(Guid));
@@ -237,12 +237,12 @@ namespace GitCommands
             }
 
             string authorDate = GetField(info, Strings.GetAuthorDateText() + ":");
-            string commitDate = GetField(info, Strings.GetCommitterDateText() + ":");
+            string commitDate = GetField(info, Strings.GetCommitDateText() + ":");
 
             if (String.Equals(authorDate, commitDate, StringComparison.CurrentCulture))
             {
                 info =
-                    RemoveField(info, Strings.GetCommitterDateText() + ":").Replace(
+                    RemoveField(info, Strings.GetCommitDateText() + ":").Replace(
                         FillToLength(Strings.GetAuthorDateText() + ":", COMMITHEADER_STRING_LENGTH), FillToLength(Strings.GetDateText() + ":", COMMITHEADER_STRING_LENGTH));
             }
 

@@ -11,6 +11,7 @@ namespace GitCommandsTests
         [TestMethod]
         public void CanGetRelativeDateString()
         {
+            Settings.Translation = "English";
             Assert.AreEqual("1 minute ago",  GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddMinutes(-1)));
             Assert.AreEqual("1 day ago",     GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-1)));
             Assert.AreEqual("1 week ago",    GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-7)));
