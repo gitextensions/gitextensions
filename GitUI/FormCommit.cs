@@ -1481,10 +1481,21 @@ namespace GitUI
             process.Start();
         }
 
+        private void resetSubmoduleChanges_Click(object sender, EventArgs e)
+        {
+            GitModule module = new GitModule(Settings.WorkingDir + _currentItem.Name + Settings.PathSeparator);
+            if (!Abort.AbortCurrentAction(module))
+                return;
+
+            Initialize();
+        }
+
         private void updateSubmoduleMenuItem_Click(object sender, EventArgs e)
         {
             var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(_currentItem.Name));
             process.ShowDialog(this);
+
+            Initialize();
         }
 
         private void submoduleSummaryMenuItem_Click(object sender, EventArgs e)
