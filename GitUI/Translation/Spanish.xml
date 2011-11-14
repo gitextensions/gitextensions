@@ -2581,14 +2581,14 @@ cualquier configuración global.</Value>
 El conflicto de fusión no se marcará como resuelto. Por favor intente de nuevo.</Value>
         </TranslationItem>
         <TranslationItem Name="allConflictsResolved" Property="Text">
-          <Value>Todos los mergeconflicts se resuelven, puede hacer commit. 
+          <Value>Todos los conflictos de fusión se resolvieron, puede hacer commit. 
 ¿Quiere hacer commit ahora?</Value>
         </TranslationItem>
         <TranslationItem Name="allConflictsResolvedCaption" Property="Text">
           <Value>Commit</Value>
         </TranslationItem>
         <TranslationItem Name="mergeConflictIsSubmodule" Property="Text">
-          <Value>El mergeconflict seleccionado es un submódulo. ¿Marcar conflicto como resuelto?</Value>
+          <Value>El conflicto de fusión seleccionado es un submódulo. ¿Marcar conflicto como resuelto?</Value>
         </TranslationItem>
         <TranslationItem Name="mergeConflictIsSubmoduleCaption" Property="Text">
           <Value>Submódulo</Value>
@@ -2887,7 +2887,7 @@ Elija eliminar el archivo o mantener la versión modificada.</Value>
     <TranslationCategory Name="FormModifiedDeletedCreated">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Resolver mergeconflict</Value>
+          <Value>Resolver conflicto de fusión</Value>
         </TranslationItem>
         <TranslationItem Name="Abort" Property="Text">
           <Value>Abortar</Value>
@@ -3662,7 +3662,7 @@ Esto inicializará y actualizará todos los submódulos recursivamente.</Value>
           <Value>Eliminar archivo</Value>
         </TranslationItem>
         <TranslationItem Name="SolveMergeconflicts" Property="Text">
-          <Value>Hay mergeconflicts sin resolver</Value>
+          <Value>Hay conflictos de fusión sin resolver</Value>
         </TranslationItem>
         <TranslationItem Name="addFileTogitignoreToolStripMenuItem" Property="Text">
           <Value>Agregar archivo a .gitignore</Value>
@@ -3826,7 +3826,7 @@ Utilice sólo modificar si el commit no está publicado todavía!
           <Value>Introduzca mensaje de commit</Value>
         </TranslationItem>
         <TranslationItem Name="_mergeConflicts" Property="Text">
-          <Value>Hay conflictos de fusión sin resolver, solucionar mergeconflicts antes de realizar el commit.</Value>
+          <Value>Hay conflictos de fusión sin resolver, solucionar conflictos antes de realizar el commit.</Value>
         </TranslationItem>
         <TranslationItem Name="_mergeConflictsCaption" Property="Text">
           <Value>Conflictos de fusión</Value>
