@@ -334,7 +334,7 @@ objetos colgados".</Value>
     <TranslationCategory Name="CreatePullRequestForm">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Crear Pull Request</Value>
+          <Value>Crear pedido de Pull</Value>
         </TranslationItem>
         <TranslationItem Name="_strLoading" Property="Text">
           <Value>Cargando...</Value>
@@ -346,10 +346,10 @@ objetos colgados".</Value>
           <Value>Debe especificar un título y cuerpo.</Value>
         </TranslationItem>
         <TranslationItem Name="_strPullRequest" Property="Text">
-          <Value>Pull request</Value>
+          <Value>Pedido de Pull</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToCreatePullRequest" Property="Text">
-          <Value>No se pudo crear solicitud de Pull.</Value>
+          <Value>No se pudo crear pedido de Pull.</Value>
         </TranslationItem>
         <TranslationItem Name="_strDone" Property="Text">
           <Value>Hecho</Value>
@@ -364,7 +364,7 @@ objetos colgados".</Value>
           <Value>Cuerpo:</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
-          <Value>Datos de la solicitud de Pull.</Value>
+          <Value>Datos del pedido de Pull.</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
           <Value>Repositorio destino:</Value>
@@ -623,7 +623,7 @@ por defecto sólo si tiene problemas.</Value>
         </TranslationItem>
         <TranslationItem Name="_strategyTooltipText" Property="Text">
           <Value>resolver
-Este sólo puede manejar dos cabezas (ej: la rama actual y otra rama de la que se hizo un pull) usando algoritmos de fusión
+Este sólo puede manejar dos cabezas (ej: la rama actual y otra rama de la que se hizo un Pull) usando algoritmos de fusión
 de 3-vías.
 Trata de detectar cuidadosamente fusiones ambigüas y es considerado generalmente rápido y seguro.
 
@@ -768,7 +768,7 @@ que hace seguimiento de esta rama remota?</Value>
     <TranslationCategory Name="ViewPullRequestsForm">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Ver Pedidos Pull</Value>
+          <Value>Ver pedidos de Pull</Value>
         </TranslationItem>
         <TranslationItem Name="columnHeader1" Property="Text">
           <Value>#</Value>
@@ -792,7 +792,7 @@ que hace seguimiento de esta rama remota?</Value>
           <Value>Enviar comentario</Value>
         </TranslationItem>
         <TranslationItem Name="_closePullRequestBtn" Property="Text">
-          <Value>Cerrar pedido pull</Value>
+          <Value>Cerrar pedido de Pull</Value>
         </TranslationItem>
         <TranslationItem Name="_refreshCommentsBtn" Property="Text">
           <Value>Actualizar</Value>
@@ -1402,10 +1402,10 @@ No podrá hacer Push a menos que sea un colaborador. {2}</Value>
           <Value>Bifurcar/Clonar repositorio</Value>
         </TranslationItem>
         <TranslationItem Name="_viewPullRequestsToolStripMenuItem" Property="Text">
-          <Value>Ver Pedidos de Pull</Value>
+          <Value>Ver pedidos de Pull</Value>
         </TranslationItem>
         <TranslationItem Name="_createPullRequestsToolStripMenuItem" Property="Text">
-          <Value>Crear Pedidos de Pull</Value>
+          <Value>Crear pedidos de Pull</Value>
         </TranslationItem>
         <TranslationItem Name="submodulesToolStripMenuItem" Property="Text">
           <Value>Submódulos</Value>
@@ -1949,7 +1949,7 @@ Si se trata de un repositorio normal, estos pasos son recomendados:
 - Hago un commit
 
 Si se trata de un repositorio central (repositorio sin un directorio de trabajo): 
-- Haga push los cambios desede otro repositorio</Value>
+- Haga Push los cambios desde otro repositorio</Value>
         </TranslationItem>
         <TranslationItem Name="Commit" Property="Text">
           <Value>Commit</Value>
@@ -3091,10 +3091,10 @@ Compruebe que el archivo esté accesible.
           <Value>Push de &amp;todas las ramas</Value>
         </TranslationItem>
         <TranslationItem Name="ForcePushBranches" Property="Text">
-          <Value>&amp;Forzar push</Value>
+          <Value>&amp;Forzar Push</Value>
         </TranslationItem>
         <TranslationItem Name="ForcePushTags" Property="Text">
-          <Value>&amp;Forzar push</Value>
+          <Value>&amp;Forzar Push</Value>
         </TranslationItem>
         <TranslationItem Name="Pull" Property="Text">
           <Value>Pull</Value>
@@ -3121,7 +3121,7 @@ Compruebe que el archivo esté accesible.
           <Value>Etiqueta</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
-          <Value>Etiqueta para hacer push</Value>
+          <Value>Etiqueta para hacer Push</Value>
         </TranslationItem>
         <TranslationItem Name="BranchTab" Property="Text">
           <Value>Push ramas</Value>
@@ -3172,8 +3172,8 @@ Compruebe que el archivo esté accesible.
           <Value>Auto Pull al ser rechazado</Value>
         </TranslationItem>
         <TranslationItem Name="_branchNewForRemote" Property="Text">
-          <Value>La rama que está a punto de hacer push parece ser una nueva rama para 
-el remoto. ¿Está seguro de que desea hacer push con esta rama?</Value>
+          <Value>La rama que está a punto de hacer Push parece ser una nueva rama para 
+el remoto. ¿Está seguro de que desea hacer Push con esta rama?</Value>
         </TranslationItem>
         <TranslationItem Name="_cannotLoadPutty" Property="Text">
           <Value>No se puede cargar clave SSH. PuTTY no está configurado correctamente.</Value>
@@ -3191,7 +3191,7 @@ el remoto. ¿Está seguro de que desea hacer push con esta rama?</Value>
           <Value>Por favor, seleccione un repositorio remoto</Value>
         </TranslationItem>
         <TranslationItem Name="_selectTag" Property="Text">
-          <Value>Tienes que seleccionar una etiqueta para hacer push o seleccione "Push todas las etiquetas";.</Value>
+          <Value>Tiene que seleccionar una etiqueta para hacer Push o seleccionar "Push todas las etiquetas";.</Value>
         </TranslationItem>
         <TranslationItem Name="_yes" Property="Text">
           <Value>Si</Value>
@@ -3692,7 +3692,7 @@ Esto inicializará y actualizará todos los submódulos recursivamente.</Value>
           <Value>&amp;Commit</Value>
         </TranslationItem>
         <TranslationItem Name="CommitAndPush" Property="Text">
-          <Value>C&amp;ommit y push</Value>
+          <Value>C&amp;ommit y Push</Value>
         </TranslationItem>
         <TranslationItem Name="Amend" Property="Text">
           <Value>&amp;Arreglar último commit</Value>
@@ -4124,7 +4124,7 @@ El valor se ha reseteado a un valor vacío.</Value>
           <Value>Repositorios remotos</Value>
         </TranslationItem>
         <TranslationItem Name="tabPage2" Property="Text">
-          <Value>Comportamiento por defecto del pull (buscar y fusionar)</Value>
+          <Value>Comportamiento por defecto del Pull (buscar y fusionar)</Value>
         </TranslationItem>
         <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
           <Value>Rama</Value>
