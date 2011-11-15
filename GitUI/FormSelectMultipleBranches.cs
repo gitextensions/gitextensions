@@ -12,6 +12,15 @@ namespace GitUI
 {
     public partial class FormSelectMultipleBranches : GitExtensionsForm
     {
+        /// <summary>
+        /// Contructor used for translation...:(
+        /// </summary>
+        public FormSelectMultipleBranches()
+        {
+            InitializeComponent();
+            Translate();
+        }
+
         public FormSelectMultipleBranches(IList<GitHead> branchesToSelect)
         {
             InitializeComponent();

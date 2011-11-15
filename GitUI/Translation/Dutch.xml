@@ -972,38 +972,6 @@ U  heeft alleen rechten om commits te verzenden als u een 'collaborator' bent. {
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormProcess">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Proces</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>OK</Value>
-        </TranslationItem>
-        <TranslationItem Name="KeepDialogOpen" Property="Text">
-          <Value>Laat dialoog open</Value>
-        </TranslationItem>
-        <TranslationItem Name="Abort" Property="Text">
-          <Value>Annuleren</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormRemoteProcess">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Proces</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>OK</Value>
-        </TranslationItem>
-        <TranslationItem Name="KeepDialogOpen" Property="Text">
-          <Value>Laat dialoog open</Value>
-        </TranslationItem>
-        <TranslationItem Name="Abort" Property="Text">
-          <Value>Annuleren</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
     <TranslationCategory Name="FormDiffSmall">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -1823,9 +1791,6 @@ Deze applicatie is verspreid in de hoop dat het bruikbaar is voor anderen, maar 
     </TranslationCategory>
     <TranslationCategory Name="RevisionGrid">
       <translationItems>
-        <TranslationItem Name="_messageCaption" Property="Text">
-          <Value>Bericht</Value>
-        </TranslationItem>
         <TranslationItem Name="_currentWorkingDirChanges" Property="Text">
           <Value>Huidige wijzigingen</Value>
         </TranslationItem>
@@ -3171,6 +3136,9 @@ Als u een vertakking wilt ophalen en samenvoegen, kies een vertakking.</Value>
         <TranslationItem Name="Force" Property="Text">
           <Value>Forceer</Value>
         </TranslationItem>
+        <TranslationItem Name="_noRevisionSelectedMsgBoxCaption" Property="Text">
+          <Value>Checkout</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormTag">
@@ -3266,6 +3234,18 @@ Als u een vertakking wilt ophalen en samenvoegen, kies een vertakking.</Value>
         </TranslationItem>
         <TranslationItem Name="AutoCommit" Property="Text">
           <Value>Maak automatisch een commit aan</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitInfo" Property="Text">
+          <Value>Commit: {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorInfo" Property="Text">
+          <Value>Auteur: {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="dateInfo" Property="Text">
+          <Value>Commit datum: {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitMessage" Property="Text">
+          <Value>Bericht: {0}</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3452,9 +3432,6 @@ Wilt u deze submodules initializeren?</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Value>Commit</Value>
-        </TranslationItem>
-        <TranslationItem Name="ResetChanges" Property="Text">
-          <Value>Wijzigingen ongedaan maken</Value>
         </TranslationItem>
         <TranslationItem Name="deleteFileToolStripMenuItem" Property="Text">
           <Value>Verwijder bestand</Value>
@@ -3692,6 +3669,9 @@ Weet u zeker dat u wilt doorgaan?</Value>
         <TranslationItem Name="_formTitle" Property="Text">
           <Value>Commit naar {0} ({1})</Value>
         </TranslationItem>
+        <TranslationItem Name="_selectionFilterErrorToolTip" Property="Text">
+          <Value>Fout {0}</Value>
+        </TranslationItem>
         <TranslationItem Name="_StageSelectedLinesToolStripMenuItem" Property="Text">
           <Value>Geselecteerde regel(s) klaarzetten</Value>
         </TranslationItem>
@@ -3747,9 +3727,6 @@ verwijderen die niet is samengevoegd, selecteer de optie 'Geforceerd verwijderen
         </TranslationItem>
         <TranslationItem Name="ForceDelete" Property="Text">
           <Value>Gerforceerd verwijderen</Value>
-        </TranslationItem>
-        <TranslationItem Name="_branchDeleted" Property="Text">
-          <Value>Command uitgevoerd</Value>
         </TranslationItem>
         <TranslationItem Name="_deleteBranchCaption" Property="Text">
           <Value>Verwijder vertakking</Value>
@@ -3816,10 +3793,59 @@ Bij het verwijderen van een vertakking kunnen commits verloren gaan!</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormCherryPickMerge">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Kies ouder</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noneParentSelectedText" Property="Text">
+          <Value>Geen ouder geselecteerd!</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noneParentSelectedTextCaption" Property="Text">
+          <Value>Fout</Value>
+        </TranslationItem>
+        <TranslationItem Name="OK" Property="Text">
+          <Value>Ok</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Deze commit is een samenvoeging, selecteer een ouder</Value>
+        </TranslationItem>
+        <TranslationItem Name="Message" Property="Text">
+          <Value>Bericht</Value>
+        </TranslationItem>
+        <TranslationItem Name="Author" Property="Text">
+          <Value>Auteur</Value>
+        </TranslationItem>
+        <TranslationItem Name="CommitDate" Property="Text">
+          <Value>Datum</Value>
+        </TranslationItem>
+        <TranslationItem Name="No" Property="Text">
+          <Value>Nr</Value>
+        </TranslationItem>
+        <TranslationItem Name="Column1" Property="HeaderText">
+          <Value>Nr</Value>
+        </TranslationItem>
+        <TranslationItem Name="Column2" Property="HeaderText">
+          <Value>Bericht</Value>
+        </TranslationItem>
+        <TranslationItem Name="Column3" Property="HeaderText">
+          <Value>Auteur</Value>
+        </TranslationItem>
+        <TranslationItem Name="Column4" Property="HeaderText">
+          <Value>Datum</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormDashboardCategoryTitle">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Title</Value>
+        </TranslationItem>
+        <TranslationItem Name="_needEnterCaptionText" Property="Text">
+          <Value>Het is verplicht een titel op te geven</Value>
+        </TranslationItem>
+        <TranslationItem Name="_needEnterCaptionTextCaption" Property="Text">
+          <Value>Voer titel in</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Title</Value>
@@ -3906,6 +3932,12 @@ Wilt u automatisch het standaard push/pull gedrag installen?</Value>
         <TranslationItem Name="_warningNoKeyEntered" Property="Text">
           <Value>Geen SSH sleutel bestand opgegeven</Value>
         </TranslationItem>
+        <TranslationItem Name="_labelUrlAsFetch" Property="Text">
+          <Value>Fetch Url</Value>
+        </TranslationItem>
+        <TranslationItem Name="_labelUrlAsFetchPush" Property="Text">
+          <Value>Url</Value>
+        </TranslationItem>
         <TranslationItem Name="tabPage1" Property="Text">
           <Value>Externe opslagplaatsen</Value>
         </TranslationItem>
@@ -3983,6 +4015,12 @@ Wilt u automatisch het standaard push/pull gedrag installen?</Value>
         </TranslationItem>
         <TranslationItem Name="Browse" Property="Text">
           <Value>Bladeren</Value>
+        </TranslationItem>
+        <TranslationItem Name="checkBoxSepPushUrl" Property="Text">
+          <Value>Aparte push Url</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelPushUrl" Property="Text">
+          <Value>Push Url</Value>
         </TranslationItem>
         <TranslationItem Name="buttonBrowsePushUrl" Property="Text">
           <Value>Bladeren</Value>
@@ -4141,6 +4179,19 @@ Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geope
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormSelectMultipleBranches">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Selecteer meerdere vertakkingen</Value>
+        </TranslationItem>
+        <TranslationItem Name="okButton" Property="Text">
+          <Value>Ok</Value>
+        </TranslationItem>
+        <TranslationItem Name="selectBranchesLabel" Property="Text">
+          <Value>Selecteer vertakkingen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="Strings">
       <translationItems>
         <TranslationItem Name="_dateText" Property="Text">
@@ -4187,6 +4238,12 @@ Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geope
         </TranslationItem>
         <TranslationItem Name="_daysAgo" Property="Text">
           <Value>{0} dagen geleden</Value>
+        </TranslationItem>
+        <TranslationItem Name="_weekAgo" Property="Text">
+          <Value>{0} week geleden</Value>
+        </TranslationItem>
+        <TranslationItem Name="_weeksAgo" Property="Text">
+          <Value>{0} weken geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_monthAgo" Property="Text">
           <Value>{0} maand geleden</Value>
