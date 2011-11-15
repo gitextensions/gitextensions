@@ -256,6 +256,7 @@ namespace GitUI
             translateCategories.Items.Clear();
             translateCategories.Items.Add(allText.Text);
 
+            HashSet<string> translateCategoriesSet = new HashSet<string>();
             string currentTranslation = GitCommands.Settings.Translation;
 
             try
@@ -273,11 +274,12 @@ namespace GitUI
                         continue;
                     }
 
-                    string className = type.Name;
+                    string className = null;
                     if (obj is Component)
                         className = ((Control)obj).Name;
-                    if (!translateCategories.Items.Contains(className))
-                        translateCategories.Items.Add(className);
+                    if (String.IsNullOrEmpty(className))
+                        className = type.Name;
+                    translateCategoriesSet.Add(className);
 
                     if (obj is Form)
                     {
@@ -301,6 +303,9 @@ namespace GitUI
             }
             finally
             {
+                translateCategories.Items.AddRange(translateCategoriesSet
+                    .Where(category => neutralTranslation.HasTranslationCategory(category))
+                    .OrderBy(category => category).ToArray());
                 //Restore translation
                 GitCommands.Settings.Translation = currentTranslation;
             }
