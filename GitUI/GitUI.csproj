@@ -88,6 +88,12 @@
     <Compile Include="AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="BranchComboBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BranchComboBox.Designer.cs">
+      <DependentUpon>BranchComboBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataGridViewCheckBoxColumnHeaderCell.cs" />
     <Compile Include="Editor\XHTML2RTF.cs" />
     <Compile Include="FormContributors.cs">
@@ -101,6 +107,12 @@
     </Compile>
     <Compile Include="FormGoToCommit.Designer.cs">
       <DependentUpon>FormGoToCommit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormSelectMultipleBranches.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSelectMultipleBranches.Designer.cs">
+      <DependentUpon>FormSelectMultipleBranches.cs</DependentUpon>
     </Compile>
     <Compile Include="FormVerify.LostObject.cs">
       <DependentUpon>FormVerify.cs</DependentUpon>
@@ -696,6 +708,9 @@
       <DependentUpon>AboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="BranchComboBox.resx">
+      <DependentUpon>BranchComboBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Editor\FileViewer.resx">
       <DependentUpon>FileViewer.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -707,6 +722,9 @@
     <EmbeddedResource Include="FormGoToCommit.resx">
       <DependentUpon>FormGoToCommit.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormSelectMultipleBranches.resx">
+      <DependentUpon>FormSelectMultipleBranches.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormViewPatch.resx">
       <DependentUpon>FormViewPatch.cs</DependentUpon>
