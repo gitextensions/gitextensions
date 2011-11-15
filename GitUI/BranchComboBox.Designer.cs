@@ -37,6 +37,8 @@
             this.branches.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.branches.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.branches.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.branches.FormattingEnabled = true;
             this.branches.Location = new System.Drawing.Point(0, 0);
             this.branches.Name = "branches";
