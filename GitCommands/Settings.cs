@@ -228,6 +228,13 @@ namespace GitCommands
             set { SafeSet("followrenamesinfilehistory", value, ref _followRenamesInFileHistory); }
         }
 
+        private static bool? _fullHistoryInFileHistory;
+        public static bool FullHistoryInFileHistory
+        {
+            get { return SafeGet("fullhistoryinfilehistory", false, ref _fullHistoryInFileHistory); }
+            set { SafeSet("fullhistoryinfilehistory", value, ref _fullHistoryInFileHistory); }
+        }
+
         private static bool? _revisionGraphShowWorkingDirChanges;
         public static bool RevisionGraphShowWorkingDirChanges
         {
