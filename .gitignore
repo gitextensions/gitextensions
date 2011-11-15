@@ -2,11 +2,13 @@
 _UpgradeReport_Files/
 [Dd]ebug*/
 [Rr]elease*/
+ipch/
 _ReSharper*/
 TestResults/
 
 *.sdf
 *.opensdf
+*.ipch
 
 */obj
 Plugins/*/obj
@@ -15,11 +17,7 @@ Plugins/*/*/obj
 Plugins/*/*/bin
 
 #ignore output mild compiler
-dlldata.c
-SimpleExt.h
-SimpleExt.tlb
-SimpleExt_i.c
-SimpleExt_p.c
+SimpleExt/Generated/*
 
 #ignore some unwanted files
 *.ncb
