@@ -682,7 +682,7 @@
         <TranslationItem Name="_selectOnlyOneFile" Property="Text">
           <Value>Возможно выбрать только один файл.</Value>
         </TranslationItem>
-        <TranslationItem Name="ResetChanges" Property="Text">
+        <TranslationItem Name="resetChanges" Property="Text">
           <Value>Отменить изменения</Value>
         </TranslationItem>
         <TranslationItem Name="deleteFileToolStripMenuItem" Property="Text">
@@ -1339,9 +1339,6 @@
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Удалить ветку</Value>
-        </TranslationItem>
-        <TranslationItem Name="_branchDeleted" Property="Text">
-          <Value>Команда выполнена</Value>
         </TranslationItem>
         <TranslationItem Name="_deleteBranchCaption" Property="Text">
           <Value>Удалить ветку</Value>
