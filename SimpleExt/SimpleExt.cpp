@@ -7,9 +7,9 @@
 #include "stdafx.h"
 #include "resource.h"
 #include <initguid.h>
-#include "SimpleExt.h"
+#include "Generated/SimpleExt.h"
 
-#include "SimpleExt_i.c"
+#include "Generated/SimpleExt_i.c"
 #include "SimpleShlExt.h"
 
 CComModule _Module;
@@ -64,36 +64,36 @@ STDAPI DllRegisterServer()
     // bug in that it requests KEY_ALL_ACCESS to the key.  That will fail if the
     // user is not an administrator.  (The code should request KEY_WRITE, which
     // is all that's necessary.)
-        CRegKey reg;
-        LONG    lRet;
+    CRegKey reg;
+    LONG    lRet;
     if ( 0 == (GetVersion() & 0x80000000UL) )
-        {
+    {
 
 
         lRet = reg.Open ( HKEY_LOCAL_MACHINE,
-                          _T("Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved"),
-                          KEY_SET_VALUE );
+            _T("Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved"),
+            KEY_SET_VALUE );
 
         if ( ERROR_SUCCESS != lRet )
             return E_ACCESSDENIED;
 
         lRet = reg.SetStringValue ( _T("{3C16B20A-BA16-4156-916F-0A375ECFFE24}"), 
-                                    _T("GitExtensions2") );
+            _T("GitExtensions2") );
 
         if ( ERROR_SUCCESS != lRet )
             return E_ACCESSDENIED;
-	}
-	{
-///////////////////////
-/// File context menu handler
-///////////////////////
+    }
+    {
+        ///////////////////////
+        /// File context menu handler
+        ///////////////////////
 
-		reg.Create(HKEY_CLASSES_ROOT,
-					_T("*\\shellex\\ContextMenuHandlers\\GitExtensions2"));
+        reg.Create(HKEY_CLASSES_ROOT,
+            _T("*\\shellex\\ContextMenuHandlers\\GitExtensions2"));
 
         lRet = reg.Open ( HKEY_CLASSES_ROOT,
-                          _T("*\\shellex\\ContextMenuHandlers\\GitExtensions2"),
-                          KEY_SET_VALUE );		
+            _T("*\\shellex\\ContextMenuHandlers\\GitExtensions2"),
+            KEY_SET_VALUE );		
 
         if ( ERROR_SUCCESS != lRet )
             return E_ACCESSDENIED;
@@ -103,16 +103,16 @@ STDAPI DllRegisterServer()
         if ( ERROR_SUCCESS != lRet )
             return E_ACCESSDENIED;
 
-///////////////////////
-/// Directory context menu handler
-///////////////////////
+        ///////////////////////
+        /// Directory context menu handler
+        ///////////////////////
 
-		reg.Create(HKEY_CLASSES_ROOT,
-					_T("Directory\\shellex\\ContextMenuHandlers\\GitExtensions2"));
+        reg.Create(HKEY_CLASSES_ROOT,
+            _T("Directory\\shellex\\ContextMenuHandlers\\GitExtensions2"));
 
         lRet = reg.Open ( HKEY_CLASSES_ROOT,
-                          _T("Directory\\shellex\\ContextMenuHandlers\\GitExtensions2"),
-                          KEY_SET_VALUE );		
+            _T("Directory\\shellex\\ContextMenuHandlers\\GitExtensions2"),
+            KEY_SET_VALUE );		
 
         if ( ERROR_SUCCESS != lRet )
             return E_ACCESSDENIED;
@@ -122,16 +122,16 @@ STDAPI DllRegisterServer()
         if ( ERROR_SUCCESS != lRet )
             return E_ACCESSDENIED;
 
-///////////////////////
-/// Background context menu handler
-///////////////////////
+        ///////////////////////
+        /// Background context menu handler
+        ///////////////////////
 
-		reg.Create(HKEY_CLASSES_ROOT,
-					_T("Directory\\Background\\shellex\\ContextMenuHandlers\\GitExtensions2"));
+        reg.Create(HKEY_CLASSES_ROOT,
+            _T("Directory\\Background\\shellex\\ContextMenuHandlers\\GitExtensions2"));
 
         lRet = reg.Open ( HKEY_CLASSES_ROOT,
-                          _T("Directory\\Background\\shellex\\ContextMenuHandlers\\GitExtensions2"),
-                          KEY_SET_VALUE );		
+            _T("Directory\\Background\\shellex\\ContextMenuHandlers\\GitExtensions2"),
+            KEY_SET_VALUE );		
 
         if ( ERROR_SUCCESS != lRet )
             return E_ACCESSDENIED;
@@ -141,7 +141,7 @@ STDAPI DllRegisterServer()
         if ( ERROR_SUCCESS != lRet )
             return E_ACCESSDENIED;
 
-        }
+    }
 
     // registers object, typelib and all interfaces in typelib
     return _Module.RegisterServer(FALSE);
@@ -156,26 +156,26 @@ STDAPI DllUnregisterServer()
     // Note that if we get an error along the way, I don't bail out since I want
     // to do the normal ATL unregistration stuff too.
 
-        CRegKey reg;
-        LONG    lRet;
+    CRegKey reg;
+    LONG    lRet;
 
-		if ( 0 == (GetVersion() & 0x80000000UL) )
-        {
+    if ( 0 == (GetVersion() & 0x80000000UL) )
+    {
 
 
         lRet = reg.Open ( HKEY_LOCAL_MACHINE,
-                          _T("Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved"),
-                          KEY_SET_VALUE );
+            _T("Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved"),
+            KEY_SET_VALUE );
 
         if ( ERROR_SUCCESS == lRet )
-            {
+        {
             lRet = reg.DeleteValue ( _T("{3C16B20A-BA16-4156-916F-0A375ECFFE24}") );
-            }
         }
+    }
 
-		reg.DeleteSubKey(_T("*\\shellex\\ContextMenuHandlers\\GitExtensions2"));
-		reg.DeleteSubKey(_T("Directory\\shellex\\ContextMenuHandlers\\GitExtensions2"));
-		reg.DeleteSubKey(_T("Directory\\Background\\shellex\\ContextMenuHandlers\\GitExtensions2"));
+    reg.DeleteSubKey(_T("*\\shellex\\ContextMenuHandlers\\GitExtensions2"));
+    reg.DeleteSubKey(_T("Directory\\shellex\\ContextMenuHandlers\\GitExtensions2"));
+    reg.DeleteSubKey(_T("Directory\\Background\\shellex\\ContextMenuHandlers\\GitExtensions2"));
 
     return _Module.UnregisterServer(FALSE);
 }
