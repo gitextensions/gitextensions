@@ -1580,6 +1580,15 @@ namespace GitCommands
             return GetSelectedBranch(_workingdir);
         }
 
+        public string GetRemoteBranch(string branch)
+        {
+            string remote = GetSetting(string.Format("branch.{0}.remote", branch));
+            string merge = GetSetting(string.Format("branch.{0}.merge", branch));
+            if (String.IsNullOrEmpty(remote) || String.IsNullOrEmpty(merge))
+                return "";
+            return remote + "/" + (merge.StartsWith("refs/heads/") ? merge.Substring(11) : merge);
+        }
+
         public List<GitHead> GetRemoteHeads(string remote, bool tags, bool branches)
         {
             remote = FixPath(remote);

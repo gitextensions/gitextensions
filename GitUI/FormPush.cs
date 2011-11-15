@@ -17,6 +17,7 @@ namespace GitUI
         private const string PuttyText = "PuTTY";
         private const string HeadText = "HEAD";
 
+        #region Translation
         private readonly TranslationString _branchNewForRemote =
             new TranslationString("The branch you are about to push seems to be a new branch for the remote." +
                                   Environment.NewLine + "Are you sure you want to push this branch?");
@@ -41,6 +42,7 @@ namespace GitUI
 
         private readonly TranslationString _yes = new TranslationString("Yes");
         private readonly TranslationString _no = new TranslationString("No");
+        #endregion
 
         public FormPush()
         {
@@ -76,12 +78,16 @@ namespace GitUI
             RemotesUpdated(null, null);
         }
 
-        public void PushAndShowDialogWhenFailed()
+        public void PushAndShowDialogWhenFailed(IWin32Window owner)
         {
             if (!PushChanges())
-                ShowDialog();
+                ShowDialog(owner);
         }
 
+        public void PushAndShowDialogWhenFailed()
+        {
+            PushAndShowDialogWhenFailed(null);
+        }
 
         private void BrowseSourceClick(object sender, EventArgs e)
         {
@@ -212,7 +218,7 @@ namespace GitUI
             {
                 ScriptManager.RunEventScripts(ScriptEvent.AfterPush);
                 if (_createPullRequestCB.Checked)
-                    GitUICommands.Instance.StartCreatePullRequest();
+                    GitUICommands.Instance.StartCreatePullRequest(this);
                 return true;
             }
 
@@ -235,7 +241,7 @@ namespace GitUI
                     else
                     {
                         bool pullCompleted;
-                        GitUICommands.Instance.StartPullDialog(true, out pullCompleted);
+                        GitUICommands.Instance.StartPullDialog(this, true, out pullCompleted);
                         if (pullCompleted)
                         {
                             form.Retry();
@@ -277,7 +283,7 @@ namespace GitUI
 
         private void PullClick(object sender, EventArgs e)
         {
-            GitUICommands.Instance.StartPullDialog();
+            GitUICommands.Instance.StartPullDialog(this);
         }
 
         private void UpdateRemoteBranchDropDown()
@@ -326,7 +332,7 @@ namespace GitUI
 
         private void AddRemoteClick(object sender, EventArgs e)
         {
-            GitUICommands.Instance.StartRemotesDialog();
+            GitUICommands.Instance.StartRemotesDialog(this);
             _NO_TRANSLATE_Remotes.DataSource = Settings.Module.GetRemotes();
         }
 

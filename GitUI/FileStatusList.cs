@@ -269,7 +269,7 @@ namespace GitUI
         void FileStatusListBox_DoubleClick(object sender, EventArgs e)
         {
             if (this.DoubleClick == null)
-                GitUICommands.Instance.StartFileHistoryDialog(SelectedItem.Name, Revision);
+                GitUICommands.Instance.StartFileHistoryDialog(this, SelectedItem.Name, Revision);
             else
                 this.DoubleClick(sender, e);
         }

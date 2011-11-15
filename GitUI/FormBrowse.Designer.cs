@@ -69,7 +69,6 @@ namespace GitUI
             this.commitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.committerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.authorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.hashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.diffContainsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainSplitContainer = new System.Windows.Forms.SplitContainer();
             this.RevisionGrid = new GitUI.RevisionGrid();
@@ -512,7 +511,6 @@ namespace GitUI
             this.commitToolStripMenuItem1,
             this.committerToolStripMenuItem,
             this.authorToolStripMenuItem,
-            this.hashToolStripMenuItem,
             this.diffContainsToolStripMenuItem});
             this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
             this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -541,13 +539,6 @@ namespace GitUI
             this.authorToolStripMenuItem.Name = "authorToolStripMenuItem";
             this.authorToolStripMenuItem.Size = new System.Drawing.Size(216, 24);
             this.authorToolStripMenuItem.Text = "Author";
-            // 
-            // hashToolStripMenuItem
-            // 
-            this.hashToolStripMenuItem.CheckOnClick = true;
-            this.hashToolStripMenuItem.Name = "hashToolStripMenuItem";
-            this.hashToolStripMenuItem.Size = new System.Drawing.Size(216, 24);
-            this.hashToolStripMenuItem.Text = "Hash";
             // 
             // diffContainsToolStripMenuItem
             // 
@@ -588,7 +579,6 @@ namespace GitUI
             this.RevisionGrid.InMemAuthorFilter = "";
             this.RevisionGrid.InMemCommitterFilter = "";
             this.RevisionGrid.InMemFilterIgnoreCase = false;
-            this.RevisionGrid.InMemHashFilter = "";
             this.RevisionGrid.InMemMessageFilter = "";
             this.RevisionGrid.LastRow = 0;
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
@@ -1861,7 +1851,6 @@ namespace GitUI
         private ToolStripMenuItem donateToolStripMenuItem;
         private ToolStripMenuItem aboutToolStripMenuItem;
         private MenuStrip menuStrip1;
-        private ToolStripMenuItem hashToolStripMenuItem;
         private ToolStripMenuItem diffBaseLocalToolStripMenuItem;
         private ToolStripMenuItem difftoolRemoteLocalToolStripMenuItem;
     }

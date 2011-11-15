@@ -90,12 +90,12 @@ namespace GitUI
             _NO_TRANSLATE_Remotes.DataSource = remotes;
         }
 
-        public DialogResult PullAndShowDialogWhenFailed()
+        public DialogResult PullAndShowDialogWhenFailed(IWin32Window owner = null)
         {
             if (PullChanges())
                 return DialogResult.OK;
             else
-                return ShowDialog();
+                return ShowDialog(owner);
         }
 
         private void BrowseSourceClick(object sender, EventArgs e)
@@ -276,7 +276,7 @@ namespace GitUI
                     if (!Fetch.Checked && File.Exists(Settings.WorkingDir + ".gitmodules"))
                     {
                         if (!IsSubmodulesIntialized() && AskIfSubmodulesShouldBeInitialized())
-                            GitUICommands.Instance.StartInitSubmodulesRecursiveDialog();
+                            GitUICommands.Instance.StartInitSubmodulesRecursiveDialog(this);
                     }
 
                     return true;
@@ -294,7 +294,7 @@ namespace GitUI
                 }
                 else
                 {
-                    MergeConflictHandler.HandleMergeConflicts();
+                    MergeConflictHandler.HandleMergeConflicts(this);
                     if (!Settings.Module.InTheMiddleOfConflictedMerge() &&
                         !Settings.Module.InTheMiddleOfRebase())
                     {
@@ -319,7 +319,7 @@ namespace GitUI
                     MessageBox.Show(this, _applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     new FormProcess("stash pop").ShowDialog(this);
-                    MergeConflictHandler.HandleMergeConflicts();
+                    MergeConflictHandler.HandleMergeConflicts(this);
                 }               
 
                 ScriptManager.RunEventScripts(ScriptEvent.AfterPull);
@@ -373,7 +373,7 @@ namespace GitUI
 
         private void StashClick(object sender, EventArgs e)
         {
-            GitUICommands.Instance.StartStashDialog();
+            GitUICommands.Instance.StartStashDialog(this);
         }
 
         private void PullFromRemoteCheckedChanged(object sender, EventArgs e)
@@ -415,7 +415,7 @@ namespace GitUI
 
         private void AddRemoteClick(object sender, EventArgs e)
         {
-            GitUICommands.Instance.StartRemotesDialog();
+            GitUICommands.Instance.StartRemotesDialog(this);
 
             bInternalUpdate = true;
             string text = _NO_TRANSLATE_Remotes.Text;

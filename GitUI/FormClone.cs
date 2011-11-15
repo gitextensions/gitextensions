@@ -95,7 +95,7 @@ namespace GitUI
 
                     if (File.Exists(Settings.WorkingDir + ".gitmodules") &&
                         AskIfSubmodulesShouldBeInitialized())
-                        GitUICommands.Instance.StartInitSubmodulesRecursiveDialog();
+                        GitUICommands.Instance.StartInitSubmodulesRecursiveDialog(this);
                 }
                 Close();
             }

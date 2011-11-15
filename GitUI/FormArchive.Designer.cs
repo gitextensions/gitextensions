@@ -111,7 +111,6 @@
             this.revisionGrid1.InMemCommitterFilter = "";
             this.revisionGrid1.InMemFilterIgnoreCase = false;
             this.revisionGrid1.InMemMessageFilter = "";
-            this.revisionGrid1.InMemHashFilter = "";
             this.revisionGrid1.LastRow = 0;
             this.revisionGrid1.Location = new System.Drawing.Point(0, 0);
             this.revisionGrid1.Name = "revisionGrid1";

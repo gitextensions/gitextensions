@@ -40,8 +40,8 @@ namespace GitUI
 
         private void Checkout_Click(object sender, EventArgs e)
         {
-            GitUICommands.Instance.StartCheckoutBranchDialog();
-            MergeConflictHandler.HandleMergeConflicts();
+            GitUICommands.Instance.StartCheckoutBranchDialog(this);
+            MergeConflictHandler.HandleMergeConflicts(this);
             RevisionGrid.RefreshRevisions();
         }
 

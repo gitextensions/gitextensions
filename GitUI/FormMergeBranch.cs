@@ -28,6 +28,12 @@ namespace GitUI
 
             if (_defaultBranch != null)
                 Branches.Text = _defaultBranch;
+            else
+            {
+                string merge = Settings.Module.GetRemoteBranch(selectedHead);
+                if (!String.IsNullOrEmpty(merge))
+                    Branches.Text = merge;
+            }
 
             Branches.Select();
         }
@@ -37,7 +43,7 @@ namespace GitUI
             var process = new FormProcess(GitCommandHelpers.MergeBranchCmd(Branches.Text, fastForward.Checked, squash.Checked, noCommit.Checked, _NO_TRANSLATE_mergeStrategy.Text));
             process.ShowDialog(this);
 
-            var wasConflict = MergeConflictHandler.HandleMergeConflicts();
+            var wasConflict = MergeConflictHandler.HandleMergeConflicts(this);
 
             if (!process.ErrorOccurred() || wasConflict)
                 Close();

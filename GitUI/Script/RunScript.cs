@@ -90,7 +90,7 @@ namespace GitUI.Script
                     {
                         if (RevisionGrid == null)
                         {
-                            MessageBox.Show("Option " + option + " is only supported when started from revision grid.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show(string.Format("Option {0} is only supported when started from revision grid.", option), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
 

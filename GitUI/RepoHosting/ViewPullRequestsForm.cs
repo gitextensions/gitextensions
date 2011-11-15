@@ -19,6 +19,9 @@ namespace GitUI.RepoHosting
         private readonly TranslationString _strCouldNotLoadDiscussion = new TranslationString("Could not load discussion!\r\n");
         private readonly TranslationString _strError = new TranslationString("Error");
         private readonly TranslationString _strLoading = new TranslationString(" : LOADING : ");
+        private readonly TranslationString _strUnableUnderstandPatch = new TranslationString("Error: Unable to understand patch");
+        private readonly TranslationString _strRemoteAlreadyExist = new TranslationString("ERROR: Remote with name {0} already exists but it does not point to the same repository!\r\nDetails: Is {1} expected {2}");
+        private readonly TranslationString _strCouldNotAddRemote = new TranslationString("Could not add remote with name {0} and URL {1}");
         #endregion
 
         private readonly IRepositoryHostPlugin _gitHoster;
@@ -224,7 +227,7 @@ namespace GitUI.RepoHosting
                 var match = Regex.Match(part, @"^a/([^\n]+) b/([^\n]+)\s*(.*)$", RegexOptions.Singleline);
                 if (!match.Success)
                 {
-                    MessageBox.Show(this, "Error: Unable to understand patch", _strError.Text);
+                    MessageBox.Show(this, _strUnableUnderstandPatch.Text, _strError.Text);
                     return;
                 }
 
@@ -274,7 +277,7 @@ namespace GitUI.RepoHosting
             {
                 if (existingRepo.GetHostedRepository().CloneReadOnlyUrl != remoteUrl)
                 {
-                    MessageBox.Show(this, string.Format("ERROR: Remote with name {0} already exists but it does not point to the same repository!\r\nDetails: Is {1} expected {2}",
+                    MessageBox.Show(this, string.Format(_strRemoteAlreadyExist.Text,
                                         remoteName, existingRepo.GetHostedRepository().CloneReadOnlyUrl, remoteUrl));
                     return;
                 }
@@ -284,7 +287,7 @@ namespace GitUI.RepoHosting
                 var error = Settings.Module.AddRemote(remoteName, remoteUrl);
                 if (!string.IsNullOrEmpty(error))
                 {
-                    MessageBox.Show(this, error, string.Format("Could not add remote with name {0} and URL {1}", remoteName, remoteUrl));
+                    MessageBox.Show(this, error, string.Format(_strCouldNotAddRemote.Text, remoteName, remoteUrl));
                     return;
                 }
             }
