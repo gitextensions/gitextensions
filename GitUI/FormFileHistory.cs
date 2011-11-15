@@ -28,6 +28,7 @@ namespace GitUI
             FileChanges.DisableContextMenu();
 
             followFileHistoryToolStripMenuItem.Checked = Settings.FollowRenamesInFileHistory;
+            fullHistoryToolStripMenuItem.Checked = Settings.FullHistoryInFileHistory;
         }
 
         public FormFileHistory(string fileName)
@@ -132,6 +133,10 @@ namespace GitUI
                 filter = " --parents -- \"" + fileName + "\"";
             }
 
+            if (Settings.FullHistoryInFileHistory)
+            {
+                filter = string.Concat(" --full-history --simplify-by-decoration ", filter);
+            }
 
             syncContext.Post(o =>
             {
@@ -319,6 +324,13 @@ namespace GitUI
             Settings.FollowRenamesInFileHistory = !Settings.FollowRenamesInFileHistory;
             followFileHistoryToolStripMenuItem.Checked = Settings.FollowRenamesInFileHistory;
 
+            ThreadPool.QueueUserWorkItem(o => LoadFileHistory(FileName));
+        }
+
+        private void fullHistoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.FullHistoryInFileHistory = !Settings.FullHistoryInFileHistory;
+            fullHistoryToolStripMenuItem.Checked = Settings.FullHistoryInFileHistory;
             ThreadPool.QueueUserWorkItem(o => LoadFileHistory(FileName));
         }
     }
