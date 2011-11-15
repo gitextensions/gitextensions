@@ -8,7 +8,10 @@ namespace GitUI
 {
     public class Abort : ITranslate
     {
-        public Abort()
+        /// <summary>
+        /// Constructor used for translation
+        /// </summary>
+        internal Abort()
         {
             var translator = new Translator(Settings.Translation);
             translator.TranslateControl(this);

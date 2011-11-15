@@ -922,9 +922,6 @@ Wollen Sie zuerst einen Ländercode auswählen?</Value>
         <TranslationItem Name="aboutToolStripMenuItem" Property="Text">
           <Value>Info</Value>
         </TranslationItem>
-        <TranslationItem Name="hashToolStripMenuItem" Property="Text">
-          <Value>Hash</Value>
-        </TranslationItem>
         <TranslationItem Name="_noBranchTitle" Property="Text">
           <Value>kein Branch</Value>
         </TranslationItem>
@@ -1066,7 +1063,7 @@ Möchten Sie trotzdem fortfahren?</Value>
         <TranslationItem Name="Ok" Property="Text">
           <Value>Commiten</Value>
         </TranslationItem>
-        <TranslationItem Name="ResetChanges" Property="Text">
+        <TranslationItem Name="resetChanges" Property="Text">
           <Value>Dateiänderungen zurücksetzen</Value>
         </TranslationItem>
         <TranslationItem Name="deleteFileToolStripMenuItem" Property="Text">
@@ -2124,9 +2121,6 @@ synchronize [--rebase] [--merge] [--fetch] [--quiet]</Value>
         <TranslationItem Name="$this" Property="Text">
           <Value>Branch löschen</Value>
         </TranslationItem>
-        <TranslationItem Name="_branchDeleted" Property="Text">
-          <Value>Befehl ausgeführt</Value>
-        </TranslationItem>
         <TranslationItem Name="_deleteBranchCaption" Property="Text">
           <Value>Branch löschen</Value>
         </TranslationItem>
@@ -2547,22 +2541,6 @@ ancestor tree.</Value>
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Value>Plugin Einstellungen</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormProcess">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Fortschritt</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>Ok</Value>
-        </TranslationItem>
-        <TranslationItem Name="KeepDialogOpen" Property="Text">
-          <Value>Dialog nicht schließen</Value>
-        </TranslationItem>
-        <TranslationItem Name="Abort" Property="Text">
-          <Value>Abbrechen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4266,9 +4244,6 @@ bei der Benutzung auftreten.</Value>
     </TranslationCategory>
     <TranslationCategory Name="RevisionGrid">
       <translationItems>
-        <TranslationItem Name="_messageCaption" Property="Text">
-          <Value>Nachricht</Value>
-        </TranslationItem>
         <TranslationItem Name="_currentWorkingDirChanges" Property="Text">
           <Value>Aktuell nicht commitete Änderungen</Value>
         </TranslationItem>
@@ -4419,22 +4394,6 @@ Wenn dies ein zentralisiertes Repository ist (ein sogenanntes Bare Repository):
         </TranslationItem>
         <TranslationItem Name="squashCommitToolStripMenuItem" Property="Text">
           <Value>Commit squashen</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormRemoteProcess">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Fortschritt</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>Ok</Value>
-        </TranslationItem>
-        <TranslationItem Name="KeepDialogOpen" Property="Text">
-          <Value>Dialog nicht schließen</Value>
-        </TranslationItem>
-        <TranslationItem Name="Abort" Property="Text">
-          <Value>Abbrechen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
