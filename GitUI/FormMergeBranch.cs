@@ -23,16 +23,15 @@ namespace GitUI
             var selectedHead = Settings.Module.GetSelectedBranch();
             currentBranchLabel.Text = selectedHead;
 
-            Branches.DisplayMember = "Name";
-            Branches.DataSource = Settings.Module.GetHeads(true, true);
+            Branches.BranchesToSelect = Settings.Module.GetHeads(true, true);
 
             if (_defaultBranch != null)
-                Branches.Text = _defaultBranch;
+                Branches.SetSelectedText(_defaultBranch);
             else
             {
                 string merge = Settings.Module.GetRemoteBranch(selectedHead);
                 if (!String.IsNullOrEmpty(merge))
-                    Branches.Text = merge;
+                    Branches.SetSelectedText(merge);
             }
 
             Branches.Select();
@@ -40,7 +39,7 @@ namespace GitUI
 
         private void OkClick(object sender, EventArgs e)
         {
-            var process = new FormProcess(GitCommandHelpers.MergeBranchCmd(Branches.Text, fastForward.Checked, squash.Checked, noCommit.Checked, _NO_TRANSLATE_mergeStrategy.Text));
+            var process = new FormProcess(GitCommandHelpers.MergeBranchCmd(Branches.GetSelectedText(), fastForward.Checked, squash.Checked, noCommit.Checked, _NO_TRANSLATE_mergeStrategy.Text));
             process.ShowDialog(this);
 
             var wasConflict = MergeConflictHandler.HandleMergeConflicts(this);
