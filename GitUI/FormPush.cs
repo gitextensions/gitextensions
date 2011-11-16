@@ -16,6 +16,13 @@ namespace GitUI
     {
         private const string PuttyText = "PuTTY";
         private const string HeadText = "HEAD";
+        private readonly string _currentBranch;
+        private readonly string _currentBranchRemote;
+        private bool candidateForRebasingMergeCommit = false;
+        private string selectedBranch;
+        private string selectedBranchRemote;
+        private string selectedRemoteBranchName;
+
 
         #region Translation
         private readonly TranslationString _branchNewForRemote =
@@ -24,9 +31,6 @@ namespace GitUI
 
         private readonly TranslationString _cannotLoadPutty =
             new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");
-
-        private readonly string _currentBranch;
-        private readonly string _currentBranchRemote;
 
         private readonly TranslationString _pushCaption = new TranslationString("Push");
 
@@ -204,6 +208,12 @@ namespace GitUI
 
             ScriptManager.RunEventScripts(ScriptEvent.BeforePush);
 
+            //controls can be accessed only from UI thread
+            candidateForRebasingMergeCommit = Settings.PullMerge == "rebase" && PullFromRemote.Checked && !PushAllBranches.Checked && TabControlTagBranch.SelectedTab == BranchTab;
+            selectedBranch = _NO_TRANSLATE_Branch.Text;
+            selectedBranchRemote = _NO_TRANSLATE_Remotes.Text;
+            selectedRemoteBranchName = RemoteBranch.Text;
+
             var form = new FormRemoteProcess(pushCmd)
                        {
                            Remote = remote,
@@ -225,18 +235,35 @@ namespace GitUI
             return false;
         }
 
-        private bool HandlePushOnExit(ref bool isError, FormProcess form) 
+
+        private bool IsRebasingMergeCommit()
         {
-            if (isError) 
+            if (candidateForRebasingMergeCommit)
+            {
+                if (selectedBranch == _currentBranch && selectedBranchRemote == _currentBranchRemote)
+                {
+                    string remoteBranchName = selectedBranchRemote + "/" + selectedRemoteBranchName;
+                    return Settings.Module.ExistsMergeCommit(remoteBranchName, selectedBranch);
+                }
+                else
+                    return false;
+            }
+            else
+                return false;
+        }
+
+        private bool HandlePushOnExit(ref bool isError, FormProcess form)
+        {
+            if (isError)
             {
 
-                if (Settings.AutoPullOnRejected && 
+                if (Settings.AutoPullOnRejected &&
                     form.OutputString.ToString().Contains("To prevent you from losing history, non-fast-forward updates were rejected"))
                 {
                     if (Settings.PullMerge == "fetch")
                         form.AppendOutputLine(Environment.NewLine + "Can not perform auto pull, when merge option is set to fetch.");
-                    else if (Settings.PullMerge == "rebase" && Settings.Module.ExistsMergeCommit(_currentBranchRemote + "/" + _currentBranch, _currentBranch))
-                        form.AppendOutputLine(Environment.NewLine + "Can not perform auto pull, when merge option is set to rebase " + Environment.NewLine 
+                    else if (IsRebasingMergeCommit())
+                        form.AppendOutputLine(Environment.NewLine + "Can not perform auto pull, when merge option is set to rebase " + Environment.NewLine
                                             + "and one of the commits that are about to be rebased is a merge.");
                     else
                     {
