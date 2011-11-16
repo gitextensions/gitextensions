@@ -5,7 +5,9 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitUI.Properties;
+#if !__MonoCS__
 using Microsoft.WindowsAPICodePack.Taskbar;
+#endif
 using ResourceManager.Translation;
 using Settings = GitCommands.Settings;
 using System.Collections.Generic;
@@ -211,6 +213,7 @@ namespace GitUI
 
         public virtual void GitExtensionsFormFormClosed(object sender, EventArgs e)
         {
+#if !__MonoCS__
             if (TaskbarManager.IsPlatformSupported)
             {
                 try
@@ -219,6 +222,7 @@ namespace GitUI
                 }
                 catch (InvalidOperationException) { }
             }
+#endif
         }
 
         /// <summary>
