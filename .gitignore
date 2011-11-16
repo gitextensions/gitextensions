@@ -32,3 +32,6 @@ Thumbs.db
 GitPlugin/bin/*
 Setup/GitExtensions207.zip
 GitPlugin/Properties/Resources.resources
+*.pidb
+*.resources
+*.userprefs
