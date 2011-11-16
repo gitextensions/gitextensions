@@ -17,7 +17,9 @@ using GitUI.Script;
 using GitUI.Statistics;
 using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor.Util;
+#if !__MonoCS__
 using Microsoft.WindowsAPICodePack.Taskbar;
+#endif
 using ResourceManager.Translation;
 
 namespace GitUI
@@ -82,9 +84,11 @@ namespace GitUI
         private ToolStripItem _bisect;
         private ToolStripItem _warning;
 
+#if !__MonoCS__
         private ThumbnailToolBarButton _commitButton;
         private ThumbnailToolBarButton _pushButton;
         private ThumbnailToolBarButton _pullButton;
+#endif
         private bool _toolbarButtonsCreated;
         private bool _dontUpdateOnIndexChange;
 
@@ -288,7 +292,7 @@ namespace GitUI
         }
 
         /// <summary>
-        /// Returns a short name for repository. 
+        /// Returns a short name for repository.
         /// If the repository contains a description it is returned,
         /// otherwise the last part of path is returned.
         /// </summary>
@@ -325,7 +329,7 @@ namespace GitUI
             {
                 ToolStripButton tempButton = new ToolStripButton();
                 //store scriptname
-                tempButton.Text = scriptInfo.Name;                
+                tempButton.Text = scriptInfo.Name;
                 tempButton.Tag = "userscript";
                 //add handler
                 tempButton.Click += new EventHandler(UserMenu_Click);
@@ -347,9 +351,10 @@ namespace GitUI
 
         private void UpdateJumplist(bool validWorkingDir)
         {
+#if !__MonoCS__
             if (Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
-                //Call this method using reflection.  This is a workaround to *not* reference WPF libraries, becuase of how the WindowsAPICodePack was implimented.  
+                //Call this method using reflection.  This is a workaround to *not* reference WPF libraries, becuase of how the WindowsAPICodePack was implimented.
                 TaskbarManager.Instance.GetType().InvokeMember("SetApplicationIdForSpecificWindow", System.Reflection.BindingFlags.InvokeMethod, null, TaskbarManager.Instance, new object[] { Handle, "GitExtensions" });
 
                 if (validWorkingDir)
@@ -369,10 +374,12 @@ namespace GitUI
 
                 CreateOrUpdateTaskBarButtons(validWorkingDir);
             }
+#endif
         }
 
         private void CreateOrUpdateTaskBarButtons(bool validRepo)
         {
+#if !__MonoCS__
             if (Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
                 if (!_toolbarButtonsCreated)
@@ -398,6 +405,7 @@ namespace GitUI
                 _pushButton.Enabled = validRepo;
                 _pullButton.Enabled = validRepo;
             }
+#endif
         }
 
         /// <summary>
@@ -551,7 +559,7 @@ namespace GitUI
         /// <param name="isWorkingDirValid">If the given path contains valid repository.</param>
         private static string GenerateWindowTitle(string workingDir, bool isWorkingDirValid, string branchName)
         {
-#if DEBUG  
+#if DEBUG
             const string defaultTitle = "Git Extensions -> DEBUG <-";
             const string repositoryTitleFormat = "{0} ({1}) - Git Extensions -> DEBUG <-";
 #else
@@ -678,7 +686,7 @@ namespace GitUI
 
         //store strings to not keep references to nodes
         private Stack<string>  lastSelectedNodes = new Stack<string>();
-     
+
         private void FillFileTree()
         {
             if (CommitInfoTabControl.SelectedTab != Tree)
@@ -687,7 +695,7 @@ namespace GitUI
             try
             {
                 GitTree.SuspendLayout();
-                // Save state only when there is selected node                
+                // Save state only when there is selected node
                 if (GitTree.SelectedNode != null)
                 {
                     TreeNode node = GitTree.SelectedNode;
@@ -722,7 +730,7 @@ namespace GitUI
 
                             node.Expand();
                             matchedNode = node;
-                            break;                            
+                            break;
                         }
                         if (matchedNode == null)
                             currenNodes = null;
@@ -1499,7 +1507,7 @@ namespace GitUI
                 Initialize();
             Cursor.Current = Cursors.Default;
         }
-                
+
         private void ToolStripSplitStashButtonClick(object sender, EventArgs e)
         {
             if (GitUICommands.Instance.StartStashDialog(this))
@@ -2164,9 +2172,9 @@ namespace GitUI
             //DRAG
             if (e.Button == MouseButtons.Left)
             {
-                // Remember the point where the mouse down occurred. 
-                // The DragSize indicates the size that the mouse can move 
-                // before a drag event should be started.               
+                // Remember the point where the mouse down occurred.
+                // The DragSize indicates the size that the mouse can move
+                // before a drag event should be started.
                 Size dragSize = SystemInformation.DragSize;
 
                 // Create a rectangle using the DragSize, with the mouse position being
@@ -2205,7 +2213,7 @@ namespace GitUI
                     DataObject obj = new DataObject();
                     obj.SetFileDropList(fileList);
 
-                    // Proceed with the drag and drop, passing in the list item.                   
+                    // Proceed with the drag and drop, passing in the list item.
                     DoDragDrop(obj, DragDropEffects.Copy);
                     gitTreeDragBoxFromMouseDown = Rectangle.Empty;
                 }
