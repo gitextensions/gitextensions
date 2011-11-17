@@ -335,6 +335,7 @@ namespace GitUI
             this.deleteTagToolStripMenuItem.Name = "deleteTagToolStripMenuItem";
             this.deleteTagToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.deleteTagToolStripMenuItem.Text = "Delete tag";
+            this.deleteTagToolStripMenuItem.Click += new System.EventHandler(this.toolStripMenuWithOneItem_Click);
             // 
             // createNewBranchToolStripMenuItem
             // 
@@ -350,6 +351,7 @@ namespace GitUI
             this.deleteBranchToolStripMenuItem.Name = "deleteBranchToolStripMenuItem";
             this.deleteBranchToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.deleteBranchToolStripMenuItem.Text = "Delete branch";
+            this.deleteBranchToolStripMenuItem.Click += new System.EventHandler(this.toolStripMenuWithOneItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -361,12 +363,14 @@ namespace GitUI
             this.mergeBranchToolStripMenuItem.Name = "mergeBranchToolStripMenuItem";
             this.mergeBranchToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.mergeBranchToolStripMenuItem.Text = "Merge current branch with";
+            this.mergeBranchToolStripMenuItem.Click += new System.EventHandler(this.toolStripMenuWithOneItem_Click);
             // 
             // rebaseOnToolStripMenuItem
             // 
             this.rebaseOnToolStripMenuItem.Name = "rebaseOnToolStripMenuItem";
             this.rebaseOnToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.rebaseOnToolStripMenuItem.Text = "Rebase current branch on";
+            this.rebaseOnToolStripMenuItem.Click += new System.EventHandler(this.toolStripMenuWithOneItem_Click);
             // 
             // resetCurrentBranchToHereToolStripMenuItem
             // 
@@ -380,6 +384,7 @@ namespace GitUI
             this.checkoutBranchToolStripMenuItem.Name = "checkoutBranchToolStripMenuItem";
             this.checkoutBranchToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.checkoutBranchToolStripMenuItem.Text = "Checkout branch";
+            this.checkoutBranchToolStripMenuItem.Click += new System.EventHandler(this.toolStripMenuWithOneItem_Click);
             // 
             // checkoutRevisionToolStripMenuItem
             // 
