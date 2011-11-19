@@ -1118,6 +1118,7 @@ namespace GitUI
             this.label58.Size = new System.Drawing.Size(301, 13);
             this.label58.TabIndex = 48;
             this.label58.Text = "Focus control on hover to enable scroll without having to click";
+            this.label58.Click += new System.EventHandler(this.checkboxLabel_Click);
             // 
             // focusControlOnHover
             // 
@@ -1158,6 +1159,7 @@ namespace GitUI
             this.label37.Size = new System.Drawing.Size(135, 13);
             this.label37.TabIndex = 44;
             this.label37.Text = "Use patience diff algorithm";
+            this.label37.Click += new System.EventHandler(this.checkboxLabel_Click);
             // 
             // usePatienceDiffAlgorithm
             // 
@@ -1177,6 +1179,7 @@ namespace GitUI
             this.labelShowCurrentBranchInVisualStudio.Size = new System.Drawing.Size(181, 13);
             this.labelShowCurrentBranchInVisualStudio.TabIndex = 42;
             this.labelShowCurrentBranchInVisualStudio.Text = "Show current branch in Visual Studio";
+            this.labelShowCurrentBranchInVisualStudio.Click += new System.EventHandler(this.checkboxLabel_Click);
             // 
             // showCurrentBranchInVisualStudio
             // 
@@ -1207,6 +1210,7 @@ namespace GitUI
             this.label52.Size = new System.Drawing.Size(247, 13);
             this.label52.TabIndex = 39;
             this.label52.Text = "Show stash count on status bar in browse window";
+            this.label52.Click += new System.EventHandler(this.checkboxLabel_Click);
             // 
             // ShowStashCountInBrowseWindow
             // 
@@ -1225,6 +1229,7 @@ namespace GitUI
             this.label26.Size = new System.Drawing.Size(287, 13);
             this.label26.TabIndex = 37;
             this.label26.Text = "Show current working dir changes in revision graph (slow!)";
+            this.label26.Click += new System.EventHandler(this.checkboxLabel_Click);
             // 
             // ShowCurrentChangesInRevisionGraph
             // 
@@ -1244,6 +1249,7 @@ namespace GitUI
             this.showErrorsWhenStagingFilesLabel.Size = new System.Drawing.Size(154, 13);
             this.showErrorsWhenStagingFilesLabel.TabIndex = 35;
             this.showErrorsWhenStagingFilesLabel.Text = "Show errors when staging files";
+            this.showErrorsWhenStagingFilesLabel.Click += new System.EventHandler(this.checkboxLabel_Click);
             // 
             // showErrorsWhenStagingFiles
             // 
@@ -1264,6 +1270,7 @@ namespace GitUI
             this.showGitStatusInToolbarLabel.TabIndex = 32;
             this.showGitStatusInToolbarLabel.Text = "Show repository status in browse dialog (number of changes in toolbar, restart re" +
                 "quired)";
+            this.showGitStatusInToolbarLabel.Click += new System.EventHandler(this.checkboxLabel_Click);
             // 
             // ShowGitStatusInToolbar
             // 
@@ -1351,6 +1358,7 @@ namespace GitUI
             this.label40.Size = new System.Drawing.Size(218, 13);
             this.label40.TabIndex = 27;
             this.label40.Text = "Follow renames in file history (experimental)";
+            this.label40.Click += new System.EventHandler(this.checkboxLabel_Click);
             // 
             // FollowRenamesInFileHistory
             // 
@@ -1370,6 +1378,7 @@ namespace GitUI
             this.label39.Size = new System.Drawing.Size(190, 13);
             this.label39.TabIndex = 25;
             this.label39.Text = "Show relative date instead of full date";
+            this.label39.Click += new System.EventHandler(this.checkboxLabel_Click);
             // 
             // label38
             // 
@@ -1379,6 +1388,7 @@ namespace GitUI
             this.label38.Size = new System.Drawing.Size(255, 13);
             this.label38.TabIndex = 24;
             this.label38.Text = "Use FileSystemWatcher to check if index is changed";
+            this.label38.Click += new System.EventHandler(this.checkboxLabel_Click);
             // 
             // label35
             // 
@@ -1388,6 +1398,7 @@ namespace GitUI
             this.label35.Size = new System.Drawing.Size(263, 13);
             this.label35.TabIndex = 22;
             this.label35.Text = "Show Git commandline dialog when executing process";
+            this.label35.Click += new System.EventHandler(this.checkboxLabel_Click);
             // 
             // label34
             // 
@@ -1397,6 +1408,7 @@ namespace GitUI
             this.label34.Size = new System.Drawing.Size(303, 13);
             this.label34.TabIndex = 21;
             this.label34.Text = "Close process dialog automatically when process is succeeded";
+            this.label34.Click += new System.EventHandler(this.checkboxLabel_Click);
             // 
             // EncodingLabel
             // 
