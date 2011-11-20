@@ -14,27 +14,12 @@ namespace GitUI
         private readonly string _defaultBranch;
         private readonly TranslationString _deleteBranchCaption = new TranslationString("Delete branch");
 
-        private readonly TranslationString _deleteBranchQuestion =
-            new TranslationString(
-                "Are you sure you want to delete this branch?" + Environment.NewLine + "Deleting a branch can cause commits to be deleted too!");
-
-        private List<GitHead> Heads;
-
         public FormRenameBranch(string defaultBranch)
         {
             InitializeComponent();
             Translate();
+            Branches.Text = defaultBranch;
             _defaultBranch = defaultBranch;
-        }
-
-        private void FormDeleteBranchLoad(object sender, EventArgs e)
-        {
-            Branches.DisplayMember = "Name";
-            Heads = Settings.Module.GetHeads(true, true);
-            Branches.DataSource = Heads.FindAll(h => h.IsHead == true && h.IsRemote == false);
-
-            if (_defaultBranch != null)
-                Branches.Text = _defaultBranch;
         }
 
         private void OkClick(object sender, EventArgs e)
