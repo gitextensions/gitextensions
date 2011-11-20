@@ -75,7 +75,7 @@
             this.MinimizeBox = false;
             this.Name = "FormRenameBranch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Delete branch";
+            this.Text = "Rename branch";
             this.ResumeLayout(false);
             this.PerformLayout();
 
