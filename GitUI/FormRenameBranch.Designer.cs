@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.Ok = new System.Windows.Forms.Button();
-            this.Branches = new System.Windows.Forms.ComboBox();
+            this.Branches = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -46,9 +46,6 @@
             // 
             // Branches
             // 
-            this.Branches.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.Branches.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.Branches.FormattingEnabled = true;
             this.Branches.Location = new System.Drawing.Point(146, 12);
             this.Branches.Name = "Branches";
             this.Branches.Size = new System.Drawing.Size(255, 23);
@@ -79,7 +76,6 @@
             this.Name = "FormRenameBranch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Delete branch";
-            this.Load += new System.EventHandler(this.FormDeleteBranchLoad);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -88,7 +84,7 @@
         #endregion
 
         private System.Windows.Forms.Button Ok;
-        private System.Windows.Forms.ComboBox Branches;
+        private System.Windows.Forms.TextBox Branches;
         private System.Windows.Forms.Label label1;
     }
 }
