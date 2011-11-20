@@ -3,16 +3,15 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
-using System.Collections.Generic;
 
 namespace GitUI
 {
     public partial class FormRenameBranch : GitExtensionsForm
     {
-        private readonly TranslationString _branchDeleted = new TranslationString("Command executed");
+        private readonly TranslationString _branchRenamed = new TranslationString("Command executed");
 
         private readonly string _defaultBranch;
-        private readonly TranslationString _deleteBranchCaption = new TranslationString("Delete branch");
+        private readonly TranslationString _renameBranchCaption = new TranslationString("Rename branch");
 
         public FormRenameBranch(string defaultBranch)
         {
@@ -27,8 +26,8 @@ namespace GitUI
             try
             {
                 var renameBranchResult = Settings.Module.Rename(_defaultBranch, Branches.Text);
-                MessageBox.Show(this, _branchDeleted.Text + Environment.NewLine + renameBranchResult,
-                                _deleteBranchCaption.Text);
+                MessageBox.Show(this, this._branchRenamed.Text + Environment.NewLine + renameBranchResult,
+                                this._renameBranchCaption.Text);
             }
             catch (Exception ex)
             {
