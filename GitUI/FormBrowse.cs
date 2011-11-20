@@ -2255,6 +2255,41 @@ namespace GitUI
                 return tuple;
             }
         }
+        
+        private void openContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+          if (DiffFiles.SelectedItems.Count == 0)
+            return;
+
+          foreach (var item in DiffFiles.SelectedItems)
+          {
+            var fileNames = new StringBuilder();
+            fileNames.Append((Settings.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+
+            string filePath = fileNames.ToString();
+            if (File.Exists(filePath))
+            {
+              System.Diagnostics.Process.Start("explorer.exe", "/select, " + filePath);
+            }
+          }
+        }
+
+        private void DiffContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+          foreach (var item in DiffFiles.SelectedItems)
+          {
+            var fileNames = new StringBuilder();
+            fileNames.Append((Settings.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+
+            if (File.Exists(fileNames.ToString()))
+            {
+              openContainingFolderToolStripMenuItem.Enabled = true;
+              return;
+            }
+          }
+
+          openContainingFolderToolStripMenuItem.Enabled = false;
+        }        
 
     }
 }
