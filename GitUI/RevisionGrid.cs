@@ -406,7 +406,7 @@ namespace GitUI
             if (!string.IsNullOrEmpty(filter))
             {
                 // hash filtering only possible in memory
-                var cmdLineSafe = !parameters[4] && GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(filter);
+                var cmdLineSafe = GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(filter);
                 revListArgs = " --regexp-ignore-case ";
                 if (parameters[0])
                     if (cmdLineSafe)

@@ -30,6 +30,8 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
+            InitializeCheckboxLabels();
+
             noImageService.Items.AddRange(GravatarService.DynamicServices.Cast<object>().ToArray());
 
             _NO_TRANSLATE_Encoding.Items.AddRange(new Object[]
@@ -40,6 +42,22 @@ namespace GitUI
             GlobalEditor.Items.AddRange(new Object[] { "\"" + GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", "notepad++" });
 
             SetCurrentDiffFont(Settings.DiffFont);
+        }
+
+        private void InitializeCheckboxLabels()
+        {
+            label26.Tag = ShowCurrentChangesInRevisionGraph;
+            label52.Tag = ShowStashCountInBrowseWindow;
+            label34.Tag = CloseProcessDialog;
+            label35.Tag = ShowGitCommandLine;
+            label38.Tag = UseFastChecks;
+            label39.Tag = ShowRelativeDate;
+            label40.Tag = FollowRenamesInFileHistory;
+            showGitStatusInToolbarLabel.Tag = ShowGitStatusInToolbar;
+            showErrorsWhenStagingFilesLabel.Tag = showErrorsWhenStagingFiles;
+            labelShowCurrentBranchInVisualStudio.Tag = showCurrentBranchInVisualStudio;
+            label37.Tag = usePatienceDiffAlgorithm;
+            label58.Tag = focusControlOnHover;
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -2412,6 +2430,14 @@ namespace GitUI
             new FormFixHome().ShowDialog(this);
             LoadSettings();
             Rescan_Click(null, null);
+        }
+
+        private void checkboxLabel_Click(object sender, EventArgs e)
+        {
+            var label = sender as Label;
+            var cb = label.Tag as CheckBox;
+            if (cb != null)
+                cb.Checked = !cb.Checked;
         }
     }
 }
