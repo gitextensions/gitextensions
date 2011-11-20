@@ -98,6 +98,7 @@ namespace GitUI
             this.copyFilenameToClipboardToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.fileHistoryDiffToolstripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openContainingFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();            
             this.DiffText = new GitUI.Editor.FileViewer();
             this.TreeContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -827,9 +828,11 @@ namespace GitUI
             this.saveAsToolStripMenuItem1,
             this.fileHistoryDiffToolstripMenuItem,
             this.diffBaseLocalToolStripMenuItem,
-            this.difftoolRemoteLocalToolStripMenuItem});
+            this.difftoolRemoteLocalToolStripMenuItem,
+            this.openContainingFolderToolStripMenuItem});
             this.DiffContextMenu.Name = "DiffContextMenu";
             this.DiffContextMenu.Size = new System.Drawing.Size(312, 100);
+            this.DiffContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.DiffContextMenu_Opening);            
             // 
             // openWithDifftoolToolStripMenuItem
             // 
@@ -861,6 +864,13 @@ namespace GitUI
             this.fileHistoryDiffToolstripMenuItem.Size = new System.Drawing.Size(311, 24);
             this.fileHistoryDiffToolstripMenuItem.Text = "File history";
             this.fileHistoryDiffToolstripMenuItem.Click += new System.EventHandler(this.fileHistoryDiffToolstripMenuItem_Click);
+            // 
+            // openContainingFolderToolStripMenuItem
+            // 
+            this.openContainingFolderToolStripMenuItem.Name = "openContainingFolderToolStripMenuItem";
+            this.openContainingFolderToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
+            this.openContainingFolderToolStripMenuItem.Text = "Open containing folder";
+            this.openContainingFolderToolStripMenuItem.Click += new System.EventHandler(this.openContainingFolderToolStripMenuItem_Click);
             // 
             // DiffText
             // 
@@ -1853,5 +1863,6 @@ namespace GitUI
         private MenuStrip menuStrip1;
         private ToolStripMenuItem diffBaseLocalToolStripMenuItem;
         private ToolStripMenuItem difftoolRemoteLocalToolStripMenuItem;
+        private ToolStripMenuItem openContainingFolderToolStripMenuItem;        
     }
 }
