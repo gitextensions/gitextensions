@@ -114,6 +114,9 @@ namespace GitUI
         public event GitUIEventHandler PreRebase;
         public event GitUIEventHandler PostRebase;
 
+        public event GitUIEventHandler PreRename;
+        public event GitUIEventHandler PostRename;
+
         public event GitUIEventHandler PreSubmodulesEdit;
         public event GitUIEventHandler PostSubmodulesEdit;
 
@@ -824,6 +827,22 @@ namespace GitUI
             form.ShowDialog(owner);
 
             InvokeEvent(PostRebase);
+
+            return true;
+        }
+
+        public bool StartRenameDialog(string branch)
+        {
+            if (!RequiresValidWorkingDir())
+                return false;
+
+            if (!InvokeEvent(PreRename))
+                return true;
+
+            var form = new FormRenameBranch(branch);
+            form.ShowDialog();
+
+            InvokeEvent(PostRename);
 
             return true;
         }
