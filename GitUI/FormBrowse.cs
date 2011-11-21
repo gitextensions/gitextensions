@@ -88,8 +88,8 @@ namespace GitUI
         private ThumbnailToolBarButton _commitButton;
         private ThumbnailToolBarButton _pushButton;
         private ThumbnailToolBarButton _pullButton;
-#endif
         private bool _toolbarButtonsCreated;
+#endif
         private bool _dontUpdateOnIndexChange;
 
         public FormBrowse(string filter)
