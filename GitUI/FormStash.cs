@@ -23,6 +23,9 @@ namespace GitUI
             _syncContext = SynchronizationContext.Current;
 
             InitializeComponent();
+#if !__MonoCS__ // animated GIFs are not supported in Mono/Linux
+            this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
+#endif
             Translate();
             View.ExtraDiffArgumentsChanged += ViewExtraDiffArgumentsChanged;
         }
