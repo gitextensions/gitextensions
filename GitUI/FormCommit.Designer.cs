@@ -351,7 +351,6 @@ namespace GitUI
             this.Loading.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.Loading.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.Loading.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
             this.Loading.Location = new System.Drawing.Point(0, 0);
             this.Loading.Name = "Loading";
             this.Loading.Size = new System.Drawing.Size(397, 255);
