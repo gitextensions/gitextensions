@@ -30,7 +30,7 @@ namespace AutoCheckForUpdates
             progressBar1.Style = ProgressBarStyle.Marquee;
         }
 
-        private void CloseClick(object sender, EventArgs e)
+        private void CloseButtonClick(object sender, EventArgs e)
         {
             Close();
         }
