@@ -1492,6 +1492,7 @@ namespace GitUI
             var checkoutBranchDropDown = new ToolStripDropDown();
             var mergeBranchDropDown = new ToolStripDropDown();
             var rebaseDropDown = new ToolStripDropDown();
+            var renameDropDown = new ToolStripDropDown();
 
             var tagNameCopy = new ToolStripDropDown();
             var branchNameCopy = new ToolStripDropDown();
@@ -1523,6 +1524,10 @@ namespace GitUI
                 toolStripItem = new ToolStripMenuItem(head.Name);
                 toolStripItem.Click += ToolStripItemClickRebaseBranch;
                 rebaseDropDown.Items.Add(toolStripItem);
+
+                toolStripItem = new ToolStripMenuItem(head.Name);
+                toolStripItem.Click += ToolStripItemClickRenameBranch;
+                renameDropDown.Items.Add(toolStripItem);
             }
 
             foreach (var head in allBranches)
@@ -1563,6 +1568,9 @@ namespace GitUI
 
             rebaseOnToolStripMenuItem.DropDown = rebaseDropDown;
             rebaseOnToolStripMenuItem.Visible = rebaseDropDown.Items.Count > 0;
+
+            renameBranchToolStripMenuItem.DropDown = renameDropDown;
+            renameBranchToolStripMenuItem.Visible = renameDropDown.Items.Count > 0;
 
             branchNameToolStripMenuItem.DropDown = branchNameCopy;
             branchNameToolStripMenuItem.Visible = branchNameCopy.Items.Count > 0;
@@ -1646,6 +1654,19 @@ namespace GitUI
                 return;
 
             GitUICommands.Instance.StartRebaseDialog(this, toolStripItem.Text);
+
+            ForceRefreshRevisions();
+            OnActionOnRepositoryPerformed();
+        }
+
+        private void ToolStripItemClickRenameBranch(object sender, EventArgs e)
+        {
+            var toolStripItem = sender as ToolStripItem;
+
+            if (toolStripItem == null)
+                return;
+
+            GitUICommands.Instance.StartRenameDialog(toolStripItem.Text);
 
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();

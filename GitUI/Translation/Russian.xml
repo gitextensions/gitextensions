@@ -1335,6 +1335,22 @@
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormRenameBranch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Переименовать ветку</Value>
+        </TranslationItem>
+        <TranslationItem Name="_renameBranchCaption" Property="Text">
+          <Value>Переименовать ветку</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Новое имя</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Переим.</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormDeleteBranch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -2800,6 +2816,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         </TranslationItem>
         <TranslationItem Name="rebaseOnToolStripMenuItem" Property="Text">
           <Value>Rebase текущую ветку на</Value>
+        </TranslationItem>
+        <TranslationItem Name="renameBranchToolStripMenuItem" Property="Text">
+          <Value>Переименовать ветку</Value>
         </TranslationItem>
         <TranslationItem Name="showAllBranchesToolStripMenuItem" Property="Text">
           <Value>Показывать все ветки</Value>
