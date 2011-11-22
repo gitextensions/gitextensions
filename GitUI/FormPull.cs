@@ -61,7 +61,6 @@ namespace GitUI
 
         private List<GitHead> _heads;
         public bool ErrorOccurred { get; private set; }
-        private string branchRemote;
         private string branch;
 
         public FormPull()
@@ -72,8 +71,7 @@ namespace GitUI
             UpdateRemotesList();
 
             branch = Settings.Module.GetSelectedBranch();
-            branchRemote = Settings.Module.GetSetting(string.Format("branch.{0}.remote", branch));
-            _NO_TRANSLATE_Remotes.Text = branchRemote;
+            _NO_TRANSLATE_Remotes.Text = Settings.Module.GetSetting(string.Format("branch.{0}.remote", branch));
             _NO_TRANSLATE_localBranch.Text = branch;
 
             Merge.Checked = Settings.PullMerge == "merge";
@@ -207,18 +205,31 @@ namespace GitUI
 
             Settings.AutoStash = AutoStash.Checked;
 
-            string remoteBranchName = branchRemote + "/" + branch;
             //ask only if exists commit not pushed to remote yet
-            if (Rebase.Checked && Settings.Module.ExistsMergeCommit(remoteBranchName, branch))
+            if (Rebase.Checked && PullFromRemote.Checked)
             {
-                DialogResult dr = MessageBox.Show(this, _areYouSureYouWantToRebaseMerge.Text, _areYouSureYouWantToRebaseMergeCaption.Text, MessageBoxButtons.YesNoCancel);
-                if (dr == DialogResult.Cancel) 
+
+                string branchRemote = _NO_TRANSLATE_Remotes.Text;
+                string remoteBranchName;
+                if (Branches.Text.IsNullOrEmpty())
                 {
-                    Close();
-                    return false;
+                    remoteBranchName = Settings.Module.GetSetting("branch." + branch + ".merge");
+                    remoteBranchName = Settings.Module.RunGitCmd("name-rev --name-only \"" + remoteBranchName + "\"").Trim();
                 }
-                else if (dr != DialogResult.Yes)
-                    return false;
+                else
+                    remoteBranchName = Branches.Text;
+                remoteBranchName = branchRemote + "/" + remoteBranchName;
+                if (Settings.Module.ExistsMergeCommit(remoteBranchName, branch))
+                {
+                    DialogResult dr = MessageBox.Show(this, _areYouSureYouWantToRebaseMerge.Text, _areYouSureYouWantToRebaseMergeCaption.Text, MessageBoxButtons.YesNoCancel);
+                    if (dr == DialogResult.Cancel)
+                    {
+                        Close();
+                        return false;
+                    }
+                    else if (dr != DialogResult.Yes)
+                        return false;
+                }
             }
 
             Repositories.RepositoryHistory.AddMostRecentRepository(PullSource.Text);
