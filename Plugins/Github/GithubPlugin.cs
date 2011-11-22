@@ -331,8 +331,8 @@ namespace Github
         {
             List<GithubHostedRemoteInformation> repoInfos = new List<GithubHostedRemoteInformation>();
 
-            var remoteNames = GitCommands.Settings.Module.GetRemotes();
-            foreach (var remote in remoteNames.Where(r => !string.IsNullOrEmpty(r)))
+            var remoteNames = GitCommands.Settings.Module.GetRemotes(false);
+            foreach (var remote in remoteNames)
             {
                 var remoteUrl = GitCommands.Settings.Module.GetSetting("remote." + remote + ".url");
                 if (string.IsNullOrEmpty(remoteUrl))

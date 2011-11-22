@@ -69,7 +69,7 @@ namespace GitUI
                 if (Remotebranch.Checked)
                 {
                     //Get a localbranch name
-                    var remoteName = GitModule.GetRemoteName(Branches.Text, Settings.Module.GetRemotes());
+                    var remoteName = GitModule.GetRemoteName(Branches.Text, Settings.Module.GetRemotes(false));
                     var localBranchName = Branches.Text.Substring(remoteName.Length + 1);
 
                     MessageBoxIcon icon = MessageBoxIcon.Question;
