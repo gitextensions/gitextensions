@@ -23,11 +23,13 @@ namespace GitUI
             FileStatusListBox.DrawItem += new DrawItemEventHandler(FileStatusListBox_DrawItem);
             FileStatusListBox.SelectedIndexChanged += new EventHandler(FileStatusListBox_SelectedIndexChanged);
             FileStatusListBox.DoubleClick += new EventHandler(FileStatusListBox_DoubleClick);
-            FileStatusListBox.MouseMove += new MouseEventHandler(FileStatusListBox_MouseMove);
             FileStatusListBox.Sorted = true;
             FileStatusListBox.SelectionMode = SelectionMode.MultiExtended;
+#if !__MonoCS // TODO Drag'n'Drop doesnt work on Mono/Linux
+            FileStatusListBox.MouseMove += new MouseEventHandler(FileStatusListBox_MouseMove);
             FileStatusListBox.MouseDown += new MouseEventHandler(FileStatusListBox_MouseDown);
-            FileStatusListBox.HorizontalScrollbar = true;
+#endif
+			FileStatusListBox.HorizontalScrollbar = true;
 
             NoFiles.Visible = false;
             NoFiles.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
