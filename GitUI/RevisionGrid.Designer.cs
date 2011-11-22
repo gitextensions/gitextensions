@@ -102,6 +102,7 @@ namespace GitUI
             this.Loading = new System.Windows.Forms.PictureBox();
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.quickSearchTimer = new System.Windows.Forms.Timer(this.components);
+            this.renameBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.squashCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fixupCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showRevisionGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -220,6 +221,7 @@ namespace GitUI
             this.mergeBranchToolStripMenuItem,
             this.rebaseOnToolStripMenuItem,
             this.resetCurrentBranchToHereToolStripMenuItem,
+            this.renameBranchToolStripMenuItem,
             this.checkoutBranchToolStripMenuItem,
             this.checkoutRevisionToolStripMenuItem,
             this.manipulateCommitToolStripMenuItem,
@@ -696,6 +698,8 @@ namespace GitUI
             this.showRevisionGraphToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
             this.showRevisionGraphToolStripMenuItem.Text = "Show revision graph";
             this.showRevisionGraphToolStripMenuItem.Click += new System.EventHandler(this.ShowRevisionGraphToolStripMenuItemClick);
+            this.renameBranchToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.renameBranchToolStripMenuItem.Text = "Rename branch";
             // 
             // RevisionGrid
             // 
@@ -787,5 +791,7 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem manipulateCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fixupCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem squashCommitToolStripMenuItem;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
+        private System.Windows.Forms.ToolStripMenuItem renameBranchToolStripMenuItem;
     }
 }
