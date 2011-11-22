@@ -203,7 +203,6 @@ namespace GitUI
             var translator = new Translator(Settings.Translation);
             translator.TranslateControl(this);
             _translated = true;
-
         }
 
         public virtual void CancelButtonClick(object sender, EventArgs e)
