@@ -1488,7 +1488,7 @@ namespace GitUI
             var revision = GetRevision(LastRow);
 
             var tagDropDown = new ToolStripDropDown();
-            var branchDropDown = new ToolStripDropDown();
+            var deleteBranchDropDown = new ToolStripDropDown();
             var checkoutBranchDropDown = new ToolStripDropDown();
             var mergeBranchDropDown = new ToolStripDropDown();
             var rebaseDropDown = new ToolStripDropDown();
@@ -1524,10 +1524,6 @@ namespace GitUI
                 toolStripItem = new ToolStripMenuItem(head.Name);
                 toolStripItem.Click += ToolStripItemClickRebaseBranch;
                 rebaseDropDown.Items.Add(toolStripItem);
-
-                toolStripItem = new ToolStripMenuItem(head.Name);
-                toolStripItem.Click += ToolStripItemClickRenameBranch;
-                renameDropDown.Items.Add(toolStripItem);
             }
 
             foreach (var head in allBranches)
@@ -1542,7 +1538,11 @@ namespace GitUI
                 {
                     toolStripItem = new ToolStripMenuItem(head.Name);
                     toolStripItem.Click += ToolStripItemClickBranch;
-                    branchDropDown.Items.Add(toolStripItem);
+                    deleteBranchDropDown.Items.Add(toolStripItem); //Add to delete branch
+
+                    toolStripItem = new ToolStripMenuItem(head.Name);
+                    toolStripItem.Click += ToolStripItemClickRenameBranch;
+                    renameDropDown.Items.Add(toolStripItem); //Add to rename branch
                 }
                 
                 toolStripItem = new ToolStripMenuItem(head.Name);
@@ -1557,8 +1557,8 @@ namespace GitUI
             deleteTagToolStripMenuItem.DropDown = tagDropDown;
             deleteTagToolStripMenuItem.Visible = tagDropDown.Items.Count > 0;
 
-            deleteBranchToolStripMenuItem.DropDown = branchDropDown;
-            deleteBranchToolStripMenuItem.Visible = branchDropDown.Items.Count > 0;
+            deleteBranchToolStripMenuItem.DropDown = deleteBranchDropDown;
+            deleteBranchToolStripMenuItem.Visible = deleteBranchDropDown.Items.Count > 0;
 
             checkoutBranchToolStripMenuItem.DropDown = checkoutBranchDropDown;
             checkoutBranchToolStripMenuItem.Visible = checkoutBranchDropDown.Items.Count > 0;
