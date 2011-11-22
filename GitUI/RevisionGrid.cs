@@ -1506,7 +1506,9 @@ namespace GitUI
                 tagNameCopy.Items.Add(tagName);
             }
 
-            var allBranches = revision.Heads.Where(h => !h.IsTag && (h.IsHead || h.IsRemote));
+            //For now there is no action that could be done on currentBranch
+            string currentBranch = Settings.Module.GetSelectedBranch();
+            var allBranches = revision.Heads.Where(h => !h.IsTag && (h.IsHead || h.IsRemote) && !h.Name.Equals(currentBranch));
             var localBranches = allBranches.Where(b => !b.IsRemote);
 
             var branchesWithNoIdenticalRemotes = allBranches.Where(
@@ -1530,19 +1532,21 @@ namespace GitUI
                 branchName.Click += copyToClipBoard;
                 branchNameCopy.Items.Add(branchName);
 
-                //if (head.IsHead && !head.IsRemote)
+                //skip remote branches - they can not be deleted this way
+                if (!head.IsRemote)
                 {
                     toolStripItem = new ToolStripMenuItem(head.Name);
                     toolStripItem.Click += ToolStripItemClickBranch;
                     branchDropDown.Items.Add(toolStripItem);
-
-                    toolStripItem = new ToolStripMenuItem(head.Name);
-                    if (head.IsRemote)
-                        toolStripItem.Click += ToolStripItemClickCheckoutRemoteBranch;
-                    else
-                        toolStripItem.Click += ToolStripItemClickCheckoutBranch;
-                    checkoutBranchDropDown.Items.Add(toolStripItem);
                 }
+                
+                toolStripItem = new ToolStripMenuItem(head.Name);
+                if (head.IsRemote)
+                    toolStripItem.Click += ToolStripItemClickCheckoutRemoteBranch;
+                else
+                    toolStripItem.Click += ToolStripItemClickCheckoutBranch;
+                checkoutBranchDropDown.Items.Add(toolStripItem);
+
             }
 
             deleteTagToolStripMenuItem.DropDown = tagDropDown;
@@ -2167,6 +2171,16 @@ namespace GitUI
         }
 
         #endregion
+
+        private void toolStripMenuWithOneItem_Click(object sender, EventArgs e)
+        {
+            if (sender is ToolStripMenuItem) 
+            {
+                ToolStripMenuItem item = sender as ToolStripMenuItem;
+                if (item.DropDown != null && item.DropDown.Items.Count == 1)
+                    item.DropDown.Items[0].PerformClick();
+            }
+        }
 
     }
 }
