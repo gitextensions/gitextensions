@@ -1260,7 +1260,17 @@ namespace GitCommands
 
         public string[] GetRemotes()
         {
-            return RunCmd(Settings.GitCommand, "remote show").Split('\n');
+            return GetRemotes(true);
+        }
+
+        public string[] GetRemotes(bool allowEmpty)
+        {
+            string remotes = RunCmd(Settings.GitCommand, "remote show");
+            if (allowEmpty)
+                return remotes.Split('\n');
+            else
+                return remotes.Split(new char[]{'\n'}, StringSplitOptions.RemoveEmptyEntries);
+            
         }
 
         public ConfigFile GetLocalConfig()
@@ -1643,7 +1653,7 @@ namespace GitCommands
 
             var heads = new List<GitHead>();
 
-            var remotes = GetRemotes();
+            var remotes = GetRemotes(false);
 
             foreach (var itemsString in itemsStrings)
             {
