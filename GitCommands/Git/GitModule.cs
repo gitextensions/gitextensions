@@ -1245,6 +1245,11 @@ namespace GitCommands
             return RunCmd(Settings.GitCommand, "remote rename \"" + name + "\" \"" + newName + "\"");
         }
 
+        public string Rename(string name, string newName)
+        {
+            return RunCmd(Settings.GitCommand, "branch --move \"" + name + "\" \"" + newName + "\"");
+        }
+
         public string AddRemote(string name, string path)
         {
             var location = FixPath(path);
