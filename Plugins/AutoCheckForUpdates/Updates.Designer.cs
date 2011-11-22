@@ -30,22 +30,22 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Updates));
-            this.Close = new System.Windows.Forms.Button();
+            this.closeButton = new System.Windows.Forms.Button();
             this.UpdateLabel = new System.Windows.Forms.Label();
             this.link = new System.Windows.Forms.LinkLabel();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.SuspendLayout();
             // 
-            // Close
+            // closeButton
             // 
-            this.Close.Location = new System.Drawing.Point(365, 66);
-            this.Close.Name = "Close";
-            this.Close.Size = new System.Drawing.Size(75, 23);
-            this.Close.TabIndex = 0;
-            this.Close.Text = "Close";
-            this.Close.UseVisualStyleBackColor = true;
-            this.Close.Click += new System.EventHandler(this.CloseClick);
+            this.closeButton.Location = new System.Drawing.Point(365, 66);
+            this.closeButton.Name = "closeButton";
+            this.closeButton.Size = new System.Drawing.Size(75, 23);
+            this.closeButton.TabIndex = 0;
+            this.closeButton.Text = "closeButton";
+            this.closeButton.UseVisualStyleBackColor = true;
+            this.closeButton.Click += new System.EventHandler(this.CloseButtonClick);
             // 
             // UpdateLabel
             // 
@@ -88,7 +88,7 @@
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.link);
             this.Controls.Add(this.UpdateLabel);
-            this.Controls.Add(this.Close);
+            this.Controls.Add(this.closeButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Updates";
@@ -102,7 +102,7 @@
 
         #endregion
 
-        private new System.Windows.Forms.Button Close;
+        private new System.Windows.Forms.Button closeButton;
         private System.Windows.Forms.Label UpdateLabel;
         private System.Windows.Forms.LinkLabel link;
         private System.Windows.Forms.ProgressBar progressBar1;
