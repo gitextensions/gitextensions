@@ -2,27 +2,40 @@
 =========
 
 Version 2.27
+	Fixed issue 718: Exception while filtering revision grid.
 	Fixed issue 668: Git directory for submodules fixed with Git 1.7.7 
-	Fixed issue 566: QuickPull with Shift
-	Fixed issue 614: Filter for tags
 	Fixed issue 667: Push command support recursive submodules check
-	Fixed issue 443: Support filtering by commit hash
 	Fixed issue 631: Adding a new item to the start page settings auto-select that item
-	Fixed issue 460: TortoiseMerge added to diff tools
-	Fixed issue 127: Preview disabled for files larger than 5Mb, but available by link
 	Fixed issue 627: The start page does not refresh upon changing the start pages settings fixed
+	Fixed issue 614: Filter for tags
+	Fixed issue 566: QuickPull with Shift
+	Fixed issue 460: TortoiseMerge added to diff tools
+	Fixed issue 443: Support filtering by commit hash
 	Fixed issue 139: Disable image paste in EditNetSpell
+	Fixed issue 127: Preview disabled for files larger than 5Mb, but available by link
 	Fixed issue 124: Submodules form now can remove submodule
-	Notepad++ added to editors list
-	Clone button added for uninitialized folders
-	Special context menu for submodules added in commit dialog
-	Blame window tooltip returned back, but on left side
-	Dashboard Editor displaying buttons fixed on monitor with big DPI 
-	Drag&drop folders and url support to dashboard added
-	EMail links added to commit header
-	Translation form hotkeys added (Alt-Up, Alt-Down and Control-Down) 
+	Fixed clone repository to bare repository
+	Added "Open containing folder" entry to the context menu of difference files
+	Added "Rename branch" to context menu in revision grid
+	Added Notepad++ to supported editors list
+	Added clone button for uninitialized folders
+	Added special context menu for submodules in the commit dialog
+	Added blame window tooltip on authors
+	Added email links to commit header
+	Added hotkeys to translation form (Alt-Up, Alt-Down and Control-Down)
+	Added option "Full history" to context menu in file history
+	Added support for merge multiple branches
+	Added support for delete multiple branches
+	Added support for drag & drop folders and urls onto dashboard
+	Dashboard Editor displaying buttons fixed on monitor with big DPI
 	Pull form now correctly updated after calling "Manage Repositories"
-	Diff warnings removing fixed 
+	When pushing a new branch and there is only one remote, this remote will be selected
+	Diff warnings removing fixed
+	Russian translation updated
+	Spanish translation updated
+	Dutch translation updated
+	German translation updated
+	Many bugfixes and minor changes
 
 Version 2.26
 	Fixed issue 629: Support of separate Fetch/Pull Urls for remotes
