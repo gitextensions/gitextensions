@@ -39,16 +39,17 @@
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.Branches.CheckOnClick = true;
+            this.Branches.ColumnWidth = 250;
             this.Branches.FormattingEnabled = true;
-            this.Branches.Location = new System.Drawing.Point(12, 28);
+            this.Branches.Location = new System.Drawing.Point(12, 32);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(277, 212);
+            this.Branches.Size = new System.Drawing.Size(239, 180);
             this.Branches.TabIndex = 2;
             // 
             // okButton
             // 
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.okButton.Location = new System.Drawing.Point(214, 252);
+            this.okButton.Location = new System.Drawing.Point(176, 223);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 3;
@@ -69,13 +70,16 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(301, 287);
+            this.ClientSize = new System.Drawing.Size(263, 252);
             this.Controls.Add(this.selectBranchesLabel);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.Branches);
+            this.MinimumSize = new System.Drawing.Size(200, 200);
             this.Name = "FormSelectMultipleBranches";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Select multiple branches";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSelectMultipleBranches_FormClosing);
+            this.Load += new System.EventHandler(this.FormSelectMultipleBranches_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
