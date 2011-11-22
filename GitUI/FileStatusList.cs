@@ -25,7 +25,7 @@ namespace GitUI
             FileStatusListBox.DoubleClick += new EventHandler(FileStatusListBox_DoubleClick);
             FileStatusListBox.Sorted = true;
             FileStatusListBox.SelectionMode = SelectionMode.MultiExtended;
-#if !__MonoCS // TODO Drag'n'Drop doesnt work on Mono/Linux
+#if !__MonoCS__ // TODO Drag'n'Drop doesnt work on Mono/Linux
             FileStatusListBox.MouseMove += new MouseEventHandler(FileStatusListBox_MouseMove);
             FileStatusListBox.MouseDown += new MouseEventHandler(FileStatusListBox_MouseDown);
 #endif
@@ -69,6 +69,7 @@ namespace GitUI
             NoFiles.Text = text;
         }
 
+#if !__MonoCS__ // TODO Drag'n'Drop doesnt work on Mono/Linux
         void FileStatusListBox_MouseDown(object sender, MouseEventArgs e)
         {
             //SELECT
@@ -112,7 +113,7 @@ namespace GitUI
                     dragBoxFromMouseDown = Rectangle.Empty;
             }
         }
-
+#endif
 
         public override ContextMenuStrip ContextMenuStrip
         {
@@ -138,6 +139,7 @@ namespace GitUI
             }
         }
 
+#if !__MonoCS__ // TODO Drag'n'Drop doesnt work on Mono/Linux
         private Rectangle dragBoxFromMouseDown;
 
         void FileStatusListBox_MouseMove(object sender, MouseEventArgs e)
@@ -206,6 +208,7 @@ namespace GitUI
                 }
             }
         }
+#endif
 
         public IList<GitItemStatus> SelectedItems
         {
