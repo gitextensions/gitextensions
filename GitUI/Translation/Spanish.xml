@@ -755,7 +755,7 @@ al árbol ancestro común.
           <Value>Forzar</Value>
         </TranslationItem>
         <TranslationItem Name="trackRemoteBranch" Property="Text">
-          <Value>Ha elegido hacer checkout de una rama remota. 
+          <Value>Elijes hacer un checkout de una rama remota. 
 
 ¿Quieres crear una rama local con el nombre "{0}"
 que hace seguimiento de esta rama remota?</Value>
@@ -980,34 +980,6 @@ No podrá hacer Push a menos que sea un colaborador. {2}</Value>
         <TranslationItem Name="Abort" Property="Text">
           <Value>Abortar</Value>
         </TranslationItem>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Proceso</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>Aceptar</Value>
-        </TranslationItem>
-        <TranslationItem Name="KeepDialogOpen" Property="Text">
-          <Value>Mantener la ventana abierta</Value>
-        </TranslationItem>
-        <TranslationItem Name="Abort" Property="Text">
-          <Value>Abortar</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormRemoteProcess">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>Proceso</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>Aceptar</Value>
-        </TranslationItem>
-        <TranslationItem Name="KeepDialogOpen" Property="Text">
-          <Value>Mantener diálogo abierto</Value>
-        </TranslationItem>
-        <TranslationItem Name="Abort" Property="Text">
-          <Value>Abortar</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormDiffSmall">
@@ -1133,9 +1105,6 @@ No podrá hacer Push a menos que sea un colaborador. {2}</Value>
         <TranslationItem Name="Tree" Property="Text">
           <Value>Árbol de archivos</Value>
         </TranslationItem>
-        <TranslationItem Name="ToolStrip" Property="Text">
-          <Value>ToolStrip1</Value>
-        </TranslationItem>
         <TranslationItem Name="toolStripButton1" Property="Text">
           <Value>Commit</Value>
         </TranslationItem>
@@ -1240,9 +1209,6 @@ No podrá hacer Push a menos que sea un colaborador. {2}</Value>
         </TranslationItem>
         <TranslationItem Name="authorToolStripMenuItem" Property="Text">
           <Value>Autor</Value>
-        </TranslationItem>
-        <TranslationItem Name="statusStrip" Property="Text">
-          <Value>StatusStrip</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripStatusLabel1" Property="Text">
           <Value>X</Value>
@@ -1491,9 +1457,6 @@ No podrá hacer Push a menos que sea un colaborador. {2}</Value>
         <TranslationItem Name="aboutToolStripMenuItem" Property="Text">
           <Value>Acerca de</Value>
         </TranslationItem>
-        <TranslationItem Name="menuStrip1" Property="Text">
-          <Value>MenuStrip1</Value>
-        </TranslationItem>
         <TranslationItem Name="_stashCount" Property="Text">
           <Value>{0} guardado {1}</Value>
         </TranslationItem>
@@ -1632,9 +1595,6 @@ No podrá hacer Push a menos que sea un colaborador. {2}</Value>
         </TranslationItem>
         <TranslationItem Name="CurrentBranchOnlyCheck" Property="Text">
           <Value>Mostrar sólo rama actual</Value>
-        </TranslationItem>
-        <TranslationItem Name="BranchFilterCheck" Property="Text">
-          <Value>CheckBox1</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1911,18 +1871,6 @@ Este programa es distribuido con la esperanza de que sea útil, pero SIN NINGUNA
     </TranslationCategory>
     <TranslationCategory Name="RevisionGrid">
       <translationItems>
-        <TranslationItem Name="_authorCaption" Property="Text">
-          <Value>Autor</Value>
-        </TranslationItem>
-        <TranslationItem Name="_authorDateCaption" Property="Text">
-          <Value>Fecha Autor</Value>
-        </TranslationItem>
-        <TranslationItem Name="_commitDateCaption" Property="Text">
-          <Value>Fecha commit</Value>
-        </TranslationItem>
-        <TranslationItem Name="_messageCaption" Property="Text">
-          <Value>Mensaje</Value>
-        </TranslationItem>
         <TranslationItem Name="_currentWorkingDirChanges" Property="Text">
           <Value>Actuales cambios no confirmados</Value>
         </TranslationItem>
@@ -2506,18 +2454,6 @@ cualquier configuración global.</Value>
         <TranslationItem Name="label37" Property="Text">
           <Value>Mostrar el gráfico de la revisión en el informe de commits</Value>
         </TranslationItem>
-        <TranslationItem Name="Enabled" Property="HeaderText">
-          <Value>Habilitado</Value>
-        </TranslationItem>
-        <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
-          <Value>Nombre</Value>
-        </TranslationItem>
-        <TranslationItem Name="AskConfirmation" Property="HeaderText">
-          <Value>Confirmación</Value>
-        </TranslationItem>
-        <TranslationItem Name="addToRevisionGridContextMenuDataGridViewCheckBoxColumn" Property="HeaderText">
-          <Value>Menú contextual</Value>
-        </TranslationItem>
         <TranslationItem Name="truncatePathMethod" Property="Text">
           <Value>Truncar nombres largos de archivo</Value>
         </TranslationItem>
@@ -2556,6 +2492,15 @@ cualquier configuración global.</Value>
         </TranslationItem>
         <TranslationItem Name="homeIsSetToLabel" Property="Text">
           <Value>HOME está seteado a: {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Nombre</Value>
+        </TranslationItem>
+        <TranslationItem Name="AskConfirmation" Property="HeaderText">
+          <Value>Confirmación</Value>
+        </TranslationItem>
+        <TranslationItem Name="addToRevisionGridContextMenuDataGridViewCheckBoxColumn" Property="HeaderText">
+          <Value>Menú contextual</Value>
         </TranslationItem>
         <TranslationItem Name="_homeIsSetToString" Property="Text">
           <Value>HOME está seteado a:</Value>
@@ -2666,7 +2611,7 @@ Elija eliminar el archivo o mantener la versión modificada.</Value>
           <Value>eliminado</Value>
         </TranslationItem>
         <TranslationItem Name="chooseLocalButtonText" Property="Text">
-          <Value>Elegir local</Value>
+          <Value>Elijar local</Value>
         </TranslationItem>
         <TranslationItem Name="chooseRemoteButtonText" Property="Text">
           <Value>Elegir remoto</Value>
@@ -2815,9 +2760,6 @@ Elija eliminar el archivo o mantener la versión modificada.</Value>
         <TranslationItem Name="conflictDescription" Property="Text">
           <Value>Seleccione el archivo</Value>
         </TranslationItem>
-        <TranslationItem Name="button1" Property="Text">
-          <Value>Abrir en mergetool</Value>
-        </TranslationItem>
         <TranslationItem Name="Rescan" Property="Text">
           <Value>Volver a examinar conflictos</Value>
         </TranslationItem>
@@ -2832,9 +2774,6 @@ Elija eliminar el archivo o mantener la versión modificada.</Value>
         </TranslationItem>
         <TranslationItem Name="fileHistoryToolStripMenuItem" Property="Text">
           <Value>Historial del archivo</Value>
-        </TranslationItem>
-        <TranslationItem Name="Namex" Property="HeaderText">
-          <Value>Nombre de archivo</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3019,7 +2958,7 @@ Compruebe que el archivo esté accesible.
           <Value>Seleccionar manualmente este commit:</Value>
         </TranslationItem>
         <TranslationItem Name="Pick" Property="Text">
-          <Value>Elegir este commit</Value>
+          <Value>Elejir este commit</Value>
         </TranslationItem>
         <TranslationItem Name="AutoCommit" Property="Text">
           <Value>Crea automáticamente un commit</Value>
@@ -3084,15 +3023,6 @@ Compruebe que el archivo esté accesible.
         <TranslationItem Name="Push" Property="Text">
           <Value>&amp;Push</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>Push de rama</Value>
-        </TranslationItem>
-        <TranslationItem Name="PushAllBranches" Property="Text">
-          <Value>Push de &amp;todas las ramas</Value>
-        </TranslationItem>
-        <TranslationItem Name="ForcePushBranches" Property="Text">
-          <Value>&amp;Forzar Push</Value>
-        </TranslationItem>
         <TranslationItem Name="ForcePushTags" Property="Text">
           <Value>&amp;Forzar Push</Value>
         </TranslationItem>
@@ -3110,9 +3040,6 @@ Compruebe que el archivo esté accesible.
         </TranslationItem>
         <TranslationItem Name="AddRemote" Property="Text">
           <Value>Administrar remotos</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text">
-          <Value>Rama</Value>
         </TranslationItem>
         <TranslationItem Name="LoadSSHKey" Property="Text">
           <Value>Cargar clave SSH</Value>
@@ -3138,9 +3065,6 @@ Compruebe que el archivo esté accesible.
         <TranslationItem Name="PushAllTags" Property="Text">
           <Value>Push &amp;todas las etiquetas</Value>
         </TranslationItem>
-        <TranslationItem Name="labelTo" Property="Text">
-          <Value>a</Value>
-        </TranslationItem>
         <TranslationItem Name="MultipleBranchTab" Property="Text">
           <Value>Push de múltiples ramas</Value>
         </TranslationItem>
@@ -3165,11 +3089,26 @@ Compruebe que el archivo esté accesible.
         <TranslationItem Name="DeleteColumn" Property="HeaderText">
           <Value>Eliminar rama remota</Value>
         </TranslationItem>
-        <TranslationItem Name="_createPullRequestCB" Property="Text">
-          <Value>Crear pedido de Pull después de Push</Value>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Rama</Value>
+        </TranslationItem>
+        <TranslationItem Name="PushAllBranches" Property="Text">
+          <Value>Push de &amp;todas las ramas</Value>
+        </TranslationItem>
+        <TranslationItem Name="ForcePushBranches" Property="Text">
+          <Value>&amp;Forzar Push</Value>
         </TranslationItem>
         <TranslationItem Name="AutoPullOnRejected" Property="Text">
           <Value>Auto Pull al ser rechazado</Value>
+        </TranslationItem>
+        <TranslationItem Name="_createPullRequestCB" Property="Text">
+          <Value>Crear pedido de Pull después de Push</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelTo" Property="Text">
+          <Value>a</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Push de rama</Value>
         </TranslationItem>
         <TranslationItem Name="_branchNewForRemote" Property="Text">
           <Value>La rama que está a punto de hacer Push parece ser una nueva rama para 
@@ -3553,9 +3492,6 @@ Cuando la clave se haya cargado, puede pulsar reintentar.</Value>
         <TranslationItem Name="Retry" Property="Text">
           <Value>Reintentar</Value>
         </TranslationItem>
-        <TranslationItem Name="button1" Property="Text">
-          <Value>Abortar</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormDonate">
@@ -3655,9 +3591,6 @@ Esto inicializará y actualizará todos los submódulos recursivamente.</Value>
         <TranslationItem Name="Ok" Property="Text">
           <Value>Commit</Value>
         </TranslationItem>
-        <TranslationItem Name="ResetChanges" Property="Text">
-          <Value>Restablecer cambios en los archivos</Value>
-        </TranslationItem>
         <TranslationItem Name="deleteFileToolStripMenuItem" Property="Text">
           <Value>Eliminar archivo</Value>
         </TranslationItem>
@@ -3684,9 +3617,6 @@ Esto inicializará y actualizará todos los submódulos recursivamente.</Value>
         </TranslationItem>
         <TranslationItem Name="editFileToolStripMenuItem" Property="Text">
           <Value>Editar el archivo</Value>
-        </TranslationItem>
-        <TranslationItem Name="ViewFileHistoryToolStripItem" Property="Text">
-          <Value>Ver historial del archivo</Value>
         </TranslationItem>
         <TranslationItem Name="Commit" Property="Text">
           <Value>&amp;Commit</Value>
@@ -3956,9 +3886,6 @@ realizarlo de todas formas.</Value>
         <TranslationItem Name="ForceDelete" Property="Text">
           <Value>Forzar eliminar</Value>
         </TranslationItem>
-        <TranslationItem Name="_branchDeleted" Property="Text">
-          <Value>Comando ejecutado</Value>
-        </TranslationItem>
         <TranslationItem Name="_deleteBranchCaption" Property="Text">
           <Value>Borrar rama</Value>
         </TranslationItem>
@@ -4039,12 +3966,6 @@ realizarlo de todas formas.</Value>
     </TranslationCategory>
     <TranslationCategory Name="DashboardEditor">
       <translationItems>
-        <TranslationItem Name="Remove" Property="Text">
-          <Value>Quitar</Value>
-        </TranslationItem>
-        <TranslationItem Name="Add" Property="Text">
-          <Value>Agregar</Value>
-        </TranslationItem>
         <TranslationItem Name="CategoriesLabel" Property="Text">
           <Value>Categorías</Value>
         </TranslationItem>
@@ -4071,6 +3992,12 @@ realizarlo de todas formas.</Value>
         </TranslationItem>
         <TranslationItem Name="descriptionDataGridViewTextBoxColumn" Property="HeaderText">
           <Value>Descripción</Value>
+        </TranslationItem>
+        <TranslationItem Name="Remove" Property="Text">
+          <Value>Quitar</Value>
+        </TranslationItem>
+        <TranslationItem Name="Add" Property="Text">
+          <Value>Agregar</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
