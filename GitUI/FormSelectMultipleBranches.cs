@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -25,6 +25,9 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
+
+            if (branchesToSelect.Count > 350)
+                Branches.MultiColumn = true;
 
             Branches.DisplayMember = "Name";
             Branches.Items.AddRange(branchesToSelect.ToArray());
@@ -58,6 +61,16 @@ namespace GitUI
         private void okButton_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void FormSelectMultipleBranches_Load(object sender, EventArgs e)
+        {
+            RestorePosition("selectmultiplebranches");
+        }
+
+        private void FormSelectMultipleBranches_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SavePosition("selectmultiplebranches");
         }
     }
 }
