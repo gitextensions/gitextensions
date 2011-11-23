@@ -14,6 +14,8 @@ namespace GitCommands
         //Cache limit
         const int cacheLimit = 40;
 
+        public delegate void CachedCommandsChangedHandler();
+
         /// <summary>
         /// Simple dictionary to store cmd/output pairs
         /// </summary>
@@ -25,9 +27,15 @@ namespace GitCommands
         /// </summary>
         private static Queue<string> queue = new Queue<string>(cacheLimit);
 
-        public static IEnumerable<string> CachedCommands()
+        private static CachedCommandsChangedHandler _CachedCommandsChanged;
+
+
+        public static string[] CachedCommands()
         {
-            return commandCache.Keys;
+            lock (queue)
+            {
+                return queue.ToArray();
+            }
         }
 
         public static bool TryGet(string cmd, out string cmdOutput)
@@ -38,8 +46,8 @@ namespace GitCommands
                 cmdOutput = null;
                 return false;
             }
-
-            return commandCache.TryGetValue(cmd, out cmdOutput);
+            lock (queue)
+                return commandCache.TryGetValue(cmd, out cmdOutput);
         }
 
         public static void Add(string cmd, string cmdOutput)
@@ -48,12 +56,47 @@ namespace GitCommands
             if (string.IsNullOrEmpty(cmd))
                 return;
 
-            commandCache[cmd] = cmdOutput;
-            queue.Enqueue(cmd);
+            lock (queue)
+            {
+                commandCache[cmd] = cmdOutput;
+                queue.Enqueue(cmd);
 
-            //Limit cache to X commands
-            if (queue.Count >= cacheLimit)
-                commandCache.Remove(queue.Dequeue());
+                //Limit cache to X commands
+                if (queue.Count >= cacheLimit)
+                    commandCache.Remove(queue.Dequeue());
+            }
+            FireCachedCommandsChanged();
+        }
+
+        public static event CachedCommandsChangedHandler CachedCommandsChanged
+        {
+            add
+            {
+                lock (queue)
+                {
+                    _CachedCommandsChanged += value;
+                }
+            }
+            remove
+            {
+                lock (queue)
+                {
+                    _CachedCommandsChanged -= value;
+                }
+            }
+        }
+
+        private static void FireCachedCommandsChanged()
+        {
+            CachedCommandsChangedHandler handler;
+            lock (queue)
+            {
+                handler = _CachedCommandsChanged;
+            }
+            if (handler != null)
+            {
+                handler();
+            }
         }
 
     }

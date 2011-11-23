@@ -1136,7 +1136,7 @@ namespace GitUI
 
         private void GitcommandLogToolStripMenuItemClick(object sender, EventArgs e)
         {
-            new GitLogForm().ShowDialog(this);
+            new GitLogForm().Show();
         }
 
 

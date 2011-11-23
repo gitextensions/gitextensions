@@ -59,6 +59,7 @@ namespace GitUI
             this.TabControl.SelectedIndex = 0;
             this.TabControl.Size = new System.Drawing.Size(659, 470);
             this.TabControl.TabIndex = 1;
+            this.TabControl.SelectedIndexChanged += new System.EventHandler(this.TabControl_SelectedIndexChanged);
             // 
             // tabPageCommandLog
             // 
