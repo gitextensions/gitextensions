@@ -149,7 +149,7 @@ namespace GitUI
                     }
             }
 
-            Repositories.RepositoryHistory.AddMostRecentRepository(PushDestination.Text);
+            Repositories.AddMostRecentRepository(PushDestination.Text);
             Settings.PushAllTags = PushAllTags.Checked;
             Settings.AutoPullOnRejected = AutoPullOnRejected.Checked;
             if (RecursiveSubmodulesCheck.Enabled)

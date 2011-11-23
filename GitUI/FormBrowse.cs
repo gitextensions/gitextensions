@@ -302,7 +302,19 @@ namespace GitUI
         {
             DirectoryInfo dirInfo = new DirectoryInfo(repositoryDir);
             if (dirInfo.Exists)
-                return ReadRepositoryDescription(repositoryDir) ?? dirInfo.Name;
+            {
+                string desc = ReadRepositoryDescription(repositoryDir);
+                if (desc.IsNullOrEmpty())
+                {
+                    foreach(Repository repo in Repositories.RepositoryHistory.Repositories)
+                        if (repo.Path.Equals(repositoryDir, StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            desc = repo.Title;
+                            break;
+                        }                                                                              
+                }
+                 return desc ?? dirInfo.Name;
+            }
             else
                 return dirInfo.Name;
         }
@@ -1579,7 +1591,7 @@ namespace GitUI
             Settings.WorkingDir += Settings.Module.GetSubmoduleLocalPath(button.Text);
 
             if (Settings.Module.ValidWorkingDir())
-                Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
+                Repositories.AddMostRecentRepository(Settings.WorkingDir);
 
             InternalInitialize(true);
         }
@@ -1707,25 +1719,225 @@ namespace GitUI
                 MessageBox.Show(this, output);
         }
 
+        private void AddWorkingdirDropDownItem(Repository repo, string caption) 
+        {
+            ToolStripMenuItem toolStripItem = new ToolStripMenuItem(caption);
+            _NO_TRANSLATE_Workingdir.DropDownItems.Add(toolStripItem);
+
+            toolStripItem.Click += (object hs, EventArgs he) =>
+            {
+                SetWorkingDir(repo.Path);
+            };
+
+            toolStripItem.MouseUp += (object sender, MouseEventArgs e) =>
+                {
+                    if (e.Button == MouseButtons.Right && toolStripItem.DropDownItems.Count == 0)
+                    {
+                        if (repo.Anchor != Repository.RepositoryAnchor.MostRecent)
+                        {
+                            ToolStripMenuItem anchorItem = new ToolStripMenuItem("Anchor to most recent repositories");
+                            toolStripItem.DropDownItems.Add(anchorItem);
+
+                            anchorItem.Click += (object hs, EventArgs he) =>
+                            {
+                                repo.Anchor = Repository.RepositoryAnchor.MostRecent;
+                            };
+                        }
+                        if (repo.Anchor != Repository.RepositoryAnchor.LessRecent)
+                        {
+                            ToolStripMenuItem anchorItem = new ToolStripMenuItem("Anchor to less recent repositories");
+                            toolStripItem.DropDownItems.Add(anchorItem);
+
+                            anchorItem.Click += (object hs, EventArgs he) =>
+                            {
+                                repo.Anchor = Repository.RepositoryAnchor.LessRecent;
+                            };
+                        }
+                        if (repo.Anchor != Repository.RepositoryAnchor.None)
+                        {
+                            ToolStripMenuItem anchorItem = new ToolStripMenuItem("Remove anchor");
+                            toolStripItem.DropDownItems.Add(anchorItem);
+
+                            anchorItem.Click += (object hs, EventArgs he) =>
+                            {
+                                repo.Anchor = Repository.RepositoryAnchor.None;
+                            };
+                        }
+                        ToolStripMenuItem removeItem = new ToolStripMenuItem("Remove from recent repositories");
+                        toolStripItem.DropDownItems.Add(removeItem);
+
+                        removeItem.Click += (object hs, EventArgs he) =>
+                        {
+                            Repositories.RepositoryHistory.Repositories.Remove(repo);
+                        };
+
+                        if (toolStripItem.DropDownItems.Count > 0)
+                            toolStripItem.ShowDropDown();    
+                    }
+                        
+                
+                };
+
+
+            if (repo.Title != null || !repo.Path.Equals(caption))
+                toolStripItem.ToolTipText = repo.Path;            
+        }
+
+        private class RecentRepoInfo 
+        {
+            public Repository Repo { get; set; }
+            public string Caption { get; set; }
+            public bool MostRecent { get; set; }
+            public DirectoryInfo DirInfo { get; set; }
+            public string ShortName { get; set; }
+            public string DirName { get; set; }
+
+            public RecentRepoInfo(Repository aRepo, bool aMostRecent)
+            {
+                Repo = aRepo;                
+                MostRecent = aMostRecent;
+                DirInfo = new DirectoryInfo(Repo.Path);
+                ShortName = Repo.Title == null ? DirInfo.Name : Repo.Title;
+                DirInfo = DirInfo.Parent;
+                DirName = DirInfo == null ? "" : DirInfo.FullName;
+            }
+
+            public bool FullPath
+            {
+                get { return DirInfo == null; }
+            }
+
+        }
+
+        private void AddToOrderedRepos(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo, bool shortenPath)
+        {
+            List<RecentRepoInfo> list = null;
+            bool existsShortName;
+            //if there is no short name for a repo, then try to find unique caption extendig short directory path
+            if (shortenPath)
+            {                
+                if (repoInfo.DirInfo != null)
+                {
+                    string s = repoInfo.DirName.Substring(repoInfo.DirInfo.FullName.Length);
+                    s = s.Trim(Path.DirectorySeparatorChar);
+                    //candidate for short name
+                    repoInfo.Caption = repoInfo.ShortName;
+                    if (!s.IsNullOrEmpty())
+                        repoInfo.Caption += " (" + s + ")";
+                    repoInfo.DirInfo = repoInfo.DirInfo.Parent;
+                }
+            }
+            else
+                repoInfo.Caption = repoInfo.Repo.Path;
+
+            existsShortName = orderedRepos.TryGetValue(repoInfo.Caption, out list);
+            if (!existsShortName)
+            {
+                list = new List<RecentRepoInfo>();
+                orderedRepos.Add(repoInfo.Caption, list);
+            }
+
+            List<RecentRepoInfo> tmpList = new List<RecentRepoInfo>();
+            if (existsShortName)
+                for (int i = list.Count - 1; i >= 0; i--)
+                {
+                    RecentRepoInfo r = list[i];
+                    if (!r.FullPath)
+                    {
+                        tmpList.Add(r);
+                        list.RemoveAt(i);
+                    }
+                }
+
+            if (repoInfo.FullPath || !existsShortName)
+                list.Add(repoInfo);
+            else
+                tmpList.Add(repoInfo);
+
+            //find unique caption for repos with no title
+            foreach (RecentRepoInfo r in tmpList)
+                AddToOrderedRepos(orderedRepos, r, shortenPath);
+        }
+
         private void WorkingdirDropDownOpening(object sender, EventArgs e)
         {
+            SortedList<string, List<RecentRepoInfo>> orderedRepos = new SortedList<string, List<RecentRepoInfo>>();
+            List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
+            List<RecentRepoInfo> lessRecentRepos = new List<RecentRepoInfo>();
+
             _NO_TRANSLATE_Workingdir.DropDownItems.Clear();
-            foreach (var repository in Repositories.RepositoryHistory.Repositories)
+            int maxRecentRepositories = Settings.MaxMostRecentRepositories;
+            int n = Math.Min(maxRecentRepositories, Repositories.RepositoryHistory.Repositories.Count);
+            bool shortenPath = Settings.ShortenRecentRepoPath;
+            bool sortMostRecentRepos = Settings.SortMostRecentRepos;
+            bool sortLessRecentRepos = Settings.SortLessRecentRepos;
+
+            //the maxRecentRepositories repositories will be added at begining
+            //rest will be added in alphabetical order
+            foreach (Repository repository in Repositories.RepositoryHistory.Repositories)
             {
-                var toolStripItem = _NO_TRANSLATE_Workingdir.DropDownItems.Add(repository.Path);
-                toolStripItem.Click += ToolStripItemClick;
+                bool mostRecent = mostRecentRepos.Count < n && repository.Anchor == Repository.RepositoryAnchor.None ||
+                    repository.Anchor == Repository.RepositoryAnchor.MostRecent;
+                RecentRepoInfo ri = new RecentRepoInfo(repository, mostRecent);
+                if (ri.MostRecent)
+                    mostRecentRepos.Add(ri);
+                else
+                    lessRecentRepos.Add(ri);
+                AddToOrderedRepos(orderedRepos, ri, shortenPath);
+            }
+            int r = 0;
+            //remove not anchored repos if there is more than maxRecentRepositories repos
+            while (mostRecentRepos.Count > n && r < mostRecentRepos.Count)
+            {
+                var repo = mostRecentRepos[r];
+                if (repo.Repo.Anchor == Repository.RepositoryAnchor.MostRecent)
+                    r++;
+                else
+                {
+                    repo.MostRecent = false;
+                    mostRecentRepos.RemoveAt(r);
+                }
+            }
+
+
+            Action<bool> addSortedRepos = delegate(bool mostRecent) 
+            {
+                foreach (string caption in orderedRepos.Keys)
+                {
+                    List<RecentRepoInfo> list = orderedRepos[caption];
+                    foreach (RecentRepoInfo repo in list)
+                        if (repo.MostRecent == mostRecent)
+                            AddWorkingdirDropDownItem(repo.Repo, repo.Caption);
+                }
+            };
+
+            Action<List<RecentRepoInfo>> addNotSortedRepos = delegate(List<RecentRepoInfo> list)
+            {
+                foreach (RecentRepoInfo repo in list)
+                    AddWorkingdirDropDownItem(repo.Repo, repo.Caption);
+            };
+
+            if (sortMostRecentRepos)
+                addSortedRepos(true);
+            else
+                addNotSortedRepos(mostRecentRepos);
+
+            if (lessRecentRepos.Count > 0)
+            {
+                if (mostRecentRepos.Count > 0 && (sortMostRecentRepos || sortLessRecentRepos))
+                    _NO_TRANSLATE_Workingdir.DropDownItems.Add(new ToolStripSeparator());
+                if (sortLessRecentRepos)
+                    addSortedRepos(false);
+                else
+                    addNotSortedRepos(lessRecentRepos);
             }
         }
 
-        private void ToolStripItemClick(object sender, EventArgs e)
+        private void SetWorkingDir(string path)
         {
-            var toolStripItem = (ToolStripItem)sender;
-            if (toolStripItem == null)
-                return;
-
-            Settings.WorkingDir = toolStripItem.Text;
-            Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
-            InternalInitialize(true);
+            Settings.WorkingDir = path;
+            Repositories.AddMostRecentRepository(Settings.WorkingDir);
+            InternalInitialize(true);                            
         }
 
         private void TranslateToolStripMenuItemClick(object sender, EventArgs e)

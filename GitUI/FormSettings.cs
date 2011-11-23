@@ -327,6 +327,11 @@ namespace GitUI
                 UseFastChecks.Checked = Settings.UseFastChecks;
                 ShowRelativeDate.Checked = Settings.RelativeDate;
 
+                shortenRecentReposPaths.Checked = Settings.ShortenRecentRepoPath;
+                sortMostRecentRepos.Checked = Settings.SortMostRecentRepos;
+                sortLessRecentRepos.Checked = Settings.SortLessRecentRepos;
+                _NO_TRANSLATE_maxRecentRepositories.Value = Settings.MaxMostRecentRepositories;
+
                 if (string.IsNullOrEmpty(GitCommandHelpers.GetSsh()))
                     OpenSSH.Checked = true;
                 else if (GitCommandHelpers.Plink())
@@ -402,6 +407,11 @@ namespace GitUI
 
             Settings.CloseProcessDialog = CloseProcessDialog.Checked;
             Settings.ShowGitCommandLine = ShowGitCommandLine.Checked;
+
+            Settings.ShortenRecentRepoPath = shortenRecentReposPaths.Checked;
+            Settings.SortMostRecentRepos = sortMostRecentRepos.Checked;
+            Settings.SortLessRecentRepos = sortLessRecentRepos.Checked;
+            Settings.MaxMostRecentRepositories = (int)_NO_TRANSLATE_maxRecentRepositories.Value;
 
             Settings.UseFastChecks = UseFastChecks.Checked;
             Settings.RelativeDate = ShowRelativeDate.Checked;
