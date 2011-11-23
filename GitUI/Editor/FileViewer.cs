@@ -61,13 +61,14 @@ namespace GitUI.Editor
             _internalFileViewer.DoubleClick += (sender, args) => OnRequestDiffView(EventArgs.Empty);
 
             this.HotkeysEnabled = true;
-            this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
 
             ContextMenu.Opening += ContextMenu_Opening; 
         }
 
         protected override void OnLoad(EventArgs e)
         {
+            if (!DesignMode)
+                this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             Font = Settings.DiffFont;
         }
 
