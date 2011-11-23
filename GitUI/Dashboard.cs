@@ -235,7 +235,7 @@ namespace GitUI
                 }
             }
 
-            Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
+            Repositories.AddMostRecentRepository(Settings.WorkingDir);
             OnWorkingDirChanged();
         }
 

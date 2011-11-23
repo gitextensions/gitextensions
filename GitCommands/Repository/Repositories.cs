@@ -32,6 +32,8 @@ namespace GitCommands.Repository
                     if (setting != null)
                     {
                         DeserializeHistoryFromXml(setting.ToString());
+                        if (_repositoryHistory != null)
+                            AssignRepositoryHistoryFromCategories(null);
                     }
                 }
 
@@ -42,6 +44,30 @@ namespace GitCommands.Repository
                 _repositoryHistory = value;
             }
 
+        }
+
+        public static void AssignRepositoryHistoryFromCategories(string path)
+        {
+            foreach (Repository repo in RepositoryHistory.Repositories)
+            {
+                if (path == null || path.Equals(repo.Path, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    Repository catRepo = FindFirstCategoryRepository(repo.Path);
+                    if (catRepo != null)
+                        repo.Assign(catRepo);
+                }
+            }        
+        }
+
+        public static Repository FindFirstCategoryRepository(string path)
+        {
+            foreach (RepositoryCategory category in Repositories.RepositoryCategories)
+            {
+                foreach (Repository repo in category.Repositories)
+                    if (repo.Path.Equals(path, StringComparison.CurrentCultureIgnoreCase))
+                        return repo;
+            }
+            return null;        
         }
 
         //This property is used to determine if repository history needs to be saved
@@ -159,6 +185,12 @@ namespace GitCommands.Repository
         public static void AddCategory(string title)
         {
             RepositoryCategories.Add(new RepositoryCategory { Description = title });
+        }
+
+        public static void AddMostRecentRepository(string repo)
+        {
+            RepositoryHistory.AddMostRecentRepository(repo);
+            AssignRepositoryHistoryFromCategories(repo);
         }
     }
 }

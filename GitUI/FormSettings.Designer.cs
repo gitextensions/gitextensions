@@ -93,6 +93,11 @@ namespace GitUI
             this.BrowseGitPath = new System.Windows.Forms.Button();
             this.GitBinPath = new System.Windows.Forms.TextBox();
             this.TabPageGitExtensions = new System.Windows.Forms.TabPage();
+            this._NO_TRANSLATE_maxRecentRepositories = new System.Windows.Forms.NumericUpDown();
+            this.maxRecentRepositories = new System.Windows.Forms.Label();
+            this.sortLessRecentRepos = new System.Windows.Forms.CheckBox();
+            this.sortMostRecentRepos = new System.Windows.Forms.CheckBox();
+            this.shortenRecentReposPaths = new System.Windows.Forms.CheckBox();
             this.label58 = new System.Windows.Forms.Label();
             this.focusControlOnHover = new System.Windows.Forms.CheckBox();
             this.truncatePathMethod = new System.Windows.Forms.Label();
@@ -293,6 +298,7 @@ namespace GitUI
             this.groupBox8.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.TabPageGitExtensions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_maxRecentRepositories)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RevisionGridQuickSearchTimeout)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_MaxCommits)).BeginInit();
             this.StartPage.SuspendLayout();
@@ -1062,6 +1068,11 @@ namespace GitUI
             // 
             // TabPageGitExtensions
             // 
+            this.TabPageGitExtensions.Controls.Add(this._NO_TRANSLATE_maxRecentRepositories);
+            this.TabPageGitExtensions.Controls.Add(this.maxRecentRepositories);
+            this.TabPageGitExtensions.Controls.Add(this.sortLessRecentRepos);
+            this.TabPageGitExtensions.Controls.Add(this.sortMostRecentRepos);
+            this.TabPageGitExtensions.Controls.Add(this.shortenRecentReposPaths);
             this.TabPageGitExtensions.Controls.Add(this.label58);
             this.TabPageGitExtensions.Controls.Add(this.focusControlOnHover);
             this.TabPageGitExtensions.Controls.Add(this.truncatePathMethod);
@@ -1109,6 +1120,63 @@ namespace GitUI
             this.TabPageGitExtensions.Text = "Git extensions";
             this.TabPageGitExtensions.UseVisualStyleBackColor = true;
             this.TabPageGitExtensions.Click += new System.EventHandler(this.TabPageGitExtensions_Click);
+            // 
+            // _NO_TRANSLATE_maxRecentRepositories
+            // 
+            this._NO_TRANSLATE_maxRecentRepositories.Location = new System.Drawing.Point(396, 505);
+            this._NO_TRANSLATE_maxRecentRepositories.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this._NO_TRANSLATE_maxRecentRepositories.Name = "_NO_TRANSLATE_maxRecentRepositories";
+            this._NO_TRANSLATE_maxRecentRepositories.Size = new System.Drawing.Size(123, 21);
+            this._NO_TRANSLATE_maxRecentRepositories.TabIndex = 53;
+            // 
+            // maxRecentRepositories
+            // 
+            this.maxRecentRepositories.AutoSize = true;
+            this.maxRecentRepositories.Location = new System.Drawing.Point(8, 506);
+            this.maxRecentRepositories.Name = "maxRecentRepositories";
+            this.maxRecentRepositories.Size = new System.Drawing.Size(222, 13);
+            this.maxRecentRepositories.TabIndex = 52;
+            this.maxRecentRepositories.Text = "Maximum number of most recent repositories";
+            // 
+            // sortLessRecentRepos
+            // 
+            this.sortLessRecentRepos.AutoSize = true;
+            this.sortLessRecentRepos.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.sortLessRecentRepos.Location = new System.Drawing.Point(396, 482);
+            this.sortLessRecentRepos.Name = "sortLessRecentRepos";
+            this.sortLessRecentRepos.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.sortLessRecentRepos.Size = new System.Drawing.Size(160, 17);
+            this.sortLessRecentRepos.TabIndex = 51;
+            this.sortLessRecentRepos.Text = "Sort less recent repositories";
+            this.sortLessRecentRepos.UseVisualStyleBackColor = true;
+            // 
+            // sortMostRecentRepos
+            // 
+            this.sortMostRecentRepos.AutoSize = true;
+            this.sortMostRecentRepos.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.sortMostRecentRepos.Location = new System.Drawing.Point(215, 482);
+            this.sortMostRecentRepos.Name = "sortMostRecentRepos";
+            this.sortMostRecentRepos.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.sortMostRecentRepos.Size = new System.Drawing.Size(165, 17);
+            this.sortMostRecentRepos.TabIndex = 50;
+            this.sortMostRecentRepos.Text = "Sort most recent repositories";
+            this.sortMostRecentRepos.UseVisualStyleBackColor = true;
+            // 
+            // shortenRecentReposPaths
+            // 
+            this.shortenRecentReposPaths.AutoSize = true;
+            this.shortenRecentReposPaths.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.shortenRecentReposPaths.Location = new System.Drawing.Point(12, 483);
+            this.shortenRecentReposPaths.Name = "shortenRecentReposPaths";
+            this.shortenRecentReposPaths.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.shortenRecentReposPaths.Size = new System.Drawing.Size(187, 17);
+            this.shortenRecentReposPaths.TabIndex = 49;
+            this.shortenRecentReposPaths.Text = "Shorten recent repositories paths";
+            this.shortenRecentReposPaths.UseVisualStyleBackColor = true;
             // 
             // label58
             // 
@@ -3213,11 +3281,11 @@ namespace GitUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(813, 573);
+            this.ClientSize = new System.Drawing.Size(813, 599);
             this.Controls.Add(this.splitContainer1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(760, 600);
+            this.MinimumSize = new System.Drawing.Size(760, 626);
             this.Name = "FormSettings";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -3242,6 +3310,7 @@ namespace GitUI
             this.groupBox7.PerformLayout();
             this.TabPageGitExtensions.ResumeLayout(false);
             this.TabPageGitExtensions.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_maxRecentRepositories)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RevisionGridQuickSearchTimeout)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_MaxCommits)).EndInit();
             this.StartPage.ResumeLayout(false);
@@ -3537,6 +3606,11 @@ namespace GitUI
         private DataGridViewTextBoxColumn OnEvent;
         private DataGridViewCheckBoxColumn AskConfirmation;
         private DataGridViewCheckBoxColumn addToRevisionGridContextMenuDataGridViewCheckBoxColumn;
+        private CheckBox shortenRecentReposPaths;
+        private CheckBox sortMostRecentRepos;
+        private CheckBox sortLessRecentRepos;
+        private NumericUpDown _NO_TRANSLATE_maxRecentRepositories;
+        private Label maxRecentRepositories;
 
     }
 }
