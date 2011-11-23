@@ -102,8 +102,6 @@ namespace GitUI
             Revisions.ColumnHeadersVisible = false;
 
             this.HotkeysEnabled = true;
-            ReloadHotkeys();
-
             try
             {
                 SetRevisionsLayout((RevisionGridLayout)Settings.RevisionGraphLayout);
@@ -476,7 +474,9 @@ namespace GitUI
         }
 
         public new void Load()
-        {
+        {            
+            if (!DesignMode)
+                ReloadHotkeys();
             ForceRefreshRevisions();
         }
 
