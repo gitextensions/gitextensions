@@ -6,33 +6,36 @@ namespace GitCommands.Logging
 {
     public class CommandLogger
     {
+        public delegate void CommandsChangedHandler(CommandLogger sender);
+
         private const int LogLimit = 100;
-        private Queue<string> _logQueue = new Queue<string>(LogLimit);
+        private Queue<string> _logQueue = new Queue<string>(LogLimit);       
+        private CommandsChangedHandler _CommandsChanged;
 
         public string[] Commands()
         {
-            return _logQueue.ToArray();
+            lock (_logQueue)
+            {
+                return _logQueue.ToArray();
+            }
         }
 
         public void Log(string command)
         {
-            try
+            lock (_logQueue)
             {
                 if (_logQueue.Count >= LogLimit)
                     _logQueue.Dequeue();
 
                 _logQueue.Enqueue(command);
             }
-            catch //This should NEVER happen... but it did happen (issue 271)
-            {
-                _logQueue = new Queue<string>(LogLimit);
-            }
+            FireCommandsChanged();
         }
 
         public override string ToString()
         {
             var stringBuilder = new StringBuilder();
-            var logQueueArray = _logQueue.ToArray();
+            var logQueueArray = Commands();
 
             for (int n = logQueueArray.Length; n > 0; n--)
             {
@@ -41,5 +44,37 @@ namespace GitCommands.Logging
 
             return stringBuilder.ToString();
         }
+
+        public event CommandsChangedHandler CommandsChanged
+        {
+            add
+            {
+                lock (_logQueue)
+                {
+                    _CommandsChanged += value;
+                }
+            }
+            remove
+            {
+                lock (_logQueue)
+                {
+                    _CommandsChanged -= value;
+                }
+            }
+        }
+
+        protected void FireCommandsChanged()
+        {
+            CommandsChangedHandler handler;
+            lock (_logQueue)
+            {
+                handler = _CommandsChanged;
+            }
+            if (handler != null)
+            {
+                handler (this);
+            }
+        }
+
     }
 }
