@@ -91,6 +91,7 @@ namespace GitUI
         private bool _toolbarButtonsCreated;
 #endif
         private bool _dontUpdateOnIndexChange;
+        private ToolStripGitStatus _toolStripGitStatus;
 
         public FormBrowse(string filter)
         {
@@ -101,12 +102,12 @@ namespace GitUI
 
             if (Settings.ShowGitStatusInBrowseToolbar)
             {
-                var status = new ToolStripGitStatus
+                _toolStripGitStatus = new ToolStripGitStatus
                                  {
                                      ImageTransparentColor = System.Drawing.Color.Magenta
                                  };
-                status.Click += StatusClick;
-                ToolStrip.Items.Insert(1, status);
+                _toolStripGitStatus.Click += StatusClick;
+                ToolStrip.Items.Insert(1, _toolStripGitStatus);
             }
 
             RevisionGrid.SelectionChanged += RevisionGridSelectionChanged;
@@ -1099,6 +1100,9 @@ namespace GitUI
                 InternalInitialize(false);
                 IndexWatcher.Reset();
             }
+
+            if (_toolStripGitStatus != null)
+                _toolStripGitStatus.UpdateImmediate();
         }
 
         private void AboutToolStripMenuItemClick(object sender, EventArgs e)
