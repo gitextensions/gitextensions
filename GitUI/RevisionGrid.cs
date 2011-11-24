@@ -127,6 +127,7 @@ namespace GitUI
         }
 
         public Font HeadFont { get; private set; }
+        public Font SuperprojectFont { get; private set; }
         public int LastScrollPos { get; private set; }
         public IComparable[] LastSelectedRows { get; private set; }
         public Font RefsFont { get; private set; }
@@ -150,10 +151,12 @@ namespace GitUI
 
                 RefsFont = IsFilledBranchesLayout() ? _normalFont : new Font(_normalFont, FontStyle.Bold);
                 HeadFont = new Font(_normalFont, FontStyle.Bold);
+                SuperprojectFont = new Font(_normalFont, FontStyle.Underline);
             }
         }
 
         public string CurrentCheckout { get; set; }
+        public string SuperprojectCurrentCheckout { get; set; }
         public int LastRow { get; set; }
         public bool AllowGraphWithFilter { get; set; }
 
@@ -682,6 +685,7 @@ namespace GitUI
                 DisposeRevisionGraphCommand();
 
                 var newCurrentCheckout = Settings.Module.GetCurrentCheckout();
+                var newSuperprojectCurrentCheckout = Settings.Module.GetSuperprojectCurrentCheckout();
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
@@ -697,6 +701,7 @@ namespace GitUI
 
                 Revisions.ClearSelection();
                 CurrentCheckout = newCurrentCheckout;
+                SuperprojectCurrentCheckout = newSuperprojectCurrentCheckout;
                 Revisions.Clear();
                 Error.Visible = false;
 
@@ -966,7 +971,11 @@ namespace GitUI
             }
 
             Brush foreBrush = new SolidBrush(foreColor);
-            var rowFont = revision.Guid == CurrentCheckout /*&& !showRevisionCards*/ ? HeadFont : NormalFont;
+            var rowFont = NormalFont;
+            if (revision.Guid == CurrentCheckout /*&& !showRevisionCards*/)
+                rowFont = HeadFont;
+            else if (revision.Guid == SuperprojectCurrentCheckout)
+                rowFont = SuperprojectFont;
 
             switch (column)
             {
