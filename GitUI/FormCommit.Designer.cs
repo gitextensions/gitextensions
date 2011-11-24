@@ -114,6 +114,7 @@ namespace GitUI
             this.Reset = new System.Windows.Forms.Button();
             this.UnstagedSubmoduleContext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openSubmoduleMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetSubmoduleChanges = new System.Windows.Forms.ToolStripMenuItem();
             this.updateSubmoduleMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.submoduleSummaryMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
@@ -123,7 +124,7 @@ namespace GitUI
             this.openDiffMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
             this.copyFolderNameMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resetSubmoduleChanges = new System.Windows.Forms.ToolStripMenuItem();
+            this.commitSubmoduleChanges = new System.Windows.Forms.ToolStripMenuItem();
             this.UnstagedFileContext.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -868,13 +869,14 @@ namespace GitUI
             // UnstagedSubmoduleContext
             // 
             this.UnstagedSubmoduleContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openSubmoduleMenuItem,
+            this.commitSubmoduleChanges,
             this.resetSubmoduleChanges,
             this.updateSubmoduleMenuItem,
-            this.submoduleSummaryMenuItem,
             this.toolStripSeparator13,
+            this.submoduleSummaryMenuItem,
             this.viewHistoryMenuItem,
             this.toolStripSeparator15,
+            this.openSubmoduleMenuItem,
             this.openFolderMenuItem,
             this.openDiffMenuItem,
             this.toolStripSeparator16,
@@ -889,6 +891,13 @@ namespace GitUI
             this.openSubmoduleMenuItem.Tag = "1";
             this.openSubmoduleMenuItem.Text = "Open with Git Extensions...";
             this.openSubmoduleMenuItem.Click += new System.EventHandler(this.openSubmoduleMenuItem_Click);
+            // 
+            // resetSubmoduleChanges
+            // 
+            this.resetSubmoduleChanges.Name = "resetSubmoduleChanges";
+            this.resetSubmoduleChanges.Size = new System.Drawing.Size(251, 24);
+            this.resetSubmoduleChanges.Text = "Reset submodule changes";
+            this.resetSubmoduleChanges.Click += new System.EventHandler(this.resetSubmoduleChanges_Click);
             // 
             // updateSubmoduleMenuItem
             // 
@@ -950,12 +959,12 @@ namespace GitUI
             this.copyFolderNameMenuItem.Text = "Copy folder name";
             this.copyFolderNameMenuItem.Click += new System.EventHandler(this.copyFolderNameMenuItem_Click);
             // 
-            // resetSubmoduleChanges
+            // commitSubmoduleChanges
             // 
-            this.resetSubmoduleChanges.Name = "resetSubmoduleChanges";
-            this.resetSubmoduleChanges.Size = new System.Drawing.Size(251, 24);
-            this.resetSubmoduleChanges.Text = "Reset submodule changes";
-            this.resetSubmoduleChanges.Click += new System.EventHandler(this.resetSubmoduleChanges_Click);
+            this.commitSubmoduleChanges.Name = "commitSubmoduleChanges";
+            this.commitSubmoduleChanges.Size = new System.Drawing.Size(251, 24);
+            this.commitSubmoduleChanges.Text = "Commit submodule changes";
+            this.commitSubmoduleChanges.Click += new System.EventHandler(this.commitSubmoduleChanges_Click);
             // 
             // FormCommit
             // 
@@ -1092,5 +1101,6 @@ namespace GitUI
         private ToolStripMenuItem copyFolderNameMenuItem;
         private ToolStripMenuItem submoduleSummaryMenuItem;
         private ToolStripMenuItem resetSubmoduleChanges;
+        private ToolStripMenuItem commitSubmoduleChanges;
     }
 }
