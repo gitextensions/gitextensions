@@ -828,6 +828,9 @@ namespace GitCommands
         public string FindGitSuperprojectPath(out string submoduleName)
         {
             submoduleName = null;
+            if (String.IsNullOrEmpty(_workingdir))
+                return null;
+
             string superprojectPath = null;
             if (File.Exists(_workingdir + ".git"))
             {
