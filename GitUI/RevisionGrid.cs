@@ -1099,7 +1099,7 @@ namespace GitUI
                         if (IsCardLayout())
                             offset = baseOffset;
 
-                        var text = revision.Message;
+                        var text = (string)e.FormattedValue;
                         var bounds = AdjustCellBounds(e.CellBounds, offset);
                         DrawColumnText(e.Graphics, text, rowFont, foreColor, bounds);
 
@@ -1149,7 +1149,7 @@ namespace GitUI
                     break;
                 case 2:
                     {
-                        var text = revision.Author;
+                        var text = (string)e.FormattedValue;
                         e.Graphics.DrawString(text, rowFont, foreBrush,
                                               new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
                     }
