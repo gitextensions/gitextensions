@@ -233,6 +233,10 @@ namespace GitUI
         ///   the settings</param>
         protected void RestorePosition(String name)
         {
+            // Restore only when we open not as modal form
+            if (Owner != null && StartPosition == FormStartPosition.CenterParent)
+                return;
+
             var position = LookupWindowPosition(name);
 
             if (position == null)
@@ -251,6 +255,10 @@ namespace GitUI
         ///   settings</param>
         protected void SavePosition(String name)
         {
+            // Save only when we open not as modal form
+            if (Owner != null && StartPosition == FormStartPosition.CenterParent)
+                return;
+
             try
             {
                 var rectangle =
