@@ -74,6 +74,7 @@ namespace GitUI
             Loading.Paint += Loading_Paint;
 
             Revisions.CellPainting += RevisionsCellPainting;
+            Revisions.CellFormatting += RevisionsCellFormatting;
             Revisions.KeyDown += RevisionsKeyDown;
 
             showAuthorDateToolStripMenuItem.Checked = Settings.ShowAuthorDate;
@@ -1159,6 +1160,44 @@ namespace GitUI
                         var text = TimeToString(time);
                         e.Graphics.DrawString(text, rowFont, foreBrush,
                                               new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                    }
+                    break;
+            }
+        }
+
+        private void RevisionsCellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            var column = e.ColumnIndex;
+            if (e.RowIndex < 0)
+                return;
+
+            if (Revisions.RowCount <= e.RowIndex)
+                return;
+
+            var revision = GetRevision(e.RowIndex);
+            if (revision == null)
+                return;
+
+            e.FormattingApplied = true;
+
+            switch (column)
+            {
+                case 0:
+                    e.Value = revision.Guid;
+                    break;
+                case 1:
+                    e.Value = revision.Message;
+                    break;
+                case 2:
+                    e.Value = revision.Author;
+                    break;
+                case 3:
+                    {
+                        var time = Settings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
+                        if (time == DateTime.MinValue || time == DateTime.MaxValue)
+                            e.Value = "";
+                        else
+                            e.Value = string.Format("{0} {1}", time.ToShortDateString(), time.ToLongTimeString());
                     }
                     break;
             }
