@@ -1578,7 +1578,8 @@ namespace GitCommands
             if (true && status.Length < 50 && status.Contains("fatal: No HEAD commit to compare"))
             {
                 //This command is a little more expensive because it will return both staged and unstaged files
-                status = RunCmd(Settings.GitCommand, "status --porcelain --untracked-files=no -z");
+                string command = GitCommandHelpers.GetAllChangedFilesCmd(true, false);
+                status = RunCmd(Settings.GitCommand, command);
                 List<GitItemStatus> stagedFiles = GitCommandHelpers.GetAllChangedFilesFromString(status, false);
                 return stagedFiles.Where(f => f.IsStaged).ToList<GitItemStatus>();
             }
@@ -1596,7 +1597,8 @@ namespace GitCommands
             if (!GitCommandHelpers.VersionInUse.SupportGitStatusPorcelain)
                 throw new Exception("The version of git you are using is not supported for this action. Please upgrade to git 1.7.3 or newer.");
 
-            string status = RunCmd(Settings.GitCommand, "status --porcelain --untracked-files -z");
+            string command = GitCommandHelpers.GetAllChangedFilesCmd(true, untracked);
+            string status = RunCmd(Settings.GitCommand, command);
             return GitCommandHelpers.GetAllChangedFilesFromString(status);
         }
 
