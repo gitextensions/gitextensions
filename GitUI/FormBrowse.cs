@@ -99,6 +99,13 @@ namespace GitUI
 
             InitializeComponent();
             Translate();
+            
+#if !__MonoCS__
+            if (Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+            {
+                TaskbarManager.Instance.ApplicationId = "HenkWesthuis.GitExtensions";
+            }
+#endif
 
             if (Settings.ShowGitStatusInBrowseToolbar)
             {
