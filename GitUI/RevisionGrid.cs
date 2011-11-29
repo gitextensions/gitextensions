@@ -1557,7 +1557,7 @@ namespace GitUI
 
             //For now there is no action that could be done on currentBranch
             string currentBranch = Settings.Module.GetSelectedBranch();
-            var allBranches = revision.Heads.Where(h => !h.IsTag && (h.IsHead || h.IsRemote) && !h.Name.Equals(currentBranch));
+            var allBranches = revision.Heads.Where(h => !h.IsTag && (h.IsHead || h.IsRemote));
             var localBranches = allBranches.Where(b => !b.IsRemote);
 
             var branchesWithNoIdenticalRemotes = allBranches.Where(
@@ -1565,13 +1565,16 @@ namespace GitUI
 
             foreach (var head in branchesWithNoIdenticalRemotes)
             {
-                ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
-                toolStripItem.Click += ToolStripItemClickMergeBranch;
-                mergeBranchDropDown.Items.Add(toolStripItem);
+                if (!head.Name.Equals(currentBranch))
+                {
+                    ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
+                    toolStripItem.Click += ToolStripItemClickMergeBranch;
+                    mergeBranchDropDown.Items.Add(toolStripItem);
 
-                toolStripItem = new ToolStripMenuItem(head.Name);
-                toolStripItem.Click += ToolStripItemClickRebaseBranch;
-                rebaseDropDown.Items.Add(toolStripItem);
+                    toolStripItem = new ToolStripMenuItem(head.Name);
+                    toolStripItem.Click += ToolStripItemClickRebaseBranch;
+                    rebaseDropDown.Items.Add(toolStripItem);
+                }
             }
 
             foreach (var head in allBranches)
@@ -1584,22 +1587,28 @@ namespace GitUI
                 //skip remote branches - they can not be deleted this way
                 if (!head.IsRemote)
                 {
-                    toolStripItem = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Click += ToolStripItemClickBranch;
-                    deleteBranchDropDown.Items.Add(toolStripItem); //Add to delete branch
+                    if (!head.Name.Equals(currentBranch))
+                    {
+                        toolStripItem = new ToolStripMenuItem(head.Name);
+                        toolStripItem.Click += ToolStripItemClickBranch;
+                        deleteBranchDropDown.Items.Add(toolStripItem); //Add to delete branch
+                    }
 
                     toolStripItem = new ToolStripMenuItem(head.Name);
                     toolStripItem.Click += ToolStripItemClickRenameBranch;
                     renameDropDown.Items.Add(toolStripItem); //Add to rename branch
                 }
-                
-                toolStripItem = new ToolStripMenuItem(head.Name);
-                if (head.IsRemote)
-                    toolStripItem.Click += ToolStripItemClickCheckoutRemoteBranch;
-                else
-                    toolStripItem.Click += ToolStripItemClickCheckoutBranch;
-                checkoutBranchDropDown.Items.Add(toolStripItem);
 
+                if (!head.Name.Equals(currentBranch))
+                {
+
+                    toolStripItem = new ToolStripMenuItem(head.Name);
+                    if (head.IsRemote)
+                        toolStripItem.Click += ToolStripItemClickCheckoutRemoteBranch;
+                    else
+                        toolStripItem.Click += ToolStripItemClickCheckoutBranch;
+                    checkoutBranchDropDown.Items.Add(toolStripItem);
+                }
             }
 
             deleteTagToolStripMenuItem.DropDown = tagDropDown;
