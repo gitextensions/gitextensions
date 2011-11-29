@@ -1956,15 +1956,9 @@ namespace GitUI
             LoadPluginsInPluginMenu();
         }
 
-        private void bisectToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            new FormBisect().ShowDialog(this);
-            Initialize();
-        }
-
         private void BisectClick(object sender, EventArgs e)
         {
-            new FormBisect().ShowDialog(this);
+            new FormBisect(RevisionGrid).ShowDialog(this);
             Initialize();
         }
 
