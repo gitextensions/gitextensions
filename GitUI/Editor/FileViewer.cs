@@ -322,7 +322,10 @@ namespace GitUI.Editor
                             if (commitData != null)
                             {
                                 sb.AppendLine("\t\t\t\t\t" + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + commitData.CommitDate.LocalDateTime.ToString(" (ddd MMM dd HH':'mm':'ss yyyy)"));
-                                sb.AppendLine("\t\t" + commitData.Body.Trim(new char[] {'\n', '\r'}));
+                                var delim = new char[] {'\n', '\r'};
+                                var lines = commitData.Body.Trim(delim).Split(delim);
+                                foreach(var curline in lines)
+                                    sb.AppendLine("\t\t" + curline);
                             }
                         }
                         else
