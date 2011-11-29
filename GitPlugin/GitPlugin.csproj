@@ -67,6 +67,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\SearchFile.cs" />
     <Compile Include="Git\GitCommands.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>
