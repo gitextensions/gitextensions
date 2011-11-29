@@ -184,6 +184,7 @@ namespace GitUI
         private void Ok_Click(object sender, EventArgs e)
         {
             Close();
+            DialogResult = DialogResult.OK;
         }
 
         private void FormStatus_Load(object sender, EventArgs e)
@@ -242,6 +243,7 @@ namespace GitUI
                 AbortCallback(this);
                 OutputString.Append(Environment.NewLine + "Aborted");
                 Done(false);
+                DialogResult = DialogResult.Abort;
             }
             catch { }
         }
