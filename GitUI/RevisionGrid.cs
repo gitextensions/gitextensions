@@ -528,7 +528,7 @@ namespace GitUI
             SelectionTimer.Start();
         }
 
-        public List<GitRevision> GetRevisions()
+        public List<GitRevision> GetSelectedRevisions()
         {
             return Revisions
                 .SelectedRows
@@ -1349,7 +1349,7 @@ namespace GitUI
 
         private void RevisionsDoubleClick(object sender, EventArgs e)
         {
-            var r = GetRevisions();
+            var r = GetSelectedRevisions();
             if (r.Count > 0)
             {
                 var form = new FormDiffSmall();

@@ -52,7 +52,7 @@ namespace GitUI
 
             Patch selectedPatch;
 
-            var revisions = RevisionGrid.GetRevisions();
+            var revisions = RevisionGrid.GetSelectedRevisions();
             if (revisions.Count == 2)
             {
                 selectedPatch =
@@ -87,7 +87,7 @@ namespace GitUI
             {
                 Cursor.Current = Cursors.WaitCursor;
                 DiffFiles.GitItemStatuses = null;
-                var revisions = RevisionGrid.GetRevisions();
+                var revisions = RevisionGrid.GetSelectedRevisions();
 
                 if (revisions.Count == 1)
                     DiffFiles.GitItemStatuses =
