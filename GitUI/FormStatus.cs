@@ -14,14 +14,19 @@ namespace GitUI
         public delegate void ProcessAbort(FormStatus form);
 
         protected readonly SynchronizationContext syncContext;
+        private bool UseDialogSettings = true;
 
-        public FormStatus()
+        public FormStatus(bool useDialogSettings = true)
         {
             syncContext = SynchronizationContext.Current;
+            UseDialogSettings = useDialogSettings;
 
             InitializeComponent();
             Translate();
-            KeepDialogOpen.Checked = !GitCommands.Settings.CloseProcessDialog;
+            if (UseDialogSettings)
+                KeepDialogOpen.Checked = !GitCommands.Settings.CloseProcessDialog;
+            else
+                KeepDialogOpen.Hide();
         }
 
         public FormStatus(ProcessStart process, ProcessAbort abort)
@@ -140,7 +145,7 @@ namespace GitUI
                 Visible = true;
             }
 
-            if (isSuccess && (showOnError || GitCommands.Settings.CloseProcessDialog))
+            if (isSuccess && (showOnError || (UseDialogSettings && GitCommands.Settings.CloseProcessDialog)))
             {
                 Close();
             }
@@ -179,6 +184,7 @@ namespace GitUI
         private void Ok_Click(object sender, EventArgs e)
         {
             Close();
+            DialogResult = DialogResult.OK;
         }
 
         private void FormStatus_Load(object sender, EventArgs e)
@@ -237,6 +243,7 @@ namespace GitUI
                 AbortCallback(this);
                 OutputString.Append(Environment.NewLine + "Aborted");
                 Done(false);
+                DialogResult = DialogResult.Abort;
             }
             catch { }
         }

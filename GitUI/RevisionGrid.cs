@@ -74,6 +74,7 @@ namespace GitUI
             Loading.Paint += Loading_Paint;
 
             Revisions.CellPainting += RevisionsCellPainting;
+            Revisions.CellFormatting += RevisionsCellFormatting;
             Revisions.KeyDown += RevisionsKeyDown;
 
             showAuthorDateToolStripMenuItem.Checked = Settings.ShowAuthorDate;
@@ -125,6 +126,7 @@ namespace GitUI
         }
 
         public Font HeadFont { get; private set; }
+        public Font SuperprojectFont { get; private set; }
         public int LastScrollPos { get; private set; }
         public IComparable[] LastSelectedRows { get; private set; }
         public Font RefsFont { get; private set; }
@@ -148,10 +150,12 @@ namespace GitUI
 
                 RefsFont = IsFilledBranchesLayout() ? _normalFont : new Font(_normalFont, FontStyle.Bold);
                 HeadFont = new Font(_normalFont, FontStyle.Bold);
+                SuperprojectFont = new Font(_normalFont, FontStyle.Underline);
             }
         }
 
         public string CurrentCheckout { get; set; }
+        public string SuperprojectCurrentCheckout { get; set; }
         public int LastRow { get; set; }
         public bool AllowGraphWithFilter { get; set; }
 
@@ -682,6 +686,7 @@ namespace GitUI
                 DisposeRevisionGraphCommand();
 
                 var newCurrentCheckout = Settings.Module.GetCurrentCheckout();
+                var newSuperprojectCurrentCheckout = Settings.Module.GetSuperprojectCurrentCheckout();
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
@@ -697,6 +702,7 @@ namespace GitUI
 
                 Revisions.ClearSelection();
                 CurrentCheckout = newCurrentCheckout;
+                SuperprojectCurrentCheckout = newSuperprojectCurrentCheckout;
                 Revisions.Clear();
                 Error.Visible = false;
 
@@ -966,7 +972,11 @@ namespace GitUI
             }
 
             Brush foreBrush = new SolidBrush(foreColor);
-            var rowFont = revision.Guid == CurrentCheckout /*&& !showRevisionCards*/ ? HeadFont : NormalFont;
+            var rowFont = NormalFont;
+            if (revision.Guid == CurrentCheckout /*&& !showRevisionCards*/)
+                rowFont = HeadFont;
+            else if (revision.Guid == SuperprojectCurrentCheckout)
+                rowFont = SuperprojectFont;
 
             switch (column)
             {
@@ -1089,7 +1099,7 @@ namespace GitUI
                         if (IsCardLayout())
                             offset = baseOffset;
 
-                        var text = revision.Message;
+                        var text = (string)e.FormattedValue;
                         var bounds = AdjustCellBounds(e.CellBounds, offset);
                         DrawColumnText(e.Graphics, text, rowFont, foreColor, bounds);
 
@@ -1139,7 +1149,7 @@ namespace GitUI
                     break;
                 case 2:
                     {
-                        var text = revision.Author;
+                        var text = (string)e.FormattedValue;
                         e.Graphics.DrawString(text, rowFont, foreBrush,
                                               new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
                     }
@@ -1150,6 +1160,44 @@ namespace GitUI
                         var text = TimeToString(time);
                         e.Graphics.DrawString(text, rowFont, foreBrush,
                                               new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                    }
+                    break;
+            }
+        }
+
+        private void RevisionsCellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            var column = e.ColumnIndex;
+            if (e.RowIndex < 0)
+                return;
+
+            if (Revisions.RowCount <= e.RowIndex)
+                return;
+
+            var revision = GetRevision(e.RowIndex);
+            if (revision == null)
+                return;
+
+            e.FormattingApplied = true;
+
+            switch (column)
+            {
+                case 0:
+                    e.Value = revision.Guid;
+                    break;
+                case 1:
+                    e.Value = revision.Message;
+                    break;
+                case 2:
+                    e.Value = revision.Author;
+                    break;
+                case 3:
+                    {
+                        var time = Settings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
+                        if (time == DateTime.MinValue || time == DateTime.MaxValue)
+                            e.Value = "";
+                        else
+                            e.Value = string.Format("{0} {1}", time.ToShortDateString(), time.ToLongTimeString());
                     }
                     break;
             }
@@ -1875,8 +1923,7 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
 
-            Settings.CloseProcessDialog = false;
-            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(false, GetRevision(LastRow).Guid)).ShowDialog(this);
+            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(false, GetRevision(LastRow).Guid), false).ShowDialog(this);
             RefreshRevisions();
         }
 
@@ -1885,8 +1932,7 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
 
-            Settings.CloseProcessDialog = false;
-            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(true, GetRevision(LastRow).Guid)).ShowDialog(this);
+            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(true, GetRevision(LastRow).Guid), false).ShowDialog(this);
             RefreshRevisions();
         }
 

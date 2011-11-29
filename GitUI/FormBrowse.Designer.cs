@@ -1114,7 +1114,7 @@ namespace GitUI
             this.bisectToolStripMenuItem.Name = "bisectToolStripMenuItem";
             this.bisectToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.bisectToolStripMenuItem.Text = "Bisect";
-            this.bisectToolStripMenuItem.Click += new System.EventHandler(this.bisectToolStripMenuItem_Click);
+            this.bisectToolStripMenuItem.Click += new System.EventHandler(this.BisectClick);
             // 
             // checkoutBranchToolStripMenuItem
             // 

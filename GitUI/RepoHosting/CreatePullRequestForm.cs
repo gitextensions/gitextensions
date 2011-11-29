@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitUIPluginInterfaces.RepositoryHosts;
 using ResourceManager.Translation;
+using GitCommands;
 
 namespace GitUI.RepoHosting
 {
@@ -25,12 +26,14 @@ namespace GitUI.RepoHosting
         private string _chooseBranch;
         private readonly string _chooseRemote;
         private List<IHostedRemote> _hostedRemotes;
+        private string _currentBranch;
 
         public CreatePullRequestForm(IRepositoryHostPlugin repoHost, string chooseRemote, string chooseBranch)
         {
             _repoHost = repoHost;
             _chooseBranch = chooseBranch;
             _chooseRemote = chooseRemote;
+            _currentBranch = "";
             InitializeComponent();
             Translate();
         }
@@ -53,6 +56,8 @@ namespace GitUI.RepoHosting
                 Close();
                 return;
             }
+
+            _currentBranch = Settings.Module.ValidWorkingDir() ? Settings.Module.GetSelectedBranch() : "";
             LoadRemotes(foreignHostedRemotes);
             LoadMyBranches();
         }
@@ -91,11 +96,17 @@ namespace GitUI.RepoHosting
                 () => _currentHostedRemote.GetHostedRepository().Branches,
                 branches =>
                 {
-                    foreach (var branch in branches)
-                        _remoteBranchesCB.Items.Add(branch.Name);
+                    branches.Sort((a, b) => String.Compare(a.Name, b.Name, true));
+                    int selectItem = 0;
+                    for (int i = 0; i < branches.Count; i++)
+                    {
+                        if (branches[i].Name == _currentBranch)
+                            selectItem = i;
+                        _remoteBranchesCB.Items.Add(branches[i].Name);
+                    }
                     _createBtn.Enabled = true;
                     if (branches.Count > 0)
-                        _remoteBranchesCB.SelectedIndex = 0;
+                        _remoteBranchesCB.SelectedIndex = selectItem;
                 },
                 ex => { throw ex; });
         }
@@ -112,11 +123,17 @@ namespace GitUI.RepoHosting
                 () => myRemote.GetHostedRepository().Branches,
                 branches =>
                 {
-                    foreach (var branch in branches)
-                        _yourBranchesCB.Items.Add(branch.Name);
+                    branches.Sort((a, b) => String.Compare(a.Name, b.Name, true));
+                    int selectItem = 0;
+                    for (int i = 0; i < branches.Count; i++)
+                    {
+                        if (branches[i].Name == _currentBranch)
+                            selectItem = i;
+                        _yourBranchesCB.Items.Add(branches[i].Name);
+                    }
                     _createBtn.Enabled = true;
                     if (branches.Count > 0)
-                        _yourBranchesCB.SelectedIndex = 0;
+                        _yourBranchesCB.SelectedIndex = selectItem;
                 },
                 ex => { throw ex; });
         }

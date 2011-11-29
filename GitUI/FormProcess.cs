@@ -27,12 +27,13 @@ namespace GitUI
         private GitCommandsInstance gitCommand;
 
         //constructor for VS designer
-        protected FormProcess()
-            : base()
+        protected FormProcess(bool useDialogSettings = true)
+            : base(useDialogSettings)
         {
         }
 
-        public FormProcess(string process, string arguments)
+        public FormProcess(string process, string arguments, bool useDialogSettings = true)
+            : base(useDialogSettings)
         {
             ProcessCallback = new ProcessStart(processStart);
             AbortCallback = new ProcessAbort(processAbort);
@@ -44,14 +45,14 @@ namespace GitUI
 
         //Input does not work for password inputs. I don't know why, but it turned out not to be really necessary.
         //For other inputs, it is not tested.
-        public FormProcess(string process, string arguments, string input)
-            : this(process, arguments)
+        public FormProcess(string process, string arguments, string input, bool useDialogSettings = true)
+            : this(process, arguments, useDialogSettings)
         {
             ProcessInput = input;
         }
 
-        public FormProcess(string arguments)
-            : this(null, arguments)
+        public FormProcess(string arguments, bool useDialogSettings = true)
+            : this(null, arguments, useDialogSettings)
         {
         }
 
