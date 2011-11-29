@@ -1923,8 +1923,7 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
 
-            Settings.CloseProcessDialog = false;
-            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(false, GetRevision(LastRow).Guid)).ShowDialog(this);
+            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(false, GetRevision(LastRow).Guid), false).ShowDialog(this);
             RefreshRevisions();
         }
 
@@ -1933,8 +1932,7 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
 
-            Settings.CloseProcessDialog = false;
-            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(true, GetRevision(LastRow).Guid)).ShowDialog(this);
+            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(true, GetRevision(LastRow).Guid), false).ShowDialog(this);
             RefreshRevisions();
         }
 
