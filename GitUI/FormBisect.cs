@@ -29,15 +29,13 @@ namespace GitUI
 
         private void Good_Click(object sender, EventArgs e)
         {
-            Settings.CloseProcessDialog = false;
-            new FormProcess(GitCommandHelpers.ContinueBisectCmd(true)).ShowDialog(this);
+            new FormProcess(GitCommandHelpers.ContinueBisectCmd(true), false).ShowDialog(this);
             Close();
         }
 
         private void Bad_Click(object sender, EventArgs e)
         {
-            Settings.CloseProcessDialog = false;
-            new FormProcess(GitCommandHelpers.ContinueBisectCmd(false)).ShowDialog(this);
+            new FormProcess(GitCommandHelpers.ContinueBisectCmd(false), false).ShowDialog(this);
             Close();
         }
 
