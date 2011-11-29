@@ -171,7 +171,7 @@ namespace GitUI
 
         private void UpdateSelectedFileViewers()
         {
-            var selectedRows = FileChanges.GetRevisions();
+            var selectedRows = FileChanges.GetSelectedRevisions();
 
             if (selectedRows.Count == 0) return;
 
@@ -243,13 +243,13 @@ namespace GitUI
 
         private void FileChangesDoubleClick(object sender, EventArgs e)
         {
-            if (FileChanges.GetRevisions().Count == 0)
+            if (FileChanges.GetSelectedRevisions().Count == 0)
             {
                 GitUICommands.Instance.StartCompareRevisionsDialog(this);
                 return;
             }
 
-            IGitItem revision = FileChanges.GetRevisions()[0];
+            IGitItem revision = FileChanges.GetSelectedRevisions()[0];
 
             var form = new FormDiffSmall();
             form.SetRevision(revision.Guid);
@@ -258,7 +258,7 @@ namespace GitUI
 
         private void OpenWithDifftoolToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var selectedRows = FileChanges.GetRevisions();
+            var selectedRows = FileChanges.GetSelectedRevisions();
             string rev1;
             string rev2;
             switch (selectedRows.Count)
@@ -292,7 +292,7 @@ namespace GitUI
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var selectedRows = FileChanges.GetRevisions();
+            var selectedRows = FileChanges.GetSelectedRevisions();
 
             if (selectedRows.Count > 0)
             {
@@ -336,11 +336,20 @@ namespace GitUI
 
         private void cherryPickThisCommitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (FileChanges.GetRevisions().Count <= FileChanges.LastRow || FileChanges.LastRow < 0)
-                return;
+            if (FileChanges.GetSelectedRevisions().Count == 1)
+            {
+                var frm = new FormCherryPickCommitSmall(FileChanges.GetSelectedRevisions()[0]);
+                frm.ShowDialog(this);
+            }
+        }
 
-            var frm = new FormCherryPickCommitSmall(FileChanges.GetRevision(FileChanges.LastRow));
-            frm.ShowDialog(this);
+        private void revertCommitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (FileChanges.GetSelectedRevisions().Count == 1)
+            {
+                var frm = new FormRevertCommitSmall(FileChanges.GetSelectedRevisions()[0]);
+                frm.ShowDialog(this);
+            }
         }
     }
 }

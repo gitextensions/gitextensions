@@ -106,26 +106,26 @@ namespace GitUI
             string rev2 = "";
             string result = "";
 
-            if (RevisionGrid.GetRevisions().Count > 0)
+            if (RevisionGrid.GetSelectedRevisions().Count > 0)
             {
-                if (RevisionGrid.GetRevisions().Count == 1)
+                if (RevisionGrid.GetSelectedRevisions().Count == 1)
                 {
-                    rev1 = RevisionGrid.GetRevisions()[0].ParentGuids[0];
-                    rev2 = RevisionGrid.GetRevisions()[0].Guid;
+                    rev1 = RevisionGrid.GetSelectedRevisions()[0].ParentGuids[0];
+                    rev2 = RevisionGrid.GetSelectedRevisions()[0].Guid;
                     result = Settings.Module.FormatPatch(rev1, rev2, savePatchesToDir);
                 }
 
-                if (RevisionGrid.GetRevisions().Count == 2)
+                if (RevisionGrid.GetSelectedRevisions().Count == 2)
                 {
-                    rev1 = RevisionGrid.GetRevisions()[0].ParentGuids[0];
-                    rev2 = RevisionGrid.GetRevisions()[1].Guid;
+                    rev1 = RevisionGrid.GetSelectedRevisions()[0].ParentGuids[0];
+                    rev2 = RevisionGrid.GetSelectedRevisions()[1].Guid;
                     result = Settings.Module.FormatPatch(rev1, rev2, savePatchesToDir);
                 }
 
-                if (RevisionGrid.GetRevisions().Count > 2)
+                if (RevisionGrid.GetSelectedRevisions().Count > 2)
                 {
                     int n = 0;
-                    foreach (GitRevision revision in RevisionGrid.GetRevisions())
+                    foreach (GitRevision revision in RevisionGrid.GetSelectedRevisions())
                     {
                         n++;
                         rev1 = revision.ParentGuids[0];
