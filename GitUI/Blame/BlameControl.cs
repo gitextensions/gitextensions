@@ -186,7 +186,7 @@ namespace GitUI.Blame
             BlameFile.ViewText(fileName, blameFile.ToString());
             BlameFile.ScrollPos = scrollpos;
 
-            BlameFile_SelectedLineChanged(null, 0);
+            commitInfo.SetRevision(guid);
         }
 
         private void ActiveTextAreaControlDoubleClick(object sender, EventArgs e)
