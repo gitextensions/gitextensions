@@ -11,6 +11,7 @@ Version 2.27
 	Fixed issue 566: QuickPull with Shift
 	Fixed issue 460: TortoiseMerge added to diff tools
 	Fixed issue 139: Disable image paste in EditNetSpell
+	Fixed issue 138: Avoid auto stash when there is nothing to stash
 	Fixed issue 127: Preview disabled for files larger than 5Mb, but available by link
 	Fixed issue 124: Submodules form now can remove submodule
 	Fixed clone repository to bare repository
@@ -23,6 +24,7 @@ Version 2.27
 	Added email links to commit header
 	Added hotkeys to translation form (Alt-Up, Alt-Down and Control-Down)
 	Added option "Full history" to context menu in file history
+	Added "Manipulate commit" context menu to file history
 	Added support for merge multiple branches
 	Added support for delete multiple branches
 	Added support for drag & drop folders and urls onto dashboard

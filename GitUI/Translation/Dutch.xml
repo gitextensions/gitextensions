@@ -3146,6 +3146,9 @@ Als u een vertakking wilt ophalen en samenvoegen, kies een vertakking.</Value>
         <TranslationItem Name="_selectSourceDirectory" Property="Text">
           <Value>Selecteer een bron directory</Value>
         </TranslationItem>
+        <TranslationItem Name="_questionInitSubmodulesCaption" Property="Text">
+          <Value>Submodulen</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormFileHistory">
@@ -3170,6 +3173,18 @@ Als u een vertakking wilt ophalen en samenvoegen, kies een vertakking.</Value>
         </TranslationItem>
         <TranslationItem Name="followFileHistoryToolStripMenuItem" Property="Text">
           <Value>Detecteer hernoemen van bestand</Value>
+        </TranslationItem>
+        <TranslationItem Name="fullHistoryToolStripMenuItem" Property="Text">
+          <Value>Volledige historie</Value>
+        </TranslationItem>
+        <TranslationItem Name="manipuleerCommitToolStripMenuItem" Property="Text">
+          <Value>Manipuleer commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="cherryPickThisCommitToolStripMenuItem" Property="Text">
+          <Value>Commit opnieuw toepassen</Value>
+        </TranslationItem>
+        <TranslationItem Name="revertCommitToolStripMenuItem" Property="Text">
+          <Value>Commit ongedaan maken</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3661,6 +3676,9 @@ Wilt u deze submodules initializeren?</Value>
         </TranslationItem>
         <TranslationItem Name="resetSubmoduleChanges" Property="Text">
           <Value>Wijzigingen in submodule terugzetten</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitSubmoduleChanges" Property="Text">
+          <Value>Commit wijzigingen in submodule</Value>
         </TranslationItem>
         <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text">
           <Value>Wilt u ook de nieuwe bestanden in de selectie verwijderen?
