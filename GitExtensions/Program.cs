@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
@@ -220,6 +221,11 @@ namespace GitExtensions
                     case "settings":
                         GitUICommands.Instance.StartSettingsDialog();
                         return;
+                    case "searchfile":
+                        var searchWindow = new SearchWindow<string>(FindFileMatches);
+                        Application.Run(searchWindow);
+                        Console.WriteLine(Settings.WorkingDir + searchWindow.SelectedItem);
+                        return;
                     case "viewdiff":
                         GitUICommands.Instance.StartCompareRevisionsDialog();
                         return;
@@ -279,6 +285,15 @@ namespace GitExtensions
                         return;
                 }
             }
+        }
+
+        private static IList<string> FindFileMatches(string name)
+        {
+            var candidates = Settings.Module.GetFullTree("HEAD");
+
+            string nameAsLower = name.ToLower();
+
+            return candidates.Where(fileName => fileName.ToLower().Contains(nameAsLower)).ToList();
         }
 
         private static void Commit(Dictionary<string, string> arguments)

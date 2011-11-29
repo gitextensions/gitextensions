@@ -26,6 +26,12 @@ namespace GitUI
             }
             this.getCandidates = getCandidates;
             AutoFit();
+
+            if (Parent == null)
+            {
+                TopMost = true;
+                CenterToScreen();
+            }
         }
 
         private void SearchForCandidates()
