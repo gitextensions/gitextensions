@@ -28,6 +28,9 @@ namespace GitCommands
         }
 
         private string _workingdir;
+        private GitModule _superprojectModule;
+        private string _submoduleName;
+
         public string WorkingDir
         {
             get
@@ -38,6 +41,27 @@ namespace GitCommands
             {
                 string old = _workingdir;
                 _workingdir = FindGitWorkingDir(value.Trim());
+                string superprojectDir = FindGitSuperprojectPath(out _submoduleName);
+                if (superprojectDir == null)
+                    _superprojectModule = null;
+                else
+                    _superprojectModule = new GitModule(superprojectDir);
+            }
+        }
+
+        public string SubmoduleName
+        {
+            get
+            {
+                return _submoduleName;
+            }
+        }
+
+        public GitModule SuperprojectModule
+        {
+            get
+            {
+                return _superprojectModule;
             }
         }
 
@@ -738,6 +762,24 @@ namespace GitCommands
             return RunCmd(Settings.GitCommand, "log -g -1 HEAD --pretty=format:%H");
         }
 
+        public string GetSuperprojectCurrentCheckout()
+        {
+            if (_superprojectModule == null)
+                return "";
+
+            var lines = _superprojectModule.RunGitCmd("submodule status --cached " + _submoduleName).Split('\n');
+
+            if (lines.Length == 0)
+                return "";
+
+            string submodule = lines[0];
+            if (submodule.Length < 43)
+                return "";
+
+            var currentCommitGuid = submodule.Substring(1, 40).Trim();
+            return currentCommitGuid;
+        }
+
         public int CommitCount()
         {
             int count;
@@ -780,9 +822,62 @@ namespace GitCommands
 
         public string GetSubmoduleFullPath(string name)
         {
-            return Settings.Module.WorkingDir + FixPath(GetSubmoduleLocalPath(name)) + Settings.PathSeparator;
+            return _workingdir + FixPath(GetSubmoduleLocalPath(name)) + Settings.PathSeparator;
         }
 
+        public string FindGitSuperprojectPath(out string submoduleName)
+        {
+            submoduleName = null;
+            if (String.IsNullOrEmpty(_workingdir))
+                return null;
+
+            string superprojectPath = null;
+            if (File.Exists(_workingdir + ".git"))
+            {
+                var lines = File.ReadAllLines(_workingdir + ".git");
+                foreach (string line in lines)
+                {
+                    if (line.StartsWith("gitdir:"))
+                    {
+                        string gitpath = line.Substring(7).Trim();
+                        int pos = gitpath.IndexOf("/.git/");
+                        if (pos != -1)
+                        {
+                            gitpath = gitpath.Substring(0, pos + 1).Replace('/', '\\');
+                            if (File.Exists(gitpath + ".gitmodules") && ValidWorkingDir(gitpath))
+                                superprojectPath = gitpath;
+                        }
+                    }
+                }
+            }
+
+            string currentPath = Path.GetDirectoryName(_workingdir); // remove last slash
+            if (superprojectPath == null)
+            {
+                string path = Path.GetDirectoryName(currentPath);
+                if (!File.Exists(path + Settings.PathSeparator + ".gitmodules") || !ValidWorkingDir(path + Settings.PathSeparator))
+                {
+                    // Check upper directory
+                    path = Path.GetDirectoryName(path);
+                    if (!File.Exists(path + Settings.PathSeparator + ".gitmodules") || !ValidWorkingDir(path + Settings.PathSeparator))
+                        return null;
+                }
+                superprojectPath = path + Settings.PathSeparator;
+            }
+
+            var localPath = currentPath.Substring(superprojectPath.Length);
+            var configFile = new ConfigFile(superprojectPath + ".gitmodules");
+            foreach (ConfigSection configSection in configFile.GetConfigSections())
+            {
+                if (configSection.GetValue("path") == localPath)
+                {
+                    submoduleName = configSection.SubSection;
+                    return superprojectPath;
+                }
+            }
+            return null;
+        }
+        
         internal static GitSubmodule CreateGitSubmodule(string submodule)
         {
             var gitSubmodule =
@@ -1483,7 +1578,8 @@ namespace GitCommands
             if (true && status.Length < 50 && status.Contains("fatal: No HEAD commit to compare"))
             {
                 //This command is a little more expensive because it will return both staged and unstaged files
-                status = RunCmd(Settings.GitCommand, "status --porcelain --untracked-files=no -z");
+                string command = GitCommandHelpers.GetAllChangedFilesCmd(true, false);
+                status = RunCmd(Settings.GitCommand, command);
                 List<GitItemStatus> stagedFiles = GitCommandHelpers.GetAllChangedFilesFromString(status, false);
                 return stagedFiles.Where(f => f.IsStaged).ToList<GitItemStatus>();
             }
@@ -1501,7 +1597,8 @@ namespace GitCommands
             if (!GitCommandHelpers.VersionInUse.SupportGitStatusPorcelain)
                 throw new Exception("The version of git you are using is not supported for this action. Please upgrade to git 1.7.3 or newer.");
 
-            string status = RunCmd(Settings.GitCommand, "status --porcelain --untracked-files -z");
+            string command = GitCommandHelpers.GetAllChangedFilesCmd(true, untracked);
+            string status = RunCmd(Settings.GitCommand, command);
             return GitCommandHelpers.GetAllChangedFilesFromString(status);
         }
 

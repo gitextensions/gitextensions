@@ -120,59 +120,57 @@ namespace GitUI
                 if (iconColor.Equals("yellow") || randomIcon == 5)
                     return Resources.x_with_arrow_yellow;
             }
+            else if (iconStyle.Equals("large", StringComparison.OrdinalIgnoreCase))
+            {
+                if (iconColor.Equals("default") || randomIcon == 0)
+                    return Resources.git_extensions_logo_final;
+                if (iconColor.Equals("blue") || randomIcon == 1)
+                    return Resources.git_extensions_logo_final_blue;
+                if (iconColor.Equals("green") || randomIcon == 3)
+                    return Resources.git_extensions_logo_final_green;
+                if (iconColor.Equals("lightblue") || randomIcon == 1)
+                    return Resources.git_extensions_logo_final_lightblue;
+                if (iconColor.Equals("purple") || randomIcon == 2)
+                    return Resources.git_extensions_logo_final_purple;
+                if (iconColor.Equals("red") || randomIcon == 4)
+                    return Resources.git_extensions_logo_final_mixed_red;
+                if (iconColor.Equals("yellow") || randomIcon == 5)
+                    return Resources.git_extensions_logo_final_mixed_yellow;
+            }
+            else if (iconStyle.Equals("cow", StringComparison.OrdinalIgnoreCase))
+            {
+                if (iconColor.Equals("default") || randomIcon == 0)
+                    return Resources.cow_head;
+                if (iconColor.Equals("blue") || randomIcon == 1)
+                    return Resources.cow_head_blue;
+                if (iconColor.Equals("green") || randomIcon == 3)
+                    return Resources.cow_head_green;
+                if (iconColor.Equals("lightblue") || randomIcon == 1)
+                    return Resources.cow_head_blue;
+                if (iconColor.Equals("purple") || randomIcon == 2)
+                    return Resources.cow_head_purple;
+                if (iconColor.Equals("red") || randomIcon == 4)
+                    return Resources.cow_head_red;
+                if (iconColor.Equals("yellow") || randomIcon == 5)
+                    return Resources.cow_head_yellow;
+            }
             else
-                if (iconStyle.Equals("large", StringComparison.OrdinalIgnoreCase))
-                {
-                    if (iconColor.Equals("default") || randomIcon == 0)
-                        return Resources.git_extensions_logo_final;
-                    if (iconColor.Equals("blue") || randomIcon == 1)
-                        return Resources.git_extensions_logo_final_blue;
-                    if (iconColor.Equals("green") || randomIcon == 3)
-                        return Resources.git_extensions_logo_final_green;
-                    if (iconColor.Equals("lightblue") || randomIcon == 1)
-                        return Resources.git_extensions_logo_final_lightblue;
-                    if (iconColor.Equals("purple") || randomIcon == 2)
-                        return Resources.git_extensions_logo_final_purple;
-                    if (iconColor.Equals("red") || randomIcon == 4)
-                        return Resources.git_extensions_logo_final_mixed_red;
-                    if (iconColor.Equals("yellow") || randomIcon == 5)
-                        return Resources.git_extensions_logo_final_mixed_yellow;
-                }
-                else
-                    if (iconStyle.Equals("cow", StringComparison.OrdinalIgnoreCase))
-                    {
-                        if (iconColor.Equals("default") || randomIcon == 0)
-                            return Resources.cow_head;
-                        if (iconColor.Equals("blue") || randomIcon == 1)
-                            return Resources.cow_head_blue;
-                        if (iconColor.Equals("green") || randomIcon == 3)
-                            return Resources.cow_head_green;
-                        if (iconColor.Equals("lightblue") || randomIcon == 1)
-                            return Resources.cow_head_blue;
-                        if (iconColor.Equals("purple") || randomIcon == 2)
-                            return Resources.cow_head_purple;
-                        if (iconColor.Equals("red") || randomIcon == 4)
-                            return Resources.cow_head_red;
-                        if (iconColor.Equals("yellow") || randomIcon == 5)
-                            return Resources.cow_head_yellow;
-                    }
-                    else
-                    {
-                        if (iconColor.Equals("default") || randomIcon == 0)
-                            return Resources.git_extensions_logo_final_mixed;
-                        if (iconColor.Equals("blue") || randomIcon == 1)
-                            return Resources.git_extensions_logo_final_mixed_blue;
-                        if (iconColor.Equals("green") || randomIcon == 3)
-                            return Resources.git_extensions_logo_final_mixed_green;
-                        if (iconColor.Equals("lightblue") || randomIcon == 1)
-                            return Resources.git_extensions_logo_final_mixed_lightblue;
-                        if (iconColor.Equals("purple") || randomIcon == 2)
-                            return Resources.git_extensions_logo_final_mixed_purple;
-                        if (iconColor.Equals("red") || randomIcon == 4)
-                            return Resources.git_extensions_logo_final_mixed_red;
-                        if (iconColor.Equals("yellow") || randomIcon == 5)
-                            return Resources.git_extensions_logo_final_mixed_yellow;
-                    }
+            {
+                if (iconColor.Equals("default") || randomIcon == 0)
+                    return Resources.git_extensions_logo_final_mixed;
+                if (iconColor.Equals("blue") || randomIcon == 1)
+                    return Resources.git_extensions_logo_final_mixed_blue;
+                if (iconColor.Equals("green") || randomIcon == 3)
+                    return Resources.git_extensions_logo_final_mixed_green;
+                if (iconColor.Equals("lightblue") || randomIcon == 1)
+                    return Resources.git_extensions_logo_final_mixed_lightblue;
+                if (iconColor.Equals("purple") || randomIcon == 2)
+                    return Resources.git_extensions_logo_final_mixed_purple;
+                if (iconColor.Equals("red") || randomIcon == 4)
+                    return Resources.git_extensions_logo_final_mixed_red;
+                if (iconColor.Equals("yellow") || randomIcon == 5)
+                    return Resources.git_extensions_logo_final_mixed_yellow;
+            }
 
             return Resources.git_extensions_logo_final_mixed;
         }
@@ -224,6 +222,8 @@ namespace GitUI
 #endif
         }
 
+        private bool _windowCentred = false;
+
         /// <summary>
         ///   Restores the position of a form from the user settings. Does
         ///   nothing if there is no entry for the form in the settings, or the
@@ -233,13 +233,23 @@ namespace GitUI
         ///   the settings</param>
         protected void RestorePosition(String name)
         {
+            _windowCentred = (StartPosition == FormStartPosition.CenterParent);
+
             var position = LookupWindowPosition(name);
 
             if (position == null)
                 return;
 
             StartPosition = FormStartPosition.Manual;
-            DesktopBounds = position.Rect;
+            Size = position.Rect.Size;
+            if (Owner == null || !_windowCentred)
+                Location = position.Rect.Location;
+            else
+            {
+                // Calculate location for modal form with parent
+                Location = new Point(Owner.Left + Owner.Width / 2 - Width / 2, 
+                    Owner.Top + Owner.Height / 2 - Height / 2);
+            }
             WindowState = position.State;
         }
 
@@ -263,12 +273,18 @@ namespace GitUI
                         ? FormWindowState.Maximized
                         : FormWindowState.Normal;
 
-                var position = new WindowPosition(rectangle, formWindowState);
-
-
                 // Write to the user settings:
                 if (Properties.Settings.Default.WindowPositions == null)
                     Properties.Settings.Default.WindowPositions = new WindowPositionList();
+                WindowPosition windowPosition = (WindowPosition)Properties.Settings.Default.WindowPositions[name];
+                // Don't save location when we center modal form
+                if (windowPosition != null && Owner != null && _windowCentred)
+                {
+                    if (rectangle.Width <= windowPosition.Rect.Width && rectangle.Height <= windowPosition.Rect.Height)
+                        rectangle.Location = windowPosition.Rect.Location;
+                }
+
+                var position = new WindowPosition(rectangle, formWindowState);
                 Properties.Settings.Default.WindowPositions[name] = position;
                 Properties.Settings.Default.Save();
             }

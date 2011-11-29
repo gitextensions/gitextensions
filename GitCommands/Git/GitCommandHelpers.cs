@@ -549,10 +549,10 @@ namespace GitCommands
 
             StringBuilder stringBuilder = new StringBuilder("status --porcelain -z");
 
-            if (!showUntrackedFiles)
-                stringBuilder.Append(" --untracked-files=no");
             if (showUntrackedFiles)
                 stringBuilder.Append(" --untracked-files");
+            else
+                stringBuilder.Append(" --untracked-files=no");
             if (!excludeIgnoredFiles)
                 stringBuilder.Append(" --ignored");
 
