@@ -106,5 +106,11 @@ namespace GitUI
             RefreshLogItems(Settings.GitLog);
             RefreshCommandCacheItems();
         }
+
+        private void alwaysOnTopCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            this.TopMost = !this.TopMost;
+            alwaysOnTopCheckBox.Checked = this.TopMost;
+        }
     }
 }
