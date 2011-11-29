@@ -36,7 +36,7 @@ namespace GitUI
             new FormProcess(GitCommandHelpers.StartBisectCmd()).ShowDialog(this);
             Initialize();
 
-            IList<GitRevision> revisions = _revisionGrid.GetRevisions();
+            IList<GitRevision> revisions = _revisionGrid.GetSelectedRevisions();
             if (revisions.Count > 1)
             {
                 if (MessageBox.Show(this, _bisectStart.Text, Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)

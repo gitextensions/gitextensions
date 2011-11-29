@@ -720,9 +720,9 @@ namespace GitUI
                 // Refresh tree
                 GitTree.Nodes.Clear();
                 //restore selected file and scroll position when new selection is done
-                if (RevisionGrid.GetRevisions().Count > 0)
+                if (RevisionGrid.GetSelectedRevisions().Count > 0)
                 {
-                    LoadInTree(RevisionGrid.GetRevisions()[0].SubItems, GitTree.Nodes);
+                    LoadInTree(RevisionGrid.GetSelectedRevisions()[0].SubItems, GitTree.Nodes);
                     //GitTree.Sort();
                     TreeNode lastMatchedNode = null;
                     // Load state
@@ -768,7 +768,7 @@ namespace GitUI
             if (CommitInfoTabControl.SelectedTab != Diff)
                 return;
 
-            var revisions = RevisionGrid.GetRevisions();
+            var revisions = RevisionGrid.GetSelectedRevisions();
 
             DiffText.SaveCurrentScrollPos();
 
@@ -809,10 +809,10 @@ namespace GitUI
             if (CommitInfoTabControl.SelectedTab != CommitInfo)
                 return;
 
-            if (RevisionGrid.GetRevisions().Count == 0)
+            if (RevisionGrid.GetSelectedRevisions().Count == 0)
                 return;
 
-            var revision = RevisionGrid.GetRevisions()[0];
+            var revision = RevisionGrid.GetSelectedRevisions()[0];
 
             if (revision != null)
                 RevisionInfo.SetRevision(revision.Guid);
@@ -883,7 +883,7 @@ namespace GitUI
 
         private IList<string> FindFileMatches(string name)
         {
-            var candidates = Settings.Module.GetFullTree(RevisionGrid.GetRevisions()[0].TreeGuid);
+            var candidates = Settings.Module.GetFullTree(RevisionGrid.GetSelectedRevisions()[0].TreeGuid);
 
             string nameAsLower = name.ToLower();
 
@@ -994,9 +994,9 @@ namespace GitUI
         {
             try
             {
-                if (RevisionGrid.GetRevisions().Count > 0 &&
-                    (RevisionGrid.GetRevisions()[0].Guid == GitRevision.UncommittedWorkingDirGuid ||
-                     RevisionGrid.GetRevisions()[0].Guid == GitRevision.IndexGuid))
+                if (RevisionGrid.GetSelectedRevisions().Count > 0 &&
+                    (RevisionGrid.GetSelectedRevisions()[0].Guid == GitRevision.UncommittedWorkingDirGuid ||
+                     RevisionGrid.GetSelectedRevisions()[0].Guid == GitRevision.IndexGuid))
                 {
                     if (CommitInfoTabControl.TabPages.Contains(CommitInfo))
                         CommitInfoTabControl.TabPages.Remove(CommitInfo);
@@ -1410,7 +1410,7 @@ namespace GitUI
             }
 
             GitItemStatus selectedItem = DiffFiles.SelectedItem;
-            var revisions = RevisionGrid.GetRevisions();
+            var revisions = RevisionGrid.GetSelectedRevisions();
 
             if (revisions.Count == 0)
                 return;
@@ -1691,7 +1691,7 @@ namespace GitUI
                 return;
             var selectedItem = (DiffFiles.SelectedItem).Name;
 
-            IList<GitRevision> revisions = RevisionGrid.GetRevisions();
+            IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
 
             if (revisions.Count == 0)
                 return;
@@ -1878,7 +1878,7 @@ namespace GitUI
 
         private void saveAsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            IList<GitRevision> revisions = RevisionGrid.GetRevisions();
+            IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
 
             if (revisions.Count == 0)
                 return;
@@ -1968,7 +1968,7 @@ namespace GitUI
 
             if (item.IsTracked)
             {
-                IList<GitRevision> revisions = RevisionGrid.GetRevisions();
+                IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
 
                 if (revisions.Count == 0)
                     GitUICommands.Instance.StartFileHistoryDialog(this, item.Name);
@@ -2073,8 +2073,8 @@ namespace GitUI
 
         private void AddNotes()
         {
-            if (RevisionGrid.GetRevisions().Count > 0)
-                Settings.Module.EditNotes(RevisionGrid.GetRevisions()[0].Guid);
+            if (RevisionGrid.GetSelectedRevisions().Count > 0)
+                Settings.Module.EditNotes(RevisionGrid.GetSelectedRevisions()[0].Guid);
             else
                 Settings.Module.EditNotes(string.Empty);
 
@@ -2252,7 +2252,7 @@ namespace GitUI
 
         private Tuple<int, string> getNextPatchFile(bool searchBackward)
         {
-            var revisions = RevisionGrid.GetRevisions();
+            var revisions = RevisionGrid.GetSelectedRevisions();
             if (revisions.Count == 0)
                 return null;
             int idx = DiffFiles.SelectedIndex;
