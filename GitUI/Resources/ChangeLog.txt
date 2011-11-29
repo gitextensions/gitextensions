@@ -10,7 +10,6 @@ Version 2.27
 	Fixed issue 614: Filter for tags
 	Fixed issue 566: QuickPull with Shift
 	Fixed issue 460: TortoiseMerge added to diff tools
-	Fixed issue 443: Support filtering by commit hash
 	Fixed issue 139: Disable image paste in EditNetSpell
 	Fixed issue 127: Preview disabled for files larger than 5Mb, but available by link
 	Fixed issue 124: Submodules form now can remove submodule

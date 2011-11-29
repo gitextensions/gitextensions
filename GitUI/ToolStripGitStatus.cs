@@ -197,6 +197,12 @@ namespace GitUI
             Update();
         }
 
+        public void UpdateImmediate()
+        {
+            if (currentStatus == WorkingStatus.Started)
+                ScheduleImmediateUpdate();
+        }
+
         private WorkingStatus CurrentStatus
         {
             get { return currentStatus; }

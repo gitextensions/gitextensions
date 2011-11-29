@@ -91,6 +91,7 @@ namespace GitUI
         private bool _toolbarButtonsCreated;
 #endif
         private bool _dontUpdateOnIndexChange;
+        private ToolStripGitStatus _toolStripGitStatus;
 
         public FormBrowse(string filter)
         {
@@ -98,15 +99,22 @@ namespace GitUI
 
             InitializeComponent();
             Translate();
+            
+#if !__MonoCS__
+            if (Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+            {
+                TaskbarManager.Instance.ApplicationId = "HenkWesthuis.GitExtensions";
+            }
+#endif
 
             if (Settings.ShowGitStatusInBrowseToolbar)
             {
-                var status = new ToolStripGitStatus
+                _toolStripGitStatus = new ToolStripGitStatus
                                  {
                                      ImageTransparentColor = System.Drawing.Color.Magenta
                                  };
-                status.Click += StatusClick;
-                ToolStrip.Items.Insert(1, status);
+                _toolStripGitStatus.Click += StatusClick;
+                ToolStrip.Items.Insert(1, _toolStripGitStatus);
             }
 
             RevisionGrid.SelectionChanged += RevisionGridSelectionChanged;
@@ -1099,6 +1107,9 @@ namespace GitUI
                 InternalInitialize(false);
                 IndexWatcher.Reset();
             }
+
+            if (_toolStripGitStatus != null)
+                _toolStripGitStatus.UpdateImmediate();
         }
 
         private void AboutToolStripMenuItemClick(object sender, EventArgs e)
@@ -1945,15 +1956,9 @@ namespace GitUI
             LoadPluginsInPluginMenu();
         }
 
-        private void bisectToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            new FormBisect().ShowDialog(this);
-            Initialize();
-        }
-
         private void BisectClick(object sender, EventArgs e)
         {
-            new FormBisect().ShowDialog(this);
+            new FormBisect(RevisionGrid).ShowDialog(this);
             Initialize();
         }
 
