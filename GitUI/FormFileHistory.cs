@@ -333,5 +333,14 @@ namespace GitUI
             fullHistoryToolStripMenuItem.Checked = Settings.FullHistoryInFileHistory;
             ThreadPool.QueueUserWorkItem(o => LoadFileHistory(FileName));
         }
+
+        private void cherryPickThisCommitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (FileChanges.GetRevisions().Count <= FileChanges.LastRow || FileChanges.LastRow < 0)
+                return;
+
+            var frm = new FormCherryPickCommitSmall(FileChanges.GetRevision(FileChanges.LastRow));
+            frm.ShowDialog(this);
+        }
     }
 }
