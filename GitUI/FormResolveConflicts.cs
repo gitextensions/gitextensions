@@ -302,6 +302,7 @@ namespace GitUI
                         {
                             arguments = arguments.Replace("-merge -3", "-merge");
                             arguments = arguments.Replace("/base:\"$BASE\"", "");
+                            arguments = arguments.Replace("/mine:\"$LOCAL\"", "/base:\"$LOCAL\"");
                             arguments = arguments.Replace("\"$BASE\"", "");
                         }
 
@@ -316,7 +317,7 @@ namespace GitUI
                     arguments = arguments.Replace("$REMOTE", filenames[2]);
                     arguments = arguments.Replace("$MERGED", filename + "");
 
-                    //get timestamp of file before merge. This is an extra check to verify if merge was successfull
+                    //get timestamp of file before merge. This is an extra check to verify if merge was successful
                     DateTime lastWriteTimeBeforeMerge = DateTime.Now;
                     if (File.Exists(Settings.WorkingDir + filename))
                         lastWriteTimeBeforeMerge = File.GetLastWriteTime(Settings.WorkingDir + filename);
