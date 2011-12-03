@@ -34,7 +34,7 @@ namespace GitUI
         private readonly IndexWatcher _indexWatcher = new IndexWatcher();
         private readonly TranslationString _currentWorkingDirChanges = new TranslationString("Current uncommitted changes");
         private readonly TranslationString _currentIndex = new TranslationString("Commit index");
-        private readonly TranslationString _areYouSureYouWantCheckout = new TranslationString("Are you sure to checkout the selected revision");
+        private readonly TranslationString _areYouSureYouWantCheckout = new TranslationString("Are you sure to checkout the selected revision?");
         private readonly TranslationString _areYouSureYouWantCheckoutCaption = new TranslationString("Checkout revision");
         private readonly TranslationString _droppingFilesBlocked = new TranslationString("For you own protection dropping more than 10 patch files at once is blocked!");
 
