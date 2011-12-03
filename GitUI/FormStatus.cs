@@ -131,10 +131,13 @@ namespace GitUI
             }
 #endif
 
-            SuccessImage.Visible = isSuccess;
-            ErrorImage.Visible = !isSuccess;
+            if (isSuccess)
+                picBoxSuccessFail.Image = GitUI.Properties.Resources.success1;
+            else
+                picBoxSuccessFail.Image = GitUI.Properties.Resources.error;
+            splitContainer1.Panel2Collapsed = false;
+
             errorOccurred = !isSuccess;
-            splitContainer5.Panel2Collapsed = false;
 
             if (showOnError && !isSuccess)
             {
@@ -189,6 +192,7 @@ namespace GitUI
 
         private void FormStatus_Load(object sender, EventArgs e)
         {
+            splitContainer1.Panel2Collapsed = true;
             if (DesignMode)
                 return;
 
