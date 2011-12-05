@@ -271,14 +271,14 @@ namespace GitUI
         public void ShowRevisionGraph()
         {
             Columns[0].Visible = true;
-//            updateData();
+            //            updateData();
             backgroundEvent.Set();
         }
-        
+
         public void HideRevisionGraph()
         {
             Columns[0].Visible = false;
-//            updateData();
+            //            updateData();
             backgroundEvent.Set();
         }
 
@@ -1318,8 +1318,8 @@ namespace GitUI
                     d.IsRelative = isRelative || d.IsRelative;
 
                     // Uh, oh, we've already processed this lane. We'll have to update some rows.
-                    int idx = d.Bunch.IndexOf(node);
-                    if (idx < d.Bunch.Count && d.Bunch[idx + 1].InLane != int.MaxValue)
+                    var parent = d.TryGetParent(node);
+                    if (parent != null && parent.InLane != int.MaxValue)
                     {
                         int resetTo = d.Parent.Descendants.Aggregate(d.Parent.InLane, (current, dd) => Math.Min(current, dd.Child.InLane));
 
@@ -1407,8 +1407,7 @@ namespace GitUI
                         // This guy should have been at the end of some junctions
                         foreach (Junction j in n.Descendants)
                         {
-                            j.Bunch.Remove(n);
-                            j.Parent.Ancestors.Remove(j);
+                            j.Remove(n);
                         }
                         isPruned = true;
                         goto start_over;
@@ -1611,7 +1610,7 @@ namespace GitUI
 
         #region Nested type: Junction
 
-        private class Junction
+        private sealed class Junction
         {
             #region State enum
 
@@ -1626,7 +1625,9 @@ namespace GitUI
 
             private static uint DebugIdNext;
 
-            public readonly List<Node> Bunch = new List<Node>();
+            private readonly List<Node> nodes = new List<Node>();
+            private readonly Dictionary<Node, int> nodeIndices = new Dictionary<Node, int>();
+
             private readonly uint DebugId;
 
             public State CurrentState = State.Unprocessed;
@@ -1636,12 +1637,12 @@ namespace GitUI
             {
                 DebugId = DebugIdNext++;
 
-                Bunch.Add(aNode);
+                AddNode(aNode);
                 if (aNode != aParent)
                 {
                     aNode.Ancestors.Add(this);
                     aParent.Descendants.Add(this);
-                    Bunch.Add(aParent);
+                    AddNode(aParent);
                 }
             }
 
@@ -1651,42 +1652,57 @@ namespace GitUI
                 // ancestor of an existing junction.
                 DebugId = DebugIdNext++;
                 aNode.Ancestors.Remove(aDescendant);
-                Bunch.Add(aNode);
+                AddNode(aNode);
             }
 
             public Node Child
             {
-                get { return Bunch[0]; }
+                get { return this[0]; }
             }
 
             public Node Parent
             {
-                get { return Bunch[Bunch.Count - 1]; }
+                get { return this[NodesCount - 1]; }
+            }
+
+            public int NodesCount
+            {
+                get { return nodes.Count; }
+            }
+
+            public Node this[int index]
+            {
+                get { return nodes[index]; }
             }
 
             public void Add(Node aParent)
             {
                 aParent.Descendants.Add(this);
                 Parent.Ancestors.Add(this);
-                Bunch.Add(aParent);
+                AddNode(aParent);
+            }
+
+            public void Remove(Node node)
+            {
+                RemoveNode(node);
+                Parent.Ancestors.Remove(this);
             }
 
             public Junction Split(Node aNode)
             {
                 // The 'top' (Child->node) of the junction is retained by this.
                 // The 'bottom' (node->Parent) of the junction is returned.
-                int index = Bunch.IndexOf(aNode);
-                if (index == -1)
-                {
+                int index;
+                if (!nodeIndices.TryGetValue(aNode, out index))
                     return null;
-                }
+
                 var bottom = new Junction(this, aNode);
                 // Add 1, since aNode was at the index
                 index += 1;
-                while (Bunch.Count > index)
+                while (index < NodesCount)
                 {
-                    Node node = Bunch[index];
-                    Bunch.RemoveAt(index);
+                    Node node = this[index];
+                    RemoveNode(node);
                     node.Ancestors.Remove(this);
                     node.Descendants.Remove(this);
                     bottom.Add(node);
@@ -1695,9 +1711,27 @@ namespace GitUI
                 return bottom;
             }
 
+            public Node TryGetParent(Node child)
+            {
+                int childIndex;
+                return nodeIndices.TryGetValue(child, out childIndex) ? nodes[childIndex + 1] : null;
+            }
+
+            private void AddNode(Node node)
+            {
+                nodeIndices.Add(node, NodesCount);
+                nodes.Add(node);
+            }
+
+            private void RemoveNode(Node node)
+            {
+                nodeIndices.Remove(node);
+                nodes.Remove(node);
+            }
+
             public override string ToString()
             {
-                return string.Format("{3}: {0}--({2})--{1}", Child, Parent, Bunch.Count, DebugId);
+                return string.Format("{3}: {0}--({2})--{1}", Child, Parent, NodesCount, DebugId);
             }
         }
 
@@ -2572,7 +2606,7 @@ namespace GitUI
                         }
                         else
                         {
-                            return junction.Bunch.Count - index;
+                            return junction.NodesCount - index;
                         }
                     }
                 }
@@ -2590,9 +2624,9 @@ namespace GitUI
                         {
                             return node;
                         }
-                        else if (index < junction.Bunch.Count)
+                        else if (index < junction.NodesCount)
                         {
-                            return junction.Bunch[index];
+                            return junction[index];
                         }
                         else
                         {
@@ -2622,11 +2656,11 @@ namespace GitUI
                     }
                     else
                     {
-                        n = junction.Bunch[index];
+                        n = junction[index];
                     }
                     index++;
 
-                    if (junction != null && index >= junction.Bunch.Count)
+                    if (junction != null && index >= junction.NodesCount)
                     {
                         junction.CurrentState = Junction.State.Processed;
                     }
@@ -2638,11 +2672,11 @@ namespace GitUI
                     if (junction != null)
                     {
                         string nodeName = "(null)";
-                        if (index < junction.Bunch.Count)
+                        if (index < junction.NodesCount)
                         {
-                            nodeName = junction.Bunch[index].ToString();
+                            nodeName = junction[index].ToString();
                         }
-                        return index + "/" + junction.Bunch.Count + "~" + nodeName + "~" + junction;
+                        return index + "/" + junction.NodesCount + "~" + nodeName + "~" + junction;
                     }
                     else if (node != null)
                     {
