@@ -100,6 +100,9 @@
     <Compile Include="DvcsGraph.Junction.cs">
       <DependentUpon>DvcsGraph.cs</DependentUpon>
     </Compile>
+    <Compile Include="DvcsGraph.Lanes.cs">
+      <DependentUpon>DvcsGraph.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormRenameBranch.cs">
       <SubType>Form</SubType>
     </Compile>
