@@ -11,12 +11,10 @@ using GitUI.Tag;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using PatchApply;
-using System.ComponentModel;
-using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public class GitUICommands  : IGitUICommands
+    public sealed class GitUICommands : IGitUICommands
     {
         private static GitUICommands instance;
 
@@ -159,18 +157,18 @@ namespace GitUI
 
             return true;
         }
-        
+
         public bool StartCommandLineProcessDialog(GitCommand cmd, Form parentForm)
-       {
-           FormProcess process;
-           if (cmd.AccessesRemote())
-               process = new FormRemoteProcess(cmd.ToLine());
-           else
-               process = new FormProcess(cmd.ToLine());
-           process.ShowDialog(parentForm);
-           return true;
-       }
-        
+        {
+            FormProcess process;
+            if (cmd.AccessesRemote())
+                process = new FormRemoteProcess(cmd.ToLine());
+            else
+                process = new FormProcess(cmd.ToLine());
+            process.ShowDialog(parentForm);
+            return true;
+        }
+
         public bool StartCommandLineProcessDialog(IWin32Window owner, string command, string arguments)
         {
             var process = new FormProcess(command, arguments);
@@ -493,7 +491,7 @@ namespace GitUI
             if (dlgResult == DialogResult.OK)
             {
                 InvokeEvent(PostPull);
-                pullCompleted = !formPull.ErrorOccurred;                
+                pullCompleted = !formPull.ErrorOccurred;
             }
 
             return true;//maybe InvokeEvent should have 'needRefresh' out parameter?
@@ -840,7 +838,9 @@ namespace GitUI
                 return true;
 
             var form = new FormRenameBranch(branch);
-            form.ShowDialog();
+
+            if (form.ShowDialog() != DialogResult.OK)
+                return false;
 
             InvokeEvent(PostRename);
 
@@ -1080,7 +1080,7 @@ namespace GitUI
             var form = new FormPush();
             if (pushOnShow)
                 form.PushAndShowDialogWhenFailed(owner);
-            else 
+            else
                 form.ShowDialog(owner);
 
             InvokeEvent(PostPush);
@@ -1175,7 +1175,7 @@ namespace GitUI
         {
             ForEachSubmodulesRecursive(null, cmd);
         }
-        
+
         private bool InvokeEvent(GitUIEventHandler gitUIEventHandler)
         {
             return InvokeEvent(this, gitUIEventHandler);
@@ -1245,7 +1245,7 @@ namespace GitUI
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show( 
+                    MessageBox.Show(
                         string.Format("ERROR: {0} failed. Message: {1}\r\n\r\n{2}", name, ex.Message, ex.StackTrace),
                         "Error! :(");
                 }
