@@ -10,21 +10,28 @@ namespace GitUI
     {
         private readonly TranslationString _branchRenameFailed = new TranslationString("Rename failed.");
 
-        private readonly string _defaultBranch;
+        private readonly string oldName;
 
         public FormRenameBranch(string defaultBranch)
         {
             InitializeComponent();
             Translate();
             Branches.Text = defaultBranch;
-            _defaultBranch = defaultBranch;
+            oldName = defaultBranch;
         }
 
         private void OkClick(object sender, EventArgs e)
         {
+            var newName = Branches.Text;
+            if (newName.Equals(oldName))
+            {
+                DialogResult = DialogResult.Cancel;
+                return;
+            }
+
             try
             {
-                var renameBranchResult = Settings.Module.Rename(_defaultBranch, Branches.Text);
+                var renameBranchResult = Settings.Module.Rename(oldName, newName);
 
                 if (!string.IsNullOrEmpty(renameBranchResult))
                     MessageBox.Show(this, _branchRenameFailed.Text + Environment.NewLine + renameBranchResult, Text,
@@ -34,7 +41,7 @@ namespace GitUI
             {
                 Trace.WriteLine(ex.Message);
             }
-            Close();
+            DialogResult = DialogResult.OK;
         }
     }
 }

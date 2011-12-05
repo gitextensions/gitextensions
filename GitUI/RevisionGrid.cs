@@ -67,7 +67,7 @@ namespace GitUI
 #if !__MonoCS__ // animated GIFs are not supported in Mono/Linux
             this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
 #endif
-            
+
             Translate();
 
             NormalFont = SystemFonts.DefaultFont;
@@ -478,7 +478,7 @@ namespace GitUI
         }
 
         public new void Load()
-        {            
+        {
             if (!DesignMode)
                 ReloadHotkeys();
             ForceRefreshRevisions();
@@ -1723,7 +1723,9 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            GitUICommands.Instance.StartRenameDialog(toolStripItem.Text);
+            var renameExecuted = GitUICommands.Instance.StartRenameDialog(toolStripItem.Text);
+            if (!renameExecuted)
+                return;
 
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
@@ -2250,7 +2252,7 @@ namespace GitUI
 
         private void toolStripMenuWithOneItem_Click(object sender, EventArgs e)
         {
-            if (sender is ToolStripMenuItem) 
+            if (sender is ToolStripMenuItem)
             {
                 ToolStripMenuItem item = sender as ToolStripMenuItem;
                 if (item.DropDown != null && item.DropDown.Items.Count == 1)
