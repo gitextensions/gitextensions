@@ -39,7 +39,7 @@ namespace GitUI
                                                           "Default (" + Encoding.Default.HeaderName + ")", "ASCII",
                                                           "Unicode", "UTF7", "UTF8", "UTF32"
                                                       });
-            GlobalEditor.Items.AddRange(new Object[] { "\"" + GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", "notepad++" });
+            GlobalEditor.Items.AddRange(new Object[] { "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", "notepad++" });
 
             SetCurrentDiffFont(Settings.DiffFont);
         }
@@ -84,7 +84,7 @@ namespace GitUI
             string editor = Settings.Module.GetGlobalSetting("core.editor");
             if (string.IsNullOrEmpty(editor))
             {
-                Settings.Module.SetGlobalSetting("core.editor", "\"" + GetGitExtensionsFullPath() + "\" fileeditor");
+                Settings.Module.SetGlobalSetting("core.editor", "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor");
             }
 
             return true;
@@ -657,7 +657,7 @@ namespace GitUI
 
         public static bool SolveGitExtensionsDir()
         {
-            string fileName = GetGitExtensionsDirectory();
+            string fileName = Settings.GetGitExtensionsDirectory();
 
             if (Directory.Exists(fileName))
             {
@@ -667,17 +667,6 @@ namespace GitUI
 
             return false;
         }
-
-        private static string GetGitExtensionsFullPath()
-        {
-            return Settings.GetGitExtensionsFullPath();
-        }
-
-        private static string GetGitExtensionsDirectory()
-        {
-            return Settings.GetGitExtensionsDirectory();
-        }
-
 
         private void ShellExtensionsRegistered_Click(object sender, EventArgs e)
         {
