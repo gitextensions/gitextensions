@@ -38,7 +38,7 @@
             this.Ok.ForeColor = System.Drawing.Color.Black;
             this.Ok.Location = new System.Drawing.Point(407, 10);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(75, 25);
+            this.Ok.Size = new System.Drawing.Size(118, 25);
             this.Ok.TabIndex = 5;
             this.Ok.Text = "Rename";
             this.Ok.UseVisualStyleBackColor = true;
@@ -66,7 +66,7 @@
             this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(494, 46);
+            this.ClientSize = new System.Drawing.Size(531, 46);
             this.Controls.Add(this.Ok);
             this.Controls.Add(this.Branches);
             this.Controls.Add(this.label1);
