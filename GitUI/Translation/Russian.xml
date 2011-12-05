@@ -1340,14 +1340,11 @@
         <TranslationItem Name="$this" Property="Text">
           <Value>Переименовать ветку</Value>
         </TranslationItem>
-        <TranslationItem Name="_renameBranchCaption" Property="Text">
-          <Value>Переименовать ветку</Value>
-        </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Новое имя</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
-          <Value>Переим.</Value>
+          <Value>Переименовать</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
