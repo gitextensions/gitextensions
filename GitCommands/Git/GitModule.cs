@@ -670,7 +670,33 @@ namespace GitCommands
         {
             if (Settings.RunningOnUnix())
             {
-                RunRealCmdDetached("bash", "--login -i");
+                string[] termEmuCmds =
+                {
+                    "gnome-terminal",
+                    "konsole",
+                    "Terminal",
+                    "xterm"
+                };
+                
+                string args = "";
+                string cmd = null;
+                
+                foreach (var termEmuCmd in termEmuCmds)
+                {
+                    if (!string.IsNullOrEmpty(RunCmd("which", termEmuCmd)))
+                    {
+                        cmd = termEmuCmd;
+                        break;
+                    }
+                }
+                
+                if (string.IsNullOrEmpty(cmd))
+                {
+                    cmd = "bash";
+                    args = "--login -i";
+                }
+
+                RunRealCmdDetached(cmd, args);
             }
             else
             {
