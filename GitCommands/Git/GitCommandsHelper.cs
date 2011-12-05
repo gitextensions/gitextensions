@@ -2043,7 +2043,10 @@ namespace GitCommands
                 if (process1 == null)
                     process1 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --add --stdin");
 
-                process1.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
+                //process1.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
+                byte[] bytearr = ConvertFileNameTo(Settings.Encoding, "\"" + FixPath(file.Name) + "\""+ process1.StandardInput.NewLine);
+                process1.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
+               
             }
             if (process1 != null)
             {
@@ -2061,7 +2064,9 @@ namespace GitCommands
                     continue;
                 if (process2 == null)
                     process2 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --remove --stdin");
-                process2.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
+                //process2.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
+                byte[] bytearr = ConvertFileNameTo(Settings.Encoding, "\"" + FixPath(file.Name) + "\"" + process2.StandardInput.NewLine);
+                process2.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
             }
             if (process2 != null)
             {
@@ -2079,6 +2084,12 @@ namespace GitCommands
             }
 
             return output;
+        }
+
+        private static byte[] ConvertFileNameTo(Encoding encoding, string filename)
+        {
+            byte[] bytesunicode = Encoding.Unicode.GetBytes(filename);
+            return Encoding.Convert(Encoding.Unicode, encoding, bytesunicode);
         }
 
         public static string UnstageFiles(List<GitItemStatus> files)
@@ -2114,7 +2125,10 @@ namespace GitCommands
                     continue;
                 if (process2 == null)
                     process2 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --force-remove --stdin");
-                process2.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
+                //process2.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
+                byte[] bytearr = ConvertFileNameTo(Settings.Encoding, "\"" + FixPath(file.Name) + "\"" + process2.StandardInput.NewLine);
+                process2.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
+                
             }
             if (process2 != null)
             {
