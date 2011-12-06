@@ -29,7 +29,7 @@ namespace GitUI
             FileStatusListBox.MouseMove += new MouseEventHandler(FileStatusListBox_MouseMove);
             FileStatusListBox.MouseDown += new MouseEventHandler(FileStatusListBox_MouseDown);
 #endif
-			FileStatusListBox.HorizontalScrollbar = true;
+            FileStatusListBox.HorizontalScrollbar = true;
 
             NoFiles.Visible = false;
             NoFiles.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
@@ -287,47 +287,42 @@ namespace GitUI
 
         void FileStatusListBox_DrawItem(object sender, DrawItemEventArgs e)
         {
-            if (e.Bounds.Height > 0 && e.Bounds.Width > 0 && e.Index >= 0)
-            {
-                e.DrawBackground();
-                e.DrawFocusRectangle();
+            if (e.Bounds.Height <= 0 || e.Bounds.Width <= 0 || e.Index < 0)
+                return;
 
-                GitItemStatus gitItemStatus = (GitItemStatus)FileStatusListBox.Items[e.Index];
+            e.DrawBackground();
+            e.DrawFocusRectangle();
 
-                e.Graphics.FillRectangle(Brushes.White, e.Bounds.Left, e.Bounds.Top, ImageSize, e.Bounds.Height);
+            GitItemStatus gitItemStatus = (GitItemStatus)FileStatusListBox.Items[e.Index];
 
-                int centeredImageTop = e.Bounds.Top;
-                if ((e.Bounds.Height - ImageSize) > 1)
-                    centeredImageTop = e.Bounds.Top + ((e.Bounds.Height - ImageSize) / 2);
+            e.Graphics.FillRectangle(Brushes.White, e.Bounds.Left, e.Bounds.Top, ImageSize, e.Bounds.Height);
 
+            int centeredImageTop = e.Bounds.Top;
+            if ((e.Bounds.Height - ImageSize) > 1)
+                centeredImageTop = e.Bounds.Top + ((e.Bounds.Height - ImageSize) / 2);
 
-                if (gitItemStatus.IsDeleted)
-                    e.Graphics.DrawImage(Resources.Removed, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
-                else
-                    if (gitItemStatus.IsNew || !gitItemStatus.IsTracked)
-                        e.Graphics.DrawImage(Resources.Added, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
-                    else
-                        if (gitItemStatus.IsChanged)
-                            e.Graphics.DrawImage(Resources.Modified, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
-                        else
-                            if (gitItemStatus.IsRenamed)
-                                e.Graphics.DrawImage(Resources.Renamed, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
-                            else
-                                if (gitItemStatus.IsCopied)
-                                    e.Graphics.DrawImage(Resources.Copied, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
+            if (gitItemStatus.IsDeleted)
+                e.Graphics.DrawImage(Resources.Removed, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
+            else if (gitItemStatus.IsNew || !gitItemStatus.IsTracked)
+                e.Graphics.DrawImage(Resources.Added, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
+            else if (gitItemStatus.IsChanged)
+                e.Graphics.DrawImage(Resources.Modified, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
+            else if (gitItemStatus.IsRenamed)
+                e.Graphics.DrawImage(Resources.Renamed, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
+            else if (gitItemStatus.IsCopied)
+                e.Graphics.DrawImage(Resources.Copied, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
 
-                string text = GetItemText(e.Graphics, gitItemStatus);
+            string text = GetItemText(e.Graphics, gitItemStatus);
 
-                e.Graphics.DrawString(text, FileStatusListBox.Font,
-                                      new SolidBrush(e.ForeColor), e.Bounds.Left + ImageSize, e.Bounds.Top);
+            e.Graphics.DrawString(text, FileStatusListBox.Font,
+                                  new SolidBrush(e.ForeColor), e.Bounds.Left + ImageSize, e.Bounds.Top);
 
-                int width = (int) e.Graphics.MeasureString(text, e.Font).Width + ImageSize;
+            int width = (int)e.Graphics.MeasureString(text, e.Font).Width + ImageSize;
 
-                ListBox listBox = (ListBox)sender;
+            ListBox listBox = (ListBox)sender;
 
-                if (listBox.HorizontalExtent < width)
-                    listBox.HorizontalExtent = width;
-            }
+            if (listBox.HorizontalExtent < width)
+                listBox.HorizontalExtent = width;
         }
 
         public bool IsEmpty
@@ -400,37 +395,37 @@ namespace GitUI
                 
         }
 
-		public int SetSelectionFilter(string filter)
-		{
-			return FilterFiles(RegexFor(filter));
-		}
+        public int SetSelectionFilter(string filter)
+        {
+            return FilterFiles(RegexFor(filter));
+        }
 
-    	private static Regex RegexFor(string value)
-		{
-			return string.IsNullOrEmpty(value)
-				? new Regex("^$", RegexOptions.Compiled)
-				: new Regex(value, RegexOptions.Compiled);
-		}
+        private static Regex RegexFor(string value)
+        {
+            return string.IsNullOrEmpty(value)
+                ? new Regex("^$", RegexOptions.Compiled)
+                : new Regex(value, RegexOptions.Compiled);
+        }
 
-		private int FilterFiles(Regex filter)
-		{
-			try
-			{
-				SuspendLayout();
+        private int FilterFiles(Regex filter)
+        {
+            try
+            {
+                SuspendLayout();
 
-				var items = FileStatusListBox.Items.Cast<GitItemStatus>().ToList();
-				for (var i = 0; i < items.Count; i++)
-				{
-					FileStatusListBox.SetSelected(i, filter.IsMatch(items[i].Name));
-				}
+                var items = FileStatusListBox.Items.Cast<GitItemStatus>().ToList();
+                for (var i = 0; i < items.Count; i++)
+                {
+                    FileStatusListBox.SetSelected(i, filter.IsMatch(items[i].Name));
+                }
 
-				return FileStatusListBox.SelectedIndices.Count;
-			}
-			finally
-			{
-				ResumeLayout(true);
-			}
-		}
+                return FileStatusListBox.SelectedIndices.Count;
+            }
+            finally
+            {
+                ResumeLayout(true);
+            }
+        }
     }
 
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Security.Permissions;
 using System.Text;
 using GitCommands.Config;
@@ -696,6 +697,8 @@ namespace GitCommands
                     if (gitItemStatus != null)
                     {
                         gitItemStatus.IsStaged = true;
+                        if (Submodules.Contains(gitItemStatus.Name))
+                            gitItemStatus.IsSubmodule = true;
                         diffFiles.Add(gitItemStatus);
                     }
                 }
@@ -706,12 +709,11 @@ namespace GitCommands
                     if (gitItemStatus != null)
                     {
                         gitItemStatus.IsStaged = false;
+                        if (Submodules.Contains(gitItemStatus.Name))
+                            gitItemStatus.IsSubmodule = true;
                         diffFiles.Add(gitItemStatus);
                     }
                 }
-
-                if (gitItemStatus != null && Submodules.Contains(gitItemStatus.Name))
-                    gitItemStatus.IsSubmodule = true;
             }
 
             return diffFiles;
@@ -892,6 +894,70 @@ namespace GitCommands
                 output += gitCommand.Output.ToString();
 
             return output;
+        }
+
+        public static string ProcessSubmodulePatch(string text)
+        {
+            StringBuilder sb = new StringBuilder();
+            using (StringReader reader = new StringReader(text))
+            {
+                string line;
+                string module = "";
+                while ((line = reader.ReadLine()) != null)
+                {
+                    if (line.StartsWith("+++ "))
+                    {
+                        module = line.Substring("+++ ".Length);
+                        var list = module.Split(new char[] { ' ' }, 2);
+                        module = list.Length > 0 ? list[0] : "";
+                        if (module.Length > 2 && module[1] == '/')
+                        {
+                            module = module.Substring(2);
+                            break;
+                        }
+                    }
+                }
+                sb.AppendLine("Submodule " + module + " Change");
+                while ((line = reader.ReadLine()) != null)
+                {
+                    if (line.Contains("Subproject"))
+                    {
+                        sb.AppendLine();
+                        char c = line[0];
+                        const string commit = "commit ";
+                        string hash = "";
+                        int pos = line.IndexOf(commit);
+                        if (pos >= 0)
+                            hash = line.Substring(pos + commit.Length);
+                        bool bdirty = hash.EndsWith("-dirty");
+                        hash = hash.Replace("-dirty", "");
+                        string dirty = !bdirty ? "" : " (dirty)";
+                        if (c == '-')
+                            sb.AppendLine("From:\t" + hash + dirty);
+                        else if (c == '+')
+                            sb.AppendLine("To:\t\t" + hash + dirty);
+
+                        string path = Settings.Module.GetSubmoduleFullPath(module);
+                        GitModule gitmodule = new GitModule(path);
+                        if (gitmodule.ValidWorkingDir())
+                        {
+                            string error = "";
+                            CommitData commitData = CommitData.GetCommitData(gitmodule, hash, ref error);
+                            if (commitData != null)
+                            {
+                                sb.AppendLine("\t\t\t\t\t" + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + commitData.CommitDate.LocalDateTime.ToString(" (ddd MMM dd HH':'mm':'ss yyyy)"));
+                                var delim = new char[] { '\n', '\r' };
+                                var lines = commitData.Body.Trim(delim).Split(new string[] {"\r\n"}, 0);
+                                foreach (var curline in lines)
+                                    sb.AppendLine("\t\t" + curline);
+                            }
+                        }
+                        else
+                            sb.AppendLine();
+                    }
+                }
+            }
+            return sb.ToString();
         }
 
         public static string GetRemoteName(string completeName, IEnumerable<string> remotes)
