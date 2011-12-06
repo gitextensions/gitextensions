@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Threading;
+using GitCommands;
 
 namespace GitExtensions
 {
@@ -37,6 +38,12 @@ namespace GitExtensions
 
             foreach (var pluginFile in plugins)
             {
+                if (!Settings.RunningOnWindows() 
+                    && pluginFile.FullName.Contains("Microsoft.WindowsAPICodePack"))
+                {
+                    continue;
+                }
+                
                 try
                 {
                     var types = Assembly.LoadFile(pluginFile.FullName).GetTypes();
