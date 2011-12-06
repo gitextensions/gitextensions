@@ -247,7 +247,8 @@ namespace GitUI
             ScriptManager.RunEventScripts(ScriptEvent.BeforePull);
 
             var stashed = false;
-            if (!Fetch.Checked && AutoStash.Checked && Settings.Module.GitStatus(false).Count > 0)
+            if (!Fetch.Checked && AutoStash.Checked &&
+                Settings.Module.GitStatus(UntrackedFilesMode.No, IgnoreSubmodulesMode.Default).Count > 0)
             {
                 new FormProcess("stash save").ShowDialog(this);
                 stashed = true;
