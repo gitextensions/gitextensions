@@ -1107,9 +1107,6 @@ namespace GitUI
                 InternalInitialize(false);
                 IndexWatcher.Reset();
             }
-
-            if (_toolStripGitStatus != null)
-                _toolStripGitStatus.UpdateImmediate();
         }
 
         private void AboutToolStripMenuItemClick(object sender, EventArgs e)
