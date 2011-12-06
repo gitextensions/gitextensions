@@ -38,8 +38,7 @@ namespace GitExtensions
 
             foreach (var pluginFile in plugins)
             {
-                if (!Settings.RunningOnWindows() 
-                    && pluginFile.FullName.Contains("Microsoft.WindowsAPICodePack"))
+                if (pluginFile.FullName.Contains("Microsoft.WindowsAPICodePack"))
                 {
                     continue;
                 }
