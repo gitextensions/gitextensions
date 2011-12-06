@@ -716,7 +716,6 @@ namespace GitUI
                     }
                 }
 
-
                 // Refresh tree
                 GitTree.Nodes.Clear();
                 //restore selected file and scroll position when new selection is done
@@ -752,7 +751,6 @@ namespace GitUI
                     if (lastMatchedNode != matchedNode)
                         FileText.ResetCurrentScrollPos();
                     GitTree.SelectedNode = lastMatchedNode;
-
                 }
             }
             finally
@@ -760,8 +758,6 @@ namespace GitUI
                 GitTree.ResumeLayout();
             }
         }
-
-
 
         private void FillDiff()
         {
@@ -1010,8 +1006,6 @@ namespace GitUI
                     if (!CommitInfoTabControl.TabPages.Contains(Tree))
                         CommitInfoTabControl.TabPages.Insert(1, Tree);
                 }
-
-
 
                 FillFileTree();
                 FillDiff();
@@ -1439,6 +1433,9 @@ namespace GitUI
 
             if (patch == null)
                 return string.Empty;
+
+            if (file.IsSubmodule)
+                return GitCommandHelpers.ProcessSubmodulePatch(patch.Text);
 
             return patch.Text;
         }
