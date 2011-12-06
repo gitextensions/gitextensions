@@ -102,7 +102,21 @@ namespace GitUI
         private void watcher_Changed(object sender, FileSystemEventArgs e)
         {
             String[] dirs = e.FullPath.Split('\\');
-            var isGitSelfChange = dirs.Any(dir => dir.Equals(".git", StringComparison.OrdinalIgnoreCase));
+            bool isGitSelfChange = false;
+            for (int  i = 0; i < dirs.Length; i++)
+                if (dirs[i].Equals(".git", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (i + 1 == dirs.Length) // .git directory changed
+                        isGitSelfChange = true;
+                    else if (i + 3 == dirs.Length) // submodule root directory changed
+                    {
+                        if (dirs[i + 1].Equals("modules", StringComparison.OrdinalIgnoreCase))
+                            isGitSelfChange = true;
+                    }
+                    else if (dirs[dirs.Length - 1].Equals("index.lock", StringComparison.OrdinalIgnoreCase)) // index.lock changed
+                        isGitSelfChange = true;
+                    break;
+                }
             if (isGitSelfChange)
                 return;
 
