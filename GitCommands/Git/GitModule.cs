@@ -1615,15 +1615,15 @@ namespace GitCommands
 
         public List<GitItemStatus> GitStatus()
         {
-            return GitStatus(true);
+            return GitStatus(UntrackedFilesMode.Default, 0);
         }
 
-        public List<GitItemStatus> GitStatus(bool untracked)
+        public List<GitItemStatus> GitStatus(UntrackedFilesMode untrackedFilesMode, IgnoreSubmodulesMode ignoreSubmodulesMode)
         {
             if (!GitCommandHelpers.VersionInUse.SupportGitStatusPorcelain)
                 throw new Exception("The version of git you are using is not supported for this action. Please upgrade to git 1.7.3 or newer.");
 
-            string command = GitCommandHelpers.GetAllChangedFilesCmd(true, untracked);
+            string command = GitCommandHelpers.GetAllChangedFilesCmd(true, untrackedFilesMode, ignoreSubmodulesMode);
             string status = RunCmd(Settings.GitCommand, command);
             return GitCommandHelpers.GetAllChangedFilesFromString(status);
         }

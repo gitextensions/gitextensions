@@ -8,6 +8,35 @@ using GitCommands.Config;
 
 namespace GitCommands
 {
+    public enum UntrackedFilesMode
+    {
+        /// <summary>
+        /// Default value.
+        /// </summary>
+        Default = 1,
+        /// <summary>
+        /// Show no untracked files.
+        /// </summary>
+        No = 2,
+        /// <summary>
+        /// Shows untracked files and directories.
+        /// </summary>
+        Normal = 3,
+        /// <summary>
+        /// Also shows individual files in untracked directories.
+        /// </summary>
+        All = 4
+    }
+
+    public enum IgnoreSubmodulesMode
+    {
+        Default = 1,
+        None = 2,
+        Untracked = 3,
+        Dirty = 4,
+        All = 5
+    }
+
     public static class GitCommandHelpers
     {
         public static void SetEnvironmentVariable()
@@ -541,18 +570,52 @@ namespace GitCommands
         {
             return new ConfigFile(GetHomeDir() + Settings.PathSeparator + ".gitconfig");
         }
-        
-        public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, bool showUntrackedFiles)
+
+        public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, bool untrackedFiles)
+        {
+            return GetAllChangedFilesCmd( excludeIgnoredFiles, untrackedFiles ? UntrackedFilesMode.Default : UntrackedFilesMode.No );
+        }
+
+        public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules = 0)
         {
             if (!VersionInUse.SupportGitStatusPorcelain)
                 throw new Exception("The version of git you are using is not supported for this action. Please upgrade to git 1.7.3 or newer.");
 
             StringBuilder stringBuilder = new StringBuilder("status --porcelain -z");
 
-            if (showUntrackedFiles)
-                stringBuilder.Append(" --untracked-files");
-            else
-                stringBuilder.Append(" --untracked-files=no");
+            switch(untrackedFiles)
+            {
+                case UntrackedFilesMode.Default:
+                    stringBuilder.Append(" --untracked-files");
+                    break;
+                case UntrackedFilesMode.No:
+                    stringBuilder.Append(" --untracked-files=no");
+                    break;
+                case UntrackedFilesMode.Normal:
+                    stringBuilder.Append(" --untracked-files=normal");
+                    break;
+                case UntrackedFilesMode.All:
+                    stringBuilder.Append(" --untracked-files=all");
+                    break;
+            }
+            switch (ignoreSubmodules)
+            {
+                case IgnoreSubmodulesMode.Default:
+                    stringBuilder.Append(" --ignore-submodules");
+                    break;
+                case IgnoreSubmodulesMode.None:
+                    stringBuilder.Append(" --ignore-submodules=none");
+                    break;
+                case IgnoreSubmodulesMode.Untracked:
+                    stringBuilder.Append(" --ignore-submodules=untracked");
+                    break;
+                case IgnoreSubmodulesMode.Dirty:
+                    stringBuilder.Append(" --ignore-submodules=dirty");
+                    break;
+                case IgnoreSubmodulesMode.All:
+                    stringBuilder.Append(" --ignore-submodules=all");
+                    break;
+            }
             if (!excludeIgnoredFiles)
                 stringBuilder.Append(" --ignored");
 
