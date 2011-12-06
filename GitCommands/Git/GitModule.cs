@@ -1368,7 +1368,7 @@ namespace GitCommands
 
         public string Rename(string name, string newName)
         {
-            return RunCmd(Settings.GitCommand, "branch --move \"" + name + "\" \"" + newName + "\"");
+            return RunCmd(Settings.GitCommand, "branch -m \"" + name + "\" \"" + newName + "\"");
         }
 
         public string AddRemote(string name, string path)
