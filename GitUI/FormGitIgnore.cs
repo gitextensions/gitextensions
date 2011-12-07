@@ -3,11 +3,22 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormGitIgnore : GitExtensionsForm
     {
+        private readonly TranslationString _gitignoreOnlyInWorkingDirSupported =
+            new TranslationString(".gitignore is only supported when there is a working dir.");
+        private readonly TranslationString _gitignoreOnlyInWorkingDirSupportedCaption =
+            new TranslationString("No working dir");
+
+        private readonly TranslationString _cannotAccessGitignore =
+            new TranslationString("Failed to save .gitignore." + Environment.NewLine + "Check if file is accessible.");
+        private readonly TranslationString _cannotAccessGitignoreCaption =
+            new TranslationString("Failed to save .gitignore");
+
         public string GitIgnoreFile;
 
         public FormGitIgnore()
@@ -16,6 +27,11 @@ namespace GitUI
             Translate();
             GitIgnoreFile = "";
 
+            LoadGitIgnore();
+        }
+
+        private void LoadGitIgnore()
+        {
             try
             {
                 if (File.Exists(Settings.WorkingDir + ".gitignore"))
@@ -31,27 +47,28 @@ namespace GitUI
 
         private void SaveClick(object sender, EventArgs e)
         {
+            SaveGitIgnore(true);
+        }
+
+        private void SaveGitIgnore(bool closeAfterSave)
+        {
             try
             {
                 FileInfoExtensions
                     .MakeFileTemporaryWritable(
                         Settings.WorkingDir + ".gitignore",
                         x =>
-                            {
-                                // Enter a newline to work around a wierd bug 
-                                // that causes the first line to include 3 extra bytes. (encoding marker??)
-                                GitIgnoreFile = Environment.NewLine + _NO_TRANSLATE_GitIgnoreEdit.GetText().Trim();
-                                using (var tw = new StreamWriter(x, false, Settings.Encoding))
-                                {
-                                    tw.Write(GitIgnoreFile);
-                                }
-                                Close();
-                            });
+                        {
+                            this.GitIgnoreFile = _NO_TRANSLATE_GitIgnoreEdit.GetText();
+                            File.WriteAllBytes(x,Settings.Encoding.GetBytes(this.GitIgnoreFile));
+                        });
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(this, _cannotAccessGitignore.Text + Environment.NewLine + ex.Message, 
+                    _cannotAccessGitignoreCaption.Text);
             }
+            Close();
         }
 
         private void FormGitIgnoreFormClosing(object sender, FormClosingEventArgs e)
@@ -62,14 +79,14 @@ namespace GitUI
         private void FormGitIgnoreLoad(object sender, EventArgs e)
         {
             RestorePosition("edit-git-ignore");
-            if (!Settings.IsBareRepository()) return;
-            MessageBox.Show(".gitignore is only supported when there is a working dir.");
+            if (!Settings.Module.IsBareRepository()) return;
+            MessageBox.Show(this, _gitignoreOnlyInWorkingDirSupported.Text, _gitignoreOnlyInWorkingDirSupportedCaption.Text);
             Close();
         }
 
         private void AddDefaultClick(object sender, EventArgs e)
         {
-            _NO_TRANSLATE_GitIgnoreEdit.ViewText(".gitignore", 
+            _NO_TRANSLATE_GitIgnoreEdit.ViewText(".gitignore",
                 _NO_TRANSLATE_GitIgnoreEdit.GetText() +
                 Environment.NewLine + "#ignore thumbnails created by windows" +
                 Environment.NewLine + "Thumbs.db" +
@@ -100,6 +117,13 @@ namespace GitUI
                 Environment.NewLine + "_ReSharper*/" +
                 Environment.NewLine + "[Tt]est[Rr]esult*" +
                 Environment.NewLine + "");
+        }
+
+        private void AddPattern_Click(object sender, EventArgs e)
+        {
+            SaveGitIgnore(false);
+            new FormAddToGitIgnore("*.dll").ShowDialog(this);
+            LoadGitIgnore();
         }
     }
 }

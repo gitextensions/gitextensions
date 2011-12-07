@@ -24,19 +24,29 @@ namespace GitUI
             repositoryCategory.SetIcon();
         }
 
+        private bool bChangingDataSource = false;
+
         public void Initialize()
         {
+            bChangingDataSource = true;
             _NO_TRANSLATE_Categories.DataSource = null;
             _NO_TRANSLATE_Categories.DataSource = Repositories.RepositoryCategories;
+            bChangingDataSource = false;
             _NO_TRANSLATE_Categories.DisplayMember = "Description";
         }
 
         private void Categories_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (_NO_TRANSLATE_Categories.SelectedItem == null)
+            {
+                if (!bChangingDataSource)
+                    splitContainer2.Panel2.Enabled = false;
                 return;
+            }
 
-            var repositoryCategory = (RepositoryCategory) _NO_TRANSLATE_Categories.SelectedItem;
+            if (!bChangingDataSource)
+                splitContainer2.Panel2.Enabled = true;
+            var repositoryCategory = (RepositoryCategory)_NO_TRANSLATE_Categories.SelectedItem;
             RepositoriesGrid.DataSource = repositoryCategory.Repositories;
 
             _NO_TRANSLATE_Caption.Text = repositoryCategory.Description;
@@ -49,7 +59,9 @@ namespace GitUI
 
         private void Add_Click(object sender, EventArgs e)
         {
-            Repositories.RepositoryCategories.Add(new RepositoryCategory("new"));
+            var category = new RepositoryCategory("new");
+            Repositories.RepositoryCategories.Add(category);
+            Categories_SelectedIndexChanged(null, null);
         }
 
         private void Remove_Click(object sender, EventArgs e)
@@ -167,16 +179,6 @@ namespace GitUI
             RepositoriesGrid.DataSource = null;
             datasource.Remove(repositoryToRemove);
             RepositoriesGrid.DataSource = datasource;
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void RepositoriesType_CheckedChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }

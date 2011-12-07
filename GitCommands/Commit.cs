@@ -28,9 +28,9 @@ namespace GitCommands
         public void Execute()
         {
             if (Dto.Amend)
-                Dto.Result = GitCommandHelpers.RunCmd(Settings.GitCommand, "commit --amend -m \"" + Dto.Message + "\"");
+                Dto.Result = Settings.Module.RunGitCmd("commit --amend -m \"" + Dto.Message + "\"");
             else
-                Dto.Result = GitCommandHelpers.RunCmd(Settings.GitCommand, "commit -m \"" + Dto.Message + "\"");
+                Dto.Result = Settings.Module.RunGitCmd("commit -m \"" + Dto.Message + "\"");
         }
 
         public static void SetCommitMessage(string commitMessageText)
@@ -41,16 +41,15 @@ namespace GitCommands
                 return;
             }
 
-            using (var textWriter = new StreamWriter(GetCommitMessagePath(), false))
+            using (var textWriter = new StreamWriter(GetCommitMessagePath(), false, Settings.Encoding))
             {
                 textWriter.Write(commitMessageText);
-                textWriter.Close();
             }
         }
 
         public static string GetCommitMessagePath()
         {
-            return Settings.WorkingDirGitDir() + Settings.PathSeparator.ToString() + "COMMITMESSAGE";
+            return Settings.Module.WorkingDirGitDir() + Settings.PathSeparator.ToString() + "COMMITMESSAGE";
         }
     }
 }

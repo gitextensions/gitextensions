@@ -72,6 +72,7 @@ namespace GitUI
             this.resetCurrentBranchToHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkoutBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkoutRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.manipulateCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.revertCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cherryPickCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -88,10 +89,11 @@ namespace GitUI
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SelecctionTimer = new System.Windows.Forms.Timer(this.components);
+            this.SelectionTimer = new System.Windows.Forms.Timer(this.components);
             this.NoCommits = new System.Windows.Forms.Panel();
             this.NoGit = new System.Windows.Forms.Panel();
             this.InitRepository = new System.Windows.Forms.Button();
+            this.CloneRepository = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.GitIgnore = new System.Windows.Forms.Button();
             this.Commit = new System.Windows.Forms.Button();
@@ -100,6 +102,9 @@ namespace GitUI
             this.Loading = new System.Windows.Forms.PictureBox();
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.quickSearchTimer = new System.Windows.Forms.Timer(this.components);
+            this.renameBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.squashCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fixupCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showRevisionGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.drawNonrelativesGrayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.orderRevisionsByDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -216,10 +221,10 @@ namespace GitUI
             this.mergeBranchToolStripMenuItem,
             this.rebaseOnToolStripMenuItem,
             this.resetCurrentBranchToHereToolStripMenuItem,
+            this.renameBranchToolStripMenuItem,
             this.checkoutBranchToolStripMenuItem,
             this.checkoutRevisionToolStripMenuItem,
-            this.revertCommitToolStripMenuItem,
-            this.cherryPickCommitToolStripMenuItem,
+            this.manipulateCommitToolStripMenuItem,
             this.toolStripSeparator1,
             this.showBranchesToolStripMenuItem,
             this.showRevisionGraphToolStripMenuItem,
@@ -332,6 +337,7 @@ namespace GitUI
             this.deleteTagToolStripMenuItem.Name = "deleteTagToolStripMenuItem";
             this.deleteTagToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.deleteTagToolStripMenuItem.Text = "Delete tag";
+            this.deleteTagToolStripMenuItem.Click += new System.EventHandler(this.toolStripMenuWithOneItem_Click);
             // 
             // createNewBranchToolStripMenuItem
             // 
@@ -347,6 +353,7 @@ namespace GitUI
             this.deleteBranchToolStripMenuItem.Name = "deleteBranchToolStripMenuItem";
             this.deleteBranchToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.deleteBranchToolStripMenuItem.Text = "Delete branch";
+            this.deleteBranchToolStripMenuItem.Click += new System.EventHandler(this.toolStripMenuWithOneItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -357,13 +364,15 @@ namespace GitUI
             // 
             this.mergeBranchToolStripMenuItem.Name = "mergeBranchToolStripMenuItem";
             this.mergeBranchToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.mergeBranchToolStripMenuItem.Text = "Merge with branch";
+            this.mergeBranchToolStripMenuItem.Text = "Merge current branch with";
+            this.mergeBranchToolStripMenuItem.Click += new System.EventHandler(this.toolStripMenuWithOneItem_Click);
             // 
             // rebaseOnToolStripMenuItem
             // 
             this.rebaseOnToolStripMenuItem.Name = "rebaseOnToolStripMenuItem";
             this.rebaseOnToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.rebaseOnToolStripMenuItem.Text = "Rebase on";
+            this.rebaseOnToolStripMenuItem.Text = "Rebase current branch on";
+            this.rebaseOnToolStripMenuItem.Click += new System.EventHandler(this.toolStripMenuWithOneItem_Click);
             // 
             // resetCurrentBranchToHereToolStripMenuItem
             // 
@@ -377,6 +386,7 @@ namespace GitUI
             this.checkoutBranchToolStripMenuItem.Name = "checkoutBranchToolStripMenuItem";
             this.checkoutBranchToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.checkoutBranchToolStripMenuItem.Text = "Checkout branch";
+            this.checkoutBranchToolStripMenuItem.Click += new System.EventHandler(this.toolStripMenuWithOneItem_Click);
             // 
             // checkoutRevisionToolStripMenuItem
             // 
@@ -384,6 +394,17 @@ namespace GitUI
             this.checkoutRevisionToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.checkoutRevisionToolStripMenuItem.Text = "Checkout revision";
             this.checkoutRevisionToolStripMenuItem.Click += new System.EventHandler(this.CheckoutRevisionToolStripMenuItemClick);
+            // 
+            // manipulateCommitToolStripMenuItem
+            // 
+            this.manipulateCommitToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.revertCommitToolStripMenuItem,
+            this.cherryPickCommitToolStripMenuItem,
+            this.fixupCommitToolStripMenuItem,
+            this.squashCommitToolStripMenuItem});
+            this.manipulateCommitToolStripMenuItem.Name = "manipulateCommitToolStripMenuItem";
+            this.manipulateCommitToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.manipulateCommitToolStripMenuItem.Text = "Manipulate commit";
             // 
             // revertCommitToolStripMenuItem
             // 
@@ -507,10 +528,10 @@ namespace GitUI
             this.dataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.dataGridViewTextBoxColumn1.Width = 70;
             // 
-            // SelecctionTimer
+            // SelectionTimer
             // 
-            this.SelecctionTimer.Interval = 200;
-            this.SelecctionTimer.Tick += new System.EventHandler(this.SelecctionTimerTick);
+            this.SelectionTimer.Interval = 200;
+            this.SelectionTimer.Tick += new System.EventHandler(this.SelectionTimerTick);
             // 
             // NoCommits
             // 
@@ -521,12 +542,13 @@ namespace GitUI
             this.NoCommits.Dock = System.Windows.Forms.DockStyle.Fill;
             this.NoCommits.Location = new System.Drawing.Point(0, 0);
             this.NoCommits.Name = "NoCommits";
-            this.NoCommits.Size = new System.Drawing.Size(585, 204);
+            this.NoCommits.Size = new System.Drawing.Size(682, 235);
             this.NoCommits.TabIndex = 3;
             // 
             // NoGit
             // 
             this.NoGit.Controls.Add(this.InitRepository);
+            this.NoGit.Controls.Add(this.CloneRepository);
             this.NoGit.Controls.Add(this.label2);
             this.NoGit.Location = new System.Drawing.Point(0, 0);
             this.NoGit.Name = "NoGit";
@@ -536,13 +558,24 @@ namespace GitUI
             // 
             // InitRepository
             // 
-            this.InitRepository.Location = new System.Drawing.Point(16, 36);
+            this.InitRepository.Location = new System.Drawing.Point(19, 42);
             this.InitRepository.Name = "InitRepository";
-            this.InitRepository.Size = new System.Drawing.Size(143, 23);
+            this.InitRepository.Size = new System.Drawing.Size(167, 27);
             this.InitRepository.TabIndex = 2;
             this.InitRepository.Text = "Initialize repository";
             this.InitRepository.UseVisualStyleBackColor = true;
             this.InitRepository.Click += new System.EventHandler(this.InitRepository_Click);
+            // 
+            // CloneRepository
+            // 
+            this.CloneRepository.Location = new System.Drawing.Point(192, 42);
+            this.CloneRepository.Name = "CloneRepository";
+            this.CloneRepository.Size = new System.Drawing.Size(167, 27);
+            this.CloneRepository.TabIndex = 3;
+            this.CloneRepository.Text = "Clone repository";
+            this.CloneRepository.UseVisualStyleBackColor = true;
+            this.CloneRepository.Visible = false;
+            this.CloneRepository.Click += new System.EventHandler(this.CloneRepository_Click);
             // 
             // label2
             // 
@@ -597,7 +630,6 @@ namespace GitUI
             // 
             this.Loading.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.Loading.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
             this.Loading.Location = new System.Drawing.Point(0, 0);
             this.Loading.Name = "Loading";
             this.Loading.Size = new System.Drawing.Size(585, 204);
@@ -630,6 +662,10 @@ namespace GitUI
             // 
             // showAuthorDateToolStripMenuItem
             // 
+            this.fixupCommitToolStripMenuItem.Name = "fixupCommitToolStripMenuItem";
+            this.fixupCommitToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.fixupCommitToolStripMenuItem.Text = "Fixup commit";
+            this.fixupCommitToolStripMenuItem.Click += new System.EventHandler(this.FixupCommitToolStripMenuItemClick);
             this.showAuthorDateToolStripMenuItem.Name = "showAuthorDateToolStripMenuItem";
             this.showAuthorDateToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.showAuthorDateToolStripMenuItem.Text = "Show author date";
@@ -641,6 +677,13 @@ namespace GitUI
             this.showRelativeDateToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.showRelativeDateToolStripMenuItem.Text = "Show relative date";
             this.showRelativeDateToolStripMenuItem.Click += new System.EventHandler(this.ShowRelativeDateToolStripMenuItemClick);
+            // 
+            // squashCommitToolStripMenuItem
+            // 
+            this.squashCommitToolStripMenuItem.Name = "squashCommitToolStripMenuItem";
+            this.squashCommitToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.squashCommitToolStripMenuItem.Text = "Squash commit";
+            this.squashCommitToolStripMenuItem.Click += new System.EventHandler(this.SquashCommitToolStripMenuItemClick);
             // 
             // showGitNotesToolStripMenuItem
             // 
@@ -655,6 +698,8 @@ namespace GitUI
             this.showRevisionGraphToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
             this.showRevisionGraphToolStripMenuItem.Text = "Show revision graph";
             this.showRevisionGraphToolStripMenuItem.Click += new System.EventHandler(this.ShowRevisionGraphToolStripMenuItemClick);
+            this.renameBranchToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.renameBranchToolStripMenuItem.Text = "Rename branch";
             // 
             // RevisionGrid
             // 
@@ -684,7 +729,7 @@ namespace GitUI
         private DvcsGraph Revisions;
         private System.Windows.Forms.BindingSource gitRevisionBindingSource;
         private System.Windows.Forms.PictureBox Loading;
-        private System.Windows.Forms.Timer SelecctionTimer;
+        private System.Windows.Forms.Timer SelectionTimer;
         public System.Windows.Forms.PictureBox Error;
         private System.Windows.Forms.ContextMenuStrip CreateTag;
         private System.Windows.Forms.ToolStripMenuItem createTagToolStripMenuItem;
@@ -736,11 +781,17 @@ namespace GitUI
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem runScriptToolStripMenuItem;
         private System.Windows.Forms.Button InitRepository;
+        private System.Windows.Forms.Button CloneRepository;
         private System.Windows.Forms.ToolStripMenuItem showRevisionGraphToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem drawNonrelativesGrayToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem orderRevisionsByDateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showAuthorDateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showRelativeDateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showGitNotesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem manipulateCommitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fixupCommitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem squashCommitToolStripMenuItem;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
+        private System.Windows.Forms.ToolStripMenuItem renameBranchToolStripMenuItem;
     }
 }

@@ -36,7 +36,8 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(110, 34);
+            this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.button1.Location = new System.Drawing.Point(53, 32);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(254, 23);
             this.button1.TabIndex = 0;
@@ -55,7 +56,7 @@
             // 
             // Remote
             // 
-            this.Remote.Location = new System.Drawing.Point(335, 6);
+            this.Remote.Location = new System.Drawing.Point(210, 6);
             this.Remote.Name = "Remote";
             this.Remote.Size = new System.Drawing.Size(142, 20);
             this.Remote.TabIndex = 2;
@@ -65,13 +66,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(489, 63);
+            this.ClientSize = new System.Drawing.Size(367, 63);
             this.Controls.Add(this.Remote);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "CreateLocalBranchesForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Create local tracking branches";
             this.ResumeLayout(false);
             this.PerformLayout();

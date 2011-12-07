@@ -3,11 +3,23 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormMailMap : GitExtensionsForm
     {
+        private readonly TranslationString _mailmapOnlyInWorkingDirSupported =
+            new TranslationString(".mailmap is only supported when there is a working dir.");
+        private readonly TranslationString _mailmapOnlyInWorkingDirSupportedCaption =
+            new TranslationString("No working dir");
+
+        private readonly TranslationString _cannotAccessMailmap =
+            new TranslationString("Failed to save .mailmap." + Environment.NewLine + "Check if file is accessible.");
+        private readonly TranslationString _cannotAccessMailmapCaption =
+            new TranslationString("Failed to save .mailmap");
+        
+        
         public string MailMapFile;
 
         public FormMailMap()
@@ -31,18 +43,23 @@ namespace GitUI
 
         private void SaveClick(object sender, EventArgs e)
         {
+            try
+            {
             FileInfoExtensions
                 .MakeFileTemporaryWritable(
                     Settings.WorkingDir + ".mailmap",
                     x =>
-                        {
-                            // Enter a newline to work around a wierd bug 
-                            // that causes the first line to include 3 extra bytes. (encoding marker??)
-                            MailMapFile = Environment.NewLine + _NO_TRANSLATE_MailMapText.GetText().Trim();
-                            using (TextWriter tw = new StreamWriter(x, false, Settings.Encoding))
-                                tw.Write(MailMapFile);
-                            Close();
+                    {
+                        this.MailMapFile = _NO_TRANSLATE_MailMapText.GetText();
+                            File.WriteAllBytes(x, Settings.Encoding.GetBytes(this.MailMapFile));
                         });
+            }
+            catch (Exception ex)
+                        {
+                MessageBox.Show(this, _cannotAccessMailmap.Text + Environment.NewLine + ex.Message, 
+                    _cannotAccessMailmapCaption.Text);
+                        }
+                        Close();
         }
 
         private void FormMailMapFormClosing(object sender, FormClosingEventArgs e)
@@ -53,8 +70,8 @@ namespace GitUI
         private void FormMailMapLoad(object sender, EventArgs e)
         {
             RestorePosition("edit-mail-map");
-            if (!Settings.IsBareRepository()) return;
-            MessageBox.Show(".mailmap is only supported when there is a working dir.");
+            if (!Settings.Module.IsBareRepository()) return;
+            MessageBox.Show(this, _mailmapOnlyInWorkingDirSupported.Text,_mailmapOnlyInWorkingDirSupportedCaption.Text);
             Close();
         }
     }

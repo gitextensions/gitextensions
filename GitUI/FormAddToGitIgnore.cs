@@ -3,17 +3,21 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormAddToGitIgnore : GitExtensionsForm
     {
+        private readonly TranslationString _matchingFilesString =
+            new TranslationString("{0} file(s) matched");
+            
         public FormAddToGitIgnore(string filePattern)
         {
             InitializeComponent();
             Translate();
             FilePattern.Text = filePattern;
-            Height = 100;
+            UpdatePreviewPanel();
         }
 
         private void AddToIngoreClick(object sender, EventArgs e)
@@ -36,18 +40,22 @@ namespace GitUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show(this, ex.ToString());
             }
 
             Close();
         }
 
-        private void ShowPreviewClick(object sender, EventArgs e)
+        private void UpdatePreviewPanel()
         {
-            Preview.DataSource = GitCommandHelpers.GetFiles(FilePattern.Text);
+            Preview.DataSource = Settings.Module.GetFiles(FilePattern.Text);
+            filesWillBeIgnored.Text = string.Format(_matchingFilesString.Text,Preview.Items.Count.ToString());
+            noMatchPanel.Visible = (Preview.Items.Count == 0);
+        }
 
-            if (Height < 110)
-                Height = 300;
+        private void FilePattern_TextChanged(object sender, EventArgs e)
+        {
+            UpdatePreviewPanel();
         }
     }
 }

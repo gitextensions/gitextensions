@@ -1,16 +1,123 @@
 ﻿Changelog
 =========
 
+Version 2.27
+	Fixed issue 124: Submodules form now can remove submodule
+	Fixed issue 127: Preview disabled for files larger than 5Mb, but available by link
+	Fixed issue 138: Avoid auto stash when there is nothing to stash
+	Fixed issue 139: Disable image paste in EditNetSpell
+	Fixed issue 460: TortoiseMerge added to diff tools
+	Fixed issue 566: QuickPull with Shift
+	Fixed issue 581: improved revision graph loading performance. Replaced O(n) with O(1).
+	Fixed issue 614: Filter for tags
+	Fixed issue 627: The start page does not refresh upon changing the start pages settings fixed
+	Fixed issue 631: Adding a new item to the start page settings auto-select that item
+	Fixed issue 667: Push command support recursive submodules check
+	Fixed issue 668: Git directory for submodules fixed with Git 1.7.7 
+	Fixed issue 718: Exception while filtering revision grid.
+	Fixed issue 736: "Downloads" link fixed on project home page
+	Fixed issue 735: ArgumentOutOfRangeException in "Format patch" dialog for first commit
+	Fixed clone repository to bare repository
+	Fixed open terminal emulator in Mono/Linux
+	Fixed KdiffPath for diff and merge tool in Mono/Linux
+	Fixed autostash with submodules
+	Fixed 2 way merge for TortoiseMerge
+	Added support for staging/unstaging files with non-ASCI characters
+	Added "Open containing folder" entry to the context menu of difference files
+	Added "Rename branch" to context menu in revision grid
+	Added Notepad++ to supported editors list
+	Added clone button for uninitialized folders
+	Added special context menu for submodules in the commit dialog
+	Added blame window tooltip on authors
+	Added email links to commit header
+	Added hotkeys to translation form (Alt-Up, Alt-Down and Control-Down)
+	Added option "Full history" to context menu in file history
+	Added "Manipulate commit" context menu to file history
+	Added support for merge multiple branches
+	Added support for delete multiple branches
+	Added support for drag & drop folders and urls onto dashboard
+	Dashboard Editor displaying buttons fixed on monitor with big DPI
+	Pull form now correctly updated after calling "Manage Repositories"
+	When pushing a new branch and there is only one remote, this remote will be selected
+	Diff warnings removing fixed
+	Russian translation updated
+	Spanish translation updated
+	Dutch translation updated
+	German translation updated
+	Many bugfixes and minor changes
+
+Version 2.26
+	Fixed issue 629: Support of separate Fetch/Pull Urls for remotes
+	Fixed issue 685: Unable to set location of global git config file in Environment tab
+	Fixed revert commit dialog
+	Added selection filter for unstaged files in commit dialog (ctrl+f)
+	When trying to pull-rebase a merge commit a warning is given
+	Updated msysgit to version 1.7.7.1
+	Traditional Chinese translation updated
+	German transation updated
+	Many bugfixes and minor changes
+
+Version 2.25
+	Fixed issue 283: Splitter position on dashboard is not remembered
+	Fixed issue 543: Show current branch in main screen
+	Fixed issue 533: UI/translation bugs on lost commits recover form
+	Fixed issue 587: do not try to commit empty changeset
+	Fixes issue 616: Suggested command for TortoiseMerge is incorrect
+	Fixed issue 628: the start page settings page has improper alignment
+	Fixed issue 632: RSS Feeds on the Start Page scroll unnecessarily	
+	Fixed issue 652: Opening a new repository does not reset the current commit view
+	Fixed issue 656: Error viewing Blame Tab on binary file	
+	Fixed issue 661: "Refresh on form focus" option in the Commit dialog does not display its setting.
+	Fixed issue: 'clone/fork GitHub repo' throws an exception if no GitHub credentials are known
+	Fixed issue: remove '.git' from targer directory if the original repository ends with '.git'
+	Fixed issue: in some cases warnings are shown in the commit dialog instead of the staged files
+	Fixed issue: the merge dialog does not close after all merge conflicts are solved
+	Updated msysgit to version 1.7.7
+	Updated command for Beyond Compare's 3-way merge
+	Updated Dutch translation
+	Updated Italian translation
+	Exclude remote tracking branch from the "merge with" and "rebase on" menu items
+	Highlight remote tracking branch in the browse dialog
+	When searching in the diff view, all files are searched
+	Added option to GitHub plugin to clear account info
+	Added a new variable '{UserInput}' which can be used in scripts to ask user for input
+	Added "Add filepattern to .gitignore" dialog 
+	Added support for global configuration commit.template
+	Added more hotkeys
+	Added menu in revision grid to manipulate commit (revert, cherry pick, squash, fixup)
+	Added new gravatar fallback option Retro and None
+	Added German translation
+	Many bugfixes and minor changes
+
+Version 2.24
+	Fixed revision filter
+
 Version 2.23
 	Fixed issue 452: "Show repository status" always updates status every second
+	Fixed issue 455: Cannot initialize repository in Visual Studio solution root
 	Fixed issue 464: Added option to add custom script to toolbar in browse dialog
 	Fixed issue 465: "Create branch" dialog closes immediately after opening by enter key
-	Fixed issue 471: Implement option to use Patience algorithm
+	Fixed issue 471: Implement option to use "Patience diff" algorithm
 	Fixed issue 479: Added the 'keep index' option to the 'ApplyStash' form
+	Fixed issue 500: number of changed files is shown wrong on the browse form toolbar
+	Fixed issue 505: Visual Studio toolbar does not show current branch name
+	Fixed issue 512: Error when opening "Translate" dialog
 	Fixed short name creation for repositories located in root directories
+	Hotkeys can be assigned to custom scripts
+	Difference view font can be changed
+	Revision log style updated
+	The current branch is highlighted in commit log
+	The current branch is shown in caption
 	Added support for Windows 7 "Recent" Jumplist to quickly open repositories
 	Added 'ignore-whitespace' option when applying patches
+	Added option to save stash with custom message
+	Added setting to choose "Truncate long filenames" method
 	Save setting for 'ignore whitespace' checkbox on 'ApplyPatch' form
+	Optimized "Recover lost objects" dialogs
+	Clear FileViewer when only unstaged file is reverted
+	Updated msysgit to version 1.7.6
+	New application logo
+	Many bugfixes and minor changes
 
 Version 2.22
 	Fixed issue 142: Changed main window title to repository name instead of path

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -88,11 +88,53 @@
     <Compile Include="AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="BranchComboBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BranchComboBox.Designer.cs">
+      <DependentUpon>BranchComboBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DvcsGraph.Graph.cs">
+      <DependentUpon>DvcsGraph.cs</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DvcsGraph.Junction.cs">
+      <DependentUpon>DvcsGraph.cs</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DvcsGraph.Lanes.cs">
+      <DependentUpon>DvcsGraph.cs</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="FormRenameBranch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormRenameBranch.Designer.cs">
+      <DependentUpon>FormRenameBranch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataGridViewCheckBoxColumnHeaderCell.cs" />
+    <Compile Include="Editor\XHTML2RTF.cs" />
+    <Compile Include="FormContributors.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormContributors.Designer.cs">
+      <DependentUpon>FormContributors.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormGoToCommit.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FormGoToCommit.Designer.cs">
       <DependentUpon>FormGoToCommit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormSelectMultipleBranches.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSelectMultipleBranches.Designer.cs">
+      <DependentUpon>FormSelectMultipleBranches.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormVerify.LostObject.cs">
+      <DependentUpon>FormVerify.cs</DependentUpon>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Hotkey\ControlHotkeys.cs">
       <SubType>UserControl</SubType>
@@ -684,13 +726,27 @@
       <DependentUpon>AboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormRenameBranch.resx">
+      <DependentUpon>FormRenameBranch.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BranchComboBox.resx">
+      <DependentUpon>BranchComboBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Editor\FileViewer.resx">
       <DependentUpon>FileViewer.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormContributors.resx">
+      <DependentUpon>FormContributors.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormGoToCommit.resx">
       <DependentUpon>FormGoToCommit.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormSelectMultipleBranches.resx">
+      <DependentUpon>FormSelectMultipleBranches.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormViewPatch.resx">
       <DependentUpon>FormViewPatch.cs</DependentUpon>
@@ -799,6 +855,9 @@
     <EmbeddedResource Include="RepoHosting\ViewPullRequestsForm.resx">
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Script\SimplePrompt.resx">
+      <DependentUpon>SimplePrompt.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SpellChecker\EditNetSpell.resx">
       <DependentUpon>EditNetSpell.cs</DependentUpon>
@@ -1080,6 +1139,25 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Compile Include="FormRemoteProcess.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormRemoteProcess.Designer.cs">
+      <DependentUpon>FormRemoteProcess.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormVerify.SortableLostObjectsList.cs">
+      <DependentUpon>FormVerify.cs</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Script\SimplePrompt.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Script\SimplePrompt.Designer.cs">
+      <DependentUpon>SimplePrompt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Script\SplitButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <None Include="gituikey.snk.pfx" />
     <None Include="Properties\DataSources\GitCommands.GitItem.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitItemStatus.datasource" />
@@ -1087,6 +1165,34 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cow-head.ico" />
+    <None Include="Resources\git-extensions-logo-final.ico" />
+    <None Include="Resources\x-with-arrow_yellow.ico" />
+    <None Include="Resources\x-with-arrow.ico" />
+    <None Include="Resources\x-with-arrow_blue.ico" />
+    <None Include="Resources\x-with-arrow_green.ico" />
+    <None Include="Resources\x-with-arrow_lightblue.ico" />
+    <None Include="Resources\x-with-arrow_purple.ico" />
+    <None Include="Resources\x-with-arrow_red.ico" />
+    <None Include="Resources\git-extensions-logo-final_blue.ico" />
+    <None Include="Resources\git-extensions-logo-final_green.ico" />
+    <None Include="Resources\git-extensions-logo-final_lightblue.ico" />
+    <None Include="Resources\git-extensions-logo-final_purple.ico" />
+    <None Include="Resources\git-extensions-logo-final_red.ico" />
+    <None Include="Resources\git-extensions-logo-final_yellow.ico" />
+    <None Include="Resources\git-extensions-logo-final_mixed_yellow.ico" />
+    <None Include="Resources\git-extensions-logo-final_mixed.ico" />
+    <None Include="Resources\git-extensions-logo-final_mixed_blue.ico" />
+    <None Include="Resources\git-extensions-logo-final_mixed_green.ico" />
+    <None Include="Resources\git-extensions-logo-final_mixed_lightblue.ico" />
+    <None Include="Resources\git-extensions-logo-final_mixed_purple.ico" />
+    <None Include="Resources\git-extensions-logo-final_mixed_red.ico" />
+    <None Include="Resources\git-extensions-logo-final-128.png" />
+    <Content Include="Translation\German.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Translation\German.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Translation\Traditional Chinese.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1130,6 +1236,7 @@
     </Content>
     <Content Include="Translation\Dutch.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Translation\English.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

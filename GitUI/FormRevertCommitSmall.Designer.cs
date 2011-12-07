@@ -42,36 +42,36 @@
             this.Date.AutoSize = true;
             this.Date.Location = new System.Drawing.Point(30, 78);
             this.Date.Name = "Date";
-            this.Date.Size = new System.Drawing.Size(71, 13);
+            this.Date.Size = new System.Drawing.Size(90, 13);
             this.Date.TabIndex = 9;
-            this.Date.Text = "Commit date:";
+            this.Date.Text = "Commit date: {0}";
             // 
             // Message
             // 
             this.Message.AutoSize = true;
             this.Message.Location = new System.Drawing.Point(30, 102);
             this.Message.Name = "Message";
-            this.Message.Size = new System.Drawing.Size(53, 13);
+            this.Message.Size = new System.Drawing.Size(72, 13);
             this.Message.TabIndex = 8;
-            this.Message.Text = "Message:";
+            this.Message.Text = "Message: {0}";
             // 
             // Author
             // 
             this.Author.AutoSize = true;
             this.Author.Location = new System.Drawing.Point(30, 53);
             this.Author.Name = "Author";
-            this.Author.Size = new System.Drawing.Size(44, 13);
+            this.Author.Size = new System.Drawing.Size(63, 13);
             this.Author.TabIndex = 7;
-            this.Author.Text = "Author:";
+            this.Author.Text = "Author: {0}";
             // 
             // Commit
             // 
             this.Commit.AutoSize = true;
             this.Commit.Location = new System.Drawing.Point(30, 30);
             this.Commit.Name = "Commit";
-            this.Commit.Size = new System.Drawing.Size(46, 13);
+            this.Commit.Size = new System.Drawing.Size(65, 13);
             this.Commit.TabIndex = 6;
-            this.Commit.Text = "Commit:";
+            this.Commit.Text = "Commit: {0}";
             // 
             // BranchInfo
             // 
@@ -84,9 +84,9 @@
             // 
             // Revert
             // 
-            this.Revert.Location = new System.Drawing.Point(453, 135);
+            this.Revert.Location = new System.Drawing.Point(425, 135);
             this.Revert.Name = "Revert";
-            this.Revert.Size = new System.Drawing.Size(109, 25);
+            this.Revert.Size = new System.Drawing.Size(137, 25);
             this.Revert.TabIndex = 10;
             this.Revert.Text = "Revert this commit";
             this.Revert.UseVisualStyleBackColor = true;

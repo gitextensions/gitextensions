@@ -3,11 +3,34 @@ using System.IO;
 using System.Net.Mail;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormFormatPatch : GitExtensionsForm
     {
+        private readonly TranslationString _currentBranchText = new TranslationString("Current branch:");
+        private readonly TranslationString _noOutputPathEnteredText = 
+            new TranslationString("You need to enter an output path.");
+        private readonly TranslationString _noEmailEnteredText = 
+            new TranslationString("You need to enter an email address.");
+        private readonly TranslationString _noSubjectEnteredText = 
+            new TranslationString("You need to enter a mail subject.");
+        private readonly TranslationString _wrongSmtpSettingsText = 
+            new TranslationString("You need to enter a valid smtp in the settings dialog.");
+        private readonly TranslationString _twoRevisionsNeededText =
+            new TranslationString("You need to select two revisions");
+        private readonly TranslationString _twoRevisionsNeededCaption =
+            new TranslationString("Patch error");
+        private readonly TranslationString _sendMailResult =
+            new TranslationString("\n\nSend to:");
+        private readonly TranslationString _sendMailResultFailed =
+            new TranslationString("\n\nFailed to send mail.");
+        private readonly TranslationString _patchResultCaption =
+            new TranslationString("Patch result");
+        private readonly TranslationString _noGitMailConfigured =
+            new TranslationString("There is no email address configured in the settings dialog.");
+
         public FormFormatPatch()
         {
             InitializeComponent(); Translate();
@@ -16,15 +39,15 @@ namespace GitUI
         private void Browse_Click(object sender, EventArgs e)
         {
             var dialog = new FolderBrowserDialog();
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog(this) == DialogResult.OK)
                 OutputPath.Text = dialog.SelectedPath;
         }
 
         private void FormFormatPath_Load(object sender, EventArgs e)
         {
             OutputPath.Text = Settings.LastFormatPatchDir;
-            string selectedHead = GitCommandHelpers.GetSelectedBranch();
-            SelectedBranch.Text = "Current branch: " + selectedHead;
+            string selectedHead = Settings.Module.GetSelectedBranch();
+            SelectedBranch.Text = _currentBranchText.Text + " " + selectedHead;
 
             SaveToDir_CheckedChanged(null, null);
             OutputPath.TextChanged += OutputPath_TextChanged;
@@ -41,25 +64,25 @@ namespace GitUI
         {
             if (SaveToDir.Checked && string.IsNullOrEmpty(OutputPath.Text))
             {
-                MessageBox.Show("You need to enter an output path.");
+                MessageBox.Show(this, _noOutputPathEnteredText.Text);
                 return;
             }
 
             if (!SaveToDir.Checked && string.IsNullOrEmpty(MailAddress.Text))
             {
-                MessageBox.Show("You need to enter an email address.");
+                MessageBox.Show(this, _noEmailEnteredText.Text);
                 return;
             }
 
             if (!SaveToDir.Checked && string.IsNullOrEmpty(MailSubject.Text))
             {
-                MessageBox.Show("You need to enter a mail subject.");
+                MessageBox.Show(this, _noSubjectEnteredText.Text);
                 return;
             }
 
             if (!SaveToDir.Checked && string.IsNullOrEmpty(Settings.Smtp))
             {
-                MessageBox.Show("You need to enter a valid smtp in the settings dialog.");
+                MessageBox.Show(this, _wrongSmtpSettingsText.Text);
                 return;
             }
 
@@ -67,7 +90,7 @@ namespace GitUI
 
             if (!SaveToDir.Checked)
             {
-                savePatchesToDir = Settings.WorkingDirGitDir() + "\\PatchesToMail";
+                savePatchesToDir = Settings.Module.WorkingDirGitDir() + "\\PatchesToMail";
                 if (Directory.Exists(savePatchesToDir))
                 {
                     foreach (string file in Directory.GetFiles(savePatchesToDir, "*.patch"))
@@ -83,47 +106,49 @@ namespace GitUI
             string rev2 = "";
             string result = "";
 
-            if (RevisionGrid.GetRevisions().Count > 0)
+            var revisions = RevisionGrid.GetSelectedRevisions();
+            if (revisions.Count > 0)
             {
-                if (RevisionGrid.GetRevisions().Count == 1)
+                if (revisions.Count == 1)
                 {
-                    rev1 = RevisionGrid.GetRevisions()[0].ParentGuids[0];
-                    rev2 = RevisionGrid.GetRevisions()[0].Guid;
-                    result = GitCommandHelpers.FormatPatch(rev1, rev2, savePatchesToDir);
+                    var parents = revisions[0].ParentGuids;
+                    rev1 = parents.Length > 0 ? parents[0] : "";
+                    rev2 = revisions[0].Guid;
+                    result = Settings.Module.FormatPatch(rev1, rev2, savePatchesToDir);
                 }
-
-                if (RevisionGrid.GetRevisions().Count == 2)
+                else if (revisions.Count == 2)
                 {
-                    rev1 = RevisionGrid.GetRevisions()[0].ParentGuids[0];
-                    rev2 = RevisionGrid.GetRevisions()[1].Guid;
-                    result = GitCommandHelpers.FormatPatch(rev1, rev2, savePatchesToDir);
+                    var parents = revisions[0].ParentGuids;
+                    rev1 = parents.Length > 0 ? parents[0] : "";
+                    rev2 = revisions[1].Guid;
+                    result = Settings.Module.FormatPatch(rev1, rev2, savePatchesToDir);
                 }
-
-                if (RevisionGrid.GetRevisions().Count > 2)
+                else if (revisions.Count > 2)
                 {
                     int n = 0;
-                    foreach (GitRevision revision in RevisionGrid.GetRevisions())
+                    foreach (GitRevision revision in revisions)
                     {
                         n++;
-                        rev1 = revision.ParentGuids[0];
+                        var parents = revision.ParentGuids;
+                        rev1 = parents.Length > 0 ? parents[0] : "";
                         rev2 = revision.Guid;
-                        result += GitCommandHelpers.FormatPatch(rev1, rev2, savePatchesToDir, n);
+                        result += Settings.Module.FormatPatch(rev1, rev2, savePatchesToDir, n);
                     }
                 }
             }
             else
                 if (string.IsNullOrEmpty(rev1) || string.IsNullOrEmpty(rev2))
                 {
-                    MessageBox.Show("You need to select 2 revisions", "Patch error");
+                    MessageBox.Show(this, _twoRevisionsNeededText.Text, _twoRevisionsNeededCaption.Text);
                     return;
                 }
 
             if (!SaveToDir.Checked)
             {
                 if (SendMail(savePatchesToDir))
-                    result += "\n\nSend to: " + MailAddress.Text;
+                    result += _sendMailResult.Text + " " + MailAddress.Text;
                 else
-                    result += "\n\nFailed to send mail.";
+                    result += _sendMailResultFailed.Text;
 
 
                 //Clean up
@@ -134,7 +159,7 @@ namespace GitUI
                 }
             }
 
-            MessageBox.Show(result, "Patch result");
+            MessageBox.Show(this, result, _patchResultCaption.Text);
             Close();
         }
 
@@ -142,13 +167,13 @@ namespace GitUI
         {
             try
             {
-                string from = GitCommandHelpers.GetSetting("user.email");
+                string from = Settings.Module.GetSetting("user.email");
 
                 if (string.IsNullOrEmpty(from))
-                    from = GitCommandHelpers.GetGlobalSetting("user.email");
+                    from = Settings.Module.GetGlobalSetting("user.email");
 
                 if (string.IsNullOrEmpty(from))
-                    MessageBox.Show("There is no email address configured in the settings dialog.");
+                    MessageBox.Show(this, _noGitMailConfigured.Text);
 
                 string to = MailAddress.Text;
 
@@ -166,7 +191,7 @@ namespace GitUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(this, ex.Message);
                 return false;
             }
             return true;

@@ -18,6 +18,7 @@ namespace GitCommands
         public event EventHandler Exited;
         public event EventHandler Error;
         public event EventHandler Updated;
+        public event EventHandler BeginUpdate;
         public int RevisionCount { get; set; }
 
         public class RevisionGraphUpdatedEventArgs : EventArgs
@@ -94,6 +95,7 @@ namespace GitCommands
         public string LogParam = "HEAD --all";//--branches --remotes --tags";
         public string BranchFilter = String.Empty;
         public RevisionGraphInMemFilter InMemFilter = null;
+        private string selectedBranchName;
 
         public void Execute()
         {
@@ -118,8 +120,7 @@ namespace GitCommands
             try
             {
                 RevisionCount = 0;
-
-                heads = GitCommandHelpers.GetHeads(true);
+                heads = GetHeads();
 
                 string formatString =
                     /* <COMMIT>       */ COMMIT_BEGIN + "%n" +
@@ -130,7 +131,7 @@ namespace GitCommands
                     formatString +=
                         /* Tree           */ "%T%n" +
                         /* Author Name    */ "%aN%n" +
-                        /* Author Email    */ "%aE%n" +                            
+                        /* Author Email    */ "%aE%n" +
                         /* Author Date    */ "%ai%n" +
                         /* Committer Name */ "%cN%n" +
                         /* Committer Date */ "%ci%n" +
@@ -160,6 +161,9 @@ namespace GitCommands
                 gitGetGraphCommand.StreamOutput = true;
                 gitGetGraphCommand.CollectOutput = false;
                 Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arguments);
+
+                if (BeginUpdate != null)
+                    BeginUpdate(this, EventArgs.Empty);
 
                 string line;
                 do
@@ -192,6 +196,29 @@ namespace GitCommands
                 Exited(this, EventArgs.Empty);
         }
 
+        private List<GitHead> GetHeads()
+        {
+            var result = Settings.Module.GetHeads(true);
+            bool validWorkingDir = Settings.Module.ValidWorkingDir();
+            selectedBranchName = validWorkingDir ? Settings.Module.GetSelectedBranch() : string.Empty;
+            GitHead selectedHead = result.Find(head => head.Name == selectedBranchName);
+
+            if (selectedHead != null)
+            {
+                selectedHead.Selected = true;
+
+                GitHead selectedHeadMergeSource =
+                    result.Find(head => head.IsRemote
+                                        && selectedHead.TrackingRemote == head.Remote
+                                        && selectedHead.MergeWith == head.LocalName);
+
+                if (selectedHeadMergeSource != null)
+                    selectedHeadMergeSource.SelectedHeadMergeSource = true;
+            }
+
+            return result;
+        }
+
         void finishRevision()
         {
             if (revision == null || revision.Guid.Trim(hexChars).Length == 0)
@@ -210,9 +237,7 @@ namespace GitCommands
         void dataReceived(string line)
         {
             if (line == null)
-            {
                 return;
-            }
 
             if (line == COMMIT_BEGIN)
             {
@@ -228,7 +253,7 @@ namespace GitCommands
                     // Sanity check
                     if (line == COMMIT_BEGIN)
                     {
-                        revision = new GitRevision();
+                        revision = new GitRevision(null);
                     }
                     else
                     {
@@ -292,12 +317,9 @@ namespace GitCommands
                     //We cannot let git recode the message to Settings.Encoding which is
                     //needed to allow the "git log" to print the filename in Settings.Encoding
                     if (logoutputEncoding == null)
-                        logoutputEncoding = GitCommandHelpers.GetLogoutputEncoding();
+                        logoutputEncoding = Settings.Module.GetLogoutputEncoding();
 
-                    if (!logoutputEncoding.Equals(Settings.Encoding))
-                        revision.Message = logoutputEncoding.GetString(Settings.Encoding.GetBytes(line));
-                    else
-                        revision.Message = line;
+                    revision.Message = logoutputEncoding.Equals(Settings.Encoding) ? line : logoutputEncoding.GetString(Settings.Encoding.GetBytes(line));
                     break;
 
                 case ReadStep.FileName:

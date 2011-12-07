@@ -83,6 +83,7 @@ namespace GitUIPluginInterfaces
         bool StartCheckoutRevisionDialog();
         bool StartCherryPickDialog();
         bool StartCloneDialog();
+        bool StartCloneDialog(string url);
         bool StartCommandLineProcessDialog(string command, string arguments);
         bool StartCommitDialog();
         bool StartCompareRevisionsDialog();

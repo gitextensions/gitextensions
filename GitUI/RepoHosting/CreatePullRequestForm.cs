@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitUIPluginInterfaces.RepositoryHosts;
 using ResourceManager.Translation;
+using GitCommands;
 
 namespace GitUI.RepoHosting
 {
@@ -15,6 +16,7 @@ namespace GitUI.RepoHosting
         private readonly TranslationString _strYouMustSpecifyATitleAndABody = new TranslationString("You must specify a title and a body.");
         private readonly TranslationString _strPullRequest = new TranslationString("Pull request");
         private readonly TranslationString _strFailedToCreatePullRequest = new TranslationString("Failed to create pull request.\r\n");
+        private readonly TranslationString _strPleaseCloneGitHubRep = new TranslationString("Please clone GitHub repository before pull request.");
         private readonly TranslationString _strDone = new TranslationString("Done");
         private readonly TranslationString _strError = new TranslationString("Error");
         #endregion
@@ -24,12 +26,14 @@ namespace GitUI.RepoHosting
         private string _chooseBranch;
         private readonly string _chooseRemote;
         private List<IHostedRemote> _hostedRemotes;
+        private string _currentBranch;
 
         public CreatePullRequestForm(IRepositoryHostPlugin repoHost, string chooseRemote, string chooseBranch)
         {
             _repoHost = repoHost;
             _chooseBranch = chooseBranch;
             _chooseRemote = chooseRemote;
+            _currentBranch = "";
             InitializeComponent();
             Translate();
         }
@@ -44,17 +48,24 @@ namespace GitUI.RepoHosting
             _createBtn.Enabled = false;
             _yourBranchesCB.Text = _strLoading.Text;
             _hostedRemotes = _repoHost.GetHostedRemotesForCurrentWorkingDirRepo();
-            LoadRemotes();
+            IHostedRemote[] foreignHostedRemotes = _hostedRemotes.Where(r => !r.IsOwnedByMe).ToArray();
+            if (foreignHostedRemotes.Length == 0)
+            {
+                MessageBox.Show(this, _strFailedToCreatePullRequest.Text + _strPleaseCloneGitHubRep.Text, "", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Close();
+                return;
+            }
+
+            _currentBranch = Settings.Module.ValidWorkingDir() ? Settings.Module.GetSelectedBranch() : "";
+            LoadRemotes(foreignHostedRemotes);
             LoadMyBranches();
         }
 
-        private void LoadRemotes()
+        private void LoadRemotes(IHostedRemote[] foreignHostedRemotes)
         {
-            var foreignHostedRemotes = _hostedRemotes.Where(r => !r.IsOwnedByMe);
-
             _pullReqTargetsCB.Items.Clear();
-            foreach (var pra in foreignHostedRemotes)
-                _pullReqTargetsCB.Items.Add(pra);
+            _pullReqTargetsCB.Items.AddRange(foreignHostedRemotes);
 
             if (_chooseRemote != null)
             {
@@ -85,11 +96,17 @@ namespace GitUI.RepoHosting
                 () => _currentHostedRemote.GetHostedRepository().Branches,
                 branches =>
                 {
-                    foreach (var branch in branches)
-                        _remoteBranchesCB.Items.Add(branch.Name);
+                    branches.Sort((a, b) => String.Compare(a.Name, b.Name, true));
+                    int selectItem = 0;
+                    for (int i = 0; i < branches.Count; i++)
+                    {
+                        if (branches[i].Name == _currentBranch)
+                            selectItem = i;
+                        _remoteBranchesCB.Items.Add(branches[i].Name);
+                    }
                     _createBtn.Enabled = true;
                     if (branches.Count > 0)
-                        _remoteBranchesCB.SelectedIndex = 0;
+                        _remoteBranchesCB.SelectedIndex = selectItem;
                 },
                 ex => { throw ex; });
         }
@@ -106,11 +123,17 @@ namespace GitUI.RepoHosting
                 () => myRemote.GetHostedRepository().Branches,
                 branches =>
                 {
-                    foreach (var branch in branches)
-                        _yourBranchesCB.Items.Add(branch.Name);
+                    branches.Sort((a, b) => String.Compare(a.Name, b.Name, true));
+                    int selectItem = 0;
+                    for (int i = 0; i < branches.Count; i++)
+                    {
+                        if (branches[i].Name == _currentBranch)
+                            selectItem = i;
+                        _yourBranchesCB.Items.Add(branches[i].Name);
+                    }
                     _createBtn.Enabled = true;
                     if (branches.Count > 0)
-                        _yourBranchesCB.SelectedIndex = 0;
+                        _yourBranchesCB.SelectedIndex = selectItem;
                 },
                 ex => { throw ex; });
         }

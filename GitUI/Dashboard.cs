@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -40,7 +41,13 @@ namespace GitUI
 
             Bitmap image = Lemmings.GetPictureBoxImage(DateTime.Now);
             if (image != null)
+            {
                 pictureBox1.Image = image;
+            }
+
+            // Do this at runtime, because it is difficult to keep consistent at design time.
+            pictureBox1.BringToFront();
+            pictureBox1.Location = new Point(this.Width - 145, this.Height - 145);
 
             Load += Dashboard_Load;
         }
@@ -68,7 +75,7 @@ namespace GitUI
             {
                 IRepositoryHostPlugin gitHoster = el;
                 var di = new DashboardItem(Resources._46, string.Format(cloneFork.Text, el.Description));
-                di.Click += (repoSender, eventArgs) => GitUICommands.Instance.StartCloneForkFromHoster(gitHoster);
+                di.Click += (repoSender, eventArgs) => GitUICommands.Instance.StartCloneForkFromHoster(this, gitHoster);
                 CommonActions.AddItem(di);
             }
 
@@ -99,21 +106,13 @@ namespace GitUI
                 WorkingDirChanged(this, null);
         }
 
-        private int AddDashboardEntry(int y, RepositoryCategory entry)
+        private void AddDashboardEntry(RepositoryCategory entry)
         {
-            var dashboardCategory = new DashboardCategory(entry.Description, entry)
-                                        {
-                                            Location = new Point(0, y),
-                                            Width = splitContainer5.Panel2.Width
-                                        };
-            splitContainer5.Panel2.Controls.Add(dashboardCategory);
-            dashboardCategory.BringToFront();
-            y += dashboardCategory.Height;
+            var dashboardCategory = new DashboardCategory(entry.Description, entry);
+            this.groupLayoutPanel.Controls.Add(dashboardCategory);
 
             dashboardCategory.DashboardItemClick += dashboardItem_Click;
             dashboardCategory.DashboardCategoryChanged += dashboardCategory_DashboardCategoryChanged;
-
-            return y;
         }
 
         private void dashboardCategory_DashboardCategoryChanged(object sender, EventArgs e)
@@ -133,39 +132,40 @@ namespace GitUI
             {
                 return;
             }
-            //Make sure the dashboard is only initialized once
+
+            // Make sure the dashboard is only initialized once
             if (!initialized)
             {
-                //Remove favourites
-                for (int i = splitContainer5.Panel2.Controls.Count; i > 0; i--)
+                // Remove favorites
+                var categories = (from DashboardCategory i in this.groupLayoutPanel.Controls
+                                  select i).ToList();
+                this.groupLayoutPanel.Controls.Clear();
+                foreach (var category in categories)
                 {
-                    DashboardCategory dashboarCategory = splitContainer5.Panel2.Controls[i - 1] as DashboardCategory;
-                    if (dashboarCategory != null)
-                    {
-                        dashboarCategory.DashboardCategoryChanged -= dashboardCategory_DashboardCategoryChanged;
-                        dashboarCategory.DashboardItemClick -= dashboardItem_Click;
-                        dashboarCategory.Clear();
-                        splitContainer5.Panel2.Controls.RemoveAt(i - 1);
-                    }
+                    category.DashboardCategoryChanged -= dashboardCategory_DashboardCategoryChanged;
+                    category.DashboardItemClick -= dashboardItem_Click;
+                    category.Clear();
                 }
 
-                //Show favourites
-                Repositories.RepositoryCategories.Aggregate(0, AddDashboardEntry);
-
-                splitContainer7.SplitterDistance = splitContainer7.Height - (DonateCategory.Height + 25);
-
-                initialized = true;
-                splitContainer7.SplitterDistance = splitContainer7.Height - (DonateCategory.Height + 25);
+                // Show favorites
+                foreach (var category in Repositories.RepositoryCategories)
+                {
+                    AddDashboardEntry(category);
+                }
 
                 initialized = true;
             }
+
+            splitContainer7.Panel1MinSize = 1;
+            splitContainer7.Panel2MinSize = 1;
+            splitContainer7.SplitterDistance = Math.Max(2, splitContainer7.Height - (DonateCategory.Height + 25));
 
             RecentRepositories.Clear();
 
             RepositoryCategory filteredRecentRepositoryHistory = new RepositoryCategory();
             filteredRecentRepositoryHistory.Description = Repositories.RepositoryHistory.Description;
             filteredRecentRepositoryHistory.CategoryType = Repositories.RepositoryHistory.CategoryType;
-            
+
             foreach (Repository repository in Repositories.RepositoryHistory.Repositories)
             {
                 if (!Repositories.RepositoryCategories.Any(c => c.Repositories.Any(r => r.Path != null && r.Path.Equals(repository.Path, StringComparison.CurrentCultureIgnoreCase))))
@@ -177,11 +177,13 @@ namespace GitUI
 
             RecentRepositories.RepositoryCategory = filteredRecentRepositoryHistory;
 
+            pictureBox1.BringToFront();
+
         }
 
-        private static void TranslateItem_Click(object sender, EventArgs e)
+        private void TranslateItem_Click(object sender, EventArgs e)
         {
-            new FormTranslate().ShowDialog();
+            new FormTranslate().ShowDialog(this);
         }
 
         private static void GitHubItem_Click(object sender, EventArgs e)
@@ -208,47 +210,51 @@ namespace GitUI
             }
             else
             {
-                Settings.WorkingDir = label.Path;
-
-                if (!Settings.ValidWorkingDir())
-                {
-                    DialogResult dialogResult = MessageBox.Show(directoryIsNotAValidRepository.Text, directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
-                    if (dialogResult == DialogResult.Cancel)
-                    {
-                        Settings.WorkingDir = string.Empty;
-                        return;
-                    }
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        Settings.WorkingDir = string.Empty;
-                        Repositories.RepositoryHistory.RemoveRecentRepository(label.Path);
-                        Refresh();
-                        return;
-                    }
-                }
-
-                Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
-                OnWorkingDirChanged();
+                OpenPath(label.Path);
             }
         }
 
+        private void OpenPath(string path)
+        {
+            Settings.WorkingDir = path;
+
+            if (!Settings.Module.ValidWorkingDir())
+            {
+                DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepository.Text, directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                if (dialogResult == DialogResult.Cancel)
+                {
+                    Settings.WorkingDir = string.Empty;
+                    return;
+                }
+                if (dialogResult == DialogResult.Yes)
+                {
+                    Settings.WorkingDir = string.Empty;
+                    Repositories.RepositoryHistory.RemoveRecentRepository(path);
+                    Refresh();
+                    return;
+                }
+            }
+
+            Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
+            OnWorkingDirChanged();
+        }
 
         private void openItem_Click(object sender, EventArgs e)
         {
             var open = new Open();
-            open.ShowDialog();
+            open.ShowDialog(this);
             OnWorkingDirChanged();
         }
 
         private void cloneItem_Click(object sender, EventArgs e)
         {
-            if (GitUICommands.Instance.StartCloneDialog())
+            if (GitUICommands.Instance.StartCloneDialog(this))
                 OnWorkingDirChanged();
         }
 
         private void createItem_Click(object sender, EventArgs e)
         {
-            GitUICommands.Instance.StartInitializeDialog(Settings.WorkingDir);
+            GitUICommands.Instance.StartInitializeDialog(this, Settings.WorkingDir);
 
             OnWorkingDirChanged();
         }
@@ -259,15 +265,70 @@ namespace GitUI
                 @"https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=WAL2SSDV8ND54&lc=US&item_name=GitExtensions&no_note=1&no_shipping=1&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted");
         }
 
-        private void splitContainer5_SplitterMoved(object sender, SplitterEventArgs e)
-        {
-            ShowRecentRepositories();
-        }
-
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            new FormDashboardEditor().ShowDialog();
+            new FormDashboardEditor().ShowDialog(this);
             Refresh();
+        }
+
+        private void groupLayoutPanel_DragDrop(object sender, DragEventArgs e)
+        {
+            var fileNameArray = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (fileNameArray != null)
+            {
+                if (fileNameArray.Length != 1)
+                    return;
+                
+                string dir = fileNameArray[0];
+                if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
+                {
+                    OpenPath(dir);
+                }
+                return;
+            }
+            var text = e.Data.GetData(DataFormats.UnicodeText) as string;
+            if (!string.IsNullOrEmpty(text))
+            {
+                var lines = text.Split('\n');
+                if (lines.Length != 1)
+                    return;
+                string url = lines[0];
+                if (!string.IsNullOrEmpty(url))
+                {
+                    if (GitUICommands.Instance.StartCloneDialog(this, url))
+                        OnWorkingDirChanged();
+                }
+            }
+        }
+
+        private void groupLayoutPanel_DragEnter(object sender, DragEventArgs e)
+        {
+            var fileNameArray = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (fileNameArray != null)
+            {
+                if (fileNameArray.Length != 1)
+                    return;
+                string dir = fileNameArray[0];
+                if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
+                {
+                    //Allow drop (copy, not move) folders
+                    e.Effect = DragDropEffects.Copy;
+                }
+                return;
+            }
+            var text = e.Data.GetData(DataFormats.UnicodeText) as string;
+            if (!string.IsNullOrEmpty(text))
+            {
+                var lines = text.Split('\n');
+                if (lines.Length != 1)
+                    return;
+                string url = lines[0];
+                if (!string.IsNullOrEmpty(url))
+                {
+                    //Allow drop (copy, not move) folders
+                    e.Effect = DragDropEffects.Copy;
+                }
+            }
         }
     }
 }

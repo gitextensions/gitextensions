@@ -28,11 +28,6 @@ namespace GitUI
         /// </summary>
         private const int MaxUpdatePeriod = 5 * 60 * 1000;
 
-        /// <summary>
-        /// Paths to be ignored on filesystem changes watching.
-        /// </summary>
-        private static readonly string[] IgnoredPaths = new[] { @"\.git", @"\.git\index.lock" };
-
         private GitCommandsInstance gitGetUnstagedCommand = new GitCommandsInstance();
         private readonly SynchronizationContext syncContext;
         private readonly FileSystemWatcher watcher = new FileSystemWatcher();
@@ -97,7 +92,7 @@ namespace GitUI
             catch { }
         }
 
-        // destructor shouldn't be used because it's not predictible when
+        // destructor shouldn't be used because it's not predictable when
         // it's going to be called by the GC!
         private void watcher_Error(object sender, ErrorEventArgs e)
         {
@@ -106,7 +101,22 @@ namespace GitUI
 
         private void watcher_Changed(object sender, FileSystemEventArgs e)
         {
-            var isGitSelfChange = IgnoredPaths.Any(path => e.FullPath.EndsWith(path));
+            String[] dirs = e.FullPath.Split('\\');
+            bool isGitSelfChange = false;
+            for (int  i = 0; i < dirs.Length; i++)
+                if (dirs[i].Equals(".git", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (i + 1 == dirs.Length) // .git directory changed
+                        isGitSelfChange = true;
+                    else if (i + 3 == dirs.Length) // submodule root directory changed
+                    {
+                        if (dirs[i + 1].Equals("modules", StringComparison.OrdinalIgnoreCase))
+                            isGitSelfChange = true;
+                    }
+                    else if (dirs[dirs.Length - 1].Equals("index.lock", StringComparison.OrdinalIgnoreCase)) // index.lock changed
+                        isGitSelfChange = true;
+                    break;
+                }
             if (isGitSelfChange)
                 return;
 
@@ -149,21 +159,24 @@ namespace GitUI
             if (CurrentStatus != WorkingStatus.Started)
                 return;
 
-            List<GitItemStatus> unstaged = GitCommandHelpers.GetAllChangedFilesFromString(gitGetUnstagedCommand.Output.ToString());
-            List<GitItemStatus> staged = GitCommandHelpers.GetStagedFiles();
+            List<GitItemStatus> allChangedFiles =
+                GitCommandHelpers.GetAllChangedFilesFromString(gitGetUnstagedCommand.Output.ToString());
 
-            if (staged.Count == 0 && unstaged.Count == 0)
+            var stagedCount = allChangedFiles.FindAll(status => status.IsStaged).Count;
+            var unstagedCount = allChangedFiles.FindAll(status => !status.IsStaged).Count;
+
+            if (stagedCount == 0 && unstagedCount == 0)
             {
                 Image = ICON_CLEAN;
             }
             else
             {
 
-                if (staged.Count == 0)
+                if (stagedCount == 0)
                 {
                     Image = ICON_DIRTY;
                 }
-                else if (unstaged.Count == 0)
+                else if (unstagedCount == 0)
                 {
                     Image = ICON_STAGED;
                 }
@@ -173,7 +186,7 @@ namespace GitUI
                 }
             }
 
-            Text = string.Format("{0} changes", staged.Count + unstaged.Count);
+            Text = string.Format("{0} changes", allChangedFiles.Count);
         }
 
         private void ScheduleNextRegularUpdate()
@@ -196,6 +209,12 @@ namespace GitUI
         {
             nextUpdateTime = 0;
             Update();
+        }
+
+        public void UpdateImmediate()
+        {
+            if (currentStatus == WorkingStatus.Started)
+                ScheduleImmediateUpdate();
         }
 
         private WorkingStatus CurrentStatus

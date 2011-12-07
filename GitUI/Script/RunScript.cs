@@ -64,7 +64,9 @@ namespace GitUI.Script
                     "{cAuthor}",
                     "{cCommitter}",
                     "{cAuthorDate}",
-                    "{cCommitDate}"
+                    "{cCommitDate}",
+                    "{cDefaultRemote}",
+                    "{UserInput}"
                 };
 
             GitRevision selectedRevision = null;
@@ -88,7 +90,7 @@ namespace GitUI.Script
                     {
                         if (RevisionGrid == null)
                         {
-                            MessageBox.Show("Option " + option + " is only supported when started from revision grid.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show(string.Format("Option {0} is only supported when started from revision grid.", option), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
 
@@ -119,8 +121,8 @@ namespace GitUI.Script
                         if (RevisionGrid == null)
                         {
                             heads = new List<GitHead>();
-                            string currentRevisionGuid = GitCommandHelpers.GetCurrentCheckout();
-                            foreach (GitHead head in GitCommandHelpers.GetHeads(true, true))
+                            string currentRevisionGuid = Settings.Module.GetCurrentCheckout();
+                            foreach (GitHead head in Settings.Module.GetHeads(true, true))
                             {
                                 if (head.Guid == currentRevisionGuid)
                                     heads.Add(head);
@@ -269,6 +271,20 @@ namespace GitUI.Script
                             break;
                         case "{cCommitDate}":
                             argument = argument.Replace(option, currentRevision.CommitDate.ToString());
+                            break;
+                        case "{cDefaultRemote}":
+                            if (currentBranches.Count == 1)
+                                argument = argument.Replace(option, Settings.Module.GetSetting(string.Format("branch.{0}.remote", currentBranches[0].Name)));
+                            else if (currentBranches.Count != 0)
+                                argument = argument.Replace(option, Settings.Module.GetSetting(string.Format("branch.{0}.remote", 
+                                                            askToSpecify(currentBranches, "Current Revision Branch"))));
+                            else
+                                argument = argument.Replace(option, "");
+                            break;
+                        case "{UserInput}":
+                            SimplePrompt Prompt = new SimplePrompt();
+                            Prompt.ShowDialog();
+                            argument = argument.Replace(option, Prompt.UserInput);
                             break;
                         default:
                             break;

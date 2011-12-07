@@ -24,7 +24,7 @@
       Installed OR NETFRAMEWORK35
     </Condition>
    
-    <Icon Id="cow_head.ico" SourceFile="../cow-head.ico"/>
+    <Icon Id="gitextensions.ico" SourceFile="../bin/logo/git-extensions-logo-final.ico"/>
 
     <?include AddRemove.wxi?>
     <?include EnableUpgrades.wxi?>
@@ -69,8 +69,8 @@
     <?endforeach?>
 
     <DirectoryRef Id="INSTALLDIR">
-      <Component Id="cow_head.ico" Guid="*">
-        <File Source="..\cow-head.ico"/>
+      <Component Id="gitextensions.ico" Guid="*">
+        <File Source="..\bin\logo\git-extensions-logo-final.ico"/>
       </Component>
       <Component Id="gitex.cmd" Guid="*">
         <File Source="..\bin\gitex.cmd"/>
@@ -80,7 +80,7 @@
       </Component>
       <Component Id="GitExtensions.exe" Guid="*">
         <File Source="..\GitExtensions\bin\Release\GitExtensions.exe"/>
-        <ProgId Id="GitExtensions" Description="Git Extentions Shortcut" Icon="cow_head.ico" Advertise="yes">
+        <ProgId Id="GitExtensions" Description="Git Extentions Shortcut" Icon="gitextensions.ico" Advertise="yes">
           <Extension Id="gitext">
             <Verb Id="open" Command="Open Git Extentions Repository" Argument="openrepo &quot;%1&quot;" />
           </Extension>
@@ -126,7 +126,7 @@
       <Component Id="GitExtensionsShellEx32.dll" Guid="*">
         <File
           Name="GitExtensionsShellEx32.dll"
-          Source="..\SimpleExt\ReleaseMinDependency\GitExtensionsShellEx.dll"
+          Source="..\SimpleExt\Release\GitExtensionsShellEx.dll"
           KeyPath="yes"/>
         
         <?foreach ShellExFileName in GitExtensionsShellEx32.dll?>
@@ -138,7 +138,7 @@
         <Condition>VersionNT64</Condition>
         <File
           Name="GitExtensionsShellEx64.dll"
-          Source="..\SimpleExt\ReleaseMinDependency64\GitExtensionsShellEx.dll"
+          Source="..\SimpleExt\Release-x64\GitExtensionsShellEx64.dll"
           KeyPath="yes"/>
 
         <?foreach ShellExFileName in GitExtensionsShellEx64.dll?>
@@ -182,20 +182,20 @@
     </DirectoryRef>
 
     <DirectoryRef Id="IconsDir">
-      <Component Id="CowHeadBlue.ico" Guid="*">
-        <File Source="..\GitUI\Icons\cow-head-blue.ico"/>
+      <Component Id="Blue.ico" Guid="*">
+        <File Source="..\bin\logo\git-extensions-logo-final_mixed_blue.ico"/>
       </Component>
-      <Component Id="CowHeadGreen.ico" Guid="*">
-        <File Source="..\GitUI\Icons\cow-head-green.ico"/>
+      <Component Id="Green.ico" Guid="*">
+        <File Source="..\bin\logo\git-extensions-logo-final_mixed_green.ico"/>
       </Component>
-      <Component Id="CowHeadPurple.ico" Guid="*">
-        <File Source="..\GitUI\Icons\cow-head-purple.ico"/>
+      <Component Id="Purple.ico" Guid="*">
+        <File Source="..\bin\logo\git-extensions-logo-final_mixed_purple.ico"/>
       </Component>
-      <Component Id="CowHeadRed.ico" Guid="*">
-        <File Source="..\GitUI\Icons\cow-head-red.ico"/>
+      <Component Id="Red.ico" Guid="*">
+        <File Source="..\bin\logo\git-extensions-logo-final_mixed_red.ico"/>
       </Component>
-      <Component Id="CowHeadYellow.ico" Guid="*">
-        <File Source="..\GitUI\Icons\cow-head-yellow.ico"/>
+      <Component Id="Yellow.ico" Guid="*">
+        <File Source="..\bin\logo\git-extensions-logo-final_mixed_yellow.ico"/>
       </Component>
     </DirectoryRef>
 
@@ -265,6 +265,12 @@
       </Component>
       <Component Id="Dutch.gif" Guid="*">
         <File Source="..\GitUI\Translation\Dutch.gif"/>
+      </Component>
+      <Component Id="German.xml" Guid="*">
+        <File Source="..\GitUI\Translation\German.xml"/>
+      </Component>
+      <Component Id="German.gif" Guid="*">
+        <File Source="..\GitUI\Translation\German.gif"/>
       </Component>
       <Component Id="SimplifiedChinese.xml" Guid="*">
         <File Source="..\GitUI\Translation\Simplified Chinese.xml"/>
@@ -368,7 +374,7 @@
           Id="GitExtensions.startmenu"
           Name="$(var.ProductName)"
           Description="$(var.ProductName)"
-          Icon="cow_head.ico"
+          Icon="gitextensions.ico"
           Target="[INSTALLDIR]GitExtensions.exe"
           WorkingDirectory="INSTALLDIR"/>
         <RegistryValue
@@ -402,7 +408,7 @@
           Id="GitExtensions.desktop"
           Name="$(var.ProductName)"
           Description="$(var.ProductName)"
-          Icon="cow_head.ico"
+          Icon="gitextensions.ico"
           Target="[INSTALLDIR]GitExtensions.exe"
           WorkingDirectory="INSTALLDIR"/>
         <RegistryValue
@@ -416,7 +422,7 @@
     </DirectoryRef>
 
     <Feature Id="GitExtensions" Title="Git Extensions" Level="1" Display="expand">
-      <ComponentRef Id="cow_head.ico"/>
+      <ComponentRef Id="gitextensions.ico"/>
       <ComponentRef Id="gitex.cmd"/>
       <ComponentRef Id="GitExtensionsUserManual.pdf"/>
       <ComponentRef Id="GitExtensions.exe"/>
@@ -477,11 +483,11 @@
       </Feature>
 
       <Feature Id="Icons" Title="Extra application icons" Level="2">
-        <ComponentRef Id="CowHeadBlue.ico"/>
-        <ComponentRef Id="CowHeadGreen.ico"/>
-        <ComponentRef Id="CowHeadPurple.ico"/>
-        <ComponentRef Id="CowHeadRed.ico"/>
-        <ComponentRef Id="CowHeadYellow.ico"/>
+        <ComponentRef Id="Blue.ico"/>
+        <ComponentRef Id="Green.ico"/>
+        <ComponentRef Id="Purple.ico"/>
+        <ComponentRef Id="Red.ico"/>
+        <ComponentRef Id="Yellow.ico"/>
       </Feature>
 
       <Feature Id="DiffScripts" Title="Custom merge scripts" Level="1">
@@ -534,6 +540,10 @@
           <ComponentRef Id="Dutch.xml"/>
           <ComponentRef Id="Dutch.gif"/>
         </Feature>
+        <Feature Id="German" Title="German" Level="1">
+          <ComponentRef Id="German.xml"/>
+          <ComponentRef Id="German.gif"/>
+        </Feature>
         <Feature Id="Japanese" Title="Japanese" Level="1">
           <ComponentRef Id="Japanese.xml"/>
           <ComponentRef Id="Japanese.gif"/>
@@ -576,10 +586,10 @@
     </Feature>
 
     <?if $(var.IncludeRequiredSoftware) = 1 ?>
-    <Binary Id="KDiff" SourceFile="..\Bin\KDiff3Setup_0.9.95-2.exe"/>
+    <Binary Id="KDiff" SourceFile="..\Bin\KDiff3Setup_0.9.96.exe"/>
     <CustomAction Id="KDiff" Impersonate="no" BinaryKey="KDiff" Execute="deferred" ExeCommand="" Return="ignore"/>
 
-    <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.7.6-preview20110708.exe"/>
+    <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.7.7.1-preview20111027.exe"/>
     <CustomAction Id="MsysGit" Impersonate="no" BinaryKey="MsysGit" Execute="deferred" ExeCommand="" Return="ignore"/>
     <InstallExecuteSequence>
       <Custom Action="KDiff" After="InstallFiles"><![CDATA[INSTALLKDIFF3=1]]>

@@ -41,11 +41,11 @@ namespace GitUI
 
             if (LocalBranch.Checked)
             {
-                Branches.DataSource = GitCommandHelpers.GetHeads(false);
+                Branches.DataSource = Settings.Module.GetHeads(false);
             }
             else
             {
-                var heads = GitCommandHelpers.GetHeads(true, true);
+                var heads = Settings.Module.GetHeads(true, true);
 
                 var remoteHeads = new List<GitHead>();
 
@@ -69,7 +69,7 @@ namespace GitUI
                 if (Remotebranch.Checked)
                 {
                     //Get a localbranch name
-                    var remoteName = GitCommandHelpers.GetRemoteName(Branches.Text, GitCommandHelpers.GetRemotes());
+                    var remoteName = GitModule.GetRemoteName(Branches.Text, Settings.Module.GetRemotes(false));
                     var localBranchName = Branches.Text.Substring(remoteName.Length + 1);
 
                     MessageBoxIcon icon = MessageBoxIcon.Question;
@@ -82,7 +82,7 @@ namespace GitUI
                         icon = MessageBoxIcon.Exclamation;
                     }
 
-                    var result = MessageBox.Show(string.Format(trackRemoteBranch.Text, localBranchName), trackRemoteBranchCaption.Text, MessageBoxButtons.YesNoCancel, icon);
+                    var result = MessageBox.Show(this, string.Format(trackRemoteBranch.Text, localBranchName), trackRemoteBranchCaption.Text, MessageBoxButtons.YesNoCancel, icon);
 
                     if (result == DialogResult.Cancel)
                         return;
@@ -95,7 +95,7 @@ namespace GitUI
                     command += " --force";
                 command += " \"" + Branches.Text + "\"";
                 var form = new FormProcess(command);
-                form.ShowDialog();
+                form.ShowDialog(this);
                 if (!form.ErrorOccurred())
                     Close();
             }
@@ -107,7 +107,7 @@ namespace GitUI
 
         private static bool LocalBranchExists(string name)
         {
-            foreach (GitHead head in GitCommandHelpers.GetHeads(false))
+            foreach (GitHead head in Settings.Module.GetHeads(false))
             {
                 if (head.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
                     return true;

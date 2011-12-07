@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
 using System.Xml.Serialization;
 
 namespace ResourceManager.Translation
 {
+    [DebuggerDisplay("{name}")]
     public class TranslationCategory
     {
         public TranslationCategory()
@@ -40,6 +41,18 @@ namespace ResourceManager.Translation
                 throw new InvalidOperationException("Cannot add translationitem without name");
 
             translationItems.Add(translationItem);
+        }
+
+        public void AddTranslationItemIfNotExist(TranslationItem translationItem)
+        {
+            if (string.IsNullOrEmpty(translationItem.Name))
+                throw new InvalidOperationException("Cannot add translationitem without name");
+
+            TranslationItem ti = GetTranslationItem(translationItem.Name, translationItem.Property);
+            if (ti == null)
+                translationItems.Add(translationItem);
+            else
+                Debug.Assert(ti.Value == translationItem.Value);
         }
 
         public bool HasTranslationItem(string name, string property)

@@ -109,7 +109,7 @@ namespace GitUI
             this.MailBody.LanguageOption = RichTextBoxLanguageOptions.UIFonts;
             this.MailBody.Location = new System.Drawing.Point(254, 93);
             this.MailBody.Name = "MailBody";
-            this.MailBody.Size = new System.Drawing.Size(477, 56);
+            this.MailBody.Size = new System.Drawing.Size(452, 56);
             this.MailBody.TabIndex = 13;
             this.MailBody.Text = "";
             // 
@@ -119,7 +119,7 @@ namespace GitUI
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.MailSubject.Location = new System.Drawing.Point(254, 66);
             this.MailSubject.Name = "MailSubject";
-            this.MailSubject.Size = new System.Drawing.Size(477, 21);
+            this.MailSubject.Size = new System.Drawing.Size(452, 21);
             this.MailSubject.TabIndex = 12;
             // 
             // MailAddress
@@ -129,7 +129,7 @@ namespace GitUI
             this.MailAddress.FormattingEnabled = true;
             this.MailAddress.Location = new System.Drawing.Point(254, 38);
             this.MailAddress.Name = "MailAddress";
-            this.MailAddress.Size = new System.Drawing.Size(477, 21);
+            this.MailAddress.Size = new System.Drawing.Size(452, 21);
             this.MailAddress.TabIndex = 11;
             // 
             // SendToMail
@@ -158,9 +158,9 @@ namespace GitUI
             // Browse
             // 
             this.Browse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Browse.Location = new System.Drawing.Point(737, 8);
+            this.Browse.Location = new System.Drawing.Point(712, 8);
             this.Browse.Name = "Browse";
-            this.Browse.Size = new System.Drawing.Size(75, 25);
+            this.Browse.Size = new System.Drawing.Size(100, 25);
             this.Browse.TabIndex = 8;
             this.Browse.Text = "Browse";
             this.Browse.UseVisualStyleBackColor = true;
@@ -174,7 +174,7 @@ namespace GitUI
             this.OutputPath.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this.OutputPath.Location = new System.Drawing.Point(254, 11);
             this.OutputPath.Name = "OutputPath";
-            this.OutputPath.Size = new System.Drawing.Size(477, 21);
+            this.OutputPath.Size = new System.Drawing.Size(452, 21);
             this.OutputPath.TabIndex = 7;
             // 
             // splitContainer2
@@ -195,7 +195,7 @@ namespace GitUI
             this.splitContainer2.Panel2.Controls.Add(this.SelectedBranch);
             this.splitContainer2.Panel2.Controls.Add(this.CurrentBranch);
             this.splitContainer2.Size = new System.Drawing.Size(824, 376);
-            this.splitContainer2.SplitterDistance = 338;
+            this.splitContainer2.SplitterDistance = 313;
             this.splitContainer2.TabIndex = 0;
             // 
             // RevisionGrid
@@ -220,9 +220,9 @@ namespace GitUI
             // FormatPatch
             // 
             this.FormatPatch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.FormatPatch.Location = new System.Drawing.Point(713, 4);
+            this.FormatPatch.Location = new System.Drawing.Point(681, 4);
             this.FormatPatch.Name = "FormatPatch";
-            this.FormatPatch.Size = new System.Drawing.Size(108, 25);
+            this.FormatPatch.Size = new System.Drawing.Size(140, 25);
             this.FormatPatch.TabIndex = 0;
             this.FormatPatch.Text = "Create patch(es)";
             this.FormatPatch.UseVisualStyleBackColor = true;
@@ -262,6 +262,7 @@ namespace GitUI
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(450, 325);
             this.Name = "FormFormatPatch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Format patch";

@@ -14,7 +14,7 @@ namespace GitUI.Blame
             if (string.IsNullOrEmpty(fileName))
                 return;
             if (revision == null)
-                revision = new GitRevision {Guid = "Head"};
+                revision = new GitRevision("Head");
 
 
             blameControl1.LoadBlame(revision.Guid, fileName, null);

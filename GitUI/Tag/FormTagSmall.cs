@@ -32,30 +32,30 @@ namespace GitUI.Tag
             {
                 if (Revision == null)
                 {
-                    MessageBox.Show(_noRevisionSelected.Text, _messageCaption.Text);
+                    MessageBox.Show(this, _noRevisionSelected.Text, _messageCaption.Text);
                     return;
                 }
                 if (annotate.Checked)
                 {
                     if (string.IsNullOrEmpty(tagMessage.Text))
                     {
-                        MessageBox.Show(_noTagMassage.Text, _messageCaption.Text);
+                        MessageBox.Show(this, _noTagMassage.Text, _messageCaption.Text);
                         return;
                     }
 
-                    File.WriteAllText(Settings.WorkingDirGitDir() + "\\TAGMESSAGE", tagMessage.Text);
+                    File.WriteAllText(Settings.Module.WorkingDirGitDir() + "\\TAGMESSAGE", tagMessage.Text);
                 }
 
 
-                var s = GitCommandHelpers.Tag(TName.Text, Revision.Guid, annotate.Checked);
+                var s = Settings.Module.Tag(TName.Text, Revision.Guid, annotate.Checked);
 
                 if (!string.IsNullOrEmpty(s))
-                    MessageBox.Show(s, _messageCaption.Text);
-                Close();
+                    MessageBox.Show(this, s, _messageCaption.Text);
+                DialogResult = DialogResult.OK;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(this, ex.Message);
             }
         }
 
