@@ -1,12 +1,21 @@
 ﻿using System;
-
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormCherryPick : GitExtensionsForm
     {
+        private readonly TranslationString _noRevisionSelectedMsgBox =
+            new TranslationString("Select 1 revision to pick.");
+        private readonly TranslationString _noRevisionSelectedMsgBoxCaption =
+            new TranslationString("Cherry pick");
+        private readonly TranslationString _cmdExecutedMsgBox =
+            new TranslationString("Command executed");
+        private readonly TranslationString _cmdExecutedMsgBoxCaption =
+            new TranslationString("Cherry pick");
+
         public FormCherryPick()
         {
             InitializeComponent(); Translate();
@@ -27,19 +36,19 @@ namespace GitUI
         private void CherryPick_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            if (RevisionGrid.GetRevisions().Count != 1)
+            if (RevisionGrid.GetSelectedRevisions().Count != 1)
             {
-                MessageBox.Show("Select 1 revision to pick.", "Cherry pick");
+                MessageBox.Show(this, _noRevisionSelectedMsgBox.Text, _noRevisionSelectedMsgBoxCaption.Text);
                 return;
             }
             bool formClosed = false;
             string arguments = "";
-            bool IsMerge = GitCommandHelpers.IsMerge(RevisionGrid.GetRevisions()[0].Guid);
+            bool IsMerge = Settings.Module.IsMerge(RevisionGrid.GetSelectedRevisions()[0].Guid);
             if (IsMerge && !autoParent.Checked)
             {
-                GitRevision[] ParentsRevisions = GitCommandHelpers.GetParents(RevisionGrid.GetRevisions()[0].Guid);
+                GitRevision[] ParentsRevisions = Settings.Module.GetParents(RevisionGrid.GetSelectedRevisions()[0].Guid);
                 var choose = new FormCherryPickMerge(ParentsRevisions);
-                choose.ShowDialog();
+                choose.ShowDialog(this);
                 if (choose.OkClicked)
                     arguments = "-m " + (choose.ParentsList.SelectedItems[0].Index + 1);
                 else
@@ -50,9 +59,9 @@ namespace GitUI
 
             if (!formClosed)
             {
-                MessageBox.Show("Command executed " + Environment.NewLine + GitCommandHelpers.CherryPick(RevisionGrid.GetRevisions()[0].Guid, AutoCommit.Checked, arguments), "Cherry pick");
+                MessageBox.Show(this, _cmdExecutedMsgBox.Text + " " + Environment.NewLine + Settings.Module.CherryPick(RevisionGrid.GetSelectedRevisions()[0].Guid, AutoCommit.Checked, arguments), _cmdExecutedMsgBoxCaption.Text);
 
-                MergeConflictHandler.HandleMergeConflicts();
+                MergeConflictHandler.HandleMergeConflicts(this);
 
                 RevisionGrid.RefreshRevisions();
 

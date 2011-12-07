@@ -1,10 +1,18 @@
 ﻿using System;
 using System.Windows.Forms;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormDashboardCategoryTitle : GitExtensionsForm
     {
+        #region Translation
+        private readonly TranslationString _needEnterCaptionText =
+            new TranslationString("You need to enter a caption.");
+        private readonly TranslationString _needEnterCaptionTextCaption =
+            new TranslationString("Enter caption");
+        #endregion
+
         public FormDashboardCategoryTitle()
         {
             InitializeComponent(); Translate();
@@ -19,7 +27,7 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(Title.Text))
             {
-                MessageBox.Show("You need to enter a caption.", "Enter caption", MessageBoxButtons.OK);
+                MessageBox.Show(this, _needEnterCaptionText.Text, _needEnterCaptionTextCaption.Text, MessageBoxButtons.OK);
                 return;
             }
 

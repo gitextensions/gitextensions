@@ -19,6 +19,9 @@ namespace GitUI.RepoHosting
         private readonly TranslationString _strCouldNotLoadDiscussion = new TranslationString("Could not load discussion!\r\n");
         private readonly TranslationString _strError = new TranslationString("Error");
         private readonly TranslationString _strLoading = new TranslationString(" : LOADING : ");
+        private readonly TranslationString _strUnableUnderstandPatch = new TranslationString("Error: Unable to understand patch");
+        private readonly TranslationString _strRemoteAlreadyExist = new TranslationString("ERROR: Remote with name {0} already exists but it does not point to the same repository!\r\nDetails: Is {1} expected {2}");
+        private readonly TranslationString _strCouldNotAddRemote = new TranslationString("Could not add remote with name {0} and URL {1}");
         #endregion
 
         private readonly IRepositoryHostPlugin _gitHoster;
@@ -36,7 +39,7 @@ namespace GitUI.RepoHosting
             _gitHoster = gitHoster;
         }
 
-        List<IHostedRepository> _hostedRepositories;
+        List<IHostedRemote> _hostedRemotes;
         List<IPullRequestInformation> _pullRequestsInfo;
         IPullRequestInformation _currentPullRequestInfo;
 
@@ -53,13 +56,19 @@ namespace GitUI.RepoHosting
             _isFirstLoad = true;
 
             AsyncHelpers.DoAsync(
-                () => _gitHoster.GetHostedRemotesForCurrentWorkingDirRepo().Select(el => el.GetHostedRepository()).ToList(),
-                repos =>
+                () =>
                 {
-                    _hostedRepositories = repos;
+                    var t = _gitHoster.GetHostedRemotesForCurrentWorkingDirRepo().ToList();
+                    foreach (var el in t)
+                        el.GetHostedRepository(); // We do this now because we want to do it in the async part.
+                    return t;
+                },
+                hostedRemotes =>
+                {
+                    _hostedRemotes = hostedRemotes;
                     _selectHostedRepoCB.Items.Clear();
-                    foreach (var hostedRepo in _hostedRepositories)
-                        _selectHostedRepoCB.Items.Add(hostedRepo);
+                    foreach (var hostedRepo in _hostedRemotes)
+                        _selectHostedRepoCB.Items.Add(hostedRepo.GetHostedRepository());
 
                     SelectNextHostedRepository();
                 },
@@ -74,8 +83,8 @@ namespace GitUI.RepoHosting
             _selectHostedRepoCB.Enabled = false;
             ResetAllAndShowLoadingPullRequests();
 
-            AsyncHelpers.DoAsync(
-               () => hostedRepo.GetPullRequests(),
+            AsyncHelpers.DoAsync <List<IPullRequestInformation>>(
+               hostedRepo.GetPullRequests,
                (res) => { SetPullRequestsData(res); _selectHostedRepoCB.Enabled = true; },
                (ex) => MessageBox.Show(this, _strFailedToFetchPullData.Text + ex.Message, _strError.Text)
             );
@@ -86,7 +95,7 @@ namespace GitUI.RepoHosting
             if (_isFirstLoad)
             {
                 _isFirstLoad = false;
-                if (infos != null && infos.Count == 0 && _hostedRepositories.Count > 0)
+                if (infos != null && infos.Count == 0 && _hostedRemotes.Count > 0)
                 {
                     SelectNextHostedRepository();
                     return;
@@ -218,7 +227,7 @@ namespace GitUI.RepoHosting
                 var match = Regex.Match(part, @"^a/([^\n]+) b/([^\n]+)\s*(.*)$", RegexOptions.Singleline);
                 if (!match.Success)
                 {
-                    MessageBox.Show(this, "Error: Unable to understand patch", _strError.Text);
+                    MessageBox.Show(this, _strUnableUnderstandPatch.Text, _strError.Text);
                     return;
                 }
 
@@ -247,10 +256,53 @@ namespace GitUI.RepoHosting
 
             var cmd = string.Format("fetch --no-tags --progress {0} {1}:{2}", _currentPullRequestInfo.HeadRepo.CloneReadOnlyUrl, _currentPullRequestInfo.HeadRef, localBranchName);
             var formProcess = new FormProcess(Settings.GitCommand, cmd);
-            formProcess.ShowDialog();
+            formProcess.ShowDialog(this);
 
             if (formProcess.ErrorOccurred())
                 return;
+            Close();
+        }
+
+        private void _addAsRemoteAndFetch_Click(object sender, EventArgs e)
+        {
+            if (_currentPullRequestInfo == null)
+                return;
+
+            var remoteName = _currentPullRequestInfo.Owner;
+            var remoteUrl = _currentPullRequestInfo.HeadRepo.CloneReadOnlyUrl;
+            var remoteRef = _currentPullRequestInfo.HeadRef;
+
+            var existingRepo = _hostedRemotes.FirstOrDefault(el => el.Name == remoteName);
+            if (existingRepo != null)
+            {
+                if (existingRepo.GetHostedRepository().CloneReadOnlyUrl != remoteUrl)
+                {
+                    MessageBox.Show(this, string.Format(_strRemoteAlreadyExist.Text,
+                                        remoteName, existingRepo.GetHostedRepository().CloneReadOnlyUrl, remoteUrl));
+                    return;
+                }
+            }
+            else
+            {
+                var error = Settings.Module.AddRemote(remoteName, remoteUrl);
+                if (!string.IsNullOrEmpty(error))
+                {
+                    MessageBox.Show(this, error, string.Format(_strCouldNotAddRemote.Text, remoteName, remoteUrl));
+                    return;
+                }
+            }
+
+            var cmd = string.Format("fetch --no-tags --progress {0} {1}:{0}/{1}", remoteName, remoteRef);
+            var formProcess = new FormProcess(Settings.GitCommand, cmd);
+            formProcess.ShowDialog(this);
+
+            if (formProcess.ErrorOccurred())
+                return;
+
+            cmd = string.Format("checkout {0}/{1}", remoteName, remoteRef);
+            formProcess = new FormProcess(Settings.GitCommand, cmd);
+            formProcess.ShowDialog(this);
+
             Close();
         }
 

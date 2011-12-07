@@ -30,7 +30,7 @@ namespace AutoCheckForUpdates
             progressBar1.Style = ProgressBarStyle.Marquee;
         }
 
-        private void CloseClick(object sender, EventArgs e)
+        private void CloseButtonClick(object sender, EventArgs e)
         {
             Close();
         }
@@ -90,7 +90,7 @@ namespace AutoCheckForUpdates
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Exception");
+                MessageBox.Show(this, ex.Message, "Exception");
                 Done();
             }
         }

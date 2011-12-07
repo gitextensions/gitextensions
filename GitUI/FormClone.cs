@@ -4,20 +4,61 @@ using System.IO;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormClone : GitExtensionsForm
     {
-        public FormClone()
+        private readonly TranslationString _infoNewRepositoryLocation = 
+            new TranslationString("The repository will be cloned to a new directory located here:"  + Environment.NewLine +
+                                  "{0}");
+
+        private readonly TranslationString _infoDirectoryExists =
+            new TranslationString("(Directory already exists)");
+
+        private readonly TranslationString _infoDirectoryNew =
+            new TranslationString("(New directory)");
+
+
+        private readonly TranslationString _questionOpenRepo =
+            new TranslationString("The repository has been cloned successfully." + Environment.NewLine +
+                                  "Do you want to open the new repository \"{0}\" now?");
+        
+        private readonly TranslationString _questionOpenRepoCaption = 
+            new TranslationString("Open");
+
+        private readonly TranslationString _questionInitSubmodules =
+            new TranslationString("The cloned has submodules configured." + Environment.NewLine +
+                                  "Do you want to initialize the submodules?" + Environment.NewLine +
+                                  "This will initialize and update all submodules recursive.");
+        
+        private readonly TranslationString _questionInitSubmodulesCaption =
+            new TranslationString("Submodules");
+
+
+        public FormClone(): this(null)
+        {
+        }
+
+        public FormClone(string url)
         {
             InitializeComponent();
             Translate();
 
-            if (Settings.ValidWorkingDir())
-                _NO_TRANSLATE_From.Text = Settings.WorkingDir;
+            if (url != null)
+            {
+                _NO_TRANSLATE_From.Text = url;
+                if (!Settings.Module.ValidWorkingDir())
+                    _NO_TRANSLATE_To.Text = Settings.WorkingDir;
+            }
             else
-                _NO_TRANSLATE_To.Text = Settings.WorkingDir;
+            {
+                if (Settings.Module.ValidWorkingDir())
+                    _NO_TRANSLATE_From.Text = Settings.WorkingDir;
+                else
+                    _NO_TRANSLATE_To.Text = Settings.WorkingDir;
+            }
 
             FromTextUpdate(null, null);
         }
@@ -35,15 +76,17 @@ namespace GitUI
                 Repositories.RepositoryHistory.AddMostRecentRepository(_NO_TRANSLATE_From.Text);
                 Repositories.RepositoryHistory.AddMostRecentRepository(dirTo);
 
+                if (!Directory.Exists(dirTo))
+                    Directory.CreateDirectory(dirTo);
 
                 var fromProcess =
-                    new FormProcess(Settings.GitCommand,
+                    new FormRemoteProcess(Settings.GitCommand,
                                     GitCommandHelpers.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
                                                                      CentralRepository.Checked, Branches.Text, null));
                 fromProcess.SetUrlTryingToConnect(_NO_TRANSLATE_From.Text);
-                fromProcess.ShowDialog();
+                fromProcess.ShowDialog(this);
 
-                if (fromProcess.ErrorOccurred() || GitCommandHelpers.InTheMiddleOfPatch())
+                if (fromProcess.ErrorOccurred() || Settings.Module.InTheMiddleOfPatch())
                     return;
 
                 if (ShowInTaskbar == false && AskIfNewRepositoryShouldBeOpened(dirTo))
@@ -52,7 +95,7 @@ namespace GitUI
 
                     if (File.Exists(Settings.WorkingDir + ".gitmodules") &&
                         AskIfSubmodulesShouldBeInitialized())
-                        InitSubmodules();
+                        GitUICommands.Instance.StartInitSubmodulesRecursiveDialog(this);
                 }
                 Close();
             }
@@ -62,56 +105,22 @@ namespace GitUI
             }
         }
 
-        private static bool AskIfNewRepositoryShouldBeOpened(string dirTo)
+        private bool AskIfNewRepositoryShouldBeOpened(string dirTo)
         {
-            return MessageBox.Show(
-                "The repository has been cloned successfully." + Environment.NewLine +
-                "Do you want to open the new repository \"" + dirTo + "\" now?", "Open",
+            return MessageBox.Show(this, string.Format(_questionOpenRepo.Text, dirTo), _questionOpenRepoCaption.Text,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
         }
 
-        private static bool AskIfSubmodulesShouldBeInitialized()
+        private bool AskIfSubmodulesShouldBeInitialized()
         {
-            return MessageBox.Show(
-                "The cloned has submodules configured." + Environment.NewLine +
-                "Do you want to initialize the submodules?" + Environment.NewLine +
-                Environment.NewLine +
-                "This will initialize and update all submodules recursive.", "Submodules",
+            return MessageBox.Show(this, _questionInitSubmodules.Text, _questionInitSubmodulesCaption.Text,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
         }
-
-        private static void InitSubmodules()
-        {
-            var process = new FormProcess(GitCommandHelpers.SubmoduleInitCmd(""));
-            process.ShowDialog();
-            InitializeSubmodulesRecursive();
-        }
-
-        private static void InitializeSubmodulesRecursive()
-        {
-            var oldworkingdir = Settings.WorkingDir;
-
-            foreach (GitSubmodule submodule in (new GitCommandsInstance()).GetSubmodules())
-            {
-                if (string.IsNullOrEmpty(submodule.LocalPath))
-                    continue;
-
-                Settings.WorkingDir = oldworkingdir + submodule.LocalPath;
-
-                if (Settings.WorkingDir != oldworkingdir &&
-                    File.Exists(Settings.WorkingDir + ".gitmodules"))
-                    InitSubmodules();
-
-                Settings.WorkingDir = oldworkingdir;
-            }
-
-            Settings.WorkingDir = oldworkingdir;
-        }
-
+        
         private void FromBrowseClick(object sender, EventArgs e)
         {
             var dialog = new FolderBrowserDialog { SelectedPath = _NO_TRANSLATE_From.Text };
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog(this) == DialogResult.OK)
                 _NO_TRANSLATE_From.Text = dialog.SelectedPath;
 
             FromTextUpdate(sender, e);
@@ -120,7 +129,7 @@ namespace GitUI
         private void ToBrowseClick(object sender, EventArgs e)
         {
             var dialog = new FolderBrowserDialog { SelectedPath = _NO_TRANSLATE_To.Text };
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog(this) == DialogResult.OK)
                 _NO_TRANSLATE_To.Text = dialog.SelectedPath;
 
             ToTextUpdate(sender, e);
@@ -151,7 +160,7 @@ namespace GitUI
 
         private void LoadSshKeyClick(object sender, EventArgs e)
         {
-            new FormLoadPuttySshKey().ShowDialog();
+            new FormLoadPuttySshKey().ShowDialog(this);
         }
 
         private void FormCloneLoad(object sender, EventArgs e)
@@ -171,8 +180,10 @@ namespace GitUI
             var path = _NO_TRANSLATE_From.Text;
             path = path.TrimEnd(new[] { '\\', '/' });
 
-            if (path.EndsWith(".git"))
-                path = path.Replace(".git", "");
+            const string standardRepositorySuffix = ".git";
+
+            if (path.EndsWith(standardRepositorySuffix))
+                path = path.Substring(0, path.Length - standardRepositorySuffix.Length);
 
             if (path.Contains("\\") || path.Contains("/"))
                 _NO_TRANSLATE_NewDirectory.Text = path.Substring(path.LastIndexOfAny(new[] { '\\', '/' }) + 1);
@@ -182,21 +193,21 @@ namespace GitUI
 
         private void ToTextUpdate(object sender, EventArgs e)
         {
-            var destinationPath = "";
+            string destinationPath = string.Empty;                
 
-            Info.Text = "The repository will be cloned to a new directory located here:" + Environment.NewLine;
             if (string.IsNullOrEmpty(_NO_TRANSLATE_To.Text))
-                destinationPath += "[destination]";
+                destinationPath += "[" + label2.Text + "]";
             else
                 destinationPath += _NO_TRANSLATE_To.Text.TrimEnd(new[] { '\\', '/' });
-            destinationPath += "\\";
 
+            destinationPath += "\\";
+            
             if (string.IsNullOrEmpty(_NO_TRANSLATE_NewDirectory.Text))
-                destinationPath += "[directory]";
+                destinationPath += "[" + label3.Text + "]";
             else
                 destinationPath += _NO_TRANSLATE_NewDirectory.Text;
 
-            Info.Text += "     " + destinationPath;
+            Info.Text = string.Format(_infoNewRepositoryLocation.Text, destinationPath);
 
             if (destinationPath.Contains("[") || destinationPath.Contains("]"))
             {
@@ -208,7 +219,7 @@ namespace GitUI
             {
                 if (Directory.GetDirectories(destinationPath).Length > 0 || Directory.GetFiles(destinationPath).Length > 0)
                 {
-                    Info.Text += " (directory already exists)";
+                    Info.Text += " " + _infoDirectoryExists.Text;
                     Info.ForeColor = Color.Red;
                 }
                 else
@@ -218,7 +229,7 @@ namespace GitUI
             }
             else
             {
-                Info.Text += " (new directory)";
+                Info.Text += " " + _infoDirectoryNew.Text;
                 Info.ForeColor = Color.Black;
             }
         }
@@ -236,7 +247,7 @@ namespace GitUI
         private void Branches_DropDown(object sender, EventArgs e)
         {
             Branches.DisplayMember = "LocalName";
-            Branches.DataSource = GitCommandHelpers.GetRemoteHeads(_NO_TRANSLATE_From.Text, false, true);
+            Branches.DataSource = Settings.Module.GetRemoteHeads(_NO_TRANSLATE_From.Text, false, true);
         }
     }
 }

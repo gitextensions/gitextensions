@@ -20,26 +20,31 @@ namespace GitUI
 
         private void FormMergeBranchLoad(object sender, EventArgs e)
         {
-            var selectedHead = GitCommandHelpers.GetSelectedBranch();
+            var selectedHead = Settings.Module.GetSelectedBranch();
             currentBranchLabel.Text = selectedHead;
 
-            Branches.DisplayMember = "Name";
-            Branches.DataSource = GitCommandHelpers.GetHeads(true, true);
+            Branches.BranchesToSelect = Settings.Module.GetHeads(true, true);
 
             if (_defaultBranch != null)
-                Branches.Text = _defaultBranch;
+                Branches.SetSelectedText(_defaultBranch);
+            else
+            {
+                string merge = Settings.Module.GetRemoteBranch(selectedHead);
+                if (!String.IsNullOrEmpty(merge))
+                    Branches.SetSelectedText(merge);
+            }
 
             Branches.Select();
         }
 
         private void OkClick(object sender, EventArgs e)
         {
-            var process = new FormProcess(GitCommandHelpers.MergeBranchCmd(Branches.Text, fastForward.Checked, squash.Checked, noCommit.Checked, _NO_TRANSLATE_mergeStrategy.Text));
-            process.ShowDialog();
+            var process = new FormProcess(GitCommandHelpers.MergeBranchCmd(Branches.GetSelectedText(), fastForward.Checked, squash.Checked, noCommit.Checked, _NO_TRANSLATE_mergeStrategy.Text));
+            process.ShowDialog(this);
 
-            MergeConflictHandler.HandleMergeConflicts();
+            var wasConflict = MergeConflictHandler.HandleMergeConflicts(this);
 
-            if (!process.ErrorOccurred())
+            if (!process.ErrorOccurred() || wasConflict)
                 Close();
         }
 

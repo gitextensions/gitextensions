@@ -30,7 +30,7 @@ namespace GitUI
 
         public void Initialize()
         {
-            Patches.DataSource = GitCommandHelpers.GetRebasePatchFiles();
+            Patches.DataSource = Settings.Module.GetRebasePatchFiles();
         }
 
         private void Patches_DoubleClick(object sender, EventArgs e)
@@ -41,7 +41,7 @@ namespace GitUI
 
             var viewPatch = new ViewPatch();
             viewPatch.LoadPatch(patchFile.FullName);
-            viewPatch.ShowDialog();
+            viewPatch.ShowDialog(this);
         }
     }
 }

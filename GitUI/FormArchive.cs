@@ -1,10 +1,19 @@
 ﻿using System;
 using System.Windows.Forms;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormArchive : GitExtensionsForm
     {
+        private readonly TranslationString _noRevisionSelectedMsgBox =
+            new TranslationString("Select 1 revision to archive");
+
+        private readonly TranslationString _saveFileDialogFilter =
+            new TranslationString("Zip file (*.zip)");
+        private readonly TranslationString _saveFileDialogCaption =
+            new TranslationString("Save archive as");
+
         public FormArchive()
         {
             InitializeComponent(); 
@@ -24,22 +33,20 @@ namespace GitUI
 
         private void Save_Click(object sender, EventArgs e)
         {
-            if (revisionGrid1.GetRevisions().Count != 1)
+            if (revisionGrid1.GetSelectedRevisions().Count != 1)
             {
-                MessageBox.Show(this, "Select 1 revision to archive", "Archive", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _noRevisionSelectedMsgBox.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            string revision = revisionGrid1.GetRevisions()[0].TreeGuid;
+            string revision = revisionGrid1.GetSelectedRevisions()[0].TreeGuid;
 
-            var saveFileDialog = new SaveFileDialog {Filter = "Zip file (*.zip)|*.zip", Title = "Save archive as"};
+            var saveFileDialog = new SaveFileDialog {Filter = _saveFileDialogFilter.Text + "|*.zip", Title = _saveFileDialogCaption.Text};
 
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
             {
-							new FormProcess("archive --format=zip " + revision + " --output \"" + saveFileDialog.FileName + "\"").ShowDialog();
+                new FormProcess("archive --format=zip " + revision + " --output \"" + saveFileDialog.FileName + "\"").ShowDialog(this);
                 Close();
             }
         }
-
-
     }
 }

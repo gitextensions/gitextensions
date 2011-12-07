@@ -16,12 +16,12 @@ namespace GitUI
 
         private void LoadSSHKey_Click(object sender, EventArgs e)
         {
-            new FormLoadPuttySshKey().ShowDialog();
+            new FormLoadPuttySshKey().ShowDialog(this);
         }
 
         public bool RetryProcess;
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Abort_Click(object sender, EventArgs e)
         {
             RetryProcess = false;
             Close();

@@ -15,7 +15,7 @@ namespace GitUI.RepoHosting
 
         public static IRepositoryHostPlugin TryGetGitHosterForCurrentWorkingDir()
         {
-            if (!Settings.ValidWorkingDir())
+            if (!Settings.Module.ValidWorkingDir())
                 return null;
 
             return GitHosters.FirstOrDefault(gitHoster => gitHoster.CurrentWorkingDirRepoIsRelevantToMe);

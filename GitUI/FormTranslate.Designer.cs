@@ -91,7 +91,7 @@ namespace GitUI
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(756, 463);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(749, 465);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
             // toolStrip1
@@ -111,16 +111,15 @@ namespace GitUI
             this._toolStripButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(756, 30);
+            this.toolStrip1.Size = new System.Drawing.Size(749, 30);
             this.toolStrip1.TabIndex = 1;
-            this.toolStrip1.Text = "toolStrip1";
             // 
             // toolStripButtonNew
             // 
             this.toolStripButtonNew.Image = global::GitUI.Properties.Resources._21;
             this.toolStripButtonNew.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonNew.Name = "toolStripButtonNew";
-            this.toolStripButtonNew.Size = new System.Drawing.Size(48, 27);
+            this.toolStripButtonNew.Size = new System.Drawing.Size(59, 27);
             this.toolStripButtonNew.Text = "New";
             this.toolStripButtonNew.ToolTipText = "Create new translation";
             this.toolStripButtonNew.Click += new System.EventHandler(this.toolStripButtonNew_Click);
@@ -143,7 +142,7 @@ namespace GitUI
             // toolStripTranslationLabel
             // 
             this.toolStripTranslationLabel.Name = "toolStripTranslationLabel";
-            this.toolStripTranslationLabel.Size = new System.Drawing.Size(102, 27);
+            this.toolStripTranslationLabel.Size = new System.Drawing.Size(134, 27);
             this.toolStripTranslationLabel.Text = "Current translation:";
             // 
             // translations
@@ -158,7 +157,7 @@ namespace GitUI
             // toolStripTranslationLanguageCode
             // 
             this.toolStripTranslationLanguageCode.Name = "toolStripTranslationLanguageCode";
-            this.toolStripTranslationLanguageCode.Size = new System.Drawing.Size(84, 27);
+            this.toolStripTranslationLanguageCode.Size = new System.Drawing.Size(114, 27);
             this.toolStripTranslationLanguageCode.Text = "Language code:";
             // 
             // _NO_TRANSLATE_languageCode
@@ -213,7 +212,7 @@ namespace GitUI
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(750, 427);
+            this.splitContainer1.Size = new System.Drawing.Size(743, 429);
             this.splitContainer1.SplitterDistance = 151;
             this.splitContainer1.TabIndex = 2;
             // 
@@ -221,9 +220,10 @@ namespace GitUI
             // 
             this.translateCategories.Dock = System.Windows.Forms.DockStyle.Fill;
             this.translateCategories.FormattingEnabled = true;
+            this.translateCategories.ItemHeight = 20;
             this.translateCategories.Location = new System.Drawing.Point(0, 0);
             this.translateCategories.Name = "translateCategories";
-            this.translateCategories.Size = new System.Drawing.Size(151, 420);
+            this.translateCategories.Size = new System.Drawing.Size(151, 429);
             this.translateCategories.TabIndex = 0;
             this.translateCategories.SelectedIndexChanged += new System.EventHandler(this.translateCategories_SelectedIndexChanged);
             // 
@@ -242,8 +242,8 @@ namespace GitUI
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
-            this.splitContainer2.Size = new System.Drawing.Size(595, 427);
-            this.splitContainer2.SplitterDistance = 270;
+            this.splitContainer2.Size = new System.Drawing.Size(588, 429);
+            this.splitContainer2.SplitterDistance = 272;
             this.splitContainer2.TabIndex = 2;
             // 
             // translateGrid
@@ -258,12 +258,13 @@ namespace GitUI
             this.translatedValueDataGridViewTextBoxColumn});
             this.translateGrid.DataSource = this.translateItemBindingSource;
             this.translateGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.translateGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.translateGrid.Location = new System.Drawing.Point(0, 0);
             this.translateGrid.MultiSelect = false;
             this.translateGrid.Name = "translateGrid";
             this.translateGrid.RowHeadersVisible = false;
             this.translateGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.translateGrid.Size = new System.Drawing.Size(595, 270);
+            this.translateGrid.Size = new System.Drawing.Size(588, 272);
             this.translateGrid.TabIndex = 1;
             this.translateGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.translateGrid_CellEndEdit);
             this.translateGrid.SelectionChanged += new System.EventHandler(this.translateGrid_SelectionChanged);
@@ -331,8 +332,8 @@ namespace GitUI
             this.splitContainer3.Panel2.Controls.Add(this.googleTranslate);
             this.splitContainer3.Panel2.Controls.Add(this.previousButton);
             this.splitContainer3.Panel2.Controls.Add(this.nextButton);
-            this.splitContainer3.Size = new System.Drawing.Size(595, 153);
-            this.splitContainer3.SplitterDistance = 388;
+            this.splitContainer3.Size = new System.Drawing.Size(588, 153);
+            this.splitContainer3.SplitterDistance = 381;
             this.splitContainer3.TabIndex = 0;
             // 
             // splitContainer4
@@ -349,7 +350,7 @@ namespace GitUI
             // splitContainer4.Panel2
             // 
             this.splitContainer4.Panel2.Controls.Add(this.translatedText);
-            this.splitContainer4.Size = new System.Drawing.Size(388, 153);
+            this.splitContainer4.Size = new System.Drawing.Size(381, 153);
             this.splitContainer4.SplitterDistance = 72;
             this.splitContainer4.TabIndex = 0;
             // 
@@ -360,7 +361,7 @@ namespace GitUI
             this.neutralTekst.Location = new System.Drawing.Point(0, 0);
             this.neutralTekst.Name = "neutralTekst";
             this.neutralTekst.ReadOnly = true;
-            this.neutralTekst.Size = new System.Drawing.Size(388, 72);
+            this.neutralTekst.Size = new System.Drawing.Size(381, 72);
             this.neutralTekst.TabIndex = 0;
             this.neutralTekst.Text = "";
             // 
@@ -370,10 +371,11 @@ namespace GitUI
             this.translatedText.LanguageOption = RichTextBoxLanguageOptions.UIFonts;
             this.translatedText.Location = new System.Drawing.Point(0, 0);
             this.translatedText.Name = "translatedText";
-            this.translatedText.Size = new System.Drawing.Size(388, 77);
+            this.translatedText.Size = new System.Drawing.Size(381, 77);
             this.translatedText.TabIndex = 0;
             this.translatedText.Text = "";
             this.translatedText.TextChanged += new System.EventHandler(this.translatedText_TextChanged);
+            this.translatedText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.translatedText_KeyDown);
             // 
             // googleAll
             // 
@@ -417,11 +419,13 @@ namespace GitUI
             // 
             // FormTranslate
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(756, 463);
+            this.ClientSize = new System.Drawing.Size(749, 465);
             this.Controls.Add(this.tableLayoutPanel1);
+            this.MinimumSize = new System.Drawing.Size(680, 510);
             this.Name = "FormTranslate";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Translate";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();

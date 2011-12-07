@@ -52,11 +52,11 @@ namespace GitUI
 
             Patch selectedPatch;
 
-            var revisions = RevisionGrid.GetRevisions();
+            var revisions = RevisionGrid.GetSelectedRevisions();
             if (revisions.Count == 2)
             {
                 selectedPatch =
-                    GitCommandHelpers
+                    Settings.Module
                         .GetSingleDiff(
                             revisions[0].Guid,
                             revisions[1].Guid,
@@ -68,7 +68,7 @@ namespace GitUI
             {
                 var revision = revisions[0];
                 selectedPatch =
-                    GitCommandHelpers
+                    Settings.Module
                         .GetSingleDiff(
                             revision.Guid,
                             revision.ParentGuids[0],
@@ -87,18 +87,18 @@ namespace GitUI
             {
                 Cursor.Current = Cursors.WaitCursor;
                 DiffFiles.GitItemStatuses = null;
-                var revisions = RevisionGrid.GetRevisions();
+                var revisions = RevisionGrid.GetSelectedRevisions();
 
                 if (revisions.Count == 1)
                     DiffFiles.GitItemStatuses =
-                        GitCommandHelpers.GetDiffFiles(
+                        Settings.Module.GetDiffFiles(
                             revisions[0].Guid,
                             revisions[0].ParentGuids[0]);
 
                 if (revisions.Count == 2)
                 {
                     DiffFiles.GitItemStatuses =
-                        GitCommandHelpers.GetDiffFiles(
+                        Settings.Module.GetDiffFiles(
                             revisions[0].Guid,
                             revisions[1].Guid);
                 }

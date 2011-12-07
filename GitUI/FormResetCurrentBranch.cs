@@ -29,7 +29,7 @@ namespace GitUI
             if (Revision == null)
                 throw new Exception("No revision");
 
-            _NO_TRANSLATE_BranchInfo.Text = string.Format(branchInfo.Text, GitCommandHelpers.GetSelectedBranch());
+            _NO_TRANSLATE_BranchInfo.Text = string.Format(branchInfo.Text, Settings.Module.GetSelectedBranch());
             _NO_TRANSLATE_Commit.Text = string.Format(commitInfo.Text, Revision.Guid);
             _NO_TRANSLATE_Author.Text = string.Format(authorInfo.Text, Revision.Author);
             _NO_TRANSLATE_Date.Text = string.Format(dateInfo.Text, Revision.CommitDate);
@@ -41,25 +41,23 @@ namespace GitUI
         {
             if (Soft.Checked)
             {
-                new FormProcess(GitCommandHelpers.ResetSoftCmd(Revision.Guid)).ShowDialog();
+                new FormProcess(GitCommandHelpers.ResetSoftCmd(Revision.Guid)).ShowDialog(this);
             }
-            else
-                if (Mixed.Checked)
+            else if (Mixed.Checked)
+            {
+                new FormProcess(GitCommandHelpers.ResetMixedCmd(Revision.Guid)).ShowDialog(this);
+            }
+            else if (Hard.Checked)
+            {
+                if (MessageBox.Show(this, resetHardWarning.Text, resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
-                    new FormProcess(GitCommandHelpers.ResetMixedCmd(Revision.Guid)).ShowDialog();
+                    new FormProcess(GitCommandHelpers.ResetHardCmd(Revision.Guid)).ShowDialog(this);
                 }
                 else
-                    if (Hard.Checked)
-                    {
-                        if (MessageBox.Show(resetHardWarning.Text, resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
-                        {
-                            new FormProcess(GitCommandHelpers.ResetHardCmd(Revision.Guid)).ShowDialog();
-                        }
-                        else
-                        {
-                            return;
-                        }
-                    }
+                {
+                    return;
+                }
+            }
 
             Close();
         }

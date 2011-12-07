@@ -2,12 +2,53 @@
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormRemotes : GitExtensionsForm
     {
         private string _remote = "";
+
+        private readonly TranslationString _remoteBranchDataError =
+            new TranslationString("Invalid ´{1}´ found for branch ´{0}´." + Environment.NewLine +
+                                  "Value has been reset to empty value.");
+
+        private readonly TranslationString _questionAutoPullBehaviour =
+            new TranslationString("You have added a new remote repository." + Environment.NewLine +
+                                  "Do you want to automatically configure the default push and pull behavior for this remote?");
+
+        private readonly TranslationString _questionAutoPullBehaviourCaption =
+            new TranslationString("New remote");
+
+        private readonly TranslationString _warningValidRemote = 
+            new TranslationString("You need to configure a valid url for this remote");
+        
+        private readonly TranslationString _warningValidRemoteCaption =
+            new TranslationString("Url needed");
+
+        private readonly TranslationString _hintDelete =
+            new TranslationString("Delete");
+
+        private readonly TranslationString _questionDeleteRemote = 
+            new TranslationString("Are you sure you want to delete this remote?");
+        
+        private readonly TranslationString _questionDeleteRemoteCaption = 
+            new TranslationString("Delete");
+
+        private readonly TranslationString _sshKeyOpenFilter =
+            new TranslationString("Private key (*.ppk)");
+
+        private readonly TranslationString _sshKeyOpenCaption =
+            new TranslationString("Select ssh key file");
+
+        private readonly TranslationString _warningNoKeyEntered =
+            new TranslationString("No SSH key file entered");
+
+        private readonly TranslationString _labelUrlAsFetch =
+            new TranslationString("Fetch Url");
+        private readonly TranslationString _labelUrlAsFetchPush =
+            new TranslationString("Url");
 
         public FormRemotes()
         {
@@ -23,10 +64,8 @@ namespace GitUI
 
         private void RemoteBranchesDataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-            MessageBox.Show(
-                string.Format(
-                    "Invalid ´{1}´ found for branch ´{0}´." + Environment.NewLine +
-                    "Value has been reset to empty value.", RemoteBranches.Rows[e.RowIndex].Cells[0].Value,
+            MessageBox.Show(this, 
+                string.Format(_remoteBranchDataError.Text, RemoteBranches.Rows[e.RowIndex].Cells[0].Value,
                     RemoteBranches.Columns[e.ColumnIndex].HeaderText));
 
             RemoteBranches.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = "";
@@ -34,9 +73,9 @@ namespace GitUI
 
         private void Initialize()
         {
-            Remotes.DataSource = GitCommandHelpers.GetRemotes();
+            Remotes.DataSource = Settings.Module.GetRemotes();
 
-            var heads = GitCommandHelpers.GetHeads(false, true);
+            var heads = Settings.Module.GetHeads(false, true);
             RemoteBranches.DataSource = heads;
 
             RemoteBranches.DataError += RemoteBranchesDataError;
@@ -50,62 +89,85 @@ namespace GitUI
             Url.DisplayMember = "Path";
         }
 
+        private void comboBoxPushUrl_DropDown(object sender, EventArgs e)
+        {
+            comboBoxPushUrl.DataSource = Repositories.RepositoryHistory.Repositories;
+            comboBoxPushUrl.DisplayMember = "Path";
+        }
+
         private void BrowseClick(object sender, EventArgs e)
         {
             var dialog = new FolderBrowserDialog();
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog(this) == DialogResult.OK)
                 Url.Text = dialog.SelectedPath;
+        }
+
+        private void buttonBrowsePushUrl_Click(object sender, EventArgs e)
+        {
+            var dialog = new FolderBrowserDialog();
+            if (dialog.ShowDialog(this) == DialogResult.OK)
+                comboBoxPushUrl.Text = dialog.SelectedPath;
+
         }
 
         private void SaveClick(object sender, EventArgs e)
         {
             var output = "";
 
+            if ((string.IsNullOrEmpty(comboBoxPushUrl.Text) && checkBoxSepPushUrl.Checked) ||
+                (comboBoxPushUrl.Text == Url.Text))
+                checkBoxSepPushUrl.Checked = false;
+
             if (string.IsNullOrEmpty(_remote))
             {
                 if (string.IsNullOrEmpty(RemoteName.Text) && string.IsNullOrEmpty(Url.Text))
                     return;
 
-                output = GitCommandHelpers.AddRemote(RemoteName.Text, Url.Text);
+                output = Settings.Module.AddRemote(RemoteName.Text, Url.Text);
 
-                if (MessageBox.Show(
-                        "You have added a new remote repository." + Environment.NewLine +
-                        "Do you want to automatically configure the default push and pull behavior for this remote?",
-                        "New remote", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (checkBoxSepPushUrl.Checked)
+                    Settings.Module.SetSetting(string.Format("remote.{0}.pushurl", RemoteName.Text), comboBoxPushUrl.Text);
+
+                if (MessageBox.Show(this, _questionAutoPullBehaviour.Text, _questionAutoPullBehaviourCaption.Text,
+                    MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     var remoteUrl = Url.Text;
 
                     if (!string.IsNullOrEmpty(remoteUrl))
                     {
-                        new FormProcess("remote update").ShowDialog();
+                        new FormRemoteProcess("remote update").ShowDialog(this);
                         ConfigureRemotes();
                     }
                     else
-                        MessageBox.Show("You need to configure a valid url for this remote", "Url needed");
+                        MessageBox.Show(this, _warningValidRemote.Text,_warningValidRemoteCaption.Text);
                 }
             }
             else
             {
                 if (RemoteName.Text != _remote)
                 {
-                    output = GitCommandHelpers.RenameRemote(_remote, RemoteName.Text);
+                    output = Settings.Module.RenameRemote(_remote, RemoteName.Text);
                 }
 
-                GitCommandHelpers.SetSetting(string.Format("remote.{0}.url", RemoteName.Text), Url.Text);
-                GitCommandHelpers.SetSetting(string.Format("remote.{0}.puttykeyfile", RemoteName.Text), PuttySshKey.Text);
+                Settings.Module.SetSetting(string.Format("remote.{0}.url", RemoteName.Text), Url.Text);
+                Settings.Module.SetSetting(string.Format("remote.{0}.puttykeyfile", RemoteName.Text), PuttySshKey.Text);
+                if (checkBoxSepPushUrl.Checked)
+                    Settings.Module.SetSetting(string.Format("remote.{0}.pushurl", RemoteName.Text), comboBoxPushUrl.Text);
+                else
+                    Settings.Module.UnsetSetting(string.Format("remote.{0}.pushurl", RemoteName.Text));
             }
 
             if (!string.IsNullOrEmpty(output))
-                MessageBox.Show(output, "Delete");
+                MessageBox.Show(this, output, _hintDelete.Text);
 
             Initialize();
         }
 
         private void ConfigureRemotes()
         {
-            foreach (var remoteHead in GitCommandHelpers.GetHeads(true, true))
+            foreach (var remoteHead in Settings.Module.GetHeads(true, true))
             {
-                foreach (var localHead in GitCommandHelpers.GetHeads(true, true))
+                foreach (var localHead in Settings.Module.GetHeads(true, true))
                 {
                     if (!remoteHead.IsRemote ||
                         localHead.IsRemote ||
@@ -124,9 +186,9 @@ namespace GitUI
 
         private void NewClick(object sender, EventArgs e)
         {
-            var output = GitCommandHelpers.AddRemote("<new>", "");
+            var output = Settings.Module.AddRemote("<new>", "");
             if (!string.IsNullOrEmpty(output))
-                MessageBox.Show(output, "Delete");
+                MessageBox.Show(this, output, _hintDelete.Text);
             Initialize();
         }
 
@@ -135,12 +197,12 @@ namespace GitUI
             if (string.IsNullOrEmpty(_remote))
                 return;
 
-            if (MessageBox.Show("Are you sure you want to delete this remote?", "Delete", MessageBoxButtons.YesNo) ==
+            if (MessageBox.Show(this, _questionDeleteRemote.Text, _questionDeleteRemoteCaption.Text, MessageBoxButtons.YesNo) ==
                 DialogResult.Yes)
             {
-                var output = GitCommandHelpers.RemoveRemote(_remote);
+                var output = Settings.Module.RemoveRemote(_remote);
                 if (!string.IsNullOrEmpty(output))
-                    MessageBox.Show(output, "Delete");
+                    MessageBox.Show(this, output, _hintDelete.Text);
             }
 
             Initialize();
@@ -151,32 +213,42 @@ namespace GitUI
             var dialog =
                 new OpenFileDialog
                     {
-                        Filter = "Private key (*.ppk)|*.ppk",
+                        Filter = _sshKeyOpenFilter.Text + "|*.ppk",
                         InitialDirectory = ".",
-                        Title = "Select ssh key file"
+                        Title = _sshKeyOpenCaption.Text
                     };
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog(this) == DialogResult.OK)
                 PuttySshKey.Text = dialog.FileName;
         }
 
         private void LoadSshKeyClick(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(PuttySshKey.Text))
-                MessageBox.Show("No SSH key file entered");
+                MessageBox.Show(this, _warningNoKeyEntered.Text);
             else
-                GitCommandHelpers.StartPageantWithKey(PuttySshKey.Text);
+                Settings.Module.StartPageantWithKey(PuttySshKey.Text);
         }
 
         private void TestConnectionClick(object sender, EventArgs e)
         {
-            GitCommandHelpers.RunRealCmdDetached(
+            System.Uri uri = new System.Uri(Url.Text);
+            string sshURL = "";
+            if (uri.Scheme == "ssh")
+            {
+                if (!string.IsNullOrEmpty(uri.UserInfo))
+                    sshURL = uri.UserInfo + "@";
+                sshURL += uri.Host + ":" + uri.LocalPath.Substring(1);
+            }
+            else
+                sshURL = Url.Text;
+            Settings.Module.RunRealCmdDetached(
                 "cmd.exe",
-                string.Format("/k \"\"{0}\" -T \"{1}\"\"", Settings.Plink, Url.Text));
+                string.Format("/k \"\"{0}\" -T \"{1}\"\"", Settings.Plink, sshURL));
         }
 
         private void PruneClick(object sender, EventArgs e)
         {
-            new FormProcess("remote prune " + _remote).ShowDialog();
+            new FormRemoteProcess("remote prune " + _remote).ShowDialog(this);
         }
 
         private void RemoteBranchesSelectionChanged(object sender, EventArgs e)
@@ -193,7 +265,7 @@ namespace GitUI
             LocalBranchNameEdit.ReadOnly = true;
             RemoteRepositoryCombo.Items.Clear();
             RemoteRepositoryCombo.Items.Add("");
-            foreach (var remote in GitCommandHelpers.GetRemotes())
+            foreach (var remote in Settings.Module.GetRemotes())
                 RemoteRepositoryCombo.Items.Add(remote);
 
             RemoteRepositoryCombo.Text = head.TrackingRemote;
@@ -220,12 +292,12 @@ namespace GitUI
             if (string.IsNullOrEmpty(head.TrackingRemote) || string.IsNullOrEmpty(currentSelectedRemote))
                 return;
 
-            var remoteUrl = GitCommandHelpers.GetSetting("remote." + currentSelectedRemote + ".url");
+            var remoteUrl = Settings.Module.GetSetting("remote." + currentSelectedRemote + ".url");
 
             if (string.IsNullOrEmpty(remoteUrl))
                 return;
 
-            foreach (var remoteHead in GitCommandHelpers.GetHeads(true, true))
+            foreach (var remoteHead in Settings.Module.GetHeads(true, true))
             {
                 if (remoteHead.IsRemote &&
                     remoteHead.Name.ToLower().Contains(currentSelectedRemote.ToLower()) /*&&
@@ -270,20 +342,45 @@ namespace GitUI
 
             _remote = (string)Remotes.SelectedItem;
             RemoteName.Text = _remote;
-            Url.Text = GitCommandHelpers.GetSetting(string.Format("remote.{0}.url", _remote));
+            
+            Url.Text = Settings.Module.GetSetting(string.Format("remote.{0}.url", _remote));
+
+            comboBoxPushUrl.Text = Settings.Module.GetSetting(string.Format("remote.{0}.pushurl", _remote));
+            if (string.IsNullOrEmpty(comboBoxPushUrl.Text))
+                checkBoxSepPushUrl.Checked = false;
+            else
+                checkBoxSepPushUrl.Checked = true;
+
             PuttySshKey.Text =
-                GitCommandHelpers.GetSetting(string.Format("remote.{0}.puttykeyfile", RemoteName.Text));
+                Settings.Module.GetSetting(string.Format("remote.{0}.puttykeyfile", RemoteName.Text));
         }
 
         private void UpdateBranchClick(object sender, EventArgs e)
         {
-            new FormProcess("remote update").ShowDialog();
+            new FormRemoteProcess("remote update").ShowDialog(this);
         }
 
         private void FormRemotes_FormClosing(object sender, FormClosingEventArgs e)
         {
             SavePosition("remotes");
         }
+
+        private void checkBoxSepPushUrl_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowSeperatePushUrl(checkBoxSepPushUrl.Checked);
+    }
+
+        private void ShowSeperatePushUrl(bool visible)
+        {
+            labelPushUrl.Visible = visible;
+            comboBoxPushUrl.Visible = visible;
+            buttonBrowsePushUrl.Visible = visible;
+            if (!visible)
+                label2.Text = _labelUrlAsFetchPush.Text;
+            else
+                label2.Text = _labelUrlAsFetch.Text;
+        }
+
 
     }
 }

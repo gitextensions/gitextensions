@@ -26,6 +26,11 @@ namespace GitUI.Editor
             TextEditor.ActiveTextAreaControl.TextArea.DoubleClick += ActiveTextAreaControlDoubleClick;
         }
 
+        public new Font Font 
+        {
+            set { TextEditor.Font = value; } 
+        }
+
         public new event MouseEventHandler MouseMove;
         public new event EventHandler MouseLeave;
 
@@ -212,7 +217,6 @@ namespace GitUI.Editor
             TextEditor.ActiveTextAreaControl.VScrollBar.Width = 0;
             TextEditor.ActiveTextAreaControl.VScrollBar.Visible = enable;
             TextEditor.ActiveTextAreaControl.TextArea.Dock = DockStyle.Fill;
-            TextEditor.Enabled = enable;
         }
 
         public void AddPatchHighlighting()
@@ -297,7 +301,9 @@ namespace GitUI.Editor
             set
             {
                 var scrollBar = TextEditor.ActiveTextAreaControl.VScrollBar;
-                scrollBar.Value = scrollBar.Maximum > value ? value : scrollBar.Maximum;
+                int max = scrollBar.Maximum - scrollBar.LargeChange;
+                max = Math.Max(max, scrollBar.Minimum);
+                scrollBar.Value = max > value ? value : max;
             }
         }
 
@@ -388,8 +394,7 @@ namespace GitUI.Editor
 
         public void FocusTextArea()
         {
-            if (!TextEditor.ActiveTextAreaControl.TextArea.Focused)
-                TextEditor.ActiveTextAreaControl.TextArea.Focus();
+            TextEditor.ActiveTextAreaControl.TextArea.Select();
         }
 
         public bool IsReadOnly 
@@ -402,6 +407,11 @@ namespace GitUI.Editor
             {
                 TextEditor.IsReadOnly = value;
             }
+        }
+
+        public void SetFileLoader(Func<bool, Tuple<int, string>> fileLoader)
+        {
+            _findAndReplaceForm.SetFileLoader(fileLoader);
         }
 
         #endregion

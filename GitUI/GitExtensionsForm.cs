@@ -5,7 +5,9 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitUI.Properties;
+#if !__MonoCS__
 using Microsoft.WindowsAPICodePack.Taskbar;
+#endif
 using ResourceManager.Translation;
 using Settings = GitCommands.Settings;
 using System.Collections.Generic;
@@ -14,7 +16,7 @@ namespace GitUI
 {
     public class GitExtensionsForm : Form
     {
-        private static readonly Icon ApplicationIcon = GetApplicationIcon();
+        private static Icon ApplicationIcon = GetApplicationIcon(Settings.IconStyle, Settings.IconColor);
 
         private bool _translated;
 
@@ -45,19 +47,19 @@ namespace GitUI
 
         /// <summary>Overridden: Checks if a hotkey wants to handle the key before letting the message propagate</summary>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-     {   
-          if (HotkeysEnabled && this.Hotkeys != null)
-            foreach (var hotkey in this.Hotkeys)
-           {
-            if (hotkey.KeyData == keyData)
-              {
-                return ExecuteCommand(hotkey.CommandCode);
-              }
-            }
+        {
+            if (HotkeysEnabled && this.Hotkeys != null)
+                foreach (var hotkey in this.Hotkeys)
+                {
+                    if (hotkey != null && hotkey.KeyData == keyData)
+                    {
+                        return ExecuteCommand(hotkey.CommandCode);
+                    }
+                }
 
-         return base.ProcessCmdKey(ref msg, keyData);
+            return base.ProcessCmdKey(ref msg, keyData);
         }
-        
+
         /// <summary>
         /// Override this method to handle form specific Hotkey commands
         /// This base method calls script-hotkeys
@@ -71,7 +73,7 @@ namespace GitUI
         protected virtual bool ExecuteScriptCommand(int command, Keys keyData)
         {
             var curScripts = GitUI.Script.ScriptManager.GetScripts();
-            
+
             foreach (GitUI.Script.ScriptInfo s in curScripts)
             {
                 if (s.HotkeyCommandIdentifier == command)
@@ -87,27 +89,92 @@ namespace GitUI
             Font = SystemFonts.MessageBoxFont;
         }
 
-        private static Icon GetApplicationIcon()
+        #region icon
+
+        protected void RotateApplicationIcon()
+        {
+            ApplicationIcon = GetApplicationIcon(Settings.IconStyle, Settings.IconColor);
+            Icon = ApplicationIcon;
+        }
+
+        protected static Icon GetApplicationIcon(string iconStyle, string iconColor)
         {
             var randomIcon = -1;
-            if (Settings.IconColor.Equals("random"))
+            if (iconColor.Equals("random"))
                 randomIcon = new Random(DateTime.Now.Millisecond).Next(6);
 
-            if (Settings.IconColor.Equals("default") || randomIcon == 0)
-                return Resources.cow_head;
-            if (Settings.IconColor.Equals("blue") || randomIcon == 1)
-                return Resources.cow_head_blue;
-            if (Settings.IconColor.Equals("purple") || randomIcon == 2)
-                return Resources.cow_head_purple;
-            if (Settings.IconColor.Equals("green") || randomIcon == 3)
-                return Resources.cow_head_green;
-            if (Settings.IconColor.Equals("red") || randomIcon == 4)
-                return Resources.cow_head_red;
-            if (Settings.IconColor.Equals("yellow") || randomIcon == 5)
-                return Resources.cow_head_yellow;
+            if (iconStyle.Equals("small", StringComparison.OrdinalIgnoreCase))
+            {
+                if (iconColor.Equals("default") || randomIcon == 0)
+                    return Resources.x_with_arrow;
+                if (iconColor.Equals("blue") || randomIcon == 1)
+                    return Resources.x_with_arrow_blue;
+                if (iconColor.Equals("green") || randomIcon == 3)
+                    return Resources.x_with_arrow_green;
+                if (iconColor.Equals("lightblue") || randomIcon == 1)
+                    return Resources.x_with_arrow_lightblue;
+                if (iconColor.Equals("purple") || randomIcon == 2)
+                    return Resources.x_with_arrow_purple;
+                if (iconColor.Equals("red") || randomIcon == 4)
+                    return Resources.x_with_arrow_red;
+                if (iconColor.Equals("yellow") || randomIcon == 5)
+                    return Resources.x_with_arrow_yellow;
+            }
+            else if (iconStyle.Equals("large", StringComparison.OrdinalIgnoreCase))
+            {
+                if (iconColor.Equals("default") || randomIcon == 0)
+                    return Resources.git_extensions_logo_final;
+                if (iconColor.Equals("blue") || randomIcon == 1)
+                    return Resources.git_extensions_logo_final_blue;
+                if (iconColor.Equals("green") || randomIcon == 3)
+                    return Resources.git_extensions_logo_final_green;
+                if (iconColor.Equals("lightblue") || randomIcon == 1)
+                    return Resources.git_extensions_logo_final_lightblue;
+                if (iconColor.Equals("purple") || randomIcon == 2)
+                    return Resources.git_extensions_logo_final_purple;
+                if (iconColor.Equals("red") || randomIcon == 4)
+                    return Resources.git_extensions_logo_final_mixed_red;
+                if (iconColor.Equals("yellow") || randomIcon == 5)
+                    return Resources.git_extensions_logo_final_mixed_yellow;
+            }
+            else if (iconStyle.Equals("cow", StringComparison.OrdinalIgnoreCase))
+            {
+                if (iconColor.Equals("default") || randomIcon == 0)
+                    return Resources.cow_head;
+                if (iconColor.Equals("blue") || randomIcon == 1)
+                    return Resources.cow_head_blue;
+                if (iconColor.Equals("green") || randomIcon == 3)
+                    return Resources.cow_head_green;
+                if (iconColor.Equals("lightblue") || randomIcon == 1)
+                    return Resources.cow_head_blue;
+                if (iconColor.Equals("purple") || randomIcon == 2)
+                    return Resources.cow_head_purple;
+                if (iconColor.Equals("red") || randomIcon == 4)
+                    return Resources.cow_head_red;
+                if (iconColor.Equals("yellow") || randomIcon == 5)
+                    return Resources.cow_head_yellow;
+            }
+            else
+            {
+                if (iconColor.Equals("default") || randomIcon == 0)
+                    return Resources.git_extensions_logo_final_mixed;
+                if (iconColor.Equals("blue") || randomIcon == 1)
+                    return Resources.git_extensions_logo_final_mixed_blue;
+                if (iconColor.Equals("green") || randomIcon == 3)
+                    return Resources.git_extensions_logo_final_mixed_green;
+                if (iconColor.Equals("lightblue") || randomIcon == 1)
+                    return Resources.git_extensions_logo_final_mixed_lightblue;
+                if (iconColor.Equals("purple") || randomIcon == 2)
+                    return Resources.git_extensions_logo_final_mixed_purple;
+                if (iconColor.Equals("red") || randomIcon == 4)
+                    return Resources.git_extensions_logo_final_mixed_red;
+                if (iconColor.Equals("yellow") || randomIcon == 5)
+                    return Resources.git_extensions_logo_final_mixed_yellow;
+            }
 
-            return Resources.cow_head;
+            return Resources.git_extensions_logo_final_mixed;
         }
+        #endregion
 
         private static bool CheckComponent(object value)
         {
@@ -134,7 +201,6 @@ namespace GitUI
             var translator = new Translator(Settings.Translation);
             translator.TranslateControl(this);
             _translated = true;
-
         }
 
         public virtual void CancelButtonClick(object sender, EventArgs e)
@@ -144,6 +210,7 @@ namespace GitUI
 
         public virtual void GitExtensionsFormFormClosed(object sender, EventArgs e)
         {
+#if !__MonoCS__
             if (TaskbarManager.IsPlatformSupported)
             {
                 try
@@ -152,7 +219,10 @@ namespace GitUI
                 }
                 catch (InvalidOperationException) { }
             }
+#endif
         }
+
+        private bool _windowCentred = false;
 
         /// <summary>
         ///   Restores the position of a form from the user settings. Does
@@ -163,13 +233,23 @@ namespace GitUI
         ///   the settings</param>
         protected void RestorePosition(String name)
         {
+            _windowCentred = (StartPosition == FormStartPosition.CenterParent);
+
             var position = LookupWindowPosition(name);
 
             if (position == null)
                 return;
 
             StartPosition = FormStartPosition.Manual;
-            DesktopBounds = position.Rect;
+            Size = position.Rect.Size;
+            if (Owner == null || !_windowCentred)
+                Location = position.Rect.Location;
+            else
+            {
+                // Calculate location for modal form with parent
+                Location = new Point(Owner.Left + Owner.Width / 2 - Width / 2, 
+                    Owner.Top + Owner.Height / 2 - Height / 2);
+            }
             WindowState = position.State;
         }
 
@@ -193,12 +273,18 @@ namespace GitUI
                         ? FormWindowState.Maximized
                         : FormWindowState.Normal;
 
-                var position = new WindowPosition(rectangle, formWindowState);
-
-
                 // Write to the user settings:
                 if (Properties.Settings.Default.WindowPositions == null)
                     Properties.Settings.Default.WindowPositions = new WindowPositionList();
+                WindowPosition windowPosition = (WindowPosition)Properties.Settings.Default.WindowPositions[name];
+                // Don't save location when we center modal form
+                if (windowPosition != null && Owner != null && _windowCentred)
+                {
+                    if (rectangle.Width <= windowPosition.Rect.Width && rectangle.Height <= windowPosition.Rect.Height)
+                        rectangle.Location = windowPosition.Rect.Location;
+                }
+
+                var position = new WindowPosition(rectangle, formWindowState);
                 Properties.Settings.Default.WindowPositions[name] = position;
                 Properties.Settings.Default.Save();
             }

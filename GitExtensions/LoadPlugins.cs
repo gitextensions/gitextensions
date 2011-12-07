@@ -4,12 +4,12 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Threading;
+using GitCommands;
 
 namespace GitExtensions
 {
     internal static class PluginLoader
     {
-        private static readonly PluginExtraction extractor = new PluginExtraction();
         public static void LoadAsync()
         {
             // Create the thread object, passing in the Alpha.Beta method
@@ -38,10 +38,15 @@ namespace GitExtensions
 
             foreach (var pluginFile in plugins)
             {
+                if (pluginFile.FullName.Contains("Microsoft.WindowsAPICodePack"))
+                {
+                    continue;
+                }
+                
                 try
                 {
                     var types = Assembly.LoadFile(pluginFile.FullName).GetTypes();
-                    extractor.ExtractPluginTypes(types);
+                    PluginExtraction.ExtractPluginTypes(types);
                 }
                 catch (Exception ex)
                 {

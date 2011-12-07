@@ -1,31 +1,50 @@
 ﻿using System;
+using System.Linq;
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands.Repository;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class DashboardCategory : GitExtensionsControl
     {
+        #region Translation
+        private readonly TranslationString _moveToCategory =
+            new TranslationString("Move to category");
+        private readonly TranslationString _moveCategoryUp = 
+            new TranslationString("Move up");
+        private readonly TranslationString _moveCategoryDown =
+            new TranslationString("Move down");
+        private readonly TranslationString _removeCategory = 
+            new TranslationString("Remove");
+        private readonly TranslationString _editCategory = 
+            new TranslationString("Edit");
+        private readonly TranslationString _showCurrentBranch =
+            new TranslationString("Show current branch");
+        private readonly TranslationString _newCategory =
+            new TranslationString("New category");
+        #endregion
+
         private RepositoryCategory m_repositoryCategory;
-        private int top = 26;
 
         public DashboardCategory()
         {
             InitializeComponent();
+
+            // Do this here, so that at design time, the form will keep its size.
+            this.flowLayoutPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+
             SetUpFonts();
             Translate();
         }
 
         public DashboardCategory(string title, RepositoryCategory repositoryCategory)
+            : this()
         {
-            InitializeComponent();
-            SetUpFonts();
-            Translate();
-
             Title = title;
             RepositoryCategory = repositoryCategory;
-            AutoSizeMode = AutoSizeMode.GrowAndShrink;
         }
 
         public RepositoryCategory RepositoryCategory
@@ -61,39 +80,53 @@ namespace GitUI
 
         private void InitRepositoryCategory()
         {
-            if (m_repositoryCategory != null)
-            {
-                Height = top = 26;
-                foreach (Repository repository in m_repositoryCategory.Repositories)
-                {
-                    var dashboardItem = new DashboardItem(repository);
-                    dashboardItem.Click += dashboardItem_Click;
-                    AddItem(dashboardItem);
-                    
-                    if (m_repositoryCategory.CategoryType == RepositoryCategoryType.Repositories)
-                    {
-                        var contextMenu = new ContextMenuStrip();
-                        var moveToMenuItem = new ToolStripMenuItem("Move To Category", null,
-                                                                   new ToolStripMenuItem("moveto")) {Tag = repository};
-                        moveToMenuItem.DropDownOpening += moveToMenuItem_DropDownOpening;
-                        contextMenu.Items.Add(moveToMenuItem);
-                        var moveUpMenuItem = new ToolStripMenuItem("Move Up") {Tag = repository};
-                        moveUpMenuItem.Click += moveUpMenuItem_Click;
-                        contextMenu.Items.Add(moveUpMenuItem);
-                        var moveDownMenuItem = new ToolStripMenuItem("Move Down") {Tag = repository};
-                        moveDownMenuItem.Click += moveDownMenuItem_Click;
-                        contextMenu.Items.Add(moveDownMenuItem);
-                        var removeMenuItem = new ToolStripMenuItem("Remove") {Tag = repository};
-                        removeMenuItem.Click += removeMenuItem_Click;
-                        contextMenu.Items.Add(removeMenuItem);
-                        var editMenuItem = new ToolStripMenuItem("Edit");
-                        editMenuItem.Click += editMenuItem_Click;
-                        contextMenu.Items.Add(editMenuItem);
+            if (m_repositoryCategory == null)
+                return;
 
-                        dashboardItem.ContextMenuStrip = contextMenu;
-                    }
+            flowLayoutPanel.SuspendLayout();
+
+            foreach (Repository repository in m_repositoryCategory.Repositories)
+            {
+                var dashboardItem = new DashboardItem(repository);
+                dashboardItem.Click += dashboardItem_Click;
+
+                if (m_repositoryCategory.CategoryType == RepositoryCategoryType.Repositories)
+                {
+                    var contextMenu = new ContextMenuStrip();
+                    var moveToMenuItem = new ToolStripMenuItem(_moveToCategory.Text, null,
+                                                               new ToolStripMenuItem("moveto")) { Tag = repository };
+                    moveToMenuItem.DropDownOpening += moveToMenuItem_DropDownOpening;
+                    contextMenu.Items.Add(moveToMenuItem);
+                    var moveUpMenuItem = new ToolStripMenuItem(_moveCategoryUp.Text) { Tag = repository };
+                    moveUpMenuItem.Click += moveUpMenuItem_Click;
+                    contextMenu.Items.Add(moveUpMenuItem);
+                    var moveDownMenuItem = new ToolStripMenuItem(_moveCategoryDown.Text) { Tag = repository };
+                    moveDownMenuItem.Click += moveDownMenuItem_Click;
+                    contextMenu.Items.Add(moveDownMenuItem);
+                    var removeMenuItem = new ToolStripMenuItem(_removeCategory.Text) { Tag = repository };
+                    removeMenuItem.Click += removeMenuItem_Click;
+                    contextMenu.Items.Add(removeMenuItem);
+                    var editMenuItem = new ToolStripMenuItem(_editCategory.Text);
+                    editMenuItem.Click += editMenuItem_Click;
+                    contextMenu.Items.Add(editMenuItem);
+
+                    var showCurrentBranchMenuItem = new ToolStripMenuItem(_showCurrentBranch.Text);
+                    showCurrentBranchMenuItem.Click += new EventHandler(showCurrentBranchMenuItem_Click);
+                    showCurrentBranchMenuItem.Checked = GitCommands.Settings.DashboardShowCurrentBranch;
+                    contextMenu.Items.Add(showCurrentBranchMenuItem);
+
+                    dashboardItem.ContextMenuStrip = contextMenu;
                 }
+                AddItem(dashboardItem);
             }
+
+            flowLayoutPanel.ResumeLayout();
+        }
+
+        void showCurrentBranchMenuItem_Click(object sender, EventArgs e)
+        {
+            GitCommands.Settings.DashboardShowCurrentBranch = !GitCommands.Settings.DashboardShowCurrentBranch;
+            dashboardCategoryChanged(null, null);
         }
 
         private void moveUpMenuItem_Click(object sender, EventArgs e)
@@ -135,7 +168,7 @@ namespace GitUI
 
         private void editMenuItem_Click(object sender, EventArgs e)
         {
-            new FormDashboardEditor().ShowDialog();
+            new FormDashboardEditor().ShowDialog(this);
             dashboardCategoryChanged(this, null);
         }
 
@@ -182,7 +215,7 @@ namespace GitUI
             if (moveToMenuItem.DropDownItems.Count > 0)
                 moveToMenuItem.DropDownItems.Add(new ToolStripSeparator());
 
-            var newCategoryMenuItem = new ToolStripMenuItem("New category") {Tag = moveToMenuItem.Tag};
+            var newCategoryMenuItem = new ToolStripMenuItem(_newCategory.Text) { Tag = moveToMenuItem.Tag };
             newCategoryMenuItem.Click += newCategoryMenuItem_Click;
             moveToMenuItem.DropDownItems.Add(newCategoryMenuItem);
         }
@@ -200,7 +233,7 @@ namespace GitUI
                 return;
 
             var formDashboardCategoryTitle = new FormDashboardCategoryTitle();
-            formDashboardCategoryTitle.ShowDialog();
+            formDashboardCategoryTitle.ShowDialog(this);
 
             if (string.IsNullOrEmpty(formDashboardCategoryTitle.GetTitle()))
                 return;
@@ -242,38 +275,23 @@ namespace GitUI
                 RepositoryRemoved(repository);
         }
 
-
         public void AddItem(DashboardItem dashboardItem)
         {
-            dashboardItem.Location = new Point(10, top);
-            dashboardItem.Width = Width - 13;
-            Controls.Add(dashboardItem);
-            top += dashboardItem.Height;
-            Height = top;
+            dashboardItem.Margin = new Padding(10, 0, 0, 0);
+            this.flowLayoutPanel.Controls.Add(dashboardItem);
         }
 
         public void Clear()
         {
-            for (int i = Controls.Count; i > 0; i--)
-            {
-                var dashboardItem = Controls[i - 1] as DashboardItem;
-                if (dashboardItem != null)
-                {
-                    dashboardItem.Click -= dashboardItem_Click;
-                    dashboardItem.Close();
-                    Controls.RemoveAt(i - 1);
-                }
-            }
-            top = 26;
-            Height = top;
-        }
+            var items = (from DashboardItem i in this.flowLayoutPanel.Controls
+                         select i).ToList();
 
-        private void DashboardCategory_SizeChanged(object sender, EventArgs e)
-        {
-            for (int i = Controls.Count; i > 0; i--)
+            this.flowLayoutPanel.Controls.Clear();
+
+            foreach (var item in items)
             {
-                if (Controls[i - 1] is DashboardItem)
-                    Controls[i - 1].Width = Width - 13;
+                item.Click -= dashboardItem_Click;
+                item.Close();
             }
         }
 
@@ -304,7 +322,7 @@ namespace GitUI
 
         private void editToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormDashboardEditor().ShowDialog();
+            new FormDashboardEditor().ShowDialog(this);
             dashboardCategoryChanged(this, null);
         }
 

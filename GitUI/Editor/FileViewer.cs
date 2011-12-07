@@ -5,9 +5,8 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
-using ICSharpCode.TextEditor.Util;
-using PatchApply;
 using GitUI.Hotkey;
+using ICSharpCode.TextEditor.Util;
 
 namespace GitUI.Editor
 {
@@ -23,6 +22,7 @@ namespace GitUI.Editor
         {
             TreatAllFilesAsText = false;
             ShowEntireFile = false;
+            DisableFocusControlOnHover = false;
             NumberOfVisibleLines = 3;
             InitializeComponent();
             Translate();
@@ -32,9 +32,10 @@ namespace GitUI.Editor
             else
                 _internalFileViewer = new FileViewerMono();
 
-            _internalFileViewer.MouseMove += new MouseEventHandler(_internalFileViewer_MouseMove);
+            _internalFileViewer.MouseLeave += _internalFileViewer_MouseLeave;
+            _internalFileViewer.MouseMove += _internalFileViewer_MouseMove;
 
-            Control internalFileViewerControl = (Control)_internalFileViewer;
+            var internalFileViewerControl = (Control)_internalFileViewer;
             internalFileViewerControl.Dock = DockStyle.Fill;
             Controls.Add(internalFileViewerControl);
 
@@ -60,9 +61,20 @@ namespace GitUI.Editor
             _internalFileViewer.DoubleClick += (sender, args) => OnRequestDiffView(EventArgs.Empty);
 
             this.HotkeysEnabled = true;
-            this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
 
             ContextMenu.Opening += ContextMenu_Opening; 
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            if (!DesignMode)
+                this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            Font = Settings.DiffFont;
+        }
+
+        public new Font Font
+        {
+            set { _internalFileViewer.Font = value; }
         }
 
         void ContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -74,7 +86,14 @@ namespace GitUI.Editor
         void _internalFileViewer_MouseMove(object sender, MouseEventArgs e)
         {
             this.OnMouseMove(e);
-            _internalFileViewer.FocusTextArea();
+
+            if (!DisableFocusControlOnHover && Settings.FocusControlOnHover)
+                _internalFileViewer.FocusTextArea();
+        }
+
+        void _internalFileViewer_MouseLeave(object sender, EventArgs e)
+        {
+            this.OnMouseLeave(e);
         }
 
         void _internalFileViewer_SelectedLineChanged(object sender, int selectedLine)
@@ -151,6 +170,7 @@ namespace GitUI.Editor
         public int NumberOfVisibleLines { get; set; }
         public bool ShowEntireFile { get; set; }
         public bool TreatAllFilesAsText { get; set; }
+        public bool DisableFocusControlOnHover { get; set; }
 
         public int ScrollPos
         {
@@ -217,14 +237,18 @@ namespace GitUI.Editor
             _currentScrollPos = ScrollPos;
         }
 
+        public void ResetCurrentScrollPos()
+        {
+            _currentScrollPos = 0;
+        }
+
         private void RestoreCurrentScrollPos()
         {
             if (_currentScrollPos < 0)
                 return;
             ScrollPos = _currentScrollPos;
-            _currentScrollPos = 0;
+            ResetCurrentScrollPos();
         }
-
 
         public void ViewFile(string fileName)
         {
@@ -236,16 +260,30 @@ namespace GitUI.Editor
             return _internalFileViewer.GetText();
         }
 
-
-
         public void ViewCurrentChanges(string fileName, string oldFileName, bool staged)
         {
-            _async.Load(() => GitCommandHelpers.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments()), ViewStagingPatch);
+            _async.Load(() => Settings.Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments()), ViewStagingPatch);
         }
 
         public void ViewStagingPatch(string text)
         {
             ViewPatch(text);
+            Reset(true, true, true);
+        }
+
+        public void ViewSubmoduleChanges(string fileName, string oldFileName, bool staged)
+        {
+            _async.Load(() => Settings.Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments()), ViewSubmodulePatch);
+        }
+
+        public void ViewSubmodulePatch(string text)
+        {
+            ResetForText(null);
+            text = GitCommandHelpers.ProcessSubmodulePatch(text);
+            _internalFileViewer.SetText(text);
+            if (TextLoaded != null)
+                TextLoaded(this, null);
+            RestoreCurrentScrollPos();
             Reset(true, true, true);
         }
 
@@ -291,12 +329,12 @@ namespace GitUI.Editor
 
         public void ViewGitItemRevision(string fileName, string guid)
         {
-            ViewItem(fileName, () => GetImage(fileName, guid), () => GitCommandHelpers.GetFileRevisionText(fileName, guid));
+            ViewItem(fileName, () => GetImage(fileName, guid), () => Settings.Module.GetFileRevisionText(fileName, guid));
         }
 
         public void ViewGitItem(string fileName, string guid)
         {
-            ViewItem(fileName, () => GetImage(fileName, guid), () => GitCommandHelpers.GetFileText(guid));
+            ViewItem(fileName, () => GetImage(fileName, guid), () => Settings.Module.GetFileText(guid));
         }
 
         private void ViewItem(string fileName, Func<Image> getImage, Func<string> getFileText)
@@ -352,7 +390,7 @@ namespace GitUI.Editor
         {
             try
             {
-                using (var stream = GitCommandHelpers.GetFileStream(guid))
+                using (var stream = Settings.Module.GetFileStream(guid))
                 {
                     return CreateImage(fileName, stream);
                 }
@@ -702,5 +740,10 @@ namespace GitUI.Editor
         {
             return (_internalFileViewer.GetText() != null && _internalFileViewer.GetText().Contains("@@"));
         }
+
+        public void SetFileLoader(Func<bool, Tuple<int, string>> fileLoader){
+            _internalFileViewer.SetFileLoader(fileLoader);
+        }
+
     }
 }

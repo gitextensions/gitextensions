@@ -163,7 +163,7 @@ namespace PatchApply
             // 
             this.BrowsePatch.Location = new System.Drawing.Point(356, 7);
             this.BrowsePatch.Name = "BrowsePatch";
-            this.BrowsePatch.Size = new System.Drawing.Size(75, 25);
+            this.BrowsePatch.Size = new System.Drawing.Size(100, 25);
             this.BrowsePatch.TabIndex = 5;
             this.BrowsePatch.Text = "Browse";
             this.BrowsePatch.UseVisualStyleBackColor = true;
@@ -182,7 +182,7 @@ namespace PatchApply
             // labelPatch
             // 
             this.labelPatch.AutoSize = true;
-            this.labelPatch.Location = new System.Drawing.Point(3, 9);
+            this.labelPatch.Location = new System.Drawing.Point(3, 13);
             this.labelPatch.Name = "labelPatch";
             this.labelPatch.Size = new System.Drawing.Size(34, 13);
             this.labelPatch.TabIndex = 1;

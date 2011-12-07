@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Windows.Forms;
 using GitUI;
+using ResourceManager.Translation;
 
 namespace PatchApply
 {
     public partial class ViewPatch : GitExtensionsForm
     {
+        private readonly TranslationString _patchFileFilterString =
+            new TranslationString("Patch file (*.Patch)");
+
+        private readonly TranslationString _patchFileFilterTitle =
+            new TranslationString("Select patch file");
+
         public ViewPatch()
         {
             InitializeComponent(); Translate();
@@ -55,11 +62,11 @@ namespace PatchApply
         {
             var dialog = new OpenFileDialog
                              {
-                                 Filter = "Patch file (*.Patch)|*.Patch",
+                                 Filter = _patchFileFilterString.Text + "|*.Patch",
                                  InitialDirectory = initialDirectory,
-                                 Title = "Select patch file"
+                                 Title = _patchFileFilterTitle.Text
                              };
-            return (dialog.ShowDialog() == DialogResult.OK) ? dialog.FileName : PatchFileNameEdit.Text;
+            return (dialog.ShowDialog(this) == DialogResult.OK) ? dialog.FileName : PatchFileNameEdit.Text;
         }
 
         private void BrowsePatch_Click(object sender, EventArgs e)

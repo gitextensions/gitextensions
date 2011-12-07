@@ -48,6 +48,8 @@ namespace GitUI
             translated = true;
         }
 
+
+
         #region Hotkeys
 
         /// <summary>Gets or sets a value that specifies if the hotkeys are used</summary>
@@ -62,7 +64,7 @@ namespace GitUI
             if (HotkeysEnabled && this.Hotkeys != null)
                 foreach (var hotkey in this.Hotkeys)
                 {
-                    if (hotkey.KeyData == keyData)
+                    if (hotkey != null && hotkey.KeyData == keyData)
                     {
                         return ExecuteCommand(hotkey.CommandCode);
                     }

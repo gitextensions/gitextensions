@@ -91,7 +91,10 @@ namespace GitUI.Hotkey
             {
                 for (int i = 0; i < hs.Commands.Length; i++)
                 {
-                    if (!UsedKeys.Contains(hs.Commands[i].KeyData)) UsedKeys.Add(hs.Commands[i].KeyData);
+                    HotkeyCommand hotkeyCommand = hs.Commands[i];
+                    
+                    if (hotkeyCommand != null && !UsedKeys.Contains(hotkeyCommand.KeyData)) 
+                        UsedKeys.Add(hotkeyCommand.KeyData);
                 }
             }
             //MessageBox.Show(UsedKeys.Count.ToString());
@@ -164,12 +167,16 @@ namespace GitUI.Hotkey
                   
                 // FormCommit
                 new HotkeySettings(FormCommit.HotkeySettingsName, 
+                    hk(FormCommit.Commands.AddToGitIgnore, Keys.None),
+                    hk(FormCommit.Commands.DeleteSelectedFiles, Keys.None),
                     hk(FormCommit.Commands.FocusUnstagedFiles, Keys.Control | Keys.D1),
                     hk(FormCommit.Commands.FocusSelectedDiff, Keys.Control | Keys.D2),
                     hk(FormCommit.Commands.FocusStagedFiles, Keys.Control | Keys.D3),
                     hk(FormCommit.Commands.FocusCommitMessage, Keys.Control | Keys.D4),
+                    hk(FormCommit.Commands.ResetSelectedFiles, Keys.R),
                     hk(FormCommit.Commands.StageSelectedFile, Keys.S),
-                    hk(FormCommit.Commands.UnStageSelectedFile, Keys.U)),
+                    hk(FormCommit.Commands.UnStageSelectedFile, Keys.U),
+                    hk(FormCommit.Commands.ToggleSelectionFilter, Keys.Control | Keys.F)),
                 new HotkeySettings(FormBrowse.HotkeySettingsName,
                     hk(FormBrowse.Commands.GitBash, Keys.Control | Keys.G),
                     hk(FormBrowse.Commands.GitGui, Keys.None),
@@ -184,7 +191,8 @@ namespace GitUI.Hotkey
                     hk(FormBrowse.Commands.SelectCurrentRevision, Keys.Control | Keys.Shift | Keys.C),
                     hk(FormBrowse.Commands.CheckoutBranch, Keys.Control | Keys.Decimal),
                     hk(FormBrowse.Commands.QuickFetch, Keys.Control | Keys.Shift | Keys.Down),
-                    hk(FormBrowse.Commands.QuickPush, Keys.Control | Keys.Shift | Keys.Up)),
+                    hk(FormBrowse.Commands.QuickPush, Keys.Control | Keys.Shift | Keys.Up),
+                    hk(FormBrowse.Commands.RotateApplicationIcon, Keys.Control | Keys.Shift | Keys.I)),
                 new HotkeySettings(RevisionGrid.HotkeySettingsName,
                     hk(RevisionGrid.Commands.RevisionFilter, Keys.Control | Keys.F),
                     hk(RevisionGrid.Commands.ToggleRevisionGraph, Keys.None),

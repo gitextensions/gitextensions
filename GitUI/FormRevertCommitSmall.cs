@@ -1,10 +1,17 @@
 ﻿using System;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormRevertCommitSmall : GitExtensionsForm
     {
+        readonly TranslationString commitInfo = new TranslationString("Commit: {0}");
+        readonly TranslationString authorInfo = new TranslationString("Author: {0}");
+        readonly TranslationString dateInfo = new TranslationString("Commit date: {0}");
+        readonly TranslationString commitMessage = new TranslationString("Message: {0}");
+
+
         public FormRevertCommitSmall(GitRevision Revision)
         {
             this.Revision = Revision;
@@ -16,17 +23,17 @@ namespace GitUI
 
         private void FormRevertCommitSmall_Load(object sender, EventArgs e)
         {
-            Commit.Text = string.Format("Commit: {0}", Revision.Guid);
-            Author.Text = string.Format("Author: {0}", Revision.Author);
-            Date.Text = string.Format("Commit date: {0}", Revision.CommitDate);
-            Message.Text = string.Format("Message: {0}", Revision.Message);
+            Commit.Text = string.Format(commitInfo.Text, Revision.Guid);
+            Author.Text = string.Format(authorInfo.Text, Revision.Author);
+            Date.Text = string.Format(dateInfo.Text, Revision.CommitDate);
+            Message.Text = string.Format(commitMessage.Text, Revision.Message);
         }
 
         private void Revert_Click(object sender, EventArgs e)
         {
-            new FormProcess(GitCommandHelpers.RevertCmd(Revision.Guid, AutoCommit.Checked)).ShowDialog();
+            new FormProcess(GitCommandHelpers.RevertCmd(Revision.Guid, AutoCommit.Checked)).ShowDialog(this);
 
-            MergeConflictHandler.HandleMergeConflicts();
+            MergeConflictHandler.HandleMergeConflicts(this);
 
             Close();
         }

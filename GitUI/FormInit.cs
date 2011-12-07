@@ -12,8 +12,19 @@ namespace GitUI
         private readonly TranslationString _chooseDirectory =
             new TranslationString("Please choose a directory.");
 
+        private readonly TranslationString _chooseDirectoryCaption =
+            new TranslationString("Choose directory");
+
         private readonly TranslationString _chooseDirectoryNotFile =
             new TranslationString("Cannot initialize a new repository on a file.\nPlease choose a directory.");
+
+        private readonly TranslationString _chooseDirectoryNotFileCaption =
+            new TranslationString("Error");
+
+        private readonly TranslationString _initMsgBoxCaption =
+            new TranslationString("Initialize new repository");
+
+        
 
         public FormInit(string dir)
         {
@@ -27,7 +38,7 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
-            if (!Settings.ValidWorkingDir())
+            if (!Settings.Module.ValidWorkingDir())
                 Directory.Text = Settings.WorkingDir;
         }
 
@@ -41,13 +52,13 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(Directory.Text))
             {
-                MessageBox.Show(_chooseDirectory.Text);
+                MessageBox.Show(this, _chooseDirectory.Text,_chooseDirectoryCaption.Text);
                 return;
             }
 
             if (File.Exists(Directory.Text))
             {
-                MessageBox.Show(_chooseDirectoryNotFile.Text);
+                MessageBox.Show(this, _chooseDirectoryNotFile.Text,_chooseDirectoryNotFileCaption.Text);
                 return;
             }
 
@@ -56,7 +67,7 @@ namespace GitUI
             if (!System.IO.Directory.Exists(Settings.WorkingDir))
                 System.IO.Directory.CreateDirectory(Settings.WorkingDir);
 
-            MessageBox.Show(GitCommandHelpers.Init(Central.Checked, Central.Checked), "Initialize new repository");
+            MessageBox.Show(this, Settings.Module.Init(Central.Checked, Central.Checked), _initMsgBoxCaption.Text);
 
             Repositories.RepositoryHistory.AddMostRecentRepository(Directory.Text);
 
@@ -67,7 +78,7 @@ namespace GitUI
         {
             var browseDialog = new FolderBrowserDialog();
 
-            if (browseDialog.ShowDialog() == DialogResult.OK)
+            if (browseDialog.ShowDialog(this) == DialogResult.OK)
                 Directory.Text = browseDialog.SelectedPath;
         }
     }

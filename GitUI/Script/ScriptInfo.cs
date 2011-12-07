@@ -19,8 +19,11 @@ namespace GitUI.Script
 
     public class ScriptInfo
     {
+        private string _Icon;
+
         public ScriptInfo()
         {
+            _Icon = "bug";
             Enabled = true;
         }
 
@@ -39,5 +42,24 @@ namespace GitUI.Script
         public bool AskConfirmation { get; set; }
 
         public int HotkeyCommandIdentifier { get; set; }
+        /// <summary>
+        /// Gets or sets the icon name.
+        /// </summary>
+        public string Icon {
+            get { return _Icon; }
+            set { _Icon = value; } 
+        }
+        /// <summary>
+        /// Gets the associated bitmap.
+        /// </summary>
+        /// <returns>Bitmap image</returns>
+        public System.Drawing.Bitmap GetIcon() {
+            // Get all resources
+                    System.Resources.ResourceManager rm 
+                        = new System.Resources.ResourceManager("GitUI.Properties.Resources"
+                            , System.Reflection.Assembly.GetExecutingAssembly());
+            // return icon
+                    return (System.Drawing.Bitmap)rm.GetObject(_Icon);
+        }
     }
 }

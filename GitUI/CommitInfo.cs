@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Web;
 using System.Windows.Forms;
 using GitCommands;
-using System.Threading;
+using GitUI.Editor.RichTextBoxExtension;
 using ResourceManager.Translation;
 
 namespace GitUI
@@ -28,6 +30,7 @@ namespace GitUI
             tableLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayout.AutoSize = true;
 
+            _RevisionHeader.LinkClicked += RevisionInfoLinkClicked;
             RevisionInfo.LinkClicked += RevisionInfoLinkClicked;
         }
 
@@ -35,10 +38,11 @@ namespace GitUI
         {
             try
             {
+                string url = e.GetUrl();
                 new Process
                     {
                         EnableRaisingEvents = false,
-                        StartInfo = { FileName = e.LinkText }
+                        StartInfo = { FileName = url }
                     }.Start();
             }
             catch (Exception ex)
@@ -71,7 +75,7 @@ namespace GitUI
             _RevisionHeader.Text = string.Empty;
             _RevisionHeader.Refresh();
             CommitInformation commitInformation = CommitInformation.GetCommitInfo(_revision);
-            _RevisionHeader.Text = commitInformation.Header;
+            _RevisionHeader.SetXHTMLText(commitInformation.Header);
             splitContainer1.SplitterDistance = _RevisionHeader.GetPreferredSize(new System.Drawing.Size(0, 0)).Height;
             _revisionInfo = commitInformation.Body;
             updateText();
@@ -98,8 +102,11 @@ namespace GitUI
 
         private void updateText()
         {
-            RevisionInfo.Text = _revisionInfo + _branchInfo + _tagInfo;
-            RevisionInfo.Refresh();
+            RevisionInfo.SuspendLayout();
+            RevisionInfo.SetXHTMLText(_revisionInfo + _branchInfo + _tagInfo);
+            RevisionInfo.SelectionStart = 0; //scroll up
+            RevisionInfo.ScrollToCaret();    //scroll up
+            RevisionInfo.ResumeLayout(true);
         }
 
         private void ResetTextAndImage()
@@ -168,8 +175,8 @@ namespace GitUI
                     allowRemote = false;
             }
             if (branchString != string.Empty)
-                return Environment.NewLine + containedInBranches.Text + " " + branchString;
-            return Environment.NewLine + containedInNoBranch.Text;
+                return Environment.NewLine + HttpUtility.HtmlEncode(containedInBranches.Text + " " + branchString);
+            return Environment.NewLine + HttpUtility.HtmlEncode(containedInNoBranch.Text);
         }
 
         private string GetTagsWhichContainsThisCommit(string revision)
@@ -183,8 +190,8 @@ namespace GitUI
             }
 
             if (tagString != string.Empty)
-                return Environment.NewLine + containedInTags.Text + " " + tagString;
-            return Environment.NewLine + containedInNoTag.Text;
+                return Environment.NewLine + HttpUtility.HtmlEncode(containedInTags.Text + " " + tagString);
+            return Environment.NewLine + HttpUtility.HtmlEncode(containedInNoTag.Text);
         }
 
         private void tableLayout_Paint(object sender, PaintEventArgs e)
@@ -223,7 +230,7 @@ namespace GitUI
 
         private void addNoteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GitCommandHelpers.EditNotes(_revision);
+            Settings.Module.EditNotes(_revision);
             ReloadCommitInfo();
         }
     }

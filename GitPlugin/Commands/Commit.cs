@@ -69,22 +69,22 @@ namespace GitPlugin.Commands
 
         private static string GetSelectedFile(EnvDTE80.DTE2 application)
         {
-            if (application.SelectedItems.Count == 0)
-                return string.Empty;
-
             foreach (SelectedItem sel in application.SelectedItems)
             {
                 if (sel.ProjectItem != null)
                 {
                     if (sel.ProjectItem.FileCount > 0)
                     {
-                        return sel.ProjectItem.FileNames[1];
+                        //Unfortunaly FileNames[1] is not supported by .net 3.5
+                        return sel.ProjectItem.get_FileNames(1);
                     }
                 }
                 else
                     if (sel.Project != null)
                         return sel.Project.FullName;
             }
+            if (application.Solution.IsOpen)
+                return application.Solution.FullName;
             return string.Empty;
         }
     }
