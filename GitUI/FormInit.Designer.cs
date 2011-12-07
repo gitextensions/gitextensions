@@ -43,7 +43,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(51, 13);
+            this.label1.Size = new System.Drawing.Size(55, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Directory";
             // 
@@ -54,15 +54,15 @@
             this.Directory.FormattingEnabled = true;
             this.Directory.Location = new System.Drawing.Point(98, 6);
             this.Directory.Name = "Directory";
-            this.Directory.Size = new System.Drawing.Size(364, 21);
+            this.Directory.Size = new System.Drawing.Size(338, 23);
             this.Directory.TabIndex = 1;
             this.Directory.DropDown += new System.EventHandler(this.DirectoryDropDown);
             // 
             // Browse
             // 
-            this.Browse.Location = new System.Drawing.Point(468, 4);
+            this.Browse.Location = new System.Drawing.Point(442, 4);
             this.Browse.Name = "Browse";
-            this.Browse.Size = new System.Drawing.Size(75, 25);
+            this.Browse.Size = new System.Drawing.Size(101, 25);
             this.Browse.TabIndex = 2;
             this.Browse.Text = "Browse";
             this.Browse.UseVisualStyleBackColor = true;
@@ -74,7 +74,7 @@
             this.groupBox1.Controls.Add(this.Personal);
             this.groupBox1.Location = new System.Drawing.Point(15, 33);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(447, 68);
+            this.groupBox1.Size = new System.Drawing.Size(421, 68);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Repository type";
@@ -84,7 +84,7 @@
             this.Central.AutoSize = true;
             this.Central.Location = new System.Drawing.Point(6, 42);
             this.Central.Name = "Central";
-            this.Central.Size = new System.Drawing.Size(292, 17);
+            this.Central.Size = new System.Drawing.Size(317, 19);
             this.Central.TabIndex = 1;
             this.Central.Text = "Central repository, no working dir  (--bare --shared=all)";
             this.Central.UseVisualStyleBackColor = true;
@@ -95,7 +95,7 @@
             this.Personal.Checked = true;
             this.Personal.Location = new System.Drawing.Point(6, 19);
             this.Personal.Name = "Personal";
-            this.Personal.Size = new System.Drawing.Size(118, 17);
+            this.Personal.Size = new System.Drawing.Size(126, 19);
             this.Personal.TabIndex = 0;
             this.Personal.TabStop = true;
             this.Personal.Text = "Personal repository";
@@ -103,9 +103,9 @@
             // 
             // Init
             // 
-            this.Init.Location = new System.Drawing.Point(468, 78);
+            this.Init.Location = new System.Drawing.Point(442, 78);
             this.Init.Name = "Init";
-            this.Init.Size = new System.Drawing.Size(75, 25);
+            this.Init.Size = new System.Drawing.Size(101, 25);
             this.Init.TabIndex = 4;
             this.Init.Text = "Initialize";
             this.Init.UseVisualStyleBackColor = true;
@@ -113,7 +113,7 @@
             // 
             // FormInit
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(548, 113);
             this.Controls.Add(this.Init);

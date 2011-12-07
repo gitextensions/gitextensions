@@ -241,6 +241,16 @@ namespace GitCommands.Config
             return configSectionToFind;
         }
 
+        public void RemoveConfigSection(string configSectionName)
+        {
+            var configSection = FindConfigSection(configSectionName);
+
+            if (configSection == null)
+                return;
+
+            _sections.Remove(configSection);
+        }
+
         private ConfigSection FindConfigSection(string name)
         {
             var configSectionToFind = new ConfigSection(name);

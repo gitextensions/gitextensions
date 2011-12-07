@@ -23,6 +23,9 @@ namespace GitUI
             _syncContext = SynchronizationContext.Current;
 
             InitializeComponent();
+#if !__MonoCS__ // animated GIFs are not supported in Mono/Linux
+            this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
+#endif
             Translate();
             View.ExtraDiffArgumentsChanged += ViewExtraDiffArgumentsChanged;
         }
@@ -49,7 +52,7 @@ namespace GitUI
 
         private void Initialize()
         {
-            IList<GitStash> stashedItems = GitCommandHelpers.GetStashes();
+            IList<GitStash> stashedItems = Settings.Module.GetStashes();
 
             currentWorkingDirStashItem = new GitStash();
             currentWorkingDirStashItem.Name = currentWorkingDirChanges.Text;
@@ -90,7 +93,7 @@ namespace GitUI
                 ThreadPool.QueueUserWorkItem(
                 o =>
                 {
-                    IList<GitItemStatus> gitItemStatuses = GitCommandHelpers.GetAllChangedFiles();
+                    IList<GitItemStatus> gitItemStatuses = Settings.Module.GetAllChangedFiles();
                     _syncContext.Post(state1 => LoadGitItemStatuses(gitItemStatuses), null);
                 });
             }
@@ -99,7 +102,7 @@ namespace GitUI
                 ThreadPool.QueueUserWorkItem(
                 o =>
                 {
-                    IList<GitItemStatus> gitItemStatuses = GitCommandHelpers.GetDiffFiles(gitStash.Name, gitStash.Name + "^", true);
+                    IList<GitItemStatus> gitItemStatuses = Settings.Module.GetDiffFiles(gitStash.Name, gitStash.Name + "^", true);
                     _syncContext.Post(state1 => LoadGitItemStatuses(gitItemStatuses), null);
                 });
             }
@@ -122,7 +125,7 @@ namespace GitUI
             if (stashedItem != null && 
                 gitStash == currentWorkingDirStashItem) //current working dir
             {
-                View.ViewCurrentChanges(stashedItem.Name, stashedItem.OldName, !stashedItem.IsStaged);
+                View.ViewCurrentChanges(stashedItem.Name, stashedItem.OldName, stashedItem.IsStaged);
             }
             else
             if (stashedItem != null)
@@ -130,7 +133,7 @@ namespace GitUI
                 string extraDiffArguments = View.GetExtraDiffArguments();
                 View.ViewPatch(() =>
                 {
-                    PatchApply.Patch patch = GitCommandHelpers.GetSingleDiff(gitStash.Name, gitStash.Name + "^", stashedItem.Name, stashedItem.OldName, extraDiffArguments);
+                    PatchApply.Patch patch = Settings.Module.GetSingleDiff(gitStash.Name, gitStash.Name + "^", stashedItem.Name, stashedItem.OldName, extraDiffArguments);
                     if (patch == null)
                         return String.Empty;
                     return patch.Text;
@@ -157,7 +160,7 @@ namespace GitUI
             if (StashKeepIndex.Checked){ Arguments += " --keep-index"; }
             if (toolStripButton_customMessage.Checked) { Msg = " " + StashMessage.Text.Trim(); }
 
-            new FormProcess(String.Format("stash save{0}{1}",Arguments,Msg)).ShowDialog();
+            new FormProcess(String.Format("stash save{0}{1}",Arguments,Msg)).ShowDialog(this);
             NeedRefresh = true;
             Initialize();
             Cursor.Current = Cursors.Default;
@@ -166,7 +169,7 @@ namespace GitUI
         private void ClearClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(string.Format("stash drop {0}", Stashes.Text)).ShowDialog();
+            new FormProcess(string.Format("stash drop {0}", Stashes.Text)).ShowDialog(this);
             NeedRefresh = true;
             Initialize();
             Cursor.Current = Cursors.Default;
@@ -174,9 +177,9 @@ namespace GitUI
 
         private void ApplyClick(object sender, EventArgs e)
         {
-            new FormProcess(string.Format("stash apply {0}", Stashes.Text)).ShowDialog();
+            new FormProcess(string.Format("stash apply {0}", Stashes.Text)).ShowDialog(this);
 
-            MergeConflictHandler.HandleMergeConflicts();
+            MergeConflictHandler.HandleMergeConflicts(this);
 
             Initialize();
         }

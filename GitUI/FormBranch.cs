@@ -21,13 +21,14 @@ namespace GitUI
             try
             {
 
-                if (RevisionGrid.GetRevisions().Count != 1)
+                if (RevisionGrid.GetSelectedRevisions().Count != 1)
                 {
-                    MessageBox.Show(_selectOneRevision.Text, _branchCaption.Text);
+                    MessageBox.Show(this, _selectOneRevision.Text, _branchCaption.Text);
                     return;
                 }
 
-                new FormProcess(GitCommandHelpers.BranchCmd(BName.Text, RevisionGrid.GetRevisions()[0].Guid, CheckoutAfterCreate.Checked)).ShowDialog();
+                string cmd = GitCommandHelpers.BranchCmd(BName.Text, RevisionGrid.GetSelectedRevisions()[0].Guid, CheckoutAfterCreate.Checked);
+                new FormProcess(cmd).ShowDialog(this);
 
                 Close();
 
@@ -39,8 +40,8 @@ namespace GitUI
 
         private void Checkout_Click(object sender, EventArgs e)
         {
-            GitUICommands.Instance.StartCheckoutBranchDialog();
-            MergeConflictHandler.HandleMergeConflicts();
+            GitUICommands.Instance.StartCheckoutBranchDialog(this);
+            MergeConflictHandler.HandleMergeConflicts(this);
             RevisionGrid.RefreshRevisions();
         }
 

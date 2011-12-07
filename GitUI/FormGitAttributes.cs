@@ -9,7 +9,15 @@ namespace GitUI
 {
     public partial class FormGitAttributes : GitExtensionsForm
     {
-        readonly TranslationString noWorkingDir = new TranslationString(".gitattributes is only supported when there is a working dir.");
+        private readonly TranslationString noWorkingDir = 
+            new TranslationString(".gitattributes is only supported when there is a working dir.");
+        private readonly TranslationString _noWorkingDirCaption =
+            new TranslationString("No working dir");
+
+        private readonly TranslationString _cannotAccessGitattributes =
+            new TranslationString("Failed to save .gitattributes." + Environment.NewLine + "Check if file is accessible.");
+        private readonly TranslationString _cannotAccessGitattributesCaption =
+            new TranslationString("Failed to save .gitattributes");
 
         public string GitAttributesFile;
 
@@ -35,18 +43,23 @@ namespace GitUI
 
         private void SaveClick(object sender, EventArgs e)
         {
-            FileInfoExtensions
-                .MakeFileTemporaryWritable(
-                    Settings.WorkingDir + ".gitattributes",
-                    x =>
+            try
+            {
+                FileInfoExtensions
+                    .MakeFileTemporaryWritable(
+                        Settings.WorkingDir + ".gitattributes",
+                        x =>
                         {
-                            // Enter a newline to work around a wierd bug 
-                            // that causes the first line to include 3 extra bytes. (encoding marker??)
-                            GitAttributesFile = Environment.NewLine + _NO_TRANSLATE_GitAttributesText.GetText().Trim();
-                            using (TextWriter tw = new StreamWriter(x, false, Settings.Encoding))
-                                tw.Write(GitAttributesFile);
-                            Close();
+                            this.GitAttributesFile = _NO_TRANSLATE_GitAttributesText.GetText();
+                            File.WriteAllBytes(x,Settings.Encoding.GetBytes(this.GitAttributesFile));
                         });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, _cannotAccessGitattributes.Text + Environment.NewLine + ex.Message,
+                    _cannotAccessGitattributesCaption.Text);
+            }
+            Close();
         }
 
         private void FormMailMapFormClosing(object sender, FormClosingEventArgs e)
@@ -57,8 +70,8 @@ namespace GitUI
         private void FormMailMapLoad(object sender, EventArgs e)
         {
             RestorePosition("edit-gitattributes");
-            if (!Settings.IsBareRepository()) return;
-            MessageBox.Show(noWorkingDir.Text);
+            if (!Settings.Module.IsBareRepository()) return;
+            MessageBox.Show(this, noWorkingDir.Text, _noWorkingDirCaption.Text);
             Close();
         }
     }

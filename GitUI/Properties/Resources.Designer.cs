@@ -386,20 +386,14 @@ namespace GitUI.Properties {
         ///   Looks up a localized string similar to Changelog
         ///=========
         ///
-        ///Version 2.17
-        ///	Fixed issue 399: blame is showing source code double space
-        ///	Fixed issue 400: commit summary with polish letters in author names shown incorrect
-        ///	Fixed &quot;show ignored files&quot; in commit dialog
-        ///	Added hotkeys for FileViewer and FormResolveConflicts
-        ///	Added advanced option to merge dialog
-        ///	Added &quot;Go to commit&quot;
-        ///	Installer checks for .Net 3.5
-        ///	Updated stash view
-        ///	Various bugfixes and minor changes
-        ///
-        ///Version 2.14
-        ///	Fixed crash when viewing binary file in blame
-        ///	Fixed s [rest of string was truncated]&quot;;.
+        ///Version 2.23
+        ///	Fixed issue 452: &quot;Show repository status&quot; always updates status every second
+        ///	Fixed issue 464: Added option to add custom script to toolbar in browse dialog
+        ///	Fixed issue 465: &quot;Create branch&quot; dialog closes immediately after opening by enter key
+        ///	Fixed issue 471: Implement option to use Patience algorithm
+        ///	Fixed issue 479: Added the &apos;keep index&apos; option to the &apos;ApplyStash&apos; form
+        ///	Fixed short name creation for repositories located in root directories
+        ///	Added support fo [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ChangeLog {
             get {
@@ -547,6 +541,111 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Icon git_extensions_logo_final {
+            get {
+                object obj = ResourceManager.GetObject("git_extensions_logo_final", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap git_extensions_logo_final_128 {
+            get {
+                object obj = ResourceManager.GetObject("git_extensions_logo_final_128", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Icon git_extensions_logo_final_blue {
+            get {
+                object obj = ResourceManager.GetObject("git_extensions_logo_final_blue", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        public static System.Drawing.Icon git_extensions_logo_final_green {
+            get {
+                object obj = ResourceManager.GetObject("git_extensions_logo_final_green", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        public static System.Drawing.Icon git_extensions_logo_final_lightblue {
+            get {
+                object obj = ResourceManager.GetObject("git_extensions_logo_final_lightblue", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        public static System.Drawing.Icon git_extensions_logo_final_mixed {
+            get {
+                object obj = ResourceManager.GetObject("git_extensions_logo_final_mixed", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        public static System.Drawing.Icon git_extensions_logo_final_mixed_blue {
+            get {
+                object obj = ResourceManager.GetObject("git_extensions_logo_final_mixed_blue", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        public static System.Drawing.Icon git_extensions_logo_final_mixed_green {
+            get {
+                object obj = ResourceManager.GetObject("git_extensions_logo_final_mixed_green", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        public static System.Drawing.Icon git_extensions_logo_final_mixed_lightblue {
+            get {
+                object obj = ResourceManager.GetObject("git_extensions_logo_final_mixed_lightblue", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        public static System.Drawing.Icon git_extensions_logo_final_mixed_purple {
+            get {
+                object obj = ResourceManager.GetObject("git_extensions_logo_final_mixed_purple", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        public static System.Drawing.Icon git_extensions_logo_final_mixed_red {
+            get {
+                object obj = ResourceManager.GetObject("git_extensions_logo_final_mixed_red", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        public static System.Drawing.Icon git_extensions_logo_final_mixed_yellow {
+            get {
+                object obj = ResourceManager.GetObject("git_extensions_logo_final_mixed_yellow", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        public static System.Drawing.Icon git_extensions_logo_final_purple {
+            get {
+                object obj = ResourceManager.GetObject("git_extensions_logo_final_purple", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        public static System.Drawing.Icon git_extensions_logo_final_red {
+            get {
+                object obj = ResourceManager.GetObject("git_extensions_logo_final_red", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        public static System.Drawing.Icon git_extensions_logo_final_yellow {
+            get {
+                object obj = ResourceManager.GetObject("git_extensions_logo_final_yellow", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
         public static System.Drawing.Icon history {
             get {
                 object obj = ResourceManager.GetObject("history", resourceCulture);
@@ -683,6 +782,55 @@ namespace GitUI.Properties {
         public static System.Drawing.Icon witespace {
             get {
                 object obj = ResourceManager.GetObject("witespace", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        public static System.Drawing.Icon x_with_arrow {
+            get {
+                object obj = ResourceManager.GetObject("x_with_arrow", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        public static System.Drawing.Icon x_with_arrow_blue {
+            get {
+                object obj = ResourceManager.GetObject("x_with_arrow_blue", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        public static System.Drawing.Icon x_with_arrow_green {
+            get {
+                object obj = ResourceManager.GetObject("x_with_arrow_green", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        public static System.Drawing.Icon x_with_arrow_lightblue {
+            get {
+                object obj = ResourceManager.GetObject("x_with_arrow_lightblue", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        public static System.Drawing.Icon x_with_arrow_purple {
+            get {
+                object obj = ResourceManager.GetObject("x_with_arrow_purple", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        public static System.Drawing.Icon x_with_arrow_red {
+            get {
+                object obj = ResourceManager.GetObject("x_with_arrow_red", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        public static System.Drawing.Icon x_with_arrow_yellow {
+            get {
+                object obj = ResourceManager.GetObject("x_with_arrow_yellow", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }

@@ -34,9 +34,10 @@ namespace GitUI
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DashboardEditor));
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this._NO_TRANSLATE_Categories = new System.Windows.Forms.ListBox();
-            this.CategoriesLabel = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.Remove = new System.Windows.Forms.Button();
             this.Add = new System.Windows.Forms.Button();
+            this.CategoriesLabel = new System.Windows.Forms.Label();
             this.RepositoriesGrid = new System.Windows.Forms.DataGridView();
             this.pathDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Title = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -52,6 +53,7 @@ namespace GitUI
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RepositoriesGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -64,9 +66,8 @@ namespace GitUI
             // splitContainer2.Panel1
             // 
             this.splitContainer2.Panel1.Controls.Add(this._NO_TRANSLATE_Categories);
+            this.splitContainer2.Panel1.Controls.Add(this.panel1);
             this.splitContainer2.Panel1.Controls.Add(this.CategoriesLabel);
-            this.splitContainer2.Panel1.Controls.Add(this.Remove);
-            this.splitContainer2.Panel1.Controls.Add(this.Add);
             // 
             // splitContainer2.Panel2
             // 
@@ -78,6 +79,7 @@ namespace GitUI
             this.splitContainer2.Panel2.Controls.Add(this.label2);
             this.splitContainer2.Panel2.Controls.Add(this._NO_TRANSLATE_Caption);
             this.splitContainer2.Panel2.Controls.Add(this.label1);
+            resources.ApplyResources(this.splitContainer2.Panel2, "splitContainer2.Panel2");
             // 
             // _NO_TRANSLATE_Categories
             // 
@@ -86,10 +88,12 @@ namespace GitUI
             this._NO_TRANSLATE_Categories.Name = "_NO_TRANSLATE_Categories";
             this._NO_TRANSLATE_Categories.SelectedIndexChanged += new System.EventHandler(this.Categories_SelectedIndexChanged);
             // 
-            // CategoriesLabel
+            // panel1
             // 
-            resources.ApplyResources(this.CategoriesLabel, "CategoriesLabel");
-            this.CategoriesLabel.Name = "CategoriesLabel";
+            this.panel1.Controls.Add(this.Remove);
+            this.panel1.Controls.Add(this.Add);
+            resources.ApplyResources(this.panel1, "panel1");
+            this.panel1.Name = "panel1";
             // 
             // Remove
             // 
@@ -104,6 +108,11 @@ namespace GitUI
             this.Add.Name = "Add";
             this.Add.UseVisualStyleBackColor = true;
             this.Add.Click += new System.EventHandler(this.Add_Click);
+            // 
+            // CategoriesLabel
+            // 
+            resources.ApplyResources(this.CategoriesLabel, "CategoriesLabel");
+            this.CategoriesLabel.Name = "CategoriesLabel";
             // 
             // RepositoriesGrid
             // 
@@ -120,8 +129,8 @@ namespace GitUI
             this.RepositoriesGrid.RowHeadersVisible = false;
             this.RepositoriesGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.RepositoriesGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.RepositoriesGrid.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.RepositoriesGrid_UserDeletingRow);
             this.RepositoriesGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.RepositoriesGrid_CellValidating);
+            this.RepositoriesGrid.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.RepositoriesGrid_UserDeletingRow);
             // 
             // pathDataGridViewTextBoxColumn
             // 
@@ -150,10 +159,8 @@ namespace GitUI
             // 
             resources.ApplyResources(this.RepositoriesType, "RepositoriesType");
             this.RepositoriesType.Name = "RepositoriesType";
-            this.RepositoriesType.TabStop = true;
             this.RepositoriesType.UseVisualStyleBackColor = true;
             this.RepositoriesType.Validating += new System.ComponentModel.CancelEventHandler(this.RepositoriesType_Validating);
-            this.RepositoriesType.CheckedChanged += new System.EventHandler(this.RepositoriesType_CheckedChanged);
             // 
             // _NO_TRANSLATE_RssFeed
             // 
@@ -166,16 +173,14 @@ namespace GitUI
             // 
             resources.ApplyResources(this.label3, "label3");
             this.label3.Name = "label3";
-            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // RssFeedType
             // 
             resources.ApplyResources(this.RssFeedType, "RssFeedType");
             this.RssFeedType.Name = "RssFeedType";
-            this.RssFeedType.TabStop = true;
             this.RssFeedType.UseVisualStyleBackColor = true;
-            this.RssFeedType.Validating += new System.ComponentModel.CancelEventHandler(this.RssFeedType_Validating);
             this.RssFeedType.CheckedChanged += new System.EventHandler(this.RssFeedType_CheckedChanged);
+            this.RssFeedType.Validating += new System.ComponentModel.CancelEventHandler(this.RssFeedType_Validating);
             // 
             // label2
             // 
@@ -204,6 +209,7 @@ namespace GitUI
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.Panel2.PerformLayout();
             this.splitContainer2.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.RepositoriesGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).EndInit();
             this.ResumeLayout(false);
@@ -213,8 +219,6 @@ namespace GitUI
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.Button Remove;
-        private System.Windows.Forms.Button Add;
         private System.Windows.Forms.ListBox _NO_TRANSLATE_Categories;
         private System.Windows.Forms.Label CategoriesLabel;
         private System.Windows.Forms.DataGridView RepositoriesGrid;
@@ -229,5 +233,8 @@ namespace GitUI
         private System.Windows.Forms.DataGridViewTextBoxColumn pathDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn Title;
         private System.Windows.Forms.DataGridViewTextBoxColumn descriptionDataGridViewTextBoxColumn;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button Remove;
+        private System.Windows.Forms.Button Add;
     }
 }

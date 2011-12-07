@@ -46,12 +46,36 @@ namespace GitUI
         readonly TranslationString keepModifiedButtonText = new TranslationString("Keep modified");
         readonly TranslationString keepBaseButtonText = new TranslationString("Keep base file");
 
+        private readonly TranslationString _conflictedFilesContextMenuText = new TranslationString("Solve");
+        private readonly TranslationString _openMergeToolItemText = new TranslationString("Open in");
+        private readonly TranslationString _button1Text = new TranslationString("Open in");
+
+        private readonly TranslationString _resetItemRebaseText = new TranslationString("Abort rebase");
+        private readonly TranslationString _contextChooseLocalRebaseText = new TranslationString("Choose local (theirs)");
+        private readonly TranslationString _contextChooseRemoteRebaseText = new TranslationString("Choose remote (ours)");
+
+        private readonly TranslationString _resetItemMergeText = new TranslationString("Abort merge");
+        private readonly TranslationString _contextChooseLocalMergeText = new TranslationString("Choose local (theirs)");
+        private readonly TranslationString _contextChooseRemoteMergeText = new TranslationString("Choose remote (ours)");
+
+        private readonly TranslationString _binaryFileWarningCaption = new TranslationString("Warning");
+
+        private readonly TranslationString _noBaseFileMergeCaption = new TranslationString("Merge");
+        
+        private readonly TranslationString _chooseBaseFileFailedText = new TranslationString("Choose base file failed.");
+        private readonly TranslationString _chooseLocalFileFailedText = new TranslationString("Choose local file failed.");
+        private readonly TranslationString _chooseRemoteFileFailedText = new TranslationString("Choose remote file failed.");
+
+        private readonly TranslationString _currentFormatFilter = 
+            new TranslationString("Current format (*.{0})");
+        private readonly TranslationString _allFilesFilter = 
+            new TranslationString("All files (*.*)");
 
 
         public FormResolveConflicts()
         {
             InitializeComponent(); Translate();
-            ThereWhereMergeConflicts = GitCommandHelpers.InTheMiddleOfConflictedMerge();
+            ThereWhereMergeConflicts = Settings.Module.InTheMiddleOfConflictedMerge();
             merge.Focus();
             merge.Select();
 
@@ -64,7 +88,7 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
             Directory.SetCurrentDirectory(Settings.WorkingDir);
-            GitCommandHelpers.RunRealCmd(Settings.GitCommand, "mergetool");
+            Settings.Module.RunRealCmd(Settings.GitCommand, "mergetool");
             Initialize();
             Cursor.Current = Cursors.Default;
         }
@@ -90,7 +114,7 @@ namespace GitUI
             int oldSelectedRow = 0;
             if (ConflictedFiles.SelectedRows.Count > 0)
                 oldSelectedRow = ConflictedFiles.SelectedRows[0].Index;
-            ConflictedFiles.DataSource = GitCommandHelpers.GetConflictedFiles();
+            ConflictedFiles.DataSource = Settings.Module.GetConflictedFiles();
             if (ConflictedFiles.Rows.Count > oldSelectedRow)
             {
                 ConflictedFiles.Rows[oldSelectedRow].Selected = true;
@@ -102,32 +126,32 @@ namespace GitUI
 
             InitMergetool();
 
-            ConflictedFilesContextMenu.Text = "Solve";
-            OpenMergetool.Text = "Open in " + mergetool;
-            button1.Text = "Open in " + mergetool;
+            ConflictedFilesContextMenu.Text = _conflictedFilesContextMenuText.Text;
+            OpenMergetool.Text = _openMergeToolItemText.Text + " " + mergetool;
+            openMergeToolBtn.Text = _button1Text.Text + " " + mergetool;
 
-            if (GitCommandHelpers.InTheMiddleOfRebase())
+            if (Settings.Module.InTheMiddleOfRebase())
             {
-                Reset.Text = "Abort rebase";
-                ContextChooseLocal.Text = "Choose local (theirs)";
-                ContextChooseRemote.Text = "Choose remote (ours)";
+                Reset.Text = _resetItemRebaseText.Text;
+                ContextChooseLocal.Text = _contextChooseLocalRebaseText.Text;
+                ContextChooseRemote.Text = _contextChooseRemoteRebaseText.Text;
             }
             else
             {
-                Reset.Text = "Abort merge";
-                ContextChooseLocal.Text = "Choose local (ours)";
-                ContextChooseRemote.Text = "Choose remote (theirs)";
+                Reset.Text = _resetItemMergeText.Text;
+                ContextChooseLocal.Text = _contextChooseLocalMergeText.Text;
+                ContextChooseRemote.Text = _contextChooseRemoteMergeText.Text;
             }
 
-            if (!GitCommandHelpers.InTheMiddleOfPatch() && !GitCommandHelpers.InTheMiddleOfRebase() && !GitCommandHelpers.InTheMiddleOfConflictedMerge() && ThereWhereMergeConflicts)
+            if (!Settings.Module.InTheMiddleOfPatch() && !Settings.Module.InTheMiddleOfRebase() && !Settings.Module.InTheMiddleOfConflictedMerge() && ThereWhereMergeConflicts)
             {
-                if (MessageBox.Show(allConflictsResolved.Text, allConflictsResolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (MessageBox.Show(this, allConflictsResolved.Text, allConflictsResolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    GitUICommands.Instance.StartCommitDialog();
+                    GitUICommands.Instance.StartCommitDialog(this);
                 }
             }
 
-            if (!GitCommandHelpers.InTheMiddleOfConflictedMerge() && ThereWhereMergeConflicts)
+            if (!Settings.Module.InTheMiddleOfConflictedMerge() && ThereWhereMergeConflicts)
             {
                 Close();
             }
@@ -167,7 +191,7 @@ namespace GitUI
 
                 if (mergeScripts.Length > 0)
                 {
-                    if (MessageBox.Show(string.Format(uskUseCustomMergeScript.Text, mergeScripts[0].Replace(Settings.PathSeparator + Settings.PathSeparator.ToString(), Settings.PathSeparator.ToString())), uskUseCustomMergeScriptCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    if (MessageBox.Show(this, string.Format(uskUseCustomMergeScript.Text, mergeScripts[0].Replace(Settings.PathSeparator + Settings.PathSeparator.ToString(), Settings.PathSeparator.ToString())), uskUseCustomMergeScriptCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
                         //get timestamp of file before merge. This is an extra check to verify if merge was successfull
                         DateTime lastWriteTimeBeforeMerge = DateTime.Now;
@@ -175,9 +199,9 @@ namespace GitUI
                             lastWriteTimeBeforeMerge = File.GetLastWriteTime(Settings.WorkingDir + fileName);
 
                         int exitCode;
-                        GitCommandHelpers.RunCmd("wscript", "\"" + mergeScripts[0] + "\" \"" + (Settings.WorkingDir + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\" \"" + remoteFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\" \"" + localFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\" \"" + baseFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\"", out exitCode);
+                        Settings.Module.RunCmd("wscript", "\"" + mergeScripts[0] + "\" \"" + (Settings.WorkingDir + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\" \"" + remoteFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\" \"" + localFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\" \"" + baseFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\"", out exitCode);
 
-                        if (MessageBox.Show(string.Format(askMergeConflictSolvedAfterCustomMergeScript.Text, (Settings.WorkingDir + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator)), askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        if (MessageBox.Show(this, string.Format(askMergeConflictSolvedAfterCustomMergeScript.Text, (Settings.WorkingDir + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator)), askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
 
                             DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
@@ -186,7 +210,7 @@ namespace GitUI
 
                             //The file is not modified, do not stage file and present warning
                             if (lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge)
-                                MessageBox.Show(fileUnchangedAfterMerge.Text);
+                                MessageBox.Show(this, fileUnchangedAfterMerge.Text);
                             else
                                 stageFile(fileName);
                         }
@@ -202,7 +226,7 @@ namespace GitUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Merge using script failed.\n" + ex);
+                MessageBox.Show(this, "Merge using script failed.\n" + ex);
             }
             return false;
         }
@@ -214,7 +238,7 @@ namespace GitUI
                 return;
 
             string filename = GetFileName();
-            string[] filenames = GitCommandHelpers.GetConflictedFiles(filename);
+            string[] filenames = Settings.Module.GetConflictedFiles(filename);
 
             try
             {
@@ -226,7 +250,7 @@ namespace GitUI
                     {
                         if (submodule.LocalPath.Equals(filename))
                         {
-                            if (MessageBox.Show(mergeConflictIsSubmodule.Text, mergeConflictIsSubmoduleCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            if (MessageBox.Show(this, mergeConflictIsSubmodule.Text, mergeConflictIsSubmoduleCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                             {
                                 stageFile(filename);
                                 Initialize();
@@ -237,7 +261,7 @@ namespace GitUI
                     var submoduleConfig = new ConfigFile(Settings.WorkingDir + ".gitmodules");
                     if (submoduleConfig.GetConfigSections().Any(configSection => configSection.GetValue("path").Trim().Equals(filename.Trim())))
                     {
-                        if (MessageBox.Show(mergeConflictIsSubmodule.Text, mergeConflictIsSubmoduleCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                        if (MessageBox.Show(this, mergeConflictIsSubmodule.Text, mergeConflictIsSubmoduleCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                         {
                             stageFile(filename);
                         }
@@ -259,7 +283,7 @@ namespace GitUI
 
                     if (FileHelper.IsBinaryFile(filename))
                     {
-                        if (MessageBox.Show(string.Format(fileIsBinary.Text, mergetool), "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
+                        if (MessageBox.Show(this, string.Format(fileIsBinary.Text, mergetool), _binaryFileWarningCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
                         {
                             BinairyFilesChooseLocalBaseRemote(filename);
                             return;
@@ -273,11 +297,12 @@ namespace GitUI
                     //quotes also. For tortoise and araxis a little bit more magic is needed.
                     if (filenames[0] == null)
                     {
-                        DialogResult result = MessageBox.Show(string.Format(noBaseRevision.Text, filename), "Merge", MessageBoxButtons.YesNoCancel);
+                        DialogResult result = MessageBox.Show(this, string.Format(noBaseRevision.Text, filename), _noBaseFileMergeCaption.Text, MessageBoxButtons.YesNoCancel);
                         if (result == DialogResult.Yes)
                         {
                             arguments = arguments.Replace("-merge -3", "-merge");
                             arguments = arguments.Replace("/base:\"$BASE\"", "");
+                            arguments = arguments.Replace("/mine:\"$LOCAL\"", "/base:\"$LOCAL\"");
                             arguments = arguments.Replace("\"$BASE\"", "");
                         }
 
@@ -292,13 +317,13 @@ namespace GitUI
                     arguments = arguments.Replace("$REMOTE", filenames[2]);
                     arguments = arguments.Replace("$MERGED", filename + "");
 
-                    //get timestamp of file before merge. This is an extra check to verify if merge was successfull
+                    //get timestamp of file before merge. This is an extra check to verify if merge was successful
                     DateTime lastWriteTimeBeforeMerge = DateTime.Now;
                     if (File.Exists(Settings.WorkingDir + filename))
                         lastWriteTimeBeforeMerge = File.GetLastWriteTime(Settings.WorkingDir + filename);
 
                     int exitCode;
-                    GitCommandHelpers.RunCmd(mergetoolPath, "" + arguments + "", out exitCode);
+                    Settings.Module.RunCmd(mergetoolPath, "" + arguments + "", out exitCode);
 
                     DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
                     if (File.Exists(Settings.WorkingDir + filename))
@@ -316,7 +341,7 @@ namespace GitUI
                     if ((exitCode == 1 && lastWriteTimeBeforeMerge != lastWriteTimeAfterMerge) ||
                         (exitCode == 0 && lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge))
                     {
-                        if (MessageBox.Show(askMergeConflictSolved.Text, askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        if (MessageBox.Show(this, askMergeConflictSolved.Text, askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
                             stageFile(filename);
                         }
@@ -335,24 +360,24 @@ namespace GitUI
 
         private void InitMergetool()
         {
-            mergetool = GitCommandHelpers.GetSetting("merge.tool");
+            mergetool = Settings.Module.GetSetting("merge.tool");
             if (string.IsNullOrEmpty(mergetool))
-                mergetool = GitCommandHelpers.GetGlobalSetting("merge.tool");
+                mergetool = Settings.Module.GetGlobalSetting("merge.tool");
 
             if (string.IsNullOrEmpty(mergetool))
             {
-                MessageBox.Show(noMergeTool.Text);
+                MessageBox.Show(this, noMergeTool.Text);
                 return;
             }
             Cursor.Current = Cursors.WaitCursor;
 
-            mergetoolCmd = GitCommandHelpers.GetSetting("mergetool." + mergetool + ".cmd");
+            mergetoolCmd = Settings.Module.GetSetting("mergetool." + mergetool + ".cmd");
             if (string.IsNullOrEmpty(mergetoolCmd))
-                mergetoolCmd = GitCommandHelpers.GetGlobalSetting("mergetool." + mergetool + ".cmd");
+                mergetoolCmd = Settings.Module.GetGlobalSetting("mergetool." + mergetool + ".cmd");
 
-            mergetoolPath = GitCommandHelpers.GetSetting("mergetool." + mergetool + ".path");
+            mergetoolPath = Settings.Module.GetSetting("mergetool." + mergetool + ".path");
             if (string.IsNullOrEmpty(mergetoolPath))
-                mergetoolPath = GitCommandHelpers.GetGlobalSetting("mergetool." + mergetool + ".path");
+                mergetoolPath = Settings.Module.GetGlobalSetting("mergetool." + mergetool + ".path");
 
             if (string.IsNullOrEmpty(mergetool) || mergetool == "kdiff3")
                 mergetoolCmd = mergetoolPath + " \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"";
@@ -372,12 +397,12 @@ namespace GitUI
 
         private string GetRemoteSideString()
         {
-            bool inTheMiddleOfRebase = GitCommandHelpers.InTheMiddleOfRebase();
+            bool inTheMiddleOfRebase = Settings.Module.InTheMiddleOfRebase();
             return inTheMiddleOfRebase ? ours.Text : theirs.Text;
         }
         private string GetLocalSideString()
         {
-            bool inTheMiddleOfRebase = GitCommandHelpers.InTheMiddleOfRebase();
+            bool inTheMiddleOfRebase = Settings.Module.InTheMiddleOfRebase();
             return inTheMiddleOfRebase ? theirs.Text : ours.Text;
         }
 
@@ -391,7 +416,7 @@ namespace GitUI
             }
 
             string filename = GetFileName();
-            string[] filenames = GitCommandHelpers.GetConflictedFileNames(filename);
+            string[] filenames = Settings.Module.GetConflictedFileNames(filename);
 
             bool baseFileExists = !string.IsNullOrEmpty(filenames[0]);
             bool localFileExists = !string.IsNullOrEmpty(filenames[1]);
@@ -422,8 +447,8 @@ namespace GitUI
 
             if (CheckForBaseRevision(filename))
             {
-                if (!GitCommandHelpers.HandleConflictSelectBase(filename))
-                    MessageBox.Show("Choose base file failed.");
+                if (!Settings.Module.HandleConflictSelectBase(filename))
+                    MessageBox.Show(this, _chooseBaseFileFailedText.Text);
             }
             Initialize();
             Cursor.Current = Cursors.Default;
@@ -436,8 +461,8 @@ namespace GitUI
             string filename = GetFileName();
             if (CheckForLocalRevision(filename))
             {
-                if (!GitCommandHelpers.HandleConflictSelectLocal(GetFileName()))
-                    MessageBox.Show("Choose local file failed.");
+                if (!Settings.Module.HandleConflictSelectLocal(GetFileName()))
+                    MessageBox.Show(this, _chooseLocalFileFailedText.Text);
             }
             Initialize();
             Cursor.Current = Cursors.Default;
@@ -449,8 +474,8 @@ namespace GitUI
             string filename = GetFileName();
             if (CheckForRemoteRevision(filename))
             {
-                if (!GitCommandHelpers.HandleConflictSelectRemote(GetFileName()))
-                    MessageBox.Show("Choose remote file failed.");
+                if (!Settings.Module.HandleConflictSelectRemote(GetFileName()))
+                    MessageBox.Show(this, _chooseRemoteFileFailedText.Text);
             }
             Initialize();
 
@@ -468,18 +493,18 @@ namespace GitUI
                                                                             string.Format(chooseRemoteButtonText.Text + " ({0})", GetRemoteSideString()),
                                                                             keepBaseButtonText.Text,
                                                                             caption);
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             if (frm.KeepBase) //base
-                GitCommandHelpers.HandleConflictSelectBase(GetFileName());
+                Settings.Module.HandleConflictSelectBase(GetFileName());
             if (frm.KeepLocal) //local
-                GitCommandHelpers.HandleConflictSelectLocal(GetFileName());
+                Settings.Module.HandleConflictSelectLocal(GetFileName());
             if (frm.KeepRemote) //remote
-                GitCommandHelpers.HandleConflictSelectRemote(GetFileName());
+                Settings.Module.HandleConflictSelectRemote(GetFileName());
         }
 
         private bool CheckForBaseRevision(string filename)
         {
-            if (string.IsNullOrEmpty(GitCommandHelpers.GetConflictedFileNames(filename)[0]))
+            if (string.IsNullOrEmpty(Settings.Module.GetConflictedFileNames(filename)[0]))
             {
                 string caption = string.Format(fileCreatedLocallyAndRemotelyLong.Text,
                                                 filename,
@@ -490,13 +515,13 @@ namespace GitUI
                                                                                 string.Format(chooseRemoteButtonText.Text + " ({0})", GetRemoteSideString()),
                                                                                 deleteFileButtonText.Text,
                                                                                 caption);
-                frm.ShowDialog();
+                frm.ShowDialog(this);
                 if (frm.KeepBase) //delete
-                    GitCommandHelpers.RunCmd(Settings.GitCommand, "rm -- \"" + filename + "\"");
+                    Settings.Module.RunGitCmd("rm -- \"" + filename + "\"");
                 if (frm.KeepLocal) //local
-                    GitCommandHelpers.HandleConflictSelectLocal(GetFileName());
+                    Settings.Module.HandleConflictSelectLocal(GetFileName());
                 if (frm.KeepRemote) //remote
-                    GitCommandHelpers.HandleConflictSelectRemote(GetFileName());
+                    Settings.Module.HandleConflictSelectRemote(GetFileName());
                 return false;
             }
             return true;
@@ -504,7 +529,7 @@ namespace GitUI
 
         private bool CheckForLocalRevision(string filename)
         {
-            if (string.IsNullOrEmpty(GitCommandHelpers.GetConflictedFileNames(filename)[1]))
+            if (string.IsNullOrEmpty(Settings.Module.GetConflictedFileNames(filename)[1]))
             {
                 string caption = string.Format(fileDeletedLocallyAndModifiedRemotelyLong.Text,
                                                 filename,
@@ -515,13 +540,13 @@ namespace GitUI
                                                                                 string.Format(keepModifiedButtonText.Text + " ({0})", GetRemoteSideString()),
                                                                                 keepBaseButtonText.Text,
                                                                                 caption);
-                frm.ShowDialog();
+                frm.ShowDialog(this);
                 if (frm.KeepBase) //base
-                    GitCommandHelpers.HandleConflictSelectBase(GetFileName());
+                    Settings.Module.HandleConflictSelectBase(GetFileName());
                 if (frm.KeepLocal) //delete
-                    GitCommandHelpers.RunCmd(Settings.GitCommand, "rm -- \"" + filename + "\"");
+                    Settings.Module.RunGitCmd("rm -- \"" + filename + "\"");
                 if (frm.KeepRemote) //remote
-                    GitCommandHelpers.HandleConflictSelectRemote(GetFileName());
+                    Settings.Module.HandleConflictSelectRemote(GetFileName());
                 return false;
             }
             return true;
@@ -529,7 +554,7 @@ namespace GitUI
 
         private bool CheckForRemoteRevision(string filename)
         {
-            if (string.IsNullOrEmpty(GitCommandHelpers.GetConflictedFileNames(filename)[2]))
+            if (string.IsNullOrEmpty(Settings.Module.GetConflictedFileNames(filename)[2]))
             {
                 string caption = string.Format(fileModifiedLocallyAndDelededRemotelyLong.Text,
                                                 filename,
@@ -540,13 +565,13 @@ namespace GitUI
                                                                                 string.Format(deleteFileButtonText.Text + " ({0})", GetRemoteSideString()),
                                                                                 keepBaseButtonText.Text,
                                                                                 caption);
-                frm.ShowDialog();
+                frm.ShowDialog(this);
                 if (frm.KeepBase) //base
-                    GitCommandHelpers.HandleConflictSelectBase(GetFileName());
+                    Settings.Module.HandleConflictSelectBase(GetFileName());
                 if (frm.KeepLocal) //delete
-                    GitCommandHelpers.HandleConflictSelectLocal(GetFileName());
+                    Settings.Module.HandleConflictSelectLocal(GetFileName());
                 if (frm.KeepRemote) //remote
-                    GitCommandHelpers.RunCmd(Settings.GitCommand, "rm -- \"" + filename + "\"");
+                    Settings.Module.RunGitCmd("rm -- \"" + filename + "\"");
                 return false;
             }
             return true;
@@ -567,7 +592,7 @@ namespace GitUI
 
             fileName = Path.GetTempPath() + fileName;
 
-            GitCommandHelpers.HandleConflictsSaveSide(GetFileName(), fileName, "BASE");
+            Settings.Module.HandleConflictsSaveSide(GetFileName(), fileName, "BASE");
 
             OpenWith.OpenAs(fileName);
             Cursor.Current = Cursors.Default;
@@ -581,7 +606,7 @@ namespace GitUI
 
             fileName = Path.GetTempPath() + fileName;
 
-            GitCommandHelpers.HandleConflictsSaveSide(GetFileName(), fileName, "LOCAL");
+            Settings.Module.HandleConflictsSaveSide(GetFileName(), fileName, "LOCAL");
 
             OpenWith.OpenAs(fileName);
             Cursor.Current = Cursors.Default;
@@ -613,7 +638,7 @@ namespace GitUI
 
             fileName = Path.GetTempPath() + fileName;
 
-            GitCommandHelpers.HandleConflictsSaveSide(GetFileName(), fileName, "REMOTE");
+            Settings.Module.HandleConflictsSaveSide(GetFileName(), fileName, "REMOTE");
 
             OpenWith.OpenAs(fileName);
             Cursor.Current = Cursors.Default;
@@ -645,11 +670,12 @@ namespace GitUI
                                      AddExtension = true
                                  };
             fileDialog.DefaultExt = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
-            fileDialog.Filter = "Current format (*." + GitCommandHelpers.GetFileExtension(fileDialog.FileName) + ")|*." + GitCommandHelpers.GetFileExtension(fileDialog.FileName) + "|All files (*.*)|*.*";
-
-            if (fileDialog.ShowDialog() == DialogResult.OK)
+            fileDialog.Filter = string.Format(_currentFormatFilter.Text, GitCommandHelpers.GetFileExtension(fileDialog.FileName)) + "|*." +
+                                GitCommandHelpers.GetFileExtension(fileDialog.FileName) + "|" + _allFilesFilter.Text + "|*.*";
+            
+            if (fileDialog.ShowDialog(this) == DialogResult.OK)
             {
-                GitCommandHelpers.HandleConflictsSaveSide(GetFileName(), fileDialog.FileName, side);
+                Settings.Module.HandleConflictsSaveSide(GetFileName(), fileDialog.FileName, side);
             }
             Cursor.Current = Cursors.Default;
         }
@@ -701,7 +727,7 @@ namespace GitUI
                     delegate(FormStatus form)
                     {
                         form.AddOutput(string.Format(stageFilename.Text, filename));
-                        string output = GitCommandHelpers.RunCmd
+                        string output = Settings.Module.RunCmd
                             (
                             Settings.GitCommand, "add -- \"" + filename + "\""
                             );
@@ -710,7 +736,7 @@ namespace GitUI
                     }
                 );
             var process = new FormStatus(processStart, null) { Text = string.Format(stageFilename.Text, filename) };
-            process.ShowDialogOnError();
+            process.ShowDialogOnError(this);
         }
 
 
@@ -736,7 +762,7 @@ namespace GitUI
 
         private void fileHistoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormFileHistory(GetFileName()).ShowDialog();
+            new FormFileHistory(GetFileName()).ShowDialog(this);
         }
 
         #region Hotkey commands

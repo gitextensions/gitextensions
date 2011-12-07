@@ -18,6 +18,21 @@ namespace GitPlugin.Git
             Run(path + "\\GitExtensions.exe", command);
         }
 
+        public static string RunGitExWait(string command, string filename)
+        {
+            string path = GetGitExRegValue("InstallDir");
+
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            SetupProcessStartInfo(startInfo, path + "\\GitExtensions.exe", command, new FileInfo(filename).DirectoryName, false, false);
+
+            using (var process = Process.Start(startInfo))
+            {
+                string output = process.StandardOutput.ReadToEnd();
+                process.WaitForExit();
+                return output;
+            }
+        }
+
         private static string RunGit(string arguments, string filename, out int exitCode)
         {
             string gitcommand = GetGitExRegValue("gitcommand");
@@ -96,7 +111,7 @@ namespace GitPlugin.Git
             if (string.IsNullOrEmpty(dir))
                 return false;
 
-            if (Directory.Exists(dir + "\\" + ".git"))
+            if (Directory.Exists(dir + "\\" + ".git") || File.Exists(dir + "\\" + ".git"))
                 return true;
 
             return !dir.Contains(".git") &&
@@ -132,10 +147,10 @@ namespace GitPlugin.Git
 
         private static string GetGitExRegValue(string key)
         {
-            string result = GetRegistryValue(Registry.CurrentUser, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", key);
+            string result = GetRegistryValue(Registry.CurrentUser, "Software\\GitExtensions\\GitExtensions", key);
 
             if (string.IsNullOrEmpty(result))
-                result = GetRegistryValue(Registry.Users, "Software\\GitExtensions\\GitExtensions\\1.0.0.0", key);
+                result = GetRegistryValue(Registry.Users, "Software\\GitExtensions\\GitExtensions", key);
 
             return result;
         }

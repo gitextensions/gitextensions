@@ -21,13 +21,13 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\Debug"
-			IntermediateDirectory=".\Debug"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
+			UseOfATL="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -35,7 +35,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Performing registration"
-				CommandLine="if (%SkipShellExtRegistration%)==() (&#x0D;&#x0A;echo Registering $(TargetFileName)&#x0D;&#x0A;regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;) else (&#x0D;&#x0A;echo Skipping registration&#x0D;&#x0A;)&#x0D;&#x0A;&#x0D;&#x0A;echo regsvr32 exe. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;"
+				CommandLine="if (%SkipShellExtRegistration%)==() (&#x0D;&#x0A;echo Registering $(TargetFileName)&#x0D;&#x0A;regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;) else (&#x0D;&#x0A;echo Skipping registration&#x0D;&#x0A;)&#x0D;&#x0A;&#x0D;&#x0A;echo regsvr32 exe. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
 				Outputs="$(OutDir)\regsvr32.trg"
 			/>
 			<Tool
@@ -46,7 +46,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\Debug/SimpleExt.tlb"
+				OutputDirectory="Generated"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -57,10 +57,6 @@
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile=".\Debug/SimpleExt.pch"
-				AssemblerListingLocation=".\Debug/"
-				ObjectFile=".\Debug/"
-				ProgramDataBaseFileName=".\Debug/"
 				BrowseInformation="1"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
@@ -79,16 +75,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile=".\Debug/GitExtensionsShellEx.dll"
+				OutputFile="$(OutDir)\GitExtensionsShellEx.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile=".\SimpleExt.def"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/SimpleExt.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary=".\Debug/SimpleExt.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -115,11 +109,11 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(ConfigurationName)-x64"
+			IntermediateDirectory="$(ConfigurationName)-x64"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
+			UseOfATL="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
 			>
@@ -129,7 +123,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Performing registration"
-				CommandLine="if (%SkipShellExtRegistration%)==() (&#x0D;&#x0A;echo Registering $(TargetFileName)&#x0D;&#x0A;regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;) else (&#x0D;&#x0A;echo Skipping registration&#x0D;&#x0A;)&#x0D;&#x0A;&#x0D;&#x0A;echo regsvr32 exe. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;"
+				CommandLine="if (%SkipShellExtRegistration%)==() (&#x0D;&#x0A;echo Registering $(TargetFileName)&#x0D;&#x0A;regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;) else (&#x0D;&#x0A;echo Skipping registration&#x0D;&#x0A;)&#x0D;&#x0A;&#x0D;&#x0A;echo regsvr32 exe. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
 				Outputs="$(OutDir)\regsvr32.trg"
 			/>
 			<Tool
@@ -141,7 +135,7 @@
 			<Tool
 				Name="VCMIDLTool"
 				TargetEnvironment="3"
-				TypeLibraryName=".\Debug/SimpleExt.tlb"
+				OutputDirectory="Generated"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -152,10 +146,6 @@
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile=".\Debug/SimpleExt.pch"
-				AssemblerListingLocation=".\Debug/"
-				ObjectFile=".\Debug/"
-				ProgramDataBaseFileName=".\Debug/"
 				BrowseInformation="1"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
@@ -174,16 +164,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile=".\Debug/GitExtensionsShellEx.dll"
+				OutputFile="$(OutDir)\GitExtensionsShellEx64.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile=".\SimpleExt.def"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/SimpleExt.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary=".\Debug/SimpleExt.lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -210,14 +198,13 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\ReleaseMinDependency"
-			IntermediateDirectory=".\ReleaseMinDependency"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
-			UseOfATL="1"
+			UseOfATL="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -225,7 +212,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Performing registration"
-				CommandLine="if (%SkipShellExtRegistration%)==() (&#x0D;&#x0A;echo Registering $(TargetFileName)&#x0D;&#x0A;regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;) else (&#x0D;&#x0A;echo Skipping registration&#x0D;&#x0A;)&#x0D;&#x0A;&#x0D;&#x0A;echo regsvr32 exe. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;"
+				CommandLine="if (%SkipShellExtRegistration%)==() (&#x0D;&#x0A;echo Registering $(TargetFileName)&#x0D;&#x0A;regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;) else (&#x0D;&#x0A;echo Skipping registration&#x0D;&#x0A;)&#x0D;&#x0A;&#x0D;&#x0A;echo regsvr32 exe. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
 				Outputs="$(OutDir)\regsvr32.trg"
 			/>
 			<Tool
@@ -236,7 +223,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\ReleaseMinDependency/SimpleExt.tlb"
+				OutputDirectory="Generated"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -249,10 +236,6 @@
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile=".\ReleaseMinDependency/SimpleExt.pch"
-				AssemblerListingLocation=".\ReleaseMinDependency/"
-				ObjectFile=".\ReleaseMinDependency/"
-				ProgramDataBaseFileName=".\ReleaseMinDependency/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 			/>
@@ -269,15 +252,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile=".\ReleaseMinDependency/GitExtensionsShellEx.dll"
+				OutputFile="$(OutDir)\GitExtensionsShellEx.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile=".\SimpleExt.def"
-				ProgramDatabaseFile=".\ReleaseMinDependency/SimpleExt.pdb"
+				GenerateDebugInformation="true"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary=".\ReleaseMinDependency/SimpleExt.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -304,12 +286,11 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory=".\ReleaseMinDependency64"
-			IntermediateDirectory=".\ReleaseMinDependency64"
+			OutputDirectory="$(ConfigurationName)-x64"
+			IntermediateDirectory="$(ConfigurationName)-x64"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
-			UseOfATL="1"
+			UseOfATL="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
 			>
@@ -319,7 +300,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Performing registration"
-				CommandLine="if (%SkipShellExtRegistration%)==() (&#x0D;&#x0A;echo Registering $(TargetFileName)&#x0D;&#x0A;regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;) else (&#x0D;&#x0A;echo Skipping registration&#x0D;&#x0A;)&#x0D;&#x0A;&#x0D;&#x0A;echo regsvr32 exe. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;"
+				CommandLine="if (%SkipShellExtRegistration%)==() (&#x0D;&#x0A;echo Registering $(TargetFileName)&#x0D;&#x0A;regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;) else (&#x0D;&#x0A;echo Skipping registration&#x0D;&#x0A;)&#x0D;&#x0A;&#x0D;&#x0A;echo regsvr32 exe. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
 				Outputs="$(OutDir)\regsvr32.trg"
 			/>
 			<Tool
@@ -331,7 +312,7 @@
 			<Tool
 				Name="VCMIDLTool"
 				TargetEnvironment="3"
-				TypeLibraryName=".\ReleaseMinDependency/SimpleExt.tlb"
+				OutputDirectory="Generated"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -344,10 +325,6 @@
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile=".\ReleaseMinDependency64/SimpleExt.pch"
-				AssemblerListingLocation=".\ReleaseMinDependency64/"
-				ObjectFile=".\ReleaseMinDependency64/"
-				ProgramDataBaseFileName=".\ReleaseMinDependency64/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 			/>
@@ -364,15 +341,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile=".\ReleaseMinDependency64/GitExtensionsShellEx.dll"
+				OutputFile="$(OutDir)\GitExtensionsShellEx64.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile=".\SimpleExt.def"
-				ProgramDatabaseFile=".\ReleaseMinDependency64/SimpleExt.pdb"
+				GenerateDebugInformation="true"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary=".\ReleaseMinDependency64/SimpleExt.lib"
 				TargetMachine="17"
 			/>
 			<Tool

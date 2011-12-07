@@ -59,11 +59,11 @@
             // 
             this.BrowsePatch.Location = new System.Drawing.Point(453, 8);
             this.BrowsePatch.Name = "BrowsePatch";
-            this.BrowsePatch.Size = new System.Drawing.Size(79, 25);
+            this.BrowsePatch.Size = new System.Drawing.Size(100, 25);
             this.BrowsePatch.TabIndex = 2;
             this.BrowsePatch.Text = "Browse";
             this.BrowsePatch.UseVisualStyleBackColor = true;
-            this.BrowsePatch.Click += new System.EventHandler(this.button1_Click);
+            this.BrowsePatch.Click += new System.EventHandler(this.BrowsePatch_Click);
             // 
             // PatchFile
             // 
@@ -71,7 +71,7 @@
             this.PatchFile.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
             this.PatchFile.Location = new System.Drawing.Point(166, 10);
             this.PatchFile.Name = "PatchFile";
-            this.PatchFile.Size = new System.Drawing.Size(281, 21);
+            this.PatchFile.Size = new System.Drawing.Size(281, 23);
             this.PatchFile.TabIndex = 1;
             // 
             // Apply
@@ -127,7 +127,7 @@
             this.Resolved.TabIndex = 9;
             this.Resolved.Text = "Conflicts resolved";
             this.Resolved.UseVisualStyleBackColor = true;
-            this.Resolved.Click += new System.EventHandler(this.button1_Click_1);
+            this.Resolved.Click += new System.EventHandler(this.Resolved_Click);
             // 
             // AddFiles
             // 
@@ -150,7 +150,7 @@
             // 
             this.splitContainer1.Panel1.Controls.Add(this.splitContainer2);
             // 
-            // 
+            // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.SolveMergeconflicts);
             this.splitContainer1.Panel2.Controls.Add(this.Apply);
@@ -199,7 +199,7 @@
             this.PatchDir.Enabled = false;
             this.PatchDir.Location = new System.Drawing.Point(166, 36);
             this.PatchDir.Name = "PatchDir";
-            this.PatchDir.Size = new System.Drawing.Size(281, 21);
+            this.PatchDir.Size = new System.Drawing.Size(281, 23);
             this.PatchDir.TabIndex = 1;
             // 
             // BrowseDir
@@ -207,7 +207,7 @@
             this.BrowseDir.Enabled = false;
             this.BrowseDir.Location = new System.Drawing.Point(453, 34);
             this.BrowseDir.Name = "BrowseDir";
-            this.BrowseDir.Size = new System.Drawing.Size(79, 25);
+            this.BrowseDir.Size = new System.Drawing.Size(100, 25);
             this.BrowseDir.TabIndex = 2;
             this.BrowseDir.Text = "Browse";
             this.BrowseDir.UseVisualStyleBackColor = true;
@@ -218,7 +218,7 @@
             this.PatchDirMode.AutoSize = true;
             this.PatchDirMode.Location = new System.Drawing.Point(13, 36);
             this.PatchDirMode.Name = "PatchDirMode";
-            this.PatchDirMode.Size = new System.Drawing.Size(67, 17);
+            this.PatchDirMode.Size = new System.Drawing.Size(72, 19);
             this.PatchDirMode.TabIndex = 1;
             this.PatchDirMode.Text = "Patch dir";
             this.PatchDirMode.UseVisualStyleBackColor = true;
@@ -230,7 +230,7 @@
             this.PatchFileMode.Checked = true;
             this.PatchFileMode.Location = new System.Drawing.Point(13, 11);
             this.PatchFileMode.Name = "PatchFileMode";
-            this.PatchFileMode.Size = new System.Drawing.Size(69, 17);
+            this.PatchFileMode.Size = new System.Drawing.Size(74, 19);
             this.PatchFileMode.TabIndex = 0;
             this.PatchFileMode.TabStop = true;
             this.PatchFileMode.Text = "Patch file";
@@ -253,7 +253,7 @@
             this.SolveMergeconflicts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SolveMergeconflicts.Location = new System.Drawing.Point(3, 267);
             this.SolveMergeconflicts.Name = "SolveMergeconflicts";
-            this.SolveMergeconflicts.Size = new System.Drawing.Size(120, 49);
+            this.SolveMergeconflicts.Size = new System.Drawing.Size(120, 78);
             this.SolveMergeconflicts.TabIndex = 12;
             this.SolveMergeconflicts.Text = "There are unresolved mergeconflicts\r\n";
             this.SolveMergeconflicts.UseVisualStyleBackColor = false;
@@ -265,7 +265,7 @@
             this.IgnoreWhitespace.AutoSize = true;
             this.IgnoreWhitespace.Location = new System.Drawing.Point(8, 34);
             this.IgnoreWhitespace.Name = "IgnoreWhitespace";
-            this.IgnoreWhitespace.Size = new System.Drawing.Size(101, 17);
+            this.IgnoreWhitespace.Size = new System.Drawing.Size(105, 19);
             this.IgnoreWhitespace.TabIndex = 5;
             this.IgnoreWhitespace.Text = "Ignore Wh.spc.";
             this.IgnoreWhitespace.UseVisualStyleBackColor = true;
@@ -290,10 +290,11 @@
             // FormApplyPatch
             // 
             this.AcceptButton = this.Apply;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(764, 391);
             this.Controls.Add(this.splitContainer1);
+            this.MinimumSize = new System.Drawing.Size(720, 400);
             this.Name = "FormApplyPatch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Apply patch";

@@ -1,9 +1,11 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace NetSpell.SpellChecker.Dictionary.Affix
 {
+    using AffixEntryCollection = List<AffixEntry>;
+
 	/// <summary>
 	///		Rule for expanding base words
 	/// </summary>

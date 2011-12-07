@@ -1,11 +1,19 @@
 ﻿using System;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FormCherryPickCommitSmall : GitExtensionsForm
     {
+        #region Translation
+        private readonly TranslationString _noneParentSelectedText =
+            new TranslationString("None parent is selected!");
+        private readonly TranslationString _noneParentSelectedTextCaption =
+            new TranslationString("Error");
+        #endregion
+
         private bool IsMerge;
         public FormCherryPickCommitSmall(GitRevision revision)
         {
@@ -19,10 +27,10 @@ namespace GitUI
         {
             base.OnLoad(e);
 
-            IsMerge = GitCommandHelpers.IsMerge(Revision.Guid);
+            IsMerge = Settings.Module.IsMerge(Revision.Guid);
             if (IsMerge)
             {
-                GitRevision[] Parents = GitCommandHelpers.GetParents(Revision.Guid);
+                GitRevision[] Parents = Settings.Module.GetParents(Revision.Guid);
                 for (int i = 0; i < Parents.Length; i++)
                 {
                     ParentsList.Items.Add(i + 1 + "");
@@ -49,10 +57,10 @@ namespace GitUI
 
         private void FormCherryPickCommitSmall_Load(object sender, EventArgs e)
         {
-            Commit.Text = string.Format("Commit: {0}", Revision.Guid);
-            Author.Text = string.Format("Author: {0}", Revision.Author);
-            Date.Text = string.Format("Commit date: {0}", Revision.CommitDate);
-            Message.Text = string.Format("Message: {0}", Revision.Message);
+            Commit.Text = string.Format(Strings.GetCommitHashText() + ": {0}", Revision.Guid);
+            Author.Text = string.Format(Strings.GetAuthorText() + ": {0}", Revision.Author);
+            Date.Text = string.Format(Strings.GetCommitDateText() + ": {0}", Revision.CommitDate);
+            Message.Text = string.Format(Strings.GetMessageText() + ": {0}", Revision.Message);
         }
 
         private void Revert_Click(object sender, EventArgs e)
@@ -63,7 +71,7 @@ namespace GitUI
             {
                 if (ParentsList.SelectedItems.Count == 0)
                 {
-                    MessageBox.Show("None parent is selected!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, _noneParentSelectedText.Text, _noneParentSelectedTextCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     CanExecute = false;
                 }                  
                 else
@@ -73,8 +81,8 @@ namespace GitUI
             }
             if (CanExecute)
             {
-                new FormProcess(GitCommandHelpers.CherryPickCmd(Revision.Guid, AutoCommit.Checked, arguments)).ShowDialog();
-                MergeConflictHandler.HandleMergeConflicts();
+                new FormProcess(GitCommandHelpers.CherryPickCmd(Revision.Guid, AutoCommit.Checked, arguments)).ShowDialog(this);
+                MergeConflictHandler.HandleMergeConflicts(this);
                 Close();
             }            
         }

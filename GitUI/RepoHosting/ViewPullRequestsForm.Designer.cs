@@ -28,13 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this._selectHostedRepoCB = new System.Windows.Forms.ComboBox();
             this._pullRequestsList = new System.Windows.Forms.ListView();
-            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this._chooseRepo = new System.Windows.Forms.Label();
             this._fetchBtn = new System.Windows.Forms.Button();
             this._postCommentText = new GitUI.SpellChecker.EditNetSpell();
@@ -47,6 +46,7 @@
             this._diffViewer = new GitUI.Editor.FileViewer();
             this._refreshCommentsBtn = new System.Windows.Forms.Button();
             this._discussionWB = new System.Windows.Forms.WebBrowser();
+            this._addAndFetchBtn = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -62,17 +62,17 @@
             // 
             this._selectHostedRepoCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._selectHostedRepoCB.FormattingEnabled = true;
-            this._selectHostedRepoCB.Location = new System.Drawing.Point(112, 6);
+            this._selectHostedRepoCB.Location = new System.Drawing.Point(130, 6);
             this._selectHostedRepoCB.Name = "_selectHostedRepoCB";
-            this._selectHostedRepoCB.Size = new System.Drawing.Size(258, 21);
+            this._selectHostedRepoCB.Size = new System.Drawing.Size(258, 23);
             this._selectHostedRepoCB.TabIndex = 0;
             this._selectHostedRepoCB.SelectedIndexChanged += new System.EventHandler(this._selectedOwner_SelectedIndexChanged);
             // 
             // _pullRequestsList
             // 
-            this._pullRequestsList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this._pullRequestsList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this._pullRequestsList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2,
@@ -114,7 +114,7 @@
             this._chooseRepo.AutoSize = true;
             this._chooseRepo.Location = new System.Drawing.Point(12, 9);
             this._chooseRepo.Name = "_chooseRepo";
-            this._chooseRepo.Size = new System.Drawing.Size(99, 13);
+            this._chooseRepo.Size = new System.Drawing.Size(106, 15);
             this._chooseRepo.TabIndex = 4;
             this._chooseRepo.Text = "Choose repository:";
             // 
@@ -123,16 +123,16 @@
             this._fetchBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this._fetchBtn.Location = new System.Drawing.Point(652, 33);
             this._fetchBtn.Name = "_fetchBtn";
-            this._fetchBtn.Size = new System.Drawing.Size(134, 29);
+            this._fetchBtn.Size = new System.Drawing.Size(146, 29);
             this._fetchBtn.TabIndex = 2;
-            this._fetchBtn.Text = "Fetch and Review";
+            this._fetchBtn.Text = "Fetch to pr/ branch";
             this._fetchBtn.UseVisualStyleBackColor = true;
             this._fetchBtn.Click += new System.EventHandler(this._fetchBtn_Click);
             // 
             // _postCommentText
             // 
-            this._postCommentText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this._postCommentText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this._postCommentText.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this._postCommentText.Location = new System.Drawing.Point(3, 582);
             this._postCommentText.MistakeFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Underline);
@@ -144,9 +144,9 @@
             // _postComment
             // 
             this._postComment.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this._postComment.Location = new System.Drawing.Point(168, 654);
+            this._postComment.Location = new System.Drawing.Point(150, 654);
             this._postComment.Name = "_postComment";
-            this._postComment.Size = new System.Drawing.Size(113, 23);
+            this._postComment.Size = new System.Drawing.Size(131, 23);
             this._postComment.TabIndex = 1;
             this._postComment.Text = "Post comment";
             this._postComment.UseVisualStyleBackColor = true;
@@ -183,6 +183,7 @@
             // 
             this.splitContainer2.Panel1.Controls.Add(this._closePullRequestBtn);
             this.splitContainer2.Panel1.Controls.Add(this._selectHostedRepoCB);
+            this.splitContainer2.Panel1.Controls.Add(this._addAndFetchBtn);
             this.splitContainer2.Panel1.Controls.Add(this._fetchBtn);
             this.splitContainer2.Panel1.Controls.Add(this._pullRequestsList);
             this.splitContainer2.Panel1.Controls.Add(this._chooseRepo);
@@ -199,7 +200,7 @@
             this._closePullRequestBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this._closePullRequestBtn.Location = new System.Drawing.Point(652, 164);
             this._closePullRequestBtn.Name = "_closePullRequestBtn";
-            this._closePullRequestBtn.Size = new System.Drawing.Size(134, 29);
+            this._closePullRequestBtn.Size = new System.Drawing.Size(146, 29);
             this._closePullRequestBtn.TabIndex = 3;
             this._closePullRequestBtn.Text = "Close pull request";
             this._closePullRequestBtn.UseVisualStyleBackColor = true;
@@ -231,6 +232,7 @@
             this._fileStatusList.Location = new System.Drawing.Point(0, 0);
             this._fileStatusList.Name = "_fileStatusList";
             this._fileStatusList.Revision = null;
+            this._fileStatusList.SelectedIndex = -1;
             this._fileStatusList.SelectedItem = null;
             this._fileStatusList.Size = new System.Drawing.Size(801, 171);
             this._fileStatusList.TabIndex = 0;
@@ -256,7 +258,7 @@
             this._refreshCommentsBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this._refreshCommentsBtn.Location = new System.Drawing.Point(3, 654);
             this._refreshCommentsBtn.Name = "_refreshCommentsBtn";
-            this._refreshCommentsBtn.Size = new System.Drawing.Size(75, 23);
+            this._refreshCommentsBtn.Size = new System.Drawing.Size(100, 23);
             this._refreshCommentsBtn.TabIndex = 9;
             this._refreshCommentsBtn.Text = "Refresh";
             this._refreshCommentsBtn.UseVisualStyleBackColor = true;
@@ -264,9 +266,9 @@
             // 
             // _discussionWB
             // 
-            this._discussionWB.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this._discussionWB.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this._discussionWB.IsWebBrowserContextMenuEnabled = false;
             this._discussionWB.Location = new System.Drawing.Point(3, 0);
             this._discussionWB.MinimumSize = new System.Drawing.Size(20, 20);
@@ -275,9 +277,20 @@
             this._discussionWB.TabIndex = 8;
             this._discussionWB.WebBrowserShortcutsEnabled = false;
             // 
+            // _addAndFetchBtn
+            // 
+            this._addAndFetchBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this._addAndFetchBtn.Location = new System.Drawing.Point(652, 68);
+            this._addAndFetchBtn.Name = "_addAndFetchBtn";
+            this._addAndFetchBtn.Size = new System.Drawing.Size(146, 29);
+            this._addAndFetchBtn.TabIndex = 2;
+            this._addAndFetchBtn.Text = "Add remote and fetch";
+            this._addAndFetchBtn.UseVisualStyleBackColor = true;
+            this._addAndFetchBtn.Click += new System.EventHandler(this._addAsRemoteAndFetch_Click);
+            // 
             // ViewPullRequestsForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1089, 680);
             this.Controls.Add(this.splitContainer1);
@@ -319,5 +332,6 @@
         private System.Windows.Forms.Button _closePullRequestBtn;
         private System.Windows.Forms.WebBrowser _discussionWB;
         private System.Windows.Forms.Button _refreshCommentsBtn;
+        private System.Windows.Forms.Button _addAndFetchBtn;
     }
 }

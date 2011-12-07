@@ -57,7 +57,7 @@ namespace DeleteUnusedBranches
 
         private void Delete_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure to delete the selected branches?" + Environment.NewLine + "Only branches that are fully merged will be deleted.", "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(this, "Are you sure to delete the selected branches?" + Environment.NewLine + "Only branches that are fully merged will be deleted.", "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 foreach (Branch branch in branches.Where(branch => branch.Delete))
                 {

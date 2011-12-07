@@ -93,7 +93,7 @@
             // logoPictureBox
             // 
             this.logoPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.logoPictureBox.Image = global::GitUI.Properties.Resources.Cow;
+            this.logoPictureBox.Image = global::GitUI.Properties.Resources.git_extensions_logo_final_128;
             this.logoPictureBox.Location = new System.Drawing.Point(3, 3);
             this.logoPictureBox.Name = "logoPictureBox";
             this.tableLayoutPanel.SetRowSpan(this.logoPictureBox, 7);
@@ -192,6 +192,7 @@
             this.thanksTo.Size = new System.Drawing.Size(58, 13);
             this.thanksTo.TabIndex = 27;
             this.thanksTo.Text = "Thanks to:";
+            this.thanksTo.Click += new System.EventHandler(this._NO_TRANSLATE_thanksToTicker_Click);
             // 
             // _NO_TRANSLATE_thanksToTicker
             // 

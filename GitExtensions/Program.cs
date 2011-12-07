@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
@@ -18,6 +19,7 @@ namespace GitExtensions
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            
             string[] args = Environment.GetCommandLineArgs();
             FormSplash.Show("Load settings");
             Settings.LoadSettings();
@@ -42,8 +44,8 @@ namespace GitExtensions
             try
             {
                 if (Application.UserAppDataRegistry == null ||
-                    Application.UserAppDataRegistry.GetValue("checksettings") == null ||
-                    !Application.UserAppDataRegistry.GetValue("checksettings").ToString().Equals("false", StringComparison.OrdinalIgnoreCase) ||
+                    Settings.GetValue<string>("checksettings", null) == null ||
+                    !Settings.GetValue<string>("checksettings", null).ToString().Equals("false", StringComparison.OrdinalIgnoreCase) ||
                     string.IsNullOrEmpty(Settings.GitCommand))
                 {
                     FormSplash.SetAction("Check settings");
@@ -73,19 +75,21 @@ namespace GitExtensions
                         Settings.WorkingDir = args[2].Substring(0, args[2].LastIndexOf(Settings.PathSeparator));
                 }
 
-                if (Settings.ValidWorkingDir())
-                    Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
+                //Do not add this working dir to the recent repositories. It is a nice feature, but it
+                //also increases the startup time
+                //if (Settings.Module.ValidWorkingDir())
+                //    Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
             }
 
             if (string.IsNullOrEmpty(Settings.WorkingDir))
             {
-                string findWorkingDir = GitCommandHelpers.FindGitWorkingDir(Directory.GetCurrentDirectory());
-                if (Settings.ValidWorkingDir(findWorkingDir))
+                string findWorkingDir = GitModule.FindGitWorkingDir(Directory.GetCurrentDirectory());
+                if (GitModule.ValidWorkingDir(findWorkingDir))
                     Settings.WorkingDir = findWorkingDir;
             }
 
             FormSplash.Hide();
-
+            
             if (args.Length <= 1)
             {
                 GitUICommands.Instance.StartBrowseDialog();
@@ -117,12 +121,12 @@ namespace GitExtensions
                 {
                     case "mergetool":
                     case "mergeconflicts":
-                        if (!arguments.ContainsKey("quiet") || GitCommandHelpers.InTheMiddleOfConflictedMerge())
+                        if (!arguments.ContainsKey("quiet") || Settings.Module.InTheMiddleOfConflictedMerge())
                             GitUICommands.Instance.StartResolveConflictsDialog();
                         
                         return;
                     case "gitbash":
-                        GitCommandHelpers.RunBash();
+                        Settings.Module.RunBash();
                         return;
                     case "gitignore":
                         GitUICommands.Instance.StartEditGitIgnoreDialog();
@@ -173,7 +177,10 @@ namespace GitExtensions
                             GitUICommands.Instance.StartInitializeDialog();
                         return;
                     case "clone":
-                        GitUICommands.Instance.StartCloneDialog();
+                        if (args.Length > 2)
+                            GitUICommands.Instance.StartCloneDialog(args[2]);
+                        else
+                            GitUICommands.Instance.StartCloneDialog();
                         return;
                     case "commit":
                         Commit(arguments);
@@ -213,6 +220,11 @@ namespace GitExtensions
                         return;
                     case "settings":
                         GitUICommands.Instance.StartSettingsDialog();
+                        return;
+                    case "searchfile":
+                        var searchWindow = new SearchWindow<string>(FindFileMatches);
+                        Application.Run(searchWindow);
+                        Console.WriteLine(Settings.WorkingDir + searchWindow.SelectedItem);
                         return;
                     case "viewdiff":
                         GitUICommands.Instance.StartCompareRevisionsDialog();
@@ -273,6 +285,15 @@ namespace GitExtensions
                         return;
                 }
             }
+        }
+
+        private static IList<string> FindFileMatches(string name)
+        {
+            var candidates = Settings.Module.GetFullTree("HEAD");
+
+            string nameAsLower = name.ToLower();
+
+            return candidates.Where(fileName => fileName.ToLower().Contains(nameAsLower)).ToList();
         }
 
         private static void Commit(Dictionary<string, string> arguments)

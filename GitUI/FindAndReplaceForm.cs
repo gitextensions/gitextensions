@@ -6,11 +6,31 @@ using System.IO;
 using System.Windows.Forms;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class FindAndReplaceForm : GitExtensionsForm
     {
+        private readonly TranslationString _findAndReplaceString =
+            new TranslationString("Find & replace");
+        private readonly TranslationString _findString =
+            new TranslationString("Find");
+        private readonly TranslationString _selectionOnlyString =
+            new TranslationString("selection only");
+        private readonly TranslationString _textNotFoundString =
+            new TranslationString("Text not found");
+        private readonly TranslationString _noSearchString =
+            new TranslationString("No string specified to look for!");
+        private readonly TranslationString _textNotFoundString2 =
+            new TranslationString("Search text not found.");
+        private readonly TranslationString _notFoundString =
+            new TranslationString("Not found");
+        private readonly TranslationString _noOccurrencesFoundString =
+            new TranslationString("No occurrences found.");
+        private readonly TranslationString _replacedOccurrencesString =
+            new TranslationString("Replaced {0} occurrences.");
+
         private readonly Dictionary<TextEditorControl, HighlightGroup> _highlightGroups =
             new Dictionary<TextEditorControl, HighlightGroup>();
 
@@ -18,6 +38,7 @@ namespace GitUI
         private TextEditorControl _editor;
         private bool _lastSearchLoopedAround;
         private bool _lastSearchWasBackward;
+        private Func<bool, Tuple<int, string>> _fileLoader;
 
         public FindAndReplaceForm()
         {
@@ -59,11 +80,11 @@ namespace GitUI
 
         private void UpdateTitleBar()
         {
-            string text = ReplaceMode ? "Find & replace" : "Find";
+            string text = ReplaceMode ? _findAndReplaceString.Text : _findString.Text;
             if (_editor != null && _editor.FileName != null)
                 text += " - " + Path.GetFileName(_editor.FileName);
             if (_search.HasScanRegion)
-                text += " (selection only)";
+                text += " (" + _selectionOnlyString.Text + ")";
             Text = text;
         }
 
@@ -101,19 +122,19 @@ namespace GitUI
 
         private void btnFindPrevious_Click(object sender, EventArgs e)
         {
-            FindNext(false, true, "Text not found");
+            FindNext(false, true, _textNotFoundString.Text);
         }
 
         private void btnFindNext_Click(object sender, EventArgs e)
         {
-            FindNext(false, false, "Text not found");
+            FindNext(false, false, _textNotFoundString.Text);
         }
 
         public TextRange FindNext(bool viaF3, bool searchBackward, string messageIfNotFound)
         {
             if (string.IsNullOrEmpty(txtLookFor.Text))
             {
-                MessageBox.Show(this, "No string specified to look for!", "Find", MessageBoxButtons.OK,
+                MessageBox.Show(this, _noSearchString.Text, Text, MessageBoxButtons.OK,
                                 MessageBoxIcon.Information);
                 return null;
             }
@@ -122,20 +143,38 @@ namespace GitUI
             _search.MatchCase = chkMatchCase.Checked;
             _search.MatchWholeWordOnly = chkMatchWholeWord.Checked;
 
-            Caret caret = _editor.ActiveTextAreaControl.Caret;
-            if (viaF3 && _search.HasScanRegion &&
-                !Globals.IsInRange(caret.Offset, _search.BeginOffset, _search.EndOffset))
-            {
-                // user moved outside of the originally selected region
-                _search.ClearScanRegion();
-                UpdateTitleBar();
-            }
+            int startIdx = -1;
+            int currentIdx = -1;
+            TextRange range = null;
+            do {
+                Caret caret = _editor.ActiveTextAreaControl.Caret;
+                if (viaF3 && _search.HasScanRegion &&
+                    !Globals.IsInRange(caret.Offset, _search.BeginOffset, _search.EndOffset))
+                {
+                    // user moved outside of the originally selected region
+                    _search.ClearScanRegion();
+                    UpdateTitleBar();
+                }
 
-            int startFrom = caret.Offset - (searchBackward ? 1 : 0);
-            TextRange range = _search.FindNext(startFrom, searchBackward, out _lastSearchLoopedAround);
-            if (range != null)
-                SelectResult(range);
-            else if (messageIfNotFound != null)
+                int startFrom = caret.Offset - (searchBackward ? 1 : 0);
+                if (startFrom == -1)
+                    startFrom = _search.EndOffset;
+                range = _search.FindNext(startFrom, searchBackward, out _lastSearchLoopedAround);
+                if (range != null && (!_lastSearchLoopedAround || _fileLoader == null))
+                {
+                    SelectResult(range);
+                }
+                else if (_fileLoader != null)
+                {
+                    range = null;
+                    if (currentIdx != -1 && startIdx == -1)
+                        startIdx = currentIdx;
+                    Tuple<int, string> nextFile = _fileLoader.Invoke(searchBackward);
+                    currentIdx = nextFile.Item1;
+                    Editor.Text = nextFile.Item2;
+                }
+            } while (range == null && startIdx != currentIdx && currentIdx != -1);
+            if (range == null && messageIfNotFound != null)
                 MessageBox.Show(this, messageIfNotFound, " ", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return range;
         }
@@ -148,8 +187,7 @@ namespace GitUI
             _editor.ActiveTextAreaControl.ScrollTo(p1.Line, p1.Column);
             // Also move the caret to the end of the selection, because when the user 
             // presses F3, the caret is where we start searching next time.
-            _editor.ActiveTextAreaControl.Caret.Position =
-                _editor.Document.OffsetToPosition(range.Offset + range.Length);
+            _editor.ActiveTextAreaControl.Caret.Position = p2;
         }
 
         private void btnHighlightAll_Click(object sender, EventArgs e)
@@ -183,7 +221,7 @@ namespace GitUI
                     group.AddMarker(m);
                 }
                 if (count == 0)
-                    MessageBox.Show(this, "Search text not found.", "Not found", MessageBoxButtons.OK,
+                    MessageBox.Show(this, _textNotFoundString2.Text, _notFoundString.Text, MessageBoxButtons.OK,
                                     MessageBoxIcon.Information);
                 else
                     Close();
@@ -217,7 +255,7 @@ namespace GitUI
             SelectionManager sm = _editor.ActiveTextAreaControl.SelectionManager;
             if (string.Equals(sm.SelectedText, txtLookFor.Text, StringComparison.OrdinalIgnoreCase))
                 InsertText(txtReplaceWith.Text);
-            FindNext(false, _lastSearchWasBackward, "Text not found.");
+            FindNext(false, _lastSearchWasBackward, _textNotFoundString.Text);
         }
 
         private void btnReplaceAll_Click(object sender, EventArgs e)
@@ -248,10 +286,10 @@ namespace GitUI
                 _editor.Document.UndoStack.EndUndoGroup();
             }
             if (count == 0)
-                MessageBox.Show("No occurrences found.");
+                MessageBox.Show(this, _noOccurrencesFoundString.Text);
             else
             {
-                MessageBox.Show(string.Format("Replaced {0} occurrences.", count));
+                MessageBox.Show(this, string.Format(_replacedOccurrencesString.Text, count));
                 Close();
             }
         }
@@ -273,6 +311,12 @@ namespace GitUI
             {
                 textArea.Document.UndoStack.EndUndoGroup();
             }
+        }
+
+
+        internal void SetFileLoader(Func<bool, Tuple<int, string>> fileLoader)
+        {
+            _fileLoader = fileLoader;
         }
     }
 

@@ -7,27 +7,33 @@ using GitCommands;
 namespace GitUI
 {
     delegate void DataCallback(string text);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="isError">if command finished with error</param>
+    /// <param name="form">this form</param>
+    /// <returns>if handled</returns>
+    public delegate bool HandleOnExit(ref bool isError, FormProcess form);
+
     public class FormProcess : FormStatus
     {
         public string Remote { get; set; }
-        public bool Plink { get; set; }
         public string ProcessString { get; set; }
         public string ProcessArguments { get; set; }
         public string ProcessInput { get; set; }
         public Process Process { get; set; }
+        public HandleOnExit HandleOnExitCallback { get; set; }
 
-        private bool restart;
         private GitCommandsInstance gitCommand;
 
-        //Input does not work for password inputs. I don't know why, but it turned out not to be really necessary.
-        //For other inputs, it is not tested.
-        public FormProcess(string process, string arguments, string input)
-            : this(process, arguments)
+        //constructor for VS designer
+        protected FormProcess(bool useDialogSettings = true)
+            : base(useDialogSettings)
         {
-            ProcessInput = input;
         }
 
-        public FormProcess(string process, string arguments)
+        public FormProcess(string process, string arguments, bool useDialogSettings = true)
+            : base(useDialogSettings)
         {
             ProcessCallback = new ProcessStart(processStart);
             AbortCallback = new ProcessAbort(processAbort);
@@ -37,29 +43,28 @@ namespace GitUI
             ProcessInput = null;
         }
 
-        public FormProcess(string arguments)
-            : this(null, arguments)
+        //Input does not work for password inputs. I don't know why, but it turned out not to be really necessary.
+        //For other inputs, it is not tested.
+        public FormProcess(string process, string arguments, string input, bool useDialogSettings = true)
+            : this(process, arguments, useDialogSettings)
+        {
+            ProcessInput = input;
+        }
+
+        public FormProcess(string arguments, bool useDialogSettings = true)
+            : this(null, arguments, useDialogSettings)
         {
         }
 
-        private string UrlTryingToConnect = string.Empty;
-        /// <summary>
-        /// When cloning a remote using putty, sometimes an error occurs that the fingerprint is not known.
-        /// This is fixed by trying to connect from the command line, and choose yes when asked for storing
-        /// the fingerpring. Just a dirty fix...
-        /// </summary>
-        public void SetUrlTryingToConnect(string url)
+        protected virtual void BeforeProcessStart()
         {
-            UrlTryingToConnect = url;
+            
         }
 
         private void processStart(FormStatus form)
         {
-            restart = false;
+            BeforeProcessStart();
             AddOutput(ProcessString + " " + ProcessArguments);
-
-            Plink = GitCommandHelpers.Plink();
-
             gitCommand = new GitCommandsInstance { CollectOutput = false };
 
             try
@@ -91,6 +96,17 @@ namespace GitUI
             }
         }
 
+        protected void KillGitCommand() 
+        {
+            try
+            {
+                gitCommand.Kill();
+            }
+            catch
+            {
+            }            
+        }
+
         void gitCommand_Exited(object sender, EventArgs e)
         {
             // This has to happen on the UI thread
@@ -99,68 +115,29 @@ namespace GitUI
             syncContext.Send(method, this);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="isError">if command finished with error</param>
+        /// <returns>if handled</returns>
+        protected virtual bool HandleOnExit(ref bool isError)
+        {
+            if (HandleOnExitCallback != null)
+                return HandleOnExitCallback(ref isError, this);
+            else
+                return false;
+        
+        }
+
         private void OnExit(object state)
         {
-            if (restart)
-            {
-                Reset();
-                ProcessCallback(this);
-                return;
-            }
-
             bool isError;
+
             try
             {
-                // An error occurred!
-                if (gitCommand != null && gitCommand.ExitCode != 0)
-                {
-                    isError = true;
-
-                    // TODO: This Plink stuff here seems misplaced. Is there a better
-                    // home for all of this stuff? For example, if I had a label called pull, 
-                    // we could end up in this code incorrectly.
-                    if (Plink)
-                    {
-                        if (ProcessArguments.ToLower().Contains("pull") || ProcessArguments.ToLower().Contains("push") || ProcessArguments.ToLower().Contains("plink") || ProcessArguments.ToLower().Contains("tortoiseplink") || ProcessArguments.ToLower().Contains("remote") || ProcessString.ToLower().Contains("clone") || ProcessArguments.ToLower().Contains("clone"))
-                        {
-                            if (OutputString.ToString().Contains("successfully authenticated"))
-                            {
-                                isError = false;
-                            }
-
-                            if (OutputString.ToString().Contains("FATAL ERROR") && OutputString.ToString().Contains("authentication"))
-                            {
-                                var puttyError = new FormPuttyError();
-                                puttyError.ShowDialog();
-                                if (puttyError.RetryProcess)
-                                {
-                                    Reset();
-                                    ProcessCallback(this);
-                                    return;
-                                }
-                            }
-                            if (OutputString.ToString().ToLower().Contains("the server's host key is not cached in the registry") && !string.IsNullOrEmpty(UrlTryingToConnect))
-                            {
-                                if (MessageBox.Show("The server's host key is not cached in the registry.\n\nDo you want to trust this host key and then try again?", "SSH", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
-                                {
-                                    GitCommandHelpers.RunRealCmdDetached(
-                                        "cmd.exe",
-                                        string.Format("/k \"\"{0}\" -T \"{1}\"\"", Settings.Plink, UrlTryingToConnect));
-
-                                    Reset();
-                                    ProcessCallback(this);
-                                    return;
-                                }
-
-                            }
-                        }
-
-                    }
-                }
-                else
-                {
-                    isError = false;
-                }
+                isError = gitCommand != null && gitCommand.ExitCode != 0;
+                if (HandleOnExit(ref isError))
+                    return;
             }
             catch
             {
@@ -168,6 +145,11 @@ namespace GitUI
             }
 
             Done(!isError);
+        }
+
+        protected virtual void DataReceived(object sender, DataReceivedEventArgs e)
+        { 
+        
         }
 
         void gitCommand_DataReceived(object sender, DataReceivedEventArgs e)
@@ -190,38 +172,23 @@ namespace GitUI
                 //{
                 //    AddOutput(e.Data);
                 //}
-                OutputString.AppendLine(e.Data);
-
-                AddToTimer(e.Data);
-                AddToTimer(Environment.NewLine);
+                AppendOutputLine(e.Data);
             }
 
+            DataReceived(sender, e);
+        }
 
-            if (Plink)
-            {
-                if (e.Data.StartsWith("If you trust this host, enter \"y\" to add the key to"))
-                {
-                    if (MessageBox.Show("The fingerprint of this host is not registered by PuTTY." + Environment.NewLine + "This causes this process to hang, and that why it is automatically stopped." + Environment.NewLine + Environment.NewLine + "When the connection is opened detached from Git and GitExtensions, the host's fingerprint can be registered." + Environment.NewLine + "You could also manually add the host's fingerprint or run Test Connection from the remotes dialog." + Environment.NewLine + Environment.NewLine + "Do you want to register the host's fingerprint and restart the process?", "Host Fingerprint not registered", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        string remoteUrl = GitCommandHelpers.GetSetting("remote." + Remote + ".url");
+        public void AppendOutputLine(string line)
+        {
+            OutputString.AppendLine(line);
 
-                        if (string.IsNullOrEmpty(remoteUrl))
-                            GitCommandHelpers.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + Remote + "\"");
-                        else
-                            GitCommandHelpers.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + remoteUrl + "\"");
+            AddToTimer(line);
+            AddToTimer(Environment.NewLine);
+        }
 
-                        restart = true;
-                    }
-
-                    try
-                    {
-                        gitCommand.Kill();
-                    }
-                    catch
-                    {
-                    }
-                }
-            }
+        public static bool IsOperationAborted(string dialogResult)
+        {
+            return dialogResult.Trim('\r', '\n') == "Aborted";
         }
     }
 }

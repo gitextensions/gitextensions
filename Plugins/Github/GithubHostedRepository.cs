@@ -72,21 +72,16 @@ namespace Github
                 string[] s = Parent.Split('/');
                 if (s.Length != 2 || s[0].Length == 0 || s[1].Length == 0)
                     return null;
-                return CreateUrl(s[0], s[1], true);
+                return CreateUrl(s[0], s[1], true, null, null);
             }
         }
 
-        public string CreateUrl(string owner, string repoName, bool readOnly)
-        {
-            return CreateUrl(owner, repoName, readOnly, null);
-        }
-
-        public string CreateUrl(string owner, string repoName, bool readOnly, string password)
+        public string CreateUrl(string owner, string repoName, bool readOnly, string username, string password)
         {
             if (readOnly)
                 return string.Format("http://github.com/{0}/{1}.git", owner, repoName);
             else if (_plugin.PreferredAccessMethod == "https")
-                return string.Format("https://{0}:{2}@github.com/{0}/{1}.git", owner, repoName, password);
+                return string.Format("https://{2}:{3}@github.com/{0}/{1}.git", owner, repoName, username, password);
             else
                 return string.Format("git@github.com:{0}/{1}.git", owner, repoName);
         }
@@ -95,7 +90,7 @@ namespace Github
         {
             get
             {
-                return CreateUrl(Owner, Name, false, _plugin.Auth.Password);
+                return CreateUrl(Owner, Name, false, _plugin.Auth.Username, _plugin.Auth.Password);
             }
         }
 
@@ -103,7 +98,7 @@ namespace Github
         {
             get
             {
-                return CreateUrl(Owner, Name, true);
+                return CreateUrl(Owner, Name, true, null, null);
             }
         }
 

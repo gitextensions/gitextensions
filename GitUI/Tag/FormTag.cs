@@ -41,33 +41,33 @@ namespace GitUI.Tag
         {
             try
             {
-                if (GitRevisions.GetRevisions().Count != 1)
+                if (GitRevisions.GetSelectedRevisions().Count != 1)
                 {
-                    MessageBox.Show(_noRevisionSelected.Text, _messageCaption.Text);
+                    MessageBox.Show(this, _noRevisionSelected.Text, _messageCaption.Text);
                     return;
                 }
                 if (annotate.Checked)
                 {
                     if (string.IsNullOrEmpty(tagMessage.Text))
                     {
-                        MessageBox.Show(_noTagMessage.Text, _messageCaption.Text);
+                        MessageBox.Show(this, _noTagMessage.Text, _messageCaption.Text);
                         return;
                     }
 
-                    File.WriteAllText(Settings.WorkingDirGitDir() + "\\TAGMESSAGE", tagMessage.Text);
+                    File.WriteAllText(Settings.Module.WorkingDirGitDir() + "\\TAGMESSAGE", tagMessage.Text);
                 }
 
 
-                var s = GitCommandHelpers.Tag(Tagname.Text, GitRevisions.GetRevisions()[0].Guid,
+                var s = Settings.Module.Tag(Tagname.Text, GitRevisions.GetSelectedRevisions()[0].Guid,
                                                     annotate.Checked);
 
                 if (!string.IsNullOrEmpty(s))
-                    MessageBox.Show(s, _messageCaption.Text);
+                    MessageBox.Show(this, s, _messageCaption.Text);
                 Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(this, ex.Message);
             }
         }
 

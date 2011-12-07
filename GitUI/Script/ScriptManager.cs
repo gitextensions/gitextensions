@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using System.Xml.Serialization;
 using System.Xml;
@@ -41,7 +38,7 @@ namespace GitUI.Script
                 if (scriptInfo.Enabled && scriptInfo.OnEvent == scriptEvent)
                 {
                     if (scriptInfo.AskConfirmation)
-                        if (MessageBox.Show("Do you want to execute '" + scriptInfo.Name + "'?", "Script", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                        if (MessageBox.Show(String.Format("Do you want to execute '{0}'?", scriptInfo.Name), "Script", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                             continue;
                     
                     ScriptRunner.RunScript(scriptInfo.Name, null);

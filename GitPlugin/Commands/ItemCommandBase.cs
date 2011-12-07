@@ -36,7 +36,8 @@ namespace GitPlugin.Commands
         {
             if (solutionItem.ProjectItem != null && IsTargetSupported(GetProjectItemTarget(solutionItem.ProjectItem)))
             {
-                OnExecute(solutionItem, solutionItem.ProjectItem.FileNames[1], pane);
+                //Unfortunaly FileNames[1] is not supported by .net 3.5
+                OnExecute(solutionItem, solutionItem.ProjectItem.get_FileNames(1), pane);
                 return;
             }
 
@@ -64,7 +65,7 @@ namespace GitPlugin.Commands
         public override bool IsEnabled(DTE2 application)
         {
             return application.SelectedItems.Count == 0
-                ? IsTargetSupported(CommandTarget.Empty)
+                ? IsTargetSupported(application.Solution.IsOpen ? CommandTarget.Solution : CommandTarget.Empty)
                 : application.SelectedItems
                     .Cast<SelectedItem>()
                     .All(item => IsTargetSupported(GetSelectedItemTarget(item, application)));
