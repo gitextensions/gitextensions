@@ -22,6 +22,7 @@ Version 2.27
 	Fixed KdiffPath for diff and merge tool in Mono/Linux
 	Fixed autostash with submodules
 	Fixed 2 way merge for TortoiseMerge
+	Updated msysgit to version 1.7.8
 	Added support for staging/unstaging files with non-ASCI characters
 	Added "Open containing folder" entry to the context menu of difference files
 	Added "Rename branch" to context menu in revision grid

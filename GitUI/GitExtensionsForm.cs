@@ -233,6 +233,10 @@ namespace GitUI
         ///   the settings</param>
         protected void RestorePosition(String name)
         {
+            if (!this.Visible || 
+                WindowState == FormWindowState.Minimized)
+                return;
+
             _windowCentred = (StartPosition == FormStartPosition.CenterParent);
 
             var position = LookupWindowPosition(name);
