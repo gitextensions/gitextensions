@@ -205,8 +205,15 @@ namespace GitUI
             {
                 Abort.Visible = false;
             }
+            StartPosition = FormStartPosition.CenterParent;
             RestorePosition("process");
             Start();
+        }
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            SavePosition("process");
+            base.OnClosing(e);
         }
 
         private void FormStatus_FormClosed(object sender, FormClosedEventArgs e)
