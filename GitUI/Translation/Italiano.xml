@@ -2268,7 +2268,7 @@ Sei sicuro di volerne effettuare il push?</Value>
         <TranslationItem Name="RemoteBranch" Property="Text">
           <Value>Errore fatale: non è un repository git (o nessuna cartella padre lo è): .git</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
+        <TranslationItem Name="labelFrom" Property="Text">
           <Value>Da</Value>
         </TranslationItem>
       </translationItems>
