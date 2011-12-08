@@ -31,6 +31,8 @@ namespace GitUI
         private GitCommandsInstance gitGetUnstagedCommand = new GitCommandsInstance();
         private readonly SynchronizationContext syncContext;
         private readonly FileSystemWatcher watcher = new FileSystemWatcher();
+        private readonly FileSystemWatcher gitDirWatcher = new FileSystemWatcher();
+        private string gitPath;
         private int nextUpdateTime;
         private WorkingStatus currentStatus;
         private bool hasDeferredUpdateRequests;
@@ -42,22 +44,32 @@ namespace GitUI
 
             InitializeComponent();
 
-            Settings.WorkingDirChanged += (_, newDir) => TryStartWatchingChanges(newDir);
+            Settings.WorkingDirChanged += (_, newDir, newGitDir) => TryStartWatchingChanges(newDir, newGitDir);
 
             GitUICommands.Instance.PreCheckoutBranch += GitUICommands_PreCheckout;
             GitUICommands.Instance.PreCheckoutRevision += GitUICommands_PreCheckout;
             GitUICommands.Instance.PostCheckoutBranch += GitUICommands_PostCheckout;
             GitUICommands.Instance.PostCheckoutRevision += GitUICommands_PostCheckout;
 
-            // Setup a file watcher to detect changes to our files, or the .git repo files. When they
+            // Setup a file watcher to detect changes to our files. When they
             // change, we'll update our status.
             watcher.Changed += watcher_Changed;
             watcher.Created += watcher_Changed;
             watcher.Deleted += watcher_Changed;
             watcher.Error += watcher_Error;
             watcher.IncludeSubdirectories = true;
+            watcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite;
 
-            TryStartWatchingChanges(Settings.WorkingDir);
+            // Setup a file watcher to detect changes to the .git repo files. When they
+            // change, we'll update our status.
+            gitDirWatcher.Changed += gitWatcher_Changed;
+            gitDirWatcher.Created += gitWatcher_Changed;
+            gitDirWatcher.Deleted += gitWatcher_Changed;
+            gitDirWatcher.Error += watcher_Error;
+            gitDirWatcher.IncludeSubdirectories = true;
+            gitDirWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite;
+
+            TryStartWatchingChanges(Settings.WorkingDir, Settings.Module.GetGitDirectory());
         }
 
 
@@ -71,7 +83,7 @@ namespace GitUI
             CurrentStatus = WorkingStatus.Started;
         }
 
-        private void TryStartWatchingChanges(string watchingPath)
+        private void TryStartWatchingChanges(string watchingPath, string watchingGitPath)
         {
             // reset status info, it was outdated
             Text = string.Empty;
@@ -79,9 +91,12 @@ namespace GitUI
 
             try
             {
-                if (!string.IsNullOrEmpty(watchingPath) && Directory.Exists(watchingPath))
+                if (!string.IsNullOrEmpty(watchingPath) && Directory.Exists(watchingPath) &&
+                    !string.IsNullOrEmpty(watchingGitPath) && Directory.Exists(watchingGitPath))
                 {
                     watcher.Path = watchingPath;
+                    gitDirWatcher.Path = watchingGitPath;
+                    gitPath = Path.GetDirectoryName(watchingGitPath).ToLowerInvariant();
                     CurrentStatus = WorkingStatus.Started;
                 }
                 else
@@ -101,23 +116,28 @@ namespace GitUI
 
         private void watcher_Changed(object sender, FileSystemEventArgs e)
         {
-            String[] dirs = e.FullPath.Split('\\');
-            bool isGitSelfChange = false;
-            for (int  i = 0; i < dirs.Length; i++)
-                if (dirs[i].Equals(".git", StringComparison.OrdinalIgnoreCase))
-                {
-                    if (i + 1 == dirs.Length) // .git directory changed
-                        isGitSelfChange = true;
-                    else if (i + 3 == dirs.Length) // submodule root directory changed
-                    {
-                        if (dirs[i + 1].Equals("modules", StringComparison.OrdinalIgnoreCase))
-                            isGitSelfChange = true;
-                    }
-                    else if (dirs[dirs.Length - 1].Equals("index.lock", StringComparison.OrdinalIgnoreCase)) // index.lock changed
-                        isGitSelfChange = true;
-                    break;
-                }
-            if (isGitSelfChange)
+            string path = e.FullPath.ToLowerInvariant();
+            if (path.StartsWith(gitPath))
+            {
+                gitWatcher_Changed(sender, e);
+                return;
+            }
+
+            // submodule .git file
+            if (path.EndsWith("\\.git"))
+                return;
+
+            ScheduleNextRegularUpdate();
+        }
+
+        private void gitWatcher_Changed(object sender, FileSystemEventArgs e)
+        {
+            string path = e.FullPath.ToLowerInvariant();
+            // git directory changed
+            if (path.Length == gitPath.Length)
+                return;
+
+            if (path.EndsWith("\\index.lock"))
                 return;
 
             ScheduleNextRegularUpdate();
@@ -211,12 +231,6 @@ namespace GitUI
             Update();
         }
 
-        public void UpdateImmediate()
-        {
-            if (currentStatus == WorkingStatus.Started)
-                ScheduleImmediateUpdate();
-        }
-
         private WorkingStatus CurrentStatus
         {
             get { return currentStatus; }
@@ -228,15 +242,18 @@ namespace GitUI
                     case WorkingStatus.Stopped:
                         timerRefresh.Stop();
                         watcher.EnableRaisingEvents = false;
+                        gitDirWatcher.EnableRaisingEvents = false;
                         Visible = false;
                         return;
                     case WorkingStatus.Paused:
                         timerRefresh.Stop();
                         watcher.EnableRaisingEvents = false;
+                        gitDirWatcher.EnableRaisingEvents = false;
                         return;
                     case WorkingStatus.Started:
                         timerRefresh.Start();
                         watcher.EnableRaisingEvents = true;
+                        gitDirWatcher.EnableRaisingEvents = !gitDirWatcher.Path.StartsWith(watcher.Path);
                         ScheduleImmediateUpdate();
                         Visible = true;
                         return;
