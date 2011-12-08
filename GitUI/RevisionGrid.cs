@@ -1189,7 +1189,7 @@ namespace GitUI
                     e.Value = revision.Message;
                     break;
                 case 2:
-                    e.Value = revision.Author;
+                    e.Value = revision.Author ?? "";
                     break;
                 case 3:
                     {
