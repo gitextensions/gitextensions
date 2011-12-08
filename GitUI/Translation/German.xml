@@ -594,7 +594,7 @@ Wollen Sie zuerst einen Ländercode auswählen?</Value>
         <TranslationItem Name="RemoteBranch" Property="Text">
           <Value>Fataler Fehler: Kein Git Verzeichnis vorhanden (auch nicht in einem übergeordneten Verzeichnis)</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
+        <TranslationItem Name="labelFrom" Property="Text">
           <Value>Zu pushender Branch</Value>
         </TranslationItem>
         <TranslationItem Name="_branchNewForRemote" Property="Text">

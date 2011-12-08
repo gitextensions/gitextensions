@@ -1721,6 +1721,48 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <TranslationItem Name="labelTo" Property="Text">
           <Value>в</Value>
         </TranslationItem>
+        <TranslationItem Name="BranchTab" Property="Text">
+          <Value>Отправить ветку</Value>
+        </TranslationItem>
+        <TranslationItem Name="MultipleBranchTab" Property="Text">
+          <Value>Отправить несколько веток</Value>
+        </TranslationItem>
+        <TranslationItem Name="TagTab" Property="Text">
+          <Value>Отправить метки</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelFrom" Property="Text">
+          <Value>Отправить ветку</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox4" Property="Text">
+          <Value>Выберите ветки для отправки</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Отправить метку</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowOptions" Property="Text">
+          <Value>Дополнительные параметры</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowTagOptions" Property="Text">
+          <Value>Дополнительные параметры</Value>
+        </TranslationItem>
+       <TranslationItem Name="LocalColumn" Property="HeaderText">
+          <Value>Локальная</Value>
+        </TranslationItem>
+       <TranslationItem Name="RemoteColumn" Property="HeaderText">
+          <Value>Внешняя</Value>
+        </TranslationItem>
+       <TranslationItem Name="NewColumn" Property="HeaderText">
+          <Value>Новая</Value>
+        </TranslationItem>
+       <TranslationItem Name="PushColumn" Property="HeaderText">
+          <Value>Отправить</Value>
+        </TranslationItem>
+       <TranslationItem Name="ForceColumn" Property="HeaderText">
+          <Value>Принудительно</Value>
+        </TranslationItem>
+       <TranslationItem Name="DeleteColumn" Property="HeaderText">
+          <Value>Удалить внешнюю</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormPuttyError">
