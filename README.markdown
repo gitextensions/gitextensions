@@ -36,7 +36,7 @@ If you do not want to use github, I also accept mailed patches. Just make sure t
 ## Links
 
 * Download page: [http://code.google.com/p/gitextensions/downloads/list](http://code.google.com/p/gitextensions/downloads/list)
-* Change log: [ChangeLog.txt](https://github.com/spdr870/gitextensions/blob/master/GitUI/Resources/ChangeLog.txt)
+* ChangeLog: [https://github.com/spdr870/gitextensions/blob/master/GitUI/Resources/ChangeLog.txt](https://github.com/spdr870/gitextensions/blob/master/GitUI/Resources/ChangeLog.txt)
 * Source code: [http://github.com/spdr870/gitextensions](http://github.com/spdr870/gitextensions)
 * Issue tracker: [http://github.com/spdr870/gitextensions/issues](http://github.com/spdr870/gitextensions/issues)
 * Mailing list: [http://groups.google.com/group/gitextensions](http://groups.google.com/group/gitextensions)
