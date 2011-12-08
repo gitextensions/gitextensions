@@ -660,7 +660,7 @@
         </TranslationItem>
         <TranslationItem Name="_notOnBranch" Property="Text">
           <Value>Вы работаете не в ветке.
-На этот коммит не будет ссылок, и когда вы переключетесь на другую ветку он может быть потерян.
+На этот коммит не будет ссылок, и когда вы переключитесь на другую ветку, он может быть потерян.
 
 Хотите продолжить?</Value>
         </TranslationItem>
@@ -786,10 +786,10 @@
           <Value>Копировать информацию о коммите</Value>
         </TranslationItem>
         <TranslationItem Name="showContainedInBranchesRemoteToolStripMenuItem" Property="Text">
-          <Value>Показать удаленные ветки, содержащие этот коммит</Value>
+          <Value>Показать внешние ветки, содержащие этот коммит</Value>
         </TranslationItem>
         <TranslationItem Name="showContainedInBranchesRemoteIfNoLocalToolStripMenuItem" Property="Text">
-          <Value>Показывать удаленные ветки только когда не существует локальных веток, содержащих этот коммит</Value>
+          <Value>Показывать внешние ветки только когда не существует локальных веток, содержащих этот коммит</Value>
         </TranslationItem>
         <TranslationItem Name="addNoteToolStripMenuItem" Property="Text">
           <Value>Добавить заметки</Value>
@@ -1195,7 +1195,7 @@
           <Value>Локальная ветка</Value>
         </TranslationItem>
         <TranslationItem Name="Remotebranch" Property="Text">
-          <Value>Удаленная ветка</Value>
+          <Value>Внешняя ветка</Value>
         </TranslationItem>
         <TranslationItem Name="Force" Property="Text">
           <Value>Принудительно</Value>
