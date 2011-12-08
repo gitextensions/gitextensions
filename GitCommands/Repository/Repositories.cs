@@ -64,7 +64,7 @@ namespace GitCommands.Repository
             foreach (RepositoryCategory category in Repositories.RepositoryCategories)
             {
                 foreach (Repository repo in category.Repositories)
-                    if (repo.Path.Equals(path, StringComparison.CurrentCultureIgnoreCase))
+                    if (repo.Path != null && repo.Path.Equals(path, StringComparison.CurrentCultureIgnoreCase))
                         return repo;
             }
             return null;        
