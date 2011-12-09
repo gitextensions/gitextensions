@@ -1,6 +1,10 @@
 ﻿Changelog
 =========
 
+Version 2.28
+	Fixed issue 738: RevisionGrid error when option "Show current working dir changes" is enabled
+	Fixed issue: all tabs are trimmed in blame control
+	
 Version 2.27
 	Fixed issue 124: Submodules form now can remove submodule
 	Fixed issue 127: Preview disabled for files larger than 5Mb, but available by link
