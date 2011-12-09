@@ -12,8 +12,8 @@ namespace GitCommands
     public static class Settings
     {
         //Constants
-        public static readonly string GitExtensionsVersionString = "2.27";
-        public static readonly int GitExtensionsVersionInt = 227;
+        public static readonly string GitExtensionsVersionString = "2.28";
+        public static readonly int GitExtensionsVersionInt = 228;
 
         //semi-constants
         public static readonly char PathSeparator = '\\';
@@ -470,7 +470,7 @@ namespace GitCommands
             set { SafeSet("maxrevisiongraphcommits", value, ref _maxRevisionGraphCommits); }
         }
 
-        public delegate void WorkingDirChangedEventHandler(string oldDir, string newDir);
+        public delegate void WorkingDirChangedEventHandler(string oldDir, string newDir, string newGitDir);
         public static event WorkingDirChangedEventHandler WorkingDirChanged;
 
         private static GitModule _module = new GitModule();
@@ -494,7 +494,7 @@ namespace GitCommands
                 _module.WorkingDir = value;
                 if (WorkingDirChanged != null)
                 {
-                    WorkingDirChanged(old, _module.WorkingDir);
+                    WorkingDirChanged(old, _module.WorkingDir, _module.GetGitDirectory());
                 }
             }
         }

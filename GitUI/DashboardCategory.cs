@@ -3,11 +3,29 @@ using System.Linq;
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands.Repository;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class DashboardCategory : GitExtensionsControl
     {
+        #region Translation
+        private readonly TranslationString _moveToCategory =
+            new TranslationString("Move to category");
+        private readonly TranslationString _moveCategoryUp = 
+            new TranslationString("Move up");
+        private readonly TranslationString _moveCategoryDown =
+            new TranslationString("Move down");
+        private readonly TranslationString _removeCategory = 
+            new TranslationString("Remove");
+        private readonly TranslationString _editCategory = 
+            new TranslationString("Edit");
+        private readonly TranslationString _showCurrentBranch =
+            new TranslationString("Show current branch");
+        private readonly TranslationString _newCategory =
+            new TranslationString("New category");
+        #endregion
+
         private RepositoryCategory m_repositoryCategory;
 
         public DashboardCategory()
@@ -75,25 +93,24 @@ namespace GitUI
                 if (m_repositoryCategory.CategoryType == RepositoryCategoryType.Repositories)
                 {
                     var contextMenu = new ContextMenuStrip();
-                    var moveToMenuItem = new ToolStripMenuItem("Move To Category", null,
+                    var moveToMenuItem = new ToolStripMenuItem(_moveToCategory.Text, null,
                                                                new ToolStripMenuItem("moveto")) { Tag = repository };
                     moveToMenuItem.DropDownOpening += moveToMenuItem_DropDownOpening;
                     contextMenu.Items.Add(moveToMenuItem);
-                    var moveUpMenuItem = new ToolStripMenuItem("Move Up") { Tag = repository };
+                    var moveUpMenuItem = new ToolStripMenuItem(_moveCategoryUp.Text) { Tag = repository };
                     moveUpMenuItem.Click += moveUpMenuItem_Click;
                     contextMenu.Items.Add(moveUpMenuItem);
-                    var moveDownMenuItem = new ToolStripMenuItem("Move Down") { Tag = repository };
+                    var moveDownMenuItem = new ToolStripMenuItem(_moveCategoryDown.Text) { Tag = repository };
                     moveDownMenuItem.Click += moveDownMenuItem_Click;
                     contextMenu.Items.Add(moveDownMenuItem);
-                    var removeMenuItem = new ToolStripMenuItem("Remove") { Tag = repository };
+                    var removeMenuItem = new ToolStripMenuItem(_removeCategory.Text) { Tag = repository };
                     removeMenuItem.Click += removeMenuItem_Click;
                     contextMenu.Items.Add(removeMenuItem);
-                    var editMenuItem = new ToolStripMenuItem("Edit");
+                    var editMenuItem = new ToolStripMenuItem(_editCategory.Text);
                     editMenuItem.Click += editMenuItem_Click;
                     contextMenu.Items.Add(editMenuItem);
 
-
-                    var showCurrentBranchMenuItem = new ToolStripMenuItem("Show curren branch");
+                    var showCurrentBranchMenuItem = new ToolStripMenuItem(_showCurrentBranch.Text);
                     showCurrentBranchMenuItem.Click += new EventHandler(showCurrentBranchMenuItem_Click);
                     showCurrentBranchMenuItem.Checked = GitCommands.Settings.DashboardShowCurrentBranch;
                     contextMenu.Items.Add(showCurrentBranchMenuItem);
@@ -198,7 +215,7 @@ namespace GitUI
             if (moveToMenuItem.DropDownItems.Count > 0)
                 moveToMenuItem.DropDownItems.Add(new ToolStripSeparator());
 
-            var newCategoryMenuItem = new ToolStripMenuItem("New category") {Tag = moveToMenuItem.Tag};
+            var newCategoryMenuItem = new ToolStripMenuItem(_newCategory.Text) { Tag = moveToMenuItem.Tag };
             newCategoryMenuItem.Click += newCategoryMenuItem_Click;
             moveToMenuItem.DropDownItems.Add(newCategoryMenuItem);
         }

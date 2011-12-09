@@ -102,8 +102,11 @@ namespace GitUI
 
         private void updateText()
         {
+            RevisionInfo.SuspendLayout();
             RevisionInfo.SetXHTMLText(_revisionInfo + _branchInfo + _tagInfo);
-            RevisionInfo.Refresh();
+            RevisionInfo.SelectionStart = 0; //scroll up
+            RevisionInfo.ScrollToCaret();    //scroll up
+            RevisionInfo.ResumeLayout(true);
         }
 
         private void ResetTextAndImage()

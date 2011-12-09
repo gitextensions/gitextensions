@@ -2,13 +2,20 @@
 using System.Windows.Forms;
 using GitCommands;
 using System.Linq;
+using GitCommands.Logging;
+using System.Threading;
 
 namespace GitUI
 {
     public partial class GitLogForm : GitExtensionsForm
     {
+
+        protected readonly SynchronizationContext syncContext;
+
         public GitLogForm()
         {
+            ShowInTaskbar = true;
+            syncContext = SynchronizationContext.Current;
             InitializeComponent();
             Translate();
         }
@@ -22,10 +29,54 @@ namespace GitUI
         {
             RestorePosition("log");
 
-            LogItems.DataSource = Settings.GitLog.Commands();
+            Settings.GitLog.CommandsChanged += (CommandLogger log) =>
+            {
+                RefreshLogItems(log);
+            };
 
-            CommandCacheItems.DataSource = GitCommandCache.CachedCommands().ToList();
+            GitCommandCache.CachedCommandsChanged += () =>
+            {
+                RefreshCommandCacheItems();
+            };
+
+            RefreshLogItems(Settings.GitLog);
+
+            RefreshCommandCacheItems();
+
         }
+
+        protected void RefreshLogItems(CommandLogger log)
+        {
+            SendOrPostCallback method = o =>
+            {
+                if (TabControl.SelectedTab == tabPageCommandLog)
+                {
+                    bool selectLastIndex = LogItems.Items.Count == 0 || LogItems.SelectedIndex == LogItems.Items.Count - 1;
+                    LogItems.DataSource = log.Commands();
+                    if (selectLastIndex && LogItems.Items.Count > 0)
+                        LogItems.SelectedIndex = LogItems.Items.Count - 1;
+                }
+            };
+            syncContext.Post(method, this);
+
+        }
+
+        protected void RefreshCommandCacheItems()
+        {
+            SendOrPostCallback method = o =>
+            {
+                if (TabControl.SelectedTab == tabPageCommandCache)
+                {
+                    bool selectLastIndex = CommandCacheItems.Items.Count == 0 || CommandCacheItems.SelectedIndex == CommandCacheItems.Items.Count - 1;
+                    CommandCacheItems.DataSource = GitCommandCache.CachedCommands();
+                    if (selectLastIndex && CommandCacheItems.Items.Count > 0)
+                        CommandCacheItems.SelectedIndex = CommandCacheItems.Items.Count - 1;
+                }
+
+            };
+            syncContext.Post(method, this);
+        }
+
 
         private void CommandCacheItems_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -48,6 +99,18 @@ namespace GitUI
             string command = LogItems.SelectedItem as string;
 
             LogOutput.Text = command;
+        }
+
+        private void TabControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            RefreshLogItems(Settings.GitLog);
+            RefreshCommandCacheItems();
+        }
+
+        private void alwaysOnTopCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            this.TopMost = !this.TopMost;
+            alwaysOnTopCheckBox.Checked = this.TopMost;
         }
     }
 }

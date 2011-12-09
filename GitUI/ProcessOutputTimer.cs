@@ -12,7 +12,7 @@ namespace GitUI
         public static void Start(FormStatus form)
         {
             _form = form;
-            _timer = new Timer(300);
+            _timer = new Timer(600);
             _timer.Elapsed += _timer_Elapsed;
             _timer.Enabled = true;
         }

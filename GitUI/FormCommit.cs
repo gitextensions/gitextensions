@@ -1476,6 +1476,19 @@ namespace GitUI
             toolbarSelectionFilter.Visible = selectionFilterToolStripMenuItem.Checked;
         }
 
+        private void commitSubmoduleChanges_Click(object sender, EventArgs e)
+        {
+            Process process = new Process();
+            process.StartInfo.FileName = Application.ExecutablePath;
+            process.StartInfo.Arguments = "commit";
+            process.StartInfo.WorkingDirectory = Settings.WorkingDir + _currentItem.Name + Settings.PathSeparator;
+            if (process.Start())
+            {
+                process.WaitForExit();
+                Initialize();
+            }
+        }
+
         private void openSubmoduleMenuItem_Click(object sender, EventArgs e)
         {
             Process process = new Process();

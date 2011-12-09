@@ -237,9 +237,7 @@ namespace GitCommands
         void dataReceived(string line)
         {
             if (line == null)
-            {
                 return;
-            }
 
             if (line == COMMIT_BEGIN)
             {
@@ -321,10 +319,7 @@ namespace GitCommands
                     if (logoutputEncoding == null)
                         logoutputEncoding = Settings.Module.GetLogoutputEncoding();
 
-                    if (!logoutputEncoding.Equals(Settings.Encoding))
-                        revision.Message = logoutputEncoding.GetString(Settings.Encoding.GetBytes(line));
-                    else
-                        revision.Message = line;
+                    revision.Message = logoutputEncoding.Equals(Settings.Encoding) ? line : logoutputEncoding.GetString(Settings.Encoding.GetBytes(line));
                     break;
 
                 case ReadStep.FileName:

@@ -18,6 +18,21 @@ namespace GitPlugin.Git
             Run(path + "\\GitExtensions.exe", command);
         }
 
+        public static string RunGitExWait(string command, string filename)
+        {
+            string path = GetGitExRegValue("InstallDir");
+
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            SetupProcessStartInfo(startInfo, path + "\\GitExtensions.exe", command, new FileInfo(filename).DirectoryName, false, false);
+
+            using (var process = Process.Start(startInfo))
+            {
+                string output = process.StandardOutput.ReadToEnd();
+                process.WaitForExit();
+                return output;
+            }
+        }
+
         private static string RunGit(string arguments, string filename, out int exitCode)
         {
             string gitcommand = GetGitExRegValue("gitcommand");
