@@ -34,7 +34,21 @@ namespace GitUI
             CancelButton = cancelButton;
 
             Load += GitExtensionsFormLoad;
-            FormClosed += GitExtensionsFormFormClosed;
+            FormClosing += GitExtensionsForm_FormClosing;
+        }
+
+        void GitExtensionsForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+#if !__MonoCS__
+            if (TaskbarManager.IsPlatformSupported)
+            {
+                try
+                {
+                    TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress);
+                }
+                catch (InvalidOperationException) { }
+            }
+#endif
         }
 
         #region Hotkeys
@@ -206,20 +220,6 @@ namespace GitUI
         public virtual void CancelButtonClick(object sender, EventArgs e)
         {
             Close();
-        }
-
-        public virtual void GitExtensionsFormFormClosed(object sender, EventArgs e)
-        {
-#if !__MonoCS__
-            if (TaskbarManager.IsPlatformSupported)
-            {
-                try
-                {
-                    TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress);
-                }
-                catch (InvalidOperationException) { }
-            }
-#endif
         }
 
         private bool _windowCentred = false;

@@ -1677,6 +1677,9 @@ namespace GitCommands
         /// </summary>
         public static string GetSelectedBranchFast(string repositoryPath)
         {
+            if (string.IsNullOrEmpty(repositoryPath))
+                return string.Empty;
+
             string head;
             string headFileName = Path.Combine(WorkingDirGitDir(repositoryPath), "HEAD");
             if (File.Exists(headFileName))
