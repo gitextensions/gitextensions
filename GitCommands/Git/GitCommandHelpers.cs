@@ -577,7 +577,12 @@ namespace GitCommands
             return GetAllChangedFilesCmd( excludeIgnoredFiles, untrackedFiles ? UntrackedFilesMode.Default : UntrackedFilesMode.No );
         }
 
-        public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules = 0)
+        public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles)
+        {
+            return GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles, 0);
+        }
+
+        public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules)
         {
             if (!VersionInUse.SupportGitStatusPorcelain)
                 throw new Exception("The version of git you are using is not supported for this action. Please upgrade to git 1.7.3 or newer.");

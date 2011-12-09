@@ -88,7 +88,11 @@ namespace GitUI
             _NO_TRANSLATE_Remotes.DataSource = remotes;
         }
 
-        public DialogResult PullAndShowDialogWhenFailed(IWin32Window owner = null)
+        public DialogResult PullAndShowDialogWhenFailed()
+        {
+            return PullAndShowDialogWhenFailed(null);
+        }
+        public DialogResult PullAndShowDialogWhenFailed(IWin32Window owner)
         {
             if (PullChanges())
                 return DialogResult.OK;
