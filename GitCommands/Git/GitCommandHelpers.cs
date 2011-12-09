@@ -2,12 +2,42 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Security.Permissions;
 using System.Text;
 using GitCommands.Config;
 
 namespace GitCommands
 {
+    public enum UntrackedFilesMode
+    {
+        /// <summary>
+        /// Default value.
+        /// </summary>
+        Default = 1,
+        /// <summary>
+        /// Show no untracked files.
+        /// </summary>
+        No = 2,
+        /// <summary>
+        /// Shows untracked files and directories.
+        /// </summary>
+        Normal = 3,
+        /// <summary>
+        /// Also shows individual files in untracked directories.
+        /// </summary>
+        All = 4
+    }
+
+    public enum IgnoreSubmodulesMode
+    {
+        Default = 1,
+        None = 2,
+        Untracked = 3,
+        Dirty = 4,
+        All = 5
+    }
+
     public static class GitCommandHelpers
     {
         public static void SetEnvironmentVariable()
@@ -541,18 +571,57 @@ namespace GitCommands
         {
             return new ConfigFile(GetHomeDir() + Settings.PathSeparator + ".gitconfig");
         }
-        
-        public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, bool showUntrackedFiles)
+
+        public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, bool untrackedFiles)
+        {
+            return GetAllChangedFilesCmd( excludeIgnoredFiles, untrackedFiles ? UntrackedFilesMode.Default : UntrackedFilesMode.No );
+        }
+
+        public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles)
+        {
+            return GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles, 0);
+        }
+
+        public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules)
         {
             if (!VersionInUse.SupportGitStatusPorcelain)
                 throw new Exception("The version of git you are using is not supported for this action. Please upgrade to git 1.7.3 or newer.");
 
             StringBuilder stringBuilder = new StringBuilder("status --porcelain -z");
 
-            if (!showUntrackedFiles)
-                stringBuilder.Append(" --untracked-files=no");
-            if (showUntrackedFiles)
-                stringBuilder.Append(" --untracked-files");
+            switch(untrackedFiles)
+            {
+                case UntrackedFilesMode.Default:
+                    stringBuilder.Append(" --untracked-files");
+                    break;
+                case UntrackedFilesMode.No:
+                    stringBuilder.Append(" --untracked-files=no");
+                    break;
+                case UntrackedFilesMode.Normal:
+                    stringBuilder.Append(" --untracked-files=normal");
+                    break;
+                case UntrackedFilesMode.All:
+                    stringBuilder.Append(" --untracked-files=all");
+                    break;
+            }
+            switch (ignoreSubmodules)
+            {
+                case IgnoreSubmodulesMode.Default:
+                    stringBuilder.Append(" --ignore-submodules");
+                    break;
+                case IgnoreSubmodulesMode.None:
+                    stringBuilder.Append(" --ignore-submodules=none");
+                    break;
+                case IgnoreSubmodulesMode.Untracked:
+                    stringBuilder.Append(" --ignore-submodules=untracked");
+                    break;
+                case IgnoreSubmodulesMode.Dirty:
+                    stringBuilder.Append(" --ignore-submodules=dirty");
+                    break;
+                case IgnoreSubmodulesMode.All:
+                    stringBuilder.Append(" --ignore-submodules=all");
+                    break;
+            }
             if (!excludeIgnoredFiles)
                 stringBuilder.Append(" --ignored");
 
@@ -633,6 +702,8 @@ namespace GitCommands
                     if (gitItemStatus != null)
                     {
                         gitItemStatus.IsStaged = true;
+                        if (Submodules.Contains(gitItemStatus.Name))
+                            gitItemStatus.IsSubmodule = true;
                         diffFiles.Add(gitItemStatus);
                     }
                 }
@@ -643,12 +714,11 @@ namespace GitCommands
                     if (gitItemStatus != null)
                     {
                         gitItemStatus.IsStaged = false;
+                        if (Submodules.Contains(gitItemStatus.Name))
+                            gitItemStatus.IsSubmodule = true;
                         diffFiles.Add(gitItemStatus);
                     }
                 }
-
-                if (gitItemStatus != null && Submodules.Contains(gitItemStatus.Name))
-                    gitItemStatus.IsSubmodule = true;
             }
 
             return diffFiles;
@@ -734,7 +804,9 @@ namespace GitCommands
                 if (process1 == null)
                     process1 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --add --stdin");
 
-                process1.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
+                //process1.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
+                byte[] bytearr = ConvertFileNameTo(Settings.Encoding, "\"" + FixPath(file.Name) + "\"" + process1.StandardInput.NewLine);
+                process1.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
             }
             if (process1 != null)
             {
@@ -752,7 +824,9 @@ namespace GitCommands
                     continue;
                 if (process2 == null)
                     process2 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --remove --stdin");
-                process2.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
+                //process2.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
+                byte[] bytearr = ConvertFileNameTo(Settings.Encoding, "\"" + FixPath(file.Name) + "\"" + process2.StandardInput.NewLine);
+                process2.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
             }
             if (process2 != null)
             {
@@ -770,6 +844,12 @@ namespace GitCommands
             }
 
             return output;
+        }
+
+        private static byte[] ConvertFileNameTo(Encoding encoding, string filename)
+        {
+            byte[] bytesunicode = Encoding.Unicode.GetBytes(filename);
+            return Encoding.Convert(Encoding.Unicode, encoding, bytesunicode);
         }
 
         public static string UnstageFiles(List<GitItemStatus> files)
@@ -805,7 +885,9 @@ namespace GitCommands
                     continue;
                 if (process2 == null)
                     process2 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --force-remove --stdin");
-                process2.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
+                //process2.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
+                byte[] bytearr = ConvertFileNameTo(Settings.Encoding, "\"" + FixPath(file.Name) + "\"" + process2.StandardInput.NewLine);
+                process2.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
             }
             if (process2 != null)
             {
@@ -817,6 +899,70 @@ namespace GitCommands
                 output += gitCommand.Output.ToString();
 
             return output;
+        }
+
+        public static string ProcessSubmodulePatch(string text)
+        {
+            StringBuilder sb = new StringBuilder();
+            using (StringReader reader = new StringReader(text))
+            {
+                string line;
+                string module = "";
+                while ((line = reader.ReadLine()) != null)
+                {
+                    if (line.StartsWith("+++ "))
+                    {
+                        module = line.Substring("+++ ".Length);
+                        var list = module.Split(new char[] { ' ' }, 2);
+                        module = list.Length > 0 ? list[0] : "";
+                        if (module.Length > 2 && module[1] == '/')
+                        {
+                            module = module.Substring(2);
+                            break;
+                        }
+                    }
+                }
+                sb.AppendLine("Submodule " + module + " Change");
+                while ((line = reader.ReadLine()) != null)
+                {
+                    if (line.Contains("Subproject"))
+                    {
+                        sb.AppendLine();
+                        char c = line[0];
+                        const string commit = "commit ";
+                        string hash = "";
+                        int pos = line.IndexOf(commit);
+                        if (pos >= 0)
+                            hash = line.Substring(pos + commit.Length);
+                        bool bdirty = hash.EndsWith("-dirty");
+                        hash = hash.Replace("-dirty", "");
+                        string dirty = !bdirty ? "" : " (dirty)";
+                        if (c == '-')
+                            sb.AppendLine("From:\t" + hash + dirty);
+                        else if (c == '+')
+                            sb.AppendLine("To:\t\t" + hash + dirty);
+
+                        string path = Settings.Module.GetSubmoduleFullPath(module);
+                        GitModule gitmodule = new GitModule(path);
+                        if (gitmodule.ValidWorkingDir())
+                        {
+                            string error = "";
+                            CommitData commitData = CommitData.GetCommitData(gitmodule, hash, ref error);
+                            if (commitData != null)
+                            {
+                                sb.AppendLine("\t\t\t\t\t" + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + commitData.CommitDate.LocalDateTime.ToString(" (ddd MMM dd HH':'mm':'ss yyyy)"));
+                                var delim = new char[] { '\n', '\r' };
+                                var lines = commitData.Body.Trim(delim).Split(new string[] {"\r\n"}, 0);
+                                foreach (var curline in lines)
+                                    sb.AppendLine("\t\t" + curline);
+                            }
+                        }
+                        else
+                            sb.AppendLine();
+                    }
+                }
+            }
+            return sb.ToString();
         }
 
         public static string GetRemoteName(string completeName, IEnumerable<string> remotes)

@@ -6,34 +6,42 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormRenameBranch : GitExtensionsForm
+    public sealed partial class FormRenameBranch : GitExtensionsForm
     {
-        private readonly TranslationString _branchRenamed = new TranslationString("Command executed");
+        private readonly TranslationString _branchRenameFailed = new TranslationString("Rename failed.");
 
-        private readonly string _defaultBranch;
-        private readonly TranslationString _renameBranchCaption = new TranslationString("Rename branch");
+        private readonly string oldName;
 
         public FormRenameBranch(string defaultBranch)
         {
             InitializeComponent();
             Translate();
             Branches.Text = defaultBranch;
-            _defaultBranch = defaultBranch;
+            oldName = defaultBranch;
         }
 
         private void OkClick(object sender, EventArgs e)
         {
+            var newName = Branches.Text;
+            if (newName.Equals(oldName))
+            {
+                DialogResult = DialogResult.Cancel;
+                return;
+            }
+
             try
             {
-                var renameBranchResult = Settings.Module.Rename(_defaultBranch, Branches.Text);
-                MessageBox.Show(this, this._branchRenamed.Text + Environment.NewLine + renameBranchResult,
-                                this._renameBranchCaption.Text);
+                var renameBranchResult = Settings.Module.Rename(oldName, newName);
+
+                if (!string.IsNullOrEmpty(renameBranchResult))
+                    MessageBox.Show(this, _branchRenameFailed.Text + Environment.NewLine + renameBranchResult, Text,
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
                 Trace.WriteLine(ex.Message);
             }
-            Close();
+            DialogResult = DialogResult.OK;
         }
     }
 }

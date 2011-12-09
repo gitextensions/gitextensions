@@ -33,12 +33,12 @@ namespace GitUI
 
         private void Save_Click(object sender, EventArgs e)
         {
-            if (revisionGrid1.GetRevisions().Count != 1)
+            if (revisionGrid1.GetSelectedRevisions().Count != 1)
             {
                 MessageBox.Show(this, _noRevisionSelectedMsgBox.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            string revision = revisionGrid1.GetRevisions()[0].TreeGuid;
+            string revision = revisionGrid1.GetSelectedRevisions()[0].TreeGuid;
 
             var saveFileDialog = new SaveFileDialog {Filter = _saveFileDialogFilter.Text + "|*.zip", Title = _saveFileDialogCaption.Text};
 

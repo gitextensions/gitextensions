@@ -106,29 +106,31 @@ namespace GitUI
             string rev2 = "";
             string result = "";
 
-            if (RevisionGrid.GetRevisions().Count > 0)
+            var revisions = RevisionGrid.GetSelectedRevisions();
+            if (revisions.Count > 0)
             {
-                if (RevisionGrid.GetRevisions().Count == 1)
+                if (revisions.Count == 1)
                 {
-                    rev1 = RevisionGrid.GetRevisions()[0].ParentGuids[0];
-                    rev2 = RevisionGrid.GetRevisions()[0].Guid;
+                    var parents = revisions[0].ParentGuids;
+                    rev1 = parents.Length > 0 ? parents[0] : "";
+                    rev2 = revisions[0].Guid;
                     result = Settings.Module.FormatPatch(rev1, rev2, savePatchesToDir);
                 }
-
-                if (RevisionGrid.GetRevisions().Count == 2)
+                else if (revisions.Count == 2)
                 {
-                    rev1 = RevisionGrid.GetRevisions()[0].ParentGuids[0];
-                    rev2 = RevisionGrid.GetRevisions()[1].Guid;
+                    var parents = revisions[0].ParentGuids;
+                    rev1 = parents.Length > 0 ? parents[0] : "";
+                    rev2 = revisions[1].Guid;
                     result = Settings.Module.FormatPatch(rev1, rev2, savePatchesToDir);
                 }
-
-                if (RevisionGrid.GetRevisions().Count > 2)
+                else if (revisions.Count > 2)
                 {
                     int n = 0;
-                    foreach (GitRevision revision in RevisionGrid.GetRevisions())
+                    foreach (GitRevision revision in revisions)
                     {
                         n++;
-                        rev1 = revision.ParentGuids[0];
+                        var parents = revision.ParentGuids;
+                        rev1 = parents.Length > 0 ? parents[0] : "";
                         rev2 = revision.Guid;
                         result += Settings.Module.FormatPatch(rev1, rev2, savePatchesToDir, n);
                     }
