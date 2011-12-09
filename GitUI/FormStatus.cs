@@ -16,7 +16,10 @@ namespace GitUI
         protected readonly SynchronizationContext syncContext;
         private bool UseDialogSettings = true;
 
-        public FormStatus(bool useDialogSettings = true)
+        public FormStatus(): this(true)
+        { }
+
+        public FormStatus(bool useDialogSettings)
         {
             syncContext = SynchronizationContext.Current;
             UseDialogSettings = useDialogSettings;

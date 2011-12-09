@@ -49,7 +49,6 @@
     </Compile>
     <Compile Include="GitImpactPlugin.cs" />
     <Compile Include="ImpactControl.cs">
-      <SubType>UserControl</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
