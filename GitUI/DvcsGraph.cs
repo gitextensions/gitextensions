@@ -710,7 +710,11 @@ namespace GitUI
 
         private List<Color> getJunctionColors(IEnumerable<Junction> aJunction)
         {
-            var colors = aJunction.Select(getJunctionColor).ToList();
+            List<Color> colors = new List<Color>();
+            foreach (Junction j in aJunction)
+            {
+                colors.Add( getJunctionColor(j) );
+            }
 
             if (colors.Count == 0)
             {
