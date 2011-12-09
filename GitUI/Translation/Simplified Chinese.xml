@@ -1766,7 +1766,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         <TranslationItem Name="labelTo" Property="Text">
           <Value>到</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
+        <TranslationItem Name="labelFrom" Property="Text">
           <Value>要推送的分支</Value>
         </TranslationItem>
       </translationItems>
