@@ -5,8 +5,8 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
-using ICSharpCode.TextEditor.Util;
 using GitUI.Hotkey;
+using ICSharpCode.TextEditor.Util;
 
 namespace GitUI.Editor
 {
@@ -61,13 +61,14 @@ namespace GitUI.Editor
             _internalFileViewer.DoubleClick += (sender, args) => OnRequestDiffView(EventArgs.Empty);
 
             this.HotkeysEnabled = true;
-            this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
 
             ContextMenu.Opening += ContextMenu_Opening; 
         }
 
         protected override void OnLoad(EventArgs e)
         {
+            if (!DesignMode)
+                this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             Font = Settings.DiffFont;
         }
 
@@ -275,67 +276,10 @@ namespace GitUI.Editor
             _async.Load(() => Settings.Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments()), ViewSubmodulePatch);
         }
 
-        private string ProcessSubmodulePatch(string text)
-        {
-            StringBuilder sb = new StringBuilder();
-            using (StringReader reader = new StringReader(text))
-            {
-                string line = reader.ReadLine();
-                const string gitstr = "--git ";
-                string module = "";
-                int pos = line.IndexOf(gitstr);
-                if (pos >= 0)
-                {
-                    module = line.Substring(pos + gitstr.Length);
-                    var list = module.Split(new char[] {' '},2);
-                    module = list.Length > 0 ? list[0] : "";
-                    if (module.StartsWith("a/"))
-                        module = module.Substring(2);
-                }
-                sb.AppendLine("Submodule " + module + " Change");
-                while ((line = reader.ReadLine()) != null)
-                {
-                    if (line.Contains("Subproject"))
-                    {
-                        sb.AppendLine();
-                        char c = line[0];
-                        const string commit = "commit ";
-                        string hash = "";
-                        pos = line.IndexOf(commit);
-                        if (pos >= 0)
-                            hash = line.Substring(pos + commit.Length);
-                        bool bdirty = hash.EndsWith("-dirty");
-                        hash = hash.Replace("-dirty", "");
-                        string dirty = !bdirty ? "" : " (dirty)";
-                        if (c == '-')
-                            sb.AppendLine("From:\t" + hash + dirty);
-                        else if (c == '+')
-                            sb.AppendLine("To:\t\t" + hash + dirty);
-
-                        string path = Settings.Module.GetSubmoduleFullPath(module);
-                        GitModule gitmodule = new GitModule(path);
-                        if (gitmodule.ValidWorkingDir())
-                        {
-                            string error = "";
-                            CommitData commitData = CommitData.GetCommitData(gitmodule, hash, ref error);
-                            if (commitData != null)
-                            {
-                                sb.AppendLine("\t\t\t\t\t" + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + commitData.CommitDate.LocalDateTime.ToString(" (ddd MMM dd HH':'mm':'ss yyyy)"));
-                                sb.AppendLine("\t\t" + commitData.Body.Trim(new char[] {'\n', '\r'}));
-                            }
-                        }
-                        else
-                            sb.AppendLine();
-                    }
-                }
-            }
-            return sb.ToString();
-        }
-
         public void ViewSubmodulePatch(string text)
         {
             ResetForText(null);
-            text = ProcessSubmodulePatch(text);
+            text = GitCommandHelpers.ProcessSubmodulePatch(text);
             _internalFileViewer.SetText(text);
             if (TextLoaded != null)
                 TextLoaded(this, null);

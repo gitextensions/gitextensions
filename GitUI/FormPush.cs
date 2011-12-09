@@ -87,7 +87,7 @@ namespace GitUI
 
         public void PushAndShowDialogWhenFailed(IWin32Window owner)
         {
-            if (!PushChanges())
+            if (!PushChanges(owner))
                 ShowDialog(owner);
         }
 
@@ -105,26 +105,26 @@ namespace GitUI
 
         private void PushClick(object sender, EventArgs e)
         {
-            if (PushChanges())
+            if (PushChanges(this))
                 Close();
         }
 
-        private bool PushChanges()
+        private bool PushChanges(IWin32Window owner)
         {
             if (PullFromUrl.Checked && string.IsNullOrEmpty(PushDestination.Text))
             {
-                MessageBox.Show(this, _selectDestinationDirectory.Text);
+                MessageBox.Show(owner, _selectDestinationDirectory.Text);
                 return false;
             }
             if (PullFromRemote.Checked && string.IsNullOrEmpty(_NO_TRANSLATE_Remotes.Text))
             {
-                MessageBox.Show(this, _selectRemote.Text);
+                MessageBox.Show(owner, _selectRemote.Text);
                 return false;
             }
             if (TabControlTagBranch.SelectedTab == TagTab && string.IsNullOrEmpty(TagComboBox.Text) &&
                 !PushAllTags.Checked)
             {
-                MessageBox.Show(this, _selectTag.Text);
+                MessageBox.Show(owner, _selectTag.Text);
                 return false;
             }
 
@@ -138,7 +138,7 @@ namespace GitUI
                 //The current branch is not known by the remote (as far as we now since we are disconnected....)
                 if (!Settings.Module.GetHeads(true, true).Exists(x => x.Remote == _NO_TRANSLATE_Remotes.Text && x.LocalName == RemoteBranch.Text))
                     //Ask if this is what the user wants
-                    if (MessageBox.Show(this, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo) ==
+                    if (MessageBox.Show(owner, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo) ==
                         DialogResult.No)
                     {
                         return false;
@@ -166,7 +166,7 @@ namespace GitUI
                 if (GitCommandHelpers.Plink())
                 {
                     if (!File.Exists(Settings.Pageant))
-                        MessageBox.Show(this, _cannotLoadPutty.Text, PuttyText);
+                        MessageBox.Show(owner, _cannotLoadPutty.Text, PuttyText);
                     else
                         Settings.Module.StartPageantForRemote(_NO_TRANSLATE_Remotes.Text);
                 }
@@ -224,14 +224,14 @@ namespace GitUI
                            HandleOnExitCallback = new HandleOnExit(HandlePushOnExit)
                        };
 
-            form.ShowDialog(this);
+            form.ShowDialog(owner);
 
             if (!Settings.Module.InTheMiddleOfConflictedMerge() &&
                 !Settings.Module.InTheMiddleOfRebase() && !form.ErrorOccurred())
             {
                 ScriptManager.RunEventScripts(ScriptEvent.AfterPush);
                 if (_createPullRequestCB.Checked)
-                    GitUICommands.Instance.StartCreatePullRequest(this);
+                    GitUICommands.Instance.StartCreatePullRequest(owner);
                 return true;
             }
 

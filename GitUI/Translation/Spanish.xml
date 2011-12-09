@@ -3107,7 +3107,7 @@ Compruebe que el archivo esté accesible.
         <TranslationItem Name="labelTo" Property="Text">
           <Value>a</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
+        <TranslationItem Name="labelFrom" Property="Text">
           <Value>Push de rama</Value>
         </TranslationItem>
         <TranslationItem Name="_branchNewForRemote" Property="Text">

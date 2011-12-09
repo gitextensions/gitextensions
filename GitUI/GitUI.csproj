@@ -94,6 +94,18 @@
     <Compile Include="BranchComboBox.Designer.cs">
       <DependentUpon>BranchComboBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="DvcsGraph.Graph.cs">
+      <DependentUpon>DvcsGraph.cs</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DvcsGraph.Junction.cs">
+      <DependentUpon>DvcsGraph.cs</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DvcsGraph.Lanes.cs">
+      <DependentUpon>DvcsGraph.cs</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="FormRenameBranch.cs">
       <SubType>Form</SubType>
     </Compile>

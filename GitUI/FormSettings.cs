@@ -39,7 +39,7 @@ namespace GitUI
                                                           "Default (" + Encoding.Default.HeaderName + ")", "ASCII",
                                                           "Unicode", "UTF7", "UTF8", "UTF32"
                                                       });
-            GlobalEditor.Items.AddRange(new Object[] { "\"" + GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", "notepad++" });
+            GlobalEditor.Items.AddRange(new Object[] { "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", "notepad++" });
 
             SetCurrentDiffFont(Settings.DiffFont);
         }
@@ -84,7 +84,7 @@ namespace GitUI
             string editor = Settings.Module.GetGlobalSetting("core.editor");
             if (string.IsNullOrEmpty(editor))
             {
-                Settings.Module.SetGlobalSetting("core.editor", "\"" + GetGitExtensionsFullPath() + "\" fileeditor");
+                Settings.Module.SetGlobalSetting("core.editor", "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor");
             }
 
             return true;
@@ -667,7 +667,7 @@ namespace GitUI
 
         public static bool SolveGitExtensionsDir()
         {
-            string fileName = GetGitExtensionsDirectory();
+            string fileName = Settings.GetGitExtensionsDirectory();
 
             if (Directory.Exists(fileName))
             {
@@ -677,17 +677,6 @@ namespace GitUI
 
             return false;
         }
-
-        private static string GetGitExtensionsFullPath()
-        {
-            return Settings.GetGitExtensionsFullPath();
-        }
-
-        private static string GetGitExtensionsDirectory()
-        {
-            return Settings.GetGitExtensionsDirectory();
-        }
-
 
         private void ShellExtensionsRegistered_Click(object sender, EventArgs e)
         {
@@ -838,53 +827,78 @@ namespace GitUI
 
         public static bool SolveKDiffPath()
         {
-            if (!Settings.RunningOnWindows())
-                return false;
-
             string kdiff3path = Settings.Module.GetGlobalSetting("mergetool.kdiff3.path");
-            if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
+            
+            if (Settings.RunningOnUnix())
             {
-                kdiff3path = @"c:\Program Files\KDiff3\kdiff3.exe";
                 if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
                 {
-                    kdiff3path = @"c:\Program Files (x86)\KDiff3\kdiff3.exe";
+                    // Maybe command -v is better, but didn't work
+                    kdiff3path = Settings.Module.RunCmd("which","kdiff3").Replace("\n",string.Empty);
+                    if (string.IsNullOrEmpty(kdiff3path))
+                        return false;
+                }
+            }
+            else if (Settings.RunningOnWindows())
+            {
+                if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
+                {
+                    kdiff3path = @"c:\Program Files\KDiff3\kdiff3.exe";
                     if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
                     {
-                        kdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "") + "\\kdiff3.exe";
+                        kdiff3path = @"c:\Program Files (x86)\KDiff3\kdiff3.exe";
                         if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
                         {
-                            return false;
+                            kdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "") + "\\kdiff3.exe";
+                            if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
+                                return false;
                         }
                     }
                 }
             }
+            else
+                return false;
+            
             Settings.Module.SetGlobalSetting("mergetool.kdiff3.path", kdiff3path);
 
             return true;
         }
-
+        
+        
         public static bool SolveKDiffTool2Path()
         {
-            if (!Settings.RunningOnWindows())
-                return false;
-
             string kdiff3path = Settings.Module.GetGlobalSetting("difftool.kdiff3.path");
-            if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
+            
+            if (Settings.RunningOnUnix())
             {
-                kdiff3path = @"c:\Program Files\KDiff3\kdiff3.exe";
                 if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
                 {
-                    kdiff3path = @"c:\Program Files (x86)\KDiff3\kdiff3.exe";
+                    // Maybe command -v is better, but didn't work
+                    kdiff3path = Settings.Module.RunCmd("which","kdiff3").Replace("\n",string.Empty);
+                    if (string.IsNullOrEmpty(kdiff3path))
+                        return false;
+                }
+            }
+            else if (Settings.RunningOnWindows())
+            {
+                if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
+                {
+                    kdiff3path = @"c:\Program Files\KDiff3\kdiff3.exe";
                     if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
                     {
-                        kdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "") + "\\kdiff3.exe";
+                        kdiff3path = @"c:\Program Files (x86)\KDiff3\kdiff3.exe";
                         if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
                         {
-                            return false;
+                            kdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "") + "\\kdiff3.exe";
+                            if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
+                                return false;
                         }
                     }
                 }
             }
+            else
+                return false;
+            
             Settings.Module.SetGlobalSetting("difftool.kdiff3.path", kdiff3path);
 
             return true;
