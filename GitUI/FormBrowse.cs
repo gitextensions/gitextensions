@@ -160,10 +160,7 @@ namespace GitUI
 
         private void DashboardWorkingDirChanged(object sender, EventArgs e)
         {
-            IndexWatcher.Clear();
-            RevisionGrid.ForceRefreshRevisions();
-            InternalInitialize(false);
-            IndexWatcher.Reset();
+            WorkingDirChanged(false);
         }
 
         private void TreeView1AfterSelect(object sender, TreeViewEventArgs e)
@@ -1021,10 +1018,7 @@ namespace GitUI
         {
             if (new Open().ShowDialog(this) == DialogResult.OK)
             {
-                IndexWatcher.Clear();
-                RevisionGrid.ForceRefreshRevisions();
-                InternalInitialize(false);
-                IndexWatcher.Reset();
+                WorkingDirChanged(false);
             }
         }
 
@@ -1629,11 +1623,7 @@ namespace GitUI
         private void CloseToolStripMenuItemClick(object sender, EventArgs e)
         {
             Settings.WorkingDir = "";
-
-            IndexWatcher.Clear();
-            RevisionGrid.ForceRefreshRevisions();
-            InternalInitialize(false);
-            IndexWatcher.Reset();
+            WorkingDirChanged(false);
         }
 
         public override void CancelButtonClick(object sender, EventArgs e)
@@ -1644,11 +1634,7 @@ namespace GitUI
                 return;
             }
             Settings.WorkingDir = "";
-
-            IndexWatcher.Clear();
-            RevisionGrid.ForceRefreshRevisions();
-            InternalInitialize(false);
-            IndexWatcher.Reset();
+            WorkingDirChanged(false);
         }
 
         private void GitTreeMouseDown(object sender, MouseEventArgs e)
@@ -2296,7 +2282,15 @@ namespace GitUI
           }
 
           openContainingFolderToolStripMenuItem.Enabled = false;
-        }        
+        }
+
+        private void WorkingDirChanged(bool internalInitialize)
+        {
+            IndexWatcher.Clear();
+            RevisionGrid.ForceRefreshRevisions();
+            InternalInitialize(internalInitialize);
+            IndexWatcher.Reset();
+        }
 
     }
 }
