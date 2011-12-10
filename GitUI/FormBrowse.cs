@@ -221,7 +221,7 @@ namespace GitUI
         /// <summary>
         ///   Execute plugin
         /// </summary>
-        private static void ItemClick(object sender, EventArgs e)
+        private void ItemClick(object sender, EventArgs e)
         {
             var menuItem = sender as ToolStripMenuItem;
             if (menuItem == null)
@@ -232,7 +232,11 @@ namespace GitUI
                 return;
 
             var eventArgs = new GitUIEventArgs(GitUICommands.Instance);
+
+            string workingDirBefore = Settings.WorkingDir;
             plugin.Execute(eventArgs);
+            if (workingDirBefore != Settings.WorkingDir)
+                WorkingDirChanged(false);
         }
 
         private void ActionOnRepositoryPerformed(object sender, EventArgs e)
