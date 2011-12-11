@@ -148,6 +148,67 @@ namespace GitCommands
                    (arguments.Contains("pull"));
         }
 
+        internal static int CreateAndStartProcess(string arguments, string cmd, out byte[] stdOutput, out byte[] stdError, string stdInput)
+        {
+            if (string.IsNullOrEmpty(cmd))
+            {
+                stdOutput = stdError = null;
+                return -1;
+            }
+
+            Settings.GitLog.Log(cmd + " " + arguments);
+            //process used to execute external commands
+
+            var startInfo = CreateProcessStartInfo();
+            startInfo.CreateNoWindow = true;
+            startInfo.FileName = cmd;
+            startInfo.Arguments = arguments;
+            startInfo.WorkingDirectory = Settings.WorkingDir;
+            startInfo.LoadUserProfile = true;
+
+            using (var process = Process.Start(startInfo))
+            {
+                if (!string.IsNullOrEmpty(stdInput))
+                {
+                    process.StandardInput.Write(stdInput);
+                    process.StandardInput.Close();
+                }
+
+                stdOutput = ReadByte(process.StandardOutput.BaseStream);
+                stdError = ReadByte(process.StandardError.BaseStream);
+                process.WaitForExit();
+                return process.ExitCode;
+            }
+        }
+
+        private static byte[] ReadByte(Stream stream)
+        {
+            if (stream.CanRead)
+            {
+                int commonLen = 0;
+                List<byte[]> list = new List<byte[]>();
+                byte[] buffer = new byte[4096];
+                int len = 0;
+                while ((len = stream.Read(buffer, 0, buffer.Length)) != 0)
+                {
+                    byte[] newbuff = new byte[len];
+                    Array.Copy(buffer, newbuff, len);
+                    commonLen += len;
+                    list.Add(newbuff);
+                }
+                buffer = new byte[commonLen];
+                commonLen = 0;
+                for (int i = 0; i < list.Count; i++)
+                {
+                    Array.Copy(list[i], 0, buffer, commonLen, list[i].Length);
+                    commonLen += list[i].Length;
+                }
+                return buffer;
+            }
+            return null;
+
+        }
+
         internal static int CreateAndStartProcess(string arguments, string cmd, string workDir, out string stdOutput, out string stdError, string stdInput)
         {
             if (string.IsNullOrEmpty(cmd))

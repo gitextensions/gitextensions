@@ -307,27 +307,42 @@ namespace GitCommands
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public string RunCmd(string cmd, string arguments, out int exitCode, string stdInput)
         {
+            byte[] output, error;
+            exitCode = RunCmdByte(cmd, arguments, stdInput, out output, out error);
+            StringBuilder sb = new StringBuilder();
+            Encoding encoding = Settings.Encoding;
+
+            if (output != null && output.Length > 0)
+            {
+                sb.Append(encoding.GetString(output));
+            }
+            if (error != null && error.Length > 0 && output != null && output.Length > 0)
+            {
+                sb.AppendLine();
+            }
+            if (error != null && error.Length > 0)
+            {
+                sb.Append(encoding.GetString(error));
+            }
+            return sb.ToString();
+
+        }
+
+        private static int RunCmdByte(string cmd, string arguments, string stdInput, out byte[] output, out byte[] error)
+        {
             try
             {
                 GitCommandHelpers.SetEnvironmentVariable();
-
                 arguments = arguments.Replace("$QUOTE$", "\\\"");
-
-                string output, error;
-                exitCode = GitCommandHelpers.CreateAndStartProcess(arguments, cmd, _workingdir, 
-                    out output, out error, stdInput);
-
-                if (!string.IsNullOrEmpty(error))
-                {
-                    output += Environment.NewLine + error;
-                }
-                return output;
+                int exitCode = GitCommandHelpers.CreateAndStartProcess(arguments, cmd, out output, out error, stdInput);
+                return exitCode;
             }
             catch (Win32Exception)
             {
-                exitCode = 1;
-                return string.Empty;
+                output = error = null;
+                return 1;
             }
+
         }
 
         public string RunGitCmd(string arguments, string stdInput)
