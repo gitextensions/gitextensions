@@ -243,17 +243,7 @@ namespace GitUI
 
         private void FileChangesDoubleClick(object sender, EventArgs e)
         {
-            if (FileChanges.GetSelectedRevisions().Count == 0)
-            {
-                GitUICommands.Instance.StartCompareRevisionsDialog(this);
-                return;
-            }
-
-            IGitItem revision = FileChanges.GetSelectedRevisions()[0];
-
-            var form = new FormDiffSmall();
-            form.SetRevision(revision.Guid);
-            form.ShowDialog(this);
+            FileChanges.ViewSelectedRevisions();
         }
 
         private void OpenWithDifftoolToolStripMenuItemClick(object sender, EventArgs e)
@@ -350,6 +340,11 @@ namespace GitUI
                 var frm = new FormRevertCommitSmall(FileChanges.GetSelectedRevisions()[0]);
                 frm.ShowDialog(this);
             }
+        }
+
+        private void viewCommitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FileChanges.ViewSelectedRevisions();
         }
     }
 }
