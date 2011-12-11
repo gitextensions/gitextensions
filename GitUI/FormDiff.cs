@@ -62,7 +62,7 @@ namespace GitUI
                             revisions[1].Guid,
                             DiffFiles.SelectedItem.Name,
                             DiffFiles.SelectedItem.OldName,
-                            diffViewer.GetExtraDiffArguments());
+                            diffViewer.GetExtraDiffArguments(), diffViewer.Encoding);
             }
             else
             {
@@ -74,7 +74,7 @@ namespace GitUI
                             revision.ParentGuids[0],
                             DiffFiles.SelectedItem.Name,
                             DiffFiles.SelectedItem.OldName,
-                            diffViewer.GetExtraDiffArguments());
+                            diffViewer.GetExtraDiffArguments(), diffViewer.Encoding);
             }
 
             diffViewer.ViewPatch(selectedPatch != null ? selectedPatch.Text : "");
