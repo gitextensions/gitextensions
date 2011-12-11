@@ -1349,11 +1349,15 @@ namespace GitUI
 
         private void RevisionsDoubleClick(object sender, EventArgs e)
         {
-            var r = GetSelectedRevisions();
-            if (r.Count > 0)
+            ViewSelectedRevisions();
+        }
+
+        public void ViewSelectedRevisions()
+        {
+            var selectedRevisions = GetSelectedRevisions();
+            if (selectedRevisions.Count > 0)
             {
-                var form = new FormDiffSmall();
-                form.SetRevision(r[0]);
+                var form = new FormDiffSmall(selectedRevisions[0]);
                 form.ShowDialog(this);
             }
             else

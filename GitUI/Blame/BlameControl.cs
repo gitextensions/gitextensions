@@ -191,14 +191,14 @@ namespace GitUI.Blame
 
         private void ActiveTextAreaControlDoubleClick(object sender, EventArgs e)
         {
+            var gitRevision = new GitRevision(_lastRevision) { ParentGuids = new[] { _lastRevision + "^" } };
             if (_revGrid != null)
             {
-                _revGrid.SetSelectedRevision(new GitRevision(_lastRevision) { ParentGuids = new[] { _lastRevision + "^" } });
+                _revGrid.SetSelectedRevision(gitRevision);
             }
             else
             {
-                var frm = new FormDiffSmall();
-                frm.SetRevision(_lastRevision);
+                var frm = new FormDiffSmall(gitRevision);
                 frm.ShowDialog(this);
             }
         }
