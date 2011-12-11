@@ -275,14 +275,15 @@ namespace GitCommands
         public string RunCachableCmd(string cmd, string arguments)
         {
             string output;
-            if (GitCommandCache.TryGet(arguments, out output))
+            if (GitCommandCache.TryGet(arguments, Settings.Encoding, out output))
                 return output;
 
-            output = RunCmd(cmd, arguments);
+            byte[] cmdout, cmderr;
+            RunCmdByte(cmd, arguments, out cmdout, out cmderr);
 
-            GitCommandCache.Add(arguments, output);
+            GitCommandCache.Add(arguments, cmdout, cmderr);
 
-            return output;
+            return EncodingHelper.GetString(cmdout, cmderr, Settings.Encoding);
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
@@ -309,26 +310,14 @@ namespace GitCommands
         {
             byte[] output, error;
             exitCode = RunCmdByte(cmd, arguments, stdInput, out output, out error);
-            StringBuilder sb = new StringBuilder();
-            Encoding encoding = Settings.Encoding;
-
-            if (output != null && output.Length > 0)
-            {
-                sb.Append(encoding.GetString(output));
-            }
-            if (error != null && error.Length > 0 && output != null && output.Length > 0)
-            {
-                sb.AppendLine();
-            }
-            if (error != null && error.Length > 0)
-            {
-                sb.Append(encoding.GetString(error));
-            }
-            return sb.ToString();
-
+            return EncodingHelper.GetString(output, error, Settings.Encoding);
         }
 
-        private static int RunCmdByte(string cmd, string arguments, string stdInput, out byte[] output, out byte[] error)
+        private  int RunCmdByte(string cmd, string arguments, out byte[] output, out byte[] error)
+        {
+            return RunCmdByte(cmd, arguments, null, out output, out error);
+        }
+        private int RunCmdByte(string cmd, string arguments, string stdInput, out byte[] output, out byte[] error)
         {
             try
             {
