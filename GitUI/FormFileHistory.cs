@@ -10,9 +10,9 @@ using System.Threading;
 
 namespace GitUI
 {
-    public partial class FormFileHistory : GitExtensionsForm
+    public sealed partial class FormFileHistory : GitExtensionsForm
     {
-        SynchronizationContext syncContext = SynchronizationContext.Current;
+        private readonly SynchronizationContext syncContext = SynchronizationContext.Current;
 
         public FormFileHistory(string fileName, GitRevision revision)
         {
@@ -20,7 +20,7 @@ namespace GitUI
             FileChanges.SetInitialRevision(revision);
             Translate();
 
-            this.FileName = fileName;
+            FileName = fileName;
 
             Diff.ExtraDiffArgumentsChanged += DiffExtraDiffArgumentsChanged;
 
@@ -43,7 +43,7 @@ namespace GitUI
             ThreadPool.QueueUserWorkItem(o => LoadFileHistory(FileName));
         }
 
-        public string FileName { get; set; }
+        private string FileName { get; set; }
 
         private void LoadFileHistory(string fileName)
         {
@@ -293,9 +293,11 @@ namespace GitUI
 
                 string fileName = orgFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
 
-                SaveFileDialog fileDialog = new SaveFileDialog();
-                fileDialog.FileName = Settings.WorkingDir + fileName;
-                fileDialog.AddExtension = true;
+                var fileDialog = new SaveFileDialog
+                {
+                    FileName = Settings.WorkingDir + fileName,
+                    AddExtension = true
+                };
                 fileDialog.DefaultExt = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
                 fileDialog.Filter =
                     "Current format (*." +
@@ -326,18 +328,20 @@ namespace GitUI
 
         private void cherryPickThisCommitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (FileChanges.GetSelectedRevisions().Count == 1)
+            var selectedRevisions = FileChanges.GetSelectedRevisions();
+            if (selectedRevisions.Count == 1)
             {
-                var frm = new FormCherryPickCommitSmall(FileChanges.GetSelectedRevisions()[0]);
+                var frm = new FormCherryPickCommitSmall(selectedRevisions[0]);
                 frm.ShowDialog(this);
             }
         }
 
         private void revertCommitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (FileChanges.GetSelectedRevisions().Count == 1)
+            var selectedRevisions = FileChanges.GetSelectedRevisions();
+            if (selectedRevisions.Count == 1)
             {
-                var frm = new FormRevertCommitSmall(FileChanges.GetSelectedRevisions()[0]);
+                var frm = new FormRevertCommitSmall(selectedRevisions[0]);
                 frm.ShowDialog(this);
             }
         }
