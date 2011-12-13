@@ -206,7 +206,7 @@ namespace GitUI
                                 () =>
                                 {
                                     Patch diff = Settings.Module.GetSingleDiff(revision1.Guid, revision1.Guid + "^", fileName,
-                                                                          Diff.GetExtraDiffArguments());
+                                                                          Diff.GetExtraDiffArguments(), Diff.Encoding);
                                     if (diff == null)
                                         return string.Empty;
                                     return diff.Text;
@@ -225,7 +225,7 @@ namespace GitUI
                             Diff.ViewPatch(
                                 () =>
                                 Settings.Module.GetSingleDiff(revision1.Guid, revision2.Guid, fileName,
-                                                                      Diff.GetExtraDiffArguments()).Text);
+                                                                      Diff.GetExtraDiffArguments(), Diff.Encoding).Text);
                         }
                     }
                     break;
