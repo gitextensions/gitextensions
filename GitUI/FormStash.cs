@@ -10,6 +10,8 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
+    using System.Text;
+
     public partial class FormStash : GitExtensionsForm
     {
         TranslationString currentWorkingDirChanges = new TranslationString("Current working dir changes");
@@ -131,9 +133,10 @@ namespace GitUI
             if (stashedItem != null)
             {
                 string extraDiffArguments = View.GetExtraDiffArguments();
+                Encoding encoding = this.View.Encoding;
                 View.ViewPatch(() =>
                 {
-                    PatchApply.Patch patch = Settings.Module.GetSingleDiff(gitStash.Name, gitStash.Name + "^", stashedItem.Name, stashedItem.OldName, extraDiffArguments);
+                    PatchApply.Patch patch = Settings.Module.GetSingleDiff(gitStash.Name, gitStash.Name + "^", stashedItem.Name, stashedItem.OldName, extraDiffArguments, encoding);
                     if (patch == null)
                         return String.Empty;
                     return patch.Text;
