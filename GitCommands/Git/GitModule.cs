@@ -295,11 +295,23 @@ namespace GitCommands
             return RunCachableCmd(cmd, arguments, Settings.Encoding);
         }
 
-
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public string RunCmd(string cmd, string arguments)
         {
-            return RunCmd(cmd, arguments, null);
+            return RunCmd(cmd, arguments, string.Empty);
+        }
+
+        [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
+        public string RunCmd(string cmd, string arguments, Encoding encoding)
+        {
+            return RunCmd(cmd, arguments, null, encoding);
+        }
+        
+        [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
+        public string RunCmd(string cmd, string arguments, string stdInput, Encoding encoding)
+        {
+            int exitCode;
+            return RunCmd(cmd, arguments, out exitCode, stdInput, encoding);
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
@@ -318,9 +330,15 @@ namespace GitCommands
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public string RunCmd(string cmd, string arguments, out int exitCode, string stdInput)
         {
+            return RunCmd(cmd, arguments, out exitCode, stdInput, Settings.Encoding);
+        }
+
+        [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
+        public string RunCmd(string cmd, string arguments, out int exitCode, string stdInput, Encoding encoding)
+        {
             byte[] output, error;
             exitCode = RunCmdByte(cmd, arguments, stdInput, out output, out error);
-            return EncodingHelper.GetString(output, error, Settings.Encoding);
+            return EncodingHelper.GetString(output, error, encoding);
         }
 
         private  int RunCmdByte(string cmd, string arguments, out byte[] output, out byte[] error)
@@ -351,7 +369,7 @@ namespace GitCommands
 
         public string RunGitCmd(string arguments)
         {
-            return RunCmd(Settings.GitCommand, arguments, null);
+            return RunCmd(Settings.GitCommand, arguments);
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
@@ -1647,7 +1665,7 @@ namespace GitCommands
             return GitCommandHelpers.GetAllChangedFilesFromString(status);
         }
 
-        public string GetCurrentChanges(string fileName, string oldFileName, bool staged, string extraDiffArguments)
+        public string GetCurrentChanges(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
         {
             fileName = string.Concat("\"", FixPath(fileName), "\"");
             if (!string.IsNullOrEmpty(oldFileName))
@@ -1660,7 +1678,7 @@ namespace GitCommands
             if (staged)
                 args = string.Concat("diff -M -C --cached", extraDiffArguments, " -- ", fileName, " ", oldFileName);
 
-            return RunCmd(Settings.GitCommand, args);
+            return RunCmd(Settings.GitCommand, args, encoding);
         }
 
         public string StageFile(string file)
