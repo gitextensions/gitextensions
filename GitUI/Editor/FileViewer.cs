@@ -281,7 +281,7 @@ namespace GitUI.Editor
 
         public void ViewCurrentChanges(string fileName, string oldFileName, bool staged)
         {
-            _async.Load(() => Settings.Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments()), ViewStagingPatch);
+            _async.Load(() => Settings.Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding), ViewStagingPatch);
         }
 
         public void ViewStagingPatch(string text)
@@ -292,7 +292,7 @@ namespace GitUI.Editor
 
         public void ViewSubmoduleChanges(string fileName, string oldFileName, bool staged)
         {
-            _async.Load(() => Settings.Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments()), ViewSubmodulePatch);
+            _async.Load(() => Settings.Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding), ViewSubmodulePatch);
         }
 
         public void ViewSubmodulePatch(string text)
