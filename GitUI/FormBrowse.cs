@@ -1429,7 +1429,7 @@ namespace GitUI
             var secondRevision = revisions.Count == 2 ? revisions[1].Guid : revisions[0].ParentGuids[0];
 
             PatchApply.Patch patch = Settings.Module.GetSingleDiff(revisions[0].Guid, secondRevision, file.Name, file.OldName,
-                                                    DiffText.GetExtraDiffArguments());
+                                                    DiffText.GetExtraDiffArguments(), DiffText.Encoding);
 
             if (patch == null)
                 return string.Empty;

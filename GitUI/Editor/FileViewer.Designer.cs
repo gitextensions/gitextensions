@@ -52,6 +52,7 @@
             this.showEntireFileButton = new System.Windows.Forms.ToolStripButton();
             this.showNonPrintChars = new System.Windows.Forms.ToolStripButton();
             this.ignoreWhiteSpaces = new System.Windows.Forms.ToolStripButton();
+            this.encodingToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.PictureBox = new System.Windows.Forms.PictureBox();
             this.ContextMenu.SuspendLayout();
             this.fileviewerToolbar.SuspendLayout();
@@ -163,11 +164,12 @@
             this.toolStripSeparator4,
             this.showEntireFileButton,
             this.showNonPrintChars,
-            this.ignoreWhiteSpaces});
+            this.ignoreWhiteSpaces,
+            this.encodingToolStripComboBox});
             this.fileviewerToolbar.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.fileviewerToolbar.Location = new System.Drawing.Point(451, 0);
+            this.fileviewerToolbar.Location = new System.Drawing.Point(297, 0);
             this.fileviewerToolbar.Name = "fileviewerToolbar";
-            this.fileviewerToolbar.Size = new System.Drawing.Size(174, 23);
+            this.fileviewerToolbar.Size = new System.Drawing.Size(328, 23);
             this.fileviewerToolbar.TabIndex = 4;
             this.fileviewerToolbar.Visible = false;
             // 
@@ -251,6 +253,13 @@
             this.ignoreWhiteSpaces.ToolTipText = "Ignore whitespaces";
             this.ignoreWhiteSpaces.Click += new System.EventHandler(this.ignoreWhiteSpaces_Click);
             // 
+            // encodingToolStripComboBox
+            // 
+            this.encodingToolStripComboBox.Name = "encodingToolStripComboBox";
+            this.encodingToolStripComboBox.Size = new System.Drawing.Size(121, 21);
+            this.encodingToolStripComboBox.SelectedIndexChanged += new System.EventHandler(this.encodingToolStripComboBox_SelectedIndexChanged);
+            // 
+            // 
             // PictureBox
             // 
             this.PictureBox.BackColor = System.Drawing.SystemColors.ControlLightLight;
@@ -307,5 +316,6 @@
         private System.Windows.Forms.ToolStripMenuItem showNonprintableCharactersToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton ignoreWhiteSpaces;
         private System.Windows.Forms.PictureBox PictureBox;
+        private System.Windows.Forms.ToolStripComboBox encodingToolStripComboBox;
     }
 }
