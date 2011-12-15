@@ -127,6 +127,10 @@ namespace GitUI
             if (path.EndsWith("\\.git"))
                 return;
 
+            // submodule .git\index.lock file
+            if (path.EndsWith("\\.git\\index.lock"))
+                return;
+
             ScheduleNextRegularUpdate();
         }
 
