@@ -564,6 +564,14 @@ namespace GitUI
             return StartFormatPatchDialog(null);
         }
 
+        public bool StartFormatPullRequestDialog(IWin32Window owner)
+        {
+            var form = new FormFormatPullRequest();
+            form.ShowDialog(owner);
+
+            return true;
+        }
+
         public bool StartStashDialog(IWin32Window owner)
         {
             if (!RequiresValidWorkingDir())

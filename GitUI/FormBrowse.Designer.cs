@@ -135,6 +135,7 @@ namespace GitUI
             this.toolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
             this.applyPatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.formatPatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.formatPullRequestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewDiffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.patchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
@@ -1076,6 +1077,7 @@ namespace GitUI
             this.toolStripSeparator25,
             this.applyPatchToolStripMenuItem,
             this.formatPatchToolStripMenuItem,
+            this.formatPullRequestToolStripMenuItem,
             this.viewDiffToolStripMenuItem,
             this.patchToolStripMenuItem,
             this.toolStripSeparator22,
@@ -1184,6 +1186,13 @@ namespace GitUI
             this.formatPatchToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.formatPatchToolStripMenuItem.Text = "Format patch";
             this.formatPatchToolStripMenuItem.Click += new System.EventHandler(this.FormatPatchToolStripMenuItemClick);
+            // 
+            // formatPullRequestToolStripMenuItem
+            // 
+            this.formatPullRequestToolStripMenuItem.Name = "formatPullRequestToolStripMenuItem";
+            this.formatPullRequestToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.formatPullRequestToolStripMenuItem.Text = "Format pull request";
+            this.formatPullRequestToolStripMenuItem.Click += new System.EventHandler(this.FormatPullRequestToolStripMenuItemClick);
             // 
             // viewDiffToolStripMenuItem
             // 
@@ -1897,5 +1906,6 @@ namespace GitUI
         private ToolStripSeparator toolStripSeparator25;
         private ToolStripSeparator toolStripSeparator22;
         private ToolStripSeparator toolStripSeparator23;        
+        private ToolStripMenuItem formatPullRequestToolStripMenuItem;        
     }
 }
