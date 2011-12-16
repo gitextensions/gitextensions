@@ -201,6 +201,9 @@ namespace GitUI
             this.donateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.toolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
+            this.SvnRebaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SvnDcommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolPanel.Panel1.SuspendLayout();
             this.toolPanel.Panel2.SuspendLayout();
             this.toolPanel.SuspendLayout();
@@ -1092,6 +1095,9 @@ namespace GitUI
             this.rebaseToolStripMenuItem,
             this.runMergetoolToolStripMenuItem,
             this.toolStripSeparator23,
+            this.SvnRebaseToolStripMenuItem,
+            this.SvnDcommitToolStripMenuItem,
+            this.toolStripSeparator24,
             this.bisectToolStripMenuItem,
             this.checkoutToolStripMenuItem,
             this.cherryPickToolStripMenuItem,
@@ -1698,6 +1704,25 @@ namespace GitUI
             this.menuStrip1.Size = new System.Drawing.Size(923, 24);
             this.menuStrip1.TabIndex = 3;
             // 
+            // toolStripSeparator24
+            // 
+            this.toolStripSeparator24.Name = "toolStripSeparator24";
+            this.toolStripSeparator24.Size = new System.Drawing.Size(213, 6);
+            // 
+            // SvnRebaseToolStripMenuItem
+            // 
+            this.SvnRebaseToolStripMenuItem.Name = "SvnRebaseToolStripMenuItem";
+            this.SvnRebaseToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.SvnRebaseToolStripMenuItem.Text = "SVN Rebase";
+            this.SvnRebaseToolStripMenuItem.Click += new System.EventHandler(this.SvnRebaseToolStripMenuItem_Click);
+            // 
+            // SvnDcommitToolStripMenuItem
+            // 
+            this.SvnDcommitToolStripMenuItem.Name = "SvnDcommitToolStripMenuItem";
+            this.SvnDcommitToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.SvnDcommitToolStripMenuItem.Text = "SVN DCommit";
+            this.SvnDcommitToolStripMenuItem.Click += new System.EventHandler(this.SvnDcommitToolStripMenuItem_Click);
+            // 
             // FormBrowse
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1909,6 +1934,9 @@ namespace GitUI
         private ToolStripSeparator toolStripSeparator25;
         private ToolStripSeparator toolStripSeparator22;
         private ToolStripSeparator toolStripSeparator23;
-        private ToolStripMenuItem cloneSVNToolStripMenuItem;        
+        private ToolStripMenuItem cloneSVNToolStripMenuItem;
+        private ToolStripMenuItem SvnRebaseToolStripMenuItem;
+        private ToolStripMenuItem SvnDcommitToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator24;        
     }
 }
