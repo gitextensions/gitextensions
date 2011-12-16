@@ -63,7 +63,7 @@ namespace GitUI
             this.Output.BackColor = System.Drawing.SystemColors.Window;
             this.Output.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Output.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Output.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Output.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Output.Location = new System.Drawing.Point(0, 0);
             this.Output.Name = "Output";
             this.Output.ReadOnly = true;
@@ -77,7 +77,7 @@ namespace GitUI
             this.ProgressBar.Location = new System.Drawing.Point(3, 4);
             this.ProgressBar.MarqueeAnimationSpeed = 1;
             this.ProgressBar.Name = "ProgressBar";
-            this.ProgressBar.Size = new System.Drawing.Size(245, 25);
+            this.ProgressBar.Size = new System.Drawing.Size(255, 25);
             this.ProgressBar.Step = 50;
             this.ProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.ProgressBar.TabIndex = 3;
@@ -86,9 +86,9 @@ namespace GitUI
             // 
             this.KeepDialogOpen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.KeepDialogOpen.AutoSize = true;
-            this.KeepDialogOpen.Location = new System.Drawing.Point(254, 6);
+            this.KeepDialogOpen.Location = new System.Drawing.Point(264, 7);
             this.KeepDialogOpen.Name = "KeepDialogOpen";
-            this.KeepDialogOpen.Size = new System.Drawing.Size(120, 22);
+            this.KeepDialogOpen.Size = new System.Drawing.Size(110, 19);
             this.KeepDialogOpen.TabIndex = 3;
             this.KeepDialogOpen.Text = "Keep dialog open";
             this.KeepDialogOpen.UseCompatibleTextRendering = true;
@@ -173,7 +173,7 @@ namespace GitUI
             // 
             // FormStatus
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(565, 327);
             this.ControlBox = false;

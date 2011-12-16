@@ -287,7 +287,7 @@ namespace GitUI
             InitToolStripBranchFilter(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
             if (hard)
                 ShowRevisions();
-            _NO_TRANSLATE_Workingdir.Text = Settings.WorkingDir;
+            RefreshWorkingDirCombo();
             Text = GenerateWindowTitle(Settings.WorkingDir, validWorkingDir, branchSelect.Text);
             DiffText.Font = Settings.DiffFont;
             UpdateJumplist(validWorkingDir);
@@ -296,7 +296,47 @@ namespace GitUI
             UpdateStashCount();
             // load custom user menu
             LoadUserMenu();
+
+
+
+
             Cursor.Current = Cursors.Default;
+        }
+
+        private void RefreshWorkingDirCombo()
+        {
+            if (Settings.RecentReposComboMinWidth > 0)
+            {
+                _NO_TRANSLATE_Workingdir.AutoSize = false;
+                _NO_TRANSLATE_Workingdir.Width = Settings.RecentReposComboMinWidth;
+            }
+            else
+                _NO_TRANSLATE_Workingdir.AutoSize = true;
+
+            Repository r = null;
+            if (Repositories.RepositoryHistory.Repositories.Count > 0)
+                r = Repositories.RepositoryHistory.Repositories[0];
+            if (r == null || !r.Path.Equals(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
+                Repositories.AddMostRecentRepository(Settings.WorkingDir);
+
+            List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
+            List<Repository> repo = new List<Repository>();
+            repo.Add(Repositories.RepositoryHistory.Repositories[0]);
+
+            RecentRepoSplitter splitter = new RecentRepoSplitter();
+            splitter.measureFont = _NO_TRANSLATE_Workingdir.Font;
+            splitter.graphics = this.CreateGraphics();
+            try
+            {
+                splitter.SplitRecentRepos(repo, mostRecentRepos, mostRecentRepos);
+            }
+            finally
+            {
+                splitter.graphics.Dispose();
+            }
+
+            _NO_TRANSLATE_Workingdir.Text = mostRecentRepos[0].Caption;
+
         }
 
         /// <summary>
@@ -1788,154 +1828,50 @@ namespace GitUI
                 toolStripItem.ToolTipText = repo.Path;            
         }
 
-        private class RecentRepoInfo 
-        {
-            public Repository Repo { get; set; }
-            public string Caption { get; set; }
-            public bool MostRecent { get; set; }
-            public DirectoryInfo DirInfo { get; set; }
-            public string ShortName { get; set; }
-            public string DirName { get; set; }
-
-            public RecentRepoInfo(Repository aRepo, bool aMostRecent)
-            {
-                Repo = aRepo;                
-                MostRecent = aMostRecent;
-                DirInfo = new DirectoryInfo(Repo.Path);
-                ShortName = Repo.Title == null ? DirInfo.Name : Repo.Title;
-                DirInfo = DirInfo.Parent;
-                DirName = DirInfo == null ? "" : DirInfo.FullName;
-            }
-
-            public bool FullPath
-            {
-                get { return DirInfo == null; }
-            }
-
-        }
-
-        private void AddToOrderedRepos(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo, bool shortenPath)
-        {
-            List<RecentRepoInfo> list = null;
-            bool existsShortName;
-            //if there is no short name for a repo, then try to find unique caption extendig short directory path
-            if (shortenPath)
-            {                
-                if (repoInfo.DirInfo != null)
-                {
-                    string s = repoInfo.DirName.Substring(repoInfo.DirInfo.FullName.Length);
-                    s = s.Trim(Path.DirectorySeparatorChar);
-                    //candidate for short name
-                    repoInfo.Caption = repoInfo.ShortName;
-                    if (!s.IsNullOrEmpty())
-                        repoInfo.Caption += " (" + s + ")";
-                    repoInfo.DirInfo = repoInfo.DirInfo.Parent;
-                }
-            }
-            else
-                repoInfo.Caption = repoInfo.Repo.Path;
-
-            existsShortName = orderedRepos.TryGetValue(repoInfo.Caption, out list);
-            if (!existsShortName)
-            {
-                list = new List<RecentRepoInfo>();
-                orderedRepos.Add(repoInfo.Caption, list);
-            }
-
-            List<RecentRepoInfo> tmpList = new List<RecentRepoInfo>();
-            if (existsShortName)
-                for (int i = list.Count - 1; i >= 0; i--)
-                {
-                    RecentRepoInfo r = list[i];
-                    if (!r.FullPath)
-                    {
-                        tmpList.Add(r);
-                        list.RemoveAt(i);
-                    }
-                }
-
-            if (repoInfo.FullPath || !existsShortName)
-                list.Add(repoInfo);
-            else
-                tmpList.Add(repoInfo);
-
-            //find unique caption for repos with no title
-            foreach (RecentRepoInfo r in tmpList)
-                AddToOrderedRepos(orderedRepos, r, shortenPath);
-        }
 
         private void WorkingdirDropDownOpening(object sender, EventArgs e)
         {
-            SortedList<string, List<RecentRepoInfo>> orderedRepos = new SortedList<string, List<RecentRepoInfo>>();
+            _NO_TRANSLATE_Workingdir.DropDownItems.Clear();
+
             List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
             List<RecentRepoInfo> lessRecentRepos = new List<RecentRepoInfo>();
 
-            _NO_TRANSLATE_Workingdir.DropDownItems.Clear();
-            int maxRecentRepositories = Settings.MaxMostRecentRepositories;
-            int n = Math.Min(maxRecentRepositories, Repositories.RepositoryHistory.Repositories.Count);
-            bool shortenPath = Settings.ShortenRecentRepoPath;
-            bool sortMostRecentRepos = Settings.SortMostRecentRepos;
-            bool sortLessRecentRepos = Settings.SortLessRecentRepos;
-
-            //the maxRecentRepositories repositories will be added at begining
-            //rest will be added in alphabetical order
-            foreach (Repository repository in Repositories.RepositoryHistory.Repositories)
+            RecentRepoSplitter splitter = new RecentRepoSplitter();
+            splitter.measureFont = _NO_TRANSLATE_Workingdir.Font;
+            splitter.graphics = this.CreateGraphics();
+            try
             {
-                bool mostRecent = mostRecentRepos.Count < n && repository.Anchor == Repository.RepositoryAnchor.None ||
-                    repository.Anchor == Repository.RepositoryAnchor.MostRecent;
-                RecentRepoInfo ri = new RecentRepoInfo(repository, mostRecent);
-                if (ri.MostRecent)
-                    mostRecentRepos.Add(ri);
-                else
-                    lessRecentRepos.Add(ri);
-                AddToOrderedRepos(orderedRepos, ri, shortenPath);
+                splitter.SplitRecentRepos(Repositories.RepositoryHistory.Repositories, mostRecentRepos, lessRecentRepos);
             }
-            int r = 0;
-            //remove not anchored repos if there is more than maxRecentRepositories repos
-            while (mostRecentRepos.Count > n && r < mostRecentRepos.Count)
+            finally
             {
-                var repo = mostRecentRepos[r];
-                if (repo.Repo.Anchor == Repository.RepositoryAnchor.MostRecent)
-                    r++;
-                else
-                {
-                    repo.MostRecent = false;
-                    mostRecentRepos.RemoveAt(r);
-                }
+                splitter.graphics.Dispose();
             }
 
+            foreach(RecentRepoInfo repo in mostRecentRepos)
+                AddWorkingdirDropDownItem(repo.Repo, repo.Caption);
 
-            Action<bool> addSortedRepos = delegate(bool mostRecent) 
-            {
-                foreach (string caption in orderedRepos.Keys)
-                {
-                    List<RecentRepoInfo> list = orderedRepos[caption];
-                    foreach (RecentRepoInfo repo in list)
-                        if (repo.MostRecent == mostRecent)
-                            AddWorkingdirDropDownItem(repo.Repo, repo.Caption);
-                }
-            };
-
-            Action<List<RecentRepoInfo>> addNotSortedRepos = delegate(List<RecentRepoInfo> list)
-            {
-                foreach (RecentRepoInfo repo in list)
-                    AddWorkingdirDropDownItem(repo.Repo, repo.Caption);
-            };
-
-            if (sortMostRecentRepos)
-                addSortedRepos(true);
-            else
-                addNotSortedRepos(mostRecentRepos);
 
             if (lessRecentRepos.Count > 0)
             {
-                if (mostRecentRepos.Count > 0 && (sortMostRecentRepos || sortLessRecentRepos))
+                if (mostRecentRepos.Count > 0 && (Settings.SortMostRecentRepos || Settings.SortLessRecentRepos))
                     _NO_TRANSLATE_Workingdir.DropDownItems.Add(new ToolStripSeparator());
-                if (sortLessRecentRepos)
-                    addSortedRepos(false);
-                else
-                    addNotSortedRepos(lessRecentRepos);
+
+                foreach (RecentRepoInfo repo in lessRecentRepos)
+                    AddWorkingdirDropDownItem(repo.Repo, repo.Caption);
             }
+
+            _NO_TRANSLATE_Workingdir.DropDownItems.Add(new ToolStripSeparator());
+            ToolStripMenuItem toolStripItem = new ToolStripMenuItem("Configure this menu");
+            _NO_TRANSLATE_Workingdir.DropDownItems.Add(toolStripItem);
+
+            toolStripItem.Click += (object hs, EventArgs he) =>
+            {
+                new FormRecentReposSettings().ShowDialog(this);
+                RefreshWorkingDirCombo();
+            };
+
+
         }
 
         private void SetWorkingDir(string path)
@@ -1954,7 +1890,7 @@ namespace GitUI
         {
             try
             {
-                Process.Start(_NO_TRANSLATE_Workingdir.Text);
+                Process.Start(Settings.WorkingDir);
             }
             catch (Exception ex)
             {

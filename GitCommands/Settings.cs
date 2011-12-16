@@ -763,11 +763,11 @@ namespace GitCommands
             set { SafeSet("RecursiveSubmodulesCheck", value, ref _RecursiveSubmodulesCheck); }
         }
 
-        private static bool? _ShortenRecentRepoPath;
-        public static bool ShortenRecentRepoPath
+        private static string _ShorteningRecentRepoPathStrategy;
+        public static string ShorteningRecentRepoPathStrategy
         {
-            get { return SafeGet("ShortenRecentRepoPath", false, ref _ShortenRecentRepoPath); }
-            set { SafeSet("ShortenRecentRepoPath", value, ref _ShortenRecentRepoPath); }
+            get { return SafeGet("ShorteningRecentRepoPathStrategy", "", ref _ShorteningRecentRepoPathStrategy); }
+            set { SafeSet("ShorteningRecentRepoPathStrategy", value, ref _ShorteningRecentRepoPathStrategy); }
         }
 
         private static int? _MaxMostRecentRepositories;
@@ -775,6 +775,13 @@ namespace GitCommands
         {
             get { return SafeGet("MaxMostRecentRepositories", 0, ref _MaxMostRecentRepositories); }
             set { SafeSet("MaxMostRecentRepositories", value, ref _MaxMostRecentRepositories); }
+        }
+
+        private static int? _RecentReposComboMinWidth;
+        public static int RecentReposComboMinWidth
+        {
+            get { return SafeGet("RecentReposComboMinWidth", 0, ref _RecentReposComboMinWidth); }
+            set { SafeSet("RecentReposComboMinWidth", value, ref _RecentReposComboMinWidth); }
         }
 
         private static bool? _SortMostRecentRepos;
