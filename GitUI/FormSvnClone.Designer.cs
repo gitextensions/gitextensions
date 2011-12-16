@@ -49,7 +49,7 @@
             this.svnRepositoryComboBox.FormattingEnabled = true;
             this.svnRepositoryComboBox.Location = new System.Drawing.Point(160, 13);
             this.svnRepositoryComboBox.Name = "svnRepositoryComboBox";
-            this.svnRepositoryComboBox.Size = new System.Drawing.Size(634, 21);
+            this.svnRepositoryComboBox.Size = new System.Drawing.Size(320, 21);
             this.svnRepositoryComboBox.TabIndex = 1;
             // 
             // destinationComboBox
@@ -59,13 +59,14 @@
             this.destinationComboBox.FormattingEnabled = true;
             this.destinationComboBox.Location = new System.Drawing.Point(160, 42);
             this.destinationComboBox.Name = "destinationComboBox";
-            this.destinationComboBox.Size = new System.Drawing.Size(531, 21);
+            this.destinationComboBox.Size = new System.Drawing.Size(217, 21);
             this.destinationComboBox.TabIndex = 2;
+            this.destinationComboBox.DropDown += new System.EventHandler(this.destinationComboBox_DropDown);
             // 
             // browseButton
             // 
             this.browseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.browseButton.Location = new System.Drawing.Point(697, 41);
+            this.browseButton.Location = new System.Drawing.Point(383, 41);
             this.browseButton.Name = "browseButton";
             this.browseButton.Size = new System.Drawing.Size(97, 25);
             this.browseButton.TabIndex = 3;
@@ -97,7 +98,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.subdirectoryTextBox.Location = new System.Drawing.Point(160, 71);
             this.subdirectoryTextBox.Name = "subdirectoryTextBox";
-            this.subdirectoryTextBox.Size = new System.Drawing.Size(531, 20);
+            this.subdirectoryTextBox.Size = new System.Drawing.Size(217, 20);
             this.subdirectoryTextBox.TabIndex = 4;
             // 
             // label3
@@ -112,7 +113,7 @@
             // okButton
             // 
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.okButton.Location = new System.Drawing.Point(719, 369);
+            this.okButton.Location = new System.Drawing.Point(405, 139);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 5;
@@ -122,14 +123,17 @@
             // 
             // authorsFileTextBox
             // 
+            this.authorsFileTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.authorsFileTextBox.Location = new System.Drawing.Point(160, 97);
             this.authorsFileTextBox.Name = "authorsFileTextBox";
-            this.authorsFileTextBox.Size = new System.Drawing.Size(531, 20);
+            this.authorsFileTextBox.Size = new System.Drawing.Size(217, 20);
             this.authorsFileTextBox.TabIndex = 8;
             // 
             // authorsFileBrowseButton
             // 
-            this.authorsFileBrowseButton.Location = new System.Drawing.Point(697, 94);
+            this.authorsFileBrowseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.authorsFileBrowseButton.Location = new System.Drawing.Point(383, 94);
             this.authorsFileBrowseButton.Name = "authorsFileBrowseButton";
             this.authorsFileBrowseButton.Size = new System.Drawing.Size(97, 25);
             this.authorsFileBrowseButton.TabIndex = 9;
@@ -151,7 +155,7 @@
             this.AcceptButton = this.okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(806, 404);
+            this.ClientSize = new System.Drawing.Size(492, 174);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.authorsFileBrowseButton);
             this.Controls.Add(this.authorsFileTextBox);
@@ -165,8 +169,12 @@
             this.Controls.Add(this.svnRepositoryComboBox);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(700, 208);
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(500, 208);
             this.Name = "FormSvnClone";
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Svn Clone";
             this.ResumeLayout(false);
             this.PerformLayout();

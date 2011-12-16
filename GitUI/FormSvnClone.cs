@@ -12,9 +12,19 @@ namespace GitUI
     using System.IO;
 
     using GitCommands;
+    using GitCommands.Repository;
+
+    using ResourceManager.Translation;
 
     public partial class FormSvnClone : Form
     {
+        private readonly TranslationString _questionOpenRepo =
+           new TranslationString("The repository has been cloned successfully." + Environment.NewLine +
+                                 "Do you want to open the new repository \"{0}\" now?");
+
+        private readonly TranslationString _questionOpenRepoCaption =
+            new TranslationString("Open");
+
         public FormSvnClone()
         {
             InitializeComponent();
@@ -53,6 +63,10 @@ namespace GitUI
 
                 if (fromProcess.ErrorOccurred() || Settings.Module.InTheMiddleOfPatch())
                     return;
+                if (ShowInTaskbar == false && AskIfNewRepositoryShouldBeOpened(dirTo))
+                {
+                    Settings.WorkingDir = dirTo;
+                }
                 Close();
             }
             catch (Exception ex)
@@ -65,10 +79,16 @@ namespace GitUI
         {
             return MessageBox.Show(
                 this,
-                "Authors file " + authorsfile + "does not exists. Continue without authors file?",
+                "Authors file \"" + authorsfile + "\" does not exists. Continue without authors file?",
                 "Authors file",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question) == DialogResult.Yes;
+        }
+
+        private bool AskIfNewRepositoryShouldBeOpened(string dirTo)
+        {
+            return MessageBox.Show(this, string.Format(_questionOpenRepo.Text, dirTo), _questionOpenRepoCaption.Text,
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
         }
 
         private void browseButton_Click(object sender, EventArgs e)
@@ -83,6 +103,17 @@ namespace GitUI
             var dialog = new OpenFileDialog() { InitialDirectory = this.destinationComboBox.Text };
             if (dialog.ShowDialog(this) == DialogResult.OK) 
                 authorsFileTextBox.Text = dialog.FileName;
+        }
+
+        private void destinationComboBox_DropDown(object sender, EventArgs e)
+        {
+            System.ComponentModel.BindingList<Repository> repos = Repositories.RepositoryHistory.Repositories;
+            if (destinationComboBox.Items.Count != repos.Count)
+            {
+                destinationComboBox.Items.Clear();
+                foreach (Repository repo in repos)
+                    destinationComboBox.Items.Add(repo.Path);
+            }
         }
     }
 }
