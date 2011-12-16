@@ -52,6 +52,9 @@ namespace GitUI
         public event GitUIEventHandler PreClone;
         public event GitUIEventHandler PostClone;
 
+        public event GitUIEventHandler PreSvnClone;
+        public event GitUIEventHandler PostSvnClone;
+
         public event GitUIEventHandler PreCommit;
         public event GitUIEventHandler PostCommit;
 
@@ -372,6 +375,19 @@ namespace GitUI
         public bool StartCloneDialog()
         {
             return StartCloneDialog(null, null);
+        }
+
+        public bool StartSvnCloneDialog(IWin32Window owner)
+        {
+            if (!InvokeEvent(PreSvnClone))
+                return false;
+
+            var form = new FormSvnClone();
+            form.ShowDialog(owner);
+
+            InvokeEvent(PostSvnClone);
+
+            return true;
         }
 
         public bool StartCommitDialog(IWin32Window owner)
