@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Text;
 
@@ -31,6 +32,44 @@
                 sb.AppendFormat("\"{0}\"", authorsFile.Trim());
             }
             return sb.ToString();
+        }
+        public static bool CheckRefsRemoteSvn()
+        {
+            string svnremote = GetConfigSvnRemoteFetch();
+            return svnremote != null && svnremote.Trim().StartsWith(":refs/remote");
+        }
+
+        public static string GetConfigSvnRemoteFetch()
+        {
+            return Settings.Module.RunCmd(Settings.GitCommand, "config svn-remote.svn.fetch");
+        }
+
+        public static string RebaseCmd()
+        {
+            return "svn rebase";
+        }
+
+        public static string DcommitCmd()
+        {
+            return "svn dcommit";
+        }
+
+        public static bool ValidSvnWorkingDir()
+        {
+            return ValidSvnWorkingDir(Settings.WorkingDir);
+        }
+
+        public static bool ValidSvnWorkingDir(string dir)
+        {
+            if (string.IsNullOrEmpty(dir))
+                return false;
+
+            string path = dir + Settings.PathSeparator + ".git" + Settings.PathSeparator + "svn";
+            if (Directory.Exists(path) || File.Exists(path))
+                return true;
+
+            return !dir.Contains(".git") &&
+                   Directory.Exists(dir + Settings.PathSeparator + "svn");
         }
     }
 }
