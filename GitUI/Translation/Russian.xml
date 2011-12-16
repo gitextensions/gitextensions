@@ -461,6 +461,9 @@
         <TranslationItem Name="cloneToolStripMenuItem" Property="Text">
           <Value>Клонировать репозиторий</Value>
         </TranslationItem>
+        <TranslationItem Name="cloneSVNToolStripMenuItem" Property="Text">
+          <Value>Клонировать SVN репозиторий</Value>
+        </TranslationItem>
         <TranslationItem Name="branchToolStripMenuItem" Property="Text">
           <Value>Создать ветку</Value>
         </TranslationItem>
