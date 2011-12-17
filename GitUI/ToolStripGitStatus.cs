@@ -96,7 +96,7 @@ namespace GitUI
                 {
                     watcher.Path = watchingPath;
                     gitDirWatcher.Path = watchingGitPath;
-                    gitPath = Path.GetDirectoryName(watchingGitPath).ToLowerInvariant();
+                    gitPath = Path.GetDirectoryName(watchingGitPath);
                     CurrentStatus = WorkingStatus.Started;
                 }
                 else
@@ -116,19 +116,18 @@ namespace GitUI
 
         private void watcher_Changed(object sender, FileSystemEventArgs e)
         {
-            string path = e.FullPath.ToLowerInvariant();
-            if (path.StartsWith(gitPath))
+            if (e.FullPath.StartsWith(gitPath))
             {
                 gitWatcher_Changed(sender, e);
                 return;
             }
 
             // submodule .git file
-            if (path.EndsWith("\\.git"))
+            if (e.FullPath.EndsWith("\\.git"))
                 return;
 
             // submodule .git\index.lock file
-            if (path.EndsWith("\\.git\\index.lock"))
+            if (e.FullPath.EndsWith("\\.git\\index.lock"))
                 return;
 
             ScheduleNextRegularUpdate();
@@ -136,12 +135,11 @@ namespace GitUI
 
         private void gitWatcher_Changed(object sender, FileSystemEventArgs e)
         {
-            string path = e.FullPath.ToLowerInvariant();
             // git directory changed
-            if (path.Length == gitPath.Length)
+            if (e.FullPath.Length == gitPath.Length)
                 return;
 
-            if (path.EndsWith("\\index.lock"))
+            if (e.FullPath.EndsWith("\\index.lock"))
                 return;
 
             ScheduleNextRegularUpdate();
