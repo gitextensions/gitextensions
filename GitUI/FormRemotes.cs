@@ -231,9 +231,10 @@ namespace GitUI
 
         private void TestConnectionClick(object sender, EventArgs e)
         {
-            System.Uri uri = new System.Uri(Url.Text);
+            System.Uri uri;
             string sshURL = "";
-            if (uri.Scheme == "ssh")
+            if (System.Uri.TryCreate(Url.Text, UriKind.RelativeOrAbsolute, out uri) &&
+                uri.Scheme == "ssh")
             {
                 if (!string.IsNullOrEmpty(uri.UserInfo))
                     sshURL = uri.UserInfo + "@";
