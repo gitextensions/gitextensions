@@ -310,6 +310,7 @@ namespace GitUI
             // _NO_TRANSLATE_Workingdir
             // 
             this._NO_TRANSLATE_Workingdir.Image = global::GitUI.Properties.Resources._40;
+            this._NO_TRANSLATE_Workingdir.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this._NO_TRANSLATE_Workingdir.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._NO_TRANSLATE_Workingdir.Name = "_NO_TRANSLATE_Workingdir";
             this._NO_TRANSLATE_Workingdir.Size = new System.Drawing.Size(91, 22);

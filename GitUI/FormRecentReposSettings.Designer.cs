@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this._NO_TRANSLATE_maxRecentRepositories = new System.Windows.Forms.NumericUpDown();
             this.maxRecentRepositories = new System.Windows.Forms.Label();
             this.sortLessRecentRepos = new System.Windows.Forms.CheckBox();
@@ -48,6 +49,11 @@
             this.mostSigDirRB = new System.Windows.Forms.RadioButton();
             this.comboMinWidthEdit = new System.Windows.Forms.NumericUpDown();
             this.comboMinWidthLabel = new System.Windows.Forms.Label();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.anchorToMostToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeAnchorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeRecentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.anchorToLessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_maxRecentRepositories)).BeginInit();
             this.comboPanel.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -55,6 +61,7 @@
             this.tableLayoutPanel2.SuspendLayout();
             this.shorteningGB.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.comboMinWidthEdit)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // _NO_TRANSLATE_maxRecentRepositories
@@ -119,6 +126,7 @@
             // 
             // LessRecentLB
             // 
+            this.LessRecentLB.ContextMenuStrip = this.contextMenuStrip1;
             this.LessRecentLB.DisplayMember = "Caption";
             this.LessRecentLB.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LessRecentLB.FormattingEnabled = true;
@@ -147,6 +155,7 @@
             // 
             // MostRecentLB
             // 
+            this.MostRecentLB.ContextMenuStrip = this.contextMenuStrip1;
             this.MostRecentLB.DisplayMember = "Caption";
             this.MostRecentLB.Dock = System.Windows.Forms.DockStyle.Top;
             this.MostRecentLB.FormattingEnabled = true;
@@ -231,7 +240,7 @@
             this.dontShortenRB.AutoSize = true;
             this.dontShortenRB.Location = new System.Drawing.Point(6, 22);
             this.dontShortenRB.Name = "dontShortenRB";
-            this.dontShortenRB.Size = new System.Drawing.Size(103, 17);
+            this.dontShortenRB.Size = new System.Drawing.Size(101, 17);
             this.dontShortenRB.TabIndex = 2;
             this.dontShortenRB.TabStop = true;
             this.dontShortenRB.Text = "Do not shorten  ";
@@ -243,7 +252,7 @@
             this.middleDotRB.AutoSize = true;
             this.middleDotRB.Location = new System.Drawing.Point(6, 68);
             this.middleDotRB.Name = "middleDotRB";
-            this.middleDotRB.Size = new System.Drawing.Size(169, 17);
+            this.middleDotRB.Size = new System.Drawing.Size(167, 17);
             this.middleDotRB.TabIndex = 1;
             this.middleDotRB.TabStop = true;
             this.middleDotRB.Text = "Replace middle part with dots ";
@@ -255,7 +264,7 @@
             this.mostSigDirRB.AutoSize = true;
             this.mostSigDirRB.Location = new System.Drawing.Point(6, 45);
             this.mostSigDirRB.Name = "mostSigDirRB";
-            this.mostSigDirRB.Size = new System.Drawing.Size(169, 17);
+            this.mostSigDirRB.Size = new System.Drawing.Size(165, 17);
             this.mostSigDirRB.TabIndex = 0;
             this.mostSigDirRB.TabStop = true;
             this.mostSigDirRB.Text = "The most significant directory ";
@@ -284,6 +293,45 @@
             this.comboMinWidthLabel.TabIndex = 62;
             this.comboMinWidthLabel.Text = "Combobox minimum width (0 = Autosize)";
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.anchorToMostToolStripMenuItem,
+            this.anchorToLessToolStripMenuItem,
+            this.removeAnchorToolStripMenuItem,
+            this.removeRecentToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(252, 92);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            // 
+            // anchorToMostToolStripMenuItem
+            // 
+            this.anchorToMostToolStripMenuItem.Name = "anchorToMostToolStripMenuItem";
+            this.anchorToMostToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.anchorToMostToolStripMenuItem.Text = "Anchor to most recent repositories";
+            this.anchorToMostToolStripMenuItem.Click += new System.EventHandler(this.anchorToMostToolStripMenuItem_Click);
+            // 
+            // removeAnchorToolStripMenuItem
+            // 
+            this.removeAnchorToolStripMenuItem.Name = "removeAnchorToolStripMenuItem";
+            this.removeAnchorToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.removeAnchorToolStripMenuItem.Text = "Remove anchor";
+            this.removeAnchorToolStripMenuItem.Click += new System.EventHandler(this.removeAnchorToolStripMenuItem_Click);
+            // 
+            // removeRecentToolStripMenuItem
+            // 
+            this.removeRecentToolStripMenuItem.Name = "removeRecentToolStripMenuItem";
+            this.removeRecentToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.removeRecentToolStripMenuItem.Text = "Remove from recent repositories";
+            this.removeRecentToolStripMenuItem.Click += new System.EventHandler(this.removeRecentToolStripMenuItem_Click);
+            // 
+            // anchorToLessToolStripMenuItem
+            // 
+            this.anchorToLessToolStripMenuItem.Name = "anchorToLessToolStripMenuItem";
+            this.anchorToLessToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.anchorToLessToolStripMenuItem.Text = "Anchor to less recent repositories";
+            this.anchorToLessToolStripMenuItem.Click += new System.EventHandler(this.anchorToLessToolStripMenuItem_Click);
+            // 
             // FormRecentReposSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -310,6 +358,7 @@
             this.shorteningGB.ResumeLayout(false);
             this.shorteningGB.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.comboMinWidthEdit)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -337,5 +386,10 @@
         private System.Windows.Forms.Label comboMinWidthLabel;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem anchorToMostToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeAnchorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeRecentToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem anchorToLessToolStripMenuItem;
     }
 }
