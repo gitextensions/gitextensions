@@ -122,11 +122,11 @@ namespace GitUI
                 return;
             }
 
-            // submodule .git file
+            // new submodule .git file
             if (e.FullPath.EndsWith("\\.git"))
                 return;
 
-            // submodule .git\index.lock file
+            // old submodule .git\index.lock file
             if (e.FullPath.EndsWith("\\.git\\index.lock"))
                 return;
 
@@ -140,6 +140,12 @@ namespace GitUI
                 return;
 
             if (e.FullPath.EndsWith("\\index.lock"))
+                return;
+
+            // new submodule changed
+            string modulePath = "\\modules\\";
+            int index = e.FullPath.IndexOf(modulePath, gitPath.Length);
+            if (index >= 0 && e.FullPath.IndexOf("\\", index + modulePath.Length) == -1)
                 return;
 
             ScheduleNextRegularUpdate();
