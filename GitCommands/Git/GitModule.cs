@@ -39,7 +39,6 @@ namespace GitCommands
             }
             set
             {
-                string old = _workingdir;
                 _workingdir = FindGitWorkingDir(value.Trim());
                 string superprojectDir = FindGitSuperprojectPath(out _submoduleName);
                 if (superprojectDir == null)
@@ -878,10 +877,12 @@ namespace GitCommands
             }
 
             string currentPath = Path.GetDirectoryName(_workingdir); // remove last slash
-            if (superprojectPath == null)
+            if (!string.IsNullOrEmpty(currentPath) &&
+                superprojectPath == null)
             {
                 string path = Path.GetDirectoryName(currentPath);
-                if (!File.Exists(path + Settings.PathSeparator + ".gitmodules") || !ValidWorkingDir(path + Settings.PathSeparator))
+                if (!string.IsNullOrEmpty(path) &&
+                    (!File.Exists(path + Settings.PathSeparator + ".gitmodules") || !ValidWorkingDir(path + Settings.PathSeparator)))
                 {
                     // Check upper directory
                     path = Path.GetDirectoryName(path);
@@ -891,16 +892,20 @@ namespace GitCommands
                 superprojectPath = path + Settings.PathSeparator;
             }
 
-            var localPath = currentPath.Substring(superprojectPath.Length);
-            var configFile = new ConfigFile(superprojectPath + ".gitmodules");
-            foreach (ConfigSection configSection in configFile.GetConfigSections())
+            if (!string.IsNullOrEmpty(superprojectPath))
             {
-                if (configSection.GetValue("path") == localPath)
+                var localPath = currentPath.Substring(superprojectPath.Length);
+                var configFile = new ConfigFile(superprojectPath + ".gitmodules");
+                foreach (ConfigSection configSection in configFile.GetConfigSections())
                 {
-                    submoduleName = configSection.SubSection;
-                    return superprojectPath;
+                    if (configSection.GetValue("path") == localPath)
+                    {
+                        submoduleName = configSection.SubSection;
+                        return superprojectPath;
+                    }
                 }
             }
+
             return null;
         }
         
@@ -1677,6 +1682,9 @@ namespace GitCommands
         /// </summary>
         public static string GetSelectedBranchFast(string repositoryPath)
         {
+            if (string.IsNullOrEmpty(repositoryPath))
+                return string.Empty;
+
             string head;
             string headFileName = Path.Combine(WorkingDirGitDir(repositoryPath), "HEAD");
             if (File.Exists(headFileName))
