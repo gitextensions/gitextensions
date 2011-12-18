@@ -134,6 +134,89 @@ namespace GitUI
             Close();
         }
 
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        {
+            RecentRepoInfo repo;
+
+            e.Cancel = !GetSelectedRepo(sender, out repo);
+
+            if (!e.Cancel)
+            {
+                anchorToMostToolStripMenuItem.Enabled = repo.Repo.Anchor != Repository.RepositoryAnchor.MostRecent;
+                anchorToLessToolStripMenuItem.Enabled = repo.Repo.Anchor != Repository.RepositoryAnchor.LessRecent;
+                removeAnchorToolStripMenuItem.Enabled = repo.Repo.Anchor != Repository.RepositoryAnchor.None;
+            }
+        }
+
+        private bool GetSelectedRepo(object sender, out RecentRepoInfo repo)
+        {
+            if (sender is ContextMenuStrip)
+                sender = (sender as ContextMenuStrip).SourceControl;
+            else if (sender is ToolStripItem)
+                return GetSelectedRepo((sender as ToolStripItem).Owner, out repo);
+            else
+                sender = null;
+
+            ListBox lb;
+            if (sender == MostRecentLB)
+                lb = MostRecentLB;
+            else if (sender == LessRecentLB)
+                lb = LessRecentLB;
+            else
+                lb = null;
+
+            if (lb != null)
+                repo = (RecentRepoInfo)lb.SelectedItem;
+            else
+                repo = null;
+
+            return repo != null;
+        }
+
+        private void anchorToMostToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RecentRepoInfo repo;
+
+            if (GetSelectedRepo(sender, out repo))
+            {
+                repo.Repo.Anchor = Repository.RepositoryAnchor.MostRecent;
+                RefreshRepos();
+            }
+        }
+
+        private void anchorToLessToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RecentRepoInfo repo;
+
+            if (GetSelectedRepo(sender, out repo))
+            {
+                repo.Repo.Anchor = Repository.RepositoryAnchor.LessRecent;
+                RefreshRepos();
+            }
+        }
+
+        private void removeAnchorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RecentRepoInfo repo;
+
+            if (GetSelectedRepo(sender, out repo))
+            {
+                repo.Repo.Anchor = Repository.RepositoryAnchor.None;
+                RefreshRepos();
+            }
+        }
+
+        private void removeRecentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RecentRepoInfo repo;
+
+            if (GetSelectedRepo(sender, out repo))
+            {
+                Repositories.RepositoryHistory.Repositories.Remove(repo.Repo);
+                RefreshRepos();
+            }
+        }
+
 
     }
 }

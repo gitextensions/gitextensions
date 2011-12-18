@@ -1774,56 +1774,6 @@ namespace GitUI
                 SetWorkingDir(repo.Path);
             };
 
-            toolStripItem.MouseUp += (object sender, MouseEventArgs e) =>
-                {
-                    if (e.Button == MouseButtons.Right && toolStripItem.DropDownItems.Count == 0)
-                    {
-                        if (repo.Anchor != Repository.RepositoryAnchor.MostRecent)
-                        {
-                            ToolStripMenuItem anchorItem = new ToolStripMenuItem("Anchor to most recent repositories");
-                            toolStripItem.DropDownItems.Add(anchorItem);
-
-                            anchorItem.Click += (object hs, EventArgs he) =>
-                            {
-                                repo.Anchor = Repository.RepositoryAnchor.MostRecent;
-                            };
-                        }
-                        if (repo.Anchor != Repository.RepositoryAnchor.LessRecent)
-                        {
-                            ToolStripMenuItem anchorItem = new ToolStripMenuItem("Anchor to less recent repositories");
-                            toolStripItem.DropDownItems.Add(anchorItem);
-
-                            anchorItem.Click += (object hs, EventArgs he) =>
-                            {
-                                repo.Anchor = Repository.RepositoryAnchor.LessRecent;
-                            };
-                        }
-                        if (repo.Anchor != Repository.RepositoryAnchor.None)
-                        {
-                            ToolStripMenuItem anchorItem = new ToolStripMenuItem("Remove anchor");
-                            toolStripItem.DropDownItems.Add(anchorItem);
-
-                            anchorItem.Click += (object hs, EventArgs he) =>
-                            {
-                                repo.Anchor = Repository.RepositoryAnchor.None;
-                            };
-                        }
-                        ToolStripMenuItem removeItem = new ToolStripMenuItem("Remove from recent repositories");
-                        toolStripItem.DropDownItems.Add(removeItem);
-
-                        removeItem.Click += (object hs, EventArgs he) =>
-                        {
-                            Repositories.RepositoryHistory.Repositories.Remove(repo);
-                        };
-
-                        if (toolStripItem.DropDownItems.Count > 0)
-                            toolStripItem.ShowDropDown();    
-                    }
-                        
-                
-                };
-
-
             if (repo.Title != null || !repo.Path.Equals(caption))
                 toolStripItem.ToolTipText = repo.Path;            
         }
