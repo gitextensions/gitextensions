@@ -35,6 +35,11 @@
             this.sortMostRecentRepos = new System.Windows.Forms.CheckBox();
             this.comboPanel = new System.Windows.Forms.Panel();
             this.LessRecentLB = new System.Windows.Forms.ListBox();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.anchorToMostToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.anchorToLessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeAnchorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeRecentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel3 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.MostRecentLB = new System.Windows.Forms.ListBox();
@@ -49,19 +54,14 @@
             this.mostSigDirRB = new System.Windows.Forms.RadioButton();
             this.comboMinWidthEdit = new System.Windows.Forms.NumericUpDown();
             this.comboMinWidthLabel = new System.Windows.Forms.Label();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.anchorToMostToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeAnchorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeRecentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.anchorToLessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_maxRecentRepositories)).BeginInit();
             this.comboPanel.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.shorteningGB.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.comboMinWidthEdit)).BeginInit();
-            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // _NO_TRANSLATE_maxRecentRepositories
@@ -93,9 +93,9 @@
             this.sortLessRecentRepos.Location = new System.Drawing.Point(12, 58);
             this.sortLessRecentRepos.Name = "sortLessRecentRepos";
             this.sortLessRecentRepos.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.sortLessRecentRepos.Size = new System.Drawing.Size(160, 17);
+            this.sortLessRecentRepos.Size = new System.Drawing.Size(228, 17);
             this.sortLessRecentRepos.TabIndex = 56;
-            this.sortLessRecentRepos.Text = "Sort less recent repositories";
+            this.sortLessRecentRepos.Text = "Sort less recent repositories alphabetically";
             this.sortLessRecentRepos.UseVisualStyleBackColor = true;
             this.sortLessRecentRepos.CheckedChanged += new System.EventHandler(this.sortMostRecentRepos_CheckedChanged);
             // 
@@ -106,9 +106,9 @@
             this.sortMostRecentRepos.Location = new System.Drawing.Point(12, 35);
             this.sortMostRecentRepos.Name = "sortMostRecentRepos";
             this.sortMostRecentRepos.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.sortMostRecentRepos.Size = new System.Drawing.Size(165, 17);
+            this.sortMostRecentRepos.Size = new System.Drawing.Size(233, 17);
             this.sortMostRecentRepos.TabIndex = 55;
-            this.sortMostRecentRepos.Text = "Sort most recent repositories";
+            this.sortMostRecentRepos.Text = "Sort most recent repositories alphabetically";
             this.sortMostRecentRepos.UseVisualStyleBackColor = true;
             this.sortMostRecentRepos.CheckedChanged += new System.EventHandler(this.sortMostRecentRepos_CheckedChanged);
             // 
@@ -134,6 +134,45 @@
             this.LessRecentLB.Name = "LessRecentLB";
             this.LessRecentLB.Size = new System.Drawing.Size(233, 202);
             this.LessRecentLB.TabIndex = 4;
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.anchorToMostToolStripMenuItem,
+            this.anchorToLessToolStripMenuItem,
+            this.removeAnchorToolStripMenuItem,
+            this.removeRecentToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(252, 92);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            // 
+            // anchorToMostToolStripMenuItem
+            // 
+            this.anchorToMostToolStripMenuItem.Name = "anchorToMostToolStripMenuItem";
+            this.anchorToMostToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.anchorToMostToolStripMenuItem.Text = "Anchor to most recent repositories";
+            this.anchorToMostToolStripMenuItem.Click += new System.EventHandler(this.anchorToMostToolStripMenuItem_Click);
+            // 
+            // anchorToLessToolStripMenuItem
+            // 
+            this.anchorToLessToolStripMenuItem.Name = "anchorToLessToolStripMenuItem";
+            this.anchorToLessToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.anchorToLessToolStripMenuItem.Text = "Anchor to less recent repositories";
+            this.anchorToLessToolStripMenuItem.Click += new System.EventHandler(this.anchorToLessToolStripMenuItem_Click);
+            // 
+            // removeAnchorToolStripMenuItem
+            // 
+            this.removeAnchorToolStripMenuItem.Name = "removeAnchorToolStripMenuItem";
+            this.removeAnchorToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.removeAnchorToolStripMenuItem.Text = "Remove anchor";
+            this.removeAnchorToolStripMenuItem.Click += new System.EventHandler(this.removeAnchorToolStripMenuItem_Click);
+            // 
+            // removeRecentToolStripMenuItem
+            // 
+            this.removeRecentToolStripMenuItem.Name = "removeRecentToolStripMenuItem";
+            this.removeRecentToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.removeRecentToolStripMenuItem.Text = "Remove from recent repositories";
+            this.removeRecentToolStripMenuItem.Click += new System.EventHandler(this.removeRecentToolStripMenuItem_Click);
             // 
             // panel3
             // 
@@ -293,45 +332,6 @@
             this.comboMinWidthLabel.TabIndex = 62;
             this.comboMinWidthLabel.Text = "Combobox minimum width (0 = Autosize)";
             // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.anchorToMostToolStripMenuItem,
-            this.anchorToLessToolStripMenuItem,
-            this.removeAnchorToolStripMenuItem,
-            this.removeRecentToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(252, 92);
-            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
-            // 
-            // anchorToMostToolStripMenuItem
-            // 
-            this.anchorToMostToolStripMenuItem.Name = "anchorToMostToolStripMenuItem";
-            this.anchorToMostToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
-            this.anchorToMostToolStripMenuItem.Text = "Anchor to most recent repositories";
-            this.anchorToMostToolStripMenuItem.Click += new System.EventHandler(this.anchorToMostToolStripMenuItem_Click);
-            // 
-            // removeAnchorToolStripMenuItem
-            // 
-            this.removeAnchorToolStripMenuItem.Name = "removeAnchorToolStripMenuItem";
-            this.removeAnchorToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
-            this.removeAnchorToolStripMenuItem.Text = "Remove anchor";
-            this.removeAnchorToolStripMenuItem.Click += new System.EventHandler(this.removeAnchorToolStripMenuItem_Click);
-            // 
-            // removeRecentToolStripMenuItem
-            // 
-            this.removeRecentToolStripMenuItem.Name = "removeRecentToolStripMenuItem";
-            this.removeRecentToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
-            this.removeRecentToolStripMenuItem.Text = "Remove from recent repositories";
-            this.removeRecentToolStripMenuItem.Click += new System.EventHandler(this.removeRecentToolStripMenuItem_Click);
-            // 
-            // anchorToLessToolStripMenuItem
-            // 
-            this.anchorToLessToolStripMenuItem.Name = "anchorToLessToolStripMenuItem";
-            this.anchorToLessToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
-            this.anchorToLessToolStripMenuItem.Text = "Anchor to less recent repositories";
-            this.anchorToLessToolStripMenuItem.Click += new System.EventHandler(this.anchorToLessToolStripMenuItem_Click);
-            // 
             // FormRecentReposSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -350,6 +350,7 @@
             this.Text = "Recent repositories settings";
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_maxRecentRepositories)).EndInit();
             this.comboPanel.ResumeLayout(false);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -358,7 +359,6 @@
             this.shorteningGB.ResumeLayout(false);
             this.shorteningGB.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.comboMinWidthEdit)).EndInit();
-            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
