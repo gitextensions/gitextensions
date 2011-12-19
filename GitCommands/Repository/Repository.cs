@@ -18,6 +18,7 @@ namespace GitCommands.Repository
         }
 
         public Repository(string path, string description, string title)
+            : this()
         {
             Path = path;
             Description = description;
@@ -28,7 +29,13 @@ namespace GitCommands.Repository
         public string Title { get; set; }
         public string Path { get; set; }
         public string Description { get; set; }
-        public RepositoryAnchor Anchor { get; set; }
+        RepositoryAnchor _Anchor;
+        public RepositoryAnchor Anchor
+        {
+            get { return _Anchor; }
+            set { 
+            _Anchor = value;
+        } }
 
         [XmlIgnore]
         public RepositoryType RepositoryType { get; set; }
@@ -39,6 +46,11 @@ namespace GitCommands.Repository
             Title = source.Title;
             Description = source.Description;
             RepositoryType = source.RepositoryType;
+        }
+
+        public override string  ToString()
+        {
+            return Path + " ("+Anchor+")";
         }
     }
 }
