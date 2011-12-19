@@ -343,7 +343,7 @@ namespace GitUI
             this.LocalSettings.Location = new System.Drawing.Point(4, 22);
             this.LocalSettings.Name = "LocalSettings";
             this.LocalSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.LocalSettings.Size = new System.Drawing.Size(805, 514);
+            this.LocalSettings.Size = new System.Drawing.Size(805, 501);
             this.LocalSettings.TabIndex = 0;
             this.LocalSettings.Text = "Local settings";
             this.LocalSettings.UseVisualStyleBackColor = true;
@@ -571,7 +571,7 @@ namespace GitUI
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(813, 566);
+            this.tabControl1.Size = new System.Drawing.Size(813, 540);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
@@ -600,7 +600,7 @@ namespace GitUI
             this.tabPage3.Controls.Add(this.GitExtensionsInstall);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(805, 540);
+            this.tabPage3.Size = new System.Drawing.Size(805, 514);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Checklist";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -914,7 +914,7 @@ namespace GitUI
             this.TabPageGit.Controls.Add(this.groupBox7);
             this.TabPageGit.Location = new System.Drawing.Point(4, 22);
             this.TabPageGit.Name = "TabPageGit";
-            this.TabPageGit.Size = new System.Drawing.Size(805, 514);
+            this.TabPageGit.Size = new System.Drawing.Size(805, 501);
             this.TabPageGit.TabIndex = 7;
             this.TabPageGit.Text = "Git";
             this.TabPageGit.UseVisualStyleBackColor = true;
@@ -1104,7 +1104,7 @@ namespace GitUI
             this.TabPageGitExtensions.Controls.Add(this.label12);
             this.TabPageGitExtensions.Location = new System.Drawing.Point(4, 22);
             this.TabPageGitExtensions.Name = "TabPageGitExtensions";
-            this.TabPageGitExtensions.Size = new System.Drawing.Size(805, 540);
+            this.TabPageGitExtensions.Size = new System.Drawing.Size(805, 501);
             this.TabPageGitExtensions.TabIndex = 3;
             this.TabPageGitExtensions.Text = "Git extensions";
             this.TabPageGitExtensions.UseVisualStyleBackColor = true;
@@ -1522,7 +1522,7 @@ namespace GitUI
             this.StartPage.Location = new System.Drawing.Point(4, 22);
             this.StartPage.Name = "StartPage";
             this.StartPage.Padding = new System.Windows.Forms.Padding(3);
-            this.StartPage.Size = new System.Drawing.Size(805, 514);
+            this.StartPage.Size = new System.Drawing.Size(805, 501);
             this.StartPage.TabIndex = 6;
             this.StartPage.Text = "Start page";
             this.StartPage.UseVisualStyleBackColor = true;
@@ -1545,7 +1545,7 @@ namespace GitUI
             this.AppearancePage.Controls.Add(this.groupBox3);
             this.AppearancePage.Location = new System.Drawing.Point(4, 22);
             this.AppearancePage.Name = "AppearancePage";
-            this.AppearancePage.Size = new System.Drawing.Size(805, 514);
+            this.AppearancePage.Size = new System.Drawing.Size(805, 501);
             this.AppearancePage.TabIndex = 5;
             this.AppearancePage.Text = "Appearance";
             this.AppearancePage.UseVisualStyleBackColor = true;
@@ -2186,7 +2186,7 @@ namespace GitUI
             this.GlobalSettingsPage.Location = new System.Drawing.Point(4, 22);
             this.GlobalSettingsPage.Name = "GlobalSettingsPage";
             this.GlobalSettingsPage.Padding = new System.Windows.Forms.Padding(3);
-            this.GlobalSettingsPage.Size = new System.Drawing.Size(805, 514);
+            this.GlobalSettingsPage.Size = new System.Drawing.Size(805, 501);
             this.GlobalSettingsPage.TabIndex = 1;
             this.GlobalSettingsPage.Text = "Global settings";
             this.GlobalSettingsPage.UseVisualStyleBackColor = true;
@@ -2557,7 +2557,7 @@ namespace GitUI
             this.Ssh.Location = new System.Drawing.Point(4, 22);
             this.Ssh.Name = "Ssh";
             this.Ssh.Padding = new System.Windows.Forms.Padding(3);
-            this.Ssh.Size = new System.Drawing.Size(805, 514);
+            this.Ssh.Size = new System.Drawing.Size(805, 501);
             this.Ssh.TabIndex = 4;
             this.Ssh.Text = "Ssh";
             this.Ssh.UseVisualStyleBackColor = true;
@@ -2792,7 +2792,7 @@ namespace GitUI
             this.scriptsTab.Location = new System.Drawing.Point(4, 22);
             this.scriptsTab.Name = "scriptsTab";
             this.scriptsTab.Padding = new System.Windows.Forms.Padding(3);
-            this.scriptsTab.Size = new System.Drawing.Size(805, 514);
+            this.scriptsTab.Size = new System.Drawing.Size(805, 501);
             this.scriptsTab.TabIndex = 8;
             this.scriptsTab.Text = "Scripts";
             this.scriptsTab.UseVisualStyleBackColor = true;
@@ -3124,7 +3124,7 @@ namespace GitUI
             this.tabPageHotkeys.Location = new System.Drawing.Point(4, 22);
             this.tabPageHotkeys.Name = "tabPageHotkeys";
             this.tabPageHotkeys.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageHotkeys.Size = new System.Drawing.Size(805, 514);
+            this.tabPageHotkeys.Size = new System.Drawing.Size(805, 501);
             this.tabPageHotkeys.TabIndex = 9;
             this.tabPageHotkeys.Text = "Hotkeys";
             this.tabPageHotkeys.UseVisualStyleBackColor = true;
@@ -3136,7 +3136,7 @@ namespace GitUI
             this.controlHotkeys.Location = new System.Drawing.Point(3, 3);
             this.controlHotkeys.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.controlHotkeys.Name = "controlHotkeys";
-            this.controlHotkeys.Size = new System.Drawing.Size(799, 495);
+            this.controlHotkeys.Size = new System.Drawing.Size(799, 488);
             this.controlHotkeys.TabIndex = 0;
             // 
             // splitContainer1
@@ -3154,8 +3154,8 @@ namespace GitUI
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.Ok);
-            this.splitContainer1.Size = new System.Drawing.Size(813, 599);
-            this.splitContainer1.SplitterDistance = 566;
+            this.splitContainer1.Size = new System.Drawing.Size(813, 573);
+            this.splitContainer1.SplitterDistance = 540;
             this.splitContainer1.TabIndex = 1;
             // 
             // Ok
@@ -3213,11 +3213,11 @@ namespace GitUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(813, 599);
+            this.ClientSize = new System.Drawing.Size(813, 573);
             this.Controls.Add(this.splitContainer1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(760, 626);
+            this.MinimumSize = new System.Drawing.Size(760, 600);
             this.Name = "FormSettings";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

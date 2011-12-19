@@ -1,4 +1,0 @@
-﻿D:\projekty\gitextensions\GitCommandsTests\GitCommandsTests.csproj : error  : The project file 'D:\projekty\gitextensions\GitCommandsTests\GitCommandsTests.csproj' cannot be opened.
-
-The project type is not supported by this installation.
-
