@@ -170,15 +170,22 @@ namespace GitUI
 
             if (Environment.TickCount > nextUpdateTime)
             {
-                string command = GitCommandHelpers.GetAllChangedFilesCmd(true, true);
-                gitGetUnstagedCommand.CmdStartProcess(Settings.GitCommand, command);
+                try
+                {
+                    string command = GitCommandHelpers.GetAllChangedFilesCmd(true, true);
+                    gitGetUnstagedCommand.CmdStartProcess(Settings.GitCommand, command);
 
-                if (hasDeferredUpdateRequests)
-                    // New changes were detected while processing previous changes, schedule deferred update
-                    ScheduleDeferredUpdate();
-                else
-                    // Always update every 5 min, even if we don't know anything changed
-                    ScheduleNextJustInCaseUpdate();
+                    if (hasDeferredUpdateRequests)
+                        // New changes were detected while processing previous changes, schedule deferred update
+                        ScheduleDeferredUpdate();
+                    else
+                        // Always update every 5 min, even if we don't know anything changed
+                        ScheduleNextJustInCaseUpdate();
+                }
+                catch (Exception)
+                {
+                    CurrentStatus = WorkingStatus.Stopped;
+                }
             }
         }
 
