@@ -241,20 +241,35 @@ namespace GitUI
 
         public bool StartCheckoutBranchDialog(IWin32Window owner)
         {
-            if (!RequiresValidWorkingDir())
+            return StartCheckoutBranchDialog(owner, "", false);
+        }
+
+
+        public bool CheckForDirtyDir(IWin32Window owner, out bool needRefresh)
+        {
+            needRefresh = false;
+            if (Settings.DirtyDirWarnBeforeCheckoutBranch &&
+                Settings.Module.GitStatus(UntrackedFilesMode.All, IgnoreSubmodulesMode.Default).Count > 0)
+            {
+                var f = new FormDirtyDirWarn();
+                DialogResult d = f.ShowDialog(owner);
+                if (d == DialogResult.Cancel)
+                    return true;
+                else if (d == DialogResult.Yes)
+                {
+                    new FormProcess("stash save").ShowDialog(owner);
+                    return false;
+                }
+                else if (d == DialogResult.Abort)
+                {
+                    needRefresh = StartCommitDialog(owner);
+                    return true;
+                }
+                else
+                    return false;
+            }
+            else
                 return false;
-
-            if (!InvokeEvent(PreCheckoutBranch))
-                return false;
-
-            var form = new FormCheckoutBranch();
-
-            if (form.ShowDialog(owner) != DialogResult.OK)
-                return false;
-
-            InvokeEvent(PostCheckoutBranch);
-
-            return true;
         }
 
         public bool StartCheckoutBranchDialog()
@@ -269,6 +284,10 @@ namespace GitUI
 
             if (!InvokeEvent(PreCheckoutBranch))
                 return false;
+
+            bool needRefresh;
+            if (CheckForDirtyDir(owner, out needRefresh))
+                return needRefresh;
 
             var form = new FormCheckoutBranch(branch, remote);
             form.ShowDialog(owner);

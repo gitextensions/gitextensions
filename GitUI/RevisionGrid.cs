@@ -1670,10 +1670,18 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            new FormProcess("checkout \"" + toolStripItem.Text + "\"").ShowDialog(this);
+            bool needRefresh;
+            if (!GitUICommands.Instance.CheckForDirtyDir(this, out needRefresh))
+            {
+                new FormProcess("checkout \"" + toolStripItem.Text + "\"").ShowDialog(this);
+                needRefresh = true;             
+            }
 
-            ForceRefreshRevisions();
-            OnActionOnRepositoryPerformed();
+            if (needRefresh)
+            {
+                ForceRefreshRevisions();
+                OnActionOnRepositoryPerformed();
+            }
         }
 
         private void ToolStripItemClickCheckoutRemoteBranch(object sender, EventArgs e)
@@ -1682,7 +1690,6 @@ namespace GitUI
 
             if (toolStripItem == null)
                 return;
-
 
             GitUICommands.Instance.StartCheckoutBranchDialog(this, toolStripItem.Text, true);
 
@@ -1739,9 +1746,19 @@ namespace GitUI
             if (MessageBox.Show(this, _areYouSureYouWantCheckout.Text, _areYouSureYouWantCheckoutCaption.Text,
                                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
-            new FormProcess(string.Format("checkout \"{0}\"", GetRevision(LastRow).Guid)).ShowDialog(this);
-            ForceRefreshRevisions();
-            OnActionOnRepositoryPerformed();
+
+            bool needRefresh;
+            if (!GitUICommands.Instance.CheckForDirtyDir(this, out needRefresh))
+            {
+                new FormProcess(string.Format("checkout \"{0}\"", GetRevision(LastRow).Guid)).ShowDialog(this);
+                needRefresh = true;
+            }
+
+            if (needRefresh)
+            {
+                ForceRefreshRevisions();
+                OnActionOnRepositoryPerformed();
+            }
         }
 
         private void ShowAuthorDateToolStripMenuItemClick(object sender, EventArgs e)
