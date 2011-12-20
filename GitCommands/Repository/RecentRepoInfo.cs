@@ -22,9 +22,18 @@ namespace GitCommands.Repository
         {
             Repo = aRepo;
             MostRecent = aMostRecent;
-            DirInfo = new DirectoryInfo(Repo.Path);
+            try
+            {
+                DirInfo = new DirectoryInfo(Repo.Path);
+            }catch(Exception)
+            {
+                DirInfo = null;
+                Caption = Repo.Path;
+            }
+            
             ShortName = Repo.Title == null ? DirInfo.Name : Repo.Title;
-            DirInfo = DirInfo.Parent;
+            if (DirInfo != null)
+                DirInfo = DirInfo.Parent;
             DirName = DirInfo == null ? "" : DirInfo.FullName;
         }
 
@@ -206,92 +215,106 @@ namespace GitCommands.Repository
 
         private void AddToOrderedMiddleDots(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo)
         {
-            DirectoryInfo dirInfo = new DirectoryInfo(repoInfo.Repo.Path);
-            string root = null;
-            string company = null;
-            string repository = null;
-            string workingDir = null;
+            DirectoryInfo dirInfo;
 
+            try
+            {
+                dirInfo = new DirectoryInfo(repoInfo.Repo.Path);
+            }
+            catch (Exception)
+            {
+                dirInfo = null;
+            }
 
-            workingDir = dirInfo.Name;
-            dirInfo = dirInfo.Parent;
             if (dirInfo != null)
             {
-                repository = dirInfo.Name;
+
+                string root = null;
+                string company = null;
+                string repository = null;
+                string workingDir = null;
+
+
+                workingDir = dirInfo.Name;
                 dirInfo = dirInfo.Parent;
-            }
-            bool addDots = false;
-
-            if (dirInfo != null)
-            {
-                while (dirInfo.Parent != null && dirInfo.Parent.Parent != null)
+                if (dirInfo != null)
                 {
+                    repository = dirInfo.Name;
                     dirInfo = dirInfo.Parent;
-                    addDots = true;
                 }
-                company = dirInfo.Name;
-                if (dirInfo.Parent != null)
-                    root = dirInfo.Parent.Name;
-            }
+                bool addDots = false;
 
-            
-            Func<int, bool> shortenPath = delegate(int skipCount)
-            {
-                bool result = false;
-                string c = null;
-                string r = null;
-                if (company != null)
+                if (dirInfo != null)
                 {
-                    if (company.Length > skipCount)
+                    while (dirInfo.Parent != null && dirInfo.Parent.Parent != null)
                     {
-                        c = company.Substring(0, company.Length - skipCount);
-                        result = true;
+                        dirInfo = dirInfo.Parent;
+                        addDots = true;
                     }
+                    company = dirInfo.Name;
+                    if (dirInfo.Parent != null)
+                        root = dirInfo.Parent.Name;
                 }
 
-                if (repository != null)
+
+                Func<int, bool> shortenPath = delegate(int skipCount)
                 {
-                    if (repository.Length > skipCount)
+                    bool result = false;
+                    string c = null;
+                    string r = null;
+                    if (company != null)
                     {
-                        r = repository.Substring(skipCount, repository.Length - skipCount);
-                        result = true;
+                        if (company.Length > skipCount)
+                        {
+                            c = company.Substring(0, company.Length - skipCount);
+                            result = true;
+                        }
                     }
-                }
 
-                repoInfo.Caption = MakePath(root, c);
-                if (addDots)
-                    repoInfo.Caption = MakePath(repoInfo.Caption, "...");
+                    if (repository != null)
+                    {
+                        if (repository.Length > skipCount)
+                        {
+                            r = repository.Substring(skipCount, repository.Length - skipCount);
+                            result = true;
+                        }
+                    }
 
-                repoInfo.Caption = MakePath(repoInfo.Caption, r);
-                repoInfo.Caption = MakePath(repoInfo.Caption, workingDir);
+                    repoInfo.Caption = MakePath(root, c);
+                    if (addDots)
+                        repoInfo.Caption = MakePath(repoInfo.Caption, "...");
 
-                return result && addDots;
-            };
+                    repoInfo.Caption = MakePath(repoInfo.Caption, r);
+                    repoInfo.Caption = MakePath(repoInfo.Caption, workingDir);
+
+                    return result && addDots;
+                };
 
 
 
 
-            //if fixed width is not set then short as in pull request vccp's example
-            //full "E:\CompanyName\Projects\git\ProductName\Sources\RepositoryName\WorkingDirName"
-            //short "E:\CompanyName\...\RepositoryName\WorkingDirName"
-            if (this.RecentReposComboMinWidth == 0)
-            {
-                shortenPath(0);
-            }
-            //else skip symbols beginning from the middle to both sides, 
-            //so we'll see "E:\Compa......toryName\WorkingDirName" and "E:\...\WorkingDirName" at the end.
-            else
-            {
-                SizeF captionSize;
-                bool canShorten;
-                int skipCount = 0;
-                do 
+                //if fixed width is not set then short as in pull request vccp's example
+                //full "E:\CompanyName\Projects\git\ProductName\Sources\RepositoryName\WorkingDirName"
+                //short "E:\CompanyName\...\RepositoryName\WorkingDirName"
+                if (this.RecentReposComboMinWidth == 0)
                 {
-                    canShorten = shortenPath(skipCount);
-                    skipCount++;
-                    captionSize = graphics.MeasureString(repoInfo.Caption, measureFont);
+                    shortenPath(0);
                 }
-                while (captionSize.Width > RecentReposComboMinWidth && canShorten);            
+                //else skip symbols beginning from the middle to both sides, 
+                //so we'll see "E:\Compa......toryName\WorkingDirName" and "E:\...\WorkingDirName" at the end.
+                else
+                {
+                    SizeF captionSize;
+                    bool canShorten;
+                    int skipCount = 0;
+                    do
+                    {
+                        canShorten = shortenPath(skipCount);
+                        skipCount++;
+                        captionSize = graphics.MeasureString(repoInfo.Caption, measureFont);
+                    }
+                    while (captionSize.Width > RecentReposComboMinWidth && canShorten);
+                }
             }
 
             List<RecentRepoInfo> list = null;
