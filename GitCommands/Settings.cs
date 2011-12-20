@@ -242,6 +242,13 @@ namespace GitCommands
             set { SafeSet("revisiongraphshowworkingdirchanges", value, ref _revisionGraphShowWorkingDirChanges); }
         }
 
+        private static bool? _DirtyDirWarnBeforeCheckoutBranch;
+        public static bool DirtyDirWarnBeforeCheckoutBranch
+        {
+            get { return SafeGet("DirtyDirWarnBeforeCheckoutBranch", false, ref _DirtyDirWarnBeforeCheckoutBranch); }
+            set { SafeSet("DirtyDirWarnBeforeCheckoutBranch", value, ref _DirtyDirWarnBeforeCheckoutBranch); }
+        }
+
         private static bool? _revisionGraphDrawNonRelativesGray;
         public static bool RevisionGraphDrawNonRelativesGray
         {

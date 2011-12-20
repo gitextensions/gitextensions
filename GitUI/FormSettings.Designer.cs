@@ -283,6 +283,8 @@ namespace GitUI
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             this.diffFontDialog = new System.Windows.Forms.FontDialog();
+            this.warnBeforeCheckoutLabel = new System.Windows.Forms.Label();
+            this.warnBeforeCheckoutChx = new System.Windows.Forms.CheckBox();
             this.LocalSettings.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
@@ -1062,6 +1064,8 @@ namespace GitUI
             // 
             // TabPageGitExtensions
             // 
+            this.TabPageGitExtensions.Controls.Add(this.warnBeforeCheckoutLabel);
+            this.TabPageGitExtensions.Controls.Add(this.warnBeforeCheckoutChx);
             this.TabPageGitExtensions.Controls.Add(this.label58);
             this.TabPageGitExtensions.Controls.Add(this.focusControlOnHover);
             this.TabPageGitExtensions.Controls.Add(this.truncatePathMethod);
@@ -3209,6 +3213,26 @@ namespace GitUI
             this.diffFontDialog.AllowVerticalFonts = false;
             this.diffFontDialog.FixedPitchOnly = true;
             // 
+            // warnBeforeCheckoutLabel
+            // 
+            this.warnBeforeCheckoutLabel.AutoSize = true;
+            this.warnBeforeCheckoutLabel.Location = new System.Drawing.Point(32, 480);
+            this.warnBeforeCheckoutLabel.Name = "warnBeforeCheckoutLabel";
+            this.warnBeforeCheckoutLabel.Size = new System.Drawing.Size(237, 13);
+            this.warnBeforeCheckoutLabel.TabIndex = 50;
+            this.warnBeforeCheckoutLabel.Text = "Warn of not committed changes before checkout";
+            this.warnBeforeCheckoutLabel.Click += new System.EventHandler(this.checkboxLabel_Click);
+            // 
+            // warnBeforeCheckoutChx
+            // 
+            this.warnBeforeCheckoutChx.AutoSize = true;
+            this.warnBeforeCheckoutChx.Location = new System.Drawing.Point(11, 480);
+            this.warnBeforeCheckoutChx.Name = "warnBeforeCheckoutChx";
+            this.warnBeforeCheckoutChx.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.warnBeforeCheckoutChx.Size = new System.Drawing.Size(15, 14);
+            this.warnBeforeCheckoutChx.TabIndex = 49;
+            this.warnBeforeCheckoutChx.UseVisualStyleBackColor = true;
+            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3537,6 +3561,8 @@ namespace GitUI
         private DataGridViewTextBoxColumn OnEvent;
         private DataGridViewCheckBoxColumn AskConfirmation;
         private DataGridViewCheckBoxColumn addToRevisionGridContextMenuDataGridViewCheckBoxColumn;
+        private Label warnBeforeCheckoutLabel;
+        private CheckBox warnBeforeCheckoutChx;
 
     }
 }
