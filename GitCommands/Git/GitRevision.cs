@@ -16,6 +16,7 @@ namespace GitCommands
         public GitRevision(string guid)
         {
             Guid = guid;
+            Message = "";
         }
 
         public List<GitHead> Heads { get { return heads; } }
