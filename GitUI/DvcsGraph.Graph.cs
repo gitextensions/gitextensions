@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using GitCommands;
 
 namespace GitUI
 {
@@ -100,7 +101,7 @@ namespace GitUI
 
             public event GraphUpdatedHandler Updated;
 
-            public void Add(IComparable aId, IComparable[] aParentIds, DataType aType, object aData)
+            public void Add(IComparable aId, IComparable[] aParentIds, DataType aType, GitRevision aData)
             {
                 // If we haven't seen this node yet, create a new junction.
                 Node node;
