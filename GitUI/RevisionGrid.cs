@@ -29,7 +29,7 @@ namespace GitUI
         LargeCardWithGraph = 8
     }
 
-    public partial class RevisionGrid : GitExtensionsControl
+    public sealed partial class RevisionGrid : GitExtensionsControl
     {
         private readonly IndexWatcher _indexWatcher = new IndexWatcher();
         private readonly TranslationString _currentWorkingDirChanges = new TranslationString("Current uncommitted changes");
@@ -176,7 +176,7 @@ namespace GitUI
 
         public event EventHandler ActionOnRepositoryPerformed;
 
-        public virtual void OnActionOnRepositoryPerformed()
+        private void OnActionOnRepositoryPerformed()
         {
             if (ActionOnRepositoryPerformed != null)
                 ActionOnRepositoryPerformed(this, null);
@@ -534,12 +534,13 @@ namespace GitUI
                 .SelectedRows
                 .Cast<DataGridViewRow>()
                 .Where(row => Revisions.RowCount > row.Index)
-                .Select(row => GetRevision(row.Index)).ToList();
+                .Select(row => GetRevision(row.Index))
+                .ToList();
         }
 
         public GitRevision GetRevision(int aRow)
         {
-            return Revisions.GetRowData(aRow) as GitRevision;
+            return Revisions.GetRowData(aRow);
         }
 
         public GitRevision GetCurrentRevision()
@@ -860,7 +861,8 @@ namespace GitUI
 
         private void SelectInitialRevision()
         {
-            if (string.IsNullOrEmpty(_initialSelectedRevision) || Revisions.SelectedRows.Count != 0) return;
+            if (string.IsNullOrEmpty(_initialSelectedRevision) || Revisions.SelectedRows.Count != 0)
+                return;
 
             for (var i = 0; i < Revisions.RowCount; i++)
             {
@@ -869,7 +871,7 @@ namespace GitUI
             }
         }
 
-        private string GetDateHeaderText()
+        private static string GetDateHeaderText()
         {
             return Settings.ShowAuthorDate ? Strings.GetAuthorDateText() : Strings.GetCommitDateText();
         }
@@ -1349,11 +1351,15 @@ namespace GitUI
 
         private void RevisionsDoubleClick(object sender, EventArgs e)
         {
-            var r = GetSelectedRevisions();
-            if (r.Count > 0)
+            ViewSelectedRevisions();
+        }
+
+        public void ViewSelectedRevisions()
+        {
+            var selectedRevisions = GetSelectedRevisions();
+            if (selectedRevisions.Count > 0)
             {
-                var form = new FormDiffSmall();
-                form.SetRevision(r[0]);
+                var form = new FormDiffSmall(selectedRevisions[0]);
                 form.ShowDialog(this);
             }
             else
