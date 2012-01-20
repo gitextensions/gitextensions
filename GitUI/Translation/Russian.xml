@@ -760,6 +760,9 @@
         <TranslationItem Name="resetSubmoduleChanges" Property="Text">
           <Value>Сбросить изменения сабмодуля</Value>
         </TranslationItem>
+        <TranslationItem Name="viewFileHistoryToolStripItem" Property="Text">
+          <Value>История файла</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="CommitInfo">
@@ -1413,6 +1416,9 @@
         </TranslationItem>
         <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
           <Value>Открыть с помощью difftool</Value>
+        </TranslationItem>
+        <TranslationItem Name="viewCommitToolStripMenuItem" Property="Text">
+          <Value>Просмотреть коммит</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
