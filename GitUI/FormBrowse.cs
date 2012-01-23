@@ -752,6 +752,10 @@ namespace GitUI
                         FileText.ResetCurrentScrollPos();
                     GitTree.SelectedNode = lastMatchedNode;
                 }
+                if (GitTree.SelectedNode == null)
+                {
+                    FileText.ViewText("", "");
+                }
             }
             finally
             {
