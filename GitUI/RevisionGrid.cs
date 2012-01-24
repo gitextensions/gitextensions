@@ -1813,10 +1813,10 @@ namespace GitUI
 
             var span = DateTime.Now - time;
 
-            if (span.Minutes < 0)
+            if (span.TotalMinutes < 1)
             {
                 if (span.Seconds == 1)
-                    return string.Format(Strings.Get1SecondAgoText(), span.Seconds);
+                    return string.Format(Strings.Get1SecondAgoText(), "1");
                 else
                     return string.Format(Strings.GetNSecondsAgoText(), span.Seconds);
             }
@@ -1824,33 +1824,39 @@ namespace GitUI
             if (span.TotalHours < 1)
             {
                 if (span.Minutes == 1)
-                    return string.Format(Strings.Get1MinuteAgoText(), span.Seconds);
+                    return string.Format(Strings.Get1MinuteAgoText(), "1");
                 else
-                    return string.Format(Strings.GetNMinutesAgoText(), span.Minutes + Math.Round(span.Seconds / 60.0, 0));
+                    return string.Format(Strings.GetNMinutesAgoText(), span.Minutes);
             }
 
-            if (span.TotalHours + Math.Round(span.Minutes / 60.0, 0) < 2)
-                return string.Format(Strings.Get1HourAgoText(), (int)span.TotalHours + Math.Round(span.Minutes / 60.0, 0));
-
             if (span.TotalHours < 24)
-                return string.Format(Strings.GetNHoursAgoText(), (int)span.TotalHours + Math.Round(span.Minutes / 60.0, 0));
-
-            if (span.TotalDays + Math.Round(span.Hours / 24.0, 0) < 2)
-                return string.Format(Strings.Get1DayAgoText(), (int)span.TotalDays + Math.Round(span.Hours / 24.0, 0));
+            {
+                if (span.Hours == 1)
+                    return string.Format(Strings.Get1HourAgoText(), "1");
+                else
+                    return string.Format(Strings.GetNHoursAgoText(), span.Hours);
+            }
 
             if (span.TotalDays < 30)
-                return string.Format(Strings.GetNDaysAgoText(), (int)span.TotalDays + Math.Round(span.Hours / 24.0, 0));
+            {
+                if (span.Days == 1)
+                    return string.Format(Strings.Get1DayAgoText(), "1");
+                else
+                    return string.Format(Strings.GetNDaysAgoText(), span.Days);
+            }
 
-            if (span.TotalDays < 45)
-                return string.Format(Strings.Get1MonthAgoText(), "1");
+            if (span.TotalDays < 360.0)    
+            {
+                if (span.Days < 45)    // less than 1.5 months = "1 month"
+                    return string.Format(Strings.Get1MonthAgoText(), "1");
+                else
+                    return string.Format(Strings.GetNMonthsAgoText(), (int)Math.Round(span.TotalDays / 30.0));
+            }
 
-            if (span.TotalDays < 365)
-                return string.Format(Strings.GetNMonthsAgoText(), (int)Math.Round(span.TotalDays / 30, 0));
-
-            if (span.TotalDays == 365)
-                return string.Format(Strings.Get1YearAgoText(), string.Format("{0:#.#} ", Math.Round(span.TotalDays / 365)));
+            if (span.TotalDays < 547.5)  // less than 1.5 years = "1 year"
+                return string.Format(Strings.Get1YearAgoText(), "1");
             else
-                return string.Format(Strings.GetNYearsAgoText(), string.Format("{0:#.#} ", Math.Round(span.TotalDays / 365)));
+                return string.Format(Strings.GetNYearsAgoText(), (int)Math.Round(span.TotalDays / 365.0));
         }
 
         private void UpdateGraph(GitRevision rev)
