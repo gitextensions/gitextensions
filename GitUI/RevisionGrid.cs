@@ -1813,7 +1813,7 @@ namespace GitUI
 
             var span = DateTime.Now - time;
 
-            if (span.TotalMinutes < 1)
+            if (span.TotalMinutes < 1.0)
             {
                 if (span.Seconds == 1)
                     return string.Format(Strings.Get1SecondAgoText(), "1");
@@ -1821,7 +1821,7 @@ namespace GitUI
                     return string.Format(Strings.GetNSecondsAgoText(), span.Seconds);
             }
 
-            if (span.TotalHours < 1)
+            if (span.TotalHours < 1.0)
             {
                 if (span.Minutes == 1)
                     return string.Format(Strings.Get1MinuteAgoText(), "1");
@@ -1829,7 +1829,7 @@ namespace GitUI
                     return string.Format(Strings.GetNMinutesAgoText(), span.Minutes);
             }
 
-            if (span.TotalHours < 24)
+            if (span.TotalHours < 24.0)
             {
                 if (span.Hours == 1)
                     return string.Format(Strings.Get1HourAgoText(), "1");
@@ -1837,7 +1837,7 @@ namespace GitUI
                     return string.Format(Strings.GetNHoursAgoText(), span.Hours);
             }
 
-            if (span.TotalDays < 30)
+            if (span.TotalDays < 30.0)
             {
                 if (span.Days == 1)
                     return string.Format(Strings.Get1DayAgoText(), "1");
@@ -1845,7 +1845,7 @@ namespace GitUI
                     return string.Format(Strings.GetNDaysAgoText(), span.Days);
             }
 
-            if (span.TotalDays < 360.0)    
+            if (span.TotalDays < 345.0)     // output "n month"/"n months" up to 11.5 months (exclusive)
             {
                 if (span.Days < 45)    // less than 1.5 months = "1 month"
                     return string.Format(Strings.Get1MonthAgoText(), "1");
