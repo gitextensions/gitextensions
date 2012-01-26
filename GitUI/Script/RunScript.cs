@@ -51,40 +51,7 @@ namespace GitUI.Script
                     continue;
                 if (!option.StartsWith("{s") || selectedRevision != null)
                 {
-                    if (option.StartsWith("{c") && currentRevision == null)
-                    {
-                        IList<GitHead> heads;
-
-                        if (RevisionGrid == null)
-                        {
-                            heads = new List<GitHead>();
-                            string currentRevisionGuid = Settings.Module.GetCurrentCheckout();
-                            foreach (GitHead head in Settings.Module.GetHeads(true, true))
-                            {
-                                if (head.Guid == currentRevisionGuid)
-                                    heads.Add(head);
-                            }
-                        }
-                        else
-                        {
-                            currentRevision = RevisionGrid.GetCurrentRevision();
-                            heads = currentRevision.Heads;
-                        }
-
-                        foreach (GitHead head in heads)
-                        {
-                            if (head.IsTag)
-                                currentTags.Add(head);
-                            else if (head.IsHead || head.IsRemote)
-                            {
-                                currentBranches.Add(head);
-                                if (head.IsRemote)
-                                    currentRemoteBranches.Add(head);
-                                else
-                                    currentLocalBranches.Add(head);
-                            }
-                        }
-                    }
+                    currentRevision = getCurrentRevision(RevisionGrid, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches, currentRevision, option);
                 }
                 else
                 {
@@ -92,8 +59,7 @@ namespace GitUI.Script
                     {
                         MessageBox.Show(
                             string.Format("Option {0} is only supported when started from revision grid.", option),
-                            "Error",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
@@ -268,6 +234,47 @@ namespace GitUI.Script
             new FormProcess(command, argument).ShowDialog();
         }
 
+        private static GitRevision getCurrentRevision(RevisionGrid RevisionGrid, List<GitHead> currentTags, List<GitHead> currentLocalBranches,
+                                                      List<GitHead> currentRemoteBranches, List<GitHead> currentBranches,
+                                                      GitRevision currentRevision, string option)
+        {
+            if (option.StartsWith("{c") && currentRevision == null)
+            {
+                IList<GitHead> heads;
+
+                if (RevisionGrid == null)
+                {
+                    heads = new List<GitHead>();
+                    string currentRevisionGuid = Settings.Module.GetCurrentCheckout();
+                    foreach (GitHead head in Settings.Module.GetHeads(true, true))
+                    {
+                        if (head.Guid == currentRevisionGuid)
+                            heads.Add(head);
+                    }
+                }
+                else
+                {
+                    currentRevision = RevisionGrid.GetCurrentRevision();
+                    heads = currentRevision.Heads;
+                }
+
+                foreach (GitHead head in heads)
+                {
+                    if (head.IsTag)
+                        currentTags.Add(head);
+                    else if (head.IsHead || head.IsRemote)
+                    {
+                        currentBranches.Add(head);
+                        if (head.IsRemote)
+                            currentRemoteBranches.Add(head);
+                        else
+                            currentLocalBranches.Add(head);
+                    }
+                }
+            }
+            return currentRevision;
+        }
+
         private static string[] Options
         {
             get
@@ -302,19 +309,19 @@ namespace GitUI.Script
             }
         }
 
-        private static string OverrideCommandWhenNecessary(string command)
+        private static string OverrideCommandWhenNecessary(string originalCommand)
         {
             //Make sure we are able to run git, even if git is not in the path
-            if (command.Equals("git", System.StringComparison.CurrentCultureIgnoreCase) ||
-                command.Equals("{git}", System.StringComparison.CurrentCultureIgnoreCase))
+            if (originalCommand.Equals("git", System.StringComparison.CurrentCultureIgnoreCase) ||
+                originalCommand.Equals("{git}", System.StringComparison.CurrentCultureIgnoreCase))
                 return Settings.GitCommand;
 
-            if (command.Equals("gitextensions", System.StringComparison.CurrentCultureIgnoreCase) ||
-                command.Equals("{gitextensions}", System.StringComparison.CurrentCultureIgnoreCase) ||
-                command.Equals("gitex", System.StringComparison.CurrentCultureIgnoreCase) ||
-                command.Equals("{gitex}", System.StringComparison.CurrentCultureIgnoreCase))
+            if (originalCommand.Equals("gitextensions", System.StringComparison.CurrentCultureIgnoreCase) ||
+                originalCommand.Equals("{gitextensions}", System.StringComparison.CurrentCultureIgnoreCase) ||
+                originalCommand.Equals("gitex", System.StringComparison.CurrentCultureIgnoreCase) ||
+                originalCommand.Equals("{gitex}", System.StringComparison.CurrentCultureIgnoreCase))
                 return Settings.GetGitExtensionsFullPath();
-            return command;
+            return originalCommand;
         }
 
         private static string askToSpecify(IEnumerable<GitHead> options, string title)
