@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using GitCommands;
-using GitUI.Script;
 using System.Windows.Forms;
 
 namespace GitUI.Script
