@@ -20,11 +20,8 @@ namespace GitUI.Script
                 MessageBox.Show("Cannot find script: " + script, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            else
-            {
-                command = scriptInfo.Command;
-                argument = scriptInfo.Arguments;
-            }
+            command = scriptInfo.Command;
+            argument = scriptInfo.Arguments;
 
 
             if (string.IsNullOrEmpty(command))
