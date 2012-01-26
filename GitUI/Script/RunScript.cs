@@ -22,6 +22,11 @@ namespace GitUI.Script
             if (string.IsNullOrEmpty(scriptInfo.Command))
                 return;
 
+            RunScript(RevisionGrid, scriptInfo);
+        }
+
+        internal static void RunScript(RevisionGrid RevisionGrid, ScriptInfo scriptInfo)
+        {
             string command = scriptInfo.Command;
             string argument = scriptInfo.Arguments;
 
@@ -84,7 +89,9 @@ namespace GitUI.Script
                     {
                         if (RevisionGrid == null)
                         {
-                            MessageBox.Show(string.Format("Option {0} is only supported when started from revision grid.", option), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show(
+                                string.Format("Option {0} is only supported when started from revision grid.", option), "Error",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
 
@@ -268,10 +275,15 @@ namespace GitUI.Script
                             break;
                         case "{cDefaultRemote}":
                             if (currentBranches.Count == 1)
-                                argument = argument.Replace(option, Settings.Module.GetSetting(string.Format("branch.{0}.remote", currentBranches[0].Name)));
+                                argument = argument.Replace(option,
+                                                            Settings.Module.GetSetting(string.Format("branch.{0}.remote",
+                                                                                                     currentBranches[0].Name)));
                             else if (currentBranches.Count != 0)
-                                argument = argument.Replace(option, Settings.Module.GetSetting(string.Format("branch.{0}.remote", 
-                                                            askToSpecify(currentBranches, "Current Revision Branch"))));
+                                argument = argument.Replace(option,
+                                                            Settings.Module.GetSetting(string.Format("branch.{0}.remote",
+                                                                                                     askToSpecify(
+                                                                                                         currentBranches,
+                                                                                                         "Current Revision Branch"))));
                             else
                                 argument = argument.Replace(option, "");
                             break;
