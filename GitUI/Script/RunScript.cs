@@ -49,12 +49,50 @@ namespace GitUI.Script
             {
                 if (string.IsNullOrEmpty(argument) || !argument.Contains(option))
                     continue;
-                if (option.StartsWith("{s") && selectedRevision == null)
+                if (!option.StartsWith("{s") || selectedRevision != null)
+                {
+                    if (option.StartsWith("{c") && currentRevision == null)
+                    {
+                        IList<GitHead> heads;
+
+                        if (RevisionGrid == null)
+                        {
+                            heads = new List<GitHead>();
+                            string currentRevisionGuid = Settings.Module.GetCurrentCheckout();
+                            foreach (GitHead head in Settings.Module.GetHeads(true, true))
+                            {
+                                if (head.Guid == currentRevisionGuid)
+                                    heads.Add(head);
+                            }
+                        }
+                        else
+                        {
+                            currentRevision = RevisionGrid.GetCurrentRevision();
+                            heads = currentRevision.Heads;
+                        }
+
+                        foreach (GitHead head in heads)
+                        {
+                            if (head.IsTag)
+                                currentTags.Add(head);
+                            else if (head.IsHead || head.IsRemote)
+                            {
+                                currentBranches.Add(head);
+                                if (head.IsRemote)
+                                    currentRemoteBranches.Add(head);
+                                else
+                                    currentLocalBranches.Add(head);
+                            }
+                        }
+                    }
+                }
+                else
                 {
                     if (RevisionGrid == null)
                     {
                         MessageBox.Show(
-                            string.Format("Option {0} is only supported when started from revision grid.", option), "Error",
+                            string.Format("Option {0} is only supported when started from revision grid.", option),
+                            "Error",
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
@@ -76,40 +114,6 @@ namespace GitUI.Script
                             }
                             else
                                 selectedLocalBranches.Add(head);
-                        }
-                    }
-                }
-                else if (option.StartsWith("{c") && currentRevision == null)
-                {
-                    IList<GitHead> heads;
-
-                    if (RevisionGrid == null)
-                    {
-                        heads = new List<GitHead>();
-                        string currentRevisionGuid = Settings.Module.GetCurrentCheckout();
-                        foreach (GitHead head in Settings.Module.GetHeads(true, true))
-                        {
-                            if (head.Guid == currentRevisionGuid)
-                                heads.Add(head);
-                        }
-                    }
-                    else
-                    {
-                        currentRevision = RevisionGrid.GetCurrentRevision();
-                        heads = currentRevision.Heads;
-                    }
-
-                    foreach (GitHead head in heads)
-                    {
-                        if (head.IsTag)
-                            currentTags.Add(head);
-                        else if (head.IsHead || head.IsRemote)
-                        {
-                            currentBranches.Add(head);
-                            if (head.IsRemote)
-                                currentRemoteBranches.Add(head);
-                            else
-                                currentLocalBranches.Add(head);
                         }
                     }
                 }
