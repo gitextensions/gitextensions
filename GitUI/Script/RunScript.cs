@@ -12,20 +12,18 @@ namespace GitUI.Script
                 return;
 
             ScriptInfo scriptInfo = ScriptManager.GetScript(script);
-            string command;
-            string argument;
 
             if (scriptInfo == null)
             {
                 MessageBox.Show("Cannot find script: " + script, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            command = scriptInfo.Command;
-            argument = scriptInfo.Arguments;
 
-
-            if (string.IsNullOrEmpty(command))
+            if (string.IsNullOrEmpty(scriptInfo.Command))
                 return;
+
+            string command = scriptInfo.Command;
+            string argument = scriptInfo.Arguments;
 
             //Make sure we are able to run git, even if git is not in the path
             if (command.Equals("git", System.StringComparison.CurrentCultureIgnoreCase) ||
