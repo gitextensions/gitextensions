@@ -51,7 +51,7 @@ namespace GitUI.Script
                     continue;
                 if (!option.StartsWith("{s") || selectedRevision != null)
                 {
-                    currentRevision = getCurrentRevision(RevisionGrid, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches, currentRevision, option);
+                    currentRevision = GetCurrentRevision(RevisionGrid, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches, currentRevision, option);
                 }
                 else
                 {
@@ -63,25 +63,7 @@ namespace GitUI.Script
                         return;
                     }
 
-                    selectedRevision = RevisionGrid.GetRevision(RevisionGrid.LastRow);
-                    foreach (GitHead head in selectedRevision.Heads)
-                    {
-                        if (head.IsTag)
-                            selectedTags.Add(head);
-
-                        else if (head.IsHead || head.IsRemote)
-                        {
-                            selectedBranches.Add(head);
-                            if (head.IsRemote)
-                            {
-                                selectedRemoteBranches.Add(head);
-                                if (!selectedRemotes.Contains(head.Remote))
-                                    selectedRemotes.Add(head.Remote);
-                            }
-                            else
-                                selectedLocalBranches.Add(head);
-                        }
-                    }
+                    selectedRevision = CalculateSelectedRevision(RevisionGrid, selectedRemoteBranches, selectedRemotes, selectedLocalBranches, selectedBranches, selectedTags);
                 }
 
                 switch (option)
@@ -234,7 +216,34 @@ namespace GitUI.Script
             new FormProcess(command, argument).ShowDialog();
         }
 
-        private static GitRevision getCurrentRevision(RevisionGrid RevisionGrid, List<GitHead> currentTags, List<GitHead> currentLocalBranches,
+        private static GitRevision CalculateSelectedRevision(RevisionGrid RevisionGrid, List<GitHead> selectedRemoteBranches,
+                                                             List<string> selectedRemotes, List<GitHead> selectedLocalBranches,
+                                                             List<GitHead> selectedBranches, List<GitHead> selectedTags)
+        {
+            GitRevision selectedRevision;
+            selectedRevision = RevisionGrid.GetRevision(RevisionGrid.LastRow);
+            foreach (GitHead head in selectedRevision.Heads)
+            {
+                if (head.IsTag)
+                    selectedTags.Add(head);
+
+                else if (head.IsHead || head.IsRemote)
+                {
+                    selectedBranches.Add(head);
+                    if (head.IsRemote)
+                    {
+                        selectedRemoteBranches.Add(head);
+                        if (!selectedRemotes.Contains(head.Remote))
+                            selectedRemotes.Add(head.Remote);
+                    }
+                    else
+                        selectedLocalBranches.Add(head);
+                }
+            }
+            return selectedRevision;
+        }
+
+        private static GitRevision GetCurrentRevision(RevisionGrid RevisionGrid, List<GitHead> currentTags, List<GitHead> currentLocalBranches,
                                                       List<GitHead> currentRemoteBranches, List<GitHead> currentBranches,
                                                       GitRevision currentRevision, string option)
         {
