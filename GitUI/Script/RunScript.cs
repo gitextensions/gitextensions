@@ -32,33 +32,6 @@ namespace GitUI.Script
 
             command = OverrideCommandWhenNecessary(command);
 
-            string[] options =
-                {
-                    "{sTag}",
-                    "{sBranch}",
-                    "{sLocalBranch}",
-                    "{sRemoteBranch}",
-                    "{sRemote}",
-                    "{sHash}",
-                    "{sMessage}",
-                    "{sAuthor}",
-                    "{sCommitter}",
-                    "{sAuthorDate}",
-                    "{sCommitDate}",
-                    "{cTag}",
-                    "{cBranch}",
-                    "{cLocalBranch}",
-                    "{cRemoteBranch}",
-                    "{cHash}",
-                    "{cMessage}",
-                    "{cAuthor}",
-                    "{cCommitter}",
-                    "{cAuthorDate}",
-                    "{cCommitDate}",
-                    "{cDefaultRemote}",
-                    "{UserInput}"
-                };
-
             GitRevision selectedRevision = null;
             GitRevision currentRevision = null;
 
@@ -72,7 +45,7 @@ namespace GitUI.Script
             var currentBranches = new List<GitHead>();
             var currentTags = new List<GitHead>();
 
-            foreach (string option in options)
+            foreach (string option in Options)
             {
                 if (!string.IsNullOrEmpty(argument) && argument.Contains(option))
                 {
@@ -290,6 +263,40 @@ namespace GitUI.Script
             }
 
             new FormProcess(command, argument).ShowDialog();
+        }
+
+        private static string[] Options
+        {
+            get
+            {
+                string[] options =
+                    {
+                        "{sTag}",
+                        "{sBranch}",
+                        "{sLocalBranch}",
+                        "{sRemoteBranch}",
+                        "{sRemote}",
+                        "{sHash}",
+                        "{sMessage}",
+                        "{sAuthor}",
+                        "{sCommitter}",
+                        "{sAuthorDate}",
+                        "{sCommitDate}",
+                        "{cTag}",
+                        "{cBranch}",
+                        "{cLocalBranch}",
+                        "{cRemoteBranch}",
+                        "{cHash}",
+                        "{cMessage}",
+                        "{cAuthor}",
+                        "{cCommitter}",
+                        "{cAuthorDate}",
+                        "{cCommitDate}",
+                        "{cDefaultRemote}",
+                        "{UserInput}"
+                    };
+                return options;
+            }
         }
 
         private static string OverrideCommandWhenNecessary(string command)
