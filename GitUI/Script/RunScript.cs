@@ -30,16 +30,7 @@ namespace GitUI.Script
             string command = scriptInfo.Command;
             string argument = scriptInfo.Arguments;
 
-            //Make sure we are able to run git, even if git is not in the path
-            if (command.Equals("git", System.StringComparison.CurrentCultureIgnoreCase) ||
-                command.Equals("{git}", System.StringComparison.CurrentCultureIgnoreCase))
-                command = Settings.GitCommand;
-
-            if (command.Equals("gitextensions", System.StringComparison.CurrentCultureIgnoreCase) ||
-                command.Equals("{gitextensions}", System.StringComparison.CurrentCultureIgnoreCase) ||
-                command.Equals("gitex", System.StringComparison.CurrentCultureIgnoreCase) ||
-                command.Equals("{gitex}", System.StringComparison.CurrentCultureIgnoreCase))
-                command = Settings.GetGitExtensionsFullPath();
+            command = OverrideCommandWhenNecessary(command);
 
             string[] options =
                 {
@@ -299,6 +290,21 @@ namespace GitUI.Script
             }
 
             new FormProcess(command, argument).ShowDialog();
+        }
+
+        private static string OverrideCommandWhenNecessary(string command)
+        {
+            //Make sure we are able to run git, even if git is not in the path
+            if (command.Equals("git", System.StringComparison.CurrentCultureIgnoreCase) ||
+                command.Equals("{git}", System.StringComparison.CurrentCultureIgnoreCase))
+                return Settings.GitCommand;
+
+            if (command.Equals("gitextensions", System.StringComparison.CurrentCultureIgnoreCase) ||
+                command.Equals("{gitextensions}", System.StringComparison.CurrentCultureIgnoreCase) ||
+                command.Equals("gitex", System.StringComparison.CurrentCultureIgnoreCase) ||
+                command.Equals("{gitex}", System.StringComparison.CurrentCultureIgnoreCase))
+                return Settings.GetGitExtensionsFullPath();
+            return command;
         }
 
         private static string askToSpecify(IEnumerable<GitHead> options, string title)
