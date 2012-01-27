@@ -36,26 +36,10 @@ namespace GitUI.Script
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
-            /*
-
-            foreach (string option in Options)
-            {
-                if (string.IsNullOrEmpty(scriptInfo.Arguments) || !scriptInfo.Arguments.Contains(option))
-                    continue;
-                if (!option.StartsWith("{s") || RevisionGrid != null)
-                    continue;
-                MessageBox.Show(
-                    string.Format("Option {0} is only supported when started from revision grid.", option),
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-             */
-
-            RunScript(RevisionGrid, scriptInfo);
+            RunScript(scriptInfo, RevisionGrid);
         }
 
-        internal static void RunScript(RevisionGrid RevisionGrid, ScriptInfo scriptInfo)
+        internal static void RunScript(ScriptInfo scriptInfo, RevisionGrid RevisionGrid)
         {
             string command = scriptInfo.Command;
             string argument = scriptInfo.Arguments;
