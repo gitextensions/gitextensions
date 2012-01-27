@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Xml;
@@ -580,10 +578,9 @@ namespace GitUI.Editor.RichTextBoxExtension
             var v = e.LinkText.Split(new char[] {'#'}, 2);
             if (v.Length == 0)
                 return "";
-            else if (v.Length == 1)
+            if (v.Length == 1)
                 return v[0];
-            else
-                return v[1];
+            return v[1];
         }
 
         public static void GetLinkText(this LinkClickedEventArgs e, out string url, out string text)
@@ -604,261 +601,43 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         public static void SetXHTMLText(this RichTextBox rtb, string xhtmlText)
         {
-            rtb.Clear();
-
-            Stack<CHARFORMAT> scf = new Stack<CHARFORMAT>();
-            Stack<PARAFORMAT> spf = new Stack<PARAFORMAT>();
             List<KeyValuePair<int,int>> links = new List<KeyValuePair<int,int>>();
 
-            CHARFORMAT cf = rtb.GetDefaultCharFormat(); // to apply character formatting
-            PARAFORMAT pf = rtb.GetDefaultParaFormat(); // to apply paragraph formatting
-
+            rtb.Clear();
             rtb.HideSelection = true;
             int oldMask = rtb.BeginUpdate();
-            int hyperlinkStart = -1;
-            string hyperlink = null;
+            DoRTBUpdate(rtb, xhtmlText, links);
+            rtb.HideSelection = false;
+            rtb.EndUpdate(oldMask);
+        }
 
-            XmlReaderSettings settings = new XmlReaderSettings();
-            settings.ConformanceLevel = ConformanceLevel.Fragment;
-
+        private static void DoRTBUpdate(RichTextBox rtb, string xhtmlText, List<KeyValuePair<int, int>> links)
+        {
             try
             {
-                using (XmlReader reader = XmlReader.Create(new StringReader(xhtmlText), settings))
+                using (XmlReader reader = CreateXmlReaderFromTextAndSettings(xhtmlText, CreateXmlReaderSettings()))
                 {
-                    while (reader.Read())
-                    {
-                        switch (reader.NodeType)
-                        {
-                            case XmlNodeType.Element:
-                                switch (reader.Name.ToLower())
-                                {
-                                    case "b":
-                                        cf.dwMask |= CFM.WEIGHT | CFM.BOLD;
-                                        cf.dwEffects |= CFE.BOLD;
-                                        cf.wWeight = FW.BOLD;
-                                        break;
-                                    case "i":
-                                        cf.dwMask |= CFM.ITALIC;
-                                        cf.dwEffects |= CFE.ITALIC;
-                                        break;
-                                    case "u":
-                                        cf.dwMask |= CFM.UNDERLINE | CFM.UNDERLINETYPE;
-                                        cf.dwEffects |= CFE.UNDERLINE;
-                                        cf.bUnderlineType = CFU.UNDERLINE;
-                                        break;
-                                    case "s":
-                                        cf.dwMask |= CFM.STRIKEOUT;
-                                        cf.dwEffects |= CFE.STRIKEOUT;
-                                        break;
-                                    case "sup":
-                                        cf.dwMask |= CFM.SUPERSCRIPT;
-                                        cf.dwEffects |= CFE.SUPERSCRIPT;
-                                        break;
-                                    case "sub":
-                                        cf.dwMask |= CFM.SUBSCRIPT;
-                                        cf.dwEffects |= CFE.SUBSCRIPT;
-                                        break;
-                                    case "a":
-                                        hyperlinkStart = rtb.TextLength;
-                                        hyperlink = null;
-                                        while (reader.MoveToNextAttribute())
-                                        {
-                                            switch (reader.Name.ToLower())
-                                            {
-                                                case "href":
-                                                    hyperlink = reader.Value;
-                                                    break;
-                                            }
-                                        }
-                                        reader.MoveToElement();
-                                        break;
-                                    case "p":
-                                        spf.Push(pf);
-                                        while (reader.MoveToNextAttribute())
-                                        {
-                                            switch (reader.Name.ToLower())
-                                            {
-                                                case "align":
-                                                    if (reader.Value == "left")
-                                                    {
-                                                        pf.dwMask |= PFM.ALIGNMENT;
-                                                        pf.wAlignment = PFA.LEFT;
-                                                    }
-                                                    else if (reader.Value == "right")
-                                                    {
-                                                        pf.dwMask |= PFM.ALIGNMENT;
-                                                        pf.wAlignment = PFA.RIGHT;
-                                                    }
-                                                    else if (reader.Value == "center")
-                                                    {
-                                                        pf.dwMask |= PFM.ALIGNMENT;
-                                                        pf.wAlignment = PFA.CENTER;
-                                                    }
-                                                    break;
-                                            }
-                                        }
-                                        reader.MoveToElement();
-                                        break;
-                                    case "li":
-                                        spf.Push(pf);
-                                        if (pf.wNumbering != PFN.BULLET)
-                                        {
-                                            pf.dwMask |= PFM.NUMBERING;
-                                            pf.wNumbering = PFN.BULLET;
-                                        }
-                                        break;
-                                    case "font":
-                                        scf.Push(cf);;
-                                        string strFont = cf.szFaceName;
-                                        int crFont = cf.crTextColor;
-                                        int yHeight = cf.yHeight;
-
-                                        while (reader.MoveToNextAttribute())
-                                        {
-                                            switch (reader.Name.ToLower())
-                                            {
-                                                case "face":
-                                                    cf.dwMask |= CFM.FACE;
-                                                    strFont = reader.Value;
-                                                    break;
-                                                case "size":
-                                                    cf.dwMask |= CFM.SIZE;
-                                                    yHeight = int.Parse(reader.Value);
-                                                    yHeight *= (20 * 5);
-                                                    break;
-                                                case "color":
-                                                    cf.dwMask |= CFM.COLOR;
-                                                    string text = reader.Value;
-                                                    if (text.StartsWith("#"))
-                                                    {
-                                                        string strCr = text.Substring(1);
-                                                        int nCr = Convert.ToInt32(strCr, 16);
-                                                        Color color = Color.FromArgb(nCr);
-                                                        crFont = GetCOLORREF(color);
-                                                    }
-                                                    else if (!int.TryParse(text, out crFont))
-                                                    {
-                                                        Color color = Color.FromName(text);
-                                                        crFont = GetCOLORREF(color);
-                                                    }
-                                                    break;
-                                            }
-                                        }
-                                        reader.MoveToElement();
-
-                                        cf.szFaceName = strFont;
-                                        cf.crTextColor = crFont;
-                                        cf.yHeight = yHeight;
-
-                                        cf.dwEffects &= ~CFE.AUTOCOLOR;
-                                        break;
-                                }
-                                break;
-                            case XmlNodeType.EndElement:
-                                switch (reader.Name)
-                                {
-                                    case "b":
-                                        cf.dwEffects &= ~CFE.BOLD;
-                                        cf.wWeight = FW.NORMAL;
-                                        break;
-                                    case "i":
-                                        cf.dwEffects &= ~CFE.ITALIC;
-                                        break;
-                                    case "u":
-                                        cf.dwEffects &= ~CFE.UNDERLINE;
-                                        break;
-                                    case "s":
-                                        cf.dwEffects &= ~CFE.STRIKEOUT;
-                                        break;
-                                    case "sup":
-                                        cf.dwEffects &= ~CFE.SUPERSCRIPT;
-                                        break;
-                                    case "sub":
-                                        cf.dwEffects &= ~CFE.SUBSCRIPT;
-                                        break;
-                                    case "a":
-                                        int length = rtb.TextLength - hyperlinkStart;
-
-                                        if (hyperlink != null)
-                                        {
-                                            rtb.Select(hyperlinkStart, length);
-                                            if (hyperlink != rtb.SelectedText)
-                                            {
-                                                string rtfText = rtb.SelectedRtf;
-                                                int idx = rtfText.LastIndexOf('}');
-                                                if (idx != -1) 
-                                                {
-                                                    string head = rtfText.Substring(0, idx);
-                                                    string tail = rtfText.Substring(idx);
-                                                    rtb.SelectedRtf = head + @"\v #" + hyperlink + @"\v0" + tail;
-                                                    length = rtb.TextLength - hyperlinkStart;
-                                                }
-                                            }
-                                            // reposition to final
-                                            rtb.Select(rtb.TextLength + 1, 0);
-                                        }
-                                        links.Add(new KeyValuePair<int, int>(hyperlinkStart, length));
-
-                                        hyperlinkStart = -1;
-                                        break;
-                                    case "p":
-                                        pf = spf.Pop();
-                                        break;
-                                    case "li":
-                                        pf = spf.Pop();
-                                        break;
-                                    case "font":
-                                        cf = scf.Pop();
-                                        break;
-                                }
-                                break;
-                            case XmlNodeType.Text:
-                            case XmlNodeType.Whitespace:
-                            case XmlNodeType.SignificantWhitespace:
-                                string strData = reader.Value;
-                                bool bNewParagraph = (strData.IndexOf("\r\n", 0) >= 0) || (strData.IndexOf("\n", 0) >= 0);
-
-                                if (strData.Length > 0)
-                                {
-                                    // now, add text to control
-                                    int nStartCache = rtb.SelectionStart;
-
-                                    rtb.SelectedText = strData;
-
-                                    rtb.Select(nStartCache, strData.Length);
-
-                                    // apply format
-                                    rtb.SetParaFormat(pf);
-                                    rtb.SetCharFormat(cf);
-                                }
-
-                                // reposition to final
-                                rtb.Select(rtb.TextLength + 1, 0);
-
-                                // new paragraph requires to reset alignment
-                                if (bNewParagraph)
-                                {
-                                    pf.dwMask = PFM.ALIGNMENT | PFM.NUMBERING;
-                                    pf.wAlignment = PFA.LEFT;
-                                    pf.wNumbering = 0;
-                                }
-                                break;
-                            case XmlNodeType.XmlDeclaration:
-                            case XmlNodeType.ProcessingInstruction:
-                                break;
-                            case XmlNodeType.Comment:
-                                break;
-                            default:
-                                break;
-                        }
-                    }
+                    ReadFromReader(rtb, links, reader);
                 }
             }
-            catch (System.Xml.XmlException ex)
+            catch (XmlException ex)
             {
                 Debug.WriteLine(ex.Message);
             }
-            rtb.HideSelection = false;
+
+            applyLinkStyle(rtb, links);
+            // reposition to final
+            rtb.Select(rtb.TextLength + 1, 0);
+        }
+
+        private static XmlReaderSettings CreateXmlReaderSettings()
+        {
+            XmlReaderSettings settings = new XmlReaderSettings {ConformanceLevel = ConformanceLevel.Fragment};
+            return settings;
+        }
+
+        private static void applyLinkStyle(RichTextBox rtb, List<KeyValuePair<int, int>> links)
+        {
             // apply links style
             CHARFORMAT ncf = new CHARFORMAT(CFM.LINK, CFE.LINK);
             foreach (var pair in links)
@@ -866,9 +645,290 @@ namespace GitUI.Editor.RichTextBoxExtension
                 rtb.Select(pair.Key, pair.Value);
                 rtb.SetCharFormat(ncf);
             }
+        }
+
+        private static XmlReader CreateXmlReaderFromTextAndSettings(string xhtmlText, XmlReaderSettings settings)
+        {
+            return XmlReader.Create(new StringReader(xhtmlText), settings);
+        }
+
+        private static void ReadFromReader(RichTextBox rtb, List<KeyValuePair<int, int>> links,
+                                           XmlReader reader)
+        {
+            CHARFORMAT cf = rtb.GetDefaultCharFormat(); // to apply character formatting
+            PARAFORMAT pf = rtb.GetDefaultParaFormat(); // to apply paragraph formatting
+
+            Stack<CHARFORMAT> scf = new Stack<CHARFORMAT>();
+            Stack<PARAFORMAT> spf = new Stack<PARAFORMAT>();
+
+            int hyperlinkStart = -1;
+            string hyperlink = null;
+            while (reader.Read())
+            {
+                switch (reader.NodeType)
+                {
+                    case XmlNodeType.Element:
+                        switch (reader.Name.ToLower())
+                        {
+                            case "b":
+                                cf.dwMask |= CFM.WEIGHT | CFM.BOLD;
+                                cf.dwEffects |= CFE.BOLD;
+                                cf.wWeight = FW.BOLD;
+                                break;
+                            case "i":
+                                cf.dwMask |= CFM.ITALIC;
+                                cf.dwEffects |= CFE.ITALIC;
+                                break;
+                            case "u":
+                                cf.dwMask |= CFM.UNDERLINE | CFM.UNDERLINETYPE;
+                                cf.dwEffects |= CFE.UNDERLINE;
+                                cf.bUnderlineType = CFU.UNDERLINE;
+                                break;
+                            case "s":
+                                cf.dwMask |= CFM.STRIKEOUT;
+                                cf.dwEffects |= CFE.STRIKEOUT;
+                                break;
+                            case "sup":
+                                cf.dwMask |= CFM.SUPERSCRIPT;
+                                cf.dwEffects |= CFE.SUPERSCRIPT;
+                                break;
+                            case "sub":
+                                cf.dwMask |= CFM.SUBSCRIPT;
+                                cf.dwEffects |= CFE.SUBSCRIPT;
+                                break;
+                            case "a":
+                                hyperlinkStart = HandleHyperlinkStart(rtb, reader, out hyperlink);
+                                break;
+                            case "p":
+                                pf = HandleParagraphElement(reader, pf, spf);
+                                break;
+                            case "li":
+                                pf = HandleListItem(pf, spf);
+                                break;
+                            case "font":
+                                cf = HandleFontElement(reader, cf, scf);
+                                break;
+                        }
+                        break;
+                    case XmlNodeType.EndElement:
+                        switch (reader.Name)
+                        {
+                            case "b":
+                                cf.dwEffects &= ~CFE.BOLD;
+                                cf.wWeight = FW.NORMAL;
+                                break;
+                            case "i":
+                                cf.dwEffects &= ~CFE.ITALIC;
+                                break;
+                            case "u":
+                                cf.dwEffects &= ~CFE.UNDERLINE;
+                                break;
+                            case "s":
+                                cf.dwEffects &= ~CFE.STRIKEOUT;
+                                break;
+                            case "sup":
+                                cf.dwEffects &= ~CFE.SUPERSCRIPT;
+                                break;
+                            case "sub":
+                                cf.dwEffects &= ~CFE.SUBSCRIPT;
+                                break;
+                            case "a":
+                                hyperlinkStart = HandleHyperlinkEnd(rtb, links, hyperlinkStart, hyperlink);
+                                break;
+                            case "p":
+                                pf = spf.Pop();
+                                break;
+                            case "li":
+                                pf = spf.Pop();
+                                break;
+                            case "font":
+                                cf = scf.Pop();
+                                break;
+                        }
+                        break;
+                    case XmlNodeType.Text:
+                    case XmlNodeType.Whitespace:
+                    case XmlNodeType.SignificantWhitespace:
+                        pf = HandleTextAndWhitespace(rtb, pf, cf, reader.Value);
+                        break;
+                    case XmlNodeType.XmlDeclaration:
+                    case XmlNodeType.ProcessingInstruction:
+                        break;
+                    case XmlNodeType.Comment:
+                        break;
+                }
+            }
+        }
+
+        private static int HandleHyperlinkEnd(RichTextBox rtb, List<KeyValuePair<int, int>> links, int hyperlinkStart, string hyperlink)
+        {
+            int length = rtb.TextLength - hyperlinkStart;
+
+            if (hyperlink != null)
+            {
+                rtb.Select(hyperlinkStart, length);
+                if (hyperlink != rtb.SelectedText)
+                {
+                    string rtfText = rtb.SelectedRtf;
+                    int idx = rtfText.LastIndexOf('}');
+                    if (idx != -1)
+                    {
+                        string head = rtfText.Substring(0, idx);
+                        string tail = rtfText.Substring(idx);
+                        rtb.SelectedRtf = head + @"\v #" + hyperlink + @"\v0" + tail;
+                        length = rtb.TextLength - hyperlinkStart;
+                    }
+                }
+                // reposition to final
+                rtb.Select(rtb.TextLength + 1, 0);
+            }
+            links.Add(new KeyValuePair<int, int>(hyperlinkStart, length));
+
+            hyperlinkStart = -1;
+            return hyperlinkStart;
+        }
+
+        private static PARAFORMAT HandleListItem(PARAFORMAT pf, Stack<PARAFORMAT> spf)
+        {
+            spf.Push(pf);
+            if (pf.wNumbering != PFN.BULLET)
+            {
+                pf.dwMask |= PFM.NUMBERING;
+                pf.wNumbering = PFN.BULLET;
+            }
+            return pf;
+        }
+
+        private static int HandleHyperlinkStart(RichTextBox rtb, XmlReader reader, out string hyperlink)
+        {
+            int hyperlinkStart;
+            hyperlinkStart = rtb.TextLength;
+            hyperlink = null;
+            while (reader.MoveToNextAttribute())
+            {
+                switch (reader.Name.ToLower())
+                {
+                    case "href":
+                        hyperlink = reader.Value;
+                        break;
+                }
+            }
+            reader.MoveToElement();
+            return hyperlinkStart;
+        }
+
+        private static CHARFORMAT HandleFontElement(XmlReader reader, CHARFORMAT cf, Stack<CHARFORMAT> scf)
+        {
+            scf.Push(cf);
+            ;
+            string strFont = cf.szFaceName;
+            int crFont = cf.crTextColor;
+            int yHeight = cf.yHeight;
+
+            while (reader.MoveToNextAttribute())
+            {
+                switch (reader.Name.ToLower())
+                {
+                    case "face":
+                        cf.dwMask |= CFM.FACE;
+                        strFont = reader.Value;
+                        break;
+                    case "size":
+                        cf.dwMask |= CFM.SIZE;
+                        yHeight = int.Parse(reader.Value);
+                        yHeight *= (20*5);
+                        break;
+                    case "color":
+                        cf.dwMask |= CFM.COLOR;
+                        string text = reader.Value;
+                        if (text.StartsWith("#"))
+                        {
+                            string strCr = text.Substring(1);
+                            int nCr = Convert.ToInt32(strCr, 16);
+                            Color color = Color.FromArgb(nCr);
+                            crFont = GetCOLORREF(color);
+                        }
+                        else if (!int.TryParse(text, out crFont))
+                        {
+                            Color color = Color.FromName(text);
+                            crFont = GetCOLORREF(color);
+                        }
+                        break;
+                }
+            }
+            reader.MoveToElement();
+
+            cf.szFaceName = strFont;
+            cf.crTextColor = crFont;
+            cf.yHeight = yHeight;
+
+            cf.dwEffects &= ~CFE.AUTOCOLOR;
+            return cf;
+        }
+
+        private static PARAFORMAT HandleParagraphElement(XmlReader reader, PARAFORMAT pf, Stack<PARAFORMAT> spf)
+        {
+            spf.Push(pf);
+            while (reader.MoveToNextAttribute())
+            {
+                pf = HandleParagraphAlignmentElement(pf, reader.Name, reader.Value);
+            }
+            reader.MoveToElement();
+            return pf;
+        }
+
+        private static PARAFORMAT HandleParagraphAlignmentElement(PARAFORMAT pf, string currentName, string currentValue)
+        {
+            if (currentName.ToLower() == "align")
+            {
+                if (currentValue == "left")
+                {
+                    pf.dwMask |= PFM.ALIGNMENT;
+                    pf.wAlignment = PFA.LEFT;
+                }
+                else if (currentValue == "right")
+                {
+                    pf.dwMask |= PFM.ALIGNMENT;
+                    pf.wAlignment = PFA.RIGHT;
+                }
+                else if (currentValue == "center")
+                {
+                    pf.dwMask |= PFM.ALIGNMENT;
+                    pf.wAlignment = PFA.CENTER;
+                }
+            }
+            return pf;
+        }
+
+        private static PARAFORMAT HandleTextAndWhitespace(RichTextBox rtb, PARAFORMAT pf, CHARFORMAT cf, string strData)
+        {
+            bool bNewParagraph = (strData.IndexOf("\r\n", 0) >= 0) || (strData.IndexOf("\n", 0) >= 0);
+
+            if (strData.Length > 0)
+            {
+                // now, add text to control
+                int nStartCache = rtb.SelectionStart;
+
+                rtb.SelectedText = strData;
+
+                rtb.Select(nStartCache, strData.Length);
+
+                // apply format
+                rtb.SetParaFormat(pf);
+                rtb.SetCharFormat(cf);
+            }
+
             // reposition to final
             rtb.Select(rtb.TextLength + 1, 0);
-            rtb.EndUpdate(oldMask);
+
+            // new paragraph requires to reset alignment
+            if (bNewParagraph)
+            {
+                pf.dwMask = PFM.ALIGNMENT | PFM.NUMBERING;
+                pf.wAlignment = PFA.LEFT;
+                pf.wNumbering = 0;
+            }
+            return pf;
         }
     }
 }
