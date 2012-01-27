@@ -22,6 +22,36 @@ namespace GitUI.Script
             if (string.IsNullOrEmpty(scriptInfo.Command))
                 return;
 
+            string argument = scriptInfo.Arguments;
+            foreach (string option in Options)
+            {
+                if (string.IsNullOrEmpty(argument) || !argument.Contains(option))
+                    continue;
+                if (!option.StartsWith("{s"))
+                    continue;
+                if (RevisionGrid != null)
+                    continue;
+                MessageBox.Show(
+                    string.Format("Option {0} is only supported when started from revision grid.", option),
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            /*
+
+            foreach (string option in Options)
+            {
+                if (string.IsNullOrEmpty(scriptInfo.Arguments) || !scriptInfo.Arguments.Contains(option))
+                    continue;
+                if (!option.StartsWith("{s") || RevisionGrid != null)
+                    continue;
+                MessageBox.Show(
+                    string.Format("Option {0} is only supported when started from revision grid.", option),
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+             */
+
             RunScript(RevisionGrid, scriptInfo);
         }
 
@@ -55,14 +85,6 @@ namespace GitUI.Script
                 }
                 else
                 {
-                    if (RevisionGrid == null)
-                    {
-                        MessageBox.Show(
-                            string.Format("Option {0} is only supported when started from revision grid.", option),
-                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-
                     selectedRevision = CalculateSelectedRevision(RevisionGrid, selectedRemoteBranches, selectedRemotes, selectedLocalBranches, selectedBranches, selectedTags);
                 }
 
@@ -207,8 +229,6 @@ namespace GitUI.Script
                         SimplePrompt Prompt = new SimplePrompt();
                         Prompt.ShowDialog();
                         argument = argument.Replace(option, Prompt.UserInput);
-                        break;
-                    default:
                         break;
                 }
             }
