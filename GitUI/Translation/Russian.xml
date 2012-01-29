@@ -461,6 +461,9 @@
         <TranslationItem Name="cloneToolStripMenuItem" Property="Text">
           <Value>Клонировать репозиторий</Value>
         </TranslationItem>
+        <TranslationItem Name="cloneSVNToolStripMenuItem" Property="Text">
+          <Value>Клонировать SVN репозиторий</Value>
+        </TranslationItem>
         <TranslationItem Name="branchToolStripMenuItem" Property="Text">
           <Value>Создать ветку</Value>
         </TranslationItem>
@@ -806,6 +809,9 @@
         </TranslationItem>
         <TranslationItem Name="cloneRepository" Property="Text">
           <Value>Клонировать репозиторий</Value>
+        </TranslationItem>
+        <TranslationItem Name="cloneSvnRepository" Property="Text">
+          <Value>Клонировать SVN репозиторий</Value>
         </TranslationItem>
         <TranslationItem Name="createRepository" Property="Text">
           <Value>Создать новый репозиторий</Value>
@@ -1311,6 +1317,46 @@
         </TranslationItem>
         <TranslationItem Name="brachLabel" Property="Text">
           <Value>Ветка</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormSvnClone">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Клонирование из SVN</Value>
+        </TranslationItem>
+        <TranslationItem Name="browseButton" Property="Text">
+          <Value>Обзор</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>SVN репозиторий для клонирования</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Назначение</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>Поддиректория для создания</Value>
+        </TranslationItem>
+        <TranslationItem Name="okButton" Property="Text">
+          <Value>Клонировать</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorsFileBrowseButton" Property="Text">
+          <Value>Обзор</Value>
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text">
+          <Value>Файл авторов</Value>
+        </TranslationItem>
+        <TranslationItem Name="_questionOpenRepo" Property="Text">
+          <Value>Клонирование репозитория прошло успешно. Хотите открыть новый репозиторий "{0}" прямо сейчас?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_questionOpenRepoCaption" Property="Text">
+          <Value>Открыть</Value>
+        </TranslationItem>
+        <TranslationItem Name="_questionContinueWithoutAuthors" Property="Text">
+          <Value>Файл авторов "{0}" не существует. Продолжить без него?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_questionContinueWithoutAuthorsCaption" Property="Text">
+          <Value>Файл авторов</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

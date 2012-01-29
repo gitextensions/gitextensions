@@ -132,6 +132,12 @@
     <Compile Include="FormSelectMultipleBranches.Designer.cs">
       <DependentUpon>FormSelectMultipleBranches.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormSvnClone.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSvnClone.Designer.cs">
+      <DependentUpon>FormSvnClone.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormVerify.LostObject.cs">
       <DependentUpon>FormVerify.cs</DependentUpon>
       <SubType>Form</SubType>
@@ -747,6 +753,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormSelectMultipleBranches.resx">
       <DependentUpon>FormSelectMultipleBranches.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormSvnClone.resx">
+      <DependentUpon>FormSvnClone.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormViewPatch.resx">
       <DependentUpon>FormViewPatch.cs</DependentUpon>
