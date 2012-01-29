@@ -45,7 +45,7 @@ namespace GitUI
             {
                 Settings.WorkingDir = _NO_TRANSLATE_Directory.Text;
 
-                Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
+                Repositories.AddMostRecentRepository(Settings.WorkingDir);
 
                 Close();
             }

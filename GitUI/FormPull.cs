@@ -244,7 +244,7 @@ namespace GitUI
                 }
             }
 
-            Repositories.RepositoryHistory.AddMostRecentRepository(PullSource.Text);
+            Repositories.AddMostRecentRepository(PullSource.Text);
 
             string source;
 
