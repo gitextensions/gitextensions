@@ -166,7 +166,7 @@ namespace GitUI
             IndexWatcher.Reset();
         }
 
-        private void TreeView1AfterSelect(object sender, TreeViewEventArgs e)
+        private void GitTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
             var item = e.Node.Tag as GitItem;
             if (item == null)
@@ -751,6 +751,10 @@ namespace GitUI
                     if (lastMatchedNode != matchedNode)
                         FileText.ResetCurrentScrollPos();
                     GitTree.SelectedNode = lastMatchedNode;
+                }
+                if (GitTree.SelectedNode == null)
+                {
+                    FileText.ViewText("", "");
                 }
             }
             finally
