@@ -160,10 +160,7 @@ namespace GitUI
 
         private void DashboardWorkingDirChanged(object sender, EventArgs e)
         {
-            IndexWatcher.Clear();
-            RevisionGrid.ForceRefreshRevisions();
-            InternalInitialize(false);
-            IndexWatcher.Reset();
+            WorkingDirChanged(false);
         }
 
         private void GitTree_AfterSelect(object sender, TreeViewEventArgs e)
@@ -224,7 +221,7 @@ namespace GitUI
         /// <summary>
         ///   Execute plugin
         /// </summary>
-        private static void ItemClick(object sender, EventArgs e)
+        private void ItemClick(object sender, EventArgs e)
         {
             var menuItem = sender as ToolStripMenuItem;
             if (menuItem == null)
@@ -235,7 +232,11 @@ namespace GitUI
                 return;
 
             var eventArgs = new GitUIEventArgs(GitUICommands.Instance);
+
+            string workingDirBefore = Settings.WorkingDir;
             plugin.Execute(eventArgs);
+            if (workingDirBefore != Settings.WorkingDir)
+                WorkingDirChanged(false);
         }
 
         private void ActionOnRepositoryPerformed(object sender, EventArgs e)
@@ -1025,10 +1026,7 @@ namespace GitUI
         {
             if (new Open().ShowDialog(this) == DialogResult.OK)
             {
-                IndexWatcher.Clear();
-                RevisionGrid.ForceRefreshRevisions();
-                InternalInitialize(false);
-                IndexWatcher.Reset();
+                WorkingDirChanged(false);
             }
         }
 
@@ -1633,11 +1631,7 @@ namespace GitUI
         private void CloseToolStripMenuItemClick(object sender, EventArgs e)
         {
             Settings.WorkingDir = "";
-
-            IndexWatcher.Clear();
-            RevisionGrid.ForceRefreshRevisions();
-            InternalInitialize(false);
-            IndexWatcher.Reset();
+            WorkingDirChanged(false);
         }
 
         public override void CancelButtonClick(object sender, EventArgs e)
@@ -1648,11 +1642,7 @@ namespace GitUI
                 return;
             }
             Settings.WorkingDir = "";
-
-            IndexWatcher.Clear();
-            RevisionGrid.ForceRefreshRevisions();
-            InternalInitialize(false);
-            IndexWatcher.Reset();
+            WorkingDirChanged(false);
         }
 
         private void GitTreeMouseDown(object sender, MouseEventArgs e)
@@ -2300,7 +2290,15 @@ namespace GitUI
           }
 
           openContainingFolderToolStripMenuItem.Enabled = false;
-        }        
+        }
+
+        private void WorkingDirChanged(bool internalInitialize)
+        {
+            IndexWatcher.Clear();
+            RevisionGrid.ForceRefreshRevisions();
+            InternalInitialize(internalInitialize);
+            IndexWatcher.Reset();
+        }
 
     }
 }
