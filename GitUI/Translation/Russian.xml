@@ -396,7 +396,7 @@
           <Value>Локальные</Value>
         </TranslationItem>
         <TranslationItem Name="remoteToolStripMenuItem" Property="Text">
-          <Value>Удаленные</Value>
+          <Value>Внешние</Value>
         </TranslationItem>
         <TranslationItem Name="committerToolStripMenuItem" Property="Text">
           <Value>Автор коммита</Value>
@@ -627,7 +627,7 @@
           <Value>Удалить</Value>
         </TranslationItem>
         <TranslationItem Name="_deleteUntrackedFiles" Property="Text">
-          <Value>Вы точно хотите удалить все untracked  файлы?</Value>
+          <Value>Вы точно хотите удалить все untracked файлы?</Value>
         </TranslationItem>
         <TranslationItem Name="_deleteUntrackedFilesCaption" Property="Text">
           <Value>Удалить untracked файлы.</Value>
@@ -651,7 +651,7 @@
           <Value>Нет сохранённых файлов для этого коммита.</Value>
         </TranslationItem>
         <TranslationItem Name="_noFilesStagedButSuggestToCommitAllUnstaged" Property="Text">
-          <Value>Нет сохраненных файлов для этого коммита.
+          <Value>Нет сохранённых файлов для этого коммита.
 Сохранить и коммитить все изменённые файлы?</Value>
         </TranslationItem>
         <TranslationItem Name="_noFilesStagedAndConfirmAnEmptyMergeCommit" Property="Text">
@@ -662,7 +662,7 @@
           <Value>Сохраненных изменений нет</Value>
         </TranslationItem>
         <TranslationItem Name="_noUnstagedChanges" Property="Text">
-          <Value>Не сохраненных изменений нет</Value>
+          <Value>Несохранённых изменений нет</Value>
         </TranslationItem>
         <TranslationItem Name="_notOnBranch" Property="Text">
           <Value>Вы работаете не в ветке.
@@ -1102,7 +1102,7 @@
           <Value>Редактировать строки игнорирования</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
-          <Value>Не один файл не соответствует шаблону.</Value>
+          <Value>Ни один файл не соответствует шаблону.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1191,7 +1191,7 @@
         <TranslationItem Name="trackRemoteBranch" Property="Text">
           <Value>Вы выбрали внешнюю ветку.
 
-Хотите создать локальную ветку с именем '{0}',
+Хотите создать локальную ветку с именем «{0}»,
 которая будет следить за внешней веткой?</Value>
         </TranslationItem>
         <TranslationItem Name="trackRemoteBranchCaption" Property="Text">
@@ -1233,7 +1233,7 @@
           <Value>Очистить репозиторий</Value>
         </TranslationItem>
         <TranslationItem Name="_reallyCleanupQuestion" Property="Text">
-          <Value>Вы уверены что хотите очистить репозиторий?</Value>
+          <Value>Вы уверены, что хотите очистить репозиторий?</Value>
         </TranslationItem>
         <TranslationItem Name="Preview" Property="Text">
           <Value>Предварительный просмотр</Value>
@@ -1248,7 +1248,7 @@
           <Value>Очистить репозиторий</Value>
         </TranslationItem>
         <TranslationItem Name="RemoveIngnored" Property="Text">
-          <Value>Удалить только игнорируемы untracked файлы</Value>
+          <Value>Удалить только игнорируемые untracked файлы</Value>
         </TranslationItem>
         <TranslationItem Name="RemoveNonIgnored" Property="Text">
           <Value>Удалить только неигнорируемые untracked файлы</Value>
@@ -1706,13 +1706,13 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Решить конфликты</Value>
         </TranslationItem>
         <TranslationItem Name="Merge" Property="Text">
-          <Value>Объединить удаленную и локальную ветки (merge)</Value>
+          <Value>Объединить локальную и внешнюю ветки (merge)</Value>
         </TranslationItem>
         <TranslationItem Name="Rebase" Property="Text">
-          <Value>Переставить локальную ветку над удалённой (rebase)</Value>
+          <Value>Переставить локальную ветку над внешней (rebase)</Value>
         </TranslationItem>
         <TranslationItem Name="Fetch" Property="Text">
-          <Value>Только получить удалённую ветку, не объединяя с локальной (fetch)</Value>
+          <Value>Только получить внешнюю ветку, не объединяя с локальной (fetch)</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Value>Опции слияния</Value>
@@ -1826,7 +1826,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Ошибка аутентификации</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
-          <Value>Выполнение комманды закончилось с ошибкой, что как правило означает, что аутентификационный агент PuTTY не запущен, или что не загружен правильный секретный ключ.
+          <Value>Выполнение команды закончилось с ошибкой, что как правило означает, что аутентификационный агент PuTTY не запущен, или что не загружен правильный секретный ключ.
 
 Когда ключ будет загружен, можете нажать Повтор.</Value>
         </TranslationItem>
@@ -1884,10 +1884,10 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Поведение по умолчанию (fetch &amp; merge)</Value>
         </TranslationItem>
         <TranslationItem Name="UpdateBranch" Property="Text">
-          <Value>Обновить информацию о всех удаленных ветках</Value>
+          <Value>Обновить внешние ветки</Value>
         </TranslationItem>
         <TranslationItem Name="Prune" Property="Text">
-          <Value>Удаление удаленных веток</Value>
+          <Value>Удалить несуществующие ветки</Value>
         </TranslationItem>
         <TranslationItem Name="label5" Property="Text">
           <Value>Удаленный репозиторий</Value>
@@ -2059,7 +2059,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         </TranslationItem>
         <TranslationItem Name="fileModifiedLocallyAndDelededRemotelyLong" Property="Text">
           <Value>У файла {0} не существует удаленой ревизии.
-Файл был изменен  локально({1}) и удален удаленно({2}).
+Файл был изменен локально({1}) и удален удаленно({2}).
 
 Можно оставить локальную версию или удалить файл.</Value>
         </TranslationItem>
@@ -2315,7 +2315,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Сохранить и пересканировать</Value>
         </TranslationItem>
         <TranslationItem Name="label12" Property="Text">
-          <Value>Ограничить количество коммитов, которые будут загружены при запуске.</Value>
+          <Value>Ограничить количество загружаемых при запуске коммитов</Value>
         </TranslationItem>
         <TranslationItem Name="BrowseGitPath" Property="Text">
           <Value>Обзор</Value>
@@ -2390,7 +2390,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
 необходимо установить корректный путь к git.cmd.</Value>
         </TranslationItem>
         <TranslationItem Name="label22" Property="Text">
-          <Value>Словарь для проверки орфографии.</Value>
+          <Value>Словарь для проверки орфографии</Value>
         </TranslationItem>
         <TranslationItem Name="label23" Property="Text">
           <Value>Smtp сервер для отправки патчей почтой</Value>
@@ -2414,7 +2414,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Цвет добавленной строки</Value>
         </TranslationItem>
         <TranslationItem Name="label33" Property="Text">
-          <Value>Цвет удаленной ветки</Value>
+          <Value>Цвет внешней ветки</Value>
         </TranslationItem>
         <TranslationItem Name="label36" Property="Text">
           <Value>Цвет другой метки</Value>
@@ -2425,6 +2425,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <TranslationItem Name="label32" Property="Text">
           <Value>Цвет ветки</Value>
         </TranslationItem>
+        <TranslationItem Name="label56" Property="Text">
+          <Value>Шрифт</Value>
+        </TranslationItem>
         <TranslationItem Name="label30" Property="Text">
           <Value>Сохранять копию (.orig) после слияния</Value>
         </TranslationItem>
@@ -2432,7 +2435,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Сохранять копию (.orig) после слияния</Value>
         </TranslationItem>
         <TranslationItem Name="label35" Property="Text">
-          <Value>Показывать коммандную строку git во время исполнения</Value>
+          <Value>Показывать командную строку git во время исполнения</Value>
         </TranslationItem>
         <TranslationItem Name="label34" Property="Text">
           <Value>Закрывать диалог прогресса, когда процесс успешно завершился</Value>
@@ -2444,7 +2447,13 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Использовать FileSystemWatcher для уведомлений об изменении index</Value>
         </TranslationItem>
         <TranslationItem Name="label40" Property="Text">
-          <Value>Показывать переименования в истории файла (эксперементально)</Value>
+          <Value>Показывать переименования в истории файла (экспериментально)</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelShowCurrentBranchInVisualStudio" Property="Text">
+          <Value>Показывать имя текущей ветки в Visual Studio</Value>
+        </TranslationItem>
+        <TranslationItem Name="label26" Property="Text">
+          <Value>Показывать текущие изменения в списке коммитов (медленно!)</Value>
         </TranslationItem>
         <TranslationItem Name="BrowseDiffTool" Property="Text">
           <Value>Обзор</Value>
@@ -2543,7 +2552,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Скрипты</Value>
         </TranslationItem>
         <TranslationItem Name="inMenuCheckBox" Property="Text">
-          <Value>Добавить ревизию к контекстному меню таблицы</Value>
+          <Value>Добавить к контекстному меню списка коммитов</Value>
         </TranslationItem>
         <TranslationItem Name="label53" Property="Text">
           <Value>Нет сервиса картинок</Value>
@@ -2603,7 +2612,10 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Включить</Value>
         </TranslationItem>
         <TranslationItem Name="labelOnEvent" Property="Text">
-          <Value>При событие:</Value>
+          <Value>При событии:</Value>
+        </TranslationItem>
+        <TranslationItem Name="scriptNeedsConfirmation" Property="Text">
+          <Value>Спрашивать подтверждение</Value>
         </TranslationItem>
         <TranslationItem Name="label37" Property="Text">
           <Value>Показывать граф ревизий в логе коммитов</Value>
@@ -2643,7 +2655,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Имя</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
-          <Value>Удаленная ветка</Value>
+          <Value>Внешняя ветка</Value>
         </TranslationItem>
         <TranslationItem Name="label5" Property="Text">
           <Value>Ветка</Value>
@@ -2882,7 +2894,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Редактировать .gitignore</Value>
         </TranslationItem>
         <TranslationItem Name="ShowRemoteBranches" Property="Text">
-          <Value>Показывать удаленные ветки</Value>
+          <Value>Показывать внешние ветки</Value>
         </TranslationItem>
         <TranslationItem Name="showBranchesToolStripMenuItem" Property="Text">
           <Value>Показывать ветки</Value>
