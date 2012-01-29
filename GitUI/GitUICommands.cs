@@ -52,8 +52,17 @@ namespace GitUI
         public event GitUIEventHandler PreClone;
         public event GitUIEventHandler PostClone;
 
+        public event GitUIEventHandler PreSvnClone;
+        public event GitUIEventHandler PostSvnClone;
+
         public event GitUIEventHandler PreCommit;
         public event GitUIEventHandler PostCommit;
+        
+        public event GitUIEventHandler PreSvnDcommit;
+        public event GitUIEventHandler PostSvnDcommit;
+
+        public event GitUIEventHandler PreSvnRebase;
+        public event GitUIEventHandler PostSvnRebase;
 
         public event GitUIEventHandler PreInitialize;
         public event GitUIEventHandler PostInitialize;
@@ -152,6 +161,26 @@ namespace GitUI
             if (!Settings.Module.ValidWorkingDir())
             {
                 MessageBox.Show("The current directory is not a valid git repository.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool RequiredValidGitSvnWorikingDir()
+        {
+            if (!RequiresValidWorkingDir()) 
+                return false;
+
+            if (!GitSvnCommandHelpers.ValidSvnWorkingDir())
+            {
+                MessageBox.Show("The current directory is not a valid git-svn repository.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            if (!GitSvnCommandHelpers.CheckRefsRemoteSvn())
+            {
+                MessageBox.Show("Unable to determine upstream SVN information.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -374,6 +403,19 @@ namespace GitUI
             return StartCloneDialog(null, null);
         }
 
+        public bool StartSvnCloneDialog(IWin32Window owner)
+        {
+            if (!InvokeEvent(PreSvnClone))
+                return false;
+
+            var form = new FormSvnClone();
+            form.ShowDialog(owner);
+
+            InvokeEvent(PostSvnClone);
+
+            return true;
+        }
+
         public bool StartCommitDialog(IWin32Window owner)
         {
             if (!RequiresValidWorkingDir())
@@ -389,6 +431,38 @@ namespace GitUI
 
             if (!form.NeedRefresh)
                 return false;
+
+            return true;
+        }
+
+        public bool StartSvnDcommitDialog(IWin32Window owner)
+        {
+            if (!RequiredValidGitSvnWorikingDir())
+                return false;
+
+           if (!InvokeEvent(PreSvnDcommit))
+                return true;
+
+            var fromProcess = new FormProcess(Settings.GitCommand, GitSvnCommandHelpers.DcommitCmd());
+            fromProcess.ShowDialog(owner);
+            
+            InvokeEvent(PostSvnDcommit);
+
+            return true;
+        }
+
+        public bool StartSvnRebaseDialog(IWin32Window owner)
+        {
+            if (!RequiredValidGitSvnWorikingDir())
+                return false;
+
+            if (!InvokeEvent(PreSvnRebase))
+                return true;
+
+            var fromProcess = new FormProcess(Settings.GitCommand, GitSvnCommandHelpers.RebaseCmd());
+            fromProcess.ShowDialog(owner);
+
+            InvokeEvent(PostSvnRebase);
 
             return true;
         }

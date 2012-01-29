@@ -2300,6 +2300,24 @@ namespace GitUI
           }
 
           openContainingFolderToolStripMenuItem.Enabled = false;
+        }
+
+        private void CloneSvnToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (GitUICommands.Instance.StartSvnCloneDialog((IWin32Window)this))
+                Initialize();
+        }
+
+        private void SvnRebaseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (GitUICommands.Instance.StartSvnRebaseDialog(this))
+                Initialize();
+        }
+
+        private void SvnDcommitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (GitUICommands.Instance.StartSvnDcommitDialog(this))
+                Initialize();
         }        
 
     }
