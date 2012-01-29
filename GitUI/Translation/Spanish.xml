@@ -755,7 +755,7 @@ al árbol ancestro común.
           <Value>Forzar</Value>
         </TranslationItem>
         <TranslationItem Name="trackRemoteBranch" Property="Text">
-          <Value>Elijes hacer un checkout de una rama remota. 
+          <Value>Has elegido hacer un checkout de una rama remota. 
 
 ¿Quieres crear una rama local con el nombre "{0}"
 que hace seguimiento de esta rama remota?</Value>
@@ -2611,7 +2611,7 @@ Elija eliminar el archivo o mantener la versión modificada.</Value>
           <Value>eliminado</Value>
         </TranslationItem>
         <TranslationItem Name="chooseLocalButtonText" Property="Text">
-          <Value>Elijar local</Value>
+          <Value>Elegir local</Value>
         </TranslationItem>
         <TranslationItem Name="chooseRemoteButtonText" Property="Text">
           <Value>Elegir remoto</Value>
@@ -2958,7 +2958,7 @@ Compruebe que el archivo esté accesible.
           <Value>Seleccionar manualmente este commit:</Value>
         </TranslationItem>
         <TranslationItem Name="Pick" Property="Text">
-          <Value>Elejir este commit</Value>
+          <Value>Elegir este commit</Value>
         </TranslationItem>
         <TranslationItem Name="AutoCommit" Property="Text">
           <Value>Crea automáticamente un commit</Value>
