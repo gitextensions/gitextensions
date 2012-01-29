@@ -47,10 +47,10 @@ namespace GitUI
 
         private void SaveClick(object sender, EventArgs e)
         {
-            SaveGitIgnore(true);
+            SaveGitIgnore();
         }
 
-        private void SaveGitIgnore(bool closeAfterSave)
+        private void SaveGitIgnore()
         {
             try
             {
@@ -60,6 +60,8 @@ namespace GitUI
                         x =>
                         {
                             this.GitIgnoreFile = _NO_TRANSLATE_GitIgnoreEdit.GetText();
+                            if (!this.GitIgnoreFile.EndsWith(Environment.NewLine))
+                                this.GitIgnoreFile += Environment.NewLine;
                             File.WriteAllBytes(x,Settings.Encoding.GetBytes(this.GitIgnoreFile));
                         });
             }
@@ -121,7 +123,7 @@ namespace GitUI
 
         private void AddPattern_Click(object sender, EventArgs e)
         {
-            SaveGitIgnore(false);
+            SaveGitIgnore();
             new FormAddToGitIgnore("*.dll").ShowDialog(this);
             LoadGitIgnore();
         }
