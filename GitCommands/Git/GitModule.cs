@@ -1044,6 +1044,10 @@ namespace GitCommands
             return result;
         }
 
+        public string FormatPullRequest(string start, string url)
+        {
+            return RunCmd(Settings.GitCommand, "request-pull " + start + " " + url);
+        }
 
         public string Tag(string tagName, string revision, bool annotation)
         {

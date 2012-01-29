@@ -1140,6 +1140,11 @@ namespace GitUI
                 Initialize();
         }
 
+        private void FormatPullRequestToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            GitUICommands.Instance.StartFormatPullRequestDialog(this);
+        }
+
         private void GitcommandLogToolStripMenuItemClick(object sender, EventArgs e)
         {
             new GitLogForm().Show();
