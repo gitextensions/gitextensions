@@ -1987,12 +1987,19 @@ namespace GitUI
 
         void BranchSelectToolStripItem_Click(object sender, EventArgs e)
         {
-            var toolStripItem = (ToolStripItem)sender;
+            bool needRefresh;
+            if (!GitUICommands.Instance.CheckForDirtyDir(this, out needRefresh))
+            {
+                var toolStripItem = (ToolStripItem)sender;
 
-            var command = string.Format("checkout \"{0}\"", toolStripItem.Text);
-            var form = new FormProcess(command);
-            form.ShowDialog(this);
-            Initialize();
+                var command = string.Format("checkout \"{0}\"", toolStripItem.Text);
+                var form = new FormProcess(command);
+                form.ShowDialog(this);
+                needRefresh = true;
+            }
+
+            if (needRefresh)
+                Initialize();
         }
 
         private void diffContainsToolStripMenuItem_Click(object sender, EventArgs e)
