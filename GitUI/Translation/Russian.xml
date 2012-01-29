@@ -575,6 +575,9 @@
         <TranslationItem Name="helpToolStripMenuItem" Property="Text">
           <Value>Помощь</Value>
         </TranslationItem>
+        <TranslationItem Name="commitcountPerUserToolStripMenuItem" Property="Text">
+          <Value>Количество коммитов</Value>
+        </TranslationItem>
         <TranslationItem Name="gitcommandLogToolStripMenuItem" Property="Text">
           <Value>Протокол команд</Value>
         </TranslationItem>
