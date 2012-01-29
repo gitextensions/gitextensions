@@ -148,6 +148,67 @@ namespace GitCommands
                    (arguments.Contains("pull"));
         }
 
+        internal static int CreateAndStartProcess(string arguments, string cmd, out byte[] stdOutput, out byte[] stdError, string stdInput)
+        {
+            if (string.IsNullOrEmpty(cmd))
+            {
+                stdOutput = stdError = null;
+                return -1;
+            }
+
+            Settings.GitLog.Log(cmd + " " + arguments);
+            //process used to execute external commands
+
+            var startInfo = CreateProcessStartInfo();
+            startInfo.CreateNoWindow = true;
+            startInfo.FileName = cmd;
+            startInfo.Arguments = arguments;
+            startInfo.WorkingDirectory = Settings.WorkingDir;
+            startInfo.LoadUserProfile = true;
+
+            using (var process = Process.Start(startInfo))
+            {
+                if (!string.IsNullOrEmpty(stdInput))
+                {
+                    process.StandardInput.Write(stdInput);
+                    process.StandardInput.Close();
+                }
+
+                stdOutput = ReadByte(process.StandardOutput.BaseStream);
+                stdError = ReadByte(process.StandardError.BaseStream);
+                process.WaitForExit();
+                return process.ExitCode;
+            }
+        }
+
+        private static byte[] ReadByte(Stream stream)
+        {
+            if (stream.CanRead)
+            {
+                int commonLen = 0;
+                List<byte[]> list = new List<byte[]>();
+                byte[] buffer = new byte[4096];
+                int len = 0;
+                while ((len = stream.Read(buffer, 0, buffer.Length)) != 0)
+                {
+                    byte[] newbuff = new byte[len];
+                    Array.Copy(buffer, newbuff, len);
+                    commonLen += len;
+                    list.Add(newbuff);
+                }
+                buffer = new byte[commonLen];
+                commonLen = 0;
+                for (int i = 0; i < list.Count; i++)
+                {
+                    Array.Copy(list[i], 0, buffer, commonLen, list[i].Length);
+                    commonLen += list[i].Length;
+                }
+                return buffer;
+            }
+            return null;
+
+        }
+
         internal static int CreateAndStartProcess(string arguments, string cmd, string workDir, out string stdOutput, out string stdError, string stdInput)
         {
             if (string.IsNullOrEmpty(cmd))
@@ -805,7 +866,7 @@ namespace GitCommands
                     process1 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --add --stdin");
 
                 //process1.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
-                byte[] bytearr = ConvertFileNameTo(Settings.Encoding, "\"" + FixPath(file.Name) + "\"" + process1.StandardInput.NewLine);
+                byte[] bytearr = EncodingHelper.ConvertTo(Settings.Encoding, "\"" + FixPath(file.Name) + "\"" + process1.StandardInput.NewLine);
                 process1.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
             }
             if (process1 != null)
@@ -825,7 +886,7 @@ namespace GitCommands
                 if (process2 == null)
                     process2 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --remove --stdin");
                 //process2.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
-                byte[] bytearr = ConvertFileNameTo(Settings.Encoding, "\"" + FixPath(file.Name) + "\"" + process2.StandardInput.NewLine);
+                byte[] bytearr = EncodingHelper.ConvertTo(Settings.Encoding, "\"" + FixPath(file.Name) + "\"" + process2.StandardInput.NewLine);
                 process2.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
             }
             if (process2 != null)
@@ -844,12 +905,6 @@ namespace GitCommands
             }
 
             return output;
-        }
-
-        private static byte[] ConvertFileNameTo(Encoding encoding, string filename)
-        {
-            byte[] bytesunicode = Encoding.Unicode.GetBytes(filename);
-            return Encoding.Convert(Encoding.Unicode, encoding, bytesunicode);
         }
 
         public static string UnstageFiles(List<GitItemStatus> files)
@@ -886,7 +941,7 @@ namespace GitCommands
                 if (process2 == null)
                     process2 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --force-remove --stdin");
                 //process2.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
-                byte[] bytearr = ConvertFileNameTo(Settings.Encoding, "\"" + FixPath(file.Name) + "\"" + process2.StandardInput.NewLine);
+                byte[] bytearr = EncodingHelper.ConvertTo(Settings.Encoding, "\"" + FixPath(file.Name) + "\"" + process2.StandardInput.NewLine);
                 process2.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
             }
             if (process2 != null)

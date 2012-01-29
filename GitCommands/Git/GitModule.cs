@@ -272,23 +272,46 @@ namespace GitCommands
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
-        public string RunCachableCmd(string cmd, string arguments)
+        public string RunCachableCmd(string cmd, string arguments, Encoding encoding)
         {
+            if (encoding == null) 
+                encoding = Settings.Encoding;
+
             string output;
-            if (GitCommandCache.TryGet(arguments, out output))
+            if (GitCommandCache.TryGet(arguments, encoding, out output))
                 return output;
 
-            output = RunCmd(cmd, arguments);
+            byte[] cmdout, cmderr;
+            RunCmdByte(cmd, arguments, out cmdout, out cmderr);
 
-            GitCommandCache.Add(arguments, output);
+            GitCommandCache.Add(arguments, cmdout, cmderr);
 
-            return output;
+            return EncodingHelper.GetString(cmdout, cmderr, encoding);
+        }
+
+        [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
+        public string RunCachableCmd(string cmd, string arguments)
+        {
+            return RunCachableCmd(cmd, arguments, Settings.Encoding);
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public string RunCmd(string cmd, string arguments)
         {
-            return RunCmd(cmd, arguments, null);
+            return RunCmd(cmd, arguments, string.Empty);
+        }
+
+        [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
+        public string RunCmd(string cmd, string arguments, Encoding encoding)
+        {
+            return RunCmd(cmd, arguments, null, encoding);
+        }
+        
+        [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
+        public string RunCmd(string cmd, string arguments, string stdInput, Encoding encoding)
+        {
+            int exitCode;
+            return RunCmd(cmd, arguments, out exitCode, stdInput, encoding);
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
@@ -307,32 +330,46 @@ namespace GitCommands
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public string RunCmd(string cmd, string arguments, out int exitCode, string stdInput)
         {
+            return RunCmd(cmd, arguments, out exitCode, stdInput, Settings.Encoding);
+        }
+
+        [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
+        public string RunCmd(string cmd, string arguments, out int exitCode, string stdInput, Encoding encoding)
+        {
+            byte[] output, error;
+            exitCode = RunCmdByte(cmd, arguments, stdInput, out output, out error);
+            return EncodingHelper.GetString(output, error, encoding);
+        }
+
+        private  int RunCmdByte(string cmd, string arguments, out byte[] output, out byte[] error)
+        {
+            return RunCmdByte(cmd, arguments, null, out output, out error);
+        }
+        private int RunCmdByte(string cmd, string arguments, string stdInput, out byte[] output, out byte[] error)
+        {
             try
             {
                 GitCommandHelpers.SetEnvironmentVariable();
-
                 arguments = arguments.Replace("$QUOTE$", "\\\"");
-
-                string output, error;
-                exitCode = GitCommandHelpers.CreateAndStartProcess(arguments, cmd, _workingdir, 
-                    out output, out error, stdInput);
-
-                if (!string.IsNullOrEmpty(error))
-                {
-                    output += Environment.NewLine + error;
-                }
-                return output;
+                int exitCode = GitCommandHelpers.CreateAndStartProcess(arguments, cmd, out output, out error, stdInput);
+                return exitCode;
             }
             catch (Win32Exception)
             {
-                exitCode = 1;
-                return string.Empty;
+                output = error = null;
+                return 1;
             }
+
         }
 
         public string RunGitCmd(string arguments, out int exitCode, string stdInput)
         {
-            return RunCmd(Settings.GitCommand, arguments, out exitCode, stdInput);
+            return RunGitCmd(arguments, out exitCode, stdInput, Settings.Encoding);
+        }
+
+        public string RunGitCmd(string arguments, out int exitCode, string stdInput, Encoding encoding)
+        {
+            return RunCmd(Settings.GitCommand, arguments, out exitCode, stdInput, encoding);
         }
 
         public string RunGitCmd(string arguments, out int exitCode)
@@ -346,9 +383,20 @@ namespace GitCommands
             return RunGitCmd(arguments, out exitCode, stdInput);
         }
 
+        public string RunGitCmd(string arguments, string stdInput, Encoding encoding)
+        {
+            int exitCode;
+            return RunGitCmd(arguments, out exitCode, stdInput, encoding);
+        }
+
         public string RunGitCmd(string arguments)
         {
-            return RunGitCmd(arguments, null);
+            return RunGitCmd(arguments, (string)null);
+        }
+
+        public string RunGitCmd(string arguments, Encoding encoding)
+        {
+            return RunGitCmd(arguments, null, encoding);
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
@@ -775,7 +823,7 @@ namespace GitCommands
 
         public string ShowSha1(string sha1)
         {
-            return RunCachableCmd(Settings.GitCommand, "show --encoding=" + Settings.Encoding.HeaderName + " " + sha1);
+            return this.RunCachableCmd(Settings.GitCommand, "show --encoding=" + Settings.Encoding.HeaderName + " " + sha1);
         }
 
         public string UserCommitCount()
@@ -1482,7 +1530,7 @@ namespace GitCommands
             return stashes;
         }
 
-        public Patch GetSingleDiff(string from, string to, string fileName, string oldFileName, string extraDiffArguments)
+        public Patch GetSingleDiff(string @from, string to, string fileName, string oldFileName, string extraDiffArguments, Encoding encoding)
         {
             if (!string.IsNullOrEmpty(fileName))
                 fileName = string.Concat("\"", FixPath(fileName), "\"");
@@ -1498,14 +1546,14 @@ namespace GitCommands
 
             var patchManager = new PatchManager();
             var arguments = string.Format("diff{0} -M -C \"{1}\" \"{2}\" -- {3} {4}", extraDiffArguments, to, from, fileName, oldFileName);
-            patchManager.LoadPatch(RunCachableCmd(Settings.GitCommand, arguments), false);
+            patchManager.LoadPatch(this.RunCachableCmd(Settings.GitCommand, arguments, encoding), false);
 
             return patchManager.Patches.Count > 0 ? patchManager.Patches[0] : null;
         }
 
-        public Patch GetSingleDiff(string from, string to, string fileName, string extraDiffArguments)
+        public Patch GetSingleDiff(string @from, string to, string fileName, string extraDiffArguments, Encoding encoding)
         {
-            return GetSingleDiff(from, to, fileName, null, extraDiffArguments);
+            return this.GetSingleDiff(from, to, fileName, null, extraDiffArguments, encoding);
         }
 
         public List<Patch> GetDiff(string from, string to, string extraDiffArguments)
@@ -1515,7 +1563,7 @@ namespace GitCommands
 
             var patchManager = new PatchManager();
             var arguments = string.Format("diff{0} \"{1}\" \"{2}\"", extraDiffArguments, from, to);
-            patchManager.LoadPatch(RunCachableCmd(Settings.GitCommand, arguments), false);
+            patchManager.LoadPatch(this.RunCachableCmd(Settings.GitCommand, arguments), false);
 
             return patchManager.Patches;
         }
@@ -1535,7 +1583,7 @@ namespace GitCommands
             }
             else
             {
-                result = RunCachableCmd(Settings.GitCommand, cmd);
+                result = this.RunCachableCmd(Settings.GitCommand, cmd);
             }
             return GitCommandHelpers.GetAllChangedFilesFromString(result, true);
         }
@@ -1644,7 +1692,7 @@ namespace GitCommands
             return GitCommandHelpers.GetAllChangedFilesFromString(status);
         }
 
-        public string GetCurrentChanges(string fileName, string oldFileName, bool staged, string extraDiffArguments)
+        public string GetCurrentChanges(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
         {
             fileName = string.Concat("\"", FixPath(fileName), "\"");
             if (!string.IsNullOrEmpty(oldFileName))
@@ -1657,7 +1705,7 @@ namespace GitCommands
             if (staged)
                 args = string.Concat("diff -M -C --cached", extraDiffArguments, " -- ", fileName, " ", oldFileName);
 
-            return RunGitCmd(args);
+            return RunGitCmd(args, encoding);
         }
 
         public string StageFile(string file)
@@ -1883,13 +1931,13 @@ namespace GitCommands
 
         public string[] GetFullTree(string id)
         {
-            string tree = RunCachableCmd(Settings.GitCommand, string.Format("ls-tree -z -r --name-only {0}", id));
+            string tree = this.RunCachableCmd(Settings.GitCommand, string.Format("ls-tree -z -r --name-only {0}", id));
             return tree.Split(new char[] { '\0', '\n' });
         }
 
         public List<IGitItem> GetTree(string id)
         {
-            var tree = RunCachableCmd(Settings.GitCommand, "ls-tree -z \"" + id + "\"");
+            var tree = this.RunCachableCmd(Settings.GitCommand, "ls-tree -z \"" + id + "\"");
 
             var itemsStrings = tree.Split(new char[] { '\0', '\n' });
 
@@ -1987,14 +2035,14 @@ namespace GitCommands
         public string GetFileRevisionText(string file, string revision)
         {
             return
-                RunCachableCmd(
+                this.RunCachableCmd(
                     Settings.GitCommand,
                     string.Format("show --encoding=" + Settings.Encoding.HeaderName + " {0}:\"{1}\"", revision, file.Replace('\\', '/')));
         }
 
         public string GetFileText(string id)
         {
-            return RunCachableCmd(Settings.GitCommand, "cat-file blob \"" + id + "\"");
+            return this.RunCachableCmd(Settings.GitCommand, "cat-file blob \"" + id + "\"");
         }
 
         public static void StreamCopy(Stream input, Stream output)
