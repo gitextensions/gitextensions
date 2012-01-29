@@ -73,6 +73,7 @@
     <Compile Include="Git\GitModule.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Git\GitSvnCommandHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Git\GitCommandsInstance.cs" />
     <Compile Include="Logging\CommandLogger.cs" />
