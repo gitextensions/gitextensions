@@ -770,6 +770,41 @@ namespace GitCommands
             set { SafeSet("RecursiveSubmodulesCheck", value, ref _RecursiveSubmodulesCheck); }
         }
 
+        private static string _ShorteningRecentRepoPathStrategy;
+        public static string ShorteningRecentRepoPathStrategy
+        {
+            get { return SafeGet("ShorteningRecentRepoPathStrategy", "", ref _ShorteningRecentRepoPathStrategy); }
+            set { SafeSet("ShorteningRecentRepoPathStrategy", value, ref _ShorteningRecentRepoPathStrategy); }
+        }
+
+        private static int? _MaxMostRecentRepositories;
+        public static int MaxMostRecentRepositories
+        {
+            get { return SafeGet("MaxMostRecentRepositories", 0, ref _MaxMostRecentRepositories); }
+            set { SafeSet("MaxMostRecentRepositories", value, ref _MaxMostRecentRepositories); }
+        }
+
+        private static int? _RecentReposComboMinWidth;
+        public static int RecentReposComboMinWidth
+        {
+            get { return SafeGet("RecentReposComboMinWidth", 0, ref _RecentReposComboMinWidth); }
+            set { SafeSet("RecentReposComboMinWidth", value, ref _RecentReposComboMinWidth); }
+        }
+
+        private static bool? _SortMostRecentRepos;
+        public static bool SortMostRecentRepos
+        {
+            get { return SafeGet("SortMostRecentRepos", false, ref _SortMostRecentRepos); }
+            set { SafeSet("SortMostRecentRepos", value, ref _SortMostRecentRepos); }
+        }
+
+        private static bool? _SortLessRecentRepos;
+        public static bool SortLessRecentRepos
+        {
+            get { return SafeGet("SortLessRecentRepos", false, ref _SortLessRecentRepos); }
+            set { SafeSet("SortLessRecentRepos", value, ref _SortLessRecentRepos); }
+        }
+
         public static string GetGitExtensionsFullPath()
         {
             return GetGitExtensionsDirectory() + "\\GitExtensions.exe";

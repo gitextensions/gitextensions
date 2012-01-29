@@ -69,7 +69,7 @@ namespace GitUI
 
             MessageBox.Show(this, Settings.Module.Init(Central.Checked, Central.Checked), _initMsgBoxCaption.Text);
 
-            Repositories.RepositoryHistory.AddMostRecentRepository(Directory.Text);
+            Repositories.AddMostRecentRepository(Directory.Text);
 
             Close();
         }

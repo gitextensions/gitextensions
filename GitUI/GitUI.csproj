@@ -109,8 +109,14 @@
     <Compile Include="FormDirtyDirWarn.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="FormRecentReposSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormDirtyDirWarn.Designer.cs">
-      <DependentUpon>FormDirtyDirWarn.cs</DependentUpon>
+      <DependentUpon>FormDirtyDirWarn.cs</DependentUpon>          
+    </Compile>
+    <Compile Include="FormRecentReposSettings.Designer.cs">
+      <DependentUpon>FormRecentReposSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="FormRenameBranch.cs">
       <SubType>Form</SubType>
@@ -737,6 +743,9 @@
     <EmbeddedResource Include="AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormRecentReposSettings.resx">
+      <DependentUpon>FormRecentReposSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormDirtyDirWarn.resx">
       <DependentUpon>FormDirtyDirWarn.cs</DependentUpon>
