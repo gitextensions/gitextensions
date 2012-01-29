@@ -1,23 +1,348 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Translation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <translationCategories>
-    <TranslationCategory Name="AboutBox">
+    <TranslationCategory Name="GravatarControl">
+      <translationItems>
+        <TranslationItem Name="refreshToolStripMenuItem" Property="Text">
+          <Value>重新整理圖片</Value>
+        </TranslationItem>
+        <TranslationItem Name="registerAtGravatarcomToolStripMenuItem" Property="Text">
+          <Value>在gravatar.com註冊</Value>
+        </TranslationItem>
+        <TranslationItem Name="clearImagecacheToolStripMenuItem" Property="Text">
+          <Value>清除圖片快取</Value>
+        </TranslationItem>
+        <TranslationItem Name="imageSizeToolStripMenuItem" Property="Text">
+          <Value>圖片尺寸</Value>
+        </TranslationItem>
+        <TranslationItem Name="noImageGeneratorToolStripMenuItem" Property="Text">
+          <Value>沒有圖片服務</Value>
+        </TranslationItem>
+        <TranslationItem Name="identiconToolStripMenuItem" Property="Text">
+          <Value>同一識別</Value>
+        </TranslationItem>
+        <TranslationItem Name="monsterIdToolStripMenuItem" Property="Text">
+          <Value>怪獸識別</Value>
+        </TranslationItem>
+        <TranslationItem Name="wavatarToolStripMenuItem" Property="Text">
+          <Value>頭像</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormSubmodules">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>關於</Value>
+          <Value>子模組</Value>
         </TranslationItem>
-        <TranslationItem Name="textBoxDescription" Property="Text">
-          <Value>Git extenstions - Visual Studio 和Shell Explorer 的Git介面 
+        <TranslationItem Name="AddSubmodule" Property="Text">
+          <Value>新增子模組</Value>
+        </TranslationItem>
+        <TranslationItem Name="label6" Property="Text">
+          <Value>狀態</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>名稱</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>遠端路徑</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Value>分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text">
+          <Value>提交</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>本機路徑</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>詳細資料</Value>
+        </TranslationItem>
+        <TranslationItem Name="SynchronizeSubmodule" Property="Text">
+          <Value>同步</Value>
+        </TranslationItem>
+        <TranslationItem Name="InitSubmodule" Property="Text">
+          <Value>初始化</Value>
+        </TranslationItem>
+        <TranslationItem Name="UpdateSubmodule" Property="Text">
+          <Value>更新</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormResetCurrentBranch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>重置當前分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>重置類型</Value>
+        </TranslationItem>
+        <TranslationItem Name="Hard" Property="Text">
+          <Value>強迫模式：重置工作目錄和索引（放棄所有的本機修改，甚至未提交的修改）</Value>
+        </TranslationItem>
+        <TranslationItem Name="Mixed" Property="Text">
+          <Value>混合模式：不動工作目錄，只是重置索引</Value>
+        </TranslationItem>
+        <TranslationItem Name="Soft" Property="Text">
+          <Value>軟模式：保持工作目錄和索引均不變</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>確定</Value>
+        </TranslationItem>
+        <TranslationItem Name="Cancel" Property="Text">
+          <Value>取消</Value>
+        </TranslationItem>
+        <TranslationItem Name="branchInfo" Property="Text">
+          <Value>重置{0}到：</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitInfo" Property="Text">
+          <Value>提交：{0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorInfo" Property="Text">
+          <Value>作者：{0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="dateInfo" Property="Text">
+          <Value>提交日期：{0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitMessage" Property="Text">
+          <Value>訊息：{0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="resetHardWarning" Property="Text">
+          <Value>您將要放棄所有的本機修改，你確定嗎？ </Value>
+        </TranslationItem>
+        <TranslationItem Name="resetCaption" Property="Text">
+          <Value>重設分支</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormInit">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>初始化新版本庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>目錄</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>瀏覽</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>版本庫種類</Value>
+        </TranslationItem>
+        <TranslationItem Name="Central" Property="Text">
+          <Value>中央版本庫，沒有工作目錄(--bare --shared=all)</Value>
+        </TranslationItem>
+        <TranslationItem Name="Personal" Property="Text">
+          <Value>個人版本庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="Init" Property="Text">
+          <Value>初始化</Value>
+        </TranslationItem>
+        <TranslationItem Name="_chooseDirectory" Property="Text">
+          <Value>請選擇一個目錄。</Value>
+        </TranslationItem>
+        <TranslationItem Name="_chooseDirectoryNotFile" Property="Text">
+          <Value>無法初始化一個新版本庫，請另選一目錄。</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormFileHistory">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>檔案歷史</Value>
+        </TranslationItem>
+        <TranslationItem Name="ViewTab" Property="Text">
+          <Value>查看</Value>
+        </TranslationItem>
+        <TranslationItem Name="DiffTab" Property="Text">
+          <Value>差異</Value>
+        </TranslationItem>
+        <TranslationItem Name="Blame" Property="Text">
+          <Value>檔案記錄</Value>
+        </TranslationItem>
+        <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
+          <Value>用difftool開啟</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveAsToolStripMenuItem" Property="Text">
+          <Value>另存為</Value>
+        </TranslationItem>
+        <TranslationItem Name="followFileHistoryToolStripMenuItem" Property="Text">
+          <Value>偵測後改名</Value>
+        </TranslationItem>
+        <TranslationItem Name="fullHistoryToolStripMenuItem" Property="Text">
+          <Value>檢視完整歷史</Value>
+        </TranslationItem>
+        <TranslationItem Name="manipuleerCommitToolStripMenuItem" Property="Text">
+          <Value>對此提交進行...</Value>
+        </TranslationItem>
+        <TranslationItem Name="cherryPickThisCommitToolStripMenuItem" Property="Text">
+          <Value>Cherry pick 提交</Value>
+        </TranslationItem>
+        <TranslationItem Name="revertCommitToolStripMenuItem" Property="Text">
+          <Value>Revert 提交</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormDonate">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>捐贈</Value>
+        </TranslationItem>
+        <TranslationItem Name="richTextBox1" Property="Text">
+          <Value>捐贈 
 
-This program is destributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE. 
-(發布這一程序的目的是希望它有用，但沒有任何擔保。甚至沒有適合特定目的的隱含的擔保) 
-</Value>
+你可以通過捐贈對此專案作出財務方面的貢獻。捐款將用於支付架設網站的成本和該專案保持運行的資源。點擊“支持本專案”按鈕來獲取有關捐贈的更多訊息。 </Value>
         </TranslationItem>
-        <TranslationItem Name="okButton" Property="Text">
-          <Value>確定(&amp;O)</Value>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormDeleteTag">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>刪除標籤</Value>
         </TranslationItem>
-        <TranslationItem Name="thanksTo" Property="Text">
-          <Value>感謝：</Value>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>刪除</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>選擇標籤</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormBranch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>建立分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectOneRevision" Property="Text">
+          <Value>選擇一版本來建立分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="_branchCaption" Property="Text">
+          <Value>分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>分支名稱</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>建立分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="Checkout" Property="Text">
+          <Value>簽出分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="CheckoutAfterCreate" Property="Text">
+          <Value>建立後簽出</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormArchive">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>存檔</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>選擇一個版本進行zip壓縮</Value>
+        </TranslationItem>
+        <TranslationItem Name="Save" Property="Text">
+          <Value>保存</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCherryPickCommitSmall">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>最優提交（Cherry pick commit）</Value>
+        </TranslationItem>
+        <TranslationItem Name="Date" Property="Text">
+          <Value>提交日期：</Value>
+        </TranslationItem>
+        <TranslationItem Name="Message" Property="Text">
+          <Value>訊息：</Value>
+        </TranslationItem>
+        <TranslationItem Name="Author" Property="Text">
+          <Value>作者：</Value>
+        </TranslationItem>
+        <TranslationItem Name="Commit" Property="Text">
+          <Value>提交：</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchInfo" Property="Text">
+          <Value>優化(Cherry pick)此提交：</Value>
+        </TranslationItem>
+        <TranslationItem Name="Pick" Property="Text">
+          <Value>挑選本提交</Value>
+        </TranslationItem>
+        <TranslationItem Name="AutoCommit" Property="Text">
+          <Value>自動建立一個提交</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader1" Property="Text">
+          <Value>序號</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader2" Property="Text">
+          <Value>訊息</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader3" Property="Text">
+          <Value>作者</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader4" Property="Text">
+          <Value>日期</Value>
+        </TranslationItem>
+        <TranslationItem Name="ParentsLabel" Property="Text">
+          <Value>這提交是一個合併，選擇合併的上一層：</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="DashboardCategory">
+      <translationItems>
+        <TranslationItem Name="moveUpToolStripMenuItem" Property="Text">
+          <Value>上移</Value>
+        </TranslationItem>
+        <TranslationItem Name="moveDownToolStripMenuItem" Property="Text">
+          <Value>下移</Value>
+        </TranslationItem>
+        <TranslationItem Name="removeToolStripMenuItem" Property="Text">
+          <Value>刪除</Value>
+        </TranslationItem>
+        <TranslationItem Name="editToolStripMenuItem" Property="Text">
+          <Value>編輯</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="CommitInfo">
+      <translationItems>
+        <TranslationItem Name="containedInBranches" Property="Text">
+          <Value>包含於以下分支：</Value>
+        </TranslationItem>
+        <TranslationItem Name="containedInNoBranch" Property="Text">
+          <Value>沒有包含在任何分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="containedInTags" Property="Text">
+          <Value>包含於標籤：</Value>
+        </TranslationItem>
+        <TranslationItem Name="containedInNoTag" Property="Text">
+          <Value>沒有包含在任何標籤</Value>
+        </TranslationItem>
+        <TranslationItem Name="showContainedInBranchesToolStripMenuItem" Property="Text">
+          <Value>顯示包含此提交的本機分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="showContainedInTagsToolStripMenuItem" Property="Text">
+          <Value>顯示包含此提交的標籤</Value>
+        </TranslationItem>
+        <TranslationItem Name="copyCommitInfoToolStripMenuItem" Property="Text">
+          <Value>複製提交訊息</Value>
+        </TranslationItem>
+        <TranslationItem Name="showContainedInBranchesRemoteToolStripMenuItem" Property="Text">
+          <Value>顯示包含此提交的遠端分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="showContainedInBranchesRemoteIfNoLocalToolStripMenuItem" Property="Text">
+          <Value>只在沒有本機分支包含此提交的情況下，顯示遠端分支。 </Value>
+        </TranslationItem>
+        <TranslationItem Name="addNoteToolStripMenuItem" Property="Text">
+          <Value>增加紀要</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormHotkeys">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>快捷鍵</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -34,319 +359,413 @@ This program is destributed in the hope that it will be useful, but WITHOUT ANY 
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormVerify">
+    <TranslationCategory Name="RevisionGrid">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>檢查資料庫</Value>
+        <TranslationItem Name="createTagToolStripMenuItem" Property="Text">
+          <Value>建立新標籤</Value>
         </TranslationItem>
-        <TranslationItem Name="_removeDanglingObjectsCaption" Property="Text">
-          <Value>移除</Value>
+        <TranslationItem Name="createNewBranchToolStripMenuItem" Property="Text">
+          <Value>建立新的分支</Value>
         </TranslationItem>
-        <TranslationItem Name="_removeDanglingObjectsQuestion" Property="Text">
-          <Value>你確定要刪除所有不可讀目標？ </Value>
-        </TranslationItem>
-        <TranslationItem Name="_xTagsCreated" Property="Text">
-          <Value>{0}個標記已經建立。不要忘記在完成時刪除這些標記。 </Value>
-        </TranslationItem>
-        <TranslationItem Name="mnuLostObjectsCreateTag" Property="Text">
-          <Value>標記選定的目標</Value>
-        </TranslationItem>
-        <TranslationItem Name="mnuLostObjectView" Property="Text">
-          <Value>查看所選目標</Value>
-        </TranslationItem>
-        <TranslationItem Name="mnuLostObjectsCreateBranch" Property="Text">
-          <Value>建立分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="btnRestoreSelectedObjects" Property="Text">
-          <Value>標記所有丟失的提交</Value>
-        </TranslationItem>
-        <TranslationItem Name="DeleteAllLostAndFoundTags" Property="Text">
-          <Value>刪除所有LOST_AND_FOUND標籤</Value>
-        </TranslationItem>
-        <TranslationItem Name="Remove" Property="Text">
-          <Value>刪除所有未決定的目標</Value>
-        </TranslationItem>
-        <TranslationItem Name="SaveObjects" Property="Text">
-          <Value>儲存到.git/lost-found目錄</Value>
-        </TranslationItem>
-        <TranslationItem Name="ShowOnlyCommits" Property="Text">
-          <Value>只顯示提交</Value>
-        </TranslationItem>
-        <TranslationItem Name="NoReflogs" Property="Text">
-          <Value>不要認為在reflog中引用的提交是可取得的</Value>
-        </TranslationItem>
-        <TranslationItem Name="FullCheck" Property="Text">
-          <Value>檢查不僅存在於在GIT_OBJECT_DIRECTORY($GIT_DIR/objects)目錄，
-而且還存在於替代目標池的目標。 </Value>
-        </TranslationItem>
-        <TranslationItem Name="Unreachable" Property="Text">
-          <Value>輸出所有存在但是不可讀的目標</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>預設情況下，在清理資料庫的時候， 
-兩週以上的未被引用的目標將會被刪除， 
-其他的目標只會在運行“刪除所有不可讀目標”的時候移除。 </Value>
+        <TranslationItem Name="resetCurrentBranchToHereToolStripMenuItem" Property="Text">
+          <Value>回復當前到這裡</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
-          <Value>雙擊一列包含SHA1的來查看。 </Value>
+          <Value>此版本庫中沒有任何提交。 
+如果此版本庫是一個常規版本庫，推薦以下步驟： 
+- 確認版本庫中.gitgnore文件正確 
+- 用提交命令來提交 
+
+如果此版本庫是一個中央版本庫（沒有工作路徑的裸版本庫）： 
+- 從其他版本庫中“推”出更改</Value>
+        </TranslationItem>
+        <TranslationItem Name="Commit" Property="Text">
+          <Value>提交</Value>
+        </TranslationItem>
+        <TranslationItem Name="GitIgnore" Property="Text">
+          <Value>編輯.gitignore</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowRemoteBranches" Property="Text">
+          <Value>顯示遠端分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="showBranchesToolStripMenuItem" Property="Text">
+          <Value>顯示分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="revertCommitToolStripMenuItem" Property="Text">
+          <Value>回復提交</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>當前的工作目錄不是一個git版本庫。 </Value>
+        </TranslationItem>
+        <TranslationItem Name="filterToolStripMenuItem" Property="Text">
+          <Value>建立高級過濾器</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteTagToolStripMenuItem" Property="Text">
+          <Value>刪除標籤</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
+          <Value>刪除分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="checkoutRevisionToolStripMenuItem" Property="Text">
+          <Value>簽出版本</Value>
+        </TranslationItem>
+        <TranslationItem Name="checkoutBranchToolStripMenuItem" Property="Text">
+          <Value>簽出分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
+          <Value>和分支合併</Value>
+        </TranslationItem>
+        <TranslationItem Name="cherryPickCommitToolStripMenuItem" Property="Text">
+          <Value>優選提交</Value>
+        </TranslationItem>
+        <TranslationItem Name="rebaseOnToolStripMenuItem" Property="Text">
+          <Value>衍合在</Value>
+        </TranslationItem>
+        <TranslationItem Name="showAllBranchesToolStripMenuItem" Property="Text">
+          <Value>顯示所有分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="showCurrentBranchOnlyToolStripMenuItem" Property="Text">
+          <Value>只顯示當前分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="showFilteredBranchesToolStripMenuItem" Property="Text">
+          <Value>顯示過濾分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="copyToClipboardToolStripMenuItem" Property="Text">
+          <Value>複製到剪貼簿</Value>
+        </TranslationItem>
+        <TranslationItem Name="branchNameToolStripMenuItem" Property="Text">
+          <Value>分支名稱</Value>
+        </TranslationItem>
+        <TranslationItem Name="tagToolStripMenuItem" Property="Text">
+          <Value>標籤</Value>
+        </TranslationItem>
+        <TranslationItem Name="messageToolStripMenuItem" Property="Text">
+          <Value>訊息</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorToolStripMenuItem" Property="Text">
+          <Value>作者</Value>
+        </TranslationItem>
+        <TranslationItem Name="dateToolStripMenuItem" Property="Text">
+          <Value>日期</Value>
+        </TranslationItem>
+        <TranslationItem Name="markRevisionAsBadToolStripMenuItem" Property="Text">
+          <Value>標記版本為“壞”</Value>
+        </TranslationItem>
+        <TranslationItem Name="markRevisionAsGoodToolStripMenuItem" Property="Text">
+          <Value>標記版本為“好”</Value>
+        </TranslationItem>
+        <TranslationItem Name="stopBisectToolStripMenuItem" Property="Text">
+          <Value>停止二分</Value>
+        </TranslationItem>
+        <TranslationItem Name="runScriptToolStripMenuItem" Property="Text">
+          <Value>執行腳本</Value>
+        </TranslationItem>
+        <TranslationItem Name="InitRepository" Property="Text">
+          <Value>初始化版本庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="CloneRepository" Property="Text">
+          <Value>複製檔案庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="showRevisionGraphToolStripMenuItem" Property="Text">
+          <Value>顯示版本圖</Value>
+        </TranslationItem>
+        <TranslationItem Name="drawNonrelativesGrayToolStripMenuItem" Property="Text">
+          <Value>淡化顯示非同系分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="orderRevisionsByDateToolStripMenuItem" Property="Text">
+          <Value>按日期順序調整</Value>
+        </TranslationItem>
+        <TranslationItem Name="showAuthorDateToolStripMenuItem" Property="Text">
+          <Value>顯示作者日期</Value>
+        </TranslationItem>
+        <TranslationItem Name="showRelativeDateToolStripMenuItem" Property="Text">
+          <Value>顯示相對日期</Value>
+        </TranslationItem>
+        <TranslationItem Name="showGitNotesToolStripMenuItem" Property="Text">
+          <Value>顯示git記事</Value>
+        </TranslationItem>
+        <TranslationItem Name="manipulateCommitToolStripMenuItem" Property="Text">
+          <Value>對此提交進行...</Value>
+        </TranslationItem>
+        <TranslationItem Name="fixupCommitToolStripMenuItem" Property="Text">
+          <Value>Fixup 提交</Value>
+        </TranslationItem>
+        <TranslationItem Name="squashCommitToolStripMenuItem" Property="Text">
+          <Value>Squash 提交</Value>
+        </TranslationItem>
+        <TranslationItem Name="renameBranchToolStripMenuItem" Property="Text">
+          <Value>重新命名分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="_currentWorkingDirChanges" Property="Text">
+          <Value>當前未提交的修改</Value>
+        </TranslationItem>
+        <TranslationItem Name="_currentIndex" Property="Text">
+          <Value>提交索引</Value>
+        </TranslationItem>
+        <TranslationItem Name="_areYouSureYouWantCheckout" Property="Text">
+          <Value>確定要checkout選擇的修訂版次?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_areYouSureYouWantCheckoutCaption" Property="Text">
+          <Value>Checkout此修訂版次</Value>
+        </TranslationItem>
+        <TranslationItem Name="_revisionFilter" Property="Text">
+          <Value>過濾器</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormHotkeys">
+    <TranslationCategory Name="FormApplyPatch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>快捷鍵</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FileViewer">
-      <translationItems>
-        <TranslationItem Name="findToolStripMenuItem" Property="Text">
-          <Value>尋找</Value>
-        </TranslationItem>
-        <TranslationItem Name="ignoreWhitespaceChangesToolStripMenuItem" Property="Text">
-          <Value>忽略空白（空行和空格）的變化</Value>
-        </TranslationItem>
-        <TranslationItem Name="increaseNumberOfLinesToolStripMenuItem" Property="Text">
-          <Value>增加可視行數</Value>
-        </TranslationItem>
-        <TranslationItem Name="descreaseNumberOfLinesToolStripMenuItem" Property="Text">
-          <Value>減少可視行數</Value>
-        </TranslationItem>
-        <TranslationItem Name="showEntireFileToolStripMenuItem" Property="Text">
-          <Value>顯示整個檔案</Value>
-        </TranslationItem>
-        <TranslationItem Name="treatAllFilesAsTextToolStripMenuItem" Property="Text">
-          <Value>把所有檔案視為文字檔案</Value>
-        </TranslationItem>
-        <TranslationItem Name="copyToolStripMenuItem" Property="Text">
-          <Value>複製</Value>
-        </TranslationItem>
-        <TranslationItem Name="copyPatchToolStripMenuItem" Property="Text">
-          <Value>複製補丁</Value>
-        </TranslationItem>
-        <TranslationItem Name="nextChangeButton" Property="ToolTipText">
-          <Value>下一個修改</Value>
-        </TranslationItem>
-        <TranslationItem Name="previousChangeButton" Property="ToolTipText">
-          <Value>上一個修改</Value>
-        </TranslationItem>
-        <TranslationItem Name="increaseNumberOfLines" Property="ToolTipText">
-          <Value>增加可視行數</Value>
-        </TranslationItem>
-        <TranslationItem Name="DecreaseNumberOfLines" Property="ToolTipText">
-          <Value>減少可視行數</Value>
-        </TranslationItem>
-        <TranslationItem Name="showEntireFileButton" Property="ToolTipText">
-          <Value>顯示整個檔案</Value>
-        </TranslationItem>
-        <TranslationItem Name="showNonPrintChars" Property="ToolTipText">
-          <Value>顯示非可印字</Value>
-        </TranslationItem>
-        <TranslationItem Name="showNonprintableCharactersToolStripMenuItem" Property="Text">
-          <Value>顯示非可印字</Value>
-        </TranslationItem>
-        <TranslationItem Name="ignoreWhiteSpaces" Property="ToolTipText">
-          <Value>忽略空白（空行和空格）</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="ViewPatch">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>查看補丁檔案</Value>
+          <Value>使用補丁</Value>
         </TranslationItem>
         <TranslationItem Name="BrowsePatch" Property="Text">
           <Value>瀏覽</Value>
         </TranslationItem>
-        <TranslationItem Name="labelPatch" Property="Text">
-          <Value>補丁</Value>
+        <TranslationItem Name="Apply" Property="Text">
+          <Value>使用補丁</Value>
+        </TranslationItem>
+        <TranslationItem Name="Mergetool" Property="Text">
+          <Value>&gt;解決衝突&lt;</Value>
+        </TranslationItem>
+        <TranslationItem Name="Skip" Property="Text">
+          <Value>跳過補丁</Value>
+        </TranslationItem>
+        <TranslationItem Name="Abort" Property="Text">
+          <Value>中止補丁</Value>
+        </TranslationItem>
+        <TranslationItem Name="Resolved" Property="Text">
+          <Value>衝突解決</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddFiles" Property="Text">
+          <Value>增加檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseDir" Property="Text">
+          <Value>瀏覽</Value>
+        </TranslationItem>
+        <TranslationItem Name="PatchDirMode" Property="Text">
+          <Value>補丁目錄</Value>
+        </TranslationItem>
+        <TranslationItem Name="PatchFileMode" Property="Text">
+          <Value>補丁檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="SolveMergeconflicts" Property="Text">
+          <Value>有未解決的合併衝突</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormBlame">
+    <TranslationCategory Name="FormRevisionFilter">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>歷史檔案</Value>
+          <Value>過濾器</Value>
         </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FileViewerWindows">
-      <translationItems>
-        <TranslationItem Name="_findAndReplaceForm" Property="Text">
-          <Value>尋找和取代</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormBisect">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>二分</Value>
-        </TranslationItem>
-        <TranslationItem Name="Start" Property="Text">
-          <Value>開始二分</Value>
-        </TranslationItem>
-        <TranslationItem Name="Good" Property="Text">
-          <Value>把當前版本標記為“好”</Value>
-        </TranslationItem>
-        <TranslationItem Name="Bad" Property="Text">
-          <Value>把當前版本標記為“壞”</Value>
-        </TranslationItem>
-        <TranslationItem Name="Stop" Property="Text">
-          <Value>停止二分</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormChooseTranslation">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>選擇使用語言</Value>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>確定</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
-          <Value>選擇你要用的語言</Value>
+          <Value>從</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
-          <Value>你隨時都可以利用設定對話方塊改變使用的語言</Value>
+          <Value>到</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>作者</Value>
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text">
+          <Value>提交者</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Value>訊息</Value>
+        </TranslationItem>
+        <TranslationItem Name="label7" Property="Text">
+          <Value>限制</Value>
+        </TranslationItem>
+        <TranslationItem Name="label6" Property="Text">
+          <Value>忽略大小寫</Value>
+        </TranslationItem>
+        <TranslationItem Name="label8" Property="Text">
+          <Value>文件過濾器</Value>
+        </TranslationItem>
+        <TranslationItem Name="label9" Property="Text">
+          <Value>分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="CurrentBranchOnlyCheck" Property="Text">
+          <Value>只顯示目前分支</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormEditor">
+    <TranslationCategory Name="FormRebase">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>編輯者</Value>
+          <Value>衍合(Rebase)</Value>
         </TranslationItem>
-        <TranslationItem Name="_saveChanges" Property="Text">
-          <Value>要儲存修改嗎？</Value>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>將當前分支衍合到另一分支頂部</Value>
         </TranslationItem>
-        <TranslationItem Name="_saveChangesCaption" Property="Text">
-          <Value>儲存修改</Value>
+        <TranslationItem Name="Currentbranch" Property="Text">
+          <Value>當前</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripSaveButton" Property="ToolTipText">
-          <Value>儲存</Value>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>衍合(Rebase)</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>衍合於(Rebase on)</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddFiles" Property="Text">
+          <Value>添加檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="Resolved" Property="Text">
+          <Value>繼續衍合(Rebase)</Value>
+        </TranslationItem>
+        <TranslationItem Name="Abort" Property="Text">
+          <Value>終止</Value>
+        </TranslationItem>
+        <TranslationItem Name="Skip" Property="Text">
+          <Value>跳過此提交</Value>
+        </TranslationItem>
+        <TranslationItem Name="Mergetool" Property="Text">
+          <Value>解決衝突</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>提交後再次應用：</Value>
+        </TranslationItem>
+        <TranslationItem Name="SolveMergeconflicts" Property="Text">
+          <Value>有未解決的合併錯誤</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkInteractive" Property="Text">
+          <Value>交互式衍合(Rebase)</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormGitAttributes">
+    <TranslationCategory Name="FormMailMap">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>編輯.gitattributes文件</Value>
-        </TranslationItem>
-        <TranslationItem Name="noWorkingDir" Property="Text">
-          <Value>.gitattributes只支援有工作目錄的</Value>
+          <Value>編輯.mailmap檔案</Value>
         </TranslationItem>
         <TranslationItem Name="Save" Property="Text">
           <Value>儲存</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
-          <Value>編輯git的屬性 
-按路徑定義屬性 
+          <Value>編輯.mailmap檔案。 
+此文件用來給改正用戶名。 
 
-舉例： 
-標記所有jpg文件為二進制： 
-*.jpg binary 
-
-標記所有sln文件為二進制： 
-*.sln binary 
-
-標記單個文件為文本 
-weirdchars.txt text 
-
-更多訊息請看git幫助 
-</Value>
+例如： 
+Henk Westhuis &lt;Henk@.(none)&gt; 
+Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormFixHome">
+    <TranslationCategory Name="FormDashboardEditor">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>首頁</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox8" Property="Text">
-          <Value>環境</Value>
-        </TranslationItem>
-        <TranslationItem Name="otherHomeBrowse" Property="Text">
-          <Value>瀏覽</Value>
-        </TranslationItem>
-        <TranslationItem Name="otherHome" Property="Text">
-          <Value>其他</Value>
-        </TranslationItem>
-        <TranslationItem Name="userprofileHome" Property="Text">
-          <Value>把USERPROFILE設為HOME</Value>
-        </TranslationItem>
-        <TranslationItem Name="defaultHome" Property="Text">
-          <Value>使用預設HOME</Value>
-        </TranslationItem>
-        <TranslationItem Name="label51" Property="Text">
-          <Value>全體設定檔案位於%HOME%的位置。預設情形下，如果%HOME%為空，%HOME%將被設置為%HOMEDRIVE%%HOMEPATH%。 
-你應該只在遇到問題的時候才考慮改變預設設置。 </Value>
-        </TranslationItem>
-        <TranslationItem Name="ok" Property="Text">
-          <Value>確定</Value>
+          <Value>起始頁</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormStatus">
+    <TranslationCategory Name="FormBranchSmall">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>進度</Value>
+          <Value>建立分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>分支名稱</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
-          <Value>確定</Value>
+          <Value>建立分支</Value>
         </TranslationItem>
-        <TranslationItem Name="KeepDialogOpen" Property="Text">
-          <Value>保持對話方塊開啟</Value>
-        </TranslationItem>
-        <TranslationItem Name="Abort" Property="Text">
-          <Value>終止</Value>
+        <TranslationItem Name="CheckoutAfterCreate" Property="Text">
+          <Value>建立後簽出</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormTranslate">
+    <TranslationCategory Name="FindAndReplaceForm">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>翻譯</Value>
+          <Value>尋找和取代</Value>
         </TranslationItem>
-        <TranslationItem Name="translateProgressText" Property="Text">
-          <Value>翻譯了{0}條，共{1}條</Value>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>尋找內容(&amp;n)：</Value>
         </TranslationItem>
-        <TranslationItem Name="allText" Property="Text">
-          <Value>所有</Value>
+        <TranslationItem Name="lblReplaceWith" Property="Text">
+          <Value>取代為(&amp;p)：</Value>
         </TranslationItem>
-        <TranslationItem Name="saveCurrentChangesText" Property="Text">
-          <Value>你想保存當前的修改？ </Value>
+        <TranslationItem Name="btnFindNext" Property="Text">
+          <Value>找下一個(&amp;F)</Value>
         </TranslationItem>
-        <TranslationItem Name="saveCurrentChangesCaption" Property="Text">
-          <Value>儲存修改</Value>
+        <TranslationItem Name="btnReplace" Property="Text">
+          <Value>取代(&amp;R)</Value>
         </TranslationItem>
-        <TranslationItem Name="saveAsText" Property="Text">
-          <Value>另存為</Value>
+        <TranslationItem Name="btnReplaceAll" Property="Text">
+          <Value>全部取代(&amp;A)</Value>
         </TranslationItem>
-        <TranslationItem Name="saveAs" Property="ToolTipText">
-          <Value>儲存翻譯</Value>
+        <TranslationItem Name="chkMatchWholeWord" Property="Text">
+          <Value>全字符合(&amp;w)</Value>
         </TranslationItem>
-        <TranslationItem Name="previousButton" Property="Text">
-          <Value>上一頁</Value>
+        <TranslationItem Name="chkMatchCase" Property="Text">
+          <Value>符合大小寫(&amp;c)</Value>
         </TranslationItem>
-        <TranslationItem Name="nextButton" Property="Text">
-          <Value>下一頁</Value>
+        <TranslationItem Name="btnHighlightAll" Property="Text">
+          <Value>尋找和高亮顯示所有(&amp;a)</Value>
         </TranslationItem>
-        <TranslationItem Name="googleTranslate" Property="Text">
-          <Value>谷歌翻譯</Value>
+        <TranslationItem Name="btnCancel" Property="Text">
+          <Value>取消</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripTranslationLabel" Property="Text">
-          <Value>目前翻譯：</Value>
+        <TranslationItem Name="btnFindPrevious" Property="Text">
+          <Value>找上一個(&amp;v)</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripTranslationLanguageCode" Property="Text">
-          <Value>語言代碼：</Value>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="ViewPullRequestsForm">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>檢視拉取請求</Value>
         </TranslationItem>
-        <TranslationItem Name="googleAll" Property="Text">
-          <Value>谷歌所有空項</Value>
+        <TranslationItem Name="columnHeader1" Property="Text">
+          <Value>#</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripButtonNew" Property="Text">
-          <Value>新建</Value>
+        <TranslationItem Name="columnHeader2" Property="Text">
+          <Value>Heading</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripButtonNew" Property="ToolTipText">
-          <Value>建立新的翻譯</Value>
+        <TranslationItem Name="columnHeader3" Property="Text">
+          <Value>由</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader4" Property="Text">
+          <Value>建立</Value>
+        </TranslationItem>
+        <TranslationItem Name="_chooseRepo" Property="Text">
+          <Value>選擇版本庫:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_fetchBtn" Property="Text">
+          <Value>擷取與評估</Value>
+        </TranslationItem>
+        <TranslationItem Name="_postComment" Property="Text">
+          <Value>發表意見</Value>
+        </TranslationItem>
+        <TranslationItem Name="_closePullRequestBtn" Property="Text">
+          <Value>關閉拉取請求</Value>
+        </TranslationItem>
+        <TranslationItem Name="_refreshCommentsBtn" Property="Text">
+          <Value>重新整理</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strFailedToFetchPullData" Property="Text">
+          <Value>無法擷取拉取日期</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strFailedToLoadDiscussionItem" Property="Text">
+          <Value>無法發表討論項目</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strFailedToClosePullRequest" Property="Text">
+          <Value>無法關閉拉取請求</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strFailedToLoadDiffData" Property="Text">
+          <Value>無法載入差異資料</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strCouldNotLoadDiscussion" Property="Text">
+          <Value>無法載入討論</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strError" Property="Text">
+          <Value>錯誤</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strLoading" Property="Text">
+          <Value>:載入:</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -709,1702 +1128,79 @@ weirdchars.txt text
         <TranslationItem Name="aboutToolStripMenuItem" Property="Text">
           <Value>關於</Value>
         </TranslationItem>
+        <TranslationItem Name="diffBaseLocalToolStripMenuItem" Property="Text">
+          <Value>啟動比對工具, 比較 base &lt; - &gt; local</Value>
+        </TranslationItem>
+        <TranslationItem Name="difftoolRemoteLocalToolStripMenuItem" Property="Text">
+          <Value>啟動比對工具, 比較 &lt;-&gt;本地端</Value>
+        </TranslationItem>
+        <TranslationItem Name="openContainingFolderToolStripMenuItem" Property="Text">
+          <Value>開啟所屬資料夾</Value>
+        </TranslationItem>
+        <TranslationItem Name="_hintUnresolvedMergeConflicts" Property="Text">
+          <Value>檔案庫中仍有未解決的衝突</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormCommit">
+    <TranslationCategory Name="FormTranslate">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>提交</Value>
-        </TranslationItem>
-        <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text">
-          <Value>你也要刪除選中檔案中的新檔案嗎？ 
-
-選“否”保留所有新檔案。 </Value>
-        </TranslationItem>
-        <TranslationItem Name="_alsoDeleteUntrackedFilesCaption" Property="Text">
-          <Value>刪除</Value>
-        </TranslationItem>
-        <TranslationItem Name="_amendCommit" Property="Text">
-          <Value>您將要改寫歷史。 
-如果提交還沒有被發布，只用修改(Amend)就可以了！ 
-
-你想繼續嗎？ </Value>
-        </TranslationItem>
-        <TranslationItem Name="_amendCommitCaption" Property="Text">
-          <Value>修改(Amend)提交</Value>
-        </TranslationItem>
-        <TranslationItem Name="_deleteFailed" Property="Text">
-          <Value>刪除檔案失敗</Value>
-        </TranslationItem>
-        <TranslationItem Name="_deleteSelectedFiles" Property="Text">
-          <Value>您確定要刪除選中的檔案嗎？ </Value>
-        </TranslationItem>
-        <TranslationItem Name="_deleteSelectedFilesCaption" Property="Text">
-          <Value>刪除</Value>
-        </TranslationItem>
-        <TranslationItem Name="_deleteUntrackedFiles" Property="Text">
-          <Value>你確定要刪除所有未追踪的檔案嗎？ </Value>
-        </TranslationItem>
-        <TranslationItem Name="_deleteUntrackedFilesCaption" Property="Text">
-          <Value>刪除未追踪檔案。 </Value>
-        </TranslationItem>
-        <TranslationItem Name="_enterCommitMessage" Property="Text">
-          <Value>請輸入提交訊息</Value>
-        </TranslationItem>
-        <TranslationItem Name="_enterCommitMessageCaption" Property="Text">
-          <Value>提交訊息</Value>
-        </TranslationItem>
-        <TranslationItem Name="_enterCommitMessageHint" Property="Text">
-          <Value>輸入提交訊息</Value>
-        </TranslationItem>
-        <TranslationItem Name="_mergeConflicts" Property="Text">
-          <Value>有未解決的合併衝突，提交之前要先結果合併衝突。 </Value>
-        </TranslationItem>
-        <TranslationItem Name="_mergeConflictsCaption" Property="Text">
-          <Value>合併衝突</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noFilesStagedAndNothingToCommit" Property="Text">
-          <Value>此次提交沒有載入任何檔案。</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noFilesStagedAndConfirmAnEmptyMergeCommit" Property="Text">
-          <Value>此次提交沒有載入任何檔案。您確認要提交嗎？ </Value>
-        </TranslationItem>
-        <TranslationItem Name="_noStagedChanges" Property="Text">
-          <Value>沒有提交修改</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noUnstagedChanges" Property="Text">
-          <Value>沒有未提交的修改</Value>
-        </TranslationItem>
-        <TranslationItem Name="_notOnBranch" Property="Text">
-          <Value>您尚未位於任何一個分支下工作。 
-當切換到另一分支時，此次提交將變得不會被任何分支引用且有可能丟失。 
-
-您想繼續嗎？ </Value>
-        </TranslationItem>
-        <TranslationItem Name="_notOnBranchCaption" Property="Text">
-          <Value>未於任何分支。 </Value>
-        </TranslationItem>
-        <TranslationItem Name="_onlyStageChunkOfSingleFileError" Property="Text">
-          <Value>只有在選擇單一檔案的時候，您才能使用此選項。 </Value>
-        </TranslationItem>
-        <TranslationItem Name="_resetChangesText" Property="Text">
-          <Value>您確定要重設對選定檔案的更改？</Value>
-        </TranslationItem>
-        <TranslationItem Name="_resetChangesCaption" Property="Text">
-          <Value>回復修改</Value>
-        </TranslationItem>
-        <TranslationItem Name="_resetSelectedChangesText" Property="Text">
-          <Value>你確定要回復所有選定的檔案？ </Value>
-        </TranslationItem>
-        <TranslationItem Name="_resetStageChunkOfFileCaption" Property="Text">
-          <Value>不提交大量檔案</Value>
-        </TranslationItem>
-        <TranslationItem Name="_stageDetails" Property="Text">
-          <Value>載入詳細情形</Value>
-        </TranslationItem>
-        <TranslationItem Name="_stageFiles" Property="Text">
-          <Value>載入{0}個檔案</Value>
-        </TranslationItem>
-        <TranslationItem Name="_selectOnlyOneFile" Property="Text">
-          <Value>你只能選一個檔案</Value>
-        </TranslationItem>
-        <TranslationItem Name="_stageSelectedLines" Property="Text">
-          <Value>提交的選擇行</Value>
-        </TranslationItem>
-        <TranslationItem Name="_unstageSelectedLines" Property="Text">
-          <Value>沒提交的選擇行</Value>
-        </TranslationItem>
-        <TranslationItem Name="_resetSelectedLines" Property="Text">
-          <Value>重設選擇行</Value>
-        </TranslationItem>
-        <TranslationItem Name="_resetSelectedLinesConfirmation" Property="Text">
-          <Value>你確定要重設成選擇行那樣？</Value>
-        </TranslationItem>
-        <TranslationItem Name="_StageSelectedLinesToolStripMenuItem" Property="Text">
-          <Value>提交選擇行</Value>
-        </TranslationItem>
-        <TranslationItem Name="_ResetSelectedLinesToolStripMenuItem" Property="Text">
-          <Value>重設選擇行</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>提交</Value>
-        </TranslationItem>
-        <TranslationItem Name="resetChanges" Property="Text">
-          <Value>重設檔案修改</Value>
-        </TranslationItem>
-        <TranslationItem Name="deleteFileToolStripMenuItem" Property="Text">
-          <Value>移除檔案</Value>
-        </TranslationItem>
-        <TranslationItem Name="SolveMergeconflicts" Property="Text">
-          <Value>有未解決的合併衝突</Value>
-        </TranslationItem>
-        <TranslationItem Name="addFileTogitignoreToolStripMenuItem" Property="Text">
-          <Value>添加檔案到.gitignore</Value>
-        </TranslationItem>
-        <TranslationItem Name="openToolStripMenuItem" Property="Text">
-          <Value>開啟</Value>
-        </TranslationItem>
-        <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
-          <Value>開啟方式</Value>
-        </TranslationItem>
-        <TranslationItem Name="filenameToClipboardToolStripMenuItem" Property="Text">
-          <Value>檔案名複製到剪貼簿</Value>
-        </TranslationItem>
-        <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
-          <Value>用Difftool開啟</Value>
-        </TranslationItem>
-        <TranslationItem Name="resetPartOfFileToolStripMenuItem" Property="Text">
-          <Value>重設多個檔案</Value>
-        </TranslationItem>
-        <TranslationItem Name="editFileToolStripMenuItem" Property="Text">
-          <Value>編輯檔案</Value>
-        </TranslationItem>
-        <TranslationItem Name="Commit" Property="Text">
-          <Value>提交(&amp;C)</Value>
-        </TranslationItem>
-        <TranslationItem Name="CommitAndPush" Property="Text">
-          <Value>提交並推送(&amp;o)</Value>
-        </TranslationItem>
-        <TranslationItem Name="Amend" Property="Text">
-          <Value>更改最後一次提交(&amp;A)</Value>
-        </TranslationItem>
-        <TranslationItem Name="Reset" Property="Text">
-          <Value>重設更改</Value>
-        </TranslationItem>
-        <TranslationItem Name="commitMessageToolStripMenuItem" Property="Text">
-          <Value>提交訊息(&amp;m)</Value>
-        </TranslationItem>
-        <TranslationItem Name="commitMessageToolStripMenuItem" Property="ToolTipText">
-          <Value>提交訊息</Value>
-        </TranslationItem>
-        <TranslationItem Name="toolStripMenuItem3" Property="Text">
-          <Value>選項</Value>
-        </TranslationItem>
-        <TranslationItem Name="toolStripMenuItem3" Property="ToolTipText">
-          <Value>選項</Value>
-        </TranslationItem>
-        <TranslationItem Name="closeDialogAfterEachCommitToolStripMenuItem" Property="Text">
-          <Value>提交後關閉視窗</Value>
-        </TranslationItem>
-        <TranslationItem Name="closeDialogAfterAllFilesCommittedToolStripMenuItem" Property="Text">
-          <Value>所有修改提交後關閉視窗</Value>
-        </TranslationItem>
-        <TranslationItem Name="refreshDialogOnFormFocusToolStripMenuItem" Property="Text">
-          <Value>表單前置時重新整理</Value>
-        </TranslationItem>
-        <TranslationItem Name="workingToolStripMenuItem" Property="Text">
-          <Value>變更工作目錄</Value>
-        </TranslationItem>
-        <TranslationItem Name="workingToolStripMenuItem" Property="ToolTipText">
-          <Value>變更工作目錄</Value>
-        </TranslationItem>
-        <TranslationItem Name="showIgnoredFilesToolStripMenuItem" Property="Text">
-          <Value>顯示被忽略的檔案</Value>
-        </TranslationItem>
-        <TranslationItem Name="showUntrackedFilesToolStripMenuItem" Property="Text">
-          <Value>顯示未追踪檔案</Value>
-        </TranslationItem>
-        <TranslationItem Name="deleteSelectedFilesToolStripMenuItem" Property="Text">
-          <Value>刪除所有選定的檔案</Value>
-        </TranslationItem>
-        <TranslationItem Name="resetSelectedFilesToolStripMenuItem" Property="Text">
-          <Value>重設選中的檔案</Value>
-        </TranslationItem>
-        <TranslationItem Name="resetAlltrackedChangesToolStripMenuItem" Property="Text">
-          <Value>重設所有（追踪的）的修改</Value>
-        </TranslationItem>
-        <TranslationItem Name="editGitIgnoreToolStripMenuItem" Property="Text">
-          <Value>編輯忽略的檔案</Value>
-        </TranslationItem>
-        <TranslationItem Name="deleteAllUntrackedFilesToolStripMenuItem" Property="Text">
-          <Value>刪除所有未追蹤檔案</Value>
-        </TranslationItem>
-        <TranslationItem Name="Cancel" Property="Text">
-          <Value>取消</Value>
-        </TranslationItem>
-        <TranslationItem Name="toolStageItem" Property="Text">
-          <Value>加入提交(&amp;S)</Value>
-        </TranslationItem>
-        <TranslationItem Name="toolStageItem" Property="ToolTipText">
-          <Value>加入提交</Value>
-        </TranslationItem>
-        <TranslationItem Name="toolUnstageItem" Property="Text">
-          <Value>不要提交(&amp;U)</Value>
-        </TranslationItem>
-        <TranslationItem Name="toolUnstageItem" Property="ToolTipText">
-          <Value>不要提交</Value>
-        </TranslationItem>
-        <TranslationItem Name="toolStageAllItem" Property="Text">
-          <Value>全部提交</Value>
-        </TranslationItem>
-        <TranslationItem Name="toolStageAllItem" Property="ToolTipText">
-          <Value>全部提交</Value>
-        </TranslationItem>
-        <TranslationItem Name="toolUnstageAllItem" Property="Text">
-          <Value>全部不提交</Value>
-        </TranslationItem>
-        <TranslationItem Name="toolUnstageAllItem" Property="ToolTipText">
-          <Value>全部不提交</Value>
-        </TranslationItem>
-        <TranslationItem Name="toolAuthorLabelItem" Property="Text">
-          <Value>作者:(格式:"name &lt;mail&gt;")</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="CommitInfo">
-      <translationItems>
-        <TranslationItem Name="containedInBranches" Property="Text">
-          <Value>包含於以下分支：</Value>
-        </TranslationItem>
-        <TranslationItem Name="containedInNoBranch" Property="Text">
-          <Value>沒有包含在任何分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="containedInTags" Property="Text">
-          <Value>包含於標籤：</Value>
-        </TranslationItem>
-        <TranslationItem Name="containedInNoTag" Property="Text">
-          <Value>沒有包含在任何標籤</Value>
-        </TranslationItem>
-        <TranslationItem Name="showContainedInBranchesToolStripMenuItem" Property="Text">
-          <Value>顯示包含此提交的本機分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="showContainedInTagsToolStripMenuItem" Property="Text">
-          <Value>顯示包含此提交的標籤</Value>
-        </TranslationItem>
-        <TranslationItem Name="copyCommitInfoToolStripMenuItem" Property="Text">
-          <Value>複製提交訊息</Value>
-        </TranslationItem>
-        <TranslationItem Name="showContainedInBranchesRemoteToolStripMenuItem" Property="Text">
-          <Value>顯示包含此提交的遠端分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="showContainedInBranchesRemoteIfNoLocalToolStripMenuItem" Property="Text">
-          <Value>只在沒有本機分支包含此提交的情況下，顯示遠端分支。 </Value>
-        </TranslationItem>
-        <TranslationItem Name="addNoteToolStripMenuItem" Property="Text">
-          <Value>增加紀要</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="Dashboard">
-      <translationItems>
-        <TranslationItem Name="cloneFork" Property="Text">
-          <Value>複製{0}版本庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="cloneRepository" Property="Text">
-          <Value>複製版本庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="createRepository" Property="Text">
-          <Value>建立新的版本庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="develop" Property="Text">
-          <Value>開發</Value>
-        </TranslationItem>
-        <TranslationItem Name="donate" Property="Text">
-          <Value>捐贈</Value>
-        </TranslationItem>
-        <TranslationItem Name="issues" Property="Text">
-          <Value>問題</Value>
-        </TranslationItem>
-        <TranslationItem Name="openRepository" Property="Text">
-          <Value>開啟版本庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="translate" Property="Text">
           <Value>翻譯</Value>
         </TranslationItem>
-        <TranslationItem Name="directoryIsNotAValidRepositoryCaption" Property="Text">
-          <Value>開啟</Value>
+        <TranslationItem Name="saveAs" Property="ToolTipText">
+          <Value>儲存翻譯</Value>
         </TranslationItem>
-        <TranslationItem Name="directoryIsNotAValidRepository" Property="Text">
-          <Value>這不是一個正確的GIT版本庫，
-
-你要終止同時將它移除？</Value>
+        <TranslationItem Name="previousButton" Property="Text">
+          <Value>上一頁</Value>
         </TranslationItem>
-        <TranslationItem Name="RecentRepositories" Property="Title">
-          <Value>最近的版本庫</Value>
+        <TranslationItem Name="nextButton" Property="Text">
+          <Value>下一頁</Value>
         </TranslationItem>
-        <TranslationItem Name="CommonActions" Property="Title">
-          <Value>一般操作</Value>
+        <TranslationItem Name="googleTranslate" Property="Text">
+          <Value>谷歌翻譯</Value>
         </TranslationItem>
-        <TranslationItem Name="DonateCategory" Property="Title">
-          <Value>貢獻</Value>
+        <TranslationItem Name="toolStripTranslationLabel" Property="Text">
+          <Value>目前翻譯：</Value>
         </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="DashboardCategory">
-      <translationItems>
-        <TranslationItem Name="moveUpToolStripMenuItem" Property="Text">
-          <Value>上移</Value>
+        <TranslationItem Name="toolStripTranslationLanguageCode" Property="Text">
+          <Value>語言代碼：</Value>
         </TranslationItem>
-        <TranslationItem Name="moveDownToolStripMenuItem" Property="Text">
-          <Value>下移</Value>
+        <TranslationItem Name="googleAll" Property="Text">
+          <Value>谷歌所有空項</Value>
         </TranslationItem>
-        <TranslationItem Name="removeToolStripMenuItem" Property="Text">
-          <Value>刪除</Value>
+        <TranslationItem Name="toolStripButtonNew" Property="Text">
+          <Value>新建</Value>
         </TranslationItem>
-        <TranslationItem Name="editToolStripMenuItem" Property="Text">
-          <Value>編輯</Value>
+        <TranslationItem Name="toolStripButtonNew" Property="ToolTipText">
+          <Value>建立新的翻譯</Value>
         </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="DashboardEditor">
-      <translationItems>
-        <TranslationItem Name="CategoriesLabel" Property="Text">
-          <Value>分類</Value>
+        <TranslationItem Name="translateProgressText" Property="Text">
+          <Value>翻譯了{0}條，共{1}條</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>標題</Value>
+        <TranslationItem Name="allText" Property="Text">
+          <Value>所有</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>類型</Value>
+        <TranslationItem Name="saveCurrentChangesText" Property="Text">
+          <Value>你想保存當前的修改？ </Value>
         </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
-          <Value>RSS源</Value>
+        <TranslationItem Name="saveCurrentChangesCaption" Property="Text">
+          <Value>儲存修改</Value>
         </TranslationItem>
-        <TranslationItem Name="RssFeedType" Property="Text">
-          <Value>RSS源</Value>
-        </TranslationItem>
-        <TranslationItem Name="RepositoriesType" Property="Text">
-          <Value>版本庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="Remove" Property="Text">
-          <Value>移除</Value>
-        </TranslationItem>
-        <TranslationItem Name="Add" Property="Text">
-          <Value>新增</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FileStatusList">
-      <translationItems>
-        <TranslationItem Name="NoFiles" Property="Text">
-          <Value>沒有改變</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormCherryPickCommitSmall">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>最優提交（Cherry pick commit）</Value>
-        </TranslationItem>
-        <TranslationItem Name="Date" Property="Text">
-          <Value>提交日期：</Value>
-        </TranslationItem>
-        <TranslationItem Name="Message" Property="Text">
-          <Value>訊息：</Value>
-        </TranslationItem>
-        <TranslationItem Name="Author" Property="Text">
-          <Value>作者：</Value>
-        </TranslationItem>
-        <TranslationItem Name="Commit" Property="Text">
-          <Value>提交：</Value>
-        </TranslationItem>
-        <TranslationItem Name="BranchInfo" Property="Text">
-          <Value>優化(Cherry pick)此提交：</Value>
-        </TranslationItem>
-        <TranslationItem Name="Pick" Property="Text">
-          <Value>挑選本提交</Value>
-        </TranslationItem>
-        <TranslationItem Name="AutoCommit" Property="Text">
-          <Value>自動建立一個提交</Value>
-        </TranslationItem>
-        <TranslationItem Name="columnHeader1" Property="Text">
-          <Value>序號</Value>
-        </TranslationItem>
-        <TranslationItem Name="columnHeader2" Property="Text">
-          <Value>訊息</Value>
-        </TranslationItem>
-        <TranslationItem Name="columnHeader3" Property="Text">
-          <Value>作者</Value>
-        </TranslationItem>
-        <TranslationItem Name="columnHeader4" Property="Text">
-          <Value>日期</Value>
-        </TranslationItem>
-        <TranslationItem Name="ParentsLabel" Property="Text">
-          <Value>這提交是一個合併，選擇合併的上一層：</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="CreatePullRequestForm">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>建立拉取請求</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strLoading" Property="Text">
-          <Value>正在載入...</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strCouldNotLocateARemoteThatBelongsToYourUser" Property="Text">
-          <Value>遠端沒有你要的</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strYouMustSpecifyATitleAndABody" Property="Text">
-          <Value>你要指名標題與本文</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strPullRequest" Property="Text">
-          <Value>拉取需求</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strFailedToCreatePullRequest" Property="Text">
-          <Value>無法建立拉取請求</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strDone" Property="Text">
-          <Value>完成</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strError" Property="Text">
-          <Value>錯誤</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>標題:</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>本文:</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text">
-          <Value>拉取需求資料</Value>
-        </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
-          <Value>目標版本庫:</Value>
-        </TranslationItem>
-        <TranslationItem Name="_createBtn" Property="Text">
-          <Value>建立</Value>
-        </TranslationItem>
-        <TranslationItem Name="label4" Property="Text">
-          <Value>你的分支:</Value>
-        </TranslationItem>
-        <TranslationItem Name="label5" Property="Text">
-          <Value>目標分支:</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="ForkAndCloneForm">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>分歧與複製遠端版本庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strError" Property="Text">
-          <Value>錯誤</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strLoading" Property="Text">
-          <Value>:載入中:</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strYes" Property="Text">
-          <Value>是</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strNo" Property="Text">
-          <Value>否</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strFailedToGetRepos" Property="Text">
-          <Value>無法取得版本庫，使用者名稱/ApiToken不正確？</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strWillCloneWithPushAccess" Property="Text">
-          <Value>將複製{0}到{1}，你必須推送才能存取{2}</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strWillCloneInfo" Property="Text">
-          <Value>將複製{0}到{1}，你必須是夥伴才能推送{2}</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strWillBeAddedAsARemote" Property="Text">
-          <Value>"{0}"的加入將視為遠端</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strCouldNotAddRemote" Property="Text">
-          <Value>無法加入遠端</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strNoHomepageDefined" Property="Text">
-          <Value>沒有首頁</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strFailedToFork" Property="Text">
-          <Value>無法分歧</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strSearchFailed" Property="Text">
-          <Value>無法搜尋</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strUserNotFound" Property="Text">
-          <Value>沒有這個使用者</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strCouldNotFetchReposOfUser" Property="Text">
-          <Value>無法擷取使用者的版本庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strSearching" Property="Text">
-          <Value>:搜尋中:</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strSelectOneItem" Property="Text">
-          <Value>你只能選擇一項</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strCloneFolderCanNotBeEmpty" Property="Text">
-          <Value>複製的資料夾不能是空的</Value>
-        </TranslationItem>
-        <TranslationItem Name="_searchBtn" Property="Text">
-          <Value>搜尋</Value>
-        </TranslationItem>
-        <TranslationItem Name="_forkBtn" Property="Text">
-          <Value>分歧!</Value>
-        </TranslationItem>
-        <TranslationItem Name="_cloneBtn" Property="Text">
-          <Value>複製</Value>
-        </TranslationItem>
-        <TranslationItem Name="columnHeader2" Property="Text">
-          <Value>私有</Value>
-        </TranslationItem>
-        <TranslationItem Name="_browseForCloneToDirbtn" Property="Text">
-          <Value>瀏覽...</Value>
-        </TranslationItem>
-        <TranslationItem Name="_descriptionLbl" Property="Text">
-          <Value>描述:</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>目的資料夾:</Value>
-        </TranslationItem>
-        <TranslationItem Name="_openGitupPageBtn" Property="Text">
-          <Value>開啟github網頁</Value>
-        </TranslationItem>
-        <TranslationItem Name="_closeBtn" Property="Text">
-          <Value>關閉</Value>
-        </TranslationItem>
-        <TranslationItem Name="_createDirectoryLbl" Property="Text">
-          <Value>建立目錄:</Value>
-        </TranslationItem>
-        <TranslationItem Name="_myReposPage" Property="Text">
-          <Value>我的版本庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="_searchReposPage" Property="Text">
-          <Value>搜尋版本庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="_cloneSetupGB" Property="Text">
-          <Value>複製</Value>
-        </TranslationItem>
-        <TranslationItem Name="_helpTextLbl" Property="Text">
-          <Value>如果要分歧他人的版本庫，可以到版本庫夜搜尋</Value>
-        </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
-          <Value>將遠端當作:</Value>
-        </TranslationItem>
-        <TranslationItem Name="_getFromUserBtn" Property="Text">
-          <Value>使用者提供</Value>
-        </TranslationItem>
-        <TranslationItem Name="columnHeader6" Property="Text">
-          <Value>分歧</Value>
-        </TranslationItem>
-        <TranslationItem Name="_orLbl" Property="Text">
-          <Value>或</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="ViewPullRequestsForm">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>檢視拉取請求</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strFailedToFetchPullData" Property="Text">
-          <Value>無法擷取拉取日期</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strFailedToLoadDiscussionItem" Property="Text">
-          <Value>無法發表討論項目</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strFailedToClosePullRequest" Property="Text">
-          <Value>無法關閉拉取請求</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strFailedToLoadDiffData" Property="Text">
-          <Value>無法載入差異資料</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strCouldNotLoadDiscussion" Property="Text">
-          <Value>無法載入討論</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strError" Property="Text">
-          <Value>錯誤</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strLoading" Property="Text">
-          <Value>:載入:</Value>
-        </TranslationItem>
-        <TranslationItem Name="columnHeader1" Property="Text">
-          <Value>#</Value>
-        </TranslationItem>
-        <TranslationItem Name="columnHeader2" Property="Text">
-          <Value>Heading</Value>
-        </TranslationItem>
-        <TranslationItem Name="columnHeader3" Property="Text">
-          <Value>由</Value>
-        </TranslationItem>
-        <TranslationItem Name="columnHeader4" Property="Text">
-          <Value>建立</Value>
-        </TranslationItem>
-        <TranslationItem Name="_chooseRepo" Property="Text">
-          <Value>選擇版本庫:</Value>
-        </TranslationItem>
-        <TranslationItem Name="_fetchBtn" Property="Text">
-          <Value>擷取與評估</Value>
-        </TranslationItem>
-        <TranslationItem Name="_postComment" Property="Text">
-          <Value>發表意見</Value>
-        </TranslationItem>
-        <TranslationItem Name="_closePullRequestBtn" Property="Text">
-          <Value>關閉拉取請求</Value>
-        </TranslationItem>
-        <TranslationItem Name="_refreshCommentsBtn" Property="Text">
-          <Value>重新整理</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="EditNetSpell">
-      <translationItems>
-        <TranslationItem Name="translateEntireText" Property="Text">
-          <Value>翻譯全文到{0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="translateCurrentWord" Property="Text">
-          <Value>翻譯{0}為{1}</Value>
-        </TranslationItem>
-        <TranslationItem Name="addToDictionaryText" Property="Text">
-          <Value>增加字典</Value>
-        </TranslationItem>
-        <TranslationItem Name="ignoreWordText" Property="Text">
-          <Value>忽略本字</Value>
-        </TranslationItem>
-        <TranslationItem Name="removeWordText" Property="Text">
-          <Value>移除本字</Value>
-        </TranslationItem>
-        <TranslationItem Name="dictionaryText" Property="Text">
-          <Value>字典</Value>
-        </TranslationItem>
-        <TranslationItem Name="markIllFormedLinesText" Property="Text">
-          <Value>標示不合格式那行</Value>
-        </TranslationItem>
-        <TranslationItem Name="EmptyLabel" Property="Text">
-          <Value>輸入訊息</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FindAndReplaceForm">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>尋找和取代</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>尋找內容(&amp;n)：</Value>
-        </TranslationItem>
-        <TranslationItem Name="lblReplaceWith" Property="Text">
-          <Value>取代為(&amp;p)：</Value>
-        </TranslationItem>
-        <TranslationItem Name="btnFindNext" Property="Text">
-          <Value>找下一個(&amp;F)</Value>
-        </TranslationItem>
-        <TranslationItem Name="btnReplace" Property="Text">
-          <Value>取代(&amp;R)</Value>
-        </TranslationItem>
-        <TranslationItem Name="btnReplaceAll" Property="Text">
-          <Value>全部取代(&amp;A)</Value>
-        </TranslationItem>
-        <TranslationItem Name="chkMatchWholeWord" Property="Text">
-          <Value>全字符合(&amp;w)</Value>
-        </TranslationItem>
-        <TranslationItem Name="chkMatchCase" Property="Text">
-          <Value>符合大小寫(&amp;c)</Value>
-        </TranslationItem>
-        <TranslationItem Name="btnHighlightAll" Property="Text">
-          <Value>尋找和高亮顯示所有(&amp;a)</Value>
-        </TranslationItem>
-        <TranslationItem Name="btnCancel" Property="Text">
-          <Value>取消</Value>
-        </TranslationItem>
-        <TranslationItem Name="btnFindPrevious" Property="Text">
-          <Value>找上一個(&amp;v)</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormAddFiles">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>增加檔案</Value>
-        </TranslationItem>
-        <TranslationItem Name="Filter" Property="Text">
-          <Value>.</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>過濾器</Value>
-        </TranslationItem>
-        <TranslationItem Name="AddFiles" Property="Text">
-          <Value>增加檔案</Value>
-        </TranslationItem>
-        <TranslationItem Name="ShowFiles" Property="Text">
-          <Value>顯示檔案</Value>
-        </TranslationItem>
-        <TranslationItem Name="force" Property="Text">
-          <Value>強制</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormAddSubmodule">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>新增子模組</Value>
-        </TranslationItem>
-        <TranslationItem Name="Add" Property="Text">
-          <Value>新增</Value>
-        </TranslationItem>
-        <TranslationItem Name="Browse" Property="Text">
-          <Value>瀏覽</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>子模組的路徑</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>本機路徑</Value>
-        </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
-          <Value>分支</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormAddToGitIgnore">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>添加檔案到.gitIgnore</Value>
-        </TranslationItem>
-        <TranslationItem Name="AddToIngore" Property="Text">
-          <Value>添加到.gitignore</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>忽略的檔案模式</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormArchive">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>存檔</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>選擇一個版本進行zip壓縮</Value>
-        </TranslationItem>
-        <TranslationItem Name="Save" Property="Text">
-          <Value>保存</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormBranch">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>建立分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="_selectOneRevision" Property="Text">
-          <Value>選擇一版本來建立分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="_branchCaption" Property="Text">
-          <Value>分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>分支名稱</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>建立分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="Checkout" Property="Text">
-          <Value>簽出分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="CheckoutAfterCreate" Property="Text">
-          <Value>建立後簽出</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormBranchSmall">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>建立分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>分支名稱</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>建立分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="CheckoutAfterCreate" Property="Text">
-          <Value>建立後簽出</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormChangeLog">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>異動日誌</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormCheckout">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>簽出版本</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>簽出</Value>
-        </TranslationItem>
-        <TranslationItem Name="Force" Property="Text">
-          <Value>強制</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormCheckoutBranch">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>簽出分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="trackRemoteBranch" Property="Text">
-          <Value>您選擇了簽出一個遠端分支。 
-
-您想建立一個名為'{0}'的本地分支來追踪此分支麼？ </Value>
-        </TranslationItem>
-        <TranslationItem Name="trackRemoteBranchCaption" Property="Text">
-          <Value>簽出分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>選擇分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>簽出</Value>
-        </TranslationItem>
-        <TranslationItem Name="LocalBranch" Property="Text">
-          <Value>本機分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="Remotebranch" Property="Text">
-          <Value>遠端分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="Force" Property="Text">
-          <Value>強制</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormCherryPick">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>優選</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>選擇您要優選的提交。該提交將在當前的頭部重新提交。 </Value>
-        </TranslationItem>
-        <TranslationItem Name="CherryPick" Property="Text">
-          <Value>優選</Value>
-        </TranslationItem>
-        <TranslationItem Name="AutoCommit" Property="Text">
-          <Value>當沒有任何合併衝突，自動建立提交。 </Value>
-        </TranslationItem>
-        <TranslationItem Name="autoParent" Property="Text">
-          <Value>當提交是一個合併時，自動設定父親為1</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormCleanupRepository">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>清理版本庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="Preview" Property="Text">
-          <Value>預覽</Value>
-        </TranslationItem>
-        <TranslationItem Name="Cleanup" Property="Text">
-          <Value>清理</Value>
-        </TranslationItem>
-        <TranslationItem Name="Cancel" Property="Text">
-          <Value>取消</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text">
-          <Value>清理倉庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="RemoveIngnored" Property="Text">
-          <Value>只移除忽略的未追踪的檔案</Value>
-        </TranslationItem>
-        <TranslationItem Name="RemoveNonIgnored" Property="Text">
-          <Value>只移除未忽略的未追踪的檔案</Value>
-        </TranslationItem>
-        <TranslationItem Name="RemoveAll" Property="Text">
-          <Value>移除所有未追踪的檔案</Value>
-        </TranslationItem>
-        <TranslationItem Name="RemoveDirectories" Property="Text">
-          <Value>移除所有未追踪的目錄</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormClone">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>複製</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>目的地</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>要複製的版本庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>複製</Value>
-        </TranslationItem>
-        <TranslationItem Name="ToBrowse" Property="Text">
-          <Value>瀏覽</Value>
-        </TranslationItem>
-        <TranslationItem Name="FromBrowse" Property="Text">
-          <Value>瀏覽</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text">
-          <Value>版本庫類型</Value>
-        </TranslationItem>
-        <TranslationItem Name="CentralRepository" Property="Text">
-          <Value>中央版本庫，沒有工作目錄(--bare)</Value>
-        </TranslationItem>
-        <TranslationItem Name="PersonalRepository" Property="Text">
-          <Value>個人版本庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="Central" Property="Text">
-          <Value>中央版本庫，沒有工作目錄(--bare --shared=all)</Value>
-        </TranslationItem>
-        <TranslationItem Name="Personal" Property="Text">
-          <Value>個人版本庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="LoadSSHKey" Property="Text">
-          <Value>加載SSH密鑰</Value>
-        </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
-          <Value>要建立的子目錄</Value>
-        </TranslationItem>
-        <TranslationItem Name="Info" Property="Text">
-          <Value>此版本庫將被複製到一個新的目錄： 
-     [destination]\GitExtensions\</Value>
-        </TranslationItem>
-        <TranslationItem Name="brachLabel" Property="Text">
-          <Value>分支</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormCommandlineHelp">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>命令行使用</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>支持的命令行參數： 
-
-browse 
-add 
-addfiles 
-apply 
-applypatch 
-branch 
-checkout 
-checkoutbranch 
-checkoutrevision 
-init 
-clone [path] 
-commit 
-filehistory [file] 
-formatpatch 
-pull 
-push 
-settings 
-viewdiff 
-rebase 
-merge 
-cherry 
-tag 
-stash</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormCommitCount">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>提交數</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormDashboardCategoryTitle">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>輸入標題</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>輸入標題</Value>
-        </TranslationItem>
-        <TranslationItem Name="OkButton" Property="Text">
-          <Value>確定</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormDashboardEditor">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>起始頁</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormDeleteBranch">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>刪除分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="_deleteBranchCaption" Property="Text">
-          <Value>刪除分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="_deleteBranchQuestion" Property="Text">
-          <Value>你確定要刪除此分支？ 
-如果刪除一個分支，它對應的提交也會被被刪除！ </Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>刪除</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>選擇分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>您只能刪除已經在HEAD中完全合併的分支。 
-如果您刪除一分支，對應的提交會丟失，因為已經沒有分支指向它們了。 
-如果您想刪除一個沒有完全合併的分支，請選中“強制刪除”</Value>
-        </TranslationItem>
-        <TranslationItem Name="ForceDelete" Property="Text">
-          <Value>強制刪除</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormDeleteTag">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>刪除標籤</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>刪除</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>選擇標籤</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormDiff">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>差異</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormDiffSmall">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>差異</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormDonate">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>捐贈</Value>
-        </TranslationItem>
-        <TranslationItem Name="richTextBox1" Property="Text">
-          <Value>捐贈 
-
-你可以通過捐贈對此專案作出財務方面的貢獻。捐款將用於支付架設網站的成本和該專案保持運行的資源。點擊“支持本專案”按鈕來獲取有關捐贈的更多訊息。 </Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormEdit">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>查看</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormFileHistory">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>檔案歷史</Value>
-        </TranslationItem>
-        <TranslationItem Name="ViewTab" Property="Text">
-          <Value>查看</Value>
-        </TranslationItem>
-        <TranslationItem Name="DiffTab" Property="Text">
-          <Value>差異</Value>
-        </TranslationItem>
-        <TranslationItem Name="Blame" Property="Text">
-          <Value>檔案記錄</Value>
-        </TranslationItem>
-        <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
-          <Value>用difftool開啟</Value>
-        </TranslationItem>
-        <TranslationItem Name="saveAsToolStripMenuItem" Property="Text">
+        <TranslationItem Name="saveAsText" Property="Text">
           <Value>另存為</Value>
         </TranslationItem>
-        <TranslationItem Name="followFileHistoryToolStripMenuItem" Property="Text">
-          <Value>偵測後改名</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormFormatPatch">
+    <TranslationCategory Name="GitLogForm">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>格式補丁</Value>
+          <Value>日誌</Value>
         </TranslationItem>
-        <TranslationItem Name="SelectedBranch" Property="Text">
-          <Value>分支</Value>
+        <TranslationItem Name="tabPageCommandLog" Property="Text">
+          <Value>命令日誌</Value>
         </TranslationItem>
-        <TranslationItem Name="Browse" Property="Text">
-          <Value>流覽</Value>
-        </TranslationItem>
-        <TranslationItem Name="FormatPatch" Property="Text">
-          <Value>建立補丁</Value>
-        </TranslationItem>
-        <TranslationItem Name="SendToMail" Property="Text">
-          <Value>寄送補丁到</Value>
-        </TranslationItem>
-        <TranslationItem Name="SaveToDir" Property="Text">
-          <Value>儲存補丁到目錄</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>本文</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>主旨</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormGitIgnore">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>編輯 .gitignore 文件</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>指定你想讓git忽略的文件模板。 
-
-舉例 
-#忽略windows生成的預覽圖文件 
-Thunbs.db 
-#忽略Visual Studio產生的文件 
-*.obj 
-*.exe 
-*.pdb 
-*.user 
-*.aps 
-*.pch 
-*.vspscc 
-*_i.c 
-*_p.c 
-*.ncb 
-*.suo 
-*.tlb 
-*.tlh 
-*.bak 
-*.cache 
-*.ilk 
-*.log 
-[Bb]in 
-[Dd]ebug*/ 
-*.lib 
-*.sbr 
-obj/ 
-[Rr]elease*/ 
-_ReSharper*/</Value>
-        </TranslationItem>
-        <TranslationItem Name="Save" Property="Text">
-          <Value>儲存</Value>
-        </TranslationItem>
-        <TranslationItem Name="AddDefault" Property="Text">
-          <Value>添加預設的忽略項</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormInit">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>初始化新版本庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="_chooseDirectory" Property="Text">
-          <Value>請選擇一個目錄。</Value>
-        </TranslationItem>
-        <TranslationItem Name="_chooseDirectoryNotFile" Property="Text">
-          <Value>無法初始化一個新版本庫，請另選一目錄。</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>目錄</Value>
-        </TranslationItem>
-        <TranslationItem Name="Browse" Property="Text">
-          <Value>瀏覽</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text">
-          <Value>版本庫種類</Value>
-        </TranslationItem>
-        <TranslationItem Name="Central" Property="Text">
-          <Value>中央版本庫，沒有工作目錄(--bare --shared=all)</Value>
-        </TranslationItem>
-        <TranslationItem Name="Personal" Property="Text">
-          <Value>個人版本庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="Init" Property="Text">
-          <Value>初始化</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormLoadPuttySshKey">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>把PuTTY的SSH密鑰載入到驗證客戶端中</Value>
-        </TranslationItem>
-        <TranslationItem Name="LoadSSHKey" Property="Text">
-          <Value>載入</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>私鑰文件</Value>
-        </TranslationItem>
-        <TranslationItem Name="Browse" Property="Text">
-          <Value>瀏覽</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormMailMap">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>編輯.mailmap檔案</Value>
-        </TranslationItem>
-        <TranslationItem Name="Save" Property="Text">
-          <Value>儲存</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>編輯.mailmap檔案。 
-此文件用來給改正用戶名。 
-
-例如： 
-Henk Westhuis &lt;Henk@.(none)&gt; 
-Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormMergeBranch">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>合併分行</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strategyTooltipText" Property="Text">
-          <Value>解析（resolve） 
-使用三向合併算法，只能解決兩頭合併（比如當前分支和你“拉”操作的來源分支）。 
-此策略會小心的檢測出交叉合併的二義性，總體來說是安全且快速的。 
-
-遞歸（recursive） 
-使用三向合併算法，只能解決兩頭合併。當兩個分支至少有一個共同祖先能夠使用三向合併的時候，此策略會為所有共同祖先建立一個合併樹並且把這棵樹當做三向合併的引用樹。除此以外，此策略還可以檢測和處理重命名的的合併。此策略是“拉”操作和合併單個分支的默認策略。 
-
-章魚（octopus） 
-此策略可以解決大於兩頭的合併，但是會拒絕需要手動解析的複雜合併。主要的作用是把幾個主要的功用分支綁在一起。此策略是“拉”操作和合併多個分支的默認策略。 
-
-排外（ours） 
-此策略可以解決任意頭合併，但是在合併的結果樹中總是保持當前分支的頭，對於忽略一切其他分支的改變的情況來說極其有效。此策略可以用來接替舊的開發歷史中的副分支。 
-
-子樹（subtree） 
-此策略是修改的遞歸策略。當合併A樹和B樹時，如果B樹對應A的一個子樹，B首先會被調整到設和A樹結構的位置，而不是進行同級別的對比。這種調整也會應用在公共祖先樹上。 </Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>把當前分支和另一分支合併</Value>
-        </TranslationItem>
-        <TranslationItem Name="Currentbranch" Property="Text">
-          <Value>當前分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>和...合併</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>合併(&amp;M)</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text">
-          <Value>合併</Value>
-        </TranslationItem>
-        <TranslationItem Name="noFastForward" Property="Text">
-          <Value>總是建立一個新的合併提交(merge commit)</Value>
-        </TranslationItem>
-        <TranslationItem Name="fastForward" Property="Text">
-          <Value>如果可能的話，建立一個單一分支線(快轉)</Value>
-        </TranslationItem>
-        <TranslationItem Name="currentBranchLabel" Property="Text">
-          <Value>？ </Value>
-        </TranslationItem>
-        <TranslationItem Name="strategyHelp" Property="Text">
-          <Value>幫助</Value>
-        </TranslationItem>
-        <TranslationItem Name="squash" Property="Text">
-          <Value>壓縮提交</Value>
-        </TranslationItem>
-        <TranslationItem Name="advanced" Property="Text">
-          <Value>顯示進階選項</Value>
-        </TranslationItem>
-        <TranslationItem Name="NonDefaultMergeStrategy" Property="Text">
-          <Value>使用非預設的合併策略</Value>
-        </TranslationItem>
-        <TranslationItem Name="noCommit" Property="Text">
-          <Value>不提交</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormModifiedDeletedCreated">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>解決合併衝突</Value>
-        </TranslationItem>
-        <TranslationItem Name="Abort" Property="Text">
-          <Value>終止</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormPluginSettings">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>插件設定</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormPull">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>拉取</Value>
-        </TranslationItem>
-        <TranslationItem Name="_allMergeConflictSolvedQuestion" Property="Text">
-          <Value>所有的合併衝突都解決了嗎？要不要提交？ </Value>
-        </TranslationItem>
-        <TranslationItem Name="_allMergeConflictSolvedQuestionCaption" Property="Text">
-          <Value>衝突解決了</Value>
-        </TranslationItem>
-        <TranslationItem Name="_applyShashedItemsAgain" Property="Text">
-          <Value>要把隱藏的目標再次應用到工作目錄嗎？ </Value>
-        </TranslationItem>
-        <TranslationItem Name="_applyShashedItemsAgainCaption" Property="Text">
-          <Value>自動隱藏</Value>
-        </TranslationItem>
-        <TranslationItem Name="_cannotLoadPutty" Property="Text">
-          <Value>無法載入SSH密鑰。 PuTTY設定的不正確。 </Value>
-        </TranslationItem>
-        <TranslationItem Name="_fetchAllBranchesCanOnlyWithFetch" Property="Text">
-          <Value>如果不使用合併(merge)或者衍合(rebase)，你只能把整個遠端分支(*)都提取過來。如果你想獲取所有遠端分支，那就選擇提取。如果你想獲取和合併某一個分支，那就選擇這個特定的分支。 </Value>
-        </TranslationItem>
-        <TranslationItem Name="_selectRemoteRepository" Property="Text">
-          <Value>請選擇一個遠端版本庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="_selectSourceDirectory" Property="Text">
-          <Value>請選擇來源目錄</Value>
-        </TranslationItem>
-        <TranslationItem Name="BrowseSource" Property="Text">
-          <Value>瀏覽</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>遠端分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="Pull" Property="Text">
-          <Value>拉取(&amp;P)</Value>
-        </TranslationItem>
-        <TranslationItem Name="Mergetool" Property="Text">
-          <Value>解決衝突</Value>
-        </TranslationItem>
-        <TranslationItem Name="Merge" Property="Text">
-          <Value>遠端分支合併到當前分支(&amp;M)</Value>
-        </TranslationItem>
-        <TranslationItem Name="Rebase" Property="Text">
-          <Value>衍合(Rebase)遠端分支到當前分支，建立線性歷史記錄。 
-建議使用時選擇一個遠端分支。 （謹慎使用）(&amp;R)</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text">
-          <Value>合併選項</Value>
-        </TranslationItem>
-        <TranslationItem Name="Fetch" Property="Text">
-          <Value>不合併，只獲取遠端分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="Stash" Property="Text">
-          <Value>緩衝更改</Value>
-        </TranslationItem>
-        <TranslationItem Name="AddRemote" Property="Text">
-          <Value>管理遠端</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox2" Property="Text">
-          <Value>從這裡拉取</Value>
-        </TranslationItem>
-        <TranslationItem Name="PullFromUrl" Property="Text">
-          <Value>網址</Value>
-        </TranslationItem>
-        <TranslationItem Name="PullFromRemote" Property="Text">
-          <Value>遠端</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox3" Property="Text">
-          <Value>分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="AutoStash" Property="Text">
-          <Value>自動緩衝</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>本機分支</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormPush">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>推送</Value>
-        </TranslationItem>
-        <TranslationItem Name="_branchNewForRemote" Property="Text">
-          <Value>您將要推送的這個分支對於遠端來說似乎是個新的分支。 
-您確認要推動這個分支嗎？</Value>
-        </TranslationItem>
-        <TranslationItem Name="_cannotLoadPutty" Property="Text">
-          <Value>無法載入SSH密鑰。 PuTTY配定的不正確​​。 </Value>
-        </TranslationItem>
-        <TranslationItem Name="_pushCaption" Property="Text">
-          <Value>推送</Value>
-        </TranslationItem>
-        <TranslationItem Name="_pushToCaption" Property="Text">
-          <Value>推送到{0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="_selectDestinationDirectory" Property="Text">
-          <Value>請選擇一個目的目錄</Value>
-        </TranslationItem>
-        <TranslationItem Name="_selectRemote" Property="Text">
-          <Value>請選擇一個遠端版本庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="_selectTag" Property="Text">
-          <Value>您需要選擇一個標籤來推送，或者您可以選擇“推送所有標籤。”</Value>
-        </TranslationItem>
-        <TranslationItem Name="_yes" Property="Text">
-          <Value>是</Value>
-        </TranslationItem>
-        <TranslationItem Name="_no" Property="Text">
-          <Value>否</Value>
-        </TranslationItem>
-        <TranslationItem Name="BrowseSource" Property="Text">
-          <Value>瀏覽</Value>
-        </TranslationItem>
-        <TranslationItem Name="Push" Property="Text">
-          <Value>推送(&amp;P)</Value>
-        </TranslationItem>
-        <TranslationItem Name="ForcePushTags" Property="Text">
-          <Value>強制推送(&amp;F)</Value>
-        </TranslationItem>
-        <TranslationItem Name="Pull" Property="Text">
-          <Value>拉取</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox2" Property="Text">
-          <Value>推送到</Value>
-        </TranslationItem>
-        <TranslationItem Name="PullFromUrl" Property="Text">
-          <Value>網址</Value>
-        </TranslationItem>
-        <TranslationItem Name="PullFromRemote" Property="Text">
-          <Value>遠端</Value>
-        </TranslationItem>
-        <TranslationItem Name="AddRemote" Property="Text">
-          <Value>管理遠端</Value>
-        </TranslationItem>
-        <TranslationItem Name="LoadSSHKey" Property="Text">
-          <Value>載入SSH密鑰</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox3" Property="Text">
-          <Value>標籤</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>要推送的標籤</Value>
-        </TranslationItem>
-        <TranslationItem Name="BranchTab" Property="Text">
-          <Value>推送分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="BranchTab" Property="ToolTipText">
-          <Value>推送分支然後提交到遠端版本庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="TagTab" Property="Text">
-          <Value>推送標籤</Value>
-        </TranslationItem>
-        <TranslationItem Name="TagTab" Property="ToolTipText">
-          <Value>推送標籤到遠端版本庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="PushAllTags" Property="Text">
-          <Value>推送所有標籤</Value>
-        </TranslationItem>
-        <TranslationItem Name="MultipleBranchTab" Property="Text">
-          <Value>推送多個分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox4" Property="Text">
-          <Value>推送選定的分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text">
-          <Value>分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="PushAllBranches" Property="Text">
-          <Value>推送所有分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="ForcePushBranches" Property="Text">
-          <Value>強制推送(&amp;F)</Value>
-        </TranslationItem>
-        <TranslationItem Name="_createPullRequestCB" Property="Text">
-          <Value>推送後建立拉取請求</Value>
-        </TranslationItem>
-        <TranslationItem Name="labelTo" Property="Text">
-          <Value>到</Value>
-        </TranslationItem>
-        <TranslationItem Name="RemoteBranch" Property="Text">
-          <Value>嚴重:不是git的版本庫(或是任一上層目錄):.git</Value>
-        </TranslationItem>
-        <TranslationItem Name="labelFrom" Property="Text">
-          <Value>要推送的分支</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormPuttyError">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>驗證錯誤</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>該命令產生一個錯誤，這通常意味著Putty認證代理端沒有運行，或者私鑰沒有正確載入。 
-
-請在載入密鑰後，點retry</Value>
-        </TranslationItem>
-        <TranslationItem Name="LoadSSHKey" Property="Text">
-          <Value>載入SSH密鑰</Value>
-        </TranslationItem>
-        <TranslationItem Name="Retry" Property="Text">
-          <Value>重試</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormRebase">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>衍合(Rebase)</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>將當前分支衍合到另一分支頂部</Value>
-        </TranslationItem>
-        <TranslationItem Name="Currentbranch" Property="Text">
-          <Value>當前</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>衍合(Rebase)</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>衍合於(Rebase on)</Value>
-        </TranslationItem>
-        <TranslationItem Name="AddFiles" Property="Text">
-          <Value>添加檔案</Value>
-        </TranslationItem>
-        <TranslationItem Name="Resolved" Property="Text">
-          <Value>繼續衍合(Rebase)</Value>
-        </TranslationItem>
-        <TranslationItem Name="Abort" Property="Text">
-          <Value>終止</Value>
-        </TranslationItem>
-        <TranslationItem Name="Skip" Property="Text">
-          <Value>跳過此提交</Value>
-        </TranslationItem>
-        <TranslationItem Name="Mergetool" Property="Text">
-          <Value>解決衝突</Value>
-        </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
-          <Value>提交後再次應用：</Value>
-        </TranslationItem>
-        <TranslationItem Name="SolveMergeconflicts" Property="Text">
-          <Value>有未解決的合併錯誤</Value>
-        </TranslationItem>
-        <TranslationItem Name="chkInteractive" Property="Text">
-          <Value>交互式衍合(Rebase)</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormRemotes">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>遠端版本庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="tabPage1" Property="Text">
-          <Value>遠端版本庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="tabPage2" Property="Text">
-          <Value>預設拉取動作(獲取與合併)</Value>
-        </TranslationItem>
-        <TranslationItem Name="UpdateBranch" Property="Text">
-          <Value>更新所有遠端分支資訊</Value>
-        </TranslationItem>
-        <TranslationItem Name="Prune" Property="Text">
-          <Value>刪除遠端分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="label6" Property="Text">
-          <Value>預設合併</Value>
-        </TranslationItem>
-        <TranslationItem Name="label5" Property="Text">
-          <Value>遠端版本庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="label4" Property="Text">
-          <Value>本機分支名稱</Value>
-        </TranslationItem>
-        <TranslationItem Name="SaveDefaultPushPull" Property="Text">
-          <Value>儲存</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text">
-          <Value>詳細資料</Value>
-        </TranslationItem>
-        <TranslationItem Name="PuTTYSSH" Property="Text">
-          <Value>PuTTY SSH</Value>
-        </TranslationItem>
-        <TranslationItem Name="LoadSSHKey" Property="Text">
-          <Value>載入SSH鑰匙</Value>
-        </TranslationItem>
-        <TranslationItem Name="TestConnection" Property="Text">
-          <Value>連接測試</Value>
-        </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
-          <Value>私鑰檔案</Value>
-        </TranslationItem>
-        <TranslationItem Name="SshBrowse" Property="Text">
-          <Value>瀏覽</Value>
-        </TranslationItem>
-        <TranslationItem Name="Delete" Property="Text">
-          <Value>刪除</Value>
-        </TranslationItem>
-        <TranslationItem Name="New" Property="Text">
-          <Value>新</Value>
-        </TranslationItem>
-        <TranslationItem Name="Save" Property="Text">
-          <Value>儲存</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>名稱</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>網址</Value>
-        </TranslationItem>
-        <TranslationItem Name="Browse" Property="Text">
-          <Value>瀏覽</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormResetCurrentBranch">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>重置當前分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="branchInfo" Property="Text">
-          <Value>重置{0}到：</Value>
-        </TranslationItem>
-        <TranslationItem Name="commitInfo" Property="Text">
-          <Value>提交：{0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="authorInfo" Property="Text">
-          <Value>作者：{0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="dateInfo" Property="Text">
-          <Value>提交日期：{0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="commitMessage" Property="Text">
-          <Value>訊息：{0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="resetHardWarning" Property="Text">
-          <Value>您將要放棄所有的本機修改，你確定嗎？ </Value>
-        </TranslationItem>
-        <TranslationItem Name="resetCaption" Property="Text">
-          <Value>重設分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text">
-          <Value>重置類型</Value>
-        </TranslationItem>
-        <TranslationItem Name="Hard" Property="Text">
-          <Value>強迫模式：重置工作目錄和索引（放棄所有的本機修改，甚至未提交的修改）</Value>
-        </TranslationItem>
-        <TranslationItem Name="Mixed" Property="Text">
-          <Value>混合模式：不動工作目錄，只是重置索引</Value>
-        </TranslationItem>
-        <TranslationItem Name="Soft" Property="Text">
-          <Value>軟模式：保持工作目錄和索引均不變</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Value>確定</Value>
-        </TranslationItem>
-        <TranslationItem Name="Cancel" Property="Text">
-          <Value>取消</Value>
+        <TranslationItem Name="tabPageCommandCache" Property="Text">
+          <Value>命令快取</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2604,23 +1400,660 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormRevert">
+    <TranslationCategory Name="FormMergeBranch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>回復檔案修改</Value>
+          <Value>合併分行</Value>
         </TranslationItem>
-        <TranslationItem Name="_resetChangesCaption" Property="Text">
-          <Value>重置修改</Value>
+        <TranslationItem Name="_strategyTooltipText" Property="Text">
+          <Value>解析（resolve） 
+使用三向合併算法，只能解決兩頭合併（比如當前分支和你“拉”操作的來源分支）。 
+此策略會小心的檢測出交叉合併的二義性，總體來說是安全且快速的。 
+
+遞歸（recursive） 
+使用三向合併算法，只能解決兩頭合併。當兩個分支至少有一個共同祖先能夠使用三向合併的時候，此策略會為所有共同祖先建立一個合併樹並且把這棵樹當做三向合併的引用樹。除此以外，此策略還可以檢測和處理重命名的的合併。此策略是“拉”操作和合併單個分支的默認策略。 
+
+章魚（octopus） 
+此策略可以解決大於兩頭的合併，但是會拒絕需要手動解析的複雜合併。主要的作用是把幾個主要的功用分支綁在一起。此策略是“拉”操作和合併多個分支的默認策略。 
+
+排外（ours） 
+此策略可以解決任意頭合併，但是在合併的結果樹中總是保持當前分支的頭，對於忽略一切其他分支的改變的情況來說極其有效。此策略可以用來接替舊的開發歷史中的副分支。 
+
+子樹（subtree） 
+此策略是修改的遞歸策略。當合併A樹和B樹時，如果B樹對應A的一個子樹，B首先會被調整到設和A樹結構的位置，而不是進行同級別的對比。這種調整也會應用在公共祖先樹上。 </Value>
         </TranslationItem>
-        <TranslationItem Name="_undoChangesIn" Property="Text">
-          <Value>回復修改：
-{0}？</Value>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>把當前分支和另一分支合併</Value>
         </TranslationItem>
-        <TranslationItem Name="btnCancel" Property="Text">
-          <Value>取消</Value>
+        <TranslationItem Name="Currentbranch" Property="Text">
+          <Value>當前分支</Value>
         </TranslationItem>
-        <TranslationItem Name="Revert" Property="Text">
-          <Value>回復修改</Value>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>和...合併</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>合併(&amp;M)</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>合併</Value>
+        </TranslationItem>
+        <TranslationItem Name="noFastForward" Property="Text">
+          <Value>總是建立一個新的合併提交(merge commit)</Value>
+        </TranslationItem>
+        <TranslationItem Name="fastForward" Property="Text">
+          <Value>如果可能的話，建立一個單一分支線(快轉)</Value>
+        </TranslationItem>
+        <TranslationItem Name="currentBranchLabel" Property="Text">
+          <Value>？ </Value>
+        </TranslationItem>
+        <TranslationItem Name="strategyHelp" Property="Text">
+          <Value>幫助</Value>
+        </TranslationItem>
+        <TranslationItem Name="squash" Property="Text">
+          <Value>壓縮提交</Value>
+        </TranslationItem>
+        <TranslationItem Name="advanced" Property="Text">
+          <Value>顯示進階選項</Value>
+        </TranslationItem>
+        <TranslationItem Name="NonDefaultMergeStrategy" Property="Text">
+          <Value>使用非預設的合併策略</Value>
+        </TranslationItem>
+        <TranslationItem Name="noCommit" Property="Text">
+          <Value>不提交</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormFixHome">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>首頁</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox8" Property="Text">
+          <Value>環境</Value>
+        </TranslationItem>
+        <TranslationItem Name="otherHomeBrowse" Property="Text">
+          <Value>瀏覽</Value>
+        </TranslationItem>
+        <TranslationItem Name="otherHome" Property="Text">
+          <Value>其他</Value>
+        </TranslationItem>
+        <TranslationItem Name="userprofileHome" Property="Text">
+          <Value>把USERPROFILE設為HOME</Value>
+        </TranslationItem>
+        <TranslationItem Name="defaultHome" Property="Text">
+          <Value>使用預設HOME</Value>
+        </TranslationItem>
+        <TranslationItem Name="label51" Property="Text">
+          <Value>全體設定檔案位於%HOME%的位置。預設情形下，如果%HOME%為空，%HOME%將被設置為%HOMEDRIVE%%HOMEPATH%。 
+你應該只在遇到問題的時候才考慮改變預設設置。 </Value>
+        </TranslationItem>
+        <TranslationItem Name="ok" Property="Text">
+          <Value>確定</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormBlame">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>歷史檔案</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="ViewPatch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>查看補丁檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowsePatch" Property="Text">
+          <Value>瀏覽</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelPatch" Property="Text">
+          <Value>補丁</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="Open">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>開啟版本庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>目錄</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>瀏覽</Value>
+        </TranslationItem>
+        <TranslationItem Name="Load" Property="Text">
+          <Value>開啟</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormEdit">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>查看</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormDashboardCategoryTitle">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>輸入標題</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>輸入標題</Value>
+        </TranslationItem>
+        <TranslationItem Name="OkButton" Property="Text">
+          <Value>確定</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="Dashboard">
+      <translationItems>
+        <TranslationItem Name="RecentRepositories" Property="Title">
+          <Value>最近的版本庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="CommonActions" Property="Title">
+          <Value>一般操作</Value>
+        </TranslationItem>
+        <TranslationItem Name="DonateCategory" Property="Title">
+          <Value>貢獻</Value>
+        </TranslationItem>
+        <TranslationItem Name="cloneFork" Property="Text">
+          <Value>複製{0}版本庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="cloneRepository" Property="Text">
+          <Value>複製版本庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="createRepository" Property="Text">
+          <Value>建立新的版本庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="develop" Property="Text">
+          <Value>開發</Value>
+        </TranslationItem>
+        <TranslationItem Name="donate" Property="Text">
+          <Value>捐贈</Value>
+        </TranslationItem>
+        <TranslationItem Name="issues" Property="Text">
+          <Value>問題</Value>
+        </TranslationItem>
+        <TranslationItem Name="openRepository" Property="Text">
+          <Value>開啟版本庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="translate" Property="Text">
+          <Value>翻譯</Value>
+        </TranslationItem>
+        <TranslationItem Name="directoryIsNotAValidRepositoryCaption" Property="Text">
+          <Value>開啟</Value>
+        </TranslationItem>
+        <TranslationItem Name="directoryIsNotAValidRepository" Property="Text">
+          <Value>這不是一個正確的GIT版本庫，
+
+你要終止同時將它移除？</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormVerify">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>檢查資料庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="_removeDanglingObjectsCaption" Property="Text">
+          <Value>移除</Value>
+        </TranslationItem>
+        <TranslationItem Name="_removeDanglingObjectsQuestion" Property="Text">
+          <Value>你確定要刪除所有不可讀目標？ </Value>
+        </TranslationItem>
+        <TranslationItem Name="_xTagsCreated" Property="Text">
+          <Value>{0}個標記已經建立。不要忘記在完成時刪除這些標記。 </Value>
+        </TranslationItem>
+        <TranslationItem Name="mnuLostObjectsCreateTag" Property="Text">
+          <Value>標記選定的目標</Value>
+        </TranslationItem>
+        <TranslationItem Name="mnuLostObjectView" Property="Text">
+          <Value>查看所選目標</Value>
+        </TranslationItem>
+        <TranslationItem Name="mnuLostObjectsCreateBranch" Property="Text">
+          <Value>建立分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnRestoreSelectedObjects" Property="Text">
+          <Value>標記所有丟失的提交</Value>
+        </TranslationItem>
+        <TranslationItem Name="DeleteAllLostAndFoundTags" Property="Text">
+          <Value>刪除所有LOST_AND_FOUND標籤</Value>
+        </TranslationItem>
+        <TranslationItem Name="Remove" Property="Text">
+          <Value>刪除所有未決定的目標</Value>
+        </TranslationItem>
+        <TranslationItem Name="SaveObjects" Property="Text">
+          <Value>儲存到.git/lost-found目錄</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowOnlyCommits" Property="Text">
+          <Value>只顯示提交</Value>
+        </TranslationItem>
+        <TranslationItem Name="NoReflogs" Property="Text">
+          <Value>不要認為在reflog中引用的提交是可取得的</Value>
+        </TranslationItem>
+        <TranslationItem Name="FullCheck" Property="Text">
+          <Value>檢查不僅存在於在GIT_OBJECT_DIRECTORY($GIT_DIR/objects)目錄，
+而且還存在於替代目標池的目標。 </Value>
+        </TranslationItem>
+        <TranslationItem Name="Unreachable" Property="Text">
+          <Value>輸出所有存在但是不可讀的目標</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>預設情況下，在清理資料庫的時候， 
+兩週以上的未被引用的目標將會被刪除， 
+其他的目標只會在運行“刪除所有不可讀目標”的時候移除。 </Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>雙擊一列包含SHA1的來查看。 </Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormTagSmall">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>建立標籤</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>標籤名稱</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>建立標籤</Value>
+        </TranslationItem>
+        <TranslationItem Name="annotate" Property="Text">
+          <Value>建立帶註解的標記</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>訊息</Value>
+        </TranslationItem>
+        <TranslationItem Name="_messageCaption" Property="Text">
+          <Value>標籤</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noRevisionSelected" Property="Text">
+          <Value>選擇一個版本來標記</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noTagMassage" Property="Text">
+          <Value>請輸入標籤的訊息</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormTag">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>標籤</Value>
+        </TranslationItem>
+        <TranslationItem Name="_messageCaption" Property="Text">
+          <Value>標籤</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noRevisionSelected" Property="Text">
+          <Value>選擇一個版本來標記</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noTagMessage" Property="Text">
+          <Value>請輸入標籤的訊息</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>標籤名稱</Value>
+        </TranslationItem>
+        <TranslationItem Name="CreateTag" Property="Text">
+          <Value>建立標籤</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>訊息</Value>
+        </TranslationItem>
+        <TranslationItem Name="annotate" Property="Text">
+          <Value>建立帶註解的標記</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormRemotes">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>遠端版本庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="tabPage1" Property="Text">
+          <Value>遠端版本庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="tabPage2" Property="Text">
+          <Value>預設拉取動作(獲取與合併)</Value>
+        </TranslationItem>
+        <TranslationItem Name="UpdateBranch" Property="Text">
+          <Value>更新所有遠端分支資訊</Value>
+        </TranslationItem>
+        <TranslationItem Name="Prune" Property="Text">
+          <Value>刪除遠端分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="label6" Property="Text">
+          <Value>預設合併</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Value>遠端版本庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text">
+          <Value>本機分支名稱</Value>
+        </TranslationItem>
+        <TranslationItem Name="SaveDefaultPushPull" Property="Text">
+          <Value>儲存</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>詳細資料</Value>
+        </TranslationItem>
+        <TranslationItem Name="PuTTYSSH" Property="Text">
+          <Value>PuTTY SSH</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>載入SSH鑰匙</Value>
+        </TranslationItem>
+        <TranslationItem Name="TestConnection" Property="Text">
+          <Value>連接測試</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>私鑰檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="SshBrowse" Property="Text">
+          <Value>瀏覽</Value>
+        </TranslationItem>
+        <TranslationItem Name="Delete" Property="Text">
+          <Value>刪除</Value>
+        </TranslationItem>
+        <TranslationItem Name="New" Property="Text">
+          <Value>新</Value>
+        </TranslationItem>
+        <TranslationItem Name="Save" Property="Text">
+          <Value>儲存</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>名稱</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>網址</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>瀏覽</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormPull">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>拉取</Value>
+        </TranslationItem>
+        <TranslationItem Name="_allMergeConflictSolvedQuestion" Property="Text">
+          <Value>所有的合併衝突都解決了嗎？要不要提交？ </Value>
+        </TranslationItem>
+        <TranslationItem Name="_allMergeConflictSolvedQuestionCaption" Property="Text">
+          <Value>衝突解決了</Value>
+        </TranslationItem>
+        <TranslationItem Name="_applyShashedItemsAgain" Property="Text">
+          <Value>要把隱藏的目標再次應用到工作目錄嗎？ </Value>
+        </TranslationItem>
+        <TranslationItem Name="_applyShashedItemsAgainCaption" Property="Text">
+          <Value>自動隱藏</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cannotLoadPutty" Property="Text">
+          <Value>無法載入SSH密鑰。 PuTTY設定的不正確。 </Value>
+        </TranslationItem>
+        <TranslationItem Name="_fetchAllBranchesCanOnlyWithFetch" Property="Text">
+          <Value>如果不使用合併(merge)或者衍合(rebase)，你只能把整個遠端分支(*)都提取過來。如果你想獲取所有遠端分支，那就選擇提取。如果你想獲取和合併某一個分支，那就選擇這個特定的分支。 </Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectRemoteRepository" Property="Text">
+          <Value>請選擇一個遠端版本庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectSourceDirectory" Property="Text">
+          <Value>請選擇來源目錄</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseSource" Property="Text">
+          <Value>瀏覽</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>遠端分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="Pull" Property="Text">
+          <Value>拉取(&amp;P)</Value>
+        </TranslationItem>
+        <TranslationItem Name="Mergetool" Property="Text">
+          <Value>解決衝突</Value>
+        </TranslationItem>
+        <TranslationItem Name="Merge" Property="Text">
+          <Value>遠端分支合併到當前分支(&amp;M)</Value>
+        </TranslationItem>
+        <TranslationItem Name="Rebase" Property="Text">
+          <Value>衍合(Rebase)遠端分支到當前分支，建立線性歷史記錄。 
+建議使用時選擇一個遠端分支。 （謹慎使用）(&amp;R)</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>合併選項</Value>
+        </TranslationItem>
+        <TranslationItem Name="Fetch" Property="Text">
+          <Value>不合併，只獲取遠端分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="Stash" Property="Text">
+          <Value>緩衝更改</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddRemote" Property="Text">
+          <Value>管理遠端</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox2" Property="Text">
+          <Value>從這裡拉取</Value>
+        </TranslationItem>
+        <TranslationItem Name="PullFromUrl" Property="Text">
+          <Value>網址</Value>
+        </TranslationItem>
+        <TranslationItem Name="PullFromRemote" Property="Text">
+          <Value>遠端</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox3" Property="Text">
+          <Value>分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="AutoStash" Property="Text">
+          <Value>自動緩衝</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>本機分支</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormDeleteBranch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>刪除分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>刪除</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>選擇分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>您只能刪除已經在HEAD中完全合併的分支。 
+如果您刪除一分支，對應的提交會丟失，因為已經沒有分支指向它們了。 
+如果您想刪除一個沒有完全合併的分支，請選中“強制刪除”</Value>
+        </TranslationItem>
+        <TranslationItem Name="ForceDelete" Property="Text">
+          <Value>強制刪除</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteBranchCaption" Property="Text">
+          <Value>刪除分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteBranchQuestion" Property="Text">
+          <Value>你確定要刪除此分支？ 
+如果刪除一個分支，它對應的提交也會被被刪除！ </Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCommandlineHelp">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>命令行使用</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>支持的命令行參數： 
+
+browse 
+add 
+addfiles 
+apply 
+applypatch 
+branch 
+checkout 
+checkoutbranch 
+checkoutrevision 
+init 
+clone [path] 
+commit 
+filehistory [file] 
+formatpatch 
+pull 
+push 
+settings 
+viewdiff 
+rebase 
+merge 
+cherry 
+tag 
+stash</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="ForkAndCloneForm">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>分歧與複製遠端版本庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="_searchBtn" Property="Text">
+          <Value>搜尋</Value>
+        </TranslationItem>
+        <TranslationItem Name="_forkBtn" Property="Text">
+          <Value>分歧!</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cloneBtn" Property="Text">
+          <Value>複製</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader2" Property="Text">
+          <Value>私有</Value>
+        </TranslationItem>
+        <TranslationItem Name="_browseForCloneToDirbtn" Property="Text">
+          <Value>瀏覽...</Value>
+        </TranslationItem>
+        <TranslationItem Name="_descriptionLbl" Property="Text">
+          <Value>描述:</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>目的資料夾:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_openGitupPageBtn" Property="Text">
+          <Value>開啟github網頁</Value>
+        </TranslationItem>
+        <TranslationItem Name="_closeBtn" Property="Text">
+          <Value>關閉</Value>
+        </TranslationItem>
+        <TranslationItem Name="_createDirectoryLbl" Property="Text">
+          <Value>建立目錄:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_myReposPage" Property="Text">
+          <Value>我的版本庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="_searchReposPage" Property="Text">
+          <Value>搜尋版本庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cloneSetupGB" Property="Text">
+          <Value>複製</Value>
+        </TranslationItem>
+        <TranslationItem Name="_helpTextLbl" Property="Text">
+          <Value>如果要分歧他人的版本庫，可以到版本庫夜搜尋</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>將遠端當作:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_getFromUserBtn" Property="Text">
+          <Value>使用者提供</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader6" Property="Text">
+          <Value>分歧</Value>
+        </TranslationItem>
+        <TranslationItem Name="_orLbl" Property="Text">
+          <Value>或</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strError" Property="Text">
+          <Value>錯誤</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strLoading" Property="Text">
+          <Value>:載入中:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strYes" Property="Text">
+          <Value>是</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strNo" Property="Text">
+          <Value>否</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strFailedToGetRepos" Property="Text">
+          <Value>無法取得版本庫，使用者名稱/ApiToken不正確？</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strWillCloneWithPushAccess" Property="Text">
+          <Value>將複製{0}到{1}，你必須推送才能存取{2}</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strWillCloneInfo" Property="Text">
+          <Value>將複製{0}到{1}，你必須是夥伴才能推送{2}</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strWillBeAddedAsARemote" Property="Text">
+          <Value>"{0}"的加入將視為遠端</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strCouldNotAddRemote" Property="Text">
+          <Value>無法加入遠端</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strNoHomepageDefined" Property="Text">
+          <Value>沒有首頁</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strFailedToFork" Property="Text">
+          <Value>無法分歧</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strSearchFailed" Property="Text">
+          <Value>無法搜尋</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strUserNotFound" Property="Text">
+          <Value>沒有這個使用者</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strCouldNotFetchReposOfUser" Property="Text">
+          <Value>無法擷取使用者的版本庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strSearching" Property="Text">
+          <Value>:搜尋中:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strSelectOneItem" Property="Text">
+          <Value>你只能選擇一項</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strCloneFolderCanNotBeEmpty" Property="Text">
+          <Value>複製的資料夾不能是空的</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormChooseTranslation">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>選擇使用語言</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>選擇你要用的語言</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>你隨時都可以利用設定對話方塊改變使用的語言</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormRenameBranch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>重新命名分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>執行</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>分支更名為</Value>
+        </TranslationItem>
+        <TranslationItem Name="_branchRenameFailed" Property="Text">
+          <Value>重新命名失敗</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2652,43 +2085,539 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormRevisionFilter">
+    <TranslationCategory Name="FormModifiedDeletedCreated">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
+          <Value>解決合併衝突</Value>
+        </TranslationItem>
+        <TranslationItem Name="Abort" Property="Text">
+          <Value>終止</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormLoadPuttySshKey">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>把PuTTY的SSH密鑰載入到驗證客戶端中</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>載入</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>私鑰文件</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>瀏覽</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCommitCount">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>提交數</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCleanupRepository">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>清理版本庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="Preview" Property="Text">
+          <Value>預覽</Value>
+        </TranslationItem>
+        <TranslationItem Name="Cleanup" Property="Text">
+          <Value>清理</Value>
+        </TranslationItem>
+        <TranslationItem Name="Cancel" Property="Text">
+          <Value>取消</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>清理倉庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoveIngnored" Property="Text">
+          <Value>只移除忽略的未追踪的檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoveNonIgnored" Property="Text">
+          <Value>只移除未忽略的未追踪的檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoveAll" Property="Text">
+          <Value>移除所有未追踪的檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoveDirectories" Property="Text">
+          <Value>移除所有未追踪的目錄</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCheckout">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>簽出版本</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>簽出</Value>
+        </TranslationItem>
+        <TranslationItem Name="Force" Property="Text">
+          <Value>強制</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormAddToGitIgnore">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>添加檔案到.gitIgnore</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddToIngore" Property="Text">
+          <Value>添加到.gitignore</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>忽略的檔案模式</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormAddFiles">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>增加檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="Filter" Property="Text">
+          <Value>.</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
           <Value>過濾器</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddFiles" Property="Text">
+          <Value>增加檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowFiles" Property="Text">
+          <Value>顯示檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="force" Property="Text">
+          <Value>強制</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormStatus">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>進度</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Value>確定</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>從</Value>
+        <TranslationItem Name="KeepDialogOpen" Property="Text">
+          <Value>保持對話方塊開啟</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>到</Value>
+        <TranslationItem Name="Abort" Property="Text">
+          <Value>終止</Value>
         </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
-          <Value>作者</Value>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="AboutBox">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>關於</Value>
         </TranslationItem>
-        <TranslationItem Name="label4" Property="Text">
-          <Value>提交者</Value>
+        <TranslationItem Name="textBoxDescription" Property="Text">
+          <Value>Git extenstions - Visual Studio 和Shell Explorer 的Git介面 
+
+This program is destributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE. 
+(發布這一程序的目的是希望它有用，但沒有任何擔保。甚至沒有適合特定目的的隱含的擔保) 
+</Value>
         </TranslationItem>
-        <TranslationItem Name="label5" Property="Text">
-          <Value>訊息</Value>
+        <TranslationItem Name="okButton" Property="Text">
+          <Value>確定(&amp;O)</Value>
         </TranslationItem>
-        <TranslationItem Name="label7" Property="Text">
-          <Value>限制</Value>
+        <TranslationItem Name="thanksTo" Property="Text">
+          <Value>感謝：</Value>
         </TranslationItem>
-        <TranslationItem Name="label6" Property="Text">
-          <Value>忽略大小寫</Value>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormFormatPatch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>格式補丁</Value>
         </TranslationItem>
-        <TranslationItem Name="label8" Property="Text">
-          <Value>文件過濾器</Value>
-        </TranslationItem>
-        <TranslationItem Name="label9" Property="Text">
+        <TranslationItem Name="SelectedBranch" Property="Text">
           <Value>分支</Value>
         </TranslationItem>
-        <TranslationItem Name="CurrentBranchOnlyCheck" Property="Text">
-          <Value>只顯示目前分支</Value>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>流覽</Value>
+        </TranslationItem>
+        <TranslationItem Name="FormatPatch" Property="Text">
+          <Value>建立補丁</Value>
+        </TranslationItem>
+        <TranslationItem Name="SendToMail" Property="Text">
+          <Value>寄送補丁到</Value>
+        </TranslationItem>
+        <TranslationItem Name="SaveToDir" Property="Text">
+          <Value>儲存補丁到目錄</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>本文</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>主旨</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormGitAttributes">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>編輯.gitattributes文件</Value>
+        </TranslationItem>
+        <TranslationItem Name="noWorkingDir" Property="Text">
+          <Value>.gitattributes只支援有工作目錄的</Value>
+        </TranslationItem>
+        <TranslationItem Name="Save" Property="Text">
+          <Value>儲存</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>編輯git的屬性 
+按路徑定義屬性 
+
+舉例： 
+標記所有jpg文件為二進制： 
+*.jpg binary 
+
+標記所有sln文件為二進制： 
+*.sln binary 
+
+標記單個文件為文本 
+weirdchars.txt text 
+
+更多訊息請看git幫助 
+</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormBisect">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>二分</Value>
+        </TranslationItem>
+        <TranslationItem Name="Start" Property="Text">
+          <Value>開始二分</Value>
+        </TranslationItem>
+        <TranslationItem Name="Good" Property="Text">
+          <Value>把當前版本標記為“好”</Value>
+        </TranslationItem>
+        <TranslationItem Name="Bad" Property="Text">
+          <Value>把當前版本標記為“壞”</Value>
+        </TranslationItem>
+        <TranslationItem Name="Stop" Property="Text">
+          <Value>停止二分</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCherryPick">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>優選</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>選擇您要優選的提交。該提交將在當前的頭部重新提交。 </Value>
+        </TranslationItem>
+        <TranslationItem Name="CherryPick" Property="Text">
+          <Value>優選</Value>
+        </TranslationItem>
+        <TranslationItem Name="AutoCommit" Property="Text">
+          <Value>當沒有任何合併衝突，自動建立提交。 </Value>
+        </TranslationItem>
+        <TranslationItem Name="autoParent" Property="Text">
+          <Value>當提交是一個合併時，自動設定父親為1</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCommit">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>提交</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>提交</Value>
+        </TranslationItem>
+        <TranslationItem Name="resetChanges" Property="Text">
+          <Value>重設檔案修改</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteFileToolStripMenuItem" Property="Text">
+          <Value>移除檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="SolveMergeconflicts" Property="Text">
+          <Value>有未解決的合併衝突</Value>
+        </TranslationItem>
+        <TranslationItem Name="addFileTogitignoreToolStripMenuItem" Property="Text">
+          <Value>添加檔案到.gitignore</Value>
+        </TranslationItem>
+        <TranslationItem Name="openToolStripMenuItem" Property="Text">
+          <Value>開啟</Value>
+        </TranslationItem>
+        <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
+          <Value>開啟方式</Value>
+        </TranslationItem>
+        <TranslationItem Name="filenameToClipboardToolStripMenuItem" Property="Text">
+          <Value>檔案名複製到剪貼簿</Value>
+        </TranslationItem>
+        <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
+          <Value>用Difftool開啟</Value>
+        </TranslationItem>
+        <TranslationItem Name="resetPartOfFileToolStripMenuItem" Property="Text">
+          <Value>重設多個檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="editFileToolStripMenuItem" Property="Text">
+          <Value>編輯檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="Commit" Property="Text">
+          <Value>提交(&amp;C)</Value>
+        </TranslationItem>
+        <TranslationItem Name="CommitAndPush" Property="Text">
+          <Value>提交並推送(&amp;o)</Value>
+        </TranslationItem>
+        <TranslationItem Name="Amend" Property="Text">
+          <Value>更改最後一次提交(&amp;A)</Value>
+        </TranslationItem>
+        <TranslationItem Name="Reset" Property="Text">
+          <Value>重設更改</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitMessageToolStripMenuItem" Property="Text">
+          <Value>提交訊息(&amp;m)</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitMessageToolStripMenuItem" Property="ToolTipText">
+          <Value>提交訊息</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripMenuItem3" Property="Text">
+          <Value>選項</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripMenuItem3" Property="ToolTipText">
+          <Value>選項</Value>
+        </TranslationItem>
+        <TranslationItem Name="closeDialogAfterEachCommitToolStripMenuItem" Property="Text">
+          <Value>提交後關閉視窗</Value>
+        </TranslationItem>
+        <TranslationItem Name="closeDialogAfterAllFilesCommittedToolStripMenuItem" Property="Text">
+          <Value>所有修改提交後關閉視窗</Value>
+        </TranslationItem>
+        <TranslationItem Name="refreshDialogOnFormFocusToolStripMenuItem" Property="Text">
+          <Value>表單前置時重新整理</Value>
+        </TranslationItem>
+        <TranslationItem Name="workingToolStripMenuItem" Property="Text">
+          <Value>變更工作目錄</Value>
+        </TranslationItem>
+        <TranslationItem Name="workingToolStripMenuItem" Property="ToolTipText">
+          <Value>變更工作目錄</Value>
+        </TranslationItem>
+        <TranslationItem Name="showIgnoredFilesToolStripMenuItem" Property="Text">
+          <Value>顯示被忽略的檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="showUntrackedFilesToolStripMenuItem" Property="Text">
+          <Value>顯示未追踪檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteSelectedFilesToolStripMenuItem" Property="Text">
+          <Value>刪除所有選定的檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="resetSelectedFilesToolStripMenuItem" Property="Text">
+          <Value>重設選中的檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="resetAlltrackedChangesToolStripMenuItem" Property="Text">
+          <Value>重設所有（追踪的）的修改</Value>
+        </TranslationItem>
+        <TranslationItem Name="editGitIgnoreToolStripMenuItem" Property="Text">
+          <Value>編輯忽略的檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteAllUntrackedFilesToolStripMenuItem" Property="Text">
+          <Value>刪除所有未追蹤檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="Cancel" Property="Text">
+          <Value>取消</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStageItem" Property="Text">
+          <Value>加入提交(&amp;S)</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStageItem" Property="ToolTipText">
+          <Value>加入提交</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolUnstageItem" Property="Text">
+          <Value>不要提交(&amp;U)</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolUnstageItem" Property="ToolTipText">
+          <Value>不要提交</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStageAllItem" Property="Text">
+          <Value>全部提交</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStageAllItem" Property="ToolTipText">
+          <Value>全部提交</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolUnstageAllItem" Property="Text">
+          <Value>全部不提交</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolUnstageAllItem" Property="ToolTipText">
+          <Value>全部不提交</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolAuthorLabelItem" Property="Text">
+          <Value>作者:(格式:"name &lt;mail&gt;")</Value>
+        </TranslationItem>
+        <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text">
+          <Value>你也要刪除選中檔案中的新檔案嗎？ 
+
+選“否”保留所有新檔案。 </Value>
+        </TranslationItem>
+        <TranslationItem Name="_alsoDeleteUntrackedFilesCaption" Property="Text">
+          <Value>刪除</Value>
+        </TranslationItem>
+        <TranslationItem Name="_amendCommit" Property="Text">
+          <Value>您將要改寫歷史。 
+如果提交還沒有被發布，只用修改(Amend)就可以了！ 
+
+你想繼續嗎？ </Value>
+        </TranslationItem>
+        <TranslationItem Name="_amendCommitCaption" Property="Text">
+          <Value>修改(Amend)提交</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteFailed" Property="Text">
+          <Value>刪除檔案失敗</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteSelectedFiles" Property="Text">
+          <Value>您確定要刪除選中的檔案嗎？ </Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteSelectedFilesCaption" Property="Text">
+          <Value>刪除</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteUntrackedFiles" Property="Text">
+          <Value>你確定要刪除所有未追踪的檔案嗎？ </Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteUntrackedFilesCaption" Property="Text">
+          <Value>刪除未追踪檔案。 </Value>
+        </TranslationItem>
+        <TranslationItem Name="_enterCommitMessage" Property="Text">
+          <Value>請輸入提交訊息</Value>
+        </TranslationItem>
+        <TranslationItem Name="_enterCommitMessageCaption" Property="Text">
+          <Value>提交訊息</Value>
+        </TranslationItem>
+        <TranslationItem Name="_enterCommitMessageHint" Property="Text">
+          <Value>輸入提交訊息</Value>
+        </TranslationItem>
+        <TranslationItem Name="_mergeConflicts" Property="Text">
+          <Value>有未解決的合併衝突，提交之前要先結果合併衝突。 </Value>
+        </TranslationItem>
+        <TranslationItem Name="_mergeConflictsCaption" Property="Text">
+          <Value>合併衝突</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noFilesStagedAndNothingToCommit" Property="Text">
+          <Value>此次提交沒有載入任何檔案。</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noFilesStagedAndConfirmAnEmptyMergeCommit" Property="Text">
+          <Value>此次提交沒有載入任何檔案。您確認要提交嗎？ </Value>
+        </TranslationItem>
+        <TranslationItem Name="_noStagedChanges" Property="Text">
+          <Value>沒有提交修改</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noUnstagedChanges" Property="Text">
+          <Value>沒有未提交的修改</Value>
+        </TranslationItem>
+        <TranslationItem Name="_notOnBranch" Property="Text">
+          <Value>您尚未位於任何一個分支下工作。 
+當切換到另一分支時，此次提交將變得不會被任何分支引用且有可能丟失。 
+
+您想繼續嗎？ </Value>
+        </TranslationItem>
+        <TranslationItem Name="_notOnBranchCaption" Property="Text">
+          <Value>未於任何分支。 </Value>
+        </TranslationItem>
+        <TranslationItem Name="_onlyStageChunkOfSingleFileError" Property="Text">
+          <Value>只有在選擇單一檔案的時候，您才能使用此選項。 </Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetChangesText" Property="Text">
+          <Value>您確定要重設對選定檔案的更改？</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetChangesCaption" Property="Text">
+          <Value>回復修改</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetSelectedChangesText" Property="Text">
+          <Value>你確定要回復所有選定的檔案？ </Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetStageChunkOfFileCaption" Property="Text">
+          <Value>不提交大量檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="_stageDetails" Property="Text">
+          <Value>載入詳細情形</Value>
+        </TranslationItem>
+        <TranslationItem Name="_stageFiles" Property="Text">
+          <Value>載入{0}個檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectOnlyOneFile" Property="Text">
+          <Value>你只能選一個檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="_stageSelectedLines" Property="Text">
+          <Value>提交的選擇行</Value>
+        </TranslationItem>
+        <TranslationItem Name="_unstageSelectedLines" Property="Text">
+          <Value>沒提交的選擇行</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetSelectedLines" Property="Text">
+          <Value>重設選擇行</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetSelectedLinesConfirmation" Property="Text">
+          <Value>你確定要重設成選擇行那樣？</Value>
+        </TranslationItem>
+        <TranslationItem Name="_StageSelectedLinesToolStripMenuItem" Property="Text">
+          <Value>提交選擇行</Value>
+        </TranslationItem>
+        <TranslationItem Name="_ResetSelectedLinesToolStripMenuItem" Property="Text">
+          <Value>重設選擇行</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FileViewer">
+      <translationItems>
+        <TranslationItem Name="findToolStripMenuItem" Property="Text">
+          <Value>尋找</Value>
+        </TranslationItem>
+        <TranslationItem Name="ignoreWhitespaceChangesToolStripMenuItem" Property="Text">
+          <Value>忽略空白（空行和空格）的變化</Value>
+        </TranslationItem>
+        <TranslationItem Name="increaseNumberOfLinesToolStripMenuItem" Property="Text">
+          <Value>增加可視行數</Value>
+        </TranslationItem>
+        <TranslationItem Name="descreaseNumberOfLinesToolStripMenuItem" Property="Text">
+          <Value>減少可視行數</Value>
+        </TranslationItem>
+        <TranslationItem Name="showEntireFileToolStripMenuItem" Property="Text">
+          <Value>顯示整個檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="treatAllFilesAsTextToolStripMenuItem" Property="Text">
+          <Value>把所有檔案視為文字檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="copyToolStripMenuItem" Property="Text">
+          <Value>複製</Value>
+        </TranslationItem>
+        <TranslationItem Name="copyPatchToolStripMenuItem" Property="Text">
+          <Value>複製補丁</Value>
+        </TranslationItem>
+        <TranslationItem Name="nextChangeButton" Property="ToolTipText">
+          <Value>下一個修改</Value>
+        </TranslationItem>
+        <TranslationItem Name="previousChangeButton" Property="ToolTipText">
+          <Value>上一個修改</Value>
+        </TranslationItem>
+        <TranslationItem Name="increaseNumberOfLines" Property="ToolTipText">
+          <Value>增加可視行數</Value>
+        </TranslationItem>
+        <TranslationItem Name="DecreaseNumberOfLines" Property="ToolTipText">
+          <Value>減少可視行數</Value>
+        </TranslationItem>
+        <TranslationItem Name="showEntireFileButton" Property="ToolTipText">
+          <Value>顯示整個檔案</Value>
+        </TranslationItem>
+        <TranslationItem Name="showNonPrintChars" Property="ToolTipText">
+          <Value>顯示非可印字</Value>
+        </TranslationItem>
+        <TranslationItem Name="showNonprintableCharactersToolStripMenuItem" Property="Text">
+          <Value>顯示非可印字</Value>
+        </TranslationItem>
+        <TranslationItem Name="ignoreWhiteSpaces" Property="ToolTipText">
+          <Value>忽略空白（空行和空格）</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3119,6 +3048,345 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormDiff">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>差異</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormEditor">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>編輯者</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripSaveButton" Property="ToolTipText">
+          <Value>儲存</Value>
+        </TranslationItem>
+        <TranslationItem Name="_saveChanges" Property="Text">
+          <Value>要儲存修改嗎？</Value>
+        </TranslationItem>
+        <TranslationItem Name="_saveChangesCaption" Property="Text">
+          <Value>儲存修改</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormPuttyError">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>驗證錯誤</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>該命令產生一個錯誤，這通常意味著Putty認證代理端沒有運行，或者私鑰沒有正確載入。 
+
+請在載入密鑰後，點retry</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>載入SSH密鑰</Value>
+        </TranslationItem>
+        <TranslationItem Name="Retry" Property="Text">
+          <Value>重試</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormPush">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>推送</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseSource" Property="Text">
+          <Value>瀏覽</Value>
+        </TranslationItem>
+        <TranslationItem Name="Push" Property="Text">
+          <Value>推送(&amp;P)</Value>
+        </TranslationItem>
+        <TranslationItem Name="ForcePushTags" Property="Text">
+          <Value>強制推送(&amp;F)</Value>
+        </TranslationItem>
+        <TranslationItem Name="Pull" Property="Text">
+          <Value>拉取</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox2" Property="Text">
+          <Value>推送到</Value>
+        </TranslationItem>
+        <TranslationItem Name="PullFromUrl" Property="Text">
+          <Value>網址</Value>
+        </TranslationItem>
+        <TranslationItem Name="PullFromRemote" Property="Text">
+          <Value>遠端</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddRemote" Property="Text">
+          <Value>管理遠端</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>載入SSH密鑰</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox3" Property="Text">
+          <Value>標籤</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>要推送的標籤</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchTab" Property="Text">
+          <Value>推送分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchTab" Property="ToolTipText">
+          <Value>推送分支然後提交到遠端版本庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="TagTab" Property="Text">
+          <Value>推送標籤</Value>
+        </TranslationItem>
+        <TranslationItem Name="TagTab" Property="ToolTipText">
+          <Value>推送標籤到遠端版本庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="PushAllTags" Property="Text">
+          <Value>推送所有標籤</Value>
+        </TranslationItem>
+        <TranslationItem Name="MultipleBranchTab" Property="Text">
+          <Value>推送多個分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox4" Property="Text">
+          <Value>推送選定的分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="PushAllBranches" Property="Text">
+          <Value>推送所有分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="ForcePushBranches" Property="Text">
+          <Value>強制推送(&amp;F)</Value>
+        </TranslationItem>
+        <TranslationItem Name="_createPullRequestCB" Property="Text">
+          <Value>推送後建立拉取請求</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelTo" Property="Text">
+          <Value>到</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoteBranch" Property="Text">
+          <Value>嚴重:不是git的版本庫(或是任一上層目錄):.git</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelFrom" Property="Text">
+          <Value>要推送的分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="_branchNewForRemote" Property="Text">
+          <Value>您將要推送的這個分支對於遠端來說似乎是個新的分支。 
+您確認要推動這個分支嗎？</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cannotLoadPutty" Property="Text">
+          <Value>無法載入SSH密鑰。 PuTTY配定的不正確​​。 </Value>
+        </TranslationItem>
+        <TranslationItem Name="_pushCaption" Property="Text">
+          <Value>推送</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pushToCaption" Property="Text">
+          <Value>推送到{0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectDestinationDirectory" Property="Text">
+          <Value>請選擇一個目的目錄</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectRemote" Property="Text">
+          <Value>請選擇一個遠端版本庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectTag" Property="Text">
+          <Value>您需要選擇一個標籤來推送，或者您可以選擇“推送所有標籤。”</Value>
+        </TranslationItem>
+        <TranslationItem Name="_yes" Property="Text">
+          <Value>是</Value>
+        </TranslationItem>
+        <TranslationItem Name="_no" Property="Text">
+          <Value>否</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCheckoutBranch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>簽出分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>選擇分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>簽出</Value>
+        </TranslationItem>
+        <TranslationItem Name="LocalBranch" Property="Text">
+          <Value>本機分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="Remotebranch" Property="Text">
+          <Value>遠端分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="Force" Property="Text">
+          <Value>強制</Value>
+        </TranslationItem>
+        <TranslationItem Name="trackRemoteBranch" Property="Text">
+          <Value>您選擇了簽出一個遠端分支。 
+
+您想建立一個名為'{0}'的本地分支來追踪此分支麼？ </Value>
+        </TranslationItem>
+        <TranslationItem Name="trackRemoteBranchCaption" Property="Text">
+          <Value>簽出分支</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="CreatePullRequestForm">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>建立拉取請求</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strLoading" Property="Text">
+          <Value>正在載入...</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strCouldNotLocateARemoteThatBelongsToYourUser" Property="Text">
+          <Value>遠端沒有你要的</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strYouMustSpecifyATitleAndABody" Property="Text">
+          <Value>你要指名標題與本文</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strPullRequest" Property="Text">
+          <Value>拉取需求</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strFailedToCreatePullRequest" Property="Text">
+          <Value>無法建立拉取請求</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strDone" Property="Text">
+          <Value>完成</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strError" Property="Text">
+          <Value>錯誤</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>標題:</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>本文:</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>拉取需求資料</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>目標版本庫:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_createBtn" Property="Text">
+          <Value>建立</Value>
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text">
+          <Value>你的分支:</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Value>目標分支:</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormDiffSmall">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>差異</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormAddSubmodule">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>新增子模組</Value>
+        </TranslationItem>
+        <TranslationItem Name="Add" Property="Text">
+          <Value>新增</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>瀏覽</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>子模組的路徑</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>本機路徑</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>分支</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FileViewerWindows">
+      <translationItems>
+        <TranslationItem Name="_findAndReplaceForm" Property="Text">
+          <Value>尋找和取代</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormGitIgnore">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>編輯 .gitignore 文件</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>指定你想讓git忽略的文件模板。 
+
+舉例 
+#忽略windows生成的預覽圖文件 
+Thunbs.db 
+#忽略Visual Studio產生的文件 
+*.obj 
+*.exe 
+*.pdb 
+*.user 
+*.aps 
+*.pch 
+*.vspscc 
+*_i.c 
+*_p.c 
+*.ncb 
+*.suo 
+*.tlb 
+*.tlh 
+*.bak 
+*.cache 
+*.ilk 
+*.log 
+[Bb]in 
+[Dd]ebug*/ 
+*.lib 
+*.sbr 
+obj/ 
+[Rr]elease*/ 
+_ReSharper*/</Value>
+        </TranslationItem>
+        <TranslationItem Name="Save" Property="Text">
+          <Value>儲存</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddDefault" Property="Text">
+          <Value>添加預設的忽略項</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="DashboardEditor">
+      <translationItems>
+        <TranslationItem Name="CategoriesLabel" Property="Text">
+          <Value>分類</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>標題</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>類型</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>RSS源</Value>
+        </TranslationItem>
+        <TranslationItem Name="RssFeedType" Property="Text">
+          <Value>RSS源</Value>
+        </TranslationItem>
+        <TranslationItem Name="RepositoriesType" Property="Text">
+          <Value>版本庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="Remove" Property="Text">
+          <Value>移除</Value>
+        </TranslationItem>
+        <TranslationItem Name="Add" Property="Text">
+          <Value>新增</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormStash">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -3150,329 +3418,122 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormSubmodules">
+    <TranslationCategory Name="FormRevert">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>子模組</Value>
+          <Value>回復檔案修改</Value>
         </TranslationItem>
-        <TranslationItem Name="AddSubmodule" Property="Text">
-          <Value>新增子模組</Value>
+        <TranslationItem Name="_resetChangesCaption" Property="Text">
+          <Value>重置修改</Value>
         </TranslationItem>
-        <TranslationItem Name="label6" Property="Text">
-          <Value>狀態</Value>
+        <TranslationItem Name="_undoChangesIn" Property="Text">
+          <Value>回復修改：
+{0}？</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>名稱</Value>
+        <TranslationItem Name="btnCancel" Property="Text">
+          <Value>取消</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>遠端路徑</Value>
-        </TranslationItem>
-        <TranslationItem Name="label5" Property="Text">
-          <Value>分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="label4" Property="Text">
-          <Value>提交</Value>
-        </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
-          <Value>本機路徑</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text">
-          <Value>詳細資料</Value>
-        </TranslationItem>
-        <TranslationItem Name="SynchronizeSubmodule" Property="Text">
-          <Value>同步</Value>
-        </TranslationItem>
-        <TranslationItem Name="InitSubmodule" Property="Text">
-          <Value>初始化</Value>
-        </TranslationItem>
-        <TranslationItem Name="UpdateSubmodule" Property="Text">
-          <Value>更新</Value>
+        <TranslationItem Name="Revert" Property="Text">
+          <Value>回復修改</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormTag">
+    <TranslationCategory Name="FormClone">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>標籤</Value>
-        </TranslationItem>
-        <TranslationItem Name="_messageCaption" Property="Text">
-          <Value>標籤</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noRevisionSelected" Property="Text">
-          <Value>選擇一個版本來標記</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noTagMessage" Property="Text">
-          <Value>請輸入標籤的訊息</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>標籤名稱</Value>
-        </TranslationItem>
-        <TranslationItem Name="CreateTag" Property="Text">
-          <Value>建立標籤</Value>
+          <Value>複製</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
-          <Value>訊息</Value>
-        </TranslationItem>
-        <TranslationItem Name="annotate" Property="Text">
-          <Value>建立帶註解的標記</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormTagSmall">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>建立標籤</Value>
-        </TranslationItem>
-        <TranslationItem Name="_messageCaption" Property="Text">
-          <Value>標籤</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noRevisionSelected" Property="Text">
-          <Value>選擇一個版本來標記</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noTagMassage" Property="Text">
-          <Value>請輸入標籤的訊息</Value>
+          <Value>目的地</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
-          <Value>標籤名稱</Value>
+          <Value>要複製的版本庫</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
-          <Value>建立標籤</Value>
+          <Value>複製</Value>
         </TranslationItem>
-        <TranslationItem Name="annotate" Property="Text">
-          <Value>建立帶註解的標記</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>訊息</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="GitLogForm">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>日誌</Value>
-        </TranslationItem>
-        <TranslationItem Name="tabPageCommandLog" Property="Text">
-          <Value>命令日誌</Value>
-        </TranslationItem>
-        <TranslationItem Name="tabPageCommandCache" Property="Text">
-          <Value>命令快取</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="GravatarControl">
-      <translationItems>
-        <TranslationItem Name="refreshToolStripMenuItem" Property="Text">
-          <Value>重新整理圖片</Value>
-        </TranslationItem>
-        <TranslationItem Name="registerAtGravatarcomToolStripMenuItem" Property="Text">
-          <Value>在gravatar.com註冊</Value>
-        </TranslationItem>
-        <TranslationItem Name="clearImagecacheToolStripMenuItem" Property="Text">
-          <Value>清除圖片快取</Value>
-        </TranslationItem>
-        <TranslationItem Name="imageSizeToolStripMenuItem" Property="Text">
-          <Value>圖片尺寸</Value>
-        </TranslationItem>
-        <TranslationItem Name="noImageGeneratorToolStripMenuItem" Property="Text">
-          <Value>沒有圖片服務</Value>
-        </TranslationItem>
-        <TranslationItem Name="identiconToolStripMenuItem" Property="Text">
-          <Value>同一識別</Value>
-        </TranslationItem>
-        <TranslationItem Name="monsterIdToolStripMenuItem" Property="Text">
-          <Value>怪獸識別</Value>
-        </TranslationItem>
-        <TranslationItem Name="wavatarToolStripMenuItem" Property="Text">
-          <Value>頭像</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormApplyPatch">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Value>使用補丁</Value>
-        </TranslationItem>
-        <TranslationItem Name="BrowsePatch" Property="Text">
+        <TranslationItem Name="ToBrowse" Property="Text">
           <Value>瀏覽</Value>
         </TranslationItem>
-        <TranslationItem Name="Apply" Property="Text">
-          <Value>使用補丁</Value>
-        </TranslationItem>
-        <TranslationItem Name="Mergetool" Property="Text">
-          <Value>&gt;解決衝突&lt;</Value>
-        </TranslationItem>
-        <TranslationItem Name="Skip" Property="Text">
-          <Value>跳過補丁</Value>
-        </TranslationItem>
-        <TranslationItem Name="Abort" Property="Text">
-          <Value>中止補丁</Value>
-        </TranslationItem>
-        <TranslationItem Name="Resolved" Property="Text">
-          <Value>衝突解決</Value>
-        </TranslationItem>
-        <TranslationItem Name="AddFiles" Property="Text">
-          <Value>增加檔案</Value>
-        </TranslationItem>
-        <TranslationItem Name="BrowseDir" Property="Text">
+        <TranslationItem Name="FromBrowse" Property="Text">
           <Value>瀏覽</Value>
         </TranslationItem>
-        <TranslationItem Name="PatchDirMode" Property="Text">
-          <Value>補丁目錄</Value>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>版本庫類型</Value>
         </TranslationItem>
-        <TranslationItem Name="PatchFileMode" Property="Text">
-          <Value>補丁檔案</Value>
+        <TranslationItem Name="CentralRepository" Property="Text">
+          <Value>中央版本庫，沒有工作目錄(--bare)</Value>
         </TranslationItem>
-        <TranslationItem Name="SolveMergeconflicts" Property="Text">
-          <Value>有未解決的合併衝突</Value>
+        <TranslationItem Name="PersonalRepository" Property="Text">
+          <Value>個人版本庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="Central" Property="Text">
+          <Value>中央版本庫，沒有工作目錄(--bare --shared=all)</Value>
+        </TranslationItem>
+        <TranslationItem Name="Personal" Property="Text">
+          <Value>個人版本庫</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>加載SSH密鑰</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>要建立的子目錄</Value>
+        </TranslationItem>
+        <TranslationItem Name="Info" Property="Text">
+          <Value>此版本庫將被複製到一個新的目錄： 
+     [destination]\GitExtensions\</Value>
+        </TranslationItem>
+        <TranslationItem Name="brachLabel" Property="Text">
+          <Value>分支</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="Open">
+    <TranslationCategory Name="EditNetSpell">
+      <translationItems>
+        <TranslationItem Name="translateEntireText" Property="Text">
+          <Value>翻譯全文到{0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="translateCurrentWord" Property="Text">
+          <Value>翻譯{0}為{1}</Value>
+        </TranslationItem>
+        <TranslationItem Name="addToDictionaryText" Property="Text">
+          <Value>增加字典</Value>
+        </TranslationItem>
+        <TranslationItem Name="ignoreWordText" Property="Text">
+          <Value>忽略本字</Value>
+        </TranslationItem>
+        <TranslationItem Name="removeWordText" Property="Text">
+          <Value>移除本字</Value>
+        </TranslationItem>
+        <TranslationItem Name="dictionaryText" Property="Text">
+          <Value>字典</Value>
+        </TranslationItem>
+        <TranslationItem Name="markIllFormedLinesText" Property="Text">
+          <Value>標示不合格式那行</Value>
+        </TranslationItem>
+        <TranslationItem Name="EmptyLabel" Property="Text">
+          <Value>輸入訊息</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FileStatusList">
+      <translationItems>
+        <TranslationItem Name="NoFiles" Property="Text">
+          <Value>沒有改變</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormPluginSettings">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>開啟版本庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>目錄</Value>
-        </TranslationItem>
-        <TranslationItem Name="Browse" Property="Text">
-          <Value>瀏覽</Value>
-        </TranslationItem>
-        <TranslationItem Name="Load" Property="Text">
-          <Value>開啟</Value>
+          <Value>插件設定</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="RevisionGrid">
+    <TranslationCategory Name="FormChangeLog">
       <translationItems>
-        <TranslationItem Name="_currentWorkingDirChanges" Property="Text">
-          <Value>當前未提交的修改</Value>
-        </TranslationItem>
-        <TranslationItem Name="_currentIndex" Property="Text">
-          <Value>提交索引</Value>
-        </TranslationItem>
-        <TranslationItem Name="_revisionFilter" Property="Text">
-          <Value>過濾器</Value>
-        </TranslationItem>
-        <TranslationItem Name="createTagToolStripMenuItem" Property="Text">
-          <Value>建立新標籤</Value>
-        </TranslationItem>
-        <TranslationItem Name="createNewBranchToolStripMenuItem" Property="Text">
-          <Value>建立新的分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="resetCurrentBranchToHereToolStripMenuItem" Property="Text">
-          <Value>回復當前到這裡</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Value>此版本庫中沒有任何提交。 
-如果此版本庫是一個常規版本庫，推薦以下步驟： 
-- 確認版本庫中.gitgnore文件正確 
-- 用提交命令來提交 
-
-如果此版本庫是一個中央版本庫（沒有工作路徑的裸版本庫）： 
-- 從其他版本庫中“推”出更改</Value>
-        </TranslationItem>
-        <TranslationItem Name="Commit" Property="Text">
-          <Value>提交</Value>
-        </TranslationItem>
-        <TranslationItem Name="GitIgnore" Property="Text">
-          <Value>編輯.gitignore</Value>
-        </TranslationItem>
-        <TranslationItem Name="ShowRemoteBranches" Property="Text">
-          <Value>顯示遠端分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="showBranchesToolStripMenuItem" Property="Text">
-          <Value>顯示分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="revertCommitToolStripMenuItem" Property="Text">
-          <Value>回復提交</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Value>當前的工作目錄不是一個git版本庫。 </Value>
-        </TranslationItem>
-        <TranslationItem Name="filterToolStripMenuItem" Property="Text">
-          <Value>建立高級過濾器</Value>
-        </TranslationItem>
-        <TranslationItem Name="deleteTagToolStripMenuItem" Property="Text">
-          <Value>刪除標籤</Value>
-        </TranslationItem>
-        <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
-          <Value>刪除分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="checkoutRevisionToolStripMenuItem" Property="Text">
-          <Value>簽出版本</Value>
-        </TranslationItem>
-        <TranslationItem Name="checkoutBranchToolStripMenuItem" Property="Text">
-          <Value>簽出分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
-          <Value>和分支合併</Value>
-        </TranslationItem>
-        <TranslationItem Name="cherryPickCommitToolStripMenuItem" Property="Text">
-          <Value>優選提交</Value>
-        </TranslationItem>
-        <TranslationItem Name="rebaseOnToolStripMenuItem" Property="Text">
-          <Value>衍合在</Value>
-        </TranslationItem>
-        <TranslationItem Name="showAllBranchesToolStripMenuItem" Property="Text">
-          <Value>顯示所有分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="showCurrentBranchOnlyToolStripMenuItem" Property="Text">
-          <Value>只顯示當前分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="showFilteredBranchesToolStripMenuItem" Property="Text">
-          <Value>顯示過濾分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="copyToClipboardToolStripMenuItem" Property="Text">
-          <Value>複製到剪貼簿</Value>
-        </TranslationItem>
-        <TranslationItem Name="branchNameToolStripMenuItem" Property="Text">
-          <Value>分支名稱</Value>
-        </TranslationItem>
-        <TranslationItem Name="tagToolStripMenuItem" Property="Text">
-          <Value>標籤</Value>
-        </TranslationItem>
-        <TranslationItem Name="messageToolStripMenuItem" Property="Text">
-          <Value>訊息</Value>
-        </TranslationItem>
-        <TranslationItem Name="authorToolStripMenuItem" Property="Text">
-          <Value>作者</Value>
-        </TranslationItem>
-        <TranslationItem Name="dateToolStripMenuItem" Property="Text">
-          <Value>日期</Value>
-        </TranslationItem>
-        <TranslationItem Name="markRevisionAsBadToolStripMenuItem" Property="Text">
-          <Value>標記版本為“壞”</Value>
-        </TranslationItem>
-        <TranslationItem Name="markRevisionAsGoodToolStripMenuItem" Property="Text">
-          <Value>標記版本為“好”</Value>
-        </TranslationItem>
-        <TranslationItem Name="stopBisectToolStripMenuItem" Property="Text">
-          <Value>停止二分</Value>
-        </TranslationItem>
-        <TranslationItem Name="runScriptToolStripMenuItem" Property="Text">
-          <Value>執行腳本</Value>
-        </TranslationItem>
-        <TranslationItem Name="InitRepository" Property="Text">
-          <Value>初始化版本庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="showRevisionGraphToolStripMenuItem" Property="Text">
-          <Value>顯示版本圖</Value>
-        </TranslationItem>
-        <TranslationItem Name="drawNonrelativesGrayToolStripMenuItem" Property="Text">
-          <Value>淡化顯示非同系分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="orderRevisionsByDateToolStripMenuItem" Property="Text">
-          <Value>按日期順序調整</Value>
-        </TranslationItem>
-        <TranslationItem Name="showAuthorDateToolStripMenuItem" Property="Text">
-          <Value>顯示作者日期</Value>
-        </TranslationItem>
-        <TranslationItem Name="showRelativeDateToolStripMenuItem" Property="Text">
-          <Value>顯示相對日期</Value>
-        </TranslationItem>
-        <TranslationItem Name="showGitNotesToolStripMenuItem" Property="Text">
-          <Value>顯示git記事</Value>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>異動日誌</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
