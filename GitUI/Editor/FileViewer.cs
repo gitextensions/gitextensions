@@ -53,6 +53,24 @@ namespace GitUI.Editor
 
             IsReadOnly = true;
 
+            this.Encoding = Settings.Encoding;
+            this.encodingToolStripComboBox.Items.AddRange(new Object[]
+                                                    {
+                                                        "Default (" + Encoding.Default.HeaderName + ")", "ASCII",
+                                                        "Unicode", "UTF7", "UTF8", "UTF32"
+                                                    });
+            if (this.Encoding.GetType() == typeof(ASCIIEncoding))
+                this.encodingToolStripComboBox.Text = "ASCII";
+            else if (this.Encoding.GetType() == typeof(UnicodeEncoding))
+                this.encodingToolStripComboBox.Text = "Unicode";
+            else if (this.Encoding.GetType() == typeof(UTF7Encoding))
+                this.encodingToolStripComboBox.Text = "UTF7";
+            else if (this.Encoding.GetType() == typeof(UTF8Encoding))
+                this.encodingToolStripComboBox.Text = "UTF8";
+            else if (this.Encoding.GetType() == typeof(UTF32Encoding))
+                this.encodingToolStripComboBox.Text = "UTF32";
+            else if (this.Encoding == Encoding.Default)
+                this.encodingToolStripComboBox.Text = "Default (" + Encoding.Default.HeaderName + ")";
             _internalFileViewer.MouseMove += TextAreaMouseMove;
             _internalFileViewer.MouseLeave += TextAreaMouseLeave;
             _internalFileViewer.TextChanged += TextEditor_TextChanged;
@@ -171,6 +189,7 @@ namespace GitUI.Editor
         public bool ShowEntireFile { get; set; }
         public bool TreatAllFilesAsText { get; set; }
         public bool DisableFocusControlOnHover { get; set; }
+        public Encoding Encoding { get; set; }
 
         public int ScrollPos
         {
@@ -262,7 +281,7 @@ namespace GitUI.Editor
 
         public void ViewCurrentChanges(string fileName, string oldFileName, bool staged)
         {
-            _async.Load(() => Settings.Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments()), ViewStagingPatch);
+            _async.Load(() => Settings.Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding), ViewStagingPatch);
         }
 
         public void ViewStagingPatch(string text)
@@ -273,7 +292,7 @@ namespace GitUI.Editor
 
         public void ViewSubmoduleChanges(string fileName, string oldFileName, bool staged)
         {
-            _async.Load(() => Settings.Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments()), ViewSubmodulePatch);
+            _async.Load(() => Settings.Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding), ViewSubmodulePatch);
         }
 
         public void ViewSubmodulePatch(string text)
@@ -743,6 +762,32 @@ namespace GitUI.Editor
 
         public void SetFileLoader(Func<bool, Tuple<int, string>> fileLoader){
             _internalFileViewer.SetFileLoader(fileLoader);
+        }
+
+        private void encodingToolStripComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Encoding encod = null;
+            if (string.IsNullOrEmpty(encodingToolStripComboBox.Text))
+                encod = Settings.Encoding;
+            else if (encodingToolStripComboBox.Text.StartsWith("Default", StringComparison.CurrentCultureIgnoreCase))
+                encod = Encoding.Default;
+            else if (encodingToolStripComboBox.Text.Equals("ASCII", StringComparison.CurrentCultureIgnoreCase))
+                encod = new ASCIIEncoding();
+            else if (encodingToolStripComboBox.Text.Equals("Unicode", StringComparison.CurrentCultureIgnoreCase))
+                encod = new UnicodeEncoding();
+            else if (encodingToolStripComboBox.Text.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
+                encod = new UTF7Encoding();
+            else if (encodingToolStripComboBox.Text.Equals("UTF8", StringComparison.CurrentCultureIgnoreCase))
+                encod = new UTF8Encoding(false);
+            else if (encodingToolStripComboBox.Text.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
+                encod = new UTF32Encoding(true, false);
+            else
+                encod = Settings.Encoding;
+            if (encod != this.Encoding)
+            {
+                this.Encoding = encod;
+                this.OnExtraDiffArgumentsChanged();
+            }
         }
 
     }
