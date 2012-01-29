@@ -114,6 +114,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="gitcommandkey.snk.pfx" />
+    <Compile Include="Repository\RecentRepoInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">

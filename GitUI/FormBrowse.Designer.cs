@@ -314,10 +314,12 @@ namespace GitUI
             // _NO_TRANSLATE_Workingdir
             // 
             this._NO_TRANSLATE_Workingdir.Image = global::GitUI.Properties.Resources._40;
+            this._NO_TRANSLATE_Workingdir.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this._NO_TRANSLATE_Workingdir.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._NO_TRANSLATE_Workingdir.Name = "_NO_TRANSLATE_Workingdir";
             this._NO_TRANSLATE_Workingdir.Size = new System.Drawing.Size(91, 22);
             this._NO_TRANSLATE_Workingdir.Text = "WorkingDir";
+            this._NO_TRANSLATE_Workingdir.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this._NO_TRANSLATE_Workingdir.ToolTipText = "Change working directory";
             this._NO_TRANSLATE_Workingdir.ButtonClick += new System.EventHandler(this.WorkingdirClick);
             this._NO_TRANSLATE_Workingdir.DropDownOpening += new System.EventHandler(this.WorkingdirDropDownOpening);

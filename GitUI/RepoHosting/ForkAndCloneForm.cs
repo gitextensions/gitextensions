@@ -274,7 +274,7 @@ namespace GitUI.RepoHosting
             if (formProcess.ErrorOccurred())
                 return;
 
-            Repositories.RepositoryHistory.AddMostRecentRepository(targetDir);
+            Repositories.AddMostRecentRepository(targetDir);
             Settings.WorkingDir = targetDir;
 
             if (_addRemoteAsTB.Text.Trim().Length > 0 && !string.IsNullOrEmpty(repo.ParentReadOnlyUrl))

@@ -288,7 +288,7 @@ namespace GitUI
             InitToolStripBranchFilter(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
             if (hard)
                 ShowRevisions();
-            _NO_TRANSLATE_Workingdir.Text = Settings.WorkingDir;
+            RefreshWorkingDirCombo();
             Text = GenerateWindowTitle(Settings.WorkingDir, validWorkingDir, branchSelect.Text);
             DiffText.Font = Settings.DiffFont;
             UpdateJumplist(validWorkingDir);
@@ -297,7 +297,47 @@ namespace GitUI
             UpdateStashCount();
             // load custom user menu
             LoadUserMenu();
+
+
+
+
             Cursor.Current = Cursors.Default;
+        }
+
+        private void RefreshWorkingDirCombo()
+        {
+            if (Settings.RecentReposComboMinWidth > 0)
+            {
+                _NO_TRANSLATE_Workingdir.AutoSize = false;
+                _NO_TRANSLATE_Workingdir.Width = Settings.RecentReposComboMinWidth;
+            }
+            else
+                _NO_TRANSLATE_Workingdir.AutoSize = true;
+
+            Repository r = null;
+            if (Repositories.RepositoryHistory.Repositories.Count > 0)
+                r = Repositories.RepositoryHistory.Repositories[0];
+            if (r == null || !r.Path.Equals(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
+                Repositories.AddMostRecentRepository(Settings.WorkingDir);
+
+            List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
+            List<Repository> repo = new List<Repository>();
+            repo.Add(Repositories.RepositoryHistory.Repositories[0]);
+
+            RecentRepoSplitter splitter = new RecentRepoSplitter();
+            splitter.measureFont = _NO_TRANSLATE_Workingdir.Font;
+            splitter.graphics = this.CreateGraphics();
+            try
+            {
+                splitter.SplitRecentRepos(repo, mostRecentRepos, mostRecentRepos);
+            }
+            finally
+            {
+                splitter.graphics.Dispose();
+            }
+
+            _NO_TRANSLATE_Workingdir.Text = mostRecentRepos[0].Caption;
+
         }
 
         /// <summary>
@@ -311,7 +351,19 @@ namespace GitUI
         {
             DirectoryInfo dirInfo = new DirectoryInfo(repositoryDir);
             if (dirInfo.Exists)
-                return ReadRepositoryDescription(repositoryDir) ?? dirInfo.Name;
+            {
+                string desc = ReadRepositoryDescription(repositoryDir);
+                if (desc.IsNullOrEmpty())
+                {
+                    foreach(Repository repo in Repositories.RepositoryHistory.Repositories)
+                        if (repo.Path.Equals(repositoryDir, StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            desc = repo.Title;
+                            break;
+                        }                                                                              
+                }
+                 return desc ?? dirInfo.Name;
+            }
             else
                 return dirInfo.Name;
         }
@@ -1586,7 +1638,7 @@ namespace GitUI
             Settings.WorkingDir += Settings.Module.GetSubmoduleLocalPath(button.Text);
 
             if (Settings.Module.ValidWorkingDir())
-                Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
+                Repositories.AddMostRecentRepository(Settings.WorkingDir);
 
             InternalInitialize(true);
         }
@@ -1706,25 +1758,71 @@ namespace GitUI
                 MessageBox.Show(this, output);
         }
 
+        private void AddWorkingdirDropDownItem(Repository repo, string caption) 
+        {
+            ToolStripMenuItem toolStripItem = new ToolStripMenuItem(caption);
+            _NO_TRANSLATE_Workingdir.DropDownItems.Add(toolStripItem);
+
+            toolStripItem.Click += (object hs, EventArgs he) =>
+            {
+                SetWorkingDir(repo.Path);
+            };
+
+            if (repo.Title != null || !repo.Path.Equals(caption))
+                toolStripItem.ToolTipText = repo.Path;            
+        }
+
+
         private void WorkingdirDropDownOpening(object sender, EventArgs e)
         {
             _NO_TRANSLATE_Workingdir.DropDownItems.Clear();
-            foreach (var repository in Repositories.RepositoryHistory.Repositories)
+
+            List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
+            List<RecentRepoInfo> lessRecentRepos = new List<RecentRepoInfo>();
+
+            RecentRepoSplitter splitter = new RecentRepoSplitter();
+            splitter.measureFont = _NO_TRANSLATE_Workingdir.Font;
+            splitter.graphics = this.CreateGraphics();
+            try
             {
-                var toolStripItem = _NO_TRANSLATE_Workingdir.DropDownItems.Add(repository.Path);
-                toolStripItem.Click += ToolStripItemClick;
+                splitter.SplitRecentRepos(Repositories.RepositoryHistory.Repositories, mostRecentRepos, lessRecentRepos);
             }
+            finally
+            {
+                splitter.graphics.Dispose();
+            }
+
+            foreach(RecentRepoInfo repo in mostRecentRepos)
+                AddWorkingdirDropDownItem(repo.Repo, repo.Caption);
+
+
+            if (lessRecentRepos.Count > 0)
+            {
+                if (mostRecentRepos.Count > 0 && (Settings.SortMostRecentRepos || Settings.SortLessRecentRepos))
+                    _NO_TRANSLATE_Workingdir.DropDownItems.Add(new ToolStripSeparator());
+
+                foreach (RecentRepoInfo repo in lessRecentRepos)
+                    AddWorkingdirDropDownItem(repo.Repo, repo.Caption);
+            }
+
+            _NO_TRANSLATE_Workingdir.DropDownItems.Add(new ToolStripSeparator());
+            ToolStripMenuItem toolStripItem = new ToolStripMenuItem("Configure this menu");
+            _NO_TRANSLATE_Workingdir.DropDownItems.Add(toolStripItem);
+
+            toolStripItem.Click += (object hs, EventArgs he) =>
+            {
+                new FormRecentReposSettings().ShowDialog(this);
+                RefreshWorkingDirCombo();
+            };
+
+
         }
 
-        private void ToolStripItemClick(object sender, EventArgs e)
+        private void SetWorkingDir(string path)
         {
-            var toolStripItem = (ToolStripItem)sender;
-            if (toolStripItem == null)
-                return;
-
-            Settings.WorkingDir = toolStripItem.Text;
-            Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
-            InternalInitialize(true);
+            Settings.WorkingDir = path;
+            Repositories.AddMostRecentRepository(Settings.WorkingDir);
+            InternalInitialize(true);                            
         }
 
         private void TranslateToolStripMenuItemClick(object sender, EventArgs e)
@@ -1736,7 +1834,7 @@ namespace GitUI
         {
             try
             {
-                Process.Start(_NO_TRANSLATE_Workingdir.Text);
+                Process.Start(Settings.WorkingDir);
             }
             catch (Exception ex)
             {
