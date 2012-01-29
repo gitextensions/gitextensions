@@ -72,7 +72,7 @@ namespace GitUI
 
             branch = Settings.Module.GetSelectedBranch();
             string currentBranchRemote = Settings.Module.GetSetting(string.Format("branch.{0}.remote", branch));
-            if (currentBranchRemote.IsNullOrEmpty() && _NO_TRANSLATE_Remotes.Items.Count >= 3)
+            if (string.IsNullOrEmpty(currentBranchRemote) && _NO_TRANSLATE_Remotes.Items.Count >= 3)
             {
                 IList<string> remotes = (IList<string>)_NO_TRANSLATE_Remotes.DataSource;
                 int i = remotes.IndexOf("origin");
