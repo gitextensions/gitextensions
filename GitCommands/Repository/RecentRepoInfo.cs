@@ -30,10 +30,16 @@ namespace GitCommands.Repository
                 DirInfo = null;
                 Caption = Repo.Path;
             }
+
+            if (Repo.Title != null)
+                ShortName = Repo.Title;
+            else if (DirInfo != null)
+                ShortName = DirInfo.Name;
             
-            ShortName = Repo.Title == null ? DirInfo.Name : Repo.Title;
+
             if (DirInfo != null)
                 DirInfo = DirInfo.Parent;
+
             DirName = DirInfo == null ? "" : DirInfo.FullName;
         }
 

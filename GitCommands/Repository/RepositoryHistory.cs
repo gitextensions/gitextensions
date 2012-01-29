@@ -30,6 +30,9 @@ namespace GitCommands.Repository
 
         public void AddMostRecentRepository(string repo)
         {
+            if (string.IsNullOrEmpty(repo))
+                return;
+
             repo = repo.Trim();
 
             if (string.IsNullOrEmpty(repo))
