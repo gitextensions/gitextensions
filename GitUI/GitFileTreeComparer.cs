@@ -10,9 +10,9 @@ namespace GitUI
             var xGitItem = (GitItem)x;
             var yGitItem = (GitItem)y;
 
-            if ((xGitItem.ItemType == "tree" || xGitItem.ItemType == "commit") && yGitItem.ItemType == "blob")
+            if ((xGitItem.IsTree || xGitItem.IsCommit) && yGitItem.IsBlob)
                 return -1;
-            if (xGitItem.ItemType == "blob" && (yGitItem.ItemType == "tree" || yGitItem.ItemType == "commit"))
+            if (xGitItem.IsBlob && (yGitItem.IsTree || yGitItem.IsCommit))
                 return 1;
             return xGitItem.Name.CompareTo(yGitItem.Name);
         }
