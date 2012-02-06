@@ -21,6 +21,21 @@ namespace GitCommands
 
         private List<IGitItem> subItems;
 
+        public bool IsBlob
+        {
+            get { return ItemType == "blob"; }
+        }
+
+        public bool IsCommit
+        {
+            get { return ItemType == "commit"; }
+        }
+
+        public bool IsTree
+        {
+            get { return ItemType == "tree"; }
+        }
+
         public List<IGitItem> SubItems
         {
             get
