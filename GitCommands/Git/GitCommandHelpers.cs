@@ -90,22 +90,22 @@ namespace GitCommands
 
             if (Settings.RunningOnWindows())
             {
-                string homePath;
+                return WindowsDefaultHomeDir;
+            }
+            return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+        }
+
+        private static string WindowsDefaultHomeDir
+        {
+            get
+            {
                 if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE")))
                 {
-                    homePath = Environment.GetEnvironmentVariable("HOMEDRIVE");
+                    string homePath = Environment.GetEnvironmentVariable("HOMEDRIVE");
                     homePath += Environment.GetEnvironmentVariable("HOMEPATH");
+                    return homePath;
                 }
-                else
-                {
-                    homePath = Environment.GetEnvironmentVariable("USERPROFILE");
-                }
-
-                return homePath;
-            }
-            else
-            {
-                return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                return Environment.GetEnvironmentVariable("USERPROFILE");
             }
         }
 
