@@ -11,6 +11,19 @@ namespace GitCommands
     /// </summary>
     public static class GitCommandCache
     {
+        private struct CacheItem
+        {
+            public CacheItem(byte[] output, byte[] error)
+            {
+                this.Output = output;
+                this.Error = error;
+            }
+
+            public byte[] Output;
+
+            public byte[] Error;
+        }
+
         //Cache limit
         const int cacheLimit = 40;
 
@@ -19,7 +32,7 @@ namespace GitCommands
         /// <summary>
         /// Simple dictionary to store cmd/output pairs
         /// </summary>
-        private static Dictionary<string, string> commandCache = new Dictionary<string, string>(cacheLimit);
+        private static Dictionary<string, CacheItem> commandCache = new Dictionary<string, CacheItem>(cacheLimit);
         
         /// <summary>
         /// Queue used to limit commandCache. The oldest item is removed
@@ -38,7 +51,7 @@ namespace GitCommands
             }
         }
 
-        public static bool TryGet(string cmd, out string cmdOutput)
+        public static bool TryGet(string cmd, Encoding encoding, out string cmdOutput)
         {
             //Never cache empty commands
             if (string.IsNullOrEmpty(cmd))
@@ -46,11 +59,33 @@ namespace GitCommands
                 cmdOutput = null;
                 return false;
             }
-            lock (queue)
-                return commandCache.TryGetValue(cmd, out cmdOutput);
+            
+            byte[] output, error;
+            if (!TryGet(cmd, out output, out error))
+            {
+                cmdOutput = null;
+                return false;
+            }
+
+            cmdOutput = EncodingHelper.GetString(output, error, encoding);
+            return true;
+             
         }
 
-        public static void Add(string cmd, string cmdOutput)
+        public static bool TryGet(string cmd, out byte[] output, out byte[] error)
+        {
+            CacheItem item = new CacheItem();
+            bool res;
+            lock (queue)
+                //Never cache empty commands
+                res = !string.IsNullOrEmpty(cmd) && commandCache.TryGetValue(cmd, out item);
+
+           output = item.Output;
+           error = item.Error;
+           return res;
+        }
+
+        public static void Add(string cmd, byte[] output, byte[] error)
         {
             //Never cache empty commands
             if (string.IsNullOrEmpty(cmd))
@@ -58,7 +93,7 @@ namespace GitCommands
 
             lock (queue)
             {
-                commandCache[cmd] = cmdOutput;
+                commandCache[cmd] = new CacheItem(output, error);
                 queue.Enqueue(cmd);
 
                 //Limit cache to X commands

@@ -68,11 +68,13 @@
     <Compile Include="CommitData.cs" />
     <Compile Include="FileHelper.cs" />
     <Compile Include="Git\GitCommand.cs" />
+    <Compile Include="Git\EncodingHelper.cs" />
     <Compile Include="Git\GitDeleteBranchCmd.cs" />
     <Compile Include="Git\GitCommandHelpers.cs" />
     <Compile Include="Git\GitModule.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Git\GitSvnCommandHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Git\GitCommandsInstance.cs" />
     <Compile Include="Logging\CommandLogger.cs" />
@@ -112,6 +114,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="gitcommandkey.snk.pfx" />
+    <Compile Include="Repository\RecentRepoInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">

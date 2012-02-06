@@ -19,6 +19,7 @@ namespace GitUI.Plugin
         {
             PluginList.DataSource = LoadedPlugins.Plugins;
             PluginList.DisplayMember = "Description";
+            RestorePosition("plugin-settings");
         }
 
         private void PluginListSelectedIndexChanged(object sender, EventArgs e)
@@ -45,7 +46,6 @@ namespace GitUI.Plugin
 
         private void LoadSettings()
         {
-            RestorePosition("plugin-settings");
             const int xLabelStart = 20;
             const int xEditStart = 300;
 

@@ -345,7 +345,13 @@ namespace GitUI
                     NoFiles.Visible = false;
 
                 FileStatusListBox.HorizontalExtent = 0;
+                int prevSelectedIndex = FileStatusListBox.SelectedIndex;
                 FileStatusListBox.DataSource = value;
+                if (value != null && value.Count == 0 && prevSelectedIndex >= 0)
+                {
+                    //bug in the ListBox control where supplying an empty list will not trigger a SelectedIndexChanged event, so we force it to trigger
+                    FileStatusListBox_SelectedIndexChanged(this, null);
+                }
             }
         }
 
