@@ -187,7 +187,7 @@ namespace GitUI
                 if (!(extensionsSeperator > 0) || extensionsSeperator + 1 >= fileName.Length)
                     return false;
 
-                string[] mergeScripts = Directory.GetFiles(Settings.GetInstallDir() + Settings.PathSeparator + "Diff-Scripts" + Settings.PathSeparator, "merge-" + fileName.Substring(extensionsSeperator + 1) + ".*");
+                string[] mergeScripts = Directory.GetFiles(Path.GetDirectoryName(Application.ExecutablePath) + Settings.PathSeparator + "Diff-Scripts" + Settings.PathSeparator, "merge-" + fileName.Substring(extensionsSeperator + 1) + ".*");
 
                 if (mergeScripts.Length > 0)
                 {

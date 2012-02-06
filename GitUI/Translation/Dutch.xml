@@ -1803,6 +1803,9 @@ Deze applicatie is verspreid in de hoop dat het bruikbaar is voor anderen, maar 
         <TranslationItem Name="_currentIndex" Property="Text">
           <Value>Commit index</Value>
         </TranslationItem>
+        <TranslationItem Name="_areYouSureYouWantCheckout" Property="Text">
+          <Value>Weet u zeker dat u de geselecteerde revisie wilt uitchecken?</Value>
+        </TranslationItem>
         <TranslationItem Name="_areYouSureYouWantCheckoutCaption" Property="Text">
           <Value>Revisie uitchecken</Value>
         </TranslationItem>
@@ -3217,6 +3220,28 @@ Als u een vertakking wilt ophalen en samenvoegen, kies een vertakking.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormDirtyDirWarn">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Waarschuwing</Value>
+        </TranslationItem>
+        <TranslationItem Name="button5" Property="Text">
+          <Value>Annuleren</Value>
+        </TranslationItem>
+        <TranslationItem Name="button4" Property="Text">
+          <Value>Commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="button3" Property="Text">
+          <Value>Doorgaan</Value>
+        </TranslationItem>
+        <TranslationItem Name="button1" Property="Text">
+          <Value>Wegzetten en doorgaan</Value>
+        </TranslationItem>
+        <TranslationItem Name="richTextBox1" Property="Text">
+          <Value>U heeft openstaande wijzigingen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormTag">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -3960,6 +3985,16 @@ Bij het verwijderen van een vertakking kunnen commits verloren gaan!</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormRecentReposSettings">
+      <translationItems>
+        <TranslationItem Name="Abort" Property="Text">
+          <Value>Annuleren</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Ok</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormDashboardCategoryTitle">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -4189,6 +4224,27 @@ Wilt u automatisch het standaard push/pull gedrag installen?</Value>
         </TranslationItem>
         <TranslationItem Name="editToolStripMenuItem" Property="Text">
           <Value>Wijzigen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_moveToCategory" Property="Text">
+          <Value>Verplaats naar categorie</Value>
+        </TranslationItem>
+        <TranslationItem Name="_moveCategoryUp" Property="Text">
+          <Value>Verplaats omhoog</Value>
+        </TranslationItem>
+        <TranslationItem Name="_moveCategoryDown" Property="Text">
+          <Value>Verplaats omlaag</Value>
+        </TranslationItem>
+        <TranslationItem Name="_removeCategory" Property="Text">
+          <Value>Verwijder</Value>
+        </TranslationItem>
+        <TranslationItem Name="_editCategory" Property="Text">
+          <Value>Wijzig</Value>
+        </TranslationItem>
+        <TranslationItem Name="_showCurrentBranch" Property="Text">
+          <Value>Toon huidige vertakking</Value>
+        </TranslationItem>
+        <TranslationItem Name="_newCategory" Property="Text">
+          <Value>Nieuwe categorie</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
