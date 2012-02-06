@@ -29,19 +29,15 @@ namespace GitCommands.Repository
         public string Title { get; set; }
         public string Path { get; set; }
         public string Description { get; set; }
-        RepositoryAnchor _Anchor;
-        public RepositoryAnchor Anchor
-        {
-            get { return _Anchor; }
-            set { 
-            _Anchor = value;
-        } }
+        public RepositoryAnchor Anchor { get; set; }
 
         [XmlIgnore]
         public RepositoryType RepositoryType { get; set; }
 
         public void Assign(Repository source)
         {
+            if (source == null)
+                return;
             Path = source.Path;
             Title = source.Title;
             Description = source.Description;
