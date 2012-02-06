@@ -30,6 +30,9 @@ namespace GitCommands.Repository
 
         public void AddMostRecentRepository(string repo)
         {
+            if (string.IsNullOrEmpty(repo))
+                return;
+
             repo = repo.Trim();
 
             if (string.IsNullOrEmpty(repo))
@@ -42,15 +45,20 @@ namespace GitCommands.Repository
                 !repo.StartsWith("ssh", StringComparison.CurrentCultureIgnoreCase))
                 repo += Settings.PathSeparator;
 
+            Repository.RepositoryAnchor anchor = Repository.RepositoryAnchor.None;
             foreach (var recentRepository in Repositories)
             {
                 if (!recentRepository.Path.Equals(repo, StringComparison.CurrentCultureIgnoreCase))
                     continue;
+                anchor = recentRepository.Anchor;
                 Repositories.Remove(recentRepository);
                 break;
             }
 
-            var repository = new Repository(repo, null, null) {RepositoryType = RepositoryType.History};
+            var repository = new Repository(repo, null, null) {
+                RepositoryType = RepositoryType.History,
+                Anchor = anchor
+            };
             Repositories.Insert(0, repository);
 
             if (Repositories.Count > 30)

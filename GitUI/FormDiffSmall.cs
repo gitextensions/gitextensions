@@ -16,10 +16,14 @@ namespace GitUI
             DiffFiles.Focus();
 
             this.revision = revision;
-            DiffFiles.GitItemStatuses = null;
-            DiffFiles.GitItemStatuses = Settings.Module.GetDiffFiles(revision.Guid, revision.Guid + "^");
 
-            commitInfo.SetRevision(revision.Guid);
+            DiffFiles.GitItemStatuses = null;
+            if (this.revision != null)
+            {
+                DiffFiles.GitItemStatuses = Settings.Module.GetDiffFiles(revision.Guid, revision.Guid + "^");
+
+                commitInfo.SetRevision(revision.Guid);
+            }
         }
 
         private void FormDiffSmall_FormClosing(object sender, FormClosingEventArgs e)
@@ -41,9 +45,9 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            if (DiffFiles.SelectedItem != null)
+            if (DiffFiles.SelectedItem != null && revision != null)
             {
-                Patch selectedPatch = Settings.Module.GetSingleDiff(revision.Guid, revision.Guid + "^", DiffFiles.SelectedItem.Name, DiffFiles.SelectedItem.OldName, DiffText.GetExtraDiffArguments());
+                Patch selectedPatch = Settings.Module.GetSingleDiff(revision.Guid, revision.Guid + "^", DiffFiles.SelectedItem.Name, DiffFiles.SelectedItem.OldName, DiffText.GetExtraDiffArguments(), DiffText.Encoding);
                 DiffText.ViewPatch(selectedPatch != null ? selectedPatch.Text : "");
             }
             Cursor.Current = Cursors.Default;
