@@ -23,6 +23,7 @@ namespace GitUI
         readonly TranslationString noLanguageCodeSelected = new TranslationString("There is no languagecode selected." + 
             Environment.NewLine + "Do you want to select a language code first?");
         readonly TranslationString noLanguageCodeSelectedCaption = new TranslationString("Language code");
+        readonly TranslationString editingCellPrefixText = new TranslationString("[EDITING]");
 
         public class TranslateItem : INotifyPropertyChanged
         {
@@ -446,12 +447,38 @@ namespace GitUI
         {
             if (translateGrid.SelectedRows.Count == 1)
             {
-                var translateItem = (TranslateItem)translateItemBindingSource.Current;
-                translateItem.TranslatedValue = translatedText.Text;
-
                 changesMade = true;
 
                 UpdateProgress();
+            }
+        }
+
+        TranslateItem translateItemInEditing;
+
+        private void translatedText_Enter(object sender, System.EventArgs e)
+        {
+            if (translateItemInEditing != null)
+            {
+                translateItemInEditing.TranslatedValue = translatedText.Text;
+            }
+
+            translateItemInEditing = (TranslateItem)translateItemBindingSource.Current;
+
+            if (translateItemInEditing != null)
+            {
+                translateItemInEditing.TranslatedValue = editingCellPrefixText.Text + " " + translateItemInEditing.TranslatedValue;
+            }
+        }
+
+        private void translatedText_Leave(object sender, System.EventArgs e)
+        {
+            //Debug.Assert(translateItemInEditing != null);
+
+            if (translateItemInEditing != null)
+            {
+                translateItemInEditing.TranslatedValue = translatedText.Text;
+
+                translateItemInEditing = null;
             }
         }
 
@@ -480,7 +507,16 @@ namespace GitUI
 
         private void translateGrid_SelectionChanged(object sender, EventArgs e)
         {
+            bool nowTranslatedTextInEditing = translateItemInEditing != null;
+
+            translatedText_Leave(null, null);
+
             translateGrid_Click(null, null);
+
+            if (nowTranslatedTextInEditing)
+            {
+                translatedText_Enter(null, null);
+            }
         }
 
         private void nextButton_Click(object sender, EventArgs e)
