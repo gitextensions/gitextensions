@@ -57,7 +57,7 @@ namespace GitUI
 
         public event GitUIEventHandler PreCommit;
         public event GitUIEventHandler PostCommit;
-        
+
         public event GitUIEventHandler PreSvnDcommit;
         public event GitUIEventHandler PostSvnDcommit;
 
@@ -169,7 +169,7 @@ namespace GitUI
 
         private bool RequiredValidGitSvnWorikingDir()
         {
-            if (!RequiresValidWorkingDir()) 
+            if (!RequiresValidWorkingDir())
                 return false;
 
             if (!GitSvnCommandHelpers.ValidSvnWorkingDir())
@@ -280,25 +280,21 @@ namespace GitUI
             if (Settings.DirtyDirWarnBeforeCheckoutBranch &&
                 Settings.Module.GitStatus(UntrackedFilesMode.All, IgnoreSubmodulesMode.Default).Count > 0)
             {
-                var f = new FormDirtyDirWarn();
-                DialogResult d = f.ShowDialog(owner);
-                if (d == DialogResult.Cancel)
-                    return true;
-                else if (d == DialogResult.Yes)
+                switch (new FormDirtyDirWarn().ShowDialog(owner))
                 {
-                    new FormProcess("stash save").ShowDialog(owner);
-                    return false;
+                    case DialogResult.Cancel:
+                        return true;
+                    case DialogResult.Yes:
+                        new FormProcess("stash save -u").ShowDialog(owner);
+                        return false;
+                    case DialogResult.Abort:
+                        needRefresh = StartCommitDialog(owner);
+                        return true;
+                    default:
+                        return false;
                 }
-                else if (d == DialogResult.Abort)
-                {
-                    needRefresh = StartCommitDialog(owner);
-                    return true;
-                }
-                else
-                    return false;
             }
-            else
-                return false;
+            return false;
         }
 
         public bool StartCheckoutBranchDialog()
@@ -459,12 +455,12 @@ namespace GitUI
             if (!RequiredValidGitSvnWorikingDir())
                 return false;
 
-           if (!InvokeEvent(PreSvnDcommit))
+            if (!InvokeEvent(PreSvnDcommit))
                 return true;
 
             var fromProcess = new FormProcess(Settings.GitCommand, GitSvnCommandHelpers.DcommitCmd());
             fromProcess.ShowDialog(owner);
-            
+
             InvokeEvent(PostSvnDcommit);
 
             return true;

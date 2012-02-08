@@ -1575,7 +1575,7 @@ namespace GitUI
 
         private void StashChangesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            new FormProcess("stash save").ShowDialog(this);
+            new FormProcess("stash save -u").ShowDialog(this);
             Initialize();
         }
 
