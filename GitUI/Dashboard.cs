@@ -18,6 +18,7 @@ namespace GitUI
     {
         private readonly TranslationString cloneFork = new TranslationString("Clone {0} repository");
         private readonly TranslationString cloneRepository = new TranslationString("Clone repository");
+        private readonly TranslationString cloneSvnRepository = new TranslationString("Clone SVN repository");
         private readonly TranslationString createRepository = new TranslationString("Create new repository");
         private readonly TranslationString develop = new TranslationString("Develop");
         private readonly TranslationString donate = new TranslationString("Donate");
@@ -70,6 +71,10 @@ namespace GitUI
             var cloneItem = new DashboardItem(Resources._46, cloneRepository.Text);
             cloneItem.Click += cloneItem_Click;
             CommonActions.AddItem(cloneItem);
+
+            var cloneSvnItem = new DashboardItem(Resources._46, cloneSvnRepository.Text);
+            cloneSvnItem.Click += cloneSvnItem_Click;
+            CommonActions.AddItem(cloneSvnItem);
 
             foreach (IRepositoryHostPlugin el in RepoHosts.GitHosters)
             {
@@ -235,7 +240,7 @@ namespace GitUI
                 }
             }
 
-            Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
+            Repositories.AddMostRecentRepository(Settings.WorkingDir);
             OnWorkingDirChanged();
         }
 
@@ -249,6 +254,12 @@ namespace GitUI
         private void cloneItem_Click(object sender, EventArgs e)
         {
             if (GitUICommands.Instance.StartCloneDialog(this))
+                OnWorkingDirChanged();
+        }
+
+        private void cloneSvnItem_Click(object sender, EventArgs e)
+        {
+            if (GitUICommands.Instance.StartSvnCloneDialog(this))
                 OnWorkingDirChanged();
         }
 

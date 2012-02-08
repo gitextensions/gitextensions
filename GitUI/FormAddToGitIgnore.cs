@@ -28,13 +28,17 @@ namespace GitUI
                     .MakeFileTemporaryWritable(Settings.WorkingDir + ".gitignore",
                                        x =>
                                        {
-                                           var gitIgnoreFile = new StringBuilder();
-                                           gitIgnoreFile.Append(Environment.NewLine);
-                                           gitIgnoreFile.Append(FilePattern.Text);
+                                           var gitIgnoreFileAddition = new StringBuilder();
+                                           gitIgnoreFileAddition.Append(FilePattern.Text);
+                                           gitIgnoreFileAddition.Append(Environment.NewLine);
+
+                                           if (File.Exists(Settings.WorkingDir + ".gitignore"))
+                                               if (!File.ReadAllText(Settings.WorkingDir + ".gitignore", Settings.Encoding).EndsWith(Environment.NewLine))
+                                                   gitIgnoreFileAddition.Insert(0, Environment.NewLine);
 
                                            using (TextWriter tw = new StreamWriter(x, true, Settings.Encoding))
                                            {
-                                               tw.Write(gitIgnoreFile);
+                                               tw.Write(gitIgnoreFileAddition);
                                            }
                                        });
             }

@@ -96,7 +96,7 @@ namespace GitUI
                 {
                     watcher.Path = watchingPath;
                     gitDirWatcher.Path = watchingGitPath;
-                    gitPath = Path.GetDirectoryName(watchingGitPath).ToLowerInvariant();
+                    gitPath = Path.GetDirectoryName(watchingGitPath);
                     CurrentStatus = WorkingStatus.Started;
                 }
                 else
@@ -116,15 +116,18 @@ namespace GitUI
 
         private void watcher_Changed(object sender, FileSystemEventArgs e)
         {
-            string path = e.FullPath.ToLowerInvariant();
-            if (path.StartsWith(gitPath))
+            if (e.FullPath.StartsWith(gitPath))
             {
                 gitWatcher_Changed(sender, e);
                 return;
             }
 
-            // submodule .git file
-            if (path.EndsWith("\\.git"))
+            // new submodule .git file
+            if (e.FullPath.EndsWith("\\.git"))
+                return;
+
+            // old submodule .git\index.lock file
+            if (e.FullPath.EndsWith("\\.git\\index.lock"))
                 return;
 
             ScheduleNextRegularUpdate();
@@ -132,12 +135,17 @@ namespace GitUI
 
         private void gitWatcher_Changed(object sender, FileSystemEventArgs e)
         {
-            string path = e.FullPath.ToLowerInvariant();
             // git directory changed
-            if (path.Length == gitPath.Length)
+            if (e.FullPath.Length == gitPath.Length)
                 return;
 
-            if (path.EndsWith("\\index.lock"))
+            if (e.FullPath.EndsWith("\\index.lock"))
+                return;
+
+            // new submodule changed
+            string modulePath = "\\modules\\";
+            int index = e.FullPath.IndexOf(modulePath, gitPath.Length);
+            if (index >= 0 && e.FullPath.IndexOf("\\", index + modulePath.Length) == -1)
                 return;
 
             ScheduleNextRegularUpdate();
@@ -162,15 +170,22 @@ namespace GitUI
 
             if (Environment.TickCount > nextUpdateTime)
             {
-                string command = GitCommandHelpers.GetAllChangedFilesCmd(true, true);
-                gitGetUnstagedCommand.CmdStartProcess(Settings.GitCommand, command);
+                try
+                {
+                    string command = GitCommandHelpers.GetAllChangedFilesCmd(true, true);
+                    gitGetUnstagedCommand.CmdStartProcess(Settings.GitCommand, command);
 
-                if (hasDeferredUpdateRequests)
-                    // New changes were detected while processing previous changes, schedule deferred update
-                    ScheduleDeferredUpdate();
-                else
-                    // Always update every 5 min, even if we don't know anything changed
-                    ScheduleNextJustInCaseUpdate();
+                    if (hasDeferredUpdateRequests)
+                        // New changes were detected while processing previous changes, schedule deferred update
+                        ScheduleDeferredUpdate();
+                    else
+                        // Always update every 5 min, even if we don't know anything changed
+                        ScheduleNextJustInCaseUpdate();
+                }
+                catch (Exception)
+                {
+                    CurrentStatus = WorkingStatus.Stopped;
+                }
             }
         }
 

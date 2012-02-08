@@ -72,7 +72,17 @@ STDMETHODIMP CSimpleShlExt::QueryContextMenu  (
 
     id = PopulateMenu(popupMenu, uidFirstCmd + id);
 
-    InsertMenu(hmenu, uMenuIndex++, MF_STRING | MF_BYPOSITION | MF_POPUP, (int)popupMenu, "Git Extensions");	
+    //InsertMenu(hmenu, uMenuIndex++, MF_STRING | MF_BYPOSITION | MF_POPUP, (int)popupMenu, "Git Extensions");	
+	MENUITEMINFO info;
+
+	info.cbSize = sizeof( MENUITEMINFO );
+	info.fMask = MIIM_ID | MIIM_TYPE | MIIM_SUBMENU;
+	info.fType = MFT_STRING;
+	info.wID = uidFirstCmd + 1;
+	info.dwTypeData = _T("Git Extensions");
+	info.hSubMenu = popupMenu;
+	InsertMenuItem(hmenu, 0, true, &info);
+
     return MAKE_HRESULT ( SEVERITY_SUCCESS, FACILITY_NULL, id-uidFirstCmd );
 }
 
