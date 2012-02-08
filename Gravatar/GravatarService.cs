@@ -110,12 +110,19 @@ namespace Gravatar
 
         public static void ClearImageCache()
         {
-            cache.ClearCache();
+            if (cache != null)
+            {
+                cache.ClearCache();
+            }
         }
 
         public static void RemoveImageFromCache(string imageFileName)
         {
-            cache.DeleteCachedFile(imageFileName);
+
+            if (cache != null)
+            {
+                cache.DeleteCachedFile(imageFileName);
+            }
         }
 
         public static Image GetImageFromCache(string imageFileName, string email, int cacheDays,

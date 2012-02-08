@@ -78,8 +78,12 @@ namespace GitUI
             Push.Focus();
 
             _currentBranchRemote = Settings.Module.GetSetting(string.Format("branch.{0}.remote", _currentBranch));
-            if (_currentBranchRemote.IsNullOrEmpty() && _NO_TRANSLATE_Remotes.Items.Count == 2)
-                _NO_TRANSLATE_Remotes.SelectedIndex = 0;
+            if (_currentBranchRemote.IsNullOrEmpty() && _NO_TRANSLATE_Remotes.Items.Count >= 2)
+            {
+                IList<string> remotes = (IList<string>)_NO_TRANSLATE_Remotes.DataSource;
+                int i = remotes.IndexOf("origin");
+                _NO_TRANSLATE_Remotes.SelectedIndex = i >= 0 ? i : 0;
+            }
             else
                 _NO_TRANSLATE_Remotes.Text = _currentBranchRemote;
             RemotesUpdated(null, null);
@@ -149,7 +153,7 @@ namespace GitUI
                     }
             }
 
-            Repositories.RepositoryHistory.AddMostRecentRepository(PushDestination.Text);
+            Repositories.AddMostRecentRepository(PushDestination.Text);
             Settings.PushAllTags = PushAllTags.Checked;
             Settings.AutoPullOnRejected = AutoPullOnRejected.Checked;
             if (RecursiveSubmodulesCheck.Enabled)
@@ -588,6 +592,7 @@ namespace GitUI
         {
             PushOptionsPanel.Visible = true;
             ShowOptions.Visible = false;
+            this.Size = new System.Drawing.Size(this.MinimumSize.Width, this.MinimumSize.Height + 70);
         }
 
         private void ShowTagOptions_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

@@ -6,7 +6,7 @@ using GitCommands;
 
 namespace GitUI.Blame
 {
-    public partial class BlameControl : GitExtensionsControl
+    public sealed partial class BlameControl : GitExtensionsControl
     {
         private GitBlame _blame;
         private string _lastRevision;
@@ -22,14 +22,14 @@ namespace GitUI.Blame
             BlameCommitter.ShowLineNumbers = false;
             BlameCommitter.DisableFocusControlOnHover = true;
             BlameCommitter.ScrollPosChanged += BlameCommitter_ScrollPosChanged;
-            BlameCommitter.MouseMove += new MouseEventHandler(BlameCommitter_MouseMove);
-            BlameCommitter.MouseLeave += new EventHandler(BlameCommitter_MouseLeave);
+            BlameCommitter.MouseMove += BlameCommitter_MouseMove;
+            BlameCommitter.MouseLeave += BlameCommitter_MouseLeave;
 
             BlameFile.IsReadOnly = true;
             BlameFile.ScrollPosChanged += BlameFile_ScrollPosChanged;
             BlameFile.SelectedLineChanged += BlameFile_SelectedLineChanged;
             BlameFile.RequestDiffView += ActiveTextAreaControlDoubleClick;
-            BlameFile.MouseMove += new MouseEventHandler(BlameFile_MouseMove);
+            BlameFile.MouseMove += BlameFile_MouseMove;
         }
 
         void BlameCommitter_MouseLeave(object sender, EventArgs e)
@@ -174,13 +174,13 @@ namespace GitUI.Blame
                 }
                 else
                 {
-                    blameCommitter.AppendLine((blameHeader.Author + " - " + blameHeader.AuthorTime.ToString() + " - " + blameHeader.FileName + new string(' ', 100)).Trim(new char[] { '\r', '\n' }));
+                    blameCommitter.AppendLine((blameHeader.Author + " - " + blameHeader.AuthorTime + " - " + blameHeader.FileName + new string(' ', 100)).Trim(new char[] { '\r', '\n' }));
                 }
-                if (blameLine.LineText == null )
+                if (blameLine.LineText == null)
                     blameFile.AppendLine("");
                 else
                     blameFile.AppendLine(blameLine.LineText.Trim(new char[] { '\r', '\n' }));
-                }
+            }
 
             BlameCommitter.ViewText("committer.txt", blameCommitter.ToString());
             BlameFile.ViewText(fileName, blameFile.ToString());
@@ -191,14 +191,14 @@ namespace GitUI.Blame
 
         private void ActiveTextAreaControlDoubleClick(object sender, EventArgs e)
         {
+            var gitRevision = new GitRevision(_lastRevision) { ParentGuids = new[] { _lastRevision + "^" } };
             if (_revGrid != null)
             {
-                _revGrid.SetSelectedRevision(new GitRevision(_lastRevision) { ParentGuids = new[] { _lastRevision + "^" } });
+                _revGrid.SetSelectedRevision(gitRevision);
             }
             else
             {
-                var frm = new FormDiffSmall();
-                frm.SetRevision(_lastRevision);
+                var frm = new FormDiffSmall(gitRevision);
                 frm.ShowDialog(this);
             }
         }

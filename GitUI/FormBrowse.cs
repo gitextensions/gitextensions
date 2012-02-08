@@ -160,13 +160,10 @@ namespace GitUI
 
         private void DashboardWorkingDirChanged(object sender, EventArgs e)
         {
-            IndexWatcher.Clear();
-            RevisionGrid.ForceRefreshRevisions();
-            InternalInitialize(false);
-            IndexWatcher.Reset();
+            WorkingDirChanged(false);
         }
 
-        private void TreeView1AfterSelect(object sender, TreeViewEventArgs e)
+        private void GitTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
             var item = e.Node.Tag as GitItem;
             if (item == null)
@@ -224,7 +221,7 @@ namespace GitUI
         /// <summary>
         ///   Execute plugin
         /// </summary>
-        private static void ItemClick(object sender, EventArgs e)
+        private void ItemClick(object sender, EventArgs e)
         {
             var menuItem = sender as ToolStripMenuItem;
             if (menuItem == null)
@@ -235,7 +232,11 @@ namespace GitUI
                 return;
 
             var eventArgs = new GitUIEventArgs(GitUICommands.Instance);
+
+            string workingDirBefore = Settings.WorkingDir;
             plugin.Execute(eventArgs);
+            if (workingDirBefore != Settings.WorkingDir)
+                WorkingDirChanged(false);
         }
 
         private void ActionOnRepositoryPerformed(object sender, EventArgs e)
@@ -287,7 +288,7 @@ namespace GitUI
             InitToolStripBranchFilter(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
             if (hard)
                 ShowRevisions();
-            _NO_TRANSLATE_Workingdir.Text = Settings.WorkingDir;
+            RefreshWorkingDirCombo();
             Text = GenerateWindowTitle(Settings.WorkingDir, validWorkingDir, branchSelect.Text);
             DiffText.Font = Settings.DiffFont;
             UpdateJumplist(validWorkingDir);
@@ -296,7 +297,47 @@ namespace GitUI
             UpdateStashCount();
             // load custom user menu
             LoadUserMenu();
+
+
+
+
             Cursor.Current = Cursors.Default;
+        }
+
+        private void RefreshWorkingDirCombo()
+        {
+            if (Settings.RecentReposComboMinWidth > 0)
+            {
+                _NO_TRANSLATE_Workingdir.AutoSize = false;
+                _NO_TRANSLATE_Workingdir.Width = Settings.RecentReposComboMinWidth;
+            }
+            else
+                _NO_TRANSLATE_Workingdir.AutoSize = true;
+
+            Repository r = null;
+            if (Repositories.RepositoryHistory.Repositories.Count > 0)
+                r = Repositories.RepositoryHistory.Repositories[0];
+            if (r == null || !r.Path.Equals(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
+                Repositories.AddMostRecentRepository(Settings.WorkingDir);
+
+            List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
+            List<Repository> repo = new List<Repository>();
+            repo.Add(Repositories.RepositoryHistory.Repositories[0]);
+
+            RecentRepoSplitter splitter = new RecentRepoSplitter();
+            splitter.measureFont = _NO_TRANSLATE_Workingdir.Font;
+            splitter.graphics = this.CreateGraphics();
+            try
+            {
+                splitter.SplitRecentRepos(repo, mostRecentRepos, mostRecentRepos);
+            }
+            finally
+            {
+                splitter.graphics.Dispose();
+            }
+
+            _NO_TRANSLATE_Workingdir.Text = mostRecentRepos[0].Caption;
+
         }
 
         /// <summary>
@@ -310,7 +351,19 @@ namespace GitUI
         {
             DirectoryInfo dirInfo = new DirectoryInfo(repositoryDir);
             if (dirInfo.Exists)
-                return ReadRepositoryDescription(repositoryDir) ?? dirInfo.Name;
+            {
+                string desc = ReadRepositoryDescription(repositoryDir);
+                if (desc.IsNullOrEmpty())
+                {
+                    foreach(Repository repo in Repositories.RepositoryHistory.Repositories)
+                        if (repo.Path.Equals(repositoryDir, StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            desc = repo.Title;
+                            break;
+                        }                                                                              
+                }
+                 return desc ?? dirInfo.Name;
+            }
             else
                 return dirInfo.Name;
         }
@@ -752,6 +805,10 @@ namespace GitUI
                         FileText.ResetCurrentScrollPos();
                     GitTree.SelectedNode = lastMatchedNode;
                 }
+                if (GitTree.SelectedNode == null)
+                {
+                    FileText.ViewText("", "");
+                }
             }
             finally
             {
@@ -1021,10 +1078,7 @@ namespace GitUI
         {
             if (new Open().ShowDialog(this) == DialogResult.OK)
             {
-                IndexWatcher.Clear();
-                RevisionGrid.ForceRefreshRevisions();
-                InternalInitialize(false);
-                IndexWatcher.Reset();
+                WorkingDirChanged(false);
             }
         }
 
@@ -1419,17 +1473,17 @@ namespace GitUI
             if (revisions[0].Guid == GitRevision.UncommittedWorkingDirGuid) //working dir changes
             {
                 if (file.IsTracked)
-                    return Settings.Module.GetCurrentChanges(file.Name, file.OldName, false, DiffText.GetExtraDiffArguments());
+                    return Settings.Module.GetCurrentChanges(file.Name, file.OldName, false, DiffText.GetExtraDiffArguments(), DiffText.Encoding);
                 return FileReader.ReadFileContent(Settings.WorkingDir + file.Name, Settings.Encoding);
             }
             if (revisions[0].Guid == GitRevision.IndexGuid) //index
             {
-                return Settings.Module.GetCurrentChanges(file.Name, file.OldName, true, DiffText.GetExtraDiffArguments());
+                return Settings.Module.GetCurrentChanges(file.Name, file.OldName, true, DiffText.GetExtraDiffArguments(), DiffText.Encoding);
             }
             var secondRevision = revisions.Count == 2 ? revisions[1].Guid : revisions[0].ParentGuids[0];
 
             PatchApply.Patch patch = Settings.Module.GetSingleDiff(revisions[0].Guid, secondRevision, file.Name, file.OldName,
-                                                    DiffText.GetExtraDiffArguments());
+                                                    DiffText.GetExtraDiffArguments(), DiffText.Encoding);
 
             if (patch == null)
                 return string.Empty;
@@ -1584,7 +1638,7 @@ namespace GitUI
             Settings.WorkingDir += Settings.Module.GetSubmoduleLocalPath(button.Text);
 
             if (Settings.Module.ValidWorkingDir())
-                Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
+                Repositories.AddMostRecentRepository(Settings.WorkingDir);
 
             InternalInitialize(true);
         }
@@ -1629,11 +1683,7 @@ namespace GitUI
         private void CloseToolStripMenuItemClick(object sender, EventArgs e)
         {
             Settings.WorkingDir = "";
-
-            IndexWatcher.Clear();
-            RevisionGrid.ForceRefreshRevisions();
-            InternalInitialize(false);
-            IndexWatcher.Reset();
+            WorkingDirChanged(false);
         }
 
         public override void CancelButtonClick(object sender, EventArgs e)
@@ -1644,11 +1694,7 @@ namespace GitUI
                 return;
             }
             Settings.WorkingDir = "";
-
-            IndexWatcher.Clear();
-            RevisionGrid.ForceRefreshRevisions();
-            InternalInitialize(false);
-            IndexWatcher.Reset();
+            WorkingDirChanged(false);
         }
 
         private void GitTreeMouseDown(object sender, MouseEventArgs e)
@@ -1712,25 +1758,71 @@ namespace GitUI
                 MessageBox.Show(this, output);
         }
 
+        private void AddWorkingdirDropDownItem(Repository repo, string caption) 
+        {
+            ToolStripMenuItem toolStripItem = new ToolStripMenuItem(caption);
+            _NO_TRANSLATE_Workingdir.DropDownItems.Add(toolStripItem);
+
+            toolStripItem.Click += (object hs, EventArgs he) =>
+            {
+                SetWorkingDir(repo.Path);
+            };
+
+            if (repo.Title != null || !repo.Path.Equals(caption))
+                toolStripItem.ToolTipText = repo.Path;            
+        }
+
+
         private void WorkingdirDropDownOpening(object sender, EventArgs e)
         {
             _NO_TRANSLATE_Workingdir.DropDownItems.Clear();
-            foreach (var repository in Repositories.RepositoryHistory.Repositories)
+
+            List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
+            List<RecentRepoInfo> lessRecentRepos = new List<RecentRepoInfo>();
+
+            RecentRepoSplitter splitter = new RecentRepoSplitter();
+            splitter.measureFont = _NO_TRANSLATE_Workingdir.Font;
+            splitter.graphics = this.CreateGraphics();
+            try
             {
-                var toolStripItem = _NO_TRANSLATE_Workingdir.DropDownItems.Add(repository.Path);
-                toolStripItem.Click += ToolStripItemClick;
+                splitter.SplitRecentRepos(Repositories.RepositoryHistory.Repositories, mostRecentRepos, lessRecentRepos);
             }
+            finally
+            {
+                splitter.graphics.Dispose();
+            }
+
+            foreach(RecentRepoInfo repo in mostRecentRepos)
+                AddWorkingdirDropDownItem(repo.Repo, repo.Caption);
+
+
+            if (lessRecentRepos.Count > 0)
+            {
+                if (mostRecentRepos.Count > 0 && (Settings.SortMostRecentRepos || Settings.SortLessRecentRepos))
+                    _NO_TRANSLATE_Workingdir.DropDownItems.Add(new ToolStripSeparator());
+
+                foreach (RecentRepoInfo repo in lessRecentRepos)
+                    AddWorkingdirDropDownItem(repo.Repo, repo.Caption);
+            }
+
+            _NO_TRANSLATE_Workingdir.DropDownItems.Add(new ToolStripSeparator());
+            ToolStripMenuItem toolStripItem = new ToolStripMenuItem("Configure this menu");
+            _NO_TRANSLATE_Workingdir.DropDownItems.Add(toolStripItem);
+
+            toolStripItem.Click += (object hs, EventArgs he) =>
+            {
+                new FormRecentReposSettings().ShowDialog(this);
+                RefreshWorkingDirCombo();
+            };
+
+
         }
 
-        private void ToolStripItemClick(object sender, EventArgs e)
+        private void SetWorkingDir(string path)
         {
-            var toolStripItem = (ToolStripItem)sender;
-            if (toolStripItem == null)
-                return;
-
-            Settings.WorkingDir = toolStripItem.Text;
-            Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
-            InternalInitialize(true);
+            Settings.WorkingDir = path;
+            Repositories.AddMostRecentRepository(Settings.WorkingDir);
+            InternalInitialize(true);                            
         }
 
         private void TranslateToolStripMenuItemClick(object sender, EventArgs e)
@@ -1742,7 +1834,7 @@ namespace GitUI
         {
             try
             {
-                Process.Start(_NO_TRANSLATE_Workingdir.Text);
+                Process.Start(Settings.WorkingDir);
             }
             catch (Exception ex)
             {
@@ -1983,12 +2075,19 @@ namespace GitUI
 
         void BranchSelectToolStripItem_Click(object sender, EventArgs e)
         {
-            var toolStripItem = (ToolStripItem)sender;
+            bool needRefresh;
+            if (!GitUICommands.Instance.CheckForDirtyDir(this, out needRefresh))
+            {
+                var toolStripItem = (ToolStripItem)sender;
 
-            var command = string.Format("checkout \"{0}\"", toolStripItem.Text);
-            var form = new FormProcess(command);
-            form.ShowDialog(this);
-            Initialize();
+                var command = string.Format("checkout \"{0}\"", toolStripItem.Text);
+                var form = new FormProcess(command);
+                form.ShowDialog(this);
+                needRefresh = true;
+            }
+
+            if (needRefresh)
+                Initialize();
         }
 
         private void diffContainsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2296,7 +2395,33 @@ namespace GitUI
           }
 
           openContainingFolderToolStripMenuItem.Enabled = false;
-        }        
+        }
+
+        private void CloneSvnToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (GitUICommands.Instance.StartSvnCloneDialog((IWin32Window)this))
+                Initialize();
+        }
+
+        private void SvnRebaseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (GitUICommands.Instance.StartSvnRebaseDialog(this))
+                Initialize();
+        }
+
+        private void SvnDcommitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (GitUICommands.Instance.StartSvnDcommitDialog(this))
+                Initialize();
+        }
+
+        private void WorkingDirChanged(bool internalInitialize)
+        {
+            IndexWatcher.Clear();
+            RevisionGrid.ForceRefreshRevisions();
+            InternalInitialize(internalInitialize);
+            IndexWatcher.Reset();
+        }
 
     }
 }

@@ -64,17 +64,17 @@ namespace GitUI
                         ProgressBar.Value = Math.Min(100, progressValue);
 
 #if !__MonoCS__
-                        if (TaskbarManager.IsPlatformSupported)
-                        {
-                            try
+                        if (GitCommands.Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
                             {
-                                TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
-                                TaskbarManager.Instance.SetProgressValue(progressValue, 100);
+                                try
+                                {
+                                    TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
+                                    TaskbarManager.Instance.SetProgressValue(progressValue, 100);
+                                }
+                                catch (InvalidOperationException)
+                                {
+                                }
                             }
-                            catch (InvalidOperationException)
-                            {
-                            }
-                        }
 #endif
                     }
                     Text = text;
@@ -120,7 +120,7 @@ namespace GitUI
             AcceptButton = Ok;
             Abort.Enabled = false;
 #if !__MonoCS__
-            if (TaskbarManager.IsPlatformSupported)
+            if (GitCommands.Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
                 try
                 {
@@ -222,7 +222,7 @@ namespace GitUI
         private void FormStatus_FormClosed(object sender, FormClosedEventArgs e)
         {
 #if !__MonoCS__
-            if (TaskbarManager.IsPlatformSupported)
+            if (GitCommands.Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
                 try
                 {
@@ -236,7 +236,7 @@ namespace GitUI
         private void Start()
         {
 #if !__MonoCS__
-            if (TaskbarManager.IsPlatformSupported)
+            if (GitCommands.Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
                 try
                 {
