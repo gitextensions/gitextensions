@@ -163,7 +163,7 @@ namespace GitUI
             if (StashKeepIndex.Checked){ Arguments += " --keep-index"; }
             if (toolStripButton_customMessage.Checked) { Msg = " " + StashMessage.Text.Trim(); }
 
-            new FormProcess(String.Format("stash save{0}{1}",Arguments,Msg)).ShowDialog(this);
+            new FormProcess(String.Format("stash save -u{0}{1}",Arguments,Msg)).ShowDialog(this);
             NeedRefresh = true;
             Initialize();
             Cursor.Current = Cursors.Default;
