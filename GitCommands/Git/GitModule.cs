@@ -16,7 +16,7 @@ namespace GitCommands
     /// Class provide non-static methods for manipulation with git module.
     /// You can create several instances for submodules.
     /// </summary>
-    public class GitModule
+    public sealed class GitModule
     {
         public GitModule()
         {            
@@ -41,10 +41,7 @@ namespace GitCommands
             {
                 _workingdir = FindGitWorkingDir(value.Trim());
                 string superprojectDir = FindGitSuperprojectPath(out _submoduleName);
-                if (superprojectDir == null)
-                    _superprojectModule = null;
-                else
-                    _superprojectModule = new GitModule(superprojectDir);
+                _superprojectModule = superprojectDir == null ? null : new GitModule(superprojectDir);
             }
         }
 
@@ -109,15 +106,9 @@ namespace GitCommands
         /// </summary>
         public IList<string> GetSubmodulesNames()
         {
-            IList<string> submodulesNames = new List<string>();
             var configFile = new ConfigFile(_workingdir + ".gitmodules");
-            foreach (ConfigSection configSection in configFile.GetConfigSections())
-            {
-                submodulesNames.Add(configSection.SubSection);
+            return configFile.GetConfigSections().Select(configSection => configSection.SubSection).ToList();
             }
-
-            return submodulesNames;
-        }
 
         public string GetGlobalSetting(string setting)
         {
@@ -541,26 +532,16 @@ namespace GitCommands
         {
             using (var ms = (MemoryStream)GetFileStream(blob)) //Ugly, has implementation info.
             {
-                byte[] buf;
                 ConfigFile localConfig = GetLocalConfig();
-                bool convertcrlf = false;
-                if (localConfig.HasValue("core.autocrlf"))
-                {
-                    convertcrlf = localConfig.GetValue("core.autocrlf").Equals("true", StringComparison.OrdinalIgnoreCase);
-                }
-                else
-                {
-                    ConfigFile globalConfig = GitCommandHelpers.GetGlobalConfig();
-                    convertcrlf = globalConfig.GetValue("core.autocrlf").Equals("true", StringComparison.OrdinalIgnoreCase);
-                }
+                bool convertcrlf = localConfig.HasValue("core.autocrlf")
+                    ? localConfig.GetValue("core.autocrlf").Equals("true", StringComparison.OrdinalIgnoreCase)
+                    : GitCommandHelpers.GetGlobalConfig().GetValue("core.autocrlf").Equals("true", StringComparison.OrdinalIgnoreCase);
 
-                buf = ms.ToArray();
+                byte[] buf = ms.ToArray();
                 if (convertcrlf)
                 {
-                    if (!FileHelper.IsBinaryFile(saveAs) &&
-                        !FileHelper.IsBinaryFileAccordingToContent(buf))
+                    if (!FileHelper.IsBinaryFile(saveAs) && !FileHelper.IsBinaryFileAccordingToContent(buf))
                     {
-                        buf = null;
                         StreamReader reader = new StreamReader(ms, Settings.Encoding);
                         String sfileout = reader.ReadToEnd();
                         sfileout = sfileout.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", "\r\n");
@@ -737,16 +718,7 @@ namespace GitCommands
                 };
                 
                 string args = "";
-                string cmd = null;
-                
-                foreach (var termEmuCmd in termEmuCmds)
-                {
-                    if (!string.IsNullOrEmpty(RunCmd("which", termEmuCmd)))
-                    {
-                        cmd = termEmuCmd;
-                        break;
-                    }
-                }
+                string cmd = termEmuCmds.FirstOrDefault(termEmuCmd => !string.IsNullOrEmpty(RunCmd("which", termEmuCmd)));
                 
                 if (string.IsNullOrEmpty(cmd))
                 {
@@ -883,14 +855,8 @@ namespace GitCommands
         {
             string revisions = RunGitCmd("rev-list --parents --no-walk " + startRev + ".." + endRev);
             string[] revisionsTab = revisions.Split('\n');
-            foreach (string parents in revisionsTab)
-            {
-                string[] parentsTab = parents.Split(' ');
-                if (parentsTab.Length > 2)
-                    return true;
+            return revisionsTab.Any(parents => parents.Split(' ').Length > 2);
             }
-            return false;
-        }
         
         public string GetSubmoduleRemotePath(string name)
         {
@@ -1095,23 +1061,16 @@ namespace GitCommands
 
         public string Tag(string tagName, string revision, bool annotation)
         {
-            string result;
-
-            if (annotation)
-                result = RunCmd(Settings.GitCommand,
+            return annotation
+                ? RunCmd(Settings.GitCommand,
                                 "tag \"" + tagName.Trim() + "\" -a -F \"" + WorkingDirGitDir() +
-                                "\\TAGMESSAGE\" -- \"" + revision + "\"");
-            else
-                result = RunGitCmd("tag \"" + tagName.Trim() + "\" \"" + revision + "\"");
-
-            return result;
+                                "\\TAGMESSAGE\" -- \"" + revision + "\"")
+                : RunGitCmd("tag \"" + tagName.Trim() + "\" \"" + revision + "\"");
         }
 
         public string Branch(string branchName, string revision, bool checkout)
         {
-            var result = RunGitCmd(GitCommandHelpers.BranchCmd(branchName, revision, checkout));
-
-            return result;
+            return RunGitCmd(GitCommandHelpers.BranchCmd(branchName, revision, checkout));
         }
 
         public string Push(string path)
@@ -1456,11 +1415,7 @@ namespace GitCommands
         public string[] GetRemotes(bool allowEmpty)
         {
             string remotes = RunGitCmd("remote show");
-            if (allowEmpty)
-                return remotes.Split('\n');
-            else
-                return remotes.Split(new char[]{'\n'}, StringSplitOptions.RemoveEmptyEntries);
-            
+            return allowEmpty ? remotes.Split('\n') : remotes.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         public ConfigFile GetLocalConfig()
@@ -1515,8 +1470,7 @@ namespace GitCommands
                 if (stashString.IndexOf(':') <= 0)
                     continue;
 
-                var stash =
-                    new GitStash
+                var stash = new GitStash
                         {
                             Name = stashString.Substring(0, stashString.IndexOf(':')).Trim()
                         };
@@ -1575,16 +1529,8 @@ namespace GitCommands
 
         public List<GitItemStatus> GetDiffFiles(string from, string to, bool noCache)
         {
-            string result;
             string cmd = "diff -M -C -z --name-status \"" + to + "\" \"" + from + "\"";
-            if (noCache)
-            {
-                result = RunGitCmd(cmd);
-            }
-            else
-            {
-                result = this.RunCachableCmd(Settings.GitCommand, cmd);
-            }
+            string result = noCache ? RunGitCmd(cmd) : this.RunCachableCmd(Settings.GitCommand, cmd);
             return GitCommandHelpers.GetAllChangedFilesFromString(result, true);
         }
 
@@ -1593,26 +1539,19 @@ namespace GitCommands
             var status = RunCmd(Settings.GitCommand,
                                 "ls-files -z --others --directory --no-empty-directory --exclude-standard");
 
-            var statusStrings = status.Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-
-            var gitItemStatusList = new List<GitItemStatus>();
-
-            foreach (var statusString in statusStrings)
+            return status.Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(statusString => statusString.Trim())
+                .Where(statusString => !string.IsNullOrEmpty(statusString))
+                .Select(statusString => new GitItemStatus
             {
-                if (string.IsNullOrEmpty(statusString.Trim()))
-                    continue;
-                gitItemStatusList.Add(
-                    new GitItemStatus
-                        {
                             IsNew = true,
                             IsChanged = false,
                             IsDeleted = false,
                             IsTracked = false,
-                            Name = statusString.Trim()
-                        });
-            }
+                                            Name = statusString
+                                        })
+                .ToList();
 
-            return gitItemStatusList;
         }
 
         public List<GitItemStatus> GetAllChangedFiles()
@@ -2099,7 +2038,8 @@ namespace GitCommands
             return null;
         }
 
-        public string RecodeString(string s) {
+        public string RecodeString(string s)
+        {
 
             Encoding logoutputEncoding = GetLogoutputEncoding();
             if (logoutputEncoding != Settings.Encoding)
@@ -2146,22 +2086,9 @@ namespace GitCommands
         {
             string revparseCommand = string.Format("rev-parse \"{0}\"", revisionExpression);
             int exitCode = 0;
-            string[] resultStrings =
-                RunCmd(
-                    Settings.GitCommand,
-                    revparseCommand,
-                    out exitCode, ""
-                    )
-                    .Split('\n');
-            if (exitCode == 0)
-            {
-                return resultStrings[0];
+            string[] resultStrings = RunCmd(Settings.GitCommand, revparseCommand, out exitCode, "").Split('\n');
+            return exitCode == 0 ? resultStrings[0] : "";
             }
-            else
-            {
-                return "";
-            }
-        }
 
         public static string WorkingDirGitDir(string repositoryPath)
         {
