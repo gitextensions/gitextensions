@@ -262,7 +262,7 @@ namespace GitUI
             if (!Fetch.Checked && AutoStash.Checked &&
                 Settings.Module.GitStatus(UntrackedFilesMode.No, IgnoreSubmodulesMode.Default).Count > 0)
             {
-                new FormProcess("stash save").ShowDialog(this);
+                new FormProcess("stash save -u").ShowDialog(this);
                 stashed = true;
             }
 

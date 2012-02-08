@@ -997,7 +997,7 @@ namespace GitCommands
 
         public string Stash()
         {
-            return RunGitCmd("stash save");
+            return RunGitCmd("stash save -u");
         }
 
         public string StashApply()
