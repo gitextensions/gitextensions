@@ -36,12 +36,14 @@ namespace GitUI
             this.DiffContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.followFileHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fullHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.manipuleerCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.revertCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cherryPickThisCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.followFileHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fullHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.ViewTab = new System.Windows.Forms.TabPage();
             this.View = new GitUI.Editor.FileViewer();
@@ -50,7 +52,6 @@ namespace GitUI
             this.Blame = new System.Windows.Forms.TabPage();
             this.blameControl1 = new GitUI.Blame.BlameControl();
             this.eventLog1 = new System.Diagnostics.EventLog();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -107,47 +108,34 @@ namespace GitUI
             this.DiffContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openWithDifftoolToolStripMenuItem,
             this.saveAsToolStripMenuItem,
+            this.viewCommitToolStripMenuItem,
             this.toolStripSeparator2,
             this.manipuleerCommitToolStripMenuItem,
             this.toolStripSeparator1,
             this.followFileHistoryToolStripMenuItem,
             this.fullHistoryToolStripMenuItem});
             this.DiffContextMenu.Name = "DiffContextMenu";
-            this.DiffContextMenu.Size = new System.Drawing.Size(203, 148);
+            this.DiffContextMenu.Size = new System.Drawing.Size(216, 170);
             // 
             // openWithDifftoolToolStripMenuItem
             // 
             this.openWithDifftoolToolStripMenuItem.Name = "openWithDifftoolToolStripMenuItem";
             this.openWithDifftoolToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
-            this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
             this.openWithDifftoolToolStripMenuItem.Text = "Open with difftool";
             this.openWithDifftoolToolStripMenuItem.Click += new System.EventHandler(this.OpenWithDifftoolToolStripMenuItemClick);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
             this.saveAsToolStripMenuItem.Text = "Save as";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
-            // toolStripSeparator1
+            // toolStripSeparator2
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(199, 6);
-            // 
-            // followFileHistoryToolStripMenuItem
-            // 
-            this.followFileHistoryToolStripMenuItem.Name = "followFileHistoryToolStripMenuItem";
-            this.followFileHistoryToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
-            this.followFileHistoryToolStripMenuItem.Text = "Detect and follow renames";
-            this.followFileHistoryToolStripMenuItem.Click += new System.EventHandler(this.followFileHistoryToolStripMenuItem_Click);
-            // 
-            // fullHistoryToolStripMenuItem
-            // 
-            this.fullHistoryToolStripMenuItem.Name = "fullHistoryToolStripMenuItem";
-            this.fullHistoryToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
-            this.fullHistoryToolStripMenuItem.Text = "Full history";
-            this.fullHistoryToolStripMenuItem.Click += new System.EventHandler(this.fullHistoryToolStripMenuItem_Click);
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(212, 6);
             // 
             // manipuleerCommitToolStripMenuItem
             // 
@@ -155,22 +143,48 @@ namespace GitUI
             this.revertCommitToolStripMenuItem,
             this.cherryPickThisCommitToolStripMenuItem});
             this.manipuleerCommitToolStripMenuItem.Name = "manipuleerCommitToolStripMenuItem";
-            this.manipuleerCommitToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.manipuleerCommitToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
             this.manipuleerCommitToolStripMenuItem.Text = "Manipulate commit";
             // 
             // revertCommitToolStripMenuItem
             // 
             this.revertCommitToolStripMenuItem.Name = "revertCommitToolStripMenuItem";
-            this.revertCommitToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.revertCommitToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.revertCommitToolStripMenuItem.Text = "Revert commit";
             this.revertCommitToolStripMenuItem.Click += new System.EventHandler(this.revertCommitToolStripMenuItem_Click);
             // 
             // cherryPickThisCommitToolStripMenuItem
             // 
             this.cherryPickThisCommitToolStripMenuItem.Name = "cherryPickThisCommitToolStripMenuItem";
-            this.cherryPickThisCommitToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.cherryPickThisCommitToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.cherryPickThisCommitToolStripMenuItem.Text = "Cherry pick commit";
             this.cherryPickThisCommitToolStripMenuItem.Click += new System.EventHandler(this.cherryPickThisCommitToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(212, 6);
+            // 
+            // followFileHistoryToolStripMenuItem
+            // 
+            this.followFileHistoryToolStripMenuItem.Name = "followFileHistoryToolStripMenuItem";
+            this.followFileHistoryToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.followFileHistoryToolStripMenuItem.Text = "Detect and follow renames";
+            this.followFileHistoryToolStripMenuItem.Click += new System.EventHandler(this.followFileHistoryToolStripMenuItem_Click);
+            // 
+            // fullHistoryToolStripMenuItem
+            // 
+            this.fullHistoryToolStripMenuItem.Name = "fullHistoryToolStripMenuItem";
+            this.fullHistoryToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.fullHistoryToolStripMenuItem.Text = "Full history";
+            this.fullHistoryToolStripMenuItem.Click += new System.EventHandler(this.fullHistoryToolStripMenuItem_Click);
+            // 
+            // viewCommitToolStripMenuItem
+            // 
+            this.viewCommitToolStripMenuItem.Name = "viewCommitToolStripMenuItem";
+            this.viewCommitToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.viewCommitToolStripMenuItem.Text = "View commit";
+            this.viewCommitToolStripMenuItem.Click += new System.EventHandler(this.viewCommitToolStripMenuItem_Click);
             // 
             // tabControl1
             // 
@@ -188,10 +202,10 @@ namespace GitUI
             // ViewTab
             // 
             this.ViewTab.Controls.Add(this.View);
-            this.ViewTab.Location = new System.Drawing.Point(4, 22);
+            this.ViewTab.Location = new System.Drawing.Point(4, 24);
             this.ViewTab.Name = "ViewTab";
             this.ViewTab.Padding = new System.Windows.Forms.Padding(3);
-            this.ViewTab.Size = new System.Drawing.Size(740, 303);
+            this.ViewTab.Size = new System.Drawing.Size(740, 301);
             this.ViewTab.TabIndex = 0;
             this.ViewTab.Text = "View";
             this.ViewTab.UseVisualStyleBackColor = true;
@@ -209,17 +223,17 @@ namespace GitUI
             this.View.ScrollPos = 0;
             this.View.ShowEntireFile = false;
             this.View.ShowLineNumbers = true;
-            this.View.Size = new System.Drawing.Size(734, 297);
+            this.View.Size = new System.Drawing.Size(734, 295);
             this.View.TabIndex = 0;
             this.View.TreatAllFilesAsText = false;
             // 
             // DiffTab
             // 
             this.DiffTab.Controls.Add(this.Diff);
-            this.DiffTab.Location = new System.Drawing.Point(4, 22);
+            this.DiffTab.Location = new System.Drawing.Point(4, 24);
             this.DiffTab.Name = "DiffTab";
             this.DiffTab.Padding = new System.Windows.Forms.Padding(3);
-            this.DiffTab.Size = new System.Drawing.Size(740, 303);
+            this.DiffTab.Size = new System.Drawing.Size(740, 301);
             this.DiffTab.TabIndex = 1;
             this.DiffTab.Text = "Diff";
             this.DiffTab.UseVisualStyleBackColor = true;
@@ -244,9 +258,9 @@ namespace GitUI
             // Blame
             // 
             this.Blame.Controls.Add(this.blameControl1);
-            this.Blame.Location = new System.Drawing.Point(4, 22);
+            this.Blame.Location = new System.Drawing.Point(4, 24);
             this.Blame.Name = "Blame";
-            this.Blame.Size = new System.Drawing.Size(740, 303);
+            this.Blame.Size = new System.Drawing.Size(740, 301);
             this.Blame.TabIndex = 2;
             this.Blame.Text = "Blame";
             this.Blame.UseVisualStyleBackColor = true;
@@ -264,14 +278,9 @@ namespace GitUI
             // 
             this.eventLog1.SynchronizingObject = this;
             // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(199, 6);
-            // 
             // FormFileHistory
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(748, 444);
             this.Controls.Add(this.splitContainer1);
@@ -316,5 +325,6 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem cherryPickThisCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem revertCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem viewCommitToolStripMenuItem;
     }
 }

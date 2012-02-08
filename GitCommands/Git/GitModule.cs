@@ -39,7 +39,6 @@ namespace GitCommands
             }
             set
             {
-                string old = _workingdir;
                 _workingdir = FindGitWorkingDir(value.Trim());
                 string superprojectDir = FindGitSuperprojectPath(out _submoduleName);
                 if (superprojectDir == null)
@@ -273,23 +272,46 @@ namespace GitCommands
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
-        public string RunCachableCmd(string cmd, string arguments)
+        public string RunCachableCmd(string cmd, string arguments, Encoding encoding)
         {
+            if (encoding == null) 
+                encoding = Settings.Encoding;
+
             string output;
-            if (GitCommandCache.TryGet(arguments, out output))
+            if (GitCommandCache.TryGet(arguments, encoding, out output))
                 return output;
 
-            output = RunCmd(cmd, arguments);
+            byte[] cmdout, cmderr;
+            RunCmdByte(cmd, arguments, out cmdout, out cmderr);
 
-            GitCommandCache.Add(arguments, output);
+            GitCommandCache.Add(arguments, cmdout, cmderr);
 
-            return output;
+            return EncodingHelper.GetString(cmdout, cmderr, encoding);
+        }
+
+        [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
+        public string RunCachableCmd(string cmd, string arguments)
+        {
+            return RunCachableCmd(cmd, arguments, Settings.Encoding);
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public string RunCmd(string cmd, string arguments)
         {
-            return RunCmd(cmd, arguments, null);
+            return RunCmd(cmd, arguments, string.Empty);
+        }
+
+        [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
+        public string RunCmd(string cmd, string arguments, Encoding encoding)
+        {
+            return RunCmd(cmd, arguments, null, encoding);
+        }
+        
+        [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
+        public string RunCmd(string cmd, string arguments, string stdInput, Encoding encoding)
+        {
+            int exitCode;
+            return RunCmd(cmd, arguments, out exitCode, stdInput, encoding);
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
@@ -308,37 +330,73 @@ namespace GitCommands
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public string RunCmd(string cmd, string arguments, out int exitCode, string stdInput)
         {
+            return RunCmd(cmd, arguments, out exitCode, stdInput, Settings.Encoding);
+        }
+
+        [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
+        public string RunCmd(string cmd, string arguments, out int exitCode, string stdInput, Encoding encoding)
+        {
+            byte[] output, error;
+            exitCode = RunCmdByte(cmd, arguments, stdInput, out output, out error);
+            return EncodingHelper.GetString(output, error, encoding);
+        }
+
+        private  int RunCmdByte(string cmd, string arguments, out byte[] output, out byte[] error)
+        {
+            return RunCmdByte(cmd, arguments, null, out output, out error);
+        }
+        private int RunCmdByte(string cmd, string arguments, string stdInput, out byte[] output, out byte[] error)
+        {
             try
             {
                 GitCommandHelpers.SetEnvironmentVariable();
-
                 arguments = arguments.Replace("$QUOTE$", "\\\"");
-
-                string output, error;
-                exitCode = GitCommandHelpers.CreateAndStartProcess(arguments, cmd, _workingdir, 
-                    out output, out error, stdInput);
-
-                if (!string.IsNullOrEmpty(error))
-                {
-                    output += Environment.NewLine + error;
-                }
-                return output;
+                int exitCode = GitCommandHelpers.CreateAndStartProcess(arguments, cmd, out output, out error, stdInput);
+                return exitCode;
             }
             catch (Win32Exception)
             {
-                exitCode = 1;
-                return string.Empty;
+                output = error = null;
+                return 1;
             }
+
+        }
+
+        public string RunGitCmd(string arguments, out int exitCode, string stdInput)
+        {
+            return RunGitCmd(arguments, out exitCode, stdInput, Settings.Encoding);
+        }
+
+        public string RunGitCmd(string arguments, out int exitCode, string stdInput, Encoding encoding)
+        {
+            return RunCmd(Settings.GitCommand, arguments, out exitCode, stdInput, encoding);
+        }
+
+        public string RunGitCmd(string arguments, out int exitCode)
+        {
+            return RunGitCmd(arguments, out exitCode, null);
         }
 
         public string RunGitCmd(string arguments, string stdInput)
         {
-            return RunCmd(Settings.GitCommand, arguments, stdInput);
+            int exitCode;
+            return RunGitCmd(arguments, out exitCode, stdInput);
+        }
+
+        public string RunGitCmd(string arguments, string stdInput, Encoding encoding)
+        {
+            int exitCode;
+            return RunGitCmd(arguments, out exitCode, stdInput, encoding);
         }
 
         public string RunGitCmd(string arguments)
         {
-            return RunCmd(Settings.GitCommand, arguments, null);
+            return RunGitCmd(arguments, (string)null);
+        }
+
+        public string RunGitCmd(string arguments, Encoding encoding)
+        {
+            return RunGitCmd(arguments, null, encoding);
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
@@ -384,7 +442,7 @@ namespace GitCommands
                 GitCommandHelpers.GetGlobalConfig().GetValue("core.editor").ToLower().Contains("notepad++") ||
                 GetLocalConfig().GetValue("core.editor").ToLower().Contains("notepad++"))
             {
-                RunCmd(Settings.GitCommand, "notes edit " + revision);
+                RunGitCmd("notes edit " + revision);
             }
             else
             {
@@ -394,7 +452,7 @@ namespace GitCommands
 
         public bool InTheMiddleOfConflictedMerge()
         {
-            return !string.IsNullOrEmpty(RunCmd(Settings.GitCommand, "ls-files -z --unmerged"));
+            return !string.IsNullOrEmpty(RunGitCmd("ls-files -z --unmerged"));
         }
 
         public List<GitItem> GetConflictedFiles()
@@ -417,7 +475,7 @@ namespace GitCommands
 
         private IEnumerable<string> GetUnmergedFileListing()
         {
-            return RunCmd(Settings.GitCommand, "ls-files -z --unmerged").Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            return RunGitCmd("ls-files -z --unmerged").Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         public bool HandleConflictSelectBase(string fileName)
@@ -425,7 +483,7 @@ namespace GitCommands
             if (!HandleConflictsSaveSide(fileName, fileName, "1"))
                 return false;
 
-            RunCmd(Settings.GitCommand, "add -- \"" + fileName + "\"");
+            RunGitCmd("add -- \"" + fileName + "\"");
             return true;
         }
 
@@ -434,7 +492,7 @@ namespace GitCommands
             if (!HandleConflictsSaveSide(fileName, fileName, "2"))
                 return false;
 
-            RunCmd(Settings.GitCommand, "add -- \"" + fileName + "\"");
+            RunGitCmd("add -- \"" + fileName + "\"");
             return true;
         }
 
@@ -443,7 +501,7 @@ namespace GitCommands
             if (!HandleConflictsSaveSide(fileName, fileName, "3"))
                 return false;
 
-            RunCmd(Settings.GitCommand, "add -- \"" + fileName + "\"");
+            RunGitCmd("add -- \"" + fileName + "\"");
             return true;
         }
 
@@ -454,7 +512,7 @@ namespace GitCommands
             side = GetSide(side);
 
             fileName = FixPath(fileName);
-            var unmerged = RunCmd(Settings.GitCommand, "ls-files -z --unmerged \"" + fileName + "\"").Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            var unmerged = RunGitCmd("ls-files -z --unmerged \"" + fileName + "\"").Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var file in unmerged)
             {
@@ -541,7 +599,7 @@ namespace GitCommands
                     filename + ".REMOTE"
                 };
 
-            var unmerged = RunCmd(Settings.GitCommand, "ls-files -z --unmerged \"" + filename + "\"").Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            var unmerged = RunGitCmd("ls-files -z --unmerged \"" + filename + "\"").Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var file in unmerged)
             {
@@ -557,7 +615,7 @@ namespace GitCommands
                 if (!Int32.TryParse(fileStage.Trim()[0].ToString(), out stage))
                     continue;
 
-                var tempFile = RunCmd(Settings.GitCommand, "checkout-index --temp --stage=" + stage + " -- " + "\"" + filename + "\"");
+                var tempFile = RunGitCmd("checkout-index --temp --stage=" + stage + " -- " + "\"" + filename + "\"");
                 tempFile = tempFile.Split('\t')[0];
                 tempFile = Path.Combine(_workingdir, tempFile);
 
@@ -592,7 +650,7 @@ namespace GitCommands
 
             var fileNames = new string[3];
 
-            var unmerged = RunCmd(Settings.GitCommand, "ls-files -z --unmerged \"" + filename + "\"").Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            var unmerged = RunGitCmd("ls-files -z --unmerged \"" + filename + "\"").Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var file in unmerged)
             {
@@ -710,15 +768,15 @@ namespace GitCommands
         public string Init(bool bare, bool shared)
         {
             if (bare && shared)
-                return RunCmd(Settings.GitCommand, "init --bare --shared=all");
+                return RunGitCmd("init --bare --shared=all");
             if (bare)
-                return RunCmd(Settings.GitCommand, "init --bare");
-            return RunCmd(Settings.GitCommand, "init");
+                return RunGitCmd("init --bare");
+            return RunGitCmd("init");
         }
 
         public bool IsMerge(string commit)
         {
-            string output = RunCmd(Settings.GitCommand, "log -n 1 --format=format:%P \"" + commit + "\"");
+            string output = RunGitCmd("log -n 1 --format=format:%P \"" + commit + "\"");
             string[] parents = output.Split(' ');
             if (parents.Length > 1) return true;
             return false;
@@ -726,7 +784,7 @@ namespace GitCommands
 
         public GitRevision[] GetParents(string commit)
         {
-            string output = RunCmd(Settings.GitCommand, "log -n 1 --format=format:%P \"" + commit + "\"");
+            string output = RunGitCmd("log -n 1 --format=format:%P \"" + commit + "\"");
             string[] Parents = output.Split(' ');
             var ParentsRevisions = new GitRevision[Parents.Length];
             for (int i = 0; i < Parents.Length; i++)
@@ -739,7 +797,7 @@ namespace GitCommands
                     /* Committer Date */ "%ci%n" +
                     /* Commit Message */ "%s";
                 string cmd = "log -n 1 --format=format:" + formatString + " " + Parents[i];
-                var RevInfo = RunCmd(Settings.GitCommand, cmd);
+                var RevInfo = RunGitCmd(cmd);
                 string[] Infos = RevInfo.Split('\n');
                 var Revision = new GitRevision(Parents[i])
                 {
@@ -760,32 +818,32 @@ namespace GitCommands
 
         public string CherryPick(string cherry, bool commit, string arguments)
         {
-            return RunCmd(Settings.GitCommand, GitCommandHelpers.CherryPickCmd(cherry, commit, arguments));
+            return RunGitCmd(GitCommandHelpers.CherryPickCmd(cherry, commit, arguments));
         }
 
         public string ShowSha1(string sha1)
         {
-            return RunCachableCmd(Settings.GitCommand, "show --encoding=" + Settings.Encoding.HeaderName + " " + sha1);
+            return this.RunCachableCmd(Settings.GitCommand, "show --encoding=" + Settings.Encoding.HeaderName + " " + sha1);
         }
 
         public string UserCommitCount()
         {
-            return RunCmd(Settings.GitCommand, "shortlog -s -n");
+            return RunGitCmd("shortlog -s -n");
         }
 
         public string DeleteBranch(string branchName, bool force, bool remoteBranch)
         {
-            return RunCmd(Settings.GitCommand, GitCommandHelpers.DeleteBranchCmd(branchName, force, remoteBranch));
+            return RunGitCmd(GitCommandHelpers.DeleteBranchCmd(branchName, force, remoteBranch));
         }
 
         public string DeleteTag(string tagName)
         {
-            return RunCmd(Settings.GitCommand, GitCommandHelpers.DeleteTagCmd(tagName));
+            return RunGitCmd(GitCommandHelpers.DeleteTagCmd(tagName));
         }
 
         public string GetCurrentCheckout()
         {
-            return RunCmd(Settings.GitCommand, "log -g -1 HEAD --pretty=format:%H");
+            return RunGitCmd("log -g -1 HEAD --pretty=format:%H");
         }
 
         public string GetSuperprojectCurrentCheckout()
@@ -823,7 +881,7 @@ namespace GitCommands
 
         public bool ExistsMergeCommit(string startRev, string endRev)
         {
-            string revisions = RunCmd(Settings.GitCommand, "rev-list --parents --no-walk " + startRev + ".." + endRev);
+            string revisions = RunGitCmd("rev-list --parents --no-walk " + startRev + ".." + endRev);
             string[] revisionsTab = revisions.Split('\n');
             foreach (string parents in revisionsTab)
             {
@@ -878,10 +936,12 @@ namespace GitCommands
             }
 
             string currentPath = Path.GetDirectoryName(_workingdir); // remove last slash
-            if (superprojectPath == null)
+            if (!string.IsNullOrEmpty(currentPath) &&
+                superprojectPath == null)
             {
                 string path = Path.GetDirectoryName(currentPath);
-                if (!File.Exists(path + Settings.PathSeparator + ".gitmodules") || !ValidWorkingDir(path + Settings.PathSeparator))
+                if (!string.IsNullOrEmpty(path) &&
+                    (!File.Exists(path + Settings.PathSeparator + ".gitmodules") || !ValidWorkingDir(path + Settings.PathSeparator)))
                 {
                     // Check upper directory
                     path = Path.GetDirectoryName(path);
@@ -891,16 +951,20 @@ namespace GitCommands
                 superprojectPath = path + Settings.PathSeparator;
             }
 
-            var localPath = currentPath.Substring(superprojectPath.Length);
-            var configFile = new ConfigFile(superprojectPath + ".gitmodules");
-            foreach (ConfigSection configSection in configFile.GetConfigSections())
+            if (!string.IsNullOrEmpty(superprojectPath))
             {
-                if (configSection.GetValue("path") == localPath)
+                var localPath = currentPath.Substring(superprojectPath.Length);
+                var configFile = new ConfigFile(superprojectPath + ".gitmodules");
+                foreach (ConfigSection configSection in configFile.GetConfigSections())
                 {
-                    submoduleName = configSection.SubSection;
-                    return superprojectPath;
+                    if (configSection.GetValue("path") == localPath)
+                    {
+                        submoduleName = configSection.SubSection;
+                        return superprojectPath;
+                    }
                 }
             }
+
             return null;
         }
         
@@ -928,22 +992,22 @@ namespace GitCommands
         public string GetSubmoduleSummary(string submodule)
         {
             var arguments = string.Format("submodule summary {0}", submodule);
-            return RunCmd(Settings.GitCommand, arguments);
+            return RunGitCmd(arguments);
         }
 
         public string Stash()
         {
-            return RunCmd(Settings.GitCommand, "stash save");
+            return RunGitCmd("stash save");
         }
 
         public string StashApply()
         {
-            return RunCmd(Settings.GitCommand, "stash apply");
+            return RunGitCmd("stash apply");
         }
 
         public string StashClear()
         {
-            return RunCmd(Settings.GitCommand, "stash clear");
+            return RunGitCmd("stash clear");
         }
 
         public string ResetSoft(string commit)
@@ -971,7 +1035,7 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(file))
                 args += " -- \"" + file + "\"";
 
-            return RunCmd(Settings.GitCommand, args);
+            return RunGitCmd(args);
         }
 
         public string ResetMixed(string commit, string file)
@@ -984,7 +1048,7 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(file))
                 args += " -- \"" + file + "\"";
 
-            return RunCmd(Settings.GitCommand, args);
+            return RunGitCmd(args);
         }
 
         public string ResetHard(string commit, string file)
@@ -997,13 +1061,13 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(file))
                 args += " -- \"" + file + "\"";
 
-            return RunCmd(Settings.GitCommand, args);
+            return RunGitCmd(args);
         }
 
         public string ResetFile(string file)
         {
             file = FixPath(file);
-            return RunCmd(Settings.GitCommand, "checkout-index --index --force -- \"" + file + "\"");
+            return RunGitCmd("checkout-index --index --force -- \"" + file + "\"");
         }
 
 
@@ -1038,21 +1102,21 @@ namespace GitCommands
                                 "tag \"" + tagName.Trim() + "\" -a -F \"" + WorkingDirGitDir() +
                                 "\\TAGMESSAGE\" -- \"" + revision + "\"");
             else
-                result = RunCmd(Settings.GitCommand, "tag \"" + tagName.Trim() + "\" \"" + revision + "\"");
+                result = RunGitCmd("tag \"" + tagName.Trim() + "\" \"" + revision + "\"");
 
             return result;
         }
 
         public string Branch(string branchName, string revision, bool checkout)
         {
-            var result = RunCmd(Settings.GitCommand, GitCommandHelpers.BranchCmd(branchName, revision, checkout));
+            var result = RunGitCmd(GitCommandHelpers.BranchCmd(branchName, revision, checkout));
 
             return result;
         }
 
         public string Push(string path)
         {
-            return RunCmd(Settings.GitCommand, "push \"" + FixPath(path).Trim() + "\"");
+            return RunGitCmd("push \"" + FixPath(path).Trim() + "\"");
         }
 
         public bool StartPageantForRemote(string remote)
@@ -1165,7 +1229,7 @@ namespace GitCommands
         {
             Directory.SetCurrentDirectory(_workingdir);
 
-            var result = RunCmd(Settings.GitCommand, GitCommandHelpers.ContinueRebaseCmd());
+            var result = RunGitCmd(GitCommandHelpers.ContinueRebaseCmd());
 
             return result;
         }
@@ -1174,7 +1238,7 @@ namespace GitCommands
         {
             Directory.SetCurrentDirectory(_workingdir);
 
-            var result = RunCmd(Settings.GitCommand, GitCommandHelpers.SkipRebaseCmd());
+            var result = RunGitCmd(GitCommandHelpers.SkipRebaseCmd());
 
             return result;
         }
@@ -1283,35 +1347,35 @@ namespace GitCommands
         {
             Directory.SetCurrentDirectory(_workingdir);
 
-            return RunCmd(Settings.GitCommand, GitCommandHelpers.RebaseCmd(branch, false, false, false));
+            return RunGitCmd(GitCommandHelpers.RebaseCmd(branch, false, false, false));
         }
 
         public string AbortRebase()
         {
             Directory.SetCurrentDirectory(_workingdir);
 
-            return RunCmd(Settings.GitCommand, GitCommandHelpers.AbortRebaseCmd());
+            return RunGitCmd(GitCommandHelpers.AbortRebaseCmd());
         }
 
         public string Resolved()
         {
             Directory.SetCurrentDirectory(_workingdir);
 
-            return RunCmd(Settings.GitCommand, GitCommandHelpers.ResolvedCmd());
+            return RunGitCmd(GitCommandHelpers.ResolvedCmd());
         }
 
         public string Skip()
         {
             Directory.SetCurrentDirectory(_workingdir);
 
-            return RunCmd(Settings.GitCommand, GitCommandHelpers.SkipCmd());
+            return RunGitCmd(GitCommandHelpers.SkipCmd());
         }
 
         public string Abort()
         {
             Directory.SetCurrentDirectory(_workingdir);
 
-            return RunCmd(Settings.GitCommand, GitCommandHelpers.AbortCmd());
+            return RunGitCmd(GitCommandHelpers.AbortCmd());
         }
 
         public string Commit(bool amend)
@@ -1321,7 +1385,7 @@ namespace GitCommands
 
         public string Commit(bool amend, string author)
         {
-            return RunCmd(Settings.GitCommand, CommitCmd(amend, author));
+            return RunGitCmd(CommitCmd(amend, author));
         }
 
         public string CommitCmd(bool amend)
@@ -1348,27 +1412,27 @@ namespace GitCommands
         {
             Directory.SetCurrentDirectory(_workingdir);
 
-            return RunCmd(Settings.GitCommand, GitCommandHelpers.PatchCmd(FixPath(patchFile)));
+            return RunGitCmd(GitCommandHelpers.PatchCmd(FixPath(patchFile)));
         }
 
         public string UpdateRemotes()
         {
-            return RunCmd(Settings.GitCommand, "remote update");
+            return RunGitCmd("remote update");
         }
 
         public string RemoveRemote(string name)
         {
-            return RunCmd(Settings.GitCommand, "remote rm \"" + name + "\"");
+            return RunGitCmd("remote rm \"" + name + "\"");
         }
 
         public string RenameRemote(string name, string newName)
         {
-            return RunCmd(Settings.GitCommand, "remote rename \"" + name + "\" \"" + newName + "\"");
+            return RunGitCmd("remote rename \"" + name + "\" \"" + newName + "\"");
         }
 
         public string Rename(string name, string newName)
         {
-            return RunCmd(Settings.GitCommand, "branch -m \"" + name + "\" \"" + newName + "\"");
+            return RunGitCmd("branch -m \"" + name + "\" \"" + newName + "\"");
         }
 
         public string AddRemote(string name, string path)
@@ -1380,8 +1444,8 @@ namespace GitCommands
 
             return
                 string.IsNullOrEmpty(location)
-                    ? RunCmd(Settings.GitCommand, string.Format("remote add \"{0}\" \"\"", name))
-                    : RunCmd(Settings.GitCommand, string.Format("remote add \"{0}\" \"{1}\"", name, location));
+                    ? RunGitCmd(string.Format("remote add \"{0}\" \"\"", name))
+                    : RunGitCmd(string.Format("remote add \"{0}\" \"{1}\"", name, location));
         }
 
         public string[] GetRemotes()
@@ -1391,7 +1455,7 @@ namespace GitCommands
 
         public string[] GetRemotes(bool allowEmpty)
         {
-            string remotes = RunCmd(Settings.GitCommand, "remote show");
+            string remotes = RunGitCmd("remote show");
             if (allowEmpty)
                 return remotes.Split('\n');
             else
@@ -1436,14 +1500,14 @@ namespace GitCommands
         public List<Patch> GetStashedItems(string stashName)
         {
             var patchManager = new PatchManager();
-            patchManager.LoadPatch(RunCmd(Settings.GitCommand, "stash show -p " + stashName), false);
+            patchManager.LoadPatch(RunGitCmd("stash show -p " + stashName), false);
 
             return patchManager.Patches;
         }
 
         public List<GitStash> GetStashes()
         {
-            var list = RunCmd(Settings.GitCommand, "stash list").Split('\n');
+            var list = RunGitCmd("stash list").Split('\n');
 
             var stashes = new List<GitStash>();
             foreach (var stashString in list)
@@ -1466,7 +1530,7 @@ namespace GitCommands
             return stashes;
         }
 
-        public Patch GetSingleDiff(string from, string to, string fileName, string oldFileName, string extraDiffArguments)
+        public Patch GetSingleDiff(string @from, string to, string fileName, string oldFileName, string extraDiffArguments, Encoding encoding)
         {
             if (!string.IsNullOrEmpty(fileName))
                 fileName = string.Concat("\"", FixPath(fileName), "\"");
@@ -1482,14 +1546,14 @@ namespace GitCommands
 
             var patchManager = new PatchManager();
             var arguments = string.Format("diff{0} -M -C \"{1}\" \"{2}\" -- {3} {4}", extraDiffArguments, to, from, fileName, oldFileName);
-            patchManager.LoadPatch(RunCachableCmd(Settings.GitCommand, arguments), false);
+            patchManager.LoadPatch(this.RunCachableCmd(Settings.GitCommand, arguments, encoding), false);
 
             return patchManager.Patches.Count > 0 ? patchManager.Patches[0] : null;
         }
 
-        public Patch GetSingleDiff(string from, string to, string fileName, string extraDiffArguments)
+        public Patch GetSingleDiff(string @from, string to, string fileName, string extraDiffArguments, Encoding encoding)
         {
-            return GetSingleDiff(from, to, fileName, null, extraDiffArguments);
+            return this.GetSingleDiff(from, to, fileName, null, extraDiffArguments, encoding);
         }
 
         public List<Patch> GetDiff(string from, string to, string extraDiffArguments)
@@ -1499,7 +1563,7 @@ namespace GitCommands
 
             var patchManager = new PatchManager();
             var arguments = string.Format("diff{0} \"{1}\" \"{2}\"", extraDiffArguments, from, to);
-            patchManager.LoadPatch(RunCachableCmd(Settings.GitCommand, arguments), false);
+            patchManager.LoadPatch(this.RunCachableCmd(Settings.GitCommand, arguments), false);
 
             return patchManager.Patches;
         }
@@ -1515,11 +1579,11 @@ namespace GitCommands
             string cmd = "diff -M -C -z --name-status \"" + to + "\" \"" + from + "\"";
             if (noCache)
             {
-                result = RunCmd(Settings.GitCommand, cmd);
+                result = RunGitCmd(cmd);
             }
             else
             {
-                result = RunCachableCmd(Settings.GitCommand, cmd);
+                result = this.RunCachableCmd(Settings.GitCommand, cmd);
             }
             return GitCommandHelpers.GetAllChangedFilesFromString(result, true);
         }
@@ -1553,21 +1617,21 @@ namespace GitCommands
 
         public List<GitItemStatus> GetAllChangedFiles()
         {
-            var status = RunCmd(Settings.GitCommand, GitCommandHelpers.GetAllChangedFilesCmd(true, true));
+            var status = RunGitCmd(GitCommandHelpers.GetAllChangedFilesCmd(true, true));
 
             return GitCommandHelpers.GetAllChangedFilesFromString(status);
         }
 
         public List<GitItemStatus> GetTrackedChangedFiles()
         {
-            var status = RunCmd(Settings.GitCommand, GitCommandHelpers.GetAllChangedFilesCmd(true, false));
+            var status = RunGitCmd(GitCommandHelpers.GetAllChangedFilesCmd(true, false));
 
             return GitCommandHelpers.GetAllChangedFilesFromString(status);
         }
 
         public List<GitItemStatus> GetDeletedFiles()
         {
-            var status = RunCmd(Settings.GitCommand, "ls-files -z --deleted --exclude-standard");
+            var status = RunGitCmd("ls-files -z --deleted --exclude-standard");
 
             var statusStrings = status.Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -1593,19 +1657,19 @@ namespace GitCommands
 
         public bool FileIsStaged(string filename)
         {
-            var status = RunCmd(Settings.GitCommand, "diff -z --cached --numstat -- \"" + filename + "\"");
+            var status = RunGitCmd("diff -z --cached --numstat -- \"" + filename + "\"");
             return !string.IsNullOrEmpty(status);
         }
 
         public List<GitItemStatus> GetStagedFiles()
         {
-            string status = RunCmd(Settings.GitCommand, "diff -M -C -z --cached --name-status");
+            string status = RunGitCmd("diff -M -C -z --cached --name-status");
 
             if (true && status.Length < 50 && status.Contains("fatal: No HEAD commit to compare"))
             {
                 //This command is a little more expensive because it will return both staged and unstaged files
                 string command = GitCommandHelpers.GetAllChangedFilesCmd(true, false);
-                status = RunCmd(Settings.GitCommand, command);
+                status = RunGitCmd(command);
                 List<GitItemStatus> stagedFiles = GitCommandHelpers.GetAllChangedFilesFromString(status, false);
                 return stagedFiles.Where(f => f.IsStaged).ToList<GitItemStatus>();
             }
@@ -1624,11 +1688,11 @@ namespace GitCommands
                 throw new Exception("The version of git you are using is not supported for this action. Please upgrade to git 1.7.3 or newer.");
 
             string command = GitCommandHelpers.GetAllChangedFilesCmd(true, untrackedFilesMode, ignoreSubmodulesMode);
-            string status = RunCmd(Settings.GitCommand, command);
+            string status = RunGitCmd(command);
             return GitCommandHelpers.GetAllChangedFilesFromString(status);
         }
 
-        public string GetCurrentChanges(string fileName, string oldFileName, bool staged, string extraDiffArguments)
+        public string GetCurrentChanges(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
         {
             fileName = string.Concat("\"", FixPath(fileName), "\"");
             if (!string.IsNullOrEmpty(oldFileName))
@@ -1641,28 +1705,28 @@ namespace GitCommands
             if (staged)
                 args = string.Concat("diff -M -C --cached", extraDiffArguments, " -- ", fileName, " ", oldFileName);
 
-            return RunCmd(Settings.GitCommand, args);
+            return RunGitCmd(args, encoding);
         }
 
         public string StageFile(string file)
         {
-            return RunCmd(Settings.GitCommand, "update-index --add" + " \"" + FixPath(file) + "\"");
+            return RunGitCmd("update-index --add" + " \"" + FixPath(file) + "\"");
         }
 
         public string StageFileToRemove(string file)
         {
-            return RunCmd(Settings.GitCommand, "update-index --remove" + " \"" + FixPath(file) + "\"");
+            return RunGitCmd("update-index --remove" + " \"" + FixPath(file) + "\"");
         }
 
 
         public string UnstageFile(string file)
         {
-            return RunCmd(Settings.GitCommand, "rm" + " --cached \"" + FixPath(file) + "\"");
+            return RunGitCmd("rm" + " --cached \"" + FixPath(file) + "\"");
         }
 
         public string UnstageFileToRemove(string file)
         {
-            return RunCmd(Settings.GitCommand, "reset HEAD -- \"" + FixPath(file) + "\"");
+            return RunGitCmd("reset HEAD -- \"" + FixPath(file) + "\"");
         }
 
 
@@ -1677,6 +1741,9 @@ namespace GitCommands
         /// </summary>
         public static string GetSelectedBranchFast(string repositoryPath)
         {
+            if (string.IsNullOrEmpty(repositoryPath))
+                return string.Empty;
+
             string head;
             string headFileName = Path.Combine(WorkingDirGitDir(repositoryPath), "HEAD");
             if (File.Exists(headFileName))
@@ -1705,7 +1772,7 @@ namespace GitCommands
             if (string.IsNullOrEmpty(head))
             {
                 int exitcode;
-                head = RunCmd(Settings.GitCommand, "symbolic-ref HEAD", out exitcode);
+                head = RunGitCmd("symbolic-ref HEAD", out exitcode);
                 if (exitcode == 1)
                     return "(no branch)";
             }
@@ -1738,11 +1805,11 @@ namespace GitCommands
         private string GetTreeFromRemoteHeands(string remote, bool tags, bool branches)
         {
             if (tags && branches)
-                return RunCmd(Settings.GitCommand, "ls-remote --heads --tags \"" + remote + "\"");
+                return RunGitCmd("ls-remote --heads --tags \"" + remote + "\"");
             if (tags)
-                return RunCmd(Settings.GitCommand, "ls-remote --tags \"" + remote + "\"");
+                return RunGitCmd("ls-remote --tags \"" + remote + "\"");
             if (branches)
-                return RunCmd(Settings.GitCommand, "ls-remote --heads \"" + remote + "\"");
+                return RunGitCmd("ls-remote --heads \"" + remote + "\"");
             return "";
         }
 
@@ -1765,13 +1832,13 @@ namespace GitCommands
         private string GetTree(bool tags, bool branches)
         {
             if (tags && branches)
-                return RunCmd(Settings.GitCommand, "show-ref --dereference");
+                return RunGitCmd("show-ref --dereference");
 
             if (tags)
-                return RunCmd(Settings.GitCommand, "show-ref --tags");
+                return RunGitCmd("show-ref --tags");
 
             if (branches)
-                return RunCmd(Settings.GitCommand, "show-ref --dereference --heads");
+                return RunGitCmd("show-ref --dereference --heads");
             return "";
         }
 
@@ -1812,7 +1879,7 @@ namespace GitCommands
         {
             // filter duplicates out of the result because options -c and -m may return 
             // same files at times
-            return RunCmd(Settings.GitCommand, "ls-files -z -o -m -c \"" + filePattern + "\"")
+            return RunGitCmd("ls-files -z -o -m -c \"" + filePattern + "\"")
                 .Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries)
                 .Distinct()
                 .ToList();
@@ -1821,7 +1888,7 @@ namespace GitCommands
         public List<GitItem> GetFileChanges(string file)
         {
             file = FixPath(file);
-            var tree = RunCmd(Settings.GitCommand, "whatchanged --all -- \"" + file + "\"");
+            var tree = RunGitCmd("whatchanged --all -- \"" + file + "\"");
 
             var itemsStrings = tree.Split('\n');
 
@@ -1864,13 +1931,13 @@ namespace GitCommands
 
         public string[] GetFullTree(string id)
         {
-            string tree = RunCachableCmd(Settings.GitCommand, string.Format("ls-tree -z -r --name-only {0}", id));
+            string tree = this.RunCachableCmd(Settings.GitCommand, string.Format("ls-tree -z -r --name-only {0}", id));
             return tree.Split(new char[] { '\0', '\n' });
         }
 
         public List<IGitItem> GetTree(string id)
         {
-            var tree = RunCachableCmd(Settings.GitCommand, "ls-tree -z \"" + id + "\"");
+            var tree = this.RunCachableCmd(Settings.GitCommand, "ls-tree -z \"" + id + "\"");
 
             var itemsStrings = tree.Split(new char[] { '\0', '\n' });
 
@@ -1919,7 +1986,8 @@ namespace GitCommands
 
                     //The contents of the actual line is output after the above header, prefixed by a TAB. This is to allow adding more header elements later.
                     if (line.StartsWith("\t"))
-                        blameLine.LineText = line.Substring(1).Trim(new char[] { '\t' });//trim first tab
+                        blameLine.LineText = line.Substring(1) //trim ONLY first tab
+                                                 .Trim(new char[] { '\r' }); //trim \r, this is a workaround for a \r\n bug
                     else if (line.StartsWith("author-mail"))
                         blameHeader.AuthorMail = line.Substring("author-mail".Length).Trim();
                     else if (line.StartsWith("author-time"))
@@ -1967,14 +2035,14 @@ namespace GitCommands
         public string GetFileRevisionText(string file, string revision)
         {
             return
-                RunCachableCmd(
+                this.RunCachableCmd(
                     Settings.GitCommand,
                     string.Format("show --encoding=" + Settings.Encoding.HeaderName + " {0}:\"{1}\"", revision, file.Replace('\\', '/')));
         }
 
         public string GetFileText(string id)
         {
-            return RunCachableCmd(Settings.GitCommand, "cat-file blob \"" + id + "\"");
+            return this.RunCachableCmd(Settings.GitCommand, "cat-file blob \"" + id + "\"");
         }
 
         public static void StreamCopy(Stream input, Stream output)
@@ -2043,12 +2111,12 @@ namespace GitCommands
         public string GetPreviousCommitMessage(int numberBack)
         {
             //+"--encoding=" + Settings.Encoding.HeaderName doesn't work
-            return RecodeString(RunCmd(Settings.GitCommand, "log -n 1 HEAD~" + numberBack + " --pretty=format:%s%n%n%b "));
+            return RecodeString(RunGitCmd("log -n 1 HEAD~" + numberBack + " --pretty=format:%s%n%n%b "));
         }
 
         public string MergeBranch(string branch)
         {
-            return RunCmd(Settings.GitCommand, GitCommandHelpers.MergeBranchCmd(branch, true, false, false, null));
+            return RunGitCmd(GitCommandHelpers.MergeBranchCmd(branch, true, false, false, null));
         }
 
         public string OpenWithDifftool(string filename)

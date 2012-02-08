@@ -71,7 +71,15 @@ namespace GitUI
             UpdateRemotesList();
 
             branch = Settings.Module.GetSelectedBranch();
-            _NO_TRANSLATE_Remotes.Text = Settings.Module.GetSetting(string.Format("branch.{0}.remote", branch));
+            string currentBranchRemote = Settings.Module.GetSetting(string.Format("branch.{0}.remote", branch));
+            if (string.IsNullOrEmpty(currentBranchRemote) && _NO_TRANSLATE_Remotes.Items.Count >= 3)
+            {
+                IList<string> remotes = (IList<string>)_NO_TRANSLATE_Remotes.DataSource;
+                int i = remotes.IndexOf("origin");
+                _NO_TRANSLATE_Remotes.SelectedIndex = i >= 0 ? i : 1;
+            }
+            else
+                _NO_TRANSLATE_Remotes.Text = currentBranchRemote;
             _NO_TRANSLATE_localBranch.Text = branch;
 
             Merge.Checked = Settings.PullMerge == "merge";
@@ -236,7 +244,7 @@ namespace GitUI
                 }
             }
 
-            Repositories.RepositoryHistory.AddMostRecentRepository(PullSource.Text);
+            Repositories.AddMostRecentRepository(PullSource.Text);
 
             string source;
 

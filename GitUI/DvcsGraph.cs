@@ -288,7 +288,7 @@ namespace GitUI
             }
         }
 
-        public void Add(IComparable aId, IComparable[] aParentIds, DataType aType, object aData)
+        public void Add(IComparable aId, IComparable[] aParentIds, DataType aType, GitRevision aData)
         {
             int lastItem = -1;
             lock (graphData)
@@ -354,16 +354,12 @@ namespace GitUI
             }
         }
 
-        public object GetRowData(int aRow)
+        public GitRevision GetRowData(int aRow)
         {
             lock (graphData)
             {
                 Graph.ILaneRow row = graphData[aRow];
-                if (row == null)
-                {
-                    return null;
-                }
-                return row.Node.Data;
+                return row == null ? null : row.Node.Data;
             }
         }
 
@@ -713,7 +709,7 @@ namespace GitUI
             List<Color> colors = new List<Color>();
             foreach (Junction j in aJunction)
             {
-                colors.Add( getJunctionColor(j) );
+                colors.Add(getJunctionColor(j));
             }
 
             if (colors.Count == 0)
@@ -1143,7 +1139,7 @@ namespace GitUI
             public readonly List<Junction> Ancestors = new List<Junction>();
             public readonly List<Junction> Descendants = new List<Junction>();
             public readonly IComparable Id;
-            public object Data;
+            public GitRevision Data;
             public DataType DataType;
             public int InLane = int.MaxValue;
             public int Index = int.MaxValue;

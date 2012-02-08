@@ -58,6 +58,7 @@ namespace GitUI
             labelShowCurrentBranchInVisualStudio.Tag = showCurrentBranchInVisualStudio;
             label37.Tag = usePatienceDiffAlgorithm;
             label58.Tag = focusControlOnHover;
+            warnBeforeCheckoutLabel.Tag = warnBeforeCheckoutChx;
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -152,6 +153,7 @@ namespace GitUI
                     _NO_TRANSLATE_Encoding.Text = "Default (" + Encoding.Default.HeaderName + ")";
 
                 focusControlOnHover.Checked = Settings.FocusControlOnHover;
+                warnBeforeCheckoutChx.Checked = Settings.DirtyDirWarnBeforeCheckoutBranch;
 
                 usePatienceDiffAlgorithm.Checked = Settings.UsePatienceDiffAlgorithm;
 
@@ -368,6 +370,8 @@ namespace GitUI
             GitCommandHelpers.SetEnvironmentVariable(true);
 
             Settings.FocusControlOnHover = focusControlOnHover.Checked;
+
+            Settings.DirtyDirWarnBeforeCheckoutBranch = warnBeforeCheckoutChx.Checked;
 
             Settings.UsePatienceDiffAlgorithm = usePatienceDiffAlgorithm.Checked;
 

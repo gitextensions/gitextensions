@@ -51,7 +51,10 @@ namespace GitUI
                     x =>
                     {
                         this.MailMapFile = _NO_TRANSLATE_MailMapText.GetText();
-                            File.WriteAllBytes(x, Settings.Encoding.GetBytes(this.MailMapFile));
+                        if (!this.MailMapFile.EndsWith(Environment.NewLine))
+                            this.MailMapFile += Environment.NewLine;
+
+                        File.WriteAllBytes(x, Settings.Encoding.GetBytes(this.MailMapFile));
                         });
             }
             catch (Exception ex)
