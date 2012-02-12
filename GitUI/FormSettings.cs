@@ -30,8 +30,6 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
-            InitializeCheckboxLabels();
-
             noImageService.Items.AddRange(GravatarService.DynamicServices.Cast<object>().ToArray());
 
             _NO_TRANSLATE_Encoding.Items.AddRange(new Object[]
@@ -42,23 +40,6 @@ namespace GitUI
             GlobalEditor.Items.AddRange(new Object[] { "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", "notepad++" });
 
             SetCurrentDiffFont(Settings.DiffFont);
-        }
-
-        private void InitializeCheckboxLabels()
-        {
-            label26.Tag = ShowCurrentChangesInRevisionGraph;
-            label52.Tag = ShowStashCountInBrowseWindow;
-            label34.Tag = CloseProcessDialog;
-            label35.Tag = ShowGitCommandLine;
-            label38.Tag = UseFastChecks;
-            label39.Tag = ShowRelativeDate;
-            label40.Tag = FollowRenamesInFileHistory;
-            showGitStatusInToolbarLabel.Tag = ShowGitStatusInToolbar;
-            showErrorsWhenStagingFilesLabel.Tag = showErrorsWhenStagingFiles;
-            labelShowCurrentBranchInVisualStudio.Tag = showCurrentBranchInVisualStudio;
-            label37.Tag = usePatienceDiffAlgorithm;
-            label58.Tag = focusControlOnHover;
-            warnBeforeCheckoutLabel.Tag = warnBeforeCheckoutChx;
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -152,16 +133,16 @@ namespace GitUI
                 else if (Settings.Encoding == Encoding.Default)
                     _NO_TRANSLATE_Encoding.Text = "Default (" + Encoding.Default.HeaderName + ")";
 
-                focusControlOnHover.Checked = Settings.FocusControlOnHover;
-                warnBeforeCheckoutChx.Checked = Settings.DirtyDirWarnBeforeCheckoutBranch;
+                chkFocusControlOnHover.Checked = Settings.FocusControlOnHover;
+                chkWarnBeforeCheckout.Checked = Settings.DirtyDirWarnBeforeCheckoutBranch;
 
-                usePatienceDiffAlgorithm.Checked = Settings.UsePatienceDiffAlgorithm;
+                chkUsePatienceDiffAlgorithm.Checked = Settings.UsePatienceDiffAlgorithm;
 
-                showCurrentBranchInVisualStudio.Checked = Settings.ShowCurrentBranchInVisualStudio;
+                chkShowCurrentBranchInVisualStudio.Checked = Settings.ShowCurrentBranchInVisualStudio;
 
                 RevisionGridQuickSearchTimeout.Value = Settings.RevisionGridQuickSearchTimeout;
 
-                FollowRenamesInFileHistory.Checked = Settings.FollowRenamesInFileHistory;
+                chkFollowRenamesInFileHistory.Checked = Settings.FollowRenamesInFileHistory;
 
                 _NO_TRANSLATE_DaysToCacheImages.Value = Settings.AuthorImageCacheDays;
 
@@ -169,7 +150,7 @@ namespace GitUI
                 ShowAuthorGravatar.Checked = Settings.ShowAuthorGravatar;
                 noImageService.Text = Settings.GravatarFallbackService;
 
-                showErrorsWhenStagingFiles.Checked = Settings.ShowErrorsWhenStagingFiles;
+                chkShowErrorsWhenStagingFiles.Checked = Settings.ShowErrorsWhenStagingFiles;
                 chkStashUntrackedFiles.Checked = Settings.IncludeUntrackedFilesInAutoStash;
 
                 Language.Items.Clear();
@@ -181,12 +162,12 @@ namespace GitUI
                 MulticolorBranches_CheckedChanged(null, null);
                 DrawNonRelativesGray.Checked = Settings.RevisionGraphDrawNonRelativesGray;
                 DrawNonRelativesTextGray.Checked = Settings.RevisionGraphDrawNonRelativesTextGray;
-                ShowCurrentChangesInRevisionGraph.Checked = Settings.RevisionGraphShowWorkingDirChanges;
-                ShowStashCountInBrowseWindow.Checked = Settings.ShowStashCount;
+                chkShowCurrentChangesInRevisionGraph.Checked = Settings.RevisionGraphShowWorkingDirChanges;
+                chkShowStashCountInBrowseWindow.Checked = Settings.ShowStashCount;
                 BranchBorders.Checked = Settings.BranchBorders;
                 StripedBanchChange.Checked = Settings.StripedBranchChange;
 
-                ShowGitStatusInToolbar.Checked = Settings.ShowGitStatusInBrowseToolbar;
+                chkShowGitStatusInToolbar.Checked = Settings.ShowGitStatusInBrowseToolbar;
 
                 _NO_TRANSLATE_truncatePathMethod.Text = Settings.TruncatePathMethod;
                 _NO_TRANSLATE_ColorGraphLabel.BackColor = Settings.GraphColor;
@@ -324,11 +305,11 @@ namespace GitUI
                 PageantPath.Text = Settings.Pageant;
                 AutostartPageant.Checked = Settings.AutoStartPageant;
 
-                CloseProcessDialog.Checked = Settings.CloseProcessDialog;
-                ShowGitCommandLine.Checked = Settings.ShowGitCommandLine;
+                chkCloseProcessDialog.Checked = Settings.CloseProcessDialog;
+                chkShowGitCommandLine.Checked = Settings.ShowGitCommandLine;
 
-                UseFastChecks.Checked = Settings.UseFastChecks;
-                ShowRelativeDate.Checked = Settings.RelativeDate;
+                chkUseFastChecks.Checked = Settings.UseFastChecks;
+                chkShowRelativeDate.Checked = Settings.RelativeDate;
 
                 if (string.IsNullOrEmpty(GitCommandHelpers.GetSsh()))
                     OpenSSH.Checked = true;
@@ -370,20 +351,20 @@ namespace GitUI
 
             GitCommandHelpers.SetEnvironmentVariable(true);
 
-            Settings.FocusControlOnHover = focusControlOnHover.Checked;
+            Settings.FocusControlOnHover = chkFocusControlOnHover.Checked;
 
-            Settings.DirtyDirWarnBeforeCheckoutBranch = warnBeforeCheckoutChx.Checked;
+            Settings.DirtyDirWarnBeforeCheckoutBranch = chkWarnBeforeCheckout.Checked;
 
-            Settings.UsePatienceDiffAlgorithm = usePatienceDiffAlgorithm.Checked;
+            Settings.UsePatienceDiffAlgorithm = chkUsePatienceDiffAlgorithm.Checked;
 
             Settings.TruncatePathMethod = _NO_TRANSLATE_truncatePathMethod.Text;
 
-            Settings.ShowCurrentBranchInVisualStudio = showCurrentBranchInVisualStudio.Checked;
+            Settings.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.Checked;
 
-            Settings.ShowErrorsWhenStagingFiles = showErrorsWhenStagingFiles.Checked;
+            Settings.ShowErrorsWhenStagingFiles = chkShowErrorsWhenStagingFiles.Checked;
             Settings.IncludeUntrackedFilesInAutoStash = chkStashUntrackedFiles.Checked;
 
-            Settings.FollowRenamesInFileHistory = FollowRenamesInFileHistory.Checked;
+            Settings.FollowRenamesInFileHistory = chkFollowRenamesInFileHistory.Checked;
 
             if ((int)_NO_TRANSLATE_authorImageSize.Value != Settings.AuthorImageSize)
             {
@@ -394,7 +375,7 @@ namespace GitUI
             Settings.Translation = Language.Text;
             Strings.Reinit();
 
-            Settings.ShowGitStatusInBrowseToolbar = ShowGitStatusInToolbar.Checked;
+            Settings.ShowGitStatusInBrowseToolbar = chkShowGitStatusInToolbar.Checked;
 
             Settings.AuthorImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
 
@@ -406,11 +387,11 @@ namespace GitUI
             Settings.ShowAuthorGravatar = ShowAuthorGravatar.Checked;
             Settings.GravatarFallbackService = noImageService.Text;
 
-            Settings.CloseProcessDialog = CloseProcessDialog.Checked;
-            Settings.ShowGitCommandLine = ShowGitCommandLine.Checked;
+            Settings.CloseProcessDialog = chkCloseProcessDialog.Checked;
+            Settings.ShowGitCommandLine = chkShowGitCommandLine.Checked;
 
-            Settings.UseFastChecks = UseFastChecks.Checked;
-            Settings.RelativeDate = ShowRelativeDate.Checked;
+            Settings.UseFastChecks = chkUseFastChecks.Checked;
+            Settings.RelativeDate = chkShowRelativeDate.Checked;
 
             Settings.Dictionary = Dictionary.Text;
 
@@ -442,8 +423,8 @@ namespace GitUI
             Settings.MulticolorBranches = MulticolorBranches.Checked;
             Settings.RevisionGraphDrawNonRelativesGray = DrawNonRelativesGray.Checked;
             Settings.RevisionGraphDrawNonRelativesTextGray = DrawNonRelativesTextGray.Checked;
-            Settings.RevisionGraphShowWorkingDirChanges = ShowCurrentChangesInRevisionGraph.Checked;
-            Settings.ShowStashCount = ShowStashCountInBrowseWindow.Checked;
+            Settings.RevisionGraphShowWorkingDirChanges = chkShowCurrentChangesInRevisionGraph.Checked;
+            Settings.ShowStashCount = chkShowStashCountInBrowseWindow.Checked;
             Settings.BranchBorders = BranchBorders.Checked;
             Settings.StripedBranchChange = StripedBanchChange.Checked;
             Settings.GraphColor = _NO_TRANSLATE_ColorGraphLabel.BackColor;
@@ -1375,10 +1356,7 @@ namespace GitUI
                                         "Suggest mergetool cmd");
                         return;
                     }
-                    else
-                    {
-                        MergetoolPath.Text = path;
-                    }
+                    MergetoolPath.Text = path;
                 }
 
                 MergeToolCmd.Text = command;
@@ -1406,7 +1384,6 @@ namespace GitUI
 
                 // /m /r=%merged /t1=%yname /t2=%bname /t3=%tname /c=%mname %mine %base %theirs
                 MergeToolCmd.Text = "\"" + MergetoolPath.Text + "\" /m /r=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"";
-                return;
             }
         }
 
@@ -1667,7 +1644,7 @@ namespace GitUI
             foreach (System.Collections.DictionaryEntry icon in resourceSet)
             {
                 //add entry to toolstrip
-                if (icon.Value.GetType() == typeof(System.Drawing.Icon))
+                if (icon.Value.GetType() == typeof(Icon))
                 {
                     //contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)((Icon)icon.Value).ToBitmap(), SplitButtonMenuItem_Click);
                 }
@@ -1769,12 +1746,7 @@ namespace GitUI
 
         private static bool getCheckAtStartupChecked(bool bValid)
         {
-            bool retValue = false;
-            if ((Settings.GetValue<string>("checksettings", null) == null ||
-                 Settings.GetValue<string>("checksettings", null).ToString() == "true"))
-            {
-                retValue = true;
-            }
+            var retValue = Settings.GetValue<string>("checksettings", null) == null || Settings.GetValue<string>("checksettings", null) == "true";
 
             if (bValid && retValue)
             {
@@ -1861,14 +1833,14 @@ namespace GitUI
             if (GitCommandHelpers.VersionInUse < GitVersion.LastSupportedVersion)
             {
                 GitFound.BackColor = Color.LightSalmon;
-                GitFound.Text = "Git found but version " + GitCommandHelpers.VersionInUse.ToString() + " is not supported. Upgrage to version " + GitVersion.LastSupportedVersion.ToString() + " or later.";
+                GitFound.Text = "Git found but version " + GitCommandHelpers.VersionInUse + " is not supported. Upgrage to version " + GitVersion.LastSupportedVersion + " or later.";
                 GitFound_Fix.Visible = true;
                 return false;
             }
 
             GitFound_Fix.Visible = false;
             GitFound.BackColor = Color.LightGreen;
-            GitFound.Text = "Git " + GitCommandHelpers.VersionInUse.ToString() + " is found on your computer.";
+            GitFound.Text = "Git " + GitCommandHelpers.VersionInUse + " is found on your computer.";
             return true;
         }
 
@@ -2074,31 +2046,20 @@ namespace GitUI
         {
             if (Settings.RunningOnWindows())
             {
-                string command = (from cmd in GetWindowsCommandLocations()
-                                  let output = Settings.Module.RunCmd(cmd, string.Empty)
-                                  where !string.IsNullOrEmpty(output)
-                                  select cmd).FirstOrDefault();
+                var command = (from cmd in GetWindowsCommandLocations()
+                               let output = Settings.Module.RunCmd(cmd, string.Empty)
+                               where !string.IsNullOrEmpty(output)
+                               select cmd).FirstOrDefault();
 
                 if (command != null)
                 {
                     Settings.GitCommand = command;
                     return true;
                 }
-                else
-                {
-                    return false;
-                }
+                return false;
             }
-            else
-            {
-                Settings.GitCommand = "git";
-                if (string.IsNullOrEmpty(Settings.Module.RunGitCmd("")))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            Settings.GitCommand = "git";
+            return !string.IsNullOrEmpty(Settings.Module.RunGitCmd(""));
         }
 
         private void SaveScripts()
@@ -2134,7 +2095,7 @@ namespace GitUI
             scriptEnabled.Checked = scriptInfo.Enabled;
             scriptNeedsConfirmation.Checked = scriptInfo.AskConfirmation;
             scriptEvent.SelectedItem = scriptInfo.OnEvent;
-            sbtn_icon.Image = (Image)scriptInfo.GetIcon();
+            sbtn_icon.Image = scriptInfo.GetIcon();
             IconName = scriptInfo.Icon;
 
             foreach (ToolStripItem item in contextMenuStrip_SplitButton.Items)
@@ -2285,7 +2246,7 @@ namespace GitUI
 
         public const string HotkeySettingsName = "Scripts";
 
-        internal enum Commands : int
+        internal enum Commands
         {
             NothingYet
         }
@@ -2401,14 +2362,14 @@ namespace GitUI
         private void SplitButtonMenuItem_Click(object sender, EventArgs e)
         {
             //reset bold item to regular
-            ToolStripMenuItem item = (ToolStripMenuItem)contextMenuStrip_SplitButton.Items.OfType<ToolStripMenuItem>().First(s => s.Font.Bold == true);
+            var item = contextMenuStrip_SplitButton.Items.OfType<ToolStripMenuItem>().First(s => s.Font.Bold);
             item.Font = new Font(contextMenuStrip_SplitButton.Font, FontStyle.Regular);
 
             //make new item bold
             ((ToolStripMenuItem)sender).Font = new Font(((ToolStripMenuItem)sender).Font, FontStyle.Bold);
 
             //set new image on button
-            sbtn_icon.Image = (Image)ResizeBitmap((Bitmap)((ToolStripMenuItem)sender).Image, 12, 12);
+            sbtn_icon.Image = ResizeBitmap((Bitmap)((ToolStripMenuItem)sender).Image, 12, 12);
 
             IconName = ((ToolStripMenuItem)sender).Text;
 
@@ -2450,14 +2411,6 @@ namespace GitUI
             new FormFixHome().ShowDialog(this);
             LoadSettings();
             Rescan_Click(null, null);
-        }
-
-        private void checkboxLabel_Click(object sender, EventArgs e)
-        {
-            var label = sender as Label;
-            var cb = label.Tag as CheckBox;
-            if (cb != null)
-                cb.Checked = !cb.Checked;
         }
     }
 }
