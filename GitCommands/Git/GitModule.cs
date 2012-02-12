@@ -19,7 +19,7 @@ namespace GitCommands
     public sealed class GitModule
     {
         public GitModule()
-        {            
+        {
         }
 
         public GitModule(string workingdir)
@@ -108,7 +108,7 @@ namespace GitCommands
         {
             var configFile = new ConfigFile(_workingdir + ".gitmodules");
             return configFile.GetConfigSections().Select(configSection => configSection.SubSection).ToList();
-            }
+        }
 
         public string GetGlobalSetting(string setting)
         {
@@ -122,7 +122,7 @@ namespace GitCommands
             configFile.SetValue(setting, value);
             configFile.Save();
         }
-        
+
         public static string FindGitWorkingDir(string startDir)
         {
             if (string.IsNullOrEmpty(startDir))
@@ -171,7 +171,7 @@ namespace GitCommands
         {
             return RunCmd(cmd, "");
         }
-        
+
         public void RunRealCmd(string cmd, string arguments)
         {
             try
@@ -265,7 +265,7 @@ namespace GitCommands
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public string RunCachableCmd(string cmd, string arguments, Encoding encoding)
         {
-            if (encoding == null) 
+            if (encoding == null)
                 encoding = Settings.Encoding;
 
             string output;
@@ -297,7 +297,7 @@ namespace GitCommands
         {
             return RunCmd(cmd, arguments, null, encoding);
         }
-        
+
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public string RunCmd(string cmd, string arguments, string stdInput, Encoding encoding)
         {
@@ -332,7 +332,7 @@ namespace GitCommands
             return EncodingHelper.GetString(output, error, encoding);
         }
 
-        private  int RunCmdByte(string cmd, string arguments, out byte[] output, out byte[] error)
+        private int RunCmdByte(string cmd, string arguments, out byte[] output, out byte[] error)
         {
             return RunCmdByte(cmd, arguments, null, out output, out error);
         }
@@ -657,7 +657,7 @@ namespace GitCommands
             if (File.Exists(repositoryPath + ".git"))
             {
                 var lines = File.ReadAllLines(repositoryPath + ".git");
-                foreach(string line in lines)
+                foreach (string line in lines)
                 {
                     if (line.StartsWith("gitdir:"))
                     {
@@ -716,10 +716,10 @@ namespace GitCommands
                     "Terminal",
                     "xterm"
                 };
-                
+
                 string args = "";
                 string cmd = termEmuCmds.FirstOrDefault(termEmuCmd => !string.IsNullOrEmpty(RunCmd("which", termEmuCmd)));
-                
+
                 if (string.IsNullOrEmpty(cmd))
                 {
                     cmd = "bash";
@@ -848,7 +848,7 @@ namespace GitCommands
 
         public bool IsMergeCommit(string commitId)
         {
-            return ExistsMergeCommit(commitId+"~1", commitId);
+            return ExistsMergeCommit(commitId + "~1", commitId);
         }
 
         public bool ExistsMergeCommit(string startRev, string endRev)
@@ -856,8 +856,8 @@ namespace GitCommands
             string revisions = RunGitCmd("rev-list --parents --no-walk " + startRev + ".." + endRev);
             string[] revisionsTab = revisions.Split('\n');
             return revisionsTab.Any(parents => parents.Split(' ').Length > 2);
-            }
-        
+        }
+
         public string GetSubmoduleRemotePath(string name)
         {
             var configFile = new ConfigFile(_workingdir + ".gitmodules");
@@ -933,7 +933,7 @@ namespace GitCommands
 
             return null;
         }
-        
+
         internal static GitSubmodule CreateGitSubmodule(string submodule)
         {
             var gitSubmodule =
@@ -963,7 +963,10 @@ namespace GitCommands
 
         public string Stash()
         {
-            return RunGitCmd("stash save -u");
+            var arguments = "stash save";
+            if (Settings.IncludeUntrackedFilesInAutoStash)
+                arguments += " -u";
+            return RunGitCmd(arguments);
         }
 
         public string StashApply()
@@ -1544,12 +1547,12 @@ namespace GitCommands
                 .Where(statusString => !string.IsNullOrEmpty(statusString))
                 .Select(statusString => new GitItemStatus
             {
-                            IsNew = true,
-                            IsChanged = false,
-                            IsDeleted = false,
-                            IsTracked = false,
-                                            Name = statusString
-                                        })
+                IsNew = true,
+                IsChanged = false,
+                IsDeleted = false,
+                IsTracked = false,
+                Name = statusString
+            })
                 .ToList();
 
         }
@@ -1695,7 +1698,7 @@ namespace GitCommands
             {
                 return string.Empty;
             }
-            
+
             if (!string.IsNullOrEmpty(head))
             {
                 return head.Replace("ref:", "").Replace("refs/heads/", string.Empty).Trim();
@@ -2088,7 +2091,7 @@ namespace GitCommands
             int exitCode = 0;
             string[] resultStrings = RunCmd(Settings.GitCommand, revparseCommand, out exitCode, "").Split('\n');
             return exitCode == 0 ? resultStrings[0] : "";
-            }
+        }
 
         public static string WorkingDirGitDir(string repositoryPath)
         {
