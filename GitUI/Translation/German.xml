@@ -2236,19 +2236,19 @@ können.</Value>
         <TranslationItem Name="label28" Property="Text">
           <Value>Orginaldatei beibehalten nach Merge (.orig)</Value>
         </TranslationItem>
-        <TranslationItem Name="label35" Property="Text">
+        <TranslationItem Name="chkShowGitCommandLine" Property="Text">
           <Value>Git Kommandozeilendialoge anzeigen</Value>
         </TranslationItem>
-        <TranslationItem Name="label34" Property="Text">
+        <TranslationItem Name="chkCloseProcessDialog" Property="Text">
           <Value>Kommandozeilendialoge automatisch schließen</Value>
         </TranslationItem>
-        <TranslationItem Name="label39" Property="Text">
+        <TranslationItem Name="chkShowRelativeDate" Property="Text">
           <Value>Relatives Datum statt absolutes Datum anzeigen</Value>
         </TranslationItem>
-        <TranslationItem Name="label38" Property="Text">
+        <TranslationItem Name="chkUseFastChecks" Property="Text">
           <Value>Benutze FileSystemWatchter um Änderungen am Index festzustellen</Value>
         </TranslationItem>
-        <TranslationItem Name="label40" Property="Text">
+        <TranslationItem Name="chkFollowRenamesInFileHistory" Property="Text">
           <Value>Verfolge Umbenennen in der Datei-Historie (Experimentell)</Value>
         </TranslationItem>
         <TranslationItem Name="label41" Property="Text">
@@ -2349,7 +2349,7 @@ bei der Benutzung auftreten.</Value>
         <TranslationItem Name="StripedBanchChange" Property="Text">
           <Value>Branch Änderungen stricheln</Value>
         </TranslationItem>
-        <TranslationItem Name="showGitStatusInToolbarLabel" Property="Text">
+        <TranslationItem Name="chkShowGitStatusInToolbar" Property="Text">
           <Value>Zeige Repository Status im Durchsuchen Dialog (Anzahl der Änderungen in der Toolbar, Neustart erforderlich)</Value>
         </TranslationItem>
         <TranslationItem Name="RevisionGridQuickSearchTimeout" Property="Text">
@@ -2358,7 +2358,7 @@ bei der Benutzung auftreten.</Value>
         <TranslationItem Name="label24" Property="Text">
           <Value>Timeout in ms bei der Revision Schnellsuche</Value>
         </TranslationItem>
-        <TranslationItem Name="showErrorsWhenStagingFilesLabel" Property="Text">
+        <TranslationItem Name="chkShowErrorsWhenStagingFiles" Property="Text">
           <Value>Zeige Fehler beim Stagen von Dateien an</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox9" Property="Text">
@@ -2389,10 +2389,10 @@ bei der Benutzung auftreten.</Value>
         <TranslationItem Name="DrawNonRelativesGray" Property="Text">
           <Value>Graphen ohne Bezug grau zeichnen</Value>
         </TranslationItem>
-        <TranslationItem Name="label26" Property="Text">
+        <TranslationItem Name="chkShowCurrentChangesInRevisionGraph" Property="Text">
           <Value>Änderungen im Arbeitsverzeichnis im Graphen darstellen (langsam)</Value>
         </TranslationItem>
-        <TranslationItem Name="label52" Property="Text">
+        <TranslationItem Name="chkShowStashCountInBrowseWindow" Property="Text">
           <Value>Anzahl der Stashes in der Statuszeile im Hauptfenster anzeigen</Value>
         </TranslationItem>
         <TranslationItem Name="scriptsTab" Property="Text">
@@ -2470,10 +2470,10 @@ bei der Benutzung auftreten.</Value>
         <TranslationItem Name="scriptNeedsConfirmation" Property="Text">
           <Value>Bestätigung anfordern</Value>
         </TranslationItem>
-        <TranslationItem Name="labelShowCurrentBranchInVisualStudio" Property="Text">
+        <TranslationItem Name="chkShowCurrentBranchInVisualStudio" Property="Text">
           <Value>Zeige aktuellen Branch in Visual Studio</Value>
         </TranslationItem>
-        <TranslationItem Name="label37" Property="Text">
+        <TranslationItem Name="chkUsePatienceDiffAlgorithm" Property="Text">
           <Value>Patience-Parameter beim Vergleich verwenden</Value>
         </TranslationItem>
         <TranslationItem Name="truncatePathMethod" Property="Text">
@@ -2506,7 +2506,7 @@ bei der Benutzung auftreten.</Value>
         <TranslationItem Name="label57" Property="Text">
           <Value>Pfad zu Commit-Template</Value>
         </TranslationItem>
-        <TranslationItem Name="label58" Property="Text">
+        <TranslationItem Name="chkFocusControlOnHover" Property="Text">
           <Value>Steuerelemente bei Überfahren fokusieren um Scrollen zu aktivieren ohne Klicken zu müssen</Value>
         </TranslationItem>
         <TranslationItem Name="downloadMsysgit" Property="Text">

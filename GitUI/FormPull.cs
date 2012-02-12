@@ -67,7 +67,7 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
-            
+
             UpdateRemotesList();
 
             branch = Settings.Module.GetSelectedBranch();
@@ -262,7 +262,7 @@ namespace GitUI
             if (!Fetch.Checked && AutoStash.Checked &&
                 Settings.Module.GitStatus(UntrackedFilesMode.No, IgnoreSubmodulesMode.Default).Count > 0)
             {
-                new FormProcess("stash save").ShowDialog(this);
+                GitUICommands.Instance.Stash(this);
                 stashed = true;
             }
 
@@ -335,8 +335,8 @@ namespace GitUI
             }
             finally
             {
-                if (stashed && 
-                    process != null && 
+                if (stashed &&
+                    process != null &&
                     !process.ErrorOccurred() &&
                     !Settings.Module.InTheMiddleOfConflictedMerge() &&
                     !Settings.Module.InTheMiddleOfRebase() &&
@@ -344,7 +344,7 @@ namespace GitUI
                 {
                     new FormProcess("stash pop").ShowDialog(this);
                     MergeConflictHandler.HandleMergeConflicts(this);
-                }               
+                }
 
                 ScriptManager.RunEventScripts(ScriptEvent.AfterPull);
             }
