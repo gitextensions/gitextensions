@@ -94,44 +94,31 @@ namespace GitUI
             this.GitBinPath = new System.Windows.Forms.TextBox();
             this.TabPageGitExtensions = new System.Windows.Forms.TabPage();
             this.chkStashUntrackedFiles = new System.Windows.Forms.CheckBox();
-            this.warnBeforeCheckoutLabel = new System.Windows.Forms.Label();
-            this.warnBeforeCheckoutChx = new System.Windows.Forms.CheckBox();
-            this.label58 = new System.Windows.Forms.Label();
-            this.focusControlOnHover = new System.Windows.Forms.CheckBox();
+            this.chkWarnBeforeCheckout = new System.Windows.Forms.CheckBox();
+            this.chkFocusControlOnHover = new System.Windows.Forms.CheckBox();
             this.truncatePathMethod = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_truncatePathMethod = new System.Windows.Forms.ComboBox();
-            this.label37 = new System.Windows.Forms.Label();
-            this.usePatienceDiffAlgorithm = new System.Windows.Forms.CheckBox();
-            this.labelShowCurrentBranchInVisualStudio = new System.Windows.Forms.Label();
-            this.showCurrentBranchInVisualStudio = new System.Windows.Forms.CheckBox();
+            this.chkUsePatienceDiffAlgorithm = new System.Windows.Forms.CheckBox();
+            this.chkShowCurrentBranchInVisualStudio = new System.Windows.Forms.CheckBox();
             this.downloadDictionary = new System.Windows.Forms.LinkLabel();
-            this.label52 = new System.Windows.Forms.Label();
-            this.ShowStashCountInBrowseWindow = new System.Windows.Forms.CheckBox();
-            this.label26 = new System.Windows.Forms.Label();
-            this.ShowCurrentChangesInRevisionGraph = new System.Windows.Forms.CheckBox();
-            this.showErrorsWhenStagingFilesLabel = new System.Windows.Forms.Label();
-            this.showErrorsWhenStagingFiles = new System.Windows.Forms.CheckBox();
-            this.showGitStatusInToolbarLabel = new System.Windows.Forms.Label();
-            this.ShowGitStatusInToolbar = new System.Windows.Forms.CheckBox();
+            this.chkShowStashCountInBrowseWindow = new System.Windows.Forms.CheckBox();
+            this.chkShowCurrentChangesInRevisionGraph = new System.Windows.Forms.CheckBox();
+            this.chkShowErrorsWhenStagingFiles = new System.Windows.Forms.CheckBox();
+            this.chkShowGitStatusInToolbar = new System.Windows.Forms.CheckBox();
             this.RevisionGridQuickSearchTimeout = new System.Windows.Forms.NumericUpDown();
             this.label24 = new System.Windows.Forms.Label();
             this.helpTranslate = new System.Windows.Forms.LinkLabel();
             this.Language = new System.Windows.Forms.ComboBox();
             this.label49 = new System.Windows.Forms.Label();
-            this.label40 = new System.Windows.Forms.Label();
-            this.FollowRenamesInFileHistory = new System.Windows.Forms.CheckBox();
-            this.label39 = new System.Windows.Forms.Label();
-            this.label38 = new System.Windows.Forms.Label();
-            this.label35 = new System.Windows.Forms.Label();
-            this.label34 = new System.Windows.Forms.Label();
+            this.chkFollowRenamesInFileHistory = new System.Windows.Forms.CheckBox();
             this.EncodingLabel = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_Encoding = new System.Windows.Forms.ComboBox();
             this.Dictionary = new System.Windows.Forms.ComboBox();
             this.label22 = new System.Windows.Forms.Label();
-            this.ShowRelativeDate = new System.Windows.Forms.CheckBox();
-            this.UseFastChecks = new System.Windows.Forms.CheckBox();
-            this.ShowGitCommandLine = new System.Windows.Forms.CheckBox();
-            this.CloseProcessDialog = new System.Windows.Forms.CheckBox();
+            this.chkShowRelativeDate = new System.Windows.Forms.CheckBox();
+            this.chkUseFastChecks = new System.Windows.Forms.CheckBox();
+            this.chkShowGitCommandLine = new System.Windows.Forms.CheckBox();
+            this.chkCloseProcessDialog = new System.Windows.Forms.CheckBox();
             this._NO_TRANSLATE_MaxCommits = new System.Windows.Forms.NumericUpDown();
             this.label12 = new System.Windows.Forms.Label();
             this.StartPage = new System.Windows.Forms.TabPage();
@@ -1066,46 +1053,33 @@ namespace GitUI
             // TabPageGitExtensions
             // 
             this.TabPageGitExtensions.Controls.Add(this.chkStashUntrackedFiles);
-            this.TabPageGitExtensions.Controls.Add(this.warnBeforeCheckoutLabel);
-            this.TabPageGitExtensions.Controls.Add(this.warnBeforeCheckoutChx);
-            this.TabPageGitExtensions.Controls.Add(this.label58);
-            this.TabPageGitExtensions.Controls.Add(this.focusControlOnHover);
+            this.TabPageGitExtensions.Controls.Add(this.chkWarnBeforeCheckout);
+            this.TabPageGitExtensions.Controls.Add(this.chkFocusControlOnHover);
             this.TabPageGitExtensions.Controls.Add(this.truncatePathMethod);
             this.TabPageGitExtensions.Controls.Add(this._NO_TRANSLATE_truncatePathMethod);
-            this.TabPageGitExtensions.Controls.Add(this.label37);
-            this.TabPageGitExtensions.Controls.Add(this.usePatienceDiffAlgorithm);
-            this.TabPageGitExtensions.Controls.Add(this.labelShowCurrentBranchInVisualStudio);
-            this.TabPageGitExtensions.Controls.Add(this.showCurrentBranchInVisualStudio);
+            this.TabPageGitExtensions.Controls.Add(this.chkUsePatienceDiffAlgorithm);
+            this.TabPageGitExtensions.Controls.Add(this.chkShowCurrentBranchInVisualStudio);
             this.TabPageGitExtensions.Controls.Add(this.downloadDictionary);
-            this.TabPageGitExtensions.Controls.Add(this.label52);
-            this.TabPageGitExtensions.Controls.Add(this.ShowStashCountInBrowseWindow);
-            this.TabPageGitExtensions.Controls.Add(this.label26);
-            this.TabPageGitExtensions.Controls.Add(this.ShowCurrentChangesInRevisionGraph);
-            this.TabPageGitExtensions.Controls.Add(this.showErrorsWhenStagingFilesLabel);
-            this.TabPageGitExtensions.Controls.Add(this.showErrorsWhenStagingFiles);
-            this.TabPageGitExtensions.Controls.Add(this.showGitStatusInToolbarLabel);
-            this.TabPageGitExtensions.Controls.Add(this.ShowGitStatusInToolbar);
+            this.TabPageGitExtensions.Controls.Add(this.chkShowStashCountInBrowseWindow);
+            this.TabPageGitExtensions.Controls.Add(this.chkShowCurrentChangesInRevisionGraph);
+            this.TabPageGitExtensions.Controls.Add(this.chkShowErrorsWhenStagingFiles);
+            this.TabPageGitExtensions.Controls.Add(this.chkShowGitStatusInToolbar);
             this.TabPageGitExtensions.Controls.Add(this.RevisionGridQuickSearchTimeout);
             this.TabPageGitExtensions.Controls.Add(this.label24);
             this.TabPageGitExtensions.Controls.Add(this.helpTranslate);
             this.TabPageGitExtensions.Controls.Add(this.Language);
             this.TabPageGitExtensions.Controls.Add(this.label49);
-            this.TabPageGitExtensions.Controls.Add(this.label40);
-            this.TabPageGitExtensions.Controls.Add(this.FollowRenamesInFileHistory);
-            this.TabPageGitExtensions.Controls.Add(this.label39);
-            this.TabPageGitExtensions.Controls.Add(this.label38);
-            this.TabPageGitExtensions.Controls.Add(this.label35);
-            this.TabPageGitExtensions.Controls.Add(this.label34);
+            this.TabPageGitExtensions.Controls.Add(this.chkFollowRenamesInFileHistory);
             this.TabPageGitExtensions.Controls.Add(this.EncodingLabel);
             this.TabPageGitExtensions.Controls.Add(this._NO_TRANSLATE_Encoding);
             this.TabPageGitExtensions.Controls.Add(this.label23);
             this.TabPageGitExtensions.Controls.Add(this.SmtpServer);
             this.TabPageGitExtensions.Controls.Add(this.Dictionary);
             this.TabPageGitExtensions.Controls.Add(this.label22);
-            this.TabPageGitExtensions.Controls.Add(this.ShowRelativeDate);
-            this.TabPageGitExtensions.Controls.Add(this.UseFastChecks);
-            this.TabPageGitExtensions.Controls.Add(this.ShowGitCommandLine);
-            this.TabPageGitExtensions.Controls.Add(this.CloseProcessDialog);
+            this.TabPageGitExtensions.Controls.Add(this.chkShowRelativeDate);
+            this.TabPageGitExtensions.Controls.Add(this.chkUseFastChecks);
+            this.TabPageGitExtensions.Controls.Add(this.chkShowGitCommandLine);
+            this.TabPageGitExtensions.Controls.Add(this.chkCloseProcessDialog);
             this.TabPageGitExtensions.Controls.Add(this._NO_TRANSLATE_MaxCommits);
             this.TabPageGitExtensions.Controls.Add(this.label12);
             this.TabPageGitExtensions.Location = new System.Drawing.Point(4, 24);
@@ -1126,45 +1100,25 @@ namespace GitUI
             this.chkStashUntrackedFiles.Text = "Include untracked files in stash";
             this.chkStashUntrackedFiles.UseVisualStyleBackColor = true;
             // 
-            // warnBeforeCheckoutLabel
+            // chkWarnBeforeCheckout
             // 
-            this.warnBeforeCheckoutLabel.AutoSize = true;
-            this.warnBeforeCheckoutLabel.Location = new System.Drawing.Point(32, 497);
-            this.warnBeforeCheckoutLabel.Name = "warnBeforeCheckoutLabel";
-            this.warnBeforeCheckoutLabel.Size = new System.Drawing.Size(268, 15);
-            this.warnBeforeCheckoutLabel.TabIndex = 50;
-            this.warnBeforeCheckoutLabel.Text = "Warn of not committed changes before checkout";
-            this.warnBeforeCheckoutLabel.Click += new System.EventHandler(this.checkboxLabel_Click);
+            this.chkWarnBeforeCheckout.AutoSize = true;
+            this.chkWarnBeforeCheckout.Location = new System.Drawing.Point(11, 497);
+            this.chkWarnBeforeCheckout.Name = "chkWarnBeforeCheckout";
+            this.chkWarnBeforeCheckout.Size = new System.Drawing.Size(287, 19);
+            this.chkWarnBeforeCheckout.TabIndex = 49;
+            this.chkWarnBeforeCheckout.Text = "Warn of not committed changes before checkout";
+            this.chkWarnBeforeCheckout.UseVisualStyleBackColor = true;
             // 
-            // warnBeforeCheckoutChx
+            // chkFocusControlOnHover
             // 
-            this.warnBeforeCheckoutChx.AutoSize = true;
-            this.warnBeforeCheckoutChx.Location = new System.Drawing.Point(11, 497);
-            this.warnBeforeCheckoutChx.Name = "warnBeforeCheckoutChx";
-            this.warnBeforeCheckoutChx.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.warnBeforeCheckoutChx.Size = new System.Drawing.Size(15, 14);
-            this.warnBeforeCheckoutChx.TabIndex = 49;
-            this.warnBeforeCheckoutChx.UseVisualStyleBackColor = true;
-            // 
-            // label58
-            // 
-            this.label58.AutoSize = true;
-            this.label58.Location = new System.Drawing.Point(32, 376);
-            this.label58.Name = "label58";
-            this.label58.Size = new System.Drawing.Size(336, 15);
-            this.label58.TabIndex = 48;
-            this.label58.Text = "Focus control on hover to enable scroll without having to click";
-            this.label58.Click += new System.EventHandler(this.checkboxLabel_Click);
-            // 
-            // focusControlOnHover
-            // 
-            this.focusControlOnHover.AutoSize = true;
-            this.focusControlOnHover.Location = new System.Drawing.Point(11, 376);
-            this.focusControlOnHover.Name = "focusControlOnHover";
-            this.focusControlOnHover.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.focusControlOnHover.Size = new System.Drawing.Size(15, 14);
-            this.focusControlOnHover.TabIndex = 47;
-            this.focusControlOnHover.UseVisualStyleBackColor = true;
+            this.chkFocusControlOnHover.AutoSize = true;
+            this.chkFocusControlOnHover.Location = new System.Drawing.Point(12, 375);
+            this.chkFocusControlOnHover.Name = "chkFocusControlOnHover";
+            this.chkFocusControlOnHover.Size = new System.Drawing.Size(355, 19);
+            this.chkFocusControlOnHover.TabIndex = 47;
+            this.chkFocusControlOnHover.Text = "Focus control on hover to enable scroll without having to click";
+            this.chkFocusControlOnHover.UseVisualStyleBackColor = true;
             // 
             // truncatePathMethod
             // 
@@ -1187,45 +1141,25 @@ namespace GitUI
             this._NO_TRANSLATE_truncatePathMethod.Size = new System.Drawing.Size(242, 23);
             this._NO_TRANSLATE_truncatePathMethod.TabIndex = 45;
             // 
-            // label37
+            // chkUsePatienceDiffAlgorithm
             // 
-            this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(32, 355);
-            this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(150, 15);
-            this.label37.TabIndex = 44;
-            this.label37.Text = "Use patience diff algorithm";
-            this.label37.Click += new System.EventHandler(this.checkboxLabel_Click);
+            this.chkUsePatienceDiffAlgorithm.AutoSize = true;
+            this.chkUsePatienceDiffAlgorithm.Location = new System.Drawing.Point(12, 353);
+            this.chkUsePatienceDiffAlgorithm.Name = "chkUsePatienceDiffAlgorithm";
+            this.chkUsePatienceDiffAlgorithm.Size = new System.Drawing.Size(169, 19);
+            this.chkUsePatienceDiffAlgorithm.TabIndex = 43;
+            this.chkUsePatienceDiffAlgorithm.Text = "Use patience diff algorithm";
+            this.chkUsePatienceDiffAlgorithm.UseVisualStyleBackColor = true;
             // 
-            // usePatienceDiffAlgorithm
+            // chkShowCurrentBranchInVisualStudio
             // 
-            this.usePatienceDiffAlgorithm.AutoSize = true;
-            this.usePatienceDiffAlgorithm.Location = new System.Drawing.Point(11, 355);
-            this.usePatienceDiffAlgorithm.Name = "usePatienceDiffAlgorithm";
-            this.usePatienceDiffAlgorithm.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.usePatienceDiffAlgorithm.Size = new System.Drawing.Size(15, 14);
-            this.usePatienceDiffAlgorithm.TabIndex = 43;
-            this.usePatienceDiffAlgorithm.UseVisualStyleBackColor = true;
-            // 
-            // labelShowCurrentBranchInVisualStudio
-            // 
-            this.labelShowCurrentBranchInVisualStudio.AutoSize = true;
-            this.labelShowCurrentBranchInVisualStudio.Location = new System.Drawing.Point(32, 333);
-            this.labelShowCurrentBranchInVisualStudio.Name = "labelShowCurrentBranchInVisualStudio";
-            this.labelShowCurrentBranchInVisualStudio.Size = new System.Drawing.Size(201, 15);
-            this.labelShowCurrentBranchInVisualStudio.TabIndex = 42;
-            this.labelShowCurrentBranchInVisualStudio.Text = "Show current branch in Visual Studio";
-            this.labelShowCurrentBranchInVisualStudio.Click += new System.EventHandler(this.checkboxLabel_Click);
-            // 
-            // showCurrentBranchInVisualStudio
-            // 
-            this.showCurrentBranchInVisualStudio.AutoSize = true;
-            this.showCurrentBranchInVisualStudio.Location = new System.Drawing.Point(11, 333);
-            this.showCurrentBranchInVisualStudio.Name = "showCurrentBranchInVisualStudio";
-            this.showCurrentBranchInVisualStudio.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.showCurrentBranchInVisualStudio.Size = new System.Drawing.Size(15, 14);
-            this.showCurrentBranchInVisualStudio.TabIndex = 41;
-            this.showCurrentBranchInVisualStudio.UseVisualStyleBackColor = true;
+            this.chkShowCurrentBranchInVisualStudio.AutoSize = true;
+            this.chkShowCurrentBranchInVisualStudio.Location = new System.Drawing.Point(12, 331);
+            this.chkShowCurrentBranchInVisualStudio.Name = "chkShowCurrentBranchInVisualStudio";
+            this.chkShowCurrentBranchInVisualStudio.Size = new System.Drawing.Size(220, 19);
+            this.chkShowCurrentBranchInVisualStudio.TabIndex = 41;
+            this.chkShowCurrentBranchInVisualStudio.Text = "Show current branch in Visual Studio";
+            this.chkShowCurrentBranchInVisualStudio.UseVisualStyleBackColor = true;
             // 
             // downloadDictionary
             // 
@@ -1238,85 +1172,46 @@ namespace GitUI
             this.downloadDictionary.Text = "Download dictionary";
             this.downloadDictionary.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.downloadDictionary_LinkClicked);
             // 
-            // label52
+            // chkShowStashCountInBrowseWindow
             // 
-            this.label52.AutoSize = true;
-            this.label52.Location = new System.Drawing.Point(33, 155);
-            this.label52.Name = "label52";
-            this.label52.Size = new System.Drawing.Size(270, 15);
-            this.label52.TabIndex = 39;
-            this.label52.Text = "Show stash count on status bar in browse window";
-            this.label52.Click += new System.EventHandler(this.checkboxLabel_Click);
+            this.chkShowStashCountInBrowseWindow.AutoSize = true;
+            this.chkShowStashCountInBrowseWindow.Location = new System.Drawing.Point(12, 156);
+            this.chkShowStashCountInBrowseWindow.Name = "chkShowStashCountInBrowseWindow";
+            this.chkShowStashCountInBrowseWindow.Size = new System.Drawing.Size(289, 19);
+            this.chkShowStashCountInBrowseWindow.TabIndex = 38;
+            this.chkShowStashCountInBrowseWindow.Text = "Show stash count on status bar in browse window";
+            this.chkShowStashCountInBrowseWindow.UseVisualStyleBackColor = true;
             // 
-            // ShowStashCountInBrowseWindow
+            // chkShowCurrentChangesInRevisionGraph
             // 
-            this.ShowStashCountInBrowseWindow.AutoSize = true;
-            this.ShowStashCountInBrowseWindow.Location = new System.Drawing.Point(12, 156);
-            this.ShowStashCountInBrowseWindow.Name = "ShowStashCountInBrowseWindow";
-            this.ShowStashCountInBrowseWindow.Size = new System.Drawing.Size(15, 14);
-            this.ShowStashCountInBrowseWindow.TabIndex = 38;
-            this.ShowStashCountInBrowseWindow.UseVisualStyleBackColor = true;
+            this.chkShowCurrentChangesInRevisionGraph.AutoSize = true;
+            this.chkShowCurrentChangesInRevisionGraph.Location = new System.Drawing.Point(12, 133);
+            this.chkShowCurrentChangesInRevisionGraph.Name = "chkShowCurrentChangesInRevisionGraph";
+            this.chkShowCurrentChangesInRevisionGraph.Size = new System.Drawing.Size(335, 19);
+            this.chkShowCurrentChangesInRevisionGraph.TabIndex = 36;
+            this.chkShowCurrentChangesInRevisionGraph.Text = "Show current working dir changes in revision graph (slow!)";
+            this.chkShowCurrentChangesInRevisionGraph.UseVisualStyleBackColor = true;
             // 
-            // label26
+            // chkShowErrorsWhenStagingFiles
             // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(32, 133);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(316, 15);
-            this.label26.TabIndex = 37;
-            this.label26.Text = "Show current working dir changes in revision graph (slow!)";
-            this.label26.Click += new System.EventHandler(this.checkboxLabel_Click);
+            this.chkShowErrorsWhenStagingFiles.AutoSize = true;
+            this.chkShowErrorsWhenStagingFiles.Location = new System.Drawing.Point(12, 308);
+            this.chkShowErrorsWhenStagingFiles.Name = "chkShowErrorsWhenStagingFiles";
+            this.chkShowErrorsWhenStagingFiles.Size = new System.Drawing.Size(186, 19);
+            this.chkShowErrorsWhenStagingFiles.TabIndex = 34;
+            this.chkShowErrorsWhenStagingFiles.Text = "Show errors when staging files";
+            this.chkShowErrorsWhenStagingFiles.UseVisualStyleBackColor = true;
             // 
-            // ShowCurrentChangesInRevisionGraph
+            // chkShowGitStatusInToolbar
             // 
-            this.ShowCurrentChangesInRevisionGraph.AutoSize = true;
-            this.ShowCurrentChangesInRevisionGraph.Location = new System.Drawing.Point(11, 134);
-            this.ShowCurrentChangesInRevisionGraph.Name = "ShowCurrentChangesInRevisionGraph";
-            this.ShowCurrentChangesInRevisionGraph.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.ShowCurrentChangesInRevisionGraph.Size = new System.Drawing.Size(15, 14);
-            this.ShowCurrentChangesInRevisionGraph.TabIndex = 36;
-            this.ShowCurrentChangesInRevisionGraph.UseVisualStyleBackColor = true;
-            // 
-            // showErrorsWhenStagingFilesLabel
-            // 
-            this.showErrorsWhenStagingFilesLabel.AutoSize = true;
-            this.showErrorsWhenStagingFilesLabel.Location = new System.Drawing.Point(32, 311);
-            this.showErrorsWhenStagingFilesLabel.Name = "showErrorsWhenStagingFilesLabel";
-            this.showErrorsWhenStagingFilesLabel.Size = new System.Drawing.Size(167, 15);
-            this.showErrorsWhenStagingFilesLabel.TabIndex = 35;
-            this.showErrorsWhenStagingFilesLabel.Text = "Show errors when staging files";
-            this.showErrorsWhenStagingFilesLabel.Click += new System.EventHandler(this.checkboxLabel_Click);
-            // 
-            // showErrorsWhenStagingFiles
-            // 
-            this.showErrorsWhenStagingFiles.AutoSize = true;
-            this.showErrorsWhenStagingFiles.Location = new System.Drawing.Point(11, 311);
-            this.showErrorsWhenStagingFiles.Name = "showErrorsWhenStagingFiles";
-            this.showErrorsWhenStagingFiles.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.showErrorsWhenStagingFiles.Size = new System.Drawing.Size(15, 14);
-            this.showErrorsWhenStagingFiles.TabIndex = 34;
-            this.showErrorsWhenStagingFiles.UseVisualStyleBackColor = true;
-            // 
-            // showGitStatusInToolbarLabel
-            // 
-            this.showGitStatusInToolbarLabel.AutoSize = true;
-            this.showGitStatusInToolbarLabel.Location = new System.Drawing.Point(32, 288);
-            this.showGitStatusInToolbarLabel.Name = "showGitStatusInToolbarLabel";
-            this.showGitStatusInToolbarLabel.Size = new System.Drawing.Size(470, 15);
-            this.showGitStatusInToolbarLabel.TabIndex = 32;
-            this.showGitStatusInToolbarLabel.Text = "Show repository status in browse dialog (number of changes in toolbar, restart re" +
+            this.chkShowGitStatusInToolbar.AutoSize = true;
+            this.chkShowGitStatusInToolbar.Location = new System.Drawing.Point(12, 286);
+            this.chkShowGitStatusInToolbar.Name = "chkShowGitStatusInToolbar";
+            this.chkShowGitStatusInToolbar.Size = new System.Drawing.Size(489, 19);
+            this.chkShowGitStatusInToolbar.TabIndex = 31;
+            this.chkShowGitStatusInToolbar.Text = "Show repository status in browse dialog (number of changes in toolbar, restart re" +
     "quired)";
-            this.showGitStatusInToolbarLabel.Click += new System.EventHandler(this.checkboxLabel_Click);
-            // 
-            // ShowGitStatusInToolbar
-            // 
-            this.ShowGitStatusInToolbar.AutoSize = true;
-            this.ShowGitStatusInToolbar.Location = new System.Drawing.Point(11, 288);
-            this.ShowGitStatusInToolbar.Name = "ShowGitStatusInToolbar";
-            this.ShowGitStatusInToolbar.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.ShowGitStatusInToolbar.Size = new System.Drawing.Size(15, 14);
-            this.ShowGitStatusInToolbar.TabIndex = 31;
-            this.ShowGitStatusInToolbar.UseVisualStyleBackColor = true;
+            this.chkShowGitStatusInToolbar.UseVisualStyleBackColor = true;
             // 
             // RevisionGridQuickSearchTimeout
             // 
@@ -1386,65 +1281,15 @@ namespace GitUI
             this.label49.TabIndex = 28;
             this.label49.Text = "Language (restart required)";
             // 
-            // label40
+            // chkFollowRenamesInFileHistory
             // 
-            this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(32, 266);
-            this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(240, 15);
-            this.label40.TabIndex = 27;
-            this.label40.Text = "Follow renames in file history (experimental)";
-            this.label40.Click += new System.EventHandler(this.checkboxLabel_Click);
-            // 
-            // FollowRenamesInFileHistory
-            // 
-            this.FollowRenamesInFileHistory.AutoSize = true;
-            this.FollowRenamesInFileHistory.Location = new System.Drawing.Point(11, 266);
-            this.FollowRenamesInFileHistory.Name = "FollowRenamesInFileHistory";
-            this.FollowRenamesInFileHistory.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.FollowRenamesInFileHistory.Size = new System.Drawing.Size(15, 14);
-            this.FollowRenamesInFileHistory.TabIndex = 26;
-            this.FollowRenamesInFileHistory.UseVisualStyleBackColor = true;
-            // 
-            // label39
-            // 
-            this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(32, 244);
-            this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(204, 15);
-            this.label39.TabIndex = 25;
-            this.label39.Text = "Show relative date instead of full date";
-            this.label39.Click += new System.EventHandler(this.checkboxLabel_Click);
-            // 
-            // label38
-            // 
-            this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(32, 221);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(278, 15);
-            this.label38.TabIndex = 24;
-            this.label38.Text = "Use FileSystemWatcher to check if index is changed";
-            this.label38.Click += new System.EventHandler(this.checkboxLabel_Click);
-            // 
-            // label35
-            // 
-            this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(32, 200);
-            this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(296, 15);
-            this.label35.TabIndex = 22;
-            this.label35.Text = "Show Git commandline dialog when executing process";
-            this.label35.Click += new System.EventHandler(this.checkboxLabel_Click);
-            // 
-            // label34
-            // 
-            this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(32, 177);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(335, 15);
-            this.label34.TabIndex = 21;
-            this.label34.Text = "Close process dialog automatically when process is succeeded";
-            this.label34.Click += new System.EventHandler(this.checkboxLabel_Click);
+            this.chkFollowRenamesInFileHistory.AutoSize = true;
+            this.chkFollowRenamesInFileHistory.Location = new System.Drawing.Point(12, 264);
+            this.chkFollowRenamesInFileHistory.Name = "chkFollowRenamesInFileHistory";
+            this.chkFollowRenamesInFileHistory.Size = new System.Drawing.Size(259, 19);
+            this.chkFollowRenamesInFileHistory.TabIndex = 26;
+            this.chkFollowRenamesInFileHistory.Text = "Follow renames in file history (experimental)";
+            this.chkFollowRenamesInFileHistory.UseVisualStyleBackColor = true;
             // 
             // EncodingLabel
             // 
@@ -1481,45 +1326,45 @@ namespace GitUI
             this.label22.TabIndex = 14;
             this.label22.Text = "Dictionary for spelling checker.";
             // 
-            // ShowRelativeDate
+            // chkShowRelativeDate
             // 
-            this.ShowRelativeDate.AutoSize = true;
-            this.ShowRelativeDate.Location = new System.Drawing.Point(11, 244);
-            this.ShowRelativeDate.Name = "ShowRelativeDate";
-            this.ShowRelativeDate.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.ShowRelativeDate.Size = new System.Drawing.Size(15, 14);
-            this.ShowRelativeDate.TabIndex = 13;
-            this.ShowRelativeDate.UseVisualStyleBackColor = true;
+            this.chkShowRelativeDate.AutoSize = true;
+            this.chkShowRelativeDate.Location = new System.Drawing.Point(12, 242);
+            this.chkShowRelativeDate.Name = "chkShowRelativeDate";
+            this.chkShowRelativeDate.Size = new System.Drawing.Size(223, 19);
+            this.chkShowRelativeDate.TabIndex = 13;
+            this.chkShowRelativeDate.Text = "Show relative date instead of full date";
+            this.chkShowRelativeDate.UseVisualStyleBackColor = true;
             // 
-            // UseFastChecks
+            // chkUseFastChecks
             // 
-            this.UseFastChecks.AutoSize = true;
-            this.UseFastChecks.Location = new System.Drawing.Point(11, 222);
-            this.UseFastChecks.Name = "UseFastChecks";
-            this.UseFastChecks.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.UseFastChecks.Size = new System.Drawing.Size(15, 14);
-            this.UseFastChecks.TabIndex = 12;
-            this.UseFastChecks.UseVisualStyleBackColor = true;
+            this.chkUseFastChecks.AutoSize = true;
+            this.chkUseFastChecks.Location = new System.Drawing.Point(12, 220);
+            this.chkUseFastChecks.Name = "chkUseFastChecks";
+            this.chkUseFastChecks.Size = new System.Drawing.Size(297, 19);
+            this.chkUseFastChecks.TabIndex = 12;
+            this.chkUseFastChecks.Text = "Use FileSystemWatcher to check if index is changed";
+            this.chkUseFastChecks.UseVisualStyleBackColor = true;
             // 
-            // ShowGitCommandLine
+            // chkShowGitCommandLine
             // 
-            this.ShowGitCommandLine.AutoSize = true;
-            this.ShowGitCommandLine.Location = new System.Drawing.Point(11, 200);
-            this.ShowGitCommandLine.Name = "ShowGitCommandLine";
-            this.ShowGitCommandLine.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.ShowGitCommandLine.Size = new System.Drawing.Size(15, 14);
-            this.ShowGitCommandLine.TabIndex = 11;
-            this.ShowGitCommandLine.UseVisualStyleBackColor = true;
+            this.chkShowGitCommandLine.AutoSize = true;
+            this.chkShowGitCommandLine.Location = new System.Drawing.Point(12, 198);
+            this.chkShowGitCommandLine.Name = "chkShowGitCommandLine";
+            this.chkShowGitCommandLine.Size = new System.Drawing.Size(315, 19);
+            this.chkShowGitCommandLine.TabIndex = 11;
+            this.chkShowGitCommandLine.Text = "Show Git commandline dialog when executing process";
+            this.chkShowGitCommandLine.UseVisualStyleBackColor = true;
             // 
-            // CloseProcessDialog
+            // chkCloseProcessDialog
             // 
-            this.CloseProcessDialog.AutoSize = true;
-            this.CloseProcessDialog.Location = new System.Drawing.Point(11, 178);
-            this.CloseProcessDialog.Name = "CloseProcessDialog";
-            this.CloseProcessDialog.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.CloseProcessDialog.Size = new System.Drawing.Size(15, 14);
-            this.CloseProcessDialog.TabIndex = 9;
-            this.CloseProcessDialog.UseVisualStyleBackColor = true;
+            this.chkCloseProcessDialog.AutoSize = true;
+            this.chkCloseProcessDialog.Location = new System.Drawing.Point(12, 176);
+            this.chkCloseProcessDialog.Name = "chkCloseProcessDialog";
+            this.chkCloseProcessDialog.Size = new System.Drawing.Size(354, 19);
+            this.chkCloseProcessDialog.TabIndex = 9;
+            this.chkCloseProcessDialog.Text = "Close process dialog automatically when process is succeeded";
+            this.chkCloseProcessDialog.UseVisualStyleBackColor = true;
             // 
             // _NO_TRANSLATE_MaxCommits
             // 
@@ -1570,7 +1415,7 @@ namespace GitUI
             this.dashboardEditor1.Location = new System.Drawing.Point(3, 3);
             this.dashboardEditor1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.dashboardEditor1.Name = "dashboardEditor1";
-            this.dashboardEditor1.Size = new System.Drawing.Size(799, 488);
+            this.dashboardEditor1.Size = new System.Drawing.Size(799, 512);
             this.dashboardEditor1.TabIndex = 0;
             // 
             // AppearancePage
@@ -2869,22 +2714,22 @@ namespace GitUI
             this.toolStripMenuItem2,
             this.toolStripMenuItem3});
             this.contextMenuStrip_SplitButton.Name = "contextMenuStrip1";
-            this.contextMenuStrip_SplitButton.Size = new System.Drawing.Size(212, 76);
+            this.contextMenuStrip_SplitButton.Size = new System.Drawing.Size(68, 70);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(211, 24);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(67, 22);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(211, 24);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(67, 22);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(211, 24);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(67, 22);
             // 
             // scriptNeedsConfirmation
             // 
@@ -3172,7 +3017,7 @@ namespace GitUI
             this.controlHotkeys.Location = new System.Drawing.Point(3, 3);
             this.controlHotkeys.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.controlHotkeys.Name = "controlHotkeys";
-            this.controlHotkeys.Size = new System.Drawing.Size(799, 506);
+            this.controlHotkeys.Size = new System.Drawing.Size(799, 512);
             this.controlHotkeys.TabIndex = 0;
             // 
             // splitContainer1
@@ -3394,11 +3239,11 @@ namespace GitUI
         private System.Windows.Forms.ComboBox MergeToolCmd;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.CheckBox CloseProcessDialog;
-        private System.Windows.Forms.CheckBox ShowGitCommandLine;
-        private System.Windows.Forms.CheckBox UseFastChecks;
+        private System.Windows.Forms.CheckBox chkCloseProcessDialog;
+        private System.Windows.Forms.CheckBox chkShowGitCommandLine;
+        private System.Windows.Forms.CheckBox chkUseFastChecks;
         private System.Windows.Forms.Label NoGitRepo;
-		private System.Windows.Forms.CheckBox ShowRelativeDate;
+		private System.Windows.Forms.CheckBox chkShowRelativeDate;
         private System.Windows.Forms.Panel InvalidGitPathGlobal;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.PictureBox pictureBox1;
@@ -3432,12 +3277,7 @@ namespace GitUI
         private System.Windows.Forms.Label label32;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.Label label28;
-        private System.Windows.Forms.Label label35;
-        private System.Windows.Forms.Label label34;
-        private System.Windows.Forms.Label label39;
-        private System.Windows.Forms.Label label38;
-        private System.Windows.Forms.Label label40;
-        private System.Windows.Forms.CheckBox FollowRenamesInFileHistory;
+        private System.Windows.Forms.CheckBox chkFollowRenamesInFileHistory;
         private System.Windows.Forms.ComboBox GlobalDiffTool;
         private System.Windows.Forms.Label label41;
         private System.Windows.Forms.Button BrowseDiffTool;
@@ -3482,12 +3322,10 @@ namespace GitUI
         private System.Windows.Forms.CheckBox BranchBorders;
         private System.Windows.Forms.Label _NO_TRANSLATE_ColorGraphLabel;
         private System.Windows.Forms.CheckBox StripedBanchChange;
-        private System.Windows.Forms.Label showGitStatusInToolbarLabel;
-        private System.Windows.Forms.CheckBox ShowGitStatusInToolbar;
+        private System.Windows.Forms.CheckBox chkShowGitStatusInToolbar;
         private System.Windows.Forms.NumericUpDown RevisionGridQuickSearchTimeout;
         private System.Windows.Forms.Label label24;
-        private System.Windows.Forms.Label showErrorsWhenStagingFilesLabel;
-        private System.Windows.Forms.CheckBox showErrorsWhenStagingFiles;
+        private System.Windows.Forms.CheckBox chkShowErrorsWhenStagingFiles;
         private System.Windows.Forms.GroupBox groupBox9;
         private System.Windows.Forms.RadioButton globalAutoCrlfFalse;
         private System.Windows.Forms.RadioButton globalAutoCrlfInput;
@@ -3497,10 +3335,8 @@ namespace GitUI
         private System.Windows.Forms.RadioButton localAutoCrlfInput;
         private System.Windows.Forms.RadioButton localAutoCrlfTrue;
         private System.Windows.Forms.CheckBox DrawNonRelativesGray;
-        private System.Windows.Forms.Label label26;
-        private System.Windows.Forms.CheckBox ShowCurrentChangesInRevisionGraph;
-        private System.Windows.Forms.CheckBox ShowStashCountInBrowseWindow;
-        private System.Windows.Forms.Label label52;
+        private System.Windows.Forms.CheckBox chkShowCurrentChangesInRevisionGraph;
+        private System.Windows.Forms.CheckBox chkShowStashCountInBrowseWindow;
         private System.Windows.Forms.TabPage scriptsTab;
         private System.Windows.Forms.CheckBox inMenuCheckBox;
         private System.Windows.Forms.ComboBox noImageService;
@@ -3538,10 +3374,8 @@ namespace GitUI
         private ComboBox scriptEvent;
         private Label labelOnEvent;
         private CheckBox scriptNeedsConfirmation;
-        private Label labelShowCurrentBranchInVisualStudio;
-        private CheckBox showCurrentBranchInVisualStudio;
-        private Label label37;
-        private CheckBox usePatienceDiffAlgorithm;
+        private CheckBox chkShowCurrentBranchInVisualStudio;
+        private CheckBox chkUsePatienceDiffAlgorithm;
         private Label truncatePathMethod;
         private ComboBox _NO_TRANSLATE_truncatePathMethod;
         private RadioButton LightblueIcon;
@@ -3562,8 +3396,7 @@ namespace GitUI
         private ToolStripMenuItem toolStripMenuItem1;
         private ToolStripMenuItem toolStripMenuItem2;
         private ToolStripMenuItem toolStripMenuItem3;
-        private Label label58;
-        private CheckBox focusControlOnHover;
+        private CheckBox chkFocusControlOnHover;
         private LinkLabel downloadMsysgit;
         private Button ChangeHomeButton;
         private Label homeIsSetToLabel;
@@ -3573,8 +3406,7 @@ namespace GitUI
         private DataGridViewTextBoxColumn OnEvent;
         private DataGridViewCheckBoxColumn AskConfirmation;
         private DataGridViewCheckBoxColumn addToRevisionGridContextMenuDataGridViewCheckBoxColumn;
-        private Label warnBeforeCheckoutLabel;
-        private CheckBox warnBeforeCheckoutChx;
+        private CheckBox chkWarnBeforeCheckout;
         private CheckBox chkStashUntrackedFiles;
 
     }
