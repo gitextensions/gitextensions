@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using PatchApply;
@@ -9,8 +10,6 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    using System.Text;
-
     public sealed partial class FormStash : GitExtensionsForm
     {
         readonly TranslationString currentWorkingDirChanges = new TranslationString("Current working dir changes");
@@ -39,12 +38,14 @@ namespace GitUI
         private void FormStashFormClosing(object sender, FormClosingEventArgs e)
         {
             Settings.StashKeepIndex = StashKeepIndex.Checked;
+            Settings.IncludeUntrackedFilesInManualStash = chkIncludeUntrackedFiles.Checked;
             SavePosition("stash");
         }
 
         private void FormStashLoad(object sender, EventArgs e)
         {
             StashKeepIndex.Checked = Settings.StashKeepIndex;
+            chkIncludeUntrackedFiles.Checked = Settings.IncludeUntrackedFilesInManualStash;
             RestorePosition("stash");
             splitContainer2_SplitterMoved(null, null);
         }
@@ -155,15 +156,17 @@ namespace GitUI
             View.ViewPatch(patch.Text);
         }
 
-
         private void StashClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
 
             var msg = toolStripButton_customMessage.Checked ? " " + StashMessage.Text.Trim() : string.Empty;
-            var arguments = StashKeepIndex.Checked ? " --keep-index" : "";
-
-            new FormProcess(String.Format("stash save -u{0}{1}", arguments, msg)).ShowDialog(this);
+            var arguments = string.Empty;
+            if (StashKeepIndex.Checked)
+                arguments += " --keep-index";
+            if (chkIncludeUntrackedFiles.Checked)
+                arguments += " -u";
+            new FormProcess(String.Format("stash save {0}{1}", arguments, msg)).ShowDialog(this);
             NeedRefresh = true;
             Initialize();
             Cursor.Current = Cursors.Default;
@@ -227,7 +230,6 @@ namespace GitUI
         private void FormStash_Resize(object sender, EventArgs e)
         {
             splitContainer2_SplitterMoved(null, null);
-            this.StashKeepIndex.Location = new Point(this.Stash.Location.X + 5, this.Stash.Location.Y - 21);
         }
 
         private void toolStripButton_customMessage_Click(object sender, EventArgs e)

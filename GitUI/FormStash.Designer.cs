@@ -32,6 +32,7 @@ namespace GitUI
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormStash));
             this.gitStashBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
@@ -43,6 +44,7 @@ namespace GitUI
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
             this.StashMessage = new System.Windows.Forms.RichTextBox();
+            this.chkIncludeUntrackedFiles = new System.Windows.Forms.CheckBox();
             this.StashKeepIndex = new System.Windows.Forms.CheckBox();
             this.Clear = new System.Windows.Forms.Button();
             this.Apply = new System.Windows.Forms.Button();
@@ -140,7 +142,7 @@ namespace GitUI
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
             this.toolStripLabel1.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.toolStripLabel1.Size = new System.Drawing.Size(48, 24);
+            this.toolStripLabel1.Size = new System.Drawing.Size(39, 24);
             this.toolStripLabel1.Text = "Show:";
             // 
             // Stashes
@@ -186,6 +188,7 @@ namespace GitUI
             // 
             // splitContainer5.Panel2
             // 
+            this.splitContainer5.Panel2.Controls.Add(this.chkIncludeUntrackedFiles);
             this.splitContainer5.Panel2.Controls.Add(this.StashKeepIndex);
             this.splitContainer5.Panel2.Controls.Add(this.Clear);
             this.splitContainer5.Panel2.Controls.Add(this.Apply);
@@ -209,13 +212,24 @@ namespace GitUI
             this.StashMessage.Text = "";
             this.StashMessage.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.StashMessage_MouseDoubleClick);
             // 
+            // chkIncludeUntrackedFiles
+            // 
+            this.chkIncludeUntrackedFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkIncludeUntrackedFiles.AutoSize = true;
+            this.chkIncludeUntrackedFiles.Location = new System.Drawing.Point(136, 330);
+            this.chkIncludeUntrackedFiles.Name = "chkIncludeUntrackedFiles";
+            this.chkIncludeUntrackedFiles.Size = new System.Drawing.Size(145, 19);
+            this.chkIncludeUntrackedFiles.TabIndex = 14;
+            this.chkIncludeUntrackedFiles.Text = "Include untracked files";
+            this.chkIncludeUntrackedFiles.UseVisualStyleBackColor = true;
+            // 
             // StashKeepIndex
             // 
-            this.StashKeepIndex.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.StashKeepIndex.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.StashKeepIndex.AutoSize = true;
-            this.StashKeepIndex.Location = new System.Drawing.Point(25, 329);
+            this.StashKeepIndex.Location = new System.Drawing.Point(5, 330);
             this.StashKeepIndex.Name = "StashKeepIndex";
-            this.StashKeepIndex.Size = new System.Drawing.Size(105, 24);
+            this.StashKeepIndex.Size = new System.Drawing.Size(83, 19);
             this.StashKeepIndex.TabIndex = 13;
             this.StashKeepIndex.Text = "Keep index";
             this.StashKeepIndex.UseVisualStyleBackColor = true;
@@ -279,7 +293,7 @@ namespace GitUI
             this.Stashed.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.Stashed.GitItemStatuses = null;
             this.Stashed.Location = new System.Drawing.Point(0, 0);
-            this.Stashed.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Stashed.Margin = new System.Windows.Forms.Padding(4);
             this.Stashed.Name = "Stashed";
             this.Stashed.Revision = null;
             this.Stashed.SelectedIndex = -1;
@@ -292,11 +306,12 @@ namespace GitUI
             // 
             this.View.DisableFocusControlOnHover = false;
             this.View.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.View.Encoding = ((System.Text.Encoding)(resources.GetObject("View.Encoding")));
             this.View.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.View.IgnoreWhitespaceChanges = false;
             this.View.IsReadOnly = true;
             this.View.Location = new System.Drawing.Point(0, 0);
-            this.View.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.View.Margin = new System.Windows.Forms.Padding(4);
             this.View.Name = "View";
             this.View.NumberOfVisibleLines = 3;
             this.View.ScrollPos = 0;
@@ -308,7 +323,7 @@ namespace GitUI
             // 
             // FormStash
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(708, 520);
             this.Controls.Add(this.splitContainer2);
@@ -359,5 +374,6 @@ namespace GitUI
         private CheckBox StashKeepIndex;
         private ToolStripButton toolStripButton_customMessage;
         private ToolStripSeparator toolStripSeparator1;
+        private CheckBox chkIncludeUntrackedFiles;
     }
 }
