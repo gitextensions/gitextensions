@@ -2454,7 +2454,10 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         </TranslationItem>
         <TranslationItem Name="label26" Property="Text">
           <Value>Показывать текущие изменения в списке коммитов (медленно!)</Value>
-        </TranslationItem>
+        </TranslationItem>        
+        <TranslationItem Name="chkStashUntrackedFiles" Property="Text">
+          <Value>Включать неотслеживаемые файлы в stash</Value>
+        </TranslationItem>        
         <TranslationItem Name="BrowseDiffTool" Property="Text">
           <Value>Обзор</Value>
         </TranslationItem>

@@ -277,24 +277,30 @@ namespace GitUI
         public bool CheckForDirtyDir(IWin32Window owner, out bool needRefresh)
         {
             needRefresh = false;
-            if (Settings.DirtyDirWarnBeforeCheckoutBranch &&
-                Settings.Module.GitStatus(UntrackedFilesMode.All, IgnoreSubmodulesMode.Default).Count > 0)
+            if (!Settings.DirtyDirWarnBeforeCheckoutBranch || Settings.Module.GitStatus(UntrackedFilesMode.All, IgnoreSubmodulesMode.Default).Count == 0)
+                return false;
+            switch (new FormDirtyDirWarn().ShowDialog(owner))
             {
-                switch (new FormDirtyDirWarn().ShowDialog(owner))
-                {
-                    case DialogResult.Cancel:
-                        return true;
-                    case DialogResult.Yes:
-                        new FormProcess("stash save -u").ShowDialog(owner);
-                        return false;
-                    case DialogResult.Abort:
-                        needRefresh = StartCommitDialog(owner);
-                        return true;
-                    default:
-                        return false;
-                }
+                case DialogResult.Cancel:
+                    return true;
+                case DialogResult.Yes:
+                    Stash(owner);
+                    return false;
+                case DialogResult.Abort:
+                    needRefresh = StartCommitDialog(owner);
+                    return true;
+                default:
+                    return false;
             }
-            return false;
+        }
+
+        public void Stash(IWin32Window owner)
+        {
+            var arguments = "stash save";
+            if (Settings.IncludeUntrackedFilesInAutoStash)
+                arguments += " -u";
+
+            new FormProcess(arguments).ShowDialog(owner);
         }
 
         public bool StartCheckoutBranchDialog()

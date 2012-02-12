@@ -17,7 +17,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormSettings : GitExtensionsForm
+    public sealed partial class FormSettings : GitExtensionsForm
     {
         private readonly TranslationString _homeIsSetToString = new TranslationString("HOME is set to:");
 
@@ -170,6 +170,7 @@ namespace GitUI
                 noImageService.Text = Settings.GravatarFallbackService;
 
                 showErrorsWhenStagingFiles.Checked = Settings.ShowErrorsWhenStagingFiles;
+                chkStashUntrackedFiles.Checked = Settings.IncludeUntrackedFilesInAutoStash;
 
                 Language.Items.Clear();
                 Language.Items.Add("English");
@@ -380,6 +381,7 @@ namespace GitUI
             Settings.ShowCurrentBranchInVisualStudio = showCurrentBranchInVisualStudio.Checked;
 
             Settings.ShowErrorsWhenStagingFiles = showErrorsWhenStagingFiles.Checked;
+            Settings.IncludeUntrackedFilesInAutoStash = chkStashUntrackedFiles.Checked;
 
             Settings.FollowRenamesInFileHistory = FollowRenamesInFileHistory.Checked;
 
@@ -467,7 +469,7 @@ namespace GitUI
             if (!CanFindGitCmd())
             {
                 if (
-                    MessageBox.Show(this, 
+                    MessageBox.Show(this,
                         "The command to run git is not configured correct." + Environment.NewLine +
                         "You need to set the correct path to be able to use GitExtensions." + Environment.NewLine +
                         Environment.NewLine + "Do you want to set the correct command now?", "Incorrect path",
@@ -704,7 +706,7 @@ namespace GitUI
             if (string.IsNullOrEmpty(GetGlobalDiffToolFromConfig()))
             {
                 if (
-                    MessageBox.Show(this, 
+                    MessageBox.Show(this,
                         "There is no difftool configured. Do you want to configure kdiff3 as your difftool?" +
                         Environment.NewLine + "Select no if you want to configure a different difftool yourself.",
                         "Mergetool", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -741,7 +743,7 @@ namespace GitUI
             if (string.IsNullOrEmpty(Settings.Module.GetGlobalSetting("merge.tool")))
             {
                 if (
-                    MessageBox.Show(this, 
+                    MessageBox.Show(this,
                         "There is no mergetool configured. Do you want to configure kdiff3 as your mergetool?" +
                         Environment.NewLine + "Select no if you want to configure a different mergetool yourself.",
                         "Mergetool", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -822,13 +824,13 @@ namespace GitUI
         public static bool SolveKDiffPath()
         {
             string kdiff3path = Settings.Module.GetGlobalSetting("mergetool.kdiff3.path");
-            
+
             if (Settings.RunningOnUnix())
             {
                 if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
                 {
                     // Maybe command -v is better, but didn't work
-                    kdiff3path = Settings.Module.RunCmd("which","kdiff3").Replace("\n",string.Empty);
+                    kdiff3path = Settings.Module.RunCmd("which", "kdiff3").Replace("\n", string.Empty);
                     if (string.IsNullOrEmpty(kdiff3path))
                         return false;
                 }
@@ -852,23 +854,23 @@ namespace GitUI
             }
             else
                 return false;
-            
+
             Settings.Module.SetGlobalSetting("mergetool.kdiff3.path", kdiff3path);
 
             return true;
         }
-        
-        
+
+
         public static bool SolveKDiffTool2Path()
         {
             string kdiff3path = Settings.Module.GetGlobalSetting("difftool.kdiff3.path");
-            
+
             if (Settings.RunningOnUnix())
             {
                 if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
                 {
                     // Maybe command -v is better, but didn't work
-                    kdiff3path = Settings.Module.RunCmd("which","kdiff3").Replace("\n",string.Empty);
+                    kdiff3path = Settings.Module.RunCmd("which", "kdiff3").Replace("\n", string.Empty);
                     if (string.IsNullOrEmpty(kdiff3path))
                         return false;
                 }
@@ -892,7 +894,7 @@ namespace GitUI
             }
             else
                 return false;
-            
+
             Settings.Module.SetGlobalSetting("difftool.kdiff3.path", kdiff3path);
 
             return true;
@@ -902,7 +904,7 @@ namespace GitUI
         {
             if (!SolveGitCommand())
             {
-                MessageBox.Show(this, 
+                MessageBox.Show(this,
                     "The command to run git could not be determined automatically." + Environment.NewLine +
                     "Please make sure git (msysgit or cygwin) is installed or set the correct command manually.",
                     "Locate git");
@@ -999,7 +1001,7 @@ namespace GitUI
         {
             if (!SolveLinuxToolsDir())
             {
-                MessageBox.Show(this, 
+                MessageBox.Show(this,
                     "The path to linux tools (sh) could not be found automatically." + Environment.NewLine +
                     "Please make sure there are linux tools installed (through msysgit or cygwin) or set the correct path manually.",
                     "Locate linux tools");

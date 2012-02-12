@@ -337,6 +337,13 @@ namespace GitCommands
             set { SafeSet("autostash", value, ref _autoStash); }
         }
 
+        private static bool? _includeUntrackedFilesInAutoStash;
+        public static bool IncludeUntrackedFilesInAutoStash
+        {
+            get { return SafeGet("includeUntrackedFilesInAutoStash", true, ref _includeUntrackedFilesInAutoStash); }
+            set { SafeSet("includeUntrackedFilesInAutoStash", value, ref _includeUntrackedFilesInAutoStash); }
+        }
+
         private static bool? _orderRevisionByDate;
         public static bool OrderRevisionByDate
         {
