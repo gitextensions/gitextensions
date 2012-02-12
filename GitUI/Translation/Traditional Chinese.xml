@@ -2809,19 +2809,19 @@ weirdchars.txt text
         <TranslationItem Name="label28" Property="Text">
           <Value>合併後保留備份（.orig）</Value>
         </TranslationItem>
-        <TranslationItem Name="label35" Property="Text">
+        <TranslationItem Name="chkShowGitCommandLine" Property="Text">
           <Value>Git的命令行對話框顯示在執行過程</Value>
         </TranslationItem>
-        <TranslationItem Name="label34" Property="Text">
+        <TranslationItem Name="chkCloseProcessDialog" Property="Text">
           <Value>對話框時自動關閉進程的過程是成功</Value>
         </TranslationItem>
-        <TranslationItem Name="label39" Property="Text">
+        <TranslationItem Name="chkShowRelativeDate" Property="Text">
           <Value>顯示相對日期，而不是​​完整的日期</Value>
         </TranslationItem>
-        <TranslationItem Name="label38" Property="Text">
+        <TranslationItem Name="chkUseFastChecks" Property="Text">
           <Value>使用FileSystemWatcher檢查索引是否改變了</Value>
         </TranslationItem>
-        <TranslationItem Name="label40" Property="Text">
+        <TranslationItem Name="chkFollowRenamesInFileHistory" Property="Text">
           <Value>按照文件的歷史重命名（實驗）</Value>
         </TranslationItem>
         <TranslationItem Name="label41" Property="Text">
@@ -2921,7 +2921,7 @@ weirdchars.txt text
         <TranslationItem Name="StripedBanchChange" Property="Text">
           <Value>條紋化表示分支的改變</Value>
         </TranslationItem>
-        <TranslationItem Name="showGitStatusInToolbarLabel" Property="Text">
+        <TranslationItem Name="chkShowGitStatusInToolbar" Property="Text">
           <Value>在瀏覽對話框中顯示版本庫的狀態（在工具欄上會產生一些變化，需要重新啟動）</Value>
         </TranslationItem>
         <TranslationItem Name="RevisionGridQuickSearchTimeout" Property="Text">
@@ -2930,7 +2930,7 @@ weirdchars.txt text
         <TranslationItem Name="label24" Property="Text">
           <Value>版本網格快速搜尋逾時[毫秒]</Value>
         </TranslationItem>
-        <TranslationItem Name="showErrorsWhenStagingFilesLabel" Property="Text">
+        <TranslationItem Name="chkShowErrorsWhenStagingFiles" Property="Text">
           <Value>顯示增加提交檔案時的錯誤</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox9" Property="Text">
@@ -2962,10 +2962,10 @@ weirdchars.txt text
         <TranslationItem Name="DrawNonRelativesGray" Property="Text">
           <Value>把無關者的顏色設為灰色</Value>
         </TranslationItem>
-        <TranslationItem Name="label26" Property="Text">
+        <TranslationItem Name="chkShowCurrentChangesInRevisionGraph" Property="Text">
           <Value>在版本圖裡顯示工作目錄的改變（慢!）</Value>
         </TranslationItem>
-        <TranslationItem Name="label52" Property="Text">
+        <TranslationItem Name="chkShowStashCountInBrowseWindow" Property="Text">
           <Value>在瀏覽窗口的狀態欄中顯示暫存緩衝區計數</Value>
         </TranslationItem>
         <TranslationItem Name="scriptsTab" Property="Text">
@@ -3043,7 +3043,7 @@ weirdchars.txt text
         <TranslationItem Name="scriptNeedsConfirmation" Property="Text">
           <Value>請確認</Value>
         </TranslationItem>
-        <TranslationItem Name="labelShowCurrentBranchInVisualStudio" Property="Text">
+        <TranslationItem Name="chkShowCurrentBranchInVisualStudio" Property="Text">
           <Value>在VS顯示當前分支</Value>
         </TranslationItem>
       </translationItems>

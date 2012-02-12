@@ -2434,25 +2434,25 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <TranslationItem Name="label28" Property="Text">
           <Value>Сохранять копию (.orig) после слияния</Value>
         </TranslationItem>
-        <TranslationItem Name="label35" Property="Text">
+        <TranslationItem Name="chkShowGitCommandLine" Property="Text">
           <Value>Показывать командную строку git во время исполнения</Value>
         </TranslationItem>
-        <TranslationItem Name="label34" Property="Text">
+        <TranslationItem Name="chkCloseProcessDialog" Property="Text">
           <Value>Закрывать диалог прогресса, когда процесс успешно завершился</Value>
         </TranslationItem>
-        <TranslationItem Name="label39" Property="Text">
+        <TranslationItem Name="chkShowRelativeDate" Property="Text">
           <Value>Показывать относительные даты вместо полных</Value>
         </TranslationItem>
-        <TranslationItem Name="label38" Property="Text">
+        <TranslationItem Name="chkUseFastChecks" Property="Text">
           <Value>Использовать FileSystemWatcher для уведомлений об изменении index</Value>
         </TranslationItem>
-        <TranslationItem Name="label40" Property="Text">
+        <TranslationItem Name="chkFollowRenamesInFileHistory" Property="Text">
           <Value>Показывать переименования в истории файла (экспериментально)</Value>
         </TranslationItem>
-        <TranslationItem Name="labelShowCurrentBranchInVisualStudio" Property="Text">
+        <TranslationItem Name="chkShowCurrentBranchInVisualStudio" Property="Text">
           <Value>Показывать имя текущей ветки в Visual Studio</Value>
         </TranslationItem>
-        <TranslationItem Name="label26" Property="Text">
+        <TranslationItem Name="chkShowCurrentChangesInRevisionGraph" Property="Text">
           <Value>Показывать текущие изменения в списке коммитов (медленно!)</Value>
         </TranslationItem>        
         <TranslationItem Name="chkStashUntrackedFiles" Property="Text">
@@ -2539,10 +2539,10 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <TranslationItem Name="BranchBorders" Property="Text">
           <Value>Рисовать границы веток</Value>
         </TranslationItem>
-        <TranslationItem Name="showGitStatusInToolbarLabel" Property="Text">
+        <TranslationItem Name="chkShowGitStatusInToolbar" Property="Text">
           <Value>Отображать статус репозитория в диалоге обзора (количество изменений на панели инструментов, необходим перезапуск)</Value>
         </TranslationItem>
-        <TranslationItem Name="showErrorsWhenStagingFilesLabel" Property="Text">
+        <TranslationItem Name="chkShowErrorsWhenStagingFiles" Property="Text">
           <Value>Показывать ошибки при stage файлов</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox9" Property="Text">
@@ -2620,7 +2620,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <TranslationItem Name="scriptNeedsConfirmation" Property="Text">
           <Value>Спрашивать подтверждение</Value>
         </TranslationItem>
-        <TranslationItem Name="label37" Property="Text">
+        <TranslationItem Name="chkUsePatienceDiffAlgorithm" Property="Text">
           <Value>Показывать граф ревизий в логе коммитов</Value>
         </TranslationItem>
         <TranslationItem Name="EnabledColumn" Property="HeaderText">

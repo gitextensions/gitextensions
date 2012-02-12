@@ -2154,19 +2154,19 @@ te kunnen wijzigen.</Value>
         <TranslationItem Name="label28" Property="Text">
           <Value>Bewaar backup (.orig) na samenvoegen</Value>
         </TranslationItem>
-        <TranslationItem Name="label35" Property="Text">
+        <TranslationItem Name="chkShowGitCommandLine" Property="Text">
           <Value>Toon git commandline dialoog bij het uitvoeren van een proces</Value>
         </TranslationItem>
-        <TranslationItem Name="label34" Property="Text">
+        <TranslationItem Name="chkCloseProcessDialog" Property="Text">
           <Value>Sluit proces dialoog automatisch wanneer proces is geslaagd</Value>
         </TranslationItem>
-        <TranslationItem Name="label39" Property="Text">
+        <TranslationItem Name="chkShowRelativeDate" Property="Text">
           <Value>Toon relatieve datum in plaats van volledige datum</Value>
         </TranslationItem>
-        <TranslationItem Name="label38" Property="Text">
+        <TranslationItem Name="chkUseFastChecks" Property="Text">
           <Value>Gebruik FileSystemWatcher om te controleren of de database is gewijzigd</Value>
         </TranslationItem>
-        <TranslationItem Name="label40" Property="Text">
+        <TranslationItem Name="chkFollowRenamesInFileHistory" Property="Text">
           <Value>Volg hernoemde bestanden in geschiedenis (experimenteel)</Value>
         </TranslationItem>
         <TranslationItem Name="label41" Property="Text">
@@ -2266,13 +2266,13 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="StripedBanchChange" Property="Text">
           <Value>Gestreepte vertakking overgangen</Value>
         </TranslationItem>
-        <TranslationItem Name="showGitStatusInToolbarLabel" Property="Text">
+        <TranslationItem Name="chkShowGitStatusInToolbar" Property="Text">
           <Value>Toon opslagplaats status in dialoog (aantal wijzigingen, herstart vereist)</Value>
         </TranslationItem>
         <TranslationItem Name="label24" Property="Text">
           <Value>Revisie lijst snel zoek timout [ms]</Value>
         </TranslationItem>
-        <TranslationItem Name="showErrorsWhenStagingFilesLabel" Property="Text">
+        <TranslationItem Name="chkShowErrorsWhenStagingFiles" Property="Text">
           <Value>Toon errors bij het klaarzetten van bestanden voor een commit</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox9" Property="Text">
@@ -2303,10 +2303,10 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="DrawNonRelativesGray" Property="Text">
           <Value>Teken niet gerelateerde vertakkingen grijs</Value>
         </TranslationItem>
-        <TranslationItem Name="label26" Property="Text">
+        <TranslationItem Name="chkShowCurrentChangesInRevisionGraph" Property="Text">
           <Value>Toon huidige wijzigingen in revisie grafiek</Value>
         </TranslationItem>
-        <TranslationItem Name="label52" Property="Text">
+        <TranslationItem Name="chkShowStashCountInBrowseWindow" Property="Text">
           <Value>Toon aantal weggezette revisies op de status bar in het browse venster</Value>
         </TranslationItem>
         <TranslationItem Name="scriptsTab" Property="Text">
@@ -2384,10 +2384,10 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="scriptNeedsConfirmation" Property="Text">
           <Value>Vraag om bevestiging</Value>
         </TranslationItem>
-        <TranslationItem Name="labelShowCurrentBranchInVisualStudio" Property="Text">
+        <TranslationItem Name="chkShowCurrentBranchInVisualStudio" Property="Text">
           <Value>Toon huidige vertakking  in Visual Studio</Value>
         </TranslationItem>
-        <TranslationItem Name="label37" Property="Text">
+        <TranslationItem Name="chkUsePatienceDiffAlgorithm" Property="Text">
           <Value>Gebruik 'patience diff' algoritme</Value>
         </TranslationItem>
         <TranslationItem Name="truncatePathMethod" Property="Text">
@@ -2417,7 +2417,7 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="label57" Property="Text">
           <Value>Pad naar commit template</Value>
         </TranslationItem>
-        <TranslationItem Name="label58" Property="Text">
+        <TranslationItem Name="chkFocusControlOnHover" Property="Text">
           <Value>Zet focus op userinterface element bij muis-over.</Value>
         </TranslationItem>
         <TranslationItem Name="downloadMsysgit" Property="Text">
