@@ -64,6 +64,9 @@ namespace GitUI
         public event GitUIEventHandler PreSvnRebase;
         public event GitUIEventHandler PostSvnRebase;
 
+        public event GitUIEventHandler PreSvnFetch;
+        public event GitUIEventHandler PostSvnFetch;
+
         public event GitUIEventHandler PreInitialize;
         public event GitUIEventHandler PostInitialize;
 
@@ -482,6 +485,22 @@ namespace GitUI
             fromProcess.ShowDialog(owner);
 
             InvokeEvent(PostSvnRebase);
+
+            return true;
+        }
+
+        public bool StartSvnFetchDialog(IWin32Window owner)
+        {
+            if (!RequiredValidGitSvnWorikingDir())
+                return false;
+
+            if (!InvokeEvent(PreSvnFetch))
+                return true;
+
+            var fromProcess = new FormProcess(Settings.GitCommand, GitSvnCommandHelpers.FetchCmd());
+            fromProcess.ShowDialog(owner);
+
+            InvokeEvent(PostSvnFetch);
 
             return true;
         }

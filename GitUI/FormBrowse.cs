@@ -2414,6 +2414,11 @@ namespace GitUI
             if (GitUICommands.Instance.StartSvnDcommitDialog(this))
                 Initialize();
         }
+        private void SvnFetchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (GitUICommands.Instance.StartSvnFetchDialog(this))
+                Initialize();
+        }
 
         private void WorkingDirChanged(bool internalInitialize)
         {
