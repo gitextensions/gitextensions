@@ -46,12 +46,17 @@
 
         public static string RebaseCmd()
         {
-            return "svn rebase";
+            return SvnPrefix + " rebase";
         }
 
         public static string DcommitCmd()
         {
-            return "svn dcommit";
+            return SvnPrefix + " dcommit";
+        }
+
+        public static string FetchCmd()
+        {
+            return SvnPrefix + " fetch";
         }
 
         public static bool ValidSvnWorkingDir()
