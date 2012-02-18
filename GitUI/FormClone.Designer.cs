@@ -91,7 +91,7 @@
             this.Branches.Location = new System.Drawing.Point(158, 99);
             this.Branches.Name = "Branches";
             this.Branches.Size = new System.Drawing.Size(239, 23);
-            this.Branches.TabIndex = 12;
+            this.Branches.TabIndex = 9;
             this.Branches.DropDown += new System.EventHandler(this.Branches_DropDown);
             // 
             // brachLabel
@@ -100,8 +100,8 @@
             this.brachLabel.Location = new System.Drawing.Point(12, 102);
             this.brachLabel.Name = "brachLabel";
             this.brachLabel.Size = new System.Drawing.Size(42, 21);
-            this.brachLabel.TabIndex = 13;
-            this.brachLabel.Text = "Branch";
+            this.brachLabel.TabIndex = 8;
+            this.brachLabel.Text = "&Branch:";
             // 
             // Info
             // 
@@ -112,7 +112,7 @@
             this.Info.Location = new System.Drawing.Point(12, 128);
             this.Info.Name = "Info";
             this.Info.Size = new System.Drawing.Size(488, 42);
-            this.Info.TabIndex = 11;
+            this.Info.TabIndex = 10;
             this.Info.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // _NO_TRANSLATE_NewDirectory
@@ -120,7 +120,7 @@
             this._NO_TRANSLATE_NewDirectory.Location = new System.Drawing.Point(158, 72);
             this._NO_TRANSLATE_NewDirectory.Name = "_NO_TRANSLATE_NewDirectory";
             this._NO_TRANSLATE_NewDirectory.Size = new System.Drawing.Size(239, 23);
-            this._NO_TRANSLATE_NewDirectory.TabIndex = 3;
+            this._NO_TRANSLATE_NewDirectory.TabIndex = 7;
             this._NO_TRANSLATE_NewDirectory.TextChanged += new System.EventHandler(this.NewDirectoryTextChanged);
             // 
             // label3
@@ -129,8 +129,8 @@
             this.label3.Location = new System.Drawing.Point(12, 75);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(125, 21);
-            this.label3.TabIndex = 9;
-            this.label3.Text = "Subdirectory to create";
+            this.label3.TabIndex = 6;
+            this.label3.Text = "&Subdirectory to create:";
             // 
             // groupBox1
             // 
@@ -142,6 +142,7 @@
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(485, 68);
             this.groupBox1.TabIndex = 4;
+            this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Repository type";
             // 
@@ -152,7 +153,7 @@
             this.CentralRepository.Name = "CentralRepository";
             this.CentralRepository.Size = new System.Drawing.Size(226, 18);
             this.CentralRepository.TabIndex = 1;
-            this.CentralRepository.Text = "Public repository, no working dir  (--bare)";
+			this.CentralRepository.Text = "P&ublic repository, no working dir  (--bare)";
             this.CentralRepository.UseVisualStyleBackColor = true;
             // 
             // PersonalRepository
@@ -164,7 +165,7 @@
             this.PersonalRepository.Size = new System.Drawing.Size(120, 18);
             this.PersonalRepository.TabIndex = 0;
             this.PersonalRepository.TabStop = true;
-            this.PersonalRepository.Text = "Personal repository";
+			this.PersonalRepository.Text = "&Personal repository";
             this.PersonalRepository.UseVisualStyleBackColor = true;
             // 
             // _NO_TRANSLATE_From
@@ -192,7 +193,7 @@
             this._NO_TRANSLATE_To.Location = new System.Drawing.Point(158, 45);
             this._NO_TRANSLATE_To.Name = "_NO_TRANSLATE_To";
             this._NO_TRANSLATE_To.Size = new System.Drawing.Size(239, 23);
-            this._NO_TRANSLATE_To.TabIndex = 2;
+            this._NO_TRANSLATE_To.TabIndex = 4;
             this._NO_TRANSLATE_To.DropDown += new System.EventHandler(this.ToDropDown);
             this._NO_TRANSLATE_To.SelectedIndexChanged += new System.EventHandler(this.ToSelectedIndexChanged);
             this._NO_TRANSLATE_To.TextUpdate += new System.EventHandler(this.ToTextUpdate);
@@ -203,8 +204,8 @@
             this.ToBrowse.Location = new System.Drawing.Point(403, 44);
             this.ToBrowse.Name = "ToBrowse";
             this.ToBrowse.Size = new System.Drawing.Size(97, 25);
-            this.ToBrowse.TabIndex = 6;
-            this.ToBrowse.Text = "Browse";
+            this.ToBrowse.TabIndex = 5;
+			this.ToBrowse.Text = "B&rowse";
             this.ToBrowse.UseVisualStyleBackColor = true;
             this.ToBrowse.Click += new System.EventHandler(this.ToBrowseClick);
             // 
@@ -214,8 +215,8 @@
             this.FromBrowse.Location = new System.Drawing.Point(403, 16);
             this.FromBrowse.Name = "FromBrowse";
             this.FromBrowse.Size = new System.Drawing.Size(97, 25);
-            this.FromBrowse.TabIndex = 5;
-            this.FromBrowse.Text = "Browse";
+            this.FromBrowse.TabIndex = 2;
+            this.FromBrowse.Text = "&Browse";
             this.FromBrowse.UseVisualStyleBackColor = true;
             this.FromBrowse.Click += new System.EventHandler(this.FromBrowseClick);
             // 
@@ -225,8 +226,8 @@
             this.label2.Location = new System.Drawing.Point(12, 49);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(67, 21);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Destination";
+            this.label2.TabIndex = 3;
+            this.label2.Text = "&Destination:";
             // 
             // label1
             // 
@@ -234,8 +235,8 @@
             this.label1.Location = new System.Drawing.Point(12, 21);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(110, 21);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Repository to clone";
+            this.label1.TabIndex = 0;
+            this.label1.Text = "&Repository to clone:";
             // 
             // LoadSSHKey
             // 
@@ -244,8 +245,8 @@
             this.LoadSSHKey.Location = new System.Drawing.Point(0, 2);
             this.LoadSSHKey.Name = "LoadSSHKey";
             this.LoadSSHKey.Size = new System.Drawing.Size(155, 25);
-            this.LoadSSHKey.TabIndex = 25;
-            this.LoadSSHKey.Text = "Load SSH key";
+            this.LoadSSHKey.TabIndex = 0;
+            this.LoadSSHKey.Text = "&Load SSH key";
             this.LoadSSHKey.UseVisualStyleBackColor = true;
             this.LoadSSHKey.Click += new System.EventHandler(this.LoadSshKeyClick);
             // 
@@ -255,7 +256,7 @@
             this.Ok.Location = new System.Drawing.Point(403, 2);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(97, 25);
-            this.Ok.TabIndex = 4;
+            this.Ok.TabIndex = 1;
             this.Ok.Text = "Clone";
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.OkClick);
@@ -284,6 +285,7 @@
             // 
             // FormClone
             // 
+            this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(525, 289);
