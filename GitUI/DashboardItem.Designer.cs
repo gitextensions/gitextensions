@@ -49,6 +49,8 @@
             panel1.Name = "panel1";
             panel1.Size = new System.Drawing.Size(250, 15);
             panel1.TabIndex = 5;
+            panel1.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
+            panel1.MouseLeave += new System.EventHandler(this.DashboardItem_MouseLeave);
             // 
             // _NO_TRANSLATE_BranchName
             // 
@@ -61,6 +63,8 @@
             this._NO_TRANSLATE_BranchName.TabIndex = 4;
             this._NO_TRANSLATE_BranchName.Text = "##branch";
             this._NO_TRANSLATE_BranchName.Click += new System.EventHandler(this.Title_Click);
+            this._NO_TRANSLATE_BranchName.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
+            this._NO_TRANSLATE_BranchName.MouseLeave += new System.EventHandler(this.DashboardItem_MouseLeave);
             // 
             // _NO_TRANSLATE_Title
             // 
