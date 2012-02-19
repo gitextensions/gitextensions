@@ -72,7 +72,7 @@ namespace GitUI
 
             branch = Settings.Module.GetSelectedBranch();
             string currentBranchRemote = Settings.Module.GetSetting(string.Format("branch.{0}.remote", branch));
-            if (string.IsNullOrEmpty(currentBranchRemote) && _NO_TRANSLATE_Remotes.Items.Count >= 3)
+            if (currentBranchRemote.IsNullOrEmpty() && _NO_TRANSLATE_Remotes.Items.Count >= 3)
             {
                 IList<string> remotes = (IList<string>)_NO_TRANSLATE_Remotes.DataSource;
                 int i = remotes.IndexOf("origin");
@@ -191,6 +191,29 @@ namespace GitUI
 
         public bool PullChanges()
         {
+            if (!ShouldPullChanges())
+                return false;
+
+            UpdateSettingsDuringPull();
+
+            if (!IsCommitNotPushedToRemoteYet())
+                return false;
+
+            Repositories.RepositoryHistory.AddMostRecentRepository(PullSource.Text);
+
+            var source = CalculateSource();
+
+            ScriptManager.RunEventScripts(ScriptEvent.BeforePull);
+
+            FormProcess process = CreateFormProcess(source);
+
+            ShowProcessDialogBox(source, process);
+
+            return EvaluateProcessDialogResults(process);
+        }
+
+        private bool ShouldPullChanges()
+        {
             if (PullFromUrl.Checked && string.IsNullOrEmpty(PullSource.Text))
             {
                 MessageBox.Show(this, _selectSourceDirectory.Text);
@@ -207,140 +230,42 @@ namespace GitUI
                 MessageBox.Show(this, _fetchAllBranchesCanOnlyWithFetch.Text);
                 return false;
             }
+            return true;
+        }
 
-            if (Merge.Checked)
-                Settings.PullMerge = "merge";
-            if (Rebase.Checked)
-                Settings.PullMerge = "rebase";
-            if (Fetch.Checked)
-                Settings.PullMerge = "fetch";
-
-            Settings.AutoStash = AutoStash.Checked;
-
+        private bool IsCommitNotPushedToRemoteYet()
+        {
             //ask only if exists commit not pushed to remote yet
-            if (Rebase.Checked && PullFromRemote.Checked)
+            if (Rebase.Checked && PullFromRemote.Checked && MergeCommitExists())
             {
-
-                string branchRemote = _NO_TRANSLATE_Remotes.Text;
-                string remoteBranchName;
-                if (Branches.Text.IsNullOrEmpty())
+                DialogResult dialogResult = MessageBox.Show(this, _areYouSureYouWantToRebaseMerge.Text,
+                                                  _areYouSureYouWantToRebaseMergeCaption.Text,
+                                                  MessageBoxButtons.YesNoCancel);
+                if (dialogResult == DialogResult.Cancel)
                 {
-                    remoteBranchName = Settings.Module.GetSetting("branch." + branch + ".merge");
-                    remoteBranchName = Settings.Module.RunGitCmd("name-rev --name-only \"" + remoteBranchName + "\"").Trim();
+                    Close();
+                    return false;
                 }
-                else
-                    remoteBranchName = Branches.Text;
-                remoteBranchName = branchRemote + "/" + remoteBranchName;
-                if (Settings.Module.ExistsMergeCommit(remoteBranchName, branch))
-                {
-                    DialogResult dr = MessageBox.Show(this, _areYouSureYouWantToRebaseMerge.Text, _areYouSureYouWantToRebaseMergeCaption.Text, MessageBoxButtons.YesNoCancel);
-                    if (dr == DialogResult.Cancel)
-                    {
-                        Close();
-                        return false;
-                    }
-                    else if (dr != DialogResult.Yes)
-                        return false;
-                }
+                if (dialogResult != DialogResult.Yes)
+                    return false;
             }
+            return true;
+        }
 
-            Repositories.AddMostRecentRepository(PullSource.Text);
-
-            string source;
-
-            if (PullFromUrl.Checked)
-                source = PullSource.Text;
-            else
-            {
-                LoadPuttyKey();
-                source = PullAll() ? "--all" : _NO_TRANSLATE_Remotes.Text;
-            }
-
-            ScriptManager.RunEventScripts(ScriptEvent.BeforePull);
-
-            var stashed = false;
-            if (!Fetch.Checked && AutoStash.Checked &&
-                Settings.Module.GitStatus(UntrackedFilesMode.No, IgnoreSubmodulesMode.Default).Count > 0)
-            {
-                GitUICommands.Instance.Stash(this);
-                stashed = true;
-            }
-
-            FormProcess process = null;
-            if (Fetch.Checked)
-            {
-                process = new FormRemoteProcess(Settings.Module.FetchCmd(source, Branches.Text, null));
-            }
-            else
-            {
-                string localBranch = Settings.Module.GetSelectedBranch();
-                if (localBranch.Equals("(no branch)", StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty(Branches.Text))
-                    localBranch = null;
-
-                if (Merge.Checked)
-                    process = new FormRemoteProcess(Settings.Module.PullCmd(source, Branches.Text, localBranch, false));
-                else if (Rebase.Checked)
-                    process = new FormRemoteProcess(Settings.Module.PullCmd(source, Branches.Text, localBranch, true));
-            }
-
-            if (process != null)
-            {
-                if (!PullAll())
-                    process.Remote = source;
-                process.ShowDialog(this);
-                ErrorOccurred = process.ErrorOccurred();
-            }
-
+        private bool EvaluateProcessDialogResults(FormProcess process)
+        {
+            var stashed = CalculateStashedValue();
             try
             {
-                if (!Settings.Module.InTheMiddleOfConflictedMerge() &&
-                    !Settings.Module.InTheMiddleOfRebase() &&
-                    (process != null && !process.ErrorOccurred()))
-                {
-                    if (!Fetch.Checked && File.Exists(Settings.WorkingDir + ".gitmodules"))
-                    {
-                        if (!IsSubmodulesIntialized() && AskIfSubmodulesShouldBeInitialized())
-                            GitUICommands.Instance.StartInitSubmodulesRecursiveDialog(this);
-                    }
-
+                if (EvaluateResultsBasedOnSettings(stashed, process))
                     return true;
-                }
-
-                // Rebase failed -> special 'rebase' merge conflict
-                if (Rebase.Checked && Settings.Module.InTheMiddleOfRebase())
-                {
-                    GitUICommands.Instance.StartRebaseDialog(null);
-                    if (!Settings.Module.InTheMiddleOfConflictedMerge() &&
-                        !Settings.Module.InTheMiddleOfRebase())
-                    {
-                        return true;
-                    }
-                }
-                else
-                {
-                    MergeConflictHandler.HandleMergeConflicts(this);
-                    if (!Settings.Module.InTheMiddleOfConflictedMerge() &&
-                        !Settings.Module.InTheMiddleOfRebase())
-                    {
-                        return true;
-                    }
-                }
-
-                if (!AutoStash.Checked || !stashed || Settings.Module.InTheMiddleOfConflictedMerge() ||
-                    Settings.Module.InTheMiddleOfRebase())
-                {
-                    return true;
-                }
-
             }
             finally
             {
-                if (stashed &&
-                    process != null &&
-                    !process.ErrorOccurred() &&
-                    !Settings.Module.InTheMiddleOfConflictedMerge() &&
-                    !Settings.Module.InTheMiddleOfRebase() &&
-                    MessageBox.Show(this, _applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                bool messageBoxResult =
+                    MessageBox.Show(this, _applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text,
+                                    MessageBoxButtons.YesNo) == DialogResult.Yes;
+                if (ShouldStashPop(messageBoxResult, process, stashed))
                 {
                     new FormProcess("stash pop").ShowDialog(this);
                     MergeConflictHandler.HandleMergeConflicts(this);
@@ -350,6 +275,147 @@ namespace GitUI
             }
 
             return false;
+        }
+
+        private bool EvaluateResultsBasedOnSettings(bool stashed, FormProcess process)
+        {
+            if (!Settings.Module.InTheMiddleOfConflictedMerge() &&
+                !Settings.Module.InTheMiddleOfRebase() &&
+                (process != null && !process.ErrorOccurred()))
+            {
+                InitModules();
+                return true;
+            }
+
+            // Rebase failed -> special 'rebase' merge conflict
+            if (Rebase.Checked && Settings.Module.InTheMiddleOfRebase())
+            {
+                GitUICommands.Instance.StartRebaseDialog(null);
+                if (!Settings.Module.InTheMiddleOfConflictedMerge() &&
+                    !Settings.Module.InTheMiddleOfRebase())
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                MergeConflictHandler.HandleMergeConflicts(this);
+                if (!Settings.Module.InTheMiddleOfConflictedMerge() &&
+                    !Settings.Module.InTheMiddleOfRebase())
+                {
+                    return true;
+                }
+            }
+
+            if (!AutoStash.Checked || !stashed || Settings.Module.InTheMiddleOfConflictedMerge() ||
+                Settings.Module.InTheMiddleOfRebase())
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private void ShowProcessDialogBox(string source, FormProcess process)
+        {
+            if (process == null)
+                return;
+            if (!PullAll())
+                process.Remote = source;
+            process.ShowDialog(this);
+            ErrorOccurred = process.ErrorOccurred();
+        }
+
+        private bool CalculateStashedValue()
+        {
+            if (!Fetch.Checked && AutoStash.Checked &&
+                Settings.Module.GitStatus(UntrackedFilesMode.No, IgnoreSubmodulesMode.Default).Count > 0)
+            {
+                GitUICommands.Instance.Stash(this);
+                return true;
+            }
+            return false;
+        }
+
+        private static bool ShouldStashPop(bool messageBoxResult, FormProcess process, bool stashed)
+        {
+            return stashed && 
+                   process != null && 
+                   !process.ErrorOccurred() &&
+                   !Settings.Module.InTheMiddleOfConflictedMerge() &&
+                   !Settings.Module.InTheMiddleOfRebase() &&
+                   messageBoxResult;
+        }
+
+        private void InitModules()
+        {
+            if (Fetch.Checked || !File.Exists(Settings.WorkingDir + ".gitmodules"))
+                return;
+            if (!IsSubmodulesIntialized() && AskIfSubmodulesShouldBeInitialized())
+                GitUICommands.Instance.StartInitSubmodulesRecursiveDialog(this);
+        }
+
+        private FormProcess CreateFormProcess(string source)
+        {
+            if (Fetch.Checked)
+            {
+                return new FormRemoteProcess(Settings.Module.FetchCmd(source, Branches.Text, null));
+            }
+            var localBranch = CalculateLocalBranch();
+
+            if (Merge.Checked)
+               return new FormRemoteProcess(Settings.Module.PullCmd(source, Branches.Text, localBranch, false));
+            if (Rebase.Checked)
+                return  new FormRemoteProcess(Settings.Module.PullCmd(source, Branches.Text, localBranch, true));
+            return null;
+        }
+
+        private string CalculateLocalBranch()
+        {
+            string localBranch = Settings.Module.GetSelectedBranch();
+            if (localBranch.Equals("(no branch)", StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty(Branches.Text))
+                localBranch = null;
+            return localBranch;
+        }
+
+        private string CalculateSource()
+        {
+            if (PullFromUrl.Checked)
+                return PullSource.Text;
+            LoadPuttyKey();
+            return PullAll() ? "--all" : _NO_TRANSLATE_Remotes.Text;
+        }
+
+        private bool MergeCommitExists()
+        {
+            return Settings.Module.ExistsMergeCommit(CalculateRemoteBranchName(), branch);
+        }
+
+        private string CalculateRemoteBranchName()
+        {
+            return _NO_TRANSLATE_Remotes.Text + "/" + CalculateRemoteBranchNameBasedOnBranchesText();
+        }
+
+        private string CalculateRemoteBranchNameBasedOnBranchesText()
+        {
+            if (!Branches.Text.IsNullOrEmpty())
+            {
+                return Branches.Text;
+            }
+            string remoteBranchName = Settings.Module.GetSetting("branch." + branch + ".merge");
+            remoteBranchName = Settings.Module.RunGitCmd("name-rev --name-only \"" + remoteBranchName + "\"").Trim();
+            return remoteBranchName;
+        }
+
+        private void UpdateSettingsDuringPull()
+        {
+            if (Merge.Checked)
+                Settings.PullMerge = "merge";
+            if (Rebase.Checked)
+                Settings.PullMerge = "rebase";
+            if (Fetch.Checked)
+                Settings.PullMerge = "fetch";
+
+            Settings.AutoStash = AutoStash.Checked;
         }
 
         private bool IsSubmodulesIntialized()

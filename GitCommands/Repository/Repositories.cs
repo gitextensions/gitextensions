@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
-using System.Windows.Forms;
 
 namespace GitCommands.Repository
 {
