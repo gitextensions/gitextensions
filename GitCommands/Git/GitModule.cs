@@ -1890,12 +1890,7 @@ namespace GitCommands
                 if (itemsString.Length <= 53)
                     continue;
 
-                var item = new GitItem { Mode = itemsString.Substring(0, 6) };
-                var guidStart = itemsString.IndexOf(' ', 7);
-                item.ItemType = itemsString.Substring(7, guidStart - 7);
-                item.Guid = itemsString.Substring(guidStart + 1, 40);
-                item.Name = itemsString.Substring(guidStart + 42).Trim();
-                item.FileName = item.Name;
+                var item = GitItem.CreateGitItemFromString(itemsString);
 
                 items.Add(item);
             }
