@@ -1660,7 +1660,7 @@ namespace GitUI
                 if (string.IsNullOrEmpty(historyItem.Path))
                     continue;
 
-                var historyItemMenu = new ToolStripButton(historyItem.Path);
+                var historyItemMenu = new ToolStripMenuItem(historyItem.Path);
                 historyItemMenu.Click += HistoryItemMenuClick;
                 historyItemMenu.Width = 225;
                 recentToolStripMenuItem.DropDownItems.Add(historyItemMenu);
@@ -1669,7 +1669,7 @@ namespace GitUI
 
         private void HistoryItemMenuClick(object sender, EventArgs e)
         {
-            var button = sender as ToolStripButton;
+            var button = sender as ToolStripMenuItem;
 
             if (button == null)
                 return;
