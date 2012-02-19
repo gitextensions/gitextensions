@@ -579,7 +579,7 @@ namespace GitUI
             return value ?? string.Empty;
         }
 
-        protected static void SetRegistryValue(RegistryKey root, string subkey, string key, string value)
+        private static void SetRegistryValue(RegistryKey root, string subkey, string key, string value)
         {
             try
             {
