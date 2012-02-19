@@ -25,6 +25,7 @@ namespace GitUI
         readonly TranslationString noLanguageCodeSelectedCaption = new TranslationString("Language code");
         readonly TranslationString editingCellPrefixText = new TranslationString("[EDITING]");
 
+        [DebuggerDisplay("{Category} - {NeutralValue}")]
         public class TranslateItem : INotifyPropertyChanged
         {
             public string Category { get; set; }
@@ -94,7 +95,6 @@ namespace GitUI
                 translateProgress.Text = progresMsg;
                 toolStrip1.Refresh();
             }
-
         }
 
         private void LoadTranslation()
@@ -307,6 +307,7 @@ namespace GitUI
                 translateCategories.Items.AddRange(translateCategoriesSet
                     .Where(category => neutralTranslation.HasTranslationCategory(category))
                     .OrderBy(category => category).ToArray());
+                neutralTranslation.Sort();
                 //Restore translation
                 GitCommands.Settings.Translation = currentTranslation;
             }
@@ -342,11 +343,7 @@ namespace GitUI
 
         private void AddTranslationItem(string category, string item, string property, string neutralValue)
         {
-            if (!neutralTranslation.HasTranslationCategory(category))
-                neutralTranslation.AddTranslationCategory(new TranslationCategory(category));
-
-
-            neutralTranslation.GetTranslationCategory(category).AddTranslationItemIfNotExist(new TranslationItem(item, property, neutralValue));
+            neutralTranslation.FindOrAddTranslationCategory(category).AddTranslationItemIfNotExist(new TranslationItem(item, property, neutralValue));
         }
 
         private void translateCategories_SelectedIndexChanged(object sender, EventArgs e)
@@ -380,10 +377,7 @@ namespace GitUI
                 if (string.IsNullOrEmpty(translateItem.TranslatedValue))
                     continue;
 
-                if (!foreignTranslation.HasTranslationCategory(translateItem.Category))
-                    foreignTranslation.AddTranslationCategory(new TranslationCategory(translateItem.Category));
-
-                foreignTranslation.GetTranslationCategory(translateItem.Category).AddTranslationItem(new TranslationItem(translateItem.Name, translateItem.Property, translateItem.TranslatedValue));
+                foreignTranslation.FindOrAddTranslationCategory(translateItem.Category).AddTranslationItem(new TranslationItem(translateItem.Name, translateItem.Property, translateItem.TranslatedValue));
             }
 
             var fileDialog = new SaveFileDialog { Title = saveAsText.Text, FileName = translations.Text + ".xml" };
