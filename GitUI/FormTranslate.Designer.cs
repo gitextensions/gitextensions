@@ -374,8 +374,10 @@ namespace GitUI
             this.translatedText.Size = new System.Drawing.Size(381, 77);
             this.translatedText.TabIndex = 0;
             this.translatedText.Text = "";
+            this.translatedText.Enter += new System.EventHandler(translatedText_Enter);
             this.translatedText.TextChanged += new System.EventHandler(this.translatedText_TextChanged);
             this.translatedText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.translatedText_KeyDown);
+            this.translatedText.Leave += new System.EventHandler(translatedText_Leave);
             // 
             // googleAll
             // 

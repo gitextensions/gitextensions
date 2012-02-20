@@ -2297,19 +2297,19 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         <TranslationItem Name="label28" Property="Text">
           <Value>合并后保留备份（.orig）</Value>
         </TranslationItem>
-        <TranslationItem Name="label35" Property="Text">
+        <TranslationItem Name="chkShowGitCommandLine" Property="Text">
           <Value>Git的命令行对话框显示在执行过程</Value>
         </TranslationItem>
-        <TranslationItem Name="label34" Property="Text">
+        <TranslationItem Name="chkCloseProcessDialog" Property="Text">
           <Value>对话框时自动关闭进程的过程是成功</Value>
         </TranslationItem>
-        <TranslationItem Name="label39" Property="Text">
+        <TranslationItem Name="chkShowRelativeDate" Property="Text">
           <Value>显示相对日期，而不是完整的日期</Value>
         </TranslationItem>
-        <TranslationItem Name="label38" Property="Text">
+        <TranslationItem Name="chkUseFastChecks" Property="Text">
           <Value>使用FileSystemWatcher检查索引是否改变了</Value>
         </TranslationItem>
-        <TranslationItem Name="label40" Property="Text">
+        <TranslationItem Name="chkFollowRenamesInFileHistory" Property="Text">
           <Value>按照文件的历史重命名（实验）</Value>
         </TranslationItem>
         <TranslationItem Name="label41" Property="Text">
@@ -2409,7 +2409,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         <TranslationItem Name="StripedBanchChange" Property="Text">
           <Value>条纹化表示分支的改变</Value>
         </TranslationItem>
-        <TranslationItem Name="showGitStatusInToolbarLabel" Property="Text">
+        <TranslationItem Name="chkShowGitStatusInToolbar" Property="Text">
           <Value>在浏览对话框中显示档案库的状态（在工具栏上会产生一些变化，需要重新启动）</Value>
         </TranslationItem>
         <TranslationItem Name="RevisionGridQuickSearchTimeout" Property="Text">
@@ -2418,7 +2418,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         <TranslationItem Name="label24" Property="Text">
           <Value>版本网格快速搜索超时[毫秒]</Value>
         </TranslationItem>
-        <TranslationItem Name="showErrorsWhenStagingFilesLabel" Property="Text">
+        <TranslationItem Name="chkShowErrorsWhenStagingFiles" Property="Text">
           <Value>在暂存文件时显示错误</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox9" Property="Text">
@@ -2450,13 +2450,13 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         <TranslationItem Name="DrawNonRelativesGray" Property="Text">
           <Value>把无关者变灰</Value>
         </TranslationItem>
-        <TranslationItem Name="label26" Property="Text">
+        <TranslationItem Name="chkShowCurrentChangesInRevisionGraph" Property="Text">
           <Value>在版本图里显示工作目录的改变（慢!）</Value>
         </TranslationItem>
-        <TranslationItem Name="label52" Property="Text">
+        <TranslationItem Name="chkShowStashCountInBrowseWindow" Property="Text">
           <Value>在浏览窗口的状态栏中显示暂存缓冲区计数</Value>
         </TranslationItem>
-        <TranslationItem Name="label37" Property="Text">
+        <TranslationItem Name="chkUsePatienceDiffAlgorithm" Property="Text">
           <Value>在提交日志中显示版本图</Value>
         </TranslationItem>
       </translationItems>
