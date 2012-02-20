@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Reflection;
 using System.Resources;
-using System.Windows.Forms;
 using EnvDTE;
 using EnvDTE80;
 using Extensibility;
@@ -20,9 +19,14 @@ namespace GitPlugin
     /// <seealso class = 'IDTExtensibility2' />
     public class Connect : IDTExtensibility2, IDTCommandTarget
     {
-        private Plugin _gitPlugin;
-        private DTE2 _applicationObject;
+        private const string GitToolBarName = "GitExtensions";
 
+        private Plugin _gitPlugin;
+        
+        public Connect()
+        {
+            
+        }
         #region IDTCommandTarget Members
 
         public void QueryStatus(string commandName, vsCommandStatusTextWanted neededText, 
@@ -64,61 +68,41 @@ namespace GitPlugin
         public void OnConnection(object application, ext_ConnectMode connectMode, 
             object addInInst, ref Array custom)
         {
-            if (_gitPlugin != null)
-                return;
-
-            try
+            if (_gitPlugin == null)
             {
                 var cultureInfo = new CultureInfo("en-US");
                 Thread.CurrentThread.CurrentCulture = cultureInfo;
 
-                _applicationObject = (DTE2) application;
-                
                 _gitPlugin = 
                     new Plugin((DTE2) application, (AddIn) addInInst, "GitExtensions", "GitPlugin.Connect");
+            }
+            
+            if (connectMode == ext_ConnectMode.ext_cm_UISetup)
+                this.GitPluginUISetup();
+            if (connectMode == ext_ConnectMode.ext_cm_AfterStartup ||
+                connectMode == ext_ConnectMode.ext_cm_Startup)
+                this.GitPluginInit();
 
-                _gitPlugin.OutputPane.OutputString("Git Extensions plugin connected" + Environment.NewLine);
+        }
 
+        private void GitPluginInit()
+        {
+            this.GitPluginUISetup();
+        }
 
+        private void GitPluginUISetup()
+        {
+            if (_gitPlugin == null) return;
 
-                //GitPlugin.DeleteCommandBar("GitExtensions");
-                try
-                {
-                    _gitPlugin.RegisterCommand("GitExtensionsFileHistory", new ToolbarCommand<FileHistory>());
-                    _gitPlugin.RegisterCommand("GitExtensionsCommit", new ToolbarCommand<Commit>());
-                    _gitPlugin.RegisterCommand("GitExtensionsBrowse", new ToolbarCommand<Browse>());
-                    _gitPlugin.RegisterCommand("GitExtensionsClone", new ToolbarCommand<Clone>());
-                    _gitPlugin.RegisterCommand("GitExtensionsCreateBranch", new ToolbarCommand<CreateBranch>());
-                    _gitPlugin.RegisterCommand("GitExtensionsSwitchBranch", new ToolbarCommand<SwitchBranch>());
-                    _gitPlugin.RegisterCommand("GitExtensionsDiff", new ToolbarCommand<ViewDiff>());
-                    _gitPlugin.RegisterCommand("GitExtensionsInitRepository", new ToolbarCommand<Init>());
-                    _gitPlugin.RegisterCommand("GitExtensionsFormatPatch", new ToolbarCommand<FormatPatch>());
-                    _gitPlugin.RegisterCommand("GitExtensionsPull", new ToolbarCommand<Pull>());
-                    _gitPlugin.RegisterCommand("GitExtensionsPush", new ToolbarCommand<Push>());
-                    _gitPlugin.RegisterCommand("GitExtensionsRebase", new ToolbarCommand<Rebase>());
-                    _gitPlugin.RegisterCommand("GitExtensionsRevert", new ToolbarCommand<Revert>());
-                    _gitPlugin.RegisterCommand("GitExtensionsMerge", new ToolbarCommand<Merge>());
-                    _gitPlugin.RegisterCommand("GitExtensionsCherryPick", new ToolbarCommand<Cherry>());
-                    _gitPlugin.RegisterCommand("GitExtensionsStash", new ToolbarCommand<Stash>());
-                    _gitPlugin.RegisterCommand("GitExtensionsSettings", new ToolbarCommand<Settings>());
-                    _gitPlugin.RegisterCommand("GitExtensionsSolveMergeConflicts",
-                                              new ToolbarCommand<SolveMergeConflicts>());
-                    _gitPlugin.RegisterCommand("GitExtensionsApplyPatch", new ToolbarCommand<ApplyPatch>());
-                    _gitPlugin.RegisterCommand("GitExtensionsAbout", new ToolbarCommand<About>());
-                    _gitPlugin.RegisterCommand("GitExtensionsBash", new ToolbarCommand<Bash>());
-                    _gitPlugin.RegisterCommand("GitExtensionsGitIgnore", new ToolbarCommand<GitIgnore>());
-                    _gitPlugin.RegisterCommand("GitExtensionsRemotes", new ToolbarCommand<Remotes>());
-                    _gitPlugin.RegisterCommand("GitExtensionsSearchFile", new ToolbarCommand<SearchFile>());
-                }
-                catch (Exception ex)
-                {
-                    _gitPlugin.OutputPane.OutputString("Error adding commands: " + ex.ToString());
-                }
+            try
+            {
+                this._gitPlugin.OutputPane.OutputString("Git Extensions plugin connected" + Environment.NewLine);
+
+                this.RegiserGitPluginCommand();
 
                 //Place the command on the tools menu.
                 //Find the MenuBar command bar, which is the top-level command bar holding all the main menu items:
-                var menuBarCommandBar = ((CommandBars) _applicationObject.CommandBars)["MenuBar"];
-
+                var menuBarCommandBar = _gitPlugin.GetMenuBar();
 
                 CommandBarControl toolsControl;
                 CommandBarPopup toolsPopup = null;
@@ -135,6 +119,7 @@ namespace GitPlugin
                 {
                     if (toolsControl == null)
                     {
+
                         toolsControl = menuBarCommandBar.Controls.Add(MsoControlType.msoControlPopup, Type.Missing,
                                                                       Type.Missing, 4, false);
                         toolsControl.Caption = "&Git";
@@ -142,15 +127,17 @@ namespace GitPlugin
 
                     toolsPopup = (CommandBarPopup) toolsControl;
                     toolsPopup.Caption = "&Git";
+
                 }
                 catch (Exception ex)
                 {
                     try
                     {
-                        _gitPlugin.OutputPane.OutputString("Error creating git menu (trying to add commands to tools menu): " + ex.ToString());
+                        _gitPlugin.OutputPane.OutputString(
+                            "Error creating git menu (trying to add commands to tools menu): " + ex.ToString());
                         if (toolsControl == null)
                         {
-                            toolsControl = menuBarCommandBar.Controls[GetToolsMenuName()];
+                            toolsControl = menuBarCommandBar.Controls[this.GetToolsMenuName()];
                             toolsPopup = (CommandBarPopup)toolsControl;
                         }
                     }
@@ -163,7 +150,7 @@ namespace GitPlugin
                 try
                 {
                     // add the toolbar and menu commands
-                    var commandBar = _gitPlugin.AddCommandBar("GitExtensions", MsoBarPosition.msoBarTop);
+                    var commandBar = _gitPlugin.AddGitCommandBar(MsoBarPosition.msoBarTop);
 
                     _gitPlugin.AddToolbarCommandWithText(
                         commandBar, "GitExtensionsCommit", "&Commit", "Commit changes", 7,1);
@@ -185,10 +172,10 @@ namespace GitPlugin
                 {
                     _gitPlugin.OutputPane.OutputString("Error creating toolbar: " + ex.ToString());
                 }
-
                 try
                 {
                     var n = 1;
+
                     _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsApplyPatch", "&Apply patch", "Apply patch", 0,
                                               n++);
                     _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsBrowse", "&Browse", "Browse repository", 12, n++);
@@ -232,6 +219,8 @@ namespace GitPlugin
                     _gitPlugin.OutputPane.OutputString("Error creating contextmenu: " + ex.ToString());
                 }
 
+               
+
                 AddContextMenuItemsToContextMenu("XML Editor");
                 AddContextMenuItemsToContextMenu("Web Item");
                 AddContextMenuItemsToContextMenu("Item");
@@ -262,7 +251,43 @@ namespace GitPlugin
             }
             catch (Exception ex)
             {
-                _gitPlugin.OutputPane.OutputString("Error loading plugin: " + ex.ToString());
+                this._gitPlugin.OutputPane.OutputString("Error loading plugin: " + ex.ToString());
+            }
+        }
+
+        private void RegiserGitPluginCommand()
+        {
+            //GitPlugin.DeleteCommandBar("GitExtensions");
+            try
+            {
+                this._gitPlugin.RegisterCommand("GitExtensionsFileHistory", new ToolbarCommand<FileHistory>());
+                this._gitPlugin.RegisterCommand("GitExtensionsCommit", new ToolbarCommand<Commit>());
+                this._gitPlugin.RegisterCommand("GitExtensionsBrowse", new ToolbarCommand<Browse>());
+                this._gitPlugin.RegisterCommand("GitExtensionsClone", new ToolbarCommand<Clone>());
+                this._gitPlugin.RegisterCommand("GitExtensionsCreateBranch", new ToolbarCommand<CreateBranch>());
+                this._gitPlugin.RegisterCommand("GitExtensionsSwitchBranch", new ToolbarCommand<SwitchBranch>());
+                this._gitPlugin.RegisterCommand("GitExtensionsDiff", new ToolbarCommand<ViewDiff>());
+                this._gitPlugin.RegisterCommand("GitExtensionsInitRepository", new ToolbarCommand<Init>());
+                this._gitPlugin.RegisterCommand("GitExtensionsFormatPatch", new ToolbarCommand<FormatPatch>());
+                this._gitPlugin.RegisterCommand("GitExtensionsPull", new ToolbarCommand<Pull>());
+                this._gitPlugin.RegisterCommand("GitExtensionsPush", new ToolbarCommand<Push>());
+                this._gitPlugin.RegisterCommand("GitExtensionsRebase", new ToolbarCommand<Rebase>());
+                this._gitPlugin.RegisterCommand("GitExtensionsRevert", new ToolbarCommand<Revert>());
+                this._gitPlugin.RegisterCommand("GitExtensionsMerge", new ToolbarCommand<Merge>());
+                this._gitPlugin.RegisterCommand("GitExtensionsCherryPick", new ToolbarCommand<Cherry>());
+                this._gitPlugin.RegisterCommand("GitExtensionsStash", new ToolbarCommand<Stash>());
+                this._gitPlugin.RegisterCommand("GitExtensionsSettings", new ToolbarCommand<Settings>());
+                this._gitPlugin.RegisterCommand("GitExtensionsSolveMergeConflicts", new ToolbarCommand<SolveMergeConflicts>());
+                this._gitPlugin.RegisterCommand("GitExtensionsApplyPatch", new ToolbarCommand<ApplyPatch>());
+                this._gitPlugin.RegisterCommand("GitExtensionsAbout", new ToolbarCommand<About>());
+                this._gitPlugin.RegisterCommand("GitExtensionsBash", new ToolbarCommand<Bash>());
+                this._gitPlugin.RegisterCommand("GitExtensionsGitIgnore", new ToolbarCommand<GitIgnore>());
+                this._gitPlugin.RegisterCommand("GitExtensionsRemotes", new ToolbarCommand<Remotes>());
+                this._gitPlugin.RegisterCommand("GitExtensionsSearchFile", new ToolbarCommand<SearchFile>());
+            }
+            catch (Exception ex)
+            {
+                this._gitPlugin.OutputPane.OutputString("Error adding commands: " + ex.ToString());
             }
         }
 
@@ -284,7 +309,29 @@ namespace GitPlugin
 
         public void OnDisconnection(ext_DisconnectMode disconnectMode, ref Array custom)
         {
-            _gitPlugin.DeleteCommands();
+            //if (disconnectMode == ext_DisconnectMode.ext_dm_HostShutdown
+            //    || disconnectMode == ext_DisconnectMode.ext_dm_UserClosed)
+            //{
+            //    _gitPlugin.DeleteCommands();
+            //    _gitPlugin.DeleteCommandBar(GitToolBarName);
+            //    //Place the command on the tools menu.
+            //    //Find the MenuBar command bar, which is the top-level command bar holding all the main menu items:
+            //    var menuBarCommandBar = ((CommandBars)_applicationObject.CommandBars)["MenuBar"];
+
+
+            //    CommandBarControl toolsControl;
+            //    try
+            //    {
+            //        toolsControl = menuBarCommandBar.Controls["Git"];
+            //        if (toolsControl != null)
+            //        {
+            //            toolsControl.Delete();
+            //        }
+            //    }
+            //    catch
+            //    {
+            //    }
+            //}
         }
 
         public void OnAddInsUpdate(ref Array custom)
@@ -293,6 +340,7 @@ namespace GitPlugin
 
         public void OnStartupComplete(ref Array custom)
         {
+            this.GitPluginInit();
         }
 
         public void OnBeginShutdown(ref Array custom)
@@ -314,7 +362,7 @@ namespace GitPlugin
                 //  CommandBar.resx.
                 string resourceName;
                 var resourceManager = new ResourceManager("GitPlugin.CommandBar", Assembly.GetExecutingAssembly());
-                var cultureInfo = new CultureInfo(_applicationObject.LocaleID);
+                var cultureInfo = new CultureInfo(_gitPlugin.LocaleID);
 
                 if (cultureInfo.TwoLetterISOLanguageName == "zh")
                 {
