@@ -52,7 +52,7 @@
             // splitContainer5
             // 
             resources.ApplyResources(this.splitContainer5, "splitContainer5");
-            this.splitContainer5.BackColor = System.Drawing.SystemColors.Control;
+            this.splitContainer5.BackColor = System.Drawing.SystemColors.ControlLight;
             this.splitContainer5.DataBindings.Add(new System.Windows.Forms.Binding("SplitterDistance", global::GitUI.Properties.Settings.Default, "Dashboard_MainSplitContainer_SplitterDistance", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.splitContainer5.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer5.Name = "splitContainer5";
@@ -60,23 +60,27 @@
             // splitContainer5.Panel1
             // 
             resources.ApplyResources(this.splitContainer5.Panel1, "splitContainer5.Panel1");
+            this.splitContainer5.Panel1.BackColor = System.Drawing.SystemColors.Control;
             this.splitContainer5.Panel1.Controls.Add(this.splitContainer6);
             // 
             // splitContainer5.Panel2
             // 
             resources.ApplyResources(this.splitContainer5.Panel2, "splitContainer5.Panel2");
+            this.splitContainer5.Panel2.BackColor = System.Drawing.SystemColors.Control;
             this.splitContainer5.Panel2.Controls.Add(this.groupLayoutPanel);
             this.splitContainer5.SplitterDistance = global::GitUI.Properties.Settings.Default.Dashboard_MainSplitContainer_SplitterDistance;
             // 
             // splitContainer6
             // 
             resources.ApplyResources(this.splitContainer6, "splitContainer6");
+            this.splitContainer6.BackColor = System.Drawing.SystemColors.ControlLight;
             this.splitContainer6.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer6.Name = "splitContainer6";
             // 
             // splitContainer6.Panel1
             // 
             resources.ApplyResources(this.splitContainer6.Panel1, "splitContainer6.Panel1");
+            this.splitContainer6.Panel1.BackColor = System.Drawing.SystemColors.Control;
             this.splitContainer6.Panel1.Controls.Add(this.CommonActions);
             // 
             // splitContainer6.Panel2
@@ -95,17 +99,20 @@
             // splitContainer7
             // 
             resources.ApplyResources(this.splitContainer7, "splitContainer7");
+            this.splitContainer7.BackColor = System.Drawing.SystemColors.ControlLight;
             this.splitContainer7.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.splitContainer7.Name = "splitContainer7";
             // 
             // splitContainer7.Panel1
             // 
             resources.ApplyResources(this.splitContainer7.Panel1, "splitContainer7.Panel1");
+            this.splitContainer7.Panel1.BackColor = System.Drawing.SystemColors.Control;
             this.splitContainer7.Panel1.Controls.Add(this.RecentRepositories);
             // 
             // splitContainer7.Panel2
             // 
             resources.ApplyResources(this.splitContainer7.Panel2, "splitContainer7.Panel2");
+            this.splitContainer7.Panel2.BackColor = System.Drawing.SystemColors.Control;
             this.splitContainer7.Panel2.Controls.Add(this.DonateCategory);
             // 
             // RecentRepositories

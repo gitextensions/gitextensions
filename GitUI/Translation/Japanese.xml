@@ -2235,19 +2235,19 @@ any global setting.</Value>
         <TranslationItem Name="label28" Property="Text">
           <Value>マージ後にバックアップ(.orig)を残す</Value>
         </TranslationItem>
-        <TranslationItem Name="label35" Property="Text">
+        <TranslationItem Name="chkShowGitCommandLine" Property="Text">
           <Value>処理実行中にGitのコマンドラインダイアログを表示する</Value>
         </TranslationItem>
-        <TranslationItem Name="label34" Property="Text">
+        <TranslationItem Name="chkCloseProcessDialog" Property="Text">
           <Value>処理に成功したときにダイアログを自動的に閉じる</Value>
         </TranslationItem>
-        <TranslationItem Name="label39" Property="Text">
+        <TranslationItem Name="chkShowRelativeDate" Property="Text">
           <Value>絶対日付の代わりに相対日付を表示する</Value>
         </TranslationItem>
-        <TranslationItem Name="label38" Property="Text">
+        <TranslationItem Name="chkUseFastChecks" Property="Text">
           <Value>FileSystemWatcherを使用して、インデックスが変更されたかチェックする</Value>
         </TranslationItem>
-        <TranslationItem Name="label40" Property="Text">
+        <TranslationItem Name="chkFollowRenamesInFileHistory" Property="Text">
           <Value>ファイルの歴史でファイル名の変更も追跡する(実験的)</Value>
         </TranslationItem>
         <TranslationItem Name="label41" Property="Text">
@@ -2347,7 +2347,7 @@ any global setting.</Value>
         <TranslationItem Name="StripedBanchChange" Property="Text">
           <Value>ブランチの変更をストライプする</Value>
         </TranslationItem>
-        <TranslationItem Name="showGitStatusInToolbarLabel" Property="Text">
+        <TranslationItem Name="chkShowGitStatusInToolbar" Property="Text">
           <Value>リポジトリの状態(変更の数)を表示する(再起動が必要)</Value>
         </TranslationItem>
         <TranslationItem Name="RevisionGridQuickSearchTimeout" Property="Text">
@@ -2356,7 +2356,7 @@ any global setting.</Value>
         <TranslationItem Name="label24" Property="Text">
           <Value>リビジョングリッドクイック検索のタイムアウト[ms]</Value>
         </TranslationItem>
-        <TranslationItem Name="showErrorsWhenStagingFilesLabel" Property="Text">
+        <TranslationItem Name="chkShowErrorsWhenStagingFiles" Property="Text">
           <Value>ファイルをステージする際のエラーを表示する</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox9" Property="Text">
@@ -2386,7 +2386,7 @@ any global setting.</Value>
         <TranslationItem Name="DrawNonRelativesGray" Property="Text">
           <Value>関係のないものを灰色で描画する</Value>
         </TranslationItem>
-        <TranslationItem Name="label37" Property="Text">
+        <TranslationItem Name="chkUsePatienceDiffAlgorithm" Property="Text">
           <Value>コミットログにリビジョングラフを表示する</Value>
         </TranslationItem>
       </translationItems>
