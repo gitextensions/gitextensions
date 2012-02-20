@@ -2,11 +2,14 @@
 =========
 
 Version 2.29
+	Fixed issue 276: Make splitter visible on Dashboard
 	Fixed issue 745: Test connection does not work with non-uri
 	Fixed issue 756: Push dialog advanced options are cut off
-	Fixed issue 651: Diff view does not clear out the file pane when switching to a commit that has no changes.
+	Fixed issue 651: Diff view does not clear out the file pane when switching to a commit that has no changes
 	Fixed issue 767: An exception is thrown in the revision graph
-	Fixed issue 780: Relative author/commit date in the commit history graph is incorrect.
+	Fixed issue 780: Relative author/commit date in the commit history graph is incorrect
+	Fixed issue 783: 'View diff' Windows context menu item executes the item directly above 'Git Extensions'
+	Fixed issue 791: Korean letters are not breaking in Translate dialog anymore
 	Fixed issue: GitExtensions crashes when detected wrong git version
 	Fixed issue: shell extensions are duplicated in 64bit environment
 	Fixed issue: an exception is thrown after moving the install folder (portable edition)
@@ -14,6 +17,7 @@ Version 2.29
 	Added option to change Encoding in diff view
 	Added “View commit” context menu item to “File History” dialog
 	Added warning of not committed changes before checkout
+	Added option to stash untracked files
 	Russian translation updated
 	Traditional Chinese translation updated
 	Spanish translation updated
