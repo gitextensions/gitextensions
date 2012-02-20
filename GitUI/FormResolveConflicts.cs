@@ -244,20 +244,6 @@ namespace GitUI
             {
                 if (Directory.Exists(Settings.WorkingDir + filename) && !File.Exists(Settings.WorkingDir + filename))
                 {
-                    /* BEGIN REPLACED WITH FASTER, BUT DIRTIER SUBMODULE CHECK
-                    IList<IGitSubmodule> submodules = (new GitCommands.GitCommands()).GetSubmodules();
-                    foreach (IGitSubmodule submodule in submodules)
-                    {
-                        if (submodule.LocalPath.Equals(filename))
-                        {
-                            if (MessageBox.Show(this, mergeConflictIsSubmodule.Text, mergeConflictIsSubmoduleCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
-                            {
-                                stageFile(filename);
-                                Initialize();
-                            }
-                            return;
-                        }
-                    }*/
                     var submoduleConfig = new ConfigFile(Settings.WorkingDir + ".gitmodules");
                     if (submoduleConfig.GetConfigSections().Any(configSection => configSection.GetValue("path").Trim().Equals(filename.Trim())))
                     {
@@ -350,12 +336,20 @@ namespace GitUI
             }
             finally
             {
-                if (filenames[0] != null && File.Exists(filenames[0])) File.Delete(filenames[0]);
-                if (filenames[1] != null && File.Exists(filenames[1])) File.Delete(filenames[1]);
-                if (filenames[2] != null && File.Exists(filenames[2])) File.Delete(filenames[2]);
+                DeleteTemporaryFiles(filenames);
                 Cursor.Current = Cursors.Default;
                 Initialize();
             }
+        }
+
+        private static void DeleteTemporaryFiles(string[] filenames)
+        {
+            if (filenames[0] != null && File.Exists(filenames[0]))
+                File.Delete(filenames[0]);
+            if (filenames[1] != null && File.Exists(filenames[1]))
+                File.Delete(filenames[1]);
+            if (filenames[2] != null && File.Exists(filenames[2]))
+                File.Delete(filenames[2]);
         }
 
         private void InitMergetool()
