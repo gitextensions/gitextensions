@@ -48,7 +48,7 @@ namespace GitUI
 
         private void FormAddSubmoduleShown(object sender, EventArgs e)
         {
-            Directory.DataSource = Repositories.RepositoryHistory.Repositories;
+            Directory.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
             Directory.DisplayMember = "Path";
             Directory.Text = "";
             LocalPath.Text = "";

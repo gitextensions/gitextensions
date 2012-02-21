@@ -40,9 +40,7 @@ namespace GitCommands.Repository
             if (string.IsNullOrEmpty(repo))
                 return;
 
-            if (!repo.StartsWith("http", StringComparison.CurrentCultureIgnoreCase) &&
-                !repo.StartsWith("git", StringComparison.CurrentCultureIgnoreCase) &&
-                !repo.StartsWith("ssh", StringComparison.CurrentCultureIgnoreCase))
+            if (!Repository.PathIsUrl(repo))
             {
                 repo = repo.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
                 if (!repo.EndsWith(Settings.PathSeparator.ToString()))

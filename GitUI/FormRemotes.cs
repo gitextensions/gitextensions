@@ -85,13 +85,13 @@ namespace GitUI
 
         private void UrlDropDown(object sender, EventArgs e)
         {
-            Url.DataSource = Repositories.RepositoryHistory.Repositories;
+            Url.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
             Url.DisplayMember = "Path";
         }
 
         private void comboBoxPushUrl_DropDown(object sender, EventArgs e)
         {
-            comboBoxPushUrl.DataSource = Repositories.RepositoryHistory.Repositories;
+            comboBoxPushUrl.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
             comboBoxPushUrl.DisplayMember = "Path";
         }
 
