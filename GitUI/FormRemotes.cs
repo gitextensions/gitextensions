@@ -81,15 +81,18 @@ namespace GitUI
             RemoteBranches.DataError += RemoteBranchesDataError;
 
             PuTTYSSH.Visible = GitCommandHelpers.Plink();
+
+            FillUrlDropDown();
+            FillPushUrlDropDown();
         }
 
-        private void UrlDropDown(object sender, EventArgs e)
+        private void FillUrlDropDown()
         {
             Url.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
             Url.DisplayMember = "Path";
         }
 
-        private void comboBoxPushUrl_DropDown(object sender, EventArgs e)
+        private void FillPushUrlDropDown()
         {
             comboBoxPushUrl.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
             comboBoxPushUrl.DisplayMember = "Path";

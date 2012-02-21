@@ -46,6 +46,8 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
+            FillFromDropDown();
+
             if (url != null)
             {
                 _NO_TRANSLATE_From.Text = url;
@@ -135,7 +137,7 @@ namespace GitUI
             ToTextUpdate(sender, e);
         }
 
-        private void FromDropDown(object sender, EventArgs e)
+        private void FillFromDropDown()
         {          
             System.ComponentModel.BindingList<Repository> repos = Repositories.RemoteRepositoryHistory.Repositories;
             if (_NO_TRANSLATE_From.Items.Count != repos.Count) 

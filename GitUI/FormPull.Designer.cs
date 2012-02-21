@@ -181,7 +181,6 @@
             this.PullSource.Name = "PullSource";
             this.PullSource.Size = new System.Drawing.Size(244, 28);
             this.PullSource.TabIndex = 4;
-            this.PullSource.DropDown += new System.EventHandler(this.PullSourceDropDown);
             this.PullSource.Validating += new System.ComponentModel.CancelEventHandler(this.PullSourceValidating);
             // 
             // Pull
