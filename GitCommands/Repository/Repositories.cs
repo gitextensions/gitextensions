@@ -12,15 +12,6 @@ namespace GitCommands.Repository
         private static RepositoryHistory _repositoryHistory;
         private static BindingList<RepositoryCategory> _repositoryCategories;
 
-        //This property is used to determine if repository history needs to be saved
-        public static bool RepositoryHistoryLoaded
-        {
-            get
-            {
-                return _repositoryHistory != null;
-            }
-        }
-
         public static RepositoryHistory RepositoryHistory
         {
             get
@@ -30,7 +21,7 @@ namespace GitCommands.Repository
                     object setting = Settings.GetValue<string>("history", null);
                     if (setting != null)
                     {
-                        DeserializeHistoryFromXml(setting.ToString());
+                        _repositoryHistory = DeserializeHistoryFromXml(setting.ToString());
                         if (_repositoryHistory != null)
                             AssignRepositoryHistoryFromCategories(null);
                     }
@@ -45,7 +36,7 @@ namespace GitCommands.Repository
 
         }
 
-        public static void AssignRepositoryHistoryFromCategories(string path)
+        private static void AssignRepositoryHistoryFromCategories(string path)
         {
             foreach (Repository repo in RepositoryHistory.Repositories)
             {
@@ -58,7 +49,7 @@ namespace GitCommands.Repository
             }        
         }
 
-        public static Repository FindFirstCategoryRepository(string path)
+        private static Repository FindFirstCategoryRepository(string path)
         {
             foreach (RepositoryCategory category in Repositories.RepositoryCategories)
             {
@@ -67,15 +58,6 @@ namespace GitCommands.Repository
                         return repo;
             }
             return null;        
-        }
-
-        //This property is used to determine if repository history needs to be saved
-        public static bool RepositoryCategoriesLoaded
-        {
-            get
-            {
-                return _repositoryCategories != null;
-            }
         }
 
         public static BindingList<RepositoryCategory> RepositoryCategories
@@ -87,7 +69,7 @@ namespace GitCommands.Repository
                     object setting = Settings.GetValue<string>("repositories", null);
                     if (setting != null)
                     {
-                        DeserializeRepositories(setting.ToString());
+                        _repositoryCategories = DeserializeRepositories(setting.ToString());
                     }
 
                 }
@@ -100,13 +82,13 @@ namespace GitCommands.Repository
             }
         }
 
-        public static string SerializeRepositories()
+        private static string SerializeRepositories(BindingList<RepositoryCategory> categories)
         {
             try
             {
                 var sw = new StringWriter();
                 var serializer = new XmlSerializer(typeof(BindingList<RepositoryCategory>));
-                serializer.Serialize(sw, RepositoryCategories);
+                serializer.Serialize(sw, categories);
                 return sw.ToString();
             }
             catch
@@ -115,20 +97,19 @@ namespace GitCommands.Repository
             }
         }
 
-        public static void DeserializeRepositories(string xml)
+        private static BindingList<RepositoryCategory> DeserializeRepositories(string xml)
         {
+            BindingList<RepositoryCategory> repositories = null;
             try
             {
                 var serializer = new XmlSerializer(typeof(BindingList<RepositoryCategory>));
                 using (var stringReader = new StringReader(xml))
                 using (var xmlReader = new XmlTextReader(stringReader))
                 {
-                    var obj = serializer.Deserialize(xmlReader) as BindingList<RepositoryCategory>;
-                    if (obj != null)
+                    repositories = serializer.Deserialize(xmlReader) as BindingList<RepositoryCategory>;
+                    if (repositories != null)
                     {
-                        RepositoryCategories = obj;
-
-                        foreach (var repositoryCategory in RepositoryCategories)
+                        foreach (var repositoryCategory in repositories)
                         {
                             repositoryCategory.SetIcon();
                         }
@@ -139,15 +120,16 @@ namespace GitCommands.Repository
             {
                 Trace.WriteLine(ex.Message);
             }
+            return repositories;
         }
 
-        public static string SerializeHistoryIntoXml()
+        private static string SerializeHistoryIntoXml(RepositoryHistory history)
         {
             try
             {
                 var sw = new StringWriter();
                 var serializer = new XmlSerializer(typeof(RepositoryHistory));
-                serializer.Serialize(sw, RepositoryHistory);
+                serializer.Serialize(sw, history);
                 return sw.ToString();
             }
             catch
@@ -156,11 +138,12 @@ namespace GitCommands.Repository
             }
         }
 
-        public static void DeserializeHistoryFromXml(string xml)
+        private static RepositoryHistory DeserializeHistoryFromXml(string xml)
         {
             if (string.IsNullOrEmpty(xml))
-                return;
+                return null;
 
+            RepositoryHistory history = null;
             try
             {
                 var serializer = new XmlSerializer(typeof(RepositoryHistory));
@@ -170,8 +153,8 @@ namespace GitCommands.Repository
                     var obj = serializer.Deserialize(xmlReader) as RepositoryHistory;
                     if (obj != null)
                     {
-                        RepositoryHistory = obj;
-                        RepositoryHistory.SetIcon();
+                        history = obj;
+                        history.SetIcon();
                     }
                 }
             }
@@ -179,6 +162,15 @@ namespace GitCommands.Repository
             {
                 Trace.WriteLine(ex.Message);
             }
+            return history;
+        }
+
+        public static void SaveSettings()
+        {
+            if (_repositoryHistory != null)
+                Settings.SetValue("history", Repositories.SerializeHistoryIntoXml(_repositoryHistory));
+            if (_repositoryCategories != null)
+                Settings.SetValue("repositories", SerializeRepositories(_repositoryCategories));
         }
 
         public static void AddCategory(string title)

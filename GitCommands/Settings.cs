@@ -730,10 +730,7 @@ namespace GitCommands
             try
             {
                 SetValue("gitssh", GitCommandHelpers.GetSsh());
-                if (Repositories.RepositoryHistoryLoaded)
-                    SetValue("history", Repositories.SerializeHistoryIntoXml());
-                if (Repositories.RepositoryCategoriesLoaded)
-                    SetValue("repositories", Repositories.SerializeRepositories());
+                Repositories.SaveSettings();
             }
             catch
             { }
