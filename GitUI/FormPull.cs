@@ -458,7 +458,7 @@ namespace GitUI
             base.OnShown(e);
         }
 
-        private void PullSourceDropDown(object sender, EventArgs e)
+        private void FillPullSourceDropDown()
         {
             PullSource.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
             PullSource.DisplayMember = "Path";
@@ -502,6 +502,8 @@ namespace GitUI
 
             Merge.Enabled = true;
             Rebase.Enabled = true;
+
+            FillPullSourceDropDown();
         }
 
         private bool bInternalUpdate = false;
