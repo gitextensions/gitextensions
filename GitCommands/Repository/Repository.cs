@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 
 namespace GitCommands.Repository
 {
@@ -32,6 +33,12 @@ namespace GitCommands.Repository
         public RepositoryAnchor Anchor { get; set; }
 
         [XmlIgnore]
+        public bool IsRemote
+        {
+            get { return PathIsUrl(Path); }
+        }
+
+        [XmlIgnore]
         public RepositoryType RepositoryType { get; set; }
 
         public void Assign(Repository source)
@@ -47,6 +54,14 @@ namespace GitCommands.Repository
         public override string  ToString()
         {
             return Path + " ("+Anchor+")";
+        }
+
+        public static bool PathIsUrl(string path)
+        {
+            return !String.IsNullOrEmpty(path) &&
+                (path.StartsWith("http", StringComparison.CurrentCultureIgnoreCase) ||
+                 path.StartsWith("git", StringComparison.CurrentCultureIgnoreCase) ||
+                 path.StartsWith("ssh", StringComparison.CurrentCultureIgnoreCase));
         }
     }
 }
