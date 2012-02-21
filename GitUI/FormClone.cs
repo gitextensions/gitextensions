@@ -137,7 +137,7 @@ namespace GitUI
 
         private void FromDropDown(object sender, EventArgs e)
         {          
-            System.ComponentModel.BindingList<Repository> repos = Repositories.RepositoryHistory.Repositories;
+            System.ComponentModel.BindingList<Repository> repos = Repositories.RemoteRepositoryHistory.Repositories;
             if (_NO_TRANSLATE_From.Items.Count != repos.Count) 
             {
                 _NO_TRANSLATE_To.Items.Clear();

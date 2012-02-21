@@ -460,7 +460,7 @@ namespace GitUI
 
         private void PullSourceDropDown(object sender, EventArgs e)
         {
-            PullSource.DataSource = Repositories.RepositoryHistory.Repositories;
+            PullSource.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
             PullSource.DisplayMember = "Path";
         }
 

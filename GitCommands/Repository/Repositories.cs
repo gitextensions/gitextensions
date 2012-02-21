@@ -10,6 +10,7 @@ namespace GitCommands.Repository
     public static class Repositories
     {
         private static RepositoryHistory _repositoryHistory;
+        private static RepositoryHistory _remoteRepositoryHistory;
         private static BindingList<RepositoryCategory> _repositoryCategories;
 
         public static RepositoryHistory RepositoryHistory
@@ -23,7 +24,27 @@ namespace GitCommands.Repository
                     {
                         _repositoryHistory = DeserializeHistoryFromXml(setting.ToString());
                         if (_repositoryHistory != null)
+                        {
                             AssignRepositoryHistoryFromCategories(null);
+
+                            // migration from old version (move URL history to _remoteRepositoryHistory)
+                            if (Settings.GetValue<string>("history remote", null) == null)
+                            {
+                                _remoteRepositoryHistory = new RepositoryHistory();
+                                foreach (Repository repo in _repositoryHistory.Repositories)
+                                {
+                                    if (repo.IsRemote)
+                                    {
+                                        repo.Path = repo.Path.Replace('\\', '/');
+                                        _remoteRepositoryHistory.AddRepository(repo);
+                                    }
+                                }
+                                foreach (Repository repo in _remoteRepositoryHistory.Repositories)
+                                {
+                                    _repositoryHistory.RemoveRepository(repo);
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -32,6 +53,28 @@ namespace GitCommands.Repository
             private set
             {
                 _repositoryHistory = value;
+            }
+
+        }
+
+        public static RepositoryHistory RemoteRepositoryHistory
+        {
+            get
+            {
+                if (_remoteRepositoryHistory == null)
+                {
+                    object setting = Settings.GetValue<string>("history remote", null);
+                    if (setting != null)
+                    {
+                        _remoteRepositoryHistory = DeserializeHistoryFromXml(setting.ToString());
+                    }
+                }
+
+                return _remoteRepositoryHistory ?? (_remoteRepositoryHistory = new RepositoryHistory());
+            }
+            private set
+            {
+                _remoteRepositoryHistory = value;
             }
 
         }
@@ -169,6 +212,8 @@ namespace GitCommands.Repository
         {
             if (_repositoryHistory != null)
                 Settings.SetValue("history", Repositories.SerializeHistoryIntoXml(_repositoryHistory));
+            if (_remoteRepositoryHistory != null)
+                Settings.SetValue("history remote", Repositories.SerializeHistoryIntoXml(_remoteRepositoryHistory));
             if (_repositoryCategories != null)
                 Settings.SetValue("repositories", SerializeRepositories(_repositoryCategories));
         }
@@ -180,8 +225,15 @@ namespace GitCommands.Repository
 
         public static void AddMostRecentRepository(string repo)
         {
-            RepositoryHistory.AddMostRecentRepository(repo);
-            AssignRepositoryHistoryFromCategories(repo);
+            if (Repository.PathIsUrl(repo))
+            {
+                RemoteRepositoryHistory.AddMostRecentRepository(repo);
+            }
+            else
+            {
+                RepositoryHistory.AddMostRecentRepository(repo);
+                AssignRepositoryHistoryFromCategories(repo);
+            }
         }
     }
 }
