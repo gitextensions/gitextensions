@@ -237,6 +237,8 @@ namespace GitUI
             // 
             // comboBoxPushUrl
             // 
+            this.comboBoxPushUrl.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.comboBoxPushUrl.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.comboBoxPushUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxPushUrl.FormattingEnabled = true;
@@ -245,7 +247,6 @@ namespace GitUI
             this.comboBoxPushUrl.Size = new System.Drawing.Size(216, 28);
             this.comboBoxPushUrl.TabIndex = 7;
             this.comboBoxPushUrl.Visible = false;
-            this.comboBoxPushUrl.DropDown += new System.EventHandler(this.comboBoxPushUrl_DropDown);
             // 
             // buttonBrowsePushUrl
             // 
@@ -299,6 +300,8 @@ namespace GitUI
             // 
             // Url
             // 
+            this.Url.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.Url.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.Url.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.Url.FormattingEnabled = true;
@@ -306,7 +309,6 @@ namespace GitUI
             this.Url.Name = "Url";
             this.Url.Size = new System.Drawing.Size(216, 28);
             this.Url.TabIndex = 3;
-            this.Url.DropDown += new System.EventHandler(this.UrlDropDown);
             // 
             // Browse
             // 
