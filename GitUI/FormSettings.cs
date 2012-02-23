@@ -120,18 +120,7 @@ namespace GitUI
 
                 scriptEvent.DataSource = Enum.GetValues(typeof(ScriptEvent));
 
-                if (Settings.Encoding.GetType() == typeof(ASCIIEncoding))
-                    _NO_TRANSLATE_Encoding.Text = "ASCII";
-                else if (Settings.Encoding.GetType() == typeof(UnicodeEncoding))
-                    _NO_TRANSLATE_Encoding.Text = "Unicode";
-                else if (Settings.Encoding.GetType() == typeof(UTF7Encoding))
-                    _NO_TRANSLATE_Encoding.Text = "UTF7";
-                else if (Settings.Encoding.GetType() == typeof(UTF8Encoding))
-                    _NO_TRANSLATE_Encoding.Text = "UTF8";
-                else if (Settings.Encoding.GetType() == typeof(UTF32Encoding))
-                    _NO_TRANSLATE_Encoding.Text = "UTF32";
-                else if (Settings.Encoding == Encoding.Default)
-                    _NO_TRANSLATE_Encoding.Text = "Default (" + Encoding.Default.HeaderName + ")";
+                _NO_TRANSLATE_Encoding.Text = CalculateNoTranslateEncodingText(Settings.Encoding.GetType());
 
                 chkFocusControlOnHover.Checked = Settings.FocusControlOnHover;
                 chkWarnBeforeCheckout.Checked = Settings.DirtyDirWarnBeforeCheckoutBranch;
@@ -334,6 +323,23 @@ namespace GitUI
             }
         }
 
+        private string CalculateNoTranslateEncodingText(Type encodingType)
+        {
+            if (encodingType == typeof(ASCIIEncoding))
+                return "ASCII";
+            if (encodingType == typeof(UnicodeEncoding))
+                return "Unicode";
+            if (encodingType == typeof(UTF7Encoding))
+                return "UTF7";
+            if (encodingType == typeof(UTF8Encoding))
+                return  "UTF8";
+            if (encodingType == typeof(UTF32Encoding))
+                return "UTF32";
+            if (Settings.Encoding == Encoding.Default)
+                return "Default (" + Encoding.Default.HeaderName + ")";
+            return "<TILT>"; // Bob Martin (aka Uncle Bob) showed me this trick
+        }
+
         private void Ok_Click(object sender, EventArgs e)
         {
             Close();
@@ -401,25 +407,8 @@ namespace GitUI
             Settings.Puttygen = PuttygenPath.Text;
             Settings.Pageant = PageantPath.Text;
             Settings.AutoStartPageant = AutostartPageant.Checked;
-
-            if (string.IsNullOrEmpty(_NO_TRANSLATE_Encoding.Text) ||
-                _NO_TRANSLATE_Encoding.Text.StartsWith("Default", StringComparison.CurrentCultureIgnoreCase))
-                Settings.Encoding = Encoding.Default;
-            else if (_NO_TRANSLATE_Encoding.Text.Equals("ASCII", StringComparison.CurrentCultureIgnoreCase))
-                Settings.Encoding = new ASCIIEncoding();
-            else if (_NO_TRANSLATE_Encoding.Text.Equals("Unicode", StringComparison.CurrentCultureIgnoreCase))
-                Settings.Encoding = new UnicodeEncoding();
-            else if (_NO_TRANSLATE_Encoding.Text.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
-                Settings.Encoding = new UTF7Encoding();
-            else if (_NO_TRANSLATE_Encoding.Text.Equals("UTF8", StringComparison.CurrentCultureIgnoreCase))
-                Settings.Encoding = new UTF8Encoding(false);
-            else if (_NO_TRANSLATE_Encoding.Text.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
-                Settings.Encoding = new UTF32Encoding(true, false);
-            else
-                Settings.Encoding = Encoding.Default;
-
+            Settings.Encoding = CalculateEncoding(_NO_TRANSLATE_Encoding.Text);
             Settings.RevisionGridQuickSearchTimeout = (int)RevisionGridQuickSearchTimeout.Value;
-
             Settings.MulticolorBranches = MulticolorBranches.Checked;
             Settings.RevisionGraphDrawNonRelativesGray = DrawNonRelativesGray.Checked;
             Settings.RevisionGraphDrawNonRelativesTextGray = DrawNonRelativesTextGray.Checked;
@@ -474,6 +463,23 @@ namespace GitUI
             Settings.SaveSettings();
 
             return true;
+        }
+
+        private Encoding CalculateEncoding(string noTranslateEncodingText)
+        {
+            if (string.IsNullOrEmpty(noTranslateEncodingText) || noTranslateEncodingText.StartsWith("Default", StringComparison.CurrentCultureIgnoreCase))
+                return Encoding.Default;
+            if (noTranslateEncodingText.Equals("ASCII", StringComparison.CurrentCultureIgnoreCase))
+                return new ASCIIEncoding();
+            if (noTranslateEncodingText.Equals("Unicode", StringComparison.CurrentCultureIgnoreCase))
+                return new UnicodeEncoding();
+            if (noTranslateEncodingText.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
+               return new UTF7Encoding();
+            if (noTranslateEncodingText.Equals("UTF8", StringComparison.CurrentCultureIgnoreCase))
+                return new UTF8Encoding(false);
+            if (noTranslateEncodingText.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
+                return new UTF32Encoding(true, false);
+            return Encoding.Default;
         }
 
         private string GetSelectedApplicationIconColor()
