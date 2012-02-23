@@ -76,11 +76,29 @@ namespace GitCommands
                     if (parts.Length < 2 || parts[0][0] == '#')
                         continue;
                     if (parts.Contains("binary") || parts.Contains("-text"))
-                        if (Regex.IsMatch(fileName, CreateRegexFromFilePattern(parts[0])))
-                            lastMatchResult = true;
+                    {
+                        try
+                        {
+                            if (Regex.IsMatch(fileName, CreateRegexFromFilePattern(parts[0])))
+                                lastMatchResult = true;
+                        }
+                        catch
+                        {
+                            continue;
+                        }
+                    }
                     if (parts.Contains("text"))
-                        if (Regex.IsMatch(fileName, CreateRegexFromFilePattern(parts[0])))
-                            lastMatchResult = false;
+                    {
+                        try
+                        {
+                            if (Regex.IsMatch(fileName, CreateRegexFromFilePattern(parts[0])))
+                                lastMatchResult = false;
+                        }
+                        catch
+                        {
+                            continue;
+                        }
+                    }
                 }
                 return lastMatchResult;
             }
