@@ -67,7 +67,7 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
-            
+
             UpdateRemotesList();
 
             branch = Settings.Module.GetSelectedBranch();
@@ -205,11 +205,12 @@ namespace GitUI
 
             ScriptManager.RunEventScripts(ScriptEvent.BeforePull);
 
-            FormProcess process = CreateFormProcess(source);
+            var stashed = CalculateStashedValue();
 
+            FormProcess process = CreateFormProcess(source);
             ShowProcessDialogBox(source, process);
 
-            return EvaluateProcessDialogResults(process);
+            return EvaluateProcessDialogResults(process, stashed);
         }
 
         private bool ShouldPullChanges()
@@ -252,9 +253,8 @@ namespace GitUI
             return true;
         }
 
-        private bool EvaluateProcessDialogResults(FormProcess process)
+        private bool EvaluateProcessDialogResults(FormProcess process, bool stashed)
         {
-            var stashed = CalculateStashedValue();
             try
             {
                 if (EvaluateResultsBasedOnSettings(stashed, process))
@@ -262,13 +262,16 @@ namespace GitUI
             }
             finally
             {
-                bool messageBoxResult =
-                    MessageBox.Show(this, _applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text,
-                                    MessageBoxButtons.YesNo) == DialogResult.Yes;
-                if (ShouldStashPop(messageBoxResult, process, stashed))
+                if (stashed)
                 {
-                    new FormProcess("stash pop").ShowDialog(this);
-                    MergeConflictHandler.HandleMergeConflicts(this);
+                    bool messageBoxResult =
+                        MessageBox.Show(this, _applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text,
+                                        MessageBoxButtons.YesNo) == DialogResult.Yes;
+                    if (ShouldStashPop(messageBoxResult, process, stashed))
+                    {
+                        new FormProcess("stash pop").ShowDialog(this);
+                        MergeConflictHandler.HandleMergeConflicts(this);
+                    }
                 }
 
                 ScriptManager.RunEventScripts(ScriptEvent.AfterPull);
@@ -330,7 +333,7 @@ namespace GitUI
             if (!Fetch.Checked && AutoStash.Checked &&
                 Settings.Module.GitStatus(UntrackedFilesMode.No, IgnoreSubmodulesMode.Default).Count > 0)
             {
-                new FormProcess("stash save").ShowDialog(this);
+                GitUICommands.Instance.Stash(this);
                 return true;
             }
             return false;
