@@ -221,7 +221,7 @@ namespace GitUI
                 }
             }
 
-            Text = string.Format("{0} changes", allChangedFiles.Count);
+            Text = string.Format("{0} changes", allChangedFiles.Count.ToString());
         }
 
         private void ScheduleNextRegularUpdate()

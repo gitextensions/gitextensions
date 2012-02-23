@@ -397,7 +397,7 @@ namespace GitCommands
             if (central)
                 options.Add("--bare");
             if (depth.HasValue)
-                options.Add("--depth " + depth);
+                options.Add("--depth " + depth.ToString());
             if (VersionInUse.CloneCanAskForProgress)
                 options.Add("--progress");
             if (!string.IsNullOrEmpty(branch))
@@ -631,7 +631,7 @@ namespace GitCommands
 
         public static ConfigFile GetGlobalConfig()
         {
-            return new ConfigFile(GetHomeDir() + Settings.PathSeparator + ".gitconfig");
+            return new ConfigFile(GetHomeDir() + Settings.PathSeparator.ToString() + ".gitconfig");
         }
 
         public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, bool untrackedFiles)
@@ -1075,55 +1075,51 @@ namespace GitCommands
             if (delta < 60)
             {
                 if (ts.Seconds == 1)
-                    return String.Format(Strings.Get1SecondAgoText(), 1);
-                else
-                    return String.Format(Strings.GetNSecondsAgoText(), ts.Seconds);
+                    return String.Format(Strings.Get1SecondAgoText(), 1.ToString());
+                return String.Format(Strings.GetNSecondsAgoText(), ts.Seconds.ToString());
             }
             if (delta < 120)
             {
-                return String.Format(Strings.Get1MinuteAgoText(), 1);
+                return String.Format(Strings.Get1MinuteAgoText(), 1.ToString());
             }
             if (delta < 2700) // 45 * 60
             {
-                return String.Format(Strings.GetNMinutesAgoText(), ts.Minutes);
+                return String.Format(Strings.GetNMinutesAgoText(), ts.Minutes.ToString());
             }
             if (delta < 5400) // 90 * 60
             {
-                return String.Format(Strings.Get1HourAgoText(), 1);
+                return String.Format(Strings.Get1HourAgoText(), 1.ToString());
             }
             if (delta < 86400) // 24 * 60 * 60
             {
-                return String.Format(Strings.GetNHoursAgoText(), ts.Hours);
+                return String.Format(Strings.GetNHoursAgoText(), ts.Hours.ToString());
             }
             if (delta < 172800) // 48 * 60 * 60
             {
-                return String.Format(Strings.Get1DayAgoText(), 1);
+                return String.Format(Strings.Get1DayAgoText(), 1.ToString());
             }
             if (delta < 604800) // 7 * 24 * 60 * 60
             {
-                return String.Format(Strings.GetNDaysAgoText(), ts.Days);
+                return String.Format(Strings.GetNDaysAgoText(), ts.Days.ToString());
             }
             if (delta < 2592000) // 30 * 24 * 60 * 60
             {
                 int weeks = Convert.ToInt32(Math.Floor((double)ts.Days / 7));
                 if (weeks <= 1)
-                    return String.Format(Strings.Get1WeekAgoText(), 1);
-                else
-                    return String.Format(Strings.GetNWeeksAgoText(), weeks);
+                    return String.Format(Strings.Get1WeekAgoText(), 1.ToString());
+                return String.Format(Strings.GetNWeeksAgoText(), weeks.ToString());
             }
             if (delta < 31104000) // 12 * 30 * 24 * 60 * 60
             {
                 int months = Convert.ToInt32(Math.Floor((double)ts.Days / 30));
                 if (months <= 1)
-                    return String.Format(Strings.Get1MonthAgoText(), 1);
-                else
-                    return String.Format(Strings.GetNMonthsAgoText(), months);
+                    return String.Format(Strings.Get1MonthAgoText(), 1.ToString());
+                return String.Format(Strings.GetNMonthsAgoText(), months.ToString());
             }
             int years = Convert.ToInt32(Math.Floor((double)ts.Days / 365));
             if (years <= 1)
-                return String.Format(Strings.Get1YearAgoText(), 1);
-            else
-                return String.Format(Strings.GetNYearsAgoText(), years);
+                return String.Format(Strings.Get1YearAgoText(), 1.ToString());
+            return String.Format(Strings.GetNYearsAgoText(), years.ToString());
         }
 
 

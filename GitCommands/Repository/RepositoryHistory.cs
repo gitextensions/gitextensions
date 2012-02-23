@@ -45,7 +45,7 @@ namespace GitCommands.Repository
                 !repo.StartsWith("http", StringComparison.CurrentCultureIgnoreCase) &&
                 !repo.StartsWith("git", StringComparison.CurrentCultureIgnoreCase) &&
                 !repo.StartsWith("ssh", StringComparison.CurrentCultureIgnoreCase))
-                repo += Settings.PathSeparator;
+                repo += Settings.PathSeparator.ToString();
 
             Repository.RepositoryAnchor anchor = Repository.RepositoryAnchor.None;
             foreach (var recentRepository in Repositories)

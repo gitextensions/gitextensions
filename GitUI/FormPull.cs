@@ -425,7 +425,7 @@ namespace GitUI
             GitModule submodule = new GitModule();
             foreach (var submoduleName in submodules)
             {
-                submodule.WorkingDir = Settings.Module.WorkingDir + submoduleName + Settings.PathSeparator;
+                submodule.WorkingDir = Settings.Module.WorkingDir + submoduleName + Settings.PathSeparator.ToString();
                 if (!submodule.ValidWorkingDir())
                     return false;
             }
