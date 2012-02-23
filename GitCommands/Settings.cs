@@ -457,7 +457,7 @@ namespace GitCommands
             {
                 var temp = value;
                 if (temp.Length > 0 && temp[temp.Length - 1] != PathSeparator)
-                    temp += PathSeparator;
+                    temp += PathSeparator.ToString();
                 SafeSet("gitbindir", temp, ref _gitBinDir);
 
                 //if (string.IsNullOrEmpty(_gitBinDir))
@@ -926,7 +926,7 @@ namespace GitCommands
     {
         public static string AsString(this Font value)
         {
-            return String.Format("{0};{1}", value.FontFamily.Name, value.Size);
+            return String.Format("{0};{1}", value.FontFamily.Name, value.Size.ToString());
         }
 
         public static Font Parse(this string value, Font defaultValue)

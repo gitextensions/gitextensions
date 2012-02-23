@@ -15,7 +15,7 @@
     /// </summary>
     public static class GitSvnCommandHelpers
     {
-        private static string SvnPrefix = "svn";
+        private const string SvnPrefix = "svn";
 
         public static string CloneCmd(string fromSvn, string toPath, string authorsFile)
         {
@@ -64,12 +64,12 @@
             if (string.IsNullOrEmpty(dir))
                 return false;
 
-            string path = dir + Settings.PathSeparator + ".git" + Settings.PathSeparator + "svn";
+            string path = dir + Settings.PathSeparator.ToString() + ".git" + Settings.PathSeparator.ToString() + "svn";
             if (Directory.Exists(path) || File.Exists(path))
                 return true;
 
             return !dir.Contains(".git") &&
-                   Directory.Exists(dir + Settings.PathSeparator + "svn");
+                   Directory.Exists(dir + Settings.PathSeparator.ToString() + "svn");
         }
     }
 }

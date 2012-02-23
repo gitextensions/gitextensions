@@ -87,7 +87,7 @@ namespace GitUI
         private void UpdateProgress()
         {
             int translatedCount = translate.Count(translateItem => !string.IsNullOrEmpty(translateItem.TranslatedValue));
-            var progresMsg = string.Format(translateProgressText.Text, translatedCount, translate.Count);
+            var progresMsg = string.Format(translateProgressText.Text, translatedCount.ToString(), translate.Count.ToString());
             if (translateProgress.Text != progresMsg)
             {
                 translateProgress.Text = progresMsg;

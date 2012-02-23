@@ -79,13 +79,16 @@ namespace GitCommands
             if (string.IsNullOrEmpty(dir))
                 return false;
 
-            if (Directory.Exists(dir + Settings.PathSeparator + ".git") || File.Exists(dir + Settings.PathSeparator + ".git"))
+            string directoryWithPathSeparator = dir + Settings.PathSeparator.ToString();
+
+            string pathWithGitExtension = directoryWithPathSeparator + ".git";
+            if (Directory.Exists(pathWithGitExtension) || File.Exists(pathWithGitExtension))
                 return true;
 
             return !dir.Contains(".git") &&
-                   Directory.Exists(dir + Settings.PathSeparator + "info") &&
-                   Directory.Exists(dir + Settings.PathSeparator + "objects") &&
-                   Directory.Exists(dir + Settings.PathSeparator + "refs");
+                   Directory.Exists(directoryWithPathSeparator + "info") &&
+                   Directory.Exists(directoryWithPathSeparator + "objects") &&
+                   Directory.Exists(directoryWithPathSeparator + "refs");
         }
 
         public string GetGitDirectory()
@@ -138,7 +141,7 @@ namespace GitCommands
                 return "";
 
             if (!startDir.EndsWith(Settings.PathSeparator.ToString()) && !startDir.EndsWith(Settings.PathSeparatorWrong.ToString()))
-                startDir += Settings.PathSeparator;
+                startDir += Settings.PathSeparator.ToString();
 
             var dir = startDir;
 
@@ -147,7 +150,7 @@ namespace GitCommands
                 dir = dir.Substring(0, dir.LastIndexOfAny(new[] { Settings.PathSeparator, Settings.PathSeparatorWrong }));
 
                 if (ValidWorkingDir(dir))
-                    return dir + Settings.PathSeparator;
+                    return dir + Settings.PathSeparator.ToString();
             }
             return startDir;
         }
@@ -615,7 +618,7 @@ namespace GitCommands
                 if (!Int32.TryParse(fileStage.Trim()[0].ToString(), out stage))
                     continue;
 
-                var tempFile = RunGitCmd("checkout-index --temp --stage=" + stage + " -- " + "\"" + filename + "\"");
+                var tempFile = RunGitCmd("checkout-index --temp --stage=" + stage.ToString() + " -- " + "\"" + filename + "\"");
                 tempFile = tempFile.Split('\t')[0];
                 tempFile = Path.Combine(_workingdir, tempFile);
 
@@ -626,7 +629,7 @@ namespace GitCommands
                     var index = 1;
                     while (File.Exists(fileNames[stage - 1]) && index < 50)
                     {
-                        fileNames[stage - 1] = newFileName + index;
+                        fileNames[stage - 1] = newFileName + index.ToString();
                         index++;
                     }
                     File.Move(tempFile, fileNames[stage - 1]);
@@ -681,11 +684,11 @@ namespace GitCommands
                     if (line.StartsWith("gitdir:"))
                     {
                         string path = line.Substring(7).Trim().Replace('/', '\\');
-                        return path + Settings.PathSeparator;
+                        return path + Settings.PathSeparator.ToString();
                     }
                 }
             }
-            return repositoryPath + ".git" + Settings.PathSeparator;
+            return repositoryPath + ".git" + Settings.PathSeparator.ToString();
         }
 
         public string GetMergeMessage()
@@ -906,7 +909,7 @@ namespace GitCommands
 
         public string GetSubmoduleFullPath(string name)
         {
-            return _workingdir + FixPath(GetSubmoduleLocalPath(name)) + Settings.PathSeparator;
+            return _workingdir + FixPath(GetSubmoduleLocalPath(name)) + Settings.PathSeparator.ToString();
         }
 
         public string FindGitSuperprojectPath(out string submoduleName)
@@ -940,15 +943,16 @@ namespace GitCommands
                 superprojectPath == null)
             {
                 string path = Path.GetDirectoryName(currentPath);
+                string pathWithSeparator = path + Settings.PathSeparator.ToString();
                 if (!string.IsNullOrEmpty(path) &&
-                    (!File.Exists(path + Settings.PathSeparator + ".gitmodules") || !ValidWorkingDir(path + Settings.PathSeparator)))
+                    (!File.Exists(pathWithSeparator + ".gitmodules") || !ValidWorkingDir(pathWithSeparator)))
                 {
                     // Check upper directory
                     path = Path.GetDirectoryName(path);
-                    if (!File.Exists(path + Settings.PathSeparator + ".gitmodules") || !ValidWorkingDir(path + Settings.PathSeparator))
+                    if (!File.Exists(pathWithSeparator + ".gitmodules") || !ValidWorkingDir(pathWithSeparator))
                         return null;
                 }
-                superprojectPath = path + Settings.PathSeparator;
+                superprojectPath = pathWithSeparator;
             }
 
             if (!string.IsNullOrEmpty(superprojectPath))
@@ -1076,7 +1080,7 @@ namespace GitCommands
             output = FixPath(output);
 
             var result = RunCmd(Settings.GitCommand,
-                                "format-patch -M -C -B --start-number " + start + " \"" + from + "\"..\"" + to +
+                                "format-patch -M -C -B --start-number " + start.ToString() + " \"" + from + "\"..\"" + to +
                                 "\" -o \"" + output + "\"");
 
             return result;
@@ -1246,19 +1250,19 @@ namespace GitCommands
         public string GetRebaseDir()
         {
             string gitDirectory = GetGitDirectory();
-            if (Directory.Exists(gitDirectory + "rebase-merge" + Settings.PathSeparator))
-                return gitDirectory + "rebase-merge" + Settings.PathSeparator;
-            if (Directory.Exists(gitDirectory + "rebase-apply" + Settings.PathSeparator))
-                return gitDirectory + "rebase-apply" + Settings.PathSeparator;
-            if (Directory.Exists(gitDirectory + "rebase" + Settings.PathSeparator))
-                return gitDirectory + "rebase" + Settings.PathSeparator;
+            if (Directory.Exists(gitDirectory + "rebase-merge" + Settings.PathSeparator.ToString()))
+                return gitDirectory + "rebase-merge" + Settings.PathSeparator.ToString();
+            if (Directory.Exists(gitDirectory + "rebase-apply" + Settings.PathSeparator.ToString()))
+                return gitDirectory + "rebase-apply" + Settings.PathSeparator.ToString();
+            if (Directory.Exists(gitDirectory + "rebase" + Settings.PathSeparator.ToString()))
+                return gitDirectory + "rebase" + Settings.PathSeparator.ToString();
 
             return "";
         }
 
         public bool InTheMiddleOfBisect()
         {
-            return File.Exists(WorkingDirGitDir() + Settings.PathSeparator + "BISECT_START");
+            return File.Exists(WorkingDirGitDir() + Settings.PathSeparator.ToString() + "BISECT_START");
         }
 
 
@@ -1402,7 +1406,7 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(author))
                 command += " --author=\"" + author + "\"";
 
-            var path = WorkingDirGitDir() + Settings.PathSeparator + "COMMITMESSAGE\"";
+            var path = WorkingDirGitDir() + Settings.PathSeparator.ToString() + "COMMITMESSAGE\"";
             command += " -F \"" + path;
 
             return command;
@@ -1465,7 +1469,7 @@ namespace GitCommands
 
         public ConfigFile GetLocalConfig()
         {
-            return new ConfigFile(WorkingDirGitDir() + Settings.PathSeparator + "config");
+            return new ConfigFile(WorkingDirGitDir() + Settings.PathSeparator.ToString() + "config");
         }
 
         public string GetSetting(string setting)
@@ -2106,7 +2110,7 @@ namespace GitCommands
         public string GetPreviousCommitMessage(int numberBack)
         {
             //+"--encoding=" + Settings.Encoding.HeaderName doesn't work
-            return RecodeString(RunGitCmd("log -n 1 HEAD~" + numberBack + " --pretty=format:%s%n%n%b "));
+            return RecodeString(RunGitCmd("log -n 1 HEAD~" + numberBack.ToString() + " --pretty=format:%s%n%n%b "));
         }
 
         public string MergeBranch(string branch)
