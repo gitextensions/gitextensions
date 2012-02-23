@@ -198,12 +198,13 @@ namespace GitUI
                                                              ForcePushBranches.Checked);
             else
             {
+                // Push Multiple Branches Tab selecdted
                 var pushActions = new List<GitPushAction>();
                 foreach (DataRow row in _branchTable.Rows)
                 {
-                    var push = (bool)row["Push"];
-                    var force = (bool)row["Force"];
-                    var delete = (bool)row["Delete"];
+                    var push = Convert.ToBoolean(row["Push"]);
+                    var force = Convert.ToBoolean(row["Force"]);
+                    var delete = Convert.ToBoolean(row["Delete"]);
 
                     if (push || force)
                         pushActions.Add(new GitPushAction(row["Local"].ToString(), row["Remote"].ToString(), force));
