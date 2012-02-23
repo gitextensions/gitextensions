@@ -2432,5 +2432,10 @@ namespace GitUI
             IndexWatcher.Reset();
         }
 
+        private void DiffFiles_DataSourceChanged(object sender, EventArgs e)
+        {
+            if (DiffFiles.GitItemStatuses == null || DiffFiles.GitItemStatuses.Count == 0)
+                DiffText.ViewPatch(String.Empty);
+        }
     }
 }
