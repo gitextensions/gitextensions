@@ -169,7 +169,7 @@ namespace GitUI
             if (item == null)
                 return;
 
-            if (item.ItemType == "blob")
+            if (item.IsBlob)
                 FileText.ViewGitItem(item.FileName, item.Guid);
             else
                 FileText.ViewText("", "");
@@ -878,7 +878,7 @@ namespace GitUI
             if (item == null)
                 return;
 
-            if (item.ItemType == "blob" || item.ItemType == "tree")
+            if (item.IsBlob || item.IsTree)
             {
                 // TODO: Find lastest revison when file was changed based on RevisionGrid.GetRevisions();
                 GitUICommands.Instance.StartFileHistoryDialog(this, item.FileName);
@@ -952,7 +952,7 @@ namespace GitUI
             var item = GitTree.SelectedNode.Tag;
 
             if (item is GitItem)
-                if (((GitItem)item).ItemType == "blob")
+                if (((GitItem)item).IsBlob)
                 {
                     var fileName = ((GitItem)item).FileName;
                     if (fileName.Contains("\\") && fileName.LastIndexOf("\\") < fileName.Length)
@@ -972,7 +972,7 @@ namespace GitUI
             var item = (GitTree.SelectedNode != null) ? GitTree.SelectedNode.Tag : null;
 
             if (item is GitItem)
-                if (((GitItem)item).ItemType == "blob")
+                if (((GitItem)item).IsBlob)
                     enableItems = true;
 
             saveAsToolStripMenuItem.Enabled = enableItems;
@@ -990,7 +990,7 @@ namespace GitUI
             {
                 var item = GitTree.SelectedNode.Tag;
                 if (item is GitItem)
-                    if (((GitItem)item).ItemType == "blob")
+                    if (((GitItem)item).IsBlob)
                     {
                         var fileName = ((GitItem)item).FileName;
                         if (fileName.Contains("\\") && fileName.LastIndexOf("\\") < fileName.Length)
@@ -1026,14 +1026,14 @@ namespace GitUI
                     subNode.Nodes.Add(new TreeNode());
                 else
                 {
-                    if (gitItem.ItemType == "tree")
+                    if (gitItem.IsTree)
                     {
                         subNode.ImageIndex = 1;
                         subNode.SelectedImageIndex = 1;
                         subNode.Nodes.Add(new TreeNode());
                     }
                     else
-                        if (gitItem.ItemType == "commit")
+                        if (gitItem.IsCommit)
                         {
                             subNode.ImageIndex = 2;
                             subNode.SelectedImageIndex = 2;
@@ -1097,7 +1097,7 @@ namespace GitUI
             if (item == null)
                 return;
 
-            if (item.ItemType != "blob")
+            if (!item.IsBlob)
                 return;
 
             if (GitUICommands.Instance.StartFileHistoryDialog(this, item.FileName))
@@ -1857,7 +1857,7 @@ namespace GitUI
 
             if (item == null)
                 return;
-            if (item.ItemType != "blob")
+            if (!item.IsBlob)
                 return;
 
             var fileDialog =
@@ -2030,7 +2030,7 @@ namespace GitUI
             var item = GitTree.SelectedNode.Tag;
 
             if (item is GitItem)
-                if (((GitItem)item).ItemType == "blob")
+                if (((GitItem)item).IsBlob)
                 {
                     string fileName = ((GitItem)item).FileName;
                     fileName = Settings.WorkingDir + fileName;
@@ -2256,7 +2256,7 @@ namespace GitUI
             var item = GitTree.SelectedNode.Tag;
 
             if (item is GitItem)
-                if (((GitItem)item).ItemType == "blob")
+                if (((GitItem)item).IsBlob)
                 {
                     string fileName = ((GitItem)item).FileName;
                     fileName = Settings.WorkingDir + fileName;
