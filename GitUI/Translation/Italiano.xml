@@ -2926,19 +2926,19 @@ globali.</Value>
         <TranslationItem Name="label28" Property="Text">
           <Value>Mantieni backup (.orig) dopo il merge</Value>
         </TranslationItem>
-        <TranslationItem Name="label35" Property="Text">
+        <TranslationItem Name="chkShowGitCommandLine" Property="Text">
           <Value>Mostra la finestra della linea di comando git quando si esegue il processo</Value>
         </TranslationItem>
-        <TranslationItem Name="label34" Property="Text">
+        <TranslationItem Name="chkCloseProcessDialog" Property="Text">
           <Value>Chiudi automaticamente la finestra del processo quando l'operazione è stata completata con successo</Value>
         </TranslationItem>
-        <TranslationItem Name="label39" Property="Text">
+        <TranslationItem Name="chkShowRelativeDate" Property="Text">
           <Value>Visualizza la data relativa invece che la data completa</Value>
         </TranslationItem>
-        <TranslationItem Name="label38" Property="Text">
+        <TranslationItem Name="chkUseFastChecks" Property="Text">
           <Value>Usa FileSystemWatcher per controllare se l'indice è cambiato</Value>
         </TranslationItem>
-        <TranslationItem Name="label40" Property="Text">
+        <TranslationItem Name="chkFollowRenamesInFileHistory" Property="Text">
           <Value>Segui le rinomine nella storia del file (sperimentale)</Value>
         </TranslationItem>
         <TranslationItem Name="label41" Property="Text">
@@ -3038,7 +3038,7 @@ sarà impostata, se vuota, a %HOMEDRIVE%%HOMEPATH%. Cambiare il comportamento de
         <TranslationItem Name="StripedBanchChange" Property="Text">
           <Value>Cambiamento del branch a righe</Value>
         </TranslationItem>
-        <TranslationItem Name="showGitStatusInToolbarLabel" Property="Text">
+        <TranslationItem Name="chkShowGitStatusInToolbar" Property="Text">
           <Value>Mostra stato del repository nella finestra Sfoglia (numero di cambiamenti nella barra degli strumenti, richiesto riavvio)</Value>
         </TranslationItem>
         <TranslationItem Name="RevisionGridQuickSearchTimeout" Property="Text">
@@ -3047,7 +3047,7 @@ sarà impostata, se vuota, a %HOMEDRIVE%%HOMEPATH%. Cambiare il comportamento de
         <TranslationItem Name="label24" Property="Text">
           <Value>Timeout ricerca rapida nella tabella delle revisioni [ms]</Value>
         </TranslationItem>
-        <TranslationItem Name="showErrorsWhenStagingFilesLabel" Property="Text">
+        <TranslationItem Name="chkShowErrorsWhenStagingFiles" Property="Text">
           <Value>Visualizza errori quando si sta effettuando lo stage dei file</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox9" Property="Text">
@@ -3077,10 +3077,10 @@ sarà impostata, se vuota, a %HOMEDRIVE%%HOMEPATH%. Cambiare il comportamento de
         <TranslationItem Name="DrawNonRelativesGray" Property="Text">
           <Value>Disegna in grigio i non-parenti</Value>
         </TranslationItem>
-        <TranslationItem Name="label26" Property="Text">
+        <TranslationItem Name="chkShowCurrentChangesInRevisionGraph" Property="Text">
           <Value>Visualizza i cambiamenti correnti nel grafo delle revisioni (lento!)</Value>
         </TranslationItem>
-        <TranslationItem Name="label52" Property="Text">
+        <TranslationItem Name="chkShowStashCountInBrowseWindow" Property="Text">
           <Value>Visualizza il contatore delle modifiche nascoste nella finestra 'sfoglia'</Value>
         </TranslationItem>
         <TranslationItem Name="scriptsTab" Property="Text">
@@ -3158,10 +3158,10 @@ sarà impostata, se vuota, a %HOMEDRIVE%%HOMEPATH%. Cambiare il comportamento de
         <TranslationItem Name="scriptNeedsConfirmation" Property="Text">
           <Value>Chiedi conferma</Value>
         </TranslationItem>
-        <TranslationItem Name="labelShowCurrentBranchInVisualStudio" Property="Text">
+        <TranslationItem Name="chkShowCurrentBranchInVisualStudio" Property="Text">
           <Value>Mostra branch corrente in Visual Studio</Value>
         </TranslationItem>
-        <TranslationItem Name="label37" Property="Text">
+        <TranslationItem Name="chkUsePatienceDiffAlgorithm" Property="Text">
           <Value>Mostra grafo delle revisioni nel log di commit</Value>
         </TranslationItem>
         <TranslationItem Name="truncatePathMethod" Property="Text">

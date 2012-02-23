@@ -46,8 +46,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitImpact", "Plugins\Statis
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateLocalBranches", "Plugins\CreateLocalBranches\CreateLocalBranches.csproj", "{31D96116-16A6-45C2-9A6D-6DD5A1FC5F20}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitUITests", "GitUITests\GitUITests.csproj", "{047C30FE-B9C5-4DE1-80A6-3D20C968ACF7}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -318,18 +316,6 @@ Global
 		{31D96116-16A6-45C2-9A6D-6DD5A1FC5F20}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{31D96116-16A6-45C2-9A6D-6DD5A1FC5F20}.Release|x64.ActiveCfg = Release|Any CPU
 		{31D96116-16A6-45C2-9A6D-6DD5A1FC5F20}.Release|x86.ActiveCfg = Release|Any CPU
-		{047C30FE-B9C5-4DE1-80A6-3D20C968ACF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{047C30FE-B9C5-4DE1-80A6-3D20C968ACF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{047C30FE-B9C5-4DE1-80A6-3D20C968ACF7}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{047C30FE-B9C5-4DE1-80A6-3D20C968ACF7}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{047C30FE-B9C5-4DE1-80A6-3D20C968ACF7}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{047C30FE-B9C5-4DE1-80A6-3D20C968ACF7}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{047C30FE-B9C5-4DE1-80A6-3D20C968ACF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{047C30FE-B9C5-4DE1-80A6-3D20C968ACF7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{047C30FE-B9C5-4DE1-80A6-3D20C968ACF7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{047C30FE-B9C5-4DE1-80A6-3D20C968ACF7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{047C30FE-B9C5-4DE1-80A6-3D20C968ACF7}.Release|x64.ActiveCfg = Release|Any CPU
-		{047C30FE-B9C5-4DE1-80A6-3D20C968ACF7}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

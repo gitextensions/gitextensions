@@ -337,6 +337,20 @@ namespace GitCommands
             set { SafeSet("autostash", value, ref _autoStash); }
         }
 
+        private static bool? _includeUntrackedFilesInAutoStash;
+        public static bool IncludeUntrackedFilesInAutoStash
+        {
+            get { return SafeGet("includeUntrackedFilesInAutoStash", true, ref _includeUntrackedFilesInAutoStash); }
+            set { SafeSet("includeUntrackedFilesInAutoStash", value, ref _includeUntrackedFilesInAutoStash); }
+        }
+
+        private static bool? _includeUntrackedFilesInManualStash;
+        public static bool IncludeUntrackedFilesInManualStash
+        {
+            get { return SafeGet("includeUntrackedFilesInManualStash", true, ref _includeUntrackedFilesInManualStash); }
+            set { SafeSet("includeUntrackedFilesInManualStash", value, ref _includeUntrackedFilesInManualStash); }
+        }
+
         private static bool? _orderRevisionByDate;
         public static bool OrderRevisionByDate
         {
@@ -457,7 +471,7 @@ namespace GitCommands
             {
                 var temp = value;
                 if (temp.Length > 0 && temp[temp.Length - 1] != PathSeparator)
-                    temp += PathSeparator.ToString();
+                    temp += PathSeparator;
                 SafeSet("gitbindir", temp, ref _gitBinDir);
 
                 //if (string.IsNullOrEmpty(_gitBinDir))
@@ -926,7 +940,7 @@ namespace GitCommands
     {
         public static string AsString(this Font value)
         {
-            return String.Format("{0};{1}", value.FontFamily.Name, value.Size.ToString());
+            return String.Format("{0};{1}", value.FontFamily.Name, value.Size);
         }
 
         public static Font Parse(this string value, Font defaultValue)

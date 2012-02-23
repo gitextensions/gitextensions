@@ -2216,19 +2216,19 @@ cualquier configuración global.</Value>
         <TranslationItem Name="label28" Property="Text">
           <Value>Mantener respaldos (.orig) después de fusionarse</Value>
         </TranslationItem>
-        <TranslationItem Name="label35" Property="Text">
+        <TranslationItem Name="chkShowGitCommandLine" Property="Text">
           <Value>Mostrar línea de comandos de Git al ejecutar un proceso</Value>
         </TranslationItem>
-        <TranslationItem Name="label34" Property="Text">
+        <TranslationItem Name="chkCloseProcessDialog" Property="Text">
           <Value>Cerrar la ventana del proceso automáticamente cuando el proceso fue satisfactorio</Value>
         </TranslationItem>
-        <TranslationItem Name="label39" Property="Text">
+        <TranslationItem Name="chkShowRelativeDate" Property="Text">
           <Value>Mostrar fecha relativa en lugar de la fecha completa</Value>
         </TranslationItem>
-        <TranslationItem Name="label38" Property="Text">
+        <TranslationItem Name="chkUseFastChecks" Property="Text">
           <Value>Utilice FileSystemWatcher para comprobar si el índice cambia</Value>
         </TranslationItem>
-        <TranslationItem Name="label40" Property="Text">
+        <TranslationItem Name="chkFollowRenamesInFileHistory" Property="Text">
           <Value>Seguir renombramientos en el historial de archivos (experimental)</Value>
         </TranslationItem>
         <TranslationItem Name="label41" Property="Text">
@@ -2328,7 +2328,7 @@ cualquier configuración global.</Value>
         <TranslationItem Name="StripedBanchChange" Property="Text">
           <Value>Cambio de ramas rayadas</Value>
         </TranslationItem>
-        <TranslationItem Name="showGitStatusInToolbarLabel" Property="Text">
+        <TranslationItem Name="chkShowGitStatusInToolbar" Property="Text">
           <Value>Mostrar el estado del repositorio en la ventana de búsqueda (número de cambios en la barra de herramientas, requiere reiniciar)</Value>
         </TranslationItem>
         <TranslationItem Name="RevisionGridQuickSearchTimeout" Property="Text">
@@ -2337,7 +2337,7 @@ cualquier configuración global.</Value>
         <TranslationItem Name="label24" Property="Text">
           <Value>Tiempo máximo de búsqueda rápida en la tabla de revisiones [ms]</Value>
         </TranslationItem>
-        <TranslationItem Name="showErrorsWhenStagingFilesLabel" Property="Text">
+        <TranslationItem Name="chkShowErrorsWhenStagingFiles" Property="Text">
           <Value>Mostrar errores al colocar archivos en el Stage</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox9" Property="Text">
@@ -2367,10 +2367,10 @@ cualquier configuración global.</Value>
         <TranslationItem Name="DrawNonRelativesGray" Property="Text">
           <Value>Dibujar no parientes con color gris</Value>
         </TranslationItem>
-        <TranslationItem Name="label26" Property="Text">
+        <TranslationItem Name="chkShowCurrentChangesInRevisionGraph" Property="Text">
           <Value>Mostrar cambios del directorio de trabajo actual en el gráfico de revisiones</Value>
         </TranslationItem>
-        <TranslationItem Name="label52" Property="Text">
+        <TranslationItem Name="chkShowStashCountInBrowseWindow" Property="Text">
           <Value>Mostrar cantidad de pilas en la barra de estado de la ventana de exploración</Value>
         </TranslationItem>
         <TranslationItem Name="scriptsTab" Property="Text">
@@ -2448,10 +2448,10 @@ cualquier configuración global.</Value>
         <TranslationItem Name="scriptNeedsConfirmation" Property="Text">
           <Value>Pedir confirmación</Value>
         </TranslationItem>
-        <TranslationItem Name="labelShowCurrentBranchInVisualStudio" Property="Text">
+        <TranslationItem Name="chkShowCurrentBranchInVisualStudio" Property="Text">
           <Value>Mostrar rama actual en Visual Studio</Value>
         </TranslationItem>
-        <TranslationItem Name="label37" Property="Text">
+        <TranslationItem Name="chkUsePatienceDiffAlgorithm" Property="Text">
           <Value>Mostrar el gráfico de la revisión en el informe de commits</Value>
         </TranslationItem>
         <TranslationItem Name="truncatePathMethod" Property="Text">
@@ -2481,7 +2481,7 @@ cualquier configuración global.</Value>
         <TranslationItem Name="label57" Property="Text">
           <Value>Ruta al template de commit</Value>
         </TranslationItem>
-        <TranslationItem Name="label58" Property="Text">
+        <TranslationItem Name="chkFocusControlOnHover" Property="Text">
           <Value>Dar foco al pasar por encima para poder desplazarse sin tener que hacer click</Value>
         </TranslationItem>
         <TranslationItem Name="downloadMsysgit" Property="Text">
