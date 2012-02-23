@@ -99,7 +99,7 @@ namespace GitUI
 
             InitializeComponent();
             Translate();
-            
+
 #if !__MonoCS__
             if (Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
@@ -169,7 +169,7 @@ namespace GitUI
             if (item == null)
                 return;
 
-            if (item.IsBlob)
+            if (item.ItemType == "blob")
                 FileText.ViewGitItem(item.FileName, item.Guid);
             else
                 FileText.ViewText("", "");
@@ -355,14 +355,14 @@ namespace GitUI
                 string desc = ReadRepositoryDescription(repositoryDir);
                 if (desc.IsNullOrEmpty())
                 {
-                    foreach(Repository repo in Repositories.RepositoryHistory.Repositories)
+                    foreach (Repository repo in Repositories.RepositoryHistory.Repositories)
                         if (repo.Path.Equals(repositoryDir, StringComparison.CurrentCultureIgnoreCase))
                         {
                             desc = repo.Title;
                             break;
-                        }                                                                              
+                        }
                 }
-                 return desc ?? dirInfo.Name;
+                return desc ?? dirInfo.Name;
             }
             else
                 return dirInfo.Name;
@@ -407,7 +407,7 @@ namespace GitUI
 
         void UserMenu_Click(object sender, EventArgs e)
         {
-            ScriptRunner.RunScript(( (ToolStripButton) sender).Text, null);
+            ScriptRunner.RunScript(((ToolStripButton)sender).Text, null);
         }
 
         private void UpdateJumplist(bool validWorkingDir)
@@ -545,7 +545,7 @@ namespace GitUI
 
                 if (_bisect == null)
                 {
-                    _bisect = new WarningToolStripItem { Text = _warningMiddleOfBisect.Text};
+                    _bisect = new WarningToolStripItem { Text = _warningMiddleOfBisect.Text };
                     _bisect.Click += BisectClick;
                     statusStrip.Items.Add(_bisect);
                 }
@@ -746,7 +746,7 @@ namespace GitUI
         }
 
         //store strings to not keep references to nodes
-        private Stack<string>  lastSelectedNodes = new Stack<string>();
+        private Stack<string> lastSelectedNodes = new Stack<string>();
 
         private void FillFileTree()
         {
@@ -878,7 +878,7 @@ namespace GitUI
             if (item == null)
                 return;
 
-            if (item.IsBlob || item.IsTree)
+            if (item.ItemType == "blob" || item.ItemType == "tree")
             {
                 // TODO: Find lastest revison when file was changed based on RevisionGrid.GetRevisions();
                 GitUICommands.Instance.StartFileHistoryDialog(this, item.FileName);
@@ -943,12 +943,16 @@ namespace GitUI
             return candidates.Where(fileName => fileName.ToLower().Contains(nameAsLower)).ToList();
         }
 
+
+
+
+
         public void OpenWithOnClick(object sender, EventArgs e)
         {
             var item = GitTree.SelectedNode.Tag;
 
             if (item is GitItem)
-                if (((GitItem)item).IsBlob)
+                if (((GitItem)item).ItemType == "blob")
                 {
                     var fileName = ((GitItem)item).FileName;
                     if (fileName.Contains("\\") && fileName.LastIndexOf("\\") < fileName.Length)
@@ -968,7 +972,7 @@ namespace GitUI
             var item = (GitTree.SelectedNode != null) ? GitTree.SelectedNode.Tag : null;
 
             if (item is GitItem)
-                if (((GitItem)item).IsBlob)
+                if (((GitItem)item).ItemType == "blob")
                     enableItems = true;
 
             saveAsToolStripMenuItem.Enabled = enableItems;
@@ -986,7 +990,7 @@ namespace GitUI
             {
                 var item = GitTree.SelectedNode.Tag;
                 if (item is GitItem)
-                    if (((GitItem)item).IsBlob)
+                    if (((GitItem)item).ItemType == "blob")
                     {
                         var fileName = ((GitItem)item).FileName;
                         if (fileName.Contains("\\") && fileName.LastIndexOf("\\") < fileName.Length)
@@ -1022,14 +1026,14 @@ namespace GitUI
                     subNode.Nodes.Add(new TreeNode());
                 else
                 {
-                    if (gitItem.IsTree)
+                    if (gitItem.ItemType == "tree")
                     {
                         subNode.ImageIndex = 1;
                         subNode.SelectedImageIndex = 1;
                         subNode.Nodes.Add(new TreeNode());
                     }
                     else
-                        if (gitItem.IsCommit)
+                        if (gitItem.ItemType == "commit")
                         {
                             subNode.ImageIndex = 2;
                             subNode.SelectedImageIndex = 2;
@@ -1093,7 +1097,7 @@ namespace GitUI
             if (item == null)
                 return;
 
-            if (!item.IsBlob)
+            if (item.ItemType != "blob")
                 return;
 
             if (GitUICommands.Instance.StartFileHistoryDialog(this, item.FileName))
@@ -1571,7 +1575,10 @@ namespace GitUI
 
         private void StashChangesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            new FormProcess("stash save").ShowDialog(this);
+            var arguments = "stash save";
+            if (Settings.IncludeUntrackedFilesInManualStash)
+                arguments += " -u";
+            new FormProcess(arguments).ShowDialog(this);
             Initialize();
         }
 
@@ -1754,7 +1761,7 @@ namespace GitUI
                 MessageBox.Show(this, output);
         }
 
-        private void AddWorkingdirDropDownItem(Repository repo, string caption) 
+        private void AddWorkingdirDropDownItem(Repository repo, string caption)
         {
             ToolStripMenuItem toolStripItem = new ToolStripMenuItem(caption);
             _NO_TRANSLATE_Workingdir.DropDownItems.Add(toolStripItem);
@@ -1765,7 +1772,7 @@ namespace GitUI
             };
 
             if (repo.Title != null || !repo.Path.Equals(caption))
-                toolStripItem.ToolTipText = repo.Path;            
+                toolStripItem.ToolTipText = repo.Path;
         }
 
 
@@ -1788,7 +1795,7 @@ namespace GitUI
                 splitter.graphics.Dispose();
             }
 
-            foreach(RecentRepoInfo repo in mostRecentRepos)
+            foreach (RecentRepoInfo repo in mostRecentRepos)
                 AddWorkingdirDropDownItem(repo.Repo, repo.Caption);
 
 
@@ -1818,7 +1825,7 @@ namespace GitUI
         {
             Settings.WorkingDir = path;
             Repositories.AddMostRecentRepository(Settings.WorkingDir);
-            InternalInitialize(true);                            
+            InternalInitialize(true);
         }
 
         private void TranslateToolStripMenuItemClick(object sender, EventArgs e)
@@ -1850,7 +1857,7 @@ namespace GitUI
 
             if (item == null)
                 return;
-            if (!item.IsBlob)
+            if (item.ItemType != "blob")
                 return;
 
             var fileDialog =
@@ -2023,7 +2030,7 @@ namespace GitUI
             var item = GitTree.SelectedNode.Tag;
 
             if (item is GitItem)
-                if (((GitItem)item).IsBlob)
+                if (((GitItem)item).ItemType == "blob")
                 {
                     string fileName = ((GitItem)item).FileName;
                     fileName = Settings.WorkingDir + fileName;
@@ -2249,7 +2256,7 @@ namespace GitUI
             var item = GitTree.SelectedNode.Tag;
 
             if (item is GitItem)
-                if (((GitItem)item).IsBlob)
+                if (((GitItem)item).ItemType == "blob")
                 {
                     string fileName = ((GitItem)item).FileName;
                     fileName = Settings.WorkingDir + fileName;
@@ -2317,7 +2324,8 @@ namespace GitUI
 
         private int getNextIdx(int curIdx, int maxIdx, bool searchBackward)
         {
-            if(searchBackward){
+            if (searchBackward)
+            {
                 if (curIdx == 0)
                 {
                     curIdx = maxIdx;
@@ -2326,7 +2334,9 @@ namespace GitUI
                 {
                     curIdx--;
                 }
-            } else {
+            }
+            else
+            {
                 if (curIdx == maxIdx)
                 {
                     curIdx = 0;
@@ -2345,9 +2355,12 @@ namespace GitUI
             if (revisions.Count == 0)
                 return null;
             int idx = DiffFiles.SelectedIndex;
-            if(idx == -1){
+            if (idx == -1)
+            {
                 return new Tuple<int, string>(idx, null);
-            } else {
+            }
+            else
+            {
                 IList<GitItemStatus> items = DiffFiles.GitItemStatuses;
                 idx = getNextIdx(idx, items.Count - 1, searchBackward);
                 _dontUpdateOnIndexChange = true;
@@ -2357,40 +2370,40 @@ namespace GitUI
                 return tuple;
             }
         }
-        
+
         private void openContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-          if (DiffFiles.SelectedItems.Count == 0)
-            return;
+            if (DiffFiles.SelectedItems.Count == 0)
+                return;
 
-          foreach (var item in DiffFiles.SelectedItems)
-          {
-            var fileNames = new StringBuilder();
-            fileNames.Append((Settings.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
-
-            string filePath = fileNames.ToString();
-            if (File.Exists(filePath))
+            foreach (var item in DiffFiles.SelectedItems)
             {
-              System.Diagnostics.Process.Start("explorer.exe", "/select, " + filePath);
+                var fileNames = new StringBuilder();
+                fileNames.Append((Settings.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+
+                string filePath = fileNames.ToString();
+                if (File.Exists(filePath))
+                {
+                    System.Diagnostics.Process.Start("explorer.exe", "/select, " + filePath);
+                }
             }
-          }
         }
 
         private void DiffContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-          foreach (var item in DiffFiles.SelectedItems)
-          {
-            var fileNames = new StringBuilder();
-            fileNames.Append((Settings.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
-
-            if (File.Exists(fileNames.ToString()))
+            foreach (var item in DiffFiles.SelectedItems)
             {
-              openContainingFolderToolStripMenuItem.Enabled = true;
-              return;
-            }
-          }
+                var fileNames = new StringBuilder();
+                fileNames.Append((Settings.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
 
-          openContainingFolderToolStripMenuItem.Enabled = false;
+                if (File.Exists(fileNames.ToString()))
+                {
+                    openContainingFolderToolStripMenuItem.Enabled = true;
+                    return;
+                }
+            }
+
+            openContainingFolderToolStripMenuItem.Enabled = false;
         }
 
         private void CloneSvnToolStripMenuItemClick(object sender, EventArgs e)

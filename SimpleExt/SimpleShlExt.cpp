@@ -119,7 +119,8 @@ int CSimpleShlExt::PopulateMenu(HMENU hMenu, int id)
     AddMenuItem(hMenu, "Settings", ++id, SettingsId=12);
     AddMenuItem(hMenu, "View diff", ++id, ViewDiffId=13);
 
-    return id++;
+    ++id;
+    return id;
 }
 
 STDMETHODIMP CSimpleShlExt::GetCommandString (
