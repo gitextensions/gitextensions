@@ -15,6 +15,11 @@ namespace GitUI
             Translate();
             _defaultBranch = defaultBranch;
 
+            if (Settings.NoFastForwardMerge)
+            {
+                noFastForward.Checked = true;
+            }
+
             advanced_CheckedChanged(null, null);
         }
 
@@ -39,6 +44,8 @@ namespace GitUI
 
         private void OkClick(object sender, EventArgs e)
         {
+            Settings.NoFastForwardMerge = noFastForward.Checked;
+
             var process = new FormProcess(GitCommandHelpers.MergeBranchCmd(Branches.GetSelectedText(), fastForward.Checked, squash.Checked, noCommit.Checked, _NO_TRANSLATE_mergeStrategy.Text));
             process.ShowDialog(this);
 

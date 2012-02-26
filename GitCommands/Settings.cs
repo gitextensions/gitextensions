@@ -805,6 +805,13 @@ namespace GitCommands
             set { SafeSet("SortLessRecentRepos", value, ref _SortLessRecentRepos); }
         }
 
+        private static bool? _NoFastForwardMerge;
+        public static bool NoFastForwardMerge
+        {
+            get { return SafeGet("NoFastForwardMerge", false, ref _NoFastForwardMerge); }
+            set { SafeSet("NoFastForwardMerge", value, ref _NoFastForwardMerge); }
+        }
+
         public static string GetGitExtensionsFullPath()
         {
             return GetGitExtensionsDirectory() + "\\GitExtensions.exe";
