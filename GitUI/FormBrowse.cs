@@ -427,8 +427,14 @@ namespace GitUI
                         Directory.CreateDirectory(baseFolder);
                     }
 
+                     //Remove InvalidPathChars
+                    StringBuilder sb = new StringBuilder(repositoryDescription);
+                    foreach (char c in Path.GetInvalidFileNameChars())
+                    {
+                        sb.Replace(c, '_');
+                    }
 
-                    string path = Path.Combine(baseFolder, String.Format("{0}.{1}", repositoryDescription, "gitext"));
+                    string path = Path.Combine(baseFolder, String.Format("{0}.{1}", sb.ToString(), "gitext"));
                     File.WriteAllText(path, Settings.WorkingDir);
                     JumpList.AddToRecent(path);
                 }
