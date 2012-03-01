@@ -294,7 +294,7 @@ namespace PatchApply
 
         public void LoadPatchFile(bool applyPatch)
         {
-            using (var re = new StreamReader(PatchFileName, Settings.Encoding))
+            using (var re = new StreamReader(PatchFileName, Settings.FilesEncoding))
             {
                 LoadPatchStream(re, applyPatch);
             }

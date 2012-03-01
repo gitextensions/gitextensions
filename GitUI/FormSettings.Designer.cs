@@ -111,8 +111,6 @@ namespace GitUI
             this.Language = new System.Windows.Forms.ComboBox();
             this.label49 = new System.Windows.Forms.Label();
             this.chkFollowRenamesInFileHistory = new System.Windows.Forms.CheckBox();
-            this.EncodingLabel = new System.Windows.Forms.Label();
-            this._NO_TRANSLATE_Encoding = new System.Windows.Forms.ComboBox();
             this.Dictionary = new System.Windows.Forms.ComboBox();
             this.label22 = new System.Windows.Forms.Label();
             this.chkShowRelativeDate = new System.Windows.Forms.CheckBox();
@@ -273,6 +271,14 @@ namespace GitUI
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             this.diffFontDialog = new System.Windows.Forms.FontDialog();
+            this.Global_AppEncoding = new System.Windows.Forms.ComboBox();
+            this.label59 = new System.Windows.Forms.Label();
+            this.label60 = new System.Windows.Forms.Label();
+            this.Global_FilesEncoding = new System.Windows.Forms.ComboBox();
+            this.Local_AppEncoding = new System.Windows.Forms.ComboBox();
+            this.LogEncodingLabel = new System.Windows.Forms.Label();
+            this.label61 = new System.Windows.Forms.Label();
+            this.Local_FilesEncoding = new System.Windows.Forms.ComboBox();
             this.LocalSettings.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
@@ -316,6 +322,10 @@ namespace GitUI
             // 
             // LocalSettings
             // 
+            this.LocalSettings.Controls.Add(this.Local_AppEncoding);
+            this.LocalSettings.Controls.Add(this.LogEncodingLabel);
+            this.LocalSettings.Controls.Add(this.label61);
+            this.LocalSettings.Controls.Add(this.Local_FilesEncoding);
             this.LocalSettings.Controls.Add(this.groupBox10);
             this.LocalSettings.Controls.Add(this.label30);
             this.LocalSettings.Controls.Add(this.InvalidGitPathLocal);
@@ -1070,8 +1080,6 @@ namespace GitUI
             this.TabPageGitExtensions.Controls.Add(this.Language);
             this.TabPageGitExtensions.Controls.Add(this.label49);
             this.TabPageGitExtensions.Controls.Add(this.chkFollowRenamesInFileHistory);
-            this.TabPageGitExtensions.Controls.Add(this.EncodingLabel);
-            this.TabPageGitExtensions.Controls.Add(this._NO_TRANSLATE_Encoding);
             this.TabPageGitExtensions.Controls.Add(this.label23);
             this.TabPageGitExtensions.Controls.Add(this.SmtpServer);
             this.TabPageGitExtensions.Controls.Add(this.Dictionary);
@@ -1290,23 +1298,6 @@ namespace GitUI
             this.chkFollowRenamesInFileHistory.TabIndex = 26;
             this.chkFollowRenamesInFileHistory.Text = "Follow renames in file history (experimental)";
             this.chkFollowRenamesInFileHistory.UseVisualStyleBackColor = true;
-            // 
-            // EncodingLabel
-            // 
-            this.EncodingLabel.AutoSize = true;
-            this.EncodingLabel.Location = new System.Drawing.Point(8, 448);
-            this.EncodingLabel.Name = "EncodingLabel";
-            this.EncodingLabel.Size = new System.Drawing.Size(57, 15);
-            this.EncodingLabel.TabIndex = 20;
-            this.EncodingLabel.Text = "Encoding";
-            // 
-            // _NO_TRANSLATE_Encoding
-            // 
-            this._NO_TRANSLATE_Encoding.FormattingEnabled = true;
-            this._NO_TRANSLATE_Encoding.Location = new System.Drawing.Point(396, 445);
-            this._NO_TRANSLATE_Encoding.Name = "_NO_TRANSLATE_Encoding";
-            this._NO_TRANSLATE_Encoding.Size = new System.Drawing.Size(242, 23);
-            this._NO_TRANSLATE_Encoding.TabIndex = 19;
             // 
             // Dictionary
             // 
@@ -2035,6 +2026,10 @@ namespace GitUI
             // 
             // GlobalSettingsPage
             // 
+            this.GlobalSettingsPage.Controls.Add(this.Global_AppEncoding);
+            this.GlobalSettingsPage.Controls.Add(this.label59);
+            this.GlobalSettingsPage.Controls.Add(this.label60);
+            this.GlobalSettingsPage.Controls.Add(this.Global_FilesEncoding);
             this.GlobalSettingsPage.Controls.Add(this.BrowseCommitTemplate);
             this.GlobalSettingsPage.Controls.Add(this.label57);
             this.GlobalSettingsPage.Controls.Add(this.CommitTemplatePath);
@@ -3090,6 +3085,76 @@ namespace GitUI
             this.diffFontDialog.AllowVerticalFonts = false;
             this.diffFontDialog.FixedPitchOnly = true;
             // 
+            // Global_AppEncoding
+            // 
+            this.Global_AppEncoding.FormattingEnabled = true;
+            this.Global_AppEncoding.Location = new System.Drawing.Point(549, 431);
+            this.Global_AppEncoding.Name = "Global_AppEncoding";
+            this.helpProvider1.SetShowHelp(this.Global_AppEncoding, true);
+            this.Global_AppEncoding.Size = new System.Drawing.Size(250, 21);
+            this.Global_AppEncoding.TabIndex = 51;
+            // 
+            // label59
+            // 
+            this.label59.AutoSize = true;
+            this.label59.Location = new System.Drawing.Point(425, 434);
+            this.label59.Name = "label59";
+            this.label59.Size = new System.Drawing.Size(118, 13);
+            this.label59.TabIndex = 50;
+            this.label59.Text = "GitExtensions encoding";
+            // 
+            // label60
+            // 
+            this.label60.AutoSize = true;
+            this.label60.Location = new System.Drawing.Point(5, 434);
+            this.label60.Name = "label60";
+            this.label60.Size = new System.Drawing.Size(74, 13);
+            this.label60.TabIndex = 49;
+            this.label60.Text = "Files encoding";
+            // 
+            // Global_FilesEncoding
+            // 
+            this.Global_FilesEncoding.FormattingEnabled = true;
+            this.Global_FilesEncoding.Location = new System.Drawing.Point(85, 431);
+            this.Global_FilesEncoding.Name = "Global_FilesEncoding";
+            this.Global_FilesEncoding.Size = new System.Drawing.Size(250, 21);
+            this.Global_FilesEncoding.TabIndex = 48;
+            // 
+            // Local_AppEncoding
+            // 
+            this.Local_AppEncoding.FormattingEnabled = true;
+            this.Local_AppEncoding.Location = new System.Drawing.Point(547, 258);
+            this.Local_AppEncoding.Name = "Local_AppEncoding";
+            this.helpProvider1.SetShowHelp(this.Local_AppEncoding, true);
+            this.Local_AppEncoding.Size = new System.Drawing.Size(250, 21);
+            this.Local_AppEncoding.TabIndex = 47;
+            // 
+            // LogEncodingLabel
+            // 
+            this.LogEncodingLabel.AutoSize = true;
+            this.LogEncodingLabel.Location = new System.Drawing.Point(418, 261);
+            this.LogEncodingLabel.Name = "LogEncodingLabel";
+            this.LogEncodingLabel.Size = new System.Drawing.Size(118, 13);
+            this.LogEncodingLabel.TabIndex = 46;
+            this.LogEncodingLabel.Text = "GitExtensions encoding";
+            // 
+            // label61
+            // 
+            this.label61.AutoSize = true;
+            this.label61.Location = new System.Drawing.Point(14, 261);
+            this.label61.Name = "label61";
+            this.label61.Size = new System.Drawing.Size(74, 13);
+            this.label61.TabIndex = 45;
+            this.label61.Text = "Files encoding";
+            // 
+            // Local_FilesEncoding
+            // 
+            this.Local_FilesEncoding.FormattingEnabled = true;
+            this.Local_FilesEncoding.Location = new System.Drawing.Point(94, 258);
+            this.Local_FilesEncoding.Name = "Local_FilesEncoding";
+            this.Local_FilesEncoding.Size = new System.Drawing.Size(250, 21);
+            this.Local_FilesEncoding.TabIndex = 44;
+            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -3256,8 +3321,6 @@ namespace GitUI
         private System.Windows.Forms.ComboBox Dictionary;
 		private System.Windows.Forms.Label label23;
         private System.Windows.Forms.TextBox SmtpServer;
-        private System.Windows.Forms.Label EncodingLabel;
-        private System.Windows.Forms.ComboBox _NO_TRANSLATE_Encoding;
         private System.Windows.Forms.TabPage AppearancePage;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.GroupBox groupBox3;
@@ -3408,6 +3471,14 @@ namespace GitUI
         private DataGridViewCheckBoxColumn addToRevisionGridContextMenuDataGridViewCheckBoxColumn;
         private CheckBox chkWarnBeforeCheckout;
         private CheckBox chkStashUntrackedFiles;
+        private ComboBox Global_AppEncoding;
+        private Label label59;
+        private Label label60;
+        private ComboBox Global_FilesEncoding;
+        private ComboBox Local_AppEncoding;
+        private Label LogEncodingLabel;
+        private Label label61;
+        private ComboBox Local_FilesEncoding;
 
     }
 }

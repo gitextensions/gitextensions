@@ -93,7 +93,7 @@ namespace PatchApply
         {
             try
             {
-                using (var streamReader = new StreamReader(DirToPatch + fileName, Settings.Encoding))
+                using (var streamReader = new StreamReader(DirToPatch + fileName, Settings.FilesEncoding))
                 {
                     string retval = "";
                     string line;
