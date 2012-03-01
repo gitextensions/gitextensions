@@ -53,7 +53,7 @@ namespace GitUI
                             this.GitAttributesFile = _NO_TRANSLATE_GitAttributesText.GetText();
                             if (!this.GitAttributesFile.EndsWith(Environment.NewLine))
                                 this.GitAttributesFile += Environment.NewLine;
-                            File.WriteAllBytes(x,Settings.Encoding.GetBytes(this.GitAttributesFile));
+                            File.WriteAllBytes(x, Settings.SystemEncoding.GetBytes(this.GitAttributesFile));
                         });
             }
             catch (Exception ex)

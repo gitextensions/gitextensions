@@ -32,11 +32,11 @@ namespace GitUI
 
             noImageService.Items.AddRange(GravatarService.DynamicServices.Cast<object>().ToArray());
 
-            _NO_TRANSLATE_Encoding.Items.AddRange(new Object[]
-                                                      {
-                                                          "Default (" + Encoding.Default.HeaderName + ")", "ASCII",
-                                                          "Unicode", "UTF7", "UTF8", "UTF32"
-                                                      });
+            FillEncodings(Global_FilesEncoding);
+            FillEncodings(Global_AppEncoding);
+            FillEncodings(Local_FilesEncoding);
+            FillEncodings(Local_AppEncoding);
+            
             GlobalEditor.Items.AddRange(new Object[] { "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", "notepad++" });
 
             SetCurrentDiffFont(Settings.DiffFont);
@@ -111,6 +111,28 @@ namespace GitUI
             configFile.SetValue("diff.tool", diffTool);
         }
 
+        private void EncodingToCombo(Encoding encoding, ComboBox combo)
+        {
+            if (encoding == null)
+                combo.Text = "";
+            else
+                combo.Text = encoding.EncodingName;           
+        }
+
+        private Encoding ComboToEncoding(ComboBox combo)
+        {
+            if (combo.SelectedItem == null)
+                return null;
+            else
+                return combo.SelectedItem as Encoding;
+        }
+
+        private void FillEncodings(ComboBox combo)
+        {
+            combo.Items.AddRange(Settings.availableEncodings.Values.ToArray());
+            combo.DisplayMember = "EncodingName";
+        }
+
         public void LoadSettings()
         {
             try
@@ -119,19 +141,10 @@ namespace GitUI
                 homeIsSetToLabel.Text = string.Concat(_homeIsSetToString.Text, " ", GitCommandHelpers.GetHomeDir());
 
                 scriptEvent.DataSource = Enum.GetValues(typeof(ScriptEvent));
-
-                if (Settings.Encoding.GetType() == typeof(ASCIIEncoding))
-                    _NO_TRANSLATE_Encoding.Text = "ASCII";
-                else if (Settings.Encoding.GetType() == typeof(UnicodeEncoding))
-                    _NO_TRANSLATE_Encoding.Text = "Unicode";
-                else if (Settings.Encoding.GetType() == typeof(UTF7Encoding))
-                    _NO_TRANSLATE_Encoding.Text = "UTF7";
-                else if (Settings.Encoding.GetType() == typeof(UTF8Encoding))
-                    _NO_TRANSLATE_Encoding.Text = "UTF8";
-                else if (Settings.Encoding.GetType() == typeof(UTF32Encoding))
-                    _NO_TRANSLATE_Encoding.Text = "UTF32";
-                else if (Settings.Encoding == Encoding.Default)
-                    _NO_TRANSLATE_Encoding.Text = "Default (" + Encoding.Default.HeaderName + ")";
+                EncodingToCombo(Settings.GetFilesEncoding(false), Global_FilesEncoding);
+                EncodingToCombo(Settings.GetAppEncoding(false), Global_AppEncoding);
+                EncodingToCombo(Settings.GetFilesEncoding(true), Local_FilesEncoding);
+                EncodingToCombo(Settings.GetAppEncoding(true), Local_AppEncoding);
 
                 chkFocusControlOnHover.Checked = Settings.FocusControlOnHover;
                 chkWarnBeforeCheckout.Checked = Settings.DirtyDirWarnBeforeCheckoutBranch;
@@ -402,21 +415,10 @@ namespace GitUI
             Settings.Pageant = PageantPath.Text;
             Settings.AutoStartPageant = AutostartPageant.Checked;
 
-            if (string.IsNullOrEmpty(_NO_TRANSLATE_Encoding.Text) ||
-                _NO_TRANSLATE_Encoding.Text.StartsWith("Default", StringComparison.CurrentCultureIgnoreCase))
-                Settings.Encoding = Encoding.Default;
-            else if (_NO_TRANSLATE_Encoding.Text.Equals("ASCII", StringComparison.CurrentCultureIgnoreCase))
-                Settings.Encoding = new ASCIIEncoding();
-            else if (_NO_TRANSLATE_Encoding.Text.Equals("Unicode", StringComparison.CurrentCultureIgnoreCase))
-                Settings.Encoding = new UnicodeEncoding();
-            else if (_NO_TRANSLATE_Encoding.Text.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
-                Settings.Encoding = new UTF7Encoding();
-            else if (_NO_TRANSLATE_Encoding.Text.Equals("UTF8", StringComparison.CurrentCultureIgnoreCase))
-                Settings.Encoding = new UTF8Encoding(false);
-            else if (_NO_TRANSLATE_Encoding.Text.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
-                Settings.Encoding = new UTF32Encoding(true, false);
-            else
-                Settings.Encoding = Encoding.Default;
+            Settings.SetFilesEncoding(false, ComboToEncoding(Global_FilesEncoding));
+            Settings.SetAppEncoding(false, ComboToEncoding(Global_AppEncoding));
+            Settings.SetFilesEncoding(true, ComboToEncoding(Local_FilesEncoding));
+            Settings.SetAppEncoding(true, ComboToEncoding(Local_AppEncoding));
 
             Settings.RevisionGridQuickSearchTimeout = (int)RevisionGridQuickSearchTimeout.Value;
 
@@ -550,6 +552,22 @@ namespace GitUI
             if (globalAutoCrlfFalse.Checked) globalConfig.SetValue("core.autocrlf", "false");
             if (globalAutoCrlfInput.Checked) globalConfig.SetValue("core.autocrlf", "input");
             if (globalAutoCrlfTrue.Checked) globalConfig.SetValue("core.autocrlf", "true");
+
+            Action<Encoding, bool, string> setEncoding = delegate(Encoding e, bool local, string name) 
+            {
+                string value = e == null ? "" : e.HeaderName;
+                if (local)
+                    localConfig.SetValue(name, value);
+                else
+                    globalConfig.SetValue(name, value);
+            };
+            setEncoding(Settings.GetLogOutputEncoding(false), false, "i18n.logoutputencoding");
+            setEncoding(Settings.GetLogOutputEncoding(true), true, "i18n.logoutputencoding");
+            setEncoding(Settings.GetCommitEncoding(false), false, "i18n.commitEncoding");
+            setEncoding(Settings.GetCommitEncoding(true), true, "i18n.commitEncoding");
+            setEncoding(Settings.GetFilesEncoding(false), false, "i18n.filesEncoding");
+            setEncoding(Settings.GetFilesEncoding(true), true, "i18n.filesEncoding");            
+
 
             globalConfig.Save();
 

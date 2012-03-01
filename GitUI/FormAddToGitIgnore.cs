@@ -33,10 +33,10 @@ namespace GitUI
                                            gitIgnoreFileAddition.Append(Environment.NewLine);
 
                                            if (File.Exists(Settings.WorkingDir + ".gitignore"))
-                                               if (!File.ReadAllText(Settings.WorkingDir + ".gitignore", Settings.Encoding).EndsWith(Environment.NewLine))
+                                               if (!File.ReadAllText(Settings.WorkingDir + ".gitignore", Settings.SystemEncoding).EndsWith(Environment.NewLine))
                                                    gitIgnoreFileAddition.Insert(0, Environment.NewLine);
 
-                                           using (TextWriter tw = new StreamWriter(x, true, Settings.Encoding))
+                                           using (TextWriter tw = new StreamWriter(x, true, Settings.SystemEncoding))
                                            {
                                                tw.Write(gitIgnoreFileAddition);
                                            }
