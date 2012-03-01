@@ -2647,10 +2647,10 @@ Elija eliminar el archivo o mantener la versión modificada.</Value>
           <Value>Abortar fusión</Value>
         </TranslationItem>
         <TranslationItem Name="_contextChooseLocalMergeText" Property="Text">
-          <Value>Elegir local (suyo)</Value>
+          <Value>Elegir local (nuestro)</Value>
         </TranslationItem>
         <TranslationItem Name="_contextChooseRemoteMergeText" Property="Text">
-          <Value>Elegir remoto (nuestro)</Value>
+          <Value>Elegir remoto (suyo)</Value>
         </TranslationItem>
         <TranslationItem Name="_binaryFileWarningCaption" Property="Text">
           <Value>Advertencia</Value>

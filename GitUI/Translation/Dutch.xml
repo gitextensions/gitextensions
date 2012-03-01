@@ -2581,10 +2581,10 @@ Kies of u het gewijzigde bestand wilt bewaren of het bestand wilt verwijderen.</
           <Value>Samenvoegen afbreken</Value>
         </TranslationItem>
         <TranslationItem Name="_contextChooseLocalMergeText" Property="Text">
-          <Value>Kies lokale versie (hun)</Value>
+          <Value>Kies lokale versie (onze)</Value>
         </TranslationItem>
         <TranslationItem Name="_contextChooseRemoteMergeText" Property="Text">
-          <Value>Kies externe versie (onze)</Value>
+          <Value>Kies externe versie (hun)</Value>
         </TranslationItem>
         <TranslationItem Name="_binaryFileWarningCaption" Property="Text">
           <Value>Waarschuwing</Value>
