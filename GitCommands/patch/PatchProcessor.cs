@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Text;
+using GitCommands;
 
 namespace PatchApply
 {
@@ -20,6 +22,7 @@ namespace PatchApply
                     gitPatch = true;
                     patch = new Patch();
                     patches.Add(patch);
+                    input = GitCommandHelpers.ReEncodeFileName(input);
                     ExtractPatchFilenames(input, patch);
                     if ((input = textReader.ReadLine()) != null)
                     {
@@ -41,6 +44,7 @@ namespace PatchApply
 
                     if ((input = textReader.ReadLine()) != null)
                     {
+                       input = GitCommandHelpers.ReEncodeFileName(input);
                        if (IsUnlistedBinaryFileDelete(input))
                         {
                             patch.File = Patch.FileType.Binary;
@@ -85,7 +89,7 @@ namespace PatchApply
 
                 if (!gitPatch || patch != null)
                 {
-                    ValidateInput(input, patch, gitPatch);
+                    ValidateInput(ref input, patch, gitPatch);
                 }
 
                 if (patch != null)
@@ -100,7 +104,7 @@ namespace PatchApply
             return input.StartsWith("index ");
         }
 
-        private static void ValidateInput(string input, Patch patch, bool gitPatch)
+        private static void ValidateInput(ref string input, Patch patch, bool gitPatch)
         {
             //The previous check checked only if the file was binary
             //--- /dev/null
@@ -114,6 +118,7 @@ namespace PatchApply
             //line starts with --- means, old file name
             if (HasOldFileName(input))
             {
+                input = GitCommandHelpers.ReEncodeFileName(input);
                 if (gitPatch && patch.FileNameA != (input.Substring(6).Trim()))
                     throw new FormatException("Old filename not parsed correct: " + input);
             }
@@ -129,6 +134,7 @@ namespace PatchApply
             //we expect a new file now!
             if (input.StartsWith("+++ ") && !IsNewFileMissing(input))
             {
+                input = GitCommandHelpers.ReEncodeFileName(input);
                 Match regexMatch = Regex.Match(input, "[+]{3}[ ][\\\"]{0,1}[b]/(.*)[\\\"]{0,1}");
 
                 if (gitPatch && patch.FileNameB != (regexMatch.Groups[1].Value.Trim()))
