@@ -1513,10 +1513,10 @@ Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möc
           <Value>Merge abbrechen</Value>
         </TranslationItem>
         <TranslationItem Name="_contextChooseLocalMergeText" Property="Text">
-          <Value>Lokale Datei wählen (theirs)</Value>
+          <Value>Lokale Datei wählen (ours)</Value>
         </TranslationItem>
         <TranslationItem Name="_contextChooseRemoteMergeText" Property="Text">
-          <Value>Remote-Datei wählen (ours)</Value>
+          <Value>Remote-Datei wählen (theirs)</Value>
         </TranslationItem>
         <TranslationItem Name="_binaryFileWarningCaption" Property="Text">
           <Value>Warnung</Value>
