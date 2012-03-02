@@ -7,9 +7,13 @@ using GitUIPluginInterfaces;
 
 namespace GitCommands
 {
+    public delegate void SetupStartInfo(ProcessStartInfo startInfo);
+    
     public sealed class GitCommandsInstance : IGitCommands, IDisposable
     {
         private readonly object processLock = new object();
+        public SetupStartInfo SetupStartInfoCallback { get; set; }
+
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         public Process CmdStartProcess(string cmd, string arguments)
@@ -32,6 +36,8 @@ namespace GitCommands
                 process.StartInfo.WorkingDirectory = Settings.WorkingDir;
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
                 process.StartInfo.LoadUserProfile = true;
+                if (SetupStartInfoCallback != null)
+                    SetupStartInfoCallback(process.StartInfo);
                 process.EnableRaisingEvents = true;
 
                 if (!StreamOutput)
