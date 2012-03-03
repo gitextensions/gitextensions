@@ -48,7 +48,7 @@ namespace GitUI
 
             // Do this at runtime, because it is difficult to keep consistent at design time.
             pictureBox1.BringToFront();
-            pictureBox1.Location = new Point(this.Width - 145, this.Height - 145);
+            pictureBox1.Location = new Point(this.Width - pictureBox1.Image.Width - 10, this.Height - pictureBox1.Image.Height - 10);
 
             Load += Dashboard_Load;
         }
@@ -160,6 +160,10 @@ namespace GitUI
 
                 initialized = true;
             }
+
+            splitContainer6.Panel1MinSize = 1;
+            splitContainer6.Panel2MinSize = 1;
+            splitContainer6.SplitterDistance = Math.Max(2, (CommonActions.Height + 2));
 
             splitContainer7.Panel1MinSize = 1;
             splitContainer7.Panel2MinSize = 1;
