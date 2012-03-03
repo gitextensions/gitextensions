@@ -71,7 +71,7 @@ namespace GitCommands
             {
                 Environment.SetEnvironmentVariable(
                     "HOME",
-                    Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User));
+                    UserHomeDir);
             }
 
             //Default!
@@ -85,27 +85,27 @@ namespace GitCommands
 
         public static string GetDefaultHomeDir()
         {
-            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)))
-                return Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User);
+            if (!string.IsNullOrEmpty(UserHomeDir))
+                return UserHomeDir;
 
             if (Settings.RunningOnWindows())
             {
-                string homePath;
+                return WindowsDefaultHomeDir;
+            }
+            return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+        }
+
+        private static string WindowsDefaultHomeDir
+        {
+            get
+            {
                 if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE")))
                 {
-                    homePath = Environment.GetEnvironmentVariable("HOMEDRIVE");
+                    string homePath = Environment.GetEnvironmentVariable("HOMEDRIVE");
                     homePath += Environment.GetEnvironmentVariable("HOMEPATH");
+                    return homePath;
                 }
-                else
-                {
-                    homePath = Environment.GetEnvironmentVariable("USERPROFILE");
-                }
-
-                return homePath;
-            }
-            else
-            {
-                return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                return Environment.GetEnvironmentVariable("USERPROFILE");
             }
         }
 
@@ -183,30 +183,29 @@ namespace GitCommands
 
         private static byte[] ReadByte(Stream stream)
         {
-            if (stream.CanRead)
+            if (!stream.CanRead)
             {
-                int commonLen = 0;
-                List<byte[]> list = new List<byte[]>();
-                byte[] buffer = new byte[4096];
-                int len = 0;
-                while ((len = stream.Read(buffer, 0, buffer.Length)) != 0)
-                {
-                    byte[] newbuff = new byte[len];
-                    Array.Copy(buffer, newbuff, len);
-                    commonLen += len;
-                    list.Add(newbuff);
-                }
-                buffer = new byte[commonLen];
-                commonLen = 0;
-                for (int i = 0; i < list.Count; i++)
-                {
-                    Array.Copy(list[i], 0, buffer, commonLen, list[i].Length);
-                    commonLen += list[i].Length;
-                }
-                return buffer;
+                return null;
             }
-            return null;
-
+            int commonLen = 0;
+            List<byte[]> list = new List<byte[]>();
+            byte[] buffer = new byte[4096];
+            int len;
+            while ((len = stream.Read(buffer, 0, buffer.Length)) != 0)
+            {
+                byte[] newbuff = new byte[len];
+                Array.Copy(buffer, newbuff, len);
+                commonLen += len;
+                list.Add(newbuff);
+            }
+            buffer = new byte[commonLen];
+            commonLen = 0;
+            for (int i = 0; i < list.Count; i++)
+            {
+                Array.Copy(list[i], 0, buffer, commonLen, list[i].Length);
+                commonLen += list[i].Length;
+            }
+            return buffer;
         }
 
         internal static int CreateAndStartProcess(string arguments, string cmd, string workDir, out string stdOutput, out string stdError, string stdInput)
@@ -267,6 +266,8 @@ namespace GitCommands
         }
 
         private static GitVersion _versionInUse;
+        private static readonly string UserHomeDir = Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User);
+
         public static GitVersion VersionInUse
         {
             get
@@ -396,7 +397,7 @@ namespace GitCommands
             if (central)
                 options.Add("--bare");
             if (depth.HasValue)
-                options.Add("--depth " + depth);
+                options.Add("--depth " + depth.ToString());
             if (VersionInUse.CloneCanAskForProgress)
                 options.Add("--progress");
             if (!string.IsNullOrEmpty(branch))
@@ -630,7 +631,7 @@ namespace GitCommands
 
         public static ConfigFile GetGlobalConfig()
         {
-            return new ConfigFile(GetHomeDir() + Settings.PathSeparator + ".gitconfig");
+            return new ConfigFile(GetHomeDir() + Settings.PathSeparator.ToString() + ".gitconfig");
         }
 
         public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, bool untrackedFiles)
@@ -769,17 +770,15 @@ namespace GitCommands
                     }
                 }
 
-                if (!fromDiff)
-                {
-                    n = GitItemStatusFromStatusCharacter(fromDiff, files, n, status, fileName, y, out gitItemStatus);
-                    if (gitItemStatus != null)
-                    {
-                        gitItemStatus.IsStaged = false;
-                        if (Submodules.Contains(gitItemStatus.Name))
-                            gitItemStatus.IsSubmodule = true;
-                        diffFiles.Add(gitItemStatus);
-                    }
-                }
+                if (fromDiff)
+                    continue;
+                n = GitItemStatusFromStatusCharacter(false, files, n, status, fileName, y, out gitItemStatus);
+                if (gitItemStatus == null)
+                    continue;
+                gitItemStatus.IsStaged = false;
+                if (Submodules.Contains(gitItemStatus.Name))
+                    gitItemStatus.IsSubmodule = true;
+                diffFiles.Add(gitItemStatus);
             }
 
             return diffFiles;
@@ -794,31 +793,29 @@ namespace GitCommands
 
             gitItemStatus = new GitItemStatus();
             //Find renamed files...
-            if (x == 'R')
+            switch (x)
             {
-                if (fromDiff)
-                {
-                    gitItemStatus.OldName = fileName.Trim();
-                    gitItemStatus.Name = files[n + 1].Trim();
-                }
-                else
-                {
-                    gitItemStatus.Name = fileName.Trim();
-                    gitItemStatus.OldName = files[n + 1].Trim();
-                }
-                gitItemStatus.IsNew = false;
-                gitItemStatus.IsChanged = false;
-                gitItemStatus.IsDeleted = false;
-                gitItemStatus.IsRenamed = true;
-                gitItemStatus.IsTracked = true;
-                if (status.Length > 2)
-                    gitItemStatus.RenameCopyPercentage = status.Substring(1);
-                n++;
-            }
-            else
-                //Find copied files...
-                if (x == 'C')
-                {
+                case 'R':
+                    if (fromDiff)
+                    {
+                        gitItemStatus.OldName = fileName.Trim();
+                        gitItemStatus.Name = files[n + 1].Trim();
+                    }
+                    else
+                    {
+                        gitItemStatus.Name = fileName.Trim();
+                        gitItemStatus.OldName = files[n + 1].Trim();
+                    }
+                    gitItemStatus.IsNew = false;
+                    gitItemStatus.IsChanged = false;
+                    gitItemStatus.IsDeleted = false;
+                    gitItemStatus.IsRenamed = true;
+                    gitItemStatus.IsTracked = true;
+                    if (status.Length > 2)
+                        gitItemStatus.RenameCopyPercentage = status.Substring(1);
+                    n++;
+                    break;
+                case 'C':
                     if (fromDiff)
                     {
                         gitItemStatus.OldName = fileName.Trim();
@@ -837,9 +834,8 @@ namespace GitCommands
                     if (status.Length > 2)
                         gitItemStatus.RenameCopyPercentage = status.Substring(1);
                     n++;
-                }
-                else
-                {
+                    break;
+                default:
                     gitItemStatus.Name = fileName.Trim();
                     gitItemStatus.IsNew = x == 'A' || x == '?' || x == '!';
                     gitItemStatus.IsChanged = x == 'M';
@@ -847,7 +843,8 @@ namespace GitCommands
                     gitItemStatus.IsRenamed = false;
                     gitItemStatus.IsTracked = x != '?' && x != '!' && x != ' ' || !gitItemStatus.IsNew;
                     gitItemStatus.IsConflict = x == 'U';
-                }
+                    break;
+            }
             return n;
         }
         
@@ -1078,55 +1075,51 @@ namespace GitCommands
             if (delta < 60)
             {
                 if (ts.Seconds == 1)
-                    return String.Format(Strings.Get1SecondAgoText(), 1);
-                else
-                    return String.Format(Strings.GetNSecondsAgoText(), ts.Seconds);
+                    return String.Format(Strings.Get1SecondAgoText(), 1.ToString());
+                return String.Format(Strings.GetNSecondsAgoText(), ts.Seconds.ToString());
             }
             if (delta < 120)
             {
-                return String.Format(Strings.Get1MinuteAgoText(), 1);
+                return String.Format(Strings.Get1MinuteAgoText(), 1.ToString());
             }
             if (delta < 2700) // 45 * 60
             {
-                return String.Format(Strings.GetNMinutesAgoText(), ts.Minutes);
+                return String.Format(Strings.GetNMinutesAgoText(), ts.Minutes.ToString());
             }
             if (delta < 5400) // 90 * 60
             {
-                return String.Format(Strings.Get1HourAgoText(), 1);
+                return String.Format(Strings.Get1HourAgoText(), 1.ToString());
             }
             if (delta < 86400) // 24 * 60 * 60
             {
-                return String.Format(Strings.GetNHoursAgoText(), ts.Hours);
+                return String.Format(Strings.GetNHoursAgoText(), ts.Hours.ToString());
             }
             if (delta < 172800) // 48 * 60 * 60
             {
-                return String.Format(Strings.Get1DayAgoText(), 1);
+                return String.Format(Strings.Get1DayAgoText(), 1.ToString());
             }
             if (delta < 604800) // 7 * 24 * 60 * 60
             {
-                return String.Format(Strings.GetNDaysAgoText(), ts.Days);
+                return String.Format(Strings.GetNDaysAgoText(), ts.Days.ToString());
             }
             if (delta < 2592000) // 30 * 24 * 60 * 60
             {
                 int weeks = Convert.ToInt32(Math.Floor((double)ts.Days / 7));
                 if (weeks <= 1)
-                    return String.Format(Strings.Get1WeekAgoText(), 1);
-                else
-                    return String.Format(Strings.GetNWeeksAgoText(), weeks);
+                    return String.Format(Strings.Get1WeekAgoText(), 1.ToString());
+                return String.Format(Strings.GetNWeeksAgoText(), weeks.ToString());
             }
             if (delta < 31104000) // 12 * 30 * 24 * 60 * 60
             {
                 int months = Convert.ToInt32(Math.Floor((double)ts.Days / 30));
                 if (months <= 1)
-                    return String.Format(Strings.Get1MonthAgoText(), 1);
-                else
-                    return String.Format(Strings.GetNMonthsAgoText(), months);
+                    return String.Format(Strings.Get1MonthAgoText(), 1.ToString());
+                return String.Format(Strings.GetNMonthsAgoText(), months.ToString());
             }
             int years = Convert.ToInt32(Math.Floor((double)ts.Days / 365));
             if (years <= 1)
-                return String.Format(Strings.Get1YearAgoText(), 1);
-            else
-                return String.Format(Strings.GetNYearsAgoText(), years);
+                return String.Format(Strings.Get1YearAgoText(), 1.ToString());
+            return String.Format(Strings.GetNYearsAgoText(), years.ToString());
         }
 
 

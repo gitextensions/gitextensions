@@ -12,7 +12,6 @@ namespace GitCommands.Repository
             None
         }
 
-
         public Repository()
         {
             Anchor = RepositoryAnchor.None;
@@ -51,9 +50,9 @@ namespace GitCommands.Repository
             RepositoryType = source.RepositoryType;
         }
 
-        public override string  ToString()
+        public override string ToString()
         {
-            return Path + " ("+Anchor+")";
+            return Path + " ("+ Anchor.ToString() +")";
         }
 
         public static bool PathIsUrl(string path)
