@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
-using System.IO.IsolatedStorage;
 using System.Net;
 
 namespace Gravatar
@@ -240,7 +238,7 @@ namespace Gravatar
             }
 
             var query = string.Format("s={0}&r={1}&d={2}",
-                size,
+                size.ToString(),
                 rating.ToString().ToLowerInvariant(),
                 d);
 

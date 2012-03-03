@@ -1065,7 +1065,7 @@ namespace GitUI
             //Save last commit message in settings. This way it can be used in multiple repositories.
             Settings.LastCommitMessage = commitMessageText;
 
-            var path = Settings.Module.WorkingDirGitDir() + Settings.PathSeparator + "COMMITMESSAGE";
+            var path = Settings.Module.WorkingDirGitDir() + Settings.PathSeparator.ToString() + "COMMITMESSAGE";
 
             //Commit messages are UTF-8 by default unless otherwise in the config file.
             //The git manual states:
@@ -1481,7 +1481,7 @@ namespace GitUI
             Process process = new Process();
             process.StartInfo.FileName = Application.ExecutablePath;
             process.StartInfo.Arguments = "commit";
-            process.StartInfo.WorkingDirectory = Settings.WorkingDir + _currentItem.Name + Settings.PathSeparator;
+            process.StartInfo.WorkingDirectory = Settings.WorkingDir + _currentItem.Name + Settings.PathSeparator.ToString();
             if (process.Start())
             {
                 process.WaitForExit();
@@ -1494,13 +1494,13 @@ namespace GitUI
             Process process = new Process();
             process.StartInfo.FileName = Application.ExecutablePath;
             process.StartInfo.Arguments = "browse";
-            process.StartInfo.WorkingDirectory = Settings.WorkingDir + _currentItem.Name + Settings.PathSeparator;
+            process.StartInfo.WorkingDirectory = Settings.WorkingDir + _currentItem.Name + Settings.PathSeparator.ToString();
             process.Start();
         }
 
         private void resetSubmoduleChanges_Click(object sender, EventArgs e)
         {
-            GitModule module = new GitModule(Settings.WorkingDir + _currentItem.Name + Settings.PathSeparator);
+            GitModule module = new GitModule(Settings.WorkingDir + _currentItem.Name + Settings.PathSeparator.ToString());
             if (!Abort.AbortCurrentAction(module))
                 return;
 

@@ -537,7 +537,7 @@ namespace GitUI
                                 // Cache the next item
                                 if (!graphData.CacheTo(curCount))
                                 {
-                                    Console.WriteLine("Cached item FAILED {0}", curCount);
+                                    Console.WriteLine("Cached item FAILED {0}", curCount.ToString());
                                     lock (backgroundThread)
                                     {
                                         backgroundScrollTo = curCount;
@@ -896,7 +896,7 @@ namespace GitUI
                         {
                             // This shouldn't be happening...If it does, clear the cache so we
                             // eventually pick it up.
-                            Console.WriteLine("Draw lane {0} {1}", rowIndex, "NO DATA");
+                            Console.WriteLine("Draw lane {0} NO DATA", rowIndex.ToString());
                             clearDrawCache();
                             return Rectangle.Empty;
                         }
