@@ -290,7 +290,7 @@ namespace GitUI
 
         private void FillPushDestinationDropDown()
         {
-            PushDestination.DataSource = Repositories.RepositoryHistory.Repositories;
+            PushDestination.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
             PushDestination.DisplayMember = "Path";
         }
 
