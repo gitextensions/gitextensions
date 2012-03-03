@@ -1480,7 +1480,7 @@ namespace GitUI
             {
                 if (file.IsTracked)
                     return Settings.Module.GetCurrentChanges(file.Name, file.OldName, false, DiffText.GetExtraDiffArguments(), DiffText.Encoding);
-                return FileReader.ReadFileContent(Settings.WorkingDir + file.Name, Settings.Encoding);
+                return FileReader.ReadFileContent(Settings.WorkingDir + file.Name, Settings.FilesEncoding);
             }
             if (revisions[0].Guid == GitRevision.IndexGuid) //index
             {

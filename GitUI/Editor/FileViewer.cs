@@ -53,24 +53,15 @@ namespace GitUI.Editor
 
             IsReadOnly = true;
 
-            this.Encoding = Settings.Encoding;
+            Settings.WorkingDirChanged += WorkingDirChanged;
+
+            this.Encoding = Settings.FilesEncoding;
+            
             this.encodingToolStripComboBox.Items.AddRange(new Object[]
                                                     {
                                                         "Default (" + Encoding.Default.HeaderName + ")", "ASCII",
                                                         "Unicode", "UTF7", "UTF8", "UTF32"
                                                     });
-            if (this.Encoding.GetType() == typeof(ASCIIEncoding))
-                this.encodingToolStripComboBox.Text = "ASCII";
-            else if (this.Encoding.GetType() == typeof(UnicodeEncoding))
-                this.encodingToolStripComboBox.Text = "Unicode";
-            else if (this.Encoding.GetType() == typeof(UTF7Encoding))
-                this.encodingToolStripComboBox.Text = "UTF7";
-            else if (this.Encoding.GetType() == typeof(UTF8Encoding))
-                this.encodingToolStripComboBox.Text = "UTF8";
-            else if (this.Encoding.GetType() == typeof(UTF32Encoding))
-                this.encodingToolStripComboBox.Text = "UTF32";
-            else if (this.Encoding == Encoding.Default)
-                this.encodingToolStripComboBox.Text = "Default (" + Encoding.Default.HeaderName + ")";
             _internalFileViewer.MouseMove += TextAreaMouseMove;
             _internalFileViewer.MouseLeave += TextAreaMouseLeave;
             _internalFileViewer.TextChanged += TextEditor_TextChanged;
@@ -82,6 +73,12 @@ namespace GitUI.Editor
 
             ContextMenu.Opening += ContextMenu_Opening; 
         }
+
+        private void WorkingDirChanged(string oldDir, string newDir, string newGitDir)
+        {
+            this.Encoding = Settings.FilesEncoding;
+        }
+
 
         protected override void OnLoad(EventArgs e)
         {
@@ -189,7 +186,33 @@ namespace GitUI.Editor
         public bool ShowEntireFile { get; set; }
         public bool TreatAllFilesAsText { get; set; }
         public bool DisableFocusControlOnHover { get; set; }
-        public Encoding Encoding { get; set; }
+        private Encoding _Encoding;
+        public Encoding Encoding 
+        {
+            get
+            {
+                return _Encoding;
+            }
+        
+            set
+            {
+                _Encoding = value;
+
+                if (this.Encoding.GetType() == typeof(ASCIIEncoding))
+                    this.encodingToolStripComboBox.Text = "ASCII";
+                else if (this.Encoding.GetType() == typeof(UnicodeEncoding))
+                    this.encodingToolStripComboBox.Text = "Unicode";
+                else if (this.Encoding.GetType() == typeof(UTF7Encoding))
+                    this.encodingToolStripComboBox.Text = "UTF7";
+                else if (this.Encoding.GetType() == typeof(UTF8Encoding))
+                    this.encodingToolStripComboBox.Text = "UTF8";
+                else if (this.Encoding.GetType() == typeof(UTF32Encoding))
+                    this.encodingToolStripComboBox.Text = "UTF32";
+                else if (this.Encoding == Encoding.Default)
+                    this.encodingToolStripComboBox.Text = "Default (" + Encoding.Default.HeaderName + ")";
+
+            }
+        }
 
         public int ScrollPos
         {
@@ -461,7 +484,7 @@ namespace GitUI.Editor
             else
                 path = GitCommands.Settings.WorkingDir + fileName;
 
-            return !File.Exists(path) ? null : FileReader.ReadFileContent(path, GitCommands.Settings.Encoding);
+            return !File.Exists(path) ? null : FileReader.ReadFileContent(path, GitCommands.Settings.FilesEncoding);
         }
 
         private void ResetForImage()
@@ -768,7 +791,7 @@ namespace GitUI.Editor
         {
             Encoding encod = null;
             if (string.IsNullOrEmpty(encodingToolStripComboBox.Text))
-                encod = Settings.Encoding;
+                encod = Settings.FilesEncoding;
             else if (encodingToolStripComboBox.Text.StartsWith("Default", StringComparison.CurrentCultureIgnoreCase))
                 encod = Encoding.Default;
             else if (encodingToolStripComboBox.Text.Equals("ASCII", StringComparison.CurrentCultureIgnoreCase))
@@ -782,7 +805,7 @@ namespace GitUI.Editor
             else if (encodingToolStripComboBox.Text.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
                 encod = new UTF32Encoding(true, false);
             else
-                encod = Settings.Encoding;
+                encod = Settings.FilesEncoding;
             if (encod != this.Encoding)
             {
                 this.Encoding = encod;
