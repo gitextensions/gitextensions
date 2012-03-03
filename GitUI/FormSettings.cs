@@ -347,23 +347,6 @@ namespace GitUI
             }
         }
 
-        private string CalculateNoTranslateEncodingText(Type encodingType)
-        {
-            if (encodingType == typeof(ASCIIEncoding))
-                return "ASCII";
-            if (encodingType == typeof(UnicodeEncoding))
-                return "Unicode";
-            if (encodingType == typeof(UTF7Encoding))
-                return "UTF7";
-            if (encodingType == typeof(UTF8Encoding))
-                return  "UTF8";
-            if (encodingType == typeof(UTF32Encoding))
-                return "UTF32";
-            if (Settings.Encoding == Encoding.Default)
-                return "Default (" + Encoding.Default.HeaderName + ")";
-            return "<TILT>"; // Bob Martin (aka Uncle Bob) showed me this trick
-        }
-
         private void Ok_Click(object sender, EventArgs e)
         {
             Close();
@@ -431,7 +414,6 @@ namespace GitUI
             Settings.Puttygen = PuttygenPath.Text;
             Settings.Pageant = PageantPath.Text;
             Settings.AutoStartPageant = AutostartPageant.Checked;
-            Settings.Encoding = CalculateEncoding(_NO_TRANSLATE_Encoding.Text);
             Settings.SetFilesEncoding(false, ComboToEncoding(Global_FilesEncoding));
             Settings.SetAppEncoding(false, ComboToEncoding(Global_AppEncoding));
             Settings.SetFilesEncoding(true, ComboToEncoding(Local_FilesEncoding));

@@ -292,7 +292,7 @@ namespace GitCommands
                     encodingName = cfg.GetValue(settingName);
                 }
 
-                if (encodingName.IsNullOrEmpty())
+                if (string.IsNullOrEmpty(encodingName))
                     result = null;
                 else if (!availableEncodings.TryGetValue(encodingName, out result))
                 {
