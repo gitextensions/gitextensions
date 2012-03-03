@@ -364,7 +364,7 @@ namespace GitUI
             // 
             this.mergeBranchToolStripMenuItem.Name = "mergeBranchToolStripMenuItem";
             this.mergeBranchToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.mergeBranchToolStripMenuItem.Text = "Merge current branch with";
+            this.mergeBranchToolStripMenuItem.Text = "Merge into current branch";
             this.mergeBranchToolStripMenuItem.Click += new System.EventHandler(this.toolStripMenuWithOneItem_Click);
             // 
             // rebaseOnToolStripMenuItem
