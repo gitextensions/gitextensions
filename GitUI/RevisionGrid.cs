@@ -1541,15 +1541,15 @@ namespace GitUI
 
             var revision = GetRevision(LastRow);
 
-            var tagDropDown = new ToolStripDropDown();
-            var deleteBranchDropDown = new ToolStripDropDown();
-            var checkoutBranchDropDown = new ToolStripDropDown();
-            var mergeBranchDropDown = new ToolStripDropDown();
-            var rebaseDropDown = new ToolStripDropDown();
-            var renameDropDown = new ToolStripDropDown();
+            var tagDropDown = new ContextMenuStrip();
+            var deleteBranchDropDown = new ContextMenuStrip();
+            var checkoutBranchDropDown = new ContextMenuStrip();
+            var mergeBranchDropDown = new ContextMenuStrip();
+            var rebaseDropDown = new ContextMenuStrip();
+            var renameDropDown = new ContextMenuStrip();
 
-            var tagNameCopy = new ToolStripDropDown();
-            var branchNameCopy = new ToolStripDropDown();
+            var tagNameCopy = new ContextMenuStrip();
+            var branchNameCopy = new ContextMenuStrip();
 
             foreach (var head in revision.Heads.Where(h => h.IsTag))
             {
