@@ -62,7 +62,7 @@ namespace GitUI
                             this.GitIgnoreFile = _NO_TRANSLATE_GitIgnoreEdit.GetText();
                             if (!this.GitIgnoreFile.EndsWith(Environment.NewLine))
                                 this.GitIgnoreFile += Environment.NewLine;
-                            File.WriteAllBytes(x,Settings.Encoding.GetBytes(this.GitIgnoreFile));
+                            File.WriteAllBytes(x, Settings.SystemEncoding.GetBytes(this.GitIgnoreFile));    
                         });
             }
             catch (Exception ex)

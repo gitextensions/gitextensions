@@ -266,7 +266,7 @@ namespace GitCommands
         public string RunCachableCmd(string cmd, string arguments, Encoding encoding)
         {
             if (encoding == null)
-                encoding = Settings.Encoding;
+                encoding = Settings.LogOutputEncoding;
 
             string output;
             if (GitCommandCache.TryGet(arguments, encoding, out output))
@@ -283,7 +283,7 @@ namespace GitCommands
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public string RunCachableCmd(string cmd, string arguments)
         {
-            return RunCachableCmd(cmd, arguments, Settings.Encoding);
+            return RunCachableCmd(cmd, arguments, Settings.LogOutputEncoding);
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
@@ -321,7 +321,7 @@ namespace GitCommands
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public string RunCmd(string cmd, string arguments, out int exitCode, string stdInput)
         {
-            return RunCmd(cmd, arguments, out exitCode, stdInput, Settings.Encoding);
+            return RunCmd(cmd, arguments, out exitCode, stdInput, Settings.LogOutputEncoding);
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
@@ -355,7 +355,7 @@ namespace GitCommands
 
         public string RunGitCmd(string arguments, out int exitCode, string stdInput)
         {
-            return RunGitCmd(arguments, out exitCode, stdInput, Settings.Encoding);
+            return RunGitCmd(arguments, out exitCode, stdInput, Settings.LogOutputEncoding);
         }
 
         public string RunGitCmd(string arguments, out int exitCode, string stdInput, Encoding encoding)
@@ -542,10 +542,10 @@ namespace GitCommands
                 {
                     if (!FileHelper.IsBinaryFile(saveAs) && !FileHelper.IsBinaryFileAccordingToContent(buf))
                     {
-                        StreamReader reader = new StreamReader(ms, Settings.Encoding);
+                        StreamReader reader = new StreamReader(ms, Settings.FilesEncoding);
                         String sfileout = reader.ReadToEnd();
                         sfileout = sfileout.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", "\r\n");
-                        buf = Settings.Encoding.GetBytes(sfileout);
+                        buf = Settings.FilesEncoding.GetBytes(sfileout);
                     }
                 }
 
@@ -795,7 +795,7 @@ namespace GitCommands
 
         public string ShowSha1(string sha1)
         {
-            return this.RunCachableCmd(Settings.GitCommand, "show --encoding=" + Settings.Encoding.HeaderName + " " + sha1);
+            return GitCommandHelpers.ReEncodeShowString(RunCachableCmd(Settings.GitCommand, "show " + sha1, Settings.LosslessEncoding));
         }
 
         public string UserCommitCount()
@@ -1458,7 +1458,7 @@ namespace GitCommands
         public List<Patch> GetStashedItems(string stashName)
         {
             var patchManager = new PatchManager();
-            patchManager.LoadPatch(RunGitCmd("stash show -p " + stashName), false);
+            patchManager.LoadPatch(RunGitCmd("stash show -p " + stashName, Settings.FilesEncoding), false);
 
             return patchManager.Patches;
         }
@@ -1533,7 +1533,7 @@ namespace GitCommands
         public List<GitItemStatus> GetDiffFiles(string from, string to, bool noCache)
         {
             string cmd = "diff -M -C -z --name-status \"" + to + "\" \"" + from + "\"";
-            string result = noCache ? RunGitCmd(cmd) : this.RunCachableCmd(Settings.GitCommand, cmd);
+            string result = noCache ? RunGitCmd(cmd) : this.RunCachableCmd(Settings.GitCommand, cmd, Settings.SystemEncoding);
             return GitCommandHelpers.GetAllChangedFilesFromString(result, true);
         }
 
@@ -1605,13 +1605,13 @@ namespace GitCommands
 
         public List<GitItemStatus> GetStagedFiles()
         {
-            string status = RunGitCmd("diff -M -C -z --cached --name-status");
+            string status = RunGitCmd("diff -M -C -z --cached --name-status", Settings.SystemEncoding);
 
             if (true && status.Length < 50 && status.Contains("fatal: No HEAD commit to compare"))
             {
                 //This command is a little more expensive because it will return both staged and unstaged files
                 string command = GitCommandHelpers.GetAllChangedFilesCmd(true, false);
-                status = RunGitCmd(command);
+                status = RunGitCmd(command, Settings.SystemEncoding);
                 List<GitItemStatus> stagedFiles = GitCommandHelpers.GetAllChangedFilesFromString(status, false);
                 return stagedFiles.Where(f => f.IsStaged).ToList<GitItemStatus>();
             }
@@ -1647,7 +1647,8 @@ namespace GitCommands
             if (staged)
                 args = string.Concat("diff -M -C --cached", extraDiffArguments, " -- ", fileName, " ", oldFileName);
 
-            return RunGitCmd(args, encoding);
+            String result = RunGitCmd(args, encoding);
+            return GitCommandHelpers.ReEncodeFileName(result, 4);
         }
 
         public string StageFile(string file)
@@ -1690,7 +1691,7 @@ namespace GitCommands
             string headFileName = Path.Combine(WorkingDirGitDir(repositoryPath), "HEAD");
             if (File.Exists(headFileName))
             {
-                head = File.ReadAllText(headFileName);
+                head = File.ReadAllText(headFileName, Settings.SystemEncoding);
                 if (!head.Contains("ref:"))
                     return "(no branch)";
             }
@@ -1774,13 +1775,13 @@ namespace GitCommands
         private string GetTree(bool tags, bool branches)
         {
             if (tags && branches)
-                return RunGitCmd("show-ref --dereference");
+                return RunGitCmd("show-ref --dereference", Settings.SystemEncoding);
 
             if (tags)
-                return RunGitCmd("show-ref --tags");
+                return RunGitCmd("show-ref --tags", Settings.SystemEncoding);
 
             if (branches)
-                return RunGitCmd("show-ref --dereference --heads");
+                return RunGitCmd("show-ref --dereference --heads", Settings.SystemEncoding);
             return "";
         }
 
@@ -1873,13 +1874,13 @@ namespace GitCommands
 
         public string[] GetFullTree(string id)
         {
-            string tree = this.RunCachableCmd(Settings.GitCommand, string.Format("ls-tree -z -r --name-only {0}", id));
+            string tree = this.RunCachableCmd(Settings.GitCommand, string.Format("ls-tree -z -r --name-only {0}", id), Settings.SystemEncoding);
             return tree.Split(new char[] { '\0', '\n' });
         }
 
         public List<IGitItem> GetTree(string id)
         {
-            var tree = this.RunCachableCmd(Settings.GitCommand, "ls-tree -z \"" + id + "\"");
+            var tree = this.RunCachableCmd(Settings.GitCommand, "ls-tree -z \"" + id + "\"", Settings.SystemEncoding);
 
             var itemsStrings = tree.Split(new char[] { '\0', '\n' });
 
@@ -1906,7 +1907,8 @@ namespace GitCommands
             var itemsStrings =
                 RunCmd(
                     Settings.GitCommand,
-                    blameCommand
+                    blameCommand,
+                    Settings.LosslessEncoding
                     )
                     .Split('\n');
 
@@ -1923,10 +1925,13 @@ namespace GitCommands
 
                     //The contents of the actual line is output after the above header, prefixed by a TAB. This is to allow adding more header elements later.
                     if (line.StartsWith("\t"))
+                    {
                         blameLine.LineText = line.Substring(1) //trim ONLY first tab
                                                  .Trim(new char[] { '\r' }); //trim \r, this is a workaround for a \r\n bug
+                        blameLine.LineText = GitCommandHelpers.ReEncodeStringFromLossless(blameLine.LineText, Settings.FilesEncoding);
+                    }                                                 
                     else if (line.StartsWith("author-mail"))
-                        blameHeader.AuthorMail = line.Substring("author-mail".Length).Trim();
+                        blameHeader.AuthorMail = GitCommandHelpers.ReEncodeStringFromLossless(line.Substring("author-mail".Length).Trim());
                     else if (line.StartsWith("author-time"))
                         blameHeader.AuthorTime = (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddSeconds(int.Parse(line.Substring("author-time".Length).Trim()));
                     else if (line.StartsWith("author-tz"))
@@ -1935,7 +1940,7 @@ namespace GitCommands
                     {
                         blameHeader = new GitBlameHeader();
                         blameHeader.CommitGuid = blameLine.CommitGuid;
-                        blameHeader.Author = line.Substring("author".Length).Trim();
+                        blameHeader.Author = GitCommandHelpers.ReEncodeStringFromLossless(line.Substring("author".Length).Trim());
                         blame.Headers.Add(blameHeader);
                     }
                     else if (line.StartsWith("committer-mail"))
@@ -1945,11 +1950,11 @@ namespace GitCommands
                     else if (line.StartsWith("committer-tz"))
                         blameHeader.CommitterTimeZone = line.Substring("committer-tz".Length).Trim();
                     else if (line.StartsWith("committer"))
-                        blameHeader.Committer = line.Substring("committer".Length).Trim();
+                        blameHeader.Committer = GitCommandHelpers.ReEncodeStringFromLossless(line.Substring("committer".Length).Trim());
                     else if (line.StartsWith("summary"))
-                        blameHeader.Summary = line.Substring("summary".Length).Trim();
+                        blameHeader.Summary = GitCommandHelpers.ReEncodeStringFromLossless(line.Substring("summary".Length).Trim());
                     else if (line.StartsWith("filename"))
-                        blameHeader.FileName = line.Substring("filename".Length).Trim();
+                        blameHeader.FileName = GitCommandHelpers.ReEncodeFileName(line.Substring("filename".Length).Trim());
                     else if (line.IndexOf(' ') == 40) //SHA1, create new line!
                     {
                         blameLine = new GitBlameLine();
@@ -1974,12 +1979,12 @@ namespace GitCommands
             return
                 this.RunCachableCmd(
                     Settings.GitCommand,
-                    string.Format("show --encoding=" + Settings.Encoding.HeaderName + " {0}:\"{1}\"", revision, file.Replace('\\', '/')));
+                    string.Format("show {0}:\"{1}\"", revision, file.Replace('\\', '/')), Settings.FilesEncoding);
         }
 
         public string GetFileText(string id)
         {
-            return this.RunCachableCmd(Settings.GitCommand, "cat-file blob \"" + id + "\"");
+            return RunCachableCmd(Settings.GitCommand, "cat-file blob \"" + id + "\"", Settings.FilesEncoding);
         }
 
         public static void StreamCopy(Stream input, Stream output)
@@ -2036,20 +2041,14 @@ namespace GitCommands
             return null;
         }
 
-        public string RecodeString(string s)
-        {
-
-            Encoding logoutputEncoding = GetLogoutputEncoding();
-            if (logoutputEncoding != Settings.Encoding)
-                s = logoutputEncoding.GetString(Settings.Encoding.GetBytes(s));
-
-            return s;
-        }
-
         public string GetPreviousCommitMessage(int numberBack)
         {
-            //+"--encoding=" + Settings.Encoding.HeaderName doesn't work
-            return RecodeString(RunGitCmd("log -n 1 HEAD~" + numberBack + " --pretty=format:%s%n%n%b "));
+            string msg = RunCmd(Settings.GitCommand, "log -n 1 HEAD~" + numberBack + " --pretty=format:%e%n%s%n%n%b ", Settings.LosslessEncoding);
+            int idx = msg.IndexOf("\n");
+            string encodingName = msg.Substring(0, idx);
+            msg = msg.Substring(idx + 1, msg.Length - idx - 1);
+            msg = GitCommandHelpers.ReEncodeCommitMessage(msg, encodingName);
+            return msg;
         }
 
         public string MergeBranch(string branch)

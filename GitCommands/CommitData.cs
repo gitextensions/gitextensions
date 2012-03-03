@@ -176,13 +176,6 @@ namespace GitCommands
 
             var body = message.ToString();
 
-            //We need to recode the commit message because of a bug in Git.
-            //We cannot let git recode the message to Settings.Encoding which is
-            //needed to allow the "git log" to print the filename in Settings.Encoding
-            Encoding logoutputEncoding = Settings.Module.GetLogoutputEncoding();
-            if (logoutputEncoding != Settings.Encoding)
-                body = logoutputEncoding.GetString(Settings.Encoding.GetBytes(body));
-
             var commitInformation = new CommitData(guid, treeGuid, parentGuids, author, authorDate,
                 committer, commitDate, body);
 
