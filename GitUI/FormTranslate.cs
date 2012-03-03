@@ -357,6 +357,8 @@ namespace GitUI
                 if (MessageBox.Show(this, noLanguageCodeSelected.Text, noLanguageCodeSelectedCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                     return;
 
+            toolStrip1.Select();
+
             SaveAs();
         }
 
