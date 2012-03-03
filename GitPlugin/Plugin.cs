@@ -12,6 +12,8 @@ namespace GitPlugin.Commands
     // Interfaces with visual studio and handles the dispatch.
     public class Plugin
     {
+        private const string GitCommandBarName = "GitExtensions";
+
         private readonly AddIn m_addIn;
         private readonly DTE2 m_application;
 
@@ -35,6 +37,14 @@ namespace GitPlugin.Commands
             get { return m_outputPane; }
         }
 
+        public int LocaleID
+        {
+            get
+            {
+                return m_application.LocaleID;
+            }
+        }
+
         public void DeleteCommands()
         {
             foreach (Command command in m_visualStudioCommands.Values)
@@ -42,6 +52,13 @@ namespace GitPlugin.Commands
                 command.Delete();
             }
         }
+
+        public CommandBar GetMenuBar()
+        {
+            return ((CommandBars)m_application.CommandBars)["MenuBar"];
+        }
+
+
 
         public void RegisterCommand(string commandName, CommandBase command)
         {
@@ -127,8 +144,9 @@ namespace GitPlugin.Commands
 
         }
 
-        public void DeleteCommandBar(string name)
+        public void DeleteCommandBar()
         {
+            var name = GitCommandBarName;
             var cmdBars = (CommandBars)m_application.CommandBars;
             try
             {
@@ -140,8 +158,9 @@ namespace GitPlugin.Commands
             }
         }
 
-        public CommandBar AddCommandBar(string name, MsoBarPosition position)
+        public CommandBar AddGitCommandBar(MsoBarPosition position)
         {
+            var name = GitCommandBarName;
             var cmdBars = (CommandBars)m_application.CommandBars;
             CommandBar bar = null;
 
@@ -157,17 +176,16 @@ namespace GitPlugin.Commands
             try
             {
                 if (bar == null)
-
+                {
                     // Create the new CommandBar
                     bar = cmdBars.Add(name, position, Type.Missing, false);
+                    bar.Visible = true;
+                    bar.Position = MsoBarPosition.msoBarTop;
+                }
             }
             catch
             {
             }
-
-            bar.Visible = true;
-            bar.Position = MsoBarPosition.msoBarTop;
-
 
             return bar;
         }
@@ -186,6 +204,7 @@ namespace GitPlugin.Commands
             // Add command
             Command command = GetCommand(commandName);
             if (!m_visualStudioCommands.ContainsKey(commandName))
+            {    
                 if (command == null)
                 {
                     if (iconIndex > 0)
@@ -199,7 +218,6 @@ namespace GitPlugin.Commands
                                                                 (int)vsCommandStatus.vsCommandStatusEnabled,
                                                                 (int)vsCommandStyle.vsCommandStylePictAndText,
                                                                 vsCommandControlType.vsCommandControlTypeButton);
-                            m_visualStudioCommands[commandName] = command;
                         }
                         catch
                         {
@@ -214,9 +232,14 @@ namespace GitPlugin.Commands
                                                             (int)vsCommandStatus.vsCommandStatusEnabled,
                                                             (int)vsCommandStyle.vsCommandStylePictAndText,
                                                             vsCommandControlType.vsCommandControlTypeButton);
-                        m_visualStudioCommands[commandName] = command;
                     }
                 }
+                if (command != null)
+                {
+                    m_visualStudioCommands[commandName] = command;
+                }
+            }
+
             if (command != null && popup != null)
             {
                 if (!HasCommand(popup.CommandBar, caption))
@@ -294,6 +317,7 @@ namespace GitPlugin.Commands
             // Add command
             Command command = GetCommand(commandName);
             if (!m_visualStudioCommands.ContainsKey(commandName))
+            {
                 if (command == null)
                 {
                     if (iconIndex > 0)
@@ -307,7 +331,6 @@ namespace GitPlugin.Commands
                                                                 (int)vsCommandStatus.vsCommandStatusEnabled,
                                                                 (int)commandStyle,
                                                                 vsCommandControlType.vsCommandControlTypeButton);
-                            m_visualStudioCommands[commandName] = command;
                         }
                         catch
                         {
@@ -322,9 +345,13 @@ namespace GitPlugin.Commands
                                                             (int)vsCommandStatus.vsCommandStatusEnabled,
                                                             (int)commandStyle,
                                                             vsCommandControlType.vsCommandControlTypeButton);
-                        m_visualStudioCommands[commandName] = command;
                     }
                 }
+                if (command != null)
+                {
+                    m_visualStudioCommands[commandName] = command;
+                }
+            }
             if (command != null && bar != null)
             {
                 if (!HasCommand(bar, caption))
