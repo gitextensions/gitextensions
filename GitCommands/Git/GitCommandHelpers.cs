@@ -124,9 +124,9 @@ namespace GitCommands
                            RedirectStandardOutput = true,
                            RedirectStandardInput = true,
                            RedirectStandardError = true,
-                           StandardOutputEncoding = Settings.Encoding,
-                           StandardErrorEncoding = Settings.Encoding
-                       };
+                           StandardOutputEncoding = Settings.LogOutputEncoding,
+                           StandardErrorEncoding = Settings.LogOutputEncoding
+                        };
         }
 
         internal static bool UseSsh(string arguments)
@@ -863,7 +863,7 @@ namespace GitCommands
                     process1 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --add --stdin");
 
                 //process1.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
-                byte[] bytearr = EncodingHelper.ConvertTo(Settings.Encoding, "\"" + FixPath(file.Name) + "\"" + process1.StandardInput.NewLine);
+                byte[] bytearr = EncodingHelper.ConvertTo(Settings.SystemEncoding, "\"" + FixPath(file.Name) + "\"" + process1.StandardInput.NewLine);
                 process1.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
             }
             if (process1 != null)
@@ -883,7 +883,7 @@ namespace GitCommands
                 if (process2 == null)
                     process2 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --remove --stdin");
                 //process2.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
-                byte[] bytearr = EncodingHelper.ConvertTo(Settings.Encoding, "\"" + FixPath(file.Name) + "\"" + process2.StandardInput.NewLine);
+                byte[] bytearr = EncodingHelper.ConvertTo(Settings.SystemEncoding, "\"" + FixPath(file.Name) + "\"" + process2.StandardInput.NewLine);
                 process2.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
             }
             if (process2 != null)
@@ -938,7 +938,7 @@ namespace GitCommands
                 if (process2 == null)
                     process2 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --force-remove --stdin");
                 //process2.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
-                byte[] bytearr = EncodingHelper.ConvertTo(Settings.Encoding, "\"" + FixPath(file.Name) + "\"" + process2.StandardInput.NewLine);
+                byte[] bytearr = EncodingHelper.ConvertTo(Settings.SystemEncoding, "\"" + FixPath(file.Name) + "\"" + process2.StandardInput.NewLine);
                 process2.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
             }
             if (process2 != null)
@@ -1139,5 +1139,166 @@ namespace GitCommands
                 return left + sep + right;
 
         }
+
+        public static string ReEncodeFileName(string diffStr, int headerLines)
+        {
+            StringReader r = new StringReader(diffStr);
+            StringWriter w = new StringWriter();
+            string line;
+            while (headerLines > 0 && (line = r.ReadLine()) != null)
+            {
+                headerLines--;
+                line = ReEncodeFileName(line);
+                w.WriteLine(line);
+            }
+            w.Write(r.ReadToEnd());
+
+            return w.ToString();
+        }
+
+        public static string ReEncodeFileName(string header)
+        {
+            char[] chars = header.ToCharArray();
+            int i = 0;
+            StringBuilder sb = new StringBuilder();
+            while (i < chars.Length)
+            {
+                char c = chars[i];
+                if (c == '\\')
+                {
+                    //there should be 3 digits
+                    if (chars.Length >= i + 3)
+                    {
+                        string octNumber = "" + chars[i + 1] + chars[i + 2] + chars[i + 3];
+
+                        try
+                        {
+                            int code = System.Convert.ToInt32(octNumber, 8);
+                            sb.Append(Settings.SystemEncoding.GetString(new byte[] { (byte)code }));
+                            i += 4;
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
+                }
+                else
+                {
+                    sb.Append(c);
+                    i++;
+                }
+            }
+            return sb.ToString();
+        }
+
+        public static string ReEncodeString(string s, Encoding fromEncoding, Encoding toEncoding)
+        {
+            if (s == null || fromEncoding.HeaderName.Equals(toEncoding.HeaderName))
+                return s;
+            else
+            {
+                byte[] bytes = fromEncoding.GetBytes(s);
+                s = toEncoding.GetString(bytes);
+                return s;
+            }
+        }
+
+        /// <summary>
+        /// reencodes string from GitCommandHelpers.LosslessEncoding to Settings.LogOutputEncoding
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static string ReEncodeStringFromLossless(string s)
+        {
+            return ReEncodeString(s, Settings.LosslessEncoding, Settings.LogOutputEncoding);
+        }
+
+        public static string ReEncodeStringFromLossless(string s, Encoding toEncoding)
+        {
+            if (toEncoding == null)
+                return s;
+            else
+                return ReEncodeString(s, Settings.LosslessEncoding, toEncoding);
+
+        }
+
+        //there is a bug: git does not recode commit message when format is given
+        //Lossless encoding is used, because LogOutputEncoding might not be lossless and not recoded
+        //characters could be replaced by replacement character while reencoding to LogOutputEncoding
+        public static string ReEncodeCommitMessage(string s, string toEncodingName)
+        {
+
+            bool isABug = true;
+
+            Encoding encoding;
+            try
+            {
+                if (isABug)
+                {
+                    if (toEncodingName.IsNullOrEmpty())
+                        encoding = Encoding.UTF8;
+                    else if (toEncodingName.Equals(Settings.LosslessEncoding.HeaderName, StringComparison.InvariantCultureIgnoreCase))
+                        encoding = null; //no recoding is needed
+                    else
+                        encoding = Encoding.GetEncoding(toEncodingName);
+                }
+                else//if bug will be fixed, git should recode commit message to LogOutputEncoding
+                    encoding = Settings.LogOutputEncoding;
+
+            }
+            catch (Exception)
+            {
+                return "! Unsupported commit message encoding: " + toEncodingName + " !\n\n" + s;
+            }
+            return ReEncodeStringFromLossless(s, encoding);
+        }
+
+        /// <summary>
+        /// header part of show result is encoded in logoutputencoding (including reencoded commit message)
+        /// diff part is raw data in file's original encoding
+        /// s should be encoded in LosslessEncoding
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static string ReEncodeShowString(string s)
+        {
+            if (s.IsNullOrEmpty())
+                return s;
+
+            int p = s.IndexOf("diff --git");
+            string header;
+            string diffHeader;
+            string diffContent;
+            string diff;
+            if (p > 0)
+            {
+                header = s.Substring(0, p);
+                diff = s.Substring(p);
+            }
+            else
+            {
+                header = string.Empty;
+                diff = s;
+            }
+
+            p = diff.IndexOf("@@");
+            if (p > 0)
+            {
+                diffHeader = diff.Substring(0, p);
+                diffContent = diff.Substring(p);
+            }
+            else
+            {
+                diffHeader = string.Empty;
+                diffContent = diff;
+            }
+
+            header = ReEncodeString(header, Settings.LosslessEncoding, Settings.LogOutputEncoding);
+            diffHeader = ReEncodeString(diffHeader, Settings.LosslessEncoding, Settings.LogOutputEncoding);
+            diffHeader = ReEncodeFileName(diffHeader);
+            diffContent = ReEncodeString(diffContent, Settings.LosslessEncoding, Settings.FilesEncoding);
+            return header + diffHeader + diffContent;
+        }
+
     }
 }

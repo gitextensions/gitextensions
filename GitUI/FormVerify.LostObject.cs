@@ -23,8 +23,8 @@ namespace GitUI
             /// %s  - subject.
             /// %ct - committer date, UNIX timestamp (easy to parse format).
             /// </summary>
-            private const string LogCommandArgumentsFormat = "log -n1 --pretty=format:\"%aN, %s, %ct\" {0}";
-            private const string LogPattern = @"^([^,]+), (.+), (\d+)$";
+            private const string LogCommandArgumentsFormat = "log -n1 --pretty=format:\"%aN, %e, %s, %ct\" {0}";
+            private const string LogPattern = @"^([^,]+), (.+), (.+), (\d+)$";
             private const string Sha1HashPattern = @"[a-f\d]{40}";
             private const string RawDataPattern = "^((dangling|missing|unreachable) (commit|blob|tree)|warning in tree) (" + Sha1HashPattern + ")(.)*$";
 
@@ -92,9 +92,10 @@ namespace GitUI
                     var logPatternMatch = LogRegex.Match(commitLog);
                     if (logPatternMatch.Success)
                     {
-                        result.Author = logPatternMatch.Groups[1].Value;
-                        result.Subject = logPatternMatch.Groups[2].Value;
-                        result.Date = UnixEpoch.AddSeconds(long.Parse(logPatternMatch.Groups[3].Value));
+                        result.Author = GitCommandHelpers.ReEncodeStringFromLossless(logPatternMatch.Groups[1].Value);
+                        string encodingName = logPatternMatch.Groups[2].Value;
+                        result.Subject = GitCommandHelpers.ReEncodeCommitMessage(logPatternMatch.Groups[3].Value, encodingName);
+                        result.Date = UnixEpoch.AddSeconds(long.Parse(logPatternMatch.Groups[4].Value));
                     }
                 }
 
@@ -106,7 +107,7 @@ namespace GitUI
                 if (string.IsNullOrEmpty(hash) || !Sha1HashRegex.IsMatch(hash))
                     throw new ArgumentOutOfRangeException("hash", hash, "Hash must be a valid SHA1 hash.");
 
-                return Settings.Module.RunGitCmd(string.Format(LogCommandArgumentsFormat, hash));
+                return Settings.Module.RunGitCmd(string.Format(LogCommandArgumentsFormat, hash), Settings.LosslessEncoding);
             }
 
             private static LostObjectType GetObjectType(GroupCollection matchedGroup)

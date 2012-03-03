@@ -46,7 +46,7 @@ namespace GitCommands
                 args = "-r "+args;
             else if (!getLocal)
                 return new string[]{};
-            string info = Settings.Module.RunGitCmd("branch " + args);
+            string info = Settings.Module.RunGitCmd("branch " + args, Settings.SystemEncoding);
             if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
                 return new List<string>();
 
@@ -74,7 +74,7 @@ namespace GitCommands
         /// <returns></returns>
         public static IEnumerable<string> GetAllTagsWhichContainGivenCommit(string sha1)
         {
-            string info = Settings.Module.RunGitCmd("tag --contains " + sha1);
+            string info = Settings.Module.RunGitCmd("tag --contains " + sha1, Settings.SystemEncoding);
 
 
             if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
