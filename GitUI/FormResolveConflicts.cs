@@ -55,8 +55,8 @@ namespace GitUI
         private readonly TranslationString _contextChooseRemoteRebaseText = new TranslationString("Choose remote (ours)");
 
         private readonly TranslationString _resetItemMergeText = new TranslationString("Abort merge");
-        private readonly TranslationString _contextChooseLocalMergeText = new TranslationString("Choose local (theirs)");
-        private readonly TranslationString _contextChooseRemoteMergeText = new TranslationString("Choose remote (ours)");
+        private readonly TranslationString _contextChooseLocalMergeText = new TranslationString("Choose local (ours)");
+        private readonly TranslationString _contextChooseRemoteMergeText = new TranslationString("Choose remote (theirs)");
 
         private readonly TranslationString _binaryFileWarningCaption = new TranslationString("Warning");
 
