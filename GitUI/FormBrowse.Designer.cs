@@ -831,6 +831,7 @@ namespace GitUI
             this.DiffFiles.Size = new System.Drawing.Size(215, 247);
             this.DiffFiles.TabIndex = 1;
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFilesSelectedIndexChanged);
+            this.DiffFiles.DataSourceChanged += new System.EventHandler(this.DiffFiles_DataSourceChanged);
             this.DiffFiles.DoubleClick += new System.EventHandler(this.DiffFilesDoubleClick);
             // 
             // DiffContextMenu
