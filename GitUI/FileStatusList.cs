@@ -22,6 +22,7 @@ namespace GitUI
             FileStatusListBox.MeasureItem += new MeasureItemEventHandler(FileStatusListBox_MeasureItem);
             FileStatusListBox.DrawItem += new DrawItemEventHandler(FileStatusListBox_DrawItem);
             FileStatusListBox.SelectedIndexChanged += new EventHandler(FileStatusListBox_SelectedIndexChanged);
+            FileStatusListBox.DataSourceChanged += new EventHandler(FileStatusListBox_DataSourceChanged);
             FileStatusListBox.DoubleClick += new EventHandler(FileStatusListBox_DoubleClick);
             FileStatusListBox.Sorted = true;
             FileStatusListBox.SelectionMode = SelectionMode.MultiExtended;
@@ -267,6 +268,7 @@ namespace GitUI
         }
 
         public event EventHandler SelectedIndexChanged;
+        public event EventHandler DataSourceChanged;
 
         public new event EventHandler DoubleClick;
         public new event KeyEventHandler KeyDown;
@@ -283,6 +285,12 @@ namespace GitUI
         {
             if (SelectedIndexChanged != null)
                 SelectedIndexChanged(sender, e);
+        }
+
+        void FileStatusListBox_DataSourceChanged(object sender, EventArgs e)
+        {
+            if (DataSourceChanged != null)
+                DataSourceChanged(sender, e);
         }
 
         void FileStatusListBox_DrawItem(object sender, DrawItemEventArgs e)
