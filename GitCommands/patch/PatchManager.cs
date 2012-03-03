@@ -252,7 +252,7 @@ namespace PatchApply
                 // update $patch (makes sure $pre_context gets appended)
                 patch += pre_context;
                 // update $wholepatch with the current hunk
-                wholepatch += "@@ -" + hln + "," + n + " +" + hln + "," + m + " @@\n" + patch;
+                wholepatch += "@@ -" + hln + "," + n.ToString() + " +" + hln + "," + m.ToString() + " @@\n" + patch;
 
                 // set $first_l to first line after the next @@ line
                 first_l = diff.IndexOf("\n", i_l) + 1;

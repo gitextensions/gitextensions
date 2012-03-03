@@ -44,7 +44,7 @@ namespace GitCommands.Repository
             {
                 repo = repo.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
                 if (!repo.EndsWith(Settings.PathSeparator.ToString()))
-                    repo += Settings.PathSeparator;
+                repo += Settings.PathSeparator.ToString();
             }
 
             Repository.RepositoryAnchor anchor = Repository.RepositoryAnchor.None;
