@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Reflection;
 using System.Text;
@@ -323,7 +323,7 @@ namespace GitCommands
         }
 
         //encoding for files paths
-        public static readonly Encoding SystemEncoding = Encoding.Default;
+        public static Encoding SystemEncoding;
         //Encoding that let us read all bytes without replacing any char
         public static readonly Encoding LosslessEncoding = Encoding.GetEncoding("ISO-8859-1");//is any better?
         //follow by git i18n CommitEncoding and LogOutputEncoding is a hell
@@ -879,8 +879,24 @@ namespace GitCommands
             }
         }
 
+        private static void SetupSystemEncoding()
+        {
+            //check whether GitExtensions works with standard msysgit or msysgit-unicode
+            String controlStr = "ą";
+            int exitCode;
+            String s = Module.RunGitCmd(controlStr, out exitCode, null, Encoding.UTF8);
+            if (s != null && s.IndexOf(controlStr) != -1)
+                SystemEncoding = Encoding.UTF8;
+            else
+                SystemEncoding = Encoding.Default;
+        
+        }
+
         public static void LoadSettings()
         {
+
+            SetupSystemEncoding();
+
             Action<Encoding> addEncoding = delegate(Encoding e) { availableEncodings[e.HeaderName] = e; };
             addEncoding(Encoding.Default);
             addEncoding(new ASCIIEncoding());

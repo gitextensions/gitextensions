@@ -1166,6 +1166,7 @@ namespace GitCommands
         public static string ReEncodeFileName(string header)
         {
             char[] chars = header.ToCharArray();
+            List<byte> blist = new List<byte>();
             int i = 0;
             StringBuilder sb = new StringBuilder();
             while (i < chars.Length)
@@ -1181,7 +1182,7 @@ namespace GitCommands
                         try
                         {
                             int code = System.Convert.ToInt32(octNumber, 8);
-                            sb.Append(Settings.SystemEncoding.GetString(new byte[] { (byte)code }));
+                            blist.Add((byte)code);
                             i += 4;
                         }
                         catch (Exception)
@@ -1191,9 +1192,20 @@ namespace GitCommands
                 }
                 else
                 {
+                    if (blist.Count > 0)
+                    {
+                        sb.Append(Settings.SystemEncoding.GetString(blist.ToArray()));
+                        blist.Clear();
+                    }
+
                     sb.Append(c);
                     i++;
                 }
+            }
+            if (blist.Count > 0)
+            {
+                sb.Append(Settings.SystemEncoding.GetString(blist.ToArray()));
+                blist.Clear();
             }
             return sb.ToString();
         }
