@@ -6,10 +6,14 @@ Version 2.29
 	Fixed issue 745: Test connection does not work with non-uri
 	Fixed issue 756: Push dialog advanced options are cut off
 	Fixed issue 651: Diff view does not clear out the file pane when switching to a commit that has no changes
+	Fixed issue 727: Fix ours/theirs menu labels in the Resolve merge conflicts dialog
 	Fixed issue 767: An exception is thrown in the revision graph
 	Fixed issue 780: Relative author/commit date in the commit history graph is incorrect
 	Fixed issue 783: 'View diff' Windows context menu item executes the item directly above 'Git Extensions'
 	Fixed issue 791: Korean letters are not breaking in Translate dialog anymore
+	Fixed issue 796: Remember 'No fast forward' turned on when merge
+	Fixed issue 812: Fix occurrence of exception in FileTree when .gitattributes is not valid
+	Fixed issue 816: Invalid path chars in FormBrowse.UpdateJumplist
 	Fixed issue: GitExtensions crashes when detected wrong git version
 	Fixed issue: shell extensions are duplicated in 64bit environment
 	Fixed issue: an exception is thrown after moving the install folder (portable edition)
@@ -22,6 +26,8 @@ Version 2.29
 	Traditional Chinese translation updated
 	Spanish translation updated
 	Dutch translation updated
+	German translation updated
+	Many bugfixes and minor changes
 
 
 Version 2.28
