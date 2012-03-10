@@ -19,8 +19,6 @@ namespace GitPlugin
     /// <seealso class = 'IDTExtensibility2' />
     public class Connect : IDTExtensibility2, IDTCommandTarget
     {
-        private const string GitToolBarName = "GitExtensions";
-
         private Plugin _gitPlugin;
         
         public Connect()
@@ -153,20 +151,20 @@ namespace GitPlugin
                     var commandBar = _gitPlugin.AddGitCommandBar(MsoBarPosition.msoBarTop);
 
                     _gitPlugin.AddToolbarCommandWithText(
-                        commandBar, "GitExtensionsCommit", "&Commit", "Commit changes", 7,1);
+                        commandBar, "GitExtensionsCommit", "Commit", "Commit changes", 7,1);
 
                     _gitPlugin.AddToolbarCommand(commandBar, 
-                        "GitExtensionsBrowse", "&Browse", "Browse repository", 12, 2);
+                        "GitExtensionsBrowse", "Browse", "Browse repository", 12, 2);
                     
-                    _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsPull", "P&ull",
+                    _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsPull", "Pull",
                                                 "Pull changes from remote repository", 9, 3);
 
-                    _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsPush", "Pu&sh",
+                    _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsPush", "Push",
                                                 "Push changes to remote repository", 8, 4);
                     _gitPlugin.AddToolbarCommand(commandBar, 
-                        "GitExtensionsStash", "Stas&h", "Stash changes", 3, 5);
+                        "GitExtensionsStash", "Stash", "Stash changes", 3, 5);
                     _gitPlugin.AddToolbarCommand(commandBar,
-                        "GitExtensionsSettings", "Se&ttings", "Settings", 2, 6);
+                        "GitExtensionsSettings", "Settings", "Settings", 2, 6);
                 }
                 catch (Exception ex)
                 {
@@ -184,7 +182,7 @@ namespace GitPlugin
                                               "Switch to branch", 10, n++);
                     _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsCherryPick", "Cherry &pick", "Cherry pick commit",
                                               11, n++);
-                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsCommit", "Commi&t", "Commit changes", 7, n++);
+                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsCommit", "&Commit", "Commit changes", 7, n++);
                     _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsCreateBranch", "Create bra&nch",
                                               "Create new branch", 10, n++);
                     _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsClone", "Clone &repository", "Clone existing Git",
