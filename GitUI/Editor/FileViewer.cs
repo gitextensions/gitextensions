@@ -52,10 +52,6 @@ namespace GitUI.Editor
             IgnoreWhitespaceChanges = false;
 
             IsReadOnly = true;
-
-            Settings.WorkingDirChanged += WorkingDirChanged;
-
-            this.Encoding = Settings.FilesEncoding;
             
             this.encodingToolStripComboBox.Items.AddRange(new Object[]
                                                     {
@@ -85,6 +81,9 @@ namespace GitUI.Editor
             if (!DesignMode)
                 this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             Font = Settings.DiffFont;
+
+            Settings.WorkingDirChanged += WorkingDirChanged;
+            this.Encoding = Settings.FilesEncoding;
         }
 
         public new Font Font
@@ -186,32 +185,22 @@ namespace GitUI.Editor
         public bool ShowEntireFile { get; set; }
         public bool TreatAllFilesAsText { get; set; }
         public bool DisableFocusControlOnHover { get; set; }
-        private Encoding _Encoding;
-        public Encoding Encoding 
+        public Encoding Encoding  { get; set; }
+
+        private void UpdateEncodingCombo()
         {
-            get
-            {
-                return _Encoding;
-            }
-        
-            set
-            {
-                _Encoding = value;
-
-                if (this.Encoding.GetType() == typeof(ASCIIEncoding))
-                    this.encodingToolStripComboBox.Text = "ASCII";
-                else if (this.Encoding.GetType() == typeof(UnicodeEncoding))
-                    this.encodingToolStripComboBox.Text = "Unicode";
-                else if (this.Encoding.GetType() == typeof(UTF7Encoding))
-                    this.encodingToolStripComboBox.Text = "UTF7";
-                else if (this.Encoding.GetType() == typeof(UTF8Encoding))
-                    this.encodingToolStripComboBox.Text = "UTF8";
-                else if (this.Encoding.GetType() == typeof(UTF32Encoding))
-                    this.encodingToolStripComboBox.Text = "UTF32";
-                else if (this.Encoding == Encoding.Default)
-                    this.encodingToolStripComboBox.Text = "Default (" + Encoding.Default.HeaderName + ")";
-
-            }
+            if (this.Encoding.GetType() == typeof(ASCIIEncoding))
+                this.encodingToolStripComboBox.Text = "ASCII";
+            else if (this.Encoding.GetType() == typeof(UnicodeEncoding))
+                this.encodingToolStripComboBox.Text = "Unicode";
+            else if (this.Encoding.GetType() == typeof(UTF7Encoding))
+                this.encodingToolStripComboBox.Text = "UTF7";
+            else if (this.Encoding.GetType() == typeof(UTF8Encoding))
+                this.encodingToolStripComboBox.Text = "UTF8";
+            else if (this.Encoding.GetType() == typeof(UTF32Encoding))
+                this.encodingToolStripComboBox.Text = "UTF32";
+            else if (this.Encoding == Encoding.Default)
+                this.encodingToolStripComboBox.Text = "Default (" + Encoding.Default.HeaderName + ")";
         }
 
         public int ScrollPos
@@ -811,6 +800,12 @@ namespace GitUI.Editor
                 this.Encoding = encod;
                 this.OnExtraDiffArgumentsChanged();
             }
+        }
+
+        private void fileviewerToolbar_VisibleChanged(object sender, EventArgs e)
+        {
+            if (fileviewerToolbar.Visible)
+                UpdateEncodingCombo();
         }
 
     }
