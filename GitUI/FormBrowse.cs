@@ -1630,7 +1630,7 @@ namespace GitUI
         {
             foreach (var item in openSubmoduleToolStripMenuItem.DropDownItems)
             {
-                var toolStripButton = item as ToolStripButton;
+                var toolStripButton = item as ToolStripMenuItem;
                 if (toolStripButton != null)
                     toolStripButton.Click -= SubmoduleToolStripButtonClick;
             }
@@ -1639,7 +1639,7 @@ namespace GitUI
 
         private void SubmoduleToolStripButtonClick(object sender, EventArgs e)
         {
-            var button = sender as ToolStripButton;
+            var button = sender as ToolStripMenuItem;
 
             if (button == null)
                 return;
