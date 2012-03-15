@@ -168,13 +168,8 @@ namespace GitUI
             this.submodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manageSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
-            this.updateAllSubmodulesRecursiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.initializeAllSubmodulesRecursiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.synchronizeAllSubmodulesRecursiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             this.updateAllSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.initializeAllSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.syncronizeAllSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.synchronizeAllSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.openSubmoduleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
@@ -1429,13 +1424,8 @@ namespace GitUI
             this.submodulesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.manageSubmodulesToolStripMenuItem,
             this.toolStripSeparator8,
-            this.updateAllSubmodulesRecursiveToolStripMenuItem,
-            this.initializeAllSubmodulesRecursiveToolStripMenuItem,
-            this.synchronizeAllSubmodulesRecursiveToolStripMenuItem,
-            this.toolStripSeparator14,
             this.updateAllSubmodulesToolStripMenuItem,
-            this.initializeAllSubmodulesToolStripMenuItem,
-            this.syncronizeAllSubmodulesToolStripMenuItem,
+            this.synchronizeAllSubmodulesToolStripMenuItem,
             this.toolStripSeparator10,
             this.openSubmoduleToolStripMenuItem});
             this.submodulesToolStripMenuItem.Name = "submodulesToolStripMenuItem";
@@ -1454,32 +1444,6 @@ namespace GitUI
             this.toolStripSeparator8.Name = "toolStripSeparator8";
             this.toolStripSeparator8.Size = new System.Drawing.Size(259, 6);
             // 
-            // updateAllSubmodulesRecursiveToolStripMenuItem
-            // 
-            this.updateAllSubmodulesRecursiveToolStripMenuItem.Name = "updateAllSubmodulesRecursiveToolStripMenuItem";
-            this.updateAllSubmodulesRecursiveToolStripMenuItem.Size = new System.Drawing.Size(262, 22);
-            this.updateAllSubmodulesRecursiveToolStripMenuItem.Text = "Update all submodules recursive";
-            this.updateAllSubmodulesRecursiveToolStripMenuItem.Click += new System.EventHandler(this.UpdateAllSubmodulesRecursiveToolStripMenuItemClick);
-            // 
-            // initializeAllSubmodulesRecursiveToolStripMenuItem
-            // 
-            this.initializeAllSubmodulesRecursiveToolStripMenuItem.Name = "initializeAllSubmodulesRecursiveToolStripMenuItem";
-            this.initializeAllSubmodulesRecursiveToolStripMenuItem.Size = new System.Drawing.Size(262, 22);
-            this.initializeAllSubmodulesRecursiveToolStripMenuItem.Text = "Initialize all submodules recursive";
-            this.initializeAllSubmodulesRecursiveToolStripMenuItem.Click += new System.EventHandler(this.InitializeAllSubmodulesRecursiveToolStripMenuItemClick);
-            // 
-            // synchronizeAllSubmodulesRecursiveToolStripMenuItem
-            // 
-            this.synchronizeAllSubmodulesRecursiveToolStripMenuItem.Name = "synchronizeAllSubmodulesRecursiveToolStripMenuItem";
-            this.synchronizeAllSubmodulesRecursiveToolStripMenuItem.Size = new System.Drawing.Size(262, 22);
-            this.synchronizeAllSubmodulesRecursiveToolStripMenuItem.Text = "Synchronize all submodules recursive";
-            this.synchronizeAllSubmodulesRecursiveToolStripMenuItem.Click += new System.EventHandler(this.SynchronizeAllSubmodulesRecursiveToolStripMenuItemClick);
-            // 
-            // toolStripSeparator14
-            // 
-            this.toolStripSeparator14.Name = "toolStripSeparator14";
-            this.toolStripSeparator14.Size = new System.Drawing.Size(259, 6);
-            // 
             // updateAllSubmodulesToolStripMenuItem
             // 
             this.updateAllSubmodulesToolStripMenuItem.Name = "updateAllSubmodulesToolStripMenuItem";
@@ -1487,19 +1451,12 @@ namespace GitUI
             this.updateAllSubmodulesToolStripMenuItem.Text = "Update all submodules";
             this.updateAllSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.UpdateAllSubmodulesToolStripMenuItemClick);
             // 
-            // initializeAllSubmodulesToolStripMenuItem
+            // synchronizeAllSubmodulesToolStripMenuItem
             // 
-            this.initializeAllSubmodulesToolStripMenuItem.Name = "initializeAllSubmodulesToolStripMenuItem";
-            this.initializeAllSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(262, 22);
-            this.initializeAllSubmodulesToolStripMenuItem.Text = "Initialize all submodules";
-            this.initializeAllSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.InitializeAllSubmodulesToolStripMenuItemClick);
-            // 
-            // syncronizeAllSubmodulesToolStripMenuItem
-            // 
-            this.syncronizeAllSubmodulesToolStripMenuItem.Name = "syncronizeAllSubmodulesToolStripMenuItem";
-            this.syncronizeAllSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(262, 22);
-            this.syncronizeAllSubmodulesToolStripMenuItem.Text = "Synchronize all submodules";
-            this.syncronizeAllSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.SyncronizeAllSubmodulesToolStripMenuItemClick);
+            this.synchronizeAllSubmodulesToolStripMenuItem.Name = "syncronizeAllSubmodulesToolStripMenuItem";
+            this.synchronizeAllSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(262, 22);
+            this.synchronizeAllSubmodulesToolStripMenuItem.Text = "Synchronize all submodules";
+            this.synchronizeAllSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.SyncronizeAllSubmodulesToolStripMenuItemClick);
             // 
             // toolStripSeparator10
             // 
@@ -1903,13 +1860,8 @@ namespace GitUI
         private ToolStripMenuItem submodulesToolStripMenuItem;
         private ToolStripMenuItem manageSubmodulesToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator8;
-        private ToolStripMenuItem updateAllSubmodulesRecursiveToolStripMenuItem;
-        private ToolStripMenuItem initializeAllSubmodulesRecursiveToolStripMenuItem;
-        private ToolStripMenuItem synchronizeAllSubmodulesRecursiveToolStripMenuItem;
-        private ToolStripSeparator toolStripSeparator14;
         private ToolStripMenuItem updateAllSubmodulesToolStripMenuItem;
-        private ToolStripMenuItem initializeAllSubmodulesToolStripMenuItem;
-        private ToolStripMenuItem syncronizeAllSubmodulesToolStripMenuItem;
+        private ToolStripMenuItem synchronizeAllSubmodulesToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator10;
         private ToolStripMenuItem openSubmoduleToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator11;

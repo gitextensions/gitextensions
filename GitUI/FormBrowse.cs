@@ -1537,40 +1537,10 @@ namespace GitUI
                 Initialize();
         }
 
-        private void UpdateAllSubmodulesRecursiveToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            Cursor.Current = Cursors.WaitCursor;
-            if (GitUICommands.Instance.StartUpdateSubmodulesRecursiveDialog(this))
-                Initialize();
-            Cursor.Current = Cursors.Default;
-        }
-
-        private void InitializeAllSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            if (GitUICommands.Instance.StartInitSubmodulesDialog(this))
-                Initialize();
-        }
-
-        private void InitializeAllSubmodulesRecursiveToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            Cursor.Current = Cursors.WaitCursor;
-            if (GitUICommands.Instance.StartInitSubmodulesRecursiveDialog(this))
-                Initialize();
-            Cursor.Current = Cursors.Default;
-        }
-
-        private void SyncronizeAllSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
+        private void SynchronizeAllSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (GitUICommands.Instance.StartSyncSubmodulesDialog(this))
                 Initialize();
-        }
-
-        private void SynchronizeAllSubmodulesRecursiveToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            Cursor.Current = Cursors.WaitCursor;
-            if (GitUICommands.Instance.StartSyncSubmodulesRecursiveDialog(this))
-                Initialize();
-            Cursor.Current = Cursors.Default;
         }
 
         private void ToolStripSplitStashButtonClick(object sender, EventArgs e)
