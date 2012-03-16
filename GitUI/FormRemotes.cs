@@ -237,7 +237,7 @@ namespace GitUI
             System.Uri uri;
             string sshURL = "";
             if (System.Uri.TryCreate(Url.Text, UriKind.RelativeOrAbsolute, out uri) &&
-                uri.Scheme == "ssh")
+                uri.IsAbsoluteUri && uri.Scheme == "ssh")
             {
                 if (!string.IsNullOrEmpty(uri.UserInfo))
                     sshURL = uri.UserInfo + "@";
