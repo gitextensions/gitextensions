@@ -314,15 +314,15 @@ namespace GitCommands
         public static string SubmoduleInitCmd(string name)
         {
             if (string.IsNullOrEmpty(name))
-                return "submodule update --init";
+                return "submodule init --recursive";
 
             return "submodule update --init \"" + name.Trim() + "\"";
         }
-
+		
         public static string SubmoduleUpdateCmd(string name)
         {
             if (string.IsNullOrEmpty(name))
-                return "submodule update";
+                return "submodule update --init --recursive";
 
             return "submodule update \"" + name.Trim() + "\"";
         }
