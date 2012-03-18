@@ -1,7 +1,7 @@
 ﻿Changelog
 =========
 
-Version 2.30
+Version 2.31
 	Fixed issue 745: test connection does not work with non-uri
 	Fixed issue 829: Browse submodules menu item does not work
 	Fixed issue 831: Remote Repositories dialog does not show Url

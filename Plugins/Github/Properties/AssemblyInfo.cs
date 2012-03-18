@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("GitExtensions")]
 [assembly: AssemblyProduct("GitExtensions")]
-[assembly: AssemblyCopyright("Copyright ©  2011 Henk Westhuis")]
+[assembly: AssemblyCopyright("Copyright ©  2012 Henk Westhuis")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -26,5 +26,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("2.30")]
-[assembly: AssemblyFileVersion("2.30")]
+[assembly: AssemblyVersion("2.31")]
+[assembly: AssemblyFileVersion("2.31")]
