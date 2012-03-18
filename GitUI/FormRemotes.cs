@@ -73,6 +73,9 @@ namespace GitUI
 
         private void Initialize()
         {
+            FillUrlDropDown();
+            FillPushUrlDropDown(); 
+            
             Remotes.DataSource = Settings.Module.GetRemotes();
 
             var heads = Settings.Module.GetHeads(false, true);
@@ -81,9 +84,6 @@ namespace GitUI
             RemoteBranches.DataError += RemoteBranchesDataError;
 
             PuTTYSSH.Visible = GitCommandHelpers.Plink();
-
-            FillUrlDropDown();
-            FillPushUrlDropDown();
         }
 
         private void FillUrlDropDown()
