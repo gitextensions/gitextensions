@@ -1,6 +1,13 @@
 ﻿Changelog
 =========
 
+Version 2.30
+	Fixed issue 745: test connection does not work with non-uri
+	Fixed issue 829: Browse submodules menu item does not work
+	Fixed issue 831: Remote Repositories dialog does not show Url
+	Fixed issue 840: Positions of splitters of main screen aren't persisted
+	Fix for "Index out of range exception" when no recent repositories are present.
+
 Version 2.29
 	Fixed issue 276: Make splitter visible on Dashboard
 	Fixed issue 745: Test connection does not work with non-uri
