@@ -317,12 +317,14 @@ namespace GitUI
             Repository r = null;
             if (Repositories.RepositoryHistory.Repositories.Count > 0)
                 r = Repositories.RepositoryHistory.Repositories[0];
-            if (r == null || !r.Path.Equals(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
-                Repositories.AddMostRecentRepository(Settings.WorkingDir);
 
             List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
             List<Repository> repo = new List<Repository>();
-            repo.Add(Repositories.RepositoryHistory.Repositories[0]);
+
+            if (r == null || !r.Path.Equals(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
+                Repositories.AddMostRecentRepository(Settings.WorkingDir);
+            else
+                repo.Add(r);
 
             RecentRepoSplitter splitter = new RecentRepoSplitter();
             splitter.measureFont = _NO_TRANSLATE_Workingdir.Font;
@@ -336,7 +338,8 @@ namespace GitUI
                 splitter.graphics.Dispose();
             }
 
-            _NO_TRANSLATE_Workingdir.Text = mostRecentRepos[0].Caption;
+            if (mostRecentRepos.Count > 0)
+                _NO_TRANSLATE_Workingdir.Text = mostRecentRepos[0].Caption;
 
         }
 
