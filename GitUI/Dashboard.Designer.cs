@@ -53,9 +53,8 @@
             // 
             resources.ApplyResources(this.splitContainer5, "splitContainer5");
             this.splitContainer5.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.splitContainer5.DataBindings.Add(new System.Windows.Forms.Binding("SplitterDistance", global::GitUI.Properties.Settings.Default, "Dashboard_MainSplitContainer_SplitterDistance", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.splitContainer5.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer5.Name = "splitContainer5";
+            this.splitContainer5.Name = "splitContainer5";            
             // 
             // splitContainer5.Panel1
             // 
@@ -68,7 +67,6 @@
             resources.ApplyResources(this.splitContainer5.Panel2, "splitContainer5.Panel2");
             this.splitContainer5.Panel2.BackColor = System.Drawing.SystemColors.Control;
             this.splitContainer5.Panel2.Controls.Add(this.groupLayoutPanel);
-            this.splitContainer5.SplitterDistance = global::GitUI.Properties.Settings.Default.Dashboard_MainSplitContainer_SplitterDistance;
             // 
             // splitContainer6
             // 
