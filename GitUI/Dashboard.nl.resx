@@ -117,41 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="CommonActions.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Tahoma, 8.25pt</value>
-  </data>
-  <data name="CommonActions.Size" type="System.Drawing.Size, System.Drawing">
-    <value>315, 144</value>
-  </data>
   <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="splitContainer7.IsSplitterFixed" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="RecentRepositories.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Tahoma, 8.25pt</value>
-  </data>
-  <data name="RecentRepositories.Size" type="System.Drawing.Size, System.Drawing">
-    <value>315, 282</value>
-  </data>
   <data name="splitContainer7.Panel1MinSize" type="System.Int32, mscorlib">
     <value>1</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="DonateCategory.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
-  </data>
-  <data name="DonateCategory.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Tahoma, 8.25pt</value>
-  </data>
-  <data name="DonateCategory.Size" type="System.Drawing.Size, System.Drawing">
-    <value>315, 23</value>
   </data>
   <data name="splitContainer7.Panel2MinSize" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="splitContainer7.Size" type="System.Drawing.Size, System.Drawing">
-    <value>315, 392</value>
+    <value>314, 392</value>
   </data>
   <data name="splitContainer7.SplitterDistance" type="System.Int32, mscorlib">
     <value>282</value>
@@ -160,7 +138,7 @@
     <value>4</value>
   </data>
   <data name="splitContainer6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>315, 540</value>
+    <value>314, 540</value>
   </data>
   <data name="splitContainer6.SplitterDistance" type="System.Int32, mscorlib">
     <value>144</value>
@@ -169,7 +147,7 @@
     <value>4</value>
   </data>
   <data name="groupLayoutPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>514, 540</value>
+    <value>515, 540</value>
   </data>
   <data name="splitContainer5.Size" type="System.Drawing.Size, System.Drawing">
     <value>833, 540</value>

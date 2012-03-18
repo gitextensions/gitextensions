@@ -2385,6 +2385,13 @@ namespace GitUI
             openContainingFolderToolStripMenuItem.Enabled = false;
         }
 
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            base.OnClosing(e);
+            if (_dashboard != null)
+                _dashboard.SaveSplitterPositions();           
+        }
+
         private void CloneSvnToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (GitUICommands.Instance.StartSvnCloneDialog((IWin32Window)this))
