@@ -120,7 +120,7 @@ namespace GitPlugin.Commands
             caption = caption.Trim();
             return commandBar.Controls
                 .Cast<CommandBarControl>()
-                .Any(control => control.Caption.Replace("&", "").Trim().Equals(caption.Replace("&", ""), StringComparison.CurrentCultureIgnoreCase));
+                .Any(control => (control.Caption.Replace("&", "").Trim().Equals(caption.Replace("&", ""), StringComparison.CurrentCultureIgnoreCase) || (control.Caption.StartsWith("Commit") && caption.StartsWith("Commit"))));
         }
 
         public static void ChangeCommandCaption(DTE2 application, string commandBarName, string tooltipText, string caption)
