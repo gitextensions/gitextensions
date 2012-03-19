@@ -21,16 +21,22 @@ namespace GitExtensions
             Application.SetCompatibleTextRenderingDefault(false);
             
             string[] args = Environment.GetCommandLineArgs();
-            FormSplash.Show("Load settings");
+            FormSplash.ShowSplash();
+            Application.DoEvents();
+
             Settings.LoadSettings();
             if (Settings.RunningOnWindows())
             {
                 //Quick HOME check:
-                FormSplash.SetAction("Check home path");
+                FormSplash.SetAction("Checking home path...");
+                Application.DoEvents();
+
                 FormFixHome.CheckHomePath();
             }
             //Register plugins
-            FormSplash.SetAction("Load plugins");
+            FormSplash.SetAction("Loading plugins...");
+            Application.DoEvents();
+
             PluginLoader.LoadAsync();
 
             if (string.IsNullOrEmpty(Settings.Translation))
@@ -48,7 +54,9 @@ namespace GitExtensions
                     !Settings.GetValue<string>("checksettings", null).ToString().Equals("false", StringComparison.OrdinalIgnoreCase) ||
                     string.IsNullOrEmpty(Settings.GitCommand))
                 {
-                    FormSplash.SetAction("Check settings");
+                    FormSplash.SetAction("Checking settings...");
+                    Application.DoEvents();
+
                     using (var settings = new FormSettings())
                     {
                         if (!settings.CheckSettings())
@@ -88,7 +96,7 @@ namespace GitExtensions
                     Settings.WorkingDir = findWorkingDir;
             }
 
-            FormSplash.Hide();
+            FormSplash.HideSplash();
             
             if (args.Length <= 1)
             {

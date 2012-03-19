@@ -32,7 +32,7 @@ namespace PatchApply
             if (text.EndsWith("\n\\ No newline at end of file\n"))
                 text = text.Remove(text.Length - "\n\\ No newline at end of file\n".Length);
 
-            // Devide diff into header and patch
+            // Divide diff into header and patch
             int patch_pos = text.IndexOf("@@");
             string header = text.Substring(0, patch_pos);
             string diff = text.Substring(patch_pos);
@@ -41,12 +41,13 @@ namespace PatchApply
             int first = selectionPosition - patch_pos;
             int last = first + selectionLength;
 
-            //Make sure the header is not in the selection
+            // Make sure the header is not in the selection
             if (first < 0)
             {
-                last += first;
                 first = 0;
             }
+            // Selection was only on the header section, so cannot proceed
+            if (last < 0) return null;
 
             // Round selection to previous and next line breaks to select the whole lines
             int first_l = diff.LastIndexOf("\n", first, first) + 1;
