@@ -662,7 +662,10 @@ namespace GitCommands
                     if (line.StartsWith("gitdir:"))
                     {
                         string path = line.Substring(7).Trim().Replace('/', '\\');
-                        return path + Settings.PathSeparator.ToString();
+                        if (Path.IsPathRooted(path))
+                            return path + Settings.PathSeparator.ToString();
+                        else
+                            return Path.GetFullPath(Path.Combine(repositoryPath, path + Settings.PathSeparator.ToString()));
                     }
                 }
             }
