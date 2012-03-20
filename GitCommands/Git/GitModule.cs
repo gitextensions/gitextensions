@@ -79,8 +79,7 @@ namespace GitCommands
             if (Directory.Exists(dir + Settings.PathSeparator.ToString() + ".git") || File.Exists(dir + Settings.PathSeparator.ToString() + ".git"))
                 return true;
 
-            return !dir.Contains(".git") &&
-                   Directory.Exists(dir + Settings.PathSeparator.ToString() + "info") &&
+            return Directory.Exists(dir + Settings.PathSeparator.ToString() + "info") &&
                    Directory.Exists(dir + Settings.PathSeparator.ToString() + "objects") &&
                    Directory.Exists(dir + Settings.PathSeparator.ToString() + "refs");
         }
