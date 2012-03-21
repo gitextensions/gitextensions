@@ -92,12 +92,16 @@ namespace GitUI
 #endif
         private bool _dontUpdateOnIndexChange;
         private ToolStripGitStatus _toolStripGitStatus;
+        private FilterRevisionsHelper filterRevisionsHelper;        
+        private FilterBranchHelper _FilterBranchHelper;
 
         public FormBrowse(string filter)
         {
             syncContext = SynchronizationContext.Current;
 
             InitializeComponent();
+            filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, RevisionGrid, toolStripLabel2, this);
+            _FilterBranchHelper = new FilterBranchHelper(toolStripBranches, toolStripDropDownButton2, RevisionGrid);
             Translate();
 
 #if !__MonoCS__
@@ -119,7 +123,7 @@ namespace GitUI
 
             RevisionGrid.SelectionChanged += RevisionGridSelectionChanged;
             DiffText.ExtraDiffArgumentsChanged += DiffTextExtraDiffArgumentsChanged;
-            SetFilter(filter);
+            filterRevisionsHelper.SetFilter(filter);
             DiffText.SetFileLoader(getNextPatchFile);
 
             GitTree.ImageList = new ImageList();
@@ -285,7 +289,7 @@ namespace GitUI
             _repositoryHostsToolStripMenuItem.Visible = RepoHosts.GitHosters.Count > 0;
             if (RepoHosts.GitHosters.Count == 1)
                 _repositoryHostsToolStripMenuItem.Text = RepoHosts.GitHosters[0].Description;
-            InitToolStripBranchFilter(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
+            _FilterBranchHelper.InitToolStripBranchFilter();            
             if (hard)
                 ShowRevisions();
             RefreshWorkingDirCombo();
@@ -671,67 +675,6 @@ namespace GitUI
             }
         }
 
-        private void InitToolStripBranchFilter(bool local, bool remote)
-        {
-            toolStripBranches.Items.Clear();
-            List<string> branches = GetBranchAndTagHeads(local, remote);
-            foreach (var branch in branches)
-                toolStripBranches.Items.Add(branch);
-
-            var autoCompleteList = toolStripBranches.AutoCompleteCustomSource.Cast<string>();
-            if (!autoCompleteList.SequenceEqual(branches))
-            {
-                toolStripBranches.AutoCompleteCustomSource.Clear();
-                toolStripBranches.AutoCompleteCustomSource.AddRange(branches.ToArray());
-            }
-        }
-
-        private static List<string> GetBranchHeads(bool local, bool remote)
-        {
-            var list = new List<string>();
-            if (local && remote)
-            {
-                var branches = Settings.Module.GetHeads(true, true);
-                list.AddRange(branches.Where(branch => !branch.IsTag).Select(branch => branch.Name));
-            }
-            else if (local)
-            {
-                var branches = Settings.Module.GetHeads(false);
-                list.AddRange(branches.Select(branch => branch.Name));
-            }
-            else if (remote)
-            {
-                var branches = Settings.Module.GetHeads(true, true);
-                list.AddRange(branches.Where(branch => branch.IsRemote && !branch.IsTag).Select(branch => branch.Name));
-            }
-            return list;
-        }
-
-        private static IEnumerable<string> GetTagsHeads(bool local, bool remote)
-        {
-            var list = new List<string>();
-            if (!remote)
-                return list;
-            if (local)
-            {
-                var tags = Settings.Module.GetHeads(true, true);
-                list.AddRange(tags.Where(tag => tag.IsTag).Select(tag => tag.Name));
-            }
-            else
-            {
-                var tags = Settings.Module.GetHeads(true, true);
-                list.AddRange(tags.Where(tag => tag.IsRemote && tag.IsTag).Select(tag => tag.Name));
-            }
-            return list;
-        }
-
-        private static List<string> GetBranchAndTagHeads(bool local, bool remote)
-        {
-            var list = GetBranchHeads(local, remote);
-            list.AddRange(GetTagsHeads(local, remote));
-            return list;
-        }
-
         private void RebaseClick(object sender, EventArgs e)
         {
             if (Settings.Module.InTheMiddleOfRebase())
@@ -889,8 +832,12 @@ namespace GitUI
 
             if (item.IsBlob || item.IsTree)
             {
-                // TODO: Find lastest revison when file was changed based on RevisionGrid.GetRevisions();
-                GitUICommands.Instance.StartFileHistoryDialog(this, item.FileName);
+                IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
+
+                if (revisions.Count == 0)
+                    GitUICommands.Instance.StartFileHistoryDialog(this, item.FileName);
+                else
+                    GitUICommands.Instance.StartFileHistoryDialog(this, item.FileName, revisions[0], false, false);
             }
         }
 
@@ -1109,7 +1056,7 @@ namespace GitUI
             if (!item.IsBlob)
                 return;
 
-            if (GitUICommands.Instance.StartFileHistoryDialog(this, item.FileName))
+            if (GitUICommands.Instance.StartFileHistoryDialog(this, item.FileName, null))
                 Initialize();
         }
 
@@ -1201,7 +1148,7 @@ namespace GitUI
 
         private void GitcommandLogToolStripMenuItemClick(object sender, EventArgs e)
         {
-            new GitLogForm().Show();
+            new GitLogForm().Show(this);
         }
 
 
@@ -1373,75 +1320,6 @@ namespace GitUI
             Settings.Module.StartExternalCommand(Settings.Puttygen, "");
         }
 
-        private void SetFilter(string filter)
-        {
-            if (string.IsNullOrEmpty(filter)) return;
-            toolStripTextBoxFilter.Text = filter;
-            ApplyFilter();
-        }
-
-        private void ApplyFilter()
-        {
-            string revListArgs;
-            string inMemMessageFilter;
-            string inMemCommitterFilter;
-            string inMemAuthorFilter;
-            var filterParams = new bool[4];
-            filterParams[0] = commitToolStripMenuItem1.Checked;
-            filterParams[1] = committerToolStripMenuItem.Checked;
-            filterParams[2] = authorToolStripMenuItem.Checked;
-            filterParams[3] = diffContainsToolStripMenuItem.Checked;
-            try
-            {
-                RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text,
-                                               filterParams,
-                                               out revListArgs,
-                                               out inMemMessageFilter,
-                                               out inMemCommitterFilter,
-                                               out inMemAuthorFilter);
-            }
-            catch (InvalidOperationException ex)
-            {
-                MessageBox.Show(this, ex.Message, "Filter error");
-                toolStripTextBoxFilter.Text = "";
-                return;
-            }
-
-            if ((RevisionGrid.Filter == revListArgs) &&
-                (RevisionGrid.InMemMessageFilter == inMemMessageFilter) &&
-                (RevisionGrid.InMemCommitterFilter == inMemCommitterFilter) &&
-                (RevisionGrid.InMemAuthorFilter == inMemAuthorFilter) &&
-                (RevisionGrid.InMemFilterIgnoreCase))
-                return;
-            RevisionGrid.Filter = revListArgs;
-            RevisionGrid.InMemMessageFilter = inMemMessageFilter;
-            RevisionGrid.InMemCommitterFilter = inMemCommitterFilter;
-            RevisionGrid.InMemAuthorFilter = inMemAuthorFilter;
-            RevisionGrid.InMemFilterIgnoreCase = true;
-            RevisionGrid.ForceRefreshRevisions();
-        }
-
-        private void ApplyBranchFilter()
-        {
-            bool success = RevisionGrid.SetAndApplyBranchFilter(toolStripBranches.Text);
-            if (success) RevisionGrid.ForceRefreshRevisions();
-        }
-
-        private void UpdateBranchFilterItems()
-        {
-            string filter = toolStripBranches.Text;
-            toolStripBranches.Items.Clear();
-            var index = toolStripBranches.Text.Length;
-            var branches = GetBranchAndTagHeads(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
-            toolStripBranches.Items.AddRange(branches.Where(branch => branch.Contains(filter)).ToArray());
-            toolStripBranches.SelectionStart = index;
-        }
-
-        private void ToolStripTextBoxFilterLeave(object sender, EventArgs e)
-        {
-            ToolStripLabel2Click(sender, e);
-        }
-
         private void TabControl1SelectedIndexChanged(object sender, EventArgs e)
         {
             FillFileTree();
@@ -1520,12 +1398,6 @@ namespace GitUI
         private void ToolStripButtonPushClick(object sender, EventArgs e)
         {
             PushToolStripMenuItemClick(sender, e);
-        }
-
-        private void ToolStripTextBoxFilterKeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)Keys.Enter)
-                ApplyFilter();
         }
 
         private void ManageSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
@@ -1885,11 +1757,6 @@ namespace GitUI
             GitBashToolStripMenuItemClick1(sender, e);
         }
 
-        private void ToolStripLabel2Click(object sender, EventArgs e)
-        {
-            ApplyFilter();
-        }
-
         private void ToolStripButtonPullClick(object sender, EventArgs e)
         {
             PullToolStripMenuItemClick(sender, e);
@@ -1977,31 +1844,9 @@ namespace GitUI
             }
         }
 
-        private void toolStripBranches_TextUpdate(object sender, EventArgs e)
-        {
-            UpdateBranchFilterItems();
-        }
-
-        private void toolStripBranches_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.KeyValue == (char)Keys.Enter)
-                ApplyBranchFilter();
-        }
-
-        private void toolStripBranches_DropDown(object sender, EventArgs e)
-        {
-            InitToolStripBranchFilter(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
-            UpdateBranchFilterItems();
-        }
-
         private void toolStripStatusLabel1_Click(object sender, EventArgs e)
         {
             statusStrip.Hide();
-        }
-
-        private void toolStripBranches_Leave(object sender, EventArgs e)
-        {
-            ApplyBranchFilter();
         }
 
         private void openWithToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2041,7 +1886,7 @@ namespace GitUI
                 if (revisions.Count == 0)
                     GitUICommands.Instance.StartFileHistoryDialog(this, item.Name);
                 else
-                    GitUICommands.Instance.StartFileHistoryDialog(this, item.Name, revisions[0]);
+                    GitUICommands.Instance.StartFileHistoryDialog(this, item.Name, revisions[0], false);
             }
         }
 
@@ -2070,18 +1915,6 @@ namespace GitUI
 
             if (needRefresh)
                 Initialize();
-        }
-
-        private void diffContainsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (diffContainsToolStripMenuItem.Checked)
-            {
-                commitToolStripMenuItem1.Checked = false;
-                committerToolStripMenuItem.Checked = false;
-                authorToolStripMenuItem.Checked = false;
-            }
-            else
-                commitToolStripMenuItem1.Checked = true;
         }
 
         private void _forkCloneMenuItem_Click(object sender, EventArgs e)
@@ -2378,11 +2211,15 @@ namespace GitUI
                 if (File.Exists(fileNames.ToString()))
                 {
                     openContainingFolderToolStripMenuItem.Enabled = true;
+                    diffBaseLocalToolStripMenuItem.Enabled = true;
+                    difftoolRemoteLocalToolStripMenuItem.Enabled = true;
                     return;
                 }
             }
 
             openContainingFolderToolStripMenuItem.Enabled = false;
+            diffBaseLocalToolStripMenuItem.Enabled = false;
+            difftoolRemoteLocalToolStripMenuItem.Enabled = false;
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -2427,6 +2264,40 @@ namespace GitUI
         {
             if (DiffFiles.GitItemStatuses == null || DiffFiles.GitItemStatuses.Count == 0)
                 DiffText.ViewPatch(String.Empty);
+        }
+
+        private void blameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GitItemStatus item = DiffFiles.SelectedItem;
+
+            if (item.IsTracked)
+            {
+                IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
+
+                if (revisions.Count == 0)
+                    GitUICommands.Instance.StartFileHistoryDialog(this, item.Name, null, false, true);
+                else
+                    GitUICommands.Instance.StartFileHistoryDialog(this, item.Name, revisions[0], true, true);
+            }
+
+        }
+
+        private void blameToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            var item = GitTree.SelectedNode.Tag as GitItem;
+
+            if (item == null)
+                return;
+
+            if (item.IsBlob || item.IsTree)
+            {
+                IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
+
+                if (revisions.Count == 0)
+                    GitUICommands.Instance.StartFileHistoryDialog(this, item.FileName, null, false, true);
+                else
+                    GitUICommands.Instance.StartFileHistoryDialog(this, item.FileName, revisions[0], true, true);
+            }
         }
     }
 }

@@ -1152,7 +1152,7 @@ namespace GitUI
             return StartBrowseDialog(null, filter);
         }
 
-        public bool StartFileHistoryDialog(IWin32Window owner, string fileName, GitRevision revision)
+        public bool StartFileHistoryDialog(IWin32Window owner, string fileName, GitRevision revision, bool filterByRevision, bool showBlame)
         {
             if (!RequiresValidWorkingDir())
                 return false;
@@ -1160,7 +1160,9 @@ namespace GitUI
             if (!InvokeEvent(PreFileHistory))
                 return false;
 
-            var form = new FormFileHistory(fileName, revision);
+            var form = new FormFileHistory(fileName, revision, filterByRevision);
+            if (showBlame)
+                form.SelectBlameTab();
             form.ShowDialog(owner);
 
             InvokeEvent(PostFileHistory);
@@ -1168,14 +1170,24 @@ namespace GitUI
             return false;
         }
 
+        public bool StartFileHistoryDialog(IWin32Window owner, string fileName, GitRevision revision, bool filterByRevision)
+        {           
+            return StartFileHistoryDialog(owner, fileName, revision, filterByRevision, false);
+        }
+
+        public bool StartFileHistoryDialog(IWin32Window owner, string fileName, GitRevision revision)
+        {
+            return StartFileHistoryDialog(owner, fileName, revision, false);
+        }
+
         public bool StartFileHistoryDialog(IWin32Window owner, string fileName)
         {
-            return StartFileHistoryDialog(owner, fileName, null);
+            return StartFileHistoryDialog(owner, fileName, null, false);
         }
 
         public bool StartFileHistoryDialog(string fileName, GitRevision revision)
         {
-            return StartFileHistoryDialog(null, fileName, revision);
+            return StartFileHistoryDialog(null, fileName, revision, false);
         }
 
         public bool StartFileHistoryDialog(string fileName)

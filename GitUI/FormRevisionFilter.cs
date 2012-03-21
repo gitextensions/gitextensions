@@ -9,11 +9,6 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
-        }
-
-        protected override void OnShown(EventArgs e)
-        {
-            base.OnShown(e);
 
             LimitCheck.Checked = Settings.MaxRevisionGraphCommits > 0;
             _NO_TRANSLATE_Limit.Value = Settings.MaxRevisionGraphCommits;
@@ -84,8 +79,8 @@ namespace GitUI
                 filter += string.Format(" --since=\"{0}\"", Since.Value.ToString("yyyy-MM-dd hh:mm:ss"));
             if (CheckUntil.Checked)
                 filter += string.Format(" --until=\"{0}\"", Until.Value.ToString("yyyy-MM-dd hh:mm:ss"));
-            if (Settings.MaxRevisionGraphCommits > 0)
-                filter += string.Format(" --max-count=\"{0}\"", Settings.MaxRevisionGraphCommits);
+            if (LimitCheck.Checked && _NO_TRANSLATE_Limit.Value > 0)
+                filter += string.Format(" --max-count=\"{0}\"", (int)_NO_TRANSLATE_Limit.Value);
             if (FileFilterCheck.Checked)
                 filter += string.Format(" -- \"{0}\"", FileFilter.Text.Replace('\\', '/'));
 
@@ -137,12 +132,12 @@ namespace GitUI
             BranchFilter.Text = filter;
         }
 
+        public void SetLimit(int limit)
+        {
+            _NO_TRANSLATE_Limit.Value = limit;
+        }
         private void OkClick(object sender, EventArgs e)
         {
-            if (LimitCheck.Checked)
-                Settings.MaxRevisionGraphCommits = (int)_NO_TRANSLATE_Limit.Value;
-            else
-                Settings.MaxRevisionGraphCommits = 0;
             Close();
         }
     }
