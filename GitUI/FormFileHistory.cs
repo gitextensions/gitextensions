@@ -13,10 +13,16 @@ namespace GitUI
     public sealed partial class FormFileHistory : GitExtensionsForm
     {
         private readonly SynchronizationContext syncContext = SynchronizationContext.Current;
+        private FilterRevisionsHelper filterRevisionsHelper;
+        private FilterBranchHelper filterBranchHelper;
 
-        public FormFileHistory(string fileName, GitRevision revision)
+        public FormFileHistory(string fileName, GitRevision revision, bool filterByRevision)
         {
             InitializeComponent();
+            filterBranchHelper = new FilterBranchHelper(toolStripBranches, toolStripDropDownButton2, FileChanges);
+
+            filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, FileChanges, toolStripLabel2, this);            
+
             FileChanges.SetInitialRevision(revision);
             Translate();
 
@@ -29,10 +35,13 @@ namespace GitUI
 
             followFileHistoryToolStripMenuItem.Checked = Settings.FollowRenamesInFileHistory;
             fullHistoryToolStripMenuItem.Checked = Settings.FullHistoryInFileHistory;
+
+            if (filterByRevision && revision != null && revision.Guid != null)
+                filterBranchHelper.SetBranchFilter(revision.Guid, false);
         }
 
         public FormFileHistory(string fileName)
-            : this(fileName, null)
+            : this(fileName, null, false)
         {
         }
 
@@ -44,6 +53,11 @@ namespace GitUI
         }
 
         private string FileName { get; set; }
+
+        public void SelectBlameTab()
+        {
+            tabControl1.SelectedTab = Blame;
+        }
 
         private void LoadFileHistory(string fileName)
         {
@@ -140,7 +154,7 @@ namespace GitUI
 
             syncContext.Post(o =>
             {
-                FileChanges.Filter = filter;
+                FileChanges.FixedFilter = filter;
                 FileChanges.AllowGraphWithFilter = true;
                 FileChanges.Load();
             }, this);
