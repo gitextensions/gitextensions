@@ -12,6 +12,7 @@ using GitUI.Hotkey;
 using GitUI.Script;
 using GitUI.Tag;
 using Gravatar;
+using ResourceManager;
 using ResourceManager.Translation;
 using System.IO;
 
@@ -2330,25 +2331,17 @@ namespace GitUI
 
     public class FilterBranchHelper
     {
-        private ToolStripComboBox toolStripBranches;
-        private ToolStripDropDownButton toolStripDropDownButton2;
-        private RevisionGrid RevisionGrid;
+        private ToolStripComboBox _NO_TRANSLATE_toolStripBranches;
+        private ToolStripDropDownButton _NO_TRANSLATE_toolStripDropDownButton2;
+        private RevisionGrid _NO_TRANSLATE_RevisionGrid;
         private ToolStripMenuItem localToolStripMenuItem;
         private ToolStripMenuItem remoteToolStripMenuItem;
 
 
-        public FilterBranchHelper(ToolStripComboBox toolStripBranches, ToolStripDropDownButton toolStripDropDownButton2, RevisionGrid RevisionGrid)
+        public FilterBranchHelper()
         {
-            this.toolStripBranches = toolStripBranches;
-            this.toolStripDropDownButton2 = toolStripDropDownButton2;
-            this.RevisionGrid = RevisionGrid;
             this.localToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.remoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-
-
-            this.toolStripDropDownButton2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.localToolStripMenuItem,
-            this.remoteToolStripMenuItem});
             // 
             // localToolStripMenuItem
             // 
@@ -2363,11 +2356,25 @@ namespace GitUI
             this.remoteToolStripMenuItem.Name = "remoteToolStripMenuItem";
             this.remoteToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
             this.remoteToolStripMenuItem.Text = "Remote";
+        
+        }
 
-            this.toolStripBranches.DropDown += new System.EventHandler(this.toolStripBranches_DropDown);
-            this.toolStripBranches.TextUpdate += new System.EventHandler(this.toolStripBranches_TextUpdate);
-            this.toolStripBranches.Leave += new System.EventHandler(this.toolStripBranches_Leave);
-            this.toolStripBranches.KeyUp += new System.Windows.Forms.KeyEventHandler(this.toolStripBranches_KeyUp);
+        public FilterBranchHelper(ToolStripComboBox toolStripBranches, ToolStripDropDownButton toolStripDropDownButton2, RevisionGrid RevisionGrid)
+            : this()
+        {
+            this._NO_TRANSLATE_toolStripBranches = toolStripBranches;
+            this._NO_TRANSLATE_toolStripDropDownButton2 = toolStripDropDownButton2;
+            this._NO_TRANSLATE_RevisionGrid = RevisionGrid;
+
+
+            this._NO_TRANSLATE_toolStripDropDownButton2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.localToolStripMenuItem,
+            this.remoteToolStripMenuItem});
+
+            this._NO_TRANSLATE_toolStripBranches.DropDown += new System.EventHandler(this.toolStripBranches_DropDown);
+            this._NO_TRANSLATE_toolStripBranches.TextUpdate += new System.EventHandler(this.toolStripBranches_TextUpdate);
+            this._NO_TRANSLATE_toolStripBranches.Leave += new System.EventHandler(this.toolStripBranches_Leave);
+            this._NO_TRANSLATE_toolStripBranches.KeyUp += new System.Windows.Forms.KeyEventHandler(this.toolStripBranches_KeyUp);
 
 
             InitToolStripBranchFilter();
@@ -2378,16 +2385,16 @@ namespace GitUI
             bool local = localToolStripMenuItem.Checked;
             bool remote = remoteToolStripMenuItem.Checked;
 
-            toolStripBranches.Items.Clear();
+            _NO_TRANSLATE_toolStripBranches.Items.Clear();
             List<string> branches = GetBranchAndTagHeads(local, remote);
             foreach (var branch in branches)
-                toolStripBranches.Items.Add(branch);
+                _NO_TRANSLATE_toolStripBranches.Items.Add(branch);
 
-            var autoCompleteList = toolStripBranches.AutoCompleteCustomSource.Cast<string>();
+            var autoCompleteList = _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Cast<string>();
             if (!autoCompleteList.SequenceEqual(branches))
             {
-                toolStripBranches.AutoCompleteCustomSource.Clear();
-                toolStripBranches.AutoCompleteCustomSource.AddRange(branches.ToArray());
+                _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Clear();
+                _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.AddRange(branches.ToArray());
             }
         }
 
@@ -2458,24 +2465,24 @@ namespace GitUI
 
         private void ApplyBranchFilter(bool refresh)
         {
-            bool success = RevisionGrid.SetAndApplyBranchFilter(toolStripBranches.Text);
+            bool success = _NO_TRANSLATE_RevisionGrid.SetAndApplyBranchFilter(_NO_TRANSLATE_toolStripBranches.Text);
             if (success && refresh)
-                RevisionGrid.ForceRefreshRevisions();
+                _NO_TRANSLATE_RevisionGrid.ForceRefreshRevisions();
         }
 
         private void UpdateBranchFilterItems()
         {
-            string filter = toolStripBranches.Text;
-            toolStripBranches.Items.Clear();
-            var index = toolStripBranches.Text.Length;
+            string filter = _NO_TRANSLATE_toolStripBranches.Text;
+            _NO_TRANSLATE_toolStripBranches.Items.Clear();
+            var index = _NO_TRANSLATE_toolStripBranches.Text.Length;
             var branches = GetBranchAndTagHeads(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
-            toolStripBranches.Items.AddRange(branches.Where(branch => branch.Contains(filter)).ToArray());
-            toolStripBranches.SelectionStart = index;
+            _NO_TRANSLATE_toolStripBranches.Items.AddRange(branches.Where(branch => branch.Contains(filter)).ToArray());
+            _NO_TRANSLATE_toolStripBranches.SelectionStart = index;
         }
 
         public void SetBranchFilter(string filter, bool refresh)
         {
-            toolStripBranches.Text = filter;
+            _NO_TRANSLATE_toolStripBranches.Text = filter;
             ApplyBranchFilter(refresh);
         }
 
@@ -2487,13 +2494,13 @@ namespace GitUI
     }
 
 
-    public class FilterRevisionsHelper
+    public class FilterRevisionsHelper 
     {
 
-        private ToolStripTextBox toolStripTextBoxFilter;
-        private ToolStripDropDownButton toolStripDropDownButton1;
-        private RevisionGrid RevisionGrid;
-        private ToolStripLabel toolStripLabel2;
+        private ToolStripTextBox _NO_TRANSLATE_toolStripTextBoxFilter;
+        private ToolStripDropDownButton _NO_TRANSLATE_toolStripDropDownButton1;
+        private RevisionGrid _NO_TRANSLATE_RevisionGrid;
+        private ToolStripLabel _NO_TRANSLATE_toolStripLabel2;
 
         private ToolStripMenuItem commitToolStripMenuItem1;
         private ToolStripMenuItem committerToolStripMenuItem;
@@ -2501,29 +2508,16 @@ namespace GitUI
         private ToolStripMenuItem diffContainsToolStripMenuItem;
         private ToolStripMenuItem hashToolStripMenuItem;
 
-        private Form form;
+        private Form _NO_TRANSLATE_form;
 
-
-
-        public FilterRevisionsHelper(ToolStripTextBox toolStripTextBoxFilter, ToolStripDropDownButton toolStripDropDownButton1, RevisionGrid RevisionGrid, ToolStripLabel toolStripLabel2, Form form)
+        public FilterRevisionsHelper()
         {
-            this.toolStripDropDownButton1 = toolStripDropDownButton1;
-            this.toolStripTextBoxFilter = toolStripTextBoxFilter;
-            this.RevisionGrid = RevisionGrid;
-            this.toolStripLabel2 = toolStripLabel2;
-            this.form = form;
 
             this.commitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.committerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.authorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.diffContainsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-
-            this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-                this.commitToolStripMenuItem1,
-                this.committerToolStripMenuItem,
-                this.authorToolStripMenuItem,
-                this.diffContainsToolStripMenuItem});
 
             // 
             // commitToolStripMenuItem1
@@ -2557,12 +2551,27 @@ namespace GitUI
             this.hashToolStripMenuItem.CheckOnClick = true;
             this.hashToolStripMenuItem.Name = "hashToolStripMenuItem";
             this.hashToolStripMenuItem.Size = new System.Drawing.Size(216, 24);
-            this.hashToolStripMenuItem.Text = "Hash";
+            this.hashToolStripMenuItem.Text = "Hash";        
+        }
 
+        public FilterRevisionsHelper(ToolStripTextBox toolStripTextBoxFilter, ToolStripDropDownButton toolStripDropDownButton1, RevisionGrid RevisionGrid, ToolStripLabel toolStripLabel2, Form form)
+            : this()
+        {
+            this._NO_TRANSLATE_toolStripDropDownButton1 = toolStripDropDownButton1;
+            this._NO_TRANSLATE_toolStripTextBoxFilter = toolStripTextBoxFilter;
+            this._NO_TRANSLATE_RevisionGrid = RevisionGrid;
+            this._NO_TRANSLATE_toolStripLabel2 = toolStripLabel2;
+            this._NO_TRANSLATE_form = form;
 
-            this.toolStripLabel2.Click += new System.EventHandler(this.ToolStripLabel2Click);
-            this.toolStripTextBoxFilter.Leave += new System.EventHandler(this.ToolStripTextBoxFilterLeave);
-            this.toolStripTextBoxFilter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ToolStripTextBoxFilterKeyPress);
+            this._NO_TRANSLATE_toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+                this.commitToolStripMenuItem1,
+                this.committerToolStripMenuItem,
+                this.authorToolStripMenuItem,
+                this.diffContainsToolStripMenuItem});
+
+            this._NO_TRANSLATE_toolStripLabel2.Click += new System.EventHandler(this.ToolStripLabel2Click);
+            this._NO_TRANSLATE_toolStripTextBoxFilter.Leave += new System.EventHandler(this.ToolStripTextBoxFilterLeave);
+            this._NO_TRANSLATE_toolStripTextBoxFilter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ToolStripTextBoxFilterKeyPress);
 
         
         }
@@ -2570,7 +2579,7 @@ namespace GitUI
         public void SetFilter(string filter)
         {
             if (string.IsNullOrEmpty(filter)) return;
-            toolStripTextBoxFilter.Text = filter;
+            _NO_TRANSLATE_toolStripTextBoxFilter.Text = filter;
             ApplyFilter();
         }
 
@@ -2587,7 +2596,7 @@ namespace GitUI
             filterParams[3] = diffContainsToolStripMenuItem.Checked;
             try
             {
-                RevisionGrid.FormatQuickFilter(toolStripTextBoxFilter.Text,
+                _NO_TRANSLATE_RevisionGrid.FormatQuickFilter(_NO_TRANSLATE_toolStripTextBoxFilter.Text,
                                                filterParams,
                                                out revListArgs,
                                                out inMemMessageFilter,
@@ -2596,23 +2605,23 @@ namespace GitUI
             }
             catch (InvalidOperationException ex)
             {
-                MessageBox.Show(form, ex.Message, "Filter error");
-                toolStripTextBoxFilter.Text = "";
+                MessageBox.Show(_NO_TRANSLATE_form, ex.Message, "Filter error");
+                _NO_TRANSLATE_toolStripTextBoxFilter.Text = "";
                 return;
             }
 
-            if ((RevisionGrid.Filter == revListArgs) &&
-                (RevisionGrid.InMemMessageFilter == inMemMessageFilter) &&
-                (RevisionGrid.InMemCommitterFilter == inMemCommitterFilter) &&
-                (RevisionGrid.InMemAuthorFilter == inMemAuthorFilter) &&
-                (RevisionGrid.InMemFilterIgnoreCase))
+            if ((_NO_TRANSLATE_RevisionGrid.Filter == revListArgs) &&
+                (_NO_TRANSLATE_RevisionGrid.InMemMessageFilter == inMemMessageFilter) &&
+                (_NO_TRANSLATE_RevisionGrid.InMemCommitterFilter == inMemCommitterFilter) &&
+                (_NO_TRANSLATE_RevisionGrid.InMemAuthorFilter == inMemAuthorFilter) &&
+                (_NO_TRANSLATE_RevisionGrid.InMemFilterIgnoreCase))
                 return;
-            RevisionGrid.Filter = revListArgs;
-            RevisionGrid.InMemMessageFilter = inMemMessageFilter;
-            RevisionGrid.InMemCommitterFilter = inMemCommitterFilter;
-            RevisionGrid.InMemAuthorFilter = inMemAuthorFilter;
-            RevisionGrid.InMemFilterIgnoreCase = true;
-            RevisionGrid.ForceRefreshRevisions();
+            _NO_TRANSLATE_RevisionGrid.Filter = revListArgs;
+            _NO_TRANSLATE_RevisionGrid.InMemMessageFilter = inMemMessageFilter;
+            _NO_TRANSLATE_RevisionGrid.InMemCommitterFilter = inMemCommitterFilter;
+            _NO_TRANSLATE_RevisionGrid.InMemAuthorFilter = inMemAuthorFilter;
+            _NO_TRANSLATE_RevisionGrid.InMemFilterIgnoreCase = true;
+            _NO_TRANSLATE_RevisionGrid.ForceRefreshRevisions();
         }
 
         private void ToolStripTextBoxFilterLeave(object sender, EventArgs e)
@@ -2646,7 +2655,7 @@ namespace GitUI
         
 
         public void SetLimit(int limit) {
-            RevisionGrid.SetLimit(limit);
+            _NO_TRANSLATE_RevisionGrid.SetLimit(limit);
         }
 
 

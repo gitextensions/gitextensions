@@ -59,5 +59,23 @@ namespace ResourceManager.Translation
                     return val; });
         }
 
+
+        public void AddTranslationItem(string category, string item, string property, string neutralValue)
+        {
+            FindOrAddTranslationCategory(category).AddTranslationItemIfNotExist(new TranslationItem(item, property, neutralValue));
+        }
+
+        public string TranslateItem(string category, string item, string property, string defaultValue)
+        {
+            TranslationCategory tc = GetTranslationCategory(category);
+            if (tc == null)
+                return defaultValue;
+            TranslationItem ti = tc.GetTranslationItem(item, property);
+            if (ti == null)
+                return defaultValue;
+            else
+                return ti.Value;
+
+        }
     }
 }

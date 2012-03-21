@@ -7,6 +7,7 @@ using PatchApply;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Threading;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
@@ -364,5 +365,22 @@ namespace GitUI
         {
             FileChanges.ViewSelectedRevisions();
         }
+
+        private static readonly string FormBrowseName = "FormBrowse";
+
+        public override void AddTranslationItems(Translation translation)
+        {
+            base.AddTranslationItems(translation);
+            TranslationUtl.AddTranslationItemsFromFields(FormBrowseName, filterRevisionsHelper, translation);
+            TranslationUtl.AddTranslationItemsFromFields(FormBrowseName, filterBranchHelper, translation);
+        }
+
+        public override void TranslateItems(Translation translation)
+        {
+            base.TranslateItems(translation);
+            TranslationUtl.TranslateItemsFromFields(FormBrowseName, filterRevisionsHelper, translation);
+            TranslationUtl.TranslateItemsFromFields(FormBrowseName, filterBranchHelper, translation);
+        }
+
     }
 }
