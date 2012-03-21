@@ -2299,5 +2299,21 @@ namespace GitUI
                     GitUICommands.Instance.StartFileHistoryDialog(this, item.FileName, revisions[0], true, true);
             }
         }
+
+        public override void AddTranslationItems(Translation translation)
+        {
+            base.AddTranslationItems(translation);
+            TranslationUtl.AddTranslationItemsFromFields(Name, filterRevisionsHelper, translation);
+            TranslationUtl.AddTranslationItemsFromFields(Name, _FilterBranchHelper, translation);
+        }
+
+        public override void TranslateItems(Translation translation)
+        {
+            base.TranslateItems(translation);
+            TranslationUtl.TranslateItemsFromFields(Name, filterRevisionsHelper, translation);
+            TranslationUtl.TranslateItemsFromFields(Name, _FilterBranchHelper, translation);
+        }
+
     }
+
 }
