@@ -53,7 +53,8 @@ namespace GitUI
         private List<TranslateItem> translate;
 
         readonly Translation neutralTranslation = new Translation();
-        Translator translator;
+        Translation translation;
+        private TranslationCategory allCategories = new TranslationCategory();
 
         private bool changesMade;
 
@@ -67,8 +68,8 @@ namespace GitUI
 
             GetPropertiesToTranslate();
             LoadTranslation();
-            translateCategories.SelectedItem = allText.Text;
-            FillTranslateGrid(translateCategories.SelectedItem.ToString());
+            translateCategories.SelectedItem = allCategories;
+            FillTranslateGrid(allCategories);
 
             foreach (CultureInfo cultureInfo in CultureInfo.GetCultures(CultureTypes.AllCultures))
             {
@@ -114,8 +115,8 @@ namespace GitUI
                                                 NeutralValue = translationItem.Value
                                             };
 
-                    if (translator != null)
-                        translateItem.TranslatedValue = translator.GetString(translationCategory.Name, translateItem.Name, translateItem.Property);
+                    if (translation != null)
+                        translateItem.TranslatedValue = translation.TranslateItem(translationCategory.Name, translateItem.Name, translateItem.Property, string.Empty);
 
                     translate.Add(translateItem);
                 }
@@ -124,7 +125,7 @@ namespace GitUI
             UpdateProgress();
         }
 
-        private void FillTranslateGrid(string filter)
+        private void FillTranslateGrid(TranslationCategory filter)
         {
             if (translate == null)
                 return;
@@ -132,7 +133,7 @@ namespace GitUI
             translateItemBindingSource.DataSource = null;
 
 
-            var filterTranslate = translate.Where(translateItem => string.IsNullOrEmpty(filter) || filter.Equals(allText.Text) || filter.Equals(translateItem.Category)).Where(translateItem => !hideTranslatedItems.Checked || string.IsNullOrEmpty(translateItem.TranslatedValue)).ToList();
+            var filterTranslate = translate.Where(translateItem => filter == null || filter == allCategories || filter.Name.Equals(translateItem.Category)).Where(translateItem => !hideTranslatedItems.Checked || string.IsNullOrEmpty(translateItem.TranslatedValue)).ToList();
 
             translateItemBindingSource.DataSource = filterTranslate;
 
@@ -156,17 +157,6 @@ namespace GitUI
             return true;
         }
 
-        private bool IsTranslatableType(Type type)
-        {
-            if ((typeof(GitExtensionsControl).IsAssignableFrom(type)) ||
-                (typeof(GitExtensionsForm).IsAssignableFrom(type)) ||
-                (typeof(ITranslate).IsAssignableFrom(type)))
-            {
-                return true;
-            }
-            return false;
-        }
-
         private List<Type> GetTranslatableTypes()
         {
             List<Type> translatableTypes = new List<Type>();
@@ -176,7 +166,7 @@ namespace GitUI
                 {
                     foreach (Type type in assembly.GetTypes())
                     {
-                        if (IsTranslatableType(type))
+                        if (typeof(ITranslate).IsAssignableFrom(type))
                         {
                             translatableTypes.Add(type);
                         }
@@ -212,52 +202,13 @@ namespace GitUI
             return obj;
         }
 
-        private void GetTranslatableFromComponent(string className, object obj, FieldInfo fieldInfo)
-        {
-            if (!(fieldInfo.GetValue(obj) is Component))
-            {
-                return;
-            }
-            Component component = fieldInfo.GetValue(obj) as Component;
-            foreach (PropertyInfo propertyInfo in fieldInfo.FieldType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic))
-            {
-                if (IsTranslatableItemInComponent(propertyInfo))
-                {
-                    var value = (string)propertyInfo.GetValue(component, null);
-                    if (!string.IsNullOrEmpty(value))
-                    {
-                        AddTranslationItem(className, fieldInfo.Name, propertyInfo.Name, value);
-                    }
-                }
-            }
-        }
-
-        private void GetTranslatableFromDataGridViewElement(string className, object obj, FieldInfo fieldInfo)
-        {
-            if (!(fieldInfo.GetValue(obj) is DataGridViewElement))
-            {
-                return;
-            }
-            DataGridViewColumn dataGridViewColumn = fieldInfo.GetValue(obj) as DataGridViewColumn;
-            foreach (PropertyInfo propertyInfo in fieldInfo.FieldType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic))
-            {
-                if (IsTranslatableItemInDataGridViewElement(propertyInfo, fieldInfo, obj))
-                {
-                    var value = (string)propertyInfo.GetValue(dataGridViewColumn, null);
-                    if (!string.IsNullOrEmpty(value))
-                    {
-                        AddTranslationItem(className, fieldInfo.Name, propertyInfo.Name, value);
-                    }
-                }
-            }
-        }
 
         public void GetPropertiesToTranslate()
         {
             translateCategories.Items.Clear();
-            translateCategories.Items.Add(allText.Text);
+            allCategories.Name = allText.Text;
+            translateCategories.Items.Add(allCategories);
 
-            HashSet<string> translateCategoriesSet = new HashSet<string>();
             string currentTranslation = GitCommands.Settings.Translation;
 
             try
@@ -269,86 +220,24 @@ namespace GitUI
 
                 foreach (Type type in translatableTypes)
                 {
-                    object obj = CreateInstanceOfClass(type);
-                    if (obj == null)
-                    {
-                        continue;
-                    }
-
-                    string className = null;
-                    if (obj is Component)
-                        className = ((Control)obj).Name;
-                    if (String.IsNullOrEmpty(className))
-                        className = type.Name;
-                    translateCategoriesSet.Add(className);
-
-                    if (obj is Form)
-                    {
-                        if (!string.IsNullOrEmpty(((Form)obj).Text))
-                        {
-                            AddTranslationItem(className, "$this", "Text", ((Form)obj).Text);
-                        }
-                    }
-
-                    foreach (FieldInfo fieldInfo in obj.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static))
-                    {
-                        //Skip controls with a name started with "_NO_TRANSLATE_"
-                        //this is a naming convention, these are not translated
-                        if (fieldInfo.Name.StartsWith("_NO_TRANSLATE_"))
-                            continue;
-
-                        GetTranslatableFromComponent(className, obj, fieldInfo);
-                        GetTranslatableFromDataGridViewElement(className, obj, fieldInfo);
-                    }
+                    ITranslate obj = CreateInstanceOfClass(type) as ITranslate;
+                    if (obj != null)
+                        obj.AddTranslationItems(neutralTranslation);                                                                  
                 }
             }
             finally
             {
-                translateCategories.Items.AddRange(translateCategoriesSet
-                    .Where(category => neutralTranslation.HasTranslationCategory(category))
-                    .OrderBy(category => category).ToArray());
                 neutralTranslation.Sort();
+                translateCategories.Items.AddRange(neutralTranslation.GetTranslationCategories().ToArray());
                 //Restore translation
                 GitCommands.Settings.Translation = currentTranslation;
             }
         }
 
-        private bool IsTranslatableItemInComponent(PropertyInfo propertyInfo)
-        {
-            if (propertyInfo.PropertyType != typeof(string))
-                return false;
-            if (propertyInfo.Name.Equals("Caption", StringComparison.CurrentCultureIgnoreCase))
-                return true;
-            if (propertyInfo.Name.Equals("Text", StringComparison.CurrentCultureIgnoreCase))
-                return true;
-            if (propertyInfo.Name.Equals("ToolTipText", StringComparison.CurrentCultureIgnoreCase))
-                return true;
-            if (propertyInfo.Name.Equals("Title", StringComparison.CurrentCultureIgnoreCase))
-                return true;
-            return false;
-        }
-
-        private bool IsTranslatableItemInDataGridViewElement(PropertyInfo propertyInfo, FieldInfo fieldInfo, Object obj)
-        {
-            if (propertyInfo.Name.Equals("HeaderText", StringComparison.CurrentCultureIgnoreCase))
-            {
-                DataGridViewColumn viewCol = fieldInfo.GetValue(obj) as DataGridViewColumn;
-                if (viewCol.Visible)
-                    return true;
-                else
-                    return false;
-            }
-            return false;
-        }
-
-        private void AddTranslationItem(string category, string item, string property, string neutralValue)
-        {
-            neutralTranslation.FindOrAddTranslationCategory(category).AddTranslationItemIfNotExist(new TranslationItem(item, property, neutralValue));
-        }
 
         private void translateCategories_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FillTranslateGrid(translateCategories.SelectedItem.ToString());
+            FillTranslateGrid(translateCategories.SelectedItem as TranslationCategory);
         }
 
         private void saveAs_Click(object sender, EventArgs e)
@@ -396,24 +285,24 @@ namespace GitUI
             AskForSave();
             changesMade = false;
 
-            translator = new Translator(translations.Text);
+            translation = Translator.GetTranslation(translations.Text);
             LoadTranslation();
-            FillTranslateGrid(translateCategories.SelectedItem.ToString());
+            FillTranslateGrid(translateCategories.SelectedItem as TranslationCategory);
 
             try
             {
-                var culture = new CultureInfo(translator.LanguageCode);
+                var culture = new CultureInfo(translation.LanguageCode);
                 _NO_TRANSLATE_languageCode.Text = string.Concat(culture.TwoLetterISOLanguageName, " (", culture.DisplayName, ")");
             }
             catch
             {
-                _NO_TRANSLATE_languageCode.Text = translator.LanguageCode;
+                _NO_TRANSLATE_languageCode.Text = translation.LanguageCode;
             }
         }
 
         private void hideTranslatedItems_CheckedChanged(object sender, EventArgs e)
         {
-            FillTranslateGrid(translateCategories.SelectedItem.ToString());
+            FillTranslateGrid(translateCategories.SelectedItem as TranslationCategory);
         }
 
         private void AskForSave()

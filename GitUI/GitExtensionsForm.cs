@@ -8,13 +8,14 @@ using GitUI.Properties;
 #if !__MonoCS__
 using Microsoft.WindowsAPICodePack.Taskbar;
 #endif
+using ResourceManager;
 using ResourceManager.Translation;
 using Settings = GitCommands.Settings;
 using System.Collections.Generic;
 
 namespace GitUI
 {
-    public class GitExtensionsForm : Form
+    public class GitExtensionsForm : Form, ITranslate
     {
         private static Icon ApplicationIcon = GetApplicationIcon(Settings.IconStyle, Settings.IconColor);
 
@@ -212,8 +213,7 @@ namespace GitUI
 
         protected void Translate()
         {
-            var translator = new Translator(Settings.Translation);
-            translator.TranslateControl(this);
+            Translator.Translate(this, Settings.Translation);
             _translated = true;
         }
 
@@ -331,5 +331,19 @@ namespace GitUI
 
             return null;
         }
+
+        public virtual void AddTranslationItems(Translation translation)
+        {
+            if (!string.IsNullOrEmpty(Text))
+                translation.AddTranslationItem(Name, "$this", "Text", Text);
+            TranslationUtl.AddTranslationItemsFromFields(Name, this, translation);
+        }
+
+        public virtual void TranslateItems(Translation translation)
+        {
+            Text = translation.TranslateItem(Name, "$this", "Text", Text);
+            TranslationUtl.TranslateItemsFromFields(Name, this, translation);
+        }
+
     }
 }
