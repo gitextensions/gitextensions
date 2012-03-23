@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
+using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Editor
@@ -366,6 +367,11 @@ namespace GitUI.Editor
                 return string.Empty; 
             
             return TextEditor.Document.GetText(TextEditor.Document.GetLineSegment(line));
+        }
+
+        public void GoToLine(int lineNumber)
+        {
+            TextEditor.ActiveTextAreaControl.Caret.Position = new TextLocation(0, lineNumber);
         }
 
         public void HighlightLine(int line, Color color)
