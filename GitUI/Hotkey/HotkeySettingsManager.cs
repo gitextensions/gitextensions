@@ -206,6 +206,7 @@ namespace GitUI.Hotkey
                     hk(RevisionGrid.Commands.ShowCurrentBranchOnly, Keys.Control | Keys.Shift | Keys.U)),
                 new HotkeySettings(FileViewer.HotkeySettingsName,
                     hk(FileViewer.Commands.Find, Keys.Control | Keys.F),
+                    hk(FileViewer.Commands.GoToLine, Keys.None),
                     hk(FileViewer.Commands.IncreaseNumberOfVisibleLines, Keys.None),
                     hk(FileViewer.Commands.DecreaseNumberOfVisibleLines, Keys.None),
                     hk(FileViewer.Commands.ShowEntireFile, Keys.None),
