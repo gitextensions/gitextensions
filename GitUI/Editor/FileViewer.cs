@@ -736,6 +736,7 @@ namespace GitUI.Editor
         internal enum Commands : int
         {
             Find,
+            GoToLine,
             IncreaseNumberOfVisibleLines,
             DecreaseNumberOfVisibleLines,
             ShowEntireFile,
@@ -750,6 +751,7 @@ namespace GitUI.Editor
             switch (command)
             {
                 case Commands.Find: this.FindToolStripMenuItemClick(null, null); break;
+                case Commands.GoToLine: this.goToLineToolStripMenuItem_Click(null, null); break;
                 case Commands.IncreaseNumberOfVisibleLines: this.IncreaseNumberOfLinesToolStripMenuItemClick(null, null); break;
                 case Commands.DecreaseNumberOfVisibleLines: this.DescreaseNumberOfLinesToolStripMenuItemClick(null, null); break;
                 case Commands.ShowEntireFile: this.ShowEntireFileToolStripMenuItemClick(null, null); break;
@@ -806,6 +808,16 @@ namespace GitUI.Editor
         {
             if (fileviewerToolbar.Visible)
                 UpdateEncodingCombo();
+        }
+
+        private void goToLineToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormGoToLine formGoToLine = new FormGoToLine();
+            formGoToLine.SetMaxLineNumber(_internalFileViewer.TotalNumberOfLines);
+            if (formGoToLine.ShowDialog(this) == DialogResult.OK)            
+                _internalFileViewer.GoToLine(formGoToLine.GetLineNumber() - 1);
+            
+
         }
 
     }
