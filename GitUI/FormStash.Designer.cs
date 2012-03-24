@@ -36,7 +36,7 @@ namespace GitUI
             this.gitStashBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStrip1 = new ToolStripEx();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.Stashes = new System.Windows.Forms.ToolStripComboBox();
@@ -366,7 +366,7 @@ namespace GitUI
         private System.Windows.Forms.BindingSource gitStashBindingSource;
         private System.Windows.Forms.RichTextBox StashMessage;
         private FileViewer View;
-        private System.Windows.Forms.ToolStrip toolStrip1;
+        private ToolStripEx toolStrip1;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripComboBox Stashes;
