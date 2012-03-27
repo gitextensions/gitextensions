@@ -12,6 +12,11 @@ namespace GitCommands.Statistics
     {
         public delegate void UpdateEventHandler(Commit commit);
 
+        /// <summary>
+        /// property to enable mailmap respectfulness
+        /// </summary>
+        public bool RespectMailmap { get; set; }
+
         public event EventHandler Exited;
         public event EventHandler Error;
         public event UpdateEventHandler Updated;
@@ -87,7 +92,9 @@ namespace GitCommands.Statistics
         {
             try
             {
-                string command = "log --pretty=tformat:\"--- %ad --- %an\" --numstat --date=iso -C --all --no-merges";
+                string authorName = this.RespectMailmap ? "%aN" : "%an";
+
+                string command = "log --pretty=tformat:\"--- %ad --- " + authorName + "\" --numstat --date=iso -C --all --no-merges";
 
                 git = new GitCommandsInstance();
                 git.StreamOutput = true;
