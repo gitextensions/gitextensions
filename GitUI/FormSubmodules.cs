@@ -76,15 +76,6 @@ namespace GitUI
             Cursor.Current = Cursors.Default;
         }
 
-        private void InitSubmoduleClick(object sender, EventArgs e)
-        {
-            Cursor.Current = Cursors.WaitCursor;
-            var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(SubModuleName.Text));
-            process.ShowDialog(this);
-            Initialize();
-            Cursor.Current = Cursors.Default;
-        }
-
         private void UpdateSubmoduleClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;

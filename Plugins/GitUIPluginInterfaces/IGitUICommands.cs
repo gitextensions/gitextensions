@@ -36,7 +36,6 @@ namespace GitUIPluginInterfaces
         event GitUIEventHandler PostStash;
         event GitUIEventHandler PostSubmodulesEdit;
         event GitUIEventHandler PostUpdateSubmodules;
-        event GitUIEventHandler PostUpdateSubmodulesRecursive;
         event GitUIEventHandler PostVerifyDatabase;
         event GitUIEventHandler PostViewPatch;
         event GitUIEventHandler PreAddFiles;
@@ -68,7 +67,6 @@ namespace GitUIPluginInterfaces
         event GitUIEventHandler PreStash;
         event GitUIEventHandler PreSubmodulesEdit;
         event GitUIEventHandler PreUpdateSubmodules;
-        event GitUIEventHandler PreUpdateSubmodulesRecursive;
         event GitUIEventHandler PreVerifyDatabase;
         event GitUIEventHandler PreViewPatch;
 
@@ -109,7 +107,6 @@ namespace GitUIPluginInterfaces
         bool StartStashDialog();
         bool StartSubmodulesDialog();
         bool StartUpdateSubmodulesDialog();
-        bool StartUpdateSubmodulesRecursiveDialog();
         bool StartVerifyDatabaseDialog();
         bool StartViewPatchDialog();
     }
