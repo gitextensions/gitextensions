@@ -1038,7 +1038,7 @@ namespace GitUI
             if (!InvokeEvent(PreInitSubmodules))
                 return true;
 
-            var process = new FormProcess(GitCommandHelpers.SubmoduleInitCmd(""));
+            var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(""));
             process.ShowDialog(owner);
 
             InvokeEvent(PostInitSubmodules);
@@ -1059,9 +1059,9 @@ namespace GitUI
             if (!InvokeEvent(PreInitSubmodulesRecursive))
                 return true;
 
-            var process = new FormProcess(GitCommandHelpers.SubmoduleInitCmd(""));
+            var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(""));
             process.ShowDialog(owner);
-            ForEachSubmodulesRecursive(GitCommandHelpers.SubmoduleInitCmd(""));
+            ForEachSubmodulesRecursive(GitCommandHelpers.SubmoduleUpdateCmd(""));
 
             InvokeEvent(PostInitSubmodulesRecursive);
 
