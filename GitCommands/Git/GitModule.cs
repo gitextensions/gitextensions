@@ -342,7 +342,7 @@ namespace GitCommands
             {
                 GitCommandHelpers.SetEnvironmentVariable();
                 arguments = arguments.Replace("$QUOTE$", "\\\"");
-                int exitCode = GitCommandHelpers.CreateAndStartProcess(arguments, cmd, out output, out error, stdInput);
+                int exitCode = GitCommandHelpers.CreateAndStartProcess(arguments, cmd, _workingdir, out output, out error, stdInput);
                 return exitCode;
             }
             catch (Win32Exception)
