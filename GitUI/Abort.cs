@@ -32,18 +32,25 @@ namespace GitUI
         private readonly TranslationString _areYouSureYouWantDeleteFilesCaption = new TranslationString("WARNING!");
         #endregion
 
-        public static bool AbortCurrentAction(GitModule module)
+        public static bool ShowAbortMessage()
         {
             var strings = new Abort();
-            if (MessageBox.Show(strings._abortCurrentOpperation.Text, strings._abortCurrentOpperationCaption.Text, 
+            if (MessageBox.Show(strings._abortCurrentOpperation.Text, strings._abortCurrentOpperationCaption.Text,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                if (MessageBox.Show(strings._areYouSureYouWantDeleteFiles.Text, strings._areYouSureYouWantDeleteFilesCaption.Text, 
+                if (MessageBox.Show(strings._areYouSureYouWantDeleteFiles.Text, strings._areYouSureYouWantDeleteFilesCaption.Text,
                     MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
-                {
-                    module.ResetHard("");
                     return true;
-                }
+            }
+            return false;
+        }
+
+        public static bool AbortCurrentAction(GitModule module)
+        {
+            if (ShowAbortMessage())
+            {
+                module.ResetHard("");
+                return true;
             }
             return false;
         }
