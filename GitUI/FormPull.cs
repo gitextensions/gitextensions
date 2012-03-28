@@ -354,7 +354,7 @@ namespace GitUI
             if (Fetch.Checked || !File.Exists(Settings.WorkingDir + ".gitmodules"))
                 return;
             if (!IsSubmodulesIntialized() && AskIfSubmodulesShouldBeInitialized())
-                GitUICommands.Instance.StartInitSubmodulesRecursiveDialog(this);
+                GitUICommands.Instance.StartUpdateSubmodulesDialog(this);
         }
 
         private FormProcess CreateFormProcess(string source)
