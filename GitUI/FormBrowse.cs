@@ -298,9 +298,6 @@ namespace GitUI
             // load custom user menu
             LoadUserMenu();
 
-
-
-
             Cursor.Current = Cursors.Default;
         }
 
