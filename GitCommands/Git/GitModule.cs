@@ -336,6 +336,7 @@ namespace GitCommands
         {
             return RunCmdByte(cmd, arguments, null, out output, out error);
         }
+
         private int RunCmdByte(string cmd, string arguments, string stdInput, out byte[] output, out byte[] error)
         {
             try
@@ -1292,7 +1293,6 @@ namespace GitCommands
                             else
                                 patchFile.Date = line.Substring(6).Trim();
 
-
                         if (line.StartsWith("Subject: ")) patchFile.Subject = line.Substring(9).Trim();
 
                         if (!string.IsNullOrEmpty(patchFile.Author) &&
@@ -1526,6 +1526,25 @@ namespace GitCommands
             patchManager.LoadPatch(this.RunCachableCmd(Settings.GitCommand, arguments), false);
 
             return patchManager.Patches;
+        }
+
+        public string GetStatusText(bool untracked)
+        {
+            string cmd = "status -s";
+            if (untracked)
+                cmd = cmd + " -u";
+            return RunGitCmd(cmd);
+        }
+
+        public string GetDiffFilesText(string from, string to)
+        {
+            return GetDiffFilesText(from, to, false);
+        }
+
+        public string GetDiffFilesText(string from, string to, bool noCache)
+        {
+            string cmd = "diff -M -C --name-status \"" + to + "\" \"" + from + "\"";
+            return noCache ? RunGitCmd(cmd) : this.RunCachableCmd(Settings.GitCommand, cmd, Settings.SystemEncoding);
         }
 
         public List<GitItemStatus> GetDiffFiles(string from, string to)
