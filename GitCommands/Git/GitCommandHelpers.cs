@@ -148,7 +148,7 @@ namespace GitCommands
                    (arguments.Contains("pull"));
         }
 
-        internal static int CreateAndStartProcess(string arguments, string cmd, out byte[] stdOutput, out byte[] stdError, string stdInput)
+        internal static int CreateAndStartProcess(string arguments, string cmd, string workDir, out byte[] stdOutput, out byte[] stdError, string stdInput)
         {
             if (string.IsNullOrEmpty(cmd))
             {
@@ -163,7 +163,7 @@ namespace GitCommands
             startInfo.CreateNoWindow = true;
             startInfo.FileName = cmd;
             startInfo.Arguments = arguments;
-            startInfo.WorkingDirectory = Settings.WorkingDir;
+            startInfo.WorkingDirectory = workDir;
             startInfo.LoadUserProfile = true;
 
             using (var process = Process.Start(startInfo))
