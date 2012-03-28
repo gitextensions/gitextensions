@@ -1487,17 +1487,37 @@ namespace GitUI
 
         private void resetSubmoduleChanges_Click(object sender, EventArgs e)
         {
-            GitModule module = new GitModule(Settings.WorkingDir + _currentItem.Name + Settings.PathSeparator.ToString());
-            if (!Abort.AbortCurrentAction(module))
+            var unStagedFiles = (List<GitItemStatus>)Unstaged.SelectedItems;
+            if (unStagedFiles.Count == 0)
                 return;
+
+            if (!Abort.ShowAbortMessage())
+                return;
+
+            foreach (var item in unStagedFiles)
+            {
+                if (!item.IsSubmodule)
+                    continue;
+                GitModule module = new GitModule(Settings.WorkingDir + item.Name + Settings.PathSeparator.ToString());
+                module.ResetHard("");
+            }
 
             Initialize();
         }
 
         private void updateSubmoduleMenuItem_Click(object sender, EventArgs e)
         {
-            var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(_currentItem.Name));
-            process.ShowDialog(this);
+            var unStagedFiles = (List<GitItemStatus>)Unstaged.SelectedItems;
+            if (unStagedFiles.Count == 0)
+                return;
+
+            foreach (var item in unStagedFiles)
+            {
+                if (!item.IsSubmodule)
+                    continue;
+                var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(item.Name));
+                process.ShowDialog(this);
+            }
 
             Initialize();
         }
