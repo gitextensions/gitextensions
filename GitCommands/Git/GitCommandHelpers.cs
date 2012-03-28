@@ -316,7 +316,7 @@ namespace GitCommands
             if (string.IsNullOrEmpty(name))
                 return "submodule update --init --recursive";
 
-            return "submodule update --init \"" + name.Trim() + "\"";
+            return "submodule update --init --recursive \"" + name.Trim() + "\"";
         }
 
         public static string SubmoduleSyncCmd(string name)
