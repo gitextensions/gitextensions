@@ -1677,6 +1677,12 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         <TranslationItem Name="_noTagMassage" Property="Text">
           <Value>請輸入標籤的訊息</Value>
         </TranslationItem>
+        <TranslationItem Name="pushTag" Property="Text">
+          <Value>推標籤</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pushToCaption" Property="Text">
+          <Value>推送到{0}</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormTag">
@@ -1696,7 +1702,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         <TranslationItem Name="label1" Property="Text">
           <Value>標籤名稱</Value>
         </TranslationItem>
-        <TranslationItem Name="CreateTag" Property="Text">
+        <TranslationItem Name="btnCreateTag" Property="Text">
           <Value>建立標籤</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
@@ -1704,6 +1710,12 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         </TranslationItem>
         <TranslationItem Name="annotate" Property="Text">
           <Value>建立帶註解的標記</Value>
+        </TranslationItem>
+        <TranslationItem Name="pushTag" Property="Text">
+          <Value>推標籤</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pushToCaption" Property="Text">
+          <Value>推送到{0}</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

@@ -35,11 +35,11 @@ namespace GitUI.Tag
             this.TName = new System.Windows.Forms.TextBox();
             this.annotate = new System.Windows.Forms.CheckBox();
             this.pushTag = new System.Windows.Forms.CheckBox();
-            this.tagMessage = new GitUI.SpellChecker.EditNetSpell();
+            this.tagMessage = new EditNetSpell();
             this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             
-            // 
+			// 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -49,7 +49,7 @@ namespace GitUI.Tag
             this.label1.TabIndex = 8;
             this.label1.Text = "Tag name";
             
-            // 
+			// 
             // Ok
             // 
             this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -60,57 +60,53 @@ namespace GitUI.Tag
             this.Ok.Text = "Create tag";
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.OkClick);
-            
-            // 
-            // pushTag
-            // 
-            this.pushTag.AutoSize = true;
-            this.pushTag.Location = new System.Drawing.Point(245, 33);
-            this.pushTag.Name = "pushTag";
-            this.pushTag.Size = new System.Drawing.Size(100, 19);
-            this.pushTag.TabIndex = 10;
-            this.pushTag.Text = "Push tag";
-            this.pushTag.UseVisualStyleBackColor = true;
-            
             // 
             // TName
             // 
-            this.TName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.TName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+						| System.Windows.Forms.AnchorStyles.Right)));
             this.TName.Location = new System.Drawing.Point(108, 7);
             this.TName.Name = "TName";
             this.TName.Size = new System.Drawing.Size(227, 23);
             this.TName.TabIndex = 6;
             this.TName.KeyUp += new System.Windows.Forms.KeyEventHandler(this.NameKeyUp);
-            
             // 
             // annotate
             // 
             this.annotate.AutoSize = true;
-            this.annotate.Location = new System.Drawing.Point(108, 33);
+            this.annotate.Location = new System.Drawing.Point(108, 53);
             this.annotate.Name = "annotate";
             this.annotate.Size = new System.Drawing.Size(137, 19);
             this.annotate.TabIndex = 9;
             this.annotate.Text = "Create annotated tag";
             this.annotate.UseVisualStyleBackColor = true;
             this.annotate.CheckedChanged += new System.EventHandler(this.AnnotateCheckedChanged);
-            
+            // 
+            // pushTag
+            // 
+            this.pushTag.AutoSize = true;
+            this.pushTag.Location = new System.Drawing.Point(108, 34);
+            this.pushTag.Name = "pushTag";
+            this.pushTag.Size = new System.Drawing.Size(72, 19);
+            this.pushTag.TabIndex = 10;
+            this.pushTag.Text = "Push tag";
+            this.pushTag.UseVisualStyleBackColor = true;
             // 
             // tagMessage
             // 
-            this.tagMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tagMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tagMessage.Enabled = false;
-            this.tagMessage.Location = new System.Drawing.Point(108, 56);
+            this.tagMessage.Location = new System.Drawing.Point(108, 73);
             this.tagMessage.Name = "tagMessage";
-            this.tagMessage.Size = new System.Drawing.Size(339, 99);
+            this.tagMessage.Size = new System.Drawing.Size(339, 82);
             this.tagMessage.TabIndex = 11;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(8, 56);
+            this.label2.Location = new System.Drawing.Point(8, 73);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(53, 15);
             this.label2.TabIndex = 12;
