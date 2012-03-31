@@ -2464,7 +2464,7 @@ any global setting.</Value>
         <TranslationItem Name="label1" Property="Text">
           <Value>タグ名</Value>
         </TranslationItem>
-        <TranslationItem Name="CreateTag" Property="Text">
+        <TranslationItem Name="btnCreateTag" Property="Text">
           <Value>タグの作成</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
@@ -2472,6 +2472,12 @@ any global setting.</Value>
         </TranslationItem>
         <TranslationItem Name="annotate" Property="Text">
           <Value>注釈タグを作成</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pushToCaption" Property="Text">
+          <Value>{0}タグにPush</Value>
+        </TranslationItem>
+        <TranslationItem Name="pushTag" Property="Text">
+          <Value>タグPush</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2500,6 +2506,12 @@ any global setting.</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Value>メッセージ</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pushToCaption" Property="Text">
+          <Value>{0}タグにPush</Value>
+        </TranslationItem>
+        <TranslationItem Name="pushTag" Property="Text">
+          <Value>タグPush</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

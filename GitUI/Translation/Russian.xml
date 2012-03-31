@@ -2645,7 +2645,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <TranslationItem Name="annotate" Property="Text">
           <Value>Создать аннотированную метку</Value>
         </TranslationItem>
-        <TranslationItem Name="CreateTag" Property="Text">
+        <TranslationItem Name="btnCreateTag" Property="Text">
           <Value>Создать метку</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
@@ -2653,6 +2653,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Value>Сообщение</Value>
+        </TranslationItem>
+        <TranslationItem Name="pushTag" Property="Text">
+          <Value>Push метки</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2681,6 +2684,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Value>Создать метку</Value>
+        </TranslationItem>
+        <TranslationItem Name="pushTag" Property="Text">
+          <Value>Push метки</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
