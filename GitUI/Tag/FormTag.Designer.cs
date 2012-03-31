@@ -37,7 +37,8 @@ namespace GitUI.Tag
             this.annotate = new System.Windows.Forms.CheckBox();
             this.Tagname = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.CreateTag = new System.Windows.Forms.Button();
+            this.btnCreateTag = new System.Windows.Forms.Button();
+            this.pushTag = new System.Windows.Forms.CheckBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -61,7 +62,8 @@ namespace GitUI.Tag
             this.splitContainer1.Panel2.Controls.Add(this.annotate);
             this.splitContainer1.Panel2.Controls.Add(this.Tagname);
             this.splitContainer1.Panel2.Controls.Add(this.label1);
-            this.splitContainer1.Panel2.Controls.Add(this.CreateTag);
+            this.splitContainer1.Panel2.Controls.Add(this.btnCreateTag);
+            this.splitContainer1.Panel2.Controls.Add(this.pushTag);
             this.splitContainer1.Size = new System.Drawing.Size(734, 523);
             this.splitContainer1.SplitterDistance = 352;
             this.splitContainer1.TabIndex = 0;
@@ -128,14 +130,26 @@ namespace GitUI.Tag
             // 
             // CreateTag
             // 
-            this.CreateTag.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.CreateTag.Location = new System.Drawing.Point(626, 2);
-            this.CreateTag.Name = "CreateTag";
-            this.CreateTag.Size = new System.Drawing.Size(105, 23);
-            this.CreateTag.TabIndex = 0;
-            this.CreateTag.Text = "Create tag";
-            this.CreateTag.UseVisualStyleBackColor = true;
-            this.CreateTag.Click += new System.EventHandler(this.CreateTagClick);
+            this.btnCreateTag.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCreateTag.Location = new System.Drawing.Point(626, 2);
+            this.btnCreateTag.Name = "CreateTag";
+            this.btnCreateTag.Size = new System.Drawing.Size(105, 23);
+            this.btnCreateTag.TabIndex = 0;
+            this.btnCreateTag.Text = "Create tag";
+            this.btnCreateTag.UseVisualStyleBackColor = true;
+            this.btnCreateTag.Click += new System.EventHandler(this.CreateTagClick);
+            
+            // 
+            // pushTag
+            // 
+            this.pushTag.AutoSize = true;
+            this.pushTag.Location = new System.Drawing.Point(255, 33);
+            this.pushTag.Name = "pushTag";
+            this.pushTag.Size = new System.Drawing.Size(100, 17);
+            this.pushTag.TabIndex = 12;
+            this.pushTag.Text = "Push tag";
+            this.pushTag.UseVisualStyleBackColor = true;
+            
             // 
             // FormTag
             // 
@@ -161,7 +175,8 @@ namespace GitUI.Tag
         private System.Windows.Forms.SplitContainer splitContainer1;
         private RevisionGrid GitRevisions;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button CreateTag;
+        private System.Windows.Forms.Button btnCreateTag;
+        private System.Windows.Forms.CheckBox pushTag;
         private System.Windows.Forms.TextBox Tagname;
         private System.Windows.Forms.Label label2;
         private EditNetSpell tagMessage;

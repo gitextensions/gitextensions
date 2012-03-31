@@ -34,9 +34,11 @@ namespace GitUI.Tag
             this.Ok = new System.Windows.Forms.Button();
             this.TName = new System.Windows.Forms.TextBox();
             this.annotate = new System.Windows.Forms.CheckBox();
+            this.pushTag = new System.Windows.Forms.CheckBox();
             this.tagMessage = new GitUI.SpellChecker.EditNetSpell();
             this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
+            
             // 
             // label1
             // 
@@ -46,6 +48,7 @@ namespace GitUI.Tag
             this.label1.Size = new System.Drawing.Size(60, 15);
             this.label1.TabIndex = 8;
             this.label1.Text = "Tag name";
+            
             // 
             // Ok
             // 
@@ -57,6 +60,18 @@ namespace GitUI.Tag
             this.Ok.Text = "Create tag";
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.OkClick);
+            
+            // 
+            // pushTag
+            // 
+            this.pushTag.AutoSize = true;
+            this.pushTag.Location = new System.Drawing.Point(245, 33);
+            this.pushTag.Name = "pushTag";
+            this.pushTag.Size = new System.Drawing.Size(100, 19);
+            this.pushTag.TabIndex = 10;
+            this.pushTag.Text = "Push tag";
+            this.pushTag.UseVisualStyleBackColor = true;
+            
             // 
             // TName
             // 
@@ -67,6 +82,7 @@ namespace GitUI.Tag
             this.TName.Size = new System.Drawing.Size(227, 23);
             this.TName.TabIndex = 6;
             this.TName.KeyUp += new System.Windows.Forms.KeyEventHandler(this.NameKeyUp);
+            
             // 
             // annotate
             // 
@@ -78,6 +94,7 @@ namespace GitUI.Tag
             this.annotate.Text = "Create annotated tag";
             this.annotate.UseVisualStyleBackColor = true;
             this.annotate.CheckedChanged += new System.EventHandler(this.AnnotateCheckedChanged);
+            
             // 
             // tagMessage
             // 
@@ -88,7 +105,7 @@ namespace GitUI.Tag
             this.tagMessage.Location = new System.Drawing.Point(108, 56);
             this.tagMessage.Name = "tagMessage";
             this.tagMessage.Size = new System.Drawing.Size(339, 99);
-            this.tagMessage.TabIndex = 10;
+            this.tagMessage.TabIndex = 11;
             // 
             // label2
             // 
@@ -96,7 +113,7 @@ namespace GitUI.Tag
             this.label2.Location = new System.Drawing.Point(8, 56);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(53, 15);
-            this.label2.TabIndex = 11;
+            this.label2.TabIndex = 12;
             this.label2.Text = "Message";
             // 
             // FormTagSmall
@@ -107,6 +124,7 @@ namespace GitUI.Tag
             this.Controls.Add(this.label2);
             this.Controls.Add(this.tagMessage);
             this.Controls.Add(this.annotate);
+            this.Controls.Add(this.pushTag);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.Ok);
             this.Controls.Add(this.TName);
@@ -127,6 +145,7 @@ namespace GitUI.Tag
         private System.Windows.Forms.Button Ok;
         private System.Windows.Forms.TextBox TName;
         private System.Windows.Forms.CheckBox annotate;
+        private System.Windows.Forms.CheckBox pushTag;
         private EditNetSpell tagMessage;
         private System.Windows.Forms.Label label2;
     }
