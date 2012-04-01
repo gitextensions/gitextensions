@@ -7,7 +7,7 @@ using GitUIPluginInterfaces;
 
 namespace AutoCompileSubmodules
 {
-    public class AutoCompileSubModules : IGitPlugin
+    public class AutoCompileSubModules : IGitPluginForRepository
     {
         private const string MsBuildPath = @"C:\Windows\Microsoft.NET\Framework\v3.5\msbuild.exe";
 

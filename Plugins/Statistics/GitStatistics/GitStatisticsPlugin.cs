@@ -4,7 +4,7 @@ using GitUIPluginInterfaces;
 
 namespace GitStatistics
 {
-    public class GitStatisticsPlugin : IGitPlugin
+    public class GitStatisticsPlugin : IGitPluginForRepository
     {
         #region IGitPlugin Members
 

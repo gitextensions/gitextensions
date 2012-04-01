@@ -5,7 +5,7 @@ using GitUIPluginInterfaces;
 
 namespace CreateLocalBranches
 {
-	public class CreateLocalBranchesPlugin : IGitPlugin
+	public class CreateLocalBranchesPlugin : IGitPluginForRepository
     {
         public string Description
         {

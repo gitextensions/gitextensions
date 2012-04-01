@@ -5,7 +5,7 @@ using GitUIPluginInterfaces;
 
 namespace DeleteUnusedBranches
 {
-    public class DeleteUnusedBranchesPlugin : IGitPlugin
+    public class DeleteUnusedBranchesPlugin : IGitPluginForRepository
     {
         public string Description
         {
