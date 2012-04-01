@@ -267,6 +267,7 @@ namespace GitUI
             else
                 ShowDashboard();
             CommitInfoTabControl.Visible = validWorkingDir;
+            fileExplorerToolStripMenuItem.Enabled = validWorkingDir;
             commandsToolStripMenuItem.Enabled = validWorkingDir;
             manageRemoteRepositoriesToolStripMenuItem1.Enabled = validWorkingDir;
             branchSelect.Enabled = validWorkingDir;
