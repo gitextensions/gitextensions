@@ -215,6 +215,7 @@ namespace GitUI
                     pluginsToolStripMenuItem.DropDownItems.Add(item);
                 }
                 pluginsLoaded = true;
+                UpdatePluginMenu(Settings.Module.ValidWorkingDir());
             }
         }
 
@@ -237,6 +238,16 @@ namespace GitUI
             plugin.Execute(eventArgs);
             if (workingDirBefore != Settings.WorkingDir)
                 WorkingDirChanged(false);
+        }
+
+        private void UpdatePluginMenu(bool validWorkingDir)
+        {
+            foreach (ToolStripItem item in pluginsToolStripMenuItem.DropDownItems)
+            {
+                var plugin = item.Tag as IGitPluginForRepository;
+
+                item.Enabled = plugin == null || validWorkingDir;
+            }
         }
 
         private void ActionOnRepositoryPerformed(object sender, EventArgs e)
@@ -275,6 +286,7 @@ namespace GitUI
             toolStripButtonPull.Enabled = validWorkingDir;
             toolStripButtonPush.Enabled = validWorkingDir;
             submodulesToolStripMenuItem.Enabled = validWorkingDir;
+            UpdatePluginMenu(validWorkingDir);
             gitMaintenanceToolStripMenuItem.Enabled = validWorkingDir;
             editgitignoreToolStripMenuItem1.Enabled = validWorkingDir;
             editgitattributesToolStripMenuItem.Enabled = validWorkingDir;
