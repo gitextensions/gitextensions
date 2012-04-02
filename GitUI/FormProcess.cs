@@ -21,6 +21,7 @@ namespace GitUI
         public string ProcessString { get; set; }
         public string ProcessArguments { get; set; }
         public string ProcessInput { get; set; }
+        public string WorkingDir { get; set; }
         public Process Process { get; set; }
         public HandleOnExit HandleOnExitCallback { get; set; }
 
@@ -32,40 +33,53 @@ namespace GitUI
         //constructor for VS designer
         protected FormProcess(bool useDialogSettings)
             : base(useDialogSettings)
-        {
-        }
-
-        public FormProcess(string process, string arguments) : this(process, arguments, true)
         { }
 
-        public FormProcess(string process, string arguments, bool useDialogSettings)
+        public FormProcess(string process, string arguments)
+            : this(process, arguments, null, null, true)
+        { }
+
+        public FormProcess(string process, string arguments, GitModule module, bool useDialogSettings)
+            : this(process, arguments, module, null, true)
+        { }
+
+        public FormProcess(string process, string arguments, GitModule module, string input, bool useDialogSettings)
             : base(useDialogSettings)
         {
             ProcessCallback = new ProcessStart(processStart);
             AbortCallback = new ProcessAbort(processAbort);
             ProcessString = process ?? Settings.GitCommand;
+            WorkingDir = module == null ? Settings.WorkingDir : module.WorkingDir;
             ProcessArguments = arguments;
             Remote = "";
-            ProcessInput = null;
-        }
-
-        //Input does not work for password inputs. I don't know why, but it turned out not to be really necessary.
-        //For other inputs, it is not tested.
-        public FormProcess(string process, string arguments, string input) : this(process, arguments, input, true)
-        { }
-        public FormProcess(string process, string arguments, string input, bool useDialogSettings)
-            : this(process, arguments, useDialogSettings)
-        {
             ProcessInput = input;
         }
 
-        public FormProcess(string arguments) : this(arguments, true)
+        public FormProcess(string arguments)
+            : this(arguments, true)
         { }
 
         public FormProcess(string arguments, bool useDialogSettings)
-            : this(null, arguments, useDialogSettings)
-        {
-        }
+            : this(null, arguments, null, null, useDialogSettings)
+        { }
+
+        public FormProcess(GitModule module, string arguments)
+            : this(module, arguments, true)
+        { }
+
+        public FormProcess(GitModule module, string arguments, bool useDialogSettings)
+            : this(null, arguments, module, useDialogSettings)
+        { }
+
+        //Input does not work for password inputs. I don't know why, but it turned out not to be really necessary.
+        //For other inputs, it is not tested.
+        public FormProcess(string process, string arguments, string input)
+            : this(process, arguments, input, true)
+        { }
+
+        public FormProcess(string process, string arguments, string input, bool useDialogSettings)
+            : this(process, arguments, null, input, useDialogSettings)
+        { }
 
         protected virtual void BeforeProcessStart()
         {
@@ -80,7 +94,7 @@ namespace GitUI
 
             try
             {
-                Process = gitCommand.CmdStartProcess(ProcessString, ProcessArguments);
+                Process = gitCommand.CmdStartProcess(ProcessString, ProcessArguments, WorkingDir);
 
                 gitCommand.Exited += gitCommand_Exited;
                 gitCommand.DataReceived += gitCommand_DataReceived;

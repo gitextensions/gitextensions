@@ -1522,6 +1522,28 @@ namespace GitUI
             Initialize();
         }
 
+        private void stashSubmoduleChangesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            var unStagedFiles = (List<GitItemStatus>)Unstaged.SelectedItems;
+            if (unStagedFiles.Count == 0)
+                return;
+
+            var arguments = "stash save";
+            if (Settings.IncludeUntrackedFilesInManualStash)
+                arguments += " -u";
+            foreach (var item in unStagedFiles)
+            {
+                if (!item.IsSubmodule)
+                    continue;
+                GitModule module = new GitModule(Settings.WorkingDir + item.Name + Settings.PathSeparator.ToString());
+                var process = new FormProcess(module, arguments);
+                process.ShowDialog(this);
+            }
+
+            Initialize();
+        }
+
         private void submoduleSummaryMenuItem_Click(object sender, EventArgs e)
         {
             string summary = Settings.Module.GetSubmoduleSummary(_currentItem.Name);
