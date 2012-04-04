@@ -176,6 +176,11 @@ namespace GitCommands
             return submoduleList;
         }
 
+        public string GetWorkingDirectory()
+        {
+            return Settings.WorkingDir;
+        }
+
         public bool CollectOutput = true;
         public bool StreamOutput;
         public int ExitCode { get; set; }

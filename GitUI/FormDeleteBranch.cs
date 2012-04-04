@@ -44,14 +44,12 @@ namespace GitUI
                 if (MessageBox.Show(this, _deleteBranchQuestion.Text, _deleteBranchCaption.Text, MessageBoxButtons.YesNo) ==
                     DialogResult.Yes)
                 {
-
                     GitDeleteBranchCmd cmd = new GitDeleteBranchCmd();
                     cmd.Force = ForceDelete.Checked;
                     foreach (GitHead head in Branches.GetSelectedBranches())
                         cmd.AddBranch(head.Name, head.IsRemote);
 
-                    GitUICommands.Instance.StartCommandLineProcessDialog(cmd, this);    
-
+                    GitUICommands.Instance.StartCommandLineProcessDialog(cmd, this);  
                 }
             }
             catch (Exception ex)
