@@ -298,9 +298,6 @@ namespace GitUI
             // load custom user menu
             LoadUserMenu();
 
-
-
-
             Cursor.Current = Cursors.Default;
         }
 
@@ -340,7 +337,8 @@ namespace GitUI
 
             if (mostRecentRepos.Count > 0)
                 _NO_TRANSLATE_Workingdir.Text = mostRecentRepos[0].Caption;
-
+            else
+                _NO_TRANSLATE_Workingdir.Text = Settings.WorkingDir;
         }
 
         /// <summary>
@@ -1584,11 +1582,12 @@ namespace GitUI
 
             RemoveSubmoduleButtons();
 
-            var submodules = Settings.Module.GetSubmodulesNames();
+            List<string> submodules = (List<string>)Settings.Module.GetSubmodulesNames();
+            submodules.Sort();
 
             foreach (var submodule in submodules)
             {
-                var submenu = new ToolStripMenuItem(submodule/*.Name*/);
+                var submenu = new ToolStripMenuItem(submodule);
                 submenu.Click += SubmoduleToolStripButtonClick;
                 submenu.Width = 200;
                 openSubmoduleToolStripMenuItem.DropDownItems.Add(submenu);
@@ -1777,7 +1776,6 @@ namespace GitUI
             foreach (RecentRepoInfo repo in mostRecentRepos)
                 AddWorkingdirDropDownItem(repo.Repo, repo.Caption);
 
-
             if (lessRecentRepos.Count > 0)
             {
                 if (mostRecentRepos.Count > 0 && (Settings.SortMostRecentRepos || Settings.SortLessRecentRepos))
@@ -1796,8 +1794,6 @@ namespace GitUI
                 new FormRecentReposSettings().ShowDialog(this);
                 RefreshWorkingDirCombo();
             };
-
-
         }
 
         private void SetWorkingDir(string path)
