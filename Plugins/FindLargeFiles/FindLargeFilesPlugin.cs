@@ -16,16 +16,16 @@ namespace FindLargeFiles
 
         public void Register(IGitUICommands gitUiCommands)
         {
-            Settings.AddSetting("Find large files bigger than (Mb)", "5");
+            Settings.AddSetting("Find large files bigger than (Mb)", "1");
         }
 
         public void Execute(GitUIBaseEventArgs gitUiCommands)
         {
             float threshold;
             if (!float.TryParse(Settings.GetSetting("Find large files bigger than (Mb)"), out threshold))
-                threshold = 5;
+                threshold = 1;
 
-            new FindLargeFilesForm(threshold, gitUiCommands.GitCommands).ShowDialog();
+            new FindLargeFilesForm(threshold, gitUiCommands).ShowDialog();
         }
     }
 }
