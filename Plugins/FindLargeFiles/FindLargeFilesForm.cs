@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
@@ -11,21 +11,23 @@ namespace FindLargeFiles
 {
     public sealed partial class FindLargeFilesForm : Form
     {
-        private readonly float threshold = 5.0f;
+        private readonly float threshold = 1.0f;
+        private readonly GitUIBaseEventArgs gitUiCommands;
         private readonly IGitCommands gitCommands;
         private string[] revList;
         private readonly Dictionary<string, GitObject> list = new Dictionary<string, GitObject>();
         private readonly SortableObjectsList gitObjects = new SortableObjectsList();
 
-        public FindLargeFilesForm(float threshold, IGitCommands gitCommands)
+        public FindLargeFilesForm(float threshold, GitUIBaseEventArgs gitUiCommands)
         {
             InitializeComponent();
 
             this.threshold = threshold;
-            this.gitCommands = gitCommands;
+            this.gitUiCommands = gitUiCommands;
+            this.gitCommands = gitUiCommands.GitCommands;
         }
 
-        private void MyCallbackFunction()
+        private void findLargeFilesFunction()
         {
             try
             {
@@ -50,37 +52,40 @@ namespace FindLargeFiles
                         list.Add(d.SHA, d);
                         BranchesGrid.Invoke((Action)(() => { gitObjects.Add(d); }));
                     }
-                    else
+                    else if (!curGitObject.Commit.Contains(commit))
                     {
-                        if (!curGitObject.Commit.Contains(commit))
-                        {
-                            if (curGitObject.LastCommitDate < date)
-                                curGitObject.LastCommitDate = date;
-                            BranchesGrid.Invoke((Action)(() => { gitObjects.ResetItem(gitObjects.IndexOf(curGitObject)); }));
-                            curGitObject.Commit.Add(commit);
-                        }
+                        if (curGitObject.LastCommitDate < date)
+                            curGitObject.LastCommitDate = date;
+                        BranchesGrid.Invoke((Action)(() => { gitObjects.ResetItem(gitObjects.IndexOf(curGitObject)); }));
+                        curGitObject.Commit.Add(commit);
                     }
                 }
-                var packFiles = Directory.GetFiles(gitCommands.GetWorkingDirectory() + ".git/objects/pack/", "pack-*.idx");
-                foreach (var pack in packFiles)
+                string objectsPackDirectory = gitUiCommands.GetGitDirectory() + "objects/pack/";
+                if (Directory.Exists(objectsPackDirectory))
                 {
-                    string[] objects = gitCommands.RunGit(string.Concat("verify-pack -v ", pack)).Split('\n');
-                    foreach (var gitobj in objects.Where(x => x.Contains(" blob ")))
+                    var packFiles = Directory.GetFiles(objectsPackDirectory, "pack-*.idx");
+                    foreach (var pack in packFiles)
                     {
-                        string[] dataFields = gitobj.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                        GitObject curGitObject;
-                        if (list.TryGetValue(dataFields[0], out curGitObject))
+                        string[] objects = gitCommands.RunGit(string.Concat("verify-pack -v ", pack)).Split('\n');
+                        pbRevisions.Invoke((Action)(() => pbRevisions.Value = pbRevisions.Value + (int)((revList.Length * 0.1f) / packFiles.Length)));
+                        foreach (var gitobj in objects.Where(x => x.Contains(" blob ")))
                         {
-                            int compressedSize = 0;
-                            if (Int32.TryParse(dataFields[3], out compressedSize))
+                            string[] dataFields = gitobj.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                            GitObject curGitObject;
+                            if (list.TryGetValue(dataFields[0], out curGitObject))
                             {
-                                curGitObject.compressedSizeInBytes = compressedSize;
-                                BranchesGrid.Invoke((Action)(() => { gitObjects.ResetItem(gitObjects.IndexOf(curGitObject)); }));
+                                int compressedSize = 0;
+                                if (Int32.TryParse(dataFields[3], out compressedSize))
+                                {
+                                    curGitObject.compressedSizeInBytes = compressedSize;
+                                    BranchesGrid.Invoke((Action)(() => { gitObjects.ResetItem(gitObjects.IndexOf(curGitObject)); }));
+                                }
                             }
                         }
                     }
                 }
                 pbRevisions.Invoke((Action)(() => pbRevisions.Hide()));
+                BranchesGrid.Invoke((Action)(() => BranchesGrid.ReadOnly = false));
             }
             catch
             {
@@ -93,7 +98,7 @@ namespace FindLargeFiles
             revList = gitCommands.RunGit("rev-list HEAD").Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             pbRevisions.Maximum = (int)(revList.Length * 1.1f);
             BranchesGrid.DataSource = gitObjects;
-            Thread MyThread = new Thread(MyCallbackFunction);
+            Thread MyThread = new Thread(findLargeFilesFunction);
             MyThread.Start();
         }
 
@@ -123,14 +128,23 @@ namespace FindLargeFiles
 
         private void Delete_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, "Are you sure to delete the selected branches?" + Environment.NewLine + "Only branches that are fully merged will be deleted.", "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(this, "Are you sure to delete the selected files?", "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                /*foreach (Branch branch in branches.Where(branch => branch.Delete))
+                StringBuilder sb = new StringBuilder();
+                foreach (GitObject gitObject in gitObjects.Where(gitObject => gitObject.Delete))
                 {
-                    branch.Result = gitCommands.RunGit("branch -d " + branch.Name).Trim();
-                }*/
-                BranchesGrid.Refresh();
+                    sb.AppendLine(String.Format("\"{0}\" filter-branch --index-filter \"git rm -r -f --cached --ignore-unmatch {1}\" --prune-empty -- --all",
+                        gitUiCommands.GitCommand, gitObject.Path));
+                }
+                sb.AppendLine(String.Format("for /f %%a IN ('\"{0}\" for-each-ref --format=%%^(refname^) refs/original/') DO \"{0}\" update-ref -d %%a",
+                        gitUiCommands.GitCommand));
+                sb.AppendLine(String.Format("\"{0}\" reflog expire --expire=now --all",
+                    gitUiCommands.GitCommand));
+                sb.AppendLine(String.Format("\"{0}\" gc --aggressive --prune=now",
+                    gitUiCommands.GitCommand));
+                gitUiCommands.GitUICommands.StartBatchFileProcessDialog(sb.ToString());
             }
+            Close();
         }
     }
 }

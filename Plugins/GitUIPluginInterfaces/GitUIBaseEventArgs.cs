@@ -16,17 +16,13 @@ namespace GitUIPluginInterfaces
 
         public abstract string GitWorkingDir { get; }
 
+        public abstract string GetGitDirectory();
+
         public abstract bool IsValidGitWorkingDir(string workingDir);
 
-        public abstract string GitCommand
-        {
-            get;
-        }
+        public abstract string GitCommand { get; }
 
-        public abstract string GitVersion
-        {
-            get;
-        }
+        public abstract string GitVersion { get; }
     }
 
 }

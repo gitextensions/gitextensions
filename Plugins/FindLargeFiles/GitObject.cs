@@ -23,6 +23,7 @@ namespace FindLargeFiles
         public string CompressedSize { get { return compressedSizeInBytes >= 0 ? String.Format("{0:F2} Mb", compressedSizeInBytes / 1024.0f / 1024) : "<Unknown>"; } }
         public int CommitCount { get { return Commit.Count; } }
         public DateTime LastCommitDate { get; set; }
+        public bool Delete { get; set; }
         internal HashSet<string> Commit { get; set; }
     }
 }
