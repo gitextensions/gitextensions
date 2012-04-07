@@ -23,6 +23,11 @@ namespace GitUI
             }
         }
 
+        public override string GetGitDirectory()
+        {
+             return Settings.Module.GetGitDirectory();
+        }
+
         public override bool IsValidGitWorkingDir(string workingDir)
         {
             return GitModule.ValidWorkingDir(workingDir);
