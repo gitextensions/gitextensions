@@ -97,10 +97,8 @@ namespace GitUI
                 */
 
                 if (OutputString.ToString().Contains("FATAL ERROR") && OutputString.ToString().Contains("authentication"))
-                {
-                    var puttyError = new FormPuttyError();
-                    puttyError.ShowDialog(this);
-                    if (puttyError.RetryProcess)
+                {                   
+                    if (FormPuttyError.AskForKey(this))
                     {
                         Retry();
                         return true;
