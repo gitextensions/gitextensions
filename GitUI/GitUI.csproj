@@ -113,7 +113,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FormDirtyDirWarn.Designer.cs">
-      <DependentUpon>FormDirtyDirWarn.cs</DependentUpon>          
+      <DependentUpon>FormDirtyDirWarn.cs</DependentUpon>
     </Compile>
     <Compile Include="FormRecentReposSettings.Designer.cs">
       <DependentUpon>FormRecentReposSettings.cs</DependentUpon>
@@ -137,6 +137,12 @@
     </Compile>
     <Compile Include="FormGoToCommit.Designer.cs">
       <DependentUpon>FormGoToCommit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormResetChanges.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormResetChanges.Designer.cs">
+      <DependentUpon>FormResetChanges.cs</DependentUpon>
     </Compile>
     <Compile Include="FormSelectMultipleBranches.cs">
       <SubType>Form</SubType>
@@ -534,12 +540,7 @@
     <Compile Include="FormInit.Designer.cs">
       <DependentUpon>FormInit.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormLoadPuttySSHKey.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormLoadPuttySSHKey.Designer.cs">
-      <DependentUpon>FormLoadPuttySSHKey.cs</DependentUpon>
-    </Compile>
+    <Compile Include="BrowseForPrivateKey.cs" />
     <Compile Include="FormMailMap.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -768,6 +769,9 @@
     <EmbeddedResource Include="FormGoToCommit.resx">
       <DependentUpon>FormGoToCommit.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormResetChanges.resx">
+      <DependentUpon>FormResetChanges.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormSelectMultipleBranches.resx">
       <DependentUpon>FormSelectMultipleBranches.cs</DependentUpon>
@@ -1000,10 +1004,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormInit.resx">
       <DependentUpon>FormInit.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormLoadPuttySSHKey.resx">
-      <DependentUpon>FormLoadPuttySSHKey.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMailMap.resx">
