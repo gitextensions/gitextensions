@@ -19,18 +19,35 @@ namespace GitUI
 
         public ResultType Result { get; private set; }
 
-        public FormResetChanges()
+        public FormResetChanges(bool hasExistingFiles, bool hasNewFiles)
         {
             InitializeComponent();
             Translate();
+
+            if (!hasExistingFiles)
+            {
+                // No existing files => new files only => force the "delete new files" checkbox on.
+                cbDeleteNewFiles.Enabled = false;
+                cbDeleteNewFiles.Checked = true;
+            }            
+            else if (!hasNewFiles)
+            {
+                // No new files => force the "delete new files" checkbox off. 
+                cbDeleteNewFiles.Enabled = false;
+                cbDeleteNewFiles.Checked = false;
+            }
+            else
+                cbDeleteNewFiles.Enabled = true; // A mix of types, so enable the checkbox.
         }
 
         /// <summary>
         /// Shows the dialog modally under the given owner, and returns the user's selection (RESET, RESET_AND_DELETE, or CANCEL).
         /// </summary>
-        public static ResultType ShowResetDialog(IWin32Window owner)
+        /// <param name="hasExistingFiles">Are there existing (modified) files selected?</param>
+        /// <param name="hasNewFiles">Are there new (untracked) files selected?</param>
+        public static ResultType ShowResetDialog(IWin32Window owner, bool hasExistingFiles, bool hasNewFiles)
         {
-            FormResetChanges form = new FormResetChanges();
+            FormResetChanges form = new FormResetChanges(hasExistingFiles, hasNewFiles);
             form.ShowDialog(owner);
             return form.Result;
         }
