@@ -16,20 +16,25 @@ namespace GitUI
 
         private void LoadSSHKey_Click(object sender, EventArgs e)
         {
-            BrowseForPrivateKey.BrowseAndLoad(this);
+            if (BrowseForPrivateKey.BrowseAndLoad(this))
+                CloseForm(true);
         }
 
         public bool RetryProcess;
 
         private void Abort_Click(object sender, EventArgs e)
         {
-            RetryProcess = false;
-            Close();
+            CloseForm(false);
         }
 
         private void Retry_Click(object sender, EventArgs e)
         {
-            RetryProcess = true;
+            CloseForm(true);
+        }
+
+        private void CloseForm(bool shouldRetry)
+        {
+            RetryProcess = shouldRetry;
             Close();
         }
     }
