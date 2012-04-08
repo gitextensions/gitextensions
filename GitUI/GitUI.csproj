@@ -540,7 +540,7 @@
     <Compile Include="FormInit.Designer.cs">
       <DependentUpon>FormInit.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormLoadPuttySSHKey.cs" />
+    <Compile Include="BrowseForPrivateKey.cs" />
     <Compile Include="FormMailMap.cs">
       <SubType>Form</SubType>
     </Compile>
