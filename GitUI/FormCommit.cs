@@ -902,16 +902,18 @@ namespace GitUI
             shouldRescanChanges = false;
             try
             {
-                if (Unstaged.SelectedItem == null ||
-                    MessageBox.Show(this, _resetChangesText.Text, _resetChangesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) !=
-                    DialogResult.Yes)
+                if (Unstaged.SelectedItem == null)
                     return;
-    
+
+                // Show a form asking the user if they want to reset the changes.
+                FormResetChanges.ResultType resetType = FormResetChanges.ShowResetDialog(this);
+                if (resetType == FormResetChanges.ResultType.CANCEL)
+                    return;
+
                 //remember max selected index
                 Unstaged.StoreNextIndexToSelect();
-    
-                var deleteNewFiles = Unstaged.SelectedItems.Any(item => item.IsNew)
-                    && MessageBox.Show(this, _alsoDeleteUntrackedFiles.Text, _alsoDeleteUntrackedFilesCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes;
+
+                var deleteNewFiles = Unstaged.SelectedItems.Any(item => item.IsNew) && (resetType == FormResetChanges.ResultType.RESET_AND_DELETE);
                 var output = new StringBuilder();
                 foreach (var item in Unstaged.SelectedItems)
                 {
