@@ -496,7 +496,7 @@ namespace GitUI
             Commit.Enabled = true;
             CommitAndPush.Enabled = true;
             Amend.Enabled = true;
-            Reset.Enabled = true;
+            Reset.Enabled = DoChangesExist();
 
             EnableStageButtons(true);
             workingToolStripMenuItem.Enabled = true;
@@ -504,6 +504,12 @@ namespace GitUI
             var inTheMiddleOfConflictedMerge = Settings.Module.InTheMiddleOfConflictedMerge();
             SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
             Unstaged.SelectStoredNextIndex();
+        }
+
+        /// <summary>Returns if there are any changes at all, staged or unstaged.</summary>
+        private bool DoChangesExist()
+        {
+            return (Unstaged.AllItems.Count > 0) || (Staged.AllItems.Count > 0);
         }
 
         private void ShowChanges(GitItemStatus item, bool staged)
