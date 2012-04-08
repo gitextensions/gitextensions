@@ -117,11 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label1.Text" xml:space="preserve">
-    <value>The command resulted with an error that usually means that the 
-PuTTY authentication agent is not running.or that the correct 
-private key is not (yet) loaded.
-
-When the key is loaded, you can press retry.</value>
-  </data>
 </root>
