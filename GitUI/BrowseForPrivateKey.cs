@@ -28,15 +28,16 @@ namespace GitUI
             new TranslationString("Select SSH key file");
 
         /// <summary>
-        /// Prompts the user to browse for a key, and attempts to load it. Returns whether successful.
+        /// Prompts the user to browse for a key, and attempts to load it. Returns the path to the key, if successful.
         /// </summary>
-        public static bool BrowseAndLoad(IWin32Window parent)
+        public static string BrowseAndLoad(IWin32Window parent)
         {
             var path = Browse(parent);
             if (!string.IsNullOrEmpty(path))
-                return LoadKey(parent, path);
-            else
-                return false;
+                if (LoadKey(parent, path))
+                    return path;
+
+            return null;
         }
 
         /// <summary>
