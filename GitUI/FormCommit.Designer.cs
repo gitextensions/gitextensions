@@ -4,8 +4,7 @@ using GitUI.SpellChecker;
 
 namespace GitUI
 {
-    partial class FormCommit			
-			
+    partial class FormCommit
     {
         /// <summary>
         /// Required designer variable.
@@ -1082,12 +1081,12 @@ namespace GitUI
         private ToolStripTextBox toolAuthor;
         private ToolStripSeparator toolStripSeparator2;
         private PictureBox LoadingStaged;
-		private ToolStripSeparator toolStripMenuItem2;
-		private ToolStripContainer toolStripContainer1;
-		private ToolStrip toolbarSelectionFilter;
-		private ToolStripLabel toolStripLabel1;
-		private ToolStripComboBox selectionFilter;
-		private ToolStripMenuItem selectionFilterToolStripMenuItem;
+        private ToolStripSeparator toolStripMenuItem2;
+        private ToolStripContainer toolStripContainer1;
+        private ToolStrip toolbarSelectionFilter;
+        private ToolStripLabel toolStripLabel1;
+        private ToolStripComboBox selectionFilter;
+        private ToolStripMenuItem selectionFilterToolStripMenuItem;
         private LinkLabel llShowPreview;
         private ContextMenuStrip UnstagedSubmoduleContext;
         private ToolStripMenuItem openSubmoduleMenuItem;
