@@ -906,7 +906,7 @@ namespace GitUI
                     return;
 
                 // Show a form asking the user if they want to reset the changes.
-                FormResetChanges.ResultType resetType = FormResetChanges.ShowResetDialog(this);
+                FormResetChanges.ResultType resetType = FormResetChanges.ShowResetDialog(this, Unstaged.SelectedItems.Any(item => !item.IsNew), Unstaged.SelectedItems.Any(item => item.IsNew));
                 if (resetType == FormResetChanges.ResultType.CANCEL)
                     return;
 
