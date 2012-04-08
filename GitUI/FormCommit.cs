@@ -938,7 +938,7 @@ namespace GitUI
                         output.Append(Settings.Module.ResetFile(item.Name));
                     }
                 }
-    
+
                 if (!string.IsNullOrEmpty(output.ToString()))
                     MessageBox.Show(this, output.ToString(), _resetChangesCaption.Text);
             }
@@ -1091,7 +1091,7 @@ namespace GitUI
                 {
                     //When a committemplate is used, skip comments
                     //otherwise: "#" is probably not used for comment but for issue number
-                    if (!line.StartsWith("#") || 
+                    if (!line.StartsWith("#") ||
                         string.IsNullOrEmpty(commitTemplate))
                     {
                         if (lineNumber == 1 && !String.IsNullOrEmpty(line))
@@ -1118,7 +1118,7 @@ namespace GitUI
 
         private void DeleteAllUntrackedFilesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, 
+            if (MessageBox.Show(this,
                 _deleteUntrackedFiles.Text,
                 _deleteUntrackedFilesCaption.Text,
                 MessageBoxButtons.YesNo) !=
@@ -1275,9 +1275,27 @@ namespace GitUI
 
         private void ResetClick(object sender, EventArgs e)
         {
-            if (!Abort.AbortCurrentAction())
+            // Show a form asking the user if they want to reset the changes.
+            FormResetChanges.ResultType resetType = FormResetChanges.ShowResetDialog(this, Unstaged.AllItems.Any(item => !item.IsNew), Unstaged.AllItems.Any(item => item.IsNew));
+            if (resetType == FormResetChanges.ResultType.CANCEL)
                 return;
 
+            // Reset all changes.
+            Settings.Module.ResetHard("");
+
+            // Also delete new files, if requested.
+            if (resetType == FormResetChanges.ResultType.RESET_AND_DELETE)
+            {
+                foreach (var item in Unstaged.AllItems.Where(item => item.IsNew))
+                {
+                    try
+                    {
+                        File.Delete(Settings.WorkingDir + item.Name);
+                    }
+                    catch (System.IO.IOException) { }
+                    catch (System.UnauthorizedAccessException) { }
+                }
+            }
             Initialize();
             NeedRefresh = true;
         }
@@ -1444,7 +1462,7 @@ namespace GitUI
 
         private void AddToSelectionFilter(string filter)
         {
-            if (!selectionFilter.Items.Cast<string>().Any(candiate  => candiate == filter))
+            if (!selectionFilter.Items.Cast<string>().Any(candiate => candiate == filter))
             {
                 const int SelectionFilterMaxLength = 10;
                 if (selectionFilter.Items.Count == SelectionFilterMaxLength)
