@@ -7,63 +7,63 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormLoadPuttySshKey : GitExtensionsForm
+    /// <summary>
+    /// Shows a dialog to let the user browse for a SSH key, and tries to load it.
+    /// </summary>
+    public partial class FormLoadPuttySshKey
     {
-        private readonly TranslationString _pageantNotFound =
+        private static readonly TranslationString _pageantNotFound =
             new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");
-        private readonly TranslationString _pageantNotFoundCaption =
+        private static readonly TranslationString _pageantNotFoundCaption =
             new TranslationString("PuTTY");
 
-        private readonly TranslationString _loadKeyFailed =
+        private static readonly TranslationString _loadKeyFailed =
             new TranslationString("Could not load key.");
-        private readonly TranslationString _loadKeyFailedCaption =
+        private static readonly TranslationString _loadKeyFailedCaption =
             new TranslationString("PuTTY");
 
-        private readonly TranslationString _browsePrivateKeyFilter =
+        private static readonly TranslationString _browsePrivateKeyFilter =
             new TranslationString("Private key");
-        private readonly TranslationString _browsePrivateKeyCaption =
+        private static readonly TranslationString _browsePrivateKeyCaption =
             new TranslationString("Select SSH key file");
 
-        public FormLoadPuttySshKey()
+        /// <summary>
+        /// Prompts the user to browse to a key, and attempts to load it. Returns whether successfull.
+        /// </summary>
+        public static bool BrowseForKey(IWin32Window parent)
         {
-            InitializeComponent();
-            Translate();
+            var dialog = new OpenFileDialog
+            {
+                Filter = " (*.ppk)|*.ppk",
+                InitialDirectory = ".",
+                Title = "Browse for key"
+            };
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+                return LoadKey(parent, dialog.FileName);
+            else
+                return false;
         }
 
-        private void PrivateKeypathDropDown(object sender, EventArgs e)
-        {
-            PrivateKeypath.DataSource = Repositories.RepositoryHistory.Repositories;
-            PrivateKeypath.DisplayMember = "Path";
-        }
-
-        private void LoadSshKeyClick(object sender, EventArgs e)
+        /// <summary>
+        /// Tries to load the given key. Returns whether successfull.
+        /// </summary>
+        private static bool LoadKey(IWin32Window parent, string path)
         {
             if (!File.Exists(Settings.Pageant))
             {
-                MessageBox.Show(this, _pageantNotFound.Text, _pageantNotFoundCaption.Text);
-                return;
+                MessageBox.Show(parent, _pageantNotFound.Text, _pageantNotFoundCaption.Text);
+                return false;
             }
 
-            if (string.IsNullOrEmpty(PrivateKeypath.Text))
+            if (string.IsNullOrEmpty(path))
             {
-                MessageBox.Show(this, _loadKeyFailed.Text, _loadKeyFailedCaption.Text);
-                return;
+                MessageBox.Show(parent, _loadKeyFailed.Text, _loadKeyFailedCaption.Text);
+                return false;
             }
 
-            Settings.Module.StartPageantWithKey(PrivateKeypath.Text);
-            Close();
-        }
-
-        private void BrowseClick(object sender, EventArgs e)
-        {
-            var dialog = new OpenFileDialog
-                             {
-                                 Filter = _browsePrivateKeyFilter.Text + " (*.ppk)|*.ppk",
-                                 InitialDirectory = ".",
-                                 Title = _browsePrivateKeyCaption.Text
-                             };
-            if (dialog.ShowDialog(this) == DialogResult.OK)
-                PrivateKeypath.Text = dialog.FileName;
+            Settings.Module.StartPageantWithKey(path);
+            return true;
         }
     }
 }
