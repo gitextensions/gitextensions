@@ -46,7 +46,12 @@ namespace GitCommands.Statistics
                 var contributor = commitCount.Substring(tab + 1);
 
                 totalCommits += count;
-                commitsPerContributor.Add(contributor, count);
+                int oldCount;
+                if (!commitsPerContributor.TryGetValue(contributor, out oldCount))
+                    commitsPerContributor.Add(contributor, count);
+                else
+                    // Sometimes this happen because of wrong encoding
+                    commitsPerContributor[contributor] = oldCount + count;
             }
             return Tuple.Create(commitsPerContributor, totalCommits);
         }

@@ -343,7 +343,7 @@ namespace GitCommands
             {
                 GitCommandHelpers.SetEnvironmentVariable();
                 arguments = arguments.Replace("$QUOTE$", "\\\"");
-                int exitCode = GitCommandHelpers.CreateAndStartProcess(arguments, cmd, out output, out error, stdInput);
+                int exitCode = GitCommandHelpers.CreateAndStartProcess(arguments, cmd, _workingdir, out output, out error, stdInput);
                 return exitCode;
             }
             catch (Win32Exception)
@@ -675,7 +675,10 @@ namespace GitCommands
                     if (line.StartsWith("gitdir:"))
                     {
                         string path = line.Substring(7).Trim().Replace('/', '\\');
-                        return path + Settings.PathSeparator.ToString();
+                        if (Path.IsPathRooted(path))
+                            return path + Settings.PathSeparator.ToString();
+                        else
+                            return Path.GetFullPath(Path.Combine(repositoryPath, path + Settings.PathSeparator.ToString()));
                     }
                 }
             }
@@ -1302,7 +1305,6 @@ namespace GitCommands
                             else
                                 patchFile.Date = line.Substring(6).Trim();
 
-
                         if (line.StartsWith("Subject: ")) patchFile.Subject = line.Substring(9).Trim();
 
                         if (!string.IsNullOrEmpty(patchFile.Author) &&
@@ -1536,6 +1538,25 @@ namespace GitCommands
             patchManager.LoadPatch(this.RunCachableCmd(Settings.GitCommand, arguments), false);
 
             return patchManager.Patches;
+        }
+
+        public string GetStatusText(bool untracked)
+        {
+            string cmd = "status -s";
+            if (untracked)
+                cmd = cmd + " -u";
+            return RunGitCmd(cmd);
+        }
+
+        public string GetDiffFilesText(string from, string to)
+        {
+            return GetDiffFilesText(from, to, false);
+        }
+
+        public string GetDiffFilesText(string from, string to, bool noCache)
+        {
+            string cmd = "diff -M -C --name-status \"" + to + "\" \"" + from + "\"";
+            return noCache ? RunGitCmd(cmd) : this.RunCachableCmd(Settings.GitCommand, cmd, Settings.SystemEncoding);
         }
 
         public List<GitItemStatus> GetDiffFiles(string from, string to)
