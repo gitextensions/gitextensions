@@ -978,9 +978,7 @@ namespace GitCommands
 
         public string Stash()
         {
-            var arguments = "stash save";
-            if (Settings.IncludeUntrackedFilesInAutoStash)
-                arguments += " -u";
+            var arguments = GitCommandHelpers.StashSaveCmd(Settings.IncludeUntrackedFilesInAutoStash);
             return RunGitCmd(arguments);
         }
 

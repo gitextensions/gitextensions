@@ -310,7 +310,7 @@ namespace GitCommands
         {
             return "tag -d \"" + tagName + "\"";
         }
-		
+        
         public static string SubmoduleUpdateCmd(string name)
         {
             if (string.IsNullOrEmpty(name))
@@ -501,6 +501,14 @@ namespace GitCommands
                 return "push " + sforce + "\"" + path.Trim() + "\" tag " + tag;
 
             return "";
+        }
+
+        public static string StashSaveCmd(bool untracked)
+        {
+            var cmd = "stash save";
+            if (untracked && VersionInUse.StashUntrackedFilesSupported)
+                cmd += " -u";
+            return cmd;
         }
 
         public static bool PathIsUrl(string path)
