@@ -31,7 +31,7 @@ namespace GitUI
         {
             this.components = new System.ComponentModel.Container();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStrip1 = new ToolStripEx();
             this.toolStripButtonNew = new System.Windows.Forms.ToolStripButton();
             this.saveAs = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -454,7 +454,7 @@ namespace GitUI
         #endregion
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.ToolStrip toolStrip1;
+        private ToolStripEx toolStrip1;
         private System.Windows.Forms.ToolStripLabel translateProgress;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ListBox translateCategories;
