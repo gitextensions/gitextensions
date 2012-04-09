@@ -3,7 +3,7 @@ using GitUIPluginInterfaces;
 
 namespace GitImpact
 {
-    public class GitImpactPlugin : IGitPlugin
+    public class GitImpactPlugin : IGitPluginForRepository
     {
         #region IGitPlugin Members
 
