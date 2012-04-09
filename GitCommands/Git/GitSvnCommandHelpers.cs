@@ -36,7 +36,7 @@
         public static bool CheckRefsRemoteSvn()
         {
             string svnremote = GetConfigSvnRemoteFetch();
-            return svnremote != null && svnremote.Trim().StartsWith(":refs/remote");
+            return svnremote != null && svnremote.Trim().Contains(":refs/remote");
         }
 
         public static string GetConfigSvnRemoteFetch()
