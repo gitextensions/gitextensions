@@ -336,6 +336,7 @@ namespace GitCommands
         {
             return RunCmdByte(cmd, arguments, null, out output, out error);
         }
+
         private int RunCmdByte(string cmd, string arguments, string stdInput, out byte[] output, out byte[] error)
         {
             try
@@ -350,7 +351,6 @@ namespace GitCommands
                 output = error = null;
                 return 1;
             }
-
         }
 
         public string RunGitCmd(string arguments, out int exitCode, string stdInput)
@@ -388,6 +388,19 @@ namespace GitCommands
         public string RunGitCmd(string arguments, Encoding encoding)
         {
             return RunGitCmd(arguments, null, encoding);
+        }
+
+        public string RunBatchFile(string batchFile)
+        {
+            string tempFileName = Path.ChangeExtension(Path.GetTempFileName(), ".cmd");
+            using (var writer = new StreamWriter(tempFileName))
+            {
+                writer.WriteLine("@prompt $G");
+                writer.Write(batchFile);
+            }
+            string result = Settings.Module.RunCmd("cmd.exe", "/C \"" + tempFileName + "\"");
+            File.Delete(tempFileName);
+            return result;
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]

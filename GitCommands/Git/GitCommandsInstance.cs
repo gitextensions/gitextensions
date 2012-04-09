@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Security.Permissions;
 using System.Text;
 using GitUIPluginInterfaces;
@@ -102,6 +103,11 @@ namespace GitCommands
         public string RunGit(string arguments)
         {
             return Settings.Module.RunGitCmd(arguments);
+        }
+
+        public string RunBatchFile(string batchFile)
+        {
+            return Settings.Module.RunBatchFile(batchFile);
         }
 
         public event DataReceivedEventHandler DataReceived;
