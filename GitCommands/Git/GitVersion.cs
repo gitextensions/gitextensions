@@ -50,6 +50,11 @@ namespace GitCommands
             get { return this >= v1_7_0; }
         }
 
+        public bool StashUntrackedFilesSupported
+        {
+            get { return this >= v1_7_7; }
+        }
+
         public bool SupportPushWithRecursiveSubmodulesCheck
         {
             get { return this >= v1_7_7; }
