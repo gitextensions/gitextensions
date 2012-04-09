@@ -72,7 +72,7 @@ namespace GitUI.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("315")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int Dashboard_MainSplitContainer_SplitterDistance {
             get {
                 return ((int)(this["Dashboard_MainSplitContainer_SplitterDistance"]));

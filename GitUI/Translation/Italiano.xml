@@ -3278,7 +3278,7 @@ sarà impostata, se vuota, a %HOMEDRIVE%%HOMEPATH%. Cambiare il comportamento de
         <TranslationItem Name="label1" Property="Text">
           <Value>Nome tag</Value>
         </TranslationItem>
-        <TranslationItem Name="CreateTag" Property="Text">
+        <TranslationItem Name="btnCreateTag" Property="Text">
           <Value>Crea tag</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
@@ -3286,6 +3286,12 @@ sarà impostata, se vuota, a %HOMEDRIVE%%HOMEPATH%. Cambiare il comportamento de
         </TranslationItem>
         <TranslationItem Name="annotate" Property="Text">
           <Value>Crea tag annotato</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pushToCaption" Property="Text">
+          <Value>Push tag in {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="pushTag" Property="Text">
+          <Value>Push tag</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3314,6 +3320,12 @@ sarà impostata, se vuota, a %HOMEDRIVE%%HOMEPATH%. Cambiare il comportamento de
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Value>Messaggio</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pushToCaption" Property="Text">
+          <Value>Push tag in {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="pushTag" Property="Text">
+          <Value>Push tag</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

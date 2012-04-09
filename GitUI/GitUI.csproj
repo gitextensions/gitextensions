@@ -106,6 +106,12 @@
       <DependentUpon>DvcsGraph.cs</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Editor\FormGoToLine.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editor\FormGoToLine.Designer.cs">
+      <DependentUpon>FormGoToLine.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormDirtyDirWarn.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -113,7 +119,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FormDirtyDirWarn.Designer.cs">
-      <DependentUpon>FormDirtyDirWarn.cs</DependentUpon>          
+      <DependentUpon>FormDirtyDirWarn.cs</DependentUpon>
     </Compile>
     <Compile Include="FormRecentReposSettings.Designer.cs">
       <DependentUpon>FormRecentReposSettings.cs</DependentUpon>
@@ -743,6 +749,9 @@
     <EmbeddedResource Include="AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\FormGoToLine.resx">
+      <DependentUpon>FormGoToLine.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormRecentReposSettings.resx">
       <DependentUpon>FormRecentReposSettings.cs</DependentUpon>
