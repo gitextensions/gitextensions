@@ -210,6 +210,18 @@ namespace GitUI
         }
 #endif
 
+        public IList<GitItemStatus> AllItems
+        {
+            get
+            {
+                IList<GitItemStatus> selectedItems = new List<GitItemStatus>();
+                foreach (object selectedItem in FileStatusListBox.Items)
+                    selectedItems.Add((GitItemStatus)selectedItem);
+
+                return selectedItems;
+            }
+        }
+
         public IList<GitItemStatus> SelectedItems
         {
             get
