@@ -3250,8 +3250,11 @@ Als u een vertakking wilt ophalen en samenvoegen, kies een vertakking.</Value>
         <TranslationItem Name="label1" Property="Text">
           <Value>Label naam</Value>
         </TranslationItem>
-        <TranslationItem Name="CreateTag" Property="Text">
+        <TranslationItem Name="btnCreateTag" Property="Text">
           <Value>Maak label</Value>
+        </TranslationItem>
+        <TranslationItem Name="pushTag" Property="Text">
+          <Value>Label verzenden</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Value>Bericht</Value>
@@ -3261,6 +3264,9 @@ Als u een vertakking wilt ophalen en samenvoegen, kies een vertakking.</Value>
         </TranslationItem>
         <TranslationItem Name="_messageCaption" Property="Text">
           <Value>Label</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pushToCaption" Property="Text">
+          <Value>Verzenden label naar {0}</Value>
         </TranslationItem>
         <TranslationItem Name="_noRevisionSelected" Property="Text">
           <Value>Selecteer 1 revisie om het label op aan te maken.</Value>
@@ -3840,6 +3846,9 @@ Weet u zeker dat u wilt doorgaan?</Value>
         <TranslationItem Name="Ok" Property="Text">
           <Value>Maak label</Value>
         </TranslationItem>
+        <TranslationItem Name="pushTag" Property="Text">
+          <Value>Label verzenden</Value>
+        </TranslationItem>        
         <TranslationItem Name="annotate" Property="Text">
           <Value>Maak geannoteerd label</Value>
         </TranslationItem>
@@ -3854,6 +3863,9 @@ Weet u zeker dat u wilt doorgaan?</Value>
         </TranslationItem>
         <TranslationItem Name="_noTagMassage" Property="Text">
           <Value>Voer label bericht in</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pushToCaption" Property="Text">
+          <Value>Verzenden label naar {0}</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

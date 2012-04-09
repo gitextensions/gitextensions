@@ -3041,12 +3041,18 @@ bei der Benutzung auftreten.</Value>
         <TranslationItem Name="_noTagMassage" Property="Text">
           <Value>Bitte eine Tag-Nachricht angeben</Value>
         </TranslationItem>
+        <TranslationItem Name="_pushToCaption" Property="Text">
+          <Value>Pushen Tag nach {0}</Value>
+        </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Tag Name</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Value>Tag erzeugen</Value>
         </TranslationItem>
+        <TranslationItem Name="pushTag" Property="Text">
+          <Value>Tag pushen</Value>
+        </TranslationItem>  
         <TranslationItem Name="annotate" Property="Text">
           <Value>Annotated Tag erzeugen</Value>
         </TranslationItem>
@@ -3063,7 +3069,7 @@ bei der Benutzung auftreten.</Value>
         <TranslationItem Name="label1" Property="Text">
           <Value>Tag Name</Value>
         </TranslationItem>
-        <TranslationItem Name="CreateTag" Property="Text">
+        <TranslationItem Name="btnCreateTag" Property="Text">
           <Value>Tag erzeugen</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
@@ -3080,6 +3086,12 @@ bei der Benutzung auftreten.</Value>
         </TranslationItem>
         <TranslationItem Name="_noTagMessage" Property="Text">
           <Value>Bitte geben Sie eine Tag-Nachricht ein</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pushToCaption" Property="Text">
+          <Value>Pushen Tag nach {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="pushTag" Property="Text">
+          <Value>Tag pushen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
