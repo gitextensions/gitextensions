@@ -1,6 +1,20 @@
 ﻿Changelog
 =========
 
+Version 2.32
+	Fixed issue 772: push tag on creation
+	Fixed issue 839: splash screen doesn't refresh
+	Issue issue 868: github username/apitoken invalid or network down 
+	Fixed issue: select all files in commit dialog performance fix
+	Visual Studio 11 support added	
+	Ctrl-g as default hotkey for GoToLine
+	Modified behavior of ToolStrips and MenuStrips to allow click-through behavior, eliminating the need for a double-click if window isn't focused.
+	Disable menu items which actions require a repository if no repository is selected.
+	Improved "missing SSH key" flow
+	New "reset changes" dialog
+	Stash untracked files is only supported in msysgit >= 1.7.7
+	Fixed diff between "copied from file" vs "copied to file"
+
 Version 2.31
 	Fixed issue 745: test connection does not work with non-uri
 	Fixed issue 829: Browse submodules menu item does not work
