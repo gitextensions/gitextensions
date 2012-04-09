@@ -113,7 +113,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FormDirtyDirWarn.Designer.cs">
-      <DependentUpon>FormDirtyDirWarn.cs</DependentUpon>          
+      <DependentUpon>FormDirtyDirWarn.cs</DependentUpon>
     </Compile>
     <Compile Include="FormRecentReposSettings.Designer.cs">
       <DependentUpon>FormRecentReposSettings.cs</DependentUpon>
@@ -171,6 +171,9 @@
     <Compile Include="Hotkey\HotkeySettingsManager.cs" />
     <Compile Include="Hotkey\KeysExtensions.cs" />
     <Compile Include="Hotkey\TextboxHotkey.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MenuStripEx.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="PathFormatter.cs" />
@@ -689,7 +692,7 @@
     <Compile Include="FormApplyPatch.Designer.cs">
       <DependentUpon>FormApplyPatch.cs</DependentUpon>
     </Compile>
-    <Compile Include="NativeMethods.cs" />
+    <Compile Include="Native.cs" />
     <Compile Include="FormOpenDirectory.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -727,6 +730,9 @@
     </Compile>
     <Compile Include="SpellChecker\SpellCheckEditControl.cs" />
     <Compile Include="SpellChecker\TextBoxHelper.cs" />
+    <Compile Include="ToolStripEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ToolStripGitStatus.cs">
       <SubType>Component</SubType>
     </Compile>
