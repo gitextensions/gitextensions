@@ -106,6 +106,7 @@ namespace AutoCheckForUpdates
                 if (UpdateFound)
                 {
                     link.Visible = true;
+                    linkChangeLog.Visible = true;
 
                     UpdateLabel.Text = "There is a new version available";
                 }
@@ -121,6 +122,11 @@ namespace AutoCheckForUpdates
         private void UpdatesShown(object sender, EventArgs e)
         {
             new Thread(SearchForUpdates).Start();
+        }
+
+        private void linkChangeLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://github.com/spdr870/gitextensions/blob/master/GitUI/Resources/ChangeLog.txt");
         }
     }
 }

@@ -312,9 +312,6 @@ namespace GitUI
             // load custom user menu
             LoadUserMenu();
 
-
-
-
             Cursor.Current = Cursors.Default;
         }
 
@@ -1810,8 +1807,6 @@ namespace GitUI
                 new FormRecentReposSettings().ShowDialog(this);
                 RefreshWorkingDirCombo();
             };
-
-
         }
 
         private void SetWorkingDir(string path)
@@ -1965,7 +1960,6 @@ namespace GitUI
             if (revisions.Count == 0)
                 return;
 
-
             if (DiffFiles.SelectedItem == null)
                 return;
 
@@ -2030,7 +2024,6 @@ namespace GitUI
 
                     OpenWith.OpenAs(fileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
                 }
-
         }
 
         private void pluginsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)

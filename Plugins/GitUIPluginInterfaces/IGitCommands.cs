@@ -7,5 +7,7 @@ namespace GitUIPluginInterfaces
         IList<IGitSubmodule> GetSubmodules();
 
         string RunGit(string arguments);
+
+        string RunBatchFile(string batchFile);
     }
 }
