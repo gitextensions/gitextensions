@@ -3,13 +3,12 @@ using ResourceManager;
 
 namespace GitCommands
 {
-    public class Strings : ITranslate
+    public class Strings : Translate
     {
         // public only because of FormTranslate
         public Strings()
         {
-            var translator = new Translator(Settings.Translation);
-            translator.TranslateControl(this);
+            Translator.Translate(this, Settings.Translation);
         }
 
         private static Strings instance;
