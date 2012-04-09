@@ -1437,9 +1437,7 @@ namespace GitUI
 
         private void StashChangesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var arguments = "stash save";
-            if (Settings.IncludeUntrackedFilesInManualStash && GitCommandHelpers.VersionInUse.StashUntrackedFilesSupported)
-                arguments += " -u";
+            var arguments = GitCommandHelpers.StashSaveCmd(Settings.IncludeUntrackedFilesInManualStash);
             new FormProcess(arguments).ShowDialog(this);
             Initialize();
         }

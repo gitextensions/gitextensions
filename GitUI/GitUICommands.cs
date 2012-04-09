@@ -306,9 +306,7 @@ namespace GitUI
 
         public void Stash(IWin32Window owner)
         {
-            var arguments = "stash save";
-            if (Settings.IncludeUntrackedFilesInAutoStash && GitCommandHelpers.VersionInUse.StashUntrackedFilesSupported)
-                arguments += " -u";
+            var arguments = GitCommandHelpers.StashSaveCmd(Settings.IncludeUntrackedFilesInAutoStash);
 
             new FormProcess(arguments).ShowDialog(owner);
         }

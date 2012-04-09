@@ -1555,9 +1555,7 @@ namespace GitUI
             if (unStagedFiles.Count == 0)
                 return;
 
-            var arguments = "stash save";
-            if (Settings.IncludeUntrackedFilesInManualStash)
-                arguments += " -u";
+            var arguments = GitCommandHelpers.StashSaveCmd(Settings.IncludeUntrackedFilesInManualStash);
             foreach (var item in unStagedFiles)
             {
                 if (!item.IsSubmodule)
