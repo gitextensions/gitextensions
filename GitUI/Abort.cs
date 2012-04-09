@@ -6,15 +6,14 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public class Abort : ITranslate
+    public class Abort : Translate
     {
         /// <summary>
         /// Constructor used for translation
         /// </summary>
         internal Abort()
         {
-            var translator = new Translator(Settings.Translation);
-            translator.TranslateControl(this);
+            Translator.Translate(this, Settings.Translation);            
         }
 
         #region Translation strings
