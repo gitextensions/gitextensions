@@ -85,6 +85,7 @@ namespace GitUIPluginInterfaces
         bool StartCloneDialog();
         bool StartCloneDialog(string url);
         bool StartCommandLineProcessDialog(string command, string arguments);
+        bool StartBatchFileProcessDialog(string batchFile);
         bool StartCommitDialog();
         bool StartCompareRevisionsDialog();
         bool StartCreateBranchDialog();
