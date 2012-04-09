@@ -9,7 +9,7 @@ using ICSharpCode.SharpZipLib.Zip;
 
 namespace Gource
 {
-    public class Gource : IGitPlugin
+    public class Gource : IGitPluginForRepository
     {
         #region IGitPlugin Members
 
