@@ -351,7 +351,6 @@ namespace GitUI
 
             if (mostRecentRepos.Count > 0)
                 _NO_TRANSLATE_Workingdir.Text = mostRecentRepos[0].Caption;
-
         }
 
         /// <summary>

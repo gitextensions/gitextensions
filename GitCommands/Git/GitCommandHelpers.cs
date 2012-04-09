@@ -310,21 +310,13 @@ namespace GitCommands
         {
             return "tag -d \"" + tagName + "\"";
         }
-
-        public static string SubmoduleInitCmd(string name)
-        {
-            if (string.IsNullOrEmpty(name))
-                return "submodule init --recursive";
-
-            return "submodule update --init \"" + name.Trim() + "\"";
-        }
 		
         public static string SubmoduleUpdateCmd(string name)
         {
             if (string.IsNullOrEmpty(name))
                 return "submodule update --init --recursive";
 
-            return "submodule update \"" + name.Trim() + "\"";
+            return "submodule update --init --recursive \"" + name.Trim() + "\"";
         }
 
         public static string SubmoduleSyncCmd(string name)

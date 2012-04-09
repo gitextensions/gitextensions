@@ -54,7 +54,6 @@
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.RemoveSubmodule = new System.Windows.Forms.Button();
             this.SynchronizeSubmodule = new System.Windows.Forms.Button();
-            this.InitSubmodule = new System.Windows.Forms.Button();
             this.UpdateSubmodule = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -334,15 +333,14 @@
             // 
             this.splitContainer4.Panel2.Controls.Add(this.RemoveSubmodule);
             this.splitContainer4.Panel2.Controls.Add(this.SynchronizeSubmodule);
-            this.splitContainer4.Panel2.Controls.Add(this.InitSubmodule);
             this.splitContainer4.Panel2.Controls.Add(this.UpdateSubmodule);
             this.splitContainer4.Size = new System.Drawing.Size(516, 36);
-            this.splitContainer4.SplitterDistance = 31;
+            this.splitContainer4.SplitterDistance = 148;
             this.splitContainer4.TabIndex = 0;
             // 
             // RemoveSubmodule
             // 
-            this.RemoveSubmodule.Location = new System.Drawing.Point(362, 2);
+            this.RemoveSubmodule.Location = new System.Drawing.Point(245, 3);
             this.RemoveSubmodule.Name = "RemoveSubmodule";
             this.RemoveSubmodule.Size = new System.Drawing.Size(115, 25);
             this.RemoveSubmodule.TabIndex = 6;
@@ -352,7 +350,7 @@
             // 
             // SynchronizeSubmodule
             // 
-            this.SynchronizeSubmodule.Location = new System.Drawing.Point(3, 2);
+            this.SynchronizeSubmodule.Location = new System.Drawing.Point(3, 3);
             this.SynchronizeSubmodule.Name = "SynchronizeSubmodule";
             this.SynchronizeSubmodule.Size = new System.Drawing.Size(115, 25);
             this.SynchronizeSubmodule.TabIndex = 5;
@@ -360,19 +358,9 @@
             this.SynchronizeSubmodule.UseVisualStyleBackColor = true;
             this.SynchronizeSubmodule.Click += new System.EventHandler(this.SynchronizeSubmoduleClick);
             // 
-            // InitSubmodule
-            // 
-            this.InitSubmodule.Location = new System.Drawing.Point(122, 2);
-            this.InitSubmodule.Name = "InitSubmodule";
-            this.InitSubmodule.Size = new System.Drawing.Size(115, 25);
-            this.InitSubmodule.TabIndex = 4;
-            this.InitSubmodule.Text = "Initialize";
-            this.InitSubmodule.UseVisualStyleBackColor = true;
-            this.InitSubmodule.Click += new System.EventHandler(this.InitSubmoduleClick);
-            // 
             // UpdateSubmodule
             // 
-            this.UpdateSubmodule.Location = new System.Drawing.Point(241, 2);
+            this.UpdateSubmodule.Location = new System.Drawing.Point(124, 3);
             this.UpdateSubmodule.Name = "UpdateSubmodule";
             this.UpdateSubmodule.Size = new System.Drawing.Size(115, 25);
             this.UpdateSubmodule.TabIndex = 3;
@@ -439,7 +427,6 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.SplitContainer splitContainer4;
         private System.Windows.Forms.Button SynchronizeSubmodule;
-        private System.Windows.Forms.Button InitSubmodule;
         private System.Windows.Forms.Button UpdateSubmodule;
         private System.Windows.Forms.Button RemoveSubmodule;
     }
