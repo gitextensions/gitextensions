@@ -14,6 +14,9 @@ namespace GitUI
     {
         readonly TranslationString currentWorkingDirChanges = new TranslationString("Current working dir changes");
         readonly TranslationString noStashes = new TranslationString("There are no stashes.");
+        readonly TranslationString stashUntrackedFilesNotSupportedCaption = new TranslationString("Stash untracked files");
+        readonly TranslationString stashUntrackedFilesNotSupported = new TranslationString("Stash untracked files is not supported in the version of msysgit you are using. Please update msysgit to at least version 1.7.7 to use this option.");
+
 
         public bool NeedRefresh;
         private readonly SynchronizationContext _syncContext;
@@ -164,8 +167,19 @@ namespace GitUI
             var arguments = string.Empty;
             if (StashKeepIndex.Checked)
                 arguments += " --keep-index";
+
             if (chkIncludeUntrackedFiles.Checked)
-                arguments += " -u";
+            {
+                if (GitCommandHelpers.VersionInUse.StashUntrackedFilesSupported)
+                {
+                    arguments += " -u";
+                }
+                else
+                {
+                    if (MessageBox.Show(stashUntrackedFilesNotSupported.Text, stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
+                        return;
+                }
+            }
             new FormProcess(String.Format("stash save {0}{1}", arguments, msg)).ShowDialog(this);
             NeedRefresh = true;
             Initialize();
