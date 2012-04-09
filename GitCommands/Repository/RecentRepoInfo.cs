@@ -153,8 +153,6 @@ namespace GitCommands.Repository
                 addSortedRepos(false, lessRecentRepoList);
             else
                 addNotSortedRepos(lessRecentRepos, lessRecentRepoList);
-
-
         }
 
         private void AddToOrderedSignDir(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo, bool shortenPath)
