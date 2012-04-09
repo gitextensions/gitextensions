@@ -180,6 +180,9 @@
       <Component Id="Github.dll" Guid="*">
         <File Source="..\Plugins\Github\bin\Release\Github.dll"/>
       </Component>
+      <Component Id="FindLargeFiles.dll" Guid="*">
+        <File Source="..\Plugins\FindLargeFiles\bin\Release\FindLargeFiles.dll"/>
+      </Component>      
     </DirectoryRef>
 
     <DirectoryRef Id="IconsDir">
@@ -458,28 +461,31 @@
         <Feature Id="AutoCheckForUpdates" Title="Check for updates" Level="1">
           <ComponentRef Id="AutoCheckForUpdates.dll"/>
         </Feature>
-        <Feature Id="CreateLocalBranches" Title="Create local branches" Level="1">
-          <ComponentRef Id="CreateLocalBranches.dll"/>
-        </Feature>        
-        <Feature Id="DeleteUnusedBranches" Title="Delete unused branches" Level="1">
-          <ComponentRef Id="DeleteUnusedBranches.dll"/>
-        </Feature>
         <Feature Id="AutoCompileSubmodules" Title="Auto compile submodules" Level="1">
           <ComponentRef Id="AutoCompileSubmodules.dll"/>
         </Feature>
-        <Feature Id="Statistics" Title="Statistics" Level="1">
-          <ComponentRef Id="GitStatistics.dll"/>
+        <Feature Id="CreateLocalBranches" Title="Create local branches" Level="1">
+          <ComponentRef Id="CreateLocalBranches.dll"/>
         </Feature>
-        <Feature Id="Impact" Title="Impact Graph" Level="1">
-          <ComponentRef Id="GitImpact.dll"/>
+        <Feature Id="DeleteUnusedBranches" Title="Delete unused branches" Level="1">
+          <ComponentRef Id="DeleteUnusedBranches.dll"/>
+        </Feature>
+        <Feature Id="FindLargeFiles" Title="Find large files" Level="1">
+          <ComponentRef Id="FindLargeFiles.dll"/>
+        </Feature>
+        <Feature Id="Github" Title="Github integration" Level="1">
+          <ComponentRef Id="Github.dll"/>
+          <ComponentRef Id="GithubSharp.Core.dll"/>
         </Feature>
         <Feature Id="Gource" Title="Gource visualization" Level="1">
           <ComponentRef Id="Gource.dll"/>
           <ComponentRef Id="ICSharpCode.SharpZipLib.dll"/>
         </Feature>
-        <Feature Id="Github" Title="Github integration" Level="1">
-          <ComponentRef Id="Github.dll"/>
-          <ComponentRef Id="GithubSharp.Core.dll"/>
+        <Feature Id="Impact" Title="Impact Graph" Level="1">
+          <ComponentRef Id="GitImpact.dll"/>
+        </Feature>
+        <Feature Id="Statistics" Title="Statistics" Level="1">
+          <ComponentRef Id="GitStatistics.dll"/>
         </Feature>
       </Feature>
 
