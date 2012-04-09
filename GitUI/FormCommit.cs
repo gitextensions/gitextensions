@@ -496,7 +496,7 @@ namespace GitUI
             Commit.Enabled = true;
             CommitAndPush.Enabled = true;
             Amend.Enabled = true;
-            Reset.Enabled = true;
+            Reset.Enabled = DoChangesExist();
 
             EnableStageButtons(true);
             workingToolStripMenuItem.Enabled = true;
@@ -504,6 +504,12 @@ namespace GitUI
             var inTheMiddleOfConflictedMerge = Settings.Module.InTheMiddleOfConflictedMerge();
             SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
             Unstaged.SelectStoredNextIndex();
+        }
+
+        /// <summary>Returns if there are any changes at all, staged or unstaged.</summary>
+        private bool DoChangesExist()
+        {
+            return (Unstaged.AllItems.Count > 0) || (Staged.AllItems.Count > 0);
         }
 
         private void ShowChanges(GitItemStatus item, bool staged)
@@ -902,16 +908,18 @@ namespace GitUI
             shouldRescanChanges = false;
             try
             {
-                if (Unstaged.SelectedItem == null ||
-                    MessageBox.Show(this, _resetChangesText.Text, _resetChangesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) !=
-                    DialogResult.Yes)
+                if (Unstaged.SelectedItem == null)
                     return;
-    
+
+                // Show a form asking the user if they want to reset the changes.
+                FormResetChanges.ResultType resetType = FormResetChanges.ShowResetDialog(this, Unstaged.SelectedItems.Any(item => !item.IsNew), Unstaged.SelectedItems.Any(item => item.IsNew));
+                if (resetType == FormResetChanges.ResultType.CANCEL)
+                    return;
+
                 //remember max selected index
                 Unstaged.StoreNextIndexToSelect();
-    
-                var deleteNewFiles = Unstaged.SelectedItems.Any(item => item.IsNew)
-                    && MessageBox.Show(this, _alsoDeleteUntrackedFiles.Text, _alsoDeleteUntrackedFilesCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes;
+
+                var deleteNewFiles = Unstaged.SelectedItems.Any(item => item.IsNew) && (resetType == FormResetChanges.ResultType.RESET_AND_DELETE);
                 var output = new StringBuilder();
                 foreach (var item in Unstaged.SelectedItems)
                 {
@@ -936,7 +944,7 @@ namespace GitUI
                         output.Append(Settings.Module.ResetFile(item.Name));
                     }
                 }
-    
+
                 if (!string.IsNullOrEmpty(output.ToString()))
                     MessageBox.Show(this, output.ToString(), _resetChangesCaption.Text);
             }
@@ -1089,7 +1097,7 @@ namespace GitUI
                 {
                     //When a committemplate is used, skip comments
                     //otherwise: "#" is probably not used for comment but for issue number
-                    if (!line.StartsWith("#") || 
+                    if (!line.StartsWith("#") ||
                         string.IsNullOrEmpty(commitTemplate))
                     {
                         if (lineNumber == 1 && !String.IsNullOrEmpty(line))
@@ -1116,7 +1124,7 @@ namespace GitUI
 
         private void DeleteAllUntrackedFilesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, 
+            if (MessageBox.Show(this,
                 _deleteUntrackedFiles.Text,
                 _deleteUntrackedFilesCaption.Text,
                 MessageBoxButtons.YesNo) !=
@@ -1273,9 +1281,27 @@ namespace GitUI
 
         private void ResetClick(object sender, EventArgs e)
         {
-            if (!Abort.AbortCurrentAction())
+            // Show a form asking the user if they want to reset the changes.
+            FormResetChanges.ResultType resetType = FormResetChanges.ShowResetDialog(this, Unstaged.AllItems.Any(item => !item.IsNew), Unstaged.AllItems.Any(item => item.IsNew));
+            if (resetType == FormResetChanges.ResultType.CANCEL)
                 return;
 
+            // Reset all changes.
+            Settings.Module.ResetHard("");
+
+            // Also delete new files, if requested.
+            if (resetType == FormResetChanges.ResultType.RESET_AND_DELETE)
+            {
+                foreach (var item in Unstaged.AllItems.Where(item => item.IsNew))
+                {
+                    try
+                    {
+                        File.Delete(Settings.WorkingDir + item.Name);
+                    }
+                    catch (System.IO.IOException) { }
+                    catch (System.UnauthorizedAccessException) { }
+                }
+            }
             Initialize();
             NeedRefresh = true;
         }
@@ -1442,7 +1468,7 @@ namespace GitUI
 
         private void AddToSelectionFilter(string filter)
         {
-            if (!selectionFilter.Items.Cast<string>().Any(candiate  => candiate == filter))
+            if (!selectionFilter.Items.Cast<string>().Any(candiate => candiate == filter))
             {
                 const int SelectionFilterMaxLength = 10;
                 if (selectionFilter.Items.Count == SelectionFilterMaxLength)
