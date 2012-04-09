@@ -41,6 +41,8 @@ namespace GitUI.Editor
         int GetLineFromVisualPosY(int visualPosY);
         string GetLineText(int line);
         int TotalNumberOfLines { get; }
+        //lineNumber is 0 based
+        void GoToLine(int lineNumber);
         Font Font { set; }
         void FocusTextArea();
 
