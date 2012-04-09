@@ -137,6 +137,10 @@
       <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
       <Name>GitCommands</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ResourceManager\ResourceManager.csproj">
+      <Project>{D3440FD7-AFC5-4351-8741-6CDBF15CE944}</Project>
+      <Name>ResourceManager</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
