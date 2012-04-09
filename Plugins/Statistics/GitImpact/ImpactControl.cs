@@ -46,6 +46,7 @@ namespace GitImpact
         public ImpactControl()
         {
             impact_loader = new ImpactLoader();
+            impact_loader.RespectMailmap = true; // respect the .mailmap file
             impact_loader.Updated += new ImpactLoader.UpdateEventHandler(OnImpactUpdate);
 
             authors = new Dictionary<string, ImpactLoader.DataPoint>();
