@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.fileViewer = new GitUI.Editor.FileViewer();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStrip1 = new ToolStripEx();
             this.toolStripSaveButton = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.toolStrip1.SuspendLayout();
@@ -110,7 +110,7 @@
         #endregion
 
         private GitUI.Editor.FileViewer fileViewer;
-        private System.Windows.Forms.ToolStrip toolStrip1;
+        private ToolStripEx toolStrip1;
         private System.Windows.Forms.ToolStripButton toolStripSaveButton;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     }
