@@ -42,7 +42,7 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.treatAllFilesAsTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showNonprintableCharactersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fileviewerToolbar = new System.Windows.Forms.ToolStrip();
+            this.fileviewerToolbar = new ToolStripEx();
             this.nextChangeButton = new System.Windows.Forms.ToolStripButton();
             this.previousChangeButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -313,7 +313,7 @@
         private System.Windows.Forms.ToolStripMenuItem treatAllFilesAsTextToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyPatchToolStripMenuItem;
-        private System.Windows.Forms.ToolStrip fileviewerToolbar;
+        private ToolStripEx fileviewerToolbar;
         private System.Windows.Forms.ToolStripButton nextChangeButton;
         private System.Windows.Forms.ToolStripButton previousChangeButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;

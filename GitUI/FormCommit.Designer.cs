@@ -64,7 +64,7 @@ namespace GitUI
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.Loading = new System.Windows.Forms.PictureBox();
             this.Unstaged = new GitUI.FileStatusList();
-            this.toolbarUnstaged = new System.Windows.Forms.ToolStrip();
+            this.toolbarUnstaged = new ToolStripEx();
             this.toolRefreshItem = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.workingToolStripMenuItem = new System.Windows.Forms.ToolStripDropDownButton();
@@ -80,12 +80,12 @@ namespace GitUI
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.selectionFilterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
-            this.toolbarSelectionFilter = new System.Windows.Forms.ToolStrip();
+            this.toolbarSelectionFilter = new ToolStripEx();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.selectionFilter = new System.Windows.Forms.ToolStripComboBox();
             this.LoadingStaged = new System.Windows.Forms.PictureBox();
             this.Staged = new GitUI.FileStatusList();
-            this.toolbarStaged = new System.Windows.Forms.ToolStrip();
+            this.toolbarStaged = new ToolStripEx();
             this.toolStageAllItem = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStageItem = new System.Windows.Forms.ToolStripButton();
@@ -98,7 +98,7 @@ namespace GitUI
             this.SolveMergeconflicts = new System.Windows.Forms.Button();
             this.SelectedDiff = new GitUI.Editor.FileViewer();
             this.Message = new GitUI.SpellChecker.EditNetSpell();
-            this.toolbarCommit = new System.Windows.Forms.ToolStrip();
+            this.toolbarCommit = new ToolStripEx();
             this.commitMessageToolStripMenuItem = new System.Windows.Forms.ToolStripDropDownButton();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripDropDownButton();
             this.closeDialogAfterEachCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1044,7 +1044,7 @@ namespace GitUI
         private Button CommitAndPush;
         private Button Amend;
         private Button Reset;
-        private ToolStrip toolbarCommit;
+        private ToolStripEx toolbarCommit;
         private ToolStripDropDownButton commitMessageToolStripMenuItem;
         private ToolStripDropDownButton toolStripMenuItem3;
         private ToolStripMenuItem closeDialogAfterEachCommitToolStripMenuItem;
@@ -1052,7 +1052,7 @@ namespace GitUI
         private ToolStripMenuItem refreshDialogOnFormFocusToolStripMenuItem;
         private PictureBox Loading;
         private FileStatusList Unstaged;
-        private ToolStrip toolbarUnstaged;
+        private ToolStripEx toolbarUnstaged;
         private ToolStripProgressBar toolStripProgressBar1;
         private ToolStripDropDownButton workingToolStripMenuItem;
         private ToolStripMenuItem showIgnoredFilesToolStripMenuItem;
@@ -1064,7 +1064,7 @@ namespace GitUI
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem editGitIgnoreToolStripMenuItem;
         private ToolStripMenuItem deleteAllUntrackedFilesToolStripMenuItem;
-        private ToolStrip toolbarStaged;
+        private ToolStripEx toolbarStaged;
         private FileStatusList Staged;
         private Button Cancel;
         private ToolStripButton toolStageItem;
@@ -1084,7 +1084,7 @@ namespace GitUI
         private PictureBox LoadingStaged;
 		private ToolStripSeparator toolStripMenuItem2;
 		private ToolStripContainer toolStripContainer1;
-		private ToolStrip toolbarSelectionFilter;
+		private ToolStripEx toolbarSelectionFilter;
 		private ToolStripLabel toolStripLabel1;
 		private ToolStripComboBox selectionFilter;
 		private ToolStripMenuItem selectionFilterToolStripMenuItem;

@@ -179,6 +179,9 @@
     <Compile Include="Hotkey\TextboxHotkey.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="MenuStripEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="PathFormatter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Editor\FileViewer.cs">
@@ -695,7 +698,7 @@
     <Compile Include="FormApplyPatch.Designer.cs">
       <DependentUpon>FormApplyPatch.cs</DependentUpon>
     </Compile>
-    <Compile Include="NativeMethods.cs" />
+    <Compile Include="Native.cs" />
     <Compile Include="FormOpenDirectory.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -733,6 +736,9 @@
     </Compile>
     <Compile Include="SpellChecker\SpellCheckEditControl.cs" />
     <Compile Include="SpellChecker\TextBoxHelper.cs" />
+    <Compile Include="ToolStripEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ToolStripGitStatus.cs">
       <SubType>Component</SubType>
     </Compile>
