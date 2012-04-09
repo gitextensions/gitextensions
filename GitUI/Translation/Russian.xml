@@ -20,10 +20,10 @@
           <Value>Закрытый ключ</Value>
         </TranslationItem>
         <TranslationItem Name="_loadKeyFailed" Property="Text">
-          <Value>Немогу загрузить ключ.</Value>
+          <Value>Не удалось загрузить ключ.</Value>
         </TranslationItem>
         <TranslationItem Name="_pageantNotFound" Property="Text">
-          <Value>Немогу загрузить ключ. PuTTY не настроен должным образом.</Value>
+          <Value>Не удалось загрузить ключ. PuTTY не настроен должным образом.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -974,7 +974,7 @@
           <Value>(Новая папка)</Value>
         </TranslationItem>
         <TranslationItem Name="_questionInitSubmodulesCaption" Property="Text">
-          <Value>Сабмодули</Value>
+          <Value>Субмодули</Value>
         </TranslationItem>
         <TranslationItem Name="_questionOpenRepoCaption" Property="Text">
           <Value>Открыть</Value>
@@ -1226,7 +1226,7 @@
           <Value>Сбросить выбранные файлы</Value>
         </TranslationItem>
         <TranslationItem Name="resetSubmoduleChanges" Property="Text">
-          <Value>Сбросить изменения сабмодуля</Value>
+          <Value>Сбросить изменения субмодуля</Value>
         </TranslationItem>
         <TranslationItem Name="selectionFilterToolStripMenuItem" Property="Text">
           <Value>Фильтр выделенного</Value>
@@ -1499,7 +1499,7 @@ _ReSharper*/
     <TranslationCategory Name="FormGoToLine">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Перейтик  строке</Value>
+          <Value>Перейти к строке</Value>
         </TranslationItem>
         <TranslationItem Name="cancelBtn" Property="Text">
           <Value>Отмена</Value>
@@ -1642,7 +1642,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Не могу загрузить ключ SSH. PuTTY неправильно сконфигурирован.</Value>
         </TranslationItem>
         <TranslationItem Name="_questionInitSubmodulesCaption" Property="Text">
-          <Value>Сабмодули</Value>
+          <Value>Субмодули</Value>
         </TranslationItem>
         <TranslationItem Name="_selectRemoteRepository" Property="Text">
           <Value>Пожалуйста, выберите удаленный репозиторий</Value>
@@ -1744,10 +1744,10 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Принудительно</Value>
         </TranslationItem>
         <TranslationItem Name="ForcePushBranches" Property="Text">
-          <Value>Форсировать P&amp;ush</Value>
+          <Value>Принудительный P&amp;ush</Value>
         </TranslationItem>
         <TranslationItem Name="ForcePushTags" Property="Text">
-          <Value>Форсировать P&amp;ush</Value>
+          <Value>Принудительный P&amp;ush</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Value>Ветка</Value>
@@ -1826,7 +1826,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Вы должны пройти аутентификацию для выполнения этой команды.</Value>
         </TranslationItem>
         <TranslationItem Name="lblPleaseLoadKey" Property="Text">
-          <Value>Пожалуйста загрузить ваш закрытый SSH ключ</Value>
+          <Value>Пожалуйста загрузите ваш закрытый SSH ключ</Value>
         </TranslationItem>
         <TranslationItem Name="LoadSSHKey" Property="Text">
           <Value>Загрузить SSH ключ</Value>
@@ -1845,7 +1845,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Текущая ветка:</Value>
         </TranslationItem>
         <TranslationItem Name="_noBranchSelectedText" Property="Text">
-          <Value>Пожалуйста выберите ветку</Value>
+          <Value>Пожалуйста, выберите ветку</Value>
         </TranslationItem>
         <TranslationItem Name="_solveConflictsText" Property="Text">
           <Value>Разрешить конфликты</Value>
@@ -1869,7 +1869,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Перебазировать текущую ветку на верхушке другой</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
-          <Value>Commit'ы которые нужно применить снова:</Value>
+          <Value>Commit'ы, которые нужно применить снова:</Value>
         </TranslationItem>
         <TranslationItem Name="Mergetool" Property="Text">
           <Value>Решить конфликты</Value>
@@ -1921,13 +1921,13 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Репозиторий</Value>
         </TranslationItem>
         <TranslationItem Name="label6" Property="Text">
-          <Value>По умолчанию объединить с</Value>
+          <Value>По умолчанию объединять с</Value>
         </TranslationItem>
         <TranslationItem Name="LoadSSHKey" Property="Text">
           <Value>Загрузить SSH ключ</Value>
         </TranslationItem>
         <TranslationItem Name="MergeWith" Property="HeaderText">
-          <Value>FormRemotes	label6	Text	Default merge with	По умолчанию объединить с</Value>
+          <Value>По умолчанию объединить с</Value>
         </TranslationItem>
         <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
           <Value>Ветка</Value>
@@ -1992,10 +1992,10 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Также удалить новые файлы</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
-          <Value>Вы уверены что желаете сбросить ваши изменения?</Value>
+          <Value>Вы уверены, что желаете сбросить изменения?</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
-          <Value>Это удалит все измения которые вы не commit'или.</Value>
+          <Value>Это удалит все измения, которые вы не commit'или.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2058,13 +2058,13 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
 </Value>
         </TranslationItem>
         <TranslationItem Name="_chooseBaseFileFailedText" Property="Text">
-          <Value>Неудалось выбрать базовый файл.</Value>
+          <Value>Не удалось выбрать базовый файл.</Value>
         </TranslationItem>
         <TranslationItem Name="_chooseLocalFileFailedText" Property="Text">
-          <Value>Неудалось выбрать локальный файл.</Value>
+          <Value>Не удалось выбрать локальный файл.</Value>
         </TranslationItem>
         <TranslationItem Name="_chooseRemoteFileFailedText" Property="Text">
-          <Value>Неудалось выбрать удаленный файл.</Value>
+          <Value>Не удалось выбрать удаленный файл.</Value>
         </TranslationItem>
         <TranslationItem Name="_conflictedFilesContextMenuText" Property="Text">
           <Value>Разрешить</Value>
@@ -2767,13 +2767,13 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Применить выбранный stash к рабочей директории</Value>
         </TranslationItem>
         <TranslationItem Name="chkIncludeUntrackedFiles" Property="Text">
-          <Value>[EDITING] Включите неотслеживаемых файлы</Value>
+          <Value>Включить неотслеживаемые файлы</Value>
         </TranslationItem>
         <TranslationItem Name="Clear" Property="Text">
           <Value>Удалить выбранный stash</Value>
         </TranslationItem>
         <TranslationItem Name="currentWorkingDirChanges" Property="Text">
-          <Value>Изменения текущий рабочий папки</Value>
+          <Value>Изменения текущей рабочей директории</Value>
         </TranslationItem>
         <TranslationItem Name="Stash" Property="Text">
           <Value>Stash всех изменений</Value>
@@ -2993,7 +2993,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         </TranslationItem>
         <TranslationItem Name="noLanguageCodeSelected" Property="Text">
           <Value>Не выбран код языка.
-Вы желаете выбрать код языка сначало?</Value>
+Вы желаете выбрать код языка сначала?</Value>
         </TranslationItem>
         <TranslationItem Name="noLanguageCodeSelectedCaption" Property="Text">
           <Value>Код языка</Value>
