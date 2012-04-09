@@ -1520,7 +1520,7 @@ namespace GitCommands
             var arguments = string.Format("diff{0} -M -C \"{1}\" \"{2}\" -- {3} {4}", extraDiffArguments, to, from, fileName, oldFileName);
             patchManager.LoadPatch(this.RunCachableCmd(Settings.GitCommand, arguments, encoding), false);
 
-            return patchManager.Patches.Count > 0 ? patchManager.Patches[0] : null;
+            return patchManager.Patches.Count > 0 ? patchManager.Patches[patchManager.Patches.Count-1] : null;
         }
 
         public Patch GetSingleDiff(string @from, string to, string fileName, string extraDiffArguments, Encoding encoding)
