@@ -3309,7 +3309,7 @@ Si desea obtener y fusionar una rama, elija una rama específica.</Value>
         <TranslationItem Name="label1" Property="Text">
           <Value>Nombre de etiqueta</Value>
         </TranslationItem>
-        <TranslationItem Name="CreateTag" Property="Text">
+        <TranslationItem Name="btnCreateTag" Property="Text">
           <Value>Crear etiqueta</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
@@ -3326,6 +3326,12 @@ Si desea obtener y fusionar una rama, elija una rama específica.</Value>
         </TranslationItem>
         <TranslationItem Name="_noTagMessage" Property="Text">
           <Value>Por favor, introduzca un mensaje de etiqueta</Value>
+        </TranslationItem>
+        <TranslationItem Name="pushTag" Property="Text">
+          <Value>Push la etiqueta</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pushToCaption" Property="Text">
+          <Value>Push para {0}</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3863,6 +3869,12 @@ Este commit no tendrá referencia al cambiar a otro rama y se puede perder.
         </TranslationItem>
         <TranslationItem Name="_noTagMassage" Property="Text">
           <Value>Introduzca un mensaje para la etiqueta</Value>
+        </TranslationItem>
+        <TranslationItem Name="pushTag" Property="Text">
+          <Value>Push la etiqueta</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pushToCaption" Property="Text">
+          <Value>Push para {0}</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
