@@ -1705,7 +1705,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            GitUICommands.Instance.StartCheckoutBranchDialog(this, toolStripItem.Text, true);
+            GitUICommands.Instance.StartCheckoutRemoteBranchDialog(this, toolStripItem.Text);
 
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
