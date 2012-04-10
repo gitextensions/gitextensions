@@ -112,6 +112,18 @@
     <Compile Include="Editor\FormGoToLine.Designer.cs">
       <DependentUpon>FormGoToLine.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormCheckoutBranch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormCheckoutBranch.Designer.cs">
+      <DependentUpon>FormCheckoutBranch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormCheckoutRemoteBranch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormCheckoutRemoteBranch.Designer.cs">
+      <DependentUpon>FormCheckoutRemoteBranch.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormDirtyDirWarn.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -441,12 +453,6 @@
     <Compile Include="FormCheckout.Designer.cs">
       <DependentUpon>FormCheckout.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCheckoutBranch.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormCheckoutBranch.Designer.cs">
-      <DependentUpon>FormCheckoutBranch.cs</DependentUpon>
-    </Compile>
     <Compile Include="FormCherryPick.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -760,6 +766,14 @@
     <EmbeddedResource Include="Editor\FormGoToLine.resx">
       <DependentUpon>FormGoToLine.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormCheckoutBranch.resx">
+      <DependentUpon>FormCheckoutBranch.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormCheckoutRemoteBranch.resx">
+      <DependentUpon>FormCheckoutRemoteBranch.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormRecentReposSettings.resx">
       <DependentUpon>FormRecentReposSettings.cs</DependentUpon>
     </EmbeddedResource>
@@ -943,10 +957,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormCheckout.resx">
       <DependentUpon>FormCheckout.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormCheckoutBranch.resx">
-      <DependentUpon>FormCheckoutBranch.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormCherryPick.resx">

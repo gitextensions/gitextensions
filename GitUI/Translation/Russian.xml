@@ -820,6 +820,9 @@
         <TranslationItem Name="$this" Property="Text">
           <Value>Забрать ревизию</Value>
         </TranslationItem>
+        <TranslationItem Name="_noRevisionSelectedMsgBox" Property="Text">
+          <Value>Выберите 1 ревизию чтобы забрать.</Value>
+        </TranslationItem>
         <TranslationItem Name="_noRevisionSelectedMsgBoxCaption" Property="Text">
           <Value>Забрать</Value>
         </TranslationItem>
@@ -851,14 +854,27 @@
         <TranslationItem Name="Remotebranch" Property="Text">
           <Value>Внешняя ветка</Value>
         </TranslationItem>
-        <TranslationItem Name="trackRemoteBranch" Property="Text">
-          <Value>Вы выбрали внешнюю ветку.
-
-Хотите создать локальную ветку с именем «{0}»,
-которая будет следить за внешней веткой?</Value>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCheckoutRemoteBranch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Забрать удаленную ветку '{0}'</Value>
         </TranslationItem>
-        <TranslationItem Name="trackRemoteBranchCaption" Property="Text">
-          <Value>Выбор ветки</Value>
+        <TranslationItem Name="btCancel" Property="Text">
+          <Value>Отмена</Value>
+        </TranslationItem>
+        <TranslationItem Name="btOk" Property="Text">
+          <Value>Забрать</Value>
+        </TranslationItem>
+        <TranslationItem Name="rbCreateBranch" Property="Text">
+          <Value>Создать локальную ветку с именем '{0}'</Value>
+        </TranslationItem>
+        <TranslationItem Name="rbDontCreate" Property="Text">
+          <Value>Не создавать локальную ветку</Value>
+        </TranslationItem>
+        <TranslationItem Name="rbResetBranch" Property="Text">
+          <Value>Сбросить локальную ветку с именем '{0}'</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
