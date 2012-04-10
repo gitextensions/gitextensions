@@ -336,6 +336,26 @@ namespace GitUI
             return true;
         }
 
+        public bool StartCheckoutRemoteBranchDialog(IWin32Window owner, string branch)
+        {
+            if (!RequiresValidWorkingDir())
+                return false;
+
+            if (!InvokeEvent(PreCheckoutBranch))
+                return false;
+
+            bool needRefresh;
+            if (CheckForDirtyDir(owner, out needRefresh))
+                return needRefresh;
+
+            var form = new FormCheckoutRemoteBranch(branch);
+            form.ShowDialog(owner);
+
+            InvokeEvent(PostCheckoutBranch);
+
+            return true;
+        }
+
         public bool StartCheckoutBranchDialog(string branch, bool remote)
         {
             return StartCheckoutBranchDialog(null, branch, remote);
