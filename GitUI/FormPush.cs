@@ -593,7 +593,8 @@ namespace GitUI
         {
             PushOptionsPanel.Visible = true;
             ShowOptions.Visible = false;
-            this.Size = new System.Drawing.Size(this.MinimumSize.Width, this.MinimumSize.Height + 70);
+            if (Height < MinimumSize.Height + 70)
+                Height = MinimumSize.Height + 70;
         }
 
         private void ShowTagOptions_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
