@@ -989,14 +989,22 @@
         <TranslationItem Name="_infoDirectoryNew" Property="Text">
           <Value>(Новая папка)</Value>
         </TranslationItem>
-        <TranslationItem Name="_questionInitSubmodulesCaption" Property="Text">
-          <Value>Субмодули</Value>
+        <TranslationItem Name="_infoNewRepositoryLocation" Property="Text">
+          <Value>Репозиторий будет клонирован в новую директорию расположенную здесь:
+{0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="_questionOpenRepo" Property="Text">
+          <Value>Репозиторий успешно склонирован.
+Не желаете открыть новый репозиторий "{0}" сейчас?</Value>
         </TranslationItem>
         <TranslationItem Name="_questionOpenRepoCaption" Property="Text">
           <Value>Открыть</Value>
         </TranslationItem>
         <TranslationItem Name="brachLabel" Property="Text">
           <Value>Ветка</Value>
+        </TranslationItem>
+        <TranslationItem Name="cbIntializeAllSubmodules" Property="Text">
+          <Value>Инициализировать все субмодули</Value>
         </TranslationItem>
         <TranslationItem Name="Central" Property="Text">
           <Value>Центральный репозиторий, без рабочей копии (--bare --shared-all)</Value>
@@ -1015,13 +1023,13 @@
      [destination]\</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
-          <Value>Репозиторий для клонирования</Value>
+          <Value>Удаленный репозиторий</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Value>Назначение</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
-          <Value>Поддиректория для создания</Value>
+          <Value>Подкаталог для создания</Value>
         </TranslationItem>
         <TranslationItem Name="LoadSSHKey" Property="Text">
           <Value>Загрузить SSH ключ</Value>
