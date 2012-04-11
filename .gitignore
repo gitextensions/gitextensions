@@ -35,3 +35,4 @@ GitPlugin/Properties/Resources.resources
 *.pidb
 *.resources
 *.userprefs
+*.dotCover
