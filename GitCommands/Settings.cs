@@ -103,7 +103,7 @@ namespace GitCommands
         private static bool? _showGitStatusInBrowseToolbar;
         public static bool ShowGitStatusInBrowseToolbar
         {
-            get { return SafeGet("showgitstatusinbrowsetoolbar", false, ref _showGitStatusInBrowseToolbar); }
+            get { return SafeGet("showgitstatusinbrowsetoolbar", true, ref _showGitStatusInBrowseToolbar); }
             set { SafeSet("showgitstatusinbrowsetoolbar", value, ref _showGitStatusInBrowseToolbar); }
         }
 
