@@ -105,15 +105,13 @@ namespace GitCommands
             //Do not cache this command, since notes can be added
             string info = module.RunGitCmd(
                 string.Format(
-                    "log -1 --pretty=raw --show-notes=* {0}", sha1));
+                    "log -1 --pretty=\"format:%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%B%nNotes:%n%-N\" {0}", sha1));
 
             if (info.Trim().StartsWith("fatal"))
             {
                 error = "Cannot find commit" + sha1;
                 return null;
             }
-
-            info = RemoveRedundancies(info);
 
             int index = info.IndexOf(sha1) + sha1.Length;
 
@@ -144,35 +142,39 @@ namespace GitCommands
             if (rawData == null)
                 throw new ArgumentNullException("rawData");
 
-            var lines = new List<string>(rawData.Split('\n'));
-
-            var commit = lines.Single(l => l.StartsWith(COMMIT_LABEL));
-            var guid = commit.Substring(COMMIT_LABEL.Length);
-            lines.Remove(commit);
+            var lines = rawData.Split('\n');
+            
+            var guid = lines[0];
 
             // TODO: we can use this to add more relationship info like gitk does if wanted
-            var tree = lines.Single(l => l.StartsWith(TREE_LABEL));
-            var treeGuid = tree.Substring(TREE_LABEL.Length);
-            lines.Remove(tree);
+            var treeGuid = lines[1];
 
             // TODO: we can use this to add more relationship info like gitk does if wanted
-            List<string> parentLines = lines.FindAll(l => l.StartsWith(PARENT_LABEL));
-            ReadOnlyCollection<string> parentGuids = parentLines.Select(parent => parent.Substring(PARENT_LABEL.Length)).ToList().AsReadOnly();
-            lines.RemoveAll(parentLines.Contains);
+            string[] parentLines = lines[2].Split(new char[]{' '});
+            ReadOnlyCollection<string> parentGuids = parentLines.ToList().AsReadOnly();
 
-            var authorInfo = lines.Single(l => l.StartsWith(AUTHOR_LABEL));
-            var author = GetPersonFromAuthorInfoLine(authorInfo, AUTHOR_LABEL.Length);
-            var authorDate = GetTimeFromAuthorInfoLine(authorInfo);
-            lines.Remove(authorInfo);
+            var author = lines[3];
+            var authorDate = GetTimeFromUtcTimeLine(lines[4]);
 
-            var committerInfo = lines.Single(l => l.StartsWith(COMMITTER_LABEL));
-            var committer = GetPersonFromAuthorInfoLine(committerInfo, COMMITTER_LABEL.Length);
-            var commitDate = GetTimeFromAuthorInfoLine(committerInfo);
-            lines.Remove(committerInfo);
+            var committer = lines[5];
+            var commitDate = GetTimeFromUtcTimeLine(lines[6]);
+
+            int startIndex = 7;
+            int endIndex = lines.Length - 1;
+            if (lines[endIndex] == "Notes:")
+                endIndex--;
 
             var message = new StringBuilder();
-            foreach (var line in lines)
+            bool bNotesStart = false;
+            for (int i = startIndex; i <= endIndex; i++)
+            {
+                string line = lines[i];
+                if (bNotesStart)
+                    line = "    " + line;
                 message.AppendLine(line);
+                if (lines[i] == "Notes:")
+                    bNotesStart = true;
+            }
 
             var body = message.ToString();
 
@@ -200,20 +202,9 @@ namespace GitCommands
             return input;
         }
 
-        private static string GetPersonFromAuthorInfoLine(string authorInfo, int labelLength)
+        private static DateTimeOffset GetTimeFromUtcTimeLine(string data)
         {
-            int offsetIndex = authorInfo.LastIndexOf(' ');
-            int timeIndex = authorInfo.LastIndexOf(' ', offsetIndex - 1);
-
-            return authorInfo.Substring(labelLength, timeIndex - labelLength);
-        }
-
-        private static DateTimeOffset GetTimeFromAuthorInfoLine(string authorInfo)
-        {
-            var offsetIndex = authorInfo.LastIndexOf(' ');
-            var timeIndex = authorInfo.LastIndexOf(' ', offsetIndex - 1);
-            
-            var unixTime = long.Parse(authorInfo.Substring(timeIndex + 1, offsetIndex - (timeIndex + 1)));
+            var unixTime = long.Parse(data);
             var time = (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddSeconds(unixTime);
 
             return new DateTimeOffset(time, new TimeSpan(0));
