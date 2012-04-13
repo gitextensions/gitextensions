@@ -36,16 +36,14 @@ namespace GitCommands
         /// <summary>
         /// 
         /// </summary>
-        /// <returns>git command rguments as single line</returns>
+        /// <returns>git command arguments as single line</returns>
         public virtual string ToLine()
         {
             List<string> argumentsList = new List<string>();
             CollectArguments(argumentsList);
             String args = null;
-            foreach (string s in argumentsList)
-                args = args.Join(" ", s);
- 
-            return GitComandName().Join(" ", args);            
+            args = string.Join(" ", argumentsList);
+            return string.Join(" ", GitComandName(), args);           
         }
 
         public override string ToString()
