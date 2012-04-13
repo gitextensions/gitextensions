@@ -1142,7 +1142,9 @@ namespace GitUI
 
         private void CommitMessageToolStripMenuItemDropDownOpening(object sender, EventArgs e)
         {
-            commitMessageToolStripMenuItem.DropDownItems.Clear();
+            var items = commitMessageToolStripMenuItem.DropDownItems;
+            for (int i = 0; i < items.Count - 2; i++)
+                items.RemoveAt(0);
             AddCommitMessageToMenu(Settings.LastCommitMessage);
 
             string localLastCommitMessage = Settings.Module.GetPreviousCommitMessage(0);
@@ -1169,12 +1171,51 @@ namespace GitUI
                         "..."
                 };
 
-            commitMessageToolStripMenuItem.DropDownItems.Add(toolStripItem);
+            int count = commitMessageToolStripMenuItem.DropDownItems.Count;
+            commitMessageToolStripMenuItem.DropDownItems.Insert(count - 2, toolStripItem);
         }
 
         private void CommitMessageToolStripMenuItemDropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            Message.Text = ((string)e.ClickedItem.Tag).Trim();
+            if (e.ClickedItem.Tag != null)
+                Message.Text = ((string)e.ClickedItem.Tag).Trim();
+        }
+
+        private void generateListOfChangesInSubmodulesChangesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var stagedFiles = (List<GitItemStatus>)Staged.AllItems;
+
+            List<string> modules = new List<string>();
+            foreach (var item in stagedFiles.Where(it => it.IsSubmodule))
+                modules.Add(item.Name);
+            if (modules.Count == 0)
+                return;
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Submodule" + (modules.Count == 1 ? " " : "s ") + 
+                String.Join(", ", modules.ToArray()) + " updated.");
+            sb.AppendLine();
+            foreach (var item in modules)
+            {
+                string diff = Settings.Module.RunGitCmd(
+                     string.Format("diff --cached -z -- {0}", item));
+                var lines = diff.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                string subprojCommit = "Subproject commit ";
+                var from = lines.Single(s => s.StartsWith("-" + subprojCommit)).Substring(subprojCommit.Length + 1);
+                var to = lines.Single(s => s.StartsWith("+" + subprojCommit)).Substring(subprojCommit.Length + 1);
+                if (!String.IsNullOrEmpty(from) && !String.IsNullOrEmpty(to))
+                {
+                    sb.AppendLine("Submodule " + item + ":");
+                    GitModule module = new GitModule(Settings.WorkingDir + item + Settings.PathSeparator.ToString());
+                    string log = module.RunGitCmd(
+                         string.Format("log --pretty=format:\"    %m %h - %s\" --no-merges {0}...{1}", from, to));
+                    if (log.Length != 0)
+                        sb.AppendLine(log);
+                    else
+                        sb.AppendLine("    * Revision changed to " + to.Substring(0, 7));
+                    sb.AppendLine();
+                }
+            }
+            Message.Text = sb.ToString().TrimEnd();
         }
 
         private void AddFileTogitignoreToolStripMenuItemClick(object sender, EventArgs e)
@@ -1520,10 +1561,8 @@ namespace GitUI
             if (!Abort.ShowAbortMessage())
                 return;
 
-            foreach (var item in unStagedFiles)
+            foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
             {
-                if (!item.IsSubmodule)
-                    continue;
                 GitModule module = new GitModule(Settings.WorkingDir + item.Name + Settings.PathSeparator.ToString());
                 module.ResetHard("");
             }
@@ -1537,10 +1576,8 @@ namespace GitUI
             if (unStagedFiles.Count == 0)
                 return;
 
-            foreach (var item in unStagedFiles)
+            foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
             {
-                if (!item.IsSubmodule)
-                    continue;
                 var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(item.Name));
                 process.ShowDialog(this);
             }
@@ -1558,10 +1595,8 @@ namespace GitUI
             var arguments = "stash save";
             if (Settings.IncludeUntrackedFilesInManualStash)
                 arguments += " -u";
-            foreach (var item in unStagedFiles)
+            foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
             {
-                if (!item.IsSubmodule)
-                    continue;
                 GitModule module = new GitModule(Settings.WorkingDir + item.Name + Settings.PathSeparator.ToString());
                 var process = new FormProcess(module, arguments);
                 process.ShowDialog(this);
