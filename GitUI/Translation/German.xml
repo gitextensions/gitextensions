@@ -37,10 +37,10 @@ Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen vo
           <Value>Enthalten in folgenden Tags:</Value>
         </TranslationItem>
         <TranslationItem Name="copyCommitInfoToolStripMenuItem" Property="Text">
-          <Value>Kopiere Commit-Info</Value>
+          <Value>Commit-Infos kopieren</Value>
         </TranslationItem>
         <TranslationItem Name="showContainedInBranchesRemoteIfNoLocalToolStripMenuItem" Property="Text">
-          <Value>Zeige Remote Branches nur, wenn kein lokaler Branch diesen Commit enthält</Value>
+          <Value>Zeige Remote Branches nur an, wenn kein lokaler Branch diesen Commit enthält</Value>
         </TranslationItem>
         <TranslationItem Name="showContainedInBranchesRemoteToolStripMenuItem" Property="Text">
           <Value>Zeige Remote Branches, die diesen Commit enthalten</Value>
@@ -77,7 +77,7 @@ Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen vo
           <Value>Mögliche Befehle</Value>
         </TranslationItem>
         <TranslationItem Name="txtHotkey" Property="Text">
-          <Value>Keiner</Value>
+          <Value>Nicht zugewiesen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -111,13 +111,13 @@ Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen vo
           <Value>Pull Request</Value>
         </TranslationItem>
         <TranslationItem Name="_strYouMustSpecifyATitleAndABody" Property="Text">
-          <Value>Sie müssen den Titel und den Text ausfüllen.</Value>
+          <Value>Sie müssen den Betreff und den Text ausfüllen.</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Value>Pull Request Daten</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
-          <Value>Titel:</Value>
+          <Value>Betreff:</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Value>Text:</Value>
@@ -141,6 +141,9 @@ Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen vo
         <TranslationItem Name="cloneRepository" Property="Text">
           <Value>Repository klonen</Value>
         </TranslationItem>
+        <TranslationItem Name="cloneSvnRepository" Property="Text">
+          <Value>SVN Repository klonen</Value>
+        </TranslationItem>
         <TranslationItem Name="CommonActions" Property="Title">
           <Value>Häufig verwendete Aktionen</Value>
         </TranslationItem>
@@ -159,7 +162,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
           <Value>Öffnen</Value>
         </TranslationItem>
         <TranslationItem Name="donate" Property="Text">
-          <Value>Beitragen</Value>
+          <Value>Spenden</Value>
         </TranslationItem>
         <TranslationItem Name="DonateCategory" Property="Title">
           <Value>Beitragen</Value>
@@ -184,7 +187,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
           <Value>Bearbeiten</Value>
         </TranslationItem>
         <TranslationItem Name="_moveCategoryDown" Property="Text">
-          <Value>Nach untern verschieben</Value>
+          <Value>Nach unten verschieben</Value>
         </TranslationItem>
         <TranslationItem Name="_moveCategoryUp" Property="Text">
           <Value>Nach oben verschieben</Value>
@@ -304,6 +307,9 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
         <TranslationItem Name="findToolStripMenuItem" Property="Text">
           <Value>Suchen</Value>
         </TranslationItem>
+        <TranslationItem Name="goToLineToolStripMenuItem" Property="Text">
+          <Value>Gehe zur Zeile</Value>
+        </TranslationItem>
         <TranslationItem Name="ignoreWhitespaceChangesToolStripMenuItem" Property="Text">
           <Value>Leerzeichenänderungen ignorieren</Value>
         </TranslationItem>
@@ -361,7 +367,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
           <Value>Keine Übereinstimmung gefunden.</Value>
         </TranslationItem>
         <TranslationItem Name="_noSearchString" Property="Text">
-          <Value>Kein Text zum Suchen angegeben</Value>
+          <Value>Kein Text zum Suchen angegeben!</Value>
         </TranslationItem>
         <TranslationItem Name="_notFoundString" Property="Text">
           <Value>Nicht gefunden</Value>
@@ -434,7 +440,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
           <Value>Beschreibung:</Value>
         </TranslationItem>
         <TranslationItem Name="_forkBtn" Property="Text">
-          <Value>Fork!</Value>
+          <Value>Forken!</Value>
         </TranslationItem>
         <TranslationItem Name="_getFromUserBtn" Property="Text">
           <Value>Benutzer abfragen</Value>
@@ -548,7 +554,7 @@ Sie können nicht pushen, solange Sie kein Mitarbeiter des Projektes sind. {2}</
     <TranslationCategory Name="FormAddSubmodule">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
-          <Value>Untermodule hinzufügen</Value>
+          <Value>Untermodul hinzufügen</Value>
         </TranslationItem>
         <TranslationItem Name="_remoteAndLocalPathRequired" Property="Text">
           <Value>Sie müssen den Remote und den lokalen Pfad angeben</Value>
@@ -692,6 +698,9 @@ Sie können nicht pushen, solange Sie kein Mitarbeiter des Projektes sind. {2}</
         <TranslationItem Name="$this" Property="Text">
           <Value>Bisect</Value>
         </TranslationItem>
+        <TranslationItem Name="_bisectStart" Property="Text">
+          <Value>Ausgewählte Revision als Start für den Bisect Prozess wählen?</Value>
+        </TranslationItem>
         <TranslationItem Name="Bad" Property="Text">
           <Value>Revision als Schlecht markieren</Value>
         </TranslationItem>
@@ -814,19 +823,19 @@ Sie können nicht pushen, solange Sie kein Mitarbeiter des Projektes sind. {2}</
           <Value>Stashes</Value>
         </TranslationItem>
         <TranslationItem Name="_stashSingular" Property="Text">
-          <Value>Stashes</Value>
+          <Value>Stash</Value>
         </TranslationItem>
         <TranslationItem Name="_viewPullRequestsToolStripMenuItem" Property="Text">
           <Value>Pull Requests anzeigen</Value>
         </TranslationItem>
         <TranslationItem Name="_warningMiddleOfBisect" Property="Text">
-          <Value>Sie sind gerade bei einem Bisect-Vorgang</Value>
+          <Value>Sie sind gerade mitten in einem Bisect-Vorgang</Value>
         </TranslationItem>
         <TranslationItem Name="_warningMiddleOfPatchApply" Property="Text">
           <Value>Sie sing gerade dabei einen Patch anzuwenden</Value>
         </TranslationItem>
         <TranslationItem Name="_warningMiddleOfRebase" Property="Text">
-          <Value>Sie sind gerade bei einem Rebase-Vorgang</Value>
+          <Value>Sie sind gerade mitten in einem Rebase-Vorgang</Value>
         </TranslationItem>
         <TranslationItem Name="aboutToolStripMenuItem" Property="Text">
           <Value>Info</Value>
@@ -842,6 +851,12 @@ Sie können nicht pushen, solange Sie kein Mitarbeiter des Projektes sind. {2}</
         </TranslationItem>
         <TranslationItem Name="bisectToolStripMenuItem" Property="Text">
           <Value>Bisect</Value>
+        </TranslationItem>
+        <TranslationItem Name="blameToolStripMenuItem" Property="Text">
+          <Value>Beschuldigen</Value>
+        </TranslationItem>
+        <TranslationItem Name="blameToolStripMenuItem1" Property="Text">
+          <Value>Beschuldigen</Value>
         </TranslationItem>
         <TranslationItem Name="branchSelect" Property="Text">
           <Value>Branch</Value>
@@ -866,6 +881,9 @@ Sie können nicht pushen, solange Sie kein Mitarbeiter des Projektes sind. {2}</
         </TranslationItem>
         <TranslationItem Name="cleanupToolStripMenuItem" Property="Text">
           <Value>Aufräumen</Value>
+        </TranslationItem>
+        <TranslationItem Name="cloneSVNToolStripMenuItem" Property="Text">
+          <Value>SVN Repository klonen</Value>
         </TranslationItem>
         <TranslationItem Name="cloneToolStripMenuItem" Property="Text">
           <Value>Repository klonen</Value>
@@ -913,16 +931,16 @@ Sie können nicht pushen, solange Sie kein Mitarbeiter des Projektes sind. {2}</
           <Value>Vergleichen</Value>
         </TranslationItem>
         <TranslationItem Name="diffBaseLocalToolStripMenuItem" Property="Text">
-          <Value>Vergleichen Basis &lt;-&gt; Lokal</Value>
+          <Value>Vergleichen Base &lt;-&gt; Local</Value>
         </TranslationItem>
         <TranslationItem Name="diffContainsToolStripMenuItem" Property="Text">
           <Value>Vergleichsinhalt (Langsam)</Value>
         </TranslationItem>
         <TranslationItem Name="difftoolRemoteLocalToolStripMenuItem" Property="Text">
-          <Value>Vergleichen Remote &lt;-&gt; Lokal</Value>
+          <Value>Vergleichen Remote &lt;-&gt; Local</Value>
         </TranslationItem>
         <TranslationItem Name="donateToolStripMenuItem" Property="Text">
-          <Value>Beitragen</Value>
+          <Value>Spenden</Value>
         </TranslationItem>
         <TranslationItem Name="editCheckedOutFileToolStripMenuItem" Property="Text">
           <Value>Ausgecheckte Datei bearbeiten</Value>
@@ -984,17 +1002,20 @@ Sie können nicht pushen, solange Sie kein Mitarbeiter des Projektes sind. {2}</
         <TranslationItem Name="goToToolStripMenuItem" Property="Text">
           <Value>Commit suchen</Value>
         </TranslationItem>
+        <TranslationItem Name="hashToolStripMenuItem" Property="Text">
+          <Value>Hash</Value>
+        </TranslationItem>
         <TranslationItem Name="helpToolStripMenuItem" Property="Text">
           <Value>Hilfe</Value>
         </TranslationItem>
         <TranslationItem Name="initNewRepositoryToolStripMenuItem" Property="Text">
-          <Value>Neues Repository initialisieren</Value>
+          <Value>Neues Repository erzeugen</Value>
         </TranslationItem>
         <TranslationItem Name="kGitToolStripMenuItem" Property="Text">
           <Value>GitK</Value>
         </TranslationItem>
         <TranslationItem Name="localToolStripMenuItem" Property="Text">
-          <Value>Lokal</Value>
+          <Value>Local</Value>
         </TranslationItem>
         <TranslationItem Name="manageRemoteRepositoriesToolStripMenuItem1" Property="Text">
           <Value>Remote Repositorys verwalten</Value>
@@ -1100,6 +1121,18 @@ Sie können nicht pushen, solange Sie kein Mitarbeiter des Projektes sind. {2}</
         </TranslationItem>
         <TranslationItem Name="submodulesToolStripMenuItem" Property="Text">
           <Value>Untermodule</Value>
+        </TranslationItem>
+        <TranslationItem Name="SvnDcommitToolStripMenuItem" Property="Text">
+          <Value>SVN Commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="SvnFetchToolStripMenuItem" Property="Text">
+          <Value>SVN Fetch</Value>
+        </TranslationItem>
+        <TranslationItem Name="SvnRebaseToolStripMenuItem" Property="Text">
+          <Value>SVN Rebase</Value>
+        </TranslationItem>
+        <TranslationItem Name="synchronizeAllSubmodulesToolStripMenuItem" Property="Text">
+          <Value>Alle Untermodule synchronisieren</Value>
         </TranslationItem>
         <TranslationItem Name="tagToolStripMenuItem" Property="Text">
           <Value>Tag erzeugen</Value>
@@ -1519,7 +1552,7 @@ Wählen Sie 'Nein' um alle neuen Dateien beizubehalten.</Value>
         </TranslationItem>
         <TranslationItem Name="_amendCommit" Property="Text">
           <Value>Mit diesem Vorgang ändern Sie die Historie.
-Korrigieren Sie einen Commit bitte nur, wenn dieser noch nicht veröffentlicht ist!
+Korrigieren Sie einen Commit bitte nur, wenn dieser noch nicht veröffentlicht (gepusht) ist!
 
 Möchten Sie den Vorgang fortsetzen?</Value>
         </TranslationItem>
@@ -1554,7 +1587,7 @@ Möchten Sie den Vorgang fortsetzen?</Value>
           <Value>Commit in {0} ({1})</Value>
         </TranslationItem>
         <TranslationItem Name="_mergeConflicts" Property="Text">
-          <Value>Es liegen unaufgelöste Merge-Konflikte vor. Lösen Sie die Merge-Konflikte vor einem Commit auf.</Value>
+          <Value>Es liegen unaufgelöste Merge-Konflikte vor. Lösen Sie die Merge-Konflikte auf bevor Sie commiten.</Value>
         </TranslationItem>
         <TranslationItem Name="_mergeConflictsCaption" Property="Text">
           <Value>Konflikte mergen</Value>
@@ -1574,7 +1607,7 @@ Wollen sie wirklich commiten?</Value>
         </TranslationItem>
         <TranslationItem Name="_notOnBranch" Property="Text">
           <Value>Sie arbeiten nicht auf einem Branch. 
-Dieser Commit wird über keine Referenz verfügen, wenn Sie in einen anderen Branch wechseln und kann damit verloren gehen.
+Dieser Commit wird über keine Referenz verfügen, wenn Sie in einen Branch wechseln und kann damit verloren gehen.
 
 Möchten Sie trotzdem fortfahren?</Value>
         </TranslationItem>
@@ -1745,6 +1778,9 @@ Möchten Sie trotzdem fortfahren?</Value>
         <TranslationItem Name="SolveMergeconflicts" Property="Text">
           <Value>Es liegen unaufgelöste Merge-Konflikte vor</Value>
         </TranslationItem>
+        <TranslationItem Name="stashSubmoduleChangesToolStripMenuItem" Property="Text">
+          <Value>Änderungen der Untermodule stashen</Value>
+        </TranslationItem>
         <TranslationItem Name="submoduleSummaryMenuItem" Property="Text">
           <Value>Zeige Zusammenfassung</Value>
         </TranslationItem>
@@ -1758,10 +1794,10 @@ Möchten Sie trotzdem fortfahren?</Value>
           <Value>Alle Dateien stagen</Value>
         </TranslationItem>
         <TranslationItem Name="toolStageItem" Property="Text">
-          <Value>&amp;Stage</Value>
+          <Value>&amp;Stagen</Value>
         </TranslationItem>
         <TranslationItem Name="toolStageItem" Property="ToolTipText">
-          <Value>Stage</Value>
+          <Value>Stagen</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripLabel1" Property="Text">
           <Value>Filter</Value>
@@ -1779,10 +1815,10 @@ Möchten Sie trotzdem fortfahren?</Value>
           <Value>Alle Dateien unstagen</Value>
         </TranslationItem>
         <TranslationItem Name="toolUnstageItem" Property="Text">
-          <Value>&amp;Unstage</Value>
+          <Value>&amp;Unstagen</Value>
         </TranslationItem>
         <TranslationItem Name="toolUnstageItem" Property="ToolTipText">
-          <Value>Unstage</Value>
+          <Value>Unstagen</Value>
         </TranslationItem>
         <TranslationItem Name="updateSubmoduleMenuItem" Property="Text">
           <Value>Untermodul aktualisieren</Value>
@@ -1842,7 +1878,7 @@ Möchten Sie trotzdem fortfahren?</Value>
           <Value>Sie müssen einen Kategorienamen vergeben</Value>
         </TranslationItem>
         <TranslationItem Name="_needEnterCaptionTextCaption" Property="Text">
-          <Value>Kategorienamen vergeben</Value>
+          <Value>Kategoriename vergeben</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Kategoriename vergeben</Value>
@@ -1869,8 +1905,7 @@ Möchten Sie trotzdem fortfahren?</Value>
         </TranslationItem>
         <TranslationItem Name="_deleteBranchQuestion" Property="Text">
           <Value>Sind Sie sich sicher, dass Sie diesen Branch löschen möchten?
-Ein Branch zu löschen kann zu gelöschten Commits führen!
-Bitte beachten Sie den Hinweis.</Value>
+Ein Branch zu löschen kann zu gelöschten Commits führen!</Value>
         </TranslationItem>
         <TranslationItem Name="ForceDelete" Property="Text">
           <Value>Löschen erzwingen</Value>
@@ -1920,6 +1955,28 @@ löschen wollen, können Sie dies mit der Option 'Löschen erzwingen' erreichen.
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormDirtyDirWarn">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Warnung</Value>
+        </TranslationItem>
+        <TranslationItem Name="button1" Property="Text">
+          <Value>Stashen &amp;&amp; Fortsetzen</Value>
+        </TranslationItem>
+        <TranslationItem Name="button3" Property="Text">
+          <Value>Fortsetzen</Value>
+        </TranslationItem>
+        <TranslationItem Name="button4" Property="Text">
+          <Value>Commiten</Value>
+        </TranslationItem>
+        <TranslationItem Name="button5" Property="Text">
+          <Value>Abbrechen</Value>
+        </TranslationItem>
+        <TranslationItem Name="richTextBox1" Property="Text">
+          <Value>Nicht alle Änderungen wurden commitet.</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormDonate">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -1956,7 +2013,7 @@ Klicken Sie auf die Schaltfläche "Support this project" um mehr Informationen z
           <Value>Fehler</Value>
         </TranslationItem>
         <TranslationItem Name="_saveChanges" Property="Text">
-          <Value>Wollen Sie Ihre Änderungen speichern</Value>
+          <Value>Wollen Sie Ihre Änderungen speichern?</Value>
         </TranslationItem>
         <TranslationItem Name="_saveChangesCaption" Property="Text">
           <Value>Speichern</Value>
@@ -1972,7 +2029,7 @@ Klicken Sie auf die Schaltfläche "Support this project" um mehr Informationen z
           <Value>Datei-Historie</Value>
         </TranslationItem>
         <TranslationItem Name="Blame" Property="Text">
-          <Value>Blame</Value>
+          <Value>Beschuldigen</Value>
         </TranslationItem>
         <TranslationItem Name="cherryPickThisCommitToolStripMenuItem" Property="Text">
           <Value>Cherry Pick Commit</Value>
@@ -1997,6 +2054,15 @@ Klicken Sie auf die Schaltfläche "Support this project" um mehr Informationen z
         </TranslationItem>
         <TranslationItem Name="saveAsToolStripMenuItem" Property="Text">
           <Value>Speichern als</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripLabel1" Property="Text">
+          <Value>Branches:</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripLabel2" Property="Text">
+          <Value>Filter:</Value>
+        </TranslationItem>
+        <TranslationItem Name="viewCommitToolStripMenuItem" Property="Text">
+          <Value>Commit anzeigen</Value>
         </TranslationItem>
         <TranslationItem Name="ViewTab" Property="Text">
           <Value>Anzeigen</Value>
@@ -2238,6 +2304,22 @@ _ReSharper*/</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormGoToLine">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Gehe zu Zeile</Value>
+        </TranslationItem>
+        <TranslationItem Name="cancelBtn" Property="Text">
+          <Value>Abbrechen</Value>
+        </TranslationItem>
+        <TranslationItem Name="lineLabel" Property="Text">
+          <Value>Zeilennummer</Value>
+        </TranslationItem>
+        <TranslationItem Name="okBtn" Property="Text">
+          <Value>Ok</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormHotkeys">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -2384,7 +2466,7 @@ ancestor tree.</Value>
           <Value>&amp;Merge</Value>
         </TranslationItem>
         <TranslationItem Name="squash" Property="Text">
-          <Value>Squash Commits</Value>
+          <Value>Commits squashen</Value>
         </TranslationItem>
         <TranslationItem Name="strategyHelp" Property="Text">
           <Value>Hilfe</Value>
@@ -2861,11 +2943,36 @@ Wert wurde mit leerem Wert ersetzt.</Value>
         <TranslationItem Name="$this" Property="Text">
           <Value>Branch umbenennen</Value>
         </TranslationItem>
+        <TranslationItem Name="_branchRenameFailed" Property="Text">
+          <Value>Umbenennen fehlgeschlagen</Value>
+        </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Neuer Name</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Value>Umbenennen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormResetChanges">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Änderungen zurücksetzen</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnCancel" Property="Text">
+          <Value>Abbrechen</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnReset" Property="Text">
+          <Value>Zurücksetzen</Value>
+        </TranslationItem>
+        <TranslationItem Name="cbDeleteNewFiles" Property="Text">
+          <Value>Neue Dateien löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Sind Sie sich sicher, dass Sie alle Änderungen zurücksetzen möchten?</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Diese Aktion wird alle nicht commitete Änderungen löschen.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2878,7 +2985,7 @@ Wert wurde mit leerem Wert ersetzt.</Value>
           <Value>Autor: {0}</Value>
         </TranslationItem>
         <TranslationItem Name="branchInfo" Property="Text">
-          <Value>{0} zurücksetzen zu:</Value>
+          <Value>{0} zurücksetzen nach:</Value>
         </TranslationItem>
         <TranslationItem Name="Cancel" Property="Text">
           <Value>Abbrechen</Value>
@@ -2930,10 +3037,10 @@ Wert wurde mit leerem Wert ersetzt.</Value>
           <Value>Öffnen in</Value>
         </TranslationItem>
         <TranslationItem Name="_chooseBaseFileFailedText" Property="Text">
-          <Value>Auswählen der Basis-Datei fehlgeschlagen.</Value>
+          <Value>Auswählen der Base-Datei fehlgeschlagen.</Value>
         </TranslationItem>
         <TranslationItem Name="_chooseLocalFileFailedText" Property="Text">
-          <Value>Auswählen der lokalen Datei fehlgeschlagen.</Value>
+          <Value>Auswählen der Local-Datei fehlgeschlagen.</Value>
         </TranslationItem>
         <TranslationItem Name="_chooseRemoteFileFailedText" Property="Text">
           <Value>Auswahl der Remote-Datei fehlgeschlagen.</Value>
@@ -2942,10 +3049,10 @@ Wert wurde mit leerem Wert ersetzt.</Value>
           <Value>Auflösen</Value>
         </TranslationItem>
         <TranslationItem Name="_contextChooseLocalMergeText" Property="Text">
-          <Value>Lokale Datei wählen (ours)</Value>
+          <Value>Local-Datei wählen (ours)</Value>
         </TranslationItem>
         <TranslationItem Name="_contextChooseLocalRebaseText" Property="Text">
-          <Value>Lokale Datei wählen (theirs)</Value>
+          <Value>Local-Datei wählen (theirs)</Value>
         </TranslationItem>
         <TranslationItem Name="_contextChooseRemoteMergeText" Property="Text">
           <Value>Remote-Datei wählen (theirs)</Value>
@@ -3007,10 +3114,10 @@ Ist der Mergekonflikt behoben?</Value>
           <Value>Datei auswählen</Value>
         </TranslationItem>
         <TranslationItem Name="ContextChooseBase" Property="Text">
-          <Value>Basis-Datei wählen</Value>
+          <Value>Base-Datei wählen</Value>
         </TranslationItem>
         <TranslationItem Name="ContextChooseLocal" Property="Text">
-          <Value>Lokale Datei wählen</Value>
+          <Value>Local-Datei wählen</Value>
         </TranslationItem>
         <TranslationItem Name="ContextChooseRemote" Property="Text">
           <Value>Remote-Datei wählen</Value>
@@ -3019,19 +3126,19 @@ Ist der Mergekonflikt behoben?</Value>
           <Value>Konflikt als gelöst markieren</Value>
         </TranslationItem>
         <TranslationItem Name="ContextOpenBaseWith" Property="Text">
-          <Value>Basis-Datei öffnen mit</Value>
+          <Value>Base-Datei öffnen mit</Value>
         </TranslationItem>
         <TranslationItem Name="ContextOpenLocalWith" Property="Text">
-          <Value>Lokale Datei öffnen mit</Value>
+          <Value>Local-Datei öffnen mit</Value>
         </TranslationItem>
         <TranslationItem Name="ContextOpenRemoteWith" Property="Text">
           <Value>Remote-Datei öffnen mit</Value>
         </TranslationItem>
         <TranslationItem Name="ContextSaveBaseAs" Property="Text">
-          <Value>Basis-Datei speichern als</Value>
+          <Value>Base-Datei speichern als</Value>
         </TranslationItem>
         <TranslationItem Name="ContextSaveLocalAs" Property="Text">
-          <Value>Lokale Datei speichern als</Value>
+          <Value>Local-Datei speichern als</Value>
         </TranslationItem>
         <TranslationItem Name="ContextSaveRemoteAs" Property="Text">
           <Value>Remote-Datei speichern als</Value>
@@ -3113,13 +3220,13 @@ Der Merge-Konflikt wird als nicht-gelöst markiert. Bitte versuchen Sie es noch 
           <Value>Unaufgelöste Merge-Konflikte</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
-          <Value>Basis</Value>
+          <Value>Base</Value>
         </TranslationItem>
         <TranslationItem Name="label5" Property="Text">
           <Value>Remote</Value>
         </TranslationItem>
         <TranslationItem Name="label7" Property="Text">
-          <Value>Lokal</Value>
+          <Value>Local</Value>
         </TranslationItem>
         <TranslationItem Name="localFileName" Property="Text">
           <Value>...</Value>
@@ -3393,11 +3500,17 @@ Wollen Sie dieses Skript verwenden?</Value>
         <TranslationItem Name="chkShowStashCountInBrowseWindow" Property="Text">
           <Value>Anzahl der Stashes in der Statuszeile im Hauptfenster anzeigen</Value>
         </TranslationItem>
+        <TranslationItem Name="chkStashUntrackedFiles" Property="Text">
+          <Value>Nicht verfolgte Dateien beim Stashen einbeziehen</Value>
+        </TranslationItem>
         <TranslationItem Name="chkUseFastChecks" Property="Text">
           <Value>Benutze FileSystemWatchter um Änderungen am Index festzustellen</Value>
         </TranslationItem>
         <TranslationItem Name="chkUsePatienceDiffAlgorithm" Property="Text">
           <Value>Patience-Parameter beim Vergleich verwenden</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkWarnBeforeCheckout" Property="Text">
+          <Value>Warnung für nicht commitete Änderungen vor einem Checkout anzeigen</Value>
         </TranslationItem>
         <TranslationItem Name="ClearImageCache" Property="Text">
           <Value>Bilder Cache löschen</Value>
@@ -3654,8 +3767,17 @@ bei der Benutzung auftreten.</Value>
         <TranslationItem Name="label57" Property="Text">
           <Value>Pfad zu Commit-Template</Value>
         </TranslationItem>
+        <TranslationItem Name="label59" Property="Text">
+          <Value>GitExtensions Encoding</Value>
+        </TranslationItem>
         <TranslationItem Name="label6" Property="Text">
           <Value>Editor</Value>
+        </TranslationItem>
+        <TranslationItem Name="label60" Property="Text">
+          <Value>Datei Encoding</Value>
+        </TranslationItem>
+        <TranslationItem Name="label61" Property="Text">
+          <Value>Datei Encoding</Value>
         </TranslationItem>
         <TranslationItem Name="label7" Property="Text">
           <Value>Mergeprogramm</Value>
@@ -3689,6 +3811,9 @@ können.</Value>
         </TranslationItem>
         <TranslationItem Name="LocalSettings" Property="Text">
           <Value>Lokale Einstellungen</Value>
+        </TranslationItem>
+        <TranslationItem Name="LogEncodingLabel" Property="Text">
+          <Value>GitExtensions Encoding</Value>
         </TranslationItem>
         <TranslationItem Name="MulticolorBranches" Property="Text">
           <Value>Mehrfarbige Branches</Value>
@@ -3814,6 +3939,9 @@ können.</Value>
         <TranslationItem Name="Apply" Property="Text">
           <Value>Gewählten Stash anwenden</Value>
         </TranslationItem>
+        <TranslationItem Name="chkIncludeUntrackedFiles" Property="Text">
+          <Value>Nicht verfolgte Dateien einbeziehen</Value>
+        </TranslationItem>
         <TranslationItem Name="Clear" Property="Text">
           <Value>Gewählten Stash verwerfen</Value>
         </TranslationItem>
@@ -3828,6 +3956,12 @@ können.</Value>
         </TranslationItem>
         <TranslationItem Name="StashKeepIndex" Property="Text">
           <Value>Index beibehalten</Value>
+        </TranslationItem>
+        <TranslationItem Name="stashUntrackedFilesNotSupported" Property="Text">
+          <Value>Nicht verfolgte Dateien zu stashen wird in Ihrer verwendeten msysgit Version nicht unterstützt. Bitte aktualisieren Sie msysgit auf die Version 1.7.7 oder höher um diese Option zu verwenden.</Value>
+        </TranslationItem>
+        <TranslationItem Name="stashUntrackedFilesNotSupportedCaption" Property="Text">
+          <Value>Nicht verfolgte Dateien stashen</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripButton_customMessage" Property="Text">
           <Value>Benutzerdefinierte Stash-Nachricht</Value>
@@ -3931,6 +4065,47 @@ Wollen Sie diesem Host-Key vertrauen und noch einmal versuchen?</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormSvnClone">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>SVN Klonen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_questionContinueWithoutAuthors" Property="Text">
+          <Value>Autoren Datei "{0}" existiert nicht. Ohne Autoren Datei fortsetzen?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_questionContinueWithoutAuthorsCaption" Property="Text">
+          <Value>Autoren Datei</Value>
+        </TranslationItem>
+        <TranslationItem Name="_questionOpenRepo" Property="Text">
+          <Value>Das Repository wurde erfolgreich geklont.
+Wollen Sie dieses neue Repository {0} nun öffnen?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_questionOpenRepoCaption" Property="Text">
+          <Value>Öffnen</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorsFileBrowseButton" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="browseButton" Property="Text">
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Zu klonendes SVN Repository</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Ziel</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>Unterverzeichnis</Value>
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text">
+          <Value>Autoren Datei</Value>
+        </TranslationItem>
+        <TranslationItem Name="okButton" Property="Text">
+          <Value>Klonen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormTag">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -4009,6 +4184,9 @@ Wollen Sie diesem Host-Key vertrauen und noch einmal versuchen?</Value>
         </TranslationItem>
         <TranslationItem Name="categoryDataGridViewTextBoxColumn" Property="HeaderText">
           <Value>Kategorie</Value>
+        </TranslationItem>
+        <TranslationItem Name="editingCellPrefixText" Property="Text">
+          <Value>[Bearbeite]</Value>
         </TranslationItem>
         <TranslationItem Name="googleAll" Property="Text">
           <Value>Alle Leeren googlen</Value>
