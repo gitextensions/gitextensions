@@ -74,6 +74,9 @@ namespace GitUI
         private readonly TranslationString _noRevisionFoundError =
             new TranslationString("No revision found.");
 
+        private readonly TranslationString _configureWorkingDirMenu =
+            new TranslationString("Configure this menu");
+
         #endregion
 
         private readonly SynchronizationContext syncContext;
@@ -1671,7 +1674,7 @@ namespace GitUI
             }
 
             _NO_TRANSLATE_Workingdir.DropDownItems.Add(new ToolStripSeparator());
-            ToolStripMenuItem toolStripItem = new ToolStripMenuItem("Configure this menu");
+            ToolStripMenuItem toolStripItem = new ToolStripMenuItem(_configureWorkingDirMenu.Text);
             _NO_TRANSLATE_Workingdir.DropDownItems.Add(toolStripItem);
 
             toolStripItem.Click += (object hs, EventArgs he) =>
