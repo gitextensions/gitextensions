@@ -102,6 +102,16 @@ namespace GitUI
         private readonly TranslationString _selectionFilterToolTip = new TranslationString("Enter a regular expression to select unstaged files.");
         private readonly TranslationString _selectionFilterErrorToolTip = new TranslationString("Error {0}");
 
+        private readonly TranslationString _commitMsgFirstLineInvalid = new TranslationString("First line of commit message contains too many characters.");
+
+        private readonly TranslationString _commitMsgLineInvalid = new TranslationString("The following line of commit message contains too many characters:" + Environment.NewLine + Environment.NewLine + "{0}");
+
+        private readonly TranslationString _commitMsgSecondLineNotEmpty = new TranslationString("Second line of commit message is not empty.");
+        
+        private readonly TranslationString _commitValidationCaption = new TranslationString("Commit validation");
+
+        private readonly TranslationString _commitTemplateSettings = new TranslationString("Settings");
+
 
         #endregion
 
@@ -168,6 +178,8 @@ namespace GitUI
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
 
             SelectedDiff.ContextMenuOpening += SelectedDiff_ContextMenuOpening;
+
+            LoadCommitTemplates();
 
             Commit.Focus();
         }
@@ -660,6 +672,10 @@ namespace GitUI
                 return;
             }
 
+            if (!ValidCommitMessage())
+                return;
+
+
             if (Settings.Module.GetSelectedBranch().Equals("(no branch)", StringComparison.OrdinalIgnoreCase) &&
                 MessageBox.Show(this, _notOnBranch.Text, _notOnBranchCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
                 return;
@@ -709,6 +725,47 @@ namespace GitUI
             {
                 MessageBox.Show(this, string.Format("Exception: {0}", e.Message));
             }
+        }
+
+        private bool ValidCommitMessage()
+        {
+            if (Settings.CommitValidationMaxCntCharsFirstLine > 0)
+            {
+                var firstLine = Message.Text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)[0];
+                if (firstLine.Length > Settings.CommitValidationMaxCntCharsFirstLine)
+                {
+                    MessageBox.Show(this, _commitMsgFirstLineInvalid.Text, _commitValidationCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    return false;
+                }
+            }
+
+            if (Settings.CommitValidationMaxCntCharsPerLine > 0)
+            {
+                var lines = Message.Text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var line in lines)
+                {
+                    if (line.Length > Settings.CommitValidationMaxCntCharsPerLine)
+                    {
+                        MessageBox.Show(this, String.Format(_commitMsgLineInvalid.Text, line), _commitValidationCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                        return false;
+                    }
+                }
+            }
+
+            if (Settings.CommitValidationSecondLineMustBeEmpty)
+            {
+                var lines = Message.Text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+                if (lines.Length > 2)
+                {
+                    if (lines[1].Length != 0)
+                    {
+                        MessageBox.Show(this, _commitMsgSecondLineNotEmpty.Text, _commitValidationCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                        return false;
+                    }
+                }
+            }
+
+            return true;
         }
 
         private void RescanChanges()
@@ -1595,6 +1652,66 @@ namespace GitUI
         {
             FilenameToClipboardToolStripMenuItemClick(sender, e);
         }
+
+        private void commitTemplatesConfigtoolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormCommitTemplateSettings().ShowDialog(this);
+            LoadCommitTemplates();
+        }
+
+        private void LoadCommitTemplates()
+        {
+            CommitTemplateItem[] commitTemplates = 
+                CommitTemplateItem.DeserializeCommitTemplatesFromXml(Settings.CommitTemplates);
+
+            if (null == commitTemplates)
+                return;
+
+            commitTemplatesToolStripMenuItem.DropDownItems.Clear();
+
+            for (int i = 0; i < commitTemplates.Length; i++)
+            {
+                if (!commitTemplates[i].Name.IsNullOrEmpty())
+                    AddTemplateCommitMessageToMenu(commitTemplates[i], commitTemplates[i].Name);
+            }
+
+            commitTemplatesToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+
+            var toolStripItem = new ToolStripMenuItem(_commitTemplateSettings.Text);
+            toolStripItem.Click += commitTemplatesConfigtoolStripMenuItem_Click;
+            commitTemplatesToolStripMenuItem.DropDownItems.Add(toolStripItem);
+        }
+
+        private void AddTemplateCommitMessageToMenu(CommitTemplateItem item, string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return;
+
+            var toolStripItem =
+                new ToolStripMenuItem
+                {
+                    Tag = item,
+                    Text = name
+                };
+
+            toolStripItem.Click += commitTemplatesToolStripMenuItem_Clicked;
+            commitTemplatesToolStripMenuItem.DropDownItems.Add(toolStripItem);
+        }
+
+        private void commitTemplatesToolStripMenuItem_Clicked(object sender, EventArgs e)
+        {
+            try
+            {
+                ToolStripMenuItem item = (ToolStripMenuItem)sender;
+                CommitTemplateItem templateItem = (CommitTemplateItem)(item.Tag);
+                Message.Text = templateItem.Text;                
+            }
+            catch
+            {
+                return;
+            }
+        }
+
     }
 
     /// <summary>

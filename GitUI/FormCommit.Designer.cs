@@ -106,6 +106,7 @@ namespace GitUI
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolAuthorLabelItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolAuthor = new System.Windows.Forms.ToolStripTextBox();
+            this.commitTemplatesToolStripMenuItem = new System.Windows.Forms.ToolStripDropDownButton();
             this.flowCommitButtons = new System.Windows.Forms.FlowLayoutPanel();
             this.Commit = new System.Windows.Forms.Button();
             this.CommitAndPush = new System.Windows.Forms.Button();
@@ -730,7 +731,8 @@ namespace GitUI
             this.toolbarCommit.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolbarCommit.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.commitMessageToolStripMenuItem,
-            this.toolStripMenuItem3});
+            this.toolStripMenuItem3,
+            this.commitTemplatesToolStripMenuItem});
             this.toolbarCommit.Location = new System.Drawing.Point(175, 0);
             this.toolbarCommit.Name = "toolbarCommit";
             this.toolbarCommit.Padding = new System.Windows.Forms.Padding(1, 1, 2, 1);
@@ -804,6 +806,14 @@ namespace GitUI
             this.toolAuthor.Name = "toolAuthor";
             this.toolAuthor.Size = new System.Drawing.Size(230, 23);
             this.toolAuthor.TextChanged += new System.EventHandler(this.toolAuthor_TextChanged);
+            // 
+            // commitTemplatesToolStripMenuItem
+            // 
+            this.commitTemplatesToolStripMenuItem.Image = global::GitUI.Properties.Resources._27;
+            this.commitTemplatesToolStripMenuItem.Name = "commitTemplatesToolStripMenuItem";
+            this.commitTemplatesToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.commitTemplatesToolStripMenuItem.Size = new System.Drawing.Size(135, 20);
+            this.commitTemplatesToolStripMenuItem.Text = "Commit &templates";
             // 
             // flowCommitButtons
             // 
@@ -1121,5 +1131,6 @@ namespace GitUI
         private ToolStripMenuItem resetSubmoduleChanges;
         private ToolStripMenuItem commitSubmoduleChanges;
         private ToolStripMenuItem stashSubmoduleChangesToolStripMenuItem;
+        private ToolStripDropDownButton commitTemplatesToolStripMenuItem;
     }
 }
