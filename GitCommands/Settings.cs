@@ -994,6 +994,34 @@ namespace GitCommands
             set { SafeSet("NoFastForwardMerge", value, ref _NoFastForwardMerge); }
         }
 
+        private static int? _CommitValidationMaxCntCharsFirstLine;
+        public static int CommitValidationMaxCntCharsFirstLine
+        {
+            get { return SafeGet("CommitValidationMaxCntCharsFirstLine", 0, ref _CommitValidationMaxCntCharsFirstLine); }
+            set { SafeSet("CommitValidationMaxCntCharsFirstLine", value, ref _CommitValidationMaxCntCharsFirstLine); }
+        }
+
+        private static int? _CommitValidationMaxCntCharsPerLine;
+        public static int CommitValidationMaxCntCharsPerLine
+        {
+            get { return SafeGet("CommitValidationMaxCntCharsPerLine", 0, ref _CommitValidationMaxCntCharsPerLine); }
+            set { SafeSet("CommitValidationMaxCntCharsPerLine", value, ref _CommitValidationMaxCntCharsPerLine); }
+        }
+
+        private static bool? _CommitValidationSecondLineMustBeEmpty;
+        public static bool CommitValidationSecondLineMustBeEmpty
+        {
+            get { return SafeGet("CommitValidationSecondLineMustBeEmpty", false, ref _CommitValidationSecondLineMustBeEmpty); }
+            set { SafeSet("CommitValidationSecondLineMustBeEmpty", value, ref _CommitValidationSecondLineMustBeEmpty); }
+        }
+
+        private static string _CommitTemplates;
+        public static string CommitTemplates
+        {
+            get { return SafeGet("CommitTemplates", String.Empty, ref _CommitTemplates); }
+            set { SafeSet("CommitTemplates", value, ref _CommitTemplates); }
+        }
+
         public static string GetGitExtensionsFullPath()
         {
             return GetGitExtensionsDirectory() + "\\GitExtensions.exe";
