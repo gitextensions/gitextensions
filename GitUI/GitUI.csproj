@@ -94,6 +94,7 @@
     <Compile Include="BranchComboBox.Designer.cs">
       <DependentUpon>BranchComboBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommitTemplateItem.cs" />
     <Compile Include="DvcsGraph.Graph.cs">
       <DependentUpon>DvcsGraph.cs</DependentUpon>
       <SubType>Component</SubType>
@@ -111,6 +112,12 @@
     </Compile>
     <Compile Include="Editor\FormGoToLine.Designer.cs">
       <DependentUpon>FormGoToLine.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormCommitTemplateSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormCommitTemplateSettings.designer.cs">
+      <DependentUpon>FormCommitTemplateSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="FormDirtyDirWarn.cs">
       <SubType>Form</SubType>
@@ -759,6 +766,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editor\FormGoToLine.resx">
       <DependentUpon>FormGoToLine.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormCommitTemplateSettings.resx">
+      <DependentUpon>FormCommitTemplateSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormRecentReposSettings.resx">
       <DependentUpon>FormRecentReposSettings.cs</DependentUpon>
