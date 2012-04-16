@@ -814,6 +814,7 @@ namespace GitUI
             this.commitTemplatesToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.commitTemplatesToolStripMenuItem.Size = new System.Drawing.Size(135, 20);
             this.commitTemplatesToolStripMenuItem.Text = "Commit &templates";
+            this.commitTemplatesToolStripMenuItem.DropDownOpening += new System.EventHandler(this.commitTemplatesToolStripMenuItem_DropDownOpening);
             // 
             // flowCommitButtons
             // 
