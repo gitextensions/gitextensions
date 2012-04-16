@@ -40,6 +40,8 @@
             this._NO_TRANSLATE_numericMaxFirstLineLength = new System.Windows.Forms.NumericUpDown();
             this.labelSecondLineEmpty = new System.Windows.Forms.Label();
             this.checkBoxSecondLineEmpty = new System.Windows.Forms.CheckBox();
+            this.labelRegExCheck = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_textBoxCommitValidationRegex = new System.Windows.Forms.TextBox();
             this.groupBoxCommitTemplates = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
@@ -136,10 +138,13 @@
             this.tableLayoutPanel3.Controls.Add(this._NO_TRANSLATE_numericMaxFirstLineLength, 1, 0);
             this.tableLayoutPanel3.Controls.Add(this.labelSecondLineEmpty, 0, 2);
             this.tableLayoutPanel3.Controls.Add(this.checkBoxSecondLineEmpty, 1, 2);
+            this.tableLayoutPanel3.Controls.Add(this.labelRegExCheck, 0, 3);
+            this.tableLayoutPanel3.Controls.Add(this._NO_TRANSLATE_textBoxCommitValidationRegex, 1, 3);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 19);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 4;
+            this.tableLayoutPanel3.RowCount = 5;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -202,6 +207,24 @@
             this.checkBoxSecondLineEmpty.Size = new System.Drawing.Size(15, 14);
             this.checkBoxSecondLineEmpty.TabIndex = 5;
             this.checkBoxSecondLineEmpty.UseVisualStyleBackColor = true;
+            // 
+            // labelRegExCheck
+            // 
+            this.labelRegExCheck.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.labelRegExCheck.AutoSize = true;
+            this.labelRegExCheck.Location = new System.Drawing.Point(3, 85);
+            this.labelRegExCheck.Name = "labelRegExCheck";
+            this.labelRegExCheck.Size = new System.Drawing.Size(345, 15);
+            this.labelRegExCheck.TabIndex = 7;
+            this.labelRegExCheck.Text = "Commit must match following RegEx (Empty = check disabled):";
+            // 
+            // _NO_TRANSLATE_textBoxCommitValidationRegex
+            // 
+            this._NO_TRANSLATE_textBoxCommitValidationRegex.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this._NO_TRANSLATE_textBoxCommitValidationRegex.Location = new System.Drawing.Point(450, 81);
+            this._NO_TRANSLATE_textBoxCommitValidationRegex.Name = "_NO_TRANSLATE_textBoxCommitValidationRegex";
+            this._NO_TRANSLATE_textBoxCommitValidationRegex.Size = new System.Drawing.Size(233, 23);
+            this._NO_TRANSLATE_textBoxCommitValidationRegex.TabIndex = 8;
             // 
             // groupBoxCommitTemplates
             // 
@@ -349,5 +372,7 @@
         private System.Windows.Forms.ComboBox _NO_TRANSLATE_comboBoxCommitTemplates;
         private System.Windows.Forms.Label labelCommitTemplateName;
         private System.Windows.Forms.TextBox _NO_TRANSLATE_textBoxCommitTemplateName;
+        private System.Windows.Forms.Label labelRegExCheck;
+        private System.Windows.Forms.TextBox _NO_TRANSLATE_textBoxCommitValidationRegex;
     }
 }

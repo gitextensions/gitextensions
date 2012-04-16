@@ -1015,6 +1015,13 @@ namespace GitCommands
             set { SafeSet("CommitValidationSecondLineMustBeEmpty", value, ref _CommitValidationSecondLineMustBeEmpty); }
         }
 
+        private static string _CommitValidationRegEx;
+        public static string CommitValidationRegEx
+        {
+            get { return SafeGet("CommitValidationRegEx", String.Empty, ref _CommitValidationRegEx); }
+            set { SafeSet("CommitValidationRegEx", value, ref _CommitValidationRegEx); }
+        }
+
         private static string _CommitTemplates;
         public static string CommitTemplates
         {
