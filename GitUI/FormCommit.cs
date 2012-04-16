@@ -109,7 +109,9 @@ namespace GitUI
             + Environment.NewLine + Environment.NewLine + "{0}" + Environment.NewLine + Environment.NewLine + "Do you want to continue?");
 
         private readonly TranslationString _commitMsgSecondLineNotEmpty = new TranslationString("Second line of commit message is not empty."  + Environment.NewLine + "Do you want to continue?");
-        
+
+        private readonly TranslationString _commitMsgRegExNotMatched = new TranslationString("Commit message does not match RegEx." + Environment.NewLine + "Do you want to continue?");
+
         private readonly TranslationString _commitValidationCaption = new TranslationString("Commit validation");
 
         private readonly TranslationString _commitTemplateSettings = new TranslationString("Settings");
@@ -764,6 +766,22 @@ namespace GitUI
                         if (DialogResult.No == MessageBox.Show(this, _commitMsgSecondLineNotEmpty.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk))
                             return false;
                     }
+                }
+            }
+
+            if (!Settings.CommitValidationRegEx.IsNullOrEmpty())
+            {
+                try
+                {
+                    if (!Regex.IsMatch(Message.Text, Settings.CommitValidationRegEx))
+                    {
+                        if (DialogResult.No == MessageBox.Show(this, _commitMsgRegExNotMatched.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk))
+                            return false;
+
+                    }
+                }
+                catch
+                {
                 }
             }
 
