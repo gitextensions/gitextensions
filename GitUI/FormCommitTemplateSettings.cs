@@ -20,14 +20,15 @@ namespace GitUI
         private CommitTemplateItem[] _commitTemplates;
 
         private const int _maxCommitTemplates = 5;
-        private const int _maxShownChars = 12;
+        private const int _maxShownCharsForName = 15;
+        private const int _maxUsedCharsForName = 80;
 
         public FormCommitTemplateSettings()
         {
             InitializeComponent();
             Translate();
 
-            _NO_TRANSLATE_textBoxCommitTemplateName.MaxLength = _maxShownChars;
+            _NO_TRANSLATE_textBoxCommitTemplateName.MaxLength = _maxUsedCharsForName;
 
             LoadSettings();
         }
@@ -105,7 +106,10 @@ namespace GitUI
             string comboBoxText;
 
             if (!_commitTemplates[line].Name.IsNullOrEmpty())
-                comboBoxText = _commitTemplates[line].Name.Substring(0, _commitTemplates[line].Name.Length > _maxShownChars ? _maxShownChars : _commitTemplates[line].Name.Length);
+            {
+                comboBoxText = _commitTemplates[line].Name.Substring(0, _commitTemplates[line].Name.Length > _maxShownCharsForName ? (_maxShownCharsForName - 3) : _commitTemplates[line].Name.Length);
+                comboBoxText += _commitTemplates[line].Name.Length > _maxShownCharsForName ? "..." : "";
+            }
             else
                 comboBoxText = "<" + _emptyTemplate.Text + ">";
 
