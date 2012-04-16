@@ -1661,15 +1661,16 @@ namespace GitUI
             CommitTemplateItem[] commitTemplates = 
                 CommitTemplateItem.DeserializeCommitTemplatesFromXml(Settings.CommitTemplates);
 
-            if (null == commitTemplates)
-                return;
 
             commitTemplatesToolStripMenuItem.DropDownItems.Clear();
 
-            for (int i = 0; i < commitTemplates.Length; i++)
+            if (null != commitTemplates)
             {
-                if (!commitTemplates[i].Name.IsNullOrEmpty())
-                    AddTemplateCommitMessageToMenu(commitTemplates[i], commitTemplates[i].Name);
+                for (int i = 0; i < commitTemplates.Length; i++)
+                {
+                    if (!commitTemplates[i].Name.IsNullOrEmpty())
+                        AddTemplateCommitMessageToMenu(commitTemplates[i], commitTemplates[i].Name);
+                }
             }
 
             commitTemplatesToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
