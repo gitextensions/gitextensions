@@ -1991,6 +1991,11 @@ namespace GitUI
             Clipboard.SetText(GetRevision(LastRow).CommitDate.ToString());
         }
 
+        private void hashToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(GetRevision(LastRow).Guid);
+        }
+
         private static void copyToClipBoard(object sender, EventArgs e)
         {
             Clipboard.SetText(sender.ToString());
