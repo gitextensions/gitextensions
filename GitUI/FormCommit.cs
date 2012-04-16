@@ -179,8 +179,6 @@ namespace GitUI
 
             SelectedDiff.ContextMenuOpening += SelectedDiff_ContextMenuOpening;
 
-            LoadCommitTemplates();
-
             Commit.Focus();
         }
 
@@ -1656,7 +1654,6 @@ namespace GitUI
         private void commitTemplatesConfigtoolStripMenuItem_Click(object sender, EventArgs e)
         {
             new FormCommitTemplateSettings().ShowDialog(this);
-            LoadCommitTemplates();
         }
 
         private void LoadCommitTemplates()
@@ -1710,6 +1707,11 @@ namespace GitUI
             {
                 return;
             }
+        }
+
+        private void commitTemplatesToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            LoadCommitTemplates();
         }
 
     }
