@@ -127,6 +127,8 @@ namespace GitUI
         private string commitTemplate;
         private bool IsMergeCommit { get; set; }
         private bool shouldRescanChanges = true;
+        private bool _shouldReloadCommitTemplates = true;
+
 
         public FormCommit()
             : this(CommitKind.Normal, null)
@@ -1654,6 +1656,7 @@ namespace GitUI
         private void commitTemplatesConfigtoolStripMenuItem_Click(object sender, EventArgs e)
         {
             new FormCommitTemplateSettings().ShowDialog(this);
+            _shouldReloadCommitTemplates = true;
         }
 
         private void LoadCommitTemplates()
@@ -1711,7 +1714,11 @@ namespace GitUI
 
         private void commitTemplatesToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
-            LoadCommitTemplates();
+            if (_shouldReloadCommitTemplates)
+            {
+                LoadCommitTemplates();
+                _shouldReloadCommitTemplates = false;
+            }
         }
 
     }
