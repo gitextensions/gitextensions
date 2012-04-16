@@ -1659,8 +1659,7 @@ namespace GitUI
         private void LoadCommitTemplates()
         {
             CommitTemplateItem[] commitTemplates = 
-                CommitTemplateItem.DeserializeCommitTemplatesFromXml(Settings.CommitTemplates);
-
+                CommitTemplateItem.DeserializeCommitTemplates(Settings.CommitTemplates);
 
             commitTemplatesToolStripMenuItem.DropDownItems.Clear();
 
