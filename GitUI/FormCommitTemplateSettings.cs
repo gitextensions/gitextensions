@@ -38,6 +38,7 @@ namespace GitUI
             _NO_TRANSLATE_numericMaxFirstLineLength.Value = Settings.CommitValidationMaxCntCharsFirstLine;
             _NO_TRANSLATE_numericMaxLineLength.Value = Settings.CommitValidationMaxCntCharsPerLine;
             checkBoxSecondLineEmpty.Checked = Settings.CommitValidationSecondLineMustBeEmpty;
+            _NO_TRANSLATE_textBoxCommitValidationRegex.Text = Settings.CommitValidationRegEx;
 
             _commitTemplates = CommitTemplateItem.DeserializeCommitTemplates(Settings.CommitTemplates);
 
@@ -64,6 +65,7 @@ namespace GitUI
             Settings.CommitValidationMaxCntCharsFirstLine = Convert.ToInt32(_NO_TRANSLATE_numericMaxFirstLineLength.Value);
             Settings.CommitValidationMaxCntCharsPerLine = Convert.ToInt32(_NO_TRANSLATE_numericMaxLineLength.Value);
             Settings.CommitValidationSecondLineMustBeEmpty = checkBoxSecondLineEmpty.Checked;
+            Settings.CommitValidationRegEx = _NO_TRANSLATE_textBoxCommitValidationRegex.Text;
 
             string serializedCommitTemplates = CommitTemplateItem.SerializeCommitTemplates(_commitTemplates);
             if (null == serializedCommitTemplates)
