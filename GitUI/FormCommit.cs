@@ -102,11 +102,13 @@ namespace GitUI
         private readonly TranslationString _selectionFilterToolTip = new TranslationString("Enter a regular expression to select unstaged files.");
         private readonly TranslationString _selectionFilterErrorToolTip = new TranslationString("Error {0}");
 
-        private readonly TranslationString _commitMsgFirstLineInvalid = new TranslationString("First line of commit message contains too many characters.");
+        private readonly TranslationString _commitMsgFirstLineInvalid = new TranslationString("First line of commit message contains too many characters." 
+            + Environment.NewLine + "Do you want to continue?");
 
-        private readonly TranslationString _commitMsgLineInvalid = new TranslationString("The following line of commit message contains too many characters:" + Environment.NewLine + Environment.NewLine + "{0}");
+        private readonly TranslationString _commitMsgLineInvalid = new TranslationString("The following line of commit message contains too many characters:"
+            + Environment.NewLine + Environment.NewLine + "{0}" + Environment.NewLine + Environment.NewLine + "Do you want to continue?");
 
-        private readonly TranslationString _commitMsgSecondLineNotEmpty = new TranslationString("Second line of commit message is not empty.");
+        private readonly TranslationString _commitMsgSecondLineNotEmpty = new TranslationString("Second line of commit message is not empty."  + Environment.NewLine + "Do you want to continue?");
         
         private readonly TranslationString _commitValidationCaption = new TranslationString("Commit validation");
 
@@ -734,8 +736,8 @@ namespace GitUI
                 var firstLine = Message.Text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)[0];
                 if (firstLine.Length > Settings.CommitValidationMaxCntCharsFirstLine)
                 {
-                    MessageBox.Show(this, _commitMsgFirstLineInvalid.Text, _commitValidationCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                    return false;
+                    if (DialogResult.No == MessageBox.Show(this, _commitMsgFirstLineInvalid.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk))
+                        return false;
                 }
             }
 
@@ -746,8 +748,8 @@ namespace GitUI
                 {
                     if (line.Length > Settings.CommitValidationMaxCntCharsPerLine)
                     {
-                        MessageBox.Show(this, String.Format(_commitMsgLineInvalid.Text, line), _commitValidationCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                        return false;
+                        if (DialogResult.No == MessageBox.Show(this, String.Format(_commitMsgLineInvalid.Text, line), _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk))
+                            return false;
                     }
                 }
             }
@@ -759,8 +761,8 @@ namespace GitUI
                 {
                     if (lines[1].Length != 0)
                     {
-                        MessageBox.Show(this, _commitMsgSecondLineNotEmpty.Text, _commitValidationCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                        return false;
+                        if (DialogResult.No == MessageBox.Show(this, _commitMsgSecondLineNotEmpty.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk))
+                            return false;
                     }
                 }
             }
