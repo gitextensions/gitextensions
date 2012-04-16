@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
+using System.Collections.Generic;
 
 namespace GitUI
 {
@@ -42,7 +43,7 @@ namespace GitUI
                 return;
             }
             bool formClosed = false;
-            string arguments = "";
+            List<string> arguments = new List<string>();
             bool IsMerge = Settings.Module.IsMerge(RevisionGrid.GetSelectedRevisions()[0].Guid);
             if (IsMerge && !autoParent.Checked)
             {
@@ -50,16 +51,19 @@ namespace GitUI
                 var choose = new FormCherryPickMerge(ParentsRevisions);
                 choose.ShowDialog(this);
                 if (choose.OkClicked)
-                    arguments = "-m " + (choose.ParentsList.SelectedItems[0].Index + 1);
+                    arguments.Add("-m " + (choose.ParentsList.SelectedItems[0].Index + 1));
                 else
                     formClosed = true;
             }
             else if (IsMerge)
-                arguments = "-m 1";
+                arguments.Add("-m 1");
+
+            if (checkAddReference.Checked)
+                arguments.Add("-x");
 
             if (!formClosed)
             {
-                MessageBox.Show(this, _cmdExecutedMsgBox.Text + " " + Environment.NewLine + Settings.Module.CherryPick(RevisionGrid.GetSelectedRevisions()[0].Guid, AutoCommit.Checked, arguments), _cmdExecutedMsgBoxCaption.Text);
+                MessageBox.Show(this, _cmdExecutedMsgBox.Text + " " + Environment.NewLine + Settings.Module.CherryPick(RevisionGrid.GetSelectedRevisions()[0].Guid, AutoCommit.Checked, string.Join(" ", arguments.ToArray())), _cmdExecutedMsgBoxCaption.Text);
 
                 MergeConflictHandler.HandleMergeConflicts(this);
 
