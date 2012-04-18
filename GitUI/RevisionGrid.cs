@@ -1591,6 +1591,15 @@ namespace GitUI
                 }
             }
 
+            //if there is no branch to merge, then let user to merge selected commit into current branch 
+            if (mergeBranchDropDown.Items.Count == 0)
+            {
+                ToolStripItem toolStripItem = new ToolStripMenuItem(revision.Guid);
+                toolStripItem.Click += ToolStripItemClickMergeBranch;
+                mergeBranchDropDown.Items.Add(toolStripItem);
+            }
+            
+
             foreach (var head in allBranches)
             {
                 ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
