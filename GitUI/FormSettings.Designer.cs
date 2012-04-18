@@ -279,6 +279,7 @@ namespace GitUI
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             this.diffFontDialog = new System.Windows.Forms.FontDialog();
+            this.chkStartWithRecentWorkingDir = new System.Windows.Forms.CheckBox();
             this.LocalSettings.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
@@ -1097,6 +1098,7 @@ namespace GitUI
             // 
             // TabPageGitExtensions
             // 
+            this.TabPageGitExtensions.Controls.Add(this.chkStartWithRecentWorkingDir);
             this.TabPageGitExtensions.Controls.Add(this.chkStashUntrackedFiles);
             this.TabPageGitExtensions.Controls.Add(this.chkWarnBeforeCheckout);
             this.TabPageGitExtensions.Controls.Add(this.chkFocusControlOnHover);
@@ -3155,6 +3157,16 @@ namespace GitUI
             this.diffFontDialog.AllowVerticalFonts = false;
             this.diffFontDialog.FixedPitchOnly = true;
             // 
+            // chkStartWithRecentWorkingDir
+            // 
+            this.chkStartWithRecentWorkingDir.AutoSize = true;
+            this.chkStartWithRecentWorkingDir.Location = new System.Drawing.Point(11, 444);
+            this.chkStartWithRecentWorkingDir.Name = "chkStartWithRecentWorkingDir";
+            this.chkStartWithRecentWorkingDir.Size = new System.Drawing.Size(180, 17);
+            this.chkStartWithRecentWorkingDir.TabIndex = 52;
+            this.chkStartWithRecentWorkingDir.Text = "Open last working dir on startup";
+            this.chkStartWithRecentWorkingDir.UseVisualStyleBackColor = true;
+            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3479,6 +3491,7 @@ namespace GitUI
         private Label LogEncodingLabel;
         private Label label61;
         private ComboBox Local_FilesEncoding;
+        private CheckBox chkStartWithRecentWorkingDir;
 
     }
 }
