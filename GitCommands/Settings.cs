@@ -627,11 +627,24 @@ namespace GitCommands
             {
                 string old = _module.WorkingDir;
                 _module.WorkingDir = value;
+                RecentWorkingDir = _module.WorkingDir;
                 if (WorkingDirChanged != null)
                 {
                     WorkingDirChanged(old, _module.WorkingDir, _module.GetGitDirectory());
                 }
             }
+        }
+
+        public static string RecentWorkingDir
+        {
+            get { return GetString("RecentWorkingDir", null); }
+            set { SetString("RecentWorkingDir", value); }
+        }
+
+        public static bool StartWithRecentWorkingDir
+        {
+            get { return GetBool("StartWithRecentWorkingDir", false).Value; }
+            set { SetBool("StartWithRecentWorkingDir", value); }
         }
 
         public static CommandLogger GitLog { get; private set; }

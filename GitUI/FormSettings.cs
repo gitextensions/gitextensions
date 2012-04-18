@@ -148,6 +148,7 @@ namespace GitUI
 
                 chkFocusControlOnHover.Checked = Settings.FocusControlOnHover;
                 chkWarnBeforeCheckout.Checked = Settings.DirtyDirWarnBeforeCheckoutBranch;
+                chkStartWithRecentWorkingDir.Checked = Settings.StartWithRecentWorkingDir;
 
                 chkUsePatienceDiffAlgorithm.Checked = Settings.UsePatienceDiffAlgorithm;
 
@@ -367,6 +368,7 @@ namespace GitUI
             Settings.FocusControlOnHover = chkFocusControlOnHover.Checked;
 
             Settings.DirtyDirWarnBeforeCheckoutBranch = chkWarnBeforeCheckout.Checked;
+            Settings.StartWithRecentWorkingDir = chkStartWithRecentWorkingDir.Checked;
 
             Settings.UsePatienceDiffAlgorithm = chkUsePatienceDiffAlgorithm.Checked;
 

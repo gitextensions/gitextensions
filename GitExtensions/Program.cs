@@ -89,6 +89,12 @@ namespace GitExtensions
                 //    Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
             }
 
+            if (string.IsNullOrEmpty(Settings.WorkingDir) && Settings.StartWithRecentWorkingDir) 
+            {
+                if (GitModule.ValidWorkingDir(Settings.RecentWorkingDir))
+                    Settings.WorkingDir = Settings.RecentWorkingDir;
+            }
+
             if (string.IsNullOrEmpty(Settings.WorkingDir))
             {
                 string findWorkingDir = GitModule.FindGitWorkingDir(Directory.GetCurrentDirectory());
