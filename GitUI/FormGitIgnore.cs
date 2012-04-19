@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
+using ICSharpCode.TextEditor.Util;
 using ResourceManager.Translation;
 
 namespace GitUI
@@ -19,15 +20,20 @@ namespace GitUI
         private readonly TranslationString _cannotAccessGitignoreCaption =
             new TranslationString("Failed to save .gitignore");
 
-        public string GitIgnoreFile;
+        private readonly TranslationString _saveFileQuestion =
+            new TranslationString("Save changes to .gitignore?");
+        private readonly TranslationString _saveFileQuestionCaption =
+            new TranslationString("Save changes?");
+
+        public string GitIgnoreFile = string.Empty;
 
         public FormGitIgnore()
         {
             InitializeComponent();
             Translate();
-            GitIgnoreFile = "";
 
             LoadGitIgnore();
+            _NO_TRANSLATE_GitIgnoreEdit.TextLoaded += GitIgnoreFileLoaded;
         }
 
         private void LoadGitIgnore()
@@ -48,9 +54,10 @@ namespace GitUI
         private void SaveClick(object sender, EventArgs e)
         {
             SaveGitIgnore();
+            Close();
         }
 
-        private void SaveGitIgnore()
+        private bool SaveGitIgnore()
         {
             try
             {
@@ -64,18 +71,42 @@ namespace GitUI
                                 this.GitIgnoreFile += Environment.NewLine;
                             File.WriteAllBytes(x, Settings.SystemEncoding.GetBytes(this.GitIgnoreFile));    
                         });
+                return true;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(this, _cannotAccessGitignore.Text + Environment.NewLine + ex.Message, 
                     _cannotAccessGitignoreCaption.Text);
+                return false;
             }
-            Close();
         }
 
         private void FormGitIgnoreFormClosing(object sender, FormClosingEventArgs e)
         {
-            SavePosition("edit-git-ignore");
+            var needToClose = false;
+
+            if (!IsFileUpToDate())
+            {
+                switch (MessageBox.Show(this, _saveFileQuestion.Text, _saveFileQuestionCaption.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+                {
+                    case DialogResult.Yes:
+                        if (SaveGitIgnore())
+                            needToClose = true;
+                        break;
+                    case DialogResult.No:
+                        needToClose = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+                needToClose = true;
+
+            if (!needToClose)
+                e.Cancel = true;
+            else
+                SavePosition("edit-git-ignore");
         }
 
         private void FormGitIgnoreLoad(object sender, EventArgs e)
@@ -127,5 +158,18 @@ namespace GitUI
             new FormAddToGitIgnore("*.dll").ShowDialog(this);
             LoadGitIgnore();
         }
+
+        private bool IsFileUpToDate()
+        {
+            return GitIgnoreFile == _NO_TRANSLATE_GitIgnoreEdit.GetText();
+        }
+
+        private void GitIgnoreFileLoaded(object sender, EventArgs e)
+        {
+            GitIgnoreFile = _NO_TRANSLATE_GitIgnoreEdit.GetText();
+        }
+
+
+
     }
 }
