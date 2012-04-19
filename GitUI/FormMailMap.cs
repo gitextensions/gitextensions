@@ -18,17 +18,22 @@ namespace GitUI
             new TranslationString("Failed to save .mailmap." + Environment.NewLine + "Check if file is accessible.");
         private readonly TranslationString _cannotAccessMailmapCaption =
             new TranslationString("Failed to save .mailmap");
+
+        private readonly TranslationString _saveFileQuestion =
+            new TranslationString("Save changes to .mailmap?");
+        private readonly TranslationString _saveFileQuestionCaption =
+            new TranslationString("Save changes?");
         
-        
-        public string MailMapFile;
+
+        public string MailMapFile = string.Empty;
 
         public FormMailMap()
         {
             InitializeComponent();
             Translate();
-            MailMapFile = "";
 
             LoadFile();
+            _NO_TRANSLATE_MailMapText.TextLoaded += MailMapFileLoaded;
         }
 
         private void LoadFile()
@@ -79,7 +84,30 @@ namespace GitUI
 
         private void FormMailMapFormClosing(object sender, FormClosingEventArgs e)
         {
-            SavePosition("edit-mail-map");
+            var needToClose = false;
+
+            if (!IsFileUpToDate())
+            {
+                switch (MessageBox.Show(this, _saveFileQuestion.Text, _saveFileQuestionCaption.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+                {
+                    case DialogResult.Yes:
+                        if (SaveFile())
+                            needToClose = true;
+                        break;
+                    case DialogResult.No:
+                        needToClose = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+                needToClose = true;
+
+            if (!needToClose)
+                e.Cancel = true;
+            else
+                SavePosition("edit-mail-map");
         }
 
         private void FormMailMapLoad(object sender, EventArgs e)
@@ -88,6 +116,16 @@ namespace GitUI
             if (!Settings.Module.IsBareRepository()) return;
             MessageBox.Show(this, _mailmapOnlyInWorkingDirSupported.Text,_mailmapOnlyInWorkingDirSupportedCaption.Text);
             Close();
+        }
+
+        private bool IsFileUpToDate()
+        {
+            return MailMapFile == _NO_TRANSLATE_MailMapText.GetText();
+        }
+
+        private void MailMapFileLoaded(object sender, EventArgs e)
+        {
+            MailMapFile = _NO_TRANSLATE_MailMapText.GetText();
         }
     }
 }
