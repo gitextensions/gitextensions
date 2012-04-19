@@ -28,6 +28,11 @@ namespace GitUI
             Translate();
             MailMapFile = "";
 
+            LoadFile();
+        }
+
+        private void LoadFile()
+        {
             try
             {
                 if (File.Exists(Settings.WorkingDir + ".mailmap"))
@@ -43,26 +48,33 @@ namespace GitUI
 
         private void SaveClick(object sender, EventArgs e)
         {
+            SaveFile();
+            Close();
+        }
+
+        private bool SaveFile()
+        {
             try
             {
-            FileInfoExtensions
-                .MakeFileTemporaryWritable(
-                    Settings.WorkingDir + ".mailmap",
-                    x =>
-                    {
-                        this.MailMapFile = _NO_TRANSLATE_MailMapText.GetText();
-                        if (!this.MailMapFile.EndsWith(Environment.NewLine))
-                            this.MailMapFile += Environment.NewLine;
+                FileInfoExtensions
+                    .MakeFileTemporaryWritable(
+                        Settings.WorkingDir + ".mailmap",
+                        x =>
+                        {
+                            this.MailMapFile = _NO_TRANSLATE_MailMapText.GetText();
+                            if (!this.MailMapFile.EndsWith(Environment.NewLine))
+                                this.MailMapFile += Environment.NewLine;
 
-                        File.WriteAllBytes(x, Settings.AppEncoding.GetBytes(this.MailMapFile));
+                            File.WriteAllBytes(x, Settings.AppEncoding.GetBytes(this.MailMapFile));
                         });
+                return true;
             }
             catch (Exception ex)
-                        {
-                MessageBox.Show(this, _cannotAccessMailmap.Text + Environment.NewLine + ex.Message, 
+            {
+                MessageBox.Show(this, _cannotAccessMailmap.Text + Environment.NewLine + ex.Message,
                     _cannotAccessMailmapCaption.Text);
-                        }
-                        Close();
+                return false;
+            }
         }
 
         private void FormMailMapFormClosing(object sender, FormClosingEventArgs e)
