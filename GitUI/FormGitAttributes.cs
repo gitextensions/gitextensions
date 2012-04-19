@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
+using ICSharpCode.TextEditor.Util;
 using ResourceManager.Translation;
 
 namespace GitUI
@@ -19,15 +20,20 @@ namespace GitUI
         private readonly TranslationString _cannotAccessGitattributesCaption =
             new TranslationString("Failed to save .gitattributes");
 
-        public string GitAttributesFile;
+        private readonly TranslationString _saveFileQuestion =
+            new TranslationString("Save changes to .gitattributes?");
+        private readonly TranslationString _saveFileQuestionCaption =
+            new TranslationString("Save changes?");
+
+        public string GitAttributesFile = string.Empty;
 
         public FormGitAttributes()
         {
             InitializeComponent();
             Translate();
-            GitAttributesFile = "";
 
             LoadFile();
+            _NO_TRANSLATE_GitAttributesText.TextLoaded += GitAttributesFileLoaded;
         }
 
         private void LoadFile()
@@ -38,7 +44,6 @@ namespace GitUI
                 {
                     _NO_TRANSLATE_GitAttributesText.ViewFile(Settings.WorkingDir + ".gitattributes");
                 }
-
             }
             catch (Exception ex)
             {
@@ -52,7 +57,7 @@ namespace GitUI
             Close();
         }
 
-        private void SaveFile()
+        private bool SaveFile()
         {
             try
             {
@@ -66,17 +71,43 @@ namespace GitUI
                                 this.GitAttributesFile += Environment.NewLine;
                             File.WriteAllBytes(x, Settings.SystemEncoding.GetBytes(this.GitAttributesFile));
                         });
+
+                return true;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(this, _cannotAccessGitattributes.Text + Environment.NewLine + ex.Message,
                     _cannotAccessGitattributesCaption.Text);
+                return false;
             }
         }
 
         private void FormMailMapFormClosing(object sender, FormClosingEventArgs e)
         {
-            SavePosition("edit-gitattributes");
+            var needToClose = false;
+
+            if (!IsFileUpToDate())
+            {
+                switch (MessageBox.Show(this, _saveFileQuestion.Text, _saveFileQuestionCaption.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+                {
+                    case DialogResult.Yes:
+                        if (SaveFile())
+                            needToClose = true;
+                        break;
+                    case DialogResult.No:
+                        needToClose = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+                needToClose = true;
+
+            if (!needToClose)
+                e.Cancel = true;
+            else
+                SavePosition("edit-gitattributes");
         }
 
         private void FormMailMapLoad(object sender, EventArgs e)
@@ -86,5 +117,16 @@ namespace GitUI
             MessageBox.Show(this, noWorkingDir.Text, _noWorkingDirCaption.Text);
             Close();
         }
+
+        private bool IsFileUpToDate()
+        {
+            return GitAttributesFile == _NO_TRANSLATE_GitAttributesText.GetText();
+        }
+
+        private void GitAttributesFileLoaded(object sender, EventArgs e)
+        {
+            GitAttributesFile = _NO_TRANSLATE_GitAttributesText.GetText();           
+        }
     }
 }
+
