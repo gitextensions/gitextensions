@@ -27,6 +27,11 @@ namespace GitUI
             Translate();
             GitAttributesFile = "";
 
+            LoadFile();
+        }
+
+        private void LoadFile()
+        {
             try
             {
                 if (File.Exists(Settings.WorkingDir + ".gitattributes"))
@@ -42,6 +47,12 @@ namespace GitUI
         }
 
         private void SaveClick(object sender, EventArgs e)
+        {
+            SaveFile();
+            Close();
+        }
+
+        private void SaveFile()
         {
             try
             {
@@ -61,7 +72,6 @@ namespace GitUI
                 MessageBox.Show(this, _cannotAccessGitattributes.Text + Environment.NewLine + ex.Message,
                     _cannotAccessGitattributesCaption.Text);
             }
-            Close();
         }
 
         private void FormMailMapFormClosing(object sender, FormClosingEventArgs e)
