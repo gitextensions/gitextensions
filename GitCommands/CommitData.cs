@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
-using System.Collections.ObjectModel;
 using System.Web;
 
 namespace GitCommands
@@ -103,15 +102,22 @@ namespace GitCommands
                 throw new ArgumentNullException("sha1");
 
             //Do not cache this command, since notes can be added
-            string info = module.RunGitCmd(
-                string.Format(
-                    "log -1 --pretty=\"format:%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%B%nNotes:%n%-N\" {0}", sha1));
+            string arguments = string.Format(CultureInfo.InvariantCulture,
+                    "log -1 --pretty=\"format:%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%B%nNotes:%n%-N\" {0}", sha1);
+            var info =
+                module.RunCmd(
+                    Settings.GitCommand,
+                    arguments,
+                    Settings.LosslessEncoding
+                    );
 
             if (info.Trim().StartsWith("fatal"))
             {
                 error = "Cannot find commit" + sha1;
                 return null;
             }
+
+            info = GitCommandHelpers.ReEncodeStringFromLossless(info);
 
             int index = info.IndexOf(sha1) + sha1.Length;
 
