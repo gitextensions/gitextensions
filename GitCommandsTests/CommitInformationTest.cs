@@ -11,7 +11,7 @@ namespace GitCommandsTests
     public class CommitInformationTest
     {
         [TestMethod]
-        public void CanCreateCommitInformationFromRawData()
+        public void CanCreateCommitInformationFromFormatedData()
         {
             var commitGuid = Guid.NewGuid();
             var treeGuid = Guid.NewGuid();
@@ -22,12 +22,14 @@ namespace GitCommandsTests
             var authorUnixTime = (int)(authorTime - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds;
             var commitUnixTime = (int)(commitTime - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds;
 
-            var rawData = "commit " + commitGuid + "\n" +
-                          "tree " + treeGuid + "\n" +
-                          "parent " + parentGuid1 + "\n" +
-                          "parent " + parentGuid2 + "\n" +
-                          "author John Doe (Acme Inc) <John.Doe@test.com> " + authorUnixTime + " +0100\n" +
-                          "committer Jane Doe (Acme Inc) <Jane.Doe@test.com> " + commitUnixTime + " +0200\n\n" +
+            var rawData = commitGuid + "\n" +
+                          treeGuid + "\n" +
+                          parentGuid1 + " " + parentGuid2 + "\n" +
+                          "John Doe (Acme Inc) <John.Doe@test.com>\n" + 
+                          authorUnixTime + "\n" +
+                          "Jane Doe (Acme Inc) <Jane.Doe@test.com>\n" +
+                          commitUnixTime + "\n" +
+                          "\n" +
                           "\tI made a really neato change.\n\n" +
                           "Notes (p4notes):\n" +
                           "\tP4@547123";
@@ -36,13 +38,13 @@ namespace GitCommandsTests
                                  "Author date:\t3 days ago (" + authorTime.ToLocalTime().ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")" + Environment.NewLine +
                                  "Committer:\t<a href='mailto:John.Doe@test.com'>Jane Doe (Acme Inc) &lt;Jane.Doe@test.com&gt;</a>" + Environment.NewLine +
                                  "Commit date:\t2 days ago (" + commitTime.ToLocalTime().ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")" + Environment.NewLine +
-                                 "Commit hash:\t" + commitGuid + Environment.NewLine;
+                                 "Commit hash:\t" + commitGuid;
 
             var expectedBody = "\n\nI made a really neato change." + Environment.NewLine + Environment.NewLine +
                                "Notes (p4notes):" + Environment.NewLine +
                                "\tP4@547123\n\n";
 
-            var commitData = CommitData.CreateFromRawData(rawData);
+            var commitData = CommitData.CreateFromFormatedData(rawData);
             var commitInformation = CommitInformation.GetCommitInfo(commitData);
             
             Assert.AreEqual(expectedHeader,commitInformation.Header);
