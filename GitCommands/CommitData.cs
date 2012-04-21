@@ -103,7 +103,7 @@ namespace GitCommands
 
             //Do not cache this command, since notes can be added
             string arguments = string.Format(CultureInfo.InvariantCulture,
-                    "log -1 --pretty=\"format:%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%B%nNotes:%n%-N\" {0}", sha1);
+                    "log -1 --pretty=\"format:"+LogFormat+"\" {0}", sha1);
             var info =
                 module.RunCmd(
                     Settings.GitCommand,
@@ -116,8 +116,6 @@ namespace GitCommands
                 error = "Cannot find commit" + sha1;
                 return null;
             }
-
-            info = GitCommandHelpers.ReEncodeStringFromLossless(info);
 
             int index = info.IndexOf(sha1) + sha1.Length;
 
@@ -132,23 +130,25 @@ namespace GitCommands
                 return null;
             }
 
-            CommitData commitInformation = CreateFromRawData(info);
+            CommitData commitInformation = CreateFromFormatedData(info);
 
             return commitInformation;
         }
 
-        /// <summary>
-        /// Creates a CommitData object from raw commit info data from git.  The string passed in should be
-        /// exact output of a log or show command using --format=raw.
-        /// </summary>
-        /// <param name="rawData">Raw commit data from git.</param>
-        /// <returns>CommitData object populated with parsed info from git string.</returns>
-        public static CommitData CreateFromRawData(string rawData)
-        {
-            if (rawData == null)
-                throw new ArgumentNullException("rawData");
+        public static readonly string LogFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N";
 
-            var lines = rawData.Split('\n');
+        /// <summary>
+        /// Creates a CommitData object from formated commit info data from git.  The string passed in should be
+        /// exact output of a log or show command using --format=LogFormat.
+        /// </summary>
+        /// <param name="data">Formated commit data from git.</param>
+        /// <returns>CommitData object populated with parsed info from git string.</returns>
+        public static CommitData CreateFromFormatedData(string data)
+        {
+            if (data == null)
+                throw new ArgumentNullException("Data");
+
+            var lines = data.Split('\n');
             
             var guid = lines[0];
 
@@ -159,13 +159,15 @@ namespace GitCommands
             string[] parentLines = lines[2].Split(new char[]{' '});
             ReadOnlyCollection<string> parentGuids = parentLines.ToList().AsReadOnly();
 
-            var author = lines[3];
+            var author = GitCommandHelpers.ReEncodeStringFromLossless(lines[3]);
             var authorDate = GetTimeFromUtcTimeLine(lines[4]);
 
-            var committer = lines[5];
+            var committer = GitCommandHelpers.ReEncodeStringFromLossless(lines[5]);
             var commitDate = GetTimeFromUtcTimeLine(lines[6]);
 
-            int startIndex = 7;
+            string commitEncoding = lines[7];
+
+            int startIndex = 8;
             int endIndex = lines.Length - 1;
             if (lines[endIndex] == "Notes:")
                 endIndex--;
@@ -182,7 +184,8 @@ namespace GitCommands
                     bNotesStart = true;
             }
 
-            var body = message.ToString();
+            //commit message is not reencoded by git when format is given
+            var body = GitCommandHelpers.ReEncodeCommitMessage(message.ToString(), commitEncoding);
 
             var commitInformation = new CommitData(guid, treeGuid, parentGuids, author, authorDate,
                 committer, commitDate, body);
