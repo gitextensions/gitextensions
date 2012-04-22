@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -12,9 +13,7 @@ using GitUI.Hotkey;
 using GitUI.Script;
 using GitUI.Tag;
 using Gravatar;
-using ResourceManager;
 using ResourceManager.Translation;
-using System.IO;
 
 namespace GitUI
 {
