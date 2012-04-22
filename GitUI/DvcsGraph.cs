@@ -459,6 +459,8 @@ namespace GitUI
 
         private void dataGrid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
+            if (e.RowIndex < 0)
+                return;
             if (Rows[e.RowIndex].Height != RowTemplate.Height)
             {
                 Rows[e.RowIndex].Height = RowTemplate.Height;
