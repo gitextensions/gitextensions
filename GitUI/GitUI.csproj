@@ -188,6 +188,7 @@
     <Compile Include="MenuStripEx.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="MergeToolsHelper.cs" />
     <Compile Include="PathFormatter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Editor\FileViewer.cs">
