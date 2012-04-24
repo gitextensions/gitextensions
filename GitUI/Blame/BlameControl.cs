@@ -103,7 +103,7 @@ namespace GitUI.Blame
 
         void BlameFile_SelectedLineChanged(object sender, int selectedLine)
         {
-            if (selectedLine >= _blame.Lines.Count)
+            if (_blame == null || selectedLine >= _blame.Lines.Count)
                 return;
 
             var newRevision = _blame.Lines[selectedLine].CommitGuid;
