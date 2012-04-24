@@ -423,9 +423,10 @@ namespace GitUI
             }
         }
 
-        void UserMenu_Click(object sender, EventArgs e)
+        private void UserMenu_Click(object sender, EventArgs e)
         {
             ScriptRunner.RunScript(((ToolStripButton)sender).Text, null);
+            RevisionGrid.RefreshRevisions();
         }
 
         private void UpdateJumplist(bool validWorkingDir)
