@@ -191,6 +191,8 @@ namespace GitUI.Blame
 
         private void ActiveTextAreaControlDoubleClick(object sender, EventArgs e)
         {
+            if (_lastRevision == null)
+                return;
             var gitRevision = new GitRevision(_lastRevision) { ParentGuids = new[] { _lastRevision + "^" } };
             if (_revGrid != null)
             {
