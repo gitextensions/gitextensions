@@ -115,7 +115,7 @@ namespace GitUI.Blame
             commitInfo.SetRevision(_lastRevision);
         }
 
-        bool bChangeScrollPosition = false;
+        bool bChangeScrollPosition;
 
         void BlameCommitter_ScrollPosChanged(object sender, EventArgs e)
         {
@@ -174,12 +174,9 @@ namespace GitUI.Blame
                 }
                 else
                 {
-                    blameCommitter.AppendLine((blameHeader.Author + " - " + blameHeader.AuthorTime + " - " + blameHeader.FileName + new string(' ', 100)).Trim(new char[] { '\r', '\n' }));
+                    blameCommitter.AppendLine((blameHeader.Author + " - " + blameHeader.AuthorTime + " - " + blameHeader.FileName + new string(' ', 100)).Trim(new[] { '\r', '\n' }));
                 }
-                if (blameLine.LineText == null)
-                    blameFile.AppendLine("");
-                else
-                    blameFile.AppendLine(blameLine.LineText.Trim(new char[] { '\r', '\n' }));
+                blameFile.AppendLine(blameLine.LineText == null ? "" : blameLine.LineText.Trim(new[] {'\r', '\n'}));
             }
 
             BlameCommitter.ViewText("committer.txt", blameCommitter.ToString());

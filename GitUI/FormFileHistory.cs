@@ -14,8 +14,8 @@ namespace GitUI
     public sealed partial class FormFileHistory : GitExtensionsForm
     {
         private readonly SynchronizationContext syncContext = SynchronizationContext.Current;
-        private FilterRevisionsHelper filterRevisionsHelper;
-        private FilterBranchHelper filterBranchHelper;
+        private readonly FilterRevisionsHelper filterRevisionsHelper;
+        private readonly FilterBranchHelper filterBranchHelper;
 
         public FormFileHistory(string fileName, GitRevision revision, bool filterByRevision)
         {
@@ -366,7 +366,7 @@ namespace GitUI
             FileChanges.ViewSelectedRevisions();
         }
 
-        private static readonly string FormBrowseName = "FormBrowse";
+        private const string FormBrowseName = "FormBrowse";
 
         public override void AddTranslationItems(Translation translation)
         {
