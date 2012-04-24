@@ -442,7 +442,8 @@ namespace GitUI
 
         public bool SetAndApplyBranchFilter(string filter)
         {
-            if (filter.Equals(_revisionFilter.GetBranchFilter())) return false;
+            if (filter.Equals(_revisionFilter.GetBranchFilter())) 
+                return false;
             if (filter.Equals(""))
             {
                 Settings.BranchFilterEnabled = false;
@@ -1024,15 +1025,14 @@ namespace GitUI
 
                         if (heads.Count > 0)
                         {
-                            heads.Sort(new Comparison<GitHead>(
-                                           (left, right) =>
+                            heads.Sort((left, right) =>
                                            {
                                                if (left.IsTag != right.IsTag)
                                                    return right.IsTag.CompareTo(left.IsTag);
                                                if (left.IsRemote != right.IsRemote)
                                                    return left.IsRemote.CompareTo(right.IsRemote);
                                                return left.Name.CompareTo(right.Name);
-                                           }));
+                                           });
 
                             foreach (var head in heads)
                             {
@@ -1353,7 +1353,7 @@ namespace GitUI
 
         private void RefreshGravatar(Image image)
         {
-            _syncContext.Post(state => { Revisions.Refresh(); }, null);
+            _syncContext.Post(state => Revisions.Refresh(), null);
         }
 
 
@@ -1868,50 +1868,24 @@ namespace GitUI
             
              */
             #endregion
+
             if (span.TotalMinutes < 1.0)
-            {
-                if (span.Seconds == 1)
-                    return string.Format(Strings.Get1SecondAgoText(), "1");
-                else
-                    return string.Format(Strings.GetNSecondsAgoText(), span.Seconds);
-            }
+                return span.Seconds == 1 ? string.Format(Strings.Get1SecondAgoText(), "1") : string.Format(Strings.GetNSecondsAgoText(), span.Seconds);
 
             if (span.TotalHours < 1.0)
-            {
-                if (span.Minutes == 1)
-                    return string.Format(Strings.Get1MinuteAgoText(), "1");
-                else
-                    return string.Format(Strings.GetNMinutesAgoText(), span.Minutes);
-            }
+                return span.Minutes == 1 ? string.Format(Strings.Get1MinuteAgoText(), "1") : string.Format(Strings.GetNMinutesAgoText(), span.Minutes);
 
             if (span.TotalHours < 24.0)
-            {
-                if (span.Hours == 1)
-                    return string.Format(Strings.Get1HourAgoText(), "1");
-                else
-                    return string.Format(Strings.GetNHoursAgoText(), span.Hours);
-            }
+                return span.Hours == 1 ? string.Format(Strings.Get1HourAgoText(), "1") : string.Format(Strings.GetNHoursAgoText(), span.Hours);
 
             if (span.TotalDays < 30.0)
-            {
-                if (span.Days == 1)
-                    return string.Format(Strings.Get1DayAgoText(), "1");
-                else
-                    return string.Format(Strings.GetNDaysAgoText(), span.Days);
-            }
+                return span.Days == 1 ? string.Format(Strings.Get1DayAgoText(), "1") : string.Format(Strings.GetNDaysAgoText(), span.Days);
 
             if (span.TotalDays < 365.0)
-            {
-                if (span.Days < 60)
-                    return string.Format(Strings.Get1MonthAgoText(), "1");
-                else    // 30.417 = 365 days / 12 months - note that the if statement only bothers with 30 days for "1 month ago" because span.Days is int.
-                    return string.Format(Strings.GetNMonthsAgoText(), (int)(span.TotalDays / 30.417));  // round down
-            }
+                return span.Days < 60 ? string.Format(Strings.Get1MonthAgoText(), "1") : string.Format(Strings.GetNMonthsAgoText(), (int)(span.TotalDays / 30.417));
 
-            if (span.TotalDays < 730.0)  // less than 2.0 years = "1 year"
-                return string.Format(Strings.Get1YearAgoText(), "1");
-            else
-                return string.Format(Strings.GetNYearsAgoText(), (int)(span.TotalDays / 365.0));        // round down
+            // less than 2.0 years = "1 year"
+            return span.TotalDays < 730.0 ? string.Format(Strings.Get1YearAgoText(), "1") : string.Format(Strings.GetNYearsAgoText(), (int)(span.TotalDays / 365.0));
         }
 
         private void UpdateGraph(GitRevision rev)
@@ -2367,14 +2341,14 @@ namespace GitUI
             this._NO_TRANSLATE_RevisionGrid = RevisionGrid;
 
 
-            this._NO_TRANSLATE_toolStripDropDownButton2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._NO_TRANSLATE_toolStripDropDownButton2.DropDownItems.AddRange(new ToolStripItem[] {
             this.localToolStripMenuItem,
             this.remoteToolStripMenuItem});
 
-            this._NO_TRANSLATE_toolStripBranches.DropDown += new System.EventHandler(this.toolStripBranches_DropDown);
-            this._NO_TRANSLATE_toolStripBranches.TextUpdate += new System.EventHandler(this.toolStripBranches_TextUpdate);
-            this._NO_TRANSLATE_toolStripBranches.Leave += new System.EventHandler(this.toolStripBranches_Leave);
-            this._NO_TRANSLATE_toolStripBranches.KeyUp += new System.Windows.Forms.KeyEventHandler(this.toolStripBranches_KeyUp);
+            this._NO_TRANSLATE_toolStripBranches.DropDown += this.toolStripBranches_DropDown;
+            this._NO_TRANSLATE_toolStripBranches.TextUpdate += this.toolStripBranches_TextUpdate;
+            this._NO_TRANSLATE_toolStripBranches.Leave += this.toolStripBranches_Leave;
+            this._NO_TRANSLATE_toolStripBranches.KeyUp += this.toolStripBranches_KeyUp;
 
 
             InitToolStripBranchFilter();
@@ -2544,7 +2518,7 @@ namespace GitUI
             this.diffContainsToolStripMenuItem.CheckOnClick = true;
             this.diffContainsToolStripMenuItem.Name = "diffContainsToolStripMenuItem";
             this.diffContainsToolStripMenuItem.Text = "Diff contains (SLOW)";
-            this.diffContainsToolStripMenuItem.Click += new System.EventHandler(this.diffContainsToolStripMenuItem_Click);
+            this.diffContainsToolStripMenuItem.Click += this.diffContainsToolStripMenuItem_Click;
             // 
             // hashToolStripMenuItem
             // 
@@ -2563,15 +2537,15 @@ namespace GitUI
             this._NO_TRANSLATE_toolStripLabel2 = toolStripLabel2;
             this._NO_TRANSLATE_form = form;
 
-            this._NO_TRANSLATE_toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._NO_TRANSLATE_toolStripDropDownButton1.DropDownItems.AddRange(new ToolStripItem[] {
                 this.commitToolStripMenuItem1,
                 this.committerToolStripMenuItem,
                 this.authorToolStripMenuItem,
                 this.diffContainsToolStripMenuItem});
 
-            this._NO_TRANSLATE_toolStripLabel2.Click += new System.EventHandler(this.ToolStripLabel2Click);
-            this._NO_TRANSLATE_toolStripTextBoxFilter.Leave += new System.EventHandler(this.ToolStripTextBoxFilterLeave);
-            this._NO_TRANSLATE_toolStripTextBoxFilter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ToolStripTextBoxFilterKeyPress);
+            this._NO_TRANSLATE_toolStripLabel2.Click += this.ToolStripLabel2Click;
+            this._NO_TRANSLATE_toolStripTextBoxFilter.Leave += this.ToolStripTextBoxFilterLeave;
+            this._NO_TRANSLATE_toolStripTextBoxFilter.KeyPress += this.ToolStripTextBoxFilterKeyPress;
 
         
         }
