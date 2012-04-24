@@ -596,14 +596,16 @@ namespace GitUI.Editor
 
         private void CopyPatchToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(_internalFileViewer.GetSelectedText()))
+            var selectedText = _internalFileViewer.GetSelectedText();
+            if (!string.IsNullOrEmpty(selectedText))
             {
-                Clipboard.SetText(_internalFileViewer.GetSelectedText());
+                Clipboard.SetText(selectedText);
+                return;
             }
-            else
-            {
-                Clipboard.SetText(_internalFileViewer.GetText());
-            }
+            
+            var text = _internalFileViewer.GetText();
+            if (!text.IsNullOrEmpty())
+                Clipboard.SetText(text);
         }
 
         public int GetSelectionPosition()
