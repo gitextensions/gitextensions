@@ -35,12 +35,13 @@ namespace GitUI
             this.rbResetBranch = new System.Windows.Forms.RadioButton();
             this.rbCreateBranch = new System.Windows.Forms.RadioButton();
             this.rbDontCreate = new System.Windows.Forms.RadioButton();
+            this.cbAutoStash = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // btOk
             // 
             this.btOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btOk.Location = new System.Drawing.Point(280, 104);
+            this.btOk.Location = new System.Drawing.Point(280, 111);
             this.btOk.Name = "btOk";
             this.btOk.Size = new System.Drawing.Size(87, 25);
             this.btOk.TabIndex = 2;
@@ -51,7 +52,7 @@ namespace GitUI
             // btCancel
             // 
             this.btCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btCancel.Location = new System.Drawing.Point(373, 104);
+            this.btCancel.Location = new System.Drawing.Point(373, 111);
             this.btCancel.Name = "btCancel";
             this.btCancel.Size = new System.Drawing.Size(87, 25);
             this.btCancel.TabIndex = 6;
@@ -64,7 +65,7 @@ namespace GitUI
             this.rbResetBranch.Checked = true;
             this.rbResetBranch.Location = new System.Drawing.Point(12, 12);
             this.rbResetBranch.Name = "rbResetBranch";
-            this.rbResetBranch.Size = new System.Drawing.Size(295, 24);
+            this.rbResetBranch.Size = new System.Drawing.Size(277, 24);
             this.rbResetBranch.TabIndex = 7;
             this.rbResetBranch.TabStop = true;
             this.rbResetBranch.Text = "Reset local branch with the name \'{0}\'";
@@ -90,12 +91,23 @@ namespace GitUI
             this.rbDontCreate.Text = "Do not create local branch";
             this.rbDontCreate.UseVisualStyleBackColor = true;
             // 
+            // cbAutoStash
+            // 
+            this.cbAutoStash.AutoSize = true;
+            this.cbAutoStash.Location = new System.Drawing.Point(12, 112);
+            this.cbAutoStash.Name = "cbAutoStash";
+            this.cbAutoStash.Size = new System.Drawing.Size(100, 24);
+            this.cbAutoStash.TabIndex = 14;
+            this.cbAutoStash.Text = "Auto stash";
+            this.cbAutoStash.UseVisualStyleBackColor = true;
+            // 
             // FormCheckoutRemoteBranch
             // 
             this.AcceptButton = this.btOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(472, 139);
+            this.ClientSize = new System.Drawing.Size(472, 144);
+            this.Controls.Add(this.cbAutoStash);
             this.Controls.Add(this.rbDontCreate);
             this.Controls.Add(this.rbCreateBranch);
             this.Controls.Add(this.rbResetBranch);
@@ -119,5 +131,6 @@ namespace GitUI
         private System.Windows.Forms.RadioButton rbResetBranch;
         private System.Windows.Forms.RadioButton rbCreateBranch;
         private System.Windows.Forms.RadioButton rbDontCreate;
+        private System.Windows.Forms.CheckBox cbAutoStash;
     }
 }

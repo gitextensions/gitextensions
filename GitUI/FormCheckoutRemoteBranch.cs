@@ -10,6 +10,14 @@ namespace GitUI
 {
     public partial class FormCheckoutRemoteBranch : GitExtensionsForm
     {
+        #region Translations
+        private readonly TranslationString _applyShashedItemsAgain =
+            new TranslationString("Apply stashed items to working dir again?");
+
+        private readonly TranslationString _applyShashedItemsAgainCaption =
+            new TranslationString("Auto stash");
+        #endregion
+
         string _branch = "";
         string _remoteName = "";
         string _newLocalBranchName = "";
@@ -54,12 +62,25 @@ namespace GitUI
             }
             rbResetBranch.Text = String.Format(rbResetBranch.Text, _localBranchName);
             rbCreateBranch.Text = String.Format(rbCreateBranch.Text, _newLocalBranchName);
+            cbAutoStash.Checked = Settings.AutoStash;
+        }
+
+        private bool CalculateStashedValue()
+        {
+            if (cbAutoStash.Checked &&
+                Settings.Module.GitStatus(UntrackedFilesMode.No, IgnoreSubmodulesMode.Default).Count > 0)
+            {
+                GitUICommands.Instance.Stash(this);
+                return true;
+            }
+            return false;
         }
 
         private void OkClick(object sender, EventArgs e)
         {
             try
             {
+                Settings.AutoStash = cbAutoStash.Checked;
                 var command = "checkout";
 
                 //Get a localbranch name
@@ -69,8 +90,16 @@ namespace GitUI
                     command += string.Format(" -B {0}", _localBranchName);
 
                 command += " \"" + _branch + "\"";
+                bool stashed = CalculateStashedValue();
                 var form = new FormProcess(command);
                 form.ShowDialog(this);
+                if (!form.ErrorOccurred() && stashed)
+                {
+                    bool messageBoxResult = MessageBox.Show(this, _applyShashedItemsAgain.Text, 
+                        _applyShashedItemsAgainCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes;
+                    if (messageBoxResult)
+                        new FormProcess("stash pop").ShowDialog(this);
+                }
                 if (!form.ErrorOccurred())
                     Close();
             }
