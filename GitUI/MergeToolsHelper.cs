@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Windows.Forms;
-using ResourceManager.Translation;
 using GitCommands;
 using Microsoft.Win32;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
@@ -89,6 +86,12 @@ namespace GitUI
             }
         }
 
+        private static string GetGlobalSetting(string setting)
+        {
+            var configFile = GitCommandHelpers.GetGlobalConfig();
+            return configFile.GetValue(setting);
+        }
+
         private static string FindFileInFolders(string fileName, params string[] locations)
         {
             foreach (string location in locations)
@@ -110,7 +113,7 @@ namespace GitUI
             switch (globalMergeTool)
             {
                 case "kdiff3":
-                    string kdiff3path = Settings.Module.GetGlobalSetting("mergetool.kdiff3.path");
+                    string kdiff3path = GetGlobalSetting("mergetool.kdiff3.path");
                     string regkdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "") + "\\kdiff3.exe";
 
                     mergetoolPath = FindFileInFolders("kdiff3.exe", kdiff3path,
@@ -119,7 +122,7 @@ namespace GitUI
                                                            regkdiff3path);
                     break;
                 case "winmerge":
-                    string winmergepath = Settings.Module.GetGlobalSetting("mergetool.winmerge.path");
+                    string winmergepath = GetGlobalSetting("mergetool.winmerge.path");
 
                     mergetoolPath = FindFileInFolders("winmergeu.exe", winmergepath,
                                                            @"c:\Program Files\winmerge\",
@@ -135,7 +138,7 @@ namespace GitUI
             switch (globalDiffTool)
             {
                 case "beyondcompare3":
-                    string bcomppath = Settings.Module.GetGlobalSetting("difftool.beyondcompare3.path");
+                    string bcomppath = GetGlobalSetting("difftool.beyondcompare3.path");
 
                     difftoolPath = FindFileInFolders("bcomp.exe",
                                                           bcomppath,
@@ -149,7 +152,7 @@ namespace GitUI
                     }
                     return "\"" + difftoolPath + "\" \"$LOCAL\" \"$REMOTE\"";
                 case "kdiff3":
-                    string kdiff3path = Settings.Module.GetGlobalSetting("difftool.kdiff3.path");
+                    string kdiff3path = GetGlobalSetting("difftool.kdiff3.path");
                     string regkdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "") + "\\kdiff3.exe";
 
                     difftoolPath = FindFileInFolders("kdiff3.exe", kdiff3path,
@@ -180,7 +183,7 @@ namespace GitUI
                     }
                     return "\"" + difftoolPath + "\" \"$LOCAL\" \"$REMOTE\"";
                 case "winmerge":
-                    string winmergepath = Settings.Module.GetGlobalSetting("difftool.winmerge.path");
+                    string winmergepath = GetGlobalSetting("difftool.winmerge.path");
 
                     difftoolPath = FindFileInFolders("winmergeu.exe", winmergepath,
                                                           @"c:\Program Files\winmerge\",
