@@ -2225,14 +2225,6 @@ namespace GitUI
             // DifftoolCmd
             // 
             this.DifftoolCmd.FormattingEnabled = true;
-            this.DifftoolCmd.Items.AddRange(new object[] {
-            "\"c:/Program Files/Perforce/p4merge.exe\" \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"",
-            "\"c:/Program Files/TortoiseSVN/bin/TortoiseMerge.exe\" \"$LOCAL\" \"$REMOTE\"",
-            "\"c:/Program Files/Araxis/Araxis Merge/Compare.exe\" -wait -merge -3 -a1 \"$BASE\" \"$" +
-                "LOCAL\" \"$REMOTE\" \"$MERGED\"",
-            "\"c:/Program Files/SourceGear/DiffMerge/DiffMerge.exe\" /m /r=\"$MERGED\" \"$LOCAL\" \"$" +
-                "BASE\" \"$REMOTE\"",
-            "\"C:/Program Files/Beyond Compare 3/bcomp.exe\" \"$LOCAL\" \"$REMOTE\""});
             this.DifftoolCmd.Location = new System.Drawing.Point(153, 259);
             this.DifftoolCmd.Name = "DifftoolCmd";
             this.DifftoolCmd.Size = new System.Drawing.Size(347, 21);
@@ -2360,15 +2352,6 @@ namespace GitUI
             // MergeToolCmd
             // 
             this.MergeToolCmd.FormattingEnabled = true;
-            this.MergeToolCmd.Items.AddRange(new object[] {
-            "\"c:/Program Files/Perforce/p4merge.exe\" \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"",
-            "\"c:/Program Files/TortoiseSVN/bin/TortoiseMerge.exe\" /base:\"$BASE\" /mine:\"$LOCAL\"" +
-                " /theirs:\"$REMOTE\" /merged:\"$MERGED\"",
-            "\"c:/Program Files/Araxis/Araxis Merge/Compare.exe\" -wait -merge -3 -a1 \"$BASE\" \"$" +
-                "LOCAL\" \"$REMOTE\" \"$MERGED\"",
-            "\"c:/Program Files/SourceGear/DiffMerge/DiffMerge.exe\" /m /r=\"$MERGED\" \"$LOCAL\" \"$" +
-                "BASE\" \"$REMOTE\"",
-            "\"C:/Program Files/Beyond Compare 3/bcomp.exe\" \"$BASE\" \"$LOCAL\" \"$REMOTE\""});
             this.MergeToolCmd.Location = new System.Drawing.Point(153, 147);
             this.MergeToolCmd.Name = "MergeToolCmd";
             this.MergeToolCmd.Size = new System.Drawing.Size(347, 21);
