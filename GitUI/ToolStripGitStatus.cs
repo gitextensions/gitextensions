@@ -224,7 +224,10 @@ namespace GitUI
                 }
             }
 
-            Text = string.Format(CommitTranslatedString + " ({0})", allChangedFiles.Count.ToString());
+            if (allChangedFiles.Count == 0)
+                Text = CommitTranslatedString;
+            else
+                Text = string.Format(CommitTranslatedString + " ({0})", allChangedFiles.Count.ToString());
         }
 
         private void ScheduleNextRegularUpdate()
