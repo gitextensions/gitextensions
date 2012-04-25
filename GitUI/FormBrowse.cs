@@ -350,9 +350,9 @@ namespace GitUI
                 splitter.SplitRecentRepos(repo, mostRecentRepos, mostRecentRepos);
             }
 
-            if (mostRecentRepos.Count > 0)
-                _NO_TRANSLATE_Workingdir.Text = mostRecentRepos[0].Caption;
-            _NO_TRANSLATE_Workingdir.Text = Settings.WorkingDir;
+            _NO_TRANSLATE_Workingdir.Text = mostRecentRepos.Count > 0 
+                ? mostRecentRepos[0].Caption 
+                : Settings.WorkingDir;
         }
 
         /// <summary>
