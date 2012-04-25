@@ -197,6 +197,7 @@ namespace GitUI
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.blameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.blameToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.findInDiffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolPanel.Panel1.SuspendLayout();
             this.toolPanel.Panel2.SuspendLayout();
             this.toolPanel.SuspendLayout();
@@ -776,7 +777,8 @@ namespace GitUI
             this.blameToolStripMenuItem,
             this.diffBaseLocalToolStripMenuItem,
             this.difftoolRemoteLocalToolStripMenuItem,
-            this.openContainingFolderToolStripMenuItem});
+            this.openContainingFolderToolStripMenuItem,
+            this.findInDiffToolStripMenuItem});
             this.DiffContextMenu.Name = "DiffContextMenu";
             this.DiffContextMenu.Size = new System.Drawing.Size(252, 180);
             this.DiffContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.DiffContextMenu_Opening);
@@ -1628,7 +1630,6 @@ namespace GitUI
             this.SvnFetchToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
             this.SvnFetchToolStripMenuItem.Text = "SVN Fetch";
             this.SvnFetchToolStripMenuItem.Click += new System.EventHandler(this.SvnFetchToolStripMenuItem_Click);
-
             // 
             // blameToolStripMenuItem
             // 
@@ -1643,6 +1644,14 @@ namespace GitUI
             this.blameToolStripMenuItem1.Size = new System.Drawing.Size(264, 22);
             this.blameToolStripMenuItem1.Text = "Blame";
             this.blameToolStripMenuItem1.Click += new System.EventHandler(this.blameToolStripMenuItem1_Click);
+            // 
+            // findInDiffToolStripMenuItem
+            // 
+            this.findInDiffToolStripMenuItem.Name = "findInDiffToolStripMenuItem";
+            this.findInDiffToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
+            this.findInDiffToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.findInDiffToolStripMenuItem.Text = "Find";
+            this.findInDiffToolStripMenuItem.Click += new System.EventHandler(this.findInDiffToolStripMenuItem_Click);
             // FormBrowse
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1850,6 +1859,7 @@ namespace GitUI
         private ToolStripSeparator toolStripSeparator24;
         private ToolStripMenuItem SvnFetchToolStripMenuItem;
         private ToolStripMenuItem blameToolStripMenuItem;
-        private ToolStripMenuItem blameToolStripMenuItem1;        
+        private ToolStripMenuItem blameToolStripMenuItem1;
+        private ToolStripMenuItem findInDiffToolStripMenuItem;        
     }
 }
