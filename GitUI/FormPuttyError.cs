@@ -18,8 +18,8 @@ namespace GitUI
 
             return form.KeyPath;
         }
-     
-        private FormPuttyError()
+
+        public FormPuttyError()
         {
             InitializeComponent();
             Translate();
