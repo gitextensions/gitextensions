@@ -52,7 +52,7 @@ namespace GitUI
                 Title = "Browse for key"
             };
 
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog(parent) == DialogResult.OK)
                 return dialog.FileName;
 
             return null;
