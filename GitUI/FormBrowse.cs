@@ -2321,6 +2321,38 @@ namespace GitUI
             TranslationUtl.TranslateItemsFromFields(Name, _FilterBranchHelper, translation);
         }
 
+
+        private IList<GitItemStatus> FindDiffFilesMatches(string name)
+        {
+            var candidates = DiffFiles.GitItemStatuses;
+
+            string nameAsLower = name.ToLower();
+
+            return candidates.Where(item => 
+                {
+                    return item.Name != null && item.Name.ToLower().Contains(nameAsLower)
+                        || item.OldName != null && item.OldName.ToLower().Contains(nameAsLower);
+                }
+                ).ToList();
+        }
+
+
+
+        private void findInDiffToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var searchWindow = new SearchWindow<GitItemStatus>(FindDiffFilesMatches)
+            {
+                Owner = this
+            };
+            searchWindow.ShowDialog(this);
+            GitItemStatus selectedItem = searchWindow.SelectedItem;
+            if (selectedItem != null)
+            {
+                DiffFiles.SelectedItem = selectedItem;
+            }
+
+        }
+
     }
 
 }
