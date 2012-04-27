@@ -57,6 +57,11 @@ namespace GitUI
             else if (IsMerge)
                 arguments = "-m 1";
 
+            if (recordCommit.Checked)
+            {
+                arguments += " -x";
+            }
+
             if (!formClosed)
             {
                 MessageBox.Show(this, _cmdExecutedMsgBox.Text + " " + Environment.NewLine + Settings.Module.CherryPick(RevisionGrid.GetSelectedRevisions()[0].Guid, AutoCommit.Checked, arguments), _cmdExecutedMsgBoxCaption.Text);
