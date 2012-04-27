@@ -97,7 +97,9 @@ namespace GitExtensions
             }
 
             FormSplash.HideSplash();
-            
+
+            MouseWheelRedirector.Active = true;
+
             if (args.Length <= 1)
             {
                 GitUICommands.Instance.StartBrowseDialog();
