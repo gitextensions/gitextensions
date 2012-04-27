@@ -85,12 +85,6 @@ namespace GitUI
         private int visibleBottom;
         private int visibleTop;
 
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            if (Settings.FocusControlOnHover)
-                Select();
-        }
-
         public void SetDimensions(int node_dimension, int lane_width, int lane_line_width, int row_height, Brush selectionBrush)
         {
             RowTemplate.Height = row_height;
