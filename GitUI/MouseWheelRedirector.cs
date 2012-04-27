@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using GitCommands;
 
 namespace GitUI
 {
@@ -20,7 +19,7 @@ namespace GitUI
             get { return instance._active; }
             set
             {
-                if (instance._active != value && !Settings.FocusControlOnHover)
+                if (instance._active != value)
                 {
                     instance._active = value;
                     if (instance._active)

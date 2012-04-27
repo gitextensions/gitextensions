@@ -9,6 +9,7 @@ namespace GitUI.Editor
     public interface IFileViewer
     {
         event MouseEventHandler MouseMove;
+        event EventHandler MouseEnter;
         event EventHandler MouseLeave;
         event EventHandler TextChanged;
         event EventHandler ScrollPosChanged;

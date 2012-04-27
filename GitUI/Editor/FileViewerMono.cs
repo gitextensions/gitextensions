@@ -17,6 +17,7 @@ namespace GitUI.Editor
             TextEditor.DoubleClick += TextEditor_DoubleClick;
             TextEditor.MouseDown += TextEditor_MouseDown;
             TextEditor.BackColor = Color.White;
+            TextEditor.MouseEnter += TextArea_MouseEnter;
             TextEditor.MouseLeave += TextArea_MouseLeave;
             TextEditor.MouseMove += TextArea_MouseLeave;
         }
@@ -26,10 +27,17 @@ namespace GitUI.Editor
             set { TextEditor.Font = value; }
         }
 
+        public new event EventHandler MouseEnter;
         public new event EventHandler MouseLeave;
 
         public void Find()
         {
+        }
+
+        void TextArea_MouseEnter(object sender, EventArgs e)
+        {
+            if (MouseEnter != null)
+                MouseEnter(sender, e);
         }
 
         void TextArea_MouseLeave(object sender, EventArgs e)
