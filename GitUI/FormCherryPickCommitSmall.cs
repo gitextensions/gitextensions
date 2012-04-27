@@ -49,6 +49,8 @@ namespace GitUI
                 Pick.Location.Y - (ParentsList.Height + ParentsLabel.Height));
                 AutoCommit.Location = new System.Drawing.Point(AutoCommit.Location.X,
                 AutoCommit.Location.Y - (ParentsList.Height + ParentsLabel.Height));
+                RecordCommit.Location = new System.Drawing.Point(RecordCommit.Location.X,
+                RecordCommit.Location.Y - (ParentsList.Height + ParentsLabel.Height));
             }
 
         }
@@ -63,7 +65,7 @@ namespace GitUI
             Message.Text = string.Format(Strings.GetMessageText() + ": {0}", Revision.Message);
         }
 
-        private void Revert_Click(object sender, EventArgs e)
+        private void Pick_Click(object sender, EventArgs e)
         {
             string arguments = "";
             bool CanExecute = true;
@@ -79,6 +81,12 @@ namespace GitUI
                     arguments = "-m " + (ParentsList.SelectedItems[0].Index + 1);
                 }
             }
+
+            if (RecordCommit.Checked)
+            {
+                arguments += " -x";
+            }
+
             if (CanExecute)
             {
                 new FormProcess(GitCommandHelpers.CherryPickCmd(Revision.Guid, AutoCommit.Checked, arguments)).ShowDialog(this);
