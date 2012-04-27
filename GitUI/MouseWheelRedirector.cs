@@ -30,19 +30,29 @@ namespace GitUI
             }
         }
 
+        private IntPtr  _previousHWnd = IntPtr.Zero;
+        private bool    _GEControl = false;
+
         public bool PreFilterMessage(ref Message m)
         {
-            if (m.Msg == 0x20a)
+            const int WM_MOUSEWHEEL = 0x20a;
+            const int WM_MOUSEHWHEEL = 0x20e;
+            if (m.Msg == WM_MOUSEWHEEL || m.Msg == WM_MOUSEHWHEEL)
             {
                 // WM_MOUSEWHEEL, find the control at screen position m.LParam
                 Point pos = new Point(m.LParam.ToInt32() & 0xffff, m.LParam.ToInt32() >> 16);
                 IntPtr hWnd = WindowFromPoint(pos);
                 if (hWnd != IntPtr.Zero && hWnd != m.HWnd && Control.FromHandle(hWnd) != null)
                 {
-                    Control control = Control.FromHandle(hWnd);
-                    while (control != null && !(control is GitExtensionsControl))
-                        control = control.Parent;
-                    if (control != null)
+                    if (_previousHWnd != hWnd)
+                    {
+                        Control control = Control.FromHandle(hWnd);
+                        while (control != null && !(control is GitExtensionsControl))
+                            control = control.Parent;
+                        _previousHWnd = hWnd;
+                        _GEControl = control != null;
+                    }
+                    if (_GEControl)
                     {
                         SendMessage(hWnd, m.Msg, m.WParam, m.LParam);
                         return true;
