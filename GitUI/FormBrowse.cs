@@ -2109,9 +2109,6 @@ namespace GitUI
         {
             TreeView gitTree = (TreeView)sender;
 
-            if (!gitTree.Focused && Settings.FocusControlOnHover)
-                gitTree.Focus();
-
             //DRAG
             // If the mouse moves outside the rectangle, start the drag.
             if (gitTreeDragBoxFromMouseDown != Rectangle.Empty &&

@@ -39,7 +39,6 @@
             // 
             // fileViewer
             // 
-            this.fileViewer.DisableFocusControlOnHover = false;
             this.fileViewer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.fileViewer.Font = new System.Drawing.Font("Tahoma", 9.75F);
             this.fileViewer.IgnoreWhitespaceChanges = false;

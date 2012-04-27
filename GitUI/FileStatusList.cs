@@ -146,11 +146,6 @@ namespace GitUI
         {
             ListBox listBox = sender as ListBox;
 
-            if (listBox != null && GitCommands.Settings.FocusControlOnHover)
-            {
-                listBox.Select();
-            }
-
             //DRAG
             // If the mouse moves outside the rectangle, start the drag.
             if (dragBoxFromMouseDown != Rectangle.Empty &&
