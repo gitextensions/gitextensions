@@ -2735,7 +2735,7 @@ Scegliere se cancellare il file o tenere quello modificato.</Value>
         <TranslationItem Name="$this" Property="Text">
           <Value>Impostazioni</Value>
         </TranslationItem>
-        <TranslationItem Name="LocalSettings" Property="Text">
+        <TranslationItem Name="tpLocalSettings" Property="Text">
           <Value>Impostazioni locali</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
@@ -2747,7 +2747,7 @@ Scegliere se cancellare il file o tenere quello modificato.</Value>
         <TranslationItem Name="Ok" Property="Text">
           <Value>OK</Value>
         </TranslationItem>
-        <TranslationItem Name="GlobalSettingsPage" Property="Text">
+        <TranslationItem Name="tpGlobalSettings" Property="Text">
           <Value>Impostazioni globali</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
@@ -2768,7 +2768,7 @@ Scegliere se cancellare il file o tenere quello modificato.</Value>
         <TranslationItem Name="label8" Property="Text">
           <Value>Strumento di merge</Value>
         </TranslationItem>
-        <TranslationItem Name="tabPage3" Property="Text">
+        <TranslationItem Name="tpChecklist" Property="Text">
           <Value>Verifica</Value>
         </TranslationItem>
         <TranslationItem Name="label11" Property="Text">
@@ -2780,7 +2780,7 @@ Scegliere se cancellare il file o tenere quello modificato.</Value>
         <TranslationItem Name="Rescan" Property="Text">
           <Value>Salva e verifica</Value>
         </TranslationItem>
-        <TranslationItem Name="TabPageGitExtensions" Property="Text">
+        <TranslationItem Name="tpGitExtensions" Property="Text">
           <Value>Git Extensions</Value>
         </TranslationItem>
         <TranslationItem Name="label12" Property="Text">
@@ -2798,7 +2798,7 @@ Scegliere se cancellare il file o tenere quello modificato.</Value>
         <TranslationItem Name="label14" Property="Text">
           <Value>Percorso per gli strumenti Linux (sh). Lasciare vuoto se è nel PATH</Value>
         </TranslationItem>
-        <TranslationItem Name="Ssh" Property="Text">
+        <TranslationItem Name="tpSsh" Property="Text">
           <Value>SSH</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
@@ -2890,7 +2890,7 @@ globali.</Value>
         <TranslationItem Name="EncodingLabel" Property="Text">
           <Value>Codifica</Value>
         </TranslationItem>
-        <TranslationItem Name="AppearancePage" Property="Text">
+        <TranslationItem Name="tpAppearance" Property="Text">
           <Value>Aspetto</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox4" Property="Text">
@@ -2992,7 +2992,7 @@ globali.</Value>
         <TranslationItem Name="label44" Property="Text">
           <Value>Dimensione immagine</Value>
         </TranslationItem>
-        <TranslationItem Name="StartPage" Property="Text">
+        <TranslationItem Name="tpStartPage" Property="Text">
           <Value>Pagina iniziale</Value>
         </TranslationItem>
         <TranslationItem Name="label47" Property="Text">
@@ -3013,7 +3013,7 @@ globali.</Value>
         <TranslationItem Name="helpTranslate" Property="Text">
           <Value>Aiuta a tradurre</Value>
         </TranslationItem>
-        <TranslationItem Name="TabPageGit" Property="Text">
+        <TranslationItem Name="tpGit" Property="Text">
           <Value>Git</Value>
         </TranslationItem>
         <TranslationItem Name="MulticolorBranches" Property="Text">
@@ -3083,7 +3083,7 @@ sarà impostata, se vuota, a %HOMEDRIVE%%HOMEPATH%. Cambiare il comportamento de
         <TranslationItem Name="chkShowStashCountInBrowseWindow" Property="Text">
           <Value>Visualizza il contatore delle modifiche nascoste nella finestra 'sfoglia'</Value>
         </TranslationItem>
-        <TranslationItem Name="scriptsTab" Property="Text">
+        <TranslationItem Name="tpScriptsTab" Property="Text">
           <Value>Script</Value>
         </TranslationItem>
         <TranslationItem Name="inMenuCheckBox" Property="Text">
@@ -3134,7 +3134,7 @@ sarà impostata, se vuota, a %HOMEDRIVE%%HOMEPATH%. Cambiare il comportamento de
         <TranslationItem Name="ShellExtensionsRegistered_Fix" Property="Text">
           <Value>Ripara</Value>
         </TranslationItem>
-        <TranslationItem Name="DiffTool2_Fix" Property="Text">
+        <TranslationItem Name="MergeTool_Fix" Property="Text">
           <Value>Ripara</Value>
         </TranslationItem>
         <TranslationItem Name="DiffTool_Fix" Property="Text">
@@ -3146,7 +3146,7 @@ sarà impostata, se vuota, a %HOMEDRIVE%%HOMEPATH%. Cambiare il comportamento de
         <TranslationItem Name="GitFound_Fix" Property="Text">
           <Value>Ripara</Value>
         </TranslationItem>
-        <TranslationItem Name="tabPageHotkeys" Property="Text">
+        <TranslationItem Name="tpHotkeys" Property="Text">
           <Value>Tasti rapidi</Value>
         </TranslationItem>
         <TranslationItem Name="scriptEnabled" Property="Text">

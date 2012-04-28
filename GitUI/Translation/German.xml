@@ -3425,7 +3425,7 @@ Wollen Sie dieses Skript verwenden?</Value>
         <TranslationItem Name="addToRevisionGridContextMenuDataGridViewCheckBoxColumn" Property="HeaderText">
           <Value>Kontextmenü</Value>
         </TranslationItem>
-        <TranslationItem Name="AppearancePage" Property="Text">
+        <TranslationItem Name="tpAppearance" Property="Text">
           <Value>Erscheinungsbild</Value>
         </TranslationItem>
         <TranslationItem Name="argumentsLabel" Property="Text">
@@ -3527,7 +3527,7 @@ Wollen Sie dieses Skript verwenden?</Value>
         <TranslationItem Name="DiffTool_Fix" Property="Text">
           <Value>Reparieren</Value>
         </TranslationItem>
-        <TranslationItem Name="DiffTool2_Fix" Property="Text">
+        <TranslationItem Name="MergeTool_Fix" Property="Text">
           <Value>Reparieren</Value>
         </TranslationItem>
         <TranslationItem Name="DiffToolCmdSuggest" Property="Text">
@@ -3566,7 +3566,7 @@ Wollen Sie dieses Skript verwenden?</Value>
         <TranslationItem Name="globalAutoCrlfTrue" Property="Text">
           <Value>Zeilenumbrüche im Windows-Format auschecken, im Unix-Format commiten ("core.autocrlf" = true)</Value>
         </TranslationItem>
-        <TranslationItem Name="GlobalSettingsPage" Property="Text">
+        <TranslationItem Name="tpGlobalSettings" Property="Text">
           <Value>Globale Einstellungen</Value>
         </TranslationItem>
         <TranslationItem Name="GreenIcon" Property="Text">
@@ -3809,7 +3809,7 @@ können.</Value>
         <TranslationItem Name="localAutoCrlfTrue" Property="Text">
           <Value>Zeilenumbrüche im Windows-Format auschecken, im Unix-Format commiten ("core.autocrlf" = true)</Value>
         </TranslationItem>
-        <TranslationItem Name="LocalSettings" Property="Text">
+        <TranslationItem Name="tpLocalSettings" Property="Text">
           <Value>Lokale Einstellungen</Value>
         </TranslationItem>
         <TranslationItem Name="LogEncodingLabel" Property="Text">
@@ -3884,7 +3884,7 @@ können.</Value>
         <TranslationItem Name="scriptNeedsConfirmation" Property="Text">
           <Value>Bestätigung anfordern</Value>
         </TranslationItem>
-        <TranslationItem Name="scriptsTab" Property="Text">
+        <TranslationItem Name="tpScriptsTab" Property="Text">
           <Value>Skripte</Value>
         </TranslationItem>
         <TranslationItem Name="ShellExtensionsRegistered_Fix" Property="Text">
@@ -3893,28 +3893,28 @@ können.</Value>
         <TranslationItem Name="ShowAuthorGravatar" Property="Text">
           <Value>Autor Bild von gravatar.com laden</Value>
         </TranslationItem>
-        <TranslationItem Name="Ssh" Property="Text">
+        <TranslationItem Name="tpSsh" Property="Text">
           <Value>SSH</Value>
         </TranslationItem>
         <TranslationItem Name="SshConfig_Fix" Property="Text">
           <Value>Reparieren</Value>
         </TranslationItem>
-        <TranslationItem Name="StartPage" Property="Text">
+        <TranslationItem Name="tpStartPage" Property="Text">
           <Value>Startseite</Value>
         </TranslationItem>
         <TranslationItem Name="StripedBanchChange" Property="Text">
           <Value>Branch Änderungen stricheln</Value>
         </TranslationItem>
-        <TranslationItem Name="tabPage3" Property="Text">
+        <TranslationItem Name="tpChecklist" Property="Text">
           <Value>Checkliste</Value>
         </TranslationItem>
-        <TranslationItem Name="TabPageGit" Property="Text">
+        <TranslationItem Name="tpGit" Property="Text">
           <Value>Git</Value>
         </TranslationItem>
-        <TranslationItem Name="TabPageGitExtensions" Property="Text">
+        <TranslationItem Name="tpGitExtensions" Property="Text">
           <Value>Git Extensions</Value>
         </TranslationItem>
-        <TranslationItem Name="tabPageHotkeys" Property="Text">
+        <TranslationItem Name="tpHotkeys" Property="Text">
           <Value>Tastenkombination</Value>
         </TranslationItem>
         <TranslationItem Name="translationConfig_Fix" Property="Text">
