@@ -10,9 +10,6 @@ namespace GitUI
 {
     public partial class FormCheckoutBranch : GitExtensionsForm
     {
-        private readonly TranslationString trackRemoteBranch = new TranslationString("You choose to checkout a remote branch." + Environment.NewLine + Environment.NewLine + "Do you want create a local branch with the name '{0}'" + Environment.NewLine + "that track's this remote branch?");
-        private readonly TranslationString trackRemoteBranchCaption = new TranslationString("Checkout branch");
-
         public FormCheckoutBranch()
         {
             InitializeComponent();
@@ -33,7 +30,6 @@ namespace GitUI
 
             Branches.Text = branch;
         }
-
 
         private void Initialize()
         {
@@ -63,58 +59,30 @@ namespace GitUI
 
         private void OkClick(object sender, EventArgs e)
         {
-            try
+            if (Remotebranch.Checked)
             {
-                var command = "checkout";
-                if (Remotebranch.Checked)
+                var checkoutRemote = new FormCheckoutRemoteBranch(Branches.Text, Force.Checked);
+                checkoutRemote.ShowDialog(this);
+            }
+            else
+            {
+                try
                 {
-                    //Get a localbranch name
-                    var remoteName = GitModule.GetRemoteName(Branches.Text, Settings.Module.GetRemotes(false));
-                    var localBranchName = Branches.Text.Substring(remoteName.Length + 1);
-
-                    MessageBoxIcon icon = MessageBoxIcon.Question;
-
-                    //try to determine the 'best' name for a local branch, check if the local
-                    //name for the remote branch is already used
-                    if (LocalBranchExists(localBranchName))
-                    {
-                        localBranchName = string.Concat(remoteName, "_", localBranchName);
-                        icon = MessageBoxIcon.Exclamation;
-                    }
-
-                    var result = MessageBox.Show(this, string.Format(trackRemoteBranch.Text, localBranchName), trackRemoteBranchCaption.Text, MessageBoxButtons.YesNoCancel, icon);
-
-                    if (result == DialogResult.Cancel)
-                        return;
-
-                    if (result == DialogResult.Yes)
-                        command += string.Format(" -b {0}", localBranchName);
+                    var command = "checkout";
+                    if (Force.Checked)
+                        command += " --force";
+                    command += " \"" + Branches.Text + "\"";
+                    var form = new FormProcess(command);
+                    form.ShowDialog(this);
+                    if (!form.ErrorOccurred())
+                        Close();
                 }
-
-                if (Force.Checked)
-                    command += " --force";
-                command += " \"" + Branches.Text + "\"";
-                var form = new FormProcess(command);
-                form.ShowDialog(this);
-                if (!form.ErrorOccurred())
-                    Close();
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex.Message);
+                catch (Exception ex)
+                {
+                    Trace.WriteLine(ex.Message);
+                }
             }
         }
-
-        private static bool LocalBranchExists(string name)
-        {
-            foreach (GitHead head in Settings.Module.GetHeads(false))
-            {
-                if (head.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
-                    return true;
-            }
-            return false;
-        }
-
 
         private void BranchTypeChanged()
         {

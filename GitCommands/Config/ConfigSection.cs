@@ -14,19 +14,22 @@ namespace GitCommands.Config
     {
         internal ConfigSection(string name)
         {
-            Keys = new Dictionary<string, IList<string>>();
+            Keys = new Dictionary<string, IList<string>>(StringComparer.OrdinalIgnoreCase);
 
             if (name.Contains("\"")) //[section "subsection"] case sensitive
             {
                 SectionName = name.Substring(0, name.IndexOf('\"')).Trim();
                 SubSection = name.Substring(name.IndexOf('\"') + 1, name.LastIndexOf('\"') - name.IndexOf('\"') - 1);
+                SubSectionCaseSensitive = true;
             }
             else if (!name.Contains("."))
             {
                 SectionName = name.Trim(); // [section] case sensitive
+                SubSectionCaseSensitive = true;
             }
             else
             {
+                //[section.subsection] case insensitive
                 var subSectionIndex = name.IndexOf('.');
 
                 if (subSectionIndex < 1)
@@ -34,12 +37,14 @@ namespace GitCommands.Config
 
                 SectionName = name.Substring(0, subSectionIndex).Trim();
                 SubSection = name.Substring(subSectionIndex + 1).Trim();
+                SubSectionCaseSensitive = false;
             }
         }
 
         internal IDictionary<string, IList<string>> Keys { get; set; }
         public string SectionName { get; set; }
         public string SubSection { get; set; }
+        public bool SubSectionCaseSensitive { get; set; }
 
         public void SetValue(string key, string value)
         {
@@ -74,5 +79,18 @@ namespace GitCommands.Config
                     ? string.Concat("[", SectionName, "]")
                     : string.Concat("[", SectionName, " \"", SubSection, "\"]");
         }
+
+        public bool Equals(ConfigSection other)
+        {
+            StringComparison sc;
+            if (SubSectionCaseSensitive)
+                sc = StringComparison.Ordinal;
+            else
+                sc = StringComparison.OrdinalIgnoreCase;
+
+            return string.Equals(SectionName, other.SectionName, StringComparison.OrdinalIgnoreCase) && 
+                string.Equals(SubSection, other.SubSection, sc);
+        }
+
     }
 }
