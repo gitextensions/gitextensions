@@ -306,9 +306,7 @@ namespace GitUI
 
         public void Stash(IWin32Window owner)
         {
-            var arguments = "stash save";
-            if (Settings.IncludeUntrackedFilesInAutoStash && GitCommandHelpers.VersionInUse.StashUntrackedFilesSupported)
-                arguments += " -u";
+            var arguments = GitCommandHelpers.StashSaveCmd(Settings.IncludeUntrackedFilesInAutoStash);
 
             new FormProcess(arguments).ShowDialog(owner);
         }
@@ -331,6 +329,26 @@ namespace GitUI
                 return needRefresh;
 
             var form = new FormCheckoutBranch(branch, remote);
+            form.ShowDialog(owner);
+
+            InvokeEvent(PostCheckoutBranch);
+
+            return true;
+        }
+
+        public bool StartCheckoutRemoteBranchDialog(IWin32Window owner, string branch)
+        {
+            if (!RequiresValidWorkingDir())
+                return false;
+
+            if (!InvokeEvent(PreCheckoutBranch))
+                return false;
+
+            bool needRefresh;
+            if (CheckForDirtyDir(owner, out needRefresh))
+                return needRefresh;
+
+            var form = new FormCheckoutRemoteBranch(branch);
             form.ShowDialog(owner);
 
             InvokeEvent(PostCheckoutBranch);

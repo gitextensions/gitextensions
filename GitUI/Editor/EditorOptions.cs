@@ -30,6 +30,9 @@
                     case "CPP":
                         syntax = "C#";
                         break;
+                    case "JS":
+                        syntax = "JavaScript";
+                        break;
                     default:
                         break;
                 }

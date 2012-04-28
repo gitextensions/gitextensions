@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
@@ -22,7 +22,6 @@ namespace GitUI.Editor
         {
             TreatAllFilesAsText = false;
             ShowEntireFile = false;
-            DisableFocusControlOnHover = false;
             NumberOfVisibleLines = 3;
             InitializeComponent();
             Translate();
@@ -32,6 +31,7 @@ namespace GitUI.Editor
             else
                 _internalFileViewer = new FileViewerMono();
 
+            _internalFileViewer.MouseEnter += _internalFileViewer_MouseEnter;
             _internalFileViewer.MouseLeave += _internalFileViewer_MouseLeave;
             _internalFileViewer.MouseMove += _internalFileViewer_MouseMove;
 
@@ -100,9 +100,11 @@ namespace GitUI.Editor
         void _internalFileViewer_MouseMove(object sender, MouseEventArgs e)
         {
             this.OnMouseMove(e);
+        }
 
-            if (!DisableFocusControlOnHover && Settings.FocusControlOnHover)
-                _internalFileViewer.FocusTextArea();
+        void _internalFileViewer_MouseEnter(object sender, EventArgs e)
+        {
+            this.OnMouseEnter(e);
         }
 
         void _internalFileViewer_MouseLeave(object sender, EventArgs e)
@@ -184,7 +186,6 @@ namespace GitUI.Editor
         public int NumberOfVisibleLines { get; set; }
         public bool ShowEntireFile { get; set; }
         public bool TreatAllFilesAsText { get; set; }
-        public bool DisableFocusControlOnHover { get; set; }
         public Encoding Encoding  { get; set; }
 
         private void UpdateEncodingCombo()
@@ -596,14 +597,16 @@ namespace GitUI.Editor
 
         private void CopyPatchToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(_internalFileViewer.GetSelectedText()))
+            var selectedText = _internalFileViewer.GetSelectedText();
+            if (!string.IsNullOrEmpty(selectedText))
             {
-                Clipboard.SetText(_internalFileViewer.GetSelectedText());
+                Clipboard.SetText(selectedText);
+                return;
             }
-            else
-            {
-                Clipboard.SetText(_internalFileViewer.GetText());
-            }
+            
+            var text = _internalFileViewer.GetText();
+            if (!text.IsNullOrEmpty())
+                Clipboard.SetText(text);
         }
 
         public int GetSelectionPosition()

@@ -36,13 +36,6 @@ namespace GitCommands
             ApplicationDataPath = Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
         }
 
-        private static bool? _focusControlOnHover;
-        public static bool FocusControlOnHover
-        {
-            get { return SafeGet("focuscontrolonhover", true, ref _focusControlOnHover); }
-            set { SafeSet("focuscontrolonhover", value, ref _focusControlOnHover); }
-        }
-
         private static int? _UserMenuLocationX;
         public static int UserMenuLocationX
         {
@@ -627,11 +620,24 @@ namespace GitCommands
             {
                 string old = _module.WorkingDir;
                 _module.WorkingDir = value;
+                RecentWorkingDir = _module.WorkingDir;
                 if (WorkingDirChanged != null)
                 {
                     WorkingDirChanged(old, _module.WorkingDir, _module.GetGitDirectory());
                 }
             }
+        }
+
+        public static string RecentWorkingDir
+        {
+            get { return GetString("RecentWorkingDir", null); }
+            set { SetString("RecentWorkingDir", value); }
+        }
+
+        public static bool StartWithRecentWorkingDir
+        {
+            get { return GetBool("StartWithRecentWorkingDir", false).Value; }
+            set { SetBool("StartWithRecentWorkingDir", value); }
         }
 
         public static CommandLogger GitLog { get; private set; }
@@ -879,9 +885,17 @@ namespace GitCommands
         private static void SetupSystemEncoding()
         {
             //check whether GitExtensions works with standard msysgit or msysgit-unicode
-            String controlStr = "ą";
+
+            // invoke a git command that returns an invalid argument in its response, and
+            // check if a unicode-only character is reported back. If so assume msysgit-unicode
+
+            // git config --get with a malformed key (no section) returns:
+            // "error: key does not contain a section: <key>"
+            const string controlStr = "ą"; // "a caudata"
+            string arguments = string.Format("config --get {0}", controlStr);
+
             int exitCode;
-            String s = Module.RunGitCmd(controlStr, out exitCode, null, Encoding.UTF8);
+            String s = Module.RunGitCmd(arguments, out exitCode, null, Encoding.UTF8);
             if (s != null && s.IndexOf(controlStr) != -1)
                 SystemEncoding = Encoding.UTF8;
             else
@@ -994,6 +1008,41 @@ namespace GitCommands
             set { SafeSet("NoFastForwardMerge", value, ref _NoFastForwardMerge); }
         }
 
+        private static int? _CommitValidationMaxCntCharsFirstLine;
+        public static int CommitValidationMaxCntCharsFirstLine
+        {
+            get { return SafeGet("CommitValidationMaxCntCharsFirstLine", 0, ref _CommitValidationMaxCntCharsFirstLine); }
+            set { SafeSet("CommitValidationMaxCntCharsFirstLine", value, ref _CommitValidationMaxCntCharsFirstLine); }
+        }
+
+        private static int? _CommitValidationMaxCntCharsPerLine;
+        public static int CommitValidationMaxCntCharsPerLine
+        {
+            get { return SafeGet("CommitValidationMaxCntCharsPerLine", 0, ref _CommitValidationMaxCntCharsPerLine); }
+            set { SafeSet("CommitValidationMaxCntCharsPerLine", value, ref _CommitValidationMaxCntCharsPerLine); }
+        }
+
+        private static bool? _CommitValidationSecondLineMustBeEmpty;
+        public static bool CommitValidationSecondLineMustBeEmpty
+        {
+            get { return SafeGet("CommitValidationSecondLineMustBeEmpty", false, ref _CommitValidationSecondLineMustBeEmpty); }
+            set { SafeSet("CommitValidationSecondLineMustBeEmpty", value, ref _CommitValidationSecondLineMustBeEmpty); }
+        }
+
+        private static string _CommitValidationRegEx;
+        public static string CommitValidationRegEx
+        {
+            get { return SafeGet("CommitValidationRegEx", String.Empty, ref _CommitValidationRegEx); }
+            set { SafeSet("CommitValidationRegEx", value, ref _CommitValidationRegEx); }
+        }
+
+        private static string _CommitTemplates;
+        public static string CommitTemplates
+        {
+            get { return SafeGet("CommitTemplates", String.Empty, ref _CommitTemplates); }
+            set { SafeSet("CommitTemplates", value, ref _CommitTemplates); }
+        }
+
         public static string GetGitExtensionsFullPath()
         {
             return GetGitExtensionsDirectory() + "\\GitExtensions.exe";
@@ -1072,7 +1121,11 @@ namespace GitCommands
             get
             {
                 if (_VersionIndependentRegKey == null)
+                {
                     _VersionIndependentRegKey = Registry.CurrentUser.OpenSubKey("Software\\GitExtensions\\GitExtensions", true);
+                    if (_VersionIndependentRegKey == null)
+                        _VersionIndependentRegKey = Registry.CurrentUser.CreateSubKey("Software\\GitExtensions\\GitExtensions", RegistryKeyPermissionCheck.ReadWriteSubTree);
+                }
                 return _VersionIndependentRegKey;
             }
         }
