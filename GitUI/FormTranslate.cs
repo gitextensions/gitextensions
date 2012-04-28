@@ -262,13 +262,26 @@ namespace GitUI
         private void SaveAs()
         {
             var foreignTranslation = new Translation { LanguageCode = GetSelectedLanguageCode() };
-            foreach (TranslateItem translateItem in translate)
+            if (foreignTranslation.LanguageCode != null)
             {
-                //Item is not translated (yet), skip it
-                if (string.IsNullOrEmpty(translateItem.TranslatedValue))
-                    continue;
+                foreach (TranslateItem translateItem in translate)
+                {
+                    //Item is not translated (yet), skip it
+                    if (string.IsNullOrEmpty(translateItem.TranslatedValue))
+                        continue;
 
-                foreignTranslation.FindOrAddTranslationCategory(translateItem.Category).AddTranslationItem(new TranslationItem(translateItem.Name, translateItem.Property, translateItem.TranslatedValue));
+                    TranslationItem ti = new TranslationItem(translateItem.Name, translateItem.Property, translateItem.TranslatedValue);
+                    foreignTranslation.FindOrAddTranslationCategory(translateItem.Category).AddTranslationItem(ti);
+                }
+            }
+            else
+            {
+                // English language
+                foreach (TranslateItem translateItem in translate)
+                {
+                    TranslationItem ti = new TranslationItem(translateItem.Name, translateItem.Property, translateItem.NeutralValue);
+                    foreignTranslation.FindOrAddTranslationCategory(translateItem.Category).AddTranslationItem(ti);
+                }
             }
 
             var fileDialog = new SaveFileDialog { Title = saveAsText.Text, FileName = translations.Text + ".xml" };
@@ -288,6 +301,12 @@ namespace GitUI
             translation = Translator.GetTranslation(translations.Text);
             LoadTranslation();
             FillTranslateGrid(translateCategories.SelectedItem as TranslationCategory);
+
+            if (translation == null)
+            {
+                _NO_TRANSLATE_languageCode.Text = "";
+                return;
+            }
 
             try
             {

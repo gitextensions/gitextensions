@@ -1964,7 +1964,7 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         <TranslationItem Name="$this" Property="Text">
           <Value>Instellingen</Value>
         </TranslationItem>
-        <TranslationItem Name="LocalSettings" Property="Text">
+        <TranslationItem Name="tpLocalSettings" Property="Text">
           <Value>Lokale instellingen</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
@@ -1976,7 +1976,7 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         <TranslationItem Name="Ok" Property="Text">
           <Value>Ok</Value>
         </TranslationItem>
-        <TranslationItem Name="GlobalSettingsPage" Property="Text">
+        <TranslationItem Name="tpGlobalSettings" Property="Text">
           <Value>Globale instelingen</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
@@ -1997,7 +1997,7 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         <TranslationItem Name="label8" Property="Text">
           <Value>Mergetool</Value>
         </TranslationItem>
-        <TranslationItem Name="tabPage3" Property="Text">
+        <TranslationItem Name="tpChecklist" Property="Text">
           <Value>Check lijst</Value>
         </TranslationItem>
         <TranslationItem Name="label11" Property="Text">
@@ -2009,7 +2009,7 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         <TranslationItem Name="Rescan" Property="Text">
           <Value>Opslaan en opnieuw scannen</Value>
         </TranslationItem>
-        <TranslationItem Name="TabPageGitExtensions" Property="Text">
+        <TranslationItem Name="tpGitExtensions" Property="Text">
           <Value>Git Extensions</Value>
         </TranslationItem>
         <TranslationItem Name="label12" Property="Text">
@@ -2027,7 +2027,7 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         <TranslationItem Name="label14" Property="Text">
           <Value>Pad naar linux tools (sh).</Value>
         </TranslationItem>
-        <TranslationItem Name="Ssh" Property="Text">
+        <TranslationItem Name="tpSsh" Property="Text">
           <Value>Ssh</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
@@ -2118,7 +2118,7 @@ te kunnen wijzigen.</Value>
         <TranslationItem Name="EncodingLabel" Property="Text">
           <Value>Encoding</Value>
         </TranslationItem>
-        <TranslationItem Name="AppearancePage" Property="Text">
+        <TranslationItem Name="tpAppearance" Property="Text">
           <Value>Weergave</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox4" Property="Text">
@@ -2220,7 +2220,7 @@ te kunnen wijzigen.</Value>
         <TranslationItem Name="label44" Property="Text">
           <Value>Formaat plaatje</Value>
         </TranslationItem>
-        <TranslationItem Name="StartPage" Property="Text">
+        <TranslationItem Name="tpStartPage" Property="Text">
           <Value>Start pagina</Value>
         </TranslationItem>
         <TranslationItem Name="label47" Property="Text">
@@ -2241,7 +2241,7 @@ te kunnen wijzigen.</Value>
         <TranslationItem Name="helpTranslate" Property="Text">
           <Value>Help met vertalen</Value>
         </TranslationItem>
-        <TranslationItem Name="TabPageGit" Property="Text">
+        <TranslationItem Name="tpGit" Property="Text">
           <Value>Git</Value>
         </TranslationItem>
         <TranslationItem Name="MulticolorBranches" Property="Text">
@@ -2309,7 +2309,7 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="chkShowStashCountInBrowseWindow" Property="Text">
           <Value>Toon aantal weggezette revisies op de status bar in het browse venster</Value>
         </TranslationItem>
-        <TranslationItem Name="scriptsTab" Property="Text">
+        <TranslationItem Name="tpScriptsTab" Property="Text">
           <Value>Scripts</Value>
         </TranslationItem>
         <TranslationItem Name="inMenuCheckBox" Property="Text">
@@ -2360,7 +2360,7 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="ShellExtensionsRegistered_Fix" Property="Text">
           <Value>Repareren</Value>
         </TranslationItem>
-        <TranslationItem Name="DiffTool2_Fix" Property="Text">
+        <TranslationItem Name="MergeTool_Fix" Property="Text">
           <Value>Repareren</Value>
         </TranslationItem>
         <TranslationItem Name="DiffTool_Fix" Property="Text">
@@ -2372,7 +2372,7 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="GitFound_Fix" Property="Text">
           <Value>Repareren</Value>
         </TranslationItem>
-        <TranslationItem Name="tabPageHotkeys" Property="Text">
+        <TranslationItem Name="tpHotkeys" Property="Text">
           <Value>Sneltoetsen</Value>
         </TranslationItem>
         <TranslationItem Name="scriptEnabled" Property="Text">
@@ -3448,8 +3448,8 @@ Wanneer de juiste geheime sleutel is geladen kunt u op herhalen drukken.</Value>
         <TranslationItem Name="Retry" Property="Text">
           <Value>Herhalen</Value>
         </TranslationItem>
-        <TranslationItem Name="Abort" Property="Text">
-          <Value>Abort</Value>
+        <TranslationItem Name="Cancel" Property="Text">
+          <Value>Cancel</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

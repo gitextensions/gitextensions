@@ -2042,7 +2042,7 @@ subtree
         <TranslationItem Name="$this" Property="Text">
           <Value>設定</Value>
         </TranslationItem>
-        <TranslationItem Name="LocalSettings" Property="Text">
+        <TranslationItem Name="tpLocalSettings" Property="Text">
           <Value>ローカル設定</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
@@ -2054,7 +2054,7 @@ subtree
         <TranslationItem Name="Ok" Property="Text">
           <Value>OK</Value>
         </TranslationItem>
-        <TranslationItem Name="GlobalSettingsPage" Property="Text">
+        <TranslationItem Name="tpGlobalSettings" Property="Text">
           <Value>グローバル設定</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
@@ -2075,7 +2075,7 @@ subtree
         <TranslationItem Name="label8" Property="Text">
           <Value>マージツール</Value>
         </TranslationItem>
-        <TranslationItem Name="tabPage3" Property="Text">
+        <TranslationItem Name="tpChecklist" Property="Text">
           <Value>チェックリスト</Value>
         </TranslationItem>
         <TranslationItem Name="label11" Property="Text">
@@ -2087,7 +2087,7 @@ subtree
         <TranslationItem Name="Rescan" Property="Text">
           <Value>保存して再スキャン</Value>
         </TranslationItem>
-        <TranslationItem Name="TabPageGitExtensions" Property="Text">
+        <TranslationItem Name="tpGitExtensions" Property="Text">
           <Value>Git Extensions</Value>
         </TranslationItem>
         <TranslationItem Name="label12" Property="Text">
@@ -2107,7 +2107,7 @@ subtree
         <TranslationItem Name="label14" Property="Text">
           <Value>shのパス。パスに含まれる場合は空のままにしてください。</Value>
         </TranslationItem>
-        <TranslationItem Name="Ssh" Property="Text">
+        <TranslationItem Name="tpSsh" Property="Text">
           <Value>SSH</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
@@ -2199,7 +2199,7 @@ any global setting.</Value>
         <TranslationItem Name="EncodingLabel" Property="Text">
           <Value>エンコード</Value>
         </TranslationItem>
-        <TranslationItem Name="AppearancePage" Property="Text">
+        <TranslationItem Name="tpAppearance" Property="Text">
           <Value>外観</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox4" Property="Text">
@@ -2301,7 +2301,7 @@ any global setting.</Value>
         <TranslationItem Name="label44" Property="Text">
           <Value>画像サイズ</Value>
         </TranslationItem>
-        <TranslationItem Name="StartPage" Property="Text">
+        <TranslationItem Name="tpStartPage" Property="Text">
           <Value>スタートページ</Value>
         </TranslationItem>
         <TranslationItem Name="label47" Property="Text">
@@ -2322,7 +2322,7 @@ any global setting.</Value>
         <TranslationItem Name="helpTranslate" Property="Text">
           <Value>翻訳のヘルプ</Value>
         </TranslationItem>
-        <TranslationItem Name="TabPageGit" Property="Text">
+        <TranslationItem Name="tpGit" Property="Text">
           <Value>Git</Value>
         </TranslationItem>
         <TranslationItem Name="MulticolorBranches" Property="Text">

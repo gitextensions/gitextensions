@@ -20,6 +20,7 @@ namespace GitUI
     public sealed partial class FormSettings : GitExtensionsForm
     {
         private readonly TranslationString _homeIsSetToString = new TranslationString("HOME is set to:");
+        private readonly TranslationString __diffToolSuggestCaption = new TranslationString("Suggest difftool cmd");
         private readonly TranslationString __mergeToolSuggestCaption = new TranslationString("Suggest mergetool cmd");
 
         private readonly TranslationString _loadingSettingsFailed =
@@ -142,6 +143,9 @@ namespace GitUI
 
         private readonly TranslationString _kdiffAsDiffConfigured =
             new TranslationString("KDiff3 is configured as difftool.");
+
+        private readonly TranslationString _toolSuggestPath =
+            new TranslationString("Please enter the path to {0} and press suggest.");
 
         private readonly TranslationString _diffToolXConfigured =
             new TranslationString("There is a difftool configured: {0}");
@@ -935,20 +939,19 @@ namespace GitUI
             if (!Settings.RunningOnWindows())
                 return;
 
-            try
-            {
-                string difftoolPath = DifftoolPath.Text;
-                string cmd = MergeToolsHelper.Instance.DiffToolCmdSuggest(GlobalDiffTool.Text, ref difftoolPath);
-                if (cmd != null)
-                    DifftoolCmd.Text = cmd;
-                DifftoolPath.Text = difftoolPath;
-            }
-            catch (System.IO.FileNotFoundException ex)
+            string exeName;
+            string exeFile = MergeToolsHelper.Instance.FindDiffToolExeFile(GlobalDiffTool.Text, out exeName);
+            if (String.IsNullOrEmpty(exeFile))
             {
                 DifftoolPath.Text = "";
+                DifftoolCmd.Text = "";
                 if (sender != null)
-                    MessageBox.Show(this, ex.Message, __mergeToolSuggestCaption.Text);
+                    MessageBox.Show(this, String.Format(_toolSuggestPath.Text, exeName),
+                        __diffToolSuggestCaption.Text);
+                return;
             }
+            DifftoolPath.Text = exeFile;
+            DifftoolCmd.Text = MergeToolsHelper.Instance.DiffToolCmdSuggest(GlobalDiffTool.Text, exeFile);
         }
 
         private void MergeToolCmdSuggest_Click(object sender, EventArgs e)
@@ -956,37 +959,36 @@ namespace GitUI
             if (!Settings.RunningOnWindows())
                 return;
 
-            try
-            {
-                string mergetoolPath = MergetoolPath.Text;
-                string cmd = MergeToolsHelper.Instance.MergeToolcmdSuggest(GlobalMergeTool.Text, ref mergetoolPath);
-                if (cmd != null)
-                    MergeToolCmd.Text = cmd;
-                MergetoolPath.Text = mergetoolPath;
-            }
-            catch (System.IO.FileNotFoundException ex)
+            string exeName;
+            string exeFile = MergeToolsHelper.Instance.FindMergeToolExeFile(GlobalMergeTool.Text, out exeName);
+            if (String.IsNullOrEmpty(exeFile))
             {
                 MergetoolPath.Text = "";
-                MessageBox.Show(this, ex.Message, __mergeToolSuggestCaption.Text);
+                MergeToolCmd.Text = "";
+                if (sender != null)
+                    MessageBox.Show(this, String.Format(_toolSuggestPath.Text, exeName),
+                        __mergeToolSuggestCaption.Text);
+                return;
             }
+            MergetoolPath.Text = exeFile;
+            MergeToolCmd.Text = MergeToolsHelper.Instance.MergeToolcmdSuggest(GlobalMergeTool.Text, exeFile);
         }
 
         private void AutoConfigMergeToolCmd(bool silent)
         {
-            try
-            {
-                string mergetoolPath = MergetoolPath.Text;
-                string cmd = MergeToolsHelper.Instance.AutoConfigMergeToolCmd(GlobalMergeTool.Text, ref mergetoolPath);
-                if (cmd != null)
-                    MergeToolCmd.Text = cmd;
-                MergetoolPath.Text = mergetoolPath;
-            }
-            catch (System.IO.FileNotFoundException ex)
+            string exeName;
+            string exeFile = MergeToolsHelper.Instance.FindMergeToolExeFile(GlobalMergeTool.Text, out exeName);
+            if (String.IsNullOrEmpty(exeFile))
             {
                 MergetoolPath.Text = "";
+                MergeToolCmd.Text = "";
                 if (!silent)
-                    MessageBox.Show(this, ex.Message, __mergeToolSuggestCaption.Text);
+                    MessageBox.Show(this, String.Format(_toolSuggestPath.Text, exeName),
+                        __mergeToolSuggestCaption.Text);
+                return;
             }
+            MergetoolPath.Text = exeFile;
+            MergeToolCmd.Text = MergeToolsHelper.Instance.AutoConfigMergeToolCmd(GlobalMergeTool.Text, exeFile);
         }
 
         private void DiffToolFix_Click(object sender, EventArgs e)

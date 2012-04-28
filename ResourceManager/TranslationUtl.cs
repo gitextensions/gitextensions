@@ -24,7 +24,6 @@ namespace ResourceManager.Translation
             ForEachField(obj, action);
         }
 
-
         public static void TranslateItemsFromFields(string category, object obj, Translation translation)
         {
             if (obj == null)
@@ -35,6 +34,12 @@ namespace ResourceManager.Translation
                 string value = translation.TranslateItem(category, item, propertyInfo.Name, null);
                 if (value != null)
                     propertyInfo.SetValue(itemObj, value, null);
+                else if (propertyInfo.Name == "ToolTipText" && !String.IsNullOrEmpty((string)propertyInfo.GetValue(itemObj, null)))
+                {
+                    value = translation.TranslateItem(category, item, "Text", null);
+                    if (value != null)
+                        propertyInfo.SetValue(itemObj, value, null);
+                }
             };
             ForEachField(obj, action);
         }
@@ -61,7 +66,7 @@ namespace ResourceManager.Translation
                     Func<PropertyInfo, bool> IsTranslatableItem = delegate(PropertyInfo propertyInfo)
                     {
                         return IsTranslatableItemInComponent(propertyInfo);
-                    };         
+                    };
 
                     ForEachProperty(c, paction, IsTranslatableItem);
                 }
@@ -74,40 +79,39 @@ namespace ResourceManager.Translation
                         return IsTranslatableItemInDataGridViewColumn(propertyInfo, c);
                     };         
 
-                    ForEachProperty(c, paction, IsTranslatableItem);
-                    
+                    ForEachProperty(c, paction, IsTranslatableItem);                    
                 }
             }
-
         }
-
 
         public static void ForEachProperty(object obj, Action<PropertyInfo> action, Func<PropertyInfo, bool> IsTranslatableItem)
         {
-            if (obj != null)
-                foreach (PropertyInfo propertyInfo in obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic))
-                    if (IsTranslatableItem(propertyInfo))
-                        action(propertyInfo);
+            if (obj == null)
+                return;
+
+            foreach (PropertyInfo propertyInfo in obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic))
+                if (IsTranslatableItem(propertyInfo))
+                    action(propertyInfo);
         }
 
         public static bool IsTranslatableItemInComponent(PropertyInfo propertyInfo)
         {
             if (propertyInfo.PropertyType != typeof(string))
                 return false;
-            if (propertyInfo.Name.Equals("Caption", StringComparison.CurrentCultureIgnoreCase))
+            if (propertyInfo.Name.Equals("Caption", StringComparison.CurrentCulture))
                 return true;
-            if (propertyInfo.Name.Equals("Text", StringComparison.CurrentCultureIgnoreCase))
+            if (propertyInfo.Name.Equals("Text", StringComparison.CurrentCulture))
                 return true;
-            if (propertyInfo.Name.Equals("ToolTipText", StringComparison.CurrentCultureIgnoreCase))
+            if (propertyInfo.Name.Equals("ToolTipText", StringComparison.CurrentCulture))
                 return true;
-            if (propertyInfo.Name.Equals("Title", StringComparison.CurrentCultureIgnoreCase))
+            if (propertyInfo.Name.Equals("Title", StringComparison.CurrentCulture))
                 return true;
             return false;
         }
 
         public static bool IsTranslatableItemInDataGridViewColumn(PropertyInfo propertyInfo, DataGridViewColumn viewCol)
         {
-            if (propertyInfo.Name.Equals("HeaderText", StringComparison.CurrentCultureIgnoreCase))
+            if (propertyInfo.Name.Equals("HeaderText", StringComparison.CurrentCulture))
             {               
                 if (viewCol.Visible)
                     return true;
@@ -116,7 +120,6 @@ namespace ResourceManager.Translation
             }
             return false;
         }
-
 
     }
 }

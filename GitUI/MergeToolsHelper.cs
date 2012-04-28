@@ -6,13 +6,8 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    class MergeToolsHelper : Translate
-    {
-        #region Translation strings
-        private readonly TranslationString _mergeToolSuggest =
-            new TranslationString("Please enter the path to {0} and press suggest.");
-        #endregion
-     
+    class MergeToolsHelper
+    {     
         private static MergeToolsHelper instance;
 
         public static MergeToolsHelper Instance
@@ -31,6 +26,21 @@ namespace GitUI
         {
             var configFile = GitCommandHelpers.GetGlobalConfig();
             return configFile.GetValue(setting);
+        }
+
+        public static string GetFullPath(string fileName)
+        {
+            if (File.Exists(fileName))
+                return Path.GetFullPath(fileName);
+
+            var values = Environment.GetEnvironmentVariable("PATH");
+            foreach (var path in values.Split(';'))
+            {
+                var fullPath = Path.Combine(path, fileName);
+                if (File.Exists(fullPath))
+                    return fullPath;
+            }
+            return null;
         }
 
         public static string FindFileInFolders(string fileName, params string[] locations)
@@ -94,183 +104,141 @@ namespace GitUI
             }
             return null;
         }
-        
-        public string DiffToolCmdSuggest(string globalDifftoolText, ref string difftoolPath)
+
+        public string FindDiffToolExeFile(string globalDifftoolText, out string exeName)
         {
             string globalDiffTool = globalDifftoolText.ToLowerInvariant();
             switch (globalDiffTool)
             {
                 case "beyondcompare3":
                     string bcomppath = GetGlobalSetting("difftool.beyondcompare3.path");
+                    
+                    exeName = "bcomp.exe";
 
-                    difftoolPath = FindFileInFolders("bcomp.exe",
-                                                          bcomppath,
+                    return FindFileInFolders(exeName, bcomppath,
                                                           @"Beyond Compare 3 (x86)\",
                                                           @"Beyond Compare 3\");
-
-                    if (String.IsNullOrEmpty(difftoolPath))
-                    {
-                        difftoolPath = "";
-                        throw new FileNotFoundException(String.Format(_mergeToolSuggest.Text, "bcomp.exe"));
-                    }
-                    return "\"" + difftoolPath + "\" \"$LOCAL\" \"$REMOTE\"";
                 case "kdiff3":
                     string kdiff3path = GetGlobalSetting("difftool.kdiff3.path");
                     string regkdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "") + "\\kdiff3.exe";
 
-                    difftoolPath = FindFileInFolders("kdiff3.exe", kdiff3path, @"KDiff3\",
+                    exeName = "kdiff3.exe";
+
+                    return FindFileInFolders(exeName, kdiff3path, @"KDiff3\",
                                                           regkdiff3path);
-
-                    if (String.IsNullOrEmpty(difftoolPath))
-                    {
-                        difftoolPath = "";
-                        throw new FileNotFoundException(String.Format(_mergeToolSuggest.Text, "kdiff3.exe"));
-                    }
-                    return "\"" + difftoolPath + "\" \"$LOCAL\" \"$REMOTE\"";
                 case "tmerge":
-                    difftoolPath = FindFileInFolders("TortoiseMerge.exe", @"TortoiseSVN\bin\");
+                    exeName = "TortoiseMerge.exe";
+                    string difftoolPath = FindFileInFolders(exeName, @"TortoiseSVN\bin\");
                     if (String.IsNullOrEmpty(difftoolPath))
-                        difftoolPath = FindFileInFolders("TortoiseMerge.exe", @"TortoiseGit\bin\");
-
-                    if (String.IsNullOrEmpty(difftoolPath))
-                    {
-                        difftoolPath = "";
-                        throw new FileNotFoundException(String.Format(_mergeToolSuggest.Text, "TortoiseMerge.exe"));
-                    }
-                    return "\"" + difftoolPath + "\" \"$LOCAL\" \"$REMOTE\"";
+                        difftoolPath = FindFileInFolders(exeName, @"TortoiseGit\bin\");
+                    return difftoolPath;
                 case "winmerge":
+                    exeName = "winmergeu.exe";
                     string winmergepath = GetGlobalSetting("difftool.winmerge.path");
 
-                    difftoolPath = FindFileInFolders("winmergeu.exe", winmergepath,
+                    return FindFileInFolders("winmergeu.exe", winmergepath,
                                                           @"WinMerge\");
-
-                    if (String.IsNullOrEmpty(difftoolPath))
-                    {
-                        difftoolPath = "";
-                        throw new FileNotFoundException(String.Format(_mergeToolSuggest.Text, "winmergeu.exe"));
-                    }
-                    return "\"" + difftoolPath + "\" \"$LOCAL\" \"$REMOTE\"";
             }
-            return null;
+            exeName = globalDifftoolText + ".exe";
+            return GetFullPath(exeName);
         }
 
-        public string MergeToolcmdSuggest(string globalMergetoolText, ref string mergetoolPath)
+        public string DiffToolCmdSuggest(string globalDifftoolText, string exeFile)
+        {
+            string globalDiffTool = globalDifftoolText.ToLowerInvariant();
+            switch (globalDiffTool)
+            {
+                case "beyondcompare3":
+                    return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
+                case "kdiff3":
+                    return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
+                case "tmerge":
+                    return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
+                case "winmerge":
+                    return "\"" + exeFile + "\" -e -u -dl \"Local\" -dr \"Remote\" \"$LOCAL\" \"$REMOTE\"";
+            }
+            return "";
+        }
+
+        public string FindMergeToolExeFile(string globalMergeToolText, out string exeName)
+        {
+            string globalMergeTool = globalMergeToolText.ToLowerInvariant();
+
+            switch (globalMergeTool)
+            {
+                case "kdiff3":
+                    exeName = "kdiff3.exe";
+                    string kdiff3path = GetGlobalSetting("mergetool.kdiff3.path");
+                    string regkdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "");
+                    if (regkdiff3path != "")
+                        regkdiff3path += "\\" + exeName;
+
+                    return FindFileInFolders(exeName, kdiff3path, @"KDiff3\", regkdiff3path);
+                case "winmerge":
+                    string winmergepath = GetGlobalSetting("mergetool.winmerge.path");
+
+                    exeName = "winmergeu.exe";
+                    return FindFileInFolders(exeName, winmergepath, @"WinMerge\");
+                case "beyondcompare3":
+                    exeName = "bcomp.exe";
+                    return FindFileInFolders(exeName,   @"Beyond Compare 3 (x86)\",
+                                                        @"Beyond Compare 3\");
+                case "p4merge":
+                    exeName = "p4merge.exe";
+                    return FindFileInFolders(exeName, @"Perforce\");
+                case "araxis":
+                    exeName = "Compare.exe";
+                    return FindFileInFolders(exeName,   @"Araxis\Araxis Merge\",
+                                                        @"Araxis 6.5\Araxis Merge\");
+                case "tortoisemerge":
+                    exeName = "TortoiseMerge.exe";
+                    string path = FindFileInFolders(exeName, @"TortoiseSVN\bin\");
+                    if (string.IsNullOrEmpty(path))
+                        path = FindFileInFolders(exeName, @"TortoiseGit\bin\");
+                    return path;
+                case "diffmerge":
+                    exeName = "DiffMerge.exe";
+                    return FindFileInFolders(exeName, @"SourceGear\DiffMerge\");
+            }
+            exeName = globalMergeToolText + ".exe";
+            return GetFullPath(exeName);
+        }
+
+        public string MergeToolcmdSuggest(string globalMergetoolText, string exeFile)
         {
             string globalMergeTool = globalMergetoolText.ToLowerInvariant();
             switch (globalMergeTool)
             {
                 case "kdiff3":
-                    string kdiff3path = GetGlobalSetting("mergetool.kdiff3.path");
-                    string regkdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "");
-                    if (regkdiff3path != "")
-                        regkdiff3path += "\\kdiff3.exe";
-
-                    mergetoolPath = FindFileInFolders("kdiff3.exe", kdiff3path, @"KDiff3\", regkdiff3path);
-                    break;
+                    return "";
                 case "winmerge":
-                    string winmergepath = GetGlobalSetting("mergetool.winmerge.path");
-
-                    mergetoolPath = FindFileInFolders("winmergeu.exe", winmergepath, @"WinMerge\");
-                    break;
+                    return "\"" + exeFile + "\" -e -u -dl \"Original\" -dr \"Modified\" \"$MERGED\" \"$REMOTE\"";
             }
-            return AutoConfigMergeToolCmd(globalMergetoolText, ref mergetoolPath);
+            return AutoConfigMergeToolCmd(globalMergetoolText, exeFile);
         }
 
-        public string AutoConfigMergeToolCmd(string globalMergetoolText, ref string mergetoolPath)
+        public string AutoConfigMergeToolCmd(string globalMergetoolText, string exeFile)
         {
             string globalMergeTool = globalMergetoolText.ToLowerInvariant();
             switch (globalMergeTool)
             {
                 case "beyondcompare3":
-                    if (mergetoolPath.Contains("kdiff3") || mergetoolPath.Contains("TortoiseMerge"))
-                        mergetoolPath = "";
-                    if (string.IsNullOrEmpty(mergetoolPath) || !File.Exists(mergetoolPath))
-                    {
-                        mergetoolPath = FindFileInFolders("bcomp.exe",
-                                                               @"Beyond Compare 3 (x86)\",
-                                                               @"Beyond Compare 3\");
-
-                        if (String.IsNullOrEmpty(mergetoolPath))
-                        {
-                            mergetoolPath = "";
-                            throw new FileNotFoundException(String.Format(_mergeToolSuggest.Text, "bcomp.exe"));
-                        }
-                    }
-
-                    return "\"" + mergetoolPath + "\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"";
+                    return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"";
                 case "p4merge":
-                    if (mergetoolPath.Contains("kdiff3") || mergetoolPath.Contains("TortoiseMerge"))
-                        mergetoolPath = "";
-                    if (string.IsNullOrEmpty(mergetoolPath) || !File.Exists(mergetoolPath))
-                    {
-                        mergetoolPath = FindFileInFolders("p4merge.exe", @"Perforce\");
-
-                        if (String.IsNullOrEmpty(mergetoolPath))
-                        {
-                            mergetoolPath = "";
-                            throw new FileNotFoundException(String.Format(_mergeToolSuggest.Text, "p4merge.exe"));
-                        }
-                    }
-
-                    return "\"" + mergetoolPath + "\" \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"";
+                    return "\"" + exeFile + "\" \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"";
                 case "araxis":
-                    if (mergetoolPath.Contains("kdiff3") || mergetoolPath.Contains("TortoiseMerge"))
-                        mergetoolPath = "";
-                    if (string.IsNullOrEmpty(mergetoolPath) || !File.Exists(mergetoolPath))
-                    {
-                        mergetoolPath = FindFileInFolders("Compare.exe",
-                                                               @"Araxis\Araxis Merge\",
-                                                               @"Araxis 6.5\Araxis Merge\");
-
-                        if (String.IsNullOrEmpty(mergetoolPath))
-                        {
-                            mergetoolPath = "";
-                            throw new FileNotFoundException(String.Format(_mergeToolSuggest.Text, "Compare.exe"));
-                        }
-                    }
-
-                    return "\"" + mergetoolPath +
+                    return "\"" + exeFile +
                                         "\" -wait -merge -3 -a1 \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"";
                 case "tortoisemerge":
-                    if (mergetoolPath.ToLower().Contains("kdiff3") || mergetoolPath.ToLower().Contains("p4merge"))
-                        mergetoolPath = "";
-                    if (string.IsNullOrEmpty(mergetoolPath) || !File.Exists(mergetoolPath))
-                    {
-                        string path = FindFileInFolders("TortoiseMerge.exe", @"TortoiseSVN\bin\");
-                        if (string.IsNullOrEmpty(path))
-                            path = FindFileInFolders("TortoiseMerge.exe", @"TortoiseGit\bin\");
-
-                        if (String.IsNullOrEmpty(mergetoolPath))
-                        {
-                            mergetoolPath = "";
-                            throw new FileNotFoundException(String.Format(_mergeToolSuggest.Text, "TortoiseMerge.exe"));
-                        }
-                        mergetoolPath = path;
-                    }
-
                     string command = "\"{0}\" /base:\"$BASE\" /mine:\"$LOCAL\" /theirs:\"$REMOTE\" /merged:\"$MERGED\"";
-                    if (mergetoolPath.ToLower().Contains("tortoisegit"))
+                    if (exeFile.ToLower().Contains("tortoisegit"))
                         command = command.Replace("/", "-");
 
-                    return String.Format(command, mergetoolPath);
+                    return String.Format(command, exeFile);
                 case "diffmerge":
-                    if (mergetoolPath.ToLower().Contains("kdiff3") || mergetoolPath.ToLower().Contains("p4merge"))
-                        mergetoolPath = "";
-                    if (string.IsNullOrEmpty(mergetoolPath) || !File.Exists(mergetoolPath))
-                    {
-                        mergetoolPath = FindFileInFolders("DiffMerge.exe", @"SourceGear\DiffMerge\");
-
-                        if (String.IsNullOrEmpty(mergetoolPath))
-                        {
-                            mergetoolPath = "";
-                            throw new FileNotFoundException(String.Format(_mergeToolSuggest.Text, "DiffMerge.exe"));
-                        }
-                    }
-
-                    // /m /r=%merged /t1=%yname /t2=%bname /t3=%tname /c=%mname %mine %base %theirs
-                    return "\"" + mergetoolPath + "\" /m /r=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"";
+                    return "\"" + exeFile + "\" /m /r=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"";
             }
-            return null;
+            return "";
         }
 
         private static string GetRegistryValue(RegistryKey root, string subkey, string key)

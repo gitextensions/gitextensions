@@ -18,8 +18,8 @@ namespace ResourceManager.Translation
             if (string.IsNullOrEmpty(translationName))
             {
                 Translator._translation = null;
-            } else
-            if (!translationName.Equals(Translator._name))
+            }
+            else if (!translationName.Equals(Translator._name))
             {                
                 if (RunningOnWindows())
                     Translator._translation = TranslationSerializer.Deserialize(Translator.GetTranslationDir() + @"\" + translationName + ".xml");

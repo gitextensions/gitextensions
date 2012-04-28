@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -49,9 +49,20 @@ namespace GitUI
         }
 
         //Contributers list 
-        private const string coders = "Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide, Dominique Plante, Grzegorz Pachocki, Seth Behunin, bleis-tift, Chris Meaney, Nathanael Schmied, Adrian Codrington, Troels Thomsen, Wilbert van Dolleweerd, Tobias Bieniek, Radoslaw Miazio, Stan Angeloff, Matt McCormick, Bj¯rn Moe, William Swanson, Daniel Locantore, Harald Deischinger, Radek Miazio, Stefan Rueckl, Emanuel Henrique do Prado, Lukasz Byczynski, Steffen M. Colding-J¯rgensen, alexeik, arBmind, mausch, xaro, Xharze, Kim Christensen, Charles Brossollet, Patrick Earl, ultonis, Michael Frenzel, showell, Daniel Doubrovkine, mdk, Marc Murray, rferriz, Jacek Pasternak, miloja, Ed Starback, Alberto Chiesa, Airat Salikhov, Max Malook, ikke, Simon Walker, Arnaud Fabre, Andy Lee, Janusz Bialobrzewski, Joe Brown, Rodrigo, John Gietzen, Ralph Hauﬂmann, Rodrigo Fraga, Michael West, David Vierra, Mark Pizzolato, Arkadiy Shapkin, Alexander Mueller, marcinmagier, Alexander Puzynia, ferow2k, lynxstv, nitoyon, iamxail, Basewq, Edward Brey, Sergey, Nils Fenner, Burim Kameri, Phillip Cohen, Andy Royle, Masanori Tanaka, Alex Ford, Arne Janbu";
-        private const string translators = "Gianni Rosa Gallina, Cheng Huang, Floyd Hung, superlongman, rferriz, gor, xaro, bleis-tift, Ralph Hauﬂmann, Jasper Chien, Arkadiy Shapkin, ferow2k";
-        private const string designers = "AndrÈj Telle, Oliver Friedrich";
+        private const string coders = "Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide, " +
+            "Dominique Plante, Grzegorz Pachocki, Seth Behunin, bleis-tift, Chris Meaney, Nathanael Schmied, " +
+            "Adrian Codrington, Troels Thomsen, Wilbert van Dolleweerd, Tobias Bieniek, Radoslaw Miazio, Stan Angeloff, " +
+            "Matt McCormick, Bj√∏rn Moe, William Swanson, Daniel Locantore, Harald Deischinger, Radek Miazio, " +
+            "Stefan Rueckl, Emanuel Henrique do Prado, Lukasz Byczynski, Steffen M. Colding-J√∏rgensen, alexeik, " +
+            "arBmind, mausch, xaro, Xharze, Kim Christensen, Charles Brossollet, Patrick Earl, ultonis, Michael Frenzel, " +
+            "showell, Daniel Doubrovkine, mdk, Marc Murray, rferriz, Jacek Pasternak, miloja, Ed Starback, Alberto Chiesa, " +
+            "Airat Salikhov, Max Malook, ikke, Simon Walker, Arnaud Fabre, Andy Lee, Janusz Bialobrzewski, Joe Brown, " +
+            "Rodrigo, John Gietzen, Ralph Hau√ümann, Rodrigo Fraga, Michael West, David Vierra, Mark Pizzolato, " +
+            "Arkadiy Shapkin, Alexander Mueller, marcinmagier, Alexander Puzynia, ferow2k, lynxstv, nitoyon, iamxail, " + 
+            "Basewq, Edward Brey, Sergey, Nils Fenner, Burim Kameri, Phillip Cohen, Andy Royle, Masanori Tanaka, Alex Ford, Arne Janbu";
+        private const string translators = "Gianni Rosa Gallina, Cheng Huang, Floyd Hung, superlongman, rferriz, gor, " + 
+            "xaro, bleis-tift, Ralph Hau√ümann, Jasper Chien, Arkadiy Shapkin, ferow2k";
+        private const string designers = "Andr√©j Telle, Oliver Friedrich";
         private const string other = "";
 
         private string[] contributersList;
