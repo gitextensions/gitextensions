@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
+using System.Collections.Generic;
 
 namespace GitUI
 {
@@ -46,9 +47,11 @@ namespace GitUI
                 ParentsLabel.Visible = false;
                 Height = Height - (ParentsList.Height + ParentsLabel.Height);
                 Pick.Location = new System.Drawing.Point(Pick.Location.X,
-                Pick.Location.Y - (ParentsList.Height + ParentsLabel.Height));
+                    Pick.Location.Y - (ParentsList.Height + ParentsLabel.Height));
                 AutoCommit.Location = new System.Drawing.Point(AutoCommit.Location.X,
-                AutoCommit.Location.Y - (ParentsList.Height + ParentsLabel.Height));
+                    AutoCommit.Location.Y - (ParentsList.Height + ParentsLabel.Height));
+                checkAddReference.Location = new System.Drawing.Point(checkAddReference.Location.X,
+                    checkAddReference.Location.Y - (ParentsList.Height + ParentsLabel.Height));
             }
 
         }
@@ -65,7 +68,7 @@ namespace GitUI
 
         private void Revert_Click(object sender, EventArgs e)
         {
-            string arguments = "";
+            List<string> argumentsList = new List<string>();
             bool CanExecute = true;
             if (IsMerge)
             {
@@ -76,12 +79,16 @@ namespace GitUI
                 }                  
                 else
                 {
-                    arguments = "-m " + (ParentsList.SelectedItems[0].Index + 1);
+                    argumentsList.Add("-m " + (ParentsList.SelectedItems[0].Index + 1));
                 }
+            }
+            if (checkAddReference.Checked)
+            {
+                argumentsList.Add("-x");
             }
             if (CanExecute)
             {
-                new FormProcess(GitCommandHelpers.CherryPickCmd(Revision.Guid, AutoCommit.Checked, arguments)).ShowDialog(this);
+                new FormProcess(GitCommandHelpers.CherryPickCmd(Revision.Guid, AutoCommit.Checked, string.Join(" ", argumentsList.ToArray()))).ShowDialog(this);
                 MergeConflictHandler.HandleMergeConflicts(this);
                 Close();
             }            
