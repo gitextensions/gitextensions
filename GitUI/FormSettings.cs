@@ -344,6 +344,7 @@ namespace GitUI
                 EncodingToCombo(Settings.GetAppEncoding(true), Local_AppEncoding);
 
                 chkWarnBeforeCheckout.Checked = Settings.DirtyDirWarnBeforeCheckoutBranch;
+                chkStartWithRecentWorkingDir.Checked = Settings.StartWithRecentWorkingDir;
 
                 chkUsePatienceDiffAlgorithm.Checked = Settings.UsePatienceDiffAlgorithm;
 
@@ -561,6 +562,7 @@ namespace GitUI
             GitCommandHelpers.SetEnvironmentVariable(true);
 
             Settings.DirtyDirWarnBeforeCheckoutBranch = chkWarnBeforeCheckout.Checked;
+            Settings.StartWithRecentWorkingDir = chkStartWithRecentWorkingDir.Checked;
 
             Settings.UsePatienceDiffAlgorithm = chkUsePatienceDiffAlgorithm.Checked;
 
