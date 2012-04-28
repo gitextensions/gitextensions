@@ -122,7 +122,7 @@
 
         #endregion
 
-        private new System.Windows.Forms.Button closeButton;
+        private System.Windows.Forms.Button closeButton;
         private System.Windows.Forms.Label UpdateLabel;
         private System.Windows.Forms.LinkLabel link;
         private System.Windows.Forms.ProgressBar progressBar1;

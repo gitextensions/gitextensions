@@ -12,6 +12,7 @@ using ResourceManager.Translation;
 
 namespace GitUI.SpellChecker
 {
+    [DefaultEvent("TextChanged")]
     public partial class EditNetSpell : GitExtensionsControl
     {
         private readonly TranslationString translateEntireText = new TranslationString("Translate entire text to {0}");
@@ -51,6 +52,8 @@ namespace GitUI.SpellChecker
             }
         }
 
+        [Description("The font for spelling errors.")]
+        [Category("Appearance")]
         public Font MistakeFont { get; set; }
 
         private void EditNetSpellEnabledChanged(object sender, EventArgs e)
@@ -450,7 +453,7 @@ namespace GitUI.SpellChecker
 
         public void StartEditing()
         {
-          EmptyLabelClick(null, null);
+            EmptyLabelClick(null, null);
         }
     }
 }
