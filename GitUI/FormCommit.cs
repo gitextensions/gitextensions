@@ -102,6 +102,20 @@ namespace GitUI
         private readonly TranslationString _selectionFilterToolTip = new TranslationString("Enter a regular expression to select unstaged files.");
         private readonly TranslationString _selectionFilterErrorToolTip = new TranslationString("Error {0}");
 
+        private readonly TranslationString _commitMsgFirstLineInvalid = new TranslationString("First line of commit message contains too many characters." 
+            + Environment.NewLine + "Do you want to continue?");
+
+        private readonly TranslationString _commitMsgLineInvalid = new TranslationString("The following line of commit message contains too many characters:"
+            + Environment.NewLine + Environment.NewLine + "{0}" + Environment.NewLine + Environment.NewLine + "Do you want to continue?");
+
+        private readonly TranslationString _commitMsgSecondLineNotEmpty = new TranslationString("Second line of commit message is not empty."  + Environment.NewLine + "Do you want to continue?");
+
+        private readonly TranslationString _commitMsgRegExNotMatched = new TranslationString("Commit message does not match RegEx." + Environment.NewLine + "Do you want to continue?");
+
+        private readonly TranslationString _commitValidationCaption = new TranslationString("Commit validation");
+
+        private readonly TranslationString _commitTemplateSettings = new TranslationString("Settings");
+
 
         #endregion
 
@@ -117,6 +131,8 @@ namespace GitUI
         private string commitTemplate;
         private bool IsMergeCommit { get; set; }
         private bool shouldRescanChanges = true;
+        private bool _shouldReloadCommitTemplates = true;
+
 
         public FormCommit()
             : this(CommitKind.Normal, null)
@@ -660,6 +676,10 @@ namespace GitUI
                 return;
             }
 
+            if (!ValidCommitMessage())
+                return;
+
+
             if (Settings.Module.GetSelectedBranch().Equals("(no branch)", StringComparison.OrdinalIgnoreCase) &&
                 MessageBox.Show(this, _notOnBranch.Text, _notOnBranchCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
                 return;
@@ -709,6 +729,63 @@ namespace GitUI
             {
                 MessageBox.Show(this, string.Format("Exception: {0}", e.Message));
             }
+        }
+
+        private bool ValidCommitMessage()
+        {
+            if (Settings.CommitValidationMaxCntCharsFirstLine > 0)
+            {
+                var firstLine = Message.Text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)[0];
+                if (firstLine.Length > Settings.CommitValidationMaxCntCharsFirstLine)
+                {
+                    if (DialogResult.No == MessageBox.Show(this, _commitMsgFirstLineInvalid.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk))
+                        return false;
+                }
+            }
+
+            if (Settings.CommitValidationMaxCntCharsPerLine > 0)
+            {
+                var lines = Message.Text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var line in lines)
+                {
+                    if (line.Length > Settings.CommitValidationMaxCntCharsPerLine)
+                    {
+                        if (DialogResult.No == MessageBox.Show(this, String.Format(_commitMsgLineInvalid.Text, line), _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk))
+                            return false;
+                    }
+                }
+            }
+
+            if (Settings.CommitValidationSecondLineMustBeEmpty)
+            {
+                var lines = Message.Text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+                if (lines.Length > 2)
+                {
+                    if (lines[1].Length != 0)
+                    {
+                        if (DialogResult.No == MessageBox.Show(this, _commitMsgSecondLineNotEmpty.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk))
+                            return false;
+                    }
+                }
+            }
+
+            if (!Settings.CommitValidationRegEx.IsNullOrEmpty())
+            {
+                try
+                {
+                    if (!Regex.IsMatch(Message.Text, Settings.CommitValidationRegEx))
+                    {
+                        if (DialogResult.No == MessageBox.Show(this, _commitMsgRegExNotMatched.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk))
+                            return false;
+
+                    }
+                }
+                catch
+                {
+                }
+            }
+
+            return true;
         }
 
         private void RescanChanges()
@@ -964,7 +1041,7 @@ namespace GitUI
                     MessageBox.Show(this, _deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo) !=
                     DialogResult.Yes)
                     return;
-
+                Unstaged.StoreNextIndexToSelect();
                 foreach (var item in Unstaged.SelectedItems)
                     File.Delete(Settings.WorkingDir + item.Name);
 
@@ -1555,9 +1632,7 @@ namespace GitUI
             if (unStagedFiles.Count == 0)
                 return;
 
-            var arguments = "stash save";
-            if (Settings.IncludeUntrackedFilesInManualStash)
-                arguments += " -u";
+            var arguments = GitCommandHelpers.StashSaveCmd(Settings.IncludeUntrackedFilesInManualStash);
             foreach (var item in unStagedFiles)
             {
                 if (!item.IsSubmodule)
@@ -1595,6 +1670,75 @@ namespace GitUI
         {
             FilenameToClipboardToolStripMenuItemClick(sender, e);
         }
+
+        private void commitTemplatesConfigtoolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormCommitTemplateSettings().ShowDialog(this);
+            _shouldReloadCommitTemplates = true;
+        }
+
+        private void LoadCommitTemplates()
+        {
+            CommitTemplateItem[] commitTemplates = 
+                CommitTemplateItem.DeserializeCommitTemplates(Settings.CommitTemplates);
+
+            commitTemplatesToolStripMenuItem.DropDownItems.Clear();
+
+            if (null != commitTemplates)
+            {
+                for (int i = 0; i < commitTemplates.Length; i++)
+                {
+                    if (!commitTemplates[i].Name.IsNullOrEmpty())
+                        AddTemplateCommitMessageToMenu(commitTemplates[i], commitTemplates[i].Name);
+                }
+            }
+
+            commitTemplatesToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+
+            var toolStripItem = new ToolStripMenuItem(_commitTemplateSettings.Text);
+            toolStripItem.Click += commitTemplatesConfigtoolStripMenuItem_Click;
+            commitTemplatesToolStripMenuItem.DropDownItems.Add(toolStripItem);
+        }
+
+        private void AddTemplateCommitMessageToMenu(CommitTemplateItem item, string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return;
+
+            var toolStripItem =
+                new ToolStripMenuItem
+                {
+                    Tag = item,
+                    Text = name
+                };
+
+            toolStripItem.Click += commitTemplatesToolStripMenuItem_Clicked;
+            commitTemplatesToolStripMenuItem.DropDownItems.Add(toolStripItem);
+        }
+
+        private void commitTemplatesToolStripMenuItem_Clicked(object sender, EventArgs e)
+        {
+            try
+            {
+                ToolStripMenuItem item = (ToolStripMenuItem)sender;
+                CommitTemplateItem templateItem = (CommitTemplateItem)(item.Tag);
+                Message.Text = templateItem.Text;                
+            }
+            catch
+            {
+                return;
+            }
+        }
+
+        private void commitTemplatesToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            if (_shouldReloadCommitTemplates)
+            {
+                LoadCommitTemplates();
+                _shouldReloadCommitTemplates = false;
+            }
+        }
+
     }
 
     /// <summary>

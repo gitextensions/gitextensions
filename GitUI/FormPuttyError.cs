@@ -11,15 +11,15 @@ namespace GitUI
         public string KeyPath { get; private set; }
 
         /// <summary>Shows the "SSH error" dialog modally, and returns the path to the key, if one was loaded.</summary>
-        public static string AskForKey(IWin32Window parent)
+        public static bool AskForKey(IWin32Window parent, out string keyPath)
         {
             var form = new FormPuttyError();
-            form.ShowDialog(parent);
-
-            return form.KeyPath;
+            var result = form.ShowDialog(parent);
+            keyPath = form.KeyPath;
+            return result == DialogResult.Retry;
         }
-     
-        private FormPuttyError()
+
+        public FormPuttyError()
         {
             InitializeComponent();
             Translate();
@@ -31,13 +31,9 @@ namespace GitUI
             if (!string.IsNullOrEmpty(pathLoaded))
             {
                 KeyPath = pathLoaded;
+                DialogResult = DialogResult.Retry;
                 Close();
             }
-        }        
-
-        private void Abort_Click(object sender, EventArgs e)
-        {
-            Close();
-        }     
+        }
     }
 }

@@ -5,7 +5,7 @@ using GitUIPluginInterfaces;
 
 namespace FindLargeFiles
 {
-    public class FindLargeFilesPlugin : IGitPlugin
+    public class FindLargeFilesPlugin : IGitPluginForRepository
     {
         public string Description
         {
