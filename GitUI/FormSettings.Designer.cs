@@ -33,7 +33,7 @@ namespace GitUI
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettings));
-            this.LocalSettings = new System.Windows.Forms.TabPage();
+            this.tpLocalSettings = new System.Windows.Forms.TabPage();
             this.Local_AppEncoding = new System.Windows.Forms.ComboBox();
             this.LogEncodingLabel = new System.Windows.Forms.Label();
             this.label61 = new System.Windows.Forms.Label();
@@ -48,7 +48,7 @@ namespace GitUI
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.NoGitRepo = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
-            this.MergeTool = new System.Windows.Forms.ComboBox();
+            this.LocalMergeTool = new System.Windows.Forms.ComboBox();
             this.KeepMergeBackup = new System.Windows.Forms.CheckBox();
             this.label8 = new System.Windows.Forms.Label();
             this.Editor = new System.Windows.Forms.TextBox();
@@ -60,29 +60,29 @@ namespace GitUI
             this.SmtpServer = new System.Windows.Forms.TextBox();
             this.label23 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tpChecklist = new System.Windows.Forms.TabPage();
             this.translationConfig_Fix = new System.Windows.Forms.Button();
             this.SshConfig_Fix = new System.Windows.Forms.Button();
             this.GitExtensionsInstall_Fix = new System.Windows.Forms.Button();
             this.GitBinFound_Fix = new System.Windows.Forms.Button();
             this.ShellExtensionsRegistered_Fix = new System.Windows.Forms.Button();
-            this.DiffTool2_Fix = new System.Windows.Forms.Button();
             this.DiffTool_Fix = new System.Windows.Forms.Button();
+            this.MergeTool_Fix = new System.Windows.Forms.Button();
             this.UserNameSet_Fix = new System.Windows.Forms.Button();
             this.GitFound_Fix = new System.Windows.Forms.Button();
             this.translationConfig = new System.Windows.Forms.Button();
-            this.DiffTool2 = new System.Windows.Forms.Button();
+            this.DiffTool = new System.Windows.Forms.Button();
             this.SshConfig = new System.Windows.Forms.Button();
             this.GitBinFound = new System.Windows.Forms.Button();
             this.Rescan = new System.Windows.Forms.Button();
             this.CheckAtStartup = new System.Windows.Forms.CheckBox();
             this.label11 = new System.Windows.Forms.Label();
             this.GitFound = new System.Windows.Forms.Button();
-            this.DiffTool = new System.Windows.Forms.Button();
+            this.MergeTool = new System.Windows.Forms.Button();
             this.UserNameSet = new System.Windows.Forms.Button();
             this.ShellExtensionsRegistered = new System.Windows.Forms.Button();
             this.GitExtensionsInstall = new System.Windows.Forms.Button();
-            this.TabPageGit = new System.Windows.Forms.TabPage();
+            this.tpGit = new System.Windows.Forms.TabPage();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.homeIsSetToLabel = new System.Windows.Forms.Label();
             this.ChangeHomeButton = new System.Windows.Forms.Button();
@@ -96,7 +96,7 @@ namespace GitUI
             this.GitPath = new System.Windows.Forms.TextBox();
             this.BrowseGitPath = new System.Windows.Forms.Button();
             this.GitBinPath = new System.Windows.Forms.TextBox();
-            this.TabPageGitExtensions = new System.Windows.Forms.TabPage();
+            this.tpGitExtensions = new System.Windows.Forms.TabPage();
             this.chkStartWithRecentWorkingDir = new System.Windows.Forms.CheckBox();
             this.chkStashUntrackedFiles = new System.Windows.Forms.CheckBox();
             this.chkWarnBeforeCheckout = new System.Windows.Forms.CheckBox();
@@ -123,9 +123,9 @@ namespace GitUI
             this.chkCloseProcessDialog = new System.Windows.Forms.CheckBox();
             this._NO_TRANSLATE_MaxCommits = new System.Windows.Forms.NumericUpDown();
             this.label12 = new System.Windows.Forms.Label();
-            this.StartPage = new System.Windows.Forms.TabPage();
+            this.tpStart = new System.Windows.Forms.TabPage();
             this.dashboardEditor1 = new GitUI.DashboardEditor();
-            this.AppearancePage = new System.Windows.Forms.TabPage();
+            this.tpAppearance = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.noImageService = new System.Windows.Forms.ComboBox();
             this.label53 = new System.Windows.Forms.Label();
@@ -178,7 +178,7 @@ namespace GitUI
             this.label31 = new System.Windows.Forms.Label();
             this.label29 = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_ColorAddedLineLabel = new System.Windows.Forms.Label();
-            this.GlobalSettingsPage = new System.Windows.Forms.TabPage();
+            this.tpGlobalSettings = new System.Windows.Forms.TabPage();
             this.Global_AppEncoding = new System.Windows.Forms.ComboBox();
             this.label59 = new System.Windows.Forms.Label();
             this.label60 = new System.Windows.Forms.Label();
@@ -202,7 +202,7 @@ namespace GitUI
             this.InvalidGitPathGlobal = new System.Windows.Forms.Panel();
             this.label9 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.MergeToolCmdSuggest = new System.Windows.Forms.Button();
             this.MergeToolCmd = new System.Windows.Forms.ComboBox();
             this.label19 = new System.Windows.Forms.Label();
             this.BrowseMergeTool = new System.Windows.Forms.Button();
@@ -217,7 +217,7 @@ namespace GitUI
             this.GlobalUserName = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.Ssh = new System.Windows.Forms.TabPage();
+            this.tpSsh = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.AutostartPageant = new System.Windows.Forms.CheckBox();
             this.PageantPath = new System.Windows.Forms.TextBox();
@@ -236,7 +236,7 @@ namespace GitUI
             this.label18 = new System.Windows.Forms.Label();
             this.OpenSSH = new System.Windows.Forms.RadioButton();
             this.Putty = new System.Windows.Forms.RadioButton();
-            this.scriptsTab = new System.Windows.Forms.TabPage();
+            this.tpScriptsTab = new System.Windows.Forms.TabPage();
             this.lbl_icon = new System.Windows.Forms.Label();
             this.sbtn_icon = new GitUI.Script.SplitButton();
             this.contextMenuStrip_SplitButton = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -268,7 +268,7 @@ namespace GitUI
             this.removeScriptButton = new System.Windows.Forms.Button();
             this.addScriptButton = new System.Windows.Forms.Button();
             this.moveUpButton = new System.Windows.Forms.Button();
-            this.tabPageHotkeys = new System.Windows.Forms.TabPage();
+            this.tpHotkeys = new System.Windows.Forms.TabPage();
             this.controlHotkeys = new GitUI.Hotkey.ControlHotkeys();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.Ok = new System.Windows.Forms.Button();
@@ -279,20 +279,20 @@ namespace GitUI
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             this.diffFontDialog = new System.Windows.Forms.FontDialog();
-            this.LocalSettings.SuspendLayout();
+            this.tpLocalSettings.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.InvalidGitPathLocal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.tabControl1.SuspendLayout();
-            this.tabPage3.SuspendLayout();
-            this.TabPageGit.SuspendLayout();
+            this.tpChecklist.SuspendLayout();
+            this.tpGit.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox7.SuspendLayout();
-            this.TabPageGitExtensions.SuspendLayout();
+            this.tpGitExtensions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RevisionGridQuickSearchTimeout)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_MaxCommits)).BeginInit();
-            this.StartPage.SuspendLayout();
-            this.AppearancePage.SuspendLayout();
+            this.tpStart.SuspendLayout();
+            this.tpAppearance.SuspendLayout();
             this.groupBox6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_DaysToCacheImages)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_authorImageSize)).BeginInit();
@@ -301,18 +301,18 @@ namespace GitUI
             ((System.ComponentModel.ISupportInitialize)(this.IconPreview)).BeginInit();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            this.GlobalSettingsPage.SuspendLayout();
+            this.tpGlobalSettings.SuspendLayout();
             this.groupBox9.SuspendLayout();
             this.InvalidGitPathGlobal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.Ssh.SuspendLayout();
+            this.tpSsh.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            this.scriptsTab.SuspendLayout();
+            this.tpScriptsTab.SuspendLayout();
             this.contextMenuStrip_SplitButton.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ScriptList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scriptInfoBindingSource)).BeginInit();
-            this.tabPageHotkeys.SuspendLayout();
+            this.tpHotkeys.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -320,33 +320,33 @@ namespace GitUI
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
-            // LocalSettings
+            // tpLocalSettings
             // 
-            this.LocalSettings.Controls.Add(this.Local_AppEncoding);
-            this.LocalSettings.Controls.Add(this.LogEncodingLabel);
-            this.LocalSettings.Controls.Add(this.label61);
-            this.LocalSettings.Controls.Add(this.Local_FilesEncoding);
-            this.LocalSettings.Controls.Add(this.groupBox10);
-            this.LocalSettings.Controls.Add(this.label30);
-            this.LocalSettings.Controls.Add(this.InvalidGitPathLocal);
-            this.LocalSettings.Controls.Add(this.NoGitRepo);
-            this.LocalSettings.Controls.Add(this.label20);
-            this.LocalSettings.Controls.Add(this.MergeTool);
-            this.LocalSettings.Controls.Add(this.KeepMergeBackup);
-            this.LocalSettings.Controls.Add(this.label8);
-            this.LocalSettings.Controls.Add(this.Editor);
-            this.LocalSettings.Controls.Add(this.label5);
-            this.LocalSettings.Controls.Add(this.UserEmail);
-            this.LocalSettings.Controls.Add(this.UserName);
-            this.LocalSettings.Controls.Add(this.label2);
-            this.LocalSettings.Controls.Add(this.label1);
-            this.LocalSettings.Location = new System.Drawing.Point(4, 22);
-            this.LocalSettings.Name = "LocalSettings";
-            this.LocalSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.LocalSettings.Size = new System.Drawing.Size(805, 520);
-            this.LocalSettings.TabIndex = 0;
-            this.LocalSettings.Text = "Local settings";
-            this.LocalSettings.UseVisualStyleBackColor = true;
+            this.tpLocalSettings.Controls.Add(this.Local_AppEncoding);
+            this.tpLocalSettings.Controls.Add(this.LogEncodingLabel);
+            this.tpLocalSettings.Controls.Add(this.label61);
+            this.tpLocalSettings.Controls.Add(this.Local_FilesEncoding);
+            this.tpLocalSettings.Controls.Add(this.groupBox10);
+            this.tpLocalSettings.Controls.Add(this.label30);
+            this.tpLocalSettings.Controls.Add(this.InvalidGitPathLocal);
+            this.tpLocalSettings.Controls.Add(this.NoGitRepo);
+            this.tpLocalSettings.Controls.Add(this.label20);
+            this.tpLocalSettings.Controls.Add(this.LocalMergeTool);
+            this.tpLocalSettings.Controls.Add(this.KeepMergeBackup);
+            this.tpLocalSettings.Controls.Add(this.label8);
+            this.tpLocalSettings.Controls.Add(this.Editor);
+            this.tpLocalSettings.Controls.Add(this.label5);
+            this.tpLocalSettings.Controls.Add(this.UserEmail);
+            this.tpLocalSettings.Controls.Add(this.UserName);
+            this.tpLocalSettings.Controls.Add(this.label2);
+            this.tpLocalSettings.Controls.Add(this.label1);
+            this.tpLocalSettings.Location = new System.Drawing.Point(4, 22);
+            this.tpLocalSettings.Name = "tpLocalSettings";
+            this.tpLocalSettings.Padding = new System.Windows.Forms.Padding(3);
+            this.tpLocalSettings.Size = new System.Drawing.Size(805, 520);
+            this.tpLocalSettings.TabIndex = 0;
+            this.tpLocalSettings.Text = "Local settings";
+            this.tpLocalSettings.UseVisualStyleBackColor = true;
             // 
             // Local_AppEncoding
             // 
@@ -494,16 +494,16 @@ namespace GitUI
             this.label20.Text = "You only need local settings\r\nif you want to override the \r\nglobal settings for t" +
     "he current\r\nrepository.";
             // 
-            // MergeTool
+            // LocalMergeTool
             // 
-            this.MergeTool.FormattingEnabled = true;
-            this.MergeTool.Items.AddRange(new object[] {
+            this.LocalMergeTool.FormattingEnabled = true;
+            this.LocalMergeTool.Items.AddRange(new object[] {
             "kdiff3",
             "p4merge"});
-            this.MergeTool.Location = new System.Drawing.Point(150, 94);
-            this.MergeTool.Name = "MergeTool";
-            this.MergeTool.Size = new System.Drawing.Size(159, 21);
-            this.MergeTool.TabIndex = 10;
+            this.LocalMergeTool.Location = new System.Drawing.Point(150, 94);
+            this.LocalMergeTool.Name = "LocalMergeTool";
+            this.LocalMergeTool.Size = new System.Drawing.Size(159, 21);
+            this.LocalMergeTool.TabIndex = 10;
             // 
             // KeepMergeBackup
             // 
@@ -592,16 +592,16 @@ namespace GitUI
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Controls.Add(this.TabPageGit);
-            this.tabControl1.Controls.Add(this.TabPageGitExtensions);
-            this.tabControl1.Controls.Add(this.StartPage);
-            this.tabControl1.Controls.Add(this.AppearancePage);
-            this.tabControl1.Controls.Add(this.GlobalSettingsPage);
-            this.tabControl1.Controls.Add(this.LocalSettings);
-            this.tabControl1.Controls.Add(this.Ssh);
-            this.tabControl1.Controls.Add(this.scriptsTab);
-            this.tabControl1.Controls.Add(this.tabPageHotkeys);
+            this.tabControl1.Controls.Add(this.tpChecklist);
+            this.tabControl1.Controls.Add(this.tpGit);
+            this.tabControl1.Controls.Add(this.tpGitExtensions);
+            this.tabControl1.Controls.Add(this.tpStart);
+            this.tabControl1.Controls.Add(this.tpAppearance);
+            this.tabControl1.Controls.Add(this.tpGlobalSettings);
+            this.tabControl1.Controls.Add(this.tpLocalSettings);
+            this.tabControl1.Controls.Add(this.tpSsh);
+            this.tabControl1.Controls.Add(this.tpScriptsTab);
+            this.tabControl1.Controls.Add(this.tpHotkeys);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -610,35 +610,35 @@ namespace GitUI
             this.tabControl1.TabIndex = 0;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
-            // tabPage3
+            // tpChecklist
             // 
-            this.tabPage3.Controls.Add(this.translationConfig_Fix);
-            this.tabPage3.Controls.Add(this.SshConfig_Fix);
-            this.tabPage3.Controls.Add(this.GitExtensionsInstall_Fix);
-            this.tabPage3.Controls.Add(this.GitBinFound_Fix);
-            this.tabPage3.Controls.Add(this.ShellExtensionsRegistered_Fix);
-            this.tabPage3.Controls.Add(this.DiffTool2_Fix);
-            this.tabPage3.Controls.Add(this.DiffTool_Fix);
-            this.tabPage3.Controls.Add(this.UserNameSet_Fix);
-            this.tabPage3.Controls.Add(this.GitFound_Fix);
-            this.tabPage3.Controls.Add(this.translationConfig);
-            this.tabPage3.Controls.Add(this.DiffTool2);
-            this.tabPage3.Controls.Add(this.SshConfig);
-            this.tabPage3.Controls.Add(this.GitBinFound);
-            this.tabPage3.Controls.Add(this.Rescan);
-            this.tabPage3.Controls.Add(this.CheckAtStartup);
-            this.tabPage3.Controls.Add(this.label11);
-            this.tabPage3.Controls.Add(this.GitFound);
-            this.tabPage3.Controls.Add(this.DiffTool);
-            this.tabPage3.Controls.Add(this.UserNameSet);
-            this.tabPage3.Controls.Add(this.ShellExtensionsRegistered);
-            this.tabPage3.Controls.Add(this.GitExtensionsInstall);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(805, 520);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Checklist";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            this.tpChecklist.Controls.Add(this.translationConfig_Fix);
+            this.tpChecklist.Controls.Add(this.SshConfig_Fix);
+            this.tpChecklist.Controls.Add(this.GitExtensionsInstall_Fix);
+            this.tpChecklist.Controls.Add(this.GitBinFound_Fix);
+            this.tpChecklist.Controls.Add(this.ShellExtensionsRegistered_Fix);
+            this.tpChecklist.Controls.Add(this.DiffTool_Fix);
+            this.tpChecklist.Controls.Add(this.MergeTool_Fix);
+            this.tpChecklist.Controls.Add(this.UserNameSet_Fix);
+            this.tpChecklist.Controls.Add(this.GitFound_Fix);
+            this.tpChecklist.Controls.Add(this.translationConfig);
+            this.tpChecklist.Controls.Add(this.DiffTool);
+            this.tpChecklist.Controls.Add(this.SshConfig);
+            this.tpChecklist.Controls.Add(this.GitBinFound);
+            this.tpChecklist.Controls.Add(this.Rescan);
+            this.tpChecklist.Controls.Add(this.CheckAtStartup);
+            this.tpChecklist.Controls.Add(this.label11);
+            this.tpChecklist.Controls.Add(this.GitFound);
+            this.tpChecklist.Controls.Add(this.MergeTool);
+            this.tpChecklist.Controls.Add(this.UserNameSet);
+            this.tpChecklist.Controls.Add(this.ShellExtensionsRegistered);
+            this.tpChecklist.Controls.Add(this.GitExtensionsInstall);
+            this.tpChecklist.Location = new System.Drawing.Point(4, 22);
+            this.tpChecklist.Name = "tpChecklist";
+            this.tpChecklist.Size = new System.Drawing.Size(805, 520);
+            this.tpChecklist.TabIndex = 2;
+            this.tpChecklist.Text = "Checklist";
+            this.tpChecklist.UseVisualStyleBackColor = true;
             // 
             // translationConfig_Fix
             // 
@@ -700,29 +700,29 @@ namespace GitUI
             this.ShellExtensionsRegistered_Fix.Visible = false;
             this.ShellExtensionsRegistered_Fix.Click += new System.EventHandler(this.ShellExtensionsRegistered_Click);
             // 
-            // DiffTool2_Fix
-            // 
-            this.DiffTool2_Fix.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.DiffTool2_Fix.Location = new System.Drawing.Point(703, 133);
-            this.DiffTool2_Fix.Name = "DiffTool2_Fix";
-            this.DiffTool2_Fix.Size = new System.Drawing.Size(91, 25);
-            this.DiffTool2_Fix.TabIndex = 16;
-            this.DiffTool2_Fix.Text = "Repair";
-            this.DiffTool2_Fix.UseVisualStyleBackColor = true;
-            this.DiffTool2_Fix.Visible = false;
-            this.DiffTool2_Fix.Click += new System.EventHandler(this.DiffTool2_Click);
-            // 
             // DiffTool_Fix
             // 
             this.DiffTool_Fix.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.DiffTool_Fix.Location = new System.Drawing.Point(703, 99);
+            this.DiffTool_Fix.Location = new System.Drawing.Point(703, 133);
             this.DiffTool_Fix.Name = "DiffTool_Fix";
             this.DiffTool_Fix.Size = new System.Drawing.Size(91, 25);
-            this.DiffTool_Fix.TabIndex = 15;
+            this.DiffTool_Fix.TabIndex = 16;
             this.DiffTool_Fix.Text = "Repair";
             this.DiffTool_Fix.UseVisualStyleBackColor = true;
             this.DiffTool_Fix.Visible = false;
-            this.DiffTool_Fix.Click += new System.EventHandler(this.DiffTool_Click);
+            this.DiffTool_Fix.Click += new System.EventHandler(this.DiffToolFix_Click);
+            // 
+            // MergeTool_Fix
+            // 
+            this.MergeTool_Fix.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.MergeTool_Fix.Location = new System.Drawing.Point(703, 99);
+            this.MergeTool_Fix.Name = "MergeTool_Fix";
+            this.MergeTool_Fix.Size = new System.Drawing.Size(91, 25);
+            this.MergeTool_Fix.TabIndex = 15;
+            this.MergeTool_Fix.Text = "Repair";
+            this.MergeTool_Fix.UseVisualStyleBackColor = true;
+            this.MergeTool_Fix.Visible = false;
+            this.MergeTool_Fix.Click += new System.EventHandler(this.MergeToolFix_Click);
             // 
             // UserNameSet_Fix
             // 
@@ -766,23 +766,23 @@ namespace GitUI
             this.translationConfig.Visible = false;
             this.translationConfig.Click += new System.EventHandler(this.translationConfig_Click);
             // 
-            // DiffTool2
+            // DiffTool
             // 
-            this.DiffTool2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.DiffTool.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.DiffTool2.BackColor = System.Drawing.Color.Gray;
-            this.DiffTool2.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.DiffTool2.FlatAppearance.BorderSize = 0;
-            this.DiffTool2.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.DiffTool2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.DiffTool2.Location = new System.Drawing.Point(9, 131);
-            this.DiffTool2.Name = "DiffTool2";
-            this.DiffTool2.Size = new System.Drawing.Size(788, 29);
-            this.DiffTool2.TabIndex = 11;
-            this.DiffTool2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.DiffTool2.UseVisualStyleBackColor = false;
-            this.DiffTool2.Visible = false;
-            this.DiffTool2.Click += new System.EventHandler(this.DiffTool2_Click);
+            this.DiffTool.BackColor = System.Drawing.Color.Gray;
+            this.DiffTool.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.DiffTool.FlatAppearance.BorderSize = 0;
+            this.DiffTool.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.DiffTool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.DiffTool.Location = new System.Drawing.Point(9, 131);
+            this.DiffTool.Name = "DiffTool";
+            this.DiffTool.Size = new System.Drawing.Size(788, 29);
+            this.DiffTool.TabIndex = 11;
+            this.DiffTool.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.DiffTool.UseVisualStyleBackColor = false;
+            this.DiffTool.Visible = false;
+            this.DiffTool.Click += new System.EventHandler(this.DiffToolFix_Click);
             // 
             // SshConfig
             // 
@@ -871,23 +871,23 @@ namespace GitUI
             this.GitFound.Visible = false;
             this.GitFound.Click += new System.EventHandler(this.GitFound_Click);
             // 
-            // DiffTool
+            // MergeTool
             // 
-            this.DiffTool.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.MergeTool.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.DiffTool.BackColor = System.Drawing.Color.Gray;
-            this.DiffTool.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.DiffTool.FlatAppearance.BorderSize = 0;
-            this.DiffTool.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.DiffTool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.DiffTool.Location = new System.Drawing.Point(9, 97);
-            this.DiffTool.Name = "DiffTool";
-            this.DiffTool.Size = new System.Drawing.Size(788, 29);
-            this.DiffTool.TabIndex = 4;
-            this.DiffTool.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.DiffTool.UseVisualStyleBackColor = false;
-            this.DiffTool.Visible = false;
-            this.DiffTool.Click += new System.EventHandler(this.DiffTool_Click);
+            this.MergeTool.BackColor = System.Drawing.Color.Gray;
+            this.MergeTool.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.MergeTool.FlatAppearance.BorderSize = 0;
+            this.MergeTool.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.MergeTool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.MergeTool.Location = new System.Drawing.Point(9, 97);
+            this.MergeTool.Name = "MergeTool";
+            this.MergeTool.Size = new System.Drawing.Size(788, 29);
+            this.MergeTool.TabIndex = 4;
+            this.MergeTool.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.MergeTool.UseVisualStyleBackColor = false;
+            this.MergeTool.Visible = false;
+            this.MergeTool.Click += new System.EventHandler(this.MergeToolFix_Click);
             // 
             // UserNameSet
             // 
@@ -943,16 +943,16 @@ namespace GitUI
             this.GitExtensionsInstall.Visible = false;
             this.GitExtensionsInstall.Click += new System.EventHandler(this.GitExtensionsInstall_Click);
             // 
-            // TabPageGit
+            // tpGit
             // 
-            this.TabPageGit.Controls.Add(this.groupBox8);
-            this.TabPageGit.Controls.Add(this.groupBox7);
-            this.TabPageGit.Location = new System.Drawing.Point(4, 22);
-            this.TabPageGit.Name = "TabPageGit";
-            this.TabPageGit.Size = new System.Drawing.Size(805, 520);
-            this.TabPageGit.TabIndex = 7;
-            this.TabPageGit.Text = "Git";
-            this.TabPageGit.UseVisualStyleBackColor = true;
+            this.tpGit.Controls.Add(this.groupBox8);
+            this.tpGit.Controls.Add(this.groupBox7);
+            this.tpGit.Location = new System.Drawing.Point(4, 22);
+            this.tpGit.Name = "tpGit";
+            this.tpGit.Size = new System.Drawing.Size(805, 520);
+            this.tpGit.TabIndex = 7;
+            this.tpGit.Text = "Git";
+            this.tpGit.UseVisualStyleBackColor = true;
             // 
             // groupBox8
             // 
@@ -1095,43 +1095,43 @@ namespace GitUI
             this.GitBinPath.Size = new System.Drawing.Size(337, 21);
             this.GitBinPath.TabIndex = 7;
             // 
-            // TabPageGitExtensions
+            // tpGitExtensions
             // 
-            this.TabPageGitExtensions.Controls.Add(this.chkStartWithRecentWorkingDir);
-            this.TabPageGitExtensions.Controls.Add(this.chkStashUntrackedFiles);
-            this.TabPageGitExtensions.Controls.Add(this.chkWarnBeforeCheckout);
-            this.TabPageGitExtensions.Controls.Add(this.truncatePathMethod);
-            this.TabPageGitExtensions.Controls.Add(this._NO_TRANSLATE_truncatePathMethod);
-            this.TabPageGitExtensions.Controls.Add(this.chkUsePatienceDiffAlgorithm);
-            this.TabPageGitExtensions.Controls.Add(this.chkShowCurrentBranchInVisualStudio);
-            this.TabPageGitExtensions.Controls.Add(this.downloadDictionary);
-            this.TabPageGitExtensions.Controls.Add(this.chkShowStashCountInBrowseWindow);
-            this.TabPageGitExtensions.Controls.Add(this.chkShowCurrentChangesInRevisionGraph);
-            this.TabPageGitExtensions.Controls.Add(this.chkShowErrorsWhenStagingFiles);
-            this.TabPageGitExtensions.Controls.Add(this.chkShowGitStatusInToolbar);
-            this.TabPageGitExtensions.Controls.Add(this.RevisionGridQuickSearchTimeout);
-            this.TabPageGitExtensions.Controls.Add(this.label24);
-            this.TabPageGitExtensions.Controls.Add(this.helpTranslate);
-            this.TabPageGitExtensions.Controls.Add(this.Language);
-            this.TabPageGitExtensions.Controls.Add(this.label49);
-            this.TabPageGitExtensions.Controls.Add(this.chkFollowRenamesInFileHistory);
-            this.TabPageGitExtensions.Controls.Add(this.label23);
-            this.TabPageGitExtensions.Controls.Add(this.SmtpServer);
-            this.TabPageGitExtensions.Controls.Add(this.Dictionary);
-            this.TabPageGitExtensions.Controls.Add(this.label22);
-            this.TabPageGitExtensions.Controls.Add(this.chkShowRelativeDate);
-            this.TabPageGitExtensions.Controls.Add(this.chkUseFastChecks);
-            this.TabPageGitExtensions.Controls.Add(this.chkShowGitCommandLine);
-            this.TabPageGitExtensions.Controls.Add(this.chkCloseProcessDialog);
-            this.TabPageGitExtensions.Controls.Add(this._NO_TRANSLATE_MaxCommits);
-            this.TabPageGitExtensions.Controls.Add(this.label12);
-            this.TabPageGitExtensions.Location = new System.Drawing.Point(4, 22);
-            this.TabPageGitExtensions.Name = "TabPageGitExtensions";
-            this.TabPageGitExtensions.Size = new System.Drawing.Size(805, 520);
-            this.TabPageGitExtensions.TabIndex = 3;
-            this.TabPageGitExtensions.Text = "Git extensions";
-            this.TabPageGitExtensions.UseVisualStyleBackColor = true;
-            this.TabPageGitExtensions.Click += new System.EventHandler(this.TabPageGitExtensions_Click);
+            this.tpGitExtensions.Controls.Add(this.chkStashUntrackedFiles);
+            this.tpGitExtensions.Controls.Add(this.chkStartWithRecentWorkingDir);
+            this.tpGitExtensions.Controls.Add(this.chkWarnBeforeCheckout);
+            this.tpGitExtensions.Controls.Add(this.truncatePathMethod);
+            this.tpGitExtensions.Controls.Add(this._NO_TRANSLATE_truncatePathMethod);
+            this.tpGitExtensions.Controls.Add(this.chkUsePatienceDiffAlgorithm);
+            this.tpGitExtensions.Controls.Add(this.chkShowCurrentBranchInVisualStudio);
+            this.tpGitExtensions.Controls.Add(this.downloadDictionary);
+            this.tpGitExtensions.Controls.Add(this.chkShowStashCountInBrowseWindow);
+            this.tpGitExtensions.Controls.Add(this.chkShowCurrentChangesInRevisionGraph);
+            this.tpGitExtensions.Controls.Add(this.chkShowErrorsWhenStagingFiles);
+            this.tpGitExtensions.Controls.Add(this.chkShowGitStatusInToolbar);
+            this.tpGitExtensions.Controls.Add(this.RevisionGridQuickSearchTimeout);
+            this.tpGitExtensions.Controls.Add(this.label24);
+            this.tpGitExtensions.Controls.Add(this.helpTranslate);
+            this.tpGitExtensions.Controls.Add(this.Language);
+            this.tpGitExtensions.Controls.Add(this.label49);
+            this.tpGitExtensions.Controls.Add(this.chkFollowRenamesInFileHistory);
+            this.tpGitExtensions.Controls.Add(this.label23);
+            this.tpGitExtensions.Controls.Add(this.SmtpServer);
+            this.tpGitExtensions.Controls.Add(this.Dictionary);
+            this.tpGitExtensions.Controls.Add(this.label22);
+            this.tpGitExtensions.Controls.Add(this.chkShowRelativeDate);
+            this.tpGitExtensions.Controls.Add(this.chkUseFastChecks);
+            this.tpGitExtensions.Controls.Add(this.chkShowGitCommandLine);
+            this.tpGitExtensions.Controls.Add(this.chkCloseProcessDialog);
+            this.tpGitExtensions.Controls.Add(this._NO_TRANSLATE_MaxCommits);
+            this.tpGitExtensions.Controls.Add(this.label12);
+            this.tpGitExtensions.Location = new System.Drawing.Point(4, 22);
+            this.tpGitExtensions.Name = "tpGitExtensions";
+            this.tpGitExtensions.Size = new System.Drawing.Size(805, 520);
+            this.tpGitExtensions.TabIndex = 3;
+            this.tpGitExtensions.Text = "Git extensions";
+            this.tpGitExtensions.UseVisualStyleBackColor = true;
+            this.tpGitExtensions.Click += new System.EventHandler(this.TabPageGitExtensions_Click);
             // 
             // chkStartWithRecentWorkingDir
             // 
@@ -1423,16 +1423,16 @@ namespace GitUI
             this.label12.TabIndex = 0;
             this.label12.Text = "Limit number of commits that will be loaded at startup.";
             // 
-            // StartPage
+            // tpStart
             // 
-            this.StartPage.Controls.Add(this.dashboardEditor1);
-            this.StartPage.Location = new System.Drawing.Point(4, 22);
-            this.StartPage.Name = "StartPage";
-            this.StartPage.Padding = new System.Windows.Forms.Padding(3);
-            this.StartPage.Size = new System.Drawing.Size(805, 520);
-            this.StartPage.TabIndex = 6;
-            this.StartPage.Text = "Start page";
-            this.StartPage.UseVisualStyleBackColor = true;
+            this.tpStart.Controls.Add(this.dashboardEditor1);
+            this.tpStart.Location = new System.Drawing.Point(4, 22);
+            this.tpStart.Name = "tpStart";
+            this.tpStart.Padding = new System.Windows.Forms.Padding(3);
+            this.tpStart.Size = new System.Drawing.Size(805, 520);
+            this.tpStart.TabIndex = 6;
+            this.tpStart.Text = "Start page";
+            this.tpStart.UseVisualStyleBackColor = true;
             // 
             // dashboardEditor1
             // 
@@ -1444,18 +1444,18 @@ namespace GitUI
             this.dashboardEditor1.Size = new System.Drawing.Size(799, 507);
             this.dashboardEditor1.TabIndex = 0;
             // 
-            // AppearancePage
+            // tpAppearance
             // 
-            this.AppearancePage.Controls.Add(this.groupBox6);
-            this.AppearancePage.Controls.Add(this.groupBox5);
-            this.AppearancePage.Controls.Add(this.groupBox4);
-            this.AppearancePage.Controls.Add(this.groupBox3);
-            this.AppearancePage.Location = new System.Drawing.Point(4, 22);
-            this.AppearancePage.Name = "AppearancePage";
-            this.AppearancePage.Size = new System.Drawing.Size(805, 520);
-            this.AppearancePage.TabIndex = 5;
-            this.AppearancePage.Text = "Appearance";
-            this.AppearancePage.UseVisualStyleBackColor = true;
+            this.tpAppearance.Controls.Add(this.groupBox6);
+            this.tpAppearance.Controls.Add(this.groupBox5);
+            this.tpAppearance.Controls.Add(this.groupBox4);
+            this.tpAppearance.Controls.Add(this.groupBox3);
+            this.tpAppearance.Location = new System.Drawing.Point(4, 22);
+            this.tpAppearance.Name = "tpAppearance";
+            this.tpAppearance.Size = new System.Drawing.Size(805, 520);
+            this.tpAppearance.TabIndex = 5;
+            this.tpAppearance.Text = "Appearance";
+            this.tpAppearance.UseVisualStyleBackColor = true;
             // 
             // groupBox6
             // 
@@ -2059,48 +2059,48 @@ namespace GitUI
             this._NO_TRANSLATE_ColorAddedLineLabel.Text = "Red";
             this._NO_TRANSLATE_ColorAddedLineLabel.Click += new System.EventHandler(this.label28_Click);
             // 
-            // GlobalSettingsPage
+            // tpGlobalSettings
             // 
-            this.GlobalSettingsPage.Controls.Add(this.Global_AppEncoding);
-            this.GlobalSettingsPage.Controls.Add(this.label59);
-            this.GlobalSettingsPage.Controls.Add(this.label60);
-            this.GlobalSettingsPage.Controls.Add(this.Global_FilesEncoding);
-            this.GlobalSettingsPage.Controls.Add(this.BrowseCommitTemplate);
-            this.GlobalSettingsPage.Controls.Add(this.label57);
-            this.GlobalSettingsPage.Controls.Add(this.CommitTemplatePath);
-            this.GlobalSettingsPage.Controls.Add(this.groupBox9);
-            this.GlobalSettingsPage.Controls.Add(this.DiffToolCmdSuggest);
-            this.GlobalSettingsPage.Controls.Add(this.DifftoolCmd);
-            this.GlobalSettingsPage.Controls.Add(this.label48);
-            this.GlobalSettingsPage.Controls.Add(this.BrowseDiffTool);
-            this.GlobalSettingsPage.Controls.Add(this.label42);
-            this.GlobalSettingsPage.Controls.Add(this.DifftoolPath);
-            this.GlobalSettingsPage.Controls.Add(this.GlobalDiffTool);
-            this.GlobalSettingsPage.Controls.Add(this.label41);
-            this.GlobalSettingsPage.Controls.Add(this.label28);
-            this.GlobalSettingsPage.Controls.Add(this.InvalidGitPathGlobal);
-            this.GlobalSettingsPage.Controls.Add(this.button1);
-            this.GlobalSettingsPage.Controls.Add(this.MergeToolCmd);
-            this.GlobalSettingsPage.Controls.Add(this.label19);
-            this.GlobalSettingsPage.Controls.Add(this.BrowseMergeTool);
-            this.GlobalSettingsPage.Controls.Add(this.GlobalMergeTool);
-            this.GlobalSettingsPage.Controls.Add(this.PathToKDiff3);
-            this.GlobalSettingsPage.Controls.Add(this.MergetoolPath);
-            this.GlobalSettingsPage.Controls.Add(this.GlobalKeepMergeBackup);
-            this.GlobalSettingsPage.Controls.Add(this.label7);
-            this.GlobalSettingsPage.Controls.Add(this.GlobalEditor);
-            this.GlobalSettingsPage.Controls.Add(this.label6);
-            this.GlobalSettingsPage.Controls.Add(this.GlobalUserEmail);
-            this.GlobalSettingsPage.Controls.Add(this.GlobalUserName);
-            this.GlobalSettingsPage.Controls.Add(this.label4);
-            this.GlobalSettingsPage.Controls.Add(this.label3);
-            this.GlobalSettingsPage.Location = new System.Drawing.Point(4, 22);
-            this.GlobalSettingsPage.Name = "GlobalSettingsPage";
-            this.GlobalSettingsPage.Padding = new System.Windows.Forms.Padding(3);
-            this.GlobalSettingsPage.Size = new System.Drawing.Size(805, 520);
-            this.GlobalSettingsPage.TabIndex = 1;
-            this.GlobalSettingsPage.Text = "Global settings";
-            this.GlobalSettingsPage.UseVisualStyleBackColor = true;
+            this.tpGlobalSettings.Controls.Add(this.Global_AppEncoding);
+            this.tpGlobalSettings.Controls.Add(this.label59);
+            this.tpGlobalSettings.Controls.Add(this.label60);
+            this.tpGlobalSettings.Controls.Add(this.Global_FilesEncoding);
+            this.tpGlobalSettings.Controls.Add(this.BrowseCommitTemplate);
+            this.tpGlobalSettings.Controls.Add(this.label57);
+            this.tpGlobalSettings.Controls.Add(this.CommitTemplatePath);
+            this.tpGlobalSettings.Controls.Add(this.groupBox9);
+            this.tpGlobalSettings.Controls.Add(this.DiffToolCmdSuggest);
+            this.tpGlobalSettings.Controls.Add(this.DifftoolCmd);
+            this.tpGlobalSettings.Controls.Add(this.label48);
+            this.tpGlobalSettings.Controls.Add(this.BrowseDiffTool);
+            this.tpGlobalSettings.Controls.Add(this.label42);
+            this.tpGlobalSettings.Controls.Add(this.DifftoolPath);
+            this.tpGlobalSettings.Controls.Add(this.GlobalDiffTool);
+            this.tpGlobalSettings.Controls.Add(this.label41);
+            this.tpGlobalSettings.Controls.Add(this.label28);
+            this.tpGlobalSettings.Controls.Add(this.InvalidGitPathGlobal);
+            this.tpGlobalSettings.Controls.Add(this.MergeToolCmdSuggest);
+            this.tpGlobalSettings.Controls.Add(this.MergeToolCmd);
+            this.tpGlobalSettings.Controls.Add(this.label19);
+            this.tpGlobalSettings.Controls.Add(this.BrowseMergeTool);
+            this.tpGlobalSettings.Controls.Add(this.GlobalMergeTool);
+            this.tpGlobalSettings.Controls.Add(this.PathToKDiff3);
+            this.tpGlobalSettings.Controls.Add(this.MergetoolPath);
+            this.tpGlobalSettings.Controls.Add(this.GlobalKeepMergeBackup);
+            this.tpGlobalSettings.Controls.Add(this.label7);
+            this.tpGlobalSettings.Controls.Add(this.GlobalEditor);
+            this.tpGlobalSettings.Controls.Add(this.label6);
+            this.tpGlobalSettings.Controls.Add(this.GlobalUserEmail);
+            this.tpGlobalSettings.Controls.Add(this.GlobalUserName);
+            this.tpGlobalSettings.Controls.Add(this.label4);
+            this.tpGlobalSettings.Controls.Add(this.label3);
+            this.tpGlobalSettings.Location = new System.Drawing.Point(4, 22);
+            this.tpGlobalSettings.Name = "tpGlobalSettings";
+            this.tpGlobalSettings.Padding = new System.Windows.Forms.Padding(3);
+            this.tpGlobalSettings.Size = new System.Drawing.Size(805, 520);
+            this.tpGlobalSettings.TabIndex = 1;
+            this.tpGlobalSettings.Text = "Global settings";
+            this.tpGlobalSettings.UseVisualStyleBackColor = true;
             // 
             // Global_AppEncoding
             // 
@@ -2225,14 +2225,6 @@ namespace GitUI
             // DifftoolCmd
             // 
             this.DifftoolCmd.FormattingEnabled = true;
-            this.DifftoolCmd.Items.AddRange(new object[] {
-            "\"c:/Program Files/Perforce/p4merge.exe\" \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"",
-            "\"c:/Program Files/TortoiseSVN/bin/TortoiseMerge.exe\" \"$LOCAL\" \"$REMOTE\"",
-            "\"c:/Program Files/Araxis/Araxis Merge/Compare.exe\" -wait -merge -3 -a1 \"$BASE\" \"$" +
-                "LOCAL\" \"$REMOTE\" \"$MERGED\"",
-            "\"c:/Program Files/SourceGear/DiffMerge/DiffMerge.exe\" /m /r=\"$MERGED\" \"$LOCAL\" \"$" +
-                "BASE\" \"$REMOTE\"",
-            "\"C:/Program Files/Beyond Compare 3/bcomp.exe\" \"$LOCAL\" \"$REMOTE\""});
             this.DifftoolCmd.Location = new System.Drawing.Point(153, 259);
             this.DifftoolCmd.Name = "DifftoolCmd";
             this.DifftoolCmd.Size = new System.Drawing.Size(347, 21);
@@ -2347,28 +2339,19 @@ namespace GitUI
             this.pictureBox1.TabIndex = 18;
             this.pictureBox1.TabStop = false;
             // 
-            // button1
+            // MergeToolCmdSuggest
             // 
-            this.button1.Location = new System.Drawing.Point(506, 145);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(108, 25);
-            this.button1.TabIndex = 16;
-            this.button1.Text = "Suggest command";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.MergeToolCmdSuggest_Click);
+            this.MergeToolCmdSuggest.Location = new System.Drawing.Point(506, 145);
+            this.MergeToolCmdSuggest.Name = "MergeToolCmdSuggest";
+            this.MergeToolCmdSuggest.Size = new System.Drawing.Size(108, 25);
+            this.MergeToolCmdSuggest.TabIndex = 16;
+            this.MergeToolCmdSuggest.Text = "Suggest command";
+            this.MergeToolCmdSuggest.UseVisualStyleBackColor = true;
+            this.MergeToolCmdSuggest.Click += new System.EventHandler(this.MergeToolCmdSuggest_Click);
             // 
             // MergeToolCmd
             // 
             this.MergeToolCmd.FormattingEnabled = true;
-            this.MergeToolCmd.Items.AddRange(new object[] {
-            "\"c:/Program Files/Perforce/p4merge.exe\" \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"",
-            "\"c:/Program Files/TortoiseSVN/bin/TortoiseMerge.exe\" /base:\"$BASE\" /mine:\"$LOCAL\"" +
-                " /theirs:\"$REMOTE\" /merged:\"$MERGED\"",
-            "\"c:/Program Files/Araxis/Araxis Merge/Compare.exe\" -wait -merge -3 -a1 \"$BASE\" \"$" +
-                "LOCAL\" \"$REMOTE\" \"$MERGED\"",
-            "\"c:/Program Files/SourceGear/DiffMerge/DiffMerge.exe\" /m /r=\"$MERGED\" \"$LOCAL\" \"$" +
-                "BASE\" \"$REMOTE\"",
-            "\"C:/Program Files/Beyond Compare 3/bcomp.exe\" \"$BASE\" \"$LOCAL\" \"$REMOTE\""});
             this.MergeToolCmd.Location = new System.Drawing.Point(153, 147);
             this.MergeToolCmd.Name = "MergeToolCmd";
             this.MergeToolCmd.Size = new System.Drawing.Size(347, 21);
@@ -2496,17 +2479,17 @@ namespace GitUI
             this.label3.TabIndex = 0;
             this.label3.Text = "User name";
             // 
-            // Ssh
+            // tpSsh
             // 
-            this.Ssh.Controls.Add(this.groupBox2);
-            this.Ssh.Controls.Add(this.groupBox1);
-            this.Ssh.Location = new System.Drawing.Point(4, 22);
-            this.Ssh.Name = "Ssh";
-            this.Ssh.Padding = new System.Windows.Forms.Padding(3);
-            this.Ssh.Size = new System.Drawing.Size(805, 520);
-            this.Ssh.TabIndex = 4;
-            this.Ssh.Text = "Ssh";
-            this.Ssh.UseVisualStyleBackColor = true;
+            this.tpSsh.Controls.Add(this.groupBox2);
+            this.tpSsh.Controls.Add(this.groupBox1);
+            this.tpSsh.Location = new System.Drawing.Point(4, 22);
+            this.tpSsh.Name = "tpSsh";
+            this.tpSsh.Padding = new System.Windows.Forms.Padding(3);
+            this.tpSsh.Size = new System.Drawing.Size(805, 520);
+            this.tpSsh.TabIndex = 4;
+            this.tpSsh.Text = "Ssh";
+            this.tpSsh.UseVisualStyleBackColor = true;
             // 
             // groupBox2
             // 
@@ -2713,35 +2696,35 @@ namespace GitUI
             this.Putty.UseVisualStyleBackColor = true;
             this.Putty.CheckedChanged += new System.EventHandler(this.Putty_CheckedChanged);
             // 
-            // scriptsTab
+            // tpScriptsTab
             // 
-            this.scriptsTab.Controls.Add(this.lbl_icon);
-            this.scriptsTab.Controls.Add(this.sbtn_icon);
-            this.scriptsTab.Controls.Add(this.scriptNeedsConfirmation);
-            this.scriptsTab.Controls.Add(this.labelOnEvent);
-            this.scriptsTab.Controls.Add(this.scriptEvent);
-            this.scriptsTab.Controls.Add(this.scriptEnabled);
-            this.scriptsTab.Controls.Add(this.ScriptList);
-            this.scriptsTab.Controls.Add(this.helpLabel);
-            this.scriptsTab.Controls.Add(this.inMenuCheckBox);
-            this.scriptsTab.Controls.Add(this.argumentsLabel);
-            this.scriptsTab.Controls.Add(this.commandLabel);
-            this.scriptsTab.Controls.Add(this.nameLabel);
-            this.scriptsTab.Controls.Add(this.browseScriptButton);
-            this.scriptsTab.Controls.Add(this.argumentsTextBox);
-            this.scriptsTab.Controls.Add(this.commandTextBox);
-            this.scriptsTab.Controls.Add(this.nameTextBox);
-            this.scriptsTab.Controls.Add(this.moveDownButton);
-            this.scriptsTab.Controls.Add(this.removeScriptButton);
-            this.scriptsTab.Controls.Add(this.addScriptButton);
-            this.scriptsTab.Controls.Add(this.moveUpButton);
-            this.scriptsTab.Location = new System.Drawing.Point(4, 22);
-            this.scriptsTab.Name = "scriptsTab";
-            this.scriptsTab.Padding = new System.Windows.Forms.Padding(3);
-            this.scriptsTab.Size = new System.Drawing.Size(805, 520);
-            this.scriptsTab.TabIndex = 8;
-            this.scriptsTab.Text = "Scripts";
-            this.scriptsTab.UseVisualStyleBackColor = true;
+            this.tpScriptsTab.Controls.Add(this.lbl_icon);
+            this.tpScriptsTab.Controls.Add(this.sbtn_icon);
+            this.tpScriptsTab.Controls.Add(this.scriptNeedsConfirmation);
+            this.tpScriptsTab.Controls.Add(this.labelOnEvent);
+            this.tpScriptsTab.Controls.Add(this.scriptEvent);
+            this.tpScriptsTab.Controls.Add(this.scriptEnabled);
+            this.tpScriptsTab.Controls.Add(this.ScriptList);
+            this.tpScriptsTab.Controls.Add(this.helpLabel);
+            this.tpScriptsTab.Controls.Add(this.inMenuCheckBox);
+            this.tpScriptsTab.Controls.Add(this.argumentsLabel);
+            this.tpScriptsTab.Controls.Add(this.commandLabel);
+            this.tpScriptsTab.Controls.Add(this.nameLabel);
+            this.tpScriptsTab.Controls.Add(this.browseScriptButton);
+            this.tpScriptsTab.Controls.Add(this.argumentsTextBox);
+            this.tpScriptsTab.Controls.Add(this.commandTextBox);
+            this.tpScriptsTab.Controls.Add(this.nameTextBox);
+            this.tpScriptsTab.Controls.Add(this.moveDownButton);
+            this.tpScriptsTab.Controls.Add(this.removeScriptButton);
+            this.tpScriptsTab.Controls.Add(this.addScriptButton);
+            this.tpScriptsTab.Controls.Add(this.moveUpButton);
+            this.tpScriptsTab.Location = new System.Drawing.Point(4, 22);
+            this.tpScriptsTab.Name = "tpScriptsTab";
+            this.tpScriptsTab.Padding = new System.Windows.Forms.Padding(3);
+            this.tpScriptsTab.Size = new System.Drawing.Size(805, 520);
+            this.tpScriptsTab.TabIndex = 8;
+            this.tpScriptsTab.Text = "Scripts";
+            this.tpScriptsTab.UseVisualStyleBackColor = true;
             // 
             // lbl_icon
             // 
@@ -3064,16 +3047,16 @@ namespace GitUI
             this.moveUpButton.UseVisualStyleBackColor = true;
             this.moveUpButton.Click += new System.EventHandler(this.moveUpButton_Click);
             // 
-            // tabPageHotkeys
+            // tpHotkeys
             // 
-            this.tabPageHotkeys.Controls.Add(this.controlHotkeys);
-            this.tabPageHotkeys.Location = new System.Drawing.Point(4, 22);
-            this.tabPageHotkeys.Name = "tabPageHotkeys";
-            this.tabPageHotkeys.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageHotkeys.Size = new System.Drawing.Size(805, 520);
-            this.tabPageHotkeys.TabIndex = 9;
-            this.tabPageHotkeys.Text = "Hotkeys";
-            this.tabPageHotkeys.UseVisualStyleBackColor = true;
+            this.tpHotkeys.Controls.Add(this.controlHotkeys);
+            this.tpHotkeys.Location = new System.Drawing.Point(4, 22);
+            this.tpHotkeys.Name = "tpHotkeys";
+            this.tpHotkeys.Padding = new System.Windows.Forms.Padding(3);
+            this.tpHotkeys.Size = new System.Drawing.Size(805, 520);
+            this.tpHotkeys.TabIndex = 9;
+            this.tpHotkeys.Text = "Hotkeys";
+            this.tpHotkeys.UseVisualStyleBackColor = true;
             // 
             // controlHotkeys
             // 
@@ -3171,27 +3154,27 @@ namespace GitUI
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSettings_FormClosing);
             this.Load += new System.EventHandler(this.FormSettings_Load);
             this.Shown += new System.EventHandler(this.FormSettings_Shown);
-            this.LocalSettings.ResumeLayout(false);
-            this.LocalSettings.PerformLayout();
+            this.tpLocalSettings.ResumeLayout(false);
+            this.tpLocalSettings.PerformLayout();
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
             this.InvalidGitPathLocal.ResumeLayout(false);
             this.InvalidGitPathLocal.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.tabControl1.ResumeLayout(false);
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
-            this.TabPageGit.ResumeLayout(false);
+            this.tpChecklist.ResumeLayout(false);
+            this.tpChecklist.PerformLayout();
+            this.tpGit.ResumeLayout(false);
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
-            this.TabPageGitExtensions.ResumeLayout(false);
-            this.TabPageGitExtensions.PerformLayout();
+            this.tpGitExtensions.ResumeLayout(false);
+            this.tpGitExtensions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RevisionGridQuickSearchTimeout)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_MaxCommits)).EndInit();
-            this.StartPage.ResumeLayout(false);
-            this.AppearancePage.ResumeLayout(false);
+            this.tpStart.ResumeLayout(false);
+            this.tpAppearance.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_DaysToCacheImages)).EndInit();
@@ -3204,24 +3187,24 @@ namespace GitUI
             this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            this.GlobalSettingsPage.ResumeLayout(false);
-            this.GlobalSettingsPage.PerformLayout();
+            this.tpGlobalSettings.ResumeLayout(false);
+            this.tpGlobalSettings.PerformLayout();
             this.groupBox9.ResumeLayout(false);
             this.groupBox9.PerformLayout();
             this.InvalidGitPathGlobal.ResumeLayout(false);
             this.InvalidGitPathGlobal.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.Ssh.ResumeLayout(false);
+            this.tpSsh.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.scriptsTab.ResumeLayout(false);
-            this.scriptsTab.PerformLayout();
+            this.tpScriptsTab.ResumeLayout(false);
+            this.tpScriptsTab.PerformLayout();
             this.contextMenuStrip_SplitButton.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.ScriptList)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.scriptInfoBindingSource)).EndInit();
-            this.tabPageHotkeys.ResumeLayout(false);
+            this.tpHotkeys.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
@@ -3233,7 +3216,7 @@ namespace GitUI
 
         #endregion
 
-        private System.Windows.Forms.TabPage LocalSettings;
+        private System.Windows.Forms.TabPage tpLocalSettings;
         private System.Windows.Forms.TextBox UserEmail;
         private System.Windows.Forms.TextBox UserName;
         private System.Windows.Forms.Label label2;
@@ -3241,7 +3224,7 @@ namespace GitUI
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Button Ok;
-        private System.Windows.Forms.TabPage GlobalSettingsPage;
+        private System.Windows.Forms.TabPage tpGlobalSettings;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox GlobalUserName;
         private System.Windows.Forms.Label label4;
@@ -3254,16 +3237,16 @@ namespace GitUI
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.CheckBox KeepMergeBackup;
         private System.Windows.Forms.CheckBox GlobalKeepMergeBackup;
-        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage tpChecklist;
         private System.Windows.Forms.Button GitExtensionsInstall;
         private System.Windows.Forms.Button ShellExtensionsRegistered;
         private System.Windows.Forms.Button UserNameSet;
-        private System.Windows.Forms.Button DiffTool;
+        private System.Windows.Forms.Button MergeTool;
         private System.Windows.Forms.Button GitFound;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.CheckBox CheckAtStartup;
         private System.Windows.Forms.Button Rescan;
-        private System.Windows.Forms.TabPage TabPageGitExtensions;
+        private System.Windows.Forms.TabPage tpGitExtensions;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.NumericUpDown _NO_TRANSLATE_MaxCommits;
         private System.Windows.Forms.Button BrowseGitPath;
@@ -3273,7 +3256,7 @@ namespace GitUI
         private System.Windows.Forms.TextBox GitBinPath;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Button GitBinFound;
-        private System.Windows.Forms.TabPage Ssh;
+        private System.Windows.Forms.TabPage tpSsh;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button PlinkBrowse;
         private System.Windows.Forms.TextBox PlinkPath;
@@ -3298,12 +3281,12 @@ namespace GitUI
         private System.Windows.Forms.Label PathToKDiff3;
         private System.Windows.Forms.TextBox MergetoolPath;
         private System.Windows.Forms.ComboBox GlobalMergeTool;
-        private System.Windows.Forms.ComboBox MergeTool;
+        private System.Windows.Forms.ComboBox LocalMergeTool;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Button BrowseMergeTool;
         private System.Windows.Forms.ComboBox MergeToolCmd;
         private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button MergeToolCmdSuggest;
         private System.Windows.Forms.CheckBox chkCloseProcessDialog;
         private System.Windows.Forms.CheckBox chkShowGitCommandLine;
         private System.Windows.Forms.CheckBox chkUseFastChecks;
@@ -3321,7 +3304,7 @@ namespace GitUI
         private System.Windows.Forms.ComboBox Dictionary;
 		private System.Windows.Forms.Label label23;
         private System.Windows.Forms.TextBox SmtpServer;
-        private System.Windows.Forms.TabPage AppearancePage;
+        private System.Windows.Forms.TabPage tpAppearance;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label label27;
@@ -3346,7 +3329,7 @@ namespace GitUI
         private System.Windows.Forms.Button BrowseDiffTool;
         private System.Windows.Forms.Label label42;
         private System.Windows.Forms.TextBox DifftoolPath;
-        private System.Windows.Forms.Button DiffTool2;
+        private System.Windows.Forms.Button DiffTool;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.RadioButton GreenIcon;
         private System.Windows.Forms.RadioButton PurpleIcon;
@@ -3364,7 +3347,7 @@ namespace GitUI
         private System.Windows.Forms.Button ClearImageCache;
         private System.Windows.Forms.Label label44;
         private System.Windows.Forms.NumericUpDown _NO_TRANSLATE_authorImageSize;
-        private System.Windows.Forms.TabPage StartPage;
+        private System.Windows.Forms.TabPage tpStart;
         private System.Windows.Forms.BindingSource repositoryBindingSource;
         private DashboardEditor dashboardEditor1;
         private System.Windows.Forms.Label label47;
@@ -3376,7 +3359,7 @@ namespace GitUI
         private System.Windows.Forms.ComboBox Language;
         private System.Windows.Forms.Label label49;
         private System.Windows.Forms.LinkLabel helpTranslate;
-        private System.Windows.Forms.TabPage TabPageGit;
+        private System.Windows.Forms.TabPage tpGit;
         private System.Windows.Forms.CheckBox MulticolorBranches;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.Label label50;
@@ -3400,7 +3383,7 @@ namespace GitUI
         private System.Windows.Forms.CheckBox DrawNonRelativesGray;
         private System.Windows.Forms.CheckBox chkShowCurrentChangesInRevisionGraph;
         private System.Windows.Forms.CheckBox chkShowStashCountInBrowseWindow;
-        private System.Windows.Forms.TabPage scriptsTab;
+        private System.Windows.Forms.TabPage tpScriptsTab;
         private System.Windows.Forms.CheckBox inMenuCheckBox;
         private System.Windows.Forms.ComboBox noImageService;
         private System.Windows.Forms.Label label53;
@@ -3425,11 +3408,11 @@ namespace GitUI
         private System.Windows.Forms.Button GitExtensionsInstall_Fix;
         private System.Windows.Forms.Button GitBinFound_Fix;
         private System.Windows.Forms.Button ShellExtensionsRegistered_Fix;
-        private System.Windows.Forms.Button DiffTool2_Fix;
         private System.Windows.Forms.Button DiffTool_Fix;
+        private System.Windows.Forms.Button MergeTool_Fix;
         private System.Windows.Forms.Button UserNameSet_Fix;
         private System.Windows.Forms.Button GitFound_Fix;
-        private System.Windows.Forms.TabPage tabPageHotkeys;
+        private System.Windows.Forms.TabPage tpHotkeys;
         private Hotkey.ControlHotkeys controlHotkeys;
         private DataGridView ScriptList;
         private BindingSource scriptInfoBindingSource;

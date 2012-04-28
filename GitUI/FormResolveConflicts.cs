@@ -286,10 +286,10 @@ namespace GitUI
                         DialogResult result = MessageBox.Show(this, string.Format(noBaseRevision.Text, filename), _noBaseFileMergeCaption.Text, MessageBoxButtons.YesNoCancel);
                         if (result == DialogResult.Yes)
                         {
-                            arguments = arguments.Replace("-merge -3", "-merge");
-                            arguments = arguments.Replace("/base:\"$BASE\"", "");
-                            arguments = arguments.Replace("/mine:\"$LOCAL\"", "/base:\"$LOCAL\"");
-                            arguments = arguments.Replace("\"$BASE\"", "");
+                            arguments = arguments.Replace("-merge -3", "-merge"); // Araxis
+                            arguments = arguments.Replace("base:\"$BASE\"", ""); // TortoiseMerge
+                            arguments = arguments.Replace("mine:\"$LOCAL\"", "base:\"$LOCAL\""); // TortoiseMerge
+                            arguments = arguments.Replace("\"$BASE\"", ""); // Perforce, Beyond Compare 3, Araxis, DiffMerge
                         }
 
                         if (result == DialogResult.Cancel)
@@ -354,9 +354,7 @@ namespace GitUI
 
         private void InitMergetool()
         {
-            mergetool = Settings.Module.GetSetting("merge.tool");
-            if (string.IsNullOrEmpty(mergetool))
-                mergetool = Settings.Module.GetGlobalSetting("merge.tool");
+            mergetool = Settings.Module.GetEffectiveSetting("merge.tool");
 
             if (string.IsNullOrEmpty(mergetool))
             {
@@ -365,19 +363,19 @@ namespace GitUI
             }
             Cursor.Current = Cursors.WaitCursor;
 
-            mergetoolCmd = Settings.Module.GetSetting("mergetool." + mergetool + ".cmd");
-            if (string.IsNullOrEmpty(mergetoolCmd))
-                mergetoolCmd = Settings.Module.GetGlobalSetting("mergetool." + mergetool + ".cmd");
+            mergetoolCmd = Settings.Module.GetEffectiveSetting("mergetool." + mergetool + ".cmd");
 
-            mergetoolPath = Settings.Module.GetSetting("mergetool." + mergetool + ".path");
-            if (string.IsNullOrEmpty(mergetoolPath))
-                mergetoolPath = Settings.Module.GetGlobalSetting("mergetool." + mergetool + ".path");
+            mergetoolPath = Settings.Module.GetEffectiveSetting("mergetool." + mergetool + ".path");
 
             if (string.IsNullOrEmpty(mergetool) || mergetool == "kdiff3")
                 mergetoolCmd = mergetoolPath + " \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"";
 
-            mergetoolPath = mergetoolCmd.Substring(0, mergetoolCmd.IndexOf(".exe") + 5).Trim(new[] { '\"', ' ' });
-            mergetoolCmd = mergetoolCmd.Substring(mergetoolCmd.IndexOf(".exe") + 5);
+            int idx = mergetoolCmd.IndexOf(".exe");
+            if (idx >= 0)
+            {
+                mergetoolPath = mergetoolCmd.Substring(0, idx + 5).Trim(new[] { '\"', ' ' });
+                mergetoolCmd = mergetoolCmd.Substring(idx + 5);
+            }
             Cursor.Current = Cursors.Default;
         }
 
