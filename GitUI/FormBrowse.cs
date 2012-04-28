@@ -74,6 +74,9 @@ namespace GitUI
         private readonly TranslationString _noRevisionFoundError =
             new TranslationString("No revision found.");
 
+        private readonly TranslationString _configureWorkingDirMenu =
+            new TranslationString("Configure this menu");
+
         #endregion
 
         private readonly SynchronizationContext syncContext;
@@ -1437,9 +1440,7 @@ namespace GitUI
 
         private void StashChangesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var arguments = "stash save";
-            if (Settings.IncludeUntrackedFilesInManualStash && GitCommandHelpers.VersionInUse.StashUntrackedFilesSupported)
-                arguments += " -u";
+            var arguments = GitCommandHelpers.StashSaveCmd(Settings.IncludeUntrackedFilesInManualStash);
             new FormProcess(arguments).ShowDialog(this);
             Initialize();
         }
@@ -1671,7 +1672,7 @@ namespace GitUI
             }
 
             _NO_TRANSLATE_Workingdir.DropDownItems.Add(new ToolStripSeparator());
-            ToolStripMenuItem toolStripItem = new ToolStripMenuItem("Configure this menu");
+            ToolStripMenuItem toolStripItem = new ToolStripMenuItem(_configureWorkingDirMenu.Text);
             _NO_TRANSLATE_Workingdir.DropDownItems.Add(toolStripItem);
 
             toolStripItem.Click += (object hs, EventArgs he) =>
@@ -2109,9 +2110,6 @@ namespace GitUI
         {
             TreeView gitTree = (TreeView)sender;
 
-            if (!gitTree.Focused && Settings.FocusControlOnHover)
-                gitTree.Focus();
-
             //DRAG
             // If the mouse moves outside the rectangle, start the drag.
             if (gitTreeDragBoxFromMouseDown != Rectangle.Empty &&
@@ -2253,10 +2251,21 @@ namespace GitUI
             if (GitUICommands.Instance.StartSvnDcommitDialog(this))
                 Initialize();
         }
+
         private void SvnFetchToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (GitUICommands.Instance.StartSvnFetchDialog(this))
                 Initialize();
+        }
+
+        private void expandAllStripMenuItem_Click(object sender, EventArgs e)
+        {
+			GitTree.ExpandAll();
+        }
+
+        private void collapseAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+			GitTree.CollapseAll();
         }
 
         private void WorkingDirChanged(bool internalInitialize)

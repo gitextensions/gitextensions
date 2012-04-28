@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -12,9 +13,7 @@ using GitUI.Hotkey;
 using GitUI.Script;
 using GitUI.Tag;
 using Gravatar;
-using ResourceManager;
 using ResourceManager.Translation;
-using System.IO;
 
 namespace GitUI
 {
@@ -1591,6 +1590,15 @@ namespace GitUI
                 }
             }
 
+            //if there is no branch to merge, then let user to merge selected commit into current branch 
+            if (mergeBranchDropDown.Items.Count == 0)
+            {
+                ToolStripItem toolStripItem = new ToolStripMenuItem(revision.Guid);
+                toolStripItem.Click += ToolStripItemClickMergeBranch;
+                mergeBranchDropDown.Items.Add(toolStripItem);
+            }
+            
+
             foreach (var head in allBranches)
             {
                 ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
@@ -1705,7 +1713,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            GitUICommands.Instance.StartCheckoutBranchDialog(this, toolStripItem.Text, true);
+            GitUICommands.Instance.StartCheckoutRemoteBranchDialog(this, toolStripItem.Text);
 
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
@@ -1989,6 +1997,11 @@ namespace GitUI
         private void dateToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Clipboard.SetText(GetRevision(LastRow).CommitDate.ToString());
+        }
+
+        private void hashToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(GetRevision(LastRow).Guid);
         }
 
         private static void copyToClipBoard(object sender, EventArgs e)

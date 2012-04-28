@@ -14,15 +14,14 @@ namespace GitUI
 {
     public partial class FormPull : GitExtensionsForm
     {
-        private const string PuttyCaption = "PuTTY";
-
+        #region Translations
         private readonly TranslationString _areYouSureYouWantToRebaseMerge =
             new TranslationString("The current commit is a merge." + Environment.NewLine +
-                                  //"." + Environment.NewLine +
-                                  "Are you sure you want to rebase this merge?");
+                                //"." + Environment.NewLine +
+                                "Are you sure you want to rebase this merge?");
 
         private readonly TranslationString _areYouSureYouWantToRebaseMergeCaption =
-                        new TranslationString("Rebase merge commit?");
+            new TranslationString("Rebase merge commit?");
 
         private readonly TranslationString _allMergeConflictSolvedQuestion =
             new TranslationString("Are all merge conflicts solved? Do you want to commit?");
@@ -52,12 +51,15 @@ namespace GitUI
             new TranslationString("Please select a source directory");
 
         private readonly TranslationString _questionInitSubmodules =
-             new TranslationString("The pulled has submodules configured." + Environment.NewLine +
+            new TranslationString("The pulled has submodules configured." + Environment.NewLine +
                                    "Do you want to initialize the submodules?" + Environment.NewLine +
                                    "This will initialize and update all submodules recursive.");
 
         private readonly TranslationString _questionInitSubmodulesCaption =
             new TranslationString("Submodules");
+        #endregion
+
+        private const string PuttyCaption = "PuTTY";
 
         private List<GitHead> _heads;
         public bool ErrorOccurred { get; private set; }

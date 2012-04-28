@@ -20,22 +20,12 @@ namespace GitUI
         private readonly TranslationString _infoDirectoryNew =
             new TranslationString("(New directory)");
 
-
         private readonly TranslationString _questionOpenRepo =
             new TranslationString("The repository has been cloned successfully." + Environment.NewLine +
                                   "Do you want to open the new repository \"{0}\" now?");
         
         private readonly TranslationString _questionOpenRepoCaption = 
             new TranslationString("Open");
-
-        private readonly TranslationString _questionInitSubmodules =
-            new TranslationString("The cloned has submodules configured." + Environment.NewLine +
-                                  "Do you want to initialize the submodules?" + Environment.NewLine +
-                                  "This will initialize and update all submodules recursive.");
-        
-        private readonly TranslationString _questionInitSubmodulesCaption =
-            new TranslationString("Submodules");
-
 
         public FormClone(): this(null)
         {
@@ -81,10 +71,9 @@ namespace GitUI
                 if (!Directory.Exists(dirTo))
                     Directory.CreateDirectory(dirTo);
 
-                var fromProcess =
-                    new FormRemoteProcess(Settings.GitCommand,
-                                    GitCommandHelpers.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
-                                                                     CentralRepository.Checked, Branches.Text, null));
+                var cloneCmd = GitCommandHelpers.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
+                            CentralRepository.Checked, cbIntializeAllSubmodules.Checked, Branches.Text, null);
+                var fromProcess = new FormRemoteProcess(Settings.GitCommand, cloneCmd);
                 fromProcess.SetUrlTryingToConnect(_NO_TRANSLATE_From.Text);
                 fromProcess.ShowDialog(this);
 
@@ -92,13 +81,7 @@ namespace GitUI
                     return;
 
                 if (ShowInTaskbar == false && AskIfNewRepositoryShouldBeOpened(dirTo))
-                {
                     Settings.WorkingDir = dirTo;
-
-                    if (File.Exists(Settings.WorkingDir + ".gitmodules") &&
-                        AskIfSubmodulesShouldBeInitialized())
-                        GitUICommands.Instance.StartUpdateSubmodulesDialog(this);
-                }
                 Close();
             }
             catch (Exception ex)
@@ -113,12 +96,6 @@ namespace GitUI
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
         }
 
-        private bool AskIfSubmodulesShouldBeInitialized()
-        {
-            return MessageBox.Show(this, _questionInitSubmodules.Text, _questionInitSubmodulesCaption.Text,
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
-        }
-        
         private void FromBrowseClick(object sender, EventArgs e)
         {
             var dialog = new FolderBrowserDialog { SelectedPath = _NO_TRANSLATE_From.Text };

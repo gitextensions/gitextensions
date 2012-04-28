@@ -310,7 +310,7 @@ namespace GitCommands
         {
             return "tag -d \"" + tagName + "\"";
         }
-		
+        
         public static string SubmoduleUpdateCmd(string name)
         {
             if (string.IsNullOrEmpty(name))
@@ -381,13 +381,20 @@ namespace GitCommands
             return "reset --hard \"" + commit + "\"";
         }
 
-        public static string CloneCmd(string fromPath, string toPath, bool central, string branch, int? depth)
+        public static string CloneCmd(string fromPath, string toPath)
+        {
+            return CloneCmd(fromPath, toPath, false, false, string.Empty, null);
+        }
+
+        public static string CloneCmd(string fromPath, string toPath, bool central, bool initSubmodules, string branch, int? depth)
         {
             var from = FixPath(fromPath);
             var to = FixPath(toPath);
             var options = new List<string> { "-v" };
             if (central)
                 options.Add("--bare");
+            if (initSubmodules)
+                options.Add("--recurse-submodules");
             if (depth.HasValue)
                 options.Add("--depth " + depth.ToString());
             if (VersionInUse.CloneCanAskForProgress)
@@ -501,6 +508,14 @@ namespace GitCommands
                 return "push " + sforce + "\"" + path.Trim() + "\" tag " + tag;
 
             return "";
+        }
+
+        public static string StashSaveCmd(bool untracked)
+        {
+            var cmd = "stash save";
+            if (untracked && VersionInUse.StashUntrackedFilesSupported)
+                cmd += " -u";
+            return cmd;
         }
 
         public static bool PathIsUrl(string path)

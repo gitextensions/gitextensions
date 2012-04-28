@@ -223,7 +223,6 @@ namespace GitUI
             // 
             // View
             // 
-            this.View.DisableFocusControlOnHover = false;
             this.View.Dock = System.Windows.Forms.DockStyle.Fill;
             this.View.Encoding = ((System.Text.Encoding)(resources.GetObject("View.Encoding")));
             this.View.Font = new System.Drawing.Font("Tahoma", 8.25F);
@@ -252,7 +251,6 @@ namespace GitUI
             // 
             // Diff
             // 
-            this.Diff.DisableFocusControlOnHover = false;
             this.Diff.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Diff.Encoding = ((System.Text.Encoding)(resources.GetObject("Diff.Encoding")));
             this.Diff.Font = new System.Drawing.Font("Tahoma", 8.25F);
