@@ -304,7 +304,6 @@ namespace GitUI
             // 
             // View
             // 
-            this.View.DisableFocusControlOnHover = false;
             this.View.Dock = System.Windows.Forms.DockStyle.Fill;
             this.View.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.View.IgnoreWhitespaceChanges = false;

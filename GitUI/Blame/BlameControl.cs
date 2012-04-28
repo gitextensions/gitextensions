@@ -20,7 +20,6 @@ namespace GitUI.Blame
             BlameCommitter.IsReadOnly = true;
             BlameCommitter.EnableScrollBars(false);
             BlameCommitter.ShowLineNumbers = false;
-            BlameCommitter.DisableFocusControlOnHover = true;
             BlameCommitter.ScrollPosChanged += BlameCommitter_ScrollPosChanged;
             BlameCommitter.MouseMove += BlameCommitter_MouseMove;
             BlameCommitter.MouseLeave += BlameCommitter_MouseLeave;
