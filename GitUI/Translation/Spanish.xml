@@ -2026,7 +2026,7 @@ Si se trata de un repositorio central (repositorio sin un directorio de trabajo)
         <TranslationItem Name="$this" Property="Text">
           <Value>Configuración</Value>
         </TranslationItem>
-        <TranslationItem Name="LocalSettings" Property="Text">
+        <TranslationItem Name="tpLocalSettings" Property="Text">
           <Value>configuración local</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
@@ -2038,7 +2038,7 @@ Si se trata de un repositorio central (repositorio sin un directorio de trabajo)
         <TranslationItem Name="Ok" Property="Text">
           <Value>Aceptar</Value>
         </TranslationItem>
-        <TranslationItem Name="GlobalSettingsPage" Property="Text">
+        <TranslationItem Name="tpGlobalSettings" Property="Text">
           <Value>Configuración global</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
@@ -2059,7 +2059,7 @@ Si se trata de un repositorio central (repositorio sin un directorio de trabajo)
         <TranslationItem Name="label8" Property="Text">
           <Value>Mergetool</Value>
         </TranslationItem>
-        <TranslationItem Name="tabPage3" Property="Text">
+        <TranslationItem Name="tpChecklist" Property="Text">
           <Value>Checklist</Value>
         </TranslationItem>
         <TranslationItem Name="label11" Property="Text">
@@ -2071,7 +2071,7 @@ Si se trata de un repositorio central (repositorio sin un directorio de trabajo)
         <TranslationItem Name="Rescan" Property="Text">
           <Value>Guardar y volver a examinar</Value>
         </TranslationItem>
-        <TranslationItem Name="TabPageGitExtensions" Property="Text">
+        <TranslationItem Name="tpGitExtensions" Property="Text">
           <Value>Git Extensions</Value>
         </TranslationItem>
         <TranslationItem Name="label12" Property="Text">
@@ -2090,7 +2090,7 @@ Si se trata de un repositorio central (repositorio sin un directorio de trabajo)
           <Value>Ruta de acceso a las herramientas de Linux (sh).
 Dejar en blanco cuando están en el PATH.</Value>
         </TranslationItem>
-        <TranslationItem Name="Ssh" Property="Text">
+        <TranslationItem Name="tpSsh" Property="Text">
           <Value>SSH</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
@@ -2180,7 +2180,7 @@ cualquier configuración global.</Value>
         <TranslationItem Name="EncodingLabel" Property="Text">
           <Value>Codificación</Value>
         </TranslationItem>
-        <TranslationItem Name="AppearancePage" Property="Text">
+        <TranslationItem Name="tpAppearance" Property="Text">
           <Value>Apariencia</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox4" Property="Text">
@@ -2282,7 +2282,7 @@ cualquier configuración global.</Value>
         <TranslationItem Name="label44" Property="Text">
           <Value>Tamaño de la imagen</Value>
         </TranslationItem>
-        <TranslationItem Name="StartPage" Property="Text">
+        <TranslationItem Name="tpStartPage" Property="Text">
           <Value>Página de inicio</Value>
         </TranslationItem>
         <TranslationItem Name="label47" Property="Text">
@@ -2303,7 +2303,7 @@ cualquier configuración global.</Value>
         <TranslationItem Name="helpTranslate" Property="Text">
           <Value>Ayudar a traducir</Value>
         </TranslationItem>
-        <TranslationItem Name="TabPageGit" Property="Text">
+        <TranslationItem Name="tpGit" Property="Text">
           <Value>Git</Value>
         </TranslationItem>
         <TranslationItem Name="MulticolorBranches" Property="Text">
@@ -2373,7 +2373,7 @@ cualquier configuración global.</Value>
         <TranslationItem Name="chkShowStashCountInBrowseWindow" Property="Text">
           <Value>Mostrar cantidad de pilas en la barra de estado de la ventana de exploración</Value>
         </TranslationItem>
-        <TranslationItem Name="scriptsTab" Property="Text">
+        <TranslationItem Name="tpScriptsTab" Property="Text">
           <Value>Scripts</Value>
         </TranslationItem>
         <TranslationItem Name="inMenuCheckBox" Property="Text">
@@ -2424,7 +2424,7 @@ cualquier configuración global.</Value>
         <TranslationItem Name="ShellExtensionsRegistered_Fix" Property="Text">
           <Value>Reparar</Value>
         </TranslationItem>
-        <TranslationItem Name="DiffTool2_Fix" Property="Text">
+        <TranslationItem Name="MergeTool_Fix" Property="Text">
           <Value>Reparar</Value>
         </TranslationItem>
         <TranslationItem Name="DiffTool_Fix" Property="Text">
@@ -2436,7 +2436,7 @@ cualquier configuración global.</Value>
         <TranslationItem Name="GitFound_Fix" Property="Text">
           <Value>Reparar</Value>
         </TranslationItem>
-        <TranslationItem Name="tabPageHotkeys" Property="Text">
+        <TranslationItem Name="tpHotkeys" Property="Text">
           <Value>Teclas de acceso rápido</Value>
         </TranslationItem>
         <TranslationItem Name="scriptEnabled" Property="Text">

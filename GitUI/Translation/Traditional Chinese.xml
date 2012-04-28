@@ -2638,7 +2638,7 @@ weirdchars.txt text
         <TranslationItem Name="$this" Property="Text">
           <Value>設定</Value>
         </TranslationItem>
-        <TranslationItem Name="LocalSettings" Property="Text">
+        <TranslationItem Name="tpLocalSettings" Property="Text">
           <Value>本機設定</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
@@ -2650,7 +2650,7 @@ weirdchars.txt text
         <TranslationItem Name="Ok" Property="Text">
           <Value>確定</Value>
         </TranslationItem>
-        <TranslationItem Name="GlobalSettingsPage" Property="Text">
+        <TranslationItem Name="tpGlobalSettings" Property="Text">
           <Value>全體設定</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
@@ -2671,7 +2671,7 @@ weirdchars.txt text
         <TranslationItem Name="label8" Property="Text">
           <Value>合併工具</Value>
         </TranslationItem>
-        <TranslationItem Name="tabPage3" Property="Text">
+        <TranslationItem Name="tpChecklist" Property="Text">
           <Value>清單</Value>
         </TranslationItem>
         <TranslationItem Name="label11" Property="Text">
@@ -2683,7 +2683,7 @@ weirdchars.txt text
         <TranslationItem Name="Rescan" Property="Text">
           <Value>保存並重新掃描</Value>
         </TranslationItem>
-        <TranslationItem Name="TabPageGitExtensions" Property="Text">
+        <TranslationItem Name="tpGitExtensions" Property="Text">
           <Value>Git extensions</Value>
         </TranslationItem>
         <TranslationItem Name="label12" Property="Text">
@@ -2701,7 +2701,7 @@ weirdchars.txt text
         <TranslationItem Name="label14" Property="Text">
           <Value>Linux工具（sh）的路徑。如果已在路徑中則留空。 </Value>
         </TranslationItem>
-        <TranslationItem Name="Ssh" Property="Text">
+        <TranslationItem Name="tpSsh" Property="Text">
           <Value>Ssh</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
@@ -2785,7 +2785,7 @@ weirdchars.txt text
         <TranslationItem Name="EncodingLabel" Property="Text">
           <Value>編碼</Value>
         </TranslationItem>
-        <TranslationItem Name="AppearancePage" Property="Text">
+        <TranslationItem Name="tpAppearance" Property="Text">
           <Value>外觀</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox4" Property="Text">
@@ -2887,7 +2887,7 @@ weirdchars.txt text
         <TranslationItem Name="label44" Property="Text">
           <Value>圖片尺寸</Value>
         </TranslationItem>
-        <TranslationItem Name="StartPage" Property="Text">
+        <TranslationItem Name="tpStartPage" Property="Text">
           <Value>開始頁</Value>
         </TranslationItem>
         <TranslationItem Name="label47" Property="Text">
@@ -2908,7 +2908,7 @@ weirdchars.txt text
         <TranslationItem Name="helpTranslate" Property="Text">
           <Value>幫忙翻譯~~~</Value>
         </TranslationItem>
-        <TranslationItem Name="TabPageGit" Property="Text">
+        <TranslationItem Name="tpGit" Property="Text">
           <Value>Git</Value>
         </TranslationItem>
         <TranslationItem Name="MulticolorBranches" Property="Text">
@@ -2980,7 +2980,7 @@ weirdchars.txt text
         <TranslationItem Name="chkShowStashCountInBrowseWindow" Property="Text">
           <Value>在瀏覽窗口的狀態欄中顯示暫存緩衝區計數</Value>
         </TranslationItem>
-        <TranslationItem Name="scriptsTab" Property="Text">
+        <TranslationItem Name="tpScriptsTab" Property="Text">
           <Value>腳本</Value>
         </TranslationItem>
         <TranslationItem Name="inMenuCheckBox" Property="Text">
@@ -3031,7 +3031,7 @@ weirdchars.txt text
         <TranslationItem Name="ShellExtensionsRegistered_Fix" Property="Text">
           <Value>修復</Value>
         </TranslationItem>
-        <TranslationItem Name="DiffTool2_Fix" Property="Text">
+        <TranslationItem Name="MergeTool_Fix" Property="Text">
           <Value>修復</Value>
         </TranslationItem>
         <TranslationItem Name="DiffTool_Fix" Property="Text">
@@ -3043,7 +3043,7 @@ weirdchars.txt text
         <TranslationItem Name="GitFound_Fix" Property="Text">
           <Value>修復</Value>
         </TranslationItem>
-        <TranslationItem Name="tabPageHotkeys" Property="Text">
+        <TranslationItem Name="tpHotkeys" Property="Text">
           <Value>快捷鍵</Value>
         </TranslationItem>
         <TranslationItem Name="scriptEnabled" Property="Text">

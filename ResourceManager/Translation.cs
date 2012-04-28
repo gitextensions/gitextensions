@@ -51,14 +51,10 @@ namespace ResourceManager.Translation
 
         public void Sort()
         {
-            translationCategories.Sort((tc1, tc2) => tc1.Name.CompareTo(tc2.Name));
+            translationCategories.Sort();
             foreach(TranslationCategory tc in translationCategories)
-                tc.GetTranslationItems().Sort((tc1, tc2) => {
-                    var val = tc1.Name.CompareTo(tc2.Name);
-                    if (val == 0) val = tc1.Property.CompareTo(tc2.Property);
-                    return val; });
+                tc.GetTranslationItems().Sort();
         }
-
 
         public void AddTranslationItem(string category, string item, string property, string neutralValue)
         {
@@ -75,7 +71,6 @@ namespace ResourceManager.Translation
                 return defaultValue;
             else
                 return ti.Value;
-
         }
     }
 }

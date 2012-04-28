@@ -2114,7 +2114,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         <TranslationItem Name="$this" Property="Text">
           <Value>设置</Value>
         </TranslationItem>
-        <TranslationItem Name="LocalSettings" Property="Text">
+        <TranslationItem Name="tpLocalSettings" Property="Text">
           <Value>本地设置</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
@@ -2126,7 +2126,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         <TranslationItem Name="Ok" Property="Text">
           <Value>确定</Value>
         </TranslationItem>
-        <TranslationItem Name="GlobalSettingsPage" Property="Text">
+        <TranslationItem Name="tpGlobalSettings" Property="Text">
           <Value>全局设置</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
@@ -2147,7 +2147,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         <TranslationItem Name="label8" Property="Text">
           <Value>合并工具</Value>
         </TranslationItem>
-        <TranslationItem Name="tabPage3" Property="Text">
+        <TranslationItem Name="tpChecklist" Property="Text">
           <Value>清单</Value>
         </TranslationItem>
         <TranslationItem Name="label11" Property="Text">
@@ -2159,7 +2159,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         <TranslationItem Name="Rescan" Property="Text">
           <Value>保存并重新扫描</Value>
         </TranslationItem>
-        <TranslationItem Name="TabPageGitExtensions" Property="Text">
+        <TranslationItem Name="tpGitExtensions" Property="Text">
           <Value>Git extensions</Value>
         </TranslationItem>
         <TranslationItem Name="label12" Property="Text">
@@ -2177,7 +2177,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         <TranslationItem Name="label14" Property="Text">
           <Value>Linux工具（sh）的路径。如果已在路径中则留空。</Value>
         </TranslationItem>
-        <TranslationItem Name="Ssh" Property="Text">
+        <TranslationItem Name="tpSsh" Property="Text">
           <Value>Ssh</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
@@ -2261,7 +2261,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         <TranslationItem Name="EncodingLabel" Property="Text">
           <Value>编码</Value>
         </TranslationItem>
-        <TranslationItem Name="AppearancePage" Property="Text">
+        <TranslationItem Name="tpAppearance" Property="Text">
           <Value>外观</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox4" Property="Text">
@@ -2363,7 +2363,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         <TranslationItem Name="label44" Property="Text">
           <Value>图像尺寸</Value>
         </TranslationItem>
-        <TranslationItem Name="StartPage" Property="Text">
+        <TranslationItem Name="tpStartPage" Property="Text">
           <Value>开始页</Value>
         </TranslationItem>
         <TranslationItem Name="label47" Property="Text">
@@ -2384,7 +2384,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         <TranslationItem Name="helpTranslate" Property="Text">
           <Value>帮忙翻译~~~</Value>
         </TranslationItem>
-        <TranslationItem Name="TabPageGit" Property="Text">
+        <TranslationItem Name="tpGit" Property="Text">
           <Value>Git</Value>
         </TranslationItem>
         <TranslationItem Name="MulticolorBranches" Property="Text">
