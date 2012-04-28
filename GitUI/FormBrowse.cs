@@ -2251,10 +2251,21 @@ namespace GitUI
             if (GitUICommands.Instance.StartSvnDcommitDialog(this))
                 Initialize();
         }
+
         private void SvnFetchToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (GitUICommands.Instance.StartSvnFetchDialog(this))
                 Initialize();
+        }
+
+        private void expandAllStripMenuItem_Click(object sender, EventArgs e)
+        {
+			GitTree.ExpandAll();
+        }
+
+        private void collapseAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+			GitTree.CollapseAll();
         }
 
         private void WorkingDirChanged(bool internalInitialize)
