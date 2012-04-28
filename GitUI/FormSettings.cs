@@ -45,22 +45,22 @@ namespace GitUI
         private readonly TranslationString _cantRegisterShellExtension =
             new TranslationString("Could not register the shell extension because '{0}' could not be found.");
 
-        private readonly TranslationString _noDiffTool2Configured =
+        private readonly TranslationString _noDiffToolConfigured =
             new TranslationString("There is no difftool configured. Do you want to configure kdiff3 as your difftool?" +
                 Environment.NewLine + "Select no if you want to configure a different difftool yourself.");
 
-        private readonly TranslationString _noDiffTool2ConfiguredCaption =
-            new TranslationString("Mergetool");
+        private readonly TranslationString _noDiffToolConfiguredCaption =
+            new TranslationString("Difftool");
 
         private readonly TranslationString _kdiff3NotFoundAuto =
             new TranslationString("Path to kdiff3 could not be found automatically." + Environment.NewLine +
                 "Please make sure KDiff3 is installed or set path manually.");
 
-        private readonly TranslationString _noDiffToolConfigured =
+        private readonly TranslationString _noMergeToolConfigured =
             new TranslationString("There is no mergetool configured. Do you want to configure kdiff3 as your mergetool?" +
                 Environment.NewLine + "Select no if you want to configure a different mergetool yourself.");
 
-        private readonly TranslationString _noDiffToolConfiguredCaption =
+        private readonly TranslationString _noMergeToolConfiguredCaption =
             new TranslationString("Mergetool");
 
         private readonly TranslationString _solveGitCommandFailed =
@@ -97,36 +97,6 @@ namespace GitUI
 
         private readonly TranslationString _puttyFoundAutoCaption =
             new TranslationString("PuTTY");
-
-        private readonly TranslationString _setPathForBeyondCompare =
-            new TranslationString("Please enter the path to bcomp.exe and press suggest.");
-
-        private readonly TranslationString _setPathForBeyondCompareCaption =
-            new TranslationString("Suggest mergetool cmd");
-
-        private readonly TranslationString _setPathForP4Merge =
-            new TranslationString("Please enter the path to p4merge.exe and press suggest.");
-
-        private readonly TranslationString _setPathForP4MergeCaption =
-            new TranslationString("Suggest mergetool cmd");
-
-        private readonly TranslationString _setPathForCompare =
-            new TranslationString("Please enter the path to Compare.exe and press suggest.");
-
-        private readonly TranslationString _setPathForCompareCaption =
-            new TranslationString("Suggest mergetool cmd");
-
-        private readonly TranslationString _setPathForTortoise =
-            new TranslationString("Please enter the path to TortoiseMerge.exe and press suggest.");
-
-        private readonly TranslationString _setPathForTortoiseCaption =
-            new TranslationString("Suggest mergetool cmd");
-
-        private readonly TranslationString _setPathForDiffMerge =
-            new TranslationString("Please enter the path to DiffMerge.exe and press suggest.");
-
-        private readonly TranslationString _setPathForDiffMergeCaption =
-            new TranslationString("Suggest mergetool cmd");
 
         private readonly TranslationString _noDictFilesFound =
             new TranslationString("No dictionary files found in: {0}");
@@ -176,7 +146,7 @@ namespace GitUI
         private readonly TranslationString _diffToolXConfigured =
             new TranslationString("There is a difftool configured: {0}");
 
-        private readonly TranslationString _noMergeToolConfigured =
+        private readonly TranslationString _configureMergeTool =
             new TranslationString("You need to configure merge tool in order to solve mergeconflicts (kdiff3 for example).");
 
         private readonly TranslationString _kdiffAsMergeConfiguredButNotFound =
@@ -201,7 +171,7 @@ namespace GitUI
             new TranslationString("A username and an email address are configured.");
 
         private readonly TranslationString _shellExtNoInstalled =
-            new TranslationString("Shell extensions are not installed. Run the installer to intall the shell extensions.");
+            new TranslationString("Shell extensions are not installed. Run the installer to install the shell extensions.");
 
         private readonly TranslationString _shellExtNeedsToBeRegistered =
             new TranslationString("{0} needs to be registered in order to use the shell extensions.");
@@ -1023,7 +993,7 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(GetGlobalDiffToolFromConfig()))
             {
-                if (MessageBox.Show(this, _noDiffTool2Configured.Text, _noDiffTool2ConfiguredCaption.Text, 
+                if (MessageBox.Show(this, _noDiffToolConfigured.Text, _noDiffToolConfiguredCaption.Text, 
                         MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     SolveDiffToolForKDiff();
@@ -1057,8 +1027,8 @@ namespace GitUI
             if (string.IsNullOrEmpty(GetMergeTool()))
             {
                 if (
-                    MessageBox.Show(this, _noDiffToolConfigured.Text,
-                        _noDiffToolConfiguredCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    MessageBox.Show(this, _noMergeToolConfigured.Text,
+                        _noMergeToolConfiguredCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     SolveMergeToolForKDiff();
                     GlobalMergeTool.Text = "kdiff3";
@@ -1825,7 +1795,7 @@ namespace GitUI
             if (string.IsNullOrEmpty(GetMergeTool()))
             {
                 MergeTool.BackColor = Color.LightSalmon;
-                MergeTool.Text = _noMergeToolConfigured.Text;
+                MergeTool.Text = _configureMergeTool.Text;
                 MergeTool_Fix.Visible = true;
                 return false;
             }

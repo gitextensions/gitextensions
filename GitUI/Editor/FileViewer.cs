@@ -10,7 +10,7 @@ using ICSharpCode.TextEditor.Util;
 
 namespace GitUI.Editor
 {
-
+    [DefaultEvent("SelectedLineChanged")]
     public partial class FileViewer : GitExtensionsControl
     {
         private readonly AsyncLoader _async;
@@ -70,6 +70,53 @@ namespace GitUI.Editor
             ContextMenu.Opening += ContextMenu_Opening; 
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [Description("The base font of the text area. No bold or italic fonts can be used because bold/italic is reserved for highlighting purposes.")]
+        [Browsable(true)]
+        public new Font Font
+        {
+            set { _internalFileViewer.Font = value; }
+        }
+
+        [Description("Ignore changes in amount of whitespace. This ignores whitespace at line end, and considers all other sequences of one or more whitespace characters to be equivalent.")]
+        [DefaultValue(false)]
+        public bool IgnoreWhitespaceChanges { get; set; }
+        [Description("Show diffs with <n> lines of context.")]
+        [DefaultValue(3)]
+        public int NumberOfVisibleLines { get; set; }
+        [Description("Show diffs with entire file.")]
+        [DefaultValue(false)]
+        public bool ShowEntireFile { get; set; }
+        [Description("Treat all files as text.")]
+        [DefaultValue(false)]
+        public bool TreatAllFilesAsText { get; set; }
+        [DefaultValue(true)]
+        [Category("Behavior")]
+        public bool IsReadOnly
+        {
+            get { return _internalFileViewer.IsReadOnly; }
+            set { _internalFileViewer.IsReadOnly = value; }
+        }
+        [DefaultValue(true)]
+        [Description("If true line numbers are shown in the textarea")]
+        [Category("Appearance")]
+        public bool ShowLineNumbers
+        {
+            get { return _internalFileViewer.ShowLineNumbers; }
+            set { _internalFileViewer.ShowLineNumbers = value; }
+        }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
+        public Encoding Encoding { get; set; }
+        [DefaultValue(0)]
+        [Browsable(false)]
+        public int ScrollPos
+        {
+            get { return _internalFileViewer.ScrollPos; }
+            set { _internalFileViewer.ScrollPos = value; }
+        }
+
         private void WorkingDirChanged(string oldDir, string newDir, string newGitDir)
         {
             this.Encoding = Settings.FilesEncoding;
@@ -84,14 +131,6 @@ namespace GitUI.Editor
 
             Settings.WorkingDirChanged += WorkingDirChanged;
             this.Encoding = Settings.FilesEncoding;
-        }
-
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        [Description("The base font of the text area. No bold or italic fonts can be used because bold/italic is reserved for highlighting purposes.")]
-        [Browsable(true)]
-        public new Font Font
-        {
-            set { _internalFileViewer.Font = value; }
         }
 
         void ContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -162,16 +201,6 @@ namespace GitUI.Editor
         {
             _internalFileViewer.EnableScrollBars(enable);
         }
-        
-        [DefaultValue(true)]
-        [Description("If true line numbers are shown in the textarea")]
-        [Category("Appearance")]
-        public bool ShowLineNumbers
-        {
-            get { return _internalFileViewer.ShowLineNumbers; }
-            set { _internalFileViewer.ShowLineNumbers = value; }
-        }
-
 
         void TextEditor_TextChanged(object sender, EventArgs e)
         {
@@ -181,24 +210,6 @@ namespace GitUI.Editor
             if (TextChanged != null)
                 TextChanged(sender, e);
         }
-        
-        [DefaultValue(true)]
-        public bool IsReadOnly
-        {
-            get { return _internalFileViewer.IsReadOnly; }
-            set { _internalFileViewer.IsReadOnly = value; }
-        }
-        
-        [DefaultValue(false)]
-        public bool IgnoreWhitespaceChanges { get; set; }
-        [DefaultValue(3)]
-        public int NumberOfVisibleLines { get; set; }
-        [DefaultValue(false)]
-        public bool ShowEntireFile { get; set; }
-        [DefaultValue(false)]
-        public bool TreatAllFilesAsText { get; set; }
-        [Browsable(false)]
-        public Encoding Encoding  { get; set; }
 
         private void UpdateEncodingCombo()
         {
@@ -214,13 +225,6 @@ namespace GitUI.Editor
                 this.encodingToolStripComboBox.Text = "UTF32";
             else if (this.Encoding == Encoding.Default)
                 this.encodingToolStripComboBox.Text = "Default (" + Encoding.Default.HeaderName + ")";
-        }
-
-        [Browsable(false)]
-        public int ScrollPos
-        {
-            get { return _internalFileViewer.ScrollPos; }
-            set { _internalFileViewer.ScrollPos = value; }
         }
 
         public event EventHandler<EventArgs> ExtraDiffArgumentsChanged;
@@ -832,9 +836,6 @@ namespace GitUI.Editor
             formGoToLine.SetMaxLineNumber(_internalFileViewer.TotalNumberOfLines);
             if (formGoToLine.ShowDialog(this) == DialogResult.OK)            
                 _internalFileViewer.GoToLine(formGoToLine.GetLineNumber() - 1);
-            
-
         }
-
     }
 }
