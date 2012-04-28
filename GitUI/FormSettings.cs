@@ -343,7 +343,6 @@ namespace GitUI
                 EncodingToCombo(Settings.GetFilesEncoding(true), Local_FilesEncoding);
                 EncodingToCombo(Settings.GetAppEncoding(true), Local_AppEncoding);
 
-                chkFocusControlOnHover.Checked = Settings.FocusControlOnHover;
                 chkWarnBeforeCheckout.Checked = Settings.DirtyDirWarnBeforeCheckoutBranch;
 
                 chkUsePatienceDiffAlgorithm.Checked = Settings.UsePatienceDiffAlgorithm;
@@ -560,8 +559,6 @@ namespace GitUI
             }
 
             GitCommandHelpers.SetEnvironmentVariable(true);
-
-            Settings.FocusControlOnHover = chkFocusControlOnHover.Checked;
 
             Settings.DirtyDirWarnBeforeCheckoutBranch = chkWarnBeforeCheckout.Checked;
 
