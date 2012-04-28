@@ -186,6 +186,7 @@ namespace GitUI.Editor
         public int NumberOfVisibleLines { get; set; }
         public bool ShowEntireFile { get; set; }
         public bool TreatAllFilesAsText { get; set; }
+        [Browsable(false)]
         public Encoding Encoding  { get; set; }
 
         private void UpdateEncodingCombo()
