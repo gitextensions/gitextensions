@@ -697,7 +697,6 @@ namespace GitUI
             // 
             this.SelectedDiff.DisableFocusControlOnHover = false;
             this.SelectedDiff.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SelectedDiff.Encoding = ((System.Text.Encoding)(resources.GetObject("SelectedDiff.Encoding")));
             this.SelectedDiff.Font = new System.Drawing.Font("Tahoma", 9.75F);
             this.SelectedDiff.IgnoreWhitespaceChanges = false;
             this.SelectedDiff.IsReadOnly = true;
