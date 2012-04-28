@@ -41,6 +41,7 @@
             this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
             this.ParentsLabel = new System.Windows.Forms.Label();
+            this.checkAddReference = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // Date
@@ -90,7 +91,7 @@
             // 
             // Pick
             // 
-            this.Pick.Location = new System.Drawing.Point(453, 216);
+            this.Pick.Location = new System.Drawing.Point(453, 226);
             this.Pick.Name = "Pick";
             this.Pick.Size = new System.Drawing.Size(109, 25);
             this.Pick.TabIndex = 10;
@@ -156,12 +157,23 @@
             this.ParentsLabel.TabIndex = 13;
             this.ParentsLabel.Text = "This commit is a merge, select parent:";
             // 
+            // checkAddReference
+            // 
+            this.checkAddReference.AutoSize = true;
+            this.checkAddReference.Location = new System.Drawing.Point(12, 236);
+            this.checkAddReference.Name = "checkAddReference";
+            this.checkAddReference.Size = new System.Drawing.Size(145, 19);
+            this.checkAddReference.TabIndex = 14;
+            this.checkAddReference.Text = "Add commit reference";
+            this.checkAddReference.UseVisualStyleBackColor = true;
+            // 
             // FormCherryPickCommitSmall
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(574, 247);
+            this.ClientSize = new System.Drawing.Size(574, 262);
+            this.Controls.Add(this.checkAddReference);
             this.Controls.Add(this.ParentsLabel);
             this.Controls.Add(this.ParentsList);
             this.Controls.Add(this.AutoCommit);
@@ -198,5 +210,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
         private System.Windows.Forms.Label ParentsLabel;
+        private System.Windows.Forms.CheckBox checkAddReference;
     }
 }
