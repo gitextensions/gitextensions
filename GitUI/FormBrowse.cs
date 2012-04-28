@@ -336,12 +336,12 @@ namespace GitUI
                 r = Repositories.RepositoryHistory.Repositories[0];
 
             List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
-            List<Repository> repo = new List<Repository>();
 
             if (r == null || !r.Path.Equals(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
+            {
                 Repositories.AddMostRecentRepository(Settings.WorkingDir);
-            else
-                repo.Add(r);
+                r = Repositories.RepositoryHistory.Repositories[0];
+            }
 
             using (var graphics = CreateGraphics())
             {
@@ -350,12 +350,15 @@ namespace GitUI
                     measureFont = _NO_TRANSLATE_Workingdir.Font,
                     graphics = graphics
                 };
-                splitter.SplitRecentRepos(repo, mostRecentRepos, mostRecentRepos);
+                splitter.SplitRecentRepos(Repositories.RepositoryHistory.Repositories, mostRecentRepos, mostRecentRepos);
             }
 
-            _NO_TRANSLATE_Workingdir.Text = mostRecentRepos.Count > 0 
-                ? mostRecentRepos[0].Caption 
-                : Settings.WorkingDir;
+            RecentRepoInfo ri = mostRecentRepos.Find((e) => e.Repo.Equals(r));
+
+            if (ri == null)
+                _NO_TRANSLATE_Workingdir.Text = Settings.WorkingDir;
+            else
+                _NO_TRANSLATE_Workingdir.Text = ri.Caption;
         }
 
         /// <summary>
