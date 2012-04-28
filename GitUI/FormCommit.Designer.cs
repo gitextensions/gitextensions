@@ -695,7 +695,6 @@ namespace GitUI
             // 
             // SelectedDiff
             // 
-            this.SelectedDiff.DisableFocusControlOnHover = false;
             this.SelectedDiff.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SelectedDiff.Font = new System.Drawing.Font("Tahoma", 9.75F);
             this.SelectedDiff.IgnoreWhitespaceChanges = false;
