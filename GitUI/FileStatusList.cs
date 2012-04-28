@@ -233,7 +233,8 @@ namespace GitUI
             }
             set
             {
-                FileStatusListBox.SelectedItem = value;
+                FileStatusListBox.ClearSelected();
+                FileStatusListBox.SelectedItem = value;                
             }
         }
 
