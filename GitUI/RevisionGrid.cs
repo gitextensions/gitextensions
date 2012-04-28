@@ -441,7 +441,8 @@ namespace GitUI
 
         public bool SetAndApplyBranchFilter(string filter)
         {
-            if (filter.Equals(_revisionFilter.GetBranchFilter())) return false;
+            if (filter.Equals(_revisionFilter.GetBranchFilter())) 
+                return false;
             if (filter.Equals(""))
             {
                 Settings.BranchFilterEnabled = false;
@@ -1023,15 +1024,14 @@ namespace GitUI
 
                         if (heads.Count > 0)
                         {
-                            heads.Sort(new Comparison<GitHead>(
-                                           (left, right) =>
+                            heads.Sort((left, right) =>
                                            {
                                                if (left.IsTag != right.IsTag)
                                                    return right.IsTag.CompareTo(left.IsTag);
                                                if (left.IsRemote != right.IsRemote)
                                                    return left.IsRemote.CompareTo(right.IsRemote);
                                                return left.Name.CompareTo(right.Name);
-                                           }));
+                                           });
 
                             foreach (var head in heads)
                             {
@@ -1352,7 +1352,7 @@ namespace GitUI
 
         private void RefreshGravatar(Image image)
         {
-            _syncContext.Post(state => { Revisions.Refresh(); }, null);
+            _syncContext.Post(state => Revisions.Refresh(), null);
         }
 
 
@@ -1876,6 +1876,7 @@ namespace GitUI
             
              */
             #endregion
+
             if (span.TotalMinutes < 1.0)
             {
                 if (span.Seconds == 1)
@@ -2380,14 +2381,14 @@ namespace GitUI
             this._NO_TRANSLATE_RevisionGrid = RevisionGrid;
 
 
-            this._NO_TRANSLATE_toolStripDropDownButton2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._NO_TRANSLATE_toolStripDropDownButton2.DropDownItems.AddRange(new ToolStripItem[] {
             this.localToolStripMenuItem,
             this.remoteToolStripMenuItem});
 
-            this._NO_TRANSLATE_toolStripBranches.DropDown += new System.EventHandler(this.toolStripBranches_DropDown);
-            this._NO_TRANSLATE_toolStripBranches.TextUpdate += new System.EventHandler(this.toolStripBranches_TextUpdate);
-            this._NO_TRANSLATE_toolStripBranches.Leave += new System.EventHandler(this.toolStripBranches_Leave);
-            this._NO_TRANSLATE_toolStripBranches.KeyUp += new System.Windows.Forms.KeyEventHandler(this.toolStripBranches_KeyUp);
+            this._NO_TRANSLATE_toolStripBranches.DropDown += this.toolStripBranches_DropDown;
+            this._NO_TRANSLATE_toolStripBranches.TextUpdate += this.toolStripBranches_TextUpdate;
+            this._NO_TRANSLATE_toolStripBranches.Leave += this.toolStripBranches_Leave;
+            this._NO_TRANSLATE_toolStripBranches.KeyUp += this.toolStripBranches_KeyUp;
 
 
             InitToolStripBranchFilter();
@@ -2557,7 +2558,7 @@ namespace GitUI
             this.diffContainsToolStripMenuItem.CheckOnClick = true;
             this.diffContainsToolStripMenuItem.Name = "diffContainsToolStripMenuItem";
             this.diffContainsToolStripMenuItem.Text = "Diff contains (SLOW)";
-            this.diffContainsToolStripMenuItem.Click += new System.EventHandler(this.diffContainsToolStripMenuItem_Click);
+            this.diffContainsToolStripMenuItem.Click += this.diffContainsToolStripMenuItem_Click;
             // 
             // hashToolStripMenuItem
             // 
@@ -2576,15 +2577,15 @@ namespace GitUI
             this._NO_TRANSLATE_toolStripLabel2 = toolStripLabel2;
             this._NO_TRANSLATE_form = form;
 
-            this._NO_TRANSLATE_toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._NO_TRANSLATE_toolStripDropDownButton1.DropDownItems.AddRange(new ToolStripItem[] {
                 this.commitToolStripMenuItem1,
                 this.committerToolStripMenuItem,
                 this.authorToolStripMenuItem,
                 this.diffContainsToolStripMenuItem});
 
-            this._NO_TRANSLATE_toolStripLabel2.Click += new System.EventHandler(this.ToolStripLabel2Click);
-            this._NO_TRANSLATE_toolStripTextBoxFilter.Leave += new System.EventHandler(this.ToolStripTextBoxFilterLeave);
-            this._NO_TRANSLATE_toolStripTextBoxFilter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ToolStripTextBoxFilterKeyPress);
+            this._NO_TRANSLATE_toolStripLabel2.Click += this.ToolStripLabel2Click;
+            this._NO_TRANSLATE_toolStripTextBoxFilter.Leave += this.ToolStripTextBoxFilterLeave;
+            this._NO_TRANSLATE_toolStripTextBoxFilter.KeyPress += this.ToolStripTextBoxFilterKeyPress;
 
         
         }
