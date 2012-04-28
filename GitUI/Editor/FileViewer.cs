@@ -86,6 +86,9 @@ namespace GitUI.Editor
             this.Encoding = Settings.FilesEncoding;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [Description("The base font of the text area. No bold or italic fonts can be used because bold/italic is reserved for highlighting purposes.")]
+        [Browsable(true)]
         public new Font Font
         {
             set { _internalFileViewer.Font = value; }
@@ -159,7 +162,10 @@ namespace GitUI.Editor
         {
             _internalFileViewer.EnableScrollBars(enable);
         }
-
+        
+        [DefaultValue(true)]
+        [Description("If true line numbers are shown in the textarea")]
+        [Category("Appearance")]
         public bool ShowLineNumbers
         {
             get { return _internalFileViewer.ShowLineNumbers; }
@@ -175,16 +181,21 @@ namespace GitUI.Editor
             if (TextChanged != null)
                 TextChanged(sender, e);
         }
-
+        
+        [DefaultValue(true)]
         public bool IsReadOnly
         {
             get { return _internalFileViewer.IsReadOnly; }
             set { _internalFileViewer.IsReadOnly = value; }
         }
-
+        
+        [DefaultValue(false)]
         public bool IgnoreWhitespaceChanges { get; set; }
+        [DefaultValue(3)]
         public int NumberOfVisibleLines { get; set; }
+        [DefaultValue(false)]
         public bool ShowEntireFile { get; set; }
+        [DefaultValue(false)]
         public bool TreatAllFilesAsText { get; set; }
         [Browsable(false)]
         public Encoding Encoding  { get; set; }
@@ -205,6 +216,7 @@ namespace GitUI.Editor
                 this.encodingToolStripComboBox.Text = "Default (" + Encoding.Default.HeaderName + ")";
         }
 
+        [Browsable(false)]
         public int ScrollPos
         {
             get { return _internalFileViewer.ScrollPos; }
