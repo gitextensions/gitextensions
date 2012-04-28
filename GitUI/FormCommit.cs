@@ -1041,7 +1041,7 @@ namespace GitUI
                     MessageBox.Show(this, _deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo) !=
                     DialogResult.Yes)
                     return;
-
+                Unstaged.StoreNextIndexToSelect();
                 foreach (var item in Unstaged.SelectedItems)
                     File.Delete(Settings.WorkingDir + item.Name);
 
