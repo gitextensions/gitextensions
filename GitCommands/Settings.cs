@@ -1115,7 +1115,11 @@ namespace GitCommands
             get
             {
                 if (_VersionIndependentRegKey == null)
+                {
                     _VersionIndependentRegKey = Registry.CurrentUser.OpenSubKey("Software\\GitExtensions\\GitExtensions", true);
+                    if (_VersionIndependentRegKey == null)
+                        _VersionIndependentRegKey = Registry.CurrentUser.CreateSubKey("Software\\GitExtensions\\GitExtensions", RegistryKeyPermissionCheck.ReadWriteSubTree);
+                }
                 return _VersionIndependentRegKey;
             }
         }
