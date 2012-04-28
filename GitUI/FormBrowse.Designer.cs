@@ -197,6 +197,8 @@ namespace GitUI
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.blameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.blameToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.expandAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.collapseAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolPanel.Panel1.SuspendLayout();
             this.toolPanel.Panel2.SuspendLayout();
             this.toolPanel.SuspendLayout();
@@ -626,7 +628,9 @@ namespace GitUI
             this.fileHistoryToolStripMenuItem,
             this.blameToolStripMenuItem1,
             this.toolStripSeparator18,
-            this.findToolStripMenuItem});
+            this.findToolStripMenuItem,
+            this.expandAllToolStripMenuItem,
+            this.collapseAllToolStripMenuItem});
             this.FileTreeContextMenu.Name = "FileTreeContextMenu";
             this.FileTreeContextMenu.Size = new System.Drawing.Size(265, 236);
             this.FileTreeContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.FileTreeContextMenu_Opening);
@@ -1643,6 +1647,23 @@ namespace GitUI
             this.blameToolStripMenuItem1.Size = new System.Drawing.Size(264, 22);
             this.blameToolStripMenuItem1.Text = "Blame";
             this.blameToolStripMenuItem1.Click += new System.EventHandler(this.blameToolStripMenuItem1_Click);
+			
+            // 
+            // expandAllToolStripMenuItem
+            // 
+            this.expandAllToolStripMenuItem.Name = "expandAllToolStripMenuItem";
+            this.expandAllToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.expandAllToolStripMenuItem.Text = "Expand all";
+            this.expandAllToolStripMenuItem.Click += new System.EventHandler(this.expandAllStripMenuItem_Click);
+            // 
+            // collapseAllToolStripMenuItem1
+            // 
+            this.collapseAllToolStripMenuItem.Name = "collapseAllToolStripMenuItem";
+            this.collapseAllToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
+            this.collapseAllToolStripMenuItem.Text = "Collapse all";
+            this.collapseAllToolStripMenuItem.Click += new System.EventHandler(this.collapseAllToolStripMenuItem_Click);
+			
+			
             // FormBrowse
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1851,5 +1872,7 @@ namespace GitUI
         private ToolStripMenuItem SvnFetchToolStripMenuItem;
         private ToolStripMenuItem blameToolStripMenuItem;
         private ToolStripMenuItem blameToolStripMenuItem1;        
+        private ToolStripMenuItem expandAllToolStripMenuItem;
+        private ToolStripMenuItem collapseAllToolStripMenuItem;        
     }
 }
