@@ -1576,9 +1576,12 @@ namespace GitUI
             var branchesWithNoIdenticalRemotes = allBranches.Where(
                 b => !b.IsRemote || !localBranches.Any(lb => lb.TrackingRemote == b.Remote && lb.MergeWith == b.LocalName));
 
+            bool currentBranchPointsToRevision = false;
             foreach (var head in branchesWithNoIdenticalRemotes)
             {
-                if (!head.Name.Equals(currentBranch))
+                if (head.Name.Equals(currentBranch))
+                    currentBranchPointsToRevision = true;
+                else
                 {
                     ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
                     toolStripItem.Click += ToolStripItemClickMergeBranch;
@@ -1591,7 +1594,7 @@ namespace GitUI
             }
 
             //if there is no branch to merge, then let user to merge selected commit into current branch 
-            if (mergeBranchDropDown.Items.Count == 0)
+            if (mergeBranchDropDown.Items.Count == 0 && !currentBranchPointsToRevision)
             {
                 ToolStripItem toolStripItem = new ToolStripMenuItem(revision.Guid);
                 toolStripItem.Click += ToolStripItemClickMergeBranch;
