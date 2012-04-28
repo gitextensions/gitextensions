@@ -26,6 +26,7 @@ SimpleExt/Generated/*
 *.orig
 *.msi
 *.user
+*.aps
 *.bak
 *.[Cc]ache
 Thumbs.db
