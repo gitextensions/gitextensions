@@ -20,7 +20,6 @@ namespace GitUI.Blame
             BlameCommitter.IsReadOnly = true;
             BlameCommitter.EnableScrollBars(false);
             BlameCommitter.ShowLineNumbers = false;
-            BlameCommitter.DisableFocusControlOnHover = true;
             BlameCommitter.ScrollPosChanged += BlameCommitter_ScrollPosChanged;
             BlameCommitter.MouseMove += BlameCommitter_MouseMove;
             BlameCommitter.MouseLeave += BlameCommitter_MouseLeave;
@@ -103,7 +102,7 @@ namespace GitUI.Blame
 
         void BlameFile_SelectedLineChanged(object sender, int selectedLine)
         {
-            if (selectedLine >= _blame.Lines.Count)
+            if (_blame == null || selectedLine >= _blame.Lines.Count)
                 return;
 
             var newRevision = _blame.Lines[selectedLine].CommitGuid;
@@ -115,7 +114,7 @@ namespace GitUI.Blame
             commitInfo.SetRevision(_lastRevision);
         }
 
-        bool bChangeScrollPosition = false;
+        bool bChangeScrollPosition;
 
         void BlameCommitter_ScrollPosChanged(object sender, EventArgs e)
         {
@@ -174,7 +173,7 @@ namespace GitUI.Blame
                 }
                 else
                 {
-                    blameCommitter.AppendLine((blameHeader.Author + " - " + blameHeader.AuthorTime + " - " + blameHeader.FileName + new string(' ', 100)).Trim(new char[] { '\r', '\n' }));
+                    blameCommitter.AppendLine((blameHeader.Author + " - " + blameHeader.AuthorTime + " - " + blameHeader.FileName + new string(' ', 100)).Trim(new[] { '\r', '\n' }));
                 }
                 if (blameLine.LineText == null)
                     blameFile.AppendLine("");
@@ -191,6 +190,8 @@ namespace GitUI.Blame
 
         private void ActiveTextAreaControlDoubleClick(object sender, EventArgs e)
         {
+            if (_lastRevision == null)
+                return;
             var gitRevision = new GitRevision(_lastRevision) { ParentGuids = new[] { _lastRevision + "^" } };
             if (_revGrid != null)
             {
