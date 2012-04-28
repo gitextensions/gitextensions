@@ -19,7 +19,7 @@ namespace GitUI
             return result == DialogResult.Retry;
         }
 
-        public FormPuttyError()
+        private FormPuttyError()
         {
             InitializeComponent();
             Translate();
