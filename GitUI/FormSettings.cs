@@ -22,6 +22,203 @@ namespace GitUI
         private readonly TranslationString _homeIsSetToString = new TranslationString("HOME is set to:");
         private readonly TranslationString __mergeToolSuggestCaption = new TranslationString("Suggest mergetool cmd");
 
+        private readonly TranslationString _loadingSettingsFailed =
+            new TranslationString("Could not load settings.");
+
+        private readonly TranslationString _cantFindGitMessage =
+            new TranslationString("The command to run git is not configured correct." + Environment.NewLine +
+                "You need to set the correct path to be able to use GitExtensions." + Environment.NewLine +
+                Environment.NewLine + "Do you want to set the correct command now?");
+
+        private readonly TranslationString _cantFindGitMessageCaption =
+            new TranslationString("Incorrect path");
+
+        private static readonly TranslationString _cantReadRegistry =
+            new TranslationString("GitExtensions has insufficient permissions to check the registry.");
+
+        private static readonly TranslationString _cantReadRegistryAddEntryManually =
+            new TranslationString("GitExtensions has insufficient permissions to modify the registry." +
+                                Environment.NewLine + "Please add this key to the registry manually." +
+                                Environment.NewLine + "Path:  {0}\\{1}" + Environment.NewLine +
+                                "Value:  {2} = {3}");
+
+        private readonly TranslationString _cantRegisterShellExtension =
+            new TranslationString("Could not register the shell extension because '{0}' could not be found.");
+
+        private readonly TranslationString _noDiffTool2Configured =
+            new TranslationString("There is no difftool configured. Do you want to configure kdiff3 as your difftool?" +
+                Environment.NewLine + "Select no if you want to configure a different difftool yourself.");
+
+        private readonly TranslationString _noDiffTool2ConfiguredCaption =
+            new TranslationString("Mergetool");
+
+        private readonly TranslationString _kdiff3NotFoundAuto =
+            new TranslationString("Path to kdiff3 could not be found automatically." + Environment.NewLine +
+                "Please make sure KDiff3 is installed or set path manually.");
+
+        private readonly TranslationString _noDiffToolConfigured =
+            new TranslationString("There is no mergetool configured. Do you want to configure kdiff3 as your mergetool?" +
+                Environment.NewLine + "Select no if you want to configure a different mergetool yourself.");
+
+        private readonly TranslationString _noDiffToolConfiguredCaption =
+            new TranslationString("Mergetool");
+
+        private readonly TranslationString _solveGitCommandFailed =
+            new TranslationString("The command to run git could not be determined automatically." + Environment.NewLine +
+                "Please make sure git (msysgit or cygwin) is installed or set the correct command manually.");
+
+        private readonly TranslationString _solveGitCommandFailedCaption =
+            new TranslationString("Locate git");
+
+        private readonly TranslationString _gitCanBeRun =
+            new TranslationString("Git can be run using: {0}");
+
+        private readonly TranslationString _gitCanBeRunCaption =
+            new TranslationString("Locate git");
+
+        private readonly TranslationString _linuxToolsShNotFound =
+            new TranslationString("The path to linux tools (sh) could not be found automatically." + Environment.NewLine +
+                "Please make sure there are linux tools installed (through msysgit or cygwin) or set the correct path manually.");
+
+        private readonly TranslationString _linuxToolsShNotFoundCaption =
+            new TranslationString("Locate linux tools");
+
+        private readonly TranslationString _shCanBeRun =
+            new TranslationString("Command sh can be run using: {0}sh");
+
+        private readonly TranslationString _shCanBeRunCaption =
+            new TranslationString("Locate linux tools");
+
+        private static readonly TranslationString _selectFile =
+            new TranslationString("Select file");
+
+        private readonly TranslationString _puttyFoundAuto =
+            new TranslationString("All paths needed for PuTTY could be automatically found and are set.");
+
+        private readonly TranslationString _puttyFoundAutoCaption =
+            new TranslationString("PuTTY");
+
+        private readonly TranslationString _setPathForBeyondCompare =
+            new TranslationString("Please enter the path to bcomp.exe and press suggest.");
+
+        private readonly TranslationString _setPathForBeyondCompareCaption =
+            new TranslationString("Suggest mergetool cmd");
+
+        private readonly TranslationString _setPathForP4Merge =
+            new TranslationString("Please enter the path to p4merge.exe and press suggest.");
+
+        private readonly TranslationString _setPathForP4MergeCaption =
+            new TranslationString("Suggest mergetool cmd");
+
+        private readonly TranslationString _setPathForCompare =
+            new TranslationString("Please enter the path to Compare.exe and press suggest.");
+
+        private readonly TranslationString _setPathForCompareCaption =
+            new TranslationString("Suggest mergetool cmd");
+
+        private readonly TranslationString _setPathForTortoise =
+            new TranslationString("Please enter the path to TortoiseMerge.exe and press suggest.");
+
+        private readonly TranslationString _setPathForTortoiseCaption =
+            new TranslationString("Suggest mergetool cmd");
+
+        private readonly TranslationString _setPathForDiffMerge =
+            new TranslationString("Please enter the path to DiffMerge.exe and press suggest.");
+
+        private readonly TranslationString _setPathForDiffMergeCaption =
+            new TranslationString("Suggest mergetool cmd");
+
+        private readonly TranslationString _noDictFilesFound =
+            new TranslationString("No dictionary files found in: {0}");
+
+        private readonly TranslationString _noLanguageConfigured =
+            new TranslationString("There is no language configured for Git Extensions.");
+
+        private readonly TranslationString _languageConfigured =
+            new TranslationString("The configured language is {0}.");
+
+        private readonly TranslationString _plinkputtyGenpageantNotFound =
+            new TranslationString("PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.");
+
+        private readonly TranslationString _puttyConfigured =
+            new TranslationString("SSH client PuTTY is configured properly.");
+
+        private readonly TranslationString _opensshUsed =
+            new TranslationString("Default SSH client, OpenSSH, will be used. (commandline window will appear on pull, push and clone operations)");
+
+        private readonly TranslationString _unknownSshClient =
+            new TranslationString("Unknown SSH client configured: {0}.");
+
+        private readonly TranslationString _linuxToolsSshNotFound =
+            new TranslationString("Linux tools (sh) not found. To solve this problem you can set the correct path in settings.");
+
+        private readonly TranslationString _linuxToolsSshFound =
+            new TranslationString("Linux tools (sh) found on your computer.");
+
+        private readonly TranslationString _gitNotFound =
+            new TranslationString("Git not found. To solve this problem you can set the correct path in settings.");
+
+        private readonly TranslationString _wrongGitVersion =
+            new TranslationString("Git found but version {0} is not supported. Upgrage to version {1} or later");
+
+        private readonly TranslationString _gitVersionFound =
+            new TranslationString("Git {0} is found on your computer.");
+
+        private readonly TranslationString _adviceDiffToolConfiguration =
+            new TranslationString("You should configure a diff tool to show file diff in external program (kdiff3 for example).");
+
+        private readonly TranslationString _kdiffAsDiffConfiguredButNotFound =
+            new TranslationString("KDiff3 is configured as difftool, but the path to kdiff.exe is not configured.");
+
+        private readonly TranslationString _kdiffAsDiffConfigured =
+            new TranslationString("KDiff3 is configured as difftool.");
+
+        private readonly TranslationString _diffToolXConfigured =
+            new TranslationString("There is a difftool configured: {0}");
+
+        private readonly TranslationString _noMergeToolConfigured =
+            new TranslationString("You need to configure merge tool in order to solve mergeconflicts (kdiff3 for example).");
+
+        private readonly TranslationString _kdiffAsMergeConfiguredButNotFound =
+            new TranslationString("KDiff3 is configured as mergetool, but the path to kdiff.exe is not configured.");
+
+        private readonly TranslationString _kdiffAsMergeConfigured =
+            new TranslationString("KDiff3 is configured as mergetool.");
+
+        private readonly TranslationString _mergeToolXConfiguredNeedsCmd =
+            new TranslationString("{0} is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.");
+
+        private readonly TranslationString _customMergeToolXConfigured =
+            new TranslationString("There is a custom mergetool configured: {0}");
+
+        private readonly TranslationString _mergeToolXConfigured =
+            new TranslationString("There is a custom mergetool configured.");
+
+        private readonly TranslationString _noEmailSet =
+            new TranslationString("You need to configure a username and an email address.");
+
+        private readonly TranslationString _emailSet =
+            new TranslationString("A username and an email address are configured.");
+
+        private readonly TranslationString _shellExtNoInstalled =
+            new TranslationString("Shell extensions are not installed. Run the installer to intall the shell extensions.");
+
+        private readonly TranslationString _shellExtNeedsToBeRegistered =
+            new TranslationString("{0} needs to be registered in order to use the shell extensions.");
+
+        private readonly TranslationString _shellExtRegistered =
+            new TranslationString("Shell extensions registered properly.");
+
+        private readonly TranslationString _registryKeyGitExtensionsMissing =
+            new TranslationString("Registry entry missing [Software\\GitExtensions\\GitExtensions\\InstallDir].");
+
+        private readonly TranslationString _registryKeyGitExtensionsFaulty =
+            new TranslationString("Invalid installation directory stored in [Software\\GitExtensions\\GitExtensions\\InstallDir].");
+
+        private readonly TranslationString _registryKeyGitExtensionsCorrect =
+            new TranslationString("GitExtensions is properly registered.");
+
+
         private Font diffFont;
         private const string GitExtensionsShellExName = "GitExtensionsShellEx32.dll";
         private string IconName = "bug";
@@ -147,8 +344,8 @@ namespace GitUI
                 EncodingToCombo(Settings.GetFilesEncoding(true), Local_FilesEncoding);
                 EncodingToCombo(Settings.GetAppEncoding(true), Local_AppEncoding);
 
-                chkFocusControlOnHover.Checked = Settings.FocusControlOnHover;
                 chkWarnBeforeCheckout.Checked = Settings.DirtyDirWarnBeforeCheckoutBranch;
+                chkStartWithRecentWorkingDir.Checked = Settings.StartWithRecentWorkingDir;
 
                 chkUsePatienceDiffAlgorithm.Checked = Settings.UsePatienceDiffAlgorithm;
 
@@ -341,7 +538,7 @@ namespace GitUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, "Could not load settings.\n\n" + ex);
+                MessageBox.Show(this, _loadingSettingsFailed.Text + Environment.NewLine + ex);
 
                 // Bail out before the user saves the incompletely loaded settings
                 // and has their day ruined.
@@ -363,9 +560,8 @@ namespace GitUI
 
             GitCommandHelpers.SetEnvironmentVariable(true);
 
-            Settings.FocusControlOnHover = chkFocusControlOnHover.Checked;
-
             Settings.DirtyDirWarnBeforeCheckoutBranch = chkWarnBeforeCheckout.Checked;
+            Settings.StartWithRecentWorkingDir = chkStartWithRecentWorkingDir.Checked;
 
             Settings.UsePatienceDiffAlgorithm = chkUsePatienceDiffAlgorithm.Checked;
 
@@ -447,10 +643,7 @@ namespace GitUI
 
             if (!CanFindGitCmd())
             {
-                if (MessageBox.Show(this,
-                        "The command to run git is not configured correct." + Environment.NewLine +
-                        "You need to set the correct path to be able to use GitExtensions." + Environment.NewLine +
-                        Environment.NewLine + "Do you want to set the correct command now?", "Incorrect path",
+                if (MessageBox.Show(this, _cantFindGitMessage.Text, _cantFindGitMessageCaption.Text,
                         MessageBoxButtons.YesNo) == DialogResult.Yes)
                     return false;
             }
@@ -587,7 +780,7 @@ namespace GitUI
             }
             catch (UnauthorizedAccessException)
             {
-                MessageBox.Show("GitExtensions has insufficient permissions to check the registry.");
+                MessageBox.Show(_cantReadRegistry.Text);
             }
             return value ?? string.Empty;
         }
@@ -607,10 +800,7 @@ namespace GitUI
             }
             catch (UnauthorizedAccessException)
             {
-                MessageBox.Show("GitExtensions has insufficient permissions to modify the registry." +
-                                Environment.NewLine + "Please add this key to the registry manually." +
-                                Environment.NewLine + "Path:   " + root + "\\" + subkey + Environment.NewLine +
-                                "Value:  " + key + " = " + value);
+                MessageBox.Show(String.Format(_cantReadRegistryAddEntryManually.Text, root, subkey, key, value));
             }
         }
 
@@ -683,8 +873,7 @@ namespace GitUI
             }
             else
             {
-                MessageBox.Show(this, string.Format(
-                    "Could not register the shell extension because '{0}' could not be found.", GitExtensionsShellExName));
+                MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, GitExtensionsShellExName));
             }
 
             CheckSettings();
@@ -834,10 +1023,8 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(GetGlobalDiffToolFromConfig()))
             {
-                if (MessageBox.Show(this,
-                        "There is no difftool configured. Do you want to configure kdiff3 as your difftool?" +
-                        Environment.NewLine + "Select no if you want to configure a different difftool yourself.",
-                        "Mergetool", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(this, _noDiffTool2Configured.Text, _noDiffTool2ConfiguredCaption.Text, 
+                        MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     SolveDiffToolForKDiff();
                     GlobalDiffTool.Text = "kdiff3";
@@ -857,8 +1044,7 @@ namespace GitUI
             if (GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
                 string.IsNullOrEmpty(Settings.Module.GetGlobalSetting("difftool.kdiff3.path")))
             {
-                MessageBox.Show(this, "Path to kdiff3 could not be found automatically." + Environment.NewLine +
-                                "Please make sure KDiff3 is installed or set path manually.");
+                MessageBox.Show(this, _kdiff3NotFoundAuto.Text);
                 tabControl1.SelectTab("tpGlobalSettings");
                 return;
             }
@@ -871,10 +1057,8 @@ namespace GitUI
             if (string.IsNullOrEmpty(GetMergeTool()))
             {
                 if (
-                    MessageBox.Show(this,
-                        "There is no mergetool configured. Do you want to configure kdiff3 as your mergetool?" +
-                        Environment.NewLine + "Select no if you want to configure a different mergetool yourself.",
-                        "Mergetool", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    MessageBox.Show(this, _noDiffToolConfigured.Text,
+                        _noDiffToolConfiguredCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     SolveMergeToolForKDiff();
                     GlobalMergeTool.Text = "kdiff3";
@@ -901,8 +1085,7 @@ namespace GitUI
             if (IsMergeTool("kdiff3") &&
                 string.IsNullOrEmpty(Settings.Module.GetGlobalSetting("mergetool.kdiff3.path")))
             {
-                MessageBox.Show(this, "Path to kdiff3 could not be found automatically." + Environment.NewLine +
-                                "Please make sure KDiff3 is installed or set path manually.");
+                MessageBox.Show(this, _kdiff3NotFoundAuto.Text);
                 tabControl1.SelectTab("tpGlobalSettings");
                 return;
             }
@@ -969,16 +1152,13 @@ namespace GitUI
         {
             if (!SolveGitCommand())
             {
-                MessageBox.Show(this,
-                    "The command to run git could not be determined automatically." + Environment.NewLine +
-                    "Please make sure git (msysgit or cygwin) is installed or set the correct command manually.",
-                    "Locate git");
+                MessageBox.Show(this, _solveGitCommandFailed.Text, _solveGitCommandFailedCaption.Text);
 
                 tabControl1.SelectTab("tpGit");
                 return;
             }
 
-            MessageBox.Show(this, "Git can be run using: " + Settings.GitCommand, "Locate git");
+            MessageBox.Show(this, String.Format(_gitCanBeRun.Text, Settings.GitCommand), _gitCanBeRunCaption.Text);
 
             GitPath.Text = Settings.GitCommand;
             Rescan_Click(null, null);
@@ -1066,15 +1246,12 @@ namespace GitUI
         {
             if (!SolveLinuxToolsDir())
             {
-                MessageBox.Show(this,
-                    "The path to linux tools (sh) could not be found automatically." + Environment.NewLine +
-                    "Please make sure there are linux tools installed (through msysgit or cygwin) or set the correct path manually.",
-                    "Locate linux tools");
+                MessageBox.Show(this, _linuxToolsShNotFound.Text, _linuxToolsShNotFoundCaption.Text);
                 tabControl1.SelectTab("tpGit");
                 return;
             }
 
-            MessageBox.Show(this, "Command sh can be run using: " + Settings.GitBinDir + "sh", "Locate linux tools");
+            MessageBox.Show(this, String.Format(_shCanBeRun.Text, Settings.GitBinDir), _shCanBeRunCaption.Text);
             GitBinPath.Text = Settings.GitBinDir;
             Rescan_Click(null, null);
         }
@@ -1210,7 +1387,7 @@ namespace GitUI
                              {
                                  Filter = filter,
                                  InitialDirectory = initialDirectory,
-                                 Title = "Select file"
+                                 Title = _selectFile.Text
                              };
             return (dialog.ShowDialog() == DialogResult.OK) ? dialog.FileName : prev;
         }
@@ -1261,7 +1438,7 @@ namespace GitUI
             if (Putty.Checked)
             {
                 if (AutoFindPuttyPaths())
-                    MessageBox.Show(this, "All paths needed for PuTTY could be automatically found and are set.", "PuTTY");
+                    MessageBox.Show(this, _puttyFoundAuto.Text, _puttyFoundAutoCaption.Text);
                 else
                     tabControl1.SelectTab("ssh");
             }
@@ -1314,7 +1491,7 @@ namespace GitUI
             }
             catch
             {
-                MessageBox.Show(this, "No dictionary files found in: " + Settings.GetDictionaryDir());
+                MessageBox.Show(this, String.Format(_noDictFilesFound.Text, Settings.GetDictionaryDir()));
             }
         }
 
@@ -1529,13 +1706,13 @@ namespace GitUI
             if (string.IsNullOrEmpty(Settings.Translation))
             {
                 translationConfig.BackColor = Color.LightSalmon;
-                translationConfig.Text = "There is no language configured for Git Extensions.";
+                translationConfig.Text = _noLanguageConfigured.Text;
                 translationConfig_Fix.Visible = true;
                 return false;
             }
             translationConfig.BackColor = Color.LightGreen;
             translationConfig_Fix.Visible = false;
-            translationConfig.Text = "The configured language is " + Settings.Translation + ".";
+            translationConfig.Text = String.Format(_languageConfigured.Text, Settings.Translation);
             return true;
         }
 
@@ -1547,25 +1724,21 @@ namespace GitUI
                 if (!File.Exists(Settings.Plink) || !File.Exists(Settings.Puttygen) || !File.Exists(Settings.Pageant))
                 {
                     SshConfig.BackColor = Color.LightSalmon;
-                    SshConfig.Text = "PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.";
-                    SshConfig.Text =
-                        "PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.";
-                    SshConfig.Text = "PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.";
+                    SshConfig.Text = _plinkputtyGenpageantNotFound.Text;
                     SshConfig_Fix.Visible = true;
                     return false;
                 }
                 SshConfig.BackColor = Color.LightGreen;
                 SshConfig_Fix.Visible = false;
-                SshConfig.Text = "SSH client PuTTY is configured properly.";
+                SshConfig.Text = _puttyConfigured.Text;
                 return true;
             }
             SshConfig.BackColor = Color.LightGreen;
             SshConfig_Fix.Visible = false;
             if (string.IsNullOrEmpty(GitCommandHelpers.GetSsh()))
-                SshConfig.Text =
-                    "Default SSH client, OpenSSH, will be used. (commandline window will appear on pull, push and clone operations)";
+                SshConfig.Text = _opensshUsed.Text;
             else
-                SshConfig.Text = "Unknown SSH client configured: " + GitCommandHelpers.GetSsh() + ".";
+                SshConfig.Text = String.Format(_unknownSshClient.Text, GitCommandHelpers.GetSsh());
             return true;
         }
 
@@ -1576,13 +1749,13 @@ namespace GitUI
                 !CheckIfFileIsInPath("sh.exe") && !CheckIfFileIsInPath("sh"))
             {
                 GitBinFound.BackColor = Color.LightSalmon;
-                GitBinFound.Text = "Linux tools (sh) not found. To solve this problem you can set the correct path in settings.";
+                GitBinFound.Text = _linuxToolsSshNotFound.Text;
                 GitBinFound_Fix.Visible = true;
                 return false;
             }
             GitBinFound_Fix.Visible = false;
             GitBinFound.BackColor = Color.LightGreen;
-            GitBinFound.Text = "Linux tools (sh) found on your computer.";
+            GitBinFound.Text = _linuxToolsSshFound.Text;
             return true;
         }
 
@@ -1592,7 +1765,7 @@ namespace GitUI
             if (!CanFindGitCmd())
             {
                 GitFound.BackColor = Color.LightSalmon;
-                GitFound.Text = "Git not found. To solve this problem you can set the correct path in settings.";
+                GitFound.Text = _gitNotFound.Text;
                 GitFound_Fix.Visible = true;
                 return false;
             }
@@ -1600,14 +1773,14 @@ namespace GitUI
             if (GitCommandHelpers.VersionInUse < GitVersion.LastSupportedVersion)
             {
                 GitFound.BackColor = Color.LightSalmon;
-                GitFound.Text = "Git found but version " + GitCommandHelpers.VersionInUse + " is not supported. Upgrage to version " + GitVersion.LastSupportedVersion + " or later.";
+                GitFound.Text = String.Format(_wrongGitVersion.Text, GitCommandHelpers.VersionInUse, GitVersion.LastSupportedVersion);
                 GitFound_Fix.Visible = true;
                 return false;
             }
 
             GitFound_Fix.Visible = false;
             GitFound.BackColor = Color.LightGreen;
-            GitFound.Text = "Git " + GitCommandHelpers.VersionInUse + " is found on your computer.";
+            GitFound.Text = String.Format(_gitVersionFound.Text, GitCommandHelpers.VersionInUse);
             return true;
         }
 
@@ -1618,7 +1791,7 @@ namespace GitUI
             {
                 DiffTool.BackColor = Color.LightSalmon;
                 DiffTool_Fix.Visible = true;
-                DiffTool.Text = "You should configure a diff tool to show file diff in external program (kdiff3 for example).";
+                DiffTool.Text = _adviceDiffToolConfiguration.Text;
                 return false;
             }
             if (Settings.RunningOnWindows())
@@ -1629,19 +1802,19 @@ namespace GitUI
                     if (string.IsNullOrEmpty(p) || !File.Exists(p))
                     {
                         DiffTool.BackColor = Color.LightSalmon;
-                        DiffTool.Text = "KDiff3 is configured as difftool, but the path to kdiff.exe is not configured.";
+                        DiffTool.Text = _kdiffAsDiffConfiguredButNotFound.Text;
                         DiffTool_Fix.Visible = true;
                         return false;
                     }
                     DiffTool.BackColor = Color.LightGreen;
-                    DiffTool.Text = "KDiff3 is configured as difftool.";
+                    DiffTool.Text = _kdiffAsDiffConfigured.Text;
                     DiffTool_Fix.Visible = false;
                     return true;
                 }
             }
             string difftool = GetGlobalDiffToolFromConfig();
             DiffTool.BackColor = Color.LightGreen;
-            DiffTool.Text = "There is a difftool configured: " + difftool;
+            DiffTool.Text = String.Format(_diffToolXConfigured.Text, difftool);
             DiffTool_Fix.Visible = false;
             return true;
         }
@@ -1652,7 +1825,7 @@ namespace GitUI
             if (string.IsNullOrEmpty(GetMergeTool()))
             {
                 MergeTool.BackColor = Color.LightSalmon;
-                MergeTool.Text = "You need to configure merge tool in order to solve mergeconflicts (kdiff3 for example).";
+                MergeTool.Text = _noMergeToolConfigured.Text;
                 MergeTool_Fix.Visible = true;
                 return false;
             }
@@ -1665,12 +1838,12 @@ namespace GitUI
                     if (string.IsNullOrEmpty(p) || !File.Exists(p))
                     {
                         MergeTool.BackColor = Color.LightSalmon;
-                        MergeTool.Text = "KDiff3 is configured as mergetool, but the path to kdiff.exe is not configured.";
+                        MergeTool.Text = _kdiffAsMergeConfiguredButNotFound.Text;
                         MergeTool_Fix.Visible = true;
                         return false;
                     }
                     MergeTool.BackColor = Color.LightGreen;
-                    MergeTool.Text = "KDiff3 is configured as mergetool.";
+                    MergeTool.Text = _kdiffAsMergeConfigured.Text;
                     MergeTool_Fix.Visible = false;
                     return true;
                 }
@@ -1681,18 +1854,18 @@ namespace GitUI
                     if (string.IsNullOrEmpty(p))
                     {
                         MergeTool.BackColor = Color.LightSalmon;
-                        MergeTool.Text = mergetool + " is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.";
+                        MergeTool.Text = String.Format(_mergeToolXConfiguredNeedsCmd.Text, mergetool);
                         MergeTool_Fix.Visible = true;
                         return false;
                     }
                     MergeTool.BackColor = Color.LightGreen;
-                    MergeTool.Text = "There is a custom mergetool configured: " + mergetool;
+                    MergeTool.Text = String.Format(_customMergeToolXConfigured.Text, mergetool);
                     MergeTool_Fix.Visible = false;
                     return true;
                 }
             }
             MergeTool.BackColor = Color.LightGreen;
-            MergeTool.Text = "There is a mergetool configured.";
+            MergeTool.Text = _mergeToolXConfigured.Text;
             MergeTool_Fix.Visible = false;
             return true;
         }
@@ -1704,12 +1877,12 @@ namespace GitUI
                 string.IsNullOrEmpty(Settings.Module.GetGlobalSetting("user.email")))
             {
                 UserNameSet.BackColor = Color.LightSalmon;
-                UserNameSet.Text = "You need to configure a username and an email address.";
+                UserNameSet.Text = _noEmailSet.Text;
                 UserNameSet_Fix.Visible = true;
                 return false;
             }
             UserNameSet.BackColor = Color.LightGreen;
-            UserNameSet.Text = "A username and an email address are configured.";
+            UserNameSet.Text = _emailSet.Text;
             UserNameSet_Fix.Visible = false;
             return true;
         }
@@ -1738,18 +1911,18 @@ namespace GitUI
                 if (!File.Exists(path))
                 {
                     ShellExtensionsRegistered.BackColor = Color.LightGreen;
-                    ShellExtensionsRegistered.Text = String.Format("Shell extensions are not installed. Run the installer to intall the shell extensions.");
+                    ShellExtensionsRegistered.Text = String.Format(_shellExtNoInstalled.Text);
                     ShellExtensionsRegistered_Fix.Visible = false;
                     return true;
                 }
 
                 ShellExtensionsRegistered.BackColor = Color.LightSalmon;
-                ShellExtensionsRegistered.Text = String.Format("{0} needs to be registered in order to use the shell extensions.", GitExtensionsShellExName);
+                ShellExtensionsRegistered.Text = String.Format(_shellExtNeedsToBeRegistered.Text, GitExtensionsShellExName);
                 ShellExtensionsRegistered_Fix.Visible = true;
                 return false;
             }
             ShellExtensionsRegistered.BackColor = Color.LightGreen;
-            ShellExtensionsRegistered.Text = "Shell extensions registered properly.";
+            ShellExtensionsRegistered.Text = _shellExtRegistered.Text;
             ShellExtensionsRegistered_Fix.Visible = false;
             return true;
         }
@@ -1763,19 +1936,19 @@ namespace GitUI
             if (string.IsNullOrEmpty(Settings.GetInstallDir()))
             {
                 GitExtensionsInstall.BackColor = Color.LightSalmon;
-                GitExtensionsInstall.Text = "Registry entry missing [Software\\GitExtensions\\GitExtensions\\InstallDir].";
+                GitExtensionsInstall.Text = _registryKeyGitExtensionsMissing.Text;
                 GitExtensionsInstall_Fix.Visible = true;
                 return false;
             }
             if (Settings.GetInstallDir() != null && Settings.GetInstallDir().EndsWith(".exe"))
             {
                 GitExtensionsInstall.BackColor = Color.LightSalmon;
-                GitExtensionsInstall.Text = "Invalid installation directory stored in [Software\\GitExtensions\\GitExtensions\\InstallDir].";
+                GitExtensionsInstall.Text = _registryKeyGitExtensionsFaulty.Text;
                 GitExtensionsInstall_Fix.Visible = true;
                 return false;
             }
             GitExtensionsInstall.BackColor = Color.LightGreen;
-            GitExtensionsInstall.Text = "GitExtensions is properly registered.";
+            GitExtensionsInstall.Text = _registryKeyGitExtensionsCorrect.Text;
             GitExtensionsInstall_Fix.Visible = false;
             return true;
         }

@@ -31,17 +31,19 @@
             this.lblMustAuthenticate = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.LoadSSHKey = new System.Windows.Forms.Button();
-            this.Abort = new System.Windows.Forms.Button();
+            this.Cancel = new System.Windows.Forms.Button();
             this.lblPleaseLoadKey = new System.Windows.Forms.Label();
+            this.Retry = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // lblMustAuthenticate
             // 
-            this.lblMustAuthenticate.AutoSize = true;
+            this.lblMustAuthenticate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblMustAuthenticate.Location = new System.Drawing.Point(65, 45);
             this.lblMustAuthenticate.Name = "lblMustAuthenticate";
-            this.lblMustAuthenticate.Size = new System.Drawing.Size(245, 15);
+            this.lblMustAuthenticate.Size = new System.Drawing.Size(258, 15);
             this.lblMustAuthenticate.TabIndex = 0;
             this.lblMustAuthenticate.Text = "You must authenticate to run this command.";
             // 
@@ -57,7 +59,7 @@
             // 
             // LoadSSHKey
             // 
-            this.LoadSSHKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.LoadSSHKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.LoadSSHKey.Image = global::GitUI.Properties.Resources.putty;
             this.LoadSSHKey.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LoadSSHKey.Location = new System.Drawing.Point(23, 86);
@@ -68,20 +70,21 @@
             this.LoadSSHKey.UseVisualStyleBackColor = true;
             this.LoadSSHKey.Click += new System.EventHandler(this.LoadSSHKey_Click);
             // 
-            // Abort
+            // Cancel
             // 
-            this.Abort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Abort.Location = new System.Drawing.Point(246, 86);
-            this.Abort.Name = "Abort";
-            this.Abort.Size = new System.Drawing.Size(77, 25);
-            this.Abort.TabIndex = 28;
-            this.Abort.Text = "Cancel";
-            this.Abort.UseVisualStyleBackColor = true;
-            this.Abort.Click += new System.EventHandler(this.Abort_Click);
+            this.Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.Cancel.Location = new System.Drawing.Point(252, 86);
+            this.Cancel.Name = "Cancel";
+            this.Cancel.Size = new System.Drawing.Size(77, 25);
+            this.Cancel.TabIndex = 28;
+            this.Cancel.Text = "Cancel";
+            this.Cancel.UseVisualStyleBackColor = true;
             // 
             // lblPleaseLoadKey
             // 
-            this.lblPleaseLoadKey.AutoSize = true;
+            this.lblPleaseLoadKey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblPleaseLoadKey.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPleaseLoadKey.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             this.lblPleaseLoadKey.Location = new System.Drawing.Point(64, 22);
@@ -90,13 +93,25 @@
             this.lblPleaseLoadKey.TabIndex = 29;
             this.lblPleaseLoadKey.Text = "Please load your SSH private key";
             // 
+            // Retry
+            // 
+            this.Retry.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.Retry.DialogResult = System.Windows.Forms.DialogResult.Retry;
+            this.Retry.Location = new System.Drawing.Point(169, 86);
+            this.Retry.Name = "Retry";
+            this.Retry.Size = new System.Drawing.Size(77, 25);
+            this.Retry.TabIndex = 30;
+            this.Retry.Text = "Retry";
+            this.Retry.UseVisualStyleBackColor = true;
+            // 
             // FormPuttyError
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(353, 125);
+            this.Controls.Add(this.Retry);
             this.Controls.Add(this.lblPleaseLoadKey);
-            this.Controls.Add(this.Abort);
+            this.Controls.Add(this.Cancel);
             this.Controls.Add(this.LoadSSHKey);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.lblMustAuthenticate);
@@ -104,7 +119,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormPuttyError";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Authentication error";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
@@ -117,7 +132,8 @@
         private System.Windows.Forms.Label lblMustAuthenticate;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button LoadSSHKey;
-        private System.Windows.Forms.Button Abort;
+        private System.Windows.Forms.Button Cancel;
         private System.Windows.Forms.Label lblPleaseLoadKey;
+        private System.Windows.Forms.Button Retry;
     }
 }

@@ -10,7 +10,7 @@ namespace GitUI
     /// <summary>
     /// Shows a dialog to let the user browse for a SSH key.
     /// </summary>
-    public partial class BrowseForPrivateKey
+    public partial class BrowseForPrivateKey : Translate
     {
         private static readonly TranslationString _pageantNotFound =
             new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");
@@ -52,7 +52,7 @@ namespace GitUI
                 Title = "Browse for key"
             };
 
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog(parent) == DialogResult.OK)
                 return dialog.FileName;
 
             return null;

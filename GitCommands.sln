@@ -43,6 +43,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitImpact", "Plugins\Statis
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateLocalBranches", "Plugins\CreateLocalBranches\CreateLocalBranches.csproj", "{31D96116-16A6-45C2-9A6D-6DD5A1FC5F20}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FindLargeFiles", "Plugins\FindLargeFiles\FindLargeFiles.csproj", "{F261BCD1-F5F7-4664-A229-E52032E6E9FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -303,6 +305,18 @@ Global
 		{31D96116-16A6-45C2-9A6D-6DD5A1FC5F20}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{31D96116-16A6-45C2-9A6D-6DD5A1FC5F20}.Release|x64.ActiveCfg = Release|Any CPU
 		{31D96116-16A6-45C2-9A6D-6DD5A1FC5F20}.Release|x86.ActiveCfg = Release|Any CPU
+		{F261BCD1-F5F7-4664-A229-E52032E6E9FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F261BCD1-F5F7-4664-A229-E52032E6E9FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F261BCD1-F5F7-4664-A229-E52032E6E9FD}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F261BCD1-F5F7-4664-A229-E52032E6E9FD}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F261BCD1-F5F7-4664-A229-E52032E6E9FD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F261BCD1-F5F7-4664-A229-E52032E6E9FD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F261BCD1-F5F7-4664-A229-E52032E6E9FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F261BCD1-F5F7-4664-A229-E52032E6E9FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F261BCD1-F5F7-4664-A229-E52032E6E9FD}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F261BCD1-F5F7-4664-A229-E52032E6E9FD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{F261BCD1-F5F7-4664-A229-E52032E6E9FD}.Release|x64.ActiveCfg = Release|Any CPU
+		{F261BCD1-F5F7-4664-A229-E52032E6E9FD}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
