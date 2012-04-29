@@ -587,9 +587,6 @@ Sie können nicht pushen, solange Sie kein Mitarbeiter des Projektes sind. {2}</
         <TranslationItem Name="AddToIngore" Property="Text">
           <Value>Ignorieren</Value>
         </TranslationItem>
-        <TranslationItem Name="filesWillBeIgnored" Property="Text">
-          <Value>Datei(en) stimmen überein</Value>
-        </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Value>Vorschau</Value>
         </TranslationItem>
@@ -598,9 +595,6 @@ Sie können nicht pushen, solange Sie kein Mitarbeiter des Projektes sind. {2}</
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Value>Keine Dateien, die zum Muster passen.</Value>
-        </TranslationItem>
-        <TranslationItem Name="Preview" Property="Text">
-          <Value>Vorschau</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -615,14 +609,8 @@ Sie können nicht pushen, solange Sie kein Mitarbeiter des Projektes sind. {2}</
         <TranslationItem Name="_conflictMergetoolText" Property="Text">
           <Value>Konflike lösen</Value>
         </TranslationItem>
-        <TranslationItem Name="_conflictMergetoolText2" Property="Text">
-          <Value>&gt;Konflikte lösen&lt;</Value>
-        </TranslationItem>
         <TranslationItem Name="_conflictResolvedText" Property="Text">
           <Value>Konflikt gelöst</Value>
-        </TranslationItem>
-        <TranslationItem Name="_conflictResolvedText2" Property="Text">
-          <Value>&gt;Konflikt gelöst&lt;</Value>
         </TranslationItem>
         <TranslationItem Name="_noFileSelectedText" Property="Text">
           <Value>Bitte wählen Sie eine Patch-Datei aus</Value>
@@ -1143,19 +1131,10 @@ Sie können nicht pushen, solange Sie kein Mitarbeiter des Projektes sind. {2}</
         <TranslationItem Name="toolStripButton1" Property="Text">
           <Value>Commiten</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripButton1" Property="ToolTipText">
-          <Value>Commiten</Value>
-        </TranslationItem>
         <TranslationItem Name="toolStripButtonPull" Property="Text">
           <Value>Pull</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripButtonPull" Property="ToolTipText">
-          <Value>Pull</Value>
-        </TranslationItem>
         <TranslationItem Name="toolStripButtonPush" Property="Text">
-          <Value>Push</Value>
-        </TranslationItem>
-        <TranslationItem Name="toolStripButtonPush" Property="ToolTipText">
           <Value>Push</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripLabel1" Property="Text">
@@ -1192,9 +1171,6 @@ Sie können nicht pushen, solange Sie kein Mitarbeiter des Projektes sind. {2}</
           <Value>Vergleich anzeigen</Value>
         </TranslationItem>
         <TranslationItem Name="viewStashToolStripMenuItem" Property="Text">
-          <Value>Stash anzeigen</Value>
-        </TranslationItem>
-        <TranslationItem Name="viewStashToolStripMenuItem" Property="ToolTipText">
           <Value>Stash anzeigen</Value>
         </TranslationItem>
       </translationItems>
@@ -1244,15 +1220,6 @@ Sie können nicht pushen, solange Sie kein Mitarbeiter des Projektes sind. {2}</
         </TranslationItem>
         <TranslationItem Name="Remotebranch" Property="Text">
           <Value>Remote Branch</Value>
-        </TranslationItem>
-        <TranslationItem Name="trackRemoteBranch" Property="Text">
-          <Value>Sie haben einen Remote Branch zum Auschecken gewählt.
-
-Wollen Sie einen lokalen Branch mit dem Namen '{0}' erzeugen,
-der diesen Remote Branch verfolgt?</Value>
-        </TranslationItem>
-        <TranslationItem Name="trackRemoteBranchCaption" Property="Text">
-          <Value>Branch auschecken</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1440,14 +1407,6 @@ der diesen Remote Branch verfolgt?</Value>
         <TranslationItem Name="_infoNewRepositoryLocation" Property="Text">
           <Value>Das Repository wird an folgender Stelle in ein neues Verzeichnis geklont:
 {0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="_questionInitSubmodules" Property="Text">
-          <Value>Das geklone Repository enthält Untermodule.
-Wollen Sie die Untermodule initialisieren?
-Dies wird alle Untermodule rekursiv initialisieren und aktualisieren.</Value>
-        </TranslationItem>
-        <TranslationItem Name="_questionInitSubmodulesCaption" Property="Text">
-          <Value>Untermodule</Value>
         </TranslationItem>
         <TranslationItem Name="_questionOpenRepo" Property="Text">
           <Value>Das Repository wurde erfolgreich geklont.
@@ -1694,9 +1653,6 @@ Möchten Sie trotzdem fortfahren?</Value>
         <TranslationItem Name="commitMessageToolStripMenuItem" Property="Text">
           <Value>Commit &amp;Nachricht</Value>
         </TranslationItem>
-        <TranslationItem Name="commitMessageToolStripMenuItem" Property="ToolTipText">
-          <Value>Commit Nachricht</Value>
-        </TranslationItem>
         <TranslationItem Name="commitSubmoduleChanges" Property="Text">
           <Value>Änderungen am Untermodul commiten</Value>
         </TranslationItem>
@@ -1790,14 +1746,8 @@ Möchten Sie trotzdem fortfahren?</Value>
         <TranslationItem Name="toolStageAllItem" Property="Text">
           <Value>Alle Dateien stagen</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStageAllItem" Property="ToolTipText">
-          <Value>Alle Dateien stagen</Value>
-        </TranslationItem>
         <TranslationItem Name="toolStageItem" Property="Text">
           <Value>&amp;Stagen</Value>
-        </TranslationItem>
-        <TranslationItem Name="toolStageItem" Property="ToolTipText">
-          <Value>Stagen</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripLabel1" Property="Text">
           <Value>Filter</Value>
@@ -1805,20 +1755,11 @@ Möchten Sie trotzdem fortfahren?</Value>
         <TranslationItem Name="toolStripMenuItem3" Property="Text">
           <Value>Optionen</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripMenuItem3" Property="ToolTipText">
-          <Value>Optionen</Value>
-        </TranslationItem>
         <TranslationItem Name="toolUnstageAllItem" Property="Text">
-          <Value>Alle Dateien unstagen</Value>
-        </TranslationItem>
-        <TranslationItem Name="toolUnstageAllItem" Property="ToolTipText">
           <Value>Alle Dateien unstagen</Value>
         </TranslationItem>
         <TranslationItem Name="toolUnstageItem" Property="Text">
           <Value>&amp;Unstagen</Value>
-        </TranslationItem>
-        <TranslationItem Name="toolUnstageItem" Property="ToolTipText">
-          <Value>Unstagen</Value>
         </TranslationItem>
         <TranslationItem Name="updateSubmoduleMenuItem" Property="Text">
           <Value>Untermodul aktualisieren</Value>
@@ -1830,9 +1771,6 @@ Möchten Sie trotzdem fortfahren?</Value>
           <Value>Zeige Historie</Value>
         </TranslationItem>
         <TranslationItem Name="workingToolStripMenuItem" Property="Text">
-          <Value>Änderungen im Arbeitsverzeichnis</Value>
-        </TranslationItem>
-        <TranslationItem Name="workingToolStripMenuItem" Property="ToolTipText">
           <Value>Änderungen im Arbeitsverzeichnis</Value>
         </TranslationItem>
       </translationItems>
@@ -3425,9 +3363,6 @@ Wollen Sie dieses Skript verwenden?</Value>
         <TranslationItem Name="addToRevisionGridContextMenuDataGridViewCheckBoxColumn" Property="HeaderText">
           <Value>Kontextmenü</Value>
         </TranslationItem>
-        <TranslationItem Name="tpAppearance" Property="Text">
-          <Value>Erscheinungsbild</Value>
-        </TranslationItem>
         <TranslationItem Name="argumentsLabel" Property="Text">
           <Value>Parameter:</Value>
         </TranslationItem>
@@ -3461,9 +3396,6 @@ Wollen Sie dieses Skript verwenden?</Value>
         <TranslationItem Name="browseScriptButton" Property="Text">
           <Value>Durchsuchen</Value>
         </TranslationItem>
-        <TranslationItem Name="button1" Property="Text">
-          <Value>Vorschlagen</Value>
-        </TranslationItem>
         <TranslationItem Name="ChangeHomeButton" Property="Text">
           <Value>HOME ändern</Value>
         </TranslationItem>
@@ -3472,9 +3404,6 @@ Wollen Sie dieses Skript verwenden?</Value>
         </TranslationItem>
         <TranslationItem Name="chkCloseProcessDialog" Property="Text">
           <Value>Kommandozeilendialoge automatisch schließen</Value>
-        </TranslationItem>
-        <TranslationItem Name="chkFocusControlOnHover" Property="Text">
-          <Value>Steuerelemente bei Überfahren fokusieren um Scrollen zu aktivieren ohne Klicken zu müssen</Value>
         </TranslationItem>
         <TranslationItem Name="chkFollowRenamesInFileHistory" Property="Text">
           <Value>Verfolge Umbenennen in der Datei-Historie (Experimentell)</Value>
@@ -3527,9 +3456,6 @@ Wollen Sie dieses Skript verwenden?</Value>
         <TranslationItem Name="DiffTool_Fix" Property="Text">
           <Value>Reparieren</Value>
         </TranslationItem>
-        <TranslationItem Name="MergeTool_Fix" Property="Text">
-          <Value>Reparieren</Value>
-        </TranslationItem>
         <TranslationItem Name="DiffToolCmdSuggest" Property="Text">
           <Value>Vorschlagen</Value>
         </TranslationItem>
@@ -3565,9 +3491,6 @@ Wollen Sie dieses Skript verwenden?</Value>
         </TranslationItem>
         <TranslationItem Name="globalAutoCrlfTrue" Property="Text">
           <Value>Zeilenumbrüche im Windows-Format auschecken, im Unix-Format commiten ("core.autocrlf" = true)</Value>
-        </TranslationItem>
-        <TranslationItem Name="tpGlobalSettings" Property="Text">
-          <Value>Globale Einstellungen</Value>
         </TranslationItem>
         <TranslationItem Name="GreenIcon" Property="Text">
           <Value>Grün</Value>
@@ -3809,11 +3732,11 @@ können.</Value>
         <TranslationItem Name="localAutoCrlfTrue" Property="Text">
           <Value>Zeilenumbrüche im Windows-Format auschecken, im Unix-Format commiten ("core.autocrlf" = true)</Value>
         </TranslationItem>
-        <TranslationItem Name="tpLocalSettings" Property="Text">
-          <Value>Lokale Einstellungen</Value>
-        </TranslationItem>
         <TranslationItem Name="LogEncodingLabel" Property="Text">
           <Value>GitExtensions Encoding</Value>
+        </TranslationItem>
+        <TranslationItem Name="MergeTool_Fix" Property="Text">
+          <Value>Reparieren</Value>
         </TranslationItem>
         <TranslationItem Name="MulticolorBranches" Property="Text">
           <Value>Mehrfarbige Branches</Value>
@@ -3884,26 +3807,20 @@ können.</Value>
         <TranslationItem Name="scriptNeedsConfirmation" Property="Text">
           <Value>Bestätigung anfordern</Value>
         </TranslationItem>
-        <TranslationItem Name="tpScriptsTab" Property="Text">
-          <Value>Skripte</Value>
-        </TranslationItem>
         <TranslationItem Name="ShellExtensionsRegistered_Fix" Property="Text">
           <Value>Reparieren</Value>
         </TranslationItem>
         <TranslationItem Name="ShowAuthorGravatar" Property="Text">
           <Value>Autor Bild von gravatar.com laden</Value>
         </TranslationItem>
-        <TranslationItem Name="tpSsh" Property="Text">
-          <Value>SSH</Value>
-        </TranslationItem>
         <TranslationItem Name="SshConfig_Fix" Property="Text">
           <Value>Reparieren</Value>
         </TranslationItem>
-        <TranslationItem Name="tpStartPage" Property="Text">
-          <Value>Startseite</Value>
-        </TranslationItem>
         <TranslationItem Name="StripedBanchChange" Property="Text">
           <Value>Branch Änderungen stricheln</Value>
+        </TranslationItem>
+        <TranslationItem Name="tpAppearance" Property="Text">
+          <Value>Erscheinungsbild</Value>
         </TranslationItem>
         <TranslationItem Name="tpChecklist" Property="Text">
           <Value>Checkliste</Value>
@@ -3914,8 +3831,20 @@ können.</Value>
         <TranslationItem Name="tpGitExtensions" Property="Text">
           <Value>Git Extensions</Value>
         </TranslationItem>
+        <TranslationItem Name="tpGlobalSettings" Property="Text">
+          <Value>Globale Einstellungen</Value>
+        </TranslationItem>
         <TranslationItem Name="tpHotkeys" Property="Text">
           <Value>Tastenkombination</Value>
+        </TranslationItem>
+        <TranslationItem Name="tpLocalSettings" Property="Text">
+          <Value>Lokale Einstellungen</Value>
+        </TranslationItem>
+        <TranslationItem Name="tpScriptsTab" Property="Text">
+          <Value>Skripte</Value>
+        </TranslationItem>
+        <TranslationItem Name="tpSsh" Property="Text">
+          <Value>SSH</Value>
         </TranslationItem>
         <TranslationItem Name="translationConfig_Fix" Property="Text">
           <Value>Reparieren</Value>
@@ -3966,13 +3895,7 @@ können.</Value>
         <TranslationItem Name="toolStripButton_customMessage" Property="Text">
           <Value>Benutzerdefinierte Stash-Nachricht</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripButton_customMessage" Property="ToolTipText">
-          <Value>Benutzerdefinierte Stash-Nachricht</Value>
-        </TranslationItem>
         <TranslationItem Name="toolStripButton1" Property="Text">
-          <Value>Aktualisieren</Value>
-        </TranslationItem>
-        <TranslationItem Name="toolStripButton1" Property="ToolTipText">
           <Value>Aktualisieren</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripLabel1" Property="Text">
