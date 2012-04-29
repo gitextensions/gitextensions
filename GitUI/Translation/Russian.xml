@@ -1427,6 +1427,31 @@
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormContributors">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Участники</Value>
+        </TranslationItem>
+        <TranslationItem Name="codersLabel" Property="Text">
+          <Value>Программисты:</Value>
+        </TranslationItem>
+        <TranslationItem Name="designersLabel" Property="Text">
+          <Value>Дизайнеры</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Программисты:</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Переводчики:</Value>
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text">
+          <Value>Дизайн логотипа:</Value>
+        </TranslationItem>
+        <TranslationItem Name="translatorsLabel" Property="Text">
+          <Value>Переводчики</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormDashboardCategoryTitle">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -2555,8 +2580,29 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <TranslationItem Name="$this" Property="Text">
           <Value>Настройки</Value>
         </TranslationItem>
+        <TranslationItem Name="__diffToolSuggestCaption" Property="Text">
+          <Value>Предложить difftool команду</Value>
+        </TranslationItem>
+        <TranslationItem Name="__mergeToolSuggestCaption" Property="Text">
+          <Value>Предложить mergetool команду</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cantFindGitMessageCaption" Property="Text">
+          <Value>Неправильный путь</Value>
+        </TranslationItem>
+        <TranslationItem Name="_gitCanBeRunCaption" Property="Text">
+          <Value>Найти git</Value>
+        </TranslationItem>
+        <TranslationItem Name="_gitVersionFound" Property="Text">
+          <Value>Git {0} найден на компьютере.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_homeIsSetToString" Property="Text">
+          <Value>HOME установлен в:</Value>
+        </TranslationItem>
         <TranslationItem Name="_selectFile" Property="Text">
           <Value>Выберите файл</Value>
+        </TranslationItem>
+        <TranslationItem Name="_solveGitCommandFailedCaption" Property="Text">
+          <Value>Найти git</Value>
         </TranslationItem>
         <TranslationItem Name="addScriptButton" Property="Text">
           <Value>Добавить</Value>
@@ -2650,6 +2696,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         </TranslationItem>
         <TranslationItem Name="downloadDictionary" Property="Text">
           <Value>Скачать словарь</Value>
+        </TranslationItem>
+        <TranslationItem Name="downloadMsysgit" Property="Text">
+          <Value>Скачать msysgit</Value>
         </TranslationItem>
         <TranslationItem Name="EnabledColumn" Property="HeaderText">
           <Value>Включен</Value>
@@ -2817,6 +2866,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <TranslationItem Name="label56" Property="Text">
           <Value>Шрифт</Value>
         </TranslationItem>
+        <TranslationItem Name="label59" Property="Text">
+          <Value>Кодировка GitExtensions</Value>
+        </TranslationItem>
         <TranslationItem Name="label6" Property="Text">
           <Value>Редактор</Value>
         </TranslationItem>
@@ -2892,6 +2944,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         </TranslationItem>
         <TranslationItem Name="Rescan" Property="Text">
           <Value>Сохранить и пересканировать</Value>
+        </TranslationItem>
+        <TranslationItem Name="sbtn_icon" Property="Text">
+          <Value>Выбрать картинку</Value>
         </TranslationItem>
         <TranslationItem Name="scriptEnabled" Property="Text">
           <Value>Включить</Value>
@@ -3114,6 +3169,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         </TranslationItem>
         <TranslationItem Name="_noTagMassage" Property="Text">
           <Value>Пожалуйста введите сообщение метки</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pushToCaption" Property="Text">
+          <Value>Push меток в {0}</Value>
         </TranslationItem>
         <TranslationItem Name="annotate" Property="Text">
           <Value>Создать аннотированную метку</Value>
