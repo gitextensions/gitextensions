@@ -186,6 +186,21 @@ namespace GitUI
             SelectedDiff.ContextMenuOpening += SelectedDiff_ContextMenuOpening;
 
             Commit.Focus();
+
+            string localBranch = CalculateLocalBranch();
+            if (localBranch == null)
+            {
+                string revision = _editedCommit != null ? _editedCommit.Guid : "";
+                GitUICommands.Instance.StartCheckoutBranchDialog(revision);
+            }
+        }
+
+        private string CalculateLocalBranch()
+        {
+            string localBranch = Settings.Module.GetSelectedBranch();
+            if (localBranch.Equals("(no branch)", StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty(localBranch))
+                localBranch = null;
+            return localBranch;
         }
 
         void SelectedDiff_ContextMenuOpening(object sender, System.ComponentModel.CancelEventArgs e)
