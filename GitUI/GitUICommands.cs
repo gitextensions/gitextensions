@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -20,6 +21,7 @@ namespace GitUI
 
         public static GitUICommands Instance
         {
+            [DebuggerStepThrough]
             get { return instance ?? (instance = new GitUICommands()); }
         }
 
@@ -136,6 +138,14 @@ namespace GitUI
         public event GitUIEventHandler PreSyncSubmodules;
         public event GitUIEventHandler PostSyncSubmodules;
 
+        public event GitUIEventHandler PreBlame;
+        public event GitUIEventHandler PostBlame;
+
+        public event GitUIEventHandler PreEditGitAttributes;
+        public event GitUIEventHandler PostEditGitAttributes;
+
+        #endregion
+
         public string GitCommand(string arguments)
         {
             return Settings.Module.RunGitCmd(arguments);
@@ -145,7 +155,6 @@ namespace GitUI
         {
             return Settings.Module.RunCmd(cmd, arguments);
         }
-
 
         private bool RequiresValidWorkingDir()
         {
@@ -278,12 +287,6 @@ namespace GitUI
             return StartCheckoutRevisionDialog(null);
         }
 
-        public bool StartCheckoutBranchDialog(IWin32Window owner)
-        {
-            return StartCheckoutBranchDialog(owner, "", false);
-        }
-
-
         public bool CheckForDirtyDir(IWin32Window owner, out bool needRefresh)
         {
             needRefresh = false;
@@ -311,12 +314,7 @@ namespace GitUI
             new FormProcess(arguments).ShowDialog(owner);
         }
 
-        public bool StartCheckoutBranchDialog()
-        {
-            return StartCheckoutBranchDialog(null);
-        }
-
-        public bool StartCheckoutBranchDialog(IWin32Window owner, string branch, bool remote)
+        public bool StartCheckoutBranchDialog(IWin32Window owner, string branch, bool remote, string containRevison)
         {
             if (!RequiresValidWorkingDir())
                 return false;
@@ -328,12 +326,37 @@ namespace GitUI
             if (CheckForDirtyDir(owner, out needRefresh))
                 return needRefresh;
 
-            var form = new FormCheckoutBranch(branch, remote);
+            var form = new FormCheckoutBranch(branch, remote, containRevison);
             form.ShowDialog(owner);
 
             InvokeEvent(PostCheckoutBranch);
 
             return true;
+        }
+
+        public bool StartCheckoutBranchDialog(IWin32Window owner, string branch, bool remote)
+        {
+            return StartCheckoutBranchDialog(null, branch, remote, null);
+        }
+
+        public bool StartCheckoutBranchDialog(string branch, bool remote)
+        {
+            return StartCheckoutBranchDialog(null, branch, remote, null);
+        }
+
+        public bool StartCheckoutBranchDialog(string containRevison)
+        {
+            return StartCheckoutBranchDialog(null, "", false, containRevison);
+        }
+
+        public bool StartCheckoutBranchDialog(IWin32Window owner)
+        {
+            return StartCheckoutBranchDialog(owner, "", false, null);
+        }
+
+        public bool StartCheckoutBranchDialog()
+        {
+            return StartCheckoutBranchDialog(null, "", false, null);
         }
 
         public bool StartCheckoutRemoteBranchDialog(IWin32Window owner, string branch)
@@ -354,11 +377,6 @@ namespace GitUI
             InvokeEvent(PostCheckoutBranch);
 
             return true;
-        }
-
-        public bool StartCheckoutBranchDialog(string branch, bool remote)
-        {
-            return StartCheckoutBranchDialog(null, branch, remote);
         }
 
         public bool StartCompareRevisionsDialog(IWin32Window owner)
@@ -465,76 +483,9 @@ namespace GitUI
             return true;
         }
 
-        public bool StartCommitDialog(IWin32Window owner)
+        public bool StartSvnCloneDialog()
         {
-            if (!RequiresValidWorkingDir())
-                return false;
-
-            if (!InvokeEvent(PreCommit))
-                return true;
-
-            var form = new FormCommit();
-            form.ShowDialog(owner);
-
-            InvokeEvent(PostCommit);
-
-            if (!form.NeedRefresh)
-                return false;
-
-            return true;
-        }
-
-        public bool StartSvnDcommitDialog(IWin32Window owner)
-        {
-            if (!RequiredValidGitSvnWorikingDir())
-                return false;
-
-            if (!InvokeEvent(PreSvnDcommit))
-                return true;
-
-            var fromProcess = new FormProcess(Settings.GitCommand, GitSvnCommandHelpers.DcommitCmd());
-            fromProcess.ShowDialog(owner);
-
-            InvokeEvent(PostSvnDcommit);
-
-            return true;
-        }
-
-        public bool StartSvnRebaseDialog(IWin32Window owner)
-        {
-            if (!RequiredValidGitSvnWorikingDir())
-                return false;
-
-            if (!InvokeEvent(PreSvnRebase))
-                return true;
-
-            var fromProcess = new FormProcess(Settings.GitCommand, GitSvnCommandHelpers.RebaseCmd());
-            fromProcess.ShowDialog(owner);
-
-            InvokeEvent(PostSvnRebase);
-
-            return true;
-        }
-
-        public bool StartSvnFetchDialog(IWin32Window owner)
-        {
-            if (!RequiredValidGitSvnWorikingDir())
-                return false;
-
-            if (!InvokeEvent(PreSvnFetch))
-                return true;
-
-            var fromProcess = new FormProcess(Settings.GitCommand, GitSvnCommandHelpers.FetchCmd());
-            fromProcess.ShowDialog(owner);
-
-            InvokeEvent(PostSvnFetch);
-
-            return true;
-        }
-
-        public bool StartCommitDialog()
-        {
-            return StartCommitDialog(null);
+            return StartSvnCloneDialog(null);
         }
 
         public bool StartCommitDialog(IWin32Window owner, bool showWhenNoChanges)
@@ -559,9 +510,82 @@ namespace GitUI
             return true;
         }
 
+        public bool StartCommitDialog(IWin32Window owner)
+        {
+            return StartCommitDialog(owner, false);
+        }
+
         public bool StartCommitDialog(bool showWhenNoChanges)
         {
             return StartCommitDialog(null, showWhenNoChanges);
+        }
+
+        public bool StartCommitDialog()
+        {
+            return StartCommitDialog(null, false);
+        }
+
+        public bool StartSvnDcommitDialog(IWin32Window owner)
+        {
+            if (!RequiredValidGitSvnWorikingDir())
+                return false;
+
+            if (!InvokeEvent(PreSvnDcommit))
+                return true;
+
+            var fromProcess = new FormProcess(Settings.GitCommand, GitSvnCommandHelpers.DcommitCmd());
+            fromProcess.ShowDialog(owner);
+
+            InvokeEvent(PostSvnDcommit);
+
+            return true;
+        }
+
+        public bool StartSvnDcommitDialog()
+        {
+            return StartSvnDcommitDialog(null);
+        }
+
+        public bool StartSvnRebaseDialog(IWin32Window owner)
+        {
+            if (!RequiredValidGitSvnWorikingDir())
+                return false;
+
+            if (!InvokeEvent(PreSvnRebase))
+                return true;
+
+            var fromProcess = new FormProcess(Settings.GitCommand, GitSvnCommandHelpers.RebaseCmd());
+            fromProcess.ShowDialog(owner);
+
+            InvokeEvent(PostSvnRebase);
+
+            return true;
+        }
+
+        public bool StartSvnRebaseDialog()
+        {
+            return StartSvnRebaseDialog(null);
+        }
+
+        public bool StartSvnFetchDialog(IWin32Window owner)
+        {
+            if (!RequiredValidGitSvnWorikingDir())
+                return false;
+
+            if (!InvokeEvent(PreSvnFetch))
+                return true;
+
+            var fromProcess = new FormProcess(Settings.GitCommand, GitSvnCommandHelpers.FetchCmd());
+            fromProcess.ShowDialog(owner);
+
+            InvokeEvent(PostSvnFetch);
+
+            return true;
+        }
+
+        public bool StartSvnFetchDialog()
+        {
+            return StartSvnFetchDialog(null);
         }
 
         public bool StartInitializeDialog(IWin32Window owner)
@@ -1064,13 +1088,6 @@ namespace GitUI
         {
             return StartPluginSettingsDialog(null);
         }
-
-        #endregion
-
-        public event GitUIEventHandler PreBlame;
-        public event GitUIEventHandler PostBlame;
-        public event GitUIEventHandler PreEditGitAttributes;
-        public event GitUIEventHandler PostEditGitAttributes;
 
         public bool StartBrowseDialog(IWin32Window owner, string filter)
         {
