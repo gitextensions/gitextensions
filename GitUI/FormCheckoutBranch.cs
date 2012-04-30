@@ -10,6 +10,8 @@ namespace GitUI
 {
     public partial class FormCheckoutBranch : GitExtensionsForm
     {
+        private string _containRevison = null;
+
         public FormCheckoutBranch()
         {
             InitializeComponent();
@@ -19,6 +21,11 @@ namespace GitUI
         }
 
         public FormCheckoutBranch(string branch, bool remote)
+            : this(branch, remote, null)
+        {
+        }
+
+        public FormCheckoutBranch(string branch, bool remote, string containRevison)
         {
             InitializeComponent();
             Translate();
@@ -29,29 +36,40 @@ namespace GitUI
             Remotebranch.Checked = remote;
 
             Branches.Text = branch;
+            _containRevison = containRevison;
         }
 
         private void Initialize()
         {
             Branches.DisplayMember = "Name";
 
-            if (LocalBranch.Checked)
+            if (_containRevison == null)
             {
-                Branches.DataSource = Settings.Module.GetHeads(false);
+                if (LocalBranch.Checked)
+                {
+                    Branches.DataSource = Settings.Module.GetHeads(false).Select(a => a.Name).ToList();
+                }
+                else
+                {
+                    var heads = Settings.Module.GetHeads(true, true);
+
+                    var remoteHeads = new List<GitHead>();
+
+                    foreach (var head in heads)
+                    {
+                        if (head.IsRemote && !head.IsTag)
+                            remoteHeads.Add(head);
+                    }
+
+                    Branches.DataSource = remoteHeads.Select(a => a.Name).ToList();
+                }
             }
             else
             {
-                var heads = Settings.Module.GetHeads(true, true);
-
-                var remoteHeads = new List<GitHead>();
-
-                foreach (var head in heads)
-                {
-                    if (head.IsRemote && !head.IsTag)
-                        remoteHeads.Add(head);
-                }
-
-                Branches.DataSource = remoteHeads;
+                var branches = CommitInformation
+                    .GetAllBranchesWhichContainGivenCommit(_containRevison, LocalBranch.Checked, !LocalBranch.Checked)
+                    .Where(a => !a.Equals("(no branch)", StringComparison.OrdinalIgnoreCase));
+                Branches.DataSource = branches.ToList();
             }
 
             Branches.Text = null;
