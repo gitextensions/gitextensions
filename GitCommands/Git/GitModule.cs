@@ -1138,10 +1138,14 @@ namespace GitCommands
 
         public string FetchCmd(string remote, string remoteBranch, string localBranch)
         {
-            if (string.IsNullOrEmpty(remote) && string.IsNullOrEmpty(remoteBranch) && string.IsNullOrEmpty(localBranch))
-                return "fetch";
+            var progressOption = "";
+            if (GitCommandHelpers.VersionInUse.FetchCanAskForProgress)
+                progressOption = "--progress ";
 
-            return "fetch " + GetFetchArgs(remote, remoteBranch, localBranch);
+            if (string.IsNullOrEmpty(remote) && string.IsNullOrEmpty(remoteBranch) && string.IsNullOrEmpty(localBranch))
+                return "fetch " + progressOption;
+
+            return "fetch " + progressOption + GetFetchArgs(remote, remoteBranch, localBranch);
         }
 
         public string Pull(string remote, string remoteBranch, string localBranch, bool rebase)
@@ -1157,13 +1161,17 @@ namespace GitCommands
 
         public string PullCmd(string remote, string remoteBranch, string localBranch, bool rebase)
         {
+            var progressOption = "";
+            if (GitCommandHelpers.VersionInUse.FetchCanAskForProgress)
+                progressOption = "--progress ";
+
             if (rebase && !string.IsNullOrEmpty(remoteBranch))
-                return "pull --rebase " + remote + " refs/heads/" + remoteBranch;
+                return "pull --rebase " + progressOption + remote + " refs/heads/" + remoteBranch;
 
             if (rebase)
-                return "pull --rebase " + remote;
+                return "pull --rebase " + progressOption + remote;
 
-            return "pull " + GetFetchArgs(remote, remoteBranch, localBranch);
+            return "pull " + progressOption + GetFetchArgs(remote, remoteBranch, localBranch);
         }
 
         private string GetFetchArgs(string remote, string remoteBranch, string localBranch)
@@ -1193,11 +1201,7 @@ namespace GitCommands
             else
                 localBranchArguments = ":" + "refs/remotes/" + remote.Trim() + "/" + localBranch + "";
 
-            var progressOption = "";
-            if (GitCommandHelpers.VersionInUse.FetchCanAskForProgress)
-                progressOption = "--progress ";
-
-            return progressOption + "\"" + remote.Trim() + "\" " + remoteBranchArguments + localBranchArguments;
+            return "\"" + remote.Trim() + "\" " + remoteBranchArguments + localBranchArguments;
         }
 
         public string ContinueRebase()
