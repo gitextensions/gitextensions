@@ -435,13 +435,19 @@ namespace GitCommands
             get { return SafeGet("smtp", "", ref _smtp); }
             set { SafeSet("smtp", value, ref _smtp); }
         }
-
-
+        
         private static bool? _autoStash;
         public static bool AutoStash
         {
             get { return SafeGet("autostash", false, ref _autoStash); }
             set { SafeSet("autostash", value, ref _autoStash); }
+        }
+
+        private static bool? _mergeAtCheckout;
+        public static bool MergeAtCheckout
+        {
+            get { return SafeGet("mergeAtCheckout", true, ref _mergeAtCheckout); }
+            set { SafeSet("mergeAtCheckout", value, ref _mergeAtCheckout); }
         }
 
         private static bool? _includeUntrackedFilesInAutoStash;
