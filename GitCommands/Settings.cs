@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using GitCommands.Config;
 using GitCommands.Logging;
 using GitCommands.Repository;
-using GitCommands.Config;
 using Microsoft.Win32;
-using System.Collections.Generic;
 
 namespace GitCommands
 {
@@ -435,13 +436,19 @@ namespace GitCommands
             get { return SafeGet("smtp", "", ref _smtp); }
             set { SafeSet("smtp", value, ref _smtp); }
         }
-
-
+        
         private static bool? _autoStash;
         public static bool AutoStash
         {
             get { return SafeGet("autostash", false, ref _autoStash); }
             set { SafeSet("autostash", value, ref _autoStash); }
+        }
+
+        private static bool? _mergeAtCheckout;
+        public static bool MergeAtCheckout
+        {
+            get { return SafeGet("mergeAtCheckout", true, ref _mergeAtCheckout); }
+            set { SafeSet("mergeAtCheckout", value, ref _mergeAtCheckout); }
         }
 
         private static bool? _includeUntrackedFilesInAutoStash;
@@ -604,6 +611,7 @@ namespace GitCommands
         private static GitModule _module = new GitModule();
         public static GitModule Module
         {
+            [DebuggerStepThrough]
             get
             {
                 return _module;

@@ -700,18 +700,11 @@ namespace GitUI
             // 
             this.SelectedDiff.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SelectedDiff.Font = new System.Drawing.Font("Tahoma", 9.75F);
-            this.SelectedDiff.IgnoreWhitespaceChanges = false;
-            this.SelectedDiff.IsReadOnly = true;
             this.SelectedDiff.Location = new System.Drawing.Point(0, 0);
             this.SelectedDiff.Margin = new System.Windows.Forms.Padding(2, 3, 3, 3);
             this.SelectedDiff.Name = "SelectedDiff";
-            this.SelectedDiff.NumberOfVisibleLines = 3;
-            this.SelectedDiff.ScrollPos = 0;
-            this.SelectedDiff.ShowEntireFile = false;
-            this.SelectedDiff.ShowLineNumbers = true;
             this.SelectedDiff.Size = new System.Drawing.Size(517, 502);
             this.SelectedDiff.TabIndex = 0;
-            this.SelectedDiff.TreatAllFilesAsText = false;
             // 
             // Message
             // 
@@ -832,7 +825,7 @@ namespace GitUI
             this.commitTemplatesToolStripMenuItem.Image = global::GitUI.Properties.Resources._27;
             this.commitTemplatesToolStripMenuItem.Name = "commitTemplatesToolStripMenuItem";
             this.commitTemplatesToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.commitTemplatesToolStripMenuItem.Size = new System.Drawing.Size(135, 20);
+            this.commitTemplatesToolStripMenuItem.Size = new System.Drawing.Size(161, 24);
             this.commitTemplatesToolStripMenuItem.Text = "Commit &templates";
             this.commitTemplatesToolStripMenuItem.DropDownOpening += new System.EventHandler(this.commitTemplatesToolStripMenuItem_DropDownOpening);
             // 

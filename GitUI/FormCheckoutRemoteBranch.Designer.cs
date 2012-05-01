@@ -35,7 +35,7 @@ namespace GitUI
             this.rbResetBranch = new System.Windows.Forms.RadioButton();
             this.rbCreateBranch = new System.Windows.Forms.RadioButton();
             this.rbDontCreate = new System.Windows.Forms.RadioButton();
-            this.cbAutoStash = new System.Windows.Forms.CheckBox();
+            this.cbMerge = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // btOk
@@ -91,15 +91,15 @@ namespace GitUI
             this.rbDontCreate.Text = "Do not create local branch";
             this.rbDontCreate.UseVisualStyleBackColor = true;
             // 
-            // cbAutoStash
+            // cbMerge
             // 
-            this.cbAutoStash.AutoSize = true;
-            this.cbAutoStash.Location = new System.Drawing.Point(12, 112);
-            this.cbAutoStash.Name = "cbAutoStash";
-            this.cbAutoStash.Size = new System.Drawing.Size(100, 24);
-            this.cbAutoStash.TabIndex = 14;
-            this.cbAutoStash.Text = "Auto stash";
-            this.cbAutoStash.UseVisualStyleBackColor = true;
+            this.cbMerge.AutoSize = true;
+            this.cbMerge.Location = new System.Drawing.Point(12, 112);
+            this.cbMerge.Name = "cbMerge";
+            this.cbMerge.Size = new System.Drawing.Size(74, 24);
+            this.cbMerge.TabIndex = 14;
+            this.cbMerge.Text = "Merge";
+            this.cbMerge.UseVisualStyleBackColor = true;
             // 
             // FormCheckoutRemoteBranch
             // 
@@ -107,7 +107,7 @@ namespace GitUI
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(472, 144);
-            this.Controls.Add(this.cbAutoStash);
+            this.Controls.Add(this.cbMerge);
             this.Controls.Add(this.rbDontCreate);
             this.Controls.Add(this.rbCreateBranch);
             this.Controls.Add(this.rbResetBranch);
@@ -131,6 +131,6 @@ namespace GitUI
         private System.Windows.Forms.RadioButton rbResetBranch;
         private System.Windows.Forms.RadioButton rbCreateBranch;
         private System.Windows.Forms.RadioButton rbDontCreate;
-        private System.Windows.Forms.CheckBox cbAutoStash;
+        private System.Windows.Forms.CheckBox cbMerge;
     }
 }

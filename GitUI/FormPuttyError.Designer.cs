@@ -41,9 +41,9 @@
             // 
             this.lblMustAuthenticate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblMustAuthenticate.Location = new System.Drawing.Point(65, 45);
+            this.lblMustAuthenticate.Location = new System.Drawing.Point(65, 47);
             this.lblMustAuthenticate.Name = "lblMustAuthenticate";
-            this.lblMustAuthenticate.Size = new System.Drawing.Size(258, 15);
+            this.lblMustAuthenticate.Size = new System.Drawing.Size(258, 22);
             this.lblMustAuthenticate.TabIndex = 0;
             this.lblMustAuthenticate.Text = "You must authenticate to run this command.";
             // 
@@ -87,9 +87,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblPleaseLoadKey.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPleaseLoadKey.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.lblPleaseLoadKey.Location = new System.Drawing.Point(64, 22);
+            this.lblPleaseLoadKey.Location = new System.Drawing.Point(64, 18);
             this.lblPleaseLoadKey.Name = "lblPleaseLoadKey";
-            this.lblPleaseLoadKey.Size = new System.Drawing.Size(259, 21);
+            this.lblPleaseLoadKey.Size = new System.Drawing.Size(259, 34);
             this.lblPleaseLoadKey.TabIndex = 29;
             this.lblPleaseLoadKey.Text = "Please load your SSH private key";
             // 
@@ -106,7 +106,7 @@
             // 
             // FormPuttyError
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(353, 125);
             this.Controls.Add(this.Retry);

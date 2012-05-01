@@ -14,10 +14,6 @@ namespace GitUI
             new TranslationString("Conflicts resolved");
         private readonly TranslationString _conflictMergetoolText =
             new TranslationString("Solve conflicts");
-        private readonly TranslationString _conflictMergetoolText2 =
-            new TranslationString(">Solve conflicts<");
-        private readonly TranslationString _conflictResolvedText2 = 
-            new TranslationString(">Conflicts resolved<");
 
         private readonly TranslationString _selectPatchFileFilter =
             new TranslationString("Patch file (*.Patch)");
@@ -95,20 +91,18 @@ namespace GitUI
 
             if (Settings.Module.InTheMiddleOfConflictedMerge())
             {
-                Mergetool.Text = _conflictMergetoolText2.Text;
+                Mergetool.Text = ">" + _conflictMergetoolText.Text + "<";
                 Mergetool.Focus();
                 AcceptButton = Mergetool;
                 MergeToolPanel.BackColor = Color.Black;
             }
-            else
-                if (Settings.Module.InTheMiddleOfPatch())
-                {
-                    Resolved.Text = _conflictResolvedText2.Text;
-                    Resolved.Focus();
-                    AcceptButton = Resolved;
-                    ContinuePanel.BackColor = Color.Black;
-                }
-
+            else if (Settings.Module.InTheMiddleOfPatch())
+            {
+                Resolved.Text = ">" + _conflictResolvedText.Text + "<";
+                Resolved.Focus();
+                AcceptButton = Resolved;
+                ContinuePanel.BackColor = Color.Black;
+            }
         }
 
         private string SelectPatchFile(string initialDirectory)
@@ -121,7 +115,6 @@ namespace GitUI
                              };
             return (dialog.ShowDialog(this) == DialogResult.OK) ? dialog.FileName : PatchFile.Text;
         }
-
 
         private void BrowsePatch_Click(object sender, EventArgs e)
         {

@@ -255,7 +255,6 @@
         private System.Windows.Forms.Button Cancel;
         private System.Windows.Forms.Button Delete;
         private System.Windows.Forms.ProgressBar pbRevisions;
-        private System.Windows.Forms.DataGridViewTextBoxColumn commitDataGridViewTextBoxColumn;
         private System.Windows.Forms.BindingSource gitObjectBindingSource;
         private System.Windows.Forms.DataGridViewTextBoxColumn sHADataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn pathDataGridViewTextBoxColumn;
