@@ -128,6 +128,8 @@
             this._NO_TRANSLATE_From.Name = "_NO_TRANSLATE_From";
             this._NO_TRANSLATE_From.Size = new System.Drawing.Size(345, 28);
             this._NO_TRANSLATE_From.TabIndex = 2;
+            this._NO_TRANSLATE_From.SelectedIndexChanged += new System.EventHandler(this.FromSelectedIndexChanged);
+            this._NO_TRANSLATE_From.TextUpdate += new System.EventHandler(this.FromTextUpdate);
             // 
             // Branches
             // 
