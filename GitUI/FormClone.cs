@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
@@ -59,6 +61,12 @@ namespace GitUI
         {
             try
             {
+                if (threadUpdateBranchList != null)
+                {
+                    Cursor = Cursors.Default;
+                    threadUpdateBranchList.Abort();
+                }
+
                 var dirTo = _NO_TRANSLATE_To.Text;
                 if (!dirTo.EndsWith(Settings.PathSeparator.ToString()) && !dirTo.EndsWith(Settings.PathSeparatorWrong.ToString()))
                     dirTo += Settings.PathSeparator.ToString();
@@ -166,6 +174,8 @@ namespace GitUI
 
             if (path.Contains("\\") || path.Contains("/"))
                 _NO_TRANSLATE_NewDirectory.Text = path.Substring(path.LastIndexOfAny(new[] { '\\', '/' }) + 1);
+            
+            Branches.DataSource = null;
 
             ToTextUpdate(sender, e);
         }
@@ -223,10 +233,32 @@ namespace GitUI
             ToTextUpdate(sender, e);
         }
 
+        private delegate void UpdateBranchesList();
+
+        private Thread threadUpdateBranchList;
+
+        private void UpdateBranches(string from)
+        {
+            var result = Settings.Module.GetRemoteHeads(from, false, true);
+            Branches.Invoke(new UpdateBranchesList(() =>
+                {
+                    string text = Branches.Text;
+                    Branches.DataSource = result;
+                    if (result.Where(a => a.LocalName == text).Any())
+                        Branches.Text = text;
+                    Cursor = Cursors.Default;
+                }));            
+        }
+
         private void Branches_DropDown(object sender, EventArgs e)
         {
             Branches.DisplayMember = "LocalName";
-            Branches.DataSource = Settings.Module.GetRemoteHeads(_NO_TRANSLATE_From.Text, false, true);
+            if (threadUpdateBranchList != null)
+                threadUpdateBranchList.Abort();
+            string from = _NO_TRANSLATE_From.Text;
+            Cursor = Cursors.AppStarting;
+            threadUpdateBranchList = new Thread(new ThreadStart(() => UpdateBranches(from)));
+            threadUpdateBranchList.Start();
         }
     }
 }
