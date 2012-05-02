@@ -37,7 +37,13 @@ namespace AutoCheckForUpdates
 
         private void LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(link.Text);
+			try
+			{
+                Process.Start(link.Text);
+            }
+            catch (System.ComponentModel.Win32Exception)
+            {
+            }
         }
 
         private void SearchForUpdates()
