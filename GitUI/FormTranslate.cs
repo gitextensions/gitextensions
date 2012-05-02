@@ -399,7 +399,6 @@ namespace GitUI
 
                 if (translateItem == null) return;
 
-                Debug.Assert(translateItem == (TranslateItem)translateItemBindingSource.Current);
                 neutralTekst.Text = translateItem.NeutralValue;
                 translatedText.Text = translateItem.TranslatedValue;
             }
