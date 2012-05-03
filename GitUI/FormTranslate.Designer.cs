@@ -31,7 +31,7 @@ namespace GitUI
         {
             this.components = new System.ComponentModel.Container();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.toolStrip1 = new ToolStripEx();
+            this.toolStrip1 = new GitUI.ToolStripEx();
             this.toolStripButtonNew = new System.Windows.Forms.ToolStripButton();
             this.saveAs = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -96,6 +96,7 @@ namespace GitUI
             // 
             // toolStrip1
             // 
+            this.toolStrip1.ClickThrough = true;
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButtonNew,
@@ -358,7 +359,6 @@ namespace GitUI
             // neutralTekst
             // 
             this.neutralTekst.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.neutralTekst.LanguageOption = RichTextBoxLanguageOptions.UIFonts;
             this.neutralTekst.Location = new System.Drawing.Point(0, 0);
             this.neutralTekst.Name = "neutralTekst";
             this.neutralTekst.ReadOnly = true;
@@ -369,16 +369,15 @@ namespace GitUI
             // translatedText
             // 
             this.translatedText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.translatedText.LanguageOption = RichTextBoxLanguageOptions.UIFonts;
             this.translatedText.Location = new System.Drawing.Point(0, 0);
             this.translatedText.Name = "translatedText";
             this.translatedText.Size = new System.Drawing.Size(381, 77);
             this.translatedText.TabIndex = 0;
             this.translatedText.Text = "";
-            this.translatedText.Enter += new System.EventHandler(translatedText_Enter);
             this.translatedText.TextChanged += new System.EventHandler(this.translatedText_TextChanged);
+            this.translatedText.Enter += new System.EventHandler(this.translatedText_Enter);
             this.translatedText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.translatedText_KeyDown);
-            this.translatedText.Leave += new System.EventHandler(translatedText_Leave);
+            this.translatedText.Leave += new System.EventHandler(this.translatedText_Leave);
             // 
             // googleAll
             // 
@@ -430,6 +429,7 @@ namespace GitUI
             this.Name = "FormTranslate";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Translate";
+            this.Load += new System.EventHandler(this.FormTranslate_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
