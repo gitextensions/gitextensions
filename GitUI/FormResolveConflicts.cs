@@ -176,6 +176,11 @@ namespace GitUI
             return ((GitItem)row.DataBoundItem).FileName;
         }
 
+        private string FixPath(string path)
+        {
+            return path.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
+        }
+
         private bool TryMergeWithScript(string fileName, string baseFileName, string remoteFileName, string localFileName)
         {
             if (!Settings.RunningOnWindows())
@@ -187,40 +192,24 @@ namespace GitUI
                 if (!(extensionsSeperator > 0) || extensionsSeperator + 1 >= fileName.Length)
                     return false;
 
-                string[] mergeScripts = Directory.GetFiles(Path.GetDirectoryName(Application.ExecutablePath) + Settings.PathSeparator + "Diff-Scripts" + Settings.PathSeparator, "merge-" + fileName.Substring(extensionsSeperator + 1) + ".*");
-
-                if (mergeScripts.Length > 0)
+                string dir = Path.GetDirectoryName(Application.ExecutablePath) + 
+                    Settings.PathSeparator + "Diff-Scripts" + Settings.PathSeparator;
+                if (Directory.Exists(dir))
                 {
-                    if (MessageBox.Show(this, string.Format(uskUseCustomMergeScript.Text, mergeScripts[0].Replace(Settings.PathSeparator + Settings.PathSeparator.ToString(), Settings.PathSeparator.ToString())), uskUseCustomMergeScriptCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    string[] mergeScripts = Directory.GetFiles(dir, "merge-" +
+                    fileName.Substring(extensionsSeperator + 1) + ".*");
+
+                    if (mergeScripts.Length > 0)
                     {
-                        //get timestamp of file before merge. This is an extra check to verify if merge was successfull
-                        DateTime lastWriteTimeBeforeMerge = DateTime.Now;
-                        if (File.Exists(Settings.WorkingDir + fileName))
-                            lastWriteTimeBeforeMerge = File.GetLastWriteTime(Settings.WorkingDir + fileName);
-
-                        int exitCode;
-                        Settings.Module.RunCmd("wscript", "\"" + mergeScripts[0] + "\" \"" + (Settings.WorkingDir + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\" \"" + remoteFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\" \"" + localFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\" \"" + baseFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\"", out exitCode);
-
-                        if (MessageBox.Show(this, string.Format(askMergeConflictSolvedAfterCustomMergeScript.Text, (Settings.WorkingDir + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator)), askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        string mergeScript = mergeScripts[0];
+                        if (MessageBox.Show(this, string.Format(uskUseCustomMergeScript.Text,
+                            mergeScript.Replace(Settings.PathSeparator + Settings.PathSeparator.ToString(), Settings.PathSeparator.ToString())), 
+                            uskUseCustomMergeScriptCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
+                            UseMergeWithScript(fileName, mergeScript, baseFileName, remoteFileName, localFileName);
 
-                            DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
-                            if (File.Exists(Settings.WorkingDir + fileName))
-                                lastWriteTimeAfterMerge = File.GetLastWriteTime(Settings.WorkingDir + fileName);
-
-                            //The file is not modified, do not stage file and present warning
-                            if (lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge)
-                                MessageBox.Show(this, fileUnchangedAfterMerge.Text);
-                            else
-                                stageFile(fileName);
+                            return true;
                         }
-
-                        Initialize();
-                        if (File.Exists(baseFileName)) File.Delete(baseFileName);
-                        if (File.Exists(remoteFileName)) File.Delete(remoteFileName);
-                        if (File.Exists(localFileName)) File.Delete(localFileName);
-
-                        return true;
                     }
                 }
             }
@@ -229,6 +218,40 @@ namespace GitUI
                 MessageBox.Show(this, "Merge using script failed.\n" + ex);
             }
             return false;
+        }
+
+        private void UseMergeWithScript(string fileName, string mergeScript, string baseFileName, string remoteFileName, string localFileName)
+        {
+            //get timestamp of file before merge. This is an extra check to verify if merge was successfully
+            DateTime lastWriteTimeBeforeMerge = DateTime.Now;
+            if (File.Exists(Settings.WorkingDir + fileName))
+                lastWriteTimeBeforeMerge = File.GetLastWriteTime(Settings.WorkingDir + fileName);
+
+            int exitCode;
+            Settings.Module.RunCmd("wscript", "\"" + mergeScript + "\" \"" +
+                FixPath(Settings.WorkingDir + fileName) + "\" \"" + FixPath(remoteFileName) + "\" \"" +
+                FixPath(localFileName) + "\" \"" + FixPath(baseFileName) + "\"", out exitCode);
+
+            if (MessageBox.Show(this, string.Format(askMergeConflictSolvedAfterCustomMergeScript.Text,
+                FixPath(Settings.WorkingDir + fileName)), askMergeConflictSolvedCaption.Text,
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+
+                DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
+                if (File.Exists(Settings.WorkingDir + fileName))
+                    lastWriteTimeAfterMerge = File.GetLastWriteTime(Settings.WorkingDir + fileName);
+
+                //The file is not modified, do not stage file and present warning
+                if (lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge)
+                    MessageBox.Show(this, fileUnchangedAfterMerge.Text);
+                else
+                    stageFile(fileName);
+            }
+
+            Initialize();
+            if (File.Exists(baseFileName)) File.Delete(baseFileName);
+            if (File.Exists(remoteFileName)) File.Delete(remoteFileName);
+            if (File.Exists(localFileName)) File.Delete(localFileName);
         }
 
         private void ConflictedFiles_DoubleClick(object sender, EventArgs e)
