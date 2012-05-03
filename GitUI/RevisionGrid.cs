@@ -1755,7 +1755,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            var renameExecuted = GitUICommands.Instance.StartRenameDialog(toolStripItem.Text);
+            var renameExecuted = GitUICommands.Instance.StartRenameDialog(this, toolStripItem.Text);
             if (!renameExecuted)
                 return;
 

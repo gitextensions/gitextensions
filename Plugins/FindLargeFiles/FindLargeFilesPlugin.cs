@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Windows.Forms;
 using GitUIPluginInterfaces;
 
 namespace FindLargeFiles
@@ -19,13 +17,14 @@ namespace FindLargeFiles
             Settings.AddSetting("Find large files bigger than (Mb)", "1");
         }
 
-        public void Execute(GitUIBaseEventArgs gitUiCommands)
+        public bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
             float threshold;
             if (!float.TryParse(Settings.GetSetting("Find large files bigger than (Mb)"), out threshold))
                 threshold = 1;
 
-            new FindLargeFilesForm(threshold, gitUiCommands).ShowDialog();
+            new FindLargeFilesForm(threshold, gitUiCommands).ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+            return true;
         }
     }
 }
