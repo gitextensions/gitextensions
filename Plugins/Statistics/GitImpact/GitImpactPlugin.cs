@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Windows.Forms;
 using GitUIPluginInterfaces;
 
 namespace GitImpact
@@ -18,13 +18,14 @@ namespace GitImpact
         {
         }
 
-        public void Execute(GitUIBaseEventArgs gitUiCommands)
+        public bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
             if (string.IsNullOrEmpty(gitUiCommands.GitWorkingDir))
-                return;
+                return false;
 
             FormImpact form = new FormImpact();
-            form.ShowDialog();
+            form.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+            return false;
         }
 
         #endregion

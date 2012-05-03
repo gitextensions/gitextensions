@@ -238,12 +238,14 @@ namespace GitUI
             if (plugin == null)
                 return;
 
-            var eventArgs = new GitUIEventArgs(GitUICommands.Instance);
+            var eventArgs = new GitUIEventArgs(this, GitUICommands.Instance);
 
             string workingDirBefore = Settings.WorkingDir;
-            plugin.Execute(eventArgs);
+            bool refresh = plugin.Execute(eventArgs);
             if (workingDirBefore != Settings.WorkingDir)
                 WorkingDirChanged(false);
+            else if (refresh)
+                RefreshToolStripMenuItemClick(null, null);
         }
 
         private void UpdatePluginMenu(bool validWorkingDir)

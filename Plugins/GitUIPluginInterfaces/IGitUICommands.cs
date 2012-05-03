@@ -89,6 +89,11 @@ namespace GitUIPluginInterfaces
         string GitCommand(string arguments);
         string CommandLineCommand(string cmd, string arguments);
 
+        bool StartCommandLineProcessDialog(object ownerForm, string command, string arguments);
+        bool StartCommandLineProcessDialog(string command, string arguments);
+        bool StartBatchFileProcessDialog(object ownerForm, string batchFile);
+        bool StartBatchFileProcessDialog(string batchFile);
+
         bool StartAddFilesDialog();
         bool StartApplyPatchDialog();
         bool StartArchiveDialog();
@@ -98,8 +103,6 @@ namespace GitUIPluginInterfaces
         bool StartCherryPickDialog();
         bool StartCloneDialog();
         bool StartCloneDialog(string url);
-        bool StartCommandLineProcessDialog(string command, string arguments);
-        bool StartBatchFileProcessDialog(string batchFile);
         bool StartCommitDialog();
         bool StartCompareRevisionsDialog();
         bool StartCreateBranchDialog();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Windows.Forms;
 using GitUIPluginInterfaces;
 
 namespace GitStatistics
@@ -24,10 +25,10 @@ namespace GitStatistics
             Settings.AddSetting("Ignore submodules (true/false)", "true");
         }
 
-        public void Execute(GitUIBaseEventArgs gitUiCommands)
+        public bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
             if (string.IsNullOrEmpty(gitUiCommands.GitWorkingDir))
-                return;
+                return false;
 
             var formGitStatistics =
                 new FormGitStatistics(Settings.GetSetting("Code files"))
@@ -49,7 +50,8 @@ namespace GitStatistics
             formGitStatistics.DirectoriesToIgnore = formGitStatistics.DirectoriesToIgnore.Replace("/", "\\");
             formGitStatistics.WorkingDir = new DirectoryInfo(gitUiCommands.GitWorkingDir);
 
-            formGitStatistics.ShowDialog();
+            formGitStatistics.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+            return false;
         }
 
         #endregion

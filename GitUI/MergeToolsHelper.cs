@@ -2,7 +2,6 @@
 using System.IO;
 using GitCommands;
 using Microsoft.Win32;
-using ResourceManager.Translation;
 
 namespace GitUI
 {
