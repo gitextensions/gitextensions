@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.Linq;
 using GitCommands;
 using ResourceManager.Translation;
 using GitCommands.Config;
@@ -44,7 +45,18 @@ namespace GitUI
         private void Initialize()
         {
             Cursor.Current = Cursors.WaitCursor;
+            var submodule = Submodules.SelectedRows.Count == 1 ? Submodules.SelectedRows[0].DataBoundItem as GitSubmodule : null;
             Submodules.DataSource = (new GitCommandsInstance()).GetSubmodules();
+            if (submodule != null)
+            {
+                DataGridViewRow row = Submodules.Rows
+                    .Cast<DataGridViewRow>()
+                    .Where(r => r.DataBoundItem as GitSubmodule == submodule)
+                    .FirstOrDefault();
+
+                if (row != null)
+                    row.Selected = true;
+            }
             Cursor.Current = Cursors.Default;
         }
 
