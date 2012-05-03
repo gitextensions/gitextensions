@@ -82,9 +82,15 @@ namespace GitUI
             FormClosing += FormTranslate_FormClosing;
         }
 
+        private void FormTranslate_Load(object sender, EventArgs e)
+        {
+            RestorePosition("translate");
+        }
+
         void FormTranslate_FormClosing(object sender, FormClosingEventArgs e)
         {
             AskForSave();
+            SavePosition("translate");
         }
 
         private void UpdateProgress()

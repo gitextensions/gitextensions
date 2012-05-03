@@ -156,8 +156,7 @@ namespace GitUI
             Repositories.AddMostRecentRepository(PushDestination.Text);
             Settings.PushAllTags = PushAllTags.Checked;
             Settings.AutoPullOnRejected = AutoPullOnRejected.Checked;
-            if (RecursiveSubmodulesCheck.Enabled)
-                Settings.RecursiveSubmodulesCheck = RecursiveSubmodulesCheck.Checked;
+            Settings.RecursiveSubmodulesCheck = RecursiveSubmodulesCheck.Checked;
 
             var remote = "";
             string destination;
@@ -182,13 +181,16 @@ namespace GitUI
             string pushCmd;
             if (TabControlTagBranch.SelectedTab == BranchTab)
             {
-                bool track = newBranch;
-                string[] remotes = _NO_TRANSLATE_Remotes.DataSource as string[];
-                if (remotes != null)
-                    foreach (string remoteBranch in remotes)
-                        if (!string.IsNullOrEmpty(remoteBranch) && _NO_TRANSLATE_Branch.Text.StartsWith(remoteBranch))
-                            track = false;
-
+                bool track = ReplaceTrackingReference.Checked;
+                if (!track)
+                {
+                    track = newBranch;
+                    string[] remotes = _NO_TRANSLATE_Remotes.DataSource as string[];
+                    if (remotes != null)
+                        foreach (string remoteBranch in remotes)
+                            if (!string.IsNullOrEmpty(remoteBranch) && _NO_TRANSLATE_Branch.Text.StartsWith(remoteBranch))
+                                track = false;
+                }
 
                 pushCmd = GitCommandHelpers.PushCmd(destination, _NO_TRANSLATE_Branch.Text, RemoteBranch.Text,
                     PushAllBranches.Checked, ForcePushBranches.Checked, track, RecursiveSubmodulesCheck.Checked);
@@ -198,7 +200,7 @@ namespace GitUI
                                                              ForcePushBranches.Checked);
             else
             {
-                // Push Multiple Branches Tab selecdted
+                // Push Multiple Branches Tab selected
                 var pushActions = new List<GitPushAction>();
                 foreach (DataRow row in _branchTable.Rows)
                 {

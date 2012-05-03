@@ -1961,6 +1961,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <TranslationItem Name="RemoteColumn" Property="HeaderText">
           <Value>Внешняя</Value>
         </TranslationItem>
+        <TranslationItem Name="ReplaceTrackingReference" Property="Text">
+          <Value>Заменить ссылку отслеживания</Value>
+        </TranslationItem>
         <TranslationItem Name="ShowOptions" Property="Text">
           <Value>Дополнительные параметры</Value>
         </TranslationItem>
