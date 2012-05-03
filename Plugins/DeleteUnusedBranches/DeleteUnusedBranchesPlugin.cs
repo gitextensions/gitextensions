@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Windows.Forms;
 using GitUIPluginInterfaces;
 
 namespace DeleteUnusedBranches
@@ -19,13 +17,14 @@ namespace DeleteUnusedBranches
             Settings.AddSetting("Delete obsolete branches older than (days)", "30");
         }
 
-        public void Execute(GitUIBaseEventArgs gitUiCommands)
+        public bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
             int days;
             if (!int.TryParse(Settings.GetSetting("Delete obsolete branches older than (days)"), out days))
                 days = 30;
 
-            new DeleteUnusedBranchesForm(days, gitUiCommands.GitCommands).ShowDialog();
+            new DeleteUnusedBranchesForm(days, gitUiCommands.GitCommands).ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+            return true;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Windows.Forms;
 using GitUIPluginInterfaces;
 
 namespace AutoCheckForUpdates
@@ -32,10 +33,11 @@ namespace AutoCheckForUpdates
             gitUiCommands.PreCommit += GitUiCommandsPreBrowse;
         }
 
-        public void Execute(GitUIBaseEventArgs e)
+        public bool Execute(GitUIBaseEventArgs e)
         {
             var updateForm = new Updates(e.GitVersion) {AutoClose = false};
-            updateForm.ShowDialog();
+            updateForm.ShowDialog(e.OwnerForm as IWin32Window);
+            return false;
         }
 
         #endregion

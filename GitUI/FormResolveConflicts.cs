@@ -5,9 +5,8 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
-using GitUI.Editor;
-using ResourceManager.Translation;
 using GitUI.Hotkey;
+using ResourceManager.Translation;
 
 namespace GitUI
 {

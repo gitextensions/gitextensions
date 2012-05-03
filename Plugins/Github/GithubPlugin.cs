@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.RepositoryHosts;
-using GithubSharp.Core.Services;
-using GithubSharp.Core.API;
-using GithubSharp.Core;
 using System.IO;
-using System.Diagnostics;
+using System.Linq;
 using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Windows.Forms;
+using GithubSharp.Core.API;
+using GithubSharp.Core.Services;
+using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.RepositoryHosts;
 
 namespace Github
 {
@@ -58,9 +57,10 @@ namespace Github
             StartConfigtest();
         }
 
-        public void Execute(GitUIBaseEventArgs gitUiCommands)
+        public bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
-            new ConfigureGithub().ShowDialog();
+            new ConfigureGithub().ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+            return false;
         }
         #endregion
 

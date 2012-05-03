@@ -36,11 +36,11 @@ namespace AutoCompileSubmodules
             gitUiCommands.PostUpdateSubmodules += GitUiCommandsPostUpdateSubmodules;
         }
 
-        public void Execute(GitUIBaseEventArgs e)
+        public bool Execute(GitUIBaseEventArgs e)
         {
             // Only build when plugin is enabled
             if (string.IsNullOrEmpty(e.GitWorkingDir))
-                return;
+                return false;
 
             var arguments = Settings.GetSetting("msbuild.exe arguments");
             var msbuildpath = Settings.GetSetting("Path to msbuild.exe");
@@ -53,7 +53,7 @@ namespace AutoCompileSubmodules
                 var solutionFile = solutionFiles[n];
 
                 var result =
-                    MessageBox.Show(
+                    MessageBox.Show(e.OwnerForm as IWin32Window,
                         string.Format("Do you want to build {0}?\n\n{1}",
                                       solutionFile.Name, 
                                       SolutionFilesToString(solutionFiles)),
@@ -61,16 +61,17 @@ namespace AutoCompileSubmodules
                         MessageBoxButtons.YesNoCancel);
 
                 if (result == DialogResult.Cancel)
-                    return;
+                    return false;
 
                 if (result != DialogResult.Yes)
                     continue;
 
                 if (string.IsNullOrEmpty(msbuildpath) || !File.Exists(msbuildpath))
-                    MessageBox.Show("Please enter correct MSBuild path in the plugin settings dialog and try again.");
+                    MessageBox.Show(e.OwnerForm as IWin32Window, "Please enter correct MSBuild path in the plugin settings dialog and try again.");
                 else
-                    e.GitUICommands.StartCommandLineProcessDialog(msbuildpath, solutionFile.FullName + " " + arguments);
+                    e.GitUICommands.StartCommandLineProcessDialog(e.OwnerForm as IWin32Window, msbuildpath, solutionFile.FullName + " " + arguments);
             }
+            return false;
         }
 
         #endregion

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Windows.Forms;
 using GitUIPluginInterfaces;
 
 namespace CreateLocalBranches
@@ -18,9 +16,10 @@ namespace CreateLocalBranches
         {
         }
 
-        public void Execute(GitUIBaseEventArgs gitUiCommands)
+        public bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
-            new CreateLocalBranchesForm(gitUiCommands).ShowDialog();
+            new CreateLocalBranchesForm(gitUiCommands).ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+            return true;
         }
     }
 }
