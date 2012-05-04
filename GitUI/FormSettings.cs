@@ -17,9 +17,181 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormSettings : GitExtensionsForm
+    public sealed partial class FormSettings : GitExtensionsForm
     {
         private readonly TranslationString _homeIsSetToString = new TranslationString("HOME is set to:");
+        private readonly TranslationString __diffToolSuggestCaption = new TranslationString("Suggest difftool cmd");
+        private readonly TranslationString __mergeToolSuggestCaption = new TranslationString("Suggest mergetool cmd");
+
+        private readonly TranslationString _loadingSettingsFailed =
+            new TranslationString("Could not load settings.");
+
+        private readonly TranslationString _cantFindGitMessage =
+            new TranslationString("The command to run git is not configured correct." + Environment.NewLine +
+                "You need to set the correct path to be able to use GitExtensions." + Environment.NewLine +
+                Environment.NewLine + "Do you want to set the correct command now?");
+
+        private readonly TranslationString _cantFindGitMessageCaption =
+            new TranslationString("Incorrect path");
+
+        private static readonly TranslationString _cantReadRegistry =
+            new TranslationString("GitExtensions has insufficient permissions to check the registry.");
+
+        private static readonly TranslationString _cantReadRegistryAddEntryManually =
+            new TranslationString("GitExtensions has insufficient permissions to modify the registry." +
+                                Environment.NewLine + "Please add this key to the registry manually." +
+                                Environment.NewLine + "Path:  {0}\\{1}" + Environment.NewLine +
+                                "Value:  {2} = {3}");
+
+        private readonly TranslationString _cantRegisterShellExtension =
+            new TranslationString("Could not register the shell extension because '{0}' could not be found.");
+
+        private readonly TranslationString _noDiffToolConfigured =
+            new TranslationString("There is no difftool configured. Do you want to configure kdiff3 as your difftool?" +
+                Environment.NewLine + "Select no if you want to configure a different difftool yourself.");
+
+        private readonly TranslationString _noDiffToolConfiguredCaption =
+            new TranslationString("Difftool");
+
+        private readonly TranslationString _kdiff3NotFoundAuto =
+            new TranslationString("Path to kdiff3 could not be found automatically." + Environment.NewLine +
+                "Please make sure KDiff3 is installed or set path manually.");
+
+        private readonly TranslationString _noMergeToolConfigured =
+            new TranslationString("There is no mergetool configured. Do you want to configure kdiff3 as your mergetool?" +
+                Environment.NewLine + "Select no if you want to configure a different mergetool yourself.");
+
+        private readonly TranslationString _noMergeToolConfiguredCaption =
+            new TranslationString("Mergetool");
+
+        private readonly TranslationString _solveGitCommandFailed =
+            new TranslationString("The command to run git could not be determined automatically." + Environment.NewLine +
+                "Please make sure git (msysgit or cygwin) is installed or set the correct command manually.");
+
+        private readonly TranslationString _solveGitCommandFailedCaption =
+            new TranslationString("Locate git");
+
+        private readonly TranslationString _gitCanBeRun =
+            new TranslationString("Git can be run using: {0}");
+
+        private readonly TranslationString _gitCanBeRunCaption =
+            new TranslationString("Locate git");
+
+        private readonly TranslationString _linuxToolsShNotFound =
+            new TranslationString("The path to linux tools (sh) could not be found automatically." + Environment.NewLine +
+                "Please make sure there are linux tools installed (through msysgit or cygwin) or set the correct path manually.");
+
+        private readonly TranslationString _linuxToolsShNotFoundCaption =
+            new TranslationString("Locate linux tools");
+
+        private readonly TranslationString _shCanBeRun =
+            new TranslationString("Command sh can be run using: {0}sh");
+
+        private readonly TranslationString _shCanBeRunCaption =
+            new TranslationString("Locate linux tools");
+
+        private static readonly TranslationString _selectFile =
+            new TranslationString("Select file");
+
+        private readonly TranslationString _puttyFoundAuto =
+            new TranslationString("All paths needed for PuTTY could be automatically found and are set.");
+
+        private readonly TranslationString _puttyFoundAutoCaption =
+            new TranslationString("PuTTY");
+
+        private readonly TranslationString _noDictFilesFound =
+            new TranslationString("No dictionary files found in: {0}");
+
+        private readonly TranslationString _noLanguageConfigured =
+            new TranslationString("There is no language configured for Git Extensions.");
+
+        private readonly TranslationString _languageConfigured =
+            new TranslationString("The configured language is {0}.");
+
+        private readonly TranslationString _plinkputtyGenpageantNotFound =
+            new TranslationString("PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.");
+
+        private readonly TranslationString _puttyConfigured =
+            new TranslationString("SSH client PuTTY is configured properly.");
+
+        private readonly TranslationString _opensshUsed =
+            new TranslationString("Default SSH client, OpenSSH, will be used. (commandline window will appear on pull, push and clone operations)");
+
+        private readonly TranslationString _unknownSshClient =
+            new TranslationString("Unknown SSH client configured: {0}.");
+
+        private readonly TranslationString _linuxToolsSshNotFound =
+            new TranslationString("Linux tools (sh) not found. To solve this problem you can set the correct path in settings.");
+
+        private readonly TranslationString _linuxToolsSshFound =
+            new TranslationString("Linux tools (sh) found on your computer.");
+
+        private readonly TranslationString _gitNotFound =
+            new TranslationString("Git not found. To solve this problem you can set the correct path in settings.");
+
+        private readonly TranslationString _wrongGitVersion =
+            new TranslationString("Git found but version {0} is not supported. Upgrage to version {1} or later");
+
+        private readonly TranslationString _gitVersionFound =
+            new TranslationString("Git {0} is found on your computer.");
+
+        private readonly TranslationString _adviceDiffToolConfiguration =
+            new TranslationString("You should configure a diff tool to show file diff in external program (kdiff3 for example).");
+
+        private readonly TranslationString _kdiffAsDiffConfiguredButNotFound =
+            new TranslationString("KDiff3 is configured as difftool, but the path to kdiff.exe is not configured.");
+
+        private readonly TranslationString _kdiffAsDiffConfigured =
+            new TranslationString("KDiff3 is configured as difftool.");
+
+        private readonly TranslationString _toolSuggestPath =
+            new TranslationString("Please enter the path to {0} and press suggest.");
+
+        private readonly TranslationString _diffToolXConfigured =
+            new TranslationString("There is a difftool configured: {0}");
+
+        private readonly TranslationString _configureMergeTool =
+            new TranslationString("You need to configure merge tool in order to solve mergeconflicts (kdiff3 for example).");
+
+        private readonly TranslationString _kdiffAsMergeConfiguredButNotFound =
+            new TranslationString("KDiff3 is configured as mergetool, but the path to kdiff.exe is not configured.");
+
+        private readonly TranslationString _kdiffAsMergeConfigured =
+            new TranslationString("KDiff3 is configured as mergetool.");
+
+        private readonly TranslationString _mergeToolXConfiguredNeedsCmd =
+            new TranslationString("{0} is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.");
+
+        private readonly TranslationString _customMergeToolXConfigured =
+            new TranslationString("There is a custom mergetool configured: {0}");
+
+        private readonly TranslationString _mergeToolXConfigured =
+            new TranslationString("There is a custom mergetool configured.");
+
+        private readonly TranslationString _noEmailSet =
+            new TranslationString("You need to configure a username and an email address.");
+
+        private readonly TranslationString _emailSet =
+            new TranslationString("A username and an email address are configured.");
+
+        private readonly TranslationString _shellExtNoInstalled =
+            new TranslationString("Shell extensions are not installed. Run the installer to install the shell extensions.");
+
+        private readonly TranslationString _shellExtNeedsToBeRegistered =
+            new TranslationString("{0} needs to be registered in order to use the shell extensions.");
+
+        private readonly TranslationString _shellExtRegistered =
+            new TranslationString("Shell extensions registered properly.");
+
+        private readonly TranslationString _registryKeyGitExtensionsMissing =
+            new TranslationString("Registry entry missing [Software\\GitExtensions\\GitExtensions\\InstallDir].");
+
+        private readonly TranslationString _registryKeyGitExtensionsFaulty =
+            new TranslationString("Invalid installation directory stored in [Software\\GitExtensions\\GitExtensions\\InstallDir].");
+
+        private readonly TranslationString _registryKeyGitExtensionsCorrect =
+            new TranslationString("GitExtensions is properly registered.");
+
 
         private Font diffFont;
         private const string GitExtensionsShellExName = "GitExtensionsShellEx32.dll";
@@ -30,35 +202,16 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
-            InitializeCheckboxLabels();
-
             noImageService.Items.AddRange(GravatarService.DynamicServices.Cast<object>().ToArray());
 
-            _NO_TRANSLATE_Encoding.Items.AddRange(new Object[]
-                                                      {
-                                                          "Default (" + Encoding.Default.HeaderName + ")", "ASCII",
-                                                          "Unicode", "UTF7", "UTF8", "UTF32"
-                                                      });
+            FillEncodings(Global_FilesEncoding);
+            FillEncodings(Global_AppEncoding);
+            FillEncodings(Local_FilesEncoding);
+            FillEncodings(Local_AppEncoding);
+            
             GlobalEditor.Items.AddRange(new Object[] { "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", "notepad++" });
 
             SetCurrentDiffFont(Settings.DiffFont);
-        }
-
-        private void InitializeCheckboxLabels()
-        {
-            label26.Tag = ShowCurrentChangesInRevisionGraph;
-            label52.Tag = ShowStashCountInBrowseWindow;
-            label34.Tag = CloseProcessDialog;
-            label35.Tag = ShowGitCommandLine;
-            label38.Tag = UseFastChecks;
-            label39.Tag = ShowRelativeDate;
-            label40.Tag = FollowRenamesInFileHistory;
-            showGitStatusInToolbarLabel.Tag = ShowGitStatusInToolbar;
-            showErrorsWhenStagingFilesLabel.Tag = showErrorsWhenStagingFiles;
-            labelShowCurrentBranchInVisualStudio.Tag = showCurrentBranchInVisualStudio;
-            label37.Tag = usePatienceDiffAlgorithm;
-            label58.Tag = focusControlOnHover;
-            warnBeforeCheckoutLabel.Tag = warnBeforeCheckoutChx;
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -74,8 +227,8 @@ namespace GitUI
 
             return SolveGitCommand() &&
                    SolveLinuxToolsDir() &&
-                   SolveKDiff() &&
-                   SolveKDiffTool2() &&
+                   SolveMergeToolForKDiff() &&
+                   SolveDiffToolForKDiff() &&
                    SolveGitExtensionsDir() &&
                    SolveEditor();
         }
@@ -130,6 +283,28 @@ namespace GitUI
             configFile.SetValue("diff.tool", diffTool);
         }
 
+        private void EncodingToCombo(Encoding encoding, ComboBox combo)
+        {
+            if (encoding == null)
+                combo.Text = "";
+            else
+                combo.Text = encoding.EncodingName;           
+        }
+
+        private Encoding ComboToEncoding(ComboBox combo)
+        {
+            if (combo.SelectedItem == null)
+                return null;
+            else
+                return combo.SelectedItem as Encoding;
+        }
+
+        private void FillEncodings(ComboBox combo)
+        {
+            combo.Items.AddRange(Settings.availableEncodings.Values.ToArray());
+            combo.DisplayMember = "EncodingName";
+        }
+
         public void LoadSettings()
         {
             try
@@ -138,30 +313,21 @@ namespace GitUI
                 homeIsSetToLabel.Text = string.Concat(_homeIsSetToString.Text, " ", GitCommandHelpers.GetHomeDir());
 
                 scriptEvent.DataSource = Enum.GetValues(typeof(ScriptEvent));
+                EncodingToCombo(Settings.GetFilesEncoding(false), Global_FilesEncoding);
+                EncodingToCombo(Settings.GetAppEncoding(false), Global_AppEncoding);
+                EncodingToCombo(Settings.GetFilesEncoding(true), Local_FilesEncoding);
+                EncodingToCombo(Settings.GetAppEncoding(true), Local_AppEncoding);
 
-                if (Settings.Encoding.GetType() == typeof(ASCIIEncoding))
-                    _NO_TRANSLATE_Encoding.Text = "ASCII";
-                else if (Settings.Encoding.GetType() == typeof(UnicodeEncoding))
-                    _NO_TRANSLATE_Encoding.Text = "Unicode";
-                else if (Settings.Encoding.GetType() == typeof(UTF7Encoding))
-                    _NO_TRANSLATE_Encoding.Text = "UTF7";
-                else if (Settings.Encoding.GetType() == typeof(UTF8Encoding))
-                    _NO_TRANSLATE_Encoding.Text = "UTF8";
-                else if (Settings.Encoding.GetType() == typeof(UTF32Encoding))
-                    _NO_TRANSLATE_Encoding.Text = "UTF32";
-                else if (Settings.Encoding == Encoding.Default)
-                    _NO_TRANSLATE_Encoding.Text = "Default (" + Encoding.Default.HeaderName + ")";
+                chkWarnBeforeCheckout.Checked = Settings.DirtyDirWarnBeforeCheckoutBranch;
+                chkStartWithRecentWorkingDir.Checked = Settings.StartWithRecentWorkingDir;
 
-                focusControlOnHover.Checked = Settings.FocusControlOnHover;
-                warnBeforeCheckoutChx.Checked = Settings.DirtyDirWarnBeforeCheckoutBranch;
+                chkUsePatienceDiffAlgorithm.Checked = Settings.UsePatienceDiffAlgorithm;
 
-                usePatienceDiffAlgorithm.Checked = Settings.UsePatienceDiffAlgorithm;
-
-                showCurrentBranchInVisualStudio.Checked = Settings.ShowCurrentBranchInVisualStudio;
+                chkShowCurrentBranchInVisualStudio.Checked = Settings.ShowCurrentBranchInVisualStudio;
 
                 RevisionGridQuickSearchTimeout.Value = Settings.RevisionGridQuickSearchTimeout;
 
-                FollowRenamesInFileHistory.Checked = Settings.FollowRenamesInFileHistory;
+                chkFollowRenamesInFileHistory.Checked = Settings.FollowRenamesInFileHistory;
 
                 _NO_TRANSLATE_DaysToCacheImages.Value = Settings.AuthorImageCacheDays;
 
@@ -169,7 +335,8 @@ namespace GitUI
                 ShowAuthorGravatar.Checked = Settings.ShowAuthorGravatar;
                 noImageService.Text = Settings.GravatarFallbackService;
 
-                showErrorsWhenStagingFiles.Checked = Settings.ShowErrorsWhenStagingFiles;
+                chkShowErrorsWhenStagingFiles.Checked = Settings.ShowErrorsWhenStagingFiles;
+                chkStashUntrackedFiles.Checked = Settings.IncludeUntrackedFilesInAutoStash;
 
                 Language.Items.Clear();
                 Language.Items.Add("English");
@@ -180,12 +347,12 @@ namespace GitUI
                 MulticolorBranches_CheckedChanged(null, null);
                 DrawNonRelativesGray.Checked = Settings.RevisionGraphDrawNonRelativesGray;
                 DrawNonRelativesTextGray.Checked = Settings.RevisionGraphDrawNonRelativesTextGray;
-                ShowCurrentChangesInRevisionGraph.Checked = Settings.RevisionGraphShowWorkingDirChanges;
-                ShowStashCountInBrowseWindow.Checked = Settings.ShowStashCount;
+                chkShowCurrentChangesInRevisionGraph.Checked = Settings.RevisionGraphShowWorkingDirChanges;
+                chkShowStashCountInBrowseWindow.Checked = Settings.ShowStashCount;
                 BranchBorders.Checked = Settings.BranchBorders;
                 StripedBanchChange.Checked = Settings.StripedBranchChange;
 
-                ShowGitStatusInToolbar.Checked = Settings.ShowGitStatusInBrowseToolbar;
+                chkShowGitStatusInToolbar.Checked = Settings.ShowGitStatusInBrowseToolbar;
 
                 _NO_TRANSLATE_truncatePathMethod.Text = Settings.TruncatePathMethod;
                 _NO_TRANSLATE_ColorGraphLabel.BackColor = Settings.GraphColor;
@@ -246,7 +413,7 @@ namespace GitUI
                 UserName.Text = localConfig.GetValue("user.name");
                 UserEmail.Text = localConfig.GetValue("user.email");
                 Editor.Text = localConfig.GetValue("core.editor");
-                MergeTool.Text = localConfig.GetValue("merge.tool");
+                LocalMergeTool.Text = localConfig.GetValue("merge.tool");
 
                 Dictionary.Text = Settings.Dictionary;
 
@@ -273,13 +440,14 @@ namespace GitUI
                 if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
                     MergeToolCmd.Text = globalConfig.GetValue("mergetool." + GlobalMergeTool.Text + ".cmd");
 
-                DefaultIcon.Checked = Settings.IconColor.Equals("default", StringComparison.CurrentCultureIgnoreCase);
-                BlueIcon.Checked = Settings.IconColor.Equals("blue", StringComparison.CurrentCultureIgnoreCase);
-                GreenIcon.Checked = Settings.IconColor.Equals("green", StringComparison.CurrentCultureIgnoreCase);
-                PurpleIcon.Checked = Settings.IconColor.Equals("purple", StringComparison.CurrentCultureIgnoreCase);
-                RedIcon.Checked = Settings.IconColor.Equals("red", StringComparison.CurrentCultureIgnoreCase);
-                YellowIcon.Checked = Settings.IconColor.Equals("yellow", StringComparison.CurrentCultureIgnoreCase);
-                RandomIcon.Checked = Settings.IconColor.Equals("random", StringComparison.CurrentCultureIgnoreCase);
+                string iconColor = Settings.IconColor.ToLower();
+                DefaultIcon.Checked = iconColor == "default";
+                BlueIcon.Checked    = iconColor == "blue";
+                GreenIcon.Checked   = iconColor == "green";
+                PurpleIcon.Checked  = iconColor == "purple";
+                RedIcon.Checked     = iconColor == "red";
+                YellowIcon.Checked  = iconColor == "yellow";
+                RandomIcon.Checked  = iconColor == "random";
 
                 IconStyle.Text = Settings.IconStyle;
 
@@ -323,11 +491,11 @@ namespace GitUI
                 PageantPath.Text = Settings.Pageant;
                 AutostartPageant.Checked = Settings.AutoStartPageant;
 
-                CloseProcessDialog.Checked = Settings.CloseProcessDialog;
-                ShowGitCommandLine.Checked = Settings.ShowGitCommandLine;
+                chkCloseProcessDialog.Checked = Settings.CloseProcessDialog;
+                chkShowGitCommandLine.Checked = Settings.ShowGitCommandLine;
 
-                UseFastChecks.Checked = Settings.UseFastChecks;
-                ShowRelativeDate.Checked = Settings.RelativeDate;
+                chkUseFastChecks.Checked = Settings.UseFastChecks;
+                chkShowRelativeDate.Checked = Settings.RelativeDate;
 
                 if (string.IsNullOrEmpty(GitCommandHelpers.GetSsh()))
                     OpenSSH.Checked = true;
@@ -344,7 +512,7 @@ namespace GitUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, "Could not load settings.\n\n" + ex);
+                MessageBox.Show(this, _loadingSettingsFailed.Text + Environment.NewLine + ex);
 
                 // Bail out before the user saves the incompletely loaded settings
                 // and has their day ruined.
@@ -362,26 +530,23 @@ namespace GitUI
             SaveScripts();
 
             if (Settings.RunningOnWindows())
-            {
-
                 FormFixHome.CheckHomePath();
-            }
 
             GitCommandHelpers.SetEnvironmentVariable(true);
 
-            Settings.FocusControlOnHover = focusControlOnHover.Checked;
+            Settings.DirtyDirWarnBeforeCheckoutBranch = chkWarnBeforeCheckout.Checked;
+            Settings.StartWithRecentWorkingDir = chkStartWithRecentWorkingDir.Checked;
 
-            Settings.DirtyDirWarnBeforeCheckoutBranch = warnBeforeCheckoutChx.Checked;
-
-            Settings.UsePatienceDiffAlgorithm = usePatienceDiffAlgorithm.Checked;
+            Settings.UsePatienceDiffAlgorithm = chkUsePatienceDiffAlgorithm.Checked;
 
             Settings.TruncatePathMethod = _NO_TRANSLATE_truncatePathMethod.Text;
 
-            Settings.ShowCurrentBranchInVisualStudio = showCurrentBranchInVisualStudio.Checked;
+            Settings.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.Checked;
 
-            Settings.ShowErrorsWhenStagingFiles = showErrorsWhenStagingFiles.Checked;
+            Settings.ShowErrorsWhenStagingFiles = chkShowErrorsWhenStagingFiles.Checked;
+            Settings.IncludeUntrackedFilesInAutoStash = chkStashUntrackedFiles.Checked;
 
-            Settings.FollowRenamesInFileHistory = FollowRenamesInFileHistory.Checked;
+            Settings.FollowRenamesInFileHistory = chkFollowRenamesInFileHistory.Checked;
 
             if ((int)_NO_TRANSLATE_authorImageSize.Value != Settings.AuthorImageSize)
             {
@@ -392,7 +557,7 @@ namespace GitUI
             Settings.Translation = Language.Text;
             Strings.Reinit();
 
-            Settings.ShowGitStatusInBrowseToolbar = ShowGitStatusInToolbar.Checked;
+            Settings.ShowGitStatusInBrowseToolbar = chkShowGitStatusInToolbar.Checked;
 
             Settings.AuthorImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
 
@@ -404,11 +569,11 @@ namespace GitUI
             Settings.ShowAuthorGravatar = ShowAuthorGravatar.Checked;
             Settings.GravatarFallbackService = noImageService.Text;
 
-            Settings.CloseProcessDialog = CloseProcessDialog.Checked;
-            Settings.ShowGitCommandLine = ShowGitCommandLine.Checked;
+            Settings.CloseProcessDialog = chkCloseProcessDialog.Checked;
+            Settings.ShowGitCommandLine = chkShowGitCommandLine.Checked;
 
-            Settings.UseFastChecks = UseFastChecks.Checked;
-            Settings.RelativeDate = ShowRelativeDate.Checked;
+            Settings.UseFastChecks = chkUseFastChecks.Checked;
+            Settings.RelativeDate = chkShowRelativeDate.Checked;
 
             Settings.Dictionary = Dictionary.Text;
 
@@ -418,30 +583,16 @@ namespace GitUI
             Settings.Puttygen = PuttygenPath.Text;
             Settings.Pageant = PageantPath.Text;
             Settings.AutoStartPageant = AutostartPageant.Checked;
-
-            if (string.IsNullOrEmpty(_NO_TRANSLATE_Encoding.Text) ||
-                _NO_TRANSLATE_Encoding.Text.StartsWith("Default", StringComparison.CurrentCultureIgnoreCase))
-                Settings.Encoding = Encoding.Default;
-            else if (_NO_TRANSLATE_Encoding.Text.Equals("ASCII", StringComparison.CurrentCultureIgnoreCase))
-                Settings.Encoding = new ASCIIEncoding();
-            else if (_NO_TRANSLATE_Encoding.Text.Equals("Unicode", StringComparison.CurrentCultureIgnoreCase))
-                Settings.Encoding = new UnicodeEncoding();
-            else if (_NO_TRANSLATE_Encoding.Text.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
-                Settings.Encoding = new UTF7Encoding();
-            else if (_NO_TRANSLATE_Encoding.Text.Equals("UTF8", StringComparison.CurrentCultureIgnoreCase))
-                Settings.Encoding = new UTF8Encoding(false);
-            else if (_NO_TRANSLATE_Encoding.Text.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
-                Settings.Encoding = new UTF32Encoding(true, false);
-            else
-                Settings.Encoding = Encoding.Default;
-
+            Settings.SetFilesEncoding(false, ComboToEncoding(Global_FilesEncoding));
+            Settings.SetAppEncoding(false, ComboToEncoding(Global_AppEncoding));
+            Settings.SetFilesEncoding(true, ComboToEncoding(Local_FilesEncoding));
+            Settings.SetAppEncoding(true, ComboToEncoding(Local_AppEncoding));
             Settings.RevisionGridQuickSearchTimeout = (int)RevisionGridQuickSearchTimeout.Value;
-
             Settings.MulticolorBranches = MulticolorBranches.Checked;
             Settings.RevisionGraphDrawNonRelativesGray = DrawNonRelativesGray.Checked;
             Settings.RevisionGraphDrawNonRelativesTextGray = DrawNonRelativesTextGray.Checked;
-            Settings.RevisionGraphShowWorkingDirChanges = ShowCurrentChangesInRevisionGraph.Checked;
-            Settings.ShowStashCount = ShowStashCountInBrowseWindow.Checked;
+            Settings.RevisionGraphShowWorkingDirChanges = chkShowCurrentChangesInRevisionGraph.Checked;
+            Settings.ShowStashCount = chkShowStashCountInBrowseWindow.Checked;
             Settings.BranchBorders = BranchBorders.Checked;
             Settings.StripedBranchChange = StripedBanchChange.Checked;
             Settings.GraphColor = _NO_TRANSLATE_ColorGraphLabel.BackColor;
@@ -466,11 +617,7 @@ namespace GitUI
 
             if (!CanFindGitCmd())
             {
-                if (
-                    MessageBox.Show(this, 
-                        "The command to run git is not configured correct." + Environment.NewLine +
-                        "You need to set the correct path to be able to use GitExtensions." + Environment.NewLine +
-                        Environment.NewLine + "Do you want to set the correct command now?", "Incorrect path",
+                if (MessageBox.Show(this, _cantFindGitMessage.Text, _cantFindGitMessageCaption.Text,
                         MessageBoxButtons.YesNo) == DialogResult.Yes)
                     return false;
             }
@@ -522,7 +669,7 @@ namespace GitUI
             if (string.IsNullOrEmpty(UserEmail.Text) || !UserEmail.Text.Equals(localConfig.GetValue("user.email")))
                 localConfig.SetValue("user.email", UserEmail.Text);
             localConfig.SetValue("core.editor", Editor.Text);
-            localConfig.SetValue("merge.tool", MergeTool.Text);
+            localConfig.SetValue("merge.tool", LocalMergeTool.Text);
 
 
             if (KeepMergeBackup.CheckState == CheckState.Checked)
@@ -568,6 +715,22 @@ namespace GitUI
             if (globalAutoCrlfInput.Checked) globalConfig.SetValue("core.autocrlf", "input");
             if (globalAutoCrlfTrue.Checked) globalConfig.SetValue("core.autocrlf", "true");
 
+            Action<Encoding, bool, string> setEncoding = delegate(Encoding e, bool local, string name) 
+            {
+                string value = e == null ? "" : e.HeaderName;
+                if (local)
+                    localConfig.SetValue(name, value);
+                else
+                    globalConfig.SetValue(name, value);
+            };
+            setEncoding(Settings.GetLogOutputEncoding(false), false, "i18n.logoutputencoding");
+            setEncoding(Settings.GetLogOutputEncoding(true), true, "i18n.logoutputencoding");
+            setEncoding(Settings.GetCommitEncoding(false), false, "i18n.commitEncoding");
+            setEncoding(Settings.GetCommitEncoding(true), true, "i18n.commitEncoding");
+            setEncoding(Settings.GetFilesEncoding(false), false, "i18n.filesEncoding");
+            setEncoding(Settings.GetFilesEncoding(true), true, "i18n.filesEncoding");            
+
+
             globalConfig.Save();
 
             //Only save local settings when we are inside a valid working dir
@@ -591,12 +754,12 @@ namespace GitUI
             }
             catch (UnauthorizedAccessException)
             {
-                MessageBox.Show("GitExtensions has insufficient permissions to check the registry.");
+                MessageBox.Show(_cantReadRegistry.Text);
             }
             return value ?? string.Empty;
         }
 
-        protected static void SetRegistryValue(RegistryKey root, string subkey, string key, string value)
+        private static void SetRegistryValue(RegistryKey root, string subkey, string key, string value)
         {
             try
             {
@@ -611,10 +774,7 @@ namespace GitUI
             }
             catch (UnauthorizedAccessException)
             {
-                MessageBox.Show("GitExtensions has insufficient permissions to modify the registry." +
-                                Environment.NewLine + "Please add this key to the registry manually." +
-                                Environment.NewLine + "Path:   " + root + "\\" + subkey + Environment.NewLine +
-                                "Value:  " + key + " = " + value);
+                MessageBox.Show(String.Format(_cantReadRegistryAddEntryManually.Text, root, subkey, key, value));
             }
         }
 
@@ -687,8 +847,7 @@ namespace GitUI
             }
             else
             {
-                MessageBox.Show(this, string.Format(
-                    "Could not register the shell extension because '{0}' could not be found.", GitExtensionsShellExName));
+                MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, GitExtensionsShellExName));
             }
 
             CheckSettings();
@@ -696,100 +855,23 @@ namespace GitUI
 
         private void UserNameSet_Click(object sender, EventArgs e)
         {
-            tabControl1.SelectTab("GlobalSettingsPage");
+            tabControl1.SelectTab("tpGlobalSettings");
         }
 
-        private void DiffTool2_Click(object sender, EventArgs e)
+        private static string GetMergeTool()
         {
-            if (string.IsNullOrEmpty(GetGlobalDiffToolFromConfig()))
-            {
-                if (
-                    MessageBox.Show(this, 
-                        "There is no difftool configured. Do you want to configure kdiff3 as your difftool?" +
-                        Environment.NewLine + "Select no if you want to configure a different difftool yourself.",
-                        "Mergetool", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    SolveKDiffTool2();
-                    GlobalDiffTool.Text = "kdiff3";
-                }
-                else
-                {
-                    tabControl1.SelectTab("GlobalSettingsPage");
-                    return;
-                }
-            }
-
-            if (GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
-            {
-                SolveKDiffTool2Path();
-            }
-
-            if (GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
-                string.IsNullOrEmpty(Settings.Module.GetGlobalSetting("difftool.kdiff3.path")))
-            {
-                MessageBox.Show(this, "Path to kdiff3 could not be found automatically." + Environment.NewLine +
-                                "Please make sure KDiff3 is installed or set path manually.");
-                tabControl1.SelectTab("GlobalSettingsPage");
-                return;
-            }
-
-            Rescan_Click(null, null);
+            return Settings.Module.GetGlobalSetting("merge.tool");
         }
 
-        private void DiffTool_Click(object sender, EventArgs e)
+        private static bool IsMergeTool(string toolName)
         {
-            if (string.IsNullOrEmpty(Settings.Module.GetGlobalSetting("merge.tool")))
-            {
-                if (
-                    MessageBox.Show(this, 
-                        "There is no mergetool configured. Do you want to configure kdiff3 as your mergetool?" +
-                        Environment.NewLine + "Select no if you want to configure a different mergetool yourself.",
-                        "Mergetool", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    SolveKDiff();
-                    GlobalMergeTool.Text = "kdiff3";
-                }
-                else
-                {
-                    tabControl1.SelectTab("GlobalSettingsPage");
-                    return;
-                }
-            }
-
-            if (Settings.Module.GetGlobalSetting("merge.tool").Equals("kdiff3",
-                                                                        StringComparison.CurrentCultureIgnoreCase))
-            {
-                SolveKDiffPath();
-            }
-            else if (
-                Settings.Module.GetGlobalSetting("merge.tool").Equals("p4merge",
-                                                                        StringComparison.CurrentCultureIgnoreCase) ||
-                Settings.Module.GetGlobalSetting("merge.tool").Equals("TortoiseMerge",
-                                                                        StringComparison.CurrentCultureIgnoreCase))
-            {
-                AutoConfigMergeToolcmd();
-                Settings.Module.SetGlobalSetting(
-                    "mergetool." + Settings.Module.GetGlobalSetting("merge.tool") + ".cmd", MergeToolCmd.Text);
-            }
-
-
-            if (
-                Settings.Module.GetGlobalSetting("merge.tool").Equals("kdiff3",
-                                                                        StringComparison.CurrentCultureIgnoreCase) &&
-                string.IsNullOrEmpty(Settings.Module.GetGlobalSetting("mergetool.kdiff3.path")))
-            {
-                MessageBox.Show(this, "Path to kdiff3 could not be found automatically." + Environment.NewLine +
-                                "Please make sure KDiff3 is installed or set path manually.");
-                tabControl1.SelectTab("GlobalSettingsPage");
-                return;
-            }
-
-            Rescan_Click(null, null);
+            return GetMergeTool().Equals(toolName,
+                StringComparison.CurrentCultureIgnoreCase);
         }
 
-        public static bool SolveKDiff()
+        public static bool SolveMergeToolForKDiff()
         {
-            string mergeTool = Settings.Module.GetGlobalSetting("merge.tool");
+            string mergeTool = GetMergeTool();
             if (string.IsNullOrEmpty(mergeTool))
             {
                 mergeTool = "kdiff3";
@@ -797,12 +879,12 @@ namespace GitUI
             }
 
             if (mergeTool.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
-                return SolveKDiffPath();
+                return SolveMergeToolPathForKDiff();
 
             return true;
         }
 
-        public static bool SolveKDiffTool2()
+        public static bool SolveDiffToolForKDiff()
         {
             string diffTool = GetGlobalDiffToolFromConfig();
             if (string.IsNullOrEmpty(diffTool))
@@ -814,104 +896,241 @@ namespace GitUI
             }
 
             if (diffTool.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
-                return SolveKDiffTool2Path();
+                return SolveDiffToolPathForKDiff();
 
             return true;
         }
 
-        public static bool SolveKDiffPath()
+        public static bool SolveDiffToolPathForKDiff()
         {
-            string kdiff3path = Settings.Module.GetGlobalSetting("mergetool.kdiff3.path");
-            
-            if (Settings.RunningOnUnix())
-            {
-                if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
-                {
-                    // Maybe command -v is better, but didn't work
-                    kdiff3path = Settings.Module.RunCmd("which","kdiff3").Replace("\n",string.Empty);
-                    if (string.IsNullOrEmpty(kdiff3path))
-                        return false;
-                }
-            }
-            else if (Settings.RunningOnWindows())
-            {
-                if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
-                {
-                    kdiff3path = @"c:\Program Files\KDiff3\kdiff3.exe";
-                    if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
-                    {
-                        kdiff3path = @"c:\Program Files (x86)\KDiff3\kdiff3.exe";
-                        if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
-                        {
-                            kdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "") + "\\kdiff3.exe";
-                            if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
-                                return false;
-                        }
-                    }
-                }
-            }
-            else
+            string kdiff3path = MergeToolsHelper.FindPathForKDiff(Settings.Module.GetGlobalSetting("difftool.kdiff3.path"));
+            if (string.IsNullOrEmpty(kdiff3path))
                 return false;
-            
-            Settings.Module.SetGlobalSetting("mergetool.kdiff3.path", kdiff3path);
 
-            return true;
-        }
-        
-        
-        public static bool SolveKDiffTool2Path()
-        {
-            string kdiff3path = Settings.Module.GetGlobalSetting("difftool.kdiff3.path");
-            
-            if (Settings.RunningOnUnix())
-            {
-                if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
-                {
-                    // Maybe command -v is better, but didn't work
-                    kdiff3path = Settings.Module.RunCmd("which","kdiff3").Replace("\n",string.Empty);
-                    if (string.IsNullOrEmpty(kdiff3path))
-                        return false;
-                }
-            }
-            else if (Settings.RunningOnWindows())
-            {
-                if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
-                {
-                    kdiff3path = @"c:\Program Files\KDiff3\kdiff3.exe";
-                    if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
-                    {
-                        kdiff3path = @"c:\Program Files (x86)\KDiff3\kdiff3.exe";
-                        if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
-                        {
-                            kdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "") + "\\kdiff3.exe";
-                            if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
-                                return false;
-                        }
-                    }
-                }
-            }
-            else
-                return false;
-            
             Settings.Module.SetGlobalSetting("difftool.kdiff3.path", kdiff3path);
-
             return true;
+        }
+
+        public static bool SolveMergeToolPathForKDiff()
+        {
+            string kdiff3path = MergeToolsHelper.FindPathForKDiff(Settings.Module.GetGlobalSetting("mergetool.kdiff3.path"));
+            if (string.IsNullOrEmpty(kdiff3path))
+                return false;
+
+            Settings.Module.SetGlobalSetting("mergetool.kdiff3.path", kdiff3path);
+            return true;
+        }
+
+        private void ResolveDiffToolPath()
+        {
+            string kdiff3path = MergeToolsHelper.FindPathForKDiff(Settings.Module.GetGlobalSetting("difftool.kdiff3.path"));
+            if (string.IsNullOrEmpty(kdiff3path))
+                return;
+
+            kdiff3path = MergeToolsHelper.FindFileInFolders("kdiff3.exe", MergetoolPath.Text);
+            if (string.IsNullOrEmpty(kdiff3path))
+                return;
+
+            DifftoolPath.Text = kdiff3path;
+        }
+
+        private void DiffToolCmdSuggest_Click(object sender, EventArgs e)
+        {
+            if (!Settings.RunningOnWindows())
+                return;
+
+            string exeName;
+            string exeFile = MergeToolsHelper.Instance.FindDiffToolExeFile(GlobalDiffTool.Text, out exeName);
+            if (String.IsNullOrEmpty(exeFile))
+            {
+                DifftoolPath.Text = "";
+                DifftoolCmd.Text = "";
+                if (sender != null)
+                    MessageBox.Show(this, String.Format(_toolSuggestPath.Text, exeName),
+                        __diffToolSuggestCaption.Text);
+                return;
+            }
+            DifftoolPath.Text = exeFile;
+            DifftoolCmd.Text = MergeToolsHelper.Instance.DiffToolCmdSuggest(GlobalDiffTool.Text, exeFile);
+        }
+
+        private void MergeToolCmdSuggest_Click(object sender, EventArgs e)
+        {
+            if (!Settings.RunningOnWindows())
+                return;
+
+            string exeName;
+            string exeFile = MergeToolsHelper.Instance.FindMergeToolExeFile(GlobalMergeTool.Text, out exeName);
+            if (String.IsNullOrEmpty(exeFile))
+            {
+                MergetoolPath.Text = "";
+                MergeToolCmd.Text = "";
+                if (sender != null)
+                    MessageBox.Show(this, String.Format(_toolSuggestPath.Text, exeName),
+                        __mergeToolSuggestCaption.Text);
+                return;
+            }
+            MergetoolPath.Text = exeFile;
+            MergeToolCmd.Text = MergeToolsHelper.Instance.MergeToolcmdSuggest(GlobalMergeTool.Text, exeFile);
+        }
+
+        private void AutoConfigMergeToolCmd(bool silent)
+        {
+            string exeName;
+            string exeFile = MergeToolsHelper.Instance.FindMergeToolExeFile(GlobalMergeTool.Text, out exeName);
+            if (String.IsNullOrEmpty(exeFile))
+            {
+                MergetoolPath.Text = "";
+                MergeToolCmd.Text = "";
+                if (!silent)
+                    MessageBox.Show(this, String.Format(_toolSuggestPath.Text, exeName),
+                        __mergeToolSuggestCaption.Text);
+                return;
+            }
+            MergetoolPath.Text = exeFile;
+            MergeToolCmd.Text = MergeToolsHelper.Instance.AutoConfigMergeToolCmd(GlobalMergeTool.Text, exeFile);
+        }
+
+        private void DiffToolFix_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(GetGlobalDiffToolFromConfig()))
+            {
+                if (MessageBox.Show(this, _noDiffToolConfigured.Text, _noDiffToolConfiguredCaption.Text, 
+                        MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    SolveDiffToolForKDiff();
+                    GlobalDiffTool.Text = "kdiff3";
+                }
+                else
+                {
+                    tabControl1.SelectTab("tpGlobalSettings");
+                    return;
+                }
+            }
+
+            if (GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
+            {
+                SolveDiffToolPathForKDiff();
+            }
+
+            if (GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
+                string.IsNullOrEmpty(Settings.Module.GetGlobalSetting("difftool.kdiff3.path")))
+            {
+                MessageBox.Show(this, _kdiff3NotFoundAuto.Text);
+                tabControl1.SelectTab("tpGlobalSettings");
+                return;
+            }
+
+            Rescan_Click(null, null);
+        }
+
+        private void MergeToolFix_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(GetMergeTool()))
+            {
+                if (
+                    MessageBox.Show(this, _noMergeToolConfigured.Text,
+                        _noMergeToolConfiguredCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    SolveMergeToolForKDiff();
+                    GlobalMergeTool.Text = "kdiff3";
+                }
+                else
+                {
+                    tabControl1.SelectTab("tpGlobalSettings");
+                    return;
+                }
+            }
+
+            if (IsMergeTool("kdiff3"))
+            {
+                SolveMergeToolPathForKDiff();
+            }
+            else if (IsMergeTool("p4merge") || IsMergeTool("TortoiseMerge"))
+            {
+                AutoConfigMergeToolCmd(true);
+
+                Settings.Module.SetGlobalSetting(
+                    "mergetool." + GetMergeTool() + ".cmd", MergeToolCmd.Text);
+            }
+            
+            if (IsMergeTool("kdiff3") &&
+                string.IsNullOrEmpty(Settings.Module.GetGlobalSetting("mergetool.kdiff3.path")))
+            {
+                MessageBox.Show(this, _kdiff3NotFoundAuto.Text);
+                tabControl1.SelectTab("tpGlobalSettings");
+                return;
+            }
+
+            Rescan_Click(null, null);
+        }
+
+        private void BrowseMergeTool_Click(object sender, EventArgs e)
+        {
+            string mergeTool = GlobalMergeTool.Text.ToLowerInvariant();
+            if (mergeTool == "kdiff3")
+                MergetoolPath.Text = SelectFile(".", "kdiff3.exe (kdiff3.exe)|kdiff3.exe", MergetoolPath.Text);
+            else if (mergeTool == "p4merge")
+                MergetoolPath.Text = SelectFile(".", "p4merge.exe (p4merge.exe)|p4merge.exe", MergetoolPath.Text);
+            else if (mergeTool == "tortoisemerge")
+                MergetoolPath.Text = SelectFile(".", "TortoiseMerge.exe (TortoiseMerge.exe)|TortoiseMerge.exe",
+                                                MergetoolPath.Text);
+            else
+                MergetoolPath.Text = SelectFile(".", "*.exe (*.exe)|*.exe", MergetoolPath.Text);
+        }
+
+
+        private void ExternalDiffTool_TextChanged(object sender, EventArgs e)
+        {
+            DifftoolPath.Text = Settings.Module.GetGlobalSetting("difftool." + GlobalDiffTool.Text.Trim() + ".path");
+            DifftoolCmd.Text = Settings.Module.GetGlobalSetting("difftool." + GlobalDiffTool.Text.Trim() + ".cmd");
+
+            if (GlobalDiffTool.Text.Trim().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
+                ResolveDiffToolPath();
+
+            DiffToolCmdSuggest_Click(null, null);
+        }
+
+        private void BrowseDiffTool_Click(object sender, EventArgs e)
+        {
+            if (GlobalDiffTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
+            {
+                DifftoolPath.Text = SelectFile(".", "kdiff3.exe (kdiff3.exe)|kdiff3.exe", DifftoolPath.Text);
+            }
+            else if (GlobalDiffTool.Text.Equals("p4merge", StringComparison.CurrentCultureIgnoreCase))
+                DifftoolPath.Text = SelectFile(".", "p4merge.exe (p4merge.exe)|p4merge.exe", DifftoolPath.Text);
+            else if (GlobalDiffTool.Text.Equals("tmerge", StringComparison.CurrentCultureIgnoreCase))
+                DifftoolPath.Text = SelectFile(".", "TortoiseMerge.exe (TortoiseMerge.exe)|TortoiseMerge.exe",
+                                               DifftoolPath.Text);
+            else
+                DifftoolPath.Text = SelectFile(".", "*.exe (*.exe)|*.exe", DifftoolPath.Text);
+        }
+
+        private void GlobalMergeTool_TextChanged(object sender, EventArgs e)
+        {
+            MergetoolPath.Text = Settings.Module.GetGlobalSetting("mergetool." + GlobalMergeTool.Text.Trim() + ".path");
+            MergeToolCmd.Text = Settings.Module.GetGlobalSetting("mergetool." + GlobalMergeTool.Text.Trim() + ".cmd");
+
+            if (GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
+                string.IsNullOrEmpty(MergeToolCmd.Text))
+                MergeToolCmd.Enabled = false;
+            else
+                MergeToolCmd.Enabled = true;
+
+            MergeToolCmdSuggest_Click(null, null);
         }
 
         private void GitFound_Click(object sender, EventArgs e)
         {
             if (!SolveGitCommand())
             {
-                MessageBox.Show(this, 
-                    "The command to run git could not be determined automatically." + Environment.NewLine +
-                    "Please make sure git (msysgit or cygwin) is installed or set the correct command manually.",
-                    "Locate git");
+                MessageBox.Show(this, _solveGitCommandFailed.Text, _solveGitCommandFailedCaption.Text);
 
-                tabControl1.SelectTab("TabPageGit");
+                tabControl1.SelectTab("tpGit");
                 return;
             }
 
-            MessageBox.Show(this, "Git can be run using: " + Settings.GitCommand, "Locate git");
+            MessageBox.Show(this, String.Format(_gitCanBeRun.Text, Settings.GitCommand), _gitCanBeRunCaption.Text);
 
             GitPath.Text = Settings.GitCommand;
             Rescan_Click(null, null);
@@ -946,7 +1165,7 @@ namespace GitUI
             UserName.Enabled = valid;
             UserEmail.Enabled = valid;
             Editor.Enabled = valid;
-            MergeTool.Enabled = valid;
+            LocalMergeTool.Enabled = valid;
             KeepMergeBackup.Enabled = valid;
             localAutoCrlfFalse.Enabled = valid;
             localAutoCrlfInput.Enabled = valid;
@@ -999,15 +1218,12 @@ namespace GitUI
         {
             if (!SolveLinuxToolsDir())
             {
-                MessageBox.Show(this, 
-                    "The path to linux tools (sh) could not be found automatically." + Environment.NewLine +
-                    "Please make sure there are linux tools installed (through msysgit or cygwin) or set the correct path manually.",
-                    "Locate linux tools");
-                tabControl1.SelectTab("TabPageGit");
+                MessageBox.Show(this, _linuxToolsShNotFound.Text, _linuxToolsShNotFoundCaption.Text);
+                tabControl1.SelectTab("tpGit");
                 return;
             }
 
-            MessageBox.Show(this, "Command sh can be run using: " + Settings.GitBinDir + "sh", "Locate linux tools");
+            MessageBox.Show(this, String.Format(_shCanBeRun.Text, Settings.GitBinDir), _shCanBeRunCaption.Text);
             GitBinPath.Text = Settings.GitBinDir;
             Rescan_Click(null, null);
         }
@@ -1143,7 +1359,7 @@ namespace GitUI
                              {
                                  Filter = filter,
                                  InitialDirectory = initialDirectory,
-                                 Title = "Select file"
+                                 Title = _selectFile.Text
                              };
             return (dialog.ShowDialog() == DialogResult.OK) ? dialog.FileName : prev;
         }
@@ -1194,7 +1410,7 @@ namespace GitUI
             if (Putty.Checked)
             {
                 if (AutoFindPuttyPaths())
-                    MessageBox.Show(this, "All paths needed for PuTTY could be automatically found and are set.", "PuTTY");
+                    MessageBox.Show(this, _puttyFoundAuto.Text, _puttyFoundAutoCaption.Text);
                 else
                     tabControl1.SelectTab("ssh");
             }
@@ -1209,202 +1425,6 @@ namespace GitUI
             if (browseDialog.ShowDialog(this) == DialogResult.OK)
             {
                 GitBinPath.Text = browseDialog.SelectedPath;
-            }
-        }
-
-        private void BrowseMergeTool_Click(object sender, EventArgs e)
-        {
-            if (GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
-            {
-                MergetoolPath.Text = SelectFile(".", "kdiff3.exe (kdiff3.exe)|kdiff3.exe", MergetoolPath.Text);
-            }
-            else if (GlobalMergeTool.Text.Equals("p4merge", StringComparison.CurrentCultureIgnoreCase))
-                MergetoolPath.Text = SelectFile(".", "p4merge.exe (p4merge.exe)|p4merge.exe", MergetoolPath.Text);
-            else if (GlobalMergeTool.Text.Equals("TortoiseMerge", StringComparison.CurrentCultureIgnoreCase))
-                MergetoolPath.Text = SelectFile(".", "TortoiseMerge.exe (TortoiseMerge.exe)|TortoiseMerge.exe",
-                                                MergetoolPath.Text);
-            else
-                MergetoolPath.Text = SelectFile(".", "*.exe (*.exe)|*.exe", MergetoolPath.Text);
-        }
-
-        private void MergeToolCmdSuggest_Click(object sender, EventArgs e)
-        {
-            if (!Settings.RunningOnWindows())
-                return;
-
-            if (GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
-            {
-                string kdiff3path = Settings.Module.GetGlobalSetting("mergetool.kdiff3.path");
-                string regkdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "") + "\\kdiff3.exe";
-
-                MergetoolPath.Text = FindFileInFolders("kdiff3.exe", kdiff3path,
-                                                       @"c:\Program Files\KDiff3\",
-                                                       @"c:\Program Files (x86)\KDiff3\",
-                                                       regkdiff3path);
-            }
-            else if (GlobalMergeTool.Text.Equals("winmerge", StringComparison.CurrentCultureIgnoreCase))
-            {
-                string winmergepath = Settings.Module.GetGlobalSetting("mergetool.winmerge.path");
-
-                MergetoolPath.Text = FindFileInFolders("winmergeu.exe", winmergepath,
-                                                       @"c:\Program Files\winmerge\",
-                                                       @"c:\Program Files (x86)\winmerge\");
-            }
-            AutoConfigMergeToolcmd();
-        }
-
-        private static string FindFileInFolders(string fileName, params string[] locations)
-        {
-            foreach (string location in locations)
-            {
-                if (!string.IsNullOrEmpty(location) && File.Exists(location))
-                    return location;
-                if (!string.IsNullOrEmpty(location) && File.Exists(location + fileName))
-                    return location + fileName;
-                if (!string.IsNullOrEmpty(location) && File.Exists(location + "\\" + fileName))
-                    return location + "\\" + fileName;
-            }
-
-            return "";
-        }
-
-        private void AutoConfigMergeToolcmd()
-        {
-            if (GlobalMergeTool.Text.Equals("BeyondCompare3", StringComparison.CurrentCultureIgnoreCase))
-            {
-                if (MergetoolPath.Text.Contains("kdiff3") || MergetoolPath.Text.Contains("TortoiseMerge"))
-                    MergetoolPath.Text = "";
-                if (string.IsNullOrEmpty(MergetoolPath.Text) || !File.Exists(MergetoolPath.Text))
-                {
-                    MergetoolPath.Text = @"C:\Program Files\Beyond Compare 3\bcomp.exe";
-
-                    MergetoolPath.Text = FindFileInFolders("bcomp.exe",
-                                                           @"C:\Program Files\Beyond Compare 3 (x86)\",
-                                                           @"C:\Program Files\Beyond Compare 3\");
-
-                    if (!File.Exists(MergetoolPath.Text))
-                    {
-                        MergetoolPath.Text = "";
-                        MessageBox.Show(this, "Please enter the path to bcomp.exe and press suggest.", "Suggest mergetool cmd");
-                        return;
-                    }
-                }
-
-                MergeToolCmd.Text = "\"" + MergetoolPath.Text + "\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"";
-                return;
-            }
-
-            if (GlobalMergeTool.Text.Equals("p4merge", StringComparison.CurrentCultureIgnoreCase))
-            {
-                if (MergetoolPath.Text.Contains("kdiff3") || MergetoolPath.Text.Contains("TortoiseMerge"))
-                    MergetoolPath.Text = "";
-                if (string.IsNullOrEmpty(MergetoolPath.Text) || !File.Exists(MergetoolPath.Text))
-                {
-                    MergetoolPath.Text = @"c:\Program Files\Perforce\p4merge.exe";
-
-                    MergetoolPath.Text = FindFileInFolders("p4merge.exe",
-                                                           @"c:\Program Files (x86)\Perforce\",
-                                                           @"c:\Program Files\Perforce\");
-
-                    if (!File.Exists(MergetoolPath.Text))
-                    {
-                        MergetoolPath.Text = "";
-                        MessageBox.Show(this, "Please enter the path to p4merge.exe and press suggest.",
-                                        "Suggest mergetool cmd");
-                        return;
-                    }
-                }
-
-                MergeToolCmd.Text = "\"" + MergetoolPath.Text + "\" \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"";
-                return;
-            }
-
-            if (GlobalMergeTool.Text.Equals("Araxis", StringComparison.CurrentCultureIgnoreCase))
-            {
-                if (MergetoolPath.Text.Contains("kdiff3") || MergetoolPath.Text.Contains("TortoiseMerge"))
-                    MergetoolPath.Text = "";
-                if (string.IsNullOrEmpty(MergetoolPath.Text) || !File.Exists(MergetoolPath.Text))
-                {
-                    MergetoolPath.Text = FindFileInFolders("Compare.exe",
-                                                           @"C:\Program Files (x86)\Araxis\Araxis Merge\",
-                                                           @"C:\Program Files\Araxis\Araxis Merge\",
-                                                           @"C:\Program Files\Araxis 6.5\Araxis Merge\");
-
-                    if (!File.Exists(MergetoolPath.Text))
-                    {
-                        MergetoolPath.Text = "";
-                        MessageBox.Show(this, "Please enter the path to Compare.exe and press suggest.",
-                                        "Suggest mergetool cmd");
-                        return;
-                    }
-                }
-
-                MergeToolCmd.Text = "\"" + MergetoolPath.Text +
-                                    "\" -wait -merge -3 -a1 \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"";
-                return;
-            }
-
-            if (GlobalMergeTool.Text.Equals("TortoiseMerge", StringComparison.CurrentCultureIgnoreCase))
-            {
-                string command = "";
-
-                if (MergetoolPath.Text.ToLower().Contains("kdiff3") || MergetoolPath.Text.ToLower().Contains("p4merge"))
-                    MergetoolPath.Text = "";
-                if (string.IsNullOrEmpty(MergetoolPath.Text) || !File.Exists(MergetoolPath.Text))
-                {
-                    string path = FindFileInFolders("TortoiseMerge.exe",
-                                                           @"c:\Program Files (x86)\TortoiseSVN\bin\",
-                                                           @"c:\Program Files\TortoiseSVN\bin\");
-                    command = "\"" + path +
-                                    "\" /base:\"$BASE\" /mine:\"$LOCAL\" /theirs:\"$REMOTE\" /merged:\"$MERGED\"";
-                    if (string.IsNullOrEmpty(path))
-                    {
-                        path = FindFileInFolders("TortoiseMerge.exe",
-                                                           @"c:\Program Files (x86)\TortoiseGit\bin\",
-                                                           @"c:\Program Files\TortoiseGit\bin\");
-                        command = "\"" + path +
-                                    "\" -base:\"$BASE\" -mine:\"$LOCAL\" -theirs:\"$REMOTE\" -merged:\"$MERGED\"";
-                    }
-
-                    if (!File.Exists(path))
-                    {
-                        MergetoolPath.Text = "";
-                        MessageBox.Show(this, "Please enter the path to TortoiseMerge.exe and press suggest.",
-                                        "Suggest mergetool cmd");
-                        return;
-                    }
-                    else
-                    {
-                        MergetoolPath.Text = path;
-                    }
-                }
-
-                MergeToolCmd.Text = command;
-                return;
-            }
-
-            if (GlobalMergeTool.Text.Equals("DiffMerge", StringComparison.CurrentCultureIgnoreCase))
-            {
-                if (MergetoolPath.Text.ToLower().Contains("kdiff3") || MergetoolPath.Text.ToLower().Contains("p4merge"))
-                    MergetoolPath.Text = "";
-                if (string.IsNullOrEmpty(MergetoolPath.Text) || !File.Exists(MergetoolPath.Text))
-                {
-                    MergetoolPath.Text = FindFileInFolders("DiffMerge.exe",
-                                                           @"C:\Program Files (x86)\SourceGear\DiffMerge\",
-                                                           @"C:\Program Files\SourceGear\DiffMerge\");
-
-                    if (!File.Exists(MergetoolPath.Text))
-                    {
-                        MergetoolPath.Text = "";
-                        MessageBox.Show(this, "Please enter the path to DiffMerge.exe and press suggest.",
-                                        "Suggest mergetool cmd");
-                        return;
-                    }
-                }
-
-                // /m /r=%merged /t1=%yname /t2=%bname /t3=%tname /c=%mname %mine %base %theirs
-                MergeToolCmd.Text = "\"" + MergetoolPath.Text + "\" /m /r=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"";
-                return;
             }
         }
 
@@ -1443,81 +1463,8 @@ namespace GitUI
             }
             catch
             {
-                MessageBox.Show(this, "No dictionary files found in: " + Settings.GetDictionaryDir());
+                MessageBox.Show(this, String.Format(_noDictFilesFound.Text, Settings.GetDictionaryDir()));
             }
-        }
-
-        private void ExternalDiffTool_TextChanged(object sender, EventArgs e)
-        {
-            DifftoolPath.Text = Settings.Module.GetGlobalSetting("difftool." + GlobalDiffTool.Text.Trim() + ".path");
-            DifftoolCmd.Text = Settings.Module.GetGlobalSetting("difftool." + GlobalDiffTool.Text.Trim() + ".cmd");
-
-            if (GlobalDiffTool.Text.Trim().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
-                ResolveDiffToolPath();
-
-            DiffToolCmdSuggest_Click(null, null);
-        }
-
-        private void ResolveDiffToolPath()
-        {
-            if (!Settings.RunningOnWindows())
-                return;
-
-            if (GlobalDiffTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
-            {
-                string kdiff3path = Settings.Module.GetGlobalSetting("difftool.kdiff3.path");
-                if (!kdiff3path.ToLower().Contains("kdiff3.exe"))
-                    kdiff3path = "";
-                if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
-                {
-                    kdiff3path = @"c:\Program Files\KDiff3\kdiff3.exe";
-                    if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
-                    {
-                        kdiff3path = @"c:\Program Files (x86)\KDiff3\kdiff3.exe";
-                        if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
-                        {
-                            kdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "") +
-                                         "\\kdiff3.exe";
-                            if (string.IsNullOrEmpty(kdiff3path) || !File.Exists(kdiff3path))
-                            {
-                                kdiff3path = MergetoolPath.Text;
-                                if (!kdiff3path.ToLower().Contains("kdiff3.exe"))
-                                    kdiff3path = "";
-                            }
-                        }
-                    }
-                }
-                DifftoolPath.Text = kdiff3path;
-            }
-        }
-
-        private void BrowseDiffTool_Click(object sender, EventArgs e)
-        {
-            if (GlobalDiffTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
-            {
-                DifftoolPath.Text = SelectFile(".", "kdiff3.exe (kdiff3.exe)|kdiff3.exe", DifftoolPath.Text);
-            }
-            else if (GlobalDiffTool.Text.Equals("p4merge", StringComparison.CurrentCultureIgnoreCase))
-                DifftoolPath.Text = SelectFile(".", "p4merge.exe (p4merge.exe)|p4merge.exe", DifftoolPath.Text);
-            else if (GlobalDiffTool.Text.Equals("tmerge", StringComparison.CurrentCultureIgnoreCase))
-                DifftoolPath.Text = SelectFile(".", "TortoiseMerge.exe (TortoiseMerge.exe)|TortoiseMerge.exe",
-                                               DifftoolPath.Text);
-            else
-                DifftoolPath.Text = SelectFile(".", "*.exe (*.exe)|*.exe", DifftoolPath.Text);
-        }
-
-        private void GlobalMergeTool_TextChanged(object sender, EventArgs e)
-        {
-            MergetoolPath.Text = Settings.Module.GetGlobalSetting("mergetool." + GlobalMergeTool.Text.Trim() + ".path");
-            MergeToolCmd.Text = Settings.Module.GetGlobalSetting("mergetool." + GlobalMergeTool.Text.Trim() + ".cmd");
-
-            if (GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
-                string.IsNullOrEmpty(MergeToolCmd.Text))
-                MergeToolCmd.Enabled = false;
-            else
-                MergeToolCmd.Enabled = true;
-
-            MergeToolCmdSuggest_Click(null, null);
         }
 
         private void ColorAddedLineDiffLabel_Click(object sender, EventArgs e)
@@ -1665,7 +1612,7 @@ namespace GitUI
             foreach (System.Collections.DictionaryEntry icon in resourceSet)
             {
                 //add entry to toolstrip
-                if (icon.Value.GetType() == typeof(System.Drawing.Icon))
+                if (icon.Value.GetType() == typeof(Icon))
                 {
                     //contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)((Icon)icon.Value).ToBitmap(), SplitButtonMenuItem_Click);
                 }
@@ -1694,58 +1641,6 @@ namespace GitUI
             GravatarService.ClearImageCache();
         }
 
-        private void DiffToolCmdSuggest_Click(object sender, EventArgs e)
-        {
-            if (!Settings.RunningOnWindows())
-                return;
-
-            if (GlobalDiffTool.Text.Equals("BeyondCompare3", StringComparison.CurrentCultureIgnoreCase))
-            {
-                string bcomppath = Settings.Module.GetGlobalSetting("difftool.beyondcompare3.path");
-
-                DifftoolPath.Text = FindFileInFolders("bcomp.exe",
-                                                      bcomppath,
-                                                      @"C:\Program Files\Beyond Compare 3 (x86)\",
-                                                      @"C:\Program Files\Beyond Compare 3\");
-
-                if (File.Exists(DifftoolPath.Text))
-                    DifftoolCmd.Text = "\"" + DifftoolPath.Text + "\" \"$LOCAL\" \"$REMOTE\"";
-            }
-            else if (GlobalDiffTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
-            {
-                string kdiff3path = Settings.Module.GetGlobalSetting("difftool.kdiff3.path");
-                string regkdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "") + "\\kdiff3.exe";
-
-                DifftoolPath.Text = FindFileInFolders("kdiff3.exe", kdiff3path,
-                                                      @"c:\Program Files\KDiff3\",
-                                                      @"c:\Program Files (x86)\KDiff3\",
-                                                      regkdiff3path);
-            }
-            else if (GlobalDiffTool.Text.Equals("tmerge", StringComparison.CurrentCultureIgnoreCase))
-            {
-                string tortoisemergepath = FindFileInFolders("TortoiseMerge.exe",
-                                                       @"c:\Program Files (x86)\TortoiseSVN\bin\",
-                                                       @"c:\Program Files\TortoiseSVN\bin\");
-                if (string.IsNullOrEmpty(tortoisemergepath))
-                {
-                    tortoisemergepath = FindFileInFolders("TortoiseMerge.exe",
-                                                       @"c:\Program Files (x86)\TortoiseGit\bin\",
-                                                       @"c:\Program Files\TortoiseGit\bin\");
-                }
-                DifftoolPath.Text = tortoisemergepath;
-            }
-            else if (GlobalDiffTool.Text.Equals("winmerge", StringComparison.CurrentCultureIgnoreCase))
-            {
-                string winmergepath = Settings.Module.GetGlobalSetting("difftool.winmerge.path");
-
-                DifftoolPath.Text = FindFileInFolders("winmergeu.exe", winmergepath,
-                                                      @"c:\Program Files\winmerge\",
-                                                      @"c:\Program Files (x86)\winmerge\");
-            }
-            if (File.Exists(DifftoolPath.Text))
-                DifftoolCmd.Text = "\"" + DifftoolPath.Text + "\" \"$LOCAL\" \"$REMOTE\"";
-        }
-
         private void helpTranslate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             new FormTranslate().ShowDialog(this);
@@ -1767,12 +1662,7 @@ namespace GitUI
 
         private static bool getCheckAtStartupChecked(bool bValid)
         {
-            bool retValue = false;
-            if ((Settings.GetValue<string>("checksettings", null) == null ||
-                 Settings.GetValue<string>("checksettings", null).ToString() == "true"))
-            {
-                retValue = true;
-            }
+            var retValue = Settings.GetValue<string>("checksettings", null) == null || Settings.GetValue<string>("checksettings", null) == "true";
 
             if (bValid && retValue)
             {
@@ -1788,13 +1678,13 @@ namespace GitUI
             if (string.IsNullOrEmpty(Settings.Translation))
             {
                 translationConfig.BackColor = Color.LightSalmon;
-                translationConfig.Text = "There is no language configured for Git Extensions.";
+                translationConfig.Text = _noLanguageConfigured.Text;
                 translationConfig_Fix.Visible = true;
                 return false;
             }
             translationConfig.BackColor = Color.LightGreen;
             translationConfig_Fix.Visible = false;
-            translationConfig.Text = "The configured language is " + Settings.Translation + ".";
+            translationConfig.Text = String.Format(_languageConfigured.Text, Settings.Translation);
             return true;
         }
 
@@ -1806,25 +1696,21 @@ namespace GitUI
                 if (!File.Exists(Settings.Plink) || !File.Exists(Settings.Puttygen) || !File.Exists(Settings.Pageant))
                 {
                     SshConfig.BackColor = Color.LightSalmon;
-                    SshConfig.Text = "PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.";
-                    SshConfig.Text =
-                        "PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.";
-                    SshConfig.Text = "PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.";
+                    SshConfig.Text = _plinkputtyGenpageantNotFound.Text;
                     SshConfig_Fix.Visible = true;
                     return false;
                 }
                 SshConfig.BackColor = Color.LightGreen;
                 SshConfig_Fix.Visible = false;
-                SshConfig.Text = "SSH client PuTTY is configured properly.";
+                SshConfig.Text = _puttyConfigured.Text;
                 return true;
             }
             SshConfig.BackColor = Color.LightGreen;
             SshConfig_Fix.Visible = false;
             if (string.IsNullOrEmpty(GitCommandHelpers.GetSsh()))
-                SshConfig.Text =
-                    "Default SSH client, OpenSSH, will be used. (commandline window will appear on pull, push and clone operations)";
+                SshConfig.Text = _opensshUsed.Text;
             else
-                SshConfig.Text = "Unknown SSH client configured: " + GitCommandHelpers.GetSsh() + ".";
+                SshConfig.Text = String.Format(_unknownSshClient.Text, GitCommandHelpers.GetSsh());
             return true;
         }
 
@@ -1835,13 +1721,13 @@ namespace GitUI
                 !CheckIfFileIsInPath("sh.exe") && !CheckIfFileIsInPath("sh"))
             {
                 GitBinFound.BackColor = Color.LightSalmon;
-                GitBinFound.Text = "Linux tools (sh) not found. To solve this problem you can set the correct path in settings.";
+                GitBinFound.Text = _linuxToolsSshNotFound.Text;
                 GitBinFound_Fix.Visible = true;
                 return false;
             }
             GitBinFound_Fix.Visible = false;
             GitBinFound.BackColor = Color.LightGreen;
-            GitBinFound.Text = "Linux tools (sh) found on your computer.";
+            GitBinFound.Text = _linuxToolsSshFound.Text;
             return true;
         }
 
@@ -1851,7 +1737,7 @@ namespace GitUI
             if (!CanFindGitCmd())
             {
                 GitFound.BackColor = Color.LightSalmon;
-                GitFound.Text = "Git not found. To solve this problem you can set the correct path in settings.";
+                GitFound.Text = _gitNotFound.Text;
                 GitFound_Fix.Visible = true;
                 return false;
             }
@@ -1859,25 +1745,25 @@ namespace GitUI
             if (GitCommandHelpers.VersionInUse < GitVersion.LastSupportedVersion)
             {
                 GitFound.BackColor = Color.LightSalmon;
-                GitFound.Text = "Git found but version " + GitCommandHelpers.VersionInUse.ToString() + " is not supported. Upgrage to version " + GitVersion.LastSupportedVersion.ToString() + " or later.";
+                GitFound.Text = String.Format(_wrongGitVersion.Text, GitCommandHelpers.VersionInUse, GitVersion.LastSupportedVersion);
                 GitFound_Fix.Visible = true;
                 return false;
             }
 
             GitFound_Fix.Visible = false;
             GitFound.BackColor = Color.LightGreen;
-            GitFound.Text = "Git " + GitCommandHelpers.VersionInUse.ToString() + " is found on your computer.";
+            GitFound.Text = String.Format(_gitVersionFound.Text, GitCommandHelpers.VersionInUse);
             return true;
         }
 
         private bool CheckDiffToolConfiguration()
         {
-            DiffTool2.Visible = true;
+            DiffTool.Visible = true;
             if (string.IsNullOrEmpty(GetGlobalDiffToolFromConfig()))
             {
-                DiffTool2.BackColor = Color.LightSalmon;
-                DiffTool2_Fix.Visible = true;
-                DiffTool2.Text = "You should configure a diff tool to show file diff in external program (kdiff3 for example).";
+                DiffTool.BackColor = Color.LightSalmon;
+                DiffTool_Fix.Visible = true;
+                DiffTool.Text = _adviceDiffToolConfiguration.Text;
                 return false;
             }
             if (Settings.RunningOnWindows())
@@ -1887,74 +1773,72 @@ namespace GitUI
                     string p = Settings.Module.GetGlobalSetting("difftool.kdiff3.path");
                     if (string.IsNullOrEmpty(p) || !File.Exists(p))
                     {
-                        DiffTool2.BackColor = Color.LightSalmon;
-                        DiffTool2.Text = "KDiff3 is configured as difftool, but the path to kdiff.exe is not configured.";
-                        DiffTool2_Fix.Visible = true;
+                        DiffTool.BackColor = Color.LightSalmon;
+                        DiffTool.Text = _kdiffAsDiffConfiguredButNotFound.Text;
+                        DiffTool_Fix.Visible = true;
                         return false;
                     }
-                    DiffTool2.BackColor = Color.LightGreen;
-                    DiffTool2.Text = "KDiff3 is configured as difftool.";
-                    DiffTool2_Fix.Visible = false;
+                    DiffTool.BackColor = Color.LightGreen;
+                    DiffTool.Text = _kdiffAsDiffConfigured.Text;
+                    DiffTool_Fix.Visible = false;
                     return true;
                 }
             }
             string difftool = GetGlobalDiffToolFromConfig();
-            DiffTool2.BackColor = Color.LightGreen;
-            DiffTool2.Text = "There is a difftool configured: " + difftool;
-            DiffTool2_Fix.Visible = false;
+            DiffTool.BackColor = Color.LightGreen;
+            DiffTool.Text = String.Format(_diffToolXConfigured.Text, difftool);
+            DiffTool_Fix.Visible = false;
             return true;
         }
 
         private bool CheckMergeTool()
         {
-            DiffTool.Visible = true;
-            if (string.IsNullOrEmpty(Settings.Module.GetGlobalSetting("merge.tool")))
+            MergeTool.Visible = true;
+            if (string.IsNullOrEmpty(GetMergeTool()))
             {
-                DiffTool.BackColor = Color.LightSalmon;
-                DiffTool.Text = "You need to configure merge tool in order to solve mergeconflicts (kdiff3 for example).";
-                DiffTool_Fix.Visible = true;
+                MergeTool.BackColor = Color.LightSalmon;
+                MergeTool.Text = _configureMergeTool.Text;
+                MergeTool_Fix.Visible = true;
                 return false;
             }
 
             if (Settings.RunningOnWindows())
             {
-                if (Settings.Module.GetGlobalSetting("merge.tool").Equals("kdiff3",
-                                                                            StringComparison.CurrentCultureIgnoreCase))
+                if (IsMergeTool("kdiff3"))
                 {
                     string p = Settings.Module.GetGlobalSetting("mergetool.kdiff3.path");
                     if (string.IsNullOrEmpty(p) || !File.Exists(p))
                     {
-                        DiffTool.BackColor = Color.LightSalmon;
-                        DiffTool.Text = "KDiff3 is configured as mergetool, but the path to kdiff.exe is not configured.";
-                        DiffTool_Fix.Visible = true;
+                        MergeTool.BackColor = Color.LightSalmon;
+                        MergeTool.Text = _kdiffAsMergeConfiguredButNotFound.Text;
+                        MergeTool_Fix.Visible = true;
                         return false;
                     }
-                    DiffTool.BackColor = Color.LightGreen;
-                    DiffTool.Text = "KDiff3 is configured as mergetool.";
-                    DiffTool_Fix.Visible = false;
+                    MergeTool.BackColor = Color.LightGreen;
+                    MergeTool.Text = _kdiffAsMergeConfigured.Text;
+                    MergeTool_Fix.Visible = false;
                     return true;
                 }
-                string mergetool = Settings.Module.GetGlobalSetting("merge.tool");
-                if (mergetool.Equals("p4merge", StringComparison.CurrentCultureIgnoreCase) ||
-                    mergetool.Equals("tmerge", StringComparison.CurrentCultureIgnoreCase))
+                string mergetool = GetMergeTool().ToLowerInvariant();
+                if (mergetool == "p4merge" || mergetool == "tmerge")
                 {
                     string p = Settings.Module.GetGlobalSetting("mergetool." + mergetool + ".cmd");
                     if (string.IsNullOrEmpty(p))
                     {
-                        DiffTool.BackColor = Color.LightSalmon;
-                        DiffTool.Text = mergetool + " is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.";
-                        DiffTool_Fix.Visible = true;
+                        MergeTool.BackColor = Color.LightSalmon;
+                        MergeTool.Text = String.Format(_mergeToolXConfiguredNeedsCmd.Text, mergetool);
+                        MergeTool_Fix.Visible = true;
                         return false;
                     }
-                    DiffTool.BackColor = Color.LightGreen;
-                    DiffTool.Text = "There is a custom mergetool configured: " + mergetool;
-                    DiffTool_Fix.Visible = false;
+                    MergeTool.BackColor = Color.LightGreen;
+                    MergeTool.Text = String.Format(_customMergeToolXConfigured.Text, mergetool);
+                    MergeTool_Fix.Visible = false;
                     return true;
                 }
             }
-            DiffTool.BackColor = Color.LightGreen;
-            DiffTool.Text = "There is a mergetool configured.";
-            DiffTool_Fix.Visible = false;
+            MergeTool.BackColor = Color.LightGreen;
+            MergeTool.Text = _mergeToolXConfigured.Text;
+            MergeTool_Fix.Visible = false;
             return true;
         }
 
@@ -1965,12 +1849,12 @@ namespace GitUI
                 string.IsNullOrEmpty(Settings.Module.GetGlobalSetting("user.email")))
             {
                 UserNameSet.BackColor = Color.LightSalmon;
-                UserNameSet.Text = "You need to configure a username and an email address.";
+                UserNameSet.Text = _noEmailSet.Text;
                 UserNameSet_Fix.Visible = true;
                 return false;
             }
             UserNameSet.BackColor = Color.LightGreen;
-            UserNameSet.Text = "A username and an email address are configured.";
+            UserNameSet.Text = _emailSet.Text;
             UserNameSet_Fix.Visible = false;
             return true;
         }
@@ -1999,18 +1883,18 @@ namespace GitUI
                 if (!File.Exists(path))
                 {
                     ShellExtensionsRegistered.BackColor = Color.LightGreen;
-                    ShellExtensionsRegistered.Text = String.Format("Shell extensions are not installed. Run the installer to intall the shell extensions.");
+                    ShellExtensionsRegistered.Text = String.Format(_shellExtNoInstalled.Text);
                     ShellExtensionsRegistered_Fix.Visible = false;
                     return true;
                 }
 
                 ShellExtensionsRegistered.BackColor = Color.LightSalmon;
-                ShellExtensionsRegistered.Text = String.Format("{0} needs to be registered in order to use the shell extensions.", GitExtensionsShellExName);
+                ShellExtensionsRegistered.Text = String.Format(_shellExtNeedsToBeRegistered.Text, GitExtensionsShellExName);
                 ShellExtensionsRegistered_Fix.Visible = true;
                 return false;
             }
             ShellExtensionsRegistered.BackColor = Color.LightGreen;
-            ShellExtensionsRegistered.Text = "Shell extensions registered properly.";
+            ShellExtensionsRegistered.Text = _shellExtRegistered.Text;
             ShellExtensionsRegistered_Fix.Visible = false;
             return true;
         }
@@ -2024,19 +1908,19 @@ namespace GitUI
             if (string.IsNullOrEmpty(Settings.GetInstallDir()))
             {
                 GitExtensionsInstall.BackColor = Color.LightSalmon;
-                GitExtensionsInstall.Text = "Registry entry missing [Software\\GitExtensions\\GitExtensions\\InstallDir].";
+                GitExtensionsInstall.Text = _registryKeyGitExtensionsMissing.Text;
                 GitExtensionsInstall_Fix.Visible = true;
                 return false;
             }
             if (Settings.GetInstallDir() != null && Settings.GetInstallDir().EndsWith(".exe"))
             {
                 GitExtensionsInstall.BackColor = Color.LightSalmon;
-                GitExtensionsInstall.Text = "Invalid installation directory stored in [Software\\GitExtensions\\GitExtensions\\InstallDir].";
+                GitExtensionsInstall.Text = _registryKeyGitExtensionsFaulty.Text;
                 GitExtensionsInstall_Fix.Visible = true;
                 return false;
             }
             GitExtensionsInstall.BackColor = Color.LightGreen;
-            GitExtensionsInstall.Text = "GitExtensions is properly registered.";
+            GitExtensionsInstall.Text = _registryKeyGitExtensionsCorrect.Text;
             GitExtensionsInstall_Fix.Visible = false;
             return true;
         }
@@ -2052,16 +1936,24 @@ namespace GitUI
                 GetRegistryValue(Registry.LocalMachine,
                                  "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") +
                 "bin\\git.exe";
-            yield return @"c:\Program Files (x86)\Git\bin\git.exe";
-            yield return @"c:\Program Files\Git\bin\git.exe";
-            yield return @"c:\Program Files (x86)\msysgit\bin\git.exe";
-            yield return @"c:\Program Files\msysgit\bin\git.exe";
+            string programFiles = Environment.GetEnvironmentVariable("ProgramFiles");
+            string programFilesX86 = null;
+            if (8 == IntPtr.Size
+                || !String.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432")))
+                programFilesX86 = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
+            if (programFilesX86 != null)
+                yield return programFilesX86 + @"\Git\bin\git.exe";
+            yield return programFiles + @"\Git\bin\git.exe";
+            if (programFilesX86 != null)
+                yield return programFilesX86 + @"\msysgit\bin\git.exe";
+            yield return programFiles + @"\msysgit\bin\git.exe";
             yield return
                 GetRegistryValue(Registry.LocalMachine,
                                  "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") +
                 "cmd\\git.cmd";
-            yield return @"c:\Program Files (x86)\Git\cmd\git.cmd";
-            yield return @"c:\Program Files\Git\cmd\git.cmd";
+            if (programFilesX86 != null)
+                yield return programFilesX86 + @"\Git\cmd\git.cmd";
+            yield return programFiles + @"\Git\cmd\git.cmd";
             yield return "git";
             yield return "git.cmd";
             yield return @"C:\msysgit\bin\git.exe";
@@ -2072,31 +1964,20 @@ namespace GitUI
         {
             if (Settings.RunningOnWindows())
             {
-                string command = (from cmd in GetWindowsCommandLocations()
-                                  let output = Settings.Module.RunCmd(cmd, string.Empty)
-                                  where !string.IsNullOrEmpty(output)
-                                  select cmd).FirstOrDefault();
+                var command = (from cmd in GetWindowsCommandLocations()
+                               let output = Settings.Module.RunCmd(cmd, string.Empty)
+                               where !string.IsNullOrEmpty(output)
+                               select cmd).FirstOrDefault();
 
                 if (command != null)
                 {
                     Settings.GitCommand = command;
                     return true;
                 }
-                else
-                {
-                    return false;
-                }
+                return false;
             }
-            else
-            {
-                Settings.GitCommand = "git";
-                if (string.IsNullOrEmpty(Settings.Module.RunGitCmd("")))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            Settings.GitCommand = "git";
+            return !string.IsNullOrEmpty(Settings.Module.RunGitCmd(""));
         }
 
         private void SaveScripts()
@@ -2132,7 +2013,7 @@ namespace GitUI
             scriptEnabled.Checked = scriptInfo.Enabled;
             scriptNeedsConfirmation.Checked = scriptInfo.AskConfirmation;
             scriptEvent.SelectedItem = scriptInfo.OnEvent;
-            sbtn_icon.Image = (Image)scriptInfo.GetIcon();
+            sbtn_icon.Image = scriptInfo.GetIcon();
             IconName = scriptInfo.Icon;
 
             foreach (ToolStripItem item in contextMenuStrip_SplitButton.Items)
@@ -2283,7 +2164,7 @@ namespace GitUI
 
         public const string HotkeySettingsName = "Scripts";
 
-        internal enum Commands : int
+        internal enum Commands
         {
             NothingYet
         }
@@ -2304,25 +2185,25 @@ namespace GitUI
 
         private void ShowIconPreview()
         {
-            if (IconStyle.Text.Equals("Default", StringComparison.OrdinalIgnoreCase))
+            string color = IconStyle.Text.ToLowerInvariant();
+            switch (color)
             {
-                IconPreview.Image = GetApplicationIcon("Large", GetSelectedApplicationIconColor()).ToBitmap();
-                IconPreviewSmall.Image = GetApplicationIcon("Small", GetSelectedApplicationIconColor()).ToBitmap();
-            }
-            if (IconStyle.Text.Equals("Small", StringComparison.OrdinalIgnoreCase))
-            {
-                IconPreview.Image = GetApplicationIcon("Small", GetSelectedApplicationIconColor()).ToBitmap();
-                IconPreviewSmall.Image = IconPreview.Image;
-            }
-            if (IconStyle.Text.Equals("Large", StringComparison.OrdinalIgnoreCase))
-            {
-                IconPreview.Image = GetApplicationIcon("Large", GetSelectedApplicationIconColor()).ToBitmap();
-                IconPreviewSmall.Image = IconPreview.Image;
-            }
-            if (IconStyle.Text.Equals("Cow", StringComparison.OrdinalIgnoreCase))
-            {
-                IconPreview.Image = GetApplicationIcon("Cow", GetSelectedApplicationIconColor()).ToBitmap();
-                IconPreviewSmall.Image = IconPreview.Image;
+                case "default":
+                    IconPreview.Image = GetApplicationIcon("Large", GetSelectedApplicationIconColor()).ToBitmap();
+                    IconPreviewSmall.Image = GetApplicationIcon("Small", GetSelectedApplicationIconColor()).ToBitmap();
+                    break;
+                case "small":
+                    IconPreview.Image = GetApplicationIcon("Small", GetSelectedApplicationIconColor()).ToBitmap();
+                    IconPreviewSmall.Image = IconPreview.Image;
+                    break;
+                case "large":
+                    IconPreview.Image = GetApplicationIcon("Large", GetSelectedApplicationIconColor()).ToBitmap();
+                    IconPreviewSmall.Image = IconPreview.Image;
+                    break;
+                case "cow":
+                    IconPreview.Image = GetApplicationIcon("Cow", GetSelectedApplicationIconColor()).ToBitmap();
+                    IconPreviewSmall.Image = IconPreview.Image;
+                    break;
             }
         }
 
@@ -2399,14 +2280,14 @@ namespace GitUI
         private void SplitButtonMenuItem_Click(object sender, EventArgs e)
         {
             //reset bold item to regular
-            ToolStripMenuItem item = (ToolStripMenuItem)contextMenuStrip_SplitButton.Items.OfType<ToolStripMenuItem>().First(s => s.Font.Bold == true);
+            var item = contextMenuStrip_SplitButton.Items.OfType<ToolStripMenuItem>().First(s => s.Font.Bold);
             item.Font = new Font(contextMenuStrip_SplitButton.Font, FontStyle.Regular);
 
             //make new item bold
             ((ToolStripMenuItem)sender).Font = new Font(((ToolStripMenuItem)sender).Font, FontStyle.Bold);
 
             //set new image on button
-            sbtn_icon.Image = (Image)ResizeBitmap((Bitmap)((ToolStripMenuItem)sender).Image, 12, 12);
+            sbtn_icon.Image = ResizeBitmap((Bitmap)((ToolStripMenuItem)sender).Image, 12, 12);
 
             IconName = ((ToolStripMenuItem)sender).Text;
 
@@ -2448,14 +2329,6 @@ namespace GitUI
             new FormFixHome().ShowDialog(this);
             LoadSettings();
             Rescan_Click(null, null);
-        }
-
-        private void checkboxLabel_Click(object sender, EventArgs e)
-        {
-            var label = sender as Label;
-            var cb = label.Tag as CheckBox;
-            if (cb != null)
-                cb.Checked = !cb.Checked;
         }
     }
 }

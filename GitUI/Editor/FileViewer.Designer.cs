@@ -42,7 +42,7 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.treatAllFilesAsTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showNonprintableCharactersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fileviewerToolbar = new System.Windows.Forms.ToolStrip();
+            this.fileviewerToolbar = new ToolStripEx();
             this.nextChangeButton = new System.Windows.Forms.ToolStripButton();
             this.previousChangeButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -54,6 +54,7 @@
             this.ignoreWhiteSpaces = new System.Windows.Forms.ToolStripButton();
             this.encodingToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.PictureBox = new System.Windows.Forms.PictureBox();
+            this.goToLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ContextMenu.SuspendLayout();
             this.fileviewerToolbar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).BeginInit();
@@ -72,9 +73,10 @@
             this.showEntireFileToolStripMenuItem,
             this.toolStripSeparator2,
             this.treatAllFilesAsTextToolStripMenuItem,
-            this.showNonprintableCharactersToolStripMenuItem});
+            this.showNonprintableCharactersToolStripMenuItem,
+            this.goToLineToolStripMenuItem});
             this.ContextMenu.Name = "ContextMenu";
-            this.ContextMenu.Size = new System.Drawing.Size(239, 236);
+            this.ContextMenu.Size = new System.Drawing.Size(239, 258);
             // 
             // findToolStripMenuItem
             // 
@@ -167,11 +169,12 @@
             this.ignoreWhiteSpaces,
             this.encodingToolStripComboBox});
             this.fileviewerToolbar.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.fileviewerToolbar.Location = new System.Drawing.Point(297, 0);
+            this.fileviewerToolbar.Location = new System.Drawing.Point(328, 0);
             this.fileviewerToolbar.Name = "fileviewerToolbar";
-            this.fileviewerToolbar.Size = new System.Drawing.Size(328, 23);
+            this.fileviewerToolbar.Size = new System.Drawing.Size(297, 23);
             this.fileviewerToolbar.TabIndex = 4;
             this.fileviewerToolbar.Visible = false;
+            this.fileviewerToolbar.VisibleChanged += new System.EventHandler(this.fileviewerToolbar_VisibleChanged);
             // 
             // nextChangeButton
             // 
@@ -259,7 +262,6 @@
             this.encodingToolStripComboBox.Size = new System.Drawing.Size(121, 21);
             this.encodingToolStripComboBox.SelectedIndexChanged += new System.EventHandler(this.encodingToolStripComboBox_SelectedIndexChanged);
             // 
-            // 
             // PictureBox
             // 
             this.PictureBox.BackColor = System.Drawing.SystemColors.ControlLightLight;
@@ -272,6 +274,13 @@
             this.PictureBox.TabIndex = 7;
             this.PictureBox.TabStop = false;
             this.PictureBox.Visible = false;
+            // 
+            // goToLineToolStripMenuItem
+            // 
+            this.goToLineToolStripMenuItem.Name = "goToLineToolStripMenuItem";
+            this.goToLineToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.goToLineToolStripMenuItem.Text = "Go to line";
+            this.goToLineToolStripMenuItem.Click += new System.EventHandler(this.goToLineToolStripMenuItem_Click);
             // 
             // FileViewer
             // 
@@ -304,7 +313,7 @@
         private System.Windows.Forms.ToolStripMenuItem treatAllFilesAsTextToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyPatchToolStripMenuItem;
-        private System.Windows.Forms.ToolStrip fileviewerToolbar;
+        private ToolStripEx fileviewerToolbar;
         private System.Windows.Forms.ToolStripButton nextChangeButton;
         private System.Windows.Forms.ToolStripButton previousChangeButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
@@ -317,5 +326,6 @@
         private System.Windows.Forms.ToolStripButton ignoreWhiteSpaces;
         private System.Windows.Forms.PictureBox PictureBox;
         private System.Windows.Forms.ToolStripComboBox encodingToolStripComboBox;
+        private System.Windows.Forms.ToolStripMenuItem goToLineToolStripMenuItem;
     }
 }

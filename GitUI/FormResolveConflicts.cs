@@ -5,9 +5,8 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
-using GitUI.Editor;
-using ResourceManager.Translation;
 using GitUI.Hotkey;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
@@ -55,8 +54,8 @@ namespace GitUI
         private readonly TranslationString _contextChooseRemoteRebaseText = new TranslationString("Choose remote (ours)");
 
         private readonly TranslationString _resetItemMergeText = new TranslationString("Abort merge");
-        private readonly TranslationString _contextChooseLocalMergeText = new TranslationString("Choose local (theirs)");
-        private readonly TranslationString _contextChooseRemoteMergeText = new TranslationString("Choose remote (ours)");
+        private readonly TranslationString _contextChooseLocalMergeText = new TranslationString("Choose local (ours)");
+        private readonly TranslationString _contextChooseRemoteMergeText = new TranslationString("Choose remote (theirs)");
 
         private readonly TranslationString _binaryFileWarningCaption = new TranslationString("Warning");
 
@@ -176,6 +175,11 @@ namespace GitUI
             return ((GitItem)row.DataBoundItem).FileName;
         }
 
+        private string FixPath(string path)
+        {
+            return path.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
+        }
+
         private bool TryMergeWithScript(string fileName, string baseFileName, string remoteFileName, string localFileName)
         {
             if (!Settings.RunningOnWindows())
@@ -187,40 +191,24 @@ namespace GitUI
                 if (!(extensionsSeperator > 0) || extensionsSeperator + 1 >= fileName.Length)
                     return false;
 
-                string[] mergeScripts = Directory.GetFiles(Path.GetDirectoryName(Application.ExecutablePath) + Settings.PathSeparator + "Diff-Scripts" + Settings.PathSeparator, "merge-" + fileName.Substring(extensionsSeperator + 1) + ".*");
-
-                if (mergeScripts.Length > 0)
+                string dir = Path.GetDirectoryName(Application.ExecutablePath) + 
+                    Settings.PathSeparator + "Diff-Scripts" + Settings.PathSeparator;
+                if (Directory.Exists(dir))
                 {
-                    if (MessageBox.Show(this, string.Format(uskUseCustomMergeScript.Text, mergeScripts[0].Replace(Settings.PathSeparator + Settings.PathSeparator.ToString(), Settings.PathSeparator.ToString())), uskUseCustomMergeScriptCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    string[] mergeScripts = Directory.GetFiles(dir, "merge-" +
+                    fileName.Substring(extensionsSeperator + 1) + ".*");
+
+                    if (mergeScripts.Length > 0)
                     {
-                        //get timestamp of file before merge. This is an extra check to verify if merge was successfull
-                        DateTime lastWriteTimeBeforeMerge = DateTime.Now;
-                        if (File.Exists(Settings.WorkingDir + fileName))
-                            lastWriteTimeBeforeMerge = File.GetLastWriteTime(Settings.WorkingDir + fileName);
-
-                        int exitCode;
-                        Settings.Module.RunCmd("wscript", "\"" + mergeScripts[0] + "\" \"" + (Settings.WorkingDir + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\" \"" + remoteFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\" \"" + localFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\" \"" + baseFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator) + "\"", out exitCode);
-
-                        if (MessageBox.Show(this, string.Format(askMergeConflictSolvedAfterCustomMergeScript.Text, (Settings.WorkingDir + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator)), askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        string mergeScript = mergeScripts[0];
+                        if (MessageBox.Show(this, string.Format(uskUseCustomMergeScript.Text,
+                            mergeScript.Replace(Settings.PathSeparator + Settings.PathSeparator.ToString(), Settings.PathSeparator.ToString())), 
+                            uskUseCustomMergeScriptCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
+                            UseMergeWithScript(fileName, mergeScript, baseFileName, remoteFileName, localFileName);
 
-                            DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
-                            if (File.Exists(Settings.WorkingDir + fileName))
-                                lastWriteTimeAfterMerge = File.GetLastWriteTime(Settings.WorkingDir + fileName);
-
-                            //The file is not modified, do not stage file and present warning
-                            if (lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge)
-                                MessageBox.Show(this, fileUnchangedAfterMerge.Text);
-                            else
-                                stageFile(fileName);
+                            return true;
                         }
-
-                        Initialize();
-                        if (File.Exists(baseFileName)) File.Delete(baseFileName);
-                        if (File.Exists(remoteFileName)) File.Delete(remoteFileName);
-                        if (File.Exists(localFileName)) File.Delete(localFileName);
-
-                        return true;
                     }
                 }
             }
@@ -229,6 +217,40 @@ namespace GitUI
                 MessageBox.Show(this, "Merge using script failed.\n" + ex);
             }
             return false;
+        }
+
+        private void UseMergeWithScript(string fileName, string mergeScript, string baseFileName, string remoteFileName, string localFileName)
+        {
+            //get timestamp of file before merge. This is an extra check to verify if merge was successfully
+            DateTime lastWriteTimeBeforeMerge = DateTime.Now;
+            if (File.Exists(Settings.WorkingDir + fileName))
+                lastWriteTimeBeforeMerge = File.GetLastWriteTime(Settings.WorkingDir + fileName);
+
+            int exitCode;
+            Settings.Module.RunCmd("wscript", "\"" + mergeScript + "\" \"" +
+                FixPath(Settings.WorkingDir + fileName) + "\" \"" + FixPath(remoteFileName) + "\" \"" +
+                FixPath(localFileName) + "\" \"" + FixPath(baseFileName) + "\"", out exitCode);
+
+            if (MessageBox.Show(this, string.Format(askMergeConflictSolvedAfterCustomMergeScript.Text,
+                FixPath(Settings.WorkingDir + fileName)), askMergeConflictSolvedCaption.Text,
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+
+                DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
+                if (File.Exists(Settings.WorkingDir + fileName))
+                    lastWriteTimeAfterMerge = File.GetLastWriteTime(Settings.WorkingDir + fileName);
+
+                //The file is not modified, do not stage file and present warning
+                if (lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge)
+                    MessageBox.Show(this, fileUnchangedAfterMerge.Text);
+                else
+                    stageFile(fileName);
+            }
+
+            Initialize();
+            if (File.Exists(baseFileName)) File.Delete(baseFileName);
+            if (File.Exists(remoteFileName)) File.Delete(remoteFileName);
+            if (File.Exists(localFileName)) File.Delete(localFileName);
         }
 
         private void ConflictedFiles_DoubleClick(object sender, EventArgs e)
@@ -244,20 +266,6 @@ namespace GitUI
             {
                 if (Directory.Exists(Settings.WorkingDir + filename) && !File.Exists(Settings.WorkingDir + filename))
                 {
-                    /* BEGIN REPLACED WITH FASTER, BUT DIRTIER SUBMODULE CHECK
-                    IList<IGitSubmodule> submodules = (new GitCommands.GitCommands()).GetSubmodules();
-                    foreach (IGitSubmodule submodule in submodules)
-                    {
-                        if (submodule.LocalPath.Equals(filename))
-                        {
-                            if (MessageBox.Show(this, mergeConflictIsSubmodule.Text, mergeConflictIsSubmoduleCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
-                            {
-                                stageFile(filename);
-                                Initialize();
-                            }
-                            return;
-                        }
-                    }*/
                     var submoduleConfig = new ConfigFile(Settings.WorkingDir + ".gitmodules");
                     if (submoduleConfig.GetConfigSections().Any(configSection => configSection.GetValue("path").Trim().Equals(filename.Trim())))
                     {
@@ -300,10 +308,10 @@ namespace GitUI
                         DialogResult result = MessageBox.Show(this, string.Format(noBaseRevision.Text, filename), _noBaseFileMergeCaption.Text, MessageBoxButtons.YesNoCancel);
                         if (result == DialogResult.Yes)
                         {
-                            arguments = arguments.Replace("-merge -3", "-merge");
-                            arguments = arguments.Replace("/base:\"$BASE\"", "");
-                            arguments = arguments.Replace("/mine:\"$LOCAL\"", "/base:\"$LOCAL\"");
-                            arguments = arguments.Replace("\"$BASE\"", "");
+                            arguments = arguments.Replace("-merge -3", "-merge"); // Araxis
+                            arguments = arguments.Replace("base:\"$BASE\"", ""); // TortoiseMerge
+                            arguments = arguments.Replace("mine:\"$LOCAL\"", "base:\"$LOCAL\""); // TortoiseMerge
+                            arguments = arguments.Replace("\"$BASE\"", ""); // Perforce, Beyond Compare 3, Araxis, DiffMerge
                         }
 
                         if (result == DialogResult.Cancel)
@@ -350,19 +358,25 @@ namespace GitUI
             }
             finally
             {
-                if (filenames[0] != null && File.Exists(filenames[0])) File.Delete(filenames[0]);
-                if (filenames[1] != null && File.Exists(filenames[1])) File.Delete(filenames[1]);
-                if (filenames[2] != null && File.Exists(filenames[2])) File.Delete(filenames[2]);
+                DeleteTemporaryFiles(filenames);
                 Cursor.Current = Cursors.Default;
                 Initialize();
             }
         }
 
+        private static void DeleteTemporaryFiles(string[] filenames)
+        {
+            if (filenames[0] != null && File.Exists(filenames[0]))
+                File.Delete(filenames[0]);
+            if (filenames[1] != null && File.Exists(filenames[1]))
+                File.Delete(filenames[1]);
+            if (filenames[2] != null && File.Exists(filenames[2]))
+                File.Delete(filenames[2]);
+        }
+
         private void InitMergetool()
         {
-            mergetool = Settings.Module.GetSetting("merge.tool");
-            if (string.IsNullOrEmpty(mergetool))
-                mergetool = Settings.Module.GetGlobalSetting("merge.tool");
+            mergetool = Settings.Module.GetEffectiveSetting("merge.tool");
 
             if (string.IsNullOrEmpty(mergetool))
             {
@@ -371,19 +385,19 @@ namespace GitUI
             }
             Cursor.Current = Cursors.WaitCursor;
 
-            mergetoolCmd = Settings.Module.GetSetting("mergetool." + mergetool + ".cmd");
-            if (string.IsNullOrEmpty(mergetoolCmd))
-                mergetoolCmd = Settings.Module.GetGlobalSetting("mergetool." + mergetool + ".cmd");
+            mergetoolCmd = Settings.Module.GetEffectiveSetting("mergetool." + mergetool + ".cmd");
 
-            mergetoolPath = Settings.Module.GetSetting("mergetool." + mergetool + ".path");
-            if (string.IsNullOrEmpty(mergetoolPath))
-                mergetoolPath = Settings.Module.GetGlobalSetting("mergetool." + mergetool + ".path");
+            mergetoolPath = Settings.Module.GetEffectiveSetting("mergetool." + mergetool + ".path");
 
             if (string.IsNullOrEmpty(mergetool) || mergetool == "kdiff3")
                 mergetoolCmd = mergetoolPath + " \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"";
 
-            mergetoolPath = mergetoolCmd.Substring(0, mergetoolCmd.IndexOf(".exe") + 5).Trim(new[] { '\"', ' ' });
-            mergetoolCmd = mergetoolCmd.Substring(mergetoolCmd.IndexOf(".exe") + 5);
+            int idx = mergetoolCmd.IndexOf(".exe");
+            if (idx >= 0)
+            {
+                mergetoolPath = mergetoolCmd.Substring(0, idx + 5).Trim(new[] { '\"', ' ' });
+                mergetoolCmd = mergetoolCmd.Substring(idx + 5);
+            }
             Cursor.Current = Cursors.Default;
         }
 

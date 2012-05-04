@@ -73,6 +73,9 @@ namespace GitUI
 
         private void Initialize()
         {
+            FillUrlDropDown();
+            FillPushUrlDropDown(); 
+            
             Remotes.DataSource = Settings.Module.GetRemotes();
 
             var heads = Settings.Module.GetHeads(false, true);
@@ -83,15 +86,15 @@ namespace GitUI
             PuTTYSSH.Visible = GitCommandHelpers.Plink();
         }
 
-        private void UrlDropDown(object sender, EventArgs e)
+        private void FillUrlDropDown()
         {
-            Url.DataSource = Repositories.RepositoryHistory.Repositories;
+            Url.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
             Url.DisplayMember = "Path";
         }
 
-        private void comboBoxPushUrl_DropDown(object sender, EventArgs e)
+        private void FillPushUrlDropDown()
         {
-            comboBoxPushUrl.DataSource = Repositories.RepositoryHistory.Repositories;
+            comboBoxPushUrl.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
             comboBoxPushUrl.DisplayMember = "Path";
         }
 
@@ -234,7 +237,7 @@ namespace GitUI
             System.Uri uri;
             string sshURL = "";
             if (System.Uri.TryCreate(Url.Text, UriKind.RelativeOrAbsolute, out uri) &&
-                uri.Scheme == "ssh")
+                uri.IsAbsoluteUri && uri.Scheme == "ssh")
             {
                 if (!string.IsNullOrEmpty(uri.UserInfo))
                     sshURL = uri.UserInfo + "@";

@@ -15,7 +15,7 @@
     /// </summary>
     public static class GitSvnCommandHelpers
     {
-        private static string SvnPrefix = "svn";
+        private const string SvnPrefix = "svn";
 
         public static string CloneCmd(string fromSvn, string toPath, string authorsFile)
         {
@@ -36,7 +36,7 @@
         public static bool CheckRefsRemoteSvn()
         {
             string svnremote = GetConfigSvnRemoteFetch();
-            return svnremote != null && svnremote.Trim().StartsWith(":refs/remote");
+            return svnremote != null && svnremote.Trim().Contains(":refs/remote");
         }
 
         public static string GetConfigSvnRemoteFetch()
@@ -46,12 +46,17 @@
 
         public static string RebaseCmd()
         {
-            return "svn rebase";
+            return SvnPrefix + " rebase";
         }
 
         public static string DcommitCmd()
         {
-            return "svn dcommit";
+            return SvnPrefix + " dcommit";
+        }
+
+        public static string FetchCmd()
+        {
+            return SvnPrefix + " fetch";
         }
 
         public static bool ValidSvnWorkingDir()
@@ -64,12 +69,12 @@
             if (string.IsNullOrEmpty(dir))
                 return false;
 
-            string path = dir + Settings.PathSeparator + ".git" + Settings.PathSeparator + "svn";
+            string path = dir + Settings.PathSeparator.ToString() + ".git" + Settings.PathSeparator.ToString() + "svn";
             if (Directory.Exists(path) || File.Exists(path))
                 return true;
 
             return !dir.Contains(".git") &&
-                   Directory.Exists(dir + Settings.PathSeparator + "svn");
+                   Directory.Exists(dir + Settings.PathSeparator.ToString() + "svn");
         }
     }
 }

@@ -119,9 +119,10 @@ namespace GitUI
 
             try
             {
-                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)) && File.Exists(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User) + Settings.PathSeparator + ".gitconfig"))
+                string userHomeDir = Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User);
+                if (!string.IsNullOrEmpty(userHomeDir) && File.Exists(userHomeDir + Settings.PathSeparator.ToString() + ".gitconfig"))
                 {
-                    MessageBox.Show(this, string.Format(_gitconfigFoundHome.Text, Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)));
+                    MessageBox.Show(this, string.Format(_gitconfigFoundHome.Text, userHomeDir));
                     defaultHome.Checked = true;
                     return;
                 }
@@ -134,7 +135,7 @@ namespace GitUI
             }
             try
             {
-                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH")) && File.Exists(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH") + Settings.PathSeparator + ".gitconfig"))
+                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH")) && File.Exists(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH") + Settings.PathSeparator.ToString() + ".gitconfig"))
                 {
                     MessageBox.Show(this, string.Format(_gitconfigFoundHomedrive.Text, Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH")));
                     defaultHome.Checked = true;
@@ -149,7 +150,7 @@ namespace GitUI
             }
             try
             {
-                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("USERPROFILE")) && File.Exists(Environment.GetEnvironmentVariable("USERPROFILE") + Settings.PathSeparator + ".gitconfig"))
+                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("USERPROFILE")) && File.Exists(Environment.GetEnvironmentVariable("USERPROFILE") + Settings.PathSeparator.ToString() + ".gitconfig"))
                 {
                     MessageBox.Show(this, string.Format(_gitconfigFoundUserprofile.Text, Environment.GetEnvironmentVariable("USERPROFILE")));
                     userprofileHome.Checked = true;
@@ -164,7 +165,7 @@ namespace GitUI
             }
             try
             {
-                if (!string.IsNullOrEmpty(Environment.GetFolderPath(Environment.SpecialFolder.Personal)) && File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + Settings.PathSeparator + ".gitconfig"))
+                if (!string.IsNullOrEmpty(Environment.GetFolderPath(Environment.SpecialFolder.Personal)) && File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + Settings.PathSeparator.ToString() + ".gitconfig"))
                 {
                     MessageBox.Show(this, string.Format(_gitconfigFoundPersonalFolder.Text, Environment.GetFolderPath(Environment.SpecialFolder.Personal)));
                     otherHome.Checked = true;

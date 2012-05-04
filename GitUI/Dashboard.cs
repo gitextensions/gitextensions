@@ -11,6 +11,7 @@ using GitUI.RepoHosting;
 using GitUIPluginInterfaces.RepositoryHosts;
 using ResourceManager.Translation;
 using Settings = GitCommands.Settings;
+using System.Configuration;
 
 namespace GitUI
 {
@@ -48,7 +49,7 @@ namespace GitUI
 
             // Do this at runtime, because it is difficult to keep consistent at design time.
             pictureBox1.BringToFront();
-            pictureBox1.Location = new Point(this.Width - 145, this.Height - 145);
+            pictureBox1.Location = new Point(this.Width - pictureBox1.Image.Width - 10, this.Height - pictureBox1.Image.Height - 10);
 
             Load += Dashboard_Load;
         }
@@ -101,6 +102,22 @@ namespace GitUI
             var IssuesItem = new DashboardItem(Resources.bug, issues.Text);
             IssuesItem.Click += IssuesItem_Click;
             DonateCategory.AddItem(IssuesItem);
+
+            
+        }
+
+        public void SaveSplitterPositions()
+        {
+            try
+            {
+                Properties.Settings.Default.Dashboard_MainSplitContainer_SplitterDistance = splitContainer5.SplitterDistance;
+                Properties.Settings.Default.Dashboard_CommonSplitContainer_SplitterDistance = splitContainer6.SplitterDistance;
+                Properties.Settings.Default.Save();
+            }
+            catch (ConfigurationException)
+            {
+                //TODO: howto restore a corrupted config? Properties.Settings.Default.Reset() doesn't work.
+            }
         }
 
         public event EventHandler WorkingDirChanged;
@@ -161,9 +178,10 @@ namespace GitUI
                 initialized = true;
             }
 
+            splitContainer6.Panel1MinSize = 1;
+            splitContainer6.Panel2MinSize = 1;
             splitContainer7.Panel1MinSize = 1;
             splitContainer7.Panel2MinSize = 1;
-            splitContainer7.SplitterDistance = Math.Max(2, splitContainer7.Height - (DonateCategory.Height + 25));
 
             RecentRepositories.Clear();
 
@@ -184,6 +202,29 @@ namespace GitUI
 
             pictureBox1.BringToFront();
 
+            SetSplitterPositions();
+        }
+
+        private void SetSplitterPositions()
+        {
+            try
+            {
+                if (Properties.Settings.Default.Dashboard_CommonSplitContainer_SplitterDistance != 0)
+                    splitContainer6.SplitterDistance = Properties.Settings.Default.Dashboard_CommonSplitContainer_SplitterDistance;
+                else
+                    splitContainer6.SplitterDistance = (int)Math.Max(2, (CommonActions.Height * 1.2));
+
+                splitContainer7.SplitterDistance = Math.Max(2, splitContainer7.Height - (DonateCategory.Height + 25));
+
+                if (Properties.Settings.Default.Dashboard_MainSplitContainer_SplitterDistance != 0)
+                    splitContainer5.SplitterDistance = Properties.Settings.Default.Dashboard_MainSplitContainer_SplitterDistance;
+                else
+                    splitContainer5.SplitterDistance = 315;
+            }
+            catch (ConfigurationException)
+            {
+                //TODO: howto restore a corrupted config? Properties.Settings.Default.Reset() doesn't work.
+            }
         }
 
         private void TranslateItem_Click(object sender, EventArgs e)
@@ -289,7 +330,7 @@ namespace GitUI
             {
                 if (fileNameArray.Length != 1)
                     return;
-                
+
                 string dir = fileNameArray[0];
                 if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
                 {

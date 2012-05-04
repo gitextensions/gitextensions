@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 namespace ResourceManager.Translation
 {
     [DebuggerDisplay("{name}")]
-    public class TranslationCategory
+    public class TranslationCategory : IComparable<TranslationCategory>
     {
         public TranslationCategory()
         {
@@ -50,7 +50,16 @@ namespace ResourceManager.Translation
 
             TranslationItem ti = GetTranslationItem(translationItem.Name, translationItem.Property);
             if (ti == null)
-                translationItems.Add(translationItem);
+            {
+                if (translationItem.Property == "ToolTipText")
+                {
+                    ti = GetTranslationItem(translationItem.Name, "Text");
+                    if (ti == null || translationItem.Value != ti.Value)
+                        translationItems.Add(translationItem);
+                }
+                else
+                    translationItems.Add(translationItem);
+            }
             else
                 Debug.Assert(ti.Value == translationItem.Value);
         }
@@ -68,6 +77,11 @@ namespace ResourceManager.Translation
         public List<TranslationItem> GetTranslationItems()
         {
             return translationItems;
+        }
+
+        public int CompareTo(TranslationCategory other)
+        {
+            return Name.CompareTo(other.Name);
         }
     }
 }

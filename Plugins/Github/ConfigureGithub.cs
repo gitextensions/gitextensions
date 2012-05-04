@@ -71,7 +71,7 @@ namespace Github
 
         private void _getApiTokenBtn_Click(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/account#admin_bucket");
+            Process.Start("https://github.com/settings/admin");
             /*
             try
             {

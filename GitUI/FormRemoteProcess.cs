@@ -75,7 +75,7 @@ namespace GitUI
         }
 
 
-        protected override  bool HandleOnExit(ref bool isError)
+        protected override bool HandleOnExit(ref bool isError)
         {
             if (restart)
             {
@@ -96,12 +96,18 @@ namespace GitUI
                 }
                 */
 
+                // If the authentication failed because of a missing key, ask the user to supply one. 
                 if (OutputString.ToString().Contains("FATAL ERROR") && OutputString.ToString().Contains("authentication"))
                 {
-                    var puttyError = new FormPuttyError();
-                    puttyError.ShowDialog(this);
-                    if (puttyError.RetryProcess)
+                    string loadedKey;
+                    if (FormPuttyError.AskForKey(this, out loadedKey))
                     {
+                        // To prevent future authentication errors, save this key for this remote.
+                        if (!String.IsNullOrEmpty(loadedKey) && !String.IsNullOrEmpty(this.Remote) && 
+                            String.IsNullOrEmpty(Settings.Module.GetSetting("remote.{0}.puttykeyfile")))
+                            Settings.Module.SetSetting(string.Format("remote.{0}.puttykeyfile", this.Remote), loadedKey);
+
+                        // Retry the command.
                         Retry();
                         return true;
                     }
@@ -131,7 +137,7 @@ namespace GitUI
 
                 }
             }
-             
+
             return base.HandleOnExit(ref isError);
         }
 

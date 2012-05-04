@@ -26,6 +26,7 @@ SimpleExt/Generated/*
 *.orig
 *.msi
 *.user
+*.aps
 *.bak
 *.[Cc]ache
 Thumbs.db
@@ -35,3 +36,4 @@ GitPlugin/Properties/Resources.resources
 *.pidb
 *.resources
 *.userprefs
+*.dotCover

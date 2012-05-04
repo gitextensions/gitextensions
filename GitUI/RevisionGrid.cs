@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -13,7 +14,6 @@ using GitUI.Script;
 using GitUI.Tag;
 using Gravatar;
 using ResourceManager.Translation;
-using System.IO;
 
 namespace GitUI
 {
@@ -86,6 +86,7 @@ namespace GitUI
             BranchFilter = String.Empty;
             SetShowBranches();
             Filter = "";
+            FixedFilter = "";
             InMemFilterIgnoreCase = false;
             InMemAuthorFilter = "";
             InMemCommitterFilter = "";
@@ -131,6 +132,7 @@ namespace GitUI
         public IComparable[] LastSelectedRows { get; private set; }
         public Font RefsFont { get; private set; }
         public string Filter { get; set; }
+        public string FixedFilter { get; set; }
         public bool InMemFilterIgnoreCase { get; set; }
         public string InMemAuthorFilter { get; set; }
         public string InMemCommitterFilter { get; set; }
@@ -439,7 +441,8 @@ namespace GitUI
 
         public bool SetAndApplyBranchFilter(string filter)
         {
-            if (filter.Equals(_revisionFilter.GetBranchFilter())) return false;
+            if (filter.Equals(_revisionFilter.GetBranchFilter())) 
+                return false;
             if (filter.Equals(""))
             {
                 Settings.BranchFilterEnabled = false;
@@ -453,6 +456,11 @@ namespace GitUI
             }
             SetShowBranches();
             return true;
+        }
+
+        public void SetLimit(int limit)         
+        {
+            _revisionFilter.SetLimit(limit);
         }
 
         public override void Refresh()
@@ -758,7 +766,7 @@ namespace GitUI
                 else
                     revGraphIMF = filterBarIMF;
 
-                _revisionGraphCommand = new RevisionGraph { BranchFilter = BranchFilter, LogParam = LogParam + Filter + _revisionFilter.GetFilter() };
+                _revisionGraphCommand = new RevisionGraph { BranchFilter = BranchFilter, LogParam = LogParam + _revisionFilter.GetFilter() + Filter + FixedFilter };
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
                 _revisionGraphCommand.Error += _revisionGraphCommand_Error;
@@ -1016,15 +1024,14 @@ namespace GitUI
 
                         if (heads.Count > 0)
                         {
-                            heads.Sort(new Comparison<GitHead>(
-                                           (left, right) =>
+                            heads.Sort((left, right) =>
                                            {
                                                if (left.IsTag != right.IsTag)
                                                    return right.IsTag.CompareTo(left.IsTag);
                                                if (left.IsRemote != right.IsRemote)
                                                    return left.IsRemote.CompareTo(right.IsRemote);
                                                return left.Name.CompareTo(right.Name);
-                                           }));
+                                           });
 
                             foreach (var head in heads)
                             {
@@ -1345,7 +1352,7 @@ namespace GitUI
 
         private void RefreshGravatar(Image image)
         {
-            _syncContext.Post(state => { Revisions.Refresh(); }, null);
+            _syncContext.Post(state => Revisions.Refresh(), null);
         }
 
 
@@ -1541,15 +1548,15 @@ namespace GitUI
 
             var revision = GetRevision(LastRow);
 
-            var tagDropDown = new ToolStripDropDown();
-            var deleteBranchDropDown = new ToolStripDropDown();
-            var checkoutBranchDropDown = new ToolStripDropDown();
-            var mergeBranchDropDown = new ToolStripDropDown();
-            var rebaseDropDown = new ToolStripDropDown();
-            var renameDropDown = new ToolStripDropDown();
+            var tagDropDown = new ContextMenuStrip();
+            var deleteBranchDropDown = new ContextMenuStrip();
+            var checkoutBranchDropDown = new ContextMenuStrip();
+            var mergeBranchDropDown = new ContextMenuStrip();
+            var rebaseDropDown = new ContextMenuStrip();
+            var renameDropDown = new ContextMenuStrip();
 
-            var tagNameCopy = new ToolStripDropDown();
-            var branchNameCopy = new ToolStripDropDown();
+            var tagNameCopy = new ContextMenuStrip();
+            var branchNameCopy = new ContextMenuStrip();
 
             foreach (var head in revision.Heads.Where(h => h.IsTag))
             {
@@ -1569,9 +1576,12 @@ namespace GitUI
             var branchesWithNoIdenticalRemotes = allBranches.Where(
                 b => !b.IsRemote || !localBranches.Any(lb => lb.TrackingRemote == b.Remote && lb.MergeWith == b.LocalName));
 
+            bool currentBranchPointsToRevision = false;
             foreach (var head in branchesWithNoIdenticalRemotes)
             {
-                if (!head.Name.Equals(currentBranch))
+                if (head.Name.Equals(currentBranch))
+                    currentBranchPointsToRevision = true;
+                else
                 {
                     ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
                     toolStripItem.Click += ToolStripItemClickMergeBranch;
@@ -1582,6 +1592,15 @@ namespace GitUI
                     rebaseDropDown.Items.Add(toolStripItem);
                 }
             }
+
+            //if there is no branch to merge, then let user to merge selected commit into current branch 
+            if (mergeBranchDropDown.Items.Count == 0 && !currentBranchPointsToRevision)
+            {
+                ToolStripItem toolStripItem = new ToolStripMenuItem(revision.Guid);
+                toolStripItem.Click += ToolStripItemClickMergeBranch;
+                mergeBranchDropDown.Items.Add(toolStripItem);
+            }
+            
 
             foreach (var head in allBranches)
             {
@@ -1697,7 +1716,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            GitUICommands.Instance.StartCheckoutBranchDialog(this, toolStripItem.Text, true);
+            GitUICommands.Instance.StartCheckoutRemoteBranchDialog(this, toolStripItem.Text);
 
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
@@ -1736,7 +1755,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            var renameExecuted = GitUICommands.Instance.StartRenameDialog(toolStripItem.Text);
+            var renameExecuted = GitUICommands.Instance.StartRenameDialog(this, toolStripItem.Text);
             if (!renameExecuted)
                 return;
 
@@ -1860,6 +1879,7 @@ namespace GitUI
             
              */
             #endregion
+
             if (span.TotalMinutes < 1.0)
             {
                 if (span.Seconds == 1)
@@ -1981,6 +2001,11 @@ namespace GitUI
         private void dateToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Clipboard.SetText(GetRevision(LastRow).CommitDate.ToString());
+        }
+
+        private void hashToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(GetRevision(LastRow).Guid);
         }
 
         private static void copyToClipBoard(object sender, EventArgs e)
@@ -2318,6 +2343,338 @@ namespace GitUI
                     item.DropDown.Items[0].PerformClick();
             }
         }
+
+    }
+
+    public class FilterBranchHelper
+    {
+        private ToolStripComboBox _NO_TRANSLATE_toolStripBranches;
+        private ToolStripDropDownButton _NO_TRANSLATE_toolStripDropDownButton2;
+        private RevisionGrid _NO_TRANSLATE_RevisionGrid;
+        private ToolStripMenuItem localToolStripMenuItem;
+        private ToolStripMenuItem remoteToolStripMenuItem;
+
+
+        public FilterBranchHelper()
+        {
+            this.localToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.remoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            // 
+            // localToolStripMenuItem
+            // 
+            this.localToolStripMenuItem.Checked = true;
+            this.localToolStripMenuItem.CheckOnClick = true;
+            this.localToolStripMenuItem.Name = "localToolStripMenuItem";
+            this.localToolStripMenuItem.Text = "Local";
+            // 
+            // remoteToolStripMenuItem
+            // 
+            this.remoteToolStripMenuItem.CheckOnClick = true;
+            this.remoteToolStripMenuItem.Name = "remoteToolStripMenuItem";
+            this.remoteToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
+            this.remoteToolStripMenuItem.Text = "Remote";
+        
+        }
+
+        public FilterBranchHelper(ToolStripComboBox toolStripBranches, ToolStripDropDownButton toolStripDropDownButton2, RevisionGrid RevisionGrid)
+            : this()
+        {
+            this._NO_TRANSLATE_toolStripBranches = toolStripBranches;
+            this._NO_TRANSLATE_toolStripDropDownButton2 = toolStripDropDownButton2;
+            this._NO_TRANSLATE_RevisionGrid = RevisionGrid;
+
+
+            this._NO_TRANSLATE_toolStripDropDownButton2.DropDownItems.AddRange(new ToolStripItem[] {
+            this.localToolStripMenuItem,
+            this.remoteToolStripMenuItem});
+
+            this._NO_TRANSLATE_toolStripBranches.DropDown += this.toolStripBranches_DropDown;
+            this._NO_TRANSLATE_toolStripBranches.TextUpdate += this.toolStripBranches_TextUpdate;
+            this._NO_TRANSLATE_toolStripBranches.Leave += this.toolStripBranches_Leave;
+            this._NO_TRANSLATE_toolStripBranches.KeyUp += this.toolStripBranches_KeyUp;
+
+
+            InitToolStripBranchFilter();
+        }
+
+        public void InitToolStripBranchFilter()
+        {
+            bool local = localToolStripMenuItem.Checked;
+            bool remote = remoteToolStripMenuItem.Checked;
+
+            _NO_TRANSLATE_toolStripBranches.Items.Clear();
+            List<string> branches = GetBranchAndTagHeads(local, remote);
+            foreach (var branch in branches)
+                _NO_TRANSLATE_toolStripBranches.Items.Add(branch);
+
+            var autoCompleteList = _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Cast<string>();
+            if (!autoCompleteList.SequenceEqual(branches))
+            {
+                _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Clear();
+                _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.AddRange(branches.ToArray());
+            }
+        }
+
+        private static List<string> GetBranchHeads(bool local, bool remote)
+        {
+            var list = new List<string>();
+            if (local && remote)
+            {
+                var branches = Settings.Module.GetHeads(true, true);
+                list.AddRange(branches.Where(branch => !branch.IsTag).Select(branch => branch.Name));
+            }
+            else if (local)
+            {
+                var branches = Settings.Module.GetHeads(false);
+                list.AddRange(branches.Select(branch => branch.Name));
+            }
+            else if (remote)
+            {
+                var branches = Settings.Module.GetHeads(true, true);
+                list.AddRange(branches.Where(branch => branch.IsRemote && !branch.IsTag).Select(branch => branch.Name));
+            }
+            return list;
+        }
+
+        private static IEnumerable<string> GetTagsHeads(bool local, bool remote)
+        {
+            var list = new List<string>();
+            if (!remote)
+                return list;
+            if (local)
+            {
+                var tags = Settings.Module.GetHeads(true, true);
+                list.AddRange(tags.Where(tag => tag.IsTag).Select(tag => tag.Name));
+            }
+            else
+            {
+                var tags = Settings.Module.GetHeads(true, true);
+                list.AddRange(tags.Where(tag => tag.IsRemote && tag.IsTag).Select(tag => tag.Name));
+            }
+            return list;
+        }
+
+        private static List<string> GetBranchAndTagHeads(bool local, bool remote)
+        {
+            var list = GetBranchHeads(local, remote);
+            list.AddRange(GetTagsHeads(local, remote));
+            return list;
+        }
+
+        private void toolStripBranches_TextUpdate(object sender, EventArgs e)
+        {
+            UpdateBranchFilterItems();
+        }
+
+        private void toolStripBranches_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyValue == (char)Keys.Enter)
+            {
+                ApplyBranchFilter(true);
+            }
+        }
+
+        private void toolStripBranches_DropDown(object sender, EventArgs e)
+        {
+            InitToolStripBranchFilter();
+            UpdateBranchFilterItems();
+        }
+
+        private void ApplyBranchFilter(bool refresh)
+        {
+            bool success = _NO_TRANSLATE_RevisionGrid.SetAndApplyBranchFilter(_NO_TRANSLATE_toolStripBranches.Text);
+            if (success && refresh)
+                _NO_TRANSLATE_RevisionGrid.ForceRefreshRevisions();
+        }
+
+        private void UpdateBranchFilterItems()
+        {
+            string filter = _NO_TRANSLATE_toolStripBranches.Text;
+            _NO_TRANSLATE_toolStripBranches.Items.Clear();
+            var index = _NO_TRANSLATE_toolStripBranches.Text.Length;
+            var branches = GetBranchAndTagHeads(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
+            _NO_TRANSLATE_toolStripBranches.Items.AddRange(branches.Where(branch => branch.Contains(filter)).ToArray());
+            _NO_TRANSLATE_toolStripBranches.SelectionStart = index;
+        }
+
+        public void SetBranchFilter(string filter, bool refresh)
+        {
+            _NO_TRANSLATE_toolStripBranches.Text = filter;
+            ApplyBranchFilter(refresh);
+        }
+
+        private void toolStripBranches_Leave(object sender, EventArgs e)
+        {
+            ApplyBranchFilter(true);
+        }
+
+    }
+
+
+    public class FilterRevisionsHelper 
+    {
+
+        private ToolStripTextBox _NO_TRANSLATE_toolStripTextBoxFilter;
+        private ToolStripDropDownButton _NO_TRANSLATE_toolStripDropDownButton1;
+        private RevisionGrid _NO_TRANSLATE_RevisionGrid;
+        private ToolStripLabel _NO_TRANSLATE_toolStripLabel2;
+
+        private ToolStripMenuItem commitToolStripMenuItem1;
+        private ToolStripMenuItem committerToolStripMenuItem;
+        private ToolStripMenuItem authorToolStripMenuItem;
+        private ToolStripMenuItem diffContainsToolStripMenuItem;
+        private ToolStripMenuItem hashToolStripMenuItem;
+
+        private Form _NO_TRANSLATE_form;
+
+        public FilterRevisionsHelper()
+        {
+
+            this.commitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.committerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.authorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.diffContainsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+
+            // 
+            // commitToolStripMenuItem1
+            // 
+            this.commitToolStripMenuItem1.Checked = true;
+            this.commitToolStripMenuItem1.CheckOnClick = true;
+            this.commitToolStripMenuItem1.Name = "commitToolStripMenuItem1";
+            this.commitToolStripMenuItem1.Text = "Commit";
+            // 
+            // committerToolStripMenuItem
+            // 
+            this.committerToolStripMenuItem.CheckOnClick = true;
+            this.committerToolStripMenuItem.Name = "committerToolStripMenuItem";
+            this.committerToolStripMenuItem.Text = "Committer";
+            // 
+            // authorToolStripMenuItem
+            // 
+            this.authorToolStripMenuItem.CheckOnClick = true;
+            this.authorToolStripMenuItem.Name = "authorToolStripMenuItem";
+            this.authorToolStripMenuItem.Text = "Author";
+            // 
+            // diffContainsToolStripMenuItem
+            // 
+            this.diffContainsToolStripMenuItem.CheckOnClick = true;
+            this.diffContainsToolStripMenuItem.Name = "diffContainsToolStripMenuItem";
+            this.diffContainsToolStripMenuItem.Text = "Diff contains (SLOW)";
+            this.diffContainsToolStripMenuItem.Click += this.diffContainsToolStripMenuItem_Click;
+            // 
+            // hashToolStripMenuItem
+            // 
+            this.hashToolStripMenuItem.CheckOnClick = true;
+            this.hashToolStripMenuItem.Name = "hashToolStripMenuItem";
+            this.hashToolStripMenuItem.Size = new System.Drawing.Size(216, 24);
+            this.hashToolStripMenuItem.Text = "Hash";        
+        }
+
+        public FilterRevisionsHelper(ToolStripTextBox toolStripTextBoxFilter, ToolStripDropDownButton toolStripDropDownButton1, RevisionGrid RevisionGrid, ToolStripLabel toolStripLabel2, Form form)
+            : this()
+        {
+            this._NO_TRANSLATE_toolStripDropDownButton1 = toolStripDropDownButton1;
+            this._NO_TRANSLATE_toolStripTextBoxFilter = toolStripTextBoxFilter;
+            this._NO_TRANSLATE_RevisionGrid = RevisionGrid;
+            this._NO_TRANSLATE_toolStripLabel2 = toolStripLabel2;
+            this._NO_TRANSLATE_form = form;
+
+            this._NO_TRANSLATE_toolStripDropDownButton1.DropDownItems.AddRange(new ToolStripItem[] {
+                this.commitToolStripMenuItem1,
+                this.committerToolStripMenuItem,
+                this.authorToolStripMenuItem,
+                this.diffContainsToolStripMenuItem});
+
+            this._NO_TRANSLATE_toolStripLabel2.Click += this.ToolStripLabel2Click;
+            this._NO_TRANSLATE_toolStripTextBoxFilter.Leave += this.ToolStripTextBoxFilterLeave;
+            this._NO_TRANSLATE_toolStripTextBoxFilter.KeyPress += this.ToolStripTextBoxFilterKeyPress;
+
+        
+        }
+
+        public void SetFilter(string filter)
+        {
+            if (string.IsNullOrEmpty(filter)) return;
+            _NO_TRANSLATE_toolStripTextBoxFilter.Text = filter;
+            ApplyFilter();
+        }
+
+        private void ApplyFilter()
+        {
+            string revListArgs;
+            string inMemMessageFilter;
+            string inMemCommitterFilter;
+            string inMemAuthorFilter;
+            var filterParams = new bool[4];
+            filterParams[0] = commitToolStripMenuItem1.Checked;
+            filterParams[1] = committerToolStripMenuItem.Checked;
+            filterParams[2] = authorToolStripMenuItem.Checked;
+            filterParams[3] = diffContainsToolStripMenuItem.Checked;
+            try
+            {
+                _NO_TRANSLATE_RevisionGrid.FormatQuickFilter(_NO_TRANSLATE_toolStripTextBoxFilter.Text,
+                                               filterParams,
+                                               out revListArgs,
+                                               out inMemMessageFilter,
+                                               out inMemCommitterFilter,
+                                               out inMemAuthorFilter);
+            }
+            catch (InvalidOperationException ex)
+            {
+                MessageBox.Show(_NO_TRANSLATE_form, ex.Message, "Filter error");
+                _NO_TRANSLATE_toolStripTextBoxFilter.Text = "";
+                return;
+            }
+
+            if ((_NO_TRANSLATE_RevisionGrid.Filter == revListArgs) &&
+                (_NO_TRANSLATE_RevisionGrid.InMemMessageFilter == inMemMessageFilter) &&
+                (_NO_TRANSLATE_RevisionGrid.InMemCommitterFilter == inMemCommitterFilter) &&
+                (_NO_TRANSLATE_RevisionGrid.InMemAuthorFilter == inMemAuthorFilter) &&
+                (_NO_TRANSLATE_RevisionGrid.InMemFilterIgnoreCase))
+                return;
+            _NO_TRANSLATE_RevisionGrid.Filter = revListArgs;
+            _NO_TRANSLATE_RevisionGrid.InMemMessageFilter = inMemMessageFilter;
+            _NO_TRANSLATE_RevisionGrid.InMemCommitterFilter = inMemCommitterFilter;
+            _NO_TRANSLATE_RevisionGrid.InMemAuthorFilter = inMemAuthorFilter;
+            _NO_TRANSLATE_RevisionGrid.InMemFilterIgnoreCase = true;
+            _NO_TRANSLATE_RevisionGrid.ForceRefreshRevisions();
+        }
+
+        private void ToolStripTextBoxFilterLeave(object sender, EventArgs e)
+        {
+            ToolStripLabel2Click(sender, e);
+        }
+
+        private void ToolStripTextBoxFilterKeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+                ToolStripLabel2Click(null, null);
+        }
+
+        private void ToolStripLabel2Click(object sender, EventArgs e)
+        {
+            ApplyFilter();
+        }
+
+        private void diffContainsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (diffContainsToolStripMenuItem.Checked)
+            {
+                commitToolStripMenuItem1.Checked = false;
+                committerToolStripMenuItem.Checked = false;
+                authorToolStripMenuItem.Checked = false;
+                hashToolStripMenuItem.Checked = false;
+            }
+            else
+                commitToolStripMenuItem1.Checked = true;
+        }
+        
+
+        public void SetLimit(int limit) {
+            _NO_TRANSLATE_RevisionGrid.SetLimit(limit);
+        }
+
 
     }
 }

@@ -17,6 +17,7 @@ namespace GitUI.Editor
             TextEditor.DoubleClick += TextEditor_DoubleClick;
             TextEditor.MouseDown += TextEditor_MouseDown;
             TextEditor.BackColor = Color.White;
+            TextEditor.MouseEnter += TextArea_MouseEnter;
             TextEditor.MouseLeave += TextArea_MouseLeave;
             TextEditor.MouseMove += TextArea_MouseLeave;
         }
@@ -26,10 +27,17 @@ namespace GitUI.Editor
             set { TextEditor.Font = value; }
         }
 
+        public new event EventHandler MouseEnter;
         public new event EventHandler MouseLeave;
 
         public void Find()
         {
+        }
+
+        void TextArea_MouseEnter(object sender, EventArgs e)
+        {
+            if (MouseEnter != null)
+                MouseEnter(sender, e);
         }
 
         void TextArea_MouseLeave(object sender, EventArgs e)
@@ -193,12 +201,33 @@ namespace GitUI.Editor
 
         public string GetLineText(int line)
         {
-            return "";// TextEditor.GetFirstCharIndexFromLine(line);                
+            return TextEditor.Lines[line];
         }
 
         public int TotalNumberOfLines
         {
-            get { return 0; }
+            get { return TextEditor.Lines.Length; }
+        }
+
+        public void GoToLine(int lineNumber)
+        {
+            TextEditor.SelectionStart = FindLineStartPos(lineNumber);
+            TextEditor.SelectionLength = 0;
+            TextEditor.ScrollToCaret();
+        }
+
+        public int FindLineStartPos(int lineNumber)
+        {
+            int result;
+            if (TextEditor.Lines.Length < lineNumber)
+                result = -1;
+            else
+            {
+                result = 0;
+                for (int i = 0; i < lineNumber; i++)
+                    result += TextEditor.Lines[i].Length;                
+            }
+            return result;
         }
 
         public void FocusTextArea()

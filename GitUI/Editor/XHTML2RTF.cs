@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Xml;
@@ -392,13 +390,13 @@ namespace GitUI.Editor.RichTextBoxExtension
             CHARFORMAT cf = rtb.GetCharFormat();
             return ((cf.dwEffects & CFE.LINK) == CFE.LINK);
         }
- 
+
         static void AddLink(this RichTextBox rtb, string text)
         {
             int position = rtb.SelectionStart;
             if (position < 0 || position > rtb.Text.Length)
                 throw new ArgumentOutOfRangeException("position");
- 
+
             rtb.SelectionStart = position;
             rtb.SelectedText = text;
             int length = rtb.SelectionStart - position;
@@ -412,7 +410,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             int position = rtb.SelectionStart;
             if (position < 0 || position > rtb.Text.Length)
                 throw new ArgumentOutOfRangeException("position");
- 
+
             rtb.SelectionStart = position;
             rtb.SelectedText = text;
             int length = rtb.SelectionStart - position;
@@ -574,10 +572,10 @@ namespace GitUI.Editor.RichTextBoxExtension
             return GetCOLORREF(r, g, b);
         }
         #endregion
-        
+
         public static string GetUrl(this LinkClickedEventArgs e)
         {
-            var v = e.LinkText.Split(new char[] {'#'}, 2);
+            var v = e.LinkText.Split(new char[] { '#' }, 2);
             if (v.Length == 0)
                 return "";
             else if (v.Length == 1)
@@ -588,7 +586,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         public static void GetLinkText(this LinkClickedEventArgs e, out string url, out string text)
         {
-            var v = e.LinkText.Split(new char[] {'#'}, 2);
+            var v = e.LinkText.Split(new char[] { '#' }, 2);
             if (v.Length == 0)
             {
                 url = "";
@@ -608,7 +606,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
             Stack<CHARFORMAT> scf = new Stack<CHARFORMAT>();
             Stack<PARAFORMAT> spf = new Stack<PARAFORMAT>();
-            List<KeyValuePair<int,int>> links = new List<KeyValuePair<int,int>>();
+            List<KeyValuePair<int, int>> links = new List<KeyValuePair<int, int>>();
 
             CHARFORMAT cf = rtb.GetDefaultCharFormat(); // to apply character formatting
             PARAFORMAT pf = rtb.GetDefaultParaFormat(); // to apply paragraph formatting
@@ -708,7 +706,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                                         }
                                         break;
                                     case "font":
-                                        scf.Push(cf);;
+                                        scf.Push(cf); ;
                                         string strFont = cf.szFaceName;
                                         int crFont = cf.crTextColor;
                                         int yHeight = cf.yHeight;
@@ -786,7 +784,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                                             {
                                                 string rtfText = rtb.SelectedRtf;
                                                 int idx = rtfText.LastIndexOf('}');
-                                                if (idx != -1) 
+                                                if (idx != -1)
                                                 {
                                                     string head = rtfText.Substring(0, idx);
                                                     string tail = rtfText.Substring(idx);

@@ -15,6 +15,17 @@ namespace ResourceManager.Translation
 
         public List<TranslationCategory> translationCategories;
 
+        public TranslationCategory FindOrAddTranslationCategory(string translationCategory)
+        {
+            TranslationCategory tc = GetTranslationCategory(translationCategory);
+            if (tc == null)
+            {
+                tc = new TranslationCategory(translationCategory);
+                AddTranslationCategory(tc);
+            }
+            return tc;
+        }
+
         public void AddTranslationCategory(TranslationCategory translationCategory)
         {
             if (string.IsNullOrEmpty(translationCategory.Name))
@@ -38,5 +49,28 @@ namespace ResourceManager.Translation
             return translationCategories;
         }
 
+        public void Sort()
+        {
+            translationCategories.Sort();
+            foreach(TranslationCategory tc in translationCategories)
+                tc.GetTranslationItems().Sort();
+        }
+
+        public void AddTranslationItem(string category, string item, string property, string neutralValue)
+        {
+            FindOrAddTranslationCategory(category).AddTranslationItemIfNotExist(new TranslationItem(item, property, neutralValue));
+        }
+
+        public string TranslateItem(string category, string item, string property, string defaultValue)
+        {
+            TranslationCategory tc = GetTranslationCategory(category);
+            if (tc == null)
+                return defaultValue;
+            TranslationItem ti = tc.GetTranslationItem(item, property);
+            if (ti == null)
+                return defaultValue;
+            else
+                return ti.Value;
+        }
     }
 }

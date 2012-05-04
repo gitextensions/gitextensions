@@ -167,10 +167,7 @@ namespace GitUI
         {
             try
             {
-                string from = Settings.Module.GetSetting("user.email");
-
-                if (string.IsNullOrEmpty(from))
-                    from = Settings.Module.GetGlobalSetting("user.email");
+                string from = Settings.Module.GetEffectiveSetting("user.email");
 
                 if (string.IsNullOrEmpty(from))
                     MessageBox.Show(this, _noGitMailConfigured.Text);

@@ -1,10 +1,12 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Xml.Serialization;
 
 namespace ResourceManager.Translation
 {
     [DebuggerDisplay("{name}.{property}={value}")]
-    public class TranslationItem
+    public class TranslationItem : IComparable<TranslationItem>
     {
         public TranslationItem()
         {
@@ -56,6 +58,13 @@ namespace ResourceManager.Translation
             {
                 this.value = value;
             }
+        }
+
+        public int CompareTo(TranslationItem other)
+        {
+            int val = Name.CompareTo(other.Name);
+            if (val == 0) val = Property.CompareTo(other.Property);
+            return val;
         }
     }
 }

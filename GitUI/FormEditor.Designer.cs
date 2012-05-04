@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.fileViewer = new GitUI.Editor.FileViewer();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStrip1 = new ToolStripEx();
             this.toolStripSaveButton = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.toolStrip1.SuspendLayout();
@@ -39,7 +39,6 @@
             // 
             // fileViewer
             // 
-            this.fileViewer.DisableFocusControlOnHover = false;
             this.fileViewer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.fileViewer.Font = new System.Drawing.Font("Tahoma", 9.75F);
             this.fileViewer.IgnoreWhitespaceChanges = false;
@@ -110,7 +109,7 @@
         #endregion
 
         private GitUI.Editor.FileViewer fileViewer;
-        private System.Windows.Forms.ToolStrip toolStrip1;
+        private ToolStripEx toolStrip1;
         private System.Windows.Forms.ToolStripButton toolStripSaveButton;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     }
