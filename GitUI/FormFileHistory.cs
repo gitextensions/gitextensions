@@ -71,30 +71,24 @@ namespace GitUI
             //browse dialog.
             fileName = fileName.Replace('\\', '/');
 
+            // we will need this later to look up proper casing for the file
+            var fullFilePath = Path.Combine(Settings.WorkingDir, fileName);
+
             //The section below contains native windows (kernel32) calls
             //and breaks on Linux. Only use it on Windows. Casing is only
             //a Windows problem anyway.
-            if (Settings.RunningOnWindows())
+            if (Settings.RunningOnWindows() && File.Exists(fullFilePath))
             {
-                // we will need this later to look up proper casing for the file
-                string fullFilePath = fileName;
+                // grab the 8.3 file path
+                var shortPath = new StringBuilder(4096);
+                NativeMethods.GetShortPathName(fullFilePath, shortPath, shortPath.Capacity);
 
-                if (!fileName.StartsWith(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
-                    fullFilePath = Path.Combine(Settings.WorkingDir, fileName);
+                // use 8.3 file path to get properly cased full file path
+                var longPath = new StringBuilder(4096);
+                NativeMethods.GetLongPathName(shortPath.ToString(), longPath, longPath.Capacity);
 
-                if (File.Exists(fullFilePath))
-                {
-                    // grab the 8.3 file path
-                    var shortPath = new StringBuilder(4096);
-                    NativeMethods.GetShortPathName(fullFilePath, shortPath, shortPath.Capacity);
-
-                    // use 8.3 file path to get properly cased full file path
-                    var longPath = new StringBuilder(4096);
-                    NativeMethods.GetLongPathName(shortPath.ToString(), longPath, longPath.Capacity);
-
-                    // remove the working dir and now we have a properly cased file name.
-                    fileName = longPath.ToString().Substring(Settings.WorkingDir.Length);
-                }
+                // remove the working dir and now we have a properly cased file name.
+                fileName = longPath.ToString().Substring(Settings.WorkingDir.Length);
             }
 
             if (fileName.StartsWith(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
@@ -103,7 +97,7 @@ namespace GitUI
             FileName = fileName;
 
             string filter;
-            if (Settings.FollowRenamesInFileHistory)
+            if (Settings.FollowRenamesInFileHistory && !Directory.Exists(fullFilePath))
             {
                 // git log --follow is not working as expected (see  http://kerneltrap.org/mailarchive/git/2009/1/30/4856404/thread)
                 //
