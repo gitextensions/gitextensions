@@ -23,7 +23,7 @@ namespace GitUI
             syncContext = SynchronizationContext.Current;
             filterBranchHelper = new FilterBranchHelper(toolStripBranches, toolStripDropDownButton2, FileChanges);
 
-            filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, FileChanges, toolStripLabel2, this);            
+            filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, FileChanges, toolStripLabel2, this);
 
             FileChanges.SetInitialRevision(revision);
             Translate();
@@ -120,7 +120,7 @@ namespace GitUI
                 Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arg);
 
                 // the sequence of (quoted) file names - start with the initial filename for the search.
-                string listOfFileNames = "\"" + fileName + "\"";
+                var listOfFileNames = new StringBuilder("\"" + fileName + "\"");
 
                 // keep a set of the file names already seen
                 var setOfFileNames = new HashSet<string> { fileName };
@@ -130,13 +130,11 @@ namespace GitUI
                 {
                     line = p.StandardOutput.ReadLine();
 
-                    if (!string.IsNullOrEmpty(line))
+                    if (!string.IsNullOrEmpty(line) && setOfFileNames.Add(line))
                     {
-                        if (!setOfFileNames.Contains(line))
-                        {
-                            listOfFileNames = listOfFileNames + " \"" + line + "\"";
-                            setOfFileNames.Add(line);
-                        }
+                        listOfFileNames.Append(" \"");
+                        listOfFileNames.Append(line);
+                        listOfFileNames.Append('\"');
                     }
                 } while (line != null);
 
