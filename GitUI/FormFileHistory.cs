@@ -13,16 +13,17 @@ namespace GitUI
 {
     public sealed partial class FormFileHistory : GitExtensionsForm
     {
-        private readonly SynchronizationContext syncContext = SynchronizationContext.Current;
+        private readonly SynchronizationContext syncContext;
         private readonly FilterRevisionsHelper filterRevisionsHelper;
         private readonly FilterBranchHelper filterBranchHelper;
 
         public FormFileHistory(string fileName, GitRevision revision, bool filterByRevision)
         {
             InitializeComponent();
+            syncContext = SynchronizationContext.Current;
             filterBranchHelper = new FilterBranchHelper(toolStripBranches, toolStripDropDownButton2, FileChanges);
 
-            filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, FileChanges, toolStripLabel2, this);            
+            filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, FileChanges, toolStripLabel2, this);
 
             FileChanges.SetInitialRevision(revision);
             Translate();
@@ -70,30 +71,24 @@ namespace GitUI
             //browse dialog.
             fileName = fileName.Replace('\\', '/');
 
+            // we will need this later to look up proper casing for the file
+            var fullFilePath = Path.Combine(Settings.WorkingDir, fileName);
+
             //The section below contains native windows (kernel32) calls
             //and breaks on Linux. Only use it on Windows. Casing is only
             //a Windows problem anyway.
-            if (Settings.RunningOnWindows())
+            if (Settings.RunningOnWindows() && File.Exists(fullFilePath))
             {
-                // we will need this later to look up proper casing for the file
-                string fullFilePath = fileName;
+                // grab the 8.3 file path
+                var shortPath = new StringBuilder(4096);
+                NativeMethods.GetShortPathName(fullFilePath, shortPath, shortPath.Capacity);
 
-                if (!fileName.StartsWith(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
-                    fullFilePath = Path.Combine(Settings.WorkingDir, fileName);
+                // use 8.3 file path to get properly cased full file path
+                var longPath = new StringBuilder(4096);
+                NativeMethods.GetLongPathName(shortPath.ToString(), longPath, longPath.Capacity);
 
-                if (File.Exists(fullFilePath))
-                {
-                    // grab the 8.3 file path
-                    var shortPath = new StringBuilder(4096);
-                    NativeMethods.GetShortPathName(fullFilePath, shortPath, shortPath.Capacity);
-
-                    // use 8.3 file path to get properly cased full file path
-                    var longPath = new StringBuilder(4096);
-                    NativeMethods.GetLongPathName(shortPath.ToString(), longPath, longPath.Capacity);
-
-                    // remove the working dir and now we have a properly cased file name.
-                    fileName = longPath.ToString().Substring(Settings.WorkingDir.Length);
-                }
+                // remove the working dir and now we have a properly cased file name.
+                fileName = longPath.ToString().Substring(Settings.WorkingDir.Length);
             }
 
             if (fileName.StartsWith(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
@@ -102,7 +97,7 @@ namespace GitUI
             FileName = fileName;
 
             string filter;
-            if (Settings.FollowRenamesInFileHistory)
+            if (Settings.FollowRenamesInFileHistory && !Directory.Exists(fullFilePath))
             {
                 // git log --follow is not working as expected (see  http://kerneltrap.org/mailarchive/git/2009/1/30/4856404/thread)
                 //
@@ -119,7 +114,7 @@ namespace GitUI
                 Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arg);
 
                 // the sequence of (quoted) file names - start with the initial filename for the search.
-                string listOfFileNames = "\"" + fileName + "\"";
+                var listOfFileNames = new StringBuilder("\"" + fileName + "\"");
 
                 // keep a set of the file names already seen
                 var setOfFileNames = new HashSet<string> { fileName };
@@ -129,13 +124,11 @@ namespace GitUI
                 {
                     line = p.StandardOutput.ReadLine();
 
-                    if (!string.IsNullOrEmpty(line))
+                    if (!string.IsNullOrEmpty(line) && setOfFileNames.Add(line))
                     {
-                        if (!setOfFileNames.Contains(line))
-                        {
-                            listOfFileNames = listOfFileNames + " \"" + line + "\"";
-                            setOfFileNames.Add(line);
-                        }
+                        listOfFileNames.Append(" \"");
+                        listOfFileNames.Append(line);
+                        listOfFileNames.Append('\"');
                     }
                 } while (line != null);
 
@@ -153,12 +146,12 @@ namespace GitUI
                 filter = string.Concat(" --full-history --simplify-by-decoration ", filter);
             }
 
-            syncContext.Post(o =>
+            syncContext.Post(_ =>
             {
                 FileChanges.FixedFilter = filter;
                 FileChanges.AllowGraphWithFilter = true;
                 FileChanges.Load();
-            }, this);
+            }, null);
         }
 
         private void DiffExtraDiffArgumentsChanged(object sender, EventArgs e)
