@@ -1,4 +1,4 @@
-// Copyright (c) 2003, Paul Welter
+ï»¿// Copyright (c) 2003, Paul Welter
 // All rights reserved.
 
 using System;
@@ -35,7 +35,7 @@ namespace NetSpell.SpellChecker
 		private MatchCollection _htmlTags;
 		private Regex _letterRegex = new Regex(@"\D", RegexOptions.Compiled);
 		private Regex _upperRegex = new Regex(@"[^A-Z]", RegexOptions.Compiled);
-		private Regex _wordEx = new Regex(@"\b[A-Za-z0-9_'À-ÿ]+\b", RegexOptions.Compiled);
+		private Regex _wordEx = new Regex(@"\b[A-Za-z0-9_'Ã€-Ã¿]+\b", RegexOptions.Compiled);
 		private MatchCollection _words;
         private SuggestionEnum _suggestionMode = SuggestionEnum.PhoneticNearMiss;
         #endregion

@@ -44,8 +44,6 @@ namespace GitCommands
 
         private GitCommandsInstance gitGetGraphCommand;
 
-        private Encoding logoutputEncoding = null;
-
         private Thread backgroundThread = null;
 
         private enum ReadStep
@@ -59,6 +57,7 @@ namespace GitCommands
             AuthorDate,
             CommitterName,
             CommitterDate,
+            CommitMessageEncoding,
             CommitMessage,
             FileName,
             Done,
@@ -129,13 +128,14 @@ namespace GitCommands
                 if (!ShaOnly)
                 {
                     formatString +=
-                        /* Tree           */ "%T%n" +
-                        /* Author Name    */ "%aN%n" +
-                        /* Author Email    */ "%aE%n" +
-                        /* Author Date    */ "%ai%n" +
-                        /* Committer Name */ "%cN%n" +
-                        /* Committer Date */ "%ci%n" +
-                        /* Commit Message */ "%s";
+                        /* Tree                    */ "%T%n" +
+                        /* Author Name             */ "%aN%n" +
+                        /* Author Email            */ "%aE%n" +
+                        /* Author Date             */ "%ai%n" +
+                        /* Committer Name          */ "%cN%n" +
+                        /* Committer Date          */ "%ci%n" +
+                        /* Commit message encoding */ "%e%n" + //there is a bug: git does not recode commit message when format is given
+                        /* Commit Message          */ "%s";
                 }
 
                 // NOTE:
@@ -159,7 +159,14 @@ namespace GitCommands
 
                 gitGetGraphCommand = new GitCommandsInstance();
                 gitGetGraphCommand.StreamOutput = true;
-                gitGetGraphCommand.CollectOutput = false;
+                gitGetGraphCommand.CollectOutput = false;                
+                Encoding LogOutputEncoding = Settings.LogOutputEncoding;
+                gitGetGraphCommand.SetupStartInfoCallback = (ProcessStartInfo startInfo) =>
+                {
+                    startInfo.StandardOutputEncoding = Settings.LosslessEncoding;
+                    startInfo.StandardErrorEncoding = Settings.LosslessEncoding;
+                }; 
+
                 Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arguments);
 
                 if (BeginUpdate != null)
@@ -169,10 +176,13 @@ namespace GitCommands
                 do
                 {
                     line = p.StandardOutput.ReadLine();
+                    //commit message is not encoded by git
+                    if (nextStep != ReadStep.CommitMessage)
+                        line = GitCommandHelpers.ReEncodeString(line, Settings.LosslessEncoding, LogOutputEncoding);
 
                     if (line != null)
                     {
-                        foreach (string entry in line.Split('\0'))
+                        foreach (string entry in line.SplitString(new char[] {'\0'}))
                         {
                             dataReceived(entry);
                         }
@@ -312,14 +322,13 @@ namespace GitCommands
                     }
                     break;
 
+                case ReadStep.CommitMessageEncoding:
+                    revision.MessageEncoding = line;
+                    break;
+                
                 case ReadStep.CommitMessage:
-                    //We need to recode the commit message because of a bug in Git.
-                    //We cannot let git recode the message to Settings.Encoding which is
-                    //needed to allow the "git log" to print the filename in Settings.Encoding
-                    if (logoutputEncoding == null)
-                        logoutputEncoding = Settings.Module.GetLogoutputEncoding();
+                    revision.Message = GitCommandHelpers.ReEncodeCommitMessage(line, revision.MessageEncoding);
 
-                    revision.Message = logoutputEncoding.Equals(Settings.Encoding) ? line : logoutputEncoding.GetString(Settings.Encoding.GetBytes(line));
                     break;
 
                 case ReadStep.FileName:

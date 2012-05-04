@@ -51,6 +51,8 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(Settings.GitBinDir) && !path.Contains(Settings.GitBinDir))
                 Environment.SetEnvironmentVariable("PATH", string.Concat(path, ";", Settings.GitBinDir), EnvironmentVariableTarget.Process);
 
+            Environment.SetEnvironmentVariable("GIT_ASKPASS", "git-gui--askpass");
+
             if (!string.IsNullOrEmpty(Settings.CustomHomeDir))
             {
                 Environment.SetEnvironmentVariable(
@@ -71,7 +73,7 @@ namespace GitCommands
             {
                 Environment.SetEnvironmentVariable(
                     "HOME",
-                    Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User));
+                    UserHomeDir);
             }
 
             //Default!
@@ -85,27 +87,27 @@ namespace GitCommands
 
         public static string GetDefaultHomeDir()
         {
-            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)))
-                return Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User);
+            if (!string.IsNullOrEmpty(UserHomeDir))
+                return UserHomeDir;
 
             if (Settings.RunningOnWindows())
             {
-                string homePath;
+                return WindowsDefaultHomeDir;
+            }
+            return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+        }
+
+        private static string WindowsDefaultHomeDir
+        {
+            get
+            {
                 if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE")))
                 {
-                    homePath = Environment.GetEnvironmentVariable("HOMEDRIVE");
+                    string homePath = Environment.GetEnvironmentVariable("HOMEDRIVE");
                     homePath += Environment.GetEnvironmentVariable("HOMEPATH");
+                    return homePath;
                 }
-                else
-                {
-                    homePath = Environment.GetEnvironmentVariable("USERPROFILE");
-                }
-
-                return homePath;
-            }
-            else
-            {
-                return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                return Environment.GetEnvironmentVariable("USERPROFILE");
             }
         }
 
@@ -124,9 +126,9 @@ namespace GitCommands
                            RedirectStandardOutput = true,
                            RedirectStandardInput = true,
                            RedirectStandardError = true,
-                           StandardOutputEncoding = Settings.Encoding,
-                           StandardErrorEncoding = Settings.Encoding
-                       };
+                           StandardOutputEncoding = Settings.LogOutputEncoding,
+                           StandardErrorEncoding = Settings.LogOutputEncoding
+                        };
         }
 
         internal static bool UseSsh(string arguments)
@@ -148,7 +150,7 @@ namespace GitCommands
                    (arguments.Contains("pull"));
         }
 
-        internal static int CreateAndStartProcess(string arguments, string cmd, out byte[] stdOutput, out byte[] stdError, string stdInput)
+        internal static int CreateAndStartProcess(string arguments, string cmd, string workDir, out byte[] stdOutput, out byte[] stdError, string stdInput)
         {
             if (string.IsNullOrEmpty(cmd))
             {
@@ -163,7 +165,7 @@ namespace GitCommands
             startInfo.CreateNoWindow = true;
             startInfo.FileName = cmd;
             startInfo.Arguments = arguments;
-            startInfo.WorkingDirectory = Settings.WorkingDir;
+            startInfo.WorkingDirectory = workDir;
             startInfo.LoadUserProfile = true;
 
             using (var process = Process.Start(startInfo))
@@ -183,30 +185,29 @@ namespace GitCommands
 
         private static byte[] ReadByte(Stream stream)
         {
-            if (stream.CanRead)
+            if (!stream.CanRead)
             {
-                int commonLen = 0;
-                List<byte[]> list = new List<byte[]>();
-                byte[] buffer = new byte[4096];
-                int len = 0;
-                while ((len = stream.Read(buffer, 0, buffer.Length)) != 0)
-                {
-                    byte[] newbuff = new byte[len];
-                    Array.Copy(buffer, newbuff, len);
-                    commonLen += len;
-                    list.Add(newbuff);
-                }
-                buffer = new byte[commonLen];
-                commonLen = 0;
-                for (int i = 0; i < list.Count; i++)
-                {
-                    Array.Copy(list[i], 0, buffer, commonLen, list[i].Length);
-                    commonLen += list[i].Length;
-                }
-                return buffer;
+                return null;
             }
-            return null;
-
+            int commonLen = 0;
+            List<byte[]> list = new List<byte[]>();
+            byte[] buffer = new byte[4096];
+            int len;
+            while ((len = stream.Read(buffer, 0, buffer.Length)) != 0)
+            {
+                byte[] newbuff = new byte[len];
+                Array.Copy(buffer, newbuff, len);
+                commonLen += len;
+                list.Add(newbuff);
+            }
+            buffer = new byte[commonLen];
+            commonLen = 0;
+            for (int i = 0; i < list.Count; i++)
+            {
+                Array.Copy(list[i], 0, buffer, commonLen, list[i].Length);
+                commonLen += list[i].Length;
+            }
+            return buffer;
         }
 
         internal static int CreateAndStartProcess(string arguments, string cmd, string workDir, out string stdOutput, out string stdError, string stdInput)
@@ -267,6 +268,8 @@ namespace GitCommands
         }
 
         private static GitVersion _versionInUse;
+        private static readonly string UserHomeDir = Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User);
+
         public static GitVersion VersionInUse
         {
             get
@@ -309,21 +312,13 @@ namespace GitCommands
         {
             return "tag -d \"" + tagName + "\"";
         }
-
-        public static string SubmoduleInitCmd(string name)
-        {
-            if (string.IsNullOrEmpty(name))
-                return "submodule update --init";
-
-            return "submodule update --init \"" + name.Trim() + "\"";
-        }
-
+        
         public static string SubmoduleUpdateCmd(string name)
         {
             if (string.IsNullOrEmpty(name))
-                return "submodule update";
+                return "submodule update --init --recursive";
 
-            return "submodule update \"" + name.Trim() + "\"";
+            return "submodule update --init --recursive \"" + name.Trim() + "\"";
         }
 
         public static string SubmoduleSyncCmd(string name)
@@ -388,15 +383,22 @@ namespace GitCommands
             return "reset --hard \"" + commit + "\"";
         }
 
-        public static string CloneCmd(string fromPath, string toPath, bool central, string branch, int? depth)
+        public static string CloneCmd(string fromPath, string toPath)
+        {
+            return CloneCmd(fromPath, toPath, false, false, string.Empty, null);
+        }
+
+        public static string CloneCmd(string fromPath, string toPath, bool central, bool initSubmodules, string branch, int? depth)
         {
             var from = FixPath(fromPath);
             var to = FixPath(toPath);
             var options = new List<string> { "-v" };
             if (central)
                 options.Add("--bare");
+            if (initSubmodules)
+                options.Add("--recurse-submodules");
             if (depth.HasValue)
-                options.Add("--depth " + depth);
+                options.Add("--depth " + depth.ToString());
             if (VersionInUse.CloneCanAskForProgress)
                 options.Add("--progress");
             if (!string.IsNullOrEmpty(branch))
@@ -466,20 +468,29 @@ namespace GitCommands
             if (recursiveSubmodulesCheck)
                 srecursiveSubmodulesCheck = "--recurse-submodules=check ";
 
+            var sprogressOption = "";
+            if (GitCommandHelpers.VersionInUse.PushCanAskForProgress)
+                sprogressOption = "--progress ";
+
+            var options = String.Concat(sforce, strack, srecursiveSubmodulesCheck, sprogressOption);
             if (all)
-                return string.Format("push {0}{1}{2}--all \"{3}\"", sforce, strack, srecursiveSubmodulesCheck, path.Trim());
+                return string.Format("push {0}--all \"{1}\"", options, path.Trim());
 
             if (!string.IsNullOrEmpty(toBranch) && !string.IsNullOrEmpty(fromBranch))
-                return string.Format("push {0}{1}{2}\"{3}\" {4}:{5}", sforce, strack, srecursiveSubmodulesCheck, path.Trim(), fromBranch, toBranch);
+                return string.Format("push {0}\"{1}\" {2}:{3}", options, path.Trim(), fromBranch, toBranch);
 
-            return string.Format("push {0}{1}{2}\"{3}\" {4}", sforce, strack, srecursiveSubmodulesCheck, path.Trim(), fromBranch);
+            return string.Format("push {0}\"{1}\" {2}", sforce, options, path.Trim(), fromBranch);
         }
 
         public static string PushMultipleCmd(string path, IEnumerable<GitPushAction> pushActions)
         {
             path = FixPath(path);
 
-            string cmd = string.Format("push \"{0}\"", path.Trim());
+            var sprogressOption = "";
+            if (GitCommandHelpers.VersionInUse.PushCanAskForProgress)
+                sprogressOption = "--progress ";
+
+            string cmd = string.Format("push {0} \"{1}\"", sprogressOption, path.Trim());
 
             foreach (GitPushAction action in pushActions)
                 cmd += " " + action.Format();
@@ -502,12 +513,26 @@ namespace GitCommands
             if (force)
                 sforce = "-f ";
 
+            var sprogressOption = "";
+            if (GitCommandHelpers.VersionInUse.PushCanAskForProgress)
+                sprogressOption = "--progress ";
+
+            var options = String.Concat(sforce, sprogressOption);
+
             if (all)
-                return "push " + sforce + "\"" + path.Trim() + "\" --tags";
+                return "push " + options + "\"" + path.Trim() + "\" --tags";
             if (!string.IsNullOrEmpty(tag))
-                return "push " + sforce + "\"" + path.Trim() + "\" tag " + tag;
+                return "push " + options + "\"" + path.Trim() + "\" tag " + tag;
 
             return "";
+        }
+
+        public static string StashSaveCmd(bool untracked)
+        {
+            var cmd = "stash save";
+            if (untracked && VersionInUse.StashUntrackedFilesSupported)
+                cmd += " -u";
+            return cmd;
         }
 
         public static bool PathIsUrl(string path)
@@ -630,7 +655,7 @@ namespace GitCommands
 
         public static ConfigFile GetGlobalConfig()
         {
-            return new ConfigFile(GetHomeDir() + Settings.PathSeparator + ".gitconfig");
+            return new ConfigFile(GetHomeDir() + Settings.PathSeparator.ToString() + ".gitconfig");
         }
 
         public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, bool untrackedFiles)
@@ -769,17 +794,15 @@ namespace GitCommands
                     }
                 }
 
-                if (!fromDiff)
-                {
-                    n = GitItemStatusFromStatusCharacter(fromDiff, files, n, status, fileName, y, out gitItemStatus);
-                    if (gitItemStatus != null)
-                    {
-                        gitItemStatus.IsStaged = false;
-                        if (Submodules.Contains(gitItemStatus.Name))
-                            gitItemStatus.IsSubmodule = true;
-                        diffFiles.Add(gitItemStatus);
-                    }
-                }
+                if (fromDiff)
+                    continue;
+                n = GitItemStatusFromStatusCharacter(false, files, n, status, fileName, y, out gitItemStatus);
+                if (gitItemStatus == null)
+                    continue;
+                gitItemStatus.IsStaged = false;
+                if (Submodules.Contains(gitItemStatus.Name))
+                    gitItemStatus.IsSubmodule = true;
+                diffFiles.Add(gitItemStatus);
             }
 
             return diffFiles;
@@ -794,31 +817,29 @@ namespace GitCommands
 
             gitItemStatus = new GitItemStatus();
             //Find renamed files...
-            if (x == 'R')
+            switch (x)
             {
-                if (fromDiff)
-                {
-                    gitItemStatus.OldName = fileName.Trim();
-                    gitItemStatus.Name = files[n + 1].Trim();
-                }
-                else
-                {
-                    gitItemStatus.Name = fileName.Trim();
-                    gitItemStatus.OldName = files[n + 1].Trim();
-                }
-                gitItemStatus.IsNew = false;
-                gitItemStatus.IsChanged = false;
-                gitItemStatus.IsDeleted = false;
-                gitItemStatus.IsRenamed = true;
-                gitItemStatus.IsTracked = true;
-                if (status.Length > 2)
-                    gitItemStatus.RenameCopyPercentage = status.Substring(1);
-                n++;
-            }
-            else
-                //Find copied files...
-                if (x == 'C')
-                {
+                case 'R':
+                    if (fromDiff)
+                    {
+                        gitItemStatus.OldName = fileName.Trim();
+                        gitItemStatus.Name = files[n + 1].Trim();
+                    }
+                    else
+                    {
+                        gitItemStatus.Name = fileName.Trim();
+                        gitItemStatus.OldName = files[n + 1].Trim();
+                    }
+                    gitItemStatus.IsNew = false;
+                    gitItemStatus.IsChanged = false;
+                    gitItemStatus.IsDeleted = false;
+                    gitItemStatus.IsRenamed = true;
+                    gitItemStatus.IsTracked = true;
+                    if (status.Length > 2)
+                        gitItemStatus.RenameCopyPercentage = status.Substring(1);
+                    n++;
+                    break;
+                case 'C':
                     if (fromDiff)
                     {
                         gitItemStatus.OldName = fileName.Trim();
@@ -837,9 +858,8 @@ namespace GitCommands
                     if (status.Length > 2)
                         gitItemStatus.RenameCopyPercentage = status.Substring(1);
                     n++;
-                }
-                else
-                {
+                    break;
+                default:
                     gitItemStatus.Name = fileName.Trim();
                     gitItemStatus.IsNew = x == 'A' || x == '?' || x == '!';
                     gitItemStatus.IsChanged = x == 'M';
@@ -847,7 +867,8 @@ namespace GitCommands
                     gitItemStatus.IsRenamed = false;
                     gitItemStatus.IsTracked = x != '?' && x != '!' && x != ' ' || !gitItemStatus.IsNew;
                     gitItemStatus.IsConflict = x == 'U';
-                }
+                    break;
+            }
             return n;
         }
         
@@ -866,7 +887,7 @@ namespace GitCommands
                     process1 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --add --stdin");
 
                 //process1.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
-                byte[] bytearr = EncodingHelper.ConvertTo(Settings.Encoding, "\"" + FixPath(file.Name) + "\"" + process1.StandardInput.NewLine);
+                byte[] bytearr = EncodingHelper.ConvertTo(Settings.SystemEncoding, "\"" + FixPath(file.Name) + "\"" + process1.StandardInput.NewLine);
                 process1.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
             }
             if (process1 != null)
@@ -886,7 +907,7 @@ namespace GitCommands
                 if (process2 == null)
                     process2 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --remove --stdin");
                 //process2.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
-                byte[] bytearr = EncodingHelper.ConvertTo(Settings.Encoding, "\"" + FixPath(file.Name) + "\"" + process2.StandardInput.NewLine);
+                byte[] bytearr = EncodingHelper.ConvertTo(Settings.SystemEncoding, "\"" + FixPath(file.Name) + "\"" + process2.StandardInput.NewLine);
                 process2.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
             }
             if (process2 != null)
@@ -941,7 +962,7 @@ namespace GitCommands
                 if (process2 == null)
                     process2 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --force-remove --stdin");
                 //process2.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
-                byte[] bytearr = EncodingHelper.ConvertTo(Settings.Encoding, "\"" + FixPath(file.Name) + "\"" + process2.StandardInput.NewLine);
+                byte[] bytearr = EncodingHelper.ConvertTo(Settings.SystemEncoding, "\"" + FixPath(file.Name) + "\"" + process2.StandardInput.NewLine);
                 process2.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
             }
             if (process2 != null)
@@ -978,6 +999,9 @@ namespace GitCommands
                     }
                 }
                 sb.AppendLine("Submodule " + module + " Change");
+                string fromHash = null;
+                string toHash = null;
+                bool dirtyFlag = false;
                 while ((line = reader.ReadLine()) != null)
                 {
                     if (line.Contains("Subproject"))
@@ -990,12 +1014,19 @@ namespace GitCommands
                         if (pos >= 0)
                             hash = line.Substring(pos + commit.Length);
                         bool bdirty = hash.EndsWith("-dirty");
+                        dirtyFlag |= bdirty;
                         hash = hash.Replace("-dirty", "");
                         string dirty = !bdirty ? "" : " (dirty)";
                         if (c == '-')
+                        {
+                            fromHash = hash;
                             sb.AppendLine("From:\t" + hash + dirty);
+                        }
                         else if (c == '+')
+                        {
+                            toHash = hash;
                             sb.AppendLine("To:\t\t" + hash + dirty);
+                        }
 
                         string path = Settings.Module.GetSubmoduleFullPath(module);
                         GitModule gitmodule = new GitModule(path);
@@ -1010,6 +1041,25 @@ namespace GitCommands
                                 var lines = commitData.Body.Trim(delim).Split(new string[] {"\r\n"}, 0);
                                 foreach (var curline in lines)
                                     sb.AppendLine("\t\t" + curline);
+                            }
+                            if (fromHash != null && toHash != null)
+                            {
+                                if (dirtyFlag)
+                                {
+                                    string status = gitmodule.GetStatusText(false);
+                                    if (!String.IsNullOrEmpty(status))
+                                    {
+                                        sb.AppendLine("\nStatus:");
+                                        sb.Append(status);
+                                    }
+                                }
+
+                                string diffs = gitmodule.GetDiffFilesText(fromHash, toHash);
+                                if (!String.IsNullOrEmpty(diffs))
+                                {
+                                    sb.AppendLine("\nDifferences:");
+                                    sb.Append(diffs);
+                                }
                             }
                         }
                         else
@@ -1078,55 +1128,51 @@ namespace GitCommands
             if (delta < 60)
             {
                 if (ts.Seconds == 1)
-                    return String.Format(Strings.Get1SecondAgoText(), 1);
-                else
-                    return String.Format(Strings.GetNSecondsAgoText(), ts.Seconds);
+                    return String.Format(Strings.Get1SecondAgoText(), 1.ToString());
+                return String.Format(Strings.GetNSecondsAgoText(), ts.Seconds.ToString());
             }
             if (delta < 120)
             {
-                return String.Format(Strings.Get1MinuteAgoText(), 1);
+                return String.Format(Strings.Get1MinuteAgoText(), 1.ToString());
             }
             if (delta < 2700) // 45 * 60
             {
-                return String.Format(Strings.GetNMinutesAgoText(), ts.Minutes);
+                return String.Format(Strings.GetNMinutesAgoText(), ts.Minutes.ToString());
             }
             if (delta < 5400) // 90 * 60
             {
-                return String.Format(Strings.Get1HourAgoText(), 1);
+                return String.Format(Strings.Get1HourAgoText(), 1.ToString());
             }
             if (delta < 86400) // 24 * 60 * 60
             {
-                return String.Format(Strings.GetNHoursAgoText(), ts.Hours);
+                return String.Format(Strings.GetNHoursAgoText(), ts.Hours.ToString());
             }
             if (delta < 172800) // 48 * 60 * 60
             {
-                return String.Format(Strings.Get1DayAgoText(), 1);
+                return String.Format(Strings.Get1DayAgoText(), 1.ToString());
             }
             if (delta < 604800) // 7 * 24 * 60 * 60
             {
-                return String.Format(Strings.GetNDaysAgoText(), ts.Days);
+                return String.Format(Strings.GetNDaysAgoText(), ts.Days.ToString());
             }
             if (delta < 2592000) // 30 * 24 * 60 * 60
             {
                 int weeks = Convert.ToInt32(Math.Floor((double)ts.Days / 7));
                 if (weeks <= 1)
-                    return String.Format(Strings.Get1WeekAgoText(), 1);
-                else
-                    return String.Format(Strings.GetNWeeksAgoText(), weeks);
+                    return String.Format(Strings.Get1WeekAgoText(), 1.ToString());
+                return String.Format(Strings.GetNWeeksAgoText(), weeks.ToString());
             }
             if (delta < 31104000) // 12 * 30 * 24 * 60 * 60
             {
                 int months = Convert.ToInt32(Math.Floor((double)ts.Days / 30));
                 if (months <= 1)
-                    return String.Format(Strings.Get1MonthAgoText(), 1);
-                else
-                    return String.Format(Strings.GetNMonthsAgoText(), months);
+                    return String.Format(Strings.Get1MonthAgoText(), 1.ToString());
+                return String.Format(Strings.GetNMonthsAgoText(), months.ToString());
             }
             int years = Convert.ToInt32(Math.Floor((double)ts.Days / 365));
             if (years <= 1)
-                return String.Format(Strings.Get1YearAgoText(), 1);
-            else
-                return String.Format(Strings.GetNYearsAgoText(), years);
+                return String.Format(Strings.Get1YearAgoText(), 1.ToString());
+            return String.Format(Strings.GetNYearsAgoText(), years.ToString());
         }
 
 
@@ -1146,5 +1192,178 @@ namespace GitCommands
                 return left + sep + right;
 
         }
+
+        public static string ReEncodeFileName(string diffStr, int headerLines)
+        {
+            StringReader r = new StringReader(diffStr);
+            StringWriter w = new StringWriter();
+            string line;
+            while (headerLines > 0 && (line = r.ReadLine()) != null)
+            {
+                headerLines--;
+                line = ReEncodeFileName(line);
+                w.WriteLine(line);
+            }
+            w.Write(r.ReadToEnd());
+
+            return w.ToString();
+        }
+
+        public static string ReEncodeFileName(string header)
+        {
+            char[] chars = header.ToCharArray();
+            List<byte> blist = new List<byte>();
+            int i = 0;
+            StringBuilder sb = new StringBuilder();
+            while (i < chars.Length)
+            {
+                char c = chars[i];
+                if (c == '\\')
+                {
+                    //there should be 3 digits
+                    if (chars.Length >= i + 3)
+                    {
+                        string octNumber = "" + chars[i + 1] + chars[i + 2] + chars[i + 3];
+
+                        try
+                        {
+                            int code = System.Convert.ToInt32(octNumber, 8);
+                            blist.Add((byte)code);
+                            i += 4;
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
+                }
+                else
+                {
+                    if (blist.Count > 0)
+                    {
+                        sb.Append(Settings.SystemEncoding.GetString(blist.ToArray()));
+                        blist.Clear();
+                    }
+
+                    sb.Append(c);
+                    i++;
+                }
+            }
+            if (blist.Count > 0)
+            {
+                sb.Append(Settings.SystemEncoding.GetString(blist.ToArray()));
+                blist.Clear();
+            }
+            return sb.ToString();
+        }
+
+        public static string ReEncodeString(string s, Encoding fromEncoding, Encoding toEncoding)
+        {
+            if (s == null || fromEncoding.HeaderName.Equals(toEncoding.HeaderName))
+                return s;
+            else
+            {
+                byte[] bytes = fromEncoding.GetBytes(s);
+                s = toEncoding.GetString(bytes);
+                return s;
+            }
+        }
+
+        /// <summary>
+        /// reencodes string from GitCommandHelpers.LosslessEncoding to Settings.LogOutputEncoding
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static string ReEncodeStringFromLossless(string s)
+        {
+            return ReEncodeString(s, Settings.LosslessEncoding, Settings.LogOutputEncoding);
+        }
+
+        public static string ReEncodeStringFromLossless(string s, Encoding toEncoding)
+        {
+            if (toEncoding == null)
+                return s;
+            else
+                return ReEncodeString(s, Settings.LosslessEncoding, toEncoding);
+
+        }
+
+        //there is a bug: git does not recode commit message when format is given
+        //Lossless encoding is used, because LogOutputEncoding might not be lossless and not recoded
+        //characters could be replaced by replacement character while reencoding to LogOutputEncoding
+        public static string ReEncodeCommitMessage(string s, string toEncodingName)
+        {
+
+            bool isABug = true;
+
+            Encoding encoding;
+            try
+            {
+                if (isABug)
+                {
+                    if (toEncodingName.IsNullOrEmpty())
+                        encoding = Encoding.UTF8;
+                    else if (toEncodingName.Equals(Settings.LosslessEncoding.HeaderName, StringComparison.InvariantCultureIgnoreCase))
+                        encoding = null; //no recoding is needed
+                    else
+                        encoding = Encoding.GetEncoding(toEncodingName);
+                }
+                else//if bug will be fixed, git should recode commit message to LogOutputEncoding
+                    encoding = Settings.LogOutputEncoding;
+
+            }
+            catch (Exception)
+            {
+                return "! Unsupported commit message encoding: " + toEncodingName + " !\n\n" + s;
+            }
+            return ReEncodeStringFromLossless(s, encoding);
+        }
+
+        /// <summary>
+        /// header part of show result is encoded in logoutputencoding (including reencoded commit message)
+        /// diff part is raw data in file's original encoding
+        /// s should be encoded in LosslessEncoding
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static string ReEncodeShowString(string s)
+        {
+            if (s.IsNullOrEmpty())
+                return s;
+
+            int p = s.IndexOf("diff --git");
+            string header;
+            string diffHeader;
+            string diffContent;
+            string diff;
+            if (p > 0)
+            {
+                header = s.Substring(0, p);
+                diff = s.Substring(p);
+            }
+            else
+            {
+                header = string.Empty;
+                diff = s;
+            }
+
+            p = diff.IndexOf("@@");
+            if (p > 0)
+            {
+                diffHeader = diff.Substring(0, p);
+                diffContent = diff.Substring(p);
+            }
+            else
+            {
+                diffHeader = string.Empty;
+                diffContent = diff;
+            }
+
+            header = ReEncodeString(header, Settings.LosslessEncoding, Settings.LogOutputEncoding);
+            diffHeader = ReEncodeString(diffHeader, Settings.LosslessEncoding, Settings.LogOutputEncoding);
+            diffHeader = ReEncodeFileName(diffHeader);
+            diffContent = ReEncodeString(diffContent, Settings.LosslessEncoding, Settings.FilesEncoding);
+            return header + diffHeader + diffContent;
+        }
+
     }
 }

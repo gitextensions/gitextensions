@@ -19,6 +19,8 @@ namespace GitCommands.Repository
 
         public void RemoveRecentRepository(string repo)
         {
+            if (string.IsNullOrEmpty(repo))
+                return;
             foreach (var recentRepository in Repositories)
             {
                 if (!recentRepository.Path.Equals(repo, StringComparison.CurrentCultureIgnoreCase))
@@ -38,12 +40,12 @@ namespace GitCommands.Repository
             if (string.IsNullOrEmpty(repo))
                 return;
 
-            repo = repo.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
-            if (!repo.EndsWith(Settings.PathSeparator.ToString()) &&
-                !repo.StartsWith("http", StringComparison.CurrentCultureIgnoreCase) &&
-                !repo.StartsWith("git", StringComparison.CurrentCultureIgnoreCase) &&
-                !repo.StartsWith("ssh", StringComparison.CurrentCultureIgnoreCase))
-                repo += Settings.PathSeparator;
+            if (!Repository.PathIsUrl(repo))
+            {
+                repo = repo.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
+                if (!repo.EndsWith(Settings.PathSeparator.ToString()))
+                repo += Settings.PathSeparator.ToString();
+            }
 
             Repository.RepositoryAnchor anchor = Repository.RepositoryAnchor.None;
             foreach (var recentRepository in Repositories)

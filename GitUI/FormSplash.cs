@@ -16,7 +16,7 @@ namespace GitUI
 
         private static FormSplash instance;
 
-        public static void Show(string action)
+        public static void ShowSplash()
         {
             instance = new FormSplash();
             instance.Show();
@@ -28,7 +28,7 @@ namespace GitUI
                 instance.SetActionText(action);
         }
 
-        public new static void Hide()
+        public static void HideSplash()
         {
             if (instance != null)
             {
@@ -60,7 +60,6 @@ namespace GitUI
         private void SetActionText(string action)
         {
             _NO_TRANSLATE_actionLabel.Text = action;
-            Refresh();
         }
 
         protected override void OnLoad(EventArgs e)

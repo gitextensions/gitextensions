@@ -1,8 +1,11 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using GitCommands.Config;
 using GitCommands.Logging;
 using GitCommands.Repository;
 using Microsoft.Win32;
@@ -12,13 +15,14 @@ namespace GitCommands
     public static class Settings
     {
         //Constants
-        public static readonly string GitExtensionsVersionString = "2.29";
-        public static readonly int GitExtensionsVersionInt = 229;
+        public static readonly string GitExtensionsVersionString = "2.32";
+        public static readonly int GitExtensionsVersionInt = 232;
 
         //semi-constants
         public static readonly char PathSeparator = '\\';
         public static readonly char PathSeparatorWrong = '/';
 
+        private static Dictionary<String, object> byNameMap = new Dictionary<String, object>();
         static Settings()
         {
             if (!RunningOnWindows())
@@ -31,13 +35,6 @@ namespace GitCommands
 
             //Make applicationdatapath version dependent
             ApplicationDataPath = Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
-        }
-
-        private static bool? _focusControlOnHover;
-        public static bool FocusControlOnHover
-        {
-            get { return SafeGet("focuscontrolonhover", true, ref _focusControlOnHover); }
-            set { SafeSet("focuscontrolonhover", value, ref _focusControlOnHover); }
         }
 
         private static int? _UserMenuLocationX;
@@ -100,7 +97,7 @@ namespace GitCommands
         private static bool? _showGitStatusInBrowseToolbar;
         public static bool ShowGitStatusInBrowseToolbar
         {
-            get { return SafeGet("showgitstatusinbrowsetoolbar", false, ref _showGitStatusInBrowseToolbar); }
+            get { return SafeGet("showgitstatusinbrowsetoolbar", true, ref _showGitStatusInBrowseToolbar); }
             set { SafeSet("showgitstatusinbrowsetoolbar", value, ref _showGitStatusInBrowseToolbar); }
         }
 
@@ -263,54 +260,165 @@ namespace GitCommands
             set { SafeSet("revisiongraphdrawnonrelativestextgray", value, ref _revisionGraphDrawNonRelativesTextGray); }
         }
 
-        private static Encoding _encoding;
-        public static Encoding Encoding
+        public static Dictionary<string, Encoding> availableEncodings = new Dictionary<string, Encoding>();
+           
+        private static Encoding GetEncoding(bool local, string settingName, bool fromSettings)
+        {
+            Encoding result;
+            string lname = local ? "_local" + '_' + WorkingDir : "_global";
+            lname = settingName + lname;
+            object o;
+            if (byNameMap.TryGetValue(lname, out o))
+                result = o as Encoding;
+            else
+            {
+                string encodingName;
+                if (fromSettings)
+                    encodingName = GetString("n_" + lname, null);
+                else
+                {
+                    ConfigFile cfg;
+                    if (local)
+                        cfg = Module.GetLocalConfig();
+                    else
+                        cfg = GitCommandHelpers.GetGlobalConfig();
+
+                    encodingName = cfg.GetValue(settingName);
+                }
+
+                if (string.IsNullOrEmpty(encodingName))
+                    result = null;
+                else if (!availableEncodings.TryGetValue(encodingName, out result))
+                {
+                    try
+                    {
+                        result = Encoding.GetEncoding(encodingName);
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        throw new Exception(ex.Message + Environment.NewLine + "Unsupported encoding set in git config file: " + encodingName + Environment.NewLine + "Please check the setting i18n.commitencoding in your local and/or global config files. Command aborted.", ex);
+                    }
+                }
+                byNameMap[lname] = result;                
+            }
+
+            return result;
+
+        }
+
+        private static void SetEncoding(bool local, string settingName, Encoding encoding, bool toSettings)
+        {
+            string lname = local ? "_local" + '_' + WorkingDir : "_global";
+            lname = settingName + lname;
+            byNameMap[lname] = encoding;
+            //storing to config file is handled by FormSettings
+            if (toSettings)
+                SetString("n_" + lname, encoding == null ? null : encoding.HeaderName);
+        }
+
+        //encoding for files paths
+        public static Encoding SystemEncoding;
+        //Encoding that let us read all bytes without replacing any char
+        public static readonly Encoding LosslessEncoding = Encoding.GetEncoding("ISO-8859-1");//is any better?
+        //follow by git i18n CommitEncoding and LogOutputEncoding is a hell
+        //command output may consist of:
+        //1) commit message encoded in CommitEncoding, recoded to LogOutputEncoding or not dependent of 
+        //   pretty parameter (pretty=raw - recoded, pretty=format - not recoded)
+        //2) author name encoded dependently on config file encoding, not recoded to LogOutputEncoding
+        //3) file content encoded in its original encoding, not recoded to LogOutputEncoding
+        //4) file path (file name is encoded in system default encoding), not recoded to LogOutputEncoding,
+        //   every not ASCII character is escaped with \ followed by its code as a three digit octal number
+        //5) branch or tag name encoded in system default encoding, not recoded to LogOutputEncoding
+        //saying that "At the core level, git is character encoding agnostic." is not enough
+        //In my opinion every data not encoded in utf8 should contain information
+        //about its encoding, also git should emit structuralized data
+        //i18n CommitEncoding and LogOutputEncoding properties are stored in config file, because of 2)
+        //it is better to encode this file in utf8 for international projects. To read config file properly
+        //we must know its encoding, let user decide by setting AppEncoding property which encoding has to be used
+        //to read/write config file
+        public static Encoding GetAppEncoding(bool local)
+        {
+            return GetEncoding(local, "AppEncoding", true);
+        }
+        public static void SetAppEncoding(bool local, Encoding encoding)
+        {
+            SetEncoding(local, "AppEncoding", encoding, true);
+        }
+        public static Encoding AppEncoding
         {
             get
             {
-                if (_encoding == null)
-                {
-                    string encoding = GetValue("encoding", "");
-
-                    if (string.IsNullOrEmpty(encoding))
-                        _encoding = new UTF8Encoding(false);
-                    else if (encoding.Equals("Default", StringComparison.CurrentCultureIgnoreCase))
-                        _encoding = Encoding.Default;
-                    else if (encoding.Equals("Unicode", StringComparison.CurrentCultureIgnoreCase))
-                        _encoding = new UnicodeEncoding();
-                    else if (encoding.Equals("ASCII", StringComparison.CurrentCultureIgnoreCase))
-                        _encoding = new ASCIIEncoding();
-                    else if (encoding.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
-                        _encoding = new UTF7Encoding();
-                    else if (encoding.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
-                        _encoding = new UTF32Encoding(true, false);
-                    else
-                        _encoding = new UTF8Encoding(false);
-                }
-                return _encoding;
+                Encoding result = GetAppEncoding(true);
+                if (result == null)
+                    result = GetAppEncoding(false);
+                if (result == null)
+                    result = new UTF8Encoding(false);
+                return result;
             }
-            set
+        }
+
+        public static Encoding GetFilesEncoding(bool local) 
+        {
+            return GetEncoding(local, "i18n.filesEncoding", false);                 
+        }
+        public static void SetFilesEncoding(bool local, Encoding encoding)
+        {
+            SetEncoding(local, "i18n.filesEncoding", encoding, false);
+        }
+        public static Encoding FilesEncoding
+        {
+            get
             {
-                _encoding = value;
+                Encoding result = GetFilesEncoding(true);
+                if (result == null)
+                    result = GetFilesEncoding(false);
+                if (result == null)
+                    result = new UTF8Encoding(false);
+                return result;
+            }
+        }
 
-                if (VersionIndependentRegKey == null)
-                    return;
+        public static Encoding GetCommitEncoding(bool local)
+        {
+            return GetEncoding(local, "i18n.commitEncoding", false);
+        }
+        public static void SetCommitEncoding(bool local, Encoding encoding)
+        {
+            SetEncoding(local, "i18n.commitEncoding", encoding, false);
+        }
+        public static Encoding CommitEncoding
+        {
+            get
+            {
+                Encoding result = GetCommitEncoding(true);
+                if (result == null)
+                    result = GetCommitEncoding(false);
+                if (result == null)
+                    result = new UTF8Encoding(false);
+                return result;
+            }
+        }
 
-                string encoding = "";
-                if (_encoding.EncodingName == Encoding.ASCII.EncodingName)
-                    encoding = "ASCII";
-                else if (_encoding.EncodingName == Encoding.Unicode.EncodingName)
-                    encoding = "Unicode";
-                else if (_encoding.EncodingName == Encoding.UTF7.EncodingName)
-                    encoding = "UTF7";
-                else if (_encoding.EncodingName == Encoding.UTF8.EncodingName)
-                    encoding = "UTF8";
-                else if (_encoding.EncodingName == Encoding.UTF32.EncodingName)
-                    encoding = "UTF32";
-                else if (_encoding.EncodingName == Encoding.Default.EncodingName)
-                    encoding = "Default";
-
-                SetValue("encoding", encoding);
+        public static Encoding GetLogOutputEncoding(bool local)
+        {
+            return GetEncoding(local, "i18n.logoutputencoding", false);
+        }
+        public static void SetLogOutputEncoding(bool local, Encoding encoding)
+        {
+            SetEncoding(local, "i18n.logoutputencoding", encoding, false);
+        }
+        public static Encoding LogOutputEncoding
+        {
+            get
+            {
+                Encoding result = GetLogOutputEncoding(true);
+                if (result == null)
+                    result = GetLogOutputEncoding(false);
+                if (result == null)
+                    result = CommitEncoding;
+                if (result == null)
+                    result = new UTF8Encoding(false);
+                return result;
             }
         }
 
@@ -328,13 +436,33 @@ namespace GitCommands
             get { return SafeGet("smtp", "", ref _smtp); }
             set { SafeSet("smtp", value, ref _smtp); }
         }
-
-
+        
         private static bool? _autoStash;
         public static bool AutoStash
         {
             get { return SafeGet("autostash", false, ref _autoStash); }
             set { SafeSet("autostash", value, ref _autoStash); }
+        }
+
+        private static bool? _mergeAtCheckout;
+        public static bool MergeAtCheckout
+        {
+            get { return SafeGet("mergeAtCheckout", true, ref _mergeAtCheckout); }
+            set { SafeSet("mergeAtCheckout", value, ref _mergeAtCheckout); }
+        }
+
+        private static bool? _includeUntrackedFilesInAutoStash;
+        public static bool IncludeUntrackedFilesInAutoStash
+        {
+            get { return SafeGet("includeUntrackedFilesInAutoStash", true, ref _includeUntrackedFilesInAutoStash); }
+            set { SafeSet("includeUntrackedFilesInAutoStash", value, ref _includeUntrackedFilesInAutoStash); }
+        }
+
+        private static bool? _includeUntrackedFilesInManualStash;
+        public static bool IncludeUntrackedFilesInManualStash
+        {
+            get { return SafeGet("includeUntrackedFilesInManualStash", true, ref _includeUntrackedFilesInManualStash); }
+            set { SafeSet("includeUntrackedFilesInManualStash", value, ref _includeUntrackedFilesInManualStash); }
         }
 
         private static bool? _orderRevisionByDate;
@@ -483,6 +611,7 @@ namespace GitCommands
         private static GitModule _module = new GitModule();
         public static GitModule Module
         {
+            [DebuggerStepThrough]
             get
             {
                 return _module;
@@ -499,11 +628,24 @@ namespace GitCommands
             {
                 string old = _module.WorkingDir;
                 _module.WorkingDir = value;
+                RecentWorkingDir = _module.WorkingDir;
                 if (WorkingDirChanged != null)
                 {
                     WorkingDirChanged(old, _module.WorkingDir, _module.GetGitDirectory());
                 }
             }
+        }
+
+        public static string RecentWorkingDir
+        {
+            get { return GetString("RecentWorkingDir", null); }
+            set { SetString("RecentWorkingDir", value); }
+        }
+
+        public static bool StartWithRecentWorkingDir
+        {
+            get { return GetBool("StartWithRecentWorkingDir", false).Value; }
+            set { SetBool("StartWithRecentWorkingDir", value); }
         }
 
         public static CommandLogger GitLog { get; private set; }
@@ -716,17 +858,79 @@ namespace GitCommands
             try
             {
                 SetValue("gitssh", GitCommandHelpers.GetSsh());
-                if (Repositories.RepositoryHistoryLoaded)
-                    SetValue("history", Repositories.SerializeHistoryIntoXml());
-                if (Repositories.RepositoryCategoriesLoaded)
-                    SetValue("repositories", Repositories.SerializeRepositories());
+                Repositories.SaveSettings();
             }
             catch
             { }
         }
 
+        private static void TransferEncodings()
+        {
+            string encoding = GetValue("encoding", "");
+            if (!encoding.IsNullOrEmpty())
+            {
+                Encoding _encoding;
+
+                if (encoding.Equals("Default", StringComparison.CurrentCultureIgnoreCase))
+                    _encoding = Encoding.Default;
+                else if (encoding.Equals("Unicode", StringComparison.CurrentCultureIgnoreCase))
+                    _encoding = new UnicodeEncoding();
+                else if (encoding.Equals("ASCII", StringComparison.CurrentCultureIgnoreCase))
+                    _encoding = new ASCIIEncoding();
+                else if (encoding.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
+                    _encoding = new UTF7Encoding();
+                else if (encoding.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
+                    _encoding = new UTF32Encoding(true, false);
+                else
+                    _encoding = new UTF8Encoding(false);
+
+                SetFilesEncoding(false, _encoding);
+                SetAppEncoding(false, _encoding);
+                SetValue("encoding", null as string);
+            }
+        }
+
+        private static void SetupSystemEncoding()
+        {
+            //check whether GitExtensions works with standard msysgit or msysgit-unicode
+
+            // invoke a git command that returns an invalid argument in its response, and
+            // check if a unicode-only character is reported back. If so assume msysgit-unicode
+
+            // git config --get with a malformed key (no section) returns:
+            // "error: key does not contain a section: <key>"
+            const string controlStr = "ą"; // "a caudata"
+            string arguments = string.Format("config --get {0}", controlStr);
+
+            int exitCode;
+            String s = Module.RunGitCmd(arguments, out exitCode, null, Encoding.UTF8);
+            if (s != null && s.IndexOf(controlStr) != -1)
+                SystemEncoding = Encoding.UTF8;
+            else
+                SystemEncoding = Encoding.Default;
+        
+        }
+
         public static void LoadSettings()
         {
+
+            SetupSystemEncoding();
+
+            Action<Encoding> addEncoding = delegate(Encoding e) { availableEncodings[e.HeaderName] = e; };
+            addEncoding(Encoding.Default);
+            addEncoding(new ASCIIEncoding());
+            addEncoding(new UnicodeEncoding());
+            addEncoding(new UTF7Encoding());
+            addEncoding(new UTF8Encoding());
+
+            try
+            {
+                TransferEncodings();
+                TransferVerDependentReg();
+            }
+            catch
+            { }
+
             try
             {
                 GitCommandHelpers.SetSsh(GetValue<string>("gitssh", null));
@@ -805,6 +1009,48 @@ namespace GitCommands
             set { SafeSet("SortLessRecentRepos", value, ref _SortLessRecentRepos); }
         }
 
+        private static bool? _NoFastForwardMerge;
+        public static bool NoFastForwardMerge
+        {
+            get { return SafeGet("NoFastForwardMerge", false, ref _NoFastForwardMerge); }
+            set { SafeSet("NoFastForwardMerge", value, ref _NoFastForwardMerge); }
+        }
+
+        private static int? _CommitValidationMaxCntCharsFirstLine;
+        public static int CommitValidationMaxCntCharsFirstLine
+        {
+            get { return SafeGet("CommitValidationMaxCntCharsFirstLine", 0, ref _CommitValidationMaxCntCharsFirstLine); }
+            set { SafeSet("CommitValidationMaxCntCharsFirstLine", value, ref _CommitValidationMaxCntCharsFirstLine); }
+        }
+
+        private static int? _CommitValidationMaxCntCharsPerLine;
+        public static int CommitValidationMaxCntCharsPerLine
+        {
+            get { return SafeGet("CommitValidationMaxCntCharsPerLine", 0, ref _CommitValidationMaxCntCharsPerLine); }
+            set { SafeSet("CommitValidationMaxCntCharsPerLine", value, ref _CommitValidationMaxCntCharsPerLine); }
+        }
+
+        private static bool? _CommitValidationSecondLineMustBeEmpty;
+        public static bool CommitValidationSecondLineMustBeEmpty
+        {
+            get { return SafeGet("CommitValidationSecondLineMustBeEmpty", false, ref _CommitValidationSecondLineMustBeEmpty); }
+            set { SafeSet("CommitValidationSecondLineMustBeEmpty", value, ref _CommitValidationSecondLineMustBeEmpty); }
+        }
+
+        private static string _CommitValidationRegEx;
+        public static string CommitValidationRegEx
+        {
+            get { return SafeGet("CommitValidationRegEx", String.Empty, ref _CommitValidationRegEx); }
+            set { SafeSet("CommitValidationRegEx", value, ref _CommitValidationRegEx); }
+        }
+
+        private static string _CommitTemplates;
+        public static string CommitTemplates
+        {
+            get { return SafeGet("CommitTemplates", String.Empty, ref _CommitTemplates); }
+            set { SafeSet("CommitTemplates", value, ref _CommitTemplates); }
+        }
+
         public static string GetGitExtensionsFullPath()
         {
             return GetGitExtensionsDirectory() + "\\GitExtensions.exe";
@@ -876,49 +1122,131 @@ namespace GitCommands
             SetValue(key, field.AsString());
         }
 
-        private static string VersionIndependentRegKey
+        private static RegistryKey _VersionIndependentRegKey;
+
+        private static RegistryKey VersionIndependentRegKey
         {
             get
             {
-                return string.Concat(Registry.CurrentUser, "\\Software\\GitExtensions\\GitExtensions");
-                //return Application.UserAppDataRegistry.Name.Replace("\\" + Application.ProductVersion, string.Empty);
+                if (_VersionIndependentRegKey == null)
+                {
+                    _VersionIndependentRegKey = Registry.CurrentUser.OpenSubKey("Software\\GitExtensions\\GitExtensions", true);
+                    if (_VersionIndependentRegKey == null)
+                        _VersionIndependentRegKey = Registry.CurrentUser.CreateSubKey("Software\\GitExtensions\\GitExtensions", RegistryKeyPermissionCheck.ReadWriteSubTree);
+                }
+                return _VersionIndependentRegKey;
             }
         }
 
         public static T GetValue<T>(string name, T defaultValue)
         {
-            T value = (T)Registry.GetValue(VersionIndependentRegKey, name, null);
+            T value = (T)VersionIndependentRegKey.GetValue(name, null);
 
             if (value != null)
                 return value;
-
-            /////////////////////////////////////////////////////////////////////////////////////
-            ///// BEGIN TEMPORARY CODE TO CONVERT OLD VERSION DEPENDENT REGISTRY TO NEW 
-            ///// VERSION INDEPENDENT REGISTRY KEY!
-            /////////////////////////////////////////////////////////////////////////////////////
-            value = (T)Registry.GetValue(VersionIndependentRegKey + "\\1.0.0.0", name, null);
-
-            if (value != null)
-            {
-                SetValue<T>(name, value);
-                return value;
-            }
-
-            if (defaultValue != null)
-            {
-                SetValue<T>(name, defaultValue);
-            }
-            /////////////////////////////////////////////////////////////////////////////////////
-            ///// END TEMPORARY CODE TO CONVERT OLD VERSION DEPENDENT REGISTRY TO NEW 
-            ///// VERSION INDEPENDENT REGISTRY KEY!
-            /////////////////////////////////////////////////////////////////////////////////////
-
+          
             return defaultValue;
+        }
+
+        //temporary code to transfer version dependent registry caused that there was no way to set value to null
+        //if there was the same named key in version dependent registry
+        private static void TransferVerDependentReg()
+        {
+            bool? transfered = GetBool("TransferedVerDependentReg", false);
+            if (!transfered.Value)
+            {
+                string r = Application.UserAppDataRegistry.Name.Replace(Application.ProductVersion, "1.0.0.0");
+                r = r.Substring(Registry.CurrentUser.Name.Length + 1, r.Length - Registry.CurrentUser.Name.Length - 1);
+                RegistryKey versionDependentRegKey = Registry.CurrentUser.OpenSubKey(r, true);
+                try
+                {
+                    foreach (string key in versionDependentRegKey.GetValueNames())
+                    {
+                        object val = versionDependentRegKey.GetValue(key);
+                        object independentVal = VersionIndependentRegKey.GetValue(key, null);
+                        if (independentVal == null)
+                            SetValue<object>(key, val);
+                    }
+                }
+                finally
+                {
+                    versionDependentRegKey.Close();
+                }
+                SetBool("TransferedVerDependentReg", true);
+            }
+            
         }
 
         public static void SetValue<T>(string name, T value)
         {
-            Registry.SetValue(VersionIndependentRegKey, name, value);
+            if (value == null)
+                VersionIndependentRegKey.DeleteValue(name);
+            else
+                VersionIndependentRegKey.SetValue(name, value);
+        }
+
+        public static T GetByName<T>(string name, T defaultValue, Func<object, T> decode)
+        {
+            object o;
+            if (byNameMap.TryGetValue(name, out o))
+            {
+                if( o == null || o is T)
+                    return (T)o;
+                else
+                    throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
+            }
+            else
+            {
+                T result;
+                o = GetValue<object>(name, null);
+                if (o == null)
+                    result = defaultValue;
+                else
+                    result = decode(o);
+
+                byNameMap[name] = result;
+                return result;
+            }
+        }
+
+        public static void SetByName<T>(string name, T value, Func<T, object> encode)
+        {
+            object o;
+            if (byNameMap.TryGetValue(name, out o))
+                if (Object.Equals(o, value))
+                    return;
+            if (value == null)
+                o = null;
+            else
+                o = encode(value);
+            SetValue<object>(name, o);
+            byNameMap[name] = value;
+        }
+
+        public static bool? GetBool(string name, bool? defaultValue)
+        {
+            return GetByName<bool?>(name, defaultValue, x => x.ToString().Equals(bool.TrueString));
+        }
+
+        public static void SetString(string name, string value)
+        {
+            SetByName<string>(name, value, (string s) => s);
+        }
+
+        public static string GetString(string name, string defaultValue)
+        {
+            return GetByName<string>(name, defaultValue, x => x.ToString());
+        }
+
+        public static void SetBool(string name, bool? value)
+        {
+            SetByName<bool?>(name, value, (bool? b) => b.Value ? bool.TrueString : bool.FalseString);
+        }
+
+
+        public static string PrefixedName(string prefix, string name) 
+        {
+            return prefix == null ? name : prefix + '_' + name;
         }
     }
 

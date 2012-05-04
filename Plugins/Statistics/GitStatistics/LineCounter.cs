@@ -35,6 +35,32 @@ namespace GitStatistics
             return false;
         }
 
+        private IEnumerable<FileInfo> GetFiles(DirectoryInfo startDirectory, string filter)
+        {
+            Queue<DirectoryInfo> queue = new Queue<DirectoryInfo>();
+            queue.Enqueue(startDirectory);
+            while(queue.Count != 0)
+            {
+                DirectoryInfo directory = queue.Dequeue();
+                FileInfo[] files = null;
+                try
+                {
+                    files = directory.GetFiles(filter);
+                    DirectoryInfo[] directories = directory.GetDirectories();
+                    foreach (var dir in directories)
+                        queue.Enqueue(dir);
+                }
+                catch (System.UnauthorizedAccessException)
+                {
+                }
+                if (files != null)
+                {
+                    foreach (var file in files)
+                        yield return file;
+                }
+            }
+        }
+
         public void FindAndAnalyzeCodeFiles(string filePattern, string directoriesToIgnore)
         {
             NumberLines = 0;
@@ -51,7 +77,7 @@ namespace GitStatistics
 
             foreach (var filter in filters)
             {
-                foreach (var file in _directory.GetFiles(filter.Trim(), SearchOption.AllDirectories))
+                foreach (var file in GetFiles(_directory, filter.Trim()))
                 {
                     if (DirectoryIsFiltered(file.Directory, directoryFilter))
                         continue;

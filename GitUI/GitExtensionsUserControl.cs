@@ -2,12 +2,13 @@
 using System.Windows.Forms;
 using System.Drawing;
 using System.ComponentModel;
+using ResourceManager;
 using ResourceManager.Translation;
 using System.Collections.Generic;
 
 namespace GitUI
 {
-    public class GitExtensionsControl : UserControl
+    public class GitExtensionsControl : UserControl, ITranslate
     {
         public GitExtensionsControl()
         {
@@ -43,11 +44,22 @@ namespace GitUI
 
         protected void Translate()
         {
-            var translator = new Translator(GitCommands.Settings.Translation);
-            translator.TranslateControl(this);
+            Translator.Translate(this, GitCommands.Settings.Translation);
             translated = true;
         }
 
+        public virtual void AddTranslationItems(Translation translation)
+        {
+            if (!string.IsNullOrEmpty(Text))
+                translation.AddTranslationItem(Name, "$this", "Text", Text);
+            TranslationUtl.AddTranslationItemsFromFields(Name, this, translation);
+        }
+
+        public virtual void TranslateItems(Translation translation)
+        {
+            Text = translation.TranslateItem(Name, "$this", "Text", Text);
+            TranslationUtl.TranslateItemsFromFields(Name, this, translation);
+        }
 
 
         #region Hotkeys

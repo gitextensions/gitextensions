@@ -7,45 +7,27 @@ using System.IO;
 
 namespace ResourceManager.Translation
 {
-    public class Translator
+    public static class Translator
     {
         //Try to cache the translation as long as possible
-        private static Translation translation;
-        private static string name;
+        private static Translation _translation;
+        private static string _name;
 
-        public Translator(string translationName)
+        public static Translation GetTranslation(string translationName)
         {
             if (string.IsNullOrEmpty(translationName))
             {
-                Translator.translation = null;
-            } else
-            if (!translationName.Equals(Translator.name))
-            {
+                Translator._translation = null;
+            }
+            else if (!translationName.Equals(Translator._name))
+            {                
                 if (RunningOnWindows())
-                    Translator.translation = TranslationSerializer.Deserialize(Translator.GetTranslationDir() + @"\" + translationName + ".xml");
+                    Translator._translation = TranslationSerializer.Deserialize(Translator.GetTranslationDir() + @"\" + translationName + ".xml");
                 else
-                    Translator.translation = TranslationSerializer.Deserialize(Translator.GetTranslationDir() + @"/" + translationName + ".xml");
+                    Translator._translation = TranslationSerializer.Deserialize(Translator.GetTranslationDir() + @"/" + translationName + ".xml");
             }
-            Translator.name = translationName;
-        }
-
-        public string LanguageCode
-        {
-            get
-            {
-                if (translation == null)
-                    return null;
-
-                return translation.LanguageCode;
-            }
-        }
-
-        public string Name
-        {
-            get
-            {
-                return Translator.name;
-            }
+            Translator._name = translationName;
+            return Translator._translation;
         }
 
         public static bool RunningOnWindows()
@@ -93,59 +75,12 @@ namespace ResourceManager.Translation
             return translations.ToArray();
         }
 
-        public string GetString(string category, string control, string property)
+        public static void Translate(ITranslate obj, string translationName)
         {
-            if (Translator.translation == null)
-                return null;
-            if (!Translator.translation.HasTranslationCategory(category))
-                return null;
-
-
-            TranslationCategory translationCategory = Translator.translation.GetTranslationCategory(category);
-            if (!translationCategory.HasTranslationItem(control, property))
-                return null;
-
-            return translationCategory.GetTranslationItem(control, property).Value;
-        }
-
-        public void TranslateControl(object controlToTranslate)
-        {
-            if (Translator.translation == null)
+            Translation translation = GetTranslation(translationName);
+            if (translation == null)
                 return;
-
-            string name;
-
-            if (controlToTranslate is Control)
-                name = ((Control)controlToTranslate).Name;
-            else
-                name = controlToTranslate.GetType().Name;
-
-            if (!Translator.translation.HasTranslationCategory(name))
-                return;
-
-            TranslationCategory translationCategory = Translator.translation.GetTranslationCategory(name);
-            foreach (TranslationItem translationItem in translationCategory.GetTranslationItems())
-            {
-                object subControl = null;
-                
-                if (translationItem.Name.Equals("$this"))
-                {
-                    subControl = controlToTranslate;
-                }
-                else
-                {
-                    FieldInfo fieldInfo = controlToTranslate.GetType().GetField(translationItem.Name, BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (fieldInfo != null)
-                        subControl = fieldInfo.GetValue(controlToTranslate);
-                }
-
-                if (subControl == null)
-                    continue;
-
-                PropertyInfo propertyInfo = subControl.GetType().GetProperty(translationItem.Property, BindingFlags.Public | BindingFlags.Instance);
-                if (propertyInfo != null)
-                    propertyInfo.SetValue(subControl, translationItem.Value, null);
-            }
+            obj.TranslateItems(Translator._translation);
         }
     }
 }

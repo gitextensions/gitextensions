@@ -1,12 +1,40 @@
 ﻿Changelog
 =========
 
+Version 2.32
+	Fixed issue 772: push tag on creation
+	Fixed issue 839: splash screen doesn't refresh
+	Issue issue 868: github username/apitoken invalid or network down 
+	Fixed issue: select all files in commit dialog performance fix
+	Visual Studio 11 support added	
+	Ctrl-g as default hotkey for GoToLine
+	Modified behavior of ToolStrips and MenuStrips to allow click-through behavior, eliminating the need for a double-click if window isn't focused.
+	Disable menu items which actions require a repository if no repository is selected.
+	Improved "missing SSH key" flow
+	New "reset changes" dialog
+	Stash untracked files is only supported in msysgit >= 1.7.7
+	Fixed diff between "copied from file" vs "copied to file"
+
+Version 2.31
+	Fixed issue 745: test connection does not work with non-uri
+	Fixed issue 829: Browse submodules menu item does not work
+	Fixed issue 831: Remote Repositories dialog does not show Url
+	Fixed issue 840: Positions of splitters of main screen aren't persisted
+	Fix for "Index out of range exception" when no recent repositories are present.
+
 Version 2.29
+	Fixed issue 276: Make splitter visible on Dashboard
 	Fixed issue 745: Test connection does not work with non-uri
 	Fixed issue 756: Push dialog advanced options are cut off
-	Fixed issue 651: Diff view does not clear out the file pane when switching to a commit that has no changes.
+	Fixed issue 651: Diff view does not clear out the file pane when switching to a commit that has no changes
+	Fixed issue 727: Fix ours/theirs menu labels in the Resolve merge conflicts dialog
 	Fixed issue 767: An exception is thrown in the revision graph
-	Fixed issue 780: Relative author/commit date in the commit history graph is incorrect.
+	Fixed issue 780: Relative author/commit date in the commit history graph is incorrect
+	Fixed issue 783: 'View diff' Windows context menu item executes the item directly above 'Git Extensions'
+	Fixed issue 791: Korean letters are not breaking in Translate dialog anymore
+	Fixed issue 796: Remember 'No fast forward' turned on when merge
+	Fixed issue 812: Fix occurrence of exception in FileTree when .gitattributes is not valid
+	Fixed issue 816: Invalid path chars in FormBrowse.UpdateJumplist
 	Fixed issue: GitExtensions crashes when detected wrong git version
 	Fixed issue: shell extensions are duplicated in 64bit environment
 	Fixed issue: an exception is thrown after moving the install folder (portable edition)
@@ -14,10 +42,13 @@ Version 2.29
 	Added option to change Encoding in diff view
 	Added “View commit” context menu item to “File History” dialog
 	Added warning of not committed changes before checkout
+	Added option to stash untracked files
 	Russian translation updated
 	Traditional Chinese translation updated
 	Spanish translation updated
 	Dutch translation updated
+	German translation updated
+	Many bugfixes and minor changes
 
 
 Version 2.28

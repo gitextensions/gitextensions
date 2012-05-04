@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.filesWillBeIgnored = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_filesWillBeIgnored = new System.Windows.Forms.Label();
             this.noMatchPanel = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.Preview = new System.Windows.Forms.ListBox();
+            this._NO_TRANSLATE_Preview = new System.Windows.Forms.ListBox();
             this.AddToIngore = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.FilePattern = new System.Windows.Forms.TextBox();
@@ -44,9 +44,9 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.filesWillBeIgnored);
+            this.groupBox1.Controls.Add(this._NO_TRANSLATE_filesWillBeIgnored);
             this.groupBox1.Controls.Add(this.noMatchPanel);
-            this.groupBox1.Controls.Add(this.Preview);
+            this.groupBox1.Controls.Add(this._NO_TRANSLATE_Preview);
             this.groupBox1.Location = new System.Drawing.Point(15, 55);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(12, 8, 12, 28);
@@ -57,12 +57,12 @@
             // 
             // filesWillBeIgnored
             // 
-            this.filesWillBeIgnored.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.filesWillBeIgnored.AutoSize = true;
-            this.filesWillBeIgnored.Location = new System.Drawing.Point(449, 211);
-            this.filesWillBeIgnored.Name = "filesWillBeIgnored";
-            this.filesWillBeIgnored.Size = new System.Drawing.Size(0, 15);
-            this.filesWillBeIgnored.TabIndex = 11;
+            this._NO_TRANSLATE_filesWillBeIgnored.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this._NO_TRANSLATE_filesWillBeIgnored.AutoSize = true;
+            this._NO_TRANSLATE_filesWillBeIgnored.Location = new System.Drawing.Point(449, 211);
+            this._NO_TRANSLATE_filesWillBeIgnored.Name = "filesWillBeIgnored";
+            this._NO_TRANSLATE_filesWillBeIgnored.Size = new System.Drawing.Size(0, 15);
+            this._NO_TRANSLATE_filesWillBeIgnored.TabIndex = 11;
             // 
             // noMatchPanel
             // 
@@ -98,13 +98,13 @@
             // 
             // Preview
             // 
-            this.Preview.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Preview.FormattingEnabled = true;
-            this.Preview.ItemHeight = 15;
-            this.Preview.Location = new System.Drawing.Point(12, 24);
-            this.Preview.Name = "Preview";
-            this.Preview.Size = new System.Drawing.Size(528, 184);
-            this.Preview.TabIndex = 1;
+            this._NO_TRANSLATE_Preview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._NO_TRANSLATE_Preview.FormattingEnabled = true;
+            this._NO_TRANSLATE_Preview.ItemHeight = 15;
+            this._NO_TRANSLATE_Preview.Location = new System.Drawing.Point(12, 24);
+            this._NO_TRANSLATE_Preview.Name = "Preview";
+            this._NO_TRANSLATE_Preview.Size = new System.Drawing.Size(528, 184);
+            this._NO_TRANSLATE_Preview.TabIndex = 1;
             // 
             // AddToIngore
             // 
@@ -160,14 +160,14 @@
         #endregion
 
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.ListBox Preview;
+        private System.Windows.Forms.ListBox _NO_TRANSLATE_Preview;
         private System.Windows.Forms.Button AddToIngore;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox FilePattern;
         private System.Windows.Forms.Panel noMatchPanel;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Label filesWillBeIgnored;
+        private System.Windows.Forms.Label _NO_TRANSLATE_filesWillBeIgnored;
 
     }
 }
