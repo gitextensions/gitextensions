@@ -1,0 +1,27 @@
+Exception Dialog (datetime UTC format)
+exception interface tests with real world scenarios
+check for updates and stop sending bug reports for older versions (in lueue with NUpdater)
+fill in internal Logger.Trace methods all around the place & create a submission progress dialog
+In protocol.cs class, Use serialized classes instead of this sort of CSV objects for ConnectionStrings!!
+internal developer ui for exceptions is shown two times (with debug button) - see ConfigErrorWithInternalConfigurationExceptionViewer
+make a new branch v1.1 & Dev
+make default UI full (for better display) and update screenshots at codeplex-site
+mendatory field check bug (test app runs regardless and no focus is given)
+merge developer UIs
+Peer review the code & the project
+settings.cs tests full
+test loading of config files (settings.cs) and custom config files (settingsoverride) and trace them
+use static constructor in unit tests! (for per class init)
+Add F1 help to configurator via .chm documentation file
+Update DbgHelp library to detect x64/x86 platform changes
+Unit tests for: Can use Settings.StopReportingAfter <= 0 and Settings.MaxQueuedReports <= 0 for infinite reports
+Refactor the code for NBug.Settings.AdditionalReportFiles.Add(Environment.CurrentDirectory + "\\Log.txt"); (the report generation part)
+The property red from the file '***' is undefined. (it should be 'read' not 'red').
+	static void Main(string[] args)
+	{
+		AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
+		throw new Exception("Test exception.");
+	}
+ReleaseMode = true; should also flush any existing cache (i.e. queued reports etc., or this maybe a separate functionality, autoflush, for version upgrades etc. so submitter will not be broken)
+Bug: connectionString="Type=HTTP;Url=http://mywebsite.com/uploadReport.php/;" (note the trailing slash)
+Use AppData-Local-Temp instead of windows temp

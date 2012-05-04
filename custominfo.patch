@@ -1,0 +1,102 @@
+Index: NBug/Core/Reporting/BugReport.cs
+===================================================================
+--- NBug/Core/Reporting/BugReport.cs	(revision 10247)
++++ NBug/Core/Reporting/BugReport.cs	(working copy)
+@@ -4,6 +4,8 @@
+ // </copyright>
+ // --------------------------------------------------------------------------------------------------------------------
+ 
++using System.Collections.Generic;
++
+ namespace NBug.Core.Reporting
+ {
+ 	using System;
+@@ -27,7 +29,7 @@
+ 		/// First parameters is the serializable exception object that is about to be processed, second parameter is any custom data
+ 		/// object that the user wants to include in the report.
+ 		/// </summary>
+-		internal static event Action<Exception, object> ProcessingException;
++		internal static event Action<Exception, List<object>> ProcessingException;
+ 
+ 		internal ExecutionFlow Report(Exception exception, ExceptionThread exceptionThread)
+ 		{
+@@ -35,6 +37,8 @@
+ 			{
+ 				// Starting with a blank report
+ 				this.report = new Report();
++				report.CustomInfo.AddRange(Settings.CustomInfo);
++
+ 				var handler = ProcessingException;
+ 				if (handler != null)
+ 				{
+Index: NBug/Core/Reporting/Info/Report.cs
+===================================================================
+--- NBug/Core/Reporting/Info/Report.cs	(revision 10247)
++++ NBug/Core/Reporting/Info/Report.cs	(working copy)
+@@ -4,6 +4,8 @@
+ // </copyright>
+ // --------------------------------------------------------------------------------------------------------------------
+ 
++using System.Collections.Generic;
++
+ namespace NBug.Core.Reporting.Info
+ {
+ 	using System;
+@@ -18,6 +20,7 @@
+ 		/// </summary>
+ 		public Report()
+ 		{
++			CustomInfo = new List<object>();
+ 		}
+ 
+ 		internal Report(SerializableException serializableException)
+@@ -29,7 +32,7 @@
+ 		/// Gets or sets a custom object property to store user supplied information in the bug report. You need to handle
+ 		/// <see cref="NBug.Settings.ProcessingException"/> event to fill this property with required information. 
+ 		/// </summary>
+-		public object CustomInfo { get; set; }
++		public List<object> CustomInfo { get; set; }
+ 
+ 		/// <summary>
+ 		/// Gets or sets general information about the exception and the system to be presented in the bug report.
+Index: NBug/Settings.cs
+===================================================================
+--- NBug/Settings.cs	(revision 10247)
++++ NBug/Settings.cs	(working copy)
+@@ -37,6 +37,7 @@
+ 			EntryAssembly = Assembly.GetEntryAssembly();
+ 			NBugDirectory = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location) ?? Environment.CurrentDirectory;
+ 			AdditionalReportFiles = new List<string>();
++			CustomInfo = new List<object>();
+ 
+ 			// Default to developer mode settings. Settings this now so that any exception below will be handled with correct settings
+ 			ReleaseMode = false; // ToDo: This results initial config loading always setup to ThrowExceptions = true;
+@@ -124,13 +125,13 @@
+ 		/// </summary>
+ 		/// <example>A sample code demonstrating the proper use of this event:
+ 		/// <code>
+-		/// NBug.Settings.ProcessingException += (exception, obj) =>
++		/// NBug.Settings.ProcessingException += (exception, custom) =>
+ 		///	{
+-		///		obj = new MyCusomSystemInformation { UtcTime = DateTime.UtcNow, AdditionalData = RubyExceptionData.GetInstance(exception) };
++		///		custom.Add(new MyCusomSystemInformation { UtcTime = DateTime.UtcNow, AdditionalData = RubyExceptionData.GetInstance(exception) });
+ 		///	};
+ 		/// </code>
+ 		/// </example>
+-		public static event Action<Exception, object> ProcessingException
++		public static event Action<Exception, List<object>> ProcessingException
+ 		{
+ 			add
+ 			{
+@@ -295,6 +296,11 @@
+ 		/// </summary>
+ 		public static List<string> AdditionalReportFiles { get; set; }
+ 
++		/// <summary>
++		/// Gets or sets a list of static information that will be added to the reports
++		/// </summary>
++		public static List<object> CustomInfo { get; set; }
++
+ 		#endregion
+ 
+ 		#region Internal Settings
