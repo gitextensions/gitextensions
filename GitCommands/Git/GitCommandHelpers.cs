@@ -468,20 +468,29 @@ namespace GitCommands
             if (recursiveSubmodulesCheck)
                 srecursiveSubmodulesCheck = "--recurse-submodules=check ";
 
+            var sprogressOption = "";
+            if (GitCommandHelpers.VersionInUse.PushCanAskForProgress)
+                sprogressOption = "--progress ";
+
+            var options = String.Concat(sforce, strack, srecursiveSubmodulesCheck, sprogressOption);
             if (all)
-                return string.Format("push {0}{1}{2}--all \"{3}\"", sforce, strack, srecursiveSubmodulesCheck, path.Trim());
+                return string.Format("push {0}--all \"{1}\"", options, path.Trim());
 
             if (!string.IsNullOrEmpty(toBranch) && !string.IsNullOrEmpty(fromBranch))
-                return string.Format("push {0}{1}{2}\"{3}\" {4}:{5}", sforce, strack, srecursiveSubmodulesCheck, path.Trim(), fromBranch, toBranch);
+                return string.Format("push {0}\"{1}\" {2}:{3}", options, path.Trim(), fromBranch, toBranch);
 
-            return string.Format("push {0}{1}{2}\"{3}\" {4}", sforce, strack, srecursiveSubmodulesCheck, path.Trim(), fromBranch);
+            return string.Format("push {0}\"{1}\" {2}", sforce, options, path.Trim(), fromBranch);
         }
 
         public static string PushMultipleCmd(string path, IEnumerable<GitPushAction> pushActions)
         {
             path = FixPath(path);
 
-            string cmd = string.Format("push \"{0}\"", path.Trim());
+            var sprogressOption = "";
+            if (GitCommandHelpers.VersionInUse.PushCanAskForProgress)
+                sprogressOption = "--progress ";
+
+            string cmd = string.Format("push {0} \"{1}\"", sprogressOption, path.Trim());
 
             foreach (GitPushAction action in pushActions)
                 cmd += " " + action.Format();
@@ -504,10 +513,16 @@ namespace GitCommands
             if (force)
                 sforce = "-f ";
 
+            var sprogressOption = "";
+            if (GitCommandHelpers.VersionInUse.PushCanAskForProgress)
+                sprogressOption = "--progress ";
+
+            var options = String.Concat(sforce, sprogressOption);
+
             if (all)
-                return "push " + sforce + "\"" + path.Trim() + "\" --tags";
+                return "push " + options + "\"" + path.Trim() + "\" --tags";
             if (!string.IsNullOrEmpty(tag))
-                return "push " + sforce + "\"" + path.Trim() + "\" tag " + tag;
+                return "push " + options + "\"" + path.Trim() + "\" tag " + tag;
 
             return "";
         }
