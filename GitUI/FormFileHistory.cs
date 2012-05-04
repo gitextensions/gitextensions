@@ -13,13 +13,14 @@ namespace GitUI
 {
     public sealed partial class FormFileHistory : GitExtensionsForm
     {
-        private readonly SynchronizationContext syncContext = SynchronizationContext.Current;
+        private readonly SynchronizationContext syncContext;
         private readonly FilterRevisionsHelper filterRevisionsHelper;
         private readonly FilterBranchHelper filterBranchHelper;
 
         public FormFileHistory(string fileName, GitRevision revision, bool filterByRevision)
         {
             InitializeComponent();
+            syncContext = SynchronizationContext.Current;
             filterBranchHelper = new FilterBranchHelper(toolStripBranches, toolStripDropDownButton2, FileChanges);
 
             filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, FileChanges, toolStripLabel2, this);            
@@ -153,12 +154,12 @@ namespace GitUI
                 filter = string.Concat(" --full-history --simplify-by-decoration ", filter);
             }
 
-            syncContext.Post(o =>
+            syncContext.Post(_ =>
             {
                 FileChanges.FixedFilter = filter;
                 FileChanges.AllowGraphWithFilter = true;
                 FileChanges.Load();
-            }, this);
+            }, null);
         }
 
         private void DiffExtraDiffArgumentsChanged(object sender, EventArgs e)
