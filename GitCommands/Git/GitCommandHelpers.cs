@@ -617,12 +617,18 @@ namespace GitCommands
 
         public static string PatchCmd(string patchFile)
         {
-            return "am --3way --signoff \"" + FixPath(patchFile) + "\"";
+            if (IsDiffFile(patchFile))
+                return "apply \"" + FixPath(patchFile) + "\"";
+            else
+                return "am --3way --signoff \"" + FixPath(patchFile) + "\"";
         }
 
         public static string PatchCmdIgnoreWhitespace(string patchFile)
         {
-            return "am --3way --signoff --ignore-whitespace \"" + FixPath(patchFile) + "\"";
+            if (IsDiffFile(patchFile))
+                return "apply --ignore-whitespace \"" + FixPath(patchFile) + "\"";
+            else
+                return "am --3way --signoff --ignore-whitespace \"" + FixPath(patchFile) + "\"";
         }
 
         public static string PatchDirCmd(string patchDir)
@@ -1365,5 +1371,22 @@ namespace GitCommands
             return header + diffHeader + diffContent;
         }
 
+        // look into patch file and try to figure out if it's a raw diff (i.e from git diff -p)
+        // only looks at start, as all we want is to tell from automail format
+        // returns false on any problem, never throws
+        private static bool IsDiffFile(string path)
+        {
+            try
+            {
+                using (StreamReader sr = new StreamReader(path))
+                {
+                    return sr.ReadLine().StartsWith("diff ");
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }
