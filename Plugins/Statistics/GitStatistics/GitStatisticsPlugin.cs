@@ -1,10 +1,11 @@
 ﻿using System;
 using System.IO;
+using System.Windows.Forms;
 using GitUIPluginInterfaces;
 
 namespace GitStatistics
 {
-    public class GitStatisticsPlugin : IGitPlugin
+    public class GitStatisticsPlugin : IGitPluginForRepository
     {
         #region IGitPlugin Members
 
@@ -18,15 +19,16 @@ namespace GitStatistics
         public void Register(IGitUICommands gitUiCommands)
         {
             Settings.AddSetting("Code files",
-                                "*.c;*.cpp;*.h;*.hpp;*.inl;*.idl;*.asm;*.inc;*.cs;*.xsd;*.wsdl;*.xml;*.htm;*.html;*.css;*.vbs;*.vb;*.sql;*.aspx;*.asp;*.php;*.nav;*.pas;*.py;*.rb");
+                                "*.c;*.cpp;*.cc;*.h;*.hpp;*.inl;*.idl;*.asm;*.inc;*.cs;*.xsd;*.wsdl;*.xml;*.htm;*.html;*.css;" + 
+                                "*.vbs;*.vb;*.sql;*.aspx;*.asp;*.php;*.nav;*.pas;*.py;*.rb");
             Settings.AddSetting("Directories to ignore (EndsWith)", "\\Debug;\\Release;\\obj;\\bin;\\lib");
             Settings.AddSetting("Ignore submodules (true/false)", "true");
         }
 
-        public void Execute(GitUIBaseEventArgs gitUiCommands)
+        public bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
             if (string.IsNullOrEmpty(gitUiCommands.GitWorkingDir))
-                return;
+                return false;
 
             var formGitStatistics =
                 new FormGitStatistics(Settings.GetSetting("Code files"))
@@ -48,7 +50,8 @@ namespace GitStatistics
             formGitStatistics.DirectoriesToIgnore = formGitStatistics.DirectoriesToIgnore.Replace("/", "\\");
             formGitStatistics.WorkingDir = new DirectoryInfo(gitUiCommands.GitWorkingDir);
 
-            formGitStatistics.ShowDialog();
+            formGitStatistics.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+            return false;
         }
 
         #endregion

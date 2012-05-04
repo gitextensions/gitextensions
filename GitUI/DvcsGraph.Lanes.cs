@@ -595,8 +595,10 @@ namespace GitUI
                     private readonly List<int> countEnd = new List<int>();
                     private readonly List<int> countStart = new List<int>();
                     private readonly List<Edge> edges = new List<Edge>();
-
+                    
+                    #pragma warning disable 0649
                     private readonly Graph.LaneInfo emptyItem;
+                    #pragma warning restore 0649
 
                     public List<Edge> EdgeList
                     {

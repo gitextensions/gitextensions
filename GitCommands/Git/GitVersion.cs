@@ -45,9 +45,19 @@ namespace GitCommands
             get { return this >= v1_7_1; }
         }
 
+        public bool PushCanAskForProgress
+        {
+            get { return this >= v1_7_1; }
+        }
+
         public bool GuiDiffToolExist
         {
             get { return this >= v1_7_0; }
+        }
+
+        public bool StashUntrackedFilesSupported
+        {
+            get { return this >= v1_7_7; }
         }
 
         public bool SupportPushWithRecursiveSubmodulesCheck

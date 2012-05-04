@@ -103,6 +103,10 @@ namespace GitStatistics
                 NumberCommentsLines++;
             else if (File.Extension.ToLower() == ".rb" && line.StartsWith("#"))
                 NumberCommentsLines++;
+            else if (File.Extension.ToLower() == ".pl" && line.StartsWith("#"))
+                NumberCommentsLines++;
+            else if (File.Extension.ToLower() == ".lua" && line.StartsWith("--"))
+                NumberCommentsLines++;
 
             if (!_skipResetFlag)
                 ResetCodeBlockFlags(line);
@@ -137,6 +141,10 @@ namespace GitStatistics
 
             if (File.Extension.ToLower() == ".rb" && line.StartsWith("=begin"))
                 _inCommentBlock = true;
+            else if (File.Extension.ToLower() == ".pl" && line.StartsWith("=begin"))
+                _inCommentBlock = true;
+            else if (File.Extension.ToLower() == ".lua" && line.StartsWith("--[["))
+                _inCommentBlock = true;
 
             if (File.Extension.ToLower() == ".py" && !_inCommentBlock)
             {
@@ -168,6 +176,10 @@ namespace GitStatistics
             }
 
             if (File.Extension.ToLower() == ".rb" && line.Contains("=end"))
+                _inCommentBlock = false;
+            else if (File.Extension.ToLower() == ".pl" && line.Contains("=end"))
+                _inCommentBlock = false;
+           else if (File.Extension.ToLower() == ".lua" && line.Contains("]]"))
                 _inCommentBlock = false;
 
             if (File.Extension.ToLower() == ".py")

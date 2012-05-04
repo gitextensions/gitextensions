@@ -85,12 +85,6 @@ namespace GitUI
         private int visibleBottom;
         private int visibleTop;
 
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            if (Settings.FocusControlOnHover)
-                Select();
-        }
-
         public void SetDimensions(int node_dimension, int lane_width, int lane_line_width, int row_height, Brush selectionBrush)
         {
             RowTemplate.Height = row_height;
@@ -459,6 +453,8 @@ namespace GitUI
 
         private void dataGrid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
+            if (e.RowIndex < 0)
+                return;
             if (Rows[e.RowIndex].Height != RowTemplate.Height)
             {
                 Rows[e.RowIndex].Height = RowTemplate.Height;
@@ -537,7 +533,7 @@ namespace GitUI
                                 // Cache the next item
                                 if (!graphData.CacheTo(curCount))
                                 {
-                                    Console.WriteLine("Cached item FAILED {0}", curCount);
+                                    Console.WriteLine("Cached item FAILED {0}", curCount.ToString());
                                     lock (backgroundThread)
                                     {
                                         backgroundScrollTo = curCount;
@@ -896,7 +892,7 @@ namespace GitUI
                         {
                             // This shouldn't be happening...If it does, clear the cache so we
                             // eventually pick it up.
-                            Console.WriteLine("Draw lane {0} {1}", rowIndex, "NO DATA");
+                            Console.WriteLine("Draw lane {0} NO DATA", rowIndex.ToString());
                             clearDrawCache();
                             return Rectangle.Empty;
                         }

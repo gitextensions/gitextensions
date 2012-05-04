@@ -1,4 +1,4 @@
-﻿
+
 namespace GitUI
 {
     partial class RevisionGrid
@@ -58,6 +58,7 @@ namespace GitUI
             this.messageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.authorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.branchNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -273,6 +274,7 @@ namespace GitUI
             this.messageToolStripMenuItem,
             this.authorToolStripMenuItem,
             this.dateToolStripMenuItem,
+            this.hashToolStripMenuItem,
             this.toolStripSeparator6,
             this.branchNameToolStripMenuItem,
             this.tagToolStripMenuItem});
@@ -300,6 +302,13 @@ namespace GitUI
             this.dateToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.dateToolStripMenuItem.Text = "Date";
             this.dateToolStripMenuItem.Click += new System.EventHandler(this.dateToolStripMenuItem_Click);
+            // 
+            // hashToolStripMenuItem
+            // 
+            this.hashToolStripMenuItem.Name = "hashToolStripMenuItem";
+            this.hashToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.hashToolStripMenuItem.Text = "Commit hash";
+            this.hashToolStripMenuItem.Click += new System.EventHandler(this.hashToolStripMenuItem_Click);
             // 
             // toolStripSeparator6
             // 
@@ -364,7 +373,7 @@ namespace GitUI
             // 
             this.mergeBranchToolStripMenuItem.Name = "mergeBranchToolStripMenuItem";
             this.mergeBranchToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.mergeBranchToolStripMenuItem.Text = "Merge current branch with";
+            this.mergeBranchToolStripMenuItem.Text = "Merge into current branch";
             this.mergeBranchToolStripMenuItem.Click += new System.EventHandler(this.toolStripMenuWithOneItem_Click);
             // 
             // rebaseOnToolStripMenuItem
@@ -791,7 +800,7 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem manipulateCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fixupCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem squashCommitToolStripMenuItem;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
         private System.Windows.Forms.ToolStripMenuItem renameBranchToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hashToolStripMenuItem;
     }
 }

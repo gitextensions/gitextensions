@@ -126,7 +126,7 @@ namespace GitUI
         {
             if (!string.IsNullOrEmpty(_fileName))
             {
-                File.WriteAllText(_fileName, fileViewer.GetText(), GitCommands.Settings.Encoding);
+                File.WriteAllText(_fileName, fileViewer.GetText(), GitCommands.Settings.FilesEncoding);
                 
                 // we've written the changes out to disk now, nothing to save.
                 _textIsChanged = false;

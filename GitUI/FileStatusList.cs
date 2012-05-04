@@ -10,24 +10,25 @@ using GitUI.Properties;
 
 namespace GitUI
 {
-    public partial class FileStatusList : GitExtensionsControl
+    public sealed partial class FileStatusList : GitExtensionsControl
     {
         private const int ImageSize = 16;
 
         public FileStatusList()
         {
             InitializeComponent(); Translate();
-            SizeChanged += new EventHandler(FileStatusList_SizeChanged);
+            SizeChanged += FileStatusList_SizeChanged;
             FileStatusListBox.DrawMode = DrawMode.OwnerDrawVariable;
-            FileStatusListBox.MeasureItem += new MeasureItemEventHandler(FileStatusListBox_MeasureItem);
-            FileStatusListBox.DrawItem += new DrawItemEventHandler(FileStatusListBox_DrawItem);
-            FileStatusListBox.SelectedIndexChanged += new EventHandler(FileStatusListBox_SelectedIndexChanged);
-            FileStatusListBox.DoubleClick += new EventHandler(FileStatusListBox_DoubleClick);
+            FileStatusListBox.MeasureItem += FileStatusListBox_MeasureItem;
+            FileStatusListBox.DrawItem += FileStatusListBox_DrawItem;
+            FileStatusListBox.SelectedIndexChanged += FileStatusListBox_SelectedIndexChanged;
+            FileStatusListBox.DataSourceChanged += FileStatusListBox_DataSourceChanged;
+            FileStatusListBox.DoubleClick += FileStatusListBox_DoubleClick;
             FileStatusListBox.Sorted = true;
             FileStatusListBox.SelectionMode = SelectionMode.MultiExtended;
 #if !__MonoCS__ // TODO Drag'n'Drop doesnt work on Mono/Linux
-            FileStatusListBox.MouseMove += new MouseEventHandler(FileStatusListBox_MouseMove);
-            FileStatusListBox.MouseDown += new MouseEventHandler(FileStatusListBox_MouseDown);
+            FileStatusListBox.MouseMove += FileStatusListBox_MouseMove;
+            FileStatusListBox.MouseDown += FileStatusListBox_MouseDown;
 #endif
             FileStatusListBox.HorizontalScrollbar = true;
 
@@ -75,8 +76,7 @@ namespace GitUI
             //SELECT
             if (e.Button == MouseButtons.Right)
             {
-                Point point = new Point(e.X, e.Y);
-                int hoverIndex = FileStatusListBox.IndexFromPoint(point);
+                var hoverIndex = FileStatusListBox.IndexFromPoint(e.Location);
 
                 if (hoverIndex >= 0)
                 {
@@ -146,11 +146,6 @@ namespace GitUI
         {
             ListBox listBox = sender as ListBox;
 
-            if (listBox != null && GitCommands.Settings.FocusControlOnHover)
-            {
-                listBox.Select();
-            }
-
             //DRAG
             // If the mouse moves outside the rectangle, start the drag.
             if (dragBoxFromMouseDown != Rectangle.Empty &&
@@ -210,17 +205,23 @@ namespace GitUI
         }
 #endif
 
-        public IList<GitItemStatus> SelectedItems
+        public IList<GitItemStatus> AllItems
         {
             get
             {
                 IList<GitItemStatus> selectedItems = new List<GitItemStatus>();
-                foreach (object selectedItem in FileStatusListBox.SelectedItems)
-                {
+                foreach (object selectedItem in FileStatusListBox.Items)
                     selectedItems.Add((GitItemStatus)selectedItem);
-                }
 
                 return selectedItems;
+            }
+        }
+
+        public IList<GitItemStatus> SelectedItems
+        {
+            get
+            {
+                return FileStatusListBox.SelectedItems.Cast<GitItemStatus>().ToList();
             }
         }
 
@@ -232,7 +233,8 @@ namespace GitUI
             }
             set
             {
-                FileStatusListBox.SelectedItem = value;
+                FileStatusListBox.ClearSelected();
+                FileStatusListBox.SelectedItem = value;                
             }
         }
 
@@ -251,7 +253,8 @@ namespace GitUI
 
         private int nextIndexToSelect = -1;
 
-        public void StoreNextIndexToSelect() {
+        public void StoreNextIndexToSelect()
+        {
             nextIndexToSelect = -1;
             foreach (int idx in FileStatusListBox.SelectedIndices)
                 if (idx > nextIndexToSelect)
@@ -259,7 +262,8 @@ namespace GitUI
             nextIndexToSelect = nextIndexToSelect - FileStatusListBox.SelectedIndices.Count + 1;
         }
 
-        public void SelectStoredNextIndex() {
+        public void SelectStoredNextIndex()
+        {
             nextIndexToSelect = Math.Min(nextIndexToSelect, FileStatusListBox.Items.Count - 1);
             if (nextIndexToSelect > -1)
                 SelectedIndex = nextIndexToSelect;
@@ -267,22 +271,29 @@ namespace GitUI
         }
 
         public event EventHandler SelectedIndexChanged;
+        public event EventHandler DataSourceChanged;
 
         public new event EventHandler DoubleClick;
         public new event KeyEventHandler KeyDown;
 
         void FileStatusListBox_DoubleClick(object sender, EventArgs e)
         {
-            if (this.DoubleClick == null)
+            if (DoubleClick == null)
                 GitUICommands.Instance.StartFileHistoryDialog(this, SelectedItem.Name, Revision);
             else
-                this.DoubleClick(sender, e);
+                DoubleClick(sender, e);
         }
 
         void FileStatusListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (SelectedIndexChanged != null)
-                SelectedIndexChanged(sender, e);
+                SelectedIndexChanged(this, e);
+        }
+
+        void FileStatusListBox_DataSourceChanged(object sender, EventArgs e)
+        {
+            if (DataSourceChanged != null)
+                DataSourceChanged(sender, e);
         }
 
         void FileStatusListBox_DrawItem(object sender, DrawItemEventArgs e)
@@ -336,7 +347,6 @@ namespace GitUI
             {
                 return FileStatusListBox.DataSource as IList<GitItemStatus>;
             }
-
             set
             {
                 if (value == null || value.Count == 0)
@@ -350,7 +360,7 @@ namespace GitUI
                 if (value != null && value.Count == 0 && prevSelectedIndex >= 0)
                 {
                     //bug in the ListBox control where supplying an empty list will not trigger a SelectedIndexChanged event, so we force it to trigger
-                    FileStatusListBox_SelectedIndexChanged(this, null);
+                    FileStatusListBox_SelectedIndexChanged(this, EventArgs.Empty);
                 }
             }
         }
@@ -376,29 +386,25 @@ namespace GitUI
                     {
                         if (e.Control)
                         {
+                            FileStatusListBox.BeginUpdate();
                             try
                             {
-                                FileStatusListBox.SuspendLayout();
-                                FileStatusListBox.ClearSelected();
-                                for (int n = FileStatusListBox.Items.Count - 1; n >= 0; n--)
-                                {
-                                    FileStatusListBox.SetSelected(n, true);
-                                }
+                                for (var i = 0; i < FileStatusListBox.Items.Count; i++)
+                                    FileStatusListBox.SetSelected(i, true);
                                 e.Handled = true;
                             }
                             finally
                             {
-                                FileStatusListBox.ResumeLayout();
+                                FileStatusListBox.EndUpdate();
                             }
                         }
                         break;
                     }
                 default:
-                    if (this.KeyDown != null)
-                        this.KeyDown(sender, e);
+                    if (KeyDown != null)
+                        KeyDown(sender, e);
                     break;
             }
-                
         }
 
         public int SetSelectionFilter(string filter)

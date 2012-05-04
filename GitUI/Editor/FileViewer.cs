@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
@@ -10,7 +10,7 @@ using ICSharpCode.TextEditor.Util;
 
 namespace GitUI.Editor
 {
-
+    [DefaultEvent("SelectedLineChanged")]
     public partial class FileViewer : GitExtensionsControl
     {
         private readonly AsyncLoader _async;
@@ -22,7 +22,6 @@ namespace GitUI.Editor
         {
             TreatAllFilesAsText = false;
             ShowEntireFile = false;
-            DisableFocusControlOnHover = false;
             NumberOfVisibleLines = 3;
             InitializeComponent();
             Translate();
@@ -32,6 +31,7 @@ namespace GitUI.Editor
             else
                 _internalFileViewer = new FileViewerMono();
 
+            _internalFileViewer.MouseEnter += _internalFileViewer_MouseEnter;
             _internalFileViewer.MouseLeave += _internalFileViewer_MouseLeave;
             _internalFileViewer.MouseMove += _internalFileViewer_MouseMove;
 
@@ -52,25 +52,12 @@ namespace GitUI.Editor
             IgnoreWhitespaceChanges = false;
 
             IsReadOnly = true;
-
-            this.Encoding = Settings.Encoding;
+            
             this.encodingToolStripComboBox.Items.AddRange(new Object[]
                                                     {
                                                         "Default (" + Encoding.Default.HeaderName + ")", "ASCII",
                                                         "Unicode", "UTF7", "UTF8", "UTF32"
                                                     });
-            if (this.Encoding.GetType() == typeof(ASCIIEncoding))
-                this.encodingToolStripComboBox.Text = "ASCII";
-            else if (this.Encoding.GetType() == typeof(UnicodeEncoding))
-                this.encodingToolStripComboBox.Text = "Unicode";
-            else if (this.Encoding.GetType() == typeof(UTF7Encoding))
-                this.encodingToolStripComboBox.Text = "UTF7";
-            else if (this.Encoding.GetType() == typeof(UTF8Encoding))
-                this.encodingToolStripComboBox.Text = "UTF8";
-            else if (this.Encoding.GetType() == typeof(UTF32Encoding))
-                this.encodingToolStripComboBox.Text = "UTF32";
-            else if (this.Encoding == Encoding.Default)
-                this.encodingToolStripComboBox.Text = "Default (" + Encoding.Default.HeaderName + ")";
             _internalFileViewer.MouseMove += TextAreaMouseMove;
             _internalFileViewer.MouseLeave += TextAreaMouseLeave;
             _internalFileViewer.TextChanged += TextEditor_TextChanged;
@@ -83,16 +70,67 @@ namespace GitUI.Editor
             ContextMenu.Opening += ContextMenu_Opening; 
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [Description("The base font of the text area. No bold or italic fonts can be used because bold/italic is reserved for highlighting purposes.")]
+        [Browsable(true)]
+        public new Font Font
+        {
+            set { _internalFileViewer.Font = value; }
+        }
+
+        [Description("Ignore changes in amount of whitespace. This ignores whitespace at line end, and considers all other sequences of one or more whitespace characters to be equivalent.")]
+        [DefaultValue(false)]
+        public bool IgnoreWhitespaceChanges { get; set; }
+        [Description("Show diffs with <n> lines of context.")]
+        [DefaultValue(3)]
+        public int NumberOfVisibleLines { get; set; }
+        [Description("Show diffs with entire file.")]
+        [DefaultValue(false)]
+        public bool ShowEntireFile { get; set; }
+        [Description("Treat all files as text.")]
+        [DefaultValue(false)]
+        public bool TreatAllFilesAsText { get; set; }
+        [DefaultValue(true)]
+        [Category("Behavior")]
+        public bool IsReadOnly
+        {
+            get { return _internalFileViewer.IsReadOnly; }
+            set { _internalFileViewer.IsReadOnly = value; }
+        }
+        [DefaultValue(true)]
+        [Description("If true line numbers are shown in the textarea")]
+        [Category("Appearance")]
+        public bool ShowLineNumbers
+        {
+            get { return _internalFileViewer.ShowLineNumbers; }
+            set { _internalFileViewer.ShowLineNumbers = value; }
+        }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
+        public Encoding Encoding { get; set; }
+        [DefaultValue(0)]
+        [Browsable(false)]
+        public int ScrollPos
+        {
+            get { return _internalFileViewer.ScrollPos; }
+            set { _internalFileViewer.ScrollPos = value; }
+        }
+
+        private void WorkingDirChanged(string oldDir, string newDir, string newGitDir)
+        {
+            this.Encoding = Settings.FilesEncoding;
+        }
+
+
         protected override void OnLoad(EventArgs e)
         {
             if (!DesignMode)
                 this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             Font = Settings.DiffFont;
-        }
 
-        public new Font Font
-        {
-            set { _internalFileViewer.Font = value; }
+            Settings.WorkingDirChanged += WorkingDirChanged;
+            this.Encoding = Settings.FilesEncoding;
         }
 
         void ContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -104,9 +142,11 @@ namespace GitUI.Editor
         void _internalFileViewer_MouseMove(object sender, MouseEventArgs e)
         {
             this.OnMouseMove(e);
+        }
 
-            if (!DisableFocusControlOnHover && Settings.FocusControlOnHover)
-                _internalFileViewer.FocusTextArea();
+        void _internalFileViewer_MouseEnter(object sender, EventArgs e)
+        {
+            this.OnMouseEnter(e);
         }
 
         void _internalFileViewer_MouseLeave(object sender, EventArgs e)
@@ -162,13 +202,6 @@ namespace GitUI.Editor
             _internalFileViewer.EnableScrollBars(enable);
         }
 
-        public bool ShowLineNumbers
-        {
-            get { return _internalFileViewer.ShowLineNumbers; }
-            set { _internalFileViewer.ShowLineNumbers = value; }
-        }
-
-
         void TextEditor_TextChanged(object sender, EventArgs e)
         {
             if (patchHighlighting)
@@ -178,23 +211,20 @@ namespace GitUI.Editor
                 TextChanged(sender, e);
         }
 
-        public bool IsReadOnly
+        private void UpdateEncodingCombo()
         {
-            get { return _internalFileViewer.IsReadOnly; }
-            set { _internalFileViewer.IsReadOnly = value; }
-        }
-
-        public bool IgnoreWhitespaceChanges { get; set; }
-        public int NumberOfVisibleLines { get; set; }
-        public bool ShowEntireFile { get; set; }
-        public bool TreatAllFilesAsText { get; set; }
-        public bool DisableFocusControlOnHover { get; set; }
-        public Encoding Encoding { get; set; }
-
-        public int ScrollPos
-        {
-            get { return _internalFileViewer.ScrollPos; }
-            set { _internalFileViewer.ScrollPos = value; }
+            if (this.Encoding.GetType() == typeof(ASCIIEncoding))
+                this.encodingToolStripComboBox.Text = "ASCII";
+            else if (this.Encoding.GetType() == typeof(UnicodeEncoding))
+                this.encodingToolStripComboBox.Text = "Unicode";
+            else if (this.Encoding.GetType() == typeof(UTF7Encoding))
+                this.encodingToolStripComboBox.Text = "UTF7";
+            else if (this.Encoding.GetType() == typeof(UTF8Encoding))
+                this.encodingToolStripComboBox.Text = "UTF8";
+            else if (this.Encoding.GetType() == typeof(UTF32Encoding))
+                this.encodingToolStripComboBox.Text = "UTF32";
+            else if (this.Encoding == Encoding.Default)
+                this.encodingToolStripComboBox.Text = "Default (" + Encoding.Default.HeaderName + ")";
         }
 
         public event EventHandler<EventArgs> ExtraDiffArgumentsChanged;
@@ -461,7 +491,7 @@ namespace GitUI.Editor
             else
                 path = GitCommands.Settings.WorkingDir + fileName;
 
-            return !File.Exists(path) ? null : FileReader.ReadFileContent(path, GitCommands.Settings.Encoding);
+            return !File.Exists(path) ? null : FileReader.ReadFileContent(path, GitCommands.Settings.FilesEncoding);
         }
 
         private void ResetForImage()
@@ -584,14 +614,16 @@ namespace GitUI.Editor
 
         private void CopyPatchToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(_internalFileViewer.GetSelectedText()))
+            var selectedText = _internalFileViewer.GetSelectedText();
+            if (!string.IsNullOrEmpty(selectedText))
             {
-                Clipboard.SetText(_internalFileViewer.GetSelectedText());
+                Clipboard.SetText(selectedText);
+                return;
             }
-            else
-            {
-                Clipboard.SetText(_internalFileViewer.GetText());
-            }
+            
+            var text = _internalFileViewer.GetText();
+            if (!text.IsNullOrEmpty())
+                Clipboard.SetText(text);
         }
 
         public int GetSelectionPosition()
@@ -724,6 +756,7 @@ namespace GitUI.Editor
         internal enum Commands : int
         {
             Find,
+            GoToLine,
             IncreaseNumberOfVisibleLines,
             DecreaseNumberOfVisibleLines,
             ShowEntireFile,
@@ -738,6 +771,7 @@ namespace GitUI.Editor
             switch (command)
             {
                 case Commands.Find: this.FindToolStripMenuItemClick(null, null); break;
+                case Commands.GoToLine: this.goToLineToolStripMenuItem_Click(null, null); break;
                 case Commands.IncreaseNumberOfVisibleLines: this.IncreaseNumberOfLinesToolStripMenuItemClick(null, null); break;
                 case Commands.DecreaseNumberOfVisibleLines: this.DescreaseNumberOfLinesToolStripMenuItemClick(null, null); break;
                 case Commands.ShowEntireFile: this.ShowEntireFileToolStripMenuItemClick(null, null); break;
@@ -768,7 +802,7 @@ namespace GitUI.Editor
         {
             Encoding encod = null;
             if (string.IsNullOrEmpty(encodingToolStripComboBox.Text))
-                encod = Settings.Encoding;
+                encod = Settings.FilesEncoding;
             else if (encodingToolStripComboBox.Text.StartsWith("Default", StringComparison.CurrentCultureIgnoreCase))
                 encod = Encoding.Default;
             else if (encodingToolStripComboBox.Text.Equals("ASCII", StringComparison.CurrentCultureIgnoreCase))
@@ -782,7 +816,7 @@ namespace GitUI.Editor
             else if (encodingToolStripComboBox.Text.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
                 encod = new UTF32Encoding(true, false);
             else
-                encod = Settings.Encoding;
+                encod = Settings.FilesEncoding;
             if (encod != this.Encoding)
             {
                 this.Encoding = encod;
@@ -790,5 +824,18 @@ namespace GitUI.Editor
             }
         }
 
+        private void fileviewerToolbar_VisibleChanged(object sender, EventArgs e)
+        {
+            if (fileviewerToolbar.Visible)
+                UpdateEncodingCombo();
+        }
+
+        private void goToLineToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormGoToLine formGoToLine = new FormGoToLine();
+            formGoToLine.SetMaxLineNumber(_internalFileViewer.TotalNumberOfLines);
+            if (formGoToLine.ShowDialog(this) == DialogResult.OK)            
+                _internalFileViewer.GoToLine(formGoToLine.GetLineNumber() - 1);
+        }
     }
 }

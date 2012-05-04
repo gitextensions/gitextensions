@@ -168,7 +168,8 @@ regsvr32 /s /c "$(TargetPath)"
 echo Skipping registration
 )
 
-echo regsvr32 exe. time &gt; "$(OutDir)regsvr32.trg"</Command>
+echo regsvr32 exe. time &gt; "$(OutDir)regsvr32.trg"
+exit /b 0</Command>
       <Outputs>$(OutDir)regsvr32.trg;%(Outputs)</Outputs>
     </CustomBuildStep>
     <Midl>

@@ -1,36 +1,39 @@
 ﻿using System;
+using System.Windows.Forms;
 
 namespace GitUI
 {
+    /// <summary>
+    /// A form that explains that the command needed authentication, and offers to load a private key.
+    /// </summary>
     public partial class FormPuttyError : GitExtensionsForm
     {
-        public FormPuttyError()
+        public string KeyPath { get; private set; }
+
+        /// <summary>Shows the "SSH error" dialog modally, and returns the path to the key, if one was loaded.</summary>
+        public static bool AskForKey(IWin32Window parent, out string keyPath)
         {
-            InitializeComponent(); Translate();
+            var form = new FormPuttyError();
+            var result = form.ShowDialog(parent);
+            keyPath = form.KeyPath;
+            return result == DialogResult.Retry;
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
+        public FormPuttyError()
         {
-
+            InitializeComponent();
+            Translate();
         }
 
         private void LoadSSHKey_Click(object sender, EventArgs e)
         {
-            new FormLoadPuttySshKey().ShowDialog(this);
-        }
-
-        public bool RetryProcess;
-
-        private void Abort_Click(object sender, EventArgs e)
-        {
-            RetryProcess = false;
-            Close();
-        }
-
-        private void Retry_Click(object sender, EventArgs e)
-        {
-            RetryProcess = true;
-            Close();
+            var pathLoaded = BrowseForPrivateKey.BrowseAndLoad(this);
+            if (!string.IsNullOrEmpty(pathLoaded))
+            {
+                KeyPath = pathLoaded;
+                DialogResult = DialogResult.Retry;
+                Close();
+            }
         }
     }
 }

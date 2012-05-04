@@ -10,6 +10,7 @@ namespace GitUIPluginInterfaces
         event GitUIEventHandler PostAddFiles;
         event GitUIEventHandler PostApplyPatch;
         event GitUIEventHandler PostArchive;
+        event GitUIEventHandler PostBlame;
         event GitUIEventHandler PostBrowse;
         event GitUIEventHandler PostCheckoutBranch;
         event GitUIEventHandler PostCheckoutRevision;
@@ -21,6 +22,7 @@ namespace GitUIPluginInterfaces
         event GitUIEventHandler PostCreateTag;
         event GitUIEventHandler PostDeleteBranch;
         event GitUIEventHandler PostDeleteTag;
+        event GitUIEventHandler PostEditGitAttributes;
         event GitUIEventHandler PostEditGitIgnore;
         event GitUIEventHandler PostFileHistory;
         event GitUIEventHandler PostFormatPatch;
@@ -30,18 +32,24 @@ namespace GitUIPluginInterfaces
         event GitUIEventHandler PostPull;
         event GitUIEventHandler PostPush;
         event GitUIEventHandler PostRebase;
+        event GitUIEventHandler PostRename;
         event GitUIEventHandler PostRemotes;
         event GitUIEventHandler PostResolveConflicts;
         event GitUIEventHandler PostSettings;
         event GitUIEventHandler PostStash;
+        event GitUIEventHandler PostSvnClone;
+        event GitUIEventHandler PostSvnDcommit;
+        event GitUIEventHandler PostSvnFetch;
+        event GitUIEventHandler PostSvnRebase;
         event GitUIEventHandler PostSubmodulesEdit;
+        event GitUIEventHandler PostSyncSubmodules;
         event GitUIEventHandler PostUpdateSubmodules;
-        event GitUIEventHandler PostUpdateSubmodulesRecursive;
         event GitUIEventHandler PostVerifyDatabase;
         event GitUIEventHandler PostViewPatch;
         event GitUIEventHandler PreAddFiles;
         event GitUIEventHandler PreApplyPatch;
         event GitUIEventHandler PreArchive;
+        event GitUIEventHandler PreBlame;
         event GitUIEventHandler PreBrowse;
         event GitUIEventHandler PreCheckoutBranch;
         event GitUIEventHandler PreCheckoutRevision;
@@ -53,6 +61,7 @@ namespace GitUIPluginInterfaces
         event GitUIEventHandler PreCreateTag;
         event GitUIEventHandler PreDeleteBranch;
         event GitUIEventHandler PreDeleteTag;
+        event GitUIEventHandler PreEditGitAttributes;
         event GitUIEventHandler PreEditGitIgnore;
         event GitUIEventHandler PreFileHistory;
         event GitUIEventHandler PreFormatPatch;
@@ -62,18 +71,28 @@ namespace GitUIPluginInterfaces
         event GitUIEventHandler PrePull;
         event GitUIEventHandler PrePush;
         event GitUIEventHandler PreRebase;
+        event GitUIEventHandler PreRename;
         event GitUIEventHandler PreRemotes;
         event GitUIEventHandler PreResolveConflicts;
         event GitUIEventHandler PreSettings;
         event GitUIEventHandler PreStash;
+        event GitUIEventHandler PreSvnClone;
+        event GitUIEventHandler PreSvnDcommit;
+        event GitUIEventHandler PreSvnFetch;
+        event GitUIEventHandler PreSvnRebase;
         event GitUIEventHandler PreSubmodulesEdit;
+        event GitUIEventHandler PreSyncSubmodules;
         event GitUIEventHandler PreUpdateSubmodules;
-        event GitUIEventHandler PreUpdateSubmodulesRecursive;
         event GitUIEventHandler PreVerifyDatabase;
         event GitUIEventHandler PreViewPatch;
 
         string GitCommand(string arguments);
         string CommandLineCommand(string cmd, string arguments);
+
+        bool StartCommandLineProcessDialog(object ownerForm, string command, string arguments);
+        bool StartCommandLineProcessDialog(string command, string arguments);
+        bool StartBatchFileProcessDialog(object ownerForm, string batchFile);
+        bool StartBatchFileProcessDialog(string batchFile);
 
         bool StartAddFilesDialog();
         bool StartApplyPatchDialog();
@@ -84,7 +103,6 @@ namespace GitUIPluginInterfaces
         bool StartCherryPickDialog();
         bool StartCloneDialog();
         bool StartCloneDialog(string url);
-        bool StartCommandLineProcessDialog(string command, string arguments);
         bool StartCommitDialog();
         bool StartCompareRevisionsDialog();
         bool StartCreateBranchDialog();
@@ -107,9 +125,13 @@ namespace GitUIPluginInterfaces
         bool StartResolveConflictsDialog();
         bool StartSettingsDialog();
         bool StartStashDialog();
+        bool StartSvnCloneDialog();
+        bool StartSvnDcommitDialog();
+        bool StartSvnFetchDialog();
+        bool StartSvnRebaseDialog();
         bool StartSubmodulesDialog();
+        bool StartSyncSubmodulesDialog();
         bool StartUpdateSubmodulesDialog();
-        bool StartUpdateSubmodulesRecursiveDialog();
         bool StartVerifyDatabaseDialog();
         bool StartViewPatchDialog();
     }

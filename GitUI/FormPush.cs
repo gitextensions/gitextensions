@@ -156,8 +156,7 @@ namespace GitUI
             Repositories.AddMostRecentRepository(PushDestination.Text);
             Settings.PushAllTags = PushAllTags.Checked;
             Settings.AutoPullOnRejected = AutoPullOnRejected.Checked;
-            if (RecursiveSubmodulesCheck.Enabled)
-                Settings.RecursiveSubmodulesCheck = RecursiveSubmodulesCheck.Checked;
+            Settings.RecursiveSubmodulesCheck = RecursiveSubmodulesCheck.Checked;
 
             var remote = "";
             string destination;
@@ -182,13 +181,16 @@ namespace GitUI
             string pushCmd;
             if (TabControlTagBranch.SelectedTab == BranchTab)
             {
-                bool track = newBranch;
-                string[] remotes = _NO_TRANSLATE_Remotes.DataSource as string[];
-                if (remotes != null)
-                    foreach (string remoteBranch in remotes)
-                        if (!string.IsNullOrEmpty(remoteBranch) && _NO_TRANSLATE_Branch.Text.StartsWith(remoteBranch))
-                            track = false;
-
+                bool track = ReplaceTrackingReference.Checked;
+                if (!track)
+                {
+                    track = newBranch;
+                    string[] remotes = _NO_TRANSLATE_Remotes.DataSource as string[];
+                    if (remotes != null)
+                        foreach (string remoteBranch in remotes)
+                            if (!string.IsNullOrEmpty(remoteBranch) && _NO_TRANSLATE_Branch.Text.StartsWith(remoteBranch))
+                                track = false;
+                }
 
                 pushCmd = GitCommandHelpers.PushCmd(destination, _NO_TRANSLATE_Branch.Text, RemoteBranch.Text,
                     PushAllBranches.Checked, ForcePushBranches.Checked, track, RecursiveSubmodulesCheck.Checked);
@@ -198,12 +200,13 @@ namespace GitUI
                                                              ForcePushBranches.Checked);
             else
             {
+                // Push Multiple Branches Tab selected
                 var pushActions = new List<GitPushAction>();
                 foreach (DataRow row in _branchTable.Rows)
                 {
-                    var push = (bool)row["Push"];
-                    var force = (bool)row["Force"];
-                    var delete = (bool)row["Delete"];
+                    var push = Convert.ToBoolean(row["Push"]);
+                    var force = Convert.ToBoolean(row["Force"]);
+                    var delete = Convert.ToBoolean(row["Delete"]);
 
                     if (push || force)
                         pushActions.Add(new GitPushAction(row["Local"].ToString(), row["Remote"].ToString(), force));
@@ -290,7 +293,7 @@ namespace GitUI
 
         private void FillPushDestinationDropDown()
         {
-            PushDestination.DataSource = Repositories.RepositoryHistory.Repositories;
+            PushDestination.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
             PushDestination.DisplayMember = "Path";
         }
 
@@ -592,13 +595,19 @@ namespace GitUI
         {
             PushOptionsPanel.Visible = true;
             ShowOptions.Visible = false;
-            this.Size = new System.Drawing.Size(this.MinimumSize.Width, this.MinimumSize.Height + 70);
+            SetFormSizeToFitAllItems();
         }
 
         private void ShowTagOptions_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             TagOptionsPanel.Visible = true;
             ShowTagOptions.Visible = false;
+            SetFormSizeToFitAllItems();
+        }
+
+        private void SetFormSizeToFitAllItems()
+        {
+            this.Size = new System.Drawing.Size(this.MinimumSize.Width, this.MinimumSize.Height + 70);
         }
     }
 }

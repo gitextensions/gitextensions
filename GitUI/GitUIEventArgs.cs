@@ -1,11 +1,13 @@
-﻿using GitCommands;
+﻿using System.Windows.Forms;
+using GitCommands;
 using GitUIPluginInterfaces;
 
 namespace GitUI
 {
     public class GitUIEventArgs : GitUIBaseEventArgs
     {
-        public GitUIEventArgs(IGitUICommands gitUICommands) : base(gitUICommands) { }
+        public GitUIEventArgs(IWin32Window ownerForm, IGitUICommands gitUICommands)
+            : base(ownerForm, gitUICommands) { }
 
         public override IGitCommands GitCommands
         {
@@ -21,6 +23,11 @@ namespace GitUI
             {
                 return Settings.WorkingDir;
             }
+        }
+
+        public override string GetGitDirectory()
+        {
+             return Settings.Module.GetGitDirectory();
         }
 
         public override bool IsValidGitWorkingDir(string workingDir)

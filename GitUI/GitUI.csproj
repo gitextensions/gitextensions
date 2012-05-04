@@ -94,6 +94,7 @@
     <Compile Include="BranchComboBox.Designer.cs">
       <DependentUpon>BranchComboBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommitTemplateItem.cs" />
     <Compile Include="DvcsGraph.Graph.cs">
       <DependentUpon>DvcsGraph.cs</DependentUpon>
       <SubType>Component</SubType>
@@ -106,6 +107,30 @@
       <DependentUpon>DvcsGraph.cs</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Editor\FormGoToLine.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editor\FormGoToLine.Designer.cs">
+      <DependentUpon>FormGoToLine.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormCheckoutBranch.cs">
+      <SubType>Form</SubType>
+    </Compile> 
+    <Compile Include="FormCommitTemplateSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormCheckoutBranch.Designer.cs">
+      <DependentUpon>FormCheckoutBranch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormCommitTemplateSettings.designer.cs">
+      <DependentUpon>FormCommitTemplateSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormCheckoutRemoteBranch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormCheckoutRemoteBranch.Designer.cs">
+      <DependentUpon>FormCheckoutRemoteBranch.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormDirtyDirWarn.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -113,7 +138,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FormDirtyDirWarn.Designer.cs">
-      <DependentUpon>FormDirtyDirWarn.cs</DependentUpon>          
+      <DependentUpon>FormDirtyDirWarn.cs</DependentUpon>
     </Compile>
     <Compile Include="FormRecentReposSettings.Designer.cs">
       <DependentUpon>FormRecentReposSettings.cs</DependentUpon>
@@ -137,6 +162,12 @@
     </Compile>
     <Compile Include="FormGoToCommit.Designer.cs">
       <DependentUpon>FormGoToCommit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormResetChanges.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormResetChanges.Designer.cs">
+      <DependentUpon>FormResetChanges.cs</DependentUpon>
     </Compile>
     <Compile Include="FormSelectMultipleBranches.cs">
       <SubType>Form</SubType>
@@ -173,6 +204,11 @@
     <Compile Include="Hotkey\TextboxHotkey.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="MenuStripEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MouseWheelRedirector.cs" />
+    <Compile Include="MergeToolsHelper.cs" />
     <Compile Include="PathFormatter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Editor\FileViewer.cs">
@@ -426,12 +462,6 @@
     <Compile Include="FormCheckout.Designer.cs">
       <DependentUpon>FormCheckout.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCheckoutBranch.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormCheckoutBranch.Designer.cs">
-      <DependentUpon>FormCheckoutBranch.cs</DependentUpon>
-    </Compile>
     <Compile Include="FormCherryPick.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -534,12 +564,7 @@
     <Compile Include="FormInit.Designer.cs">
       <DependentUpon>FormInit.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormLoadPuttySSHKey.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormLoadPuttySSHKey.Designer.cs">
-      <DependentUpon>FormLoadPuttySSHKey.cs</DependentUpon>
-    </Compile>
+    <Compile Include="BrowseForPrivateKey.cs" />
     <Compile Include="FormMailMap.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -689,7 +714,7 @@
     <Compile Include="FormApplyPatch.Designer.cs">
       <DependentUpon>FormApplyPatch.cs</DependentUpon>
     </Compile>
-    <Compile Include="NativeMethods.cs" />
+    <Compile Include="Native.cs" />
     <Compile Include="FormOpenDirectory.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -727,6 +752,9 @@
     </Compile>
     <Compile Include="SpellChecker\SpellCheckEditControl.cs" />
     <Compile Include="SpellChecker\TextBoxHelper.cs" />
+    <Compile Include="ToolStripEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ToolStripGitStatus.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -742,6 +770,20 @@
   <ItemGroup>
     <EmbeddedResource Include="AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\FormGoToLine.resx">
+      <DependentUpon>FormGoToLine.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormCommitTemplateSettings.resx">
+      <DependentUpon>FormCommitTemplateSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormCheckoutBranch.resx">
+      <DependentUpon>FormCheckoutBranch.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormCheckoutRemoteBranch.resx">
+      <DependentUpon>FormCheckoutRemoteBranch.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormRecentReposSettings.resx">
@@ -768,6 +810,9 @@
     <EmbeddedResource Include="FormGoToCommit.resx">
       <DependentUpon>FormGoToCommit.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormResetChanges.resx">
+      <DependentUpon>FormResetChanges.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormSelectMultipleBranches.resx">
       <DependentUpon>FormSelectMultipleBranches.cs</DependentUpon>
@@ -926,10 +971,6 @@
       <DependentUpon>FormCheckout.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCheckoutBranch.resx">
-      <DependentUpon>FormCheckoutBranch.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="FormCherryPick.resx">
       <DependentUpon>FormCherryPick.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1000,10 +1041,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormInit.resx">
       <DependentUpon>FormInit.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormLoadPuttySSHKey.resx">
-      <DependentUpon>FormLoadPuttySSHKey.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMailMap.resx">

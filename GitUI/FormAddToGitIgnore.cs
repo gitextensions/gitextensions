@@ -33,10 +33,10 @@ namespace GitUI
                                            gitIgnoreFileAddition.Append(Environment.NewLine);
 
                                            if (File.Exists(Settings.WorkingDir + ".gitignore"))
-                                               if (!File.ReadAllText(Settings.WorkingDir + ".gitignore", Settings.Encoding).EndsWith(Environment.NewLine))
+                                               if (!File.ReadAllText(Settings.WorkingDir + ".gitignore", Settings.SystemEncoding).EndsWith(Environment.NewLine))
                                                    gitIgnoreFileAddition.Insert(0, Environment.NewLine);
 
-                                           using (TextWriter tw = new StreamWriter(x, true, Settings.Encoding))
+                                           using (TextWriter tw = new StreamWriter(x, true, Settings.SystemEncoding))
                                            {
                                                tw.Write(gitIgnoreFileAddition);
                                            }
@@ -52,9 +52,9 @@ namespace GitUI
 
         private void UpdatePreviewPanel()
         {
-            Preview.DataSource = Settings.Module.GetFiles(FilePattern.Text);
-            filesWillBeIgnored.Text = string.Format(_matchingFilesString.Text,Preview.Items.Count.ToString());
-            noMatchPanel.Visible = (Preview.Items.Count == 0);
+            _NO_TRANSLATE_Preview.DataSource = Settings.Module.GetFiles(FilePattern.Text);
+            _NO_TRANSLATE_filesWillBeIgnored.Text = string.Format(_matchingFilesString.Text, _NO_TRANSLATE_Preview.Items.Count.ToString());
+            noMatchPanel.Visible = (_NO_TRANSLATE_Preview.Items.Count == 0);
         }
 
         private void FilePattern_TextChanged(object sender, EventArgs e)

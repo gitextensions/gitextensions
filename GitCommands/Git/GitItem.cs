@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace GitCommands
 {
     public class GitItem : IGitItem
     {
+        internal const int MinimumStringLength = 53;
+
         public GitItem()
         {
         }
@@ -19,7 +19,23 @@ namespace GitCommands
         public string FileName { get; set; }
         public string Mode { get; set; }
 
-        protected List<IGitItem> subItems;
+        private List<IGitItem> subItems;
+
+        public bool IsBlob
+        {
+            get { return ItemType == "blob"; }
+        }
+
+        public bool IsCommit
+        {
+            get { return ItemType == "commit"; }
+        }
+
+        public bool IsTree
+        {
+            get { return ItemType == "tree"; }
+        }
+
         public List<IGitItem> SubItems
         {
             get
@@ -36,6 +52,25 @@ namespace GitCommands
 
                 return subItems;
             }
+        }
+
+        internal static GitItem CreateGitItemFromString(string itemsString)
+        {
+            if ((itemsString == null) || (itemsString.Length <= MinimumStringLength))
+                return null;
+
+            var guidStart = itemsString.IndexOf(' ', 7);
+
+            var item = new GitItem
+                           {
+                               Mode = itemsString.Substring(0, 6),
+                               ItemType = itemsString.Substring(7, guidStart - 7),
+                               Guid = itemsString.Substring(guidStart + 1, 40),
+                               Name = itemsString.Substring(guidStart + 42).Trim()
+                           };
+
+            item.FileName = item.Name;
+            return item;
         }
     }
 }

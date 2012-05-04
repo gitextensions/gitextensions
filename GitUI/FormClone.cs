@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
@@ -20,22 +22,12 @@ namespace GitUI
         private readonly TranslationString _infoDirectoryNew =
             new TranslationString("(New directory)");
 
-
         private readonly TranslationString _questionOpenRepo =
             new TranslationString("The repository has been cloned successfully." + Environment.NewLine +
                                   "Do you want to open the new repository \"{0}\" now?");
         
         private readonly TranslationString _questionOpenRepoCaption = 
             new TranslationString("Open");
-
-        private readonly TranslationString _questionInitSubmodules =
-            new TranslationString("The cloned has submodules configured." + Environment.NewLine +
-                                  "Do you want to initialize the submodules?" + Environment.NewLine +
-                                  "This will initialize and update all submodules recursive.");
-        
-        private readonly TranslationString _questionInitSubmodulesCaption =
-            new TranslationString("Submodules");
-
 
         public FormClone(): this(null)
         {
@@ -45,6 +37,8 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
+
+            FillFromDropDown();
 
             if (url != null)
             {
@@ -67,6 +61,12 @@ namespace GitUI
         {
             try
             {
+                if (threadUpdateBranchList != null)
+                {
+                    Cursor = Cursors.Default;
+                    threadUpdateBranchList.Abort();
+                }
+
                 var dirTo = _NO_TRANSLATE_To.Text;
                 if (!dirTo.EndsWith(Settings.PathSeparator.ToString()) && !dirTo.EndsWith(Settings.PathSeparatorWrong.ToString()))
                     dirTo += Settings.PathSeparator.ToString();
@@ -79,10 +79,9 @@ namespace GitUI
                 if (!Directory.Exists(dirTo))
                     Directory.CreateDirectory(dirTo);
 
-                var fromProcess =
-                    new FormRemoteProcess(Settings.GitCommand,
-                                    GitCommandHelpers.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
-                                                                     CentralRepository.Checked, Branches.Text, null));
+                var cloneCmd = GitCommandHelpers.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
+                            CentralRepository.Checked, cbIntializeAllSubmodules.Checked, Branches.Text, null);
+                var fromProcess = new FormRemoteProcess(Settings.GitCommand, cloneCmd);
                 fromProcess.SetUrlTryingToConnect(_NO_TRANSLATE_From.Text);
                 fromProcess.ShowDialog(this);
 
@@ -90,13 +89,7 @@ namespace GitUI
                     return;
 
                 if (ShowInTaskbar == false && AskIfNewRepositoryShouldBeOpened(dirTo))
-                {
                     Settings.WorkingDir = dirTo;
-
-                    if (File.Exists(Settings.WorkingDir + ".gitmodules") &&
-                        AskIfSubmodulesShouldBeInitialized())
-                        GitUICommands.Instance.StartInitSubmodulesRecursiveDialog(this);
-                }
                 Close();
             }
             catch (Exception ex)
@@ -111,12 +104,6 @@ namespace GitUI
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
         }
 
-        private bool AskIfSubmodulesShouldBeInitialized()
-        {
-            return MessageBox.Show(this, _questionInitSubmodules.Text, _questionInitSubmodulesCaption.Text,
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
-        }
-        
         private void FromBrowseClick(object sender, EventArgs e)
         {
             var dialog = new FolderBrowserDialog { SelectedPath = _NO_TRANSLATE_From.Text };
@@ -135,9 +122,9 @@ namespace GitUI
             ToTextUpdate(sender, e);
         }
 
-        private void FromDropDown(object sender, EventArgs e)
+        private void FillFromDropDown()
         {          
-            System.ComponentModel.BindingList<Repository> repos = Repositories.RepositoryHistory.Repositories;
+            System.ComponentModel.BindingList<Repository> repos = Repositories.RemoteRepositoryHistory.Repositories;
             if (_NO_TRANSLATE_From.Items.Count != repos.Count) 
             {
                 _NO_TRANSLATE_To.Items.Clear();
@@ -160,7 +147,7 @@ namespace GitUI
 
         private void LoadSshKeyClick(object sender, EventArgs e)
         {
-            new FormLoadPuttySshKey().ShowDialog(this);
+            BrowseForPrivateKey.BrowseAndLoad(this);
         }
 
         private void FormCloneLoad(object sender, EventArgs e)
@@ -187,6 +174,8 @@ namespace GitUI
 
             if (path.Contains("\\") || path.Contains("/"))
                 _NO_TRANSLATE_NewDirectory.Text = path.Substring(path.LastIndexOfAny(new[] { '\\', '/' }) + 1);
+            
+            Branches.DataSource = null;
 
             ToTextUpdate(sender, e);
         }
@@ -244,10 +233,32 @@ namespace GitUI
             ToTextUpdate(sender, e);
         }
 
+        private delegate void UpdateBranchesList();
+
+        private Thread threadUpdateBranchList;
+
+        private void UpdateBranches(string from)
+        {
+            var result = Settings.Module.GetRemoteHeads(from, false, true);
+            Branches.Invoke(new UpdateBranchesList(() =>
+                {
+                    string text = Branches.Text;
+                    Branches.DataSource = result;
+                    if (result.Where(a => a.LocalName == text).Any())
+                        Branches.Text = text;
+                    Cursor = Cursors.Default;
+                }));            
+        }
+
         private void Branches_DropDown(object sender, EventArgs e)
         {
             Branches.DisplayMember = "LocalName";
-            Branches.DataSource = Settings.Module.GetRemoteHeads(_NO_TRANSLATE_From.Text, false, true);
+            if (threadUpdateBranchList != null)
+                threadUpdateBranchList.Abort();
+            string from = _NO_TRANSLATE_From.Text;
+            Cursor = Cursors.AppStarting;
+            threadUpdateBranchList = new Thread(new ThreadStart(() => UpdateBranches(from)));
+            threadUpdateBranchList.Start();
         }
     }
 }

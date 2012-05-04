@@ -7,16 +7,23 @@ using PatchApply;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Threading;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public sealed partial class FormFileHistory : GitExtensionsForm
     {
         private readonly SynchronizationContext syncContext = SynchronizationContext.Current;
+        private readonly FilterRevisionsHelper filterRevisionsHelper;
+        private readonly FilterBranchHelper filterBranchHelper;
 
-        public FormFileHistory(string fileName, GitRevision revision)
+        public FormFileHistory(string fileName, GitRevision revision, bool filterByRevision)
         {
             InitializeComponent();
+            filterBranchHelper = new FilterBranchHelper(toolStripBranches, toolStripDropDownButton2, FileChanges);
+
+            filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, FileChanges, toolStripLabel2, this);            
+
             FileChanges.SetInitialRevision(revision);
             Translate();
 
@@ -29,10 +36,13 @@ namespace GitUI
 
             followFileHistoryToolStripMenuItem.Checked = Settings.FollowRenamesInFileHistory;
             fullHistoryToolStripMenuItem.Checked = Settings.FullHistoryInFileHistory;
+
+            if (filterByRevision && revision != null && revision.Guid != null)
+                filterBranchHelper.SetBranchFilter(revision.Guid, false);
         }
 
         public FormFileHistory(string fileName)
-            : this(fileName, null)
+            : this(fileName, null, false)
         {
         }
 
@@ -44,6 +54,11 @@ namespace GitUI
         }
 
         private string FileName { get; set; }
+
+        public void SelectBlameTab()
+        {
+            tabControl1.SelectedTab = Blame;
+        }
 
         private void LoadFileHistory(string fileName)
         {
@@ -140,7 +155,7 @@ namespace GitUI
 
             syncContext.Post(o =>
             {
-                FileChanges.Filter = filter;
+                FileChanges.FixedFilter = filter;
                 FileChanges.AllowGraphWithFilter = true;
                 FileChanges.Load();
             }, this);
@@ -350,5 +365,22 @@ namespace GitUI
         {
             FileChanges.ViewSelectedRevisions();
         }
+
+        private const string FormBrowseName = "FormBrowse";
+
+        public override void AddTranslationItems(Translation translation)
+        {
+            base.AddTranslationItems(translation);
+            TranslationUtl.AddTranslationItemsFromFields(FormBrowseName, filterRevisionsHelper, translation);
+            TranslationUtl.AddTranslationItemsFromFields(FormBrowseName, filterBranchHelper, translation);
+        }
+
+        public override void TranslateItems(Translation translation)
+        {
+            base.TranslateItems(translation);
+            TranslationUtl.TranslateItemsFromFields(FormBrowseName, filterRevisionsHelper, translation);
+            TranslationUtl.TranslateItemsFromFields(FormBrowseName, filterBranchHelper, translation);
+        }
+
     }
 }

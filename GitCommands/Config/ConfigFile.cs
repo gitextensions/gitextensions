@@ -57,7 +57,7 @@ namespace GitCommands.Config
             if (string.IsNullOrEmpty(Path.GetFileName(_fileName)) || !File.Exists(_fileName))
                 return;
 
-            FindSections(File.ReadAllLines(_fileName, Settings.Encoding));
+            FindSections(File.ReadAllLines(_fileName, Settings.AppEncoding));
         }
 
         private void FindSections(IEnumerable<string> fileLines)
@@ -119,7 +119,7 @@ namespace GitCommands.Config
                 FileInfoExtensions
                     .MakeFileTemporaryWritable(_fileName,
                                        x =>
-                                       File.WriteAllText(_fileName, configFileContent.ToString(), Settings.Encoding));
+                                       File.WriteAllText(_fileName, configFileContent.ToString(), Settings.AppEncoding));
             }
             catch (Exception ex)
             {
@@ -229,16 +229,14 @@ namespace GitCommands.Config
 
         private ConfigSection FindOrCreateConfigSection(string name)
         {
-            var configSectionToFind = new ConfigSection(name);
-
-            foreach (var configSection in _sections)
+            var result = FindConfigSection(name);
+            if (result == null)
             {
-                if (configSection.SectionName == configSectionToFind.SectionName &&
-                    configSection.SubSection == configSectionToFind.SubSection)
-                    return configSection;
+                result = new ConfigSection(name);
+                _sections.Add(result);
             }
-            _sections.Add(configSectionToFind);
-            return configSectionToFind;
+            
+            return result;
         }
 
         public void RemoveConfigSection(string configSectionName)
@@ -257,8 +255,7 @@ namespace GitCommands.Config
 
             foreach (var configSection in _sections)
             {
-                if (configSection.SectionName == configSectionToFind.SectionName &&
-                    configSection.SubSection == configSectionToFind.SubSection)
+                if (configSectionToFind.Equals(configSection))
                     return configSection;
             }
             return null;
