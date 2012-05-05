@@ -790,7 +790,7 @@ namespace GitCommands
         {
             //This setting MUST be set to false by default, otherwise it will not work in Visual Studio without
             //other changes in the Visual Studio plugin itself.
-            get { return SafeGet("showcurrentbranchinvisualstudio", false, ref _showCurrentBranchInVisualStudio); }
+            get { return SafeGet("showcurrentbranchinvisualstudio", true, ref _showCurrentBranchInVisualStudio); }
             set { SafeSet("showcurrentbranchinvisualstudio", value, ref _showCurrentBranchInVisualStudio); }
         }
 
