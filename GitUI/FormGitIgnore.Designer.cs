@@ -81,7 +81,7 @@
             // 
             // AddPattern
             // 
-            this.AddPattern.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.AddPattern.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.AddPattern.Location = new System.Drawing.Point(67, 429);
             this.AddPattern.Name = "AddPattern";
             this.AddPattern.Size = new System.Drawing.Size(160, 25);
@@ -92,7 +92,7 @@
             // 
             // AddDefault
             // 
-            this.AddDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.AddDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.AddDefault.Location = new System.Drawing.Point(67, 460);
             this.AddDefault.Name = "AddDefault";
             this.AddDefault.Size = new System.Drawing.Size(160, 25);
