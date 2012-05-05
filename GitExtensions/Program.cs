@@ -104,7 +104,8 @@ namespace GitExtensions
 
             FormSplash.HideSplash();
 
-            MouseWheelRedirector.Active = true;
+            if (Settings.RunningOnWindows())
+                MouseWheelRedirector.Active = true;
 
             if (args.Length <= 1)
             {
