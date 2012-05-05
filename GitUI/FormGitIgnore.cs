@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
@@ -149,13 +150,18 @@ namespace GitUI
 
         private void AddDefaultClick(object sender, EventArgs e)
         {
+            var currentFileContent = _NO_TRANSLATE_GitIgnoreEdit.GetText();
+            var patternsToAdd = DefaultIgnorePatterns
+                .Except(currentFileContent.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                .ToArray();
+            if (patternsToAdd.Length == 0)
+                return;
             // workaround to prevent GitIgnoreFileLoaded event handling (it causes wrong _originalGitIgnoreFileContent update)
             // TODO: implement in FileViewer separate events for loading text from file and for setting text directly via ViewText
             _NO_TRANSLATE_GitIgnoreEdit.TextLoaded -= GitIgnoreFileLoaded;
             _NO_TRANSLATE_GitIgnoreEdit.ViewText(".gitignore",
-                _NO_TRANSLATE_GitIgnoreEdit.GetText() +
-                Environment.NewLine + string.Join(Environment.NewLine, DefaultIgnorePatterns) +
-                Environment.NewLine + "");
+                currentFileContent + Environment.NewLine +
+                string.Join(Environment.NewLine, patternsToAdd) + Environment.NewLine + string.Empty);
             _NO_TRANSLATE_GitIgnoreEdit.TextLoaded += GitIgnoreFileLoaded;
         }
 
