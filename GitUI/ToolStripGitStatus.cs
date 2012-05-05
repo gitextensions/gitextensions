@@ -12,10 +12,10 @@ namespace GitUI
 {
     public sealed partial class ToolStripGitStatus : ToolStripMenuItem
     {
-        private static readonly Bitmap ICON_CLEAN = Properties.Resources._81;
-        private static readonly Bitmap ICON_DIRTY = Properties.Resources._82;
-        private static readonly Bitmap ICON_STAGED = Properties.Resources._83;
-        private static readonly Bitmap ICON_MIXED = Properties.Resources._84;
+        private static readonly Bitmap ICON_CLEAN = Properties.Resources._9;
+        private static readonly Bitmap ICON_DIRTY = Properties.Resources.commitRed;
+        private static readonly Bitmap ICON_STAGED = Properties.Resources._10;
+        private static readonly Bitmap ICON_MIXED = Properties.Resources.commitYellow;
 
         /// <summary>
         /// We often change several files at once.
@@ -37,12 +37,15 @@ namespace GitUI
         private WorkingStatus currentStatus;
         private bool hasDeferredUpdateRequests;
 
+        public string CommitTranslatedString { get; set; }
+
         public ToolStripGitStatus()
         {
             syncContext = SynchronizationContext.Current;
             gitGetUnstagedCommand.Exited += (o, ea) => syncContext.Post(_ => onData(), null);
 
             InitializeComponent();
+            CommitTranslatedString = "Commit";
 
             Settings.WorkingDirChanged += (_, newDir, newGitDir) => TryStartWatchingChanges(newDir, newGitDir);
 
@@ -221,7 +224,10 @@ namespace GitUI
                 }
             }
 
-            Text = string.Format("{0} changes", allChangedFiles.Count.ToString());
+            if (allChangedFiles.Count == 0)
+                Text = CommitTranslatedString;
+            else
+                Text = string.Format(CommitTranslatedString + " ({0})", allChangedFiles.Count.ToString());
         }
 
         private void ScheduleNextRegularUpdate()

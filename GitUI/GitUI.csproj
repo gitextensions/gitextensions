@@ -1251,6 +1251,8 @@
     <None Include="Resources\git-extensions-logo-final_mixed_purple.ico" />
     <None Include="Resources\git-extensions-logo-final_mixed_red.ico" />
     <None Include="Resources\git-extensions-logo-final-128.png" />
+    <None Include="Icons\commitRed.png" />
+    <None Include="Icons\commitYellow.png" />
     <Content Include="Translation\German.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
