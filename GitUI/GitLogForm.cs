@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Windows.Forms;
 using GitCommands;
-using System.Linq;
-using GitCommands.Logging;
 using System.Threading;
 
 namespace GitUI
 {
-    public partial class GitLogForm : GitExtensionsForm
+    public sealed partial class GitLogForm : GitExtensionsForm
     {
-
-        protected readonly SynchronizationContext syncContext;
+        private readonly SynchronizationContext syncContext;
 
         public GitLogForm()
         {
@@ -29,58 +26,37 @@ namespace GitUI
         {
             RestorePosition("log");
 
-            Settings.GitLog.CommandsChanged += (CommandLogger log) =>
-            {
-                RefreshLogItems(log);
-            };
+            Settings.GitLog.CommandsChanged += () => syncContext.Post(_ => RefreshLogItems(), null);
+            GitCommandCache.CachedCommandsChanged += () => syncContext.Post(_ => RefreshCommandCacheItems(), null);
 
-            GitCommandCache.CachedCommandsChanged += () =>
-            {
-                RefreshCommandCacheItems();
-            };
-
-            RefreshLogItems(Settings.GitLog);
+            RefreshLogItems();
 
             RefreshCommandCacheItems();
-
         }
 
-        protected void RefreshLogItems(CommandLogger log)
+        private void RefreshLogItems()
         {
-            SendOrPostCallback method = o =>
-            {
-                if (TabControl.SelectedTab == tabPageCommandLog)
-                {
-                    bool selectLastIndex = LogItems.Items.Count == 0 || LogItems.SelectedIndex == LogItems.Items.Count - 1;
-                    LogItems.DataSource = log.Commands();
-                    if (selectLastIndex && LogItems.Items.Count > 0)
-                        LogItems.SelectedIndex = LogItems.Items.Count - 1;
-                }
-            };
-            syncContext.Post(method, this);
-
+            if (TabControl.SelectedTab == tabPageCommandLog)
+                RefreshListBox(LogItems, Settings.GitLog.GetCommands());
         }
 
-        protected void RefreshCommandCacheItems()
+        private void RefreshCommandCacheItems()
         {
-            SendOrPostCallback method = o =>
-            {
-                if (TabControl.SelectedTab == tabPageCommandCache)
-                {
-                    bool selectLastIndex = CommandCacheItems.Items.Count == 0 || CommandCacheItems.SelectedIndex == CommandCacheItems.Items.Count - 1;
-                    CommandCacheItems.DataSource = GitCommandCache.CachedCommands();
-                    if (selectLastIndex && CommandCacheItems.Items.Count > 0)
-                        CommandCacheItems.SelectedIndex = CommandCacheItems.Items.Count - 1;
-                }
-
-            };
-            syncContext.Post(method, this);
+            if (TabControl.SelectedTab == tabPageCommandCache)
+                RefreshListBox(CommandCacheItems, GitCommandCache.CachedCommands());
         }
 
+        private static void RefreshListBox(ListBox log, string[] items)
+        {
+            var selectLastIndex = log.Items.Count == 0 || log.SelectedIndex == log.Items.Count - 1;
+            log.DataSource = items;
+            if (selectLastIndex && log.Items.Count > 0)
+                log.SelectedIndex = log.Items.Count - 1;
+        }
 
         private void CommandCacheItems_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string command = CommandCacheItems.SelectedItem as string;
+            string command = (string)CommandCacheItems.SelectedItem;
 
             string output;
             if (GitCommandCache.TryGet(command, Settings.LogOutputEncoding, out output))
@@ -96,21 +72,19 @@ namespace GitUI
 
         private void LogItems_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string command = LogItems.SelectedItem as string;
-
-            LogOutput.Text = command;
+            LogOutput.Text = (string)LogItems.SelectedItem;
         }
 
         private void TabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
-            RefreshLogItems(Settings.GitLog);
+            RefreshLogItems();
             RefreshCommandCacheItems();
         }
 
         private void alwaysOnTopCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            this.TopMost = !this.TopMost;
-            alwaysOnTopCheckBox.Checked = this.TopMost;
+            TopMost = !TopMost;
+            alwaysOnTopCheckBox.Checked = TopMost;
         }
     }
 }
