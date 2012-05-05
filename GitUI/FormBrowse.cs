@@ -113,7 +113,6 @@ namespace GitUI
                 TaskbarManager.Instance.ApplicationId = "HenkWesthuis.GitExtensions";
             }
 #endif
-
             if (Settings.ShowGitStatusInBrowseToolbar)
             {
                 _toolStripGitStatus = new ToolStripGitStatus
@@ -121,9 +120,10 @@ namespace GitUI
                                      ImageTransparentColor = System.Drawing.Color.Magenta
                                  };
                 _toolStripGitStatus.Click += StatusClick;
-                ToolStrip.Items.Insert(1, _toolStripGitStatus);
+                ToolStrip.Items.Insert(ToolStrip.Items.IndexOf(toolStripButton1), _toolStripGitStatus);
+                ToolStrip.Items.Remove(toolStripButton1);
+                _toolStripGitStatus.CommitTranslatedString = toolStripButton1.Text;
             }
-
             RevisionGrid.SelectionChanged += RevisionGridSelectionChanged;
             DiffText.ExtraDiffArgumentsChanged += DiffTextExtraDiffArgumentsChanged;
             filterRevisionsHelper.SetFilter(filter);
@@ -291,6 +291,8 @@ namespace GitUI
             manageRemoteRepositoriesToolStripMenuItem1.Enabled = validWorkingDir;
             branchSelect.Enabled = validWorkingDir;
             toolStripButton1.Enabled = validWorkingDir;
+            if (_toolStripGitStatus != null)
+                _toolStripGitStatus.Enabled = validWorkingDir;
             toolStripButtonPull.Enabled = validWorkingDir;
             toolStripButtonPush.Enabled = validWorkingDir;
             submodulesToolStripMenuItem.Enabled = validWorkingDir;
