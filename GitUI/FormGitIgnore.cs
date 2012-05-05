@@ -181,5 +181,10 @@ namespace GitUI
         {
             _originalGitIgnoreFileContent = _NO_TRANSLATE_GitIgnoreEdit.GetText();
         }
+
+        private void lnkGitIgnorePatterns_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(@"https://github.com/github/gitignore");
+        }
     }
 }

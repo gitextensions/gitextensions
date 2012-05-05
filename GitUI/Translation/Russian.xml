@@ -1639,6 +1639,9 @@ obj/
 _ReSharper*/
 </Value>
         </TranslationItem>
+        <TranslationItem Name="lnkGitIgnorePatterns" Property="Text">
+          <Value>Коллекция шаблонов игнорирования</Value>
+        </TranslationItem>
         <TranslationItem Name="Save" Property="Text">
           <Value>Сохранить</Value>
         </TranslationItem>
