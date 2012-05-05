@@ -29,15 +29,18 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormGitIgnore));
+            System.Windows.Forms.Panel panel1;
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this._NO_TRANSLATE_GitIgnoreEdit = new GitUI.Editor.FileViewer();
             this.AddPattern = new System.Windows.Forms.Button();
             this.AddDefault = new System.Windows.Forms.Button();
             this.Save = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.TextBox();
+            panel1 = new System.Windows.Forms.Panel();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -53,19 +56,17 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.AddPattern);
-            this.splitContainer1.Panel2.Controls.Add(this.AddDefault);
-            this.splitContainer1.Panel2.Controls.Add(this.Save);
             this.splitContainer1.Panel2.Controls.Add(this.label1);
+            this.splitContainer1.Panel2.Controls.Add(panel1);
             this.splitContainer1.Size = new System.Drawing.Size(634, 519);
             this.splitContainer1.SplitterDistance = 400;
             this.splitContainer1.TabIndex = 0;
             // 
             // _NO_TRANSLATE_GitIgnoreEdit
             // 
-            this._NO_TRANSLATE_GitIgnoreEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this._NO_TRANSLATE_GitIgnoreEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this._NO_TRANSLATE_GitIgnoreEdit.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this._NO_TRANSLATE_GitIgnoreEdit.IgnoreWhitespaceChanges = false;
             this._NO_TRANSLATE_GitIgnoreEdit.IsReadOnly = false;
@@ -82,7 +83,7 @@
             // AddPattern
             // 
             this.AddPattern.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.AddPattern.Location = new System.Drawing.Point(67, 429);
+            this.AddPattern.Location = new System.Drawing.Point(67, 44);
             this.AddPattern.Name = "AddPattern";
             this.AddPattern.Size = new System.Drawing.Size(160, 25);
             this.AddPattern.TabIndex = 3;
@@ -93,7 +94,7 @@
             // AddDefault
             // 
             this.AddDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.AddDefault.Location = new System.Drawing.Point(67, 460);
+            this.AddDefault.Location = new System.Drawing.Point(67, 75);
             this.AddDefault.Name = "AddDefault";
             this.AddDefault.Size = new System.Drawing.Size(160, 25);
             this.AddDefault.TabIndex = 2;
@@ -104,7 +105,7 @@
             // Save
             // 
             this.Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Save.Location = new System.Drawing.Point(67, 491);
+            this.Save.Location = new System.Drawing.Point(67, 106);
             this.Save.Name = "Save";
             this.Save.Size = new System.Drawing.Size(160, 25);
             this.Save.TabIndex = 1;
@@ -114,12 +115,27 @@
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 9);
+            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label1.Location = new System.Drawing.Point(0, 0);
+            this.label1.Multiline = true;
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(213, 312);
-            this.label1.TabIndex = 0;
+            this.label1.ReadOnly = true;
+            this.label1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.label1.Size = new System.Drawing.Size(230, 519);
+            this.label1.TabIndex = 4;
             this.label1.Text = resources.GetString("label1.Text");
+            this.label1.WordWrap = false;
+            // 
+            // panel1
+            // 
+            panel1.Controls.Add(this.AddDefault);
+            panel1.Controls.Add(this.AddPattern);
+            panel1.Controls.Add(this.Save);
+            panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            panel1.Location = new System.Drawing.Point(0, 385);
+            panel1.Name = "panel1";
+            panel1.Size = new System.Drawing.Size(230, 134);
+            panel1.TabIndex = 5;
             // 
             // FormGitIgnore
             // 
@@ -136,6 +152,7 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
             this.splitContainer1.ResumeLayout(false);
+            panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -144,7 +161,7 @@
 
         private System.Windows.Forms.SplitContainer splitContainer1;
         private GitUI.Editor.FileViewer _NO_TRANSLATE_GitIgnoreEdit;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox label1;
         private System.Windows.Forms.Button Save;
         private System.Windows.Forms.Button AddDefault;
         private System.Windows.Forms.Button AddPattern;
