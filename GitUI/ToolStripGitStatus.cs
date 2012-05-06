@@ -12,9 +12,9 @@ namespace GitUI
 {
     public sealed partial class ToolStripGitStatus : ToolStripMenuItem
     {
-        private static readonly Bitmap ICON_CLEAN = Properties.Resources._9;
+        private static readonly Bitmap ICON_CLEAN = Properties.Resources._10;
         private static readonly Bitmap ICON_DIRTY = Properties.Resources.commitRed;
-        private static readonly Bitmap ICON_STAGED = Properties.Resources._10;
+        private static readonly Bitmap ICON_STAGED = Properties.Resources._9;
         private static readonly Bitmap ICON_MIXED = Properties.Resources.commitYellow;
 
         /// <summary>
