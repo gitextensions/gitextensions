@@ -124,7 +124,7 @@
           <Value>Участвовать</Value>
         </TranslationItem>
         <TranslationItem Name="issues" Property="Text">
-          <Value>Проблемы</Value>
+          <Value>Сообщить об ошибке</Value>
         </TranslationItem>
         <TranslationItem Name="openRepository" Property="Text">
           <Value>Открыть репозиторий</Value>
@@ -1010,6 +1010,9 @@
         <TranslationItem Name="AutoCommit" Property="Text">
           <Value>Автоматически создавать коммит</Value>
         </TranslationItem>
+        <TranslationItem Name="checkAddReference" Property="Text">
+          <Value>Добавить к сообщению строку со ссылкой на исходный коммит</Value>
+        </TranslationItem>
         <TranslationItem Name="BranchInfo" Property="Text">
           <Value>Скопировать (cherry pick) этот коммит:</Value>
         </TranslationItem>
@@ -1605,6 +1608,9 @@
         </TranslationItem>
         <TranslationItem Name="AddDefault" Property="Text">
           <Value>Добавить стандартные записи</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddPattern" Property="Text">
+          <Value>Добавить шаблон</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Value>Укажите шаблоны файлов для игнорирования.
@@ -3510,7 +3516,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
           <Value>Инициализировать репозиторий</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
-          <Value>В этот репозиторий еще небыло коммитов.</Value>
+          <Value>В этом репозитории ещё нет коммитов.</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Value>Текущая рабочая папка не является git репозиторием.</Value>
