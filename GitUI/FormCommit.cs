@@ -161,7 +161,7 @@ namespace GitUI
 
             Unstaged.SetNoFilesText(_noUnstagedChanges.Text);
             Staged.SetNoFilesText(_noStagedChanges.Text);
-            Message.SetEmptyMessage(_enterCommitMessageHint.Text);
+            Message.WatermarkText = _enterCommitMessageHint.Text;
 
             _commitKind = commitKind;
             _editedCommit = editedCommit;
@@ -273,7 +273,7 @@ namespace GitUI
 
         private bool FocusCommitMessage()
         {
-            Message.StartEditing();
+            Message.Focus();
             return true;
         }
 
@@ -535,6 +535,12 @@ namespace GitUI
             var inTheMiddleOfConflictedMerge = Settings.Module.InTheMiddleOfConflictedMerge();
             SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
             Unstaged.SelectStoredNextIndex();
+            if (Unstaged.GitItemStatuses.Count > 0)
+                Unstaged.Focus();
+            else if (Staged.GitItemStatuses.Count > 0)
+                Message.Focus();
+            else
+                Amend.Focus();
         }
 
         /// <summary>Returns if there are any changes at all, staged or unstaged.</summary>
