@@ -49,6 +49,18 @@ namespace GitUI
             }
         }
 
+        public new bool Focus()
+        {
+            if (FileStatusListBox.Items.Count > 0)
+            {
+                if (FileStatusListBox.SelectedItem == null)
+                    FileStatusListBox.SelectedIndex = 0;
+                return FileStatusListBox.Focus();
+            }
+            else
+                return false;
+        }
+
         void FileStatusListBox_MeasureItem(object sender, MeasureItemEventArgs e)
         {
             var gitItemStatus = (GitItemStatus)FileStatusListBox.Items[e.Index];
