@@ -37,3 +37,5 @@ GitPlugin/Properties/Resources.resources
 *.resources
 *.userprefs
 *.dotCover
+*.ncrunchproject
+*.ncrunchsolution
