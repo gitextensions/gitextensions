@@ -283,6 +283,7 @@ namespace GitUI
             this.Cancel.Name = "Cancel";
             this.Cancel.Size = new System.Drawing.Size(129, 23);
             this.Cancel.TabIndex = 15;
+            this.Cancel.TabStop = false;
             this.Cancel.Text = "Cancel";
             this.Cancel.UseVisualStyleBackColor = true;
             // 
@@ -305,6 +306,7 @@ namespace GitUI
             this.splitMain.Size = new System.Drawing.Size(918, 644);
             this.splitMain.SplitterDistance = 397;
             this.splitMain.TabIndex = 0;
+            this.splitMain.TabStop = false;
             // 
             // splitLeft
             // 
@@ -326,6 +328,7 @@ namespace GitUI
             this.splitLeft.Size = new System.Drawing.Size(397, 644);
             this.splitLeft.SplitterDistance = 284;
             this.splitLeft.TabIndex = 3;
+            this.splitLeft.TabStop = false;
             // 
             // toolStripContainer1
             // 
@@ -340,6 +343,7 @@ namespace GitUI
             this.toolStripContainer1.Name = "toolStripContainer1";
             this.toolStripContainer1.Size = new System.Drawing.Size(397, 284);
             this.toolStripContainer1.TabIndex = 13;
+            this.toolStripContainer1.TabStop = false;
             // 
             // toolStripContainer1.TopToolStripPanel
             // 
@@ -370,7 +374,7 @@ namespace GitUI
             this.Unstaged.SelectedIndex = -1;
             this.Unstaged.SelectedItem = null;
             this.Unstaged.Size = new System.Drawing.Size(397, 255);
-            this.Unstaged.TabIndex = 10;
+            this.Unstaged.TabIndex = 1;
             // 
             // toolbarUnstaged
             // 
@@ -561,6 +565,7 @@ namespace GitUI
             this.Staged.SelectedItem = null;
             this.Staged.Size = new System.Drawing.Size(397, 328);
             this.Staged.TabIndex = 16;
+            this.Staged.TabStop = false;
             // 
             // toolbarStaged
             // 
@@ -668,6 +673,7 @@ namespace GitUI
             this.splitRight.Size = new System.Drawing.Size(517, 644);
             this.splitRight.SplitterDistance = 502;
             this.splitRight.TabIndex = 0;
+            this.splitRight.TabStop = false;
             // 
             // llShowPreview
             // 
@@ -690,7 +696,7 @@ namespace GitUI
             this.SolveMergeconflicts.Location = new System.Drawing.Point(14, 12);
             this.SolveMergeconflicts.Name = "SolveMergeconflicts";
             this.SolveMergeconflicts.Size = new System.Drawing.Size(188, 42);
-            this.SolveMergeconflicts.TabIndex = 8;
+            this.SolveMergeconflicts.TabIndex = 0;
             this.SolveMergeconflicts.Text = "There are unresolved mergeconflicts\r\n";
             this.SolveMergeconflicts.UseVisualStyleBackColor = false;
             this.SolveMergeconflicts.Visible = false;
@@ -705,6 +711,7 @@ namespace GitUI
             this.SelectedDiff.Name = "SelectedDiff";
             this.SelectedDiff.Size = new System.Drawing.Size(517, 502);
             this.SelectedDiff.TabIndex = 0;
+            this.SelectedDiff.TabStop = false;
             // 
             // Message
             // 
@@ -715,7 +722,8 @@ namespace GitUI
             this.Message.MistakeFont = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Underline);
             this.Message.Name = "Message";
             this.Message.Size = new System.Drawing.Size(342, 110);
-            this.Message.TabIndex = 4;
+            this.Message.TabIndex = 2;
+            this.Message.WatermarkText = "";
             this.Message.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Message_KeyDown);
             this.Message.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Message_KeyUp);
             // 
@@ -853,6 +861,7 @@ namespace GitUI
             this.Commit.Name = "Commit";
             this.Commit.Size = new System.Drawing.Size(171, 26);
             this.Commit.TabIndex = 3;
+            this.Commit.TabStop = false;
             this.Commit.Text = "&Commit";
             this.Commit.UseVisualStyleBackColor = true;
             this.Commit.Click += new System.EventHandler(this.CommitClick);
@@ -866,6 +875,7 @@ namespace GitUI
             this.CommitAndPush.Name = "CommitAndPush";
             this.CommitAndPush.Size = new System.Drawing.Size(171, 26);
             this.CommitAndPush.TabIndex = 9;
+            this.CommitAndPush.TabStop = false;
             this.CommitAndPush.Text = "C&ommit && push";
             this.CommitAndPush.UseVisualStyleBackColor = true;
             this.CommitAndPush.Click += new System.EventHandler(this.CommitAndPush_Click);
@@ -877,6 +887,7 @@ namespace GitUI
             this.Amend.Name = "Amend";
             this.Amend.Size = new System.Drawing.Size(171, 26);
             this.Amend.TabIndex = 10;
+            this.Amend.TabStop = false;
             this.Amend.Text = "&Amend last commit";
             this.Amend.UseVisualStyleBackColor = true;
             this.Amend.Click += new System.EventHandler(this.AmendClick);
@@ -888,6 +899,7 @@ namespace GitUI
             this.Reset.Name = "Reset";
             this.Reset.Size = new System.Drawing.Size(171, 26);
             this.Reset.TabIndex = 11;
+            this.Reset.TabStop = false;
             this.Reset.Text = "Reset changes";
             this.Reset.UseVisualStyleBackColor = true;
             this.Reset.Click += new System.EventHandler(this.ResetClick);

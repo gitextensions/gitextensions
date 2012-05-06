@@ -161,7 +161,7 @@ namespace GitUI
 
             Unstaged.SetNoFilesText(_noUnstagedChanges.Text);
             Staged.SetNoFilesText(_noStagedChanges.Text);
-            Message.SetEmptyMessage(_enterCommitMessageHint.Text);
+            Message.WatermarkText = _enterCommitMessageHint.Text;
 
             _commitKind = commitKind;
             _editedCommit = editedCommit;
@@ -171,8 +171,6 @@ namespace GitUI
 
             Unstaged.DoubleClick += Unstaged_DoubleClick;
             Staged.DoubleClick += Staged_DoubleClick;
-
-            Unstaged.Focus();
 
             SelectedDiff.AddContextMenuEntry(null, null);
             _StageSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_stageSelectedLines.Text, StageSelectedLinesToolStripMenuItemClick);
@@ -184,8 +182,6 @@ namespace GitUI
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
 
             SelectedDiff.ContextMenuOpening += SelectedDiff_ContextMenuOpening;
-
-            Commit.Focus();
 
             string localBranch = CalculateLocalBranch();
             if (localBranch == null)
@@ -273,7 +269,7 @@ namespace GitUI
 
         private bool FocusCommitMessage()
         {
-            Message.StartEditing();
+            Message.Focus();
             return true;
         }
 
@@ -497,6 +493,8 @@ namespace GitUI
             Cursor.Current = Cursors.Default;
         }
 
+        private bool LoadUnstagedOutputFirstTime = true;
+
         /// <summary>
         ///   Loads the unstaged output.
         ///   This method is passed in to the SetTextCallBack delegate
@@ -535,6 +533,17 @@ namespace GitUI
             var inTheMiddleOfConflictedMerge = Settings.Module.InTheMiddleOfConflictedMerge();
             SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
             Unstaged.SelectStoredNextIndex();
+
+            if (LoadUnstagedOutputFirstTime)
+            {
+                if (Unstaged.GitItemStatuses.Count > 0)
+                    Unstaged.Focus();
+                else if (Staged.GitItemStatuses.Count > 0)
+                    Message.Focus();
+                else
+                    Amend.Focus();
+                LoadUnstagedOutputFirstTime = false;
+            }
         }
 
         /// <summary>Returns if there are any changes at all, staged or unstaged.</summary>
@@ -913,6 +922,7 @@ namespace GitUI
                     toolStripProgressBar1.Visible = true;
                     toolStripProgressBar1.Maximum = Staged.SelectedItems.Count * 2;
                     toolStripProgressBar1.Value = 0;
+                    Staged.StoreNextIndexToSelect();
 
                     var files = new List<GitItemStatus>();
                     var allFiles = new List<GitItemStatus>();
@@ -978,6 +988,7 @@ namespace GitUI
                     }
                     Staged.GitItemStatuses = stagedFiles;
                     Unstaged.GitItemStatuses = unStagedFiles;
+                    Staged.SelectStoredNextIndex();
 
                     toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
                 }
