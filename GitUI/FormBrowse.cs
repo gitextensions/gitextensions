@@ -77,6 +77,11 @@ namespace GitUI
         private readonly TranslationString _configureWorkingDirMenu =
             new TranslationString("Configure this menu");
 
+        private readonly TranslationString _UnsupportedMultiselectAction =
+            new TranslationString("Operation not supported");
+
+        private string _NoDiffFilesChangesText;
+
         #endregion
 
         private readonly SynchronizationContext syncContext;
@@ -106,6 +111,7 @@ namespace GitUI
             filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, RevisionGrid, toolStripLabel2, this);
             _FilterBranchHelper = new FilterBranchHelper(toolStripBranches, toolStripDropDownButton2, RevisionGrid);
             Translate();
+            _NoDiffFilesChangesText = DiffFiles.GetNoFilesText();
 
 #if !__MonoCS__
             if (Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
@@ -788,11 +794,19 @@ namespace GitUI
 
             DiffText.SaveCurrentScrollPos();
 
+            DiffFiles.SetNoFilesText(_NoDiffFilesChangesText);
             switch (revisions.Count)
             {
                 case 2:
-                    DiffFiles.GitItemStatuses =
-                        Settings.Module.GetDiffFiles(revisions[0].Guid, revisions[1].Guid);
+                    bool artificialRevSelected = revisions[0].IsArtificial() || revisions[1].IsArtificial();
+                    if (artificialRevSelected)
+                    {
+                        DiffFiles.SetNoFilesText(_UnsupportedMultiselectAction.Text);
+                        DiffFiles.GitItemStatuses = null;
+                    }
+                    else
+                        DiffFiles.GitItemStatuses =
+                            Settings.Module.GetDiffFiles(revisions[0].Guid, revisions[1].Guid);
                     break;
                 case 0:
                     DiffFiles.GitItemStatuses = null;
