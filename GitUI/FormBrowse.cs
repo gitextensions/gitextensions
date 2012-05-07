@@ -1578,6 +1578,7 @@ namespace GitUI
         {
             if (DiffFiles.SelectedItem == null)
                 return;
+
             var selectedItem = (DiffFiles.SelectedItem).Name;
 
             IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
@@ -1597,8 +1598,15 @@ namespace GitUI
                 output = Settings.Module.OpenWithDifftool(selectedItem, revisions[0].Guid);
             else
                 if (revisions.Count == 1)   // single item selected
-                    output = Settings.Module.OpenWithDifftool(selectedItem, revisions[0].Guid,
+                {
+                    if (revisions[0].Guid == GitRevision.UncommittedWorkingDirGuid) //working dir changes
+                        output = Settings.Module.OpenWithDifftool(selectedItem);
+                    else if (revisions[0].Guid == GitRevision.IndexGuid) //staged changes
+                        output = Settings.Module.OpenWithDifftool(selectedItem, null, null, "--cached");
+                    else
+                        output = Settings.Module.OpenWithDifftool(selectedItem, revisions[0].Guid,
                                                                       revisions[0].ParentGuids[0]);
+                }
                 else                        // multiple items selected
                     output = Settings.Module.OpenWithDifftool(selectedItem, revisions[0].Guid,
                                                                   revisions[revisions.Count - 1].Guid);
@@ -2167,6 +2175,17 @@ namespace GitUI
 
         private void DiffContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            bool artificialRevSelected;
+
+            IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
+
+            if (revisions.Count == 0)
+                artificialRevSelected = false;
+            else 
+                artificialRevSelected = revisions[0].IsArtificial();
+            if (revisions.Count > 1)
+                artificialRevSelected = artificialRevSelected || revisions[revisions.Count - 1].IsArtificial();
+
             foreach (var item in DiffFiles.SelectedItems)
             {
                 var fileNames = new StringBuilder();
@@ -2175,8 +2194,8 @@ namespace GitUI
                 if (File.Exists(fileNames.ToString()))
                 {
                     openContainingFolderToolStripMenuItem.Enabled = true;
-                    diffBaseLocalToolStripMenuItem.Enabled = true;
-                    difftoolRemoteLocalToolStripMenuItem.Enabled = true;
+                    diffBaseLocalToolStripMenuItem.Enabled = !artificialRevSelected;
+                    difftoolRemoteLocalToolStripMenuItem.Enabled = !artificialRevSelected;
                     return;
                 }
             }
