@@ -67,10 +67,7 @@ namespace ResourceManager.Translation
             if (tc == null)
                 return defaultValue;
             TranslationItem ti = tc.GetTranslationItem(item, property);
-            if (ti == null)
-                return defaultValue;
-            else
-                return ti.Value;
+            return ti == null ? defaultValue : ti.Value;
         }
     }
 }
