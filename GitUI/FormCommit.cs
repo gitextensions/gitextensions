@@ -434,7 +434,7 @@ namespace GitUI
             {
                 _gitGetUnstagedCommand = new GitCommandsInstance()
                 {
-                    SetupStartInfoCallback = (ProcessStartInfo startInfo) =>
+                    SetupStartInfoCallback = startInfo =>
                     {
                         startInfo.StandardOutputEncoding = Settings.SystemEncoding;
                         startInfo.StandardErrorEncoding = Settings.SystemEncoding;
@@ -1300,7 +1300,7 @@ namespace GitUI
                 string diff = Settings.Module.RunGitCmd(
                      string.Format("diff --cached -z -- {0}", item));
                 var lines = diff.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
-                string subprojCommit = "Subproject commit ";
+                const string subprojCommit = "Subproject commit ";
                 var from = lines.Single(s => s.StartsWith("-" + subprojCommit)).Substring(subprojCommit.Length + 1);
                 var to = lines.Single(s => s.StartsWith("+" + subprojCommit)).Substring(subprojCommit.Length + 1);
                 if (!String.IsNullOrEmpty(from) && !String.IsNullOrEmpty(to))

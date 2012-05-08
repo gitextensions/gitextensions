@@ -268,7 +268,7 @@ namespace GitUI
                     bool messageBoxResult =
                         MessageBox.Show(this, _applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text,
                                         MessageBoxButtons.YesNo) == DialogResult.Yes;
-                    if (ShouldStashPop(messageBoxResult, process, stashed))
+                    if (ShouldStashPop(messageBoxResult, process, true))
                     {
                         new FormProcess("stash pop").ShowDialog(this);
                         MergeConflictHandler.HandleMergeConflicts(this);

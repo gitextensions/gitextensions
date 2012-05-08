@@ -68,7 +68,7 @@ namespace GitStatistics
 
         private void InitializeCommitCount()
         {
-            Action<FormGitStatistics> a = (FormGitStatistics sender) =>
+            Action<FormGitStatistics> a = sender =>
             {
                 var allCommitsByUser = CommitCounter.GroupAllCommitsByContributor();
                 syncContext.Post(o =>
@@ -176,7 +176,7 @@ namespace GitStatistics
             }
 
             //Sync rest to UI thread
-            syncContext.Post((o) =>
+            syncContext.Post(o =>
             {
                 TotalLinesOfTestCode.Text = lineCounter.NumberTestCodeLines + " Lines of test code";
 

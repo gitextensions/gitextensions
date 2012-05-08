@@ -11,12 +11,12 @@ namespace GitStatistics.PieChart
         /// <summary>
         ///   Small brightness change factor.
         /// </summary>
-        public static readonly float BrightnessEnhancementFactor1 = 0.3F;
+        public const float BrightnessEnhancementFactor1 = 0.3F;
 
         /// <summary>
         ///   Large brightness change factor.
         /// </summary>
-        public static readonly float BrightnessEnhancementFactor2 = 0.5F;
+        public const float BrightnessEnhancementFactor2 = 0.5F;
 
         /// <summary>
         ///   Creates color with corrected lightness.

@@ -51,8 +51,7 @@ namespace GitUI
             {
                 DataGridViewRow row = Submodules.Rows
                     .Cast<DataGridViewRow>()
-                    .Where(r => r.DataBoundItem as GitSubmodule == submodule)
-                    .FirstOrDefault();
+                    .FirstOrDefault(r => r.DataBoundItem as GitSubmodule == submodule);
 
                 if (row != null)
                     row.Selected = true;

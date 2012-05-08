@@ -28,7 +28,7 @@ namespace GitCommands
                 Revision = revision;
             }
 
-            public GitRevision Revision;
+            public readonly GitRevision Revision;
         }
 
         public bool BackgroundThread { get; set; }
@@ -38,7 +38,7 @@ namespace GitCommands
 
         private readonly char[] hexChars = "0123456789ABCDEFabcdef".ToCharArray();
 
-        private readonly string COMMIT_BEGIN = "<(__BEGIN_COMMIT__)>"; // Something unlikely to show up in a comment
+        private const string COMMIT_BEGIN = "<(__BEGIN_COMMIT__)>"; // Something unlikely to show up in a comment
 
         private List<GitHead> heads;
 
@@ -160,7 +160,7 @@ namespace GitCommands
                 gitGetGraphCommand.StreamOutput = true;
                 gitGetGraphCommand.CollectOutput = false;                
                 Encoding LogOutputEncoding = Settings.LogOutputEncoding;
-                gitGetGraphCommand.SetupStartInfoCallback = (ProcessStartInfo startInfo) =>
+                gitGetGraphCommand.SetupStartInfoCallback = startInfo =>
                 {
                     startInfo.StandardOutputEncoding = Settings.LosslessEncoding;
                     startInfo.StandardErrorEncoding = Settings.LosslessEncoding;
