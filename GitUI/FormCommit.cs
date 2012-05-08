@@ -255,10 +255,9 @@ namespace GitUI
         }
 
         /// <summary>Helper method that moves the focus to the supplied FileStatusList</summary>
-        private bool FocusFileList(FileStatusList fileStatusList)
+        private void FocusFileList(FileStatusList fileStatusList)
         {
             fileStatusList.Focus();
-            return true;
         }
 
         private bool FocusSelectedDiff()
