@@ -563,7 +563,7 @@ namespace NetSpell.SpellChecker
 		{
 		
 			// i.e. 2-D array
-			Array matrix = Array.CreateInstance(typeof(int), source.Length+1, target.Length+1);
+			Array matrix = new int[source.Length+1, target.Length+1];
 
 			// boundary conditions
 			matrix.SetValue(0, 0, 0); 

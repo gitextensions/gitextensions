@@ -4,12 +4,12 @@ namespace GitUIPluginInterfaces
 {
     public abstract class GitUIBaseEventArgs : CancelEventArgs
     {
-        public GitUIBaseEventArgs(IGitUICommands gitUICommands)
+        protected GitUIBaseEventArgs(IGitUICommands gitUICommands)
             : this(null, gitUICommands)
         {
         }
 
-        public GitUIBaseEventArgs(object ownerForm, IGitUICommands gitUICommands)
+        protected GitUIBaseEventArgs(object ownerForm, IGitUICommands gitUICommands)
             : base(false)
         {
             this.OwnerForm = ownerForm;
