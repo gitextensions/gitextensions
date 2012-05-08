@@ -1126,15 +1126,9 @@ namespace NetSpell.SpellChecker
 
 			TraceWriter.TraceVerbose("Testing Word: {0}" , word);
 
-			if (this.Dictionary.Contains(word))
-			{
-				return true;
-			}
-			else if (this.Dictionary.Contains(word.ToLower()))
-			{
-				return true;
-			}
-			return false;
+		    if (this.Dictionary.Contains(word))
+		        return true;
+		    return this.Dictionary.Contains(word.ToLower());
 		}
 
 		#endregion
@@ -1203,12 +1197,11 @@ namespace NetSpell.SpellChecker
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public string CurrentWord
 		{
-			get	
+			get
 			{
-				if(_words == null || _words.Count == 0)
+			    if(_words == null || _words.Count == 0)
 					return string.Empty;
-				else
-					return _words[this.WordIndex].Value;
+			    return _words[this.WordIndex].Value;
 			}
 		}
 
@@ -1222,7 +1215,7 @@ namespace NetSpell.SpellChecker
 		{
 			get 
 			{
-				if(!base.DesignMode && _dictionary == null)
+				if(!DesignMode && _dictionary == null)
 					_dictionary = new WordDictionary();
 
 				return _dictionary;

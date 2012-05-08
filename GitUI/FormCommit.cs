@@ -1154,7 +1154,6 @@ namespace GitUI
                 case CommitKind.Squash:
                     message = string.Format("squash! {0}", _editedCommit.Message);
                     break;
-                case CommitKind.Normal:
                 default:
                     message = Settings.Module.GetMergeMessage();
 

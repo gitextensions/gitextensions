@@ -293,10 +293,7 @@ namespace GitUI
 
         private Encoding ComboToEncoding(ComboBox combo)
         {
-            if (combo.SelectedItem == null)
-                return null;
-            else
-                return combo.SelectedItem as Encoding;
+            return combo.SelectedItem as Encoding;
         }
 
         private void FillEncodings(ComboBox combo)

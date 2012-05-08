@@ -34,7 +34,7 @@ namespace GitUI.Hotkey
         /// <returns></returns>
         public static bool IsUniqueKey(Keys keyData)
         {
-            return (UsedKeys.Contains(keyData)) ? true : false;
+            return UsedKeys.Contains(keyData);
         }
 
         public static HotkeyCommand[] LoadHotkeys(string name)
@@ -80,8 +80,7 @@ namespace GitUI.Hotkey
             // If the default settings and the loaded settings do not match, then get the default settings, as we don't trust the loaded ones
             if (DidDefaultSettingsChange(defaultSettings, loadedSettings))
                 return defaultSettings;
-            else
-                return loadedSettings;
+            return loadedSettings;
         }
 
         private static void GetUsedHotkeys(HotkeySettings[] settings)

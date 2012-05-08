@@ -248,18 +248,13 @@ namespace GitUI
 
         private bool IsRebasingMergeCommit()
         {
-            if (candidateForRebasingMergeCommit)
-            {
-                if (selectedBranch == _currentBranch && selectedBranchRemote == _currentBranchRemote)
-                {
-                    string remoteBranchName = selectedBranchRemote + "/" + selectedRemoteBranchName;
-                    return Settings.Module.ExistsMergeCommit(remoteBranchName, selectedBranch);
-                }
-                else
-                    return false;
-            }
-            else
+            if (!candidateForRebasingMergeCommit)
                 return false;
+            if (selectedBranch != _currentBranch || selectedBranchRemote != _currentBranchRemote)
+                return false;
+
+            string remoteBranchName = selectedBranchRemote + "/" + selectedRemoteBranchName;
+            return Settings.Module.ExistsMergeCommit(remoteBranchName, selectedBranch);
         }
 
         private bool HandlePushOnExit(ref bool isError, FormProcess form)
