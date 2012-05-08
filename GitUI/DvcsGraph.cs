@@ -385,17 +385,15 @@ namespace GitUI
             }
         }
 
-        public bool Prune()
+        public void Prune()
         {
-            bool status;
             int count;
             lock (graphData)
             {
-                status = graphData.Prune();
+                graphData.Prune();
                 count = graphData.Count;
             }
             setRowCount(count);
-            return status;
         }
 
         private void RebuildGraph()
