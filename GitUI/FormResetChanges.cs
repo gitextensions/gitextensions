@@ -43,6 +43,7 @@ namespace GitUI
         /// <summary>
         /// Shows the dialog modally under the given owner, and returns the user's selection (RESET, RESET_AND_DELETE, or CANCEL).
         /// </summary>
+        /// <param name="owner">Shows this form as a modal dialog with the specified owner.</param>
         /// <param name="hasExistingFiles">Are there existing (modified) files selected?</param>
         /// <param name="hasNewFiles">Are there new (untracked) files selected?</param>
         public static ResultType ShowResetDialog(IWin32Window owner, bool hasExistingFiles, bool hasNewFiles)

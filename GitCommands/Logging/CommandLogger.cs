@@ -1,18 +1,17 @@
-﻿using System.Collections.Generic;
-using System.Text;
-using System;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GitCommands.Logging
 {
-    public class CommandLogger
+    public sealed class CommandLogger
     {
-        public delegate void CommandsChangedHandler(CommandLogger sender);
-
+        public delegate void CommandsChangedHandler();
         private const int LogLimit = 100;
-        private Queue<string> _logQueue = new Queue<string>(LogLimit);       
-        private CommandsChangedHandler _CommandsChanged;
+        private readonly Queue<string> _logQueue = new Queue<string>(LogLimit);
 
-        public string[] Commands()
+        public event CommandsChangedHandler CommandsChanged = delegate { };
+
+        public string[] GetCommands()
         {
             lock (_logQueue)
             {
@@ -29,52 +28,12 @@ namespace GitCommands.Logging
 
                 _logQueue.Enqueue(command);
             }
-            FireCommandsChanged();
+            CommandsChanged();
         }
 
         public override string ToString()
         {
-            var stringBuilder = new StringBuilder();
-            var logQueueArray = Commands();
-
-            for (int n = logQueueArray.Length; n > 0; n--)
-            {
-                stringBuilder.AppendLine(logQueueArray[n - 1]);
-            }
-
-            return stringBuilder.ToString();
+            return string.Join(Environment.NewLine, GetCommands());
         }
-
-        public event CommandsChangedHandler CommandsChanged
-        {
-            add
-            {
-                lock (_logQueue)
-                {
-                    _CommandsChanged += value;
-                }
-            }
-            remove
-            {
-                lock (_logQueue)
-                {
-                    _CommandsChanged -= value;
-                }
-            }
-        }
-
-        protected void FireCommandsChanged()
-        {
-            CommandsChangedHandler handler;
-            lock (_logQueue)
-            {
-                handler = _CommandsChanged;
-            }
-            if (handler != null)
-            {
-                handler (this);
-            }
-        }
-
     }
 }

@@ -82,8 +82,6 @@ namespace GitCommands
         /// <summary>
         /// Gets the commit info.
         /// </summary>
-        /// <param name="sha1">The sha1.</param>
-        /// <returns></returns>
         public static CommitData GetCommitData(string sha1, ref string error)
         {
             return GetCommitData(Settings.Module, sha1, ref error);
@@ -92,8 +90,6 @@ namespace GitCommands
         /// <summary>
         /// Gets the commit info for submodule.
         /// </summary>
-        /// <param name="sha1">The sha1.</param>
-        /// <returns></returns>
         public static CommitData GetCommitData(GitModule module, string sha1, ref string error)
         {
             if (module == null)
@@ -135,7 +131,7 @@ namespace GitCommands
             return commitInformation;
         }
 
-        public static readonly string LogFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N";
+        public const string LogFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N";
 
         /// <summary>
         /// Creates a CommitData object from formated commit info data from git.  The string passed in should be

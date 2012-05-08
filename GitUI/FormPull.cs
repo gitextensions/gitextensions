@@ -106,8 +106,7 @@ namespace GitUI
         {
             if (PullChanges())
                 return DialogResult.OK;
-            else
-                return ShowDialog(owner);
+            return ShowDialog(owner);
         }
 
         private void BrowseSourceClick(object sender, EventArgs e)
@@ -269,7 +268,7 @@ namespace GitUI
                     bool messageBoxResult =
                         MessageBox.Show(this, _applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text,
                                         MessageBoxButtons.YesNo) == DialogResult.Yes;
-                    if (ShouldStashPop(messageBoxResult, process, stashed))
+                    if (ShouldStashPop(messageBoxResult, process, true))
                     {
                         new FormProcess("stash pop").ShowDialog(this);
                         MergeConflictHandler.HandleMergeConflicts(this);
@@ -455,11 +454,6 @@ namespace GitUI
             Text = string.Format("Pull ({0})", Settings.WorkingDir);
         }
 
-        protected override void OnShown(EventArgs e)
-        {
-            base.OnShown(e);
-        }
-
         private void FillPullSourceDropDown()
         {
             PullSource.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
@@ -508,7 +502,7 @@ namespace GitUI
             FillPullSourceDropDown();
         }
 
-        private bool bInternalUpdate = false;
+        private bool bInternalUpdate;
 
         private void AddRemoteClick(object sender, EventArgs e)
         {

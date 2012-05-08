@@ -28,7 +28,7 @@ namespace GitCommands
                 Revision = revision;
             }
 
-            public GitRevision Revision;
+            public readonly GitRevision Revision;
         }
 
         public bool BackgroundThread { get; set; }
@@ -38,13 +38,13 @@ namespace GitCommands
 
         private readonly char[] hexChars = "0123456789ABCDEFabcdef".ToCharArray();
 
-        private readonly string COMMIT_BEGIN = "<(__BEGIN_COMMIT__)>"; // Something unlikely to show up in a comment
+        private const string COMMIT_BEGIN = "<(__BEGIN_COMMIT__)>"; // Something unlikely to show up in a comment
 
         private List<GitHead> heads;
 
         private GitCommandsInstance gitGetGraphCommand;
 
-        private Thread backgroundThread = null;
+        private Thread backgroundThread;
 
         private enum ReadStep
         {
@@ -93,7 +93,7 @@ namespace GitCommands
 
         public string LogParam = "HEAD --all";//--branches --remotes --tags";
         public string BranchFilter = String.Empty;
-        public RevisionGraphInMemFilter InMemFilter = null;
+        public RevisionGraphInMemFilter InMemFilter;
         private string selectedBranchName;
 
         public void Execute()
@@ -104,8 +104,7 @@ namespace GitCommands
                 {
                     backgroundThread.Abort();
                 }
-                backgroundThread = new Thread(new ThreadStart(execute));
-                backgroundThread.IsBackground = true;
+                backgroundThread = new Thread(execute) { IsBackground = true };
                 backgroundThread.Start();
             }
             else
@@ -161,7 +160,7 @@ namespace GitCommands
                 gitGetGraphCommand.StreamOutput = true;
                 gitGetGraphCommand.CollectOutput = false;                
                 Encoding LogOutputEncoding = Settings.LogOutputEncoding;
-                gitGetGraphCommand.SetupStartInfoCallback = (ProcessStartInfo startInfo) =>
+                gitGetGraphCommand.SetupStartInfoCallback = startInfo =>
                 {
                     startInfo.StandardOutputEncoding = Settings.LosslessEncoding;
                     startInfo.StandardErrorEncoding = Settings.LosslessEncoding;
@@ -198,7 +197,7 @@ namespace GitCommands
             {
                 if (Error != null)
                     Error(this, EventArgs.Empty);
-                MessageBox.Show("Cannot load commit log." + Environment.NewLine + Environment.NewLine + ex.ToString());
+                MessageBox.Show("Cannot load commit log." + Environment.NewLine + Environment.NewLine + ex);
                 return;
             }
 

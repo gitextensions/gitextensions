@@ -111,15 +111,7 @@ namespace ResourceManager.Translation
 
         public static bool IsTranslatableItemInDataGridViewColumn(PropertyInfo propertyInfo, DataGridViewColumn viewCol)
         {
-            if (propertyInfo.Name.Equals("HeaderText", StringComparison.CurrentCulture))
-            {               
-                if (viewCol.Visible)
-                    return true;
-                else
-                    return false;
-            }
-            return false;
+            return propertyInfo.Name.Equals("HeaderText", StringComparison.CurrentCulture) && viewCol.Visible;
         }
-
     }
 }

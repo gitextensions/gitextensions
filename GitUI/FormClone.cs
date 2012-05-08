@@ -244,7 +244,7 @@ namespace GitUI
                 {
                     string text = Branches.Text;
                     Branches.DataSource = result;
-                    if (result.Where(a => a.LocalName == text).Any())
+                    if (result.Any(a => a.LocalName == text))
                         Branches.Text = text;
                     Cursor = Cursors.Default;
                 }));            
@@ -257,7 +257,7 @@ namespace GitUI
                 threadUpdateBranchList.Abort();
             string from = _NO_TRANSLATE_From.Text;
             Cursor = Cursors.AppStarting;
-            threadUpdateBranchList = new Thread(new ThreadStart(() => UpdateBranches(from)));
+            threadUpdateBranchList = new Thread(() => UpdateBranches(from));
             threadUpdateBranchList.Start();
         }
     }

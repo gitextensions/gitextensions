@@ -1117,7 +1117,8 @@ namespace GitCommands
         /// It is important to note that times are compared using the current timezone, so the date that is passed in should be converted 
         /// to the local timezone before passing it in.
         /// </summary>
-        /// <param name="theDate">The date to get relative time string for.</param>
+        /// <param name="originDate">Current date.</param>
+        /// <param name="previousDate">The date to get relative time string for.</param>
         /// <returns>The human readable string for relative date.</returns>
         /// <see cref="http://stackoverflow.com/questions/11/how-do-i-calculate-relative-time"/>
         public static string GetRelativeDateString(DateTime originDate, DateTime previousDate)
@@ -1186,11 +1187,9 @@ namespace GitCommands
         {
             if (left.IsNullOrEmpty())
                 return right;
-            else if (right.IsNullOrEmpty())
+            if (right.IsNullOrEmpty())
                 return left;
-            else
-                return left + sep + right;
-
+            return left + sep + right;
         }
 
         public static string ReEncodeFileName(string diffStr, int headerLines)
@@ -1260,12 +1259,9 @@ namespace GitCommands
         {
             if (s == null || fromEncoding.HeaderName.Equals(toEncoding.HeaderName))
                 return s;
-            else
-            {
-                byte[] bytes = fromEncoding.GetBytes(s);
-                s = toEncoding.GetString(bytes);
-                return s;
-            }
+            byte[] bytes = fromEncoding.GetBytes(s);
+            s = toEncoding.GetString(bytes);
+            return s;
         }
 
         /// <summary>
@@ -1282,9 +1278,7 @@ namespace GitCommands
         {
             if (toEncoding == null)
                 return s;
-            else
-                return ReEncodeString(s, Settings.LosslessEncoding, toEncoding);
-
+            return ReEncodeString(s, Settings.LosslessEncoding, toEncoding);
         }
 
         //there is a bug: git does not recode commit message when format is given

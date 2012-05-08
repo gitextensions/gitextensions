@@ -18,7 +18,7 @@ namespace GitUI
         private const string HeadText = "HEAD";
         private readonly string _currentBranch;
         private readonly string _currentBranchRemote;
-        private bool candidateForRebasingMergeCommit = false;
+        private bool candidateForRebasingMergeCommit;
         private string selectedBranch;
         private string selectedBranchRemote;
         private string selectedRemoteBranchName;
@@ -228,7 +228,7 @@ namespace GitUI
                        {
                            Remote = remote,
                            Text = string.Format(_pushToCaption.Text, destination),
-                           HandleOnExitCallback = new HandleOnExit(HandlePushOnExit)
+                           HandleOnExitCallback = HandlePushOnExit
                        };
 
             form.ShowDialog(owner);
@@ -248,18 +248,13 @@ namespace GitUI
 
         private bool IsRebasingMergeCommit()
         {
-            if (candidateForRebasingMergeCommit)
-            {
-                if (selectedBranch == _currentBranch && selectedBranchRemote == _currentBranchRemote)
-                {
-                    string remoteBranchName = selectedBranchRemote + "/" + selectedRemoteBranchName;
-                    return Settings.Module.ExistsMergeCommit(remoteBranchName, selectedBranch);
-                }
-                else
-                    return false;
-            }
-            else
+            if (!candidateForRebasingMergeCommit)
                 return false;
+            if (selectedBranch != _currentBranch || selectedBranchRemote != _currentBranchRemote)
+                return false;
+
+            string remoteBranchName = selectedBranchRemote + "/" + selectedRemoteBranchName;
+            return Settings.Module.ExistsMergeCommit(remoteBranchName, selectedBranch);
         }
 
         private bool HandlePushOnExit(ref bool isError, FormProcess form)

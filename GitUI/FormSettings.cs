@@ -293,10 +293,7 @@ namespace GitUI
 
         private Encoding ComboToEncoding(ComboBox combo)
         {
-            if (combo.SelectedItem == null)
-                return null;
-            else
-                return combo.SelectedItem as Encoding;
+            return combo.SelectedItem as Encoding;
         }
 
         private void FillEncodings(ComboBox combo)
@@ -1603,7 +1600,7 @@ namespace GitUI
                             System.Reflection.Assembly.GetExecutingAssembly());
 
             // dummy request; for some strange reason the ResourceSets are not loaded untill after the first object request... bug?
-            var dummy = rm.GetObject("dummy");
+            rm.GetObject("dummy");
 
             System.Resources.ResourceSet resourceSet = rm.GetResourceSet(System.Globalization.CultureInfo.CurrentUICulture, true, true);
 
@@ -2130,7 +2127,6 @@ namespace GitUI
         {
             if (ScriptList.SelectedRows.Count > 0)
             {
-                ScriptInfo selectedScriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
                 RefreshScriptDetails();
 
                 removeScriptButton.Enabled = true;
