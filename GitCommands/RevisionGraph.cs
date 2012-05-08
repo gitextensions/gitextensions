@@ -197,7 +197,7 @@ namespace GitCommands
             {
                 if (Error != null)
                     Error(this, EventArgs.Empty);
-                MessageBox.Show("Cannot load commit log." + Environment.NewLine + Environment.NewLine + ex.ToString());
+                MessageBox.Show("Cannot load commit log." + Environment.NewLine + Environment.NewLine + ex);
                 return;
             }
 
