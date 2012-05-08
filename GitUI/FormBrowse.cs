@@ -1147,9 +1147,8 @@ namespace GitUI
 
         private void GitcommandLogToolStripMenuItemClick(object sender, EventArgs e)
         {
-            new GitLogForm().Show(this);
+            GitLogForm.ShowOrActivate(this);
         }
-
 
         private void CheckoutBranchToolStripMenuItemClick(object sender, EventArgs e)
         {
