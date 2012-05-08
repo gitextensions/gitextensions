@@ -12,7 +12,7 @@ namespace GitUI
         private readonly TranslationString _cannotOpenFile = new TranslationString("Cannot open file: ");
         private readonly TranslationString _cannotSaveFile = new TranslationString("Cannot save file: ");
         private readonly TranslationString _error = new TranslationString("Error");
-        private bool _textIsChanged = false;
+        private bool _textIsChanged;
 
 
         public FormEditor()

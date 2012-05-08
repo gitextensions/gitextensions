@@ -74,7 +74,7 @@ namespace GitUI.SpellChecker
             }
         }
 
-        private bool IsWatermarkShowing = false;
+        private bool IsWatermarkShowing;
         private string _WatermarkText = "";
         public string WatermarkText
         {

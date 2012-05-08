@@ -56,7 +56,7 @@ namespace GitCommands.Statistics
 
         private GitCommandsInstance git;
 
-        private Thread backgroundThread = null;
+        private Thread backgroundThread;
 
         ~ImpactLoader()
         {
