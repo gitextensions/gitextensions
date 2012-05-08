@@ -83,8 +83,7 @@ namespace GitCommands.Statistics
             {
                 backgroundThread.Abort();
             }
-            backgroundThread = new Thread(new ThreadStart(execute));
-            backgroundThread.IsBackground = true;
+            backgroundThread = new Thread(execute) {IsBackground = true};
             backgroundThread.Start();
         }
 
