@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace NetSpell.SpellChecker.Dictionary.Affix
 {
@@ -15,14 +13,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
 		private AffixEntryCollection _AffixEntries = new AffixEntryCollection();
 		private string _Name = "";
 
-		/// <summary>
-		///     Initializes a new instance of the class
-		/// </summary>
-		public AffixRule()
-		{
-		}
-
-		/// <summary>
+	    /// <summary>
 		///     Allow combining prefix and suffix
 		/// </summary>
 		public bool AllowCombine
