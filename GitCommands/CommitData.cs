@@ -82,8 +82,6 @@ namespace GitCommands
         /// <summary>
         /// Gets the commit info.
         /// </summary>
-        /// <param name="sha1">The sha1.</param>
-        /// <returns></returns>
         public static CommitData GetCommitData(string sha1, ref string error)
         {
             return GetCommitData(Settings.Module, sha1, ref error);
@@ -92,8 +90,6 @@ namespace GitCommands
         /// <summary>
         /// Gets the commit info for submodule.
         /// </summary>
-        /// <param name="sha1">The sha1.</param>
-        /// <returns></returns>
         public static CommitData GetCommitData(GitModule module, string sha1, ref string error)
         {
             if (module == null)

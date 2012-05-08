@@ -9,9 +9,6 @@ namespace GitUI
         /// Translate Text using Google Translate API's
         /// Google URL - http://www.google.com/translate_t?hl=en&ie=UTF8&text={0}&langpair={1}
         /// </summary>
-        /// <param name="input">Input string</param>
-        /// <param name="languagePair">2 letter Language Pair, delimited by "|".
-        /// E.g. "ar|en" language pair means to translate from Arabic to English</param>
         /// <returns>Translated to String</returns>
         public static string TranslateText(
             string input,

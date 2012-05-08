@@ -35,7 +35,7 @@ namespace GitCommands
         /// </summary>
         /// <param name="sha1">The sha1.</param>
         /// <param name="getLocal">Pass true to include local branches</param>
-        /// <param name="getLocal">Pass true to include remote branches</param>
+        /// <param name="getRemote">Pass true to include remote branches</param>
         /// <returns></returns>
         public static IEnumerable<string> GetAllBranchesWhichContainGivenCommit(string sha1, bool getLocal, bool getRemote) 
         {
