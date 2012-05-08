@@ -265,9 +265,6 @@ namespace GitImpact
 
         private void UpdatePathsAndLabels()
         {
-            // Randomizer for the user colors
-            Random rnd = new Random();
-
             int h_max = 0;
             int x = 0;
             Dictionary<string, List<Tuple<Rectangle, int>>> author_points_dict = new Dictionary<string, List<Tuple<Rectangle, int>>>();

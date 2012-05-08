@@ -2296,7 +2296,7 @@ namespace GitUI
 
         public const string HotkeySettingsName = "RevisionGrid";
 
-        internal enum Commands : int
+        internal enum Commands
         {
             ToggleRevisionGraph,
             RevisionFilter,

@@ -753,7 +753,7 @@ namespace GitUI.Editor
 
         public const string HotkeySettingsName = "FileViewer";
 
-        internal enum Commands : int
+        internal enum Commands
         {
             Find,
             GoToLine,
