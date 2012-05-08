@@ -146,7 +146,7 @@ namespace GitUI
                 return;
 
             // new submodule changed
-            string modulePath = "\\modules\\";
+            const string modulePath = "\\modules\\";
             int index = e.FullPath.IndexOf(modulePath, gitPath.Length);
             if (index >= 0 && e.FullPath.IndexOf("\\", index + modulePath.Length) == -1)
                 return;

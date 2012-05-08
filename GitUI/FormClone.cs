@@ -244,7 +244,7 @@ namespace GitUI
                 {
                     string text = Branches.Text;
                     Branches.DataSource = result;
-                    if (result.Where(a => a.LocalName == text).Any())
+                    if (result.Any(a => a.LocalName == text))
                         Branches.Text = text;
                     Cursor = Cursors.Default;
                 }));            

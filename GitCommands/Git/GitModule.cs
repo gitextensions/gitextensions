@@ -1641,7 +1641,7 @@ namespace GitCommands
         {
             string status = RunGitCmd("diff -M -C -z --cached --name-status", Settings.SystemEncoding);
 
-            if (true && status.Length < 50 && status.Contains("fatal: No HEAD commit to compare"))
+            if (status.Length < 50 && status.Contains("fatal: No HEAD commit to compare"))
             {
                 //This command is a little more expensive because it will return both staged and unstaged files
                 string command = GitCommandHelpers.GetAllChangedFilesCmd(true, false);
