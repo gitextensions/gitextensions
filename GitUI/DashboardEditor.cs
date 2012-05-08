@@ -24,7 +24,7 @@ namespace GitUI
             repositoryCategory.SetIcon();
         }
 
-        private bool bChangingDataSource = false;
+        private bool bChangingDataSource;
 
         public void Initialize()
         {

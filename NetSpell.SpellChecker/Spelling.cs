@@ -41,7 +41,7 @@ namespace NetSpell.SpellChecker
         #endregion
 
 		#region private variables
-		private System.ComponentModel.Container components = null;
+		private System.ComponentModel.Container components;
 		#endregion
 
 		#region Events
@@ -1146,14 +1146,14 @@ namespace NetSpell.SpellChecker
 		private bool _ignoreAllCapsWords = true;
 		private bool _ignoreHtml = true;
 		private ArrayList _ignoreList = new ArrayList();
-		private bool _ignoreWordsWithDigits = false;
+		private bool _ignoreWordsWithDigits;
 		private int _maxSuggestions = 25;
 		private Hashtable _replaceList = new Hashtable();
 		private string _replacementWord = "";
 		private bool _showDialog = true;
 		private ArrayList _suggestions = new ArrayList();
 		private StringBuilder _text = new StringBuilder();
-		private int _wordIndex = 0;
+		private int _wordIndex;
 
 
 		/// <summary>

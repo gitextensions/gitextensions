@@ -521,7 +521,7 @@ namespace GitUI.Editor
                 ResetForDiff();
             }
         }
-        private bool patchHighlighting = false;
+        private bool patchHighlighting;
         private void ResetForDiff()
         {
             Reset(true, true);

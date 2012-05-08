@@ -7,11 +7,11 @@ namespace NetSpell.SpellChecker.Dictionary.Phonetic
 	{
 		private bool _BeginningOnly;
 		private int[] _Condition = new int[256];
-		private int _ConditionCount = 0;
+		private int _ConditionCount;
 		private int _ConsumeCount;
 		private bool _EndOnly;
 		private int _Priority;
-		private bool _ReplaceMode = false;
+		private bool _ReplaceMode;
 		private string _ReplaceString;
 
 	    /// <summary>

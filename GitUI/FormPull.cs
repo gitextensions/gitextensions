@@ -503,7 +503,7 @@ namespace GitUI
             FillPullSourceDropDown();
         }
 
-        private bool bInternalUpdate = false;
+        private bool bInternalUpdate;
 
         private void AddRemoteClick(object sender, EventArgs e)
         {

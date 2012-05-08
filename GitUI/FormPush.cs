@@ -18,7 +18,7 @@ namespace GitUI
         private const string HeadText = "HEAD";
         private readonly string _currentBranch;
         private readonly string _currentBranchRemote;
-        private bool candidateForRebasingMergeCommit = false;
+        private bool candidateForRebasingMergeCommit;
         private string selectedBranch;
         private string selectedBranchRemote;
         private string selectedRemoteBranchName;

@@ -9,7 +9,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
 	/// </summary>
 	public class AffixRule
 	{
-		private bool _AllowCombine = false;
+		private bool _AllowCombine;
 		private AffixEntryCollection _AffixEntries = new AffixEntryCollection();
 		private string _Name = "";
 
