@@ -47,9 +47,7 @@ namespace GitUI
             _NO_TRANSLATE_programTitle.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Bold);
 
             var image = Lemmings.GetPictureBoxImage(DateTime.Now);
-            if (image != null)
-                pictureBox1.Image = image;
-
+            pictureBox1.Image = image ?? Properties.Resources.git_extensions_logo_final_128;
         }
 
         private void SetFont()
