@@ -1187,11 +1187,9 @@ namespace GitCommands
         {
             if (left.IsNullOrEmpty())
                 return right;
-            else if (right.IsNullOrEmpty())
+            if (right.IsNullOrEmpty())
                 return left;
-            else
-                return left + sep + right;
-
+            return left + sep + right;
         }
 
         public static string ReEncodeFileName(string diffStr, int headerLines)
@@ -1261,12 +1259,9 @@ namespace GitCommands
         {
             if (s == null || fromEncoding.HeaderName.Equals(toEncoding.HeaderName))
                 return s;
-            else
-            {
-                byte[] bytes = fromEncoding.GetBytes(s);
-                s = toEncoding.GetString(bytes);
-                return s;
-            }
+            byte[] bytes = fromEncoding.GetBytes(s);
+            s = toEncoding.GetString(bytes);
+            return s;
         }
 
         /// <summary>
@@ -1283,9 +1278,7 @@ namespace GitCommands
         {
             if (toEncoding == null)
                 return s;
-            else
-                return ReEncodeString(s, Settings.LosslessEncoding, toEncoding);
-
+            return ReEncodeString(s, Settings.LosslessEncoding, toEncoding);
         }
 
         //there is a bug: git does not recode commit message when format is given

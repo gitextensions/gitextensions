@@ -48,8 +48,7 @@ namespace ResourceManager.Translation
         {
             if (RunningOnWindows())
                 return typeof(Translator).Assembly.Location.Substring(0, typeof(Translator).Assembly.Location.LastIndexOf("\\")) + @"\Translation";
-            else
-                return typeof(Translator).Assembly.Location.Substring(0, typeof(Translator).Assembly.Location.LastIndexOf("/")) + @"/Translation";
+            return typeof(Translator).Assembly.Location.Substring(0, typeof(Translator).Assembly.Location.LastIndexOf("/")) + @"/Translation";
         }
 
         public static string[] GetAllTranslations()
