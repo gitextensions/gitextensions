@@ -1956,6 +1956,7 @@ namespace GitUI
             SelectCurrentRevision,
             CheckoutBranch,
             QuickFetch,
+            QuickPull,
             QuickPush,
             RotateApplicationIcon,
         }
@@ -1998,7 +1999,14 @@ namespace GitUI
                 case Commands.SelectCurrentRevision: RevisionGrid.SetSelectedRevision(new GitRevision(RevisionGrid.CurrentCheckout)); break;
                 case Commands.CheckoutBranch: CheckoutBranchToolStripMenuItemClick(null, null); break;
                 case Commands.QuickFetch: QuickFetch(); break;
-                case Commands.QuickPush: GitUICommands.Instance.StartPushDialog(this, true); break;
+                case Commands.QuickPull:
+                    if (GitUICommands.Instance.StartPullDialog(this, true))
+                        Initialize();
+                    break;
+                case Commands.QuickPush:
+                    if (GitUICommands.Instance.StartPushDialog(this, true))
+                        Initialize();
+                    break;
                 case Commands.RotateApplicationIcon: RotateApplicationIcon(); break;
                 default: ExecuteScriptCommand(cmd, Keys.None); break;
             }
