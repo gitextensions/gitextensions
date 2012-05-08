@@ -9,7 +9,7 @@ namespace GitUI
     {
         private readonly SynchronizationContext syncContext;
 
-        public GitLogForm()
+        private GitLogForm()
         {
             ShowInTaskbar = true;
             syncContext = SynchronizationContext.Current;
@@ -35,6 +35,7 @@ namespace GitUI
         private void GitLogForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             UnsubscribeFromEvents();
+            instance = null;
         }
 
         private void RefreshLogItems()
@@ -111,5 +112,19 @@ namespace GitUI
         {
             syncContext.Post(_ => RefreshCommandCacheItems(), null);
         }
+
+        #region Single instance static members
+        private static GitLogForm instance;
+
+        public static void ShowOrActivate(IWin32Window owner)
+        {
+            if (instance == null)
+                (instance = new GitLogForm()).Show(owner);
+            else if (instance.WindowState == FormWindowState.Minimized)
+                instance.WindowState = FormWindowState.Normal;
+            else
+                instance.Activate();
+        }
+        #endregion
     }
 }
