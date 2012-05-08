@@ -192,6 +192,7 @@ namespace GitUI
             this.Name = "GitLogForm";
             this.Text = "Log";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GitLogFormFormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.GitLogForm_FormClosed); 
             this.Load += new System.EventHandler(this.GitLogFormLoad);
             this.TabControl.ResumeLayout(false);
             this.tabPageCommandLog.ResumeLayout(false);

@@ -17,21 +17,24 @@ namespace GitUI
             Translate();
         }
 
+        private void GitLogFormLoad(object sender, EventArgs e)
+        {
+            RestorePosition("log");
+
+            SubscribeToEvents();
+            RefreshLogItems();
+
+            RefreshCommandCacheItems();
+        }
+
         private void GitLogFormFormClosing(object sender, FormClosingEventArgs e)
         {
             SavePosition("log");
         }
 
-        private void GitLogFormLoad(object sender, EventArgs e)
+        private void GitLogForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            RestorePosition("log");
-
-            Settings.GitLog.CommandsChanged += () => syncContext.Post(_ => RefreshLogItems(), null);
-            GitCommandCache.CachedCommandsChanged += () => syncContext.Post(_ => RefreshCommandCacheItems(), null);
-
-            RefreshLogItems();
-
-            RefreshCommandCacheItems();
+            UnsubscribeFromEvents();
         }
 
         private void RefreshLogItems()
@@ -85,6 +88,28 @@ namespace GitUI
         {
             TopMost = !TopMost;
             alwaysOnTopCheckBox.Checked = TopMost;
+        }
+
+        private void UnsubscribeFromEvents()
+        {
+            Settings.GitLog.CommandsChanged -= OnCommandsLogChanged;
+            GitCommandCache.CachedCommandsChanged -= OnCachedCommandsLogChanged;
+        }
+
+        private void SubscribeToEvents()
+        {
+            Settings.GitLog.CommandsChanged += OnCommandsLogChanged;
+            GitCommandCache.CachedCommandsChanged += OnCachedCommandsLogChanged;
+        }
+
+        private void OnCommandsLogChanged()
+        {
+            syncContext.Post(_ => RefreshLogItems(), null);
+        }
+
+        private void OnCachedCommandsLogChanged()
+        {
+            syncContext.Post(_ => RefreshCommandCacheItems(), null);
         }
     }
 }
