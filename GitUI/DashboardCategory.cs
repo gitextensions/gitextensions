@@ -111,7 +111,7 @@ namespace GitUI
                     contextMenu.Items.Add(editMenuItem);
 
                     var showCurrentBranchMenuItem = new ToolStripMenuItem(_showCurrentBranch.Text);
-                    showCurrentBranchMenuItem.Click += new EventHandler(showCurrentBranchMenuItem_Click);
+                    showCurrentBranchMenuItem.Click += showCurrentBranchMenuItem_Click;
                     showCurrentBranchMenuItem.Checked = GitCommands.Settings.DashboardShowCurrentBranch;
                     contextMenu.Items.Add(showCurrentBranchMenuItem);
 
