@@ -8,8 +8,6 @@ using Extensibility;
 using GitPlugin.Commands;
 using Microsoft.VisualStudio.CommandBars;
 using Thread = System.Threading.Thread;
-using GitPlugin.Git;
-using System.IO;
 
 namespace GitPlugin
 {
@@ -21,10 +19,6 @@ namespace GitPlugin
     {
         private Plugin _gitPlugin;
         
-        public Connect()
-        {
-            
-        }
         #region IDTCommandTarget Members
 
         public void QueryStatus(string commandName, vsCommandStatusTextWanted neededText, 

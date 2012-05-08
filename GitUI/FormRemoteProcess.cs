@@ -31,7 +31,6 @@ namespace GitUI
 
         //constructor for VS designer
         protected FormRemoteProcess()
-            : base()
         {
 
         }

@@ -1,5 +1,3 @@
-using System;
-
 namespace NetSpell.SpellChecker.Dictionary.Phonetic
 {
 	/// <summary>
@@ -16,14 +14,7 @@ namespace NetSpell.SpellChecker.Dictionary.Phonetic
 		private bool _ReplaceMode = false;
 		private string _ReplaceString;
 
-		/// <summary>
-		///     Initializes a new instance of the class
-		/// </summary>
-		public PhoneticRule()
-		{
-		}
-
-		/// <summary>
+	    /// <summary>
 		///     True if this rule should be applied to the beginning only
 		/// </summary>
 		public bool BeginningOnly

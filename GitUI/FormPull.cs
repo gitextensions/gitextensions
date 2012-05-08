@@ -455,11 +455,6 @@ namespace GitUI
             Text = string.Format("Pull ({0})", Settings.WorkingDir);
         }
 
-        protected override void OnShown(EventArgs e)
-        {
-            base.OnShown(e);
-        }
-
         private void FillPullSourceDropDown()
         {
             PullSource.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
