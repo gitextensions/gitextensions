@@ -129,7 +129,7 @@ namespace GitCommands.Statistics
                         continue;
 
                     // Save author in variable
-                    string author = commit.author = header[1];
+                    commit.author = header[1];
 
                     // Parse commit date
                     DateTime date = DateTime.Parse(header[0]).Date;
