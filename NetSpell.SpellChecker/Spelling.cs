@@ -492,8 +492,7 @@ namespace NetSpell.SpellChecker
 				TraceWriter.TraceWarning("No Words to Delete");
 				return;
 			}
-			string replacedWord = this.CurrentWord;
-			int replacedIndex = this.WordIndex;
+		    int replacedIndex = this.WordIndex;
 
 			int index = _words[replacedIndex].Index;
 			int length = _words[replacedIndex].Length;

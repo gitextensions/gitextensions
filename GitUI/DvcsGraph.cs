@@ -284,10 +284,8 @@ namespace GitUI
 
         public void Add(IComparable aId, IComparable[] aParentIds, DataType aType, GitRevision aData)
         {
-            int lastItem = -1;
             lock (graphData)
             {
-                lastItem = graphData.Count;
                 graphData.Add(aId, aParentIds, aType, aData);
             }
 
@@ -557,11 +555,6 @@ namespace GitUI
                                 graphDataCount = curCount;
                             }
                         }
-
-                    lock (backgroundThread)
-                    {
-                        int rowCount = RowCount;
-                    }
                 }
             }
         }
