@@ -39,8 +39,7 @@
             this.SuspendLayout();
             // 
             // pictureBox1
-            // 
-            this.pictureBox1.Image = global::GitUI.Properties.Resources.git_extensions_logo_final_128;
+            //             
             this.pictureBox1.Location = new System.Drawing.Point(5, 5);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(5);
             this.pictureBox1.Name = "pictureBox1";
