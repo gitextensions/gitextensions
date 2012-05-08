@@ -136,9 +136,9 @@ namespace GitStatistics
             initializeLinesOfCodeDone = true;
 
             lineCounter = new LineCounter(WorkingDir);
-            lineCounter.LinesOfCodeUpdated += new EventHandler(lineCounter_LinesOfCodeUpdated);
+            lineCounter.LinesOfCodeUpdated += lineCounter_LinesOfCodeUpdated;
 
-            loadThread = new Thread(new ThreadStart(LoadLinesOfCode));
+            loadThread = new Thread(LoadLinesOfCode);
 
             loadThread.Start();
         }

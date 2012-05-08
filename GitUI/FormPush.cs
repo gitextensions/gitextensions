@@ -228,7 +228,7 @@ namespace GitUI
                        {
                            Remote = remote,
                            Text = string.Format(_pushToCaption.Text, destination),
-                           HandleOnExitCallback = new HandleOnExit(HandlePushOnExit)
+                           HandleOnExitCallback = HandlePushOnExit
                        };
 
             form.ShowDialog(owner);

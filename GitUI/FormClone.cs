@@ -257,7 +257,7 @@ namespace GitUI
                 threadUpdateBranchList.Abort();
             string from = _NO_TRANSLATE_From.Text;
             Cursor = Cursors.AppStarting;
-            threadUpdateBranchList = new Thread(new ThreadStart(() => UpdateBranches(from)));
+            threadUpdateBranchList = new Thread(() => UpdateBranches(from));
             threadUpdateBranchList.Start();
         }
     }

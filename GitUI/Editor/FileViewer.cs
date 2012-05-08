@@ -61,8 +61,8 @@ namespace GitUI.Editor
             _internalFileViewer.MouseMove += TextAreaMouseMove;
             _internalFileViewer.MouseLeave += TextAreaMouseLeave;
             _internalFileViewer.TextChanged += TextEditor_TextChanged;
-            _internalFileViewer.ScrollPosChanged += new EventHandler(_internalFileViewer_ScrollPosChanged);
-            _internalFileViewer.SelectedLineChanged += new SelectedLineChangedEventHandler(_internalFileViewer_SelectedLineChanged);
+            _internalFileViewer.ScrollPosChanged += _internalFileViewer_ScrollPosChanged;
+            _internalFileViewer.SelectedLineChanged += _internalFileViewer_SelectedLineChanged;
             _internalFileViewer.DoubleClick += (sender, args) => OnRequestDiffView(EventArgs.Empty);
 
             this.HotkeysEnabled = true;
