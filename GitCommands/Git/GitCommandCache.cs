@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 
 namespace GitCommands
@@ -15,33 +14,32 @@ namespace GitCommands
         {
             public CacheItem(byte[] output, byte[] error)
             {
-                this.Output = output;
-                this.Error = error;
+                Output = output;
+                Error = error;
             }
 
-            public byte[] Output;
+            public readonly byte[] Output;
 
-            public byte[] Error;
+            public readonly byte[] Error;
         }
 
         //Cache limit
-        const int cacheLimit = 40;
+        private const int CacheLimit = 40;
 
         public delegate void CachedCommandsChangedHandler();
+
+        public static event CachedCommandsChangedHandler CachedCommandsChanged = delegate { };
 
         /// <summary>
         /// Simple dictionary to store cmd/output pairs
         /// </summary>
-        private static Dictionary<string, CacheItem> commandCache = new Dictionary<string, CacheItem>(cacheLimit);
-        
+        private static readonly Dictionary<string, CacheItem> commandCache = new Dictionary<string, CacheItem>(CacheLimit);
+
         /// <summary>
         /// Queue used to limit commandCache. The oldest item is removed
         /// when the limit is reached.
         /// </summary>
-        private static Queue<string> queue = new Queue<string>(cacheLimit);
-
-        private static CachedCommandsChangedHandler _CachedCommandsChanged;
-
+        private static readonly Queue<string> queue = new Queue<string>(CacheLimit);
 
         public static string[] CachedCommands()
         {
@@ -59,30 +57,19 @@ namespace GitCommands
                 cmdOutput = null;
                 return false;
             }
-            
-            byte[] output, error;
-            if (!TryGet(cmd, out output, out error))
+
+            CacheItem item;
+            lock (queue)
             {
-                cmdOutput = null;
-                return false;
+                if (!commandCache.TryGetValue(cmd, out item))
+                {
+                    cmdOutput = null;
+                    return false;
+                }
             }
 
-            cmdOutput = EncodingHelper.GetString(output, error, encoding);
+            cmdOutput = EncodingHelper.GetString(item.Output, item.Error, encoding);
             return true;
-             
-        }
-
-        public static bool TryGet(string cmd, out byte[] output, out byte[] error)
-        {
-            CacheItem item = new CacheItem();
-            bool res;
-            lock (queue)
-                //Never cache empty commands
-                res = !string.IsNullOrEmpty(cmd) && commandCache.TryGetValue(cmd, out item);
-
-           output = item.Output;
-           error = item.Error;
-           return res;
         }
 
         public static void Add(string cmd, byte[] output, byte[] error)
@@ -97,42 +84,10 @@ namespace GitCommands
                 queue.Enqueue(cmd);
 
                 //Limit cache to X commands
-                if (queue.Count >= cacheLimit)
+                if (queue.Count >= CacheLimit)
                     commandCache.Remove(queue.Dequeue());
             }
-            FireCachedCommandsChanged();
+            CachedCommandsChanged();
         }
-
-        public static event CachedCommandsChangedHandler CachedCommandsChanged
-        {
-            add
-            {
-                lock (queue)
-                {
-                    _CachedCommandsChanged += value;
-                }
-            }
-            remove
-            {
-                lock (queue)
-                {
-                    _CachedCommandsChanged -= value;
-                }
-            }
-        }
-
-        private static void FireCachedCommandsChanged()
-        {
-            CachedCommandsChangedHandler handler;
-            lock (queue)
-            {
-                handler = _CachedCommandsChanged;
-            }
-            if (handler != null)
-            {
-                handler();
-            }
-        }
-
     }
 }

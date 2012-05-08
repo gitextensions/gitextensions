@@ -9,7 +9,7 @@ namespace GitCommands.Logging
         private const int LogLimit = 100;
         private readonly Queue<string> _logQueue = new Queue<string>(LogLimit);
 
-        public event CommandsChangedHandler CommandsChanged;
+        public event CommandsChangedHandler CommandsChanged = delegate { };
 
         public string[] GetCommands()
         {
@@ -28,19 +28,12 @@ namespace GitCommands.Logging
 
                 _logQueue.Enqueue(command);
             }
-            FireCommandsChanged();
+            CommandsChanged();
         }
 
         public override string ToString()
         {
             return string.Join(Environment.NewLine, GetCommands());
-        }
-
-        private void FireCommandsChanged()
-        {
-            var handler = CommandsChanged;
-            if (handler != null)
-                handler();
         }
     }
 }
