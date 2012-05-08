@@ -44,7 +44,7 @@ namespace GitCommands
 
         private GitCommandsInstance gitGetGraphCommand;
 
-        private Thread backgroundThread = null;
+        private Thread backgroundThread;
 
         private enum ReadStep
         {
@@ -93,7 +93,7 @@ namespace GitCommands
 
         public string LogParam = "HEAD --all";//--branches --remotes --tags";
         public string BranchFilter = String.Empty;
-        public RevisionGraphInMemFilter InMemFilter = null;
+        public RevisionGraphInMemFilter InMemFilter;
         private string selectedBranchName;
 
         public void Execute()

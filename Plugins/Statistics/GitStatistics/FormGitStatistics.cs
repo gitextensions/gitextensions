@@ -127,7 +127,7 @@ namespace GitStatistics
                 pie.Height = pie.Width;
         }
 
-        bool initializeLinesOfCodeDone = false;
+        bool initializeLinesOfCodeDone;
         private void InitializeLinesOfCode()
         {
             if (initializeLinesOfCodeDone)
