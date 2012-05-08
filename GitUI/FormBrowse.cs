@@ -642,6 +642,7 @@ namespace GitUI
         /// </summary>
         /// <param name="workingDir">Path to repository.</param>
         /// <param name="isWorkingDirValid">If the given path contains valid repository.</param>
+        /// <param name="branchName">Current branch name.</param>
         private static string GenerateWindowTitle(string workingDir, bool isWorkingDirValid, string branchName)
         {
 #if DEBUG

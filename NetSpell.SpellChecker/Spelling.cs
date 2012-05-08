@@ -1301,7 +1301,7 @@ namespace NetSpell.SpellChecker
 		///     List of words and replacement values to automatically replace
 		/// </summary>
 		/// <remarks>
-		///		When <see cref="ReplaceAllWord"/> is clicked, the <see cref="CurrentWord"/> is added to this list
+		///		When <see cref="ReplaceAllWord()"/> is clicked, the <see cref="CurrentWord"/> is added to this list
 		/// </remarks>
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -1313,8 +1313,8 @@ namespace NetSpell.SpellChecker
 		/// <summary>
 		///     The word to used when replacing the misspelled word
 		/// </summary>
-		/// <seealso cref="ReplaceAllWord"/>
-		/// <seealso cref="ReplaceWord"/>
+        /// <seealso cref="ReplaceAllWord()"/>
+        /// <seealso cref="ReplaceWord()"/>
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public string ReplacementWord
@@ -1355,8 +1355,8 @@ namespace NetSpell.SpellChecker
 		/// <summary>
 		///     An array of word suggestions for the correct spelling of the misspelled word
 		/// </summary>
-		/// <seealso cref="Suggest"/>
-		/// <seealso cref="SpellCheck"/>
+        /// <seealso cref="Suggest()"/>
+        /// <seealso cref="SpellCheck()"/>
 		/// <seealso cref="MaxSuggestions"/>
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
