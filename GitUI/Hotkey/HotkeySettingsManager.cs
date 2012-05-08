@@ -237,7 +237,7 @@ namespace GitUI.Hotkey
             {
                 if (!string.IsNullOrEmpty(s.Name))
                 {
-                    scriptKeys[i] = new HotkeyCommand((int)s.HotkeyCommandIdentifier, s.Name.ToString()) { KeyData = (Keys.None) };
+                    scriptKeys[i] = new HotkeyCommand((int)s.HotkeyCommandIdentifier, s.Name) { KeyData = (Keys.None) };
                     i++;
                 }
             }

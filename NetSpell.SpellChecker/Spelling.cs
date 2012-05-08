@@ -415,8 +415,8 @@ namespace NetSpell.SpellChecker
 					if (this.TestWord(tempWord))
 					{
 						Word ws = new Word();
-						ws.Text = tempWord.ToString().ToLower();
-						ws.EditDistance = this.EditDistance(this.CurrentWord, tempWord.ToString());
+						ws.Text = tempWord.ToLower();
+						ws.EditDistance = this.EditDistance(this.CurrentWord, tempWord);
 				
 						tempSuggestion.Add(ws);
 					}
@@ -466,8 +466,8 @@ namespace NetSpell.SpellChecker
 					string tempWord = firstWord + " " + secondWord;
 					
 					Word ws = new Word();
-					ws.Text = tempWord.ToString().ToLower();
-					ws.EditDistance = this.EditDistance(this.CurrentWord, tempWord.ToString());
+					ws.Text = tempWord.ToLower();
+					ws.EditDistance = this.EditDistance(this.CurrentWord, tempWord);
 				
 					tempSuggestion.Add(ws);
 				}	 
@@ -906,7 +906,7 @@ namespace NetSpell.SpellChecker
 							//break;
 						}
 					}
-					else if(i > 0 && _words[i-1].Value.ToString() == currentWord 
+					else if(i > 0 && _words[i-1].Value == currentWord 
 						&& (_words[i-1].Index + _words[i-1].Length + 1) == _words[i].Index)
 					{
 						misspelledWord = true;
