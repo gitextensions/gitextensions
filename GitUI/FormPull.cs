@@ -397,7 +397,11 @@ namespace GitUI
 
         private string CalculateRemoteBranchName()
         {
-            return _NO_TRANSLATE_Remotes.Text + "/" + CalculateRemoteBranchNameBasedOnBranchesText();
+            string remoteBranchName = CalculateRemoteBranchNameBasedOnBranchesText();
+            if (remoteBranchName.IsNullOrEmpty())
+                return remoteBranchName;
+            else
+                return _NO_TRANSLATE_Remotes.Text + "/" + remoteBranchName;
         }
 
         private string CalculateRemoteBranchNameBasedOnBranchesText()
@@ -407,7 +411,8 @@ namespace GitUI
                 return Branches.Text;
             }
             string remoteBranchName = Settings.Module.GetSetting("branch." + branch + ".merge");
-            remoteBranchName = Settings.Module.RunGitCmd("name-rev --name-only \"" + remoteBranchName + "\"").Trim();
+            if (!remoteBranchName.IsNullOrEmpty())
+                remoteBranchName = Settings.Module.RunGitCmd("name-rev --name-only \"" + remoteBranchName + "\"").Trim();
             return remoteBranchName;
         }
 
