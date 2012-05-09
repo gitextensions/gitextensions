@@ -1775,11 +1775,11 @@ namespace GitCommands
         {
             remote = FixPath(remote);
 
-            var tree = GetTreeFromRemoteHeands(remote, tags, branches);
+            var tree = GetTreeFromRemoteHeads(remote, tags, branches);
             return GetHeads(tree);
         }
 
-        private string GetTreeFromRemoteHeands(string remote, bool tags, bool branches)
+        private string GetTreeFromRemoteHeads(string remote, bool tags, bool branches)
         {
             if (tags && branches)
                 return RunGitCmd("ls-remote --heads --tags \"" + remote + "\"");
