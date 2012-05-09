@@ -131,9 +131,9 @@ namespace GitCommands
                         /* Tree                    */ "%T%n" +
                         /* Author Name             */ "%aN%n" +
                         /* Author Email            */ "%aE%n" +
-                        /* Author Date             */ "%ai%n" +
+                        /* Author Date             */ "%at%n" +
                         /* Committer Name          */ "%cN%n" +
-                        /* Committer Date          */ "%ci%n" +
+                        /* Committer Date          */ "%ct%n" +
                         /* Commit message encoding */ "%e%n" + //there is a bug: git does not recode commit message when format is given
                         /* Commit Message          */ "%s";
                 }
@@ -305,8 +305,8 @@ namespace GitCommands
                 case ReadStep.AuthorDate:
                     {
                         DateTime dateTime;
-                        DateTime.TryParse(line, out dateTime);
-                        revision.AuthorDate = dateTime;
+                        if (DateTimeUtils.TryParseUnixTime(line, out dateTime))
+                            revision.AuthorDate = dateTime;
                     }
                     break;
 
@@ -317,8 +317,8 @@ namespace GitCommands
                 case ReadStep.CommitterDate:
                     {
                         DateTime dateTime;
-                        DateTime.TryParse(line, out dateTime);
-                        revision.CommitDate = dateTime;
+                        if (DateTimeUtils.TryParseUnixTime(line, out dateTime))
+                            revision.CommitDate = dateTime;
                     }
                     break;
 
