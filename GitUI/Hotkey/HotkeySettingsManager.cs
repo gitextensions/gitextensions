@@ -80,6 +80,7 @@ namespace GitUI.Hotkey
             // If the default settings and the loaded settings do not match, then get the default settings, as we don't trust the loaded ones
             if (DidDefaultSettingsChange(defaultSettings, loadedSettings))
                 return defaultSettings;
+            else
             return loadedSettings;
         }
 

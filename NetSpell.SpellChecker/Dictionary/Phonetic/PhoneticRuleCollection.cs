@@ -5,7 +5,7 @@ namespace NetSpell.SpellChecker.Dictionary.Phonetic
 	/// <summary>
 	///     A collection that stores 'PhoneticRule' objects.
 	/// </summary>
-	[Serializable]
+	[Serializable()]
 	public class PhoneticRuleCollection : System.Collections.CollectionBase 
 	{
     

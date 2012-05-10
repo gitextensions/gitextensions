@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
@@ -7,7 +10,7 @@ using System.Runtime.Serialization;
 
 namespace GitUI
 {
-    [Serializable]
+    [Serializable()]
     public class CommitTemplateItem : ISerializable
     {
         private string _name;
@@ -64,11 +67,13 @@ namespace GitUI
                     bytes = ws.GetBuffer();
                     return bytes.Length.ToString() + ":" + Convert.ToBase64String(bytes, 0, bytes.Length, Base64FormattingOptions.None);
                 }
-
-                var sw = new StringWriter();
-                var serializer = new XmlSerializer(typeof(CommitTemplateItem[]));
-                serializer.Serialize(sw, items);
-                return sw.ToString();
+                else
+                {
+                    var sw = new StringWriter();
+                    var serializer = new XmlSerializer(typeof(CommitTemplateItem[]));
+                    serializer.Serialize(sw, items);
+                    return sw.ToString();
+                }
             }
             catch
             {

@@ -1192,14 +1192,17 @@ namespace GitCommands
             {
                 if( o == null || o is T)
                     return (T)o;
-                throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
+                else
+                    throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
             }
+            else
+            {
+                o = GetValue<object>(name, null);
+                T result = o == null ? defaultValue : decode(o);
 
-            o = GetValue<object>(name, null);
-            T result = o == null ? defaultValue : decode(o);
-
-            byNameMap[name] = result;
-            return result;
+                byNameMap[name] = result;
+                return result;
+            }
         }
 
         public static void SetByName<T>(string name, T value, Func<T, object> encode)

@@ -80,9 +80,10 @@ namespace Github
         {
             if (readOnly)
                 return string.Format("http://github.com/{0}/{1}.git", owner, repoName);
-            if (_plugin.PreferredAccessMethod == "https")
+            else if (_plugin.PreferredAccessMethod == "https")
                 return string.Format("https://{2}:{3}@github.com/{0}/{1}.git", owner, repoName, username, password);
-            return string.Format("git@github.com:{0}/{1}.git", owner, repoName);
+            else
+                return string.Format("git@github.com:{0}/{1}.git", owner, repoName);
         }
 
         public string CloneReadWriteUrl
