@@ -868,9 +868,17 @@ namespace GitCommands
 
         public bool ExistsMergeCommit(string startRev, string endRev)
         {
+            if (startRev.IsNullOrEmpty() || endRev.IsNullOrEmpty())
+                return false;
+
             string revisions = RunGitCmd("rev-list --parents --no-walk " + startRev + ".." + endRev);
             string[] revisionsTab = revisions.Split('\n');
-            return revisionsTab.Any(parents => parents.Split(' ').Length > 2);
+            Func<string, bool> ex = (string parents) =>
+                {
+                    string[] tab = parents.Split(' ');
+                    return tab.Length > 2 && tab.All( parent => GitRevision.Sha1HashRegex.IsMatch(parent));
+                };
+            return revisionsTab.Any(ex);
         }
 
         public string GetSubmoduleRemotePath(string name)
