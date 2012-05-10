@@ -32,7 +32,6 @@ namespace GitUI
             private static readonly Regex RawDataRegex = new Regex(RawDataPattern, RegexOptions.Compiled);
             private static readonly Regex LogRegex = new Regex(LogPattern, RegexOptions.Compiled | RegexOptions.Singleline);
 
-            private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0);
             private readonly LostObjectType objectType;
             private readonly string rawType;
             private readonly string hash;
@@ -95,7 +94,7 @@ namespace GitUI
                         result.Author = GitCommandHelpers.ReEncodeStringFromLossless(logPatternMatch.Groups[1].Value);
                         string encodingName = logPatternMatch.Groups[2].Value;
                         result.Subject = GitCommandHelpers.ReEncodeCommitMessage(logPatternMatch.Groups[3].Value, encodingName);
-                        result.Date = UnixEpoch.AddSeconds(long.Parse(logPatternMatch.Groups[4].Value));
+                        result.Date = DateTimeUtils.ParseUnixTime(logPatternMatch.Groups[4].Value);
                     }
                 }
 
