@@ -41,7 +41,7 @@ namespace GitUI
                 var result = new StringBuilder(length);
                 PathCompactPathEx(result, path, length, 0);
                 return result.ToString();
-            }
+            } else
             if (truncatePathMethod.Equals("trimStart", StringComparison.OrdinalIgnoreCase))
             {
                 return "..." + path.Substring(path.Length - length);

@@ -578,9 +578,10 @@ namespace GitUI.Editor.RichTextBoxExtension
             var v = e.LinkText.Split(new char[] { '#' }, 2);
             if (v.Length == 0)
                 return "";
-            if (v.Length == 1)
+            else if (v.Length == 1)
                 return v[0];
-            return v[1];
+            else
+                return v[1];
         }
 
         public static void GetLinkText(this LinkClickedEventArgs e, out string url, out string text)

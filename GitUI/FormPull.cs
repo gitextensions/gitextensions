@@ -106,7 +106,8 @@ namespace GitUI
         {
             if (PullChanges())
                 return DialogResult.OK;
-            return ShowDialog(owner);
+            else
+                return ShowDialog(owner);
         }
 
         private void BrowseSourceClick(object sender, EventArgs e)
