@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+    xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
 
   <?include Config.wxi?>
 
@@ -80,7 +81,9 @@
         <File Source="..\bin\GitExtensionsUserManual.pdf"/>
       </Component>
       <Component Id="GitExtensions.exe" Guid="*">
-        <File Source="..\GitExtensions\bin\Release\GitExtensions.exe"/>
+        <File Source="..\GitExtensions\bin\Release\GitExtensions.exe">
+          <netfx:NativeImage Id="ngen_GitExtensions.exe" Platform="all" Priority="1"/>
+        </File>
         <ProgId Id="GitExtensions" Description="Git Extentions Shortcut" Icon="gitextensions.ico" Advertise="yes">
           <Extension Id="gitext">
             <Verb Id="open" Command="Open Git Extentions Repository" Argument="openrepo &quot;%1&quot;" />
