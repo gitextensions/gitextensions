@@ -476,12 +476,10 @@ namespace GitUI
             Cursor.Current = Cursors.Default;
         }
 
-        // TODO: unify with FormVerify, extract to common constants.
-        private const string Sha1HashPattern = @"[a-f\d]{40}";
         private void UpdateMergeHead()
         {
             var mergeHead = Settings.Module.RevParse("MERGE_HEAD");
-            IsMergeCommit = Regex.IsMatch(mergeHead, Sha1HashPattern);
+            IsMergeCommit = Regex.IsMatch(mergeHead, GitRevision.Sha1HashPattern);
         }
 
         private void InitializedStaged()
