@@ -71,5 +71,12 @@ namespace GitCommands
                 Author.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase) ||
                 Message.ToLower().Contains(searchString);
         }
+
+        public bool IsArtificial()
+        {
+            return Guid == UncommittedWorkingDirGuid ||
+                Guid == IndexGuid;
+        }
+
     }
 }

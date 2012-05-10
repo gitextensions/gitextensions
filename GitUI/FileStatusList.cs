@@ -82,6 +82,11 @@ namespace GitUI
             NoFiles.Text = text;
         }
 
+        public string GetNoFilesText()
+        {
+            return NoFiles.Text;
+        }
+
 #if !__MonoCS__ // TODO Drag'n'Drop doesnt work on Mono/Linux
         void FileStatusListBox_MouseDown(object sender, MouseEventArgs e)
         {
