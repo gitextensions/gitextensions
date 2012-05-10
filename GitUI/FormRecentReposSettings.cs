@@ -50,11 +50,12 @@ namespace GitUI
         {
             if (dontShortenRB.Checked)
                 return RecentRepoSplitter.ShorteningStrategy_None;
-            if (mostSigDirRB.Checked)
+            else if (mostSigDirRB.Checked)
                 return RecentRepoSplitter.ShorteningStrategy_MostSignDir;
-            if (middleDotRB.Checked)
+            else if (middleDotRB.Checked)
                 return RecentRepoSplitter.ShorteningStrategy_MiddleDots;
-            throw new Exception("Can not figure shortening strategy");
+            else
+                throw new Exception("Can not figure shortening strategy");
         }
 
         private void SetShorteningStrategy(string strategy)

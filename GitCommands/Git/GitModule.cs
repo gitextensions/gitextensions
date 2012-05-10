@@ -676,7 +676,8 @@ namespace GitCommands
                         string path = line.Substring(7).Trim().Replace('/', '\\');
                         if (Path.IsPathRooted(path))
                             return path + Settings.PathSeparator.ToString();
-                        return Path.GetFullPath(Path.Combine(repositoryPath, path + Settings.PathSeparator.ToString()));
+                        else
+                            return Path.GetFullPath(Path.Combine(repositoryPath, path + Settings.PathSeparator.ToString()));
                     }
                 }
             }

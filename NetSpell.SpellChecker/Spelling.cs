@@ -1122,13 +1122,11 @@ namespace NetSpell.SpellChecker
 		/// </returns>
 		public bool TestWord(string word)
 		{
-			this.Initialize();
+			Initialize();
 
 			TraceWriter.TraceVerbose("Testing Word: {0}" , word);
 
-		    if (this.Dictionary.Contains(word))
-		        return true;
-		    return this.Dictionary.Contains(word.ToLower());
+		    return Dictionary.Contains(word) || Dictionary.Contains(word.ToLower());
 		}
 
 		#endregion
@@ -1201,6 +1199,7 @@ namespace NetSpell.SpellChecker
 			{
 			    if(_words == null || _words.Count == 0)
 					return string.Empty;
+				else
 			    return _words[this.WordIndex].Value;
 			}
 		}
