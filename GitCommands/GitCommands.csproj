@@ -105,7 +105,6 @@
     <Compile Include="Repository\RepositoryType.cs" />
     <Compile Include="RevisionGraph.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="SplitEnumerator.cs" />
     <Compile Include="Statistics\CommitCounter.cs" />
     <Compile Include="Statistics\ImpactLoader.cs" />
     <Compile Include="Strings.cs" />

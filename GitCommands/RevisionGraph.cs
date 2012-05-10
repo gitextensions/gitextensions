@@ -182,7 +182,7 @@ namespace GitCommands
 
                     if (line != null)
                     {
-                        foreach (string entry in line.SplitString(new char[] {'\0'}))
+                        foreach (string entry in line.Split('\0'))
                         {
                             dataReceived(entry);
                         }
