@@ -8,9 +8,9 @@ namespace NetSpell.SpellChecker.Dictionary
 	public class Word  : IComparable
 	{
 		private string _AffixKeys = "";
-		private int _EditDistance = 0;
-		private int _height = 0;
-		private int _index = 0;
+		private int _EditDistance;
+		private int _height;
+		private int _index;
 		private string _PhoneticCode = "";
 		private string _text = "";
 

@@ -113,7 +113,7 @@ namespace GitUI.RepoHosting
 
         private void LoadMyBranches()
         {
-            var myRemote = _hostedRemotes.Where(r => r.IsOwnedByMe).FirstOrDefault();
+            var myRemote = _hostedRemotes.FirstOrDefault(r => r.IsOwnedByMe);
             if (myRemote == null)
                 throw new InvalidOperationException(_strCouldNotLocateARemoteThatBelongsToYourUser.Text);
 

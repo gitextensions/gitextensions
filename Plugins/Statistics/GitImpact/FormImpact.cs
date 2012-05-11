@@ -20,7 +20,7 @@ namespace GitImpact
             InitializeComponent();
             UpdateAuthorInfo("");
             Impact.UpdateData();
-            Impact.Invalidated += new InvalidateEventHandler(Impact_Invalidated);
+            Impact.Invalidated += Impact_Invalidated;
         }
 
         protected override void OnClosed(EventArgs e)
@@ -32,10 +32,7 @@ namespace GitImpact
 
         void Impact_Invalidated(object sender, InvalidateEventArgs e)
         {
-            syncContext.Send(new SendOrPostCallback(delegate(object o)
-            {
-                UpdateAuthorInfo(Impact.GetSelectedAuthor());
-            }), this);
+            syncContext.Send(o => UpdateAuthorInfo(Impact.GetSelectedAuthor()), this);
         }
 
         private void UpdateAuthorInfo(string author)
