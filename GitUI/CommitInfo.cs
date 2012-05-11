@@ -213,7 +213,7 @@ namespace GitUI
 
         private void copyCommitInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(string.Concat(_RevisionHeader.Text, Environment.NewLine, RevisionInfo.Text));
+            Clipboard.SetText(string.Concat(_RevisionHeader.Text, Environment.NewLine, RevisionInfo.Text).Replace("\n",Environment.NewLine));
         }
 
         private void showContainedInBranchesRemoteToolStripMenuItem_Click(object sender, EventArgs e)
