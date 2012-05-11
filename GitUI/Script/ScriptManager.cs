@@ -127,8 +127,8 @@ namespace GitUI.Script
 
         private static void DeserializeFromOldFormat(string inputString)
         {
-            string PARAM_SEPARATOR = "<_PARAM_SEPARATOR_>";
-            string SCRIPT_SEPARATOR = "<_SCRIPT_SEPARATOR_>";
+            const string PARAM_SEPARATOR = "<_PARAM_SEPARATOR_>";
+            const string SCRIPT_SEPARATOR = "<_SCRIPT_SEPARATOR_>";
 
             if (inputString.Contains(PARAM_SEPARATOR) || inputString.Contains(SCRIPT_SEPARATOR))
             {

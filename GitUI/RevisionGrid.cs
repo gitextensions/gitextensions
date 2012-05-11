@@ -62,7 +62,7 @@ namespace GitUI
         {
             _syncContext = SynchronizationContext.Current;
 
-            base.InitLayout();
+            InitLayout();
             InitializeComponent();
 #if !__MonoCS__ // animated GIFs are not supported in Mono/Linux
             this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
@@ -2296,7 +2296,7 @@ namespace GitUI
 
         public const string HotkeySettingsName = "RevisionGrid";
 
-        internal enum Commands : int
+        internal enum Commands
         {
             ToggleRevisionGraph,
             RevisionFilter,

@@ -32,7 +32,7 @@ namespace NetSpell.SpellChecker.Dictionary
         private string _dictionaryFile = Thread.CurrentThread.CurrentCulture.Name + ".dic";
         private string _dictionaryFolder = "";
         private bool _enableUserFile = true;
-        private bool _initialized = false;
+        private bool _initialized;
         private PhoneticRuleCollection _phoneticRules = new PhoneticRuleCollection();
         private List<string> _possibleBaseWords = new List<string>();
         private AffixRuleCollection _prefixRules = new AffixRuleCollection();
@@ -41,7 +41,7 @@ namespace NetSpell.SpellChecker.Dictionary
         private string _tryCharacters = "";
         private string _userFile = "user.dic";
         private Dictionary<string, string> _userWords = new Dictionary<string, string>();
-        private System.ComponentModel.Container components = null;
+        private System.ComponentModel.Container components;
 
         /// <summary>
         ///     Initializes a new instance of the class

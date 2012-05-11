@@ -360,7 +360,7 @@ namespace GitUI
                 splitter.SplitRecentRepos(Repositories.RepositoryHistory.Repositories, mostRecentRepos, mostRecentRepos);
             }
 
-            RecentRepoInfo ri = mostRecentRepos.Find((e) => e.Repo.Equals(r));
+            RecentRepoInfo ri = mostRecentRepos.Find(e => e.Repo.Equals(r));
 
             if (ri == null)
                 _NO_TRANSLATE_Workingdir.Text = Settings.WorkingDir;
@@ -648,6 +648,7 @@ namespace GitUI
         /// </summary>
         /// <param name="workingDir">Path to repository.</param>
         /// <param name="isWorkingDirValid">If the given path contains valid repository.</param>
+        /// <param name="branchName">Current branch name.</param>
         private static string GenerateWindowTitle(string workingDir, bool isWorkingDirValid, string branchName)
         {
 #if DEBUG
@@ -1161,9 +1162,8 @@ namespace GitUI
 
         private void GitcommandLogToolStripMenuItemClick(object sender, EventArgs e)
         {
-            new GitLogForm().Show(this);
+            GitLogForm.ShowOrActivate(this);
         }
-
 
         private void CheckoutBranchToolStripMenuItemClick(object sender, EventArgs e)
         {

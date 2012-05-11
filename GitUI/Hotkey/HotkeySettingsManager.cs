@@ -34,7 +34,7 @@ namespace GitUI.Hotkey
         /// <returns></returns>
         public static bool IsUniqueKey(Keys keyData)
         {
-            return (UsedKeys.Contains(keyData)) ? true : false;
+            return UsedKeys.Contains(keyData);
         }
 
         public static HotkeyCommand[] LoadHotkeys(string name)
@@ -81,7 +81,7 @@ namespace GitUI.Hotkey
             if (DidDefaultSettingsChange(defaultSettings, loadedSettings))
                 return defaultSettings;
             else
-                return loadedSettings;
+            return loadedSettings;
         }
 
         private static void GetUsedHotkeys(HotkeySettings[] settings)
@@ -239,7 +239,7 @@ namespace GitUI.Hotkey
             {
                 if (!string.IsNullOrEmpty(s.Name))
                 {
-                    scriptKeys[i] = new HotkeyCommand((int)s.HotkeyCommandIdentifier, s.Name.ToString()) { KeyData = (Keys.None) };
+                    scriptKeys[i] = new HotkeyCommand((int)s.HotkeyCommandIdentifier, s.Name) { KeyData = (Keys.None) };
                     i++;
                 }
             }

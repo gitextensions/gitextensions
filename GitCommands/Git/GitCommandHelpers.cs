@@ -1123,7 +1123,8 @@ namespace GitCommands
         /// It is important to note that times are compared using the current timezone, so the date that is passed in should be converted 
         /// to the local timezone before passing it in.
         /// </summary>
-        /// <param name="theDate">The date to get relative time string for.</param>
+        /// <param name="originDate">Current date.</param>
+        /// <param name="previousDate">The date to get relative time string for.</param>
         /// <returns>The human readable string for relative date.</returns>
         /// <see cref="http://stackoverflow.com/questions/11/how-do-i-calculate-relative-time"/>
         public static string GetRelativeDateString(DateTime originDate, DateTime previousDate)
