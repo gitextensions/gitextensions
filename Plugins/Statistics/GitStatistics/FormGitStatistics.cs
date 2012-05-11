@@ -68,7 +68,7 @@ namespace GitStatistics
 
         private void InitializeCommitCount()
         {
-            Action<FormGitStatistics> a = (FormGitStatistics sender) =>
+            Action<FormGitStatistics> a = sender =>
             {
                 var allCommitsByUser = CommitCounter.GroupAllCommitsByContributor();
                 syncContext.Post(o =>
@@ -127,7 +127,7 @@ namespace GitStatistics
                 pie.Height = pie.Width;
         }
 
-        bool initializeLinesOfCodeDone = false;
+        bool initializeLinesOfCodeDone;
         private void InitializeLinesOfCode()
         {
             if (initializeLinesOfCodeDone)
@@ -136,9 +136,9 @@ namespace GitStatistics
             initializeLinesOfCodeDone = true;
 
             lineCounter = new LineCounter(WorkingDir);
-            lineCounter.LinesOfCodeUpdated += new EventHandler(lineCounter_LinesOfCodeUpdated);
+            lineCounter.LinesOfCodeUpdated += lineCounter_LinesOfCodeUpdated;
 
-            loadThread = new Thread(new ThreadStart(LoadLinesOfCode));
+            loadThread = new Thread(LoadLinesOfCode);
 
             loadThread.Start();
         }
@@ -176,7 +176,7 @@ namespace GitStatistics
             }
 
             //Sync rest to UI thread
-            syncContext.Post((o) =>
+            syncContext.Post(o =>
             {
                 TotalLinesOfTestCode.Text = lineCounter.NumberTestCodeLines + " Lines of test code";
 

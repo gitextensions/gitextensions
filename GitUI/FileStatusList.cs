@@ -49,16 +49,14 @@ namespace GitUI
             }
         }
 
-        public new bool Focus()
+        public new void Focus()
         {
             if (FileStatusListBox.Items.Count > 0)
             {
                 if (FileStatusListBox.SelectedItem == null)
                     FileStatusListBox.SelectedIndex = 0;
-                return FileStatusListBox.Focus();
+                FileStatusListBox.Focus();
             }
-            else
-                return false;
         }
 
         void FileStatusListBox_MeasureItem(object sender, MeasureItemEventArgs e)

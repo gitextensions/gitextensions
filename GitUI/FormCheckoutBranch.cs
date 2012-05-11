@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows.Forms;
 using GitCommands;
-using ResourceManager.Translation;
 using System.Collections.Generic;
 
 namespace GitUI
 {
     public partial class FormCheckoutBranch : GitExtensionsForm
     {
-        private string _containRevison = null;
+        private string _containRevison;
 
         public FormCheckoutBranch()
         {

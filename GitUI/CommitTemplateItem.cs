@@ -61,11 +61,9 @@ namespace GitUI
                 {
                     // Serialize to a base 64 string
                     byte[] bytes;
-                    long length = 0;
                     MemoryStream ws = new MemoryStream();
                     BinaryFormatter sf = new BinaryFormatter();
                     sf.Serialize(ws, items);
-                    length = ws.Length;
                     bytes = ws.GetBuffer();
                     return bytes.Length.ToString() + ":" + Convert.ToBase64String(bytes, 0, bytes.Length, Base64FormattingOptions.None);
                 }
