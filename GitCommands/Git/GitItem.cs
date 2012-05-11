@@ -6,10 +6,6 @@ namespace GitCommands
     {
         internal const int MinimumStringLength = 53;
 
-        public GitItem()
-        {
-        }
-
         public string Guid { get; set; }
         public string CommitGuid { get; set; }
         public string ItemType{ get; set; }

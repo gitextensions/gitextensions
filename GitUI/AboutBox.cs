@@ -66,8 +66,8 @@ namespace GitUI
         private const string designers = "Andréj Telle, Oliver Friedrich";
         private const string other = "";
 
-        private string[] contributersList;
-        private Random random = new Random();
+        private readonly string[] contributersList;
+        private readonly Random random = new Random();
 
         private void thanksTimer_Tick(object sender, EventArgs e)
         {

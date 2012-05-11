@@ -41,7 +41,7 @@ namespace NetSpell.SpellChecker
         #endregion
 
 		#region private variables
-		private System.ComponentModel.Container components = null;
+		private System.ComponentModel.Container components;
 		#endregion
 
 		#region Events
@@ -415,8 +415,8 @@ namespace NetSpell.SpellChecker
 					if (this.TestWord(tempWord))
 					{
 						Word ws = new Word();
-						ws.Text = tempWord.ToString().ToLower();
-						ws.EditDistance = this.EditDistance(this.CurrentWord, tempWord.ToString());
+						ws.Text = tempWord.ToLower();
+						ws.EditDistance = this.EditDistance(this.CurrentWord, tempWord);
 				
 						tempSuggestion.Add(ws);
 					}
@@ -466,8 +466,8 @@ namespace NetSpell.SpellChecker
 					string tempWord = firstWord + " " + secondWord;
 					
 					Word ws = new Word();
-					ws.Text = tempWord.ToString().ToLower();
-					ws.EditDistance = this.EditDistance(this.CurrentWord, tempWord.ToString());
+					ws.Text = tempWord.ToLower();
+					ws.EditDistance = this.EditDistance(this.CurrentWord, tempWord);
 				
 					tempSuggestion.Add(ws);
 				}	 
@@ -492,8 +492,7 @@ namespace NetSpell.SpellChecker
 				TraceWriter.TraceWarning("No Words to Delete");
 				return;
 			}
-			string replacedWord = this.CurrentWord;
-			int replacedIndex = this.WordIndex;
+		    int replacedIndex = this.WordIndex;
 
 			int index = _words[replacedIndex].Index;
 			int length = _words[replacedIndex].Length;
@@ -564,7 +563,7 @@ namespace NetSpell.SpellChecker
 		{
 		
 			// i.e. 2-D array
-			Array matrix = Array.CreateInstance(typeof(int), source.Length+1, target.Length+1);
+			Array matrix = new int[source.Length+1, target.Length+1];
 
 			// boundary conditions
 			matrix.SetValue(0, 0, 0); 
@@ -907,7 +906,7 @@ namespace NetSpell.SpellChecker
 							//break;
 						}
 					}
-					else if(i > 0 && _words[i-1].Value.ToString() == currentWord 
+					else if(i > 0 && _words[i-1].Value == currentWord 
 						&& (_words[i-1].Index + _words[i-1].Length + 1) == _words[i].Index)
 					{
 						misspelledWord = true;
@@ -1123,19 +1122,11 @@ namespace NetSpell.SpellChecker
 		/// </returns>
 		public bool TestWord(string word)
 		{
-			this.Initialize();
+			Initialize();
 
 			TraceWriter.TraceVerbose("Testing Word: {0}" , word);
 
-			if (this.Dictionary.Contains(word))
-			{
-				return true;
-			}
-			else if (this.Dictionary.Contains(word.ToLower()))
-			{
-				return true;
-			}
-			return false;
+		    return Dictionary.Contains(word) || Dictionary.Contains(word.ToLower());
 		}
 
 		#endregion
@@ -1147,14 +1138,14 @@ namespace NetSpell.SpellChecker
 		private bool _ignoreAllCapsWords = true;
 		private bool _ignoreHtml = true;
 		private ArrayList _ignoreList = new ArrayList();
-		private bool _ignoreWordsWithDigits = false;
+		private bool _ignoreWordsWithDigits;
 		private int _maxSuggestions = 25;
 		private Hashtable _replaceList = new Hashtable();
 		private string _replacementWord = "";
 		private bool _showDialog = true;
 		private ArrayList _suggestions = new ArrayList();
 		private StringBuilder _text = new StringBuilder();
-		private int _wordIndex = 0;
+		private int _wordIndex;
 
 
 		/// <summary>
@@ -1204,12 +1195,12 @@ namespace NetSpell.SpellChecker
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public string CurrentWord
 		{
-			get	
+			get
 			{
-				if(_words == null || _words.Count == 0)
+			    if(_words == null || _words.Count == 0)
 					return string.Empty;
 				else
-					return _words[this.WordIndex].Value;
+			    return _words[this.WordIndex].Value;
 			}
 		}
 
@@ -1223,7 +1214,7 @@ namespace NetSpell.SpellChecker
 		{
 			get 
 			{
-				if(!base.DesignMode && _dictionary == null)
+				if(!DesignMode && _dictionary == null)
 					_dictionary = new WordDictionary();
 
 				return _dictionary;
@@ -1301,7 +1292,7 @@ namespace NetSpell.SpellChecker
 		///     List of words and replacement values to automatically replace
 		/// </summary>
 		/// <remarks>
-		///		When <see cref="ReplaceAllWord"/> is clicked, the <see cref="CurrentWord"/> is added to this list
+		///		When <see cref="ReplaceAllWord()"/> is clicked, the <see cref="CurrentWord"/> is added to this list
 		/// </remarks>
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -1313,8 +1304,8 @@ namespace NetSpell.SpellChecker
 		/// <summary>
 		///     The word to used when replacing the misspelled word
 		/// </summary>
-		/// <seealso cref="ReplaceAllWord"/>
-		/// <seealso cref="ReplaceWord"/>
+        /// <seealso cref="ReplaceAllWord()"/>
+        /// <seealso cref="ReplaceWord()"/>
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public string ReplacementWord
@@ -1355,8 +1346,8 @@ namespace NetSpell.SpellChecker
 		/// <summary>
 		///     An array of word suggestions for the correct spelling of the misspelled word
 		/// </summary>
-		/// <seealso cref="Suggest"/>
-		/// <seealso cref="SpellCheck"/>
+        /// <seealso cref="Suggest()"/>
+        /// <seealso cref="SpellCheck()"/>
 		/// <seealso cref="MaxSuggestions"/>
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

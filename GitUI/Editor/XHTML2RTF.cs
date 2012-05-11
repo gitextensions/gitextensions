@@ -706,7 +706,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                                         }
                                         break;
                                     case "font":
-                                        scf.Push(cf); ;
+                                        scf.Push(cf);
                                         string strFont = cf.szFaceName;
                                         int crFont = cf.crTextColor;
                                         int yHeight = cf.yHeight;
