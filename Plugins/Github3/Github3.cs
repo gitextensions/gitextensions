@@ -6,6 +6,7 @@ using GitUIPluginInterfaces.RepositoryHosts;
 using GitUIPluginInterfaces;
 using Git.hub;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 namespace Github3
 {
@@ -111,7 +112,7 @@ namespace Github3
 
         public IList<IHostedRepository> SearchForRepository(string search)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Not supporte in the Github API v3");
         }
 
         public IList<IHostedRepository> GetRepositoriesOfUser(string user)
@@ -129,19 +130,37 @@ namespace Github3
             return github.getRepositories().Select(repo => (IHostedRepository)new GithubRepo(repo)).ToList();
         }
 
-        public bool ConfigurationOk
-        {
-            get { return true; }
-        }
+        public bool ConfigurationOk { get { return true; } }
+        public bool CurrentWorkingDirRepoIsRelevantToMe { get { return GetHostedRemotesForCurrentWorkingDirRepo().Count > 0; } }
 
-        public bool CurrentWorkingDirRepoIsRelevantToMe
-        {
-            get { return false; }
-        }
-
+        /// <summary>
+        /// Returns all relevant github-remotes for the current working directory
+        /// </summary>
+        /// <returns></returns>
         public List<IHostedRemote> GetHostedRemotesForCurrentWorkingDirRepo()
         {
-            return new List<IHostedRemote>();
+            List<IHostedRemote> repoInfos = new List<IHostedRemote>();
+
+            string[] remotes = GitCommands.Settings.Module.GetRemotes(false);
+            foreach(string remote in remotes)
+            {
+                var url = GitCommands.Settings.Module.GetSetting("remote." + remote + ".url");
+                if (string.IsNullOrEmpty(url))
+                    continue;
+
+                var m = Regex.Match(url, @"git(?:@|://)github.com[:/]([^/]+)/(\w+)\.git");
+                if (!m.Success)
+                    m = Regex.Match(url, @"https?://(?:[^@:]+)?(?::[^/@:]+)?@?github.com/([^/]+)/([\w_\.]+)(?:.git)?");
+                if (m.Success)
+                {
+                    var hostedRemote = new GithubHostedRemote() { Name = remote, Owner = m.Groups[1].Value, RemoteRepositoryName = m.Groups[2].Value.Replace(".git", "") };
+                    if (!repoInfos.Contains(hostedRemote))
+                        repoInfos.Add(hostedRemote);
+                }
+
+            }
+
+            return repoInfos;
         }
     }
 }
