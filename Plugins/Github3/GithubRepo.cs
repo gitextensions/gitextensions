@@ -75,12 +75,17 @@ namespace Github3
 
         public List<IPullRequestInformation> GetPullRequests()
         {
-            return new List<IPullRequestInformation>();
+            return repo.GetPullRequests().Select(pullrequest => (IPullRequestInformation)new GithubPullRequest(pullrequest)).ToList();
         }
 
         public int CreatePullRequest(string myBranch, string remoteBranch, string title, string body)
         {
             throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            return Owner + "/" + Name;
         }
     }
 }

@@ -50,6 +50,7 @@
     <Compile Include="Github3.cs" />
     <Compile Include="GithubBranch.cs" />
     <Compile Include="GithubHostedRemote.cs" />
+    <Compile Include="GithubPullRequest.cs" />
     <Compile Include="GithubRepo.cs" />
     <Compile Include="OAuth.cs">
       <SubType>Form</SubType>
