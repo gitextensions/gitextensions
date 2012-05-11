@@ -2,7 +2,7 @@
 
 namespace GitCommands
 {
-    public class GitSubmodule : IGitSubmodule
+    public sealed class GitSubmodule : IGitSubmodule
     {
         public string Name { get; set; }
         public string RemotePath
@@ -46,27 +46,29 @@ namespace GitCommands
             }
         }
 
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+                return true;
+            var other = obj as GitSubmodule;
+            if (ReferenceEquals(null, other))
+                return false;
+            return Equals(other.Name, Name) && Equals(other.LocalPath, LocalPath);
+        }
+
+        public override int GetHashCode()
+        {
+            return Name != null ? Name.GetHashCode() : 0;
+        }
+
         public static bool operator ==(GitSubmodule a, GitSubmodule b)
         {
-            // If both are null, or both are same instance, return true.
-            if (System.Object.ReferenceEquals(a, b))
-            {
-                return true;
-            }
-
-            // If one is null, but not both, return false.
-            if (((object)a == null) || ((object)b == null))
-            {
-                return false;
-            }
-
-            // Return true if the fields match:
-            return a.Name == b.Name && a.LocalPath == b.LocalPath;
+            return Equals(a, b);
         }
 
         public static bool operator !=(GitSubmodule a, GitSubmodule b)
         {
-            return !(a == b);
+            return !Equals(a, b);
         }
     }
 }

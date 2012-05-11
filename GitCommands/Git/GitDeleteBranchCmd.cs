@@ -7,7 +7,7 @@ namespace GitCommands
 {
     public class GitDeleteBranchCmd : GitCommand
     {
-        private List<string> branchList = new List<string>();
+        private readonly List<string> branchList = new List<string>();
 
         public bool Force { get; set; }
         public bool HasRemoteBranch { get; set; }

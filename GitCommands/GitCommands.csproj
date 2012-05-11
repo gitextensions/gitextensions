@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommitData.cs" />
+    <Compile Include="DateTimeUtils.cs" />
     <Compile Include="FileHelper.cs" />
     <Compile Include="Git\GitCommand.cs" />
     <Compile Include="Git\EncodingHelper.cs" />
@@ -105,7 +106,6 @@
     <Compile Include="Repository\RepositoryType.cs" />
     <Compile Include="RevisionGraph.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="SplitEnumerator.cs" />
     <Compile Include="Statistics\CommitCounter.cs" />
     <Compile Include="Statistics\ImpactLoader.cs" />
     <Compile Include="Strings.cs" />
