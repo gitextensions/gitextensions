@@ -153,7 +153,7 @@ namespace Github3
                     m = Regex.Match(url, @"https?://(?:[^@:]+)?(?::[^/@:]+)?@?github.com/([^/]+)/([\w_\.]+)(?:.git)?");
                 if (m.Success)
                 {
-                    var hostedRemote = new GithubHostedRemote() { Name = remote, Owner = m.Groups[1].Value, RemoteRepositoryName = m.Groups[2].Value.Replace(".git", "") };
+                    var hostedRemote = new GithubHostedRemote(remote, m.Groups[1].Value, m.Groups[2].Value.Replace(".git", ""));
                     if (!repoInfos.Contains(hostedRemote))
                         repoInfos.Add(hostedRemote);
                 }
