@@ -7,14 +7,14 @@ namespace GitCommands
         /// <summary>
         /// Midnight 1 January 1970.
         /// </summary>
-        private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0);
+        private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         public static bool TryParseUnixTime(string unixTime, out DateTime result)
         {
             long seconds;
             if (long.TryParse(unixTime, out seconds))
             {
-                result = UnixEpoch.AddSeconds(seconds);
+                result = UnixEpoch.AddSeconds(seconds).ToLocalTime();
                 return true;
             }
 
@@ -24,7 +24,7 @@ namespace GitCommands
 
         public static DateTime ParseUnixTime(string unixTime)
         {
-            return UnixEpoch.AddSeconds(long.Parse(unixTime));
+            return UnixEpoch.AddSeconds(long.Parse(unixTime)).ToLocalTime();
         }
     }
 }
