@@ -196,7 +196,7 @@ namespace GitUI
                 writer.Write(batchFile);
             }
             var process = new FormProcess("cmd.exe", "/C \"" + tempFileName + "\"");
-            bool result = process.ShowDialog(owner as IWin32Window) == DialogResult.OK;
+            process.ShowDialog(owner as IWin32Window);
             File.Delete(tempFileName);
             return true;
         }

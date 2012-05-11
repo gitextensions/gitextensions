@@ -24,15 +24,12 @@ namespace GitUI
             /// %ct - committer date, UNIX timestamp (easy to parse format).
             /// </summary>
             private const string LogCommandArgumentsFormat = "log -n1 --pretty=format:\"%aN, %e, %s, %ct\" {0}";
-            private const string LogPattern = @"^([^,]+), (.+), (.+), (\d+)$";
-            private const string Sha1HashPattern = @"[a-f\d]{40}";
-            private const string RawDataPattern = "^((dangling|missing|unreachable) (commit|blob|tree)|warning in tree) (" + Sha1HashPattern + ")(.)*$";
+            private const string LogPattern = @"^([^,]+), (.+), (.+), (\d+)$";            
+            private const string RawDataPattern = "^((dangling|missing|unreachable) (commit|blob|tree)|warning in tree) (" + GitRevision.Sha1HashPattern + ")(.)*$";
 
-            private static readonly Regex Sha1HashRegex = new Regex("^" + Sha1HashPattern + "$", RegexOptions.Compiled);
             private static readonly Regex RawDataRegex = new Regex(RawDataPattern, RegexOptions.Compiled);
             private static readonly Regex LogRegex = new Regex(LogPattern, RegexOptions.Compiled | RegexOptions.Singleline);
 
-            private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0);
             private readonly LostObjectType objectType;
             private readonly string rawType;
             private readonly string hash;
@@ -95,7 +92,7 @@ namespace GitUI
                         result.Author = GitCommandHelpers.ReEncodeStringFromLossless(logPatternMatch.Groups[1].Value);
                         string encodingName = logPatternMatch.Groups[2].Value;
                         result.Subject = GitCommandHelpers.ReEncodeCommitMessage(logPatternMatch.Groups[3].Value, encodingName);
-                        result.Date = UnixEpoch.AddSeconds(long.Parse(logPatternMatch.Groups[4].Value));
+                        result.Date = DateTimeUtils.ParseUnixTime(logPatternMatch.Groups[4].Value);
                     }
                 }
 
@@ -104,7 +101,7 @@ namespace GitUI
 
             private static string GetLostCommitLog(string hash)
             {
-                if (string.IsNullOrEmpty(hash) || !Sha1HashRegex.IsMatch(hash))
+                if (string.IsNullOrEmpty(hash) || !GitRevision.Sha1HashRegex.IsMatch(hash))
                     throw new ArgumentOutOfRangeException("hash", hash, "Hash must be a valid SHA1 hash.");
 
                 return Settings.Module.RunGitCmd(string.Format(LogCommandArgumentsFormat, hash), Settings.LosslessEncoding);

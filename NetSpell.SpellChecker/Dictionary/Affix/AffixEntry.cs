@@ -1,6 +1,3 @@
-using System;
-using System.Text.RegularExpressions;
-
 namespace NetSpell.SpellChecker.Dictionary.Affix
 {
 	/// <summary>
@@ -12,13 +9,6 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
 		private string _AddCharacters = "";
 		private int[] _Condition = new int[1200];
 		private string _StripCharacters = "";
-
-		/// <summary>
-		///     Initializes a new instance of the class
-		/// </summary>
-		public AffixEntry()
-		{
-		}
 
 		/// <summary>
 		///     The characters to add to the string

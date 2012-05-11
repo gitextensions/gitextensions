@@ -15,14 +15,14 @@ namespace GitCommands
     public static class Settings
     {
         //Constants
-        public static readonly string GitExtensionsVersionString = "2.32";
-        public static readonly int GitExtensionsVersionInt = 232;
+        public const string GitExtensionsVersionString = "2.32";
+        public const int GitExtensionsVersionInt = 232;
 
         //semi-constants
         public static readonly char PathSeparator = '\\';
         public static readonly char PathSeparatorWrong = '/';
 
-        private static Dictionary<String, object> byNameMap = new Dictionary<String, object>();
+        private static readonly Dictionary<String, object> byNameMap = new Dictionary<String, object>();
         static Settings()
         {
             if (!RunningOnWindows())
@@ -260,7 +260,7 @@ namespace GitCommands
             set { SafeSet("revisiongraphdrawnonrelativestextgray", value, ref _revisionGraphDrawNonRelativesTextGray); }
         }
 
-        public static Dictionary<string, Encoding> availableEncodings = new Dictionary<string, Encoding>();
+        public static readonly Dictionary<string, Encoding> availableEncodings = new Dictionary<string, Encoding>();
            
         private static Encoding GetEncoding(bool local, string settingName, bool fromSettings)
         {
@@ -608,7 +608,7 @@ namespace GitCommands
         public delegate void WorkingDirChangedEventHandler(string oldDir, string newDir, string newGitDir);
         public static event WorkingDirChangedEventHandler WorkingDirChanged;
 
-        private static GitModule _module = new GitModule();
+        private static readonly GitModule _module = new GitModule();
         public static GitModule Module
         {
             [DebuggerStepThrough]
@@ -1197,12 +1197,8 @@ namespace GitCommands
             }
             else
             {
-                T result;
                 o = GetValue<object>(name, null);
-                if (o == null)
-                    result = defaultValue;
-                else
-                    result = decode(o);
+                T result = o == null ? defaultValue : decode(o);
 
                 byNameMap[name] = result;
                 return result;
@@ -1230,7 +1226,7 @@ namespace GitCommands
 
         public static void SetString(string name, string value)
         {
-            SetByName<string>(name, value, (string s) => s);
+            SetByName<string>(name, value, s => s);
         }
 
         public static string GetString(string name, string defaultValue)

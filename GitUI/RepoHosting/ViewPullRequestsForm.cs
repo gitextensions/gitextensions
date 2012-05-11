@@ -85,8 +85,8 @@ namespace GitUI.RepoHosting
 
             AsyncHelpers.DoAsync <List<IPullRequestInformation>>(
                hostedRepo.GetPullRequests,
-               (res) => { SetPullRequestsData(res); _selectHostedRepoCB.Enabled = true; },
-               (ex) => MessageBox.Show(this, _strFailedToFetchPullData.Text + ex.Message, _strError.Text)
+               res => { SetPullRequestsData(res); _selectHostedRepoCB.Enabled = true; },
+               ex => MessageBox.Show(this, _strFailedToFetchPullData.Text + ex.Message, _strError.Text)
             );
         }
 

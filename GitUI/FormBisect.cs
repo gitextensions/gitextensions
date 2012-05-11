@@ -12,7 +12,7 @@ namespace GitUI
         private readonly TranslationString _bisectStart =
             new TranslationString("Mark selected revisions as start bisect range?");
 
-        private RevisionGrid _revisionGrid;
+        private readonly RevisionGrid _revisionGrid;
 
         public FormBisect(RevisionGrid revisionGrid)
         {

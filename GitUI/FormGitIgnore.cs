@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using ICSharpCode.TextEditor.Util;
 using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormGitIgnore : GitExtensionsForm
+    public sealed partial class FormGitIgnore : GitExtensionsForm
     {
         private readonly TranslationString _gitignoreOnlyInWorkingDirSupported =
             new TranslationString(".gitignore is only supported when there is a working dir.");
@@ -25,7 +25,41 @@ namespace GitUI
         private readonly TranslationString _saveFileQuestionCaption =
             new TranslationString("Save changes?");
 
-        public string GitIgnoreFile = string.Empty;
+        private string _originalGitIgnoreFileContent = string.Empty;
+
+        #region default patterns
+        private static readonly string[] DefaultIgnorePatterns = new[]
+        {
+            "#ignore thumbnails created by windows",
+            "Thumbs.db",
+            "#Ignore files build by Visual Studio",
+            "*.obj",
+            "*.exe",
+            "*.pdb",
+            "*.user",
+            "*.aps",
+            "*.pch",
+            "*.vspscc",
+            "*_i.c",
+            "*_p.c",
+            "*.ncb",
+            "*.suo",
+            "*.tlb",
+            "*.tlh",
+            "*.bak",
+            "*.cache",
+            "*.ilk",
+            "*.log",
+            "[Bb]in",
+            "[Dd]ebug*/",
+            "*.lib",
+            "*.sbr",
+            "obj/",
+            "[Rr]elease*/",
+            "_ReSharper*/",
+            "[Tt]est[Rr]esult*"
+        };
+        #endregion
 
         public FormGitIgnore()
         {
@@ -41,9 +75,7 @@ namespace GitUI
             try
             {
                 if (File.Exists(Settings.WorkingDir + ".gitignore"))
-                {
                     _NO_TRANSLATE_GitIgnoreEdit.ViewFile(Settings.WorkingDir + ".gitignore");
-                }
             }
             catch (Exception ex)
             {
@@ -59,6 +91,8 @@ namespace GitUI
 
         private bool SaveGitIgnore()
         {
+            if (!HasUnsavedChanges())
+                return false;
             try
             {
                 FileInfoExtensions
@@ -66,16 +100,17 @@ namespace GitUI
                         Settings.WorkingDir + ".gitignore",
                         x =>
                         {
-                            this.GitIgnoreFile = _NO_TRANSLATE_GitIgnoreEdit.GetText();
-                            if (!this.GitIgnoreFile.EndsWith(Environment.NewLine))
-                                this.GitIgnoreFile += Environment.NewLine;
-                            File.WriteAllBytes(x, Settings.SystemEncoding.GetBytes(this.GitIgnoreFile));    
+                            var fileContent = _NO_TRANSLATE_GitIgnoreEdit.GetText();
+                            if (!fileContent.EndsWith(Environment.NewLine))
+                                fileContent += Environment.NewLine;
+                            File.WriteAllBytes(x, Settings.SystemEncoding.GetBytes(fileContent));
+                            _originalGitIgnoreFileContent = fileContent;
                         });
                 return true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, _cannotAccessGitignore.Text + Environment.NewLine + ex.Message, 
+                MessageBox.Show(this, _cannotAccessGitignore.Text + Environment.NewLine + ex.Message,
                     _cannotAccessGitignoreCaption.Text);
                 return false;
             }
@@ -83,73 +118,51 @@ namespace GitUI
 
         private void FormGitIgnoreFormClosing(object sender, FormClosingEventArgs e)
         {
-            var needToClose = false;
-
-            if (!IsFileUpToDate())
+            if (HasUnsavedChanges())
             {
-                switch (MessageBox.Show(this, _saveFileQuestion.Text, _saveFileQuestionCaption.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+                switch (MessageBox.Show(this, _saveFileQuestion.Text, _saveFileQuestionCaption.Text,
+                                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
                 {
                     case DialogResult.Yes:
-                        if (SaveGitIgnore())
-                            needToClose = true;
+                        if (!SaveGitIgnore())
+                        {
+                            e.Cancel = true;
+                            return;
+                        }
                         break;
-                    case DialogResult.No:
-                        needToClose = true;
-                        break;
-                    default:
-                        break;
+                    case DialogResult.Cancel:
+                        e.Cancel = true;
+                        return;
                 }
             }
-            else
-                needToClose = true;
 
-            if (!needToClose)
-                e.Cancel = true;
-            else
-                SavePosition("edit-git-ignore");
+            SavePosition("edit-git-ignore");
         }
 
         private void FormGitIgnoreLoad(object sender, EventArgs e)
         {
             RestorePosition("edit-git-ignore");
-            if (!Settings.Module.IsBareRepository()) return;
+            if (!Settings.Module.IsBareRepository())
+                return;
             MessageBox.Show(this, _gitignoreOnlyInWorkingDirSupported.Text, _gitignoreOnlyInWorkingDirSupportedCaption.Text);
             Close();
         }
 
         private void AddDefaultClick(object sender, EventArgs e)
         {
+            var currentFileContent = _NO_TRANSLATE_GitIgnoreEdit.GetText();
+            var patternsToAdd = DefaultIgnorePatterns
+                .Except(currentFileContent.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                .ToArray();
+            if (patternsToAdd.Length == 0)
+                return;
+            // workaround to prevent GitIgnoreFileLoaded event handling (it causes wrong _originalGitIgnoreFileContent update)
+            // TODO: implement in FileViewer separate events for loading text from file and for setting text directly via ViewText
+            _NO_TRANSLATE_GitIgnoreEdit.TextLoaded -= GitIgnoreFileLoaded;
             _NO_TRANSLATE_GitIgnoreEdit.ViewText(".gitignore",
-                _NO_TRANSLATE_GitIgnoreEdit.GetText() +
-                Environment.NewLine + "#ignore thumbnails created by windows" +
-                Environment.NewLine + "Thumbs.db" +
-                Environment.NewLine + "#Ignore files build by Visual Studio" +
-                Environment.NewLine + "*.obj" +
-                Environment.NewLine + "*.exe" +
-                Environment.NewLine + "*.pdb" +
-                Environment.NewLine + "*.user" +
-                Environment.NewLine + "*.aps" +
-                Environment.NewLine + "*.pch" +
-                Environment.NewLine + "*.vspscc" +
-                Environment.NewLine + "*_i.c" +
-                Environment.NewLine + "*_p.c" +
-                Environment.NewLine + "*.ncb" +
-                Environment.NewLine + "*.suo" +
-                Environment.NewLine + "*.tlb" +
-                Environment.NewLine + "*.tlh" +
-                Environment.NewLine + "*.bak" +
-                Environment.NewLine + "*.cache" +
-                Environment.NewLine + "*.ilk" +
-                Environment.NewLine + "*.log" +
-                Environment.NewLine + "[Bb]in" +
-                Environment.NewLine + "[Dd]ebug*/" +
-                Environment.NewLine + "*.lib" +
-                Environment.NewLine + "*.sbr" +
-                Environment.NewLine + "obj/" +
-                Environment.NewLine + "[Rr]elease*/" +
-                Environment.NewLine + "_ReSharper*/" +
-                Environment.NewLine + "[Tt]est[Rr]esult*" +
-                Environment.NewLine + "");
+                currentFileContent + Environment.NewLine +
+                string.Join(Environment.NewLine, patternsToAdd) + Environment.NewLine + string.Empty);
+            _NO_TRANSLATE_GitIgnoreEdit.TextLoaded += GitIgnoreFileLoaded;
         }
 
         private void AddPattern_Click(object sender, EventArgs e)
@@ -159,17 +172,19 @@ namespace GitUI
             LoadGitIgnore();
         }
 
-        private bool IsFileUpToDate()
+        private bool HasUnsavedChanges()
         {
-            return GitIgnoreFile == _NO_TRANSLATE_GitIgnoreEdit.GetText();
+            return _originalGitIgnoreFileContent != _NO_TRANSLATE_GitIgnoreEdit.GetText();
         }
 
         private void GitIgnoreFileLoaded(object sender, EventArgs e)
         {
-            GitIgnoreFile = _NO_TRANSLATE_GitIgnoreEdit.GetText();
+            _originalGitIgnoreFileContent = _NO_TRANSLATE_GitIgnoreEdit.GetText();
         }
 
-
-
+        private void lnkGitIgnorePatterns_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(@"https://github.com/github/gitignore");
+        }
     }
 }

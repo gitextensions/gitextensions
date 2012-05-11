@@ -868,9 +868,17 @@ namespace GitCommands
 
         public bool ExistsMergeCommit(string startRev, string endRev)
         {
+            if (startRev.IsNullOrEmpty() || endRev.IsNullOrEmpty())
+                return false;
+
             string revisions = RunGitCmd("rev-list --parents --no-walk " + startRev + ".." + endRev);
             string[] revisionsTab = revisions.Split('\n');
-            return revisionsTab.Any(parents => parents.Split(' ').Length > 2);
+            Func<string, bool> ex = (string parents) =>
+                {
+                    string[] tab = parents.Split(' ');
+                    return tab.Length > 2 && tab.All( parent => GitRevision.Sha1HashRegex.IsMatch(parent));
+                };
+            return revisionsTab.Any(ex);
         }
 
         public string GetSubmoduleRemotePath(string name)
@@ -1642,7 +1650,7 @@ namespace GitCommands
         {
             string status = RunGitCmd("diff -M -C -z --cached --name-status", Settings.SystemEncoding);
 
-            if (true && status.Length < 50 && status.Contains("fatal: No HEAD commit to compare"))
+            if (status.Length < 50 && status.Contains("fatal: No HEAD commit to compare"))
             {
                 //This command is a little more expensive because it will return both staged and unstaged files
                 string command = GitCommandHelpers.GetAllChangedFilesCmd(true, false);
@@ -1776,11 +1784,11 @@ namespace GitCommands
         {
             remote = FixPath(remote);
 
-            var tree = GetTreeFromRemoteHeands(remote, tags, branches);
+            var tree = GetTreeFromRemoteHeads(remote, tags, branches);
             return GetHeads(tree);
         }
 
-        private string GetTreeFromRemoteHeands(string remote, bool tags, bool branches)
+        private string GetTreeFromRemoteHeads(string remote, bool tags, bool branches)
         {
             if (tags && branches)
                 return RunGitCmd("ls-remote --heads --tags \"" + remote + "\"");
@@ -2102,9 +2110,14 @@ namespace GitCommands
         }
 
         public string OpenWithDifftool(string filename, string revision1, string revision2)
+        { 
+            return OpenWithDifftool(filename, revision1, revision2, string.Empty);        
+        }
+
+        public string OpenWithDifftool(string filename, string revision1, string revision2, string extraDiffArguments)
         {
             var output = "";
-            string args = revision2.Join(" ", revision1).Join(" ", "-- \"" + filename + "\"");
+            string args = extraDiffArguments.Join(" ", revision2).Join(" ", revision1).Join(" ", "-- \"" + filename + "\"");
             if (GitCommandHelpers.VersionInUse.GuiDiffToolExist)
                 RunCmdAsync(Settings.GitCommand,
                             "difftool --gui --no-prompt " + args);

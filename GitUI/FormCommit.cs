@@ -255,10 +255,9 @@ namespace GitUI
         }
 
         /// <summary>Helper method that moves the focus to the supplied FileStatusList</summary>
-        private bool FocusFileList(FileStatusList fileStatusList)
+        private void FocusFileList(FileStatusList fileStatusList)
         {
             fileStatusList.Focus();
-            return true;
         }
 
         private bool FocusSelectedDiff()
@@ -435,7 +434,7 @@ namespace GitUI
             {
                 _gitGetUnstagedCommand = new GitCommandsInstance()
                 {
-                    SetupStartInfoCallback = (ProcessStartInfo startInfo) =>
+                    SetupStartInfoCallback = startInfo =>
                     {
                         startInfo.StandardOutputEncoding = Settings.SystemEncoding;
                         startInfo.StandardErrorEncoding = Settings.SystemEncoding;
@@ -476,12 +475,10 @@ namespace GitUI
             Cursor.Current = Cursors.Default;
         }
 
-        // TODO: unify with FormVerify, extract to common constants.
-        private const string Sha1HashPattern = @"[a-f\d]{40}";
         private void UpdateMergeHead()
         {
             var mergeHead = Settings.Module.RevParse("MERGE_HEAD");
-            IsMergeCommit = Regex.IsMatch(mergeHead, Sha1HashPattern);
+            IsMergeCommit = Regex.IsMatch(mergeHead, GitRevision.Sha1HashPattern);
         }
 
         private void InitializedStaged()
@@ -1155,7 +1152,6 @@ namespace GitUI
                 case CommitKind.Squash:
                     message = string.Format("squash! {0}", _editedCommit.Message);
                     break;
-                case CommitKind.Normal:
                 default:
                     message = Settings.Module.GetMergeMessage();
 
@@ -1302,7 +1298,7 @@ namespace GitUI
                 string diff = Settings.Module.RunGitCmd(
                      string.Format("diff --cached -z -- {0}", item));
                 var lines = diff.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
-                string subprojCommit = "Subproject commit ";
+                const string subprojCommit = "Subproject commit ";
                 var from = lines.Single(s => s.StartsWith("-" + subprojCommit)).Substring(subprojCommit.Length + 1);
                 var to = lines.Single(s => s.StartsWith("+" + subprojCommit)).Substring(subprojCommit.Length + 1);
                 if (!String.IsNullOrEmpty(from) && !String.IsNullOrEmpty(to))
