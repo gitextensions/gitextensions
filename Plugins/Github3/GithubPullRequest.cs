@@ -117,9 +117,16 @@ namespace Github3
             throw new NotImplementedException();
         }
 
+        private IPullRequestDiscussion _Discussion;
         public IPullRequestDiscussion Discussion
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                if(_Discussion == null)
+                    _Discussion = new GithubPullRequestDiscussion(pullrequest);
+
+                return _Discussion;
+            }
         }
     }
 }
