@@ -98,6 +98,7 @@ namespace GitUI.RepoHosting
                 {
                     branches.Sort((a, b) => String.Compare(a.Name, b.Name, true));
                     int selectItem = 0;
+                    _remoteBranchesCB.Items.Clear();
                     for (int i = 0; i < branches.Count; i++)
                     {
                         if (branches[i].Name == _currentBranch)
