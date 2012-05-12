@@ -1,4 +1,5 @@
-﻿using GitUIPluginInterfaces;
+﻿using System;
+using GitUIPluginInterfaces;
 
 namespace GitCommands
 {
@@ -67,6 +68,16 @@ namespace GitCommands
         public static bool operator !=(GitSubmodule a, GitSubmodule b)
         {
             return !(a == b);
+        }
+
+        public override bool Equals(Object obj)
+        {
+            return obj is GitSubmodule && this == (GitSubmodule)obj;
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode() ^ LocalPath.GetHashCode();
         }
     }
 }
