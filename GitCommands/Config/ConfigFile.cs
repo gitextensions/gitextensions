@@ -43,7 +43,8 @@ namespace GitCommands.Config
             }
             catch (Exception ex)
             {
-                throw new Exception("Could not load config file: " + _fileName, ex);
+                ex.Data.Add(GetType().Name + ".Load", "Could not load config file: " + _fileName);
+                throw;
             }
         }
 
@@ -123,7 +124,7 @@ namespace GitCommands.Config
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                ExceptionUtils.ShowException(ex, false);
             }
         }
 
