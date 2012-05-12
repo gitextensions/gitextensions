@@ -154,7 +154,7 @@ namespace GitUI
                 case "tmerge":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
                 case "winmerge":
-                    return "\"" + exeFile + "\" -e -u -dl \"Local\" -dr \"Remote\" \"$LOCAL\" \"$REMOTE\"";
+                    return "\"" + exeFile + "\" -e -u \"$LOCAL\" \"$REMOTE\"";
             }
             return "";
         }
