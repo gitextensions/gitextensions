@@ -80,7 +80,11 @@ namespace Github3
 
         public int CreatePullRequest(string myBranch, string remoteBranch, string title, string body)
         {
-            throw new NotImplementedException();
+            var pullrequest = repo.CreatePullRequest(GithubLoginInfo.username + ":" + myBranch, remoteBranch, title, body);
+            if (pullrequest == null || pullrequest.Number == 0)
+                throw new Exception("Failed to create pull request.");
+
+            return pullrequest.Number;
         }
 
         public override string ToString()
