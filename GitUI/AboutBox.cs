@@ -8,7 +8,7 @@ namespace GitUI
     {
         public AboutBox()
         {
-            contributersList = string.Concat(coders, translators, designers, other).Split(',');
+            contributersList = string.Concat(coders, ", ", translators, ", ", designers, ", ", other).Split(new char[]{','}, StringSplitOptions.RemoveEmptyEntries);
 
             InitializeComponent(); 
             Translate();
