@@ -30,8 +30,7 @@ namespace GitUI.SpellChecker
 
         public EditNetSpell()
         {
-            InitializeComponent();
-            TextBoxFont = TextBox.Font;
+            InitializeComponent();            
             Translate();
 
             _customUnderlines = new SpellCheckEditControl(TextBox);
@@ -39,7 +38,6 @@ namespace GitUI.SpellChecker
             SpellCheckTimer.Enabled = false;
 
             EnabledChanged += EditNetSpellEnabledChanged;
-            ShowWatermark();
         }
 
         public override string Text
@@ -91,6 +89,8 @@ namespace GitUI.SpellChecker
         private void EditNetSpellLoad(object sender, EventArgs e)
         {
             MistakeFont = new Font(TextBox.Font, FontStyle.Underline);
+            TextBoxFont = TextBox.Font;
+            ShowWatermark();
 
             components = new Container();
             _spelling =
@@ -458,7 +458,7 @@ namespace GitUI.SpellChecker
 
         private void ShowWatermark()
         {
-            if (!Focused && string.IsNullOrEmpty(TextBox.Text))
+            if (!Focused && string.IsNullOrEmpty(TextBox.Text) && TextBoxFont!= null)
             {
                 TextBox.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
                 TextBox.ForeColor = SystemColors.InactiveCaption;
@@ -469,7 +469,7 @@ namespace GitUI.SpellChecker
 
         private void HideWatermark()
         {
-            if (IsWatermarkShowing)
+            if (IsWatermarkShowing && TextBoxFont != null)
             {
                 TextBox.Font = TextBoxFont;
                 TextBox.Text = string.Empty;
