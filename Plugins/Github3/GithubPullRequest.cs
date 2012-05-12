@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Git.hub;
+using System.Net;
+using System.IO;
 
 namespace Github3
 {
@@ -36,9 +38,24 @@ namespace Github3
             get { return pullrequest.CreatedAt; }
         }
 
-        public string DiffData
-        {
-            get { return ""; }
+
+
+        private string _diffData;
+        public string DiffData 
+        { 
+            get
+            {
+                if (_diffData == null)
+                {
+                    HttpWebRequest wr = (HttpWebRequest)WebRequest.Create(pullrequest.DiffUrl);
+                    using (var response = wr.GetResponse())
+                    using (var respStream = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                    {
+                        _diffData = respStream.ReadToEnd();
+                    }
+                }
+                return _diffData;
+            }
         }
 
         private IHostedRepository _BaseRepo;
