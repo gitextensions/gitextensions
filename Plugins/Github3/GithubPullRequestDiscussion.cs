@@ -22,7 +22,7 @@ namespace Github3
 
         public void Post(string data)
         {
-            throw new NotImplementedException();
+            pullrequest.ToIssue().CreateComment(data);
         }
 
         public void ForceReload()
