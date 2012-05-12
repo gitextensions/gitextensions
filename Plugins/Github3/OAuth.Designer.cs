@@ -43,6 +43,7 @@ namespace Github3
             this.webBrowser1.Name = "webBrowser1";
             this.webBrowser1.Size = new System.Drawing.Size(980, 600);
             this.webBrowser1.TabIndex = 0;
+            this.webBrowser1.Navigated += web_Navigated;
             this.webBrowser1.Navigating += web_Navigating;
             // 
             // OAuth
@@ -67,25 +68,39 @@ namespace Github3
             this.webBrowser1.Navigate("https://github.com/login/oauth/authorize?client_id=" + GithubAPIInfo.client_id + "&scope=repo,public_repo");
         }
 
+        private bool gotToken = false;
+
         public void web_Navigating(object sender, WebBrowserNavigatingEventArgs e)
         {
+            checkAuth(e.Url.ToString());
+        }
+        public void web_Navigated(object sender, WebBrowserNavigatedEventArgs e)
+        {
+            checkAuth(e.Url.ToString());
+        }
+         
+        public void checkAuth(string url)
+        {
+            if (gotToken)
+                return;
 
-            // Seems pretty borked
-            // Right now:
-            //   Open browser, login, say you want to auth -> navigation error (expected, as it redirects to http://git-extensions/?code=abc)
-            //   Open browser, fetches OAuth token
-            string url = e.Url.ToString();
             if(url.Contains("?code="))
             {
                 string[] splits = url.Split(new string[]{"?code="}, StringSplitOptions.RemoveEmptyEntries);
-                string code = splits[1];
-                string token = OAuth2Helper.requestToken(GithubAPIInfo.client_id, GithubAPIInfo.client_secret, code);
+                if (splits.Length == 2)
+                {
+                    this.Hide();
+                    this.Close();
+                    string code = splits[1];
+                    string token = OAuth2Helper.requestToken(GithubAPIInfo.client_id, GithubAPIInfo.client_secret, code);
+                    if (token == null)
+                        return;
+                    gotToken = true;
 
-                //MessageBox.Show("oauth code=" + code + ", token=" + token);
-                GithubLoginInfo.OAuthToken = token;
-                this.Close();
+                    GithubLoginInfo.OAuthToken = token;
 
-                MessageBox.Show("Successfully retrieved OAuth token.");
+                    MessageBox.Show(this.Owner as IWin32Window, "Successfully retrieved OAuth token.", "Github Authorization");
+                }
             }
         }
     }
