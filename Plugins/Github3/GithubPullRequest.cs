@@ -114,7 +114,7 @@ namespace Github3
 
         public void Close()
         {
-            throw new NotImplementedException();
+            pullrequest.Close();
         }
 
         private IPullRequestDiscussion _Discussion;
