@@ -31,16 +31,28 @@ namespace Github3
 
             foreach (var commit in pullrequest.GetCommits())
             {
-                Entries.Add(new GithubDiscussionCommit { Sha = commit.Sha, Author = commit.Author.Login, Created = commit.Commit.Author.Date, Body = commit.Commit.Message });
+                Entries.Add(new GithubDiscussionCommit { Sha = commit.Sha, Author = commit.AuthorName.Replace("<", "&lt;").Replace(">", "&gt;"), Created = commit.Commit.Author.Date, Body = commit.Commit.Message });
             }
+
+            foreach (var comment in pullrequest.GetIssueComments())
+            {
+                Entries.Add(new GithubDiscussionComment { Author = comment.User.Login, Created = comment.CreatedAt, Body = comment.Body });
+            }
+
+            Entries = Entries.OrderBy(entry => entry.Created).ToList();
+
         }
     }
 
-    class GithubDiscussionCommit : ICommitDiscussionEntry
+    class GithubDiscussionComment : IDiscussionEntry
     {
-        public string Sha { get; internal set; }
         public string Author { get; internal set; }
         public DateTime Created { get; internal set; }
         public string Body { get; internal set; }
+    }
+
+    class GithubDiscussionCommit : GithubDiscussionComment, ICommitDiscussionEntry
+    {
+        public string Sha { get; internal set; }
     }
 }
