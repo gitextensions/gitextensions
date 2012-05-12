@@ -61,10 +61,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Bin\ICSharpCode.TextEditor.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Bin\Microsoft.WindowsAPICodePack.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Bin\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
@@ -115,7 +111,7 @@
     </Compile>
     <Compile Include="FormCheckoutBranch.cs">
       <SubType>Form</SubType>
-    </Compile> 
+    </Compile>
     <Compile Include="FormCommitTemplateSettings.cs">
       <SubType>Form</SubType>
     </Compile>
