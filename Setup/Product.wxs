@@ -102,6 +102,9 @@
       <Component Id="ICSharpCode.SharpZipLib.dll" Guid="*">
         <File Source="..\bin\ICSharpCode.SharpZipLib.dll"/>
       </Component>
+      <Component Id="PSTaskDialog.dll" Guid="*">
+        <File Source="..\bin\PSTaskDialog.dll"/>
+      </Component>
       <!--Component Id="GithubSharp.Core.dll" Guid="*">
         <File Source="..\bin\GithubSharp.Core.dll"/>
       </Component-->
@@ -434,6 +437,7 @@
       <ComponentRef Id="GitCommands.dll"/>
       <ComponentRef Id="GitUI.dll"/>
       <ComponentRef Id="ICSharpCode.TextEditor.dll"/>
+      <ComponentRef Id="PSTaskDialog.dll"/>
       <ComponentRef Id="Microsoft.WindowsAPICodePack.dll"/>
       <ComponentRef Id="Microsoft.WindowsAPICodePack.Shell.dll"/>
       <ComponentRef Id="NetSpell.SpellChecker.dll"/>
