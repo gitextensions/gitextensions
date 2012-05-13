@@ -478,5 +478,10 @@ namespace GitUI.SpellChecker
             IsWatermarkShowing = false;
         }
 
+        public new bool Focus()
+        {
+            HideWatermark();
+            return base.Focus();
+        }
     }
 }
