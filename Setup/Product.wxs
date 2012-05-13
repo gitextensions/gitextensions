@@ -378,10 +378,11 @@
     </DirectoryRef>
     <?endforeach?>
 
-    <DirectoryRef Id="StartMenuDir">
-      <Component Id="GitExtensions.startmenu" Guid="*">
+
+    <DirectoryRef Id="ProgramMenuFolder">
+      <Component Id="GitExtensions.newstartmenu" Guid="*">
         <Shortcut
-          Id="GitExtensions.startmenu"
+          Id="GitExtensions.newstartmenu"
           Name="$(var.ProductName)"
           Description="$(var.ProductName)"
           Icon="gitextensions.ico"
@@ -389,26 +390,18 @@
           WorkingDirectory="INSTALLDIR"/>
         <RegistryValue
           Root="HKCU" Key="$(var.InstalledRegKey)"
-          Name="GitExtensions.startmenu" Value="" Type="string"
+          Name="GitExtensions.newstartmenu" Value="" Type="string"
           KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+    
+    <!-- Remove old start menu entries -->
+    <DirectoryRef Id="StartMenuDir">
+      <Component Id="GitExtensions.startmenu" Guid="{028C359A-8752-48E1-86EE-A539A9D2709A}">
         <RemoveFolder
           Id="GitExtensions.startmenu"
-          On="uninstall"/>
-      </Component>
-
-      <Component Id="UserManual.startmenu" Guid="*">
-        <Shortcut
-          Id="UserManual.startmenu"
-          Name="User Manual"
-          Description="$(var.ProductName) User Manual"
-          Target="[INSTALLDIR]GitExtensionsUserManual.pdf"/>
-        <RegistryValue
-          Root="HKCU" Key="$(var.InstalledRegKey)"
-          Name="UserManual.startmenu" Value="" Type="string"
-          KeyPath="yes"/>
-        <RemoveFolder
-          Id="UserManual.startmenu"
-          On="uninstall"/>
+          Directory="StartMenuDir"
+          On="install"/>
       </Component>
     </DirectoryRef>
 
@@ -457,9 +450,9 @@
       <ComponentRef Id="puttygen.exe"/>
       <ComponentRef Id="puttygen.reg"/>
 
+      <ComponentRef Id="GitExtensions.newstartmenu"/>
       <ComponentRef Id="GitExtensions.startmenu"/>
       <ComponentRef Id="GitExtensions.desktop"/>
-      <ComponentRef Id="UserManual.startmenu"/>
 
       <ComponentRef Id="English.gif"/>
 
