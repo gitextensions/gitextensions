@@ -112,7 +112,7 @@ namespace Github3
 
         public IList<IHostedRepository> SearchForRepository(string search)
         {
-            throw new NotImplementedException("Not supporte in the Github API v3");
+            return github.searchRepositories(search).Select(repo => (IHostedRepository) new GithubRepo(repo)).ToList();
         }
 
         public IList<IHostedRepository> GetRepositoriesOfUser(string user)
