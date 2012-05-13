@@ -199,7 +199,7 @@
   <data name="SplitViewLayout" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\SplitViewLayout.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="10" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="_10" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\10.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="77" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -262,7 +262,7 @@
   <data name="89" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\89.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="9" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="_9" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\9.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Add" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -421,7 +421,6 @@
   <data name="x_with_arrow_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\x-with-arrow_yellow.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="git_extensions_logo_final_128" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\git-extensions-logo-final-128.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -445,5 +444,12 @@
   </data>
   <data name="git_extensions_logo_final_mixed_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\git-extensions-logo-final_mixed_yellow.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="commitRed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\commitRed.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="commitYellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\commitYellow.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

@@ -61,8 +61,8 @@ namespace GitUI.Editor
             _internalFileViewer.MouseMove += TextAreaMouseMove;
             _internalFileViewer.MouseLeave += TextAreaMouseLeave;
             _internalFileViewer.TextChanged += TextEditor_TextChanged;
-            _internalFileViewer.ScrollPosChanged += new EventHandler(_internalFileViewer_ScrollPosChanged);
-            _internalFileViewer.SelectedLineChanged += new SelectedLineChangedEventHandler(_internalFileViewer_SelectedLineChanged);
+            _internalFileViewer.ScrollPosChanged += _internalFileViewer_ScrollPosChanged;
+            _internalFileViewer.SelectedLineChanged += _internalFileViewer_SelectedLineChanged;
             _internalFileViewer.DoubleClick += (sender, args) => OnRequestDiffView(EventArgs.Empty);
 
             this.HotkeysEnabled = true;
@@ -521,7 +521,7 @@ namespace GitUI.Editor
                 ResetForDiff();
             }
         }
-        private bool patchHighlighting = false;
+        private bool patchHighlighting;
         private void ResetForDiff()
         {
             Reset(true, true);
@@ -753,7 +753,7 @@ namespace GitUI.Editor
 
         public const string HotkeySettingsName = "FileViewer";
 
-        internal enum Commands : int
+        internal enum Commands
         {
             Find,
             GoToLine,

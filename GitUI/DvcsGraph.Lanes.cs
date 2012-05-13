@@ -877,16 +877,12 @@ namespace GitUI
                     index = 0;
                 }
 
-                public Node Next()
+                public void Next()
                 {
-                    var n = node ?? junction[index];
                     index++;
 
                     if (junction != null && index >= junction.NodesCount)
-                    {
                         junction.CurrentState = Junction.State.Processed;
-                    }
-                    return n;
                 }
 
                 public override string ToString()

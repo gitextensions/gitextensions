@@ -43,7 +43,8 @@ namespace GitCommands.Config
             }
             catch (Exception ex)
             {
-                throw new Exception("Could not load config file: " + _fileName, ex);
+                ex.Data.Add(GetType().Name + ".Load", "Could not load config file: " + _fileName);
+                throw;
             }
         }
 
@@ -123,7 +124,7 @@ namespace GitCommands.Config
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                ExceptionUtils.ShowException(ex, false);
             }
         }
 
@@ -166,10 +167,7 @@ namespace GitCommands.Config
             var keyName = setting.Substring(keyIndex + 1);
 
             var configSection = FindConfigSection(configSectionName);
-            if (configSection != null)
-                return configSection.GetValue(keyName) != string.Empty;
-            else
-                return false;
+            return configSection != null && configSection.GetValue(keyName) != string.Empty;
         }
 
         public string GetValue(string setting)

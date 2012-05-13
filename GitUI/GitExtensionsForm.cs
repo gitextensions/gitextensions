@@ -222,7 +222,7 @@ namespace GitUI
             Close();
         }
 
-        private bool _windowCentred = false;
+        private bool _windowCentred;
 
         /// <summary>
         ///   Restores the position of a form from the user settings. Does

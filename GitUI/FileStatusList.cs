@@ -49,6 +49,16 @@ namespace GitUI
             }
         }
 
+        public new void Focus()
+        {
+            if (FileStatusListBox.Items.Count > 0)
+            {
+                if (FileStatusListBox.SelectedItem == null)
+                    FileStatusListBox.SelectedIndex = 0;
+                FileStatusListBox.Focus();
+            }
+        }
+
         void FileStatusListBox_MeasureItem(object sender, MeasureItemEventArgs e)
         {
             var gitItemStatus = (GitItemStatus)FileStatusListBox.Items[e.Index];
@@ -68,6 +78,11 @@ namespace GitUI
         public void SetNoFilesText(string text)
         {
             NoFiles.Text = text;
+        }
+
+        public string GetNoFilesText()
+        {
+            return NoFiles.Text;
         }
 
 #if !__MonoCS__ // TODO Drag'n'Drop doesnt work on Mono/Linux

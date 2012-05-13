@@ -46,8 +46,8 @@ namespace GitUI
         public FormProcess(string process, string arguments, GitModule module, string input, bool useDialogSettings)
             : base(useDialogSettings)
         {
-            ProcessCallback = new ProcessStart(processStart);
-            AbortCallback = new ProcessAbort(processAbort);
+            ProcessCallback = processStart;
+            AbortCallback = processAbort;
             ProcessString = process ?? Settings.GitCommand;
             WorkingDir = module == null ? Settings.WorkingDir : module.WorkingDir;
             ProcessArguments = arguments;
@@ -147,11 +147,7 @@ namespace GitUI
         /// <returns>if handled</returns>
         protected virtual bool HandleOnExit(ref bool isError)
         {
-            if (HandleOnExitCallback != null)
-                return HandleOnExitCallback(ref isError, this);
-            else
-                return false;
-        
+            return HandleOnExitCallback != null && HandleOnExitCallback(ref isError, this);
         }
 
         private void OnExit(object state)

@@ -26,13 +26,12 @@ namespace GitUI.SpellChecker
         private readonly SpellCheckEditControl _customUnderlines;
         private Spelling _spelling;
         private static WordDictionary _wordDictionary;
+        private Font TextBoxFont;
 
         public EditNetSpell()
         {
-            InitializeComponent();
+            InitializeComponent();            
             Translate();
-
-            EmptyLabel.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
 
             _customUnderlines = new SpellCheckEditControl(TextBox);
 
@@ -43,12 +42,15 @@ namespace GitUI.SpellChecker
 
         public override string Text
         {
-            get { return TextBox.Text; }
+            get 
+            {
+                return IsWatermarkShowing ? string.Empty : TextBox.Text; 
+            }
             set
             {
+                HideWatermark();
                 TextBox.Text = value;
-
-                UpdateEmptyLabel();
+                ShowWatermark();
             }
         }
 
@@ -61,23 +63,34 @@ namespace GitUI.SpellChecker
             if (Enabled)
             {
                 TextBox.ReadOnly = false;
-                UpdateEmptyLabel();
+                ShowWatermark();
             }
             else
             {
                 TextBox.ReadOnly = true;
-                EmptyLabel.Visible = false;
+                HideWatermark();
             }
         }
 
-        public void SetEmptyMessage(string message)
+        private bool IsWatermarkShowing;
+        private string _WatermarkText = "";
+        public string WatermarkText
         {
-            EmptyLabel.Text = message;
+            get { return _WatermarkText; }
+
+            set 
+            {
+                HideWatermark();
+                _WatermarkText = value;
+                ShowWatermark();
+            }      
         }
 
         private void EditNetSpellLoad(object sender, EventArgs e)
         {
             MistakeFont = new Font(TextBox.Font, FontStyle.Underline);
+            TextBoxFont = TextBox.Font;
+            ShowWatermark();
 
             components = new Container();
             _spelling =
@@ -409,25 +422,12 @@ namespace GitUI.SpellChecker
 
         private void TextBoxSizeChanged(object sender, EventArgs e)
         {
-            EmptyLabel.Location = new Point(3, 3);
-            EmptyLabel.Size = new Size(Size.Width - 6, Size.Height - 6);
             SpellCheckTimer.Enabled = true;
-        }
-
-        private void UpdateEmptyLabel()
-        {
-            EmptyLabel.Visible = TextBox.TextLength == 0;
-        }
-
-        private void EmptyLabelClick(object sender, EventArgs e)
-        {
-            EmptyLabel.Visible = false;
-            TextBox.Focus();
         }
 
         private void TextBoxLeave(object sender, EventArgs e)
         {
-            UpdateEmptyLabel();
+            ShowWatermark();
         }
 
         private void TextBox_KeyUp(object sender, KeyEventArgs e)
@@ -451,9 +451,37 @@ namespace GitUI.SpellChecker
             OnKeyDown(e);
         }
 
-        public void StartEditing()
+        private void TextBox_Enter(object sender, EventArgs e)
         {
-            EmptyLabelClick(null, null);
+            HideWatermark();
+        }
+
+        private void ShowWatermark()
+        {
+            if (!Focused && string.IsNullOrEmpty(TextBox.Text) && TextBoxFont!= null)
+            {
+                TextBox.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
+                TextBox.ForeColor = SystemColors.InactiveCaption;
+                TextBox.Text = WatermarkText;
+                IsWatermarkShowing = true;
+            }
+        }
+
+        private void HideWatermark()
+        {
+            if (IsWatermarkShowing && TextBoxFont != null)
+            {
+                TextBox.Font = TextBoxFont;
+                TextBox.Text = string.Empty;
+                TextBox.ForeColor = SystemColors.WindowText;
+            }
+            IsWatermarkShowing = false;
+        }
+
+        public new bool Focus()
+        {
+            HideWatermark();
+            return base.Focus();
         }
     }
 }

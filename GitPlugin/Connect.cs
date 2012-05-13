@@ -8,8 +8,6 @@ using Extensibility;
 using GitPlugin.Commands;
 using Microsoft.VisualStudio.CommandBars;
 using Thread = System.Threading.Thread;
-using GitPlugin.Git;
-using System.IO;
 
 namespace GitPlugin
 {
@@ -21,10 +19,6 @@ namespace GitPlugin
     {
         private Plugin _gitPlugin;
         
-        public Connect()
-        {
-            
-        }
         #region IDTCommandTarget Members
 
         public void QueryStatus(string commandName, vsCommandStatusTextWanted neededText, 
@@ -132,7 +126,7 @@ namespace GitPlugin
                     try
                     {
                         _gitPlugin.OutputPane.OutputString(
-                            "Error creating git menu (trying to add commands to tools menu): " + ex.ToString());
+                            "Error creating git menu (trying to add commands to tools menu): " + ex);
                         if (toolsControl == null)
                         {
                             toolsControl = menuBarCommandBar.Controls[this.GetToolsMenuName()];
@@ -141,7 +135,7 @@ namespace GitPlugin
                     }
                     catch (Exception ex2)
                     {
-                        _gitPlugin.OutputPane.OutputString("Error menu: " + ex2.ToString());
+                        _gitPlugin.OutputPane.OutputString("Error menu: " + ex2);
                     }
                 }
 
@@ -168,7 +162,7 @@ namespace GitPlugin
                 }
                 catch (Exception ex)
                 {
-                    _gitPlugin.OutputPane.OutputString("Error creating toolbar: " + ex.ToString());
+                    _gitPlugin.OutputPane.OutputString("Error creating toolbar: " + ex);
                 }
                 try
                 {
@@ -214,7 +208,7 @@ namespace GitPlugin
                 }
                 catch (Exception ex)
                 {
-                    _gitPlugin.OutputPane.OutputString("Error creating contextmenu: " + ex.ToString());
+                    _gitPlugin.OutputPane.OutputString("Error creating contextmenu: " + ex);
                 }
 
                
@@ -249,7 +243,7 @@ namespace GitPlugin
             }
             catch (Exception ex)
             {
-                this._gitPlugin.OutputPane.OutputString("Error loading plugin: " + ex.ToString());
+                this._gitPlugin.OutputPane.OutputString("Error loading plugin: " + ex);
             }
         }
 
@@ -285,7 +279,7 @@ namespace GitPlugin
             }
             catch (Exception ex)
             {
-                this._gitPlugin.OutputPane.OutputString("Error adding commands: " + ex.ToString());
+                this._gitPlugin.OutputPane.OutputString("Error adding commands: " + ex);
             }
         }
 

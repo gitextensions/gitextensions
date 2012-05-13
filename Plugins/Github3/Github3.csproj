@@ -3,16 +3,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5D0F8E21-48A2-4350-BB14-F8B64F24B948}</ProjectGuid>
+    <ProjectGuid>{B1B0C273-AB3F-48BF-92C7-DE0BE90D5870}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Github</RootNamespace>
-    <AssemblyName>Github</AssemblyName>
+    <RootNamespace>Github3</RootNamespace>
+    <AssemblyName>Github3</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,33 +33,29 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GithubSharp.Core">
-      <HintPath>..\..\Bin\GithubSharp.Core.dll</HintPath>
+    <Reference Include="Git.hub, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Bin\Git.hub.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ConfigureGithub.cs">
+    <Compile Include="Github3.cs" />
+    <Compile Include="GithubBranch.cs" />
+    <Compile Include="GithubHostedRemote.cs" />
+    <Compile Include="GithubPullRequest.cs" />
+    <Compile Include="GithubPullRequestDiscussion.cs" />
+    <Compile Include="GithubRepo.cs" />
+    <Compile Include="OAuth.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ConfigureGithub.Designer.cs">
-      <DependentUpon>ConfigureGithub.cs</DependentUpon>
+    <Compile Include="OAuth.Designer.cs">
+      <DependentUpon>OAuth.cs</DependentUpon>
     </Compile>
-    <Compile Include="GithubHostedRepository.cs" />
-    <Compile Include="GithubPlugin.cs" />
-    <Compile Include="GithubHostedRemote.cs" />
-    <Compile Include="GithubPullRequestInformation.cs" />
-    <Compile Include="GithubHostedRemoteInformation.cs" />
-    <Compile Include="MiscHelpers.cs" />
-    <Compile Include="PullRequestDiscussion.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\GitCommands\GitCommands.csproj">
@@ -71,15 +68,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ConfigureGithub.resx">
-      <DependentUpon>ConfigureGithub.cs</DependentUpon>
-      <SubType>Designer</SubType>
+    <EmbeddedResource Include="OAuth.resx">
+      <DependentUpon>OAuth.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "..\..\..\..\GitExtensions\bin\Debug"
-copy "$(SolutionDir)\bin\GithubSharp.Core.Dll" "..\..\..\..\GitExtensions\bin\Debug"</PostBuildEvent>
+copy "$(SolutionDir)\bin\Git.hub.dll" "..\..\..\..\GitExtensions\bin\Debug"
+copy "$(SolutionDir)\bin\RestSharp.dll" "..\..\..\..\GitExtensions\bin\Debug"
+</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

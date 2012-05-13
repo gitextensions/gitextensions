@@ -68,12 +68,12 @@ namespace GitUI
         private readonly TranslationString _noStagedChanges = new TranslationString("There are no staged changes");
         private readonly TranslationString _noUnstagedChanges = new TranslationString("There are no unstaged changes");
 
+        private readonly TranslationString _notOnBranchMainInstruction = new TranslationString("You are not working on a branch");
         private readonly TranslationString _notOnBranch =
-            new TranslationString("You are not working on a branch." + Environment.NewLine +
-                                  "This commit will be unreferenced when switching to another branch and can be lost." +
+            new TranslationString("This commit will be unreferenced when switching to another branch and can be lost." +
                                   Environment.NewLine + "" + Environment.NewLine + "Do you want to continue?");
-
-        private readonly TranslationString _notOnBranchCaption = new TranslationString("Not on a branch.");
+        private readonly TranslationString _notOnBranchButtons = new TranslationString("Checkout branch|Continue");
+        private readonly TranslationString _notOnBranchCaption = new TranslationString("Not on a branch");
 
         private readonly TranslationString _onlyStageChunkOfSingleFileError =
             new TranslationString("You can only use this option when selecting a single file");
@@ -161,7 +161,7 @@ namespace GitUI
 
             Unstaged.SetNoFilesText(_noUnstagedChanges.Text);
             Staged.SetNoFilesText(_noStagedChanges.Text);
-            Message.SetEmptyMessage(_enterCommitMessageHint.Text);
+            Message.WatermarkText = _enterCommitMessageHint.Text;
 
             _commitKind = commitKind;
             _editedCommit = editedCommit;
@@ -171,8 +171,6 @@ namespace GitUI
 
             Unstaged.DoubleClick += Unstaged_DoubleClick;
             Staged.DoubleClick += Staged_DoubleClick;
-
-            Unstaged.Focus();
 
             SelectedDiff.AddContextMenuEntry(null, null);
             _StageSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_stageSelectedLines.Text, StageSelectedLinesToolStripMenuItemClick);
@@ -184,23 +182,6 @@ namespace GitUI
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
 
             SelectedDiff.ContextMenuOpening += SelectedDiff_ContextMenuOpening;
-
-            Commit.Focus();
-
-            string localBranch = CalculateLocalBranch();
-            if (localBranch == null)
-            {
-                string revision = _editedCommit != null ? _editedCommit.Guid : "";
-                GitUICommands.Instance.StartCheckoutBranchDialog(revision);
-            }
-        }
-
-        private string CalculateLocalBranch()
-        {
-            string localBranch = Settings.Module.GetSelectedBranch();
-            if (localBranch.Equals("(no branch)", StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty(localBranch))
-                localBranch = null;
-            return localBranch;
         }
 
         void SelectedDiff_ContextMenuOpening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -259,10 +240,9 @@ namespace GitUI
         }
 
         /// <summary>Helper method that moves the focus to the supplied FileStatusList</summary>
-        private bool FocusFileList(FileStatusList fileStatusList)
+        private void FocusFileList(FileStatusList fileStatusList)
         {
             fileStatusList.Focus();
-            return true;
         }
 
         private bool FocusSelectedDiff()
@@ -273,7 +253,7 @@ namespace GitUI
 
         private bool FocusCommitMessage()
         {
-            Message.StartEditing();
+            Message.Focus();
             return true;
         }
 
@@ -439,7 +419,7 @@ namespace GitUI
             {
                 _gitGetUnstagedCommand = new GitCommandsInstance()
                 {
-                    SetupStartInfoCallback = (ProcessStartInfo startInfo) =>
+                    SetupStartInfoCallback = startInfo =>
                     {
                         startInfo.StandardOutputEncoding = Settings.SystemEncoding;
                         startInfo.StandardErrorEncoding = Settings.SystemEncoding;
@@ -480,12 +460,10 @@ namespace GitUI
             Cursor.Current = Cursors.Default;
         }
 
-        // TODO: unify with FormVerify, extract to common constants.
-        private const string Sha1HashPattern = @"[a-f\d]{40}";
         private void UpdateMergeHead()
         {
             var mergeHead = Settings.Module.RevParse("MERGE_HEAD");
-            IsMergeCommit = Regex.IsMatch(mergeHead, Sha1HashPattern);
+            IsMergeCommit = Regex.IsMatch(mergeHead, GitRevision.Sha1HashPattern);
         }
 
         private void InitializedStaged()
@@ -496,6 +474,8 @@ namespace GitUI
             Staged.GitItemStatuses = Settings.Module.GetStagedFiles();
             Cursor.Current = Cursors.Default;
         }
+
+        private bool LoadUnstagedOutputFirstTime = true;
 
         /// <summary>
         ///   Loads the unstaged output.
@@ -535,6 +515,17 @@ namespace GitUI
             var inTheMiddleOfConflictedMerge = Settings.Module.InTheMiddleOfConflictedMerge();
             SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
             Unstaged.SelectStoredNextIndex();
+
+            if (LoadUnstagedOutputFirstTime)
+            {
+                if (Unstaged.GitItemStatuses.Count > 0)
+                    Unstaged.Focus();
+                else if (Staged.GitItemStatuses.Count > 0)
+                    Message.Focus();
+                else
+                    Amend.Focus();
+                LoadUnstagedOutputFirstTime = false;
+            }
         }
 
         /// <summary>Returns if there are any changes at all, staged or unstaged.</summary>
@@ -694,10 +685,24 @@ namespace GitUI
             if (!ValidCommitMessage())
                 return;
 
-
-            if (Settings.Module.GetSelectedBranch().Equals("(no branch)", StringComparison.OrdinalIgnoreCase) &&
-                MessageBox.Show(this, _notOnBranch.Text, _notOnBranchCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
-                return;
+            if (Settings.Module.GetSelectedBranch().Equals("(no branch)", StringComparison.OrdinalIgnoreCase))
+            {
+                int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(this,
+                                                        _notOnBranchCaption.Text,
+                                                        _notOnBranchMainInstruction.Text,
+                                                        _notOnBranch.Text,
+                                                        _notOnBranchButtons.Text,
+                                                        true);
+                switch (idx)
+                {
+                    case 0:
+                        string revision = _editedCommit != null ? _editedCommit.Guid : "";
+                        GitUICommands.Instance.StartCheckoutBranchDialog(revision);
+                        break;
+                    case -1:
+                        return;
+                }
+            }
 
             try
             {
@@ -913,6 +918,7 @@ namespace GitUI
                     toolStripProgressBar1.Visible = true;
                     toolStripProgressBar1.Maximum = Staged.SelectedItems.Count * 2;
                     toolStripProgressBar1.Value = 0;
+                    Staged.StoreNextIndexToSelect();
 
                     var files = new List<GitItemStatus>();
                     var allFiles = new List<GitItemStatus>();
@@ -978,6 +984,7 @@ namespace GitUI
                     }
                     Staged.GitItemStatuses = stagedFiles;
                     Unstaged.GitItemStatuses = unStagedFiles;
+                    Staged.SelectStoredNextIndex();
 
                     toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
                 }
@@ -1144,7 +1151,6 @@ namespace GitUI
                 case CommitKind.Squash:
                     message = string.Format("squash! {0}", _editedCommit.Message);
                     break;
-                case CommitKind.Normal:
                 default:
                     message = Settings.Module.GetMergeMessage();
 
@@ -1291,7 +1297,7 @@ namespace GitUI
                 string diff = Settings.Module.RunGitCmd(
                      string.Format("diff --cached -z -- {0}", item));
                 var lines = diff.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
-                string subprojCommit = "Subproject commit ";
+                const string subprojCommit = "Subproject commit ";
                 var from = lines.Single(s => s.StartsWith("-" + subprojCommit)).Substring(subprojCommit.Length + 1);
                 var to = lines.Single(s => s.StartsWith("+" + subprojCommit)).Substring(subprojCommit.Length + 1);
                 if (!String.IsNullOrEmpty(from) && !String.IsNullOrEmpty(to))
@@ -1772,7 +1778,8 @@ namespace GitUI
             {
                 ToolStripMenuItem item = (ToolStripMenuItem)sender;
                 CommitTemplateItem templateItem = (CommitTemplateItem)(item.Tag);
-                Message.Text = templateItem.Text;                
+                Message.Text = templateItem.Text;
+                Message.Focus();
             }
             catch
             {

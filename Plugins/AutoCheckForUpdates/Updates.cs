@@ -51,8 +51,8 @@ namespace AutoCheckForUpdates
             var webClient = new WebClient { Proxy = WebRequest.DefaultWebProxy };
             webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
             webClient.Encoding = Encoding.UTF8;
-            webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(webClient_DownloadProgressChanged);
-            webClient.DownloadStringCompleted += new DownloadStringCompletedEventHandler(webClient_DownloadStringCompleted);
+            webClient.DownloadProgressChanged += webClient_DownloadProgressChanged;
+            webClient.DownloadStringCompleted += webClient_DownloadStringCompleted;
             webClient.DownloadStringAsync(new Uri(@"http://code.google.com/p/gitextensions/"));
         }
 
