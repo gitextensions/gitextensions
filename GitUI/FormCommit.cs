@@ -1779,7 +1779,8 @@ namespace GitUI
             {
                 ToolStripMenuItem item = (ToolStripMenuItem)sender;
                 CommitTemplateItem templateItem = (CommitTemplateItem)(item.Tag);
-                Message.Text = templateItem.Text;                
+                Message.Text = templateItem.Text;
+                Message.Focus();
             }
             catch
             {
