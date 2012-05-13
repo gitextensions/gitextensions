@@ -47,7 +47,7 @@ namespace GitImpact
         {
             impact_loader = new ImpactLoader();
             impact_loader.RespectMailmap = true; // respect the .mailmap file
-            impact_loader.Updated += new ImpactLoader.UpdateEventHandler(OnImpactUpdate);
+            impact_loader.Updated += OnImpactUpdate;
 
             authors = new Dictionary<string, ImpactLoader.DataPoint>();
             impact = new SortedDictionary<DateTime, Dictionary<string, ImpactLoader.DataPoint>>();
@@ -65,7 +65,7 @@ namespace GitImpact
             this.SetStyle(ControlStyles.AllPaintingInWmPaint |
                 ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
 
-            MouseWheel += new MouseEventHandler(ImpactControl_MouseWheel);
+            MouseWheel += ImpactControl_MouseWheel;
         }
 
         public void Stop()
@@ -148,14 +148,14 @@ namespace GitImpact
             this.scrollBar.Size = new System.Drawing.Size(150, 17);
             this.scrollBar.SmallChange = 0;
             this.scrollBar.TabIndex = 0;
-            this.scrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.OnScroll);
+            this.scrollBar.Scroll += this.OnScroll;
             // 
             // ImpactControl
             // 
             this.Controls.Add(this.scrollBar);
             this.Name = "ImpactControl";
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.OnPaint);
-            this.Resize += new System.EventHandler(this.OnResize);
+            this.Paint += this.OnPaint;
+            this.Resize += this.OnResize;
             this.ResumeLayout(false);
 
         }
@@ -265,9 +265,6 @@ namespace GitImpact
 
         private void UpdatePathsAndLabels()
         {
-            // Randomizer for the user colors
-            Random rnd = new Random();
-
             int h_max = 0;
             int x = 0;
             Dictionary<string, List<Tuple<Rectangle, int>>> author_points_dict = new Dictionary<string, List<Tuple<Rectangle, int>>>();

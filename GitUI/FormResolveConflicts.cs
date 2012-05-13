@@ -783,7 +783,7 @@ namespace GitUI
 
         public const string HotkeySettingsName = "FormMergeConflicts";
 
-        internal enum Commands : int
+        internal enum Commands
         {
             Merge,
             Rescan,

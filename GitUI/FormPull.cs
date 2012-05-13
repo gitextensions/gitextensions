@@ -269,7 +269,7 @@ namespace GitUI
                     bool messageBoxResult =
                         MessageBox.Show(this, _applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text,
                                         MessageBoxButtons.YesNo) == DialogResult.Yes;
-                    if (ShouldStashPop(messageBoxResult, process, stashed))
+                    if (ShouldStashPop(messageBoxResult, process, true))
                     {
                         new FormProcess("stash pop").ShowDialog(this);
                         MergeConflictHandler.HandleMergeConflicts(this);
@@ -397,7 +397,11 @@ namespace GitUI
 
         private string CalculateRemoteBranchName()
         {
-            return _NO_TRANSLATE_Remotes.Text + "/" + CalculateRemoteBranchNameBasedOnBranchesText();
+            string remoteBranchName = CalculateRemoteBranchNameBasedOnBranchesText();
+            if (remoteBranchName.IsNullOrEmpty())
+                return remoteBranchName;
+            else
+                return _NO_TRANSLATE_Remotes.Text + "/" + remoteBranchName;
         }
 
         private string CalculateRemoteBranchNameBasedOnBranchesText()
@@ -407,7 +411,8 @@ namespace GitUI
                 return Branches.Text;
             }
             string remoteBranchName = Settings.Module.GetSetting("branch." + branch + ".merge");
-            remoteBranchName = Settings.Module.RunGitCmd("name-rev --name-only \"" + remoteBranchName + "\"").Trim();
+            if (!remoteBranchName.IsNullOrEmpty())
+                remoteBranchName = Settings.Module.RunGitCmd("name-rev --name-only \"" + remoteBranchName + "\"").Trim();
             return remoteBranchName;
         }
 
@@ -453,11 +458,6 @@ namespace GitUI
             _NO_TRANSLATE_Remotes.Select();
 
             Text = string.Format("Pull ({0})", Settings.WorkingDir);
-        }
-
-        protected override void OnShown(EventArgs e)
-        {
-            base.OnShown(e);
         }
 
         private void FillPullSourceDropDown()
@@ -508,7 +508,7 @@ namespace GitUI
             FillPullSourceDropDown();
         }
 
-        private bool bInternalUpdate = false;
+        private bool bInternalUpdate;
 
         private void AddRemoteClick(object sender, EventArgs e)
         {

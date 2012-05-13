@@ -56,7 +56,7 @@ namespace GitCommands.Statistics
 
         private GitCommandsInstance git;
 
-        private Thread backgroundThread = null;
+        private Thread backgroundThread;
 
         ~ImpactLoader()
         {
@@ -83,8 +83,7 @@ namespace GitCommands.Statistics
             {
                 backgroundThread.Abort();
             }
-            backgroundThread = new Thread(new ThreadStart(execute));
-            backgroundThread.IsBackground = true;
+            backgroundThread = new Thread(execute) {IsBackground = true};
             backgroundThread.Start();
         }
 
@@ -129,7 +128,7 @@ namespace GitCommands.Statistics
                         continue;
 
                     // Save author in variable
-                    string author = commit.author = header[1];
+                    commit.author = header[1];
 
                     // Parse commit date
                     DateTime date = DateTime.Parse(header[0]).Date;
@@ -170,7 +169,7 @@ namespace GitCommands.Statistics
             {
                 if (Error != null)
                     Error(this, EventArgs.Empty);
-                MessageBox.Show("Cannot load commit log." + Environment.NewLine + Environment.NewLine + ex.ToString());
+                MessageBox.Show("Cannot load commit log." + Environment.NewLine + Environment.NewLine + ex);
                 return;
             }
 
