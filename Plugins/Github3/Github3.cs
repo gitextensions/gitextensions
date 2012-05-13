@@ -139,7 +139,7 @@ namespace Github3
         /// <returns></returns>
         public List<IHostedRemote> GetHostedRemotesForCurrentWorkingDirRepo()
         {
-            List<IHostedRemote> repoInfos = new List<IHostedRemote>();
+            var repoInfos = new List<IHostedRemote>();
 
             string[] remotes = GitCommands.Settings.Module.GetRemotes(false);
             foreach(string remote in remotes)
@@ -148,7 +148,7 @@ namespace Github3
                 if (string.IsNullOrEmpty(url))
                     continue;
 
-                var m = Regex.Match(url, @"git(?:@|://)github.com[:/]([^/]+)/(\w+)\.git");
+                var m = Regex.Match(url, @"git(?:@|://)github.com[:/]([^/]+)/([\w_\.]+)\.git");
                 if (!m.Success)
                     m = Regex.Match(url, @"https?://(?:[^@:]+)?(?::[^/@:]+)?@?github.com/([^/]+)/([\w_\.]+)(?:.git)?");
                 if (m.Success)
@@ -157,7 +157,6 @@ namespace Github3
                     if (!repoInfos.Contains(hostedRemote))
                         repoInfos.Add(hostedRemote);
                 }
-
             }
 
             return repoInfos;
