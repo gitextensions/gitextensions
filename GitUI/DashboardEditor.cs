@@ -24,7 +24,7 @@ namespace GitUI
             repositoryCategory.SetIcon();
         }
 
-        private bool bChangingDataSource = false;
+        private bool bChangingDataSource;
 
         public void Initialize()
         {
@@ -70,6 +70,7 @@ namespace GitUI
                 return;
 
             Repositories.RepositoryCategories.Remove((RepositoryCategory) _NO_TRANSLATE_Categories.SelectedItem);
+            Categories_SelectedIndexChanged(null, null);
         }
 
         private void Caption_TextChanged(object sender, EventArgs e)

@@ -1,5 +1,3 @@
-using System;
-
 namespace NetSpell.SpellChecker.Dictionary.Affix
 {
 	/// <summary>
@@ -7,14 +5,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
 	/// </summary>
 	public sealed class AffixUtility
 	{
-		/// <summary>
-		///     Initializes a new instance of the class
-		/// </summary>
-		public AffixUtility()
-		{
-		}
-
-		/// <summary>
+	    /// <summary>
 		///     Adds a prefix to a word
 		/// </summary>
 		/// <param name="word" type="string">

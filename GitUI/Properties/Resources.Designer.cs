@@ -62,7 +62,7 @@ namespace GitUI.Properties {
         
         public static System.Drawing.Bitmap _10 {
             get {
-                object obj = ResourceManager.GetObject("10", resourceCulture);
+                object obj = ResourceManager.GetObject("_10", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -321,7 +321,7 @@ namespace GitUI.Properties {
         
         public static System.Drawing.Bitmap _9 {
             get {
-                object obj = ResourceManager.GetObject("9", resourceCulture);
+                object obj = ResourceManager.GetObject("_9", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -398,6 +398,20 @@ namespace GitUI.Properties {
         public static string ChangeLog {
             get {
                 return ResourceManager.GetString("ChangeLog", resourceCulture);
+            }
+        }
+        
+        public static System.Drawing.Bitmap commitRed {
+            get {
+                object obj = ResourceManager.GetObject("commitRed", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap commitYellow {
+            get {
+                object obj = ResourceManager.GetObject("commitYellow", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

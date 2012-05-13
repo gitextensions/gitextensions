@@ -27,11 +27,10 @@ namespace GitUI
         #endregion
 
         public bool Plink { get; set; }
-        private bool restart = false;
+        private bool restart;
 
         //constructor for VS designer
         protected FormRemoteProcess()
-            : base()
         {
 
         }
