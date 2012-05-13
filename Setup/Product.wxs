@@ -108,6 +108,9 @@
       <Component Id="Git.hub.dll" Guid="*">
         <File Source="..\bin\Git.hub.dll"/>
       </Component>
+      <Component Id="PSTaskDialog.dll" Guid="*">
+        <File Source="..\bin\PSTaskDialog.dll"/>
+      </Component>
       <Component Id="RestSharp.dll" Guid="*">
         <File Source="..\bin\RestSharp.dll"/>
       </Component>
@@ -440,6 +443,7 @@
       <ComponentRef Id="GitCommands.dll"/>
       <ComponentRef Id="GitUI.dll"/>
       <ComponentRef Id="ICSharpCode.TextEditor.dll"/>
+      <ComponentRef Id="PSTaskDialog.dll"/>
       <ComponentRef Id="Microsoft.WindowsAPICodePack.dll"/>
       <ComponentRef Id="Microsoft.WindowsAPICodePack.Shell.dll"/>
       <ComponentRef Id="NetSpell.SpellChecker.dll"/>
