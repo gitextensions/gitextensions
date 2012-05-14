@@ -60,14 +60,14 @@ namespace GitUI
         private readonly TranslationString _binaryFileWarningCaption = new TranslationString("Warning");
 
         private readonly TranslationString _noBaseFileMergeCaption = new TranslationString("Merge");
-        
+
         private readonly TranslationString _chooseBaseFileFailedText = new TranslationString("Choose base file failed.");
         private readonly TranslationString _chooseLocalFileFailedText = new TranslationString("Choose local file failed.");
         private readonly TranslationString _chooseRemoteFileFailedText = new TranslationString("Choose remote file failed.");
 
-        private readonly TranslationString _currentFormatFilter = 
+        private readonly TranslationString _currentFormatFilter =
             new TranslationString("Current format (*.{0})");
-        private readonly TranslationString _allFilesFilter = 
+        private readonly TranslationString _allFilesFilter =
             new TranslationString("All files (*.*)");
 
 
@@ -191,7 +191,7 @@ namespace GitUI
                 if (!(extensionsSeperator > 0) || extensionsSeperator + 1 >= fileName.Length)
                     return false;
 
-                string dir = Path.GetDirectoryName(Application.ExecutablePath) + 
+                string dir = Path.GetDirectoryName(Application.ExecutablePath) +
                     Settings.PathSeparator + "Diff-Scripts" + Settings.PathSeparator;
                 if (Directory.Exists(dir))
                 {
@@ -202,7 +202,7 @@ namespace GitUI
                     {
                         string mergeScript = mergeScripts[0];
                         if (MessageBox.Show(this, string.Format(uskUseCustomMergeScript.Text,
-                            mergeScript.Replace(Settings.PathSeparator + Settings.PathSeparator.ToString(), Settings.PathSeparator.ToString())), 
+                            mergeScript.Replace(Settings.PathSeparator + Settings.PathSeparator.ToString(), Settings.PathSeparator.ToString())),
                             uskUseCustomMergeScriptCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
                             UseMergeWithScript(fileName, mergeScript, baseFileName, remoteFileName, localFileName);
@@ -392,11 +392,12 @@ namespace GitUI
             if (string.IsNullOrEmpty(mergetool) || mergetool == "kdiff3")
                 mergetoolCmd = mergetoolPath + " \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"";
 
-            int idx = mergetoolCmd.IndexOf(".exe");
+            const string executablePattern = ".exe";
+            int idx = mergetoolCmd.IndexOf(executablePattern);
             if (idx >= 0)
             {
-                mergetoolPath = mergetoolCmd.Substring(0, idx + 5).Trim(new[] { '\"', ' ' });
-                mergetoolCmd = mergetoolCmd.Substring(idx + 5);
+                mergetoolPath = mergetoolCmd.Substring(0, idx + executablePattern.Length).Trim(new[] { '\"', ' ' });
+                mergetoolCmd = mergetoolCmd.Substring(idx + executablePattern.Length);
             }
             Cursor.Current = Cursors.Default;
         }
@@ -686,7 +687,7 @@ namespace GitUI
             fileDialog.DefaultExt = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
             fileDialog.Filter = string.Format(_currentFormatFilter.Text, GitCommandHelpers.GetFileExtension(fileDialog.FileName)) + "|*." +
                                 GitCommandHelpers.GetFileExtension(fileDialog.FileName) + "|" + _allFilesFilter.Text + "|*.*";
-            
+
             if (fileDialog.ShowDialog(this) == DialogResult.OK)
             {
                 Settings.Module.HandleConflictsSaveSide(GetFileName(), fileDialog.FileName, side);
