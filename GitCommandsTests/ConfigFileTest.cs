@@ -89,13 +89,13 @@ namespace GitCommandsTests
 
             { //PERFORM TEST
                 ConfigFile configFile = new ConfigFile(GetConfigFileName());
-                configFile.SetValue("directory.first", @"c:\program files\gitextensions\gitextensions.exe");
+                configFile.SetPathValue("directory.first", @"c:\program files\gitextensions\gitextensions.exe");
                 configFile.Save();
             }
 
             {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName());
-                Assert.AreEqual(@"c:/program files/gitextensions/gitextensions.exe", configFile.GetValue("directory.first"));
+                Assert.AreEqual(@"c:/program files/gitextensions/gitextensions.exe", configFile.GetPathValue("directory.first"));
             }
         }
 
@@ -105,13 +105,13 @@ namespace GitCommandsTests
 
             { //PERFORM TEST
                 ConfigFile configFile = new ConfigFile(GetConfigFileName());
-                configFile.SetValue("directory.first", @"c:\program files\gitextensions\gitextensions.exe");
+                configFile.SetPathValue("directory.first", @"c:\program files\gitextensions\gitextensions.exe");
                 configFile.Save();
             }
 
             {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName());
-                Assert.AreEqual(@"c:/program files/gitextensions/gitextensions.exe", configFile.GetValue("directory.first"));
+                Assert.AreEqual(@"c:/program files/gitextensions/gitextensions.exe", configFile.GetPathValue("directory.first"));
             }
         }
 
@@ -131,20 +131,20 @@ namespace GitCommandsTests
             //CHECK GET CONFIG VALUE
             {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName());
-                Assert.AreEqual("test.test", configFile.GetValue("submodule.test.test.path"));
+                Assert.AreEqual("test.test", configFile.GetPathValue("submodule.test.test.path"));
             }
 
             //CHECK SET CONFIG VALUE
             {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName());
-                configFile.SetValue("submodule.test.test.path", "newvalue");
+                configFile.SetPathValue("submodule.test.test.path", "newvalue");
                 configFile.Save();
             }
 
             //CHECK WRITTEN VALUE
             {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName());
-                Assert.AreEqual("newvalue", configFile.GetValue("submodule.test.test.path"));
+                Assert.AreEqual("newvalue", configFile.GetPathValue("submodule.test.test.path"));
             }
         }
 
@@ -164,20 +164,20 @@ namespace GitCommandsTests
             //CHECK GET CONFIG VALUE
             {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName());
-                Assert.AreEqual("test.test", configFile.GetValue("submodule.test.test.path"));
+                Assert.AreEqual("test.test", configFile.GetPathValue("submodule.test.test.path"));
             }
 
             //CHECK SET CONFIG VALUE
             {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName());
-                configFile.SetValue("submodule.test.test.path", "newvalue");
+                configFile.SetPathValue("submodule.test.test.path", "newvalue");
                 configFile.Save();
             }
 
             //CHECK WRITTEN VALUE
             {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName());
-                Assert.AreEqual("newvalue", configFile.GetValue("submodule.test.test.path"));
+                Assert.AreEqual("newvalue", configFile.GetPathValue("submodule.test.test.path"));
             }
         }
 
@@ -283,6 +283,44 @@ namespace GitCommandsTests
         }
 
         [TestMethod]
+        public void NewLineTest()
+        {
+            { //TESTDATA
+                StringBuilder content = new StringBuilder();
+
+                content.AppendLine("[bugtraq]");
+                content.AppendLine("	url = http://192.168.0.1:8080/browse/%BUGID%");
+                content.AppendLine("	message = This commit fixes %BUGID%");
+                content.AppendLine("	append = true");
+                content.AppendLine("	label = Key:");
+                content.AppendLine("	number = true");
+                content.AppendLine("	logregex = \\n([A-Z][A-Z0-9]+-/d+)");
+
+                //Write test config
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
+            }
+
+            //CHECK GET CONFIG VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                Assert.AreEqual("\\n([A-Z][A-Z0-9]+-/d+)", configFile.GetValue("bugtraq.logregex"));
+            }
+
+            //CHECK SET CONFIG VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                configFile.SetValue("bugtraq.logregex", "data\\nnewline");
+                configFile.Save();
+            }
+
+            //CHECK WRITTEN VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                Assert.AreEqual("data\\nnewline", configFile.GetValue("bugtraq.logregex"));
+            }
+        }
+
+        [TestMethod]
         public void UncPathTest1()
         {
             { //TESTDATA
@@ -298,20 +336,20 @@ namespace GitCommandsTests
             //CHECK GET CONFIG VALUE
             {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName());
-                Assert.AreEqual(@"//test/", configFile.GetValue("path.unc"));
+                Assert.AreEqual(@"//test/", configFile.GetPathValue("path.unc"));
             }
 
             //CHECK SET CONFIG VALUE
             {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName());
-                configFile.SetValue("path.unc", @"//test/test2/");
+                configFile.SetPathValue("path.unc", @"//test/test2/");
                 configFile.Save();
             }
 
             //CHECK WRITTEN VALUE
             {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName());
-                Assert.AreEqual(@"//test/test2/", configFile.GetValue("path.unc"));
+                Assert.AreEqual(@"//test/test2/", configFile.GetPathValue("path.unc"));
             }
         }
 
@@ -331,20 +369,20 @@ namespace GitCommandsTests
             //CHECK GET CONFIG VALUE
             {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName());
-                Assert.AreEqual(@"\\test\", configFile.GetValue("path.unc"));
+                Assert.AreEqual(@"\\test\", configFile.GetPathValue("path.unc"));
             }
 
             //CHECK SET CONFIG VALUE
             {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName());
-                configFile.SetValue("path.unc", @"\\test\test2\");
+                configFile.SetPathValue("path.unc", @"\\test\test2\");
                 configFile.Save();
             }
 
             //CHECK WRITTEN VALUE
             {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName());
-                Assert.AreEqual(@"\\test\test2\", configFile.GetValue("path.unc"));
+                Assert.AreEqual(@"\\test\test2\", configFile.GetPathValue("path.unc"));
             }
         }
 
