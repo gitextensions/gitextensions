@@ -12,7 +12,8 @@ namespace GitUI
         private readonly TranslationString _cannotOpenFile = new TranslationString("Cannot open file: ");
         private readonly TranslationString _cannotSaveFile = new TranslationString("Cannot save file: ");
         private readonly TranslationString _error = new TranslationString("Error");
-        private bool _textIsChanged;
+        private bool _hasChanges;
+        private string _fileName;
 
         public FormEditor(string fileName)
         {
@@ -20,25 +21,19 @@ namespace GitUI
             Translate();
 
             OpenFile(fileName);
-            fileViewer.TextChanged += fileViewer_TextChanged;
-            fileViewer.TextLoaded += fileViewer_TextLoaded;
+            fileViewer.TextChanged += (s, e) => HasChanges = true;
+            fileViewer.TextLoaded += (s, e) => HasChanges = false;
         }
 
-        void fileViewer_TextChanged(object sender, EventArgs e)
+        private bool HasChanges
         {
-            // I don't care what the old value is, it ought to be set to true whatever the old value is.
-            _textIsChanged = true;
-            toolStripSaveButton.Enabled = _textIsChanged;
+            get { return _hasChanges; }
+            set
+            {
+                _hasChanges = value;
+                toolStripSaveButton.Enabled = value;
+            }
         }
-
-        void fileViewer_TextLoaded(object sender, EventArgs e)
-        {
-            //reset 'changed' flag
-            _textIsChanged = false;
-            toolStripSaveButton.Enabled = _textIsChanged;
-        }
-
-        private string _fileName;
 
         private void OpenFile(string fileName)
         {
@@ -53,7 +48,7 @@ namespace GitUI
                 Text = _fileName;
 
                 // loading a new file from disk, the text hasn't been changed yet.
-                _textIsChanged = false;
+                HasChanges = false;
             }
             catch (Exception ex)
             {
@@ -66,7 +61,7 @@ namespace GitUI
         private void FormEditor_FormClosing(object sender, FormClosingEventArgs e)
         {
             // only offer to save if there's something to save.
-            if (_textIsChanged)
+            if (HasChanges)
             {
                 var saveChangesAnswer = MessageBox.Show(this, _saveChanges.Text, _saveChangesCaption.Text,
                                          MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
@@ -122,7 +117,7 @@ namespace GitUI
                 File.WriteAllText(_fileName, fileViewer.GetText(), GitCommands.Settings.FilesEncoding);
 
                 // we've written the changes out to disk now, nothing to save.
-                _textIsChanged = false;
+                HasChanges = false;
             }
         }
 
