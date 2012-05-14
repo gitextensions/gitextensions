@@ -5,7 +5,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormEditor : GitExtensionsForm
+    public sealed partial class FormEditor : GitExtensionsForm
     {
         private readonly TranslationString _saveChanges = new TranslationString("Do you want to save changes?");
         private readonly TranslationString _saveChangesCaption = new TranslationString("Save changes");
@@ -13,14 +13,6 @@ namespace GitUI
         private readonly TranslationString _cannotSaveFile = new TranslationString("Cannot save file: ");
         private readonly TranslationString _error = new TranslationString("Error");
         private bool _textIsChanged;
-
-
-        public FormEditor()
-        {
-            InitializeComponent();
-            Translate();
-            fileViewer.TextChanged += fileViewer_TextChanged;
-        }
 
         public FormEditor(string fileName)
         {
@@ -75,29 +67,30 @@ namespace GitUI
         {
             try
             {
-                this.DialogResult = DialogResult.No;
-
-                DialogResult result = DialogResult.No;
                 // only offer to save if there's something to save.
                 if (_textIsChanged)
                 {
-                    result = MessageBox.Show(this, _saveChanges.Text, _saveChangesCaption.Text,
+                    var saveChangesAnswer = MessageBox.Show(this, _saveChanges.Text, _saveChangesCaption.Text,
                                              MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-
+                    switch (saveChangesAnswer)
+                    {
+                        case DialogResult.Yes:
+                            SaveChanges();
+                            DialogResult = DialogResult.OK;
+                            break;
+                        case DialogResult.Cancel:
+                            e.Cancel = true;
+                            return;
+                        default:
+                            DialogResult = DialogResult.Cancel;
+                            break;
+                    }
                 }
-
-
-
-                if (result == DialogResult.Yes)
+                else
                 {
-                    SaveChanges();
-                    this.DialogResult = DialogResult.Yes;
+                    DialogResult = DialogResult.Cancel;
                 }
 
-                if (result == DialogResult.Cancel)
-                {
-                    this.DialogResult = DialogResult.Cancel;
-                }
 
                 SavePosition("fileeditor");
             }
@@ -127,7 +120,7 @@ namespace GitUI
             if (!string.IsNullOrEmpty(_fileName))
             {
                 File.WriteAllText(_fileName, fileViewer.GetText(), GitCommands.Settings.FilesEncoding);
-                
+
                 // we've written the changes out to disk now, nothing to save.
                 _textIsChanged = false;
             }
