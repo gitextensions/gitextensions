@@ -1221,7 +1221,17 @@ namespace GitCommands
 
         public static bool? GetBool(string name, bool? defaultValue)
         {
-            return GetByName<bool?>(name, defaultValue, x => x.ToString().Equals(bool.TrueString));
+            return GetByName<bool?>(name, defaultValue, x => {
+                var val = x.ToString().ToLower();
+                if (val == "true") return true;
+                if (val == "false") return false;
+                return null;
+            });
+        }
+
+        public static void SetBool(string name, bool? value)
+        {
+            SetByName<bool?>(name, value, (bool? b) => b.Value ? "true" : "false");
         }
 
         public static void SetString(string name, string value)
@@ -1233,12 +1243,6 @@ namespace GitCommands
         {
             return GetByName<string>(name, defaultValue, x => x.ToString());
         }
-
-        public static void SetBool(string name, bool? value)
-        {
-            SetByName<bool?>(name, value, (bool? b) => b.Value ? bool.TrueString : bool.FalseString);
-        }
-
 
         public static string PrefixedName(string prefix, string name) 
         {
