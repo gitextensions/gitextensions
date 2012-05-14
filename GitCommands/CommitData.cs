@@ -109,7 +109,7 @@ namespace GitCommands
 
             if (info.Trim().StartsWith("fatal"))
             {
-                error = "Cannot find commit" + sha1;
+                error = "Cannot find commit " + sha1;
                 return null;
             }
 
@@ -117,7 +117,7 @@ namespace GitCommands
 
             if (index < 0)
             {
-                error = "Cannot find commit" + sha1;
+                error = "Cannot find commit " + sha1;
                 return null;
             }
             if (index >= info.Length)
