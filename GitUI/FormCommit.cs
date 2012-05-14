@@ -1796,6 +1796,24 @@ namespace GitUI
             }
         }
 
+        private void openContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Unstaged.SelectedItems.Count == 0)
+                return;
+
+            foreach (var item in Unstaged.SelectedItems)
+            {
+                var fileNames = new StringBuilder();
+                fileNames.Append((Settings.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+
+                string filePath = fileNames.ToString();
+                if (File.Exists(filePath))
+                {
+                    Process.Start("explorer.exe", "/select, " + filePath);
+                }
+            }
+        }
+
     }
 
     /// <summary>
