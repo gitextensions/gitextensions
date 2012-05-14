@@ -128,6 +128,7 @@ namespace GitUI
             this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
             this.copyFolderNameMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemStatusBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.openContainingFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.UnstagedFileContext.SuspendLayout();
             this.splitMain.Panel1.SuspendLayout();
             this.splitMain.Panel2.SuspendLayout();
@@ -163,6 +164,7 @@ namespace GitUI
             this.openToolStripMenuItem,
             this.openWithToolStripMenuItem,
             this.openWithDifftoolToolStripMenuItem,
+            this.openContainingFolderToolStripMenuItem,
             this.toolStripSeparator4,
             this.editFileToolStripMenuItem,
             this.deleteFileToolStripMenuItem,
@@ -1016,6 +1018,13 @@ namespace GitUI
             // 
             this.gitItemStatusBindingSource.DataSource = typeof(GitCommands.GitItemStatus);
             // 
+            // openContainingFolderToolStripMenuItem
+            // 
+            this.openContainingFolderToolStripMenuItem.Name = "openContainingFolderToolStripMenuItem";
+            this.openContainingFolderToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.openContainingFolderToolStripMenuItem.Text = "Open containing folder";
+            this.openContainingFolderToolStripMenuItem.Click += new System.EventHandler(this.openContainingFolderToolStripMenuItem_Click);
+            // 
             // FormCommit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -1156,5 +1165,6 @@ namespace GitUI
         private ToolStripSeparator toolStripMenuItem1;
         private ToolStripMenuItem generateListOfChangesInSubmodulesChangesToolStripMenuItem;
         private ToolStripDropDownButton commitTemplatesToolStripMenuItem;
+        private ToolStripMenuItem openContainingFolderToolStripMenuItem;
     }
 }
