@@ -65,42 +65,42 @@ namespace GitUI
 
         private void FormEditor_FormClosing(object sender, FormClosingEventArgs e)
         {
-            try
+            // only offer to save if there's something to save.
+            if (_textIsChanged)
             {
-                // only offer to save if there's something to save.
-                if (_textIsChanged)
+                var saveChangesAnswer = MessageBox.Show(this, _saveChanges.Text, _saveChangesCaption.Text,
+                                         MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                switch (saveChangesAnswer)
                 {
-                    var saveChangesAnswer = MessageBox.Show(this, _saveChanges.Text, _saveChangesCaption.Text,
-                                             MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                    switch (saveChangesAnswer)
-                    {
-                        case DialogResult.Yes:
+                    case DialogResult.Yes:
+                        try
+                        {
                             SaveChanges();
-                            DialogResult = DialogResult.OK;
-                            break;
-                        case DialogResult.Cancel:
-                            e.Cancel = true;
-                            return;
-                        default:
-                            DialogResult = DialogResult.Cancel;
-                            break;
-                    }
+                        }
+                        catch (Exception ex)
+                        {
+                            if (MessageBox.Show(this, _cannotSaveFile.Text + Environment.NewLine + ex.Message, _error.Text, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.Cancel)
+                            {
+                                e.Cancel = true;
+                                return;
+                            }
+                        }
+                        DialogResult = DialogResult.OK;
+                        break;
+                    case DialogResult.Cancel:
+                        e.Cancel = true;
+                        return;
+                    default:
+                        DialogResult = DialogResult.Cancel;
+                        break;
                 }
-                else
-                {
-                    DialogResult = DialogResult.Cancel;
-                }
-
-
-                SavePosition("fileeditor");
             }
-            catch (Exception ex)
+            else
             {
-                if (MessageBox.Show(this, _cannotSaveFile.Text + Environment.NewLine + ex.Message, _error.Text, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.Cancel)
-                {
-                    e.Cancel = true;
-                }
+                DialogResult = DialogResult.Cancel;
             }
+
+            SavePosition("fileeditor");
         }
 
         private void toolStripSaveButton_Click(object sender, EventArgs e)
@@ -124,6 +124,16 @@ namespace GitUI
                 // we've written the changes out to disk now, nothing to save.
                 _textIsChanged = false;
             }
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Escape)
+            {
+                Close();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
         }
     }
 }
