@@ -68,12 +68,12 @@ namespace GitUI
         private readonly TranslationString _noStagedChanges = new TranslationString("There are no staged changes");
         private readonly TranslationString _noUnstagedChanges = new TranslationString("There are no unstaged changes");
 
+        private readonly TranslationString _notOnBranchMainInstruction = new TranslationString("You are not working on a branch");
         private readonly TranslationString _notOnBranch =
-            new TranslationString("You are not working on a branch." + Environment.NewLine +
-                                  "This commit will be unreferenced when switching to another branch and can be lost." +
+            new TranslationString("This commit will be unreferenced when switching to another branch and can be lost." +
                                   Environment.NewLine + "" + Environment.NewLine + "Do you want to continue?");
-
-        private readonly TranslationString _notOnBranchCaption = new TranslationString("Not on a branch.");
+        private readonly TranslationString _notOnBranchButtons = new TranslationString("Checkout branch|Continue");
+        private readonly TranslationString _notOnBranchCaption = new TranslationString("Not on a branch");
 
         private readonly TranslationString _onlyStageChunkOfSingleFileError =
             new TranslationString("You can only use this option when selecting a single file");
@@ -182,21 +182,6 @@ namespace GitUI
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
 
             SelectedDiff.ContextMenuOpening += SelectedDiff_ContextMenuOpening;
-
-            string localBranch = CalculateLocalBranch();
-            if (localBranch == null)
-            {
-                string revision = _editedCommit != null ? _editedCommit.Guid : "";
-                GitUICommands.Instance.StartCheckoutBranchDialog(revision);
-            }
-        }
-
-        private string CalculateLocalBranch()
-        {
-            string localBranch = Settings.Module.GetSelectedBranch();
-            if (localBranch.Equals("(no branch)", StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty(localBranch))
-                localBranch = null;
-            return localBranch;
         }
 
         void SelectedDiff_ContextMenuOpening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -700,10 +685,24 @@ namespace GitUI
             if (!ValidCommitMessage())
                 return;
 
-
-            if (Settings.Module.GetSelectedBranch().Equals("(no branch)", StringComparison.OrdinalIgnoreCase) &&
-                MessageBox.Show(this, _notOnBranch.Text, _notOnBranchCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
-                return;
+            if (Settings.Module.GetSelectedBranch().Equals("(no branch)", StringComparison.OrdinalIgnoreCase))
+            {
+                int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(this,
+                                                        _notOnBranchCaption.Text,
+                                                        _notOnBranchMainInstruction.Text,
+                                                        _notOnBranch.Text,
+                                                        _notOnBranchButtons.Text,
+                                                        true);
+                switch (idx)
+                {
+                    case 0:
+                        string revision = _editedCommit != null ? _editedCommit.Guid : "";
+                        GitUICommands.Instance.StartCheckoutBranchDialog(revision);
+                        break;
+                    case -1:
+                        return;
+                }
+            }
 
             try
             {
@@ -1779,7 +1778,8 @@ namespace GitUI
             {
                 ToolStripMenuItem item = (ToolStripMenuItem)sender;
                 CommitTemplateItem templateItem = (CommitTemplateItem)(item.Tag);
-                Message.Text = templateItem.Text;                
+                Message.Text = templateItem.Text;
+                Message.Focus();
             }
             catch
             {

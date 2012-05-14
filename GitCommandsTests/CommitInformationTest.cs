@@ -10,6 +10,7 @@ namespace GitCommandsTests
     [TestClass]
     public class CommitInformationTest
     {
+
         [TestMethod]
         public void CanCreateCommitInformationFromFormatedData()
         {
@@ -49,6 +50,29 @@ namespace GitCommandsTests
             
             Assert.AreEqual(expectedHeader,commitInformation.Header);
             Assert.AreEqual(expectedBody, commitInformation.Body);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void CanCreateCommitInformationFromFormatedDataThrowsException()
+        {
+            CommitInformation.GetCommitInfo(data: null);
+        }
+
+        [TestMethod]
+        public void GetCommitInfoTestWhenDataIsNull()
+        {
+            var actualResult = CommitInformation.GetCommitInfo(new GitModule(""), "fakesha1");
+            Assert.AreEqual("Cannot find commit fakesha1", actualResult.Header);
+        }
+
+        [TestMethod]
+        public void GetAllBranchesWhichContainGivenCommitTestReturnsEmptyList()
+        {
+            var actualResult = CommitInformation.GetAllBranchesWhichContainGivenCommit("fakesha1", false, false);
+
+            Assert.IsNotNull(actualResult);
+            Assert.IsTrue(!actualResult.Any());
         }
     }
 }

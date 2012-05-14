@@ -105,9 +105,15 @@
       <Component Id="ICSharpCode.SharpZipLib.dll" Guid="*">
         <File Source="..\bin\ICSharpCode.SharpZipLib.dll"/>
       </Component>
-      <!--Component Id="GithubSharp.Core.dll" Guid="*">
-        <File Source="..\bin\GithubSharp.Core.dll"/>
-      </Component-->
+      <Component Id="Git.hub.dll" Guid="*">
+        <File Source="..\bin\Git.hub.dll"/>
+      </Component>
+      <Component Id="PSTaskDialog.dll" Guid="*">
+        <File Source="..\bin\PSTaskDialog.dll"/>
+      </Component>
+      <Component Id="RestSharp.dll" Guid="*">
+        <File Source="..\bin\RestSharp.dll"/>
+      </Component>
       <Component Id="NetSpell.SpellChecker.dll" Guid="*">
         <File Source="..\GitExtensions\bin\Release\NetSpell.SpellChecker.dll"/>
       </Component>
@@ -180,9 +186,9 @@
       <Component Id="Gource.dll" Guid="*">
         <File Source="..\Plugins\Gource\bin\Release\Gource.dll"/>
       </Component>
-      <!--Component Id="Github.dll" Guid="*">
-        <File Source="..\Plugins\Github\bin\Release\Github.dll"/>
-      </Component-->
+      <Component Id="Github3.dll" Guid="*">
+        <File Source="..\Plugins\Github3\bin\Release\Github3.dll"/>
+      </Component>
       <Component Id="FindLargeFiles.dll" Guid="*">
         <File Source="..\Plugins\FindLargeFiles\bin\Release\FindLargeFiles.dll"/>
       </Component>      
@@ -437,6 +443,7 @@
       <ComponentRef Id="GitCommands.dll"/>
       <ComponentRef Id="GitUI.dll"/>
       <ComponentRef Id="ICSharpCode.TextEditor.dll"/>
+      <ComponentRef Id="PSTaskDialog.dll"/>
       <ComponentRef Id="Microsoft.WindowsAPICodePack.dll"/>
       <ComponentRef Id="Microsoft.WindowsAPICodePack.Shell.dll"/>
       <ComponentRef Id="NetSpell.SpellChecker.dll"/>
@@ -476,10 +483,11 @@
         <Feature Id="FindLargeFiles" Title="Find large files" Level="1">
           <ComponentRef Id="FindLargeFiles.dll"/>
         </Feature>
-        <!--Feature Id="Github" Title="Github integration" Level="1">
-          <ComponentRef Id="Github.dll"/>
-          <ComponentRef Id="GithubSharp.Core.dll"/>
-        </Feature-->
+        <Feature Id="Github" Title="Github integration" Level="1">
+          <ComponentRef Id="Github3.dll"/>
+          <ComponentRef Id="Git.hub.dll"/>
+          <ComponentRef Id="RestSharp.dll"/>
+        </Feature>
         <Feature Id="Gource" Title="Gource visualization" Level="1">
           <ComponentRef Id="Gource.dll"/>
           <ComponentRef Id="ICSharpCode.SharpZipLib.dll"/>
