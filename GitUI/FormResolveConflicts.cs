@@ -267,7 +267,7 @@ namespace GitUI
                 if (Directory.Exists(Settings.WorkingDir + filename) && !File.Exists(Settings.WorkingDir + filename))
                 {
                     var submoduleConfig = new ConfigFile(Settings.WorkingDir + ".gitmodules");
-                    if (submoduleConfig.GetConfigSections().Any(configSection => configSection.GetValue("path").Trim().Equals(filename.Trim())))
+                    if (submoduleConfig.GetConfigSections().Any(configSection => configSection.GetPathValue("path").Trim().Equals(filename.Trim())))
                     {
                         if (MessageBox.Show(this, mergeConflictIsSubmodule.Text, mergeConflictIsSubmoduleCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                         {
@@ -385,9 +385,9 @@ namespace GitUI
             }
             Cursor.Current = Cursors.WaitCursor;
 
-            mergetoolCmd = Settings.Module.GetEffectiveSetting("mergetool." + mergetool + ".cmd");
+            mergetoolCmd = Settings.Module.GetEffectivePathSetting(string.Format("mergetool.{0}.cmd", mergetool));
 
-            mergetoolPath = Settings.Module.GetEffectiveSetting("mergetool." + mergetool + ".path");
+            mergetoolPath = Settings.Module.GetEffectivePathSetting(string.Format("mergetool.{0}.path", mergetool));
 
             if (string.IsNullOrEmpty(mergetool) || mergetool == "kdiff3")
                 mergetoolCmd = mergetoolPath + " \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"";

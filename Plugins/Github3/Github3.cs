@@ -144,7 +144,7 @@ namespace Github3
             string[] remotes = GitCommands.Settings.Module.GetRemotes(false);
             foreach(string remote in remotes)
             {
-                var url = GitCommands.Settings.Module.GetSetting("remote." + remote + ".url");
+                var url = GitCommands.Settings.Module.GetSetting(string.Format("remote.{0}.url", remote));
                 if (string.IsNullOrEmpty(url))
                     continue;
 
