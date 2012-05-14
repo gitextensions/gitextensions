@@ -123,12 +123,17 @@ namespace GitUI
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (keyData == Keys.Escape)
+            switch (keyData)
             {
-                Close();
-                return true;
+                case Keys.Escape:
+                    Close();
+                    return true;
+                case Keys.Control | Keys.S:
+                    SaveChanges();
+                    return true;
+                default:
+                    return base.ProcessCmdKey(ref msg, keyData);
             }
-            return base.ProcessCmdKey(ref msg, keyData);
         }
     }
 }
