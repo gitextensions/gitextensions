@@ -405,7 +405,7 @@ namespace GitUI
 
             EnableLoadSshButton();
 
-            var pushSettingValue = Settings.Module.GetSetting("remote." + _NO_TRANSLATE_Remotes.Text + ".push");
+            var pushSettingValue = Settings.Module.GetSetting(string.Format("remote.{0}.push", _NO_TRANSLATE_Remotes.Text));
 
             if (PullFromRemote.Checked && !string.IsNullOrEmpty(pushSettingValue))
             {

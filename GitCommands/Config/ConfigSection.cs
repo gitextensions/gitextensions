@@ -45,6 +45,29 @@ namespace GitCommands.Config
         public string SectionName { get; set; }
         public string SubSection { get; set; }
         public bool SubSectionCaseSensitive { get; set; }
+        
+        internal static string UnescapeString(string value)
+        {
+            // The .gitconfig escapes some character sequences -> 
+            // \" = "
+            // \\ = \
+            return value.Replace("\\\"", "\"").Replace("\\\\", "\\");
+        }
+
+        internal static string EscapeString(string path)
+        {
+            // The .gitconfig escapes some character sequences
+            path = path.Replace("\"", "$QUOTE$");
+
+            path = path.Trim();
+
+            if (path.StartsWith("\\\\")) //for using unc paths -> these need to be backward slashes
+                path = path.Replace("\\", "\\\\");
+            else //for directories -> git only supports forward slashes
+                path = path.Replace('\\', '/');
+
+            return path.Replace("$QUOTE$", "\\\"");
+        }
 
         public void SetValue(string key, string value)
         {
@@ -52,6 +75,11 @@ namespace GitCommands.Config
                 Keys.Remove(key);
             else
                 Keys[key] = new List<string> {value};
+        }
+
+        public void SetPathValue(string setting, string value)
+        {
+            SetValue(setting, EscapeString(value));
         }
 
         public void AddValue(string key, string value)
@@ -65,6 +93,11 @@ namespace GitCommands.Config
         public string GetValue(string key)
         {
             return Keys.ContainsKey(key) && Keys[key].Count > 0 ? Keys[key][0] : string.Empty;
+        }
+
+        public string GetPathValue(string setting)
+        {
+            return UnescapeString(GetValue(setting));
         }
 
         public IList<string> GetValues(string key)
