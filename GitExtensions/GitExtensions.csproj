@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\FxCop.targets" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -109,6 +109,10 @@
       <Project>{921F0443-C3A1-4A09-82E8-C4AFB9654943}</Project>
       <Name>DeleteUnusedBranches</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Plugins\FindLargeFiles\FindLargeFiles.csproj">
+      <Project>{F261BCD1-F5F7-4664-A229-E52032E6E9FD}</Project>
+      <Name>FindLargeFiles</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Plugins\Github3\Github3.csproj">
       <Project>{B1B0C273-AB3F-48BF-92C7-DE0BE90D5870}</Project>
       <Name>Github3</Name>
@@ -136,10 +140,6 @@
     <ProjectReference Include="..\ResourceManager\ResourceManager.csproj">
       <Project>{D3440FD7-AFC5-4351-8741-6CDBF15CE944}</Project>
       <Name>ResourceManager</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Plugins\FindLargeFiles\FindLargeFiles.csproj">
-      <Project>{F261BCD1-F5F7-4664-A229-E52032E6E9FD}</Project>
-      <Name>FindLargeFiles</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
