@@ -19,24 +19,27 @@ namespace GitUI
         }
 
         public FormCheckoutBranch(string branch, bool remote)
-            : this(branch, remote, null)
+            : this()
         {
-        }
-
-        public FormCheckoutBranch(string branch, bool remote, string containRevison)
-        {
-            InitializeComponent();
-            Translate();
-
-            Initialize();
-
             LocalBranch.Checked = !remote;
             Remotebranch.Checked = remote;
 
             Branches.Text = branch;
+        }
+
+        public FormCheckoutBranch(string branch, bool remote, string containRevison)
+            : this(branch, remote)
+        {
             _containRevison = containRevison;
         }
 
+
+        public FormCheckoutBranch(string branch, bool remote, string containRevison, bool force)
+            : this(branch, remote, containRevison)
+        {
+            Force.Checked = force;
+        }
+        
         private void Initialize()
         {
             Branches.DisplayMember = "Name";
