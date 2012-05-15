@@ -287,9 +287,10 @@ namespace GitUI
             return StartCheckoutRevisionDialog(null);
         }
 
-        public bool CheckForDirtyDir(IWin32Window owner, out bool needRefresh)
+        public bool CheckForDirtyDir(IWin32Window owner, out bool needRefresh, out bool force)
         {
             needRefresh = false;
+            force = false;
             if (!Settings.DirtyDirWarnBeforeCheckoutBranch || Settings.Module.GitStatus(UntrackedFilesMode.All, IgnoreSubmodulesMode.Default).Count == 0)
                 return false;
             switch (new FormDirtyDirWarn().ShowDialog(owner))
@@ -302,6 +303,9 @@ namespace GitUI
                 case DialogResult.Abort:
                     needRefresh = StartCommitDialog(owner);
                     return true;
+                case DialogResult.Retry:
+                    force = true;
+                    return false;
                 default:
                     return false;
             }
@@ -323,10 +327,11 @@ namespace GitUI
                 return false;
 
             bool needRefresh;
-            if (CheckForDirtyDir(owner, out needRefresh))
+            bool force;
+            if (CheckForDirtyDir(owner, out needRefresh, out force))
                 return needRefresh;
 
-            var form = new FormCheckoutBranch(branch, remote, containRevison);
+            var form = new FormCheckoutBranch(branch, remote, containRevison, force);
             form.ShowDialog(owner);
 
             InvokeEvent(owner, PostCheckoutBranch);
@@ -368,10 +373,11 @@ namespace GitUI
                 return false;
 
             bool needRefresh;
-            if (CheckForDirtyDir(owner, out needRefresh))
+            bool force;
+            if (CheckForDirtyDir(owner, out needRefresh, out force))
                 return needRefresh;
 
-            var form = new FormCheckoutRemoteBranch(branch);
+            var form = new FormCheckoutRemoteBranch(branch, force);
             form.ShowDialog(owner);
 
             InvokeEvent(owner, PostCheckoutBranch);
