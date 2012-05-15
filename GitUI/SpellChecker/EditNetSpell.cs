@@ -139,22 +139,28 @@ namespace GitUI.SpellChecker
         {
             _customUnderlines.IllFormedLines.Clear();
             _customUnderlines.Lines.Clear();
-            try
-            {
-                if (_spelling != null && TextBox.Text.Length < 5000)
-                {
-                    _spelling.Text = TextBox.Text;
-                    _spelling.ShowDialog = false;
 
-                    if (File.Exists(_spelling.Dictionary.DictionaryFile))
-                        _spelling.SpellCheck();
-                }
-            }
-            catch (Exception ex)
+            //Do not check spelling of watermark text
+            if (!IsWatermarkShowing)
             {
-                Trace.WriteLine(ex);
+                try
+                {
+                    if (_spelling != null && TextBox.Text.Length < 5000)
+                    {
+                        _spelling.Text = TextBox.Text;
+                        _spelling.ShowDialog = false;
+
+                        if (File.Exists(_spelling.Dictionary.DictionaryFile))
+                            _spelling.SpellCheck();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine(ex);
+                }
+                MarkLines();
             }
-            MarkLines();
+
             TextBox.Refresh();
         }
 
