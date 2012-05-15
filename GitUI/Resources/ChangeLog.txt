@@ -1,6 +1,9 @@
 ﻿Changelog
 =========
 
+Version 2.33
+	
+
 Version 2.32
 	Fixed issue 85: http authentication support
 	Fixed issue 605: submodule improvements
