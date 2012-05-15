@@ -71,12 +71,12 @@ BEGIN
         BEGIN
             VALUE "Git Extensions", "\0"
             VALUE "FileDescription", "Git Extensions\0"
-            VALUE "FileVersion", "2, 30\0"
+            VALUE "FileVersion", "2, 33\0"
             VALUE "InternalName", "Git Extensions\0"
             VALUE "LegalCopyright", "Copyright 2012\0"
             VALUE "OriginalFilename", "GitExtensionsShellExt.dll\0"
             VALUE "ProductName", "Git Extensions\0"
-            VALUE "ProductVersion", "2, 30\0"
+            VALUE "ProductVersion", "2, 33\0"
             VALUE "OLESelfRegister", "\0"
         END
     END
