@@ -348,7 +348,10 @@ namespace GitUI
             List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
 
             if (r == null || !r.Path.Equals(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
+            {
                 Repositories.AddMostRecentRepository(Settings.WorkingDir);
+                r = Repositories.RepositoryHistory.Repositories[0];
+            }
 
             using (var graphics = CreateGraphics())
             {
