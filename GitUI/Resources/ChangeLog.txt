@@ -2,8 +2,12 @@
 =========
 
 Version 2.33
+	Fixed issue 922: error during merge conflict resolve
+	Fixed issue 951: install Git Extensions into 'All Progams' instead of 'All Programs\Git Extensions'
+	Fixed issue 954: improve RSS feed deletion
+	Fixed issue 955: GitHub plugin fixed for GitHub api 3
+	Fixed issue 965: integrated text editor usability improvements
 	
-
 Version 2.32
 	Fixed issue 85: http authentication support
 	Fixed issue 605: submodule improvements
