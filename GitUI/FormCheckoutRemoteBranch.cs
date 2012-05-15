@@ -39,13 +39,19 @@ namespace GitUI
             Initialize();
         }
 
-        public FormCheckoutRemoteBranch(string branch, bool force)
+        public FormCheckoutRemoteBranch(string branch, bool resetLocalBranch)
             : this(branch)
         {
-            if (force)
+            if (resetLocalBranch)
                 rbResetBranch.Checked = true;
             else
                 rbCreateBranch.Checked = true;
+        }
+
+        public FormCheckoutRemoteBranch(string branch, bool resetLocalBranch, bool force)
+            : this(branch, resetLocalBranch)
+        {
+            Force.Checked = force;
         }
 
         private void Initialize()
@@ -80,6 +86,9 @@ namespace GitUI
 
                 if (cbMerge.Checked)
                     command += " -m";
+
+                if (Force.Checked)
+                    command += " --force";
 
                 command += " \"" + _branch + "\"";
                 var form = new FormProcess(command);
