@@ -131,7 +131,7 @@ namespace GitCommands
             return commitInformation;
         }
 
-        public const string LogFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N";
+        public const string LogFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N"; 
 
         /// <summary>
         /// Creates a CommitData object from formated commit info data from git.  The string passed in should be

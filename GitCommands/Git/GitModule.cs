@@ -115,6 +115,12 @@ namespace GitCommands
             return configFile.GetValue(setting);
         }
 
+        public string GetGlobalPathSetting(string setting)
+        {
+            var configFile = GitCommandHelpers.GetGlobalConfig();
+            return configFile.GetPathValue(setting);
+        }
+
         public void SetGlobalSetting(string setting, string value)
         {
             var configFile = GitCommandHelpers.GetGlobalConfig();
@@ -122,6 +128,13 @@ namespace GitCommands
             configFile.Save();
         }
 
+        public void SetGlobalPathSetting(string setting, string value)
+        {
+            var configFile = GitCommandHelpers.GetGlobalConfig();
+            configFile.SetPathValue(setting, value);
+            configFile.Save();
+        }
+        
         public static string FindGitWorkingDir(string startDir)
         {
             if (string.IsNullOrEmpty(startDir))
@@ -438,12 +451,9 @@ namespace GitCommands
 
         public void EditNotes(string revision)
         {
-            if (GitCommandHelpers.GetGlobalConfig().GetValue("core.editor").ToLower().Contains("gitextensions") ||
-                GetLocalConfig().GetValue("core.editor").ToLower().Contains("gitextensions") ||
-                GitCommandHelpers.GetGlobalConfig().GetValue("core.editor").ToLower().Contains("notepad") ||
-                GetLocalConfig().GetValue("core.editor").ToLower().Contains("notepad") ||
-                GitCommandHelpers.GetGlobalConfig().GetValue("core.editor").ToLower().Contains("notepad++") ||
-                GetLocalConfig().GetValue("core.editor").ToLower().Contains("notepad++"))
+            string editor = GetEffectivePathSetting("core.editor").ToLower();
+            if (editor.Contains("gitextensions") || editor.Contains("notepad") ||
+                editor.Contains("notepad++"))
             {
                 RunGitCmd("notes edit " + revision);
             }
@@ -545,9 +555,8 @@ namespace GitCommands
             using (var ms = (MemoryStream)GetFileStream(blob)) //Ugly, has implementation info.
             {
                 ConfigFile localConfig = GetLocalConfig();
-                bool convertcrlf = localConfig.HasValue("core.autocrlf")
-                    ? localConfig.GetValue("core.autocrlf").Equals("true", StringComparison.OrdinalIgnoreCase)
-                    : GitCommandHelpers.GetGlobalConfig().GetValue("core.autocrlf").Equals("true", StringComparison.OrdinalIgnoreCase);
+                string autocrlf = Settings.Module.GetEffectiveSetting("core.autocrlf").ToLower();
+                bool convertcrlf = autocrlf == "true";
 
                 byte[] buf = ms.ToArray();
                 if (convertcrlf)
@@ -884,13 +893,13 @@ namespace GitCommands
         public string GetSubmoduleRemotePath(string name)
         {
             var configFile = new ConfigFile(_workingdir + ".gitmodules");
-            return configFile.GetValue("submodule." + name.Trim() + ".url").Trim();
+            return configFile.GetPathValue(string.Format("submodule.{0}.url", name.Trim())).Trim();
         }
 
         public string GetSubmoduleLocalPath(string name)
         {
             var configFile = new ConfigFile(_workingdir + ".gitmodules");
-            return configFile.GetValue("submodule." + name.Trim() + ".path").Trim();
+            return configFile.GetPathValue(string.Format("submodule.{0}.path", name.Trim())).Trim();
         }
 
         public string GetSubmoduleFullPath(string name)
@@ -946,7 +955,7 @@ namespace GitCommands
                 var configFile = new ConfigFile(superprojectPath + ".gitmodules");
                 foreach (ConfigSection configSection in configFile.GetConfigSections())
                 {
-                    if (configSection.GetValue("path") == localPath)
+                    if (configSection.GetPathValue("path") == localPath)
                     {
                         submoduleName = configSection.SubSection;
                         return superprojectPath;
@@ -1125,7 +1134,7 @@ namespace GitCommands
                 !GitCommandHelpers.Plink())
                 return "";
 
-            return GetSetting("remote." + remote + ".puttykeyfile");
+            return GetPathSetting(string.Format("remote.{0}.puttykeyfile", remote));
         }
 
         public string Fetch(string remote, string branch)
@@ -1200,7 +1209,7 @@ namespace GitCommands
                 remoteBranchArguments = "+refs/heads/" + remoteBranch + "";
 
             string localBranchArguments;
-            var remoteUrl = GetSetting("remote." + remote + ".url");
+            var remoteUrl = GetPathSetting(string.Format("remote.{0}.url", remote));
 
             if (PathIsUrl(remote) && !string.IsNullOrEmpty(localBranch) && string.IsNullOrEmpty(remoteUrl))
                 localBranchArguments = ":refs/heads/" + localBranch + "";
@@ -1456,6 +1465,12 @@ namespace GitCommands
             return configFile.GetValue(setting);
         }
 
+        public string GetPathSetting(string setting)
+        {
+            var configFile = GetLocalConfig();
+            return configFile.GetPathValue(setting);
+        }
+
         public string GetEffectiveSetting(string setting)
         {
             var localConfig = GetLocalConfig();
@@ -1463,6 +1478,15 @@ namespace GitCommands
                 return localConfig.GetValue(setting);
 
             return GitCommandHelpers.GetGlobalConfig().GetValue(setting);
+        }
+
+        public string GetEffectivePathSetting(string setting)
+        {
+            var localConfig = GetLocalConfig();
+            if (localConfig.HasValue(setting))
+                return localConfig.GetPathValue(setting);
+
+            return GitCommandHelpers.GetGlobalConfig().GetPathValue(setting);
         }
 
         public void UnsetSetting(string setting)
@@ -1476,6 +1500,13 @@ namespace GitCommands
         {
             var configFile = GetLocalConfig();
             configFile.SetValue(setting, value);
+            configFile.Save();
+        }
+
+        public void SetPathSetting(string setting, string value)
+        {
+            var configFile = GetLocalConfig();
+            configFile.SetPathValue(setting, value);
             configFile.Save();
         }
 
