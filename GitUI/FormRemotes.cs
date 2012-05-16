@@ -153,7 +153,7 @@ namespace GitUI
                 }
 
                 Settings.Module.SetSetting(string.Format("remote.{0}.url", RemoteName.Text), Url.Text);
-                Settings.Module.SetSetting(string.Format("remote.{0}.puttykeyfile", RemoteName.Text), PuttySshKey.Text);
+                Settings.Module.SetPathSetting(string.Format("remote.{0}.puttykeyfile", RemoteName.Text), PuttySshKey.Text);
                 if (checkBoxSepPushUrl.Checked)
                     Settings.Module.SetSetting(string.Format("remote.{0}.pushurl", RemoteName.Text), comboBoxPushUrl.Text);
                 else
@@ -296,7 +296,7 @@ namespace GitUI
             if (string.IsNullOrEmpty(head.TrackingRemote) || string.IsNullOrEmpty(currentSelectedRemote))
                 return;
 
-            var remoteUrl = Settings.Module.GetSetting("remote." + currentSelectedRemote + ".url");
+            var remoteUrl = Settings.Module.GetSetting(string.Format("remote.{0}.url", currentSelectedRemote));
 
             if (string.IsNullOrEmpty(remoteUrl))
                 return;
@@ -356,7 +356,7 @@ namespace GitUI
                 checkBoxSepPushUrl.Checked = true;
 
             PuttySshKey.Text =
-                Settings.Module.GetSetting(string.Format("remote.{0}.puttykeyfile", RemoteName.Text));
+                Settings.Module.GetPathSetting(string.Format("remote.{0}.puttykeyfile", RemoteName.Text));
         }
 
         private void UpdateBranchClick(object sender, EventArgs e)
