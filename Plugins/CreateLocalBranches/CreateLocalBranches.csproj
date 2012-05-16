@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="CreateLocalBranchesForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -48,7 +51,6 @@
       <DependentUpon>CreateLocalBranchesForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CreateLocalBranchesPlugin.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
