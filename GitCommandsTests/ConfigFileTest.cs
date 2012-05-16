@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GitCommands.Config;
@@ -48,6 +49,66 @@ namespace GitCommandsTests
             ConfigFile configFile = new ConfigFile(GetConfigFileName() + "\\");
             
             Assert.IsNotNull(configFile);
+        }
+
+        [TestMethod]
+        public void TestWithInexistentFile()
+        {
+            try
+            {
+                ConfigFile file = new ConfigFile(null);
+                file.GetValue("inexistentSetting");
+            }
+            catch (Exception e)
+            {
+                Assert.AreEqual("invalid setting name: inexistentsetting", e.Message.ToLower());
+            }
+            
+        }
+
+        [TestMethod]
+        public void TestHasSection()
+        {
+            { //TESTDATA
+                //Write test config
+                File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), Encoding.UTF8);
+            }
+            ConfigFile file = new ConfigFile(GetConfigFileName());
+            Assert.IsTrue(file.HasConfigSection("section1"));
+            Assert.IsFalse(file.HasConfigSection("inexistent.section"));
+            Assert.IsFalse(file.HasConfigSection("inexistent"));
+        }
+
+        [TestMethod]
+        public void TestHasValue()
+        {
+            { //TESTDATA
+                //Write test config
+                File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), Encoding.UTF8);
+            }
+            ConfigFile file = new ConfigFile(GetConfigFileName());
+            Assert.IsTrue(file.HasValue("section1.key1"));
+        }
+
+        [TestMethod]
+        public void TestRemoveSection()
+        {
+            { //TESTDATA
+                //Write test config
+                File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), Encoding.UTF8);
+            }
+            ConfigFile configFile = new ConfigFile(GetConfigFileName());
+            Assert.IsTrue(configFile.GetConfigSections().Count == 3);
+            configFile.RemoveConfigSection("section1");
+            Assert.IsTrue(configFile.GetConfigSections().Count == 2);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void TestWithNullSettings()
+        {
+            ConfigFile file = new ConfigFile(GetConfigFileName());
+            file.GetValue(null);
         }
 
         [TestMethod]
