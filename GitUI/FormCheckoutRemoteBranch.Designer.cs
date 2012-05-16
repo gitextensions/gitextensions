@@ -35,8 +35,10 @@ namespace GitUI
             this.rbResetBranch = new System.Windows.Forms.RadioButton();
             this.rbCreateBranch = new System.Windows.Forms.RadioButton();
             this.rbDontCreate = new System.Windows.Forms.RadioButton();
-            this.cbMerge = new System.Windows.Forms.CheckBox();
-            this.Force = new System.Windows.Forms.CheckBox();
+            this.localChangesGB = new System.Windows.Forms.GroupBox();
+            this.rbReset = new System.Windows.Forms.RadioButton();
+            this.rbMerge = new System.Windows.Forms.RadioButton();
+            this.localChangesGB.SuspendLayout();
             this.SuspendLayout();
             // 
             // btOk
@@ -92,25 +94,38 @@ namespace GitUI
             this.rbDontCreate.Text = "Do not create local branch";
             this.rbDontCreate.UseVisualStyleBackColor = true;
             // 
-            // cbMerge
+            // localChangesGB
             // 
-            this.cbMerge.AutoSize = true;
-            this.cbMerge.Location = new System.Drawing.Point(12, 112);
-            this.cbMerge.Name = "cbMerge";
-            this.cbMerge.Size = new System.Drawing.Size(56, 17);
-            this.cbMerge.TabIndex = 14;
-            this.cbMerge.Text = "Merge";
-            this.cbMerge.UseVisualStyleBackColor = true;
+            this.localChangesGB.Controls.Add(this.rbReset);
+            this.localChangesGB.Controls.Add(this.rbMerge);
+            this.localChangesGB.Location = new System.Drawing.Point(12, 105);
+            this.localChangesGB.Name = "localChangesGB";
+            this.localChangesGB.Size = new System.Drawing.Size(200, 43);
+            this.localChangesGB.TabIndex = 16;
+            this.localChangesGB.TabStop = false;
+            this.localChangesGB.Text = "Local changes";
             // 
-            // Force
+            // rbReset
             // 
-            this.Force.AutoSize = true;
-            this.Force.Location = new System.Drawing.Point(12, 135);
-            this.Force.Name = "Force";
-            this.Force.Size = new System.Drawing.Size(53, 17);
-            this.Force.TabIndex = 15;
-            this.Force.Text = "Force";
-            this.Force.UseVisualStyleBackColor = true;
+            this.rbReset.AutoSize = true;
+            this.rbReset.Location = new System.Drawing.Point(104, 17);
+            this.rbReset.Name = "rbReset";
+            this.rbReset.Size = new System.Drawing.Size(53, 17);
+            this.rbReset.TabIndex = 1;
+            this.rbReset.TabStop = true;
+            this.rbReset.Text = "Reset";
+            this.rbReset.UseVisualStyleBackColor = true;
+            // 
+            // rbMerge
+            // 
+            this.rbMerge.AutoSize = true;
+            this.rbMerge.Location = new System.Drawing.Point(13, 17);
+            this.rbMerge.Name = "rbMerge";
+            this.rbMerge.Size = new System.Drawing.Size(55, 17);
+            this.rbMerge.TabIndex = 0;
+            this.rbMerge.TabStop = true;
+            this.rbMerge.Text = "Merge";
+            this.rbMerge.UseVisualStyleBackColor = true;
             // 
             // FormCheckoutRemoteBranch
             // 
@@ -118,8 +133,7 @@ namespace GitUI
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(472, 158);
-            this.Controls.Add(this.Force);
-            this.Controls.Add(this.cbMerge);
+            this.Controls.Add(this.localChangesGB);
             this.Controls.Add(this.rbDontCreate);
             this.Controls.Add(this.rbCreateBranch);
             this.Controls.Add(this.rbResetBranch);
@@ -131,6 +145,8 @@ namespace GitUI
             this.Name = "FormCheckoutRemoteBranch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Checkout remote branch \'{0}\'";
+            this.localChangesGB.ResumeLayout(false);
+            this.localChangesGB.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -143,7 +159,8 @@ namespace GitUI
         private System.Windows.Forms.RadioButton rbResetBranch;
         private System.Windows.Forms.RadioButton rbCreateBranch;
         private System.Windows.Forms.RadioButton rbDontCreate;
-        private System.Windows.Forms.CheckBox cbMerge;
-        private System.Windows.Forms.CheckBox Force;
+        private System.Windows.Forms.GroupBox localChangesGB;
+        private System.Windows.Forms.RadioButton rbMerge;
+        private System.Windows.Forms.RadioButton rbReset;
     }
 }
