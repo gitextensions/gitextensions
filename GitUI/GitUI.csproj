@@ -84,6 +84,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Abort.cs" />
     <Compile Include="AboutBox.cs">
       <SubType>Form</SubType>
@@ -213,7 +216,6 @@
     <Compile Include="MouseWheelRedirector.cs" />
     <Compile Include="MergeToolsHelper.cs" />
     <Compile Include="PathFormatter.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Editor\FileViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
