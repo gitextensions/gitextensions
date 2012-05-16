@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 
 namespace GitCommands.Config
 {
@@ -81,7 +80,7 @@ namespace GitCommands.Config
                     if (m.Success) //this line is a key
                     {
                         var key = m.Groups["Key"].Value;
-                        var value = UnescapeString(m.Groups["Value"].Value);
+                        var value = m.Groups["Value"].Value;
 
                         if (configSection == null)
                             throw new Exception(
@@ -109,7 +108,7 @@ namespace GitCommands.Config
                 {
                     foreach (var value in key.Value)
                     {
-                        configFileContent.AppendLine(string.Concat("\t", key.Key, " = ", EscapeString(value)));
+                        configFileContent.AppendLine(string.Concat("\t", key.Key, " = ", value));
                     }
                 }
             }
@@ -128,13 +127,12 @@ namespace GitCommands.Config
             }
         }
 
-        public void SetValue(string setting, string value)
+        private void SetStringValue(string setting, string value)
         {
             var keyIndex = setting.LastIndexOf('.');
 
             if (keyIndex < 0 && keyIndex == setting.Length)
                 throw new Exception("Invalid setting name: " + setting);
-
 
             var configSectionName = setting.Substring(0, keyIndex);
             var keyName = setting.Substring(keyIndex + 1);
@@ -142,18 +140,37 @@ namespace GitCommands.Config
             FindOrCreateConfigSection(configSectionName).SetValue(keyName, value);
         }
 
-        public void AddValue(string setting, string value)
+        public void SetValue(string setting, string value)
+        {
+            SetStringValue(setting, value);
+        }
+
+        public void SetPathValue(string setting, string value)
+        {
+            SetStringValue(setting, ConfigSection.EscapeString(value));
+        }
+
+        private void AddStringValue(string setting, string value)
         {
             var keyIndex = setting.LastIndexOf('.');
 
             if (keyIndex < 0 && keyIndex == setting.Length)
                 throw new Exception("Invalid setting name: " + setting);
 
-
             var configSectionName = setting.Substring(0, keyIndex);
             var keyName = setting.Substring(keyIndex + 1);
 
             FindOrCreateConfigSection(configSectionName).AddValue(keyName, value);
+        }
+
+        public void AddValue(string setting, string value)
+        {
+            AddStringValue(setting, value);
+        }
+
+        public void AddPathValue(string setting, string value)
+        {
+            AddStringValue(setting, ConfigSection.EscapeString(value));
         }
 
         public bool HasValue(string setting)
@@ -170,7 +187,16 @@ namespace GitCommands.Config
             return configSection != null && configSection.GetValue(keyName) != string.Empty;
         }
 
-        public string GetValue(string setting)
+        public bool HasConfigSection(string configSectionName)
+        {
+            var configSection = FindConfigSection(configSectionName);
+            if (configSection != null)
+                return true;
+            else
+                return false;
+        }
+
+        private string GetStringValue(string setting)
         {
             var keyIndex = setting.LastIndexOf('.');
 
@@ -188,6 +214,15 @@ namespace GitCommands.Config
             return configSection.GetValue(keyName);
         }
 
+        public string GetValue(string setting)
+        {
+            return GetStringValue(setting);
+        }
+
+        public string GetPathValue(string setting)
+        {
+            return ConfigSection.UnescapeString(GetStringValue(setting));
+        }
 
         public IList<string> GetValues(string setting)
         {
@@ -257,29 +292,6 @@ namespace GitCommands.Config
                     return configSection;
             }
             return null;
-        }
-
-        private static string UnescapeString(string value)
-        {
-            // The .gitconfig escapes some character sequences -> 
-            // \" = "
-            // \\ = \
-            return value.Replace("\\\"", "\"").Replace("\\\\", "\\");
-        }
-
-        private static string EscapeString(string path)
-        {
-            // The .gitconfig escapes some character sequences
-            path = path.Replace("\"", "$QUOTE$");
-
-            path = path.Trim();
-
-            if (path.StartsWith("\\\\")) //for using unc paths -> these need to be backward slashes
-                path = path.Replace("\\", "\\\\");
-            else //for directories -> git only supports forward slashes
-                path = path.Replace('\\', '/');
-
-            return path.Replace("$QUOTE$", "\\\"");
         }
     }
 }

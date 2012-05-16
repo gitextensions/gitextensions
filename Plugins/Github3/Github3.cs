@@ -112,7 +112,7 @@ namespace Github3
 
         public IList<IHostedRepository> SearchForRepository(string search)
         {
-            throw new NotImplementedException("Not supporte in the Github API v3");
+            return github.searchRepositories(search).Select(repo => (IHostedRepository) new GithubRepo(repo)).ToList();
         }
 
         public IList<IHostedRepository> GetRepositoriesOfUser(string user)
@@ -139,16 +139,16 @@ namespace Github3
         /// <returns></returns>
         public List<IHostedRemote> GetHostedRemotesForCurrentWorkingDirRepo()
         {
-            List<IHostedRemote> repoInfos = new List<IHostedRemote>();
+            var repoInfos = new List<IHostedRemote>();
 
             string[] remotes = GitCommands.Settings.Module.GetRemotes(false);
             foreach(string remote in remotes)
             {
-                var url = GitCommands.Settings.Module.GetSetting("remote." + remote + ".url");
+                var url = GitCommands.Settings.Module.GetSetting(string.Format("remote.{0}.url", remote));
                 if (string.IsNullOrEmpty(url))
                     continue;
 
-                var m = Regex.Match(url, @"git(?:@|://)github.com[:/]([^/]+)/(\w+)\.git");
+                var m = Regex.Match(url, @"git(?:@|://)github.com[:/]([^/]+)/([\w_\.]+)\.git");
                 if (!m.Success)
                     m = Regex.Match(url, @"https?://(?:[^@:]+)?(?::[^/@:]+)?@?github.com/([^/]+)/([\w_\.]+)(?:.git)?");
                 if (m.Success)
@@ -157,7 +157,6 @@ namespace Github3
                     if (!repoInfos.Contains(hostedRemote))
                         repoInfos.Add(hostedRemote);
                 }
-
             }
 
             return repoInfos;
