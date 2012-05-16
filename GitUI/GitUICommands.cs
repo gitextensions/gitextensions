@@ -377,7 +377,7 @@ namespace GitUI
             if (CheckForDirtyDir(owner, out needRefresh, out force))
                 return needRefresh;
 
-            var form = new FormCheckoutRemoteBranch(branch, false, force);
+            var form = new FormCheckoutRemoteBranch(branch, null, force);
             form.ShowDialog(owner);
 
             InvokeEvent(owner, PostCheckoutBranch);

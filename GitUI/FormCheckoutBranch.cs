@@ -80,7 +80,7 @@ namespace GitUI
         {
             if (Remotebranch.Checked)
             {
-                var checkoutRemote = new FormCheckoutRemoteBranch(Branches.Text, Force.Checked);
+                var checkoutRemote = new FormCheckoutRemoteBranch(Branches.Text, null, Force.Checked);
                 checkoutRemote.ShowDialog(this);
             }
             else
