@@ -15,6 +15,7 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
+            picBoxWarn.Image = SystemIcons.Warning.ToBitmap();
         }
     }
 }
