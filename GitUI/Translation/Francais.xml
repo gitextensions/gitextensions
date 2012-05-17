@@ -1,0 +1,685 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Translation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <translationCategories>
+    <TranslationCategory Name="AboutBox">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>A propos</Value>
+        </TranslationItem>
+        <TranslationItem Name="thanksTo" Property="Text">
+          <Value>Remerciements</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="CommitInfo">
+      <translationItems>
+        <TranslationItem Name="addNoteToolStripMenuItem" Property="Text">
+          <Value>Ajouter notes</Value>
+        </TranslationItem>
+        <TranslationItem Name="containedInBranches" Property="Text">
+          <Value>Contenu dans les branches:</Value>
+        </TranslationItem>
+        <TranslationItem Name="containedInNoBranch" Property="Text">
+          <Value>Contenu dans aucune branche</Value>
+        </TranslationItem>
+        <TranslationItem Name="containedInNoTag" Property="Text">
+          <Value>Contenu dans aucun tag</Value>
+        </TranslationItem>
+        <TranslationItem Name="containedInTags" Property="Text">
+          <Value>Contenu dans les tags</Value>
+        </TranslationItem>
+        <TranslationItem Name="copyCommitInfoToolStripMenuItem" Property="Text">
+          <Value>Copier les infos de commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="showContainedInBranchesRemoteIfNoLocalToolStripMenuItem" Property="Text">
+          <Value>Montrer branches distantes seulement quand aucune branche locale ne contient ce commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="showContainedInBranchesRemoteToolStripMenuItem" Property="Text">
+          <Value>Montrer les branches distantes contenant ce commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="showContainedInBranchesToolStripMenuItem" Property="Text">
+          <Value>Montrer les branches locales contenant ce commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="showContainedInTagsToolStripMenuItem" Property="Text">
+          <Value>Montrer les tags contenant ce commit</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="Dashboard">
+      <translationItems>
+        <TranslationItem Name="cloneRepository" Property="Text">
+          <Value>Cloner un dépôt</Value>
+        </TranslationItem>
+        <TranslationItem Name="createRepository" Property="Text">
+          <Value>Créer un nouveau dépôt</Value>
+        </TranslationItem>
+        <TranslationItem Name="develop" Property="Text">
+          <Value>Développer</Value>
+        </TranslationItem>
+        <TranslationItem Name="directoryIsNotAValidRepositoryCaption" Property="Text">
+          <Value>Ouvrir</Value>
+        </TranslationItem>
+        <TranslationItem Name="donate" Property="Text">
+          <Value>Faire un don</Value>
+        </TranslationItem>
+        <TranslationItem Name="DonateCategory" Property="Title">
+          <Value>Contribuer</Value>
+        </TranslationItem>
+        <TranslationItem Name="openRepository" Property="Text">
+          <Value>Ouvrir dépôt</Value>
+        </TranslationItem>
+        <TranslationItem Name="RecentRepositories" Property="Title">
+          <Value>Dépôts récents</Value>
+        </TranslationItem>
+        <TranslationItem Name="translate" Property="Text">
+          <Value>Traduire</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="DashboardCategory">
+      <translationItems>
+        <TranslationItem Name="_editCategory" Property="Text">
+          <Value>Editer</Value>
+        </TranslationItem>
+        <TranslationItem Name="_moveCategoryDown" Property="Text">
+          <Value>Descendre</Value>
+        </TranslationItem>
+        <TranslationItem Name="_moveCategoryUp" Property="Text">
+          <Value>Monter</Value>
+        </TranslationItem>
+        <TranslationItem Name="_moveToCategory" Property="Text">
+          <Value>Ajouter à la catégorie</Value>
+        </TranslationItem>
+        <TranslationItem Name="_newCategory" Property="Text">
+          <Value>Nouvelle catégorie</Value>
+        </TranslationItem>
+        <TranslationItem Name="_removeCategory" Property="Text">
+          <Value>Supprimer</Value>
+        </TranslationItem>
+        <TranslationItem Name="_showCurrentBranch" Property="Text">
+          <Value>Montrer la branche actuelle</Value>
+        </TranslationItem>
+        <TranslationItem Name="editToolStripMenuItem" Property="Text">
+          <Value>Editer</Value>
+        </TranslationItem>
+        <TranslationItem Name="moveDownToolStripMenuItem" Property="Text">
+          <Value>Descendre</Value>
+        </TranslationItem>
+        <TranslationItem Name="moveUpToolStripMenuItem" Property="Text">
+          <Value>Monter</Value>
+        </TranslationItem>
+        <TranslationItem Name="removeToolStripMenuItem" Property="Text">
+          <Value>Supprimer</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="DashboardEditor">
+      <translationItems>
+        <TranslationItem Name="Add" Property="Text">
+          <Value>Ajouter</Value>
+        </TranslationItem>
+        <TranslationItem Name="CategoriesLabel" Property="Text">
+          <Value>Catégories</Value>
+        </TranslationItem>
+        <TranslationItem Name="descriptionDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Description</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Légende</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Type</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>fil RSS</Value>
+        </TranslationItem>
+        <TranslationItem Name="pathDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Chemin</Value>
+        </TranslationItem>
+        <TranslationItem Name="Remove" Property="Text">
+          <Value>Supprimer</Value>
+        </TranslationItem>
+        <TranslationItem Name="RepositoriesType" Property="Text">
+          <Value>Dépôts</Value>
+        </TranslationItem>
+        <TranslationItem Name="RssFeedType" Property="Text">
+          <Value>Fil RSS</Value>
+        </TranslationItem>
+        <TranslationItem Name="Title" Property="HeaderText">
+          <Value>Titre</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FileStatusList">
+      <translationItems>
+        <TranslationItem Name="NoFiles" Property="Text">
+          <Value>Pas de changements</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormAddToGitIgnore">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Ajouter fichier(s) à .gitIgnore</Value>
+        </TranslationItem>
+        <TranslationItem Name="_matchingFilesString" Property="Text">
+          <Value>{0} fichiers(s) correspondants</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddToIngore" Property="Text">
+          <Value>Ignorer</Value>
+        </TranslationItem>
+        <TranslationItem Name="filesWillBeIgnored" Property="Text">
+          <Value>1 fichier(s) correspondant</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Prévisualisation</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Entrer un motif de fichier à ignorer:</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Aucun fichiers existants ne correspondent à ce motif.</Value>
+        </TranslationItem>
+        <TranslationItem Name="Preview" Property="Text">
+          <Value>fatal: N'est pas un dépôt git (ou aucun des dossiers parents): .git</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormBranch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Créer une branche</Value>
+        </TranslationItem>
+        <TranslationItem Name="_branchCaption" Property="Text">
+          <Value>Branche</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectOneRevision" Property="Text">
+          <Value>Sélectionner une révision à partir de laquelle créer la branche</Value>
+        </TranslationItem>
+        <TranslationItem Name="Checkout" Property="Text">
+          <Value>Charger une branche</Value>
+        </TranslationItem>
+        <TranslationItem Name="CheckoutAfterCreate" Property="Text">
+          <Value>Charger après la création</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Nom de la branche</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Créer une branche</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormBranchSmall">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Créer une branche</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noRevisionSelected" Property="Text">
+          <Value>FormBranch	_selectOneRevision	Text	Select 1 revision to create the branch on.	Sélectionner une révision à partir de laquelle créer la branche</Value>
+        </TranslationItem>
+        <TranslationItem Name="CheckoutAfterCreate" Property="Text">
+          <Value>Charger après la création</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Nom de la branche</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Créer une branche</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormBrowse">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Git Extensions</Value>
+        </TranslationItem>
+        <TranslationItem Name="_hintUnresolvedMergeConflicts" Property="Text">
+          <Value>Il y a des conflits de fusion non-résolus !</Value>
+        </TranslationItem>
+        <TranslationItem Name="_indexLockDeleted" Property="Text">
+          <Value>index.lock supprimé.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_indexLockNotFound" Property="Text">
+          <Value>index.lock non trouvé à:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noBranchTitle" Property="Text">
+          <Value>pas de branche</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noReposHostFoundCaption" Property="Text">
+          <Value>Erreur</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noReposHostPluginLoadedCaption" Property="Text">
+          <Value>Erreur</Value>
+        </TranslationItem>
+        <TranslationItem Name="_saveFileFilterAllFiles" Property="Text">
+          <Value>Tous les fichiers</Value>
+        </TranslationItem>
+        <TranslationItem Name="_saveFileFilterCurrentFormat" Property="Text">
+          <Value>Format actuel</Value>
+        </TranslationItem>
+        <TranslationItem Name="aboutToolStripMenuItem" Property="Text">
+          <Value>A propos</Value>
+        </TranslationItem>
+        <TranslationItem Name="applyPatchToolStripMenuItem" Property="Text">
+          <Value>Appliquer patch</Value>
+        </TranslationItem>
+        <TranslationItem Name="authorToolStripMenuItem" Property="Text">
+          <Value>Auteur</Value>
+        </TranslationItem>
+        <TranslationItem Name="branchSelect" Property="Text">
+          <Value>Branche</Value>
+        </TranslationItem>
+        <TranslationItem Name="branchSelect" Property="ToolTipText">
+          <Value>Changer la branche actuelle</Value>
+        </TranslationItem>
+        <TranslationItem Name="branchToolStripMenuItem" Property="Text">
+          <Value>Créer une branche</Value>
+        </TranslationItem>
+        <TranslationItem Name="checkoutBranchToolStripMenuItem" Property="Text">
+          <Value>Changer de branche</Value>
+        </TranslationItem>
+        <TranslationItem Name="cloneToolStripMenuItem" Property="Text">
+          <Value>Cloner dépôt</Value>
+        </TranslationItem>
+        <TranslationItem Name="closeToolStripMenuItem" Property="Text">
+          <Value>Fermer</Value>
+        </TranslationItem>
+        <TranslationItem Name="commandsToolStripMenuItem" Property="Text">
+          <Value>Commandes</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitcountPerUserToolStripMenuItem" Property="Text">
+          <Value>Commits par utilisateur</Value>
+        </TranslationItem>
+        <TranslationItem Name="compressGitDatabaseToolStripMenuItem" Property="Text">
+          <Value>Compresser la base de données git</Value>
+        </TranslationItem>
+        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem" Property="Text">
+          <Value>Copier le nom de fichier</Value>
+        </TranslationItem>
+        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem1" Property="Text">
+          <Value>Copier le nom de fichier</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
+          <Value>Supprimer branche</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteIndexlockToolStripMenuItem" Property="Text">
+          <Value>Supprimer index.lock</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteTagToolStripMenuItem" Property="Text">
+          <Value>Supprimer tag</Value>
+        </TranslationItem>
+        <TranslationItem Name="donateToolStripMenuItem" Property="Text">
+          <Value>Faire un don</Value>
+        </TranslationItem>
+        <TranslationItem Name="editgitattributesToolStripMenuItem" Property="Text">
+          <Value>Editer .gitattributes</Value>
+        </TranslationItem>
+        <TranslationItem Name="editgitignoreToolStripMenuItem1" Property="Text">
+          <Value>Editer.gitignore</Value>
+        </TranslationItem>
+        <TranslationItem Name="editmailmapToolStripMenuItem" Property="Text">
+          <Value>Editer .mailmap</Value>
+        </TranslationItem>
+        <TranslationItem Name="EditSettings" Property="ToolTipText">
+          <Value>Configuration</Value>
+        </TranslationItem>
+        <TranslationItem Name="exitToolStripMenuItem" Property="Text">
+          <Value>Quitter</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileExplorerToolStripMenuItem" Property="Text">
+          <Value>Explorateur de fichiers</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileHistoryDiffToolstripMenuItem" Property="Text">
+          <Value>Historique de fichier</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileHistoryToolStripMenuItem" Property="Text">
+          <Value>Historique de fichier</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileToolStripMenuItem" Property="Text">
+          <Value>Fichier</Value>
+        </TranslationItem>
+        <TranslationItem Name="findToolStripMenuItem" Property="Text">
+          <Value>Trouver</Value>
+        </TranslationItem>
+        <TranslationItem Name="generateOrImportKeyToolStripMenuItem" Property="Text">
+          <Value>Générer ou importer clé</Value>
+        </TranslationItem>
+        <TranslationItem Name="helpToolStripMenuItem" Property="Text">
+          <Value>Aide</Value>
+        </TranslationItem>
+        <TranslationItem Name="initNewRepositoryToolStripMenuItem" Property="Text">
+          <Value>Créer nouveau dépôt</Value>
+        </TranslationItem>
+        <TranslationItem Name="manageRemoteRepositoriesToolStripMenuItem1" Property="Text">
+          <Value>Gérer les dépôts distants</Value>
+        </TranslationItem>
+        <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
+          <Value>Fusionner branches</Value>
+        </TranslationItem>
+        <TranslationItem Name="openContainingFolderToolStripMenuItem" Property="Text">
+          <Value>Ouvrir le dossier contenant</Value>
+        </TranslationItem>
+        <TranslationItem Name="openToolStripMenuItem" Property="Text">
+          <Value>Ouvrir</Value>
+        </TranslationItem>
+        <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
+          <Value>Ouvrir avec difftool</Value>
+        </TranslationItem>
+        <TranslationItem Name="patchToolStripMenuItem" Property="Text">
+          <Value>Voir fichier patch</Value>
+        </TranslationItem>
+        <TranslationItem Name="pullToolStripMenuItem" Property="Text">
+          <Value>Récupérer</Value>
+        </TranslationItem>
+        <TranslationItem Name="pushToolStripMenuItem" Property="Text">
+          <Value>Pousser</Value>
+        </TranslationItem>
+        <TranslationItem Name="recentToolStripMenuItem" Property="Text">
+          <Value>Dépôts récents</Value>
+        </TranslationItem>
+        <TranslationItem Name="RefreshButton" Property="ToolTipText">
+          <Value>Rafraichir</Value>
+        </TranslationItem>
+        <TranslationItem Name="refreshToolStripMenuItem" Property="Text">
+          <Value>Rafraichir</Value>
+        </TranslationItem>
+        <TranslationItem Name="remoteToolStripMenuItem" Property="Text">
+          <Value>Distant</Value>
+        </TranslationItem>
+        <TranslationItem Name="runMergetoolToolStripMenuItem" Property="Text">
+          <Value>Résoudre conflits de fusion</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveAsToolStripMenuItem" Property="Text">
+          <Value>Enregistrer sous</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveAsToolStripMenuItem1" Property="Text">
+          <Value>Enregistrer sous</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveToolStripMenuItem" Property="Text">
+          <Value>Enregistrer</Value>
+        </TranslationItem>
+        <TranslationItem Name="settingsToolStripMenuItem" Property="Text">
+          <Value>Configuration</Value>
+        </TranslationItem>
+        <TranslationItem Name="settingsToolStripMenuItem1" Property="Text">
+          <Value>Configuration</Value>
+        </TranslationItem>
+        <TranslationItem Name="settingsToolStripMenuItem2" Property="Text">
+          <Value>Configuration</Value>
+        </TranslationItem>
+        <TranslationItem Name="startAuthenticationAgentToolStripMenuItem" Property="Text">
+          <Value>Démarrer l'agent d'authentification</Value>
+        </TranslationItem>
+        <TranslationItem Name="tagToolStripMenuItem" Property="Text">
+          <Value>Créer tag</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButtonPull" Property="Text">
+          <Value>Récupérer</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButtonPull" Property="ToolTipText">
+          <Value>Récupérer</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButtonPush" Property="Text">
+          <Value>Pousser</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButtonPush" Property="ToolTipText">
+          <Value>Pousser</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripLabel2" Property="Text">
+          <Value>Filtre:</Value>
+        </TranslationItem>
+        <TranslationItem Name="translateToolStripMenuItem" Property="Text">
+          <Value>Traduire</Value>
+        </TranslationItem>
+        <TranslationItem Name="userManualToolStripMenuItem" Property="Text">
+          <Value>Manuel Utilisateur</Value>
+        </TranslationItem>
+        <TranslationItem Name="verifyGitDatabaseToolStripMenuItem" Property="Text">
+          <Value>Retrouver objets perdus</Value>
+        </TranslationItem>
+        <TranslationItem Name="viewDiffToolStripMenuItem" Property="Text">
+          <Value>Voir changements</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormChooseTranslation">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Choix langue</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Choississez votre langue</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Vous pouvez changez la langue dans le panneau de configuration</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCommit">
+      <translationItems>
+        <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text">
+          <Value>Voulez-vous aussi supprimer les nouveaux fichiers dans cette séléction ?Choisissez 'Non' pour garder les nouveaux fichiers.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_alsoDeleteUntrackedFilesCaption" Property="Text">
+          <Value>Supprimer</Value>
+        </TranslationItem>
+        <TranslationItem Name="_amendCommit" Property="Text">
+          <Value>Vous êtes sur le point de réécrire l'historique. Utiliser la rectification seulement si le commit n'a pas encore été publié ! Voulez-vous continuer ?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_amendCommitCaption" Property="Text">
+          <Value>Rectifier commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteFailed" Property="Text">
+          <Value>Suppression du fichier échouée</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteSelectedFiles" Property="Text">
+          <Value>Voulez-vous vraiment supprimer les fichier(s) sélectionné(s) ?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteSelectedFilesCaption" Property="Text">
+          <Value>Supprimer</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteUntrackedFiles" Property="Text">
+          <Value>Voulez-vous vraiment supprimer tous les fichiers non suivis ?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_deleteUntrackedFilesCaption" Property="Text">
+          <Value>Supprimer tous les fichiers non-suivis.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_enterCommitMessage" Property="Text">
+          <Value>Veuillez entrer un message de commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="_enterCommitMessageCaption" Property="Text">
+          <Value>Message de commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="_enterCommitMessageHint" Property="Text">
+          <Value>Entrer un message de commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="_mergeConflicts" Property="Text">
+          <Value>Il y a des conflits de fusion non résolus, résolvez les avant un commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="_mergeConflictsCaption" Property="Text">
+          <Value>Conflits de fusion</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noFilesStagedAndConfirmAnEmptyMergeCommit" Property="Text">
+          <Value>Il n'y a pas de fichiers indexés pour ce commit. Voulez-vous vraiment faire un commit ?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noFilesStagedAndNothingToCommit" Property="Text">
+          <Value>Il n'y a pas de fichiers indexés pour ce commit.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noFilesStagedButSuggestToCommitAllUnstaged" Property="Text">
+          <Value>Il n'ya pas de fichiers indexés pour ce commit. Indexer et faire un commit de tous les fichiers non-indexés ?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_notOnBranch" Property="Text">
+          <Value>Vous n'êtes pas sur une branche. Ce commit sera non-référencé quand vous chargerez une branche et peut être perdu. Voulez-vous continuer ?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_notOnBranchCaption" Property="Text">
+          <Value>Pas sur une branche.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noUnstagedChanges" Property="Text">
+          <Value>Il n'y a pas de changements non-indexés.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_onlyStageChunkOfSingleFileError" Property="Text">
+          <Value>Vous ne pouvez utiliser cette option qu'en sélectionnant un seul fichier</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetChangesCaption" Property="Text">
+          <Value>Réinitialiser changements</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetChangesText" Property="Text">
+          <Value>Voulez-vous vraiment réinitialiser les changements pour les fichiers sélectionnés ?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetSelectedChangesText" Property="Text">
+          <Value>Voulez-vous vraiment réinitialiser tous les fichiers sélectionnés ?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetSelectedLines" Property="Text">
+          <Value>Réinitialiser les lignes sélectionnées</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetSelectedLinesConfirmation" Property="Text">
+          <Value>Voulez-vous vraiment réinitialiser toutes les lignes sélectionnées ?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_ResetSelectedLinesToolStripMenuItem" Property="Text">
+          <Value>Réinitialiser les lignes sélectionnées</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetStageChunkOfFileCaption" Property="Text">
+          <Value>Désindexer un morceau de fichier</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectionFilterErrorToolTip" Property="Text">
+          <Value>Erreur {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectionFilterToolTip" Property="Text">
+          <Value>Entrer une expression régulière pour sélectionner des fichiers non-indexés.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectOnlyOneFile" Property="Text">
+          <Value>Vous devez n'avoir qu'un seul fichier sélectionné.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectOnlyOneFileCaption" Property="Text">
+          <Value>Erreur</Value>
+        </TranslationItem>
+        <TranslationItem Name="_stageFiles" Property="Text">
+          <Value>{0} fichiers indexés</Value>
+        </TranslationItem>
+        <TranslationItem Name="_stageSelectedLines" Property="Text">
+          <Value>Indexer les lignes sélectionnées</Value>
+        </TranslationItem>
+        <TranslationItem Name="_StageSelectedLinesToolStripMenuItem" Property="Text">
+          <Value>Indexer les lignes sélectionnées</Value>
+        </TranslationItem>
+        <TranslationItem Name="_unstageSelectedLines" Property="Text">
+          <Value>Désindexer les lignes sélectionnées</Value>
+        </TranslationItem>
+        <TranslationItem Name="addFileTogitignoreToolStripMenuItem" Property="Text">
+          <Value>Ajouter le fichier à .gitignore</Value>
+        </TranslationItem>
+        <TranslationItem Name="Cancel" Property="Text">
+          <Value>Annuler</Value>
+        </TranslationItem>
+        <TranslationItem Name="closeDialogAfterAllFilesCommittedToolStripMenuItem" Property="Text">
+          <Value>Fermer la fenêtre quand tous les changements auront été commités</Value>
+        </TranslationItem>
+        <TranslationItem Name="closeDialogAfterEachCommitToolStripMenuItem" Property="Text">
+          <Value>Fermer la fenêtre après chaque commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="copyFolderNameMenuItem" Property="Text">
+          <Value>Copier nom de dossier</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteAllUntrackedFilesToolStripMenuItem" Property="Text">
+          <Value>Supprimer tous les fichiers non-suivis</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteFileToolStripMenuItem" Property="Text">
+          <Value>Supprimer fichier</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteSelectedFilesToolStripMenuItem" Property="Text">
+          <Value>Supprimer les fichiers sélectionnés</Value>
+        </TranslationItem>
+        <TranslationItem Name="editFileToolStripMenuItem" Property="Text">
+          <Value>Editer fichier</Value>
+        </TranslationItem>
+        <TranslationItem Name="editGitIgnoreToolStripMenuItem" Property="Text">
+          <Value>Editer les fichiers ignorés</Value>
+        </TranslationItem>
+        <TranslationItem Name="filenameToClipboardToolStripMenuItem" Property="Text">
+          <Value>Copier nom de fichier</Value>
+        </TranslationItem>
+        <TranslationItem Name="llShowPreview" Property="Text">
+          <Value>Ce fichier fait plus de 5 Mo. Cliquer pour voir l'aperçu</Value>
+        </TranslationItem>
+        <TranslationItem Name="openDiffMenuItem" Property="Text">
+          <Value>Ouvrir avec Difftool</Value>
+        </TranslationItem>
+        <TranslationItem Name="openFolderMenuItem" Property="Text">
+          <Value>Ouvrir dossier</Value>
+        </TranslationItem>
+        <TranslationItem Name="openSubmoduleMenuItem" Property="Text">
+          <Value>Ouvrir avec Git Extensions...</Value>
+        </TranslationItem>
+        <TranslationItem Name="openToolStripMenuItem" Property="Text">
+          <Value>Ouvrir</Value>
+        </TranslationItem>
+        <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
+          <Value>Ouvrir With Difftool</Value>
+        </TranslationItem>
+        <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
+          <Value>Ouvrir Avec</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormTranslate">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Traduire</Value>
+        </TranslationItem>
+        <TranslationItem Name="allText" Property="Text">
+          <Value>Tous</Value>
+        </TranslationItem>
+        <TranslationItem Name="categoryDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Catégorie</Value>
+        </TranslationItem>
+        <TranslationItem Name="googleAll" Property="Text">
+          <Value>Traduire tous par Google</Value>
+        </TranslationItem>
+        <TranslationItem Name="googleTranslate" Property="Text">
+          <Value>Traduire par Google</Value>
+        </TranslationItem>
+        <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Nom</Value>
+        </TranslationItem>
+        <TranslationItem Name="neutralValueDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Valeur Neutre</Value>
+        </TranslationItem>
+        <TranslationItem Name="propertyDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Propriété</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveAs" Property="ToolTipText">
+          <Value>Enregistrer la traduction</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveAsText" Property="Text">
+          <Value>Enregistrer sous</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveCurrentChangesCaption" Property="Text">
+          <Value>Enregistrer les changements</Value>
+        </TranslationItem>
+        <TranslationItem Name="saveCurrentChangesText" Property="Text">
+          <Value>Voulez-vous sauvegarder les modifications ?</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButtonNew" Property="Text">
+          <Value>Nouveau</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripButtonNew" Property="ToolTipText">
+          <Value>Créer nouvelle traduction</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripTranslationLabel" Property="Text">
+          <Value>Traduction actuelle:</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripTranslationLanguageCode" Property="Text">
+          <Value>Code langage:</Value>
+        </TranslationItem>
+        <TranslationItem Name="translatedValueDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>ValeurTraduite</Value>
+        </TranslationItem>
+        <TranslationItem Name="translateProgressText" Property="Text">
+          <Value>Traduits {0] sur {1}</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+  </translationCategories>
+  <LanguageCode>fr</LanguageCode>
+</Translation>
