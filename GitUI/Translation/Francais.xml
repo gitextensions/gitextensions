@@ -351,6 +351,9 @@
         <TranslationItem Name="initNewRepositoryToolStripMenuItem" Property="Text">
           <Value>Créer nouveau dépôt</Value>
         </TranslationItem>
+        <TranslationItem Name="localToolStripMenuItem" Property="Text">
+          <Value>Locales</Value>
+        </TranslationItem>
         <TranslationItem Name="manageRemoteRepositoriesToolStripMenuItem1" Property="Text">
           <Value>Gérer les dépôts distants</Value>
         </TranslationItem>
@@ -384,8 +387,11 @@
         <TranslationItem Name="refreshToolStripMenuItem" Property="Text">
           <Value>Rafraichir</Value>
         </TranslationItem>
+        <TranslationItem Name="remotesToolStripMenuItem" Property="Text">
+          <Value>Dépôts distants</Value>
+        </TranslationItem>
         <TranslationItem Name="remoteToolStripMenuItem" Property="Text">
-          <Value>Distant</Value>
+          <Value>Distante</Value>
         </TranslationItem>
         <TranslationItem Name="runMergetoolToolStripMenuItem" Property="Text">
           <Value>Résoudre conflits de fusion</Value>
@@ -414,6 +420,9 @@
         <TranslationItem Name="tagToolStripMenuItem" Property="Text">
           <Value>Créer tag</Value>
         </TranslationItem>
+        <TranslationItem Name="toggleSplitViewLayout" Property="ToolTipText">
+          <Value>Activer vue séparée</Value>
+        </TranslationItem>
         <TranslationItem Name="toolStripButtonPull" Property="Text">
           <Value>Récupérer</Value>
         </TranslationItem>
@@ -431,6 +440,9 @@
         </TranslationItem>
         <TranslationItem Name="translateToolStripMenuItem" Property="Text">
           <Value>Traduire</Value>
+        </TranslationItem>
+        <TranslationItem Name="Tree" Property="Text">
+          <Value>Arbre des fichiers</Value>
         </TranslationItem>
         <TranslationItem Name="userManualToolStripMenuItem" Property="Text">
           <Value>Manuel Utilisateur</Value>
@@ -622,6 +634,542 @@
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormPush">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Pousser</Value>
+        </TranslationItem>
+        <TranslationItem Name="_branchNewForRemote" Property="Text">
+          <Value>Il semble que cette branche n'existe pas dans le dépôt distant.
+Voulez-vous vraiment pousser cette branche ?
+
+</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cannotLoadPutty" Property="Text">
+          <Value>Impossible de charger la clef SSH. PuTTY n'est pas configuré correctement.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_createPullRequestCB" Property="Text">
+          <Value>Créer requête de récupération</Value>
+        </TranslationItem>
+        <TranslationItem Name="_no" Property="Text">
+          <Value>Non</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pushCaption" Property="Text">
+          <Value>Pousser</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pushToCaption" Property="Text">
+          <Value>Pousser vers {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectDestinationDirectory" Property="Text">
+          <Value>Veuillez sélectionner une url de destination</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectRemote" Property="Text">
+          <Value>Veuillez sélectionner un dépôt distant</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectTag" Property="Text">
+          <Value>Vous devez sélectionner un tag ou cocher "Tous les tags".</Value>
+        </TranslationItem>
+        <TranslationItem Name="_yes" Property="Text">
+          <Value>Oui</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddRemote" Property="Text">
+          <Value>Gérer</Value>
+        </TranslationItem>
+        <TranslationItem Name="AutoPullOnRejected" Property="Text">
+          <Value>Pull automatique si rejet</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchTab" Property="Text">
+          <Value>Pousser branches</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchTab" Property="ToolTipText">
+          <Value>Pousser branches et commits sur un dépôt distant.</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseSource" Property="Text">
+          <Value>Parcourir</Value>
+        </TranslationItem>
+        <TranslationItem Name="DeleteColumn" Property="HeaderText">
+          <Value>Supprimer branche distante</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Branche</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox2" Property="Text">
+          <Value>Destination</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox4" Property="Text">
+          <Value>Sélectionnez branches à pousser</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Tag à pousser</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelFrom" Property="Text">
+          <Value>Branche à pousser</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelTo" Property="Text">
+          <Value>vers</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>Charger clef ssh</Value>
+        </TranslationItem>
+        <TranslationItem Name="LocalColumn" Property="HeaderText">
+          <Value>Branche locale</Value>
+        </TranslationItem>
+        <TranslationItem Name="MultipleBranchTab" Property="Text">
+          <Value>Pousser plusieurs branches</Value>
+        </TranslationItem>
+        <TranslationItem Name="PushAllBranches" Property="Text">
+          <Value>Toutes les branches</Value>
+        </TranslationItem>
+        <TranslationItem Name="PushAllTags" Property="Text">
+          <Value>Tous les tags</Value>
+        </TranslationItem>
+        <TranslationItem Name="PushColumn" Property="HeaderText">
+          <Value>Pousser</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoteColumn" Property="HeaderText">
+          <Value>Branche distante</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowOptions" Property="Text">
+          <Value>Afficher les options</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowTagOptions" Property="Text">
+          <Value>Afficher les options</Value>
+        </TranslationItem>
+        <TranslationItem Name="TagTab" Property="Text">
+          <Value>Pousser tags</Value>
+        </TranslationItem>
+        <TranslationItem Name="TagTab" Property="ToolTipText">
+          <Value>Pousser tags sur un dépôt distant</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormRemotes">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Dépôts distants</Value>
+        </TranslationItem>
+        <TranslationItem Name="_hintDelete" Property="Text">
+          <Value>Supprimer</Value>
+        </TranslationItem>
+        <TranslationItem Name="_questionAutoPullBehaviour" Property="Text">
+          <Value>Vous avez ajouté nouveau dépôt distant.
+Voulez-vous utilisez le comportement par défaut de push et pull pour ce dépôt distant ?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_questionAutoPullBehaviourCaption" Property="Text">
+          <Value>Nouveau dépôt distant</Value>
+        </TranslationItem>
+        <TranslationItem Name="_questionDeleteRemote" Property="Text">
+          <Value>Voulez-vous vraiment supprimer ce dépôt ?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_questionDeleteRemoteCaption" Property="Text">
+          <Value>Supprimer</Value>
+        </TranslationItem>
+        <TranslationItem Name="_sshKeyOpenCaption" Property="Text">
+          <Value>Sélectionnez un fichier de clef ssh</Value>
+        </TranslationItem>
+        <TranslationItem Name="_sshKeyOpenFilter" Property="Text">
+          <Value>Clef privée (*.ppk)</Value>
+        </TranslationItem>
+        <TranslationItem Name="_warningNoKeyEntered" Property="Text">
+          <Value>Aucun fichier de clef ssh entré</Value>
+        </TranslationItem>
+        <TranslationItem Name="_warningValidRemote" Property="Text">
+          <Value>Vous devez entrer une url valide pour ce dépôt distant</Value>
+        </TranslationItem>
+        <TranslationItem Name="_warningValidRemoteCaption" Property="Text">
+          <Value>Url requise</Value>
+        </TranslationItem>
+        <TranslationItem Name="BName" Property="HeaderText">
+          <Value>Nom</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchName" Property="HeaderText">
+          <Value>Nom de branche locale</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>Parcourir</Value>
+        </TranslationItem>
+        <TranslationItem Name="buttonBrowsePushUrl" Property="Text">
+          <Value>Parcourir</Value>
+        </TranslationItem>
+        <TranslationItem Name="checkBoxSepPushUrl" Property="Text">
+          <Value>Url de push séparée</Value>
+        </TranslationItem>
+        <TranslationItem Name="dataGridViewTextBoxColumn1" Property="HeaderText">
+          <Value>Nom</Value>
+        </TranslationItem>
+        <TranslationItem Name="Delete" Property="Text">
+          <Value>Supprimer</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Détails</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Nom</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Url</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>Fichier de clef privée</Value>
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text">
+          <Value>Nom de branche locale</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Value>Dépôt distant</Value>
+        </TranslationItem>
+        <TranslationItem Name="label6" Property="Text">
+          <Value>Fusion par défaut avec</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelPushUrl" Property="Text">
+          <Value>Url push</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>Charger clef SSH</Value>
+        </TranslationItem>
+        <TranslationItem Name="MergeWith" Property="HeaderText">
+          <Value>Fusion par défaut avec</Value>
+        </TranslationItem>
+        <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Branche</Value>
+        </TranslationItem>
+        <TranslationItem Name="New" Property="Text">
+          <Value>Nouveau</Value>
+        </TranslationItem>
+        <TranslationItem Name="Prune" Property="Text">
+          <Value>Elaguer branches distantes</Value>
+        </TranslationItem>
+        <TranslationItem Name="RemoteCombo" Property="HeaderText">
+          <Value>Dépôt distant</Value>
+        </TranslationItem>
+        <TranslationItem Name="Save" Property="Text">
+          <Value>Enregistrer</Value>
+        </TranslationItem>
+        <TranslationItem Name="SaveDefaultPushPull" Property="Text">
+          <Value>Enregistrer</Value>
+        </TranslationItem>
+        <TranslationItem Name="SshBrowse" Property="Text">
+          <Value>Parcourir</Value>
+        </TranslationItem>
+        <TranslationItem Name="tabPage1" Property="Text">
+          <Value>Dépôts distants</Value>
+        </TranslationItem>
+        <TranslationItem Name="tabPage2" Property="Text">
+          <Value>Comportement par défaut de pull (fetch et merge)</Value>
+        </TranslationItem>
+        <TranslationItem Name="TestConnection" Property="Text">
+          <Value>Test de connexion</Value>
+        </TranslationItem>
+        <TranslationItem Name="UpdateBranch" Property="Text">
+          <Value>Mettre à jour les infos de toutes les branches distantes</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormSettings">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Configuration</Value>
+        </TranslationItem>
+        <TranslationItem Name="addScriptButton" Property="Text">
+          <Value>Ajouter</Value>
+        </TranslationItem>
+        <TranslationItem Name="addToRevisionGridContextMenuDataGridViewCheckBoxColumn" Property="HeaderText">
+          <Value>Menu contextuel</Value>
+        </TranslationItem>
+        <TranslationItem Name="AppearancePage" Property="Text">
+          <Value>Apparence</Value>
+        </TranslationItem>
+        <TranslationItem Name="AutostartPageant" Property="Text">
+          <Value>Lancer automatiquement le client d'authentification si une clef privée est définie pour un dépôt distant</Value>
+        </TranslationItem>
+        <TranslationItem Name="BlueIcon" Property="Text">
+          <Value>Bleu</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseCommitTemplate" Property="Text">
+          <Value>Parcourir</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseDiffTool" Property="Text">
+          <Value>Parcourir</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseGitBinPath" Property="Text">
+          <Value>Parcourir</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseGitPath" Property="Text">
+          <Value>Parcourir</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseMergeTool" Property="Text">
+          <Value>Parcourir</Value>
+        </TranslationItem>
+        <TranslationItem Name="browseScriptButton" Property="Text">
+          <Value>Parcourir</Value>
+        </TranslationItem>
+        <TranslationItem Name="button1" Property="Text">
+          <Value>Suggestions de commandes</Value>
+        </TranslationItem>
+        <TranslationItem Name="ChangeHomeButton" Property="Text">
+          <Value>Changer HOME</Value>
+        </TranslationItem>
+        <TranslationItem Name="CheckAtStartup" Property="Text">
+          <Value>Vérifier les paramètres au démarrage (disables automatically if all settings are correct)</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkCloseProcessDialog" Property="Text">
+          <Value>Fermer automatiquement les fenêtres d'actions lorsque l'action est terminée</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkFollowRenamesInFileHistory" Property="Text">
+          <Value>Détecter les renommages dans l'historique de fichier (expérimental)</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkShowCurrentBranchInVisualStudio" Property="Text">
+          <Value>Afficher la branche actuelle dans Visual Studio</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkShowCurrentChangesInRevisionGraph" Property="Text">
+          <Value>Afficher les changements actuels du répertoire de travail dans le graphique des révisions (lent !)</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkShowErrorsWhenStagingFiles" Property="Text">
+          <Value>Afficher les erreurs lors de l'indexation de fichiers</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkShowGitCommandLine" Property="Text">
+          <Value>Afficher la console git lorsque une action est exécutée</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkShowGitStatusInToolbar" Property="Text">
+          <Value>Afficher le statut du dépôt dans la fenêtre parcourir (number of changes in toolbar, restart required)</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkShowRelativeDate" Property="Text">
+          <Value>Afficher les dates relatives plutôt que les dates absolues</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkWarnBeforeCheckout" Property="Text">
+          <Value>Avertir de changements non-commités avant de changer de branche</Value>
+        </TranslationItem>
+        <TranslationItem Name="ClearImageCache" Property="Text">
+          <Value>Vider le cache d'images</Value>
+        </TranslationItem>
+        <TranslationItem Name="commandLabel" Property="Text">
+          <Value>Commande:</Value>
+        </TranslationItem>
+        <TranslationItem Name="DefaultIcon" Property="Text">
+          <Value>Défaut</Value>
+        </TranslationItem>
+        <TranslationItem Name="DiffTool_Fix" Property="Text">
+          <Value>Réparer</Value>
+        </TranslationItem>
+        <TranslationItem Name="DiffTool2_Fix" Property="Text">
+          <Value>Réparer</Value>
+        </TranslationItem>
+        <TranslationItem Name="DiffToolCmdSuggest" Property="Text">
+          <Value>Suggestions de commandes</Value>
+        </TranslationItem>
+        <TranslationItem Name="downloadDictionary" Property="Text">
+          <Value>Télécharger un dictionnaire</Value>
+        </TranslationItem>
+        <TranslationItem Name="downloadMsysgit" Property="Text">
+          <Value>Télécharger msysgit</Value>
+        </TranslationItem>
+        <TranslationItem Name="EnabledColumn" Property="HeaderText">
+          <Value>Activé</Value>
+        </TranslationItem>
+        <TranslationItem Name="GitBinFound_Fix" Property="Text">
+          <Value>Réparer</Value>
+        </TranslationItem>
+        <TranslationItem Name="GitExtensionsInstall_Fix" Property="Text">
+          <Value>Réparer</Value>
+        </TranslationItem>
+        <TranslationItem Name="GitFound_Fix" Property="Text">
+          <Value>Réparer</Value>
+        </TranslationItem>
+        <TranslationItem Name="GlobalSettingsPage" Property="Text">
+          <Value>Paramètres globaux</Value>
+        </TranslationItem>
+        <TranslationItem Name="GreenIcon" Property="Text">
+          <Value>Vert</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Spécifier quel client ssh utiliser</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox10" Property="Text">
+          <Value>Fin de lignes</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox2" Property="Text">
+          <Value>Configurer PuTTY</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox6" Property="Text">
+          <Value>Images auteurs</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox8" Property="Text">
+          <Value>Environnement</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox9" Property="Text">
+          <Value>Fin de lignes</Value>
+        </TranslationItem>
+        <TranslationItem Name="helpLabel" Property="Text">
+          <Value>Appuyer sur F1 pour voir les options disponibles</Value>
+        </TranslationItem>
+        <TranslationItem Name="helpTranslate" Property="Text">
+          <Value>Aider à traduire</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Nom d'utilisateur</Value>
+        </TranslationItem>
+        <TranslationItem Name="label10" Property="Text">
+          <Value>Vous devez entrer un chemin valide vers git.cmd avant de pouvoir modifier les paramètres globaux</Value>
+        </TranslationItem>
+        <TranslationItem Name="label11" Property="Text">
+          <Value>La liste ci-dessous indique les paramètres de base nécessaires au bon fonctionnement de Git Extensions</Value>
+        </TranslationItem>
+        <TranslationItem Name="label12" Property="Text">
+          <Value>Nombre max de commits chargés au démarrage.</Value>
+        </TranslationItem>
+        <TranslationItem Name="label13" Property="Text">
+          <Value>Commande utilisée pour démarrer git (git.cmd ou git.exe)</Value>
+        </TranslationItem>
+        <TranslationItem Name="label15" Property="Text">
+          <Value>Chemin vers plink.exe</Value>
+        </TranslationItem>
+        <TranslationItem Name="label16" Property="Text">
+          <Value>Chemin de puttygen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label17" Property="Text">
+          <Value>Chemin de pageant</Value>
+        </TranslationItem>
+        <TranslationItem Name="label18" Property="Text">
+          <Value>OpenSSH est un outil console. PuTTY est plus ergonomique sous Windows, 
+mais nécessite que le client d'authentification tourne en arrière-plan.</Value>
+        </TranslationItem>
+        <TranslationItem Name="label19" Property="Text">
+          <Value>Commande de l'outil de fusion</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Value>Email utilisateur</Value>
+        </TranslationItem>
+        <TranslationItem Name="label20" Property="Text">
+          <Value>Les paramètres locaux servent à
+ définir des paramètres spécifiques
+ à un dépôt.</Value>
+        </TranslationItem>
+        <TranslationItem Name="label21" Property="Text">
+          <Value>Vous devez entrer un chemin valide
+ vers git avant de pouvoir modifier
+ les paramètres locaux</Value>
+        </TranslationItem>
+        <TranslationItem Name="label22" Property="Text">
+          <Value>Dictionnaire pour vérification d'orthographe.</Value>
+        </TranslationItem>
+        <TranslationItem Name="label23" Property="Text">
+          <Value>Serveur smtp pour l'envoi de patchs par email</Value>
+        </TranslationItem>
+        <TranslationItem Name="label25" Property="Text">
+          <Value>Couleur des tags</Value>
+        </TranslationItem>
+        <TranslationItem Name="label27" Property="Text">
+          <Value>Couleur des lignes supprimées</Value>
+        </TranslationItem>
+        <TranslationItem Name="label28" Property="Text">
+          <Value>Garder une sauvegarde (.orig) après fusion</Value>
+        </TranslationItem>
+        <TranslationItem Name="label29" Property="Text">
+          <Value>Couleur lignes ajoutées</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>Nom d'utilisateur</Value>
+        </TranslationItem>
+        <TranslationItem Name="label30" Property="Text">
+          <Value>Garder une sauvegarde (.orig) après fusion</Value>
+        </TranslationItem>
+        <TranslationItem Name="label47" Property="Text">
+          <Value>jours</Value>
+        </TranslationItem>
+        <TranslationItem Name="label49" Property="Text">
+          <Value>Langue (redémarrage requis)</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Value>Editeur</Value>
+        </TranslationItem>
+        <TranslationItem Name="label54" Property="Text">
+          <Value>Style d'icônes</Value>
+        </TranslationItem>
+        <TranslationItem Name="label55" Property="Text">
+          <Value>Couleur icône</Value>
+        </TranslationItem>
+        <TranslationItem Name="label56" Property="Text">
+          <Value>Police</Value>
+        </TranslationItem>
+        <TranslationItem Name="label6" Property="Text">
+          <Value>Editeur</Value>
+        </TranslationItem>
+        <TranslationItem Name="label9" Property="Text">
+          <Value>Vous devez entrer un chemin valide
+ vers git avant de pouvoir modifier
+ les paramètres globaux.</Value>
+        </TranslationItem>
+        <TranslationItem Name="lbl_icon" Property="Text">
+          <Value>Icône:</Value>
+        </TranslationItem>
+        <TranslationItem Name="LightblueIcon" Property="Text">
+          <Value>Bleu clair</Value>
+        </TranslationItem>
+        <TranslationItem Name="LocalSettings" Property="Text">
+          <Value>Paramètres locaux</Value>
+        </TranslationItem>
+        <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
+          <Value>Nom</Value>
+        </TranslationItem>
+        <TranslationItem Name="nameLabel" Property="Text">
+          <Value>Nom:</Value>
+        </TranslationItem>
+        <TranslationItem Name="Other" Property="Text">
+          <Value>Autre client ssh</Value>
+        </TranslationItem>
+        <TranslationItem Name="OtherSshBrowse" Property="Text">
+          <Value>Parcourir</Value>
+        </TranslationItem>
+        <TranslationItem Name="PageantBrowse" Property="Text">
+          <Value>Parcourir</Value>
+        </TranslationItem>
+        <TranslationItem Name="PlinkBrowse" Property="Text">
+          <Value>Parcourir</Value>
+        </TranslationItem>
+        <TranslationItem Name="PurpleIcon" Property="Text">
+          <Value>Violet</Value>
+        </TranslationItem>
+        <TranslationItem Name="PuttygenBrowse" Property="Text">
+          <Value>Parcourir</Value>
+        </TranslationItem>
+        <TranslationItem Name="RandomIcon" Property="Text">
+          <Value>Aléatoire</Value>
+        </TranslationItem>
+        <TranslationItem Name="RedIcon" Property="Text">
+          <Value>Rouge</Value>
+        </TranslationItem>
+        <TranslationItem Name="removeScriptButton" Property="Text">
+          <Value>Supprimer</Value>
+        </TranslationItem>
+        <TranslationItem Name="scriptEnabled" Property="Text">
+          <Value>Activé</Value>
+        </TranslationItem>
+        <TranslationItem Name="scriptNeedsConfirmation" Property="Text">
+          <Value>Demander confirmation</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShellExtensionsRegistered_Fix" Property="Text">
+          <Value>Réparer</Value>
+        </TranslationItem>
+        <TranslationItem Name="SshConfig_Fix" Property="Text">
+          <Value>Réparer</Value>
+        </TranslationItem>
+        <TranslationItem Name="StartPage" Property="Text">
+          <Value>Page de démarrage</Value>
+        </TranslationItem>
+        <TranslationItem Name="tabPageHotkeys" Property="Text">
+          <Value>Racourcis clavier</Value>
+        </TranslationItem>
+        <TranslationItem Name="translationConfig_Fix" Property="Text">
+          <Value>Réparer</Value>
+        </TranslationItem>
+        <TranslationItem Name="UserNameSet_Fix" Property="Text">
+          <Value>Réparer</Value>
+        </TranslationItem>
+        <TranslationItem Name="YellowIcon" Property="Text">
+          <Value>Jaune</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormTranslate">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -644,6 +1192,9 @@
         </TranslationItem>
         <TranslationItem Name="neutralValueDataGridViewTextBoxColumn" Property="HeaderText">
           <Value>Valeur Neutre</Value>
+        </TranslationItem>
+        <TranslationItem Name="noLanguageCodeSelectedCaption" Property="Text">
+          <Value>Code langage:</Value>
         </TranslationItem>
         <TranslationItem Name="propertyDataGridViewTextBoxColumn" Property="HeaderText">
           <Value>Propriété</Value>
@@ -676,7 +1227,56 @@
           <Value>ValeurTraduite</Value>
         </TranslationItem>
         <TranslationItem Name="translateProgressText" Property="Text">
-          <Value>Traduits {0] sur {1}</Value>
+          <Value>Traduits {0} sur {1}</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="Strings">
+      <translationItems>
+        <TranslationItem Name="_authorText" Property="Text">
+          <Value>Auteur</Value>
+        </TranslationItem>
+        <TranslationItem Name="_dayAgo" Property="Text">
+          <Value>Il y a {0} jour</Value>
+        </TranslationItem>
+        <TranslationItem Name="_daysAgo" Property="Text">
+          <Value>Il y a {0} jours</Value>
+        </TranslationItem>
+        <TranslationItem Name="_hourAgo" Property="Text">
+          <Value>Il y a {0} heure</Value>
+        </TranslationItem>
+        <TranslationItem Name="_hoursAgo" Property="Text">
+          <Value>Il y a {0} heures</Value>
+        </TranslationItem>
+        <TranslationItem Name="_minuteAgo" Property="Text">
+          <Value>Il y a {0} minute</Value>
+        </TranslationItem>
+        <TranslationItem Name="_minutesAgo" Property="Text">
+          <Value>Il y a {0} minutes</Value>
+        </TranslationItem>
+        <TranslationItem Name="_monthAgo" Property="Text">
+          <Value>Il y a {0} mois</Value>
+        </TranslationItem>
+        <TranslationItem Name="_monthsAgo" Property="Text">
+          <Value>Il y a {0} mois</Value>
+        </TranslationItem>
+        <TranslationItem Name="_secondAgo" Property="Text">
+          <Value>Il y a {0} seconde</Value>
+        </TranslationItem>
+        <TranslationItem Name="_secondsAgo" Property="Text">
+          <Value>Il y a {0} secondes</Value>
+        </TranslationItem>
+        <TranslationItem Name="_weekAgo" Property="Text">
+          <Value>Il y a {0} semaine</Value>
+        </TranslationItem>
+        <TranslationItem Name="_weeksAgo" Property="Text">
+          <Value>Il y a {0} semaines</Value>
+        </TranslationItem>
+        <TranslationItem Name="_yearAgo" Property="Text">
+          <Value>Il y a {0} an</Value>
+        </TranslationItem>
+        <TranslationItem Name="_yearsAgo" Property="Text">
+          <Value>Il y a {0} ans</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
