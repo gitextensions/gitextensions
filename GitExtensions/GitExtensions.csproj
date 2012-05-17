@@ -62,7 +62,9 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="LoadPlugins.cs" />
     <Compile Include="GitPluginSettingsContainer.cs" />
     <Compile Include="PluginExtraction.cs" />
