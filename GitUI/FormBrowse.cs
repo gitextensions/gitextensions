@@ -348,10 +348,7 @@ namespace GitUI
             List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
 
             if (r == null || !r.Path.Equals(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
-            {
                 Repositories.AddMostRecentRepository(Settings.WorkingDir);
-                r = Repositories.RepositoryHistory.Repositories[0];
-            }
 
             using (var graphics = CreateGraphics())
             {
@@ -363,7 +360,7 @@ namespace GitUI
                 splitter.SplitRecentRepos(Repositories.RepositoryHistory.Repositories, mostRecentRepos, mostRecentRepos);
             }
 
-            RecentRepoInfo ri = mostRecentRepos.Find((e) => e.Repo.Equals(r));
+            RecentRepoInfo ri = mostRecentRepos.Find((e) => e.Repo.Path.Equals(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase));
 
             if (ri == null)
                 _NO_TRANSLATE_Workingdir.Text = Settings.WorkingDir;
