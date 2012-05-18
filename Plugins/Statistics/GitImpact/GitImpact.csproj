@@ -53,6 +53,7 @@
     <Compile Include="ImpactControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\GitCommands\GitCommands.csproj">

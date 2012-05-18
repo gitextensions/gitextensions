@@ -83,6 +83,7 @@
     <Compile Include="PieChart\SliceSelectedArgs.cs" />
     <Compile Include="PieChart\ShadowStyle.cs" />
     <Compile Include="PieChart\SliceSelectedHandler.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\GitCommands\GitCommands.csproj">

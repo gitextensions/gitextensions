@@ -49,13 +49,16 @@
     <Compile Include="GithubPullRequest.cs" />
     <Compile Include="GithubPullRequestDiscussion.cs" />
     <Compile Include="GithubRepo.cs" />
-    <Compile Include="OAuth.cs" />
+    <Compile Include="OAuth.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="OAuth.Designer.cs">
       <DependentUpon>OAuth.cs</DependentUpon>
     </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\GitCommands\GitCommands.csproj">

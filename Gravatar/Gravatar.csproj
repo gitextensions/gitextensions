@@ -62,6 +62,7 @@
     <Compile Include="IImageCache.cs" />
     <Compile Include="IsolatedStorageImageCache.cs" />
     <Compile Include="MD5.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
