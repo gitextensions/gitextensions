@@ -216,13 +216,15 @@ namespace GitUI.SpellChecker
 
         private void SpellCheckContextMenuOpening(object sender, CancelEventArgs e)
         {
+            TextBox.Focus();
+            
             SpellCheckContextMenu.Items.Clear();
 
             try
             {
                 var pos = TextBox.GetCharIndexFromPosition(TextBox.PointToClient(MousePosition));
 
-                if (pos <= 0)
+                if (pos < 0)
                 {
                     e.Cancel = true;
                     return;
@@ -239,10 +241,13 @@ namespace GitUI.SpellChecker
 
                 var addToDictionary = SpellCheckContextMenu.Items.Add(addToDictionaryText.Text);
                 addToDictionary.Click += AddToDictionaryClick;
+                addToDictionary.Enabled = (_spelling.CurrentWord.Length > 0);
                 var ignoreWord = SpellCheckContextMenu.Items.Add(ignoreWordText.Text);
                 ignoreWord.Click += IgnoreWordClick;
+                ignoreWord.Enabled = (_spelling.CurrentWord.Length > 0);
                 var removeWord = SpellCheckContextMenu.Items.Add(removeWordText.Text);
                 removeWord.Click += RemoveWordClick;
+                removeWord.Enabled = (_spelling.CurrentWord.Length > 0);
 
                 SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
 
@@ -441,7 +446,7 @@ namespace GitUI.SpellChecker
             {
                 if (!Clipboard.ContainsText())
                 {
-                    e.Handled = true;                
+                    e.Handled = true;
                     return;
                 }
                 // remove image data from clipboard
@@ -476,12 +481,6 @@ namespace GitUI.SpellChecker
                 TextBox.ForeColor = SystemColors.WindowText;
             }
             IsWatermarkShowing = false;
-        }
-
-        public new bool Focus()
-        {
-            HideWatermark();
-            return base.Focus();
         }
     }
 }
