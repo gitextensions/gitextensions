@@ -397,8 +397,8 @@ namespace GitUI
             int idx = mergetoolCmd.IndexOf(executablePattern);
             if (idx >= 0)
             {
-                mergetoolPath = mergetoolCmd.Substring(0, idx + executablePattern.Length).Trim(new[] { '\"', ' ' });
-                mergetoolCmd = mergetoolCmd.Substring(idx + executablePattern.Length);
+                mergetoolPath = mergetoolCmd.Substring(0, idx + executablePattern.Length + 1).Trim(new[] { '\"', ' ' });
+                mergetoolCmd = mergetoolCmd.Substring(idx + executablePattern.Length + 1);
             }
             Cursor.Current = Cursors.Default;
         }
