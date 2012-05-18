@@ -12,6 +12,7 @@ namespace GitUI
 {
     public partial class FormResolveConflicts : GitExtensionsForm
     {
+        #region Translations
         readonly TranslationString uskUseCustomMergeScript = new TranslationString("There is a custom merge script({0}) for this file type." + Environment.NewLine + Environment.NewLine + "Do you want to use this custom merge script?");
         readonly TranslationString uskUseCustomMergeScriptCaption = new TranslationString("Custom merge script");
         readonly TranslationString fileUnchangedAfterMerge = new TranslationString("The file has not been modified by the merge. Usually this means that the file has been saved to the wrong location." + Environment.NewLine + Environment.NewLine + "The merge conflict will not be marked as solved. Please try again.");
@@ -69,8 +70,8 @@ namespace GitUI
             new TranslationString("Current format (*.{0})");
         private readonly TranslationString _allFilesFilter =
             new TranslationString("All files (*.*)");
-
-
+        #endregion
+        
         public FormResolveConflicts()
         {
             InitializeComponent(); Translate();
@@ -385,9 +386,9 @@ namespace GitUI
             }
             Cursor.Current = Cursors.WaitCursor;
 
-            mergetoolCmd = Settings.Module.GetEffectiveSetting("mergetool." + mergetool + ".cmd");
+            mergetoolCmd = Settings.Module.GetEffectiveSetting(string.Format("mergetool.{0}.cmd", mergetool));
 
-            mergetoolPath = Settings.Module.GetEffectiveSetting("mergetool." + mergetool + ".path");
+            mergetoolPath = Settings.Module.GetEffectiveSetting(string.Format("mergetool.{0}.path", mergetool));
 
             if (string.IsNullOrEmpty(mergetool) || mergetool == "kdiff3")
                 mergetoolCmd = mergetoolPath + " \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"";

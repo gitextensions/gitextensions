@@ -77,7 +77,7 @@ namespace GitUI
             return "";
         }
 
-        private string UnquoteString(string str)
+        private static string UnquoteString(string str)
         {
             if (String.IsNullOrEmpty(str))
                 return str;

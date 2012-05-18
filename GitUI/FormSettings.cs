@@ -438,9 +438,9 @@ namespace GitUI
                                                                                              OrdinalIgnoreCase);
 
                 if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
-                    MergetoolPath.Text = globalConfig.GetValue("mergetool." + GlobalMergeTool.Text + ".path");
+                    MergetoolPath.Text = globalConfig.GetValue(string.Format("mergetool.{0}.path", GlobalMergeTool.Text));
                 if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
-                    MergeToolCmd.Text = globalConfig.GetValue("mergetool." + GlobalMergeTool.Text + ".cmd");
+                    MergeToolCmd.Text = globalConfig.GetValue(string.Format("mergetool.{0}.cmd", GlobalMergeTool.Text));
 
                 string iconColor = Settings.IconColor.ToLower();
                 DefaultIcon.Checked = iconColor == "default";
@@ -456,9 +456,9 @@ namespace GitUI
                 GlobalDiffTool.Text = GetGlobalDiffToolFromConfig();
 
                 if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
-                    DifftoolPath.Text = globalConfig.GetValue("difftool." + GlobalDiffTool.Text + ".path");
+                    DifftoolPath.Text = globalConfig.GetValue(string.Format("difftool.{0}.path", GlobalDiffTool.Text));
                 if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
-                    DifftoolCmd.Text = globalConfig.GetValue("difftool." + GlobalDiffTool.Text + ".cmd");
+                    DifftoolCmd.Text = globalConfig.GetValue(string.Format("difftool.{0}.cmd", GlobalDiffTool.Text));
 
                 SetCheckboxFromString(GlobalKeepMergeBackup, globalConfig.GetValue("mergetool.keepBackup"));
 
@@ -698,16 +698,16 @@ namespace GitUI
             SetGlobalDiffToolToConfig(globalConfig, GlobalDiffTool.Text);
 
             if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
-                globalConfig.SetValue("difftool." + GlobalDiffTool.Text + ".path", DifftoolPath.Text);
+                globalConfig.SetValue(string.Format("difftool.{0}.path", GlobalDiffTool.Text), DifftoolPath.Text);
             if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
-                globalConfig.SetValue("difftool." + GlobalDiffTool.Text + ".cmd", DifftoolCmd.Text);
+                globalConfig.SetValue(string.Format("difftool.{0}.cmd", GlobalDiffTool.Text), DifftoolCmd.Text);
 
             globalConfig.SetValue("merge.tool", GlobalMergeTool.Text);
 
             if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
-                globalConfig.SetValue("mergetool." + GlobalMergeTool.Text + ".path", MergetoolPath.Text);
+                globalConfig.SetValue(string.Format("mergetool.{0}.path", GlobalMergeTool.Text), MergetoolPath.Text);
             if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
-                globalConfig.SetValue("mergetool." + GlobalMergeTool.Text + ".cmd", MergeToolCmd.Text);
+                globalConfig.SetValue(string.Format("mergetool.{0}.cmd", GlobalMergeTool.Text), MergeToolCmd.Text);
 
             if (GlobalKeepMergeBackup.CheckState == CheckState.Checked)
                 globalConfig.SetValue("mergetool.keepBackup", "true");
@@ -1062,7 +1062,7 @@ namespace GitUI
                 AutoConfigMergeToolCmd(true);
 
                 Settings.Module.SetGlobalSetting(
-                    "mergetool." + GetMergeTool() + ".cmd", MergeToolCmd.Text);
+                    string.Format("mergetool.{0}.cmd", GetMergeTool()), MergeToolCmd.Text);
             }
             
             if (IsMergeTool("kdiff3") &&
@@ -1094,8 +1094,8 @@ namespace GitUI
         {
             if (loadingSettings)
                 return;
-            DifftoolPath.Text = Settings.Module.GetGlobalSetting("difftool." + GlobalDiffTool.Text.Trim() + ".path");
-            DifftoolCmd.Text = Settings.Module.GetGlobalSetting("difftool." + GlobalDiffTool.Text.Trim() + ".cmd");
+            DifftoolPath.Text = Settings.Module.GetGlobalSetting(string.Format("difftool.{0}.path", GlobalDiffTool.Text.Trim()));
+            DifftoolCmd.Text = Settings.Module.GetGlobalSetting(string.Format("difftool.{0}.cmd", GlobalDiffTool.Text.Trim()));
 
             if (GlobalDiffTool.Text.Trim().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
                 ResolveDiffToolPath();
@@ -1122,8 +1122,8 @@ namespace GitUI
         {
             if (loadingSettings)
                 return;
-            MergetoolPath.Text = Settings.Module.GetGlobalSetting("mergetool." + GlobalMergeTool.Text.Trim() + ".path");
-            MergeToolCmd.Text = Settings.Module.GetGlobalSetting("mergetool." + GlobalMergeTool.Text.Trim() + ".cmd");
+            MergetoolPath.Text = Settings.Module.GetGlobalSetting(string.Format("mergetool.{0}.path", GlobalMergeTool.Text.Trim()));
+            MergeToolCmd.Text = Settings.Module.GetGlobalSetting(string.Format("mergetool.{0}.cmd", GlobalMergeTool.Text.Trim()));
 
             if (GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
                 string.IsNullOrEmpty(MergeToolCmd.Text))
@@ -1838,7 +1838,7 @@ namespace GitUI
                 string mergetool = GetMergeTool().ToLowerInvariant();
                 if (mergetool == "p4merge" || mergetool == "tmerge")
                 {
-                    string p = Settings.Module.GetGlobalSetting("mergetool." + mergetool + ".cmd");
+                    string p = Settings.Module.GetGlobalSetting(string.Format("mergetool.{0}.cmd", mergetool));
                     if (string.IsNullOrEmpty(p))
                     {
                         MergeTool.BackColor = Color.LightSalmon;
