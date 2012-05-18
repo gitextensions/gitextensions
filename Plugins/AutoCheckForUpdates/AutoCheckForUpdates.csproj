@@ -61,6 +61,7 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AutoCheckForUpdates.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Updates.cs">
       <SubType>Form</SubType>
     </Compile>
