@@ -527,6 +527,12 @@ namespace GitUI.SpellChecker
             IsWatermarkShowing = false;
         }
         
+        public new bool Focus()
+        {
+            HideWatermark();
+            return base.Focus();
+        }
+        
         private void UndoMenuItemClick(object sender, EventArgs e)
         {
             TextBox.Undo();
