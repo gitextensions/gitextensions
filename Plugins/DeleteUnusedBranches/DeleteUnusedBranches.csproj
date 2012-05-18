@@ -55,6 +55,7 @@
     <Compile Include="DeleteUnusedBranchesForm.Designer.cs">
       <DependentUpon>DeleteUnusedBranchesForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SortableBranchesList.cs" />
   </ItemGroup>
   <ItemGroup>

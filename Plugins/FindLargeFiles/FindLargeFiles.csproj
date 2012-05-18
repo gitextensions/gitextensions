@@ -55,6 +55,7 @@
     <Compile Include="FindLargeFilesForm.Designer.cs">
       <DependentUpon>FindLargeFilesForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SortableObjectsList.cs" />
   </ItemGroup>
   <ItemGroup>
