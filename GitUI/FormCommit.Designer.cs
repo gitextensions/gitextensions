@@ -1,4 +1,4 @@
-﻿using System.Windows.Forms;
+using System.Windows.Forms;
 using GitUI.Editor;
 using GitUI.SpellChecker;
 
@@ -128,6 +128,7 @@ namespace GitUI
             this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
             this.copyFolderNameMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemStatusBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.openContainingFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.UnstagedFileContext.SuspendLayout();
             this.splitMain.Panel1.SuspendLayout();
             this.splitMain.Panel2.SuspendLayout();
@@ -163,6 +164,7 @@ namespace GitUI
             this.openToolStripMenuItem,
             this.openWithToolStripMenuItem,
             this.openWithDifftoolToolStripMenuItem,
+            this.openContainingFolderToolStripMenuItem,
             this.toolStripSeparator4,
             this.editFileToolStripMenuItem,
             this.deleteFileToolStripMenuItem,
@@ -215,7 +217,7 @@ namespace GitUI
             // 
             this.openWithToolStripMenuItem.Name = "openWithToolStripMenuItem";
             this.openWithToolStripMenuItem.Size = new System.Drawing.Size(229, 24);
-            this.openWithToolStripMenuItem.Text = "Open With";
+            this.openWithToolStripMenuItem.Text = "Open with";
             this.openWithToolStripMenuItem.Click += new System.EventHandler(this.OpenWithToolStripMenuItemClick);
             // 
             // openWithDifftoolToolStripMenuItem
@@ -223,7 +225,7 @@ namespace GitUI
             this.openWithDifftoolToolStripMenuItem.Name = "openWithDifftoolToolStripMenuItem";
             this.openWithDifftoolToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
             this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(229, 24);
-            this.openWithDifftoolToolStripMenuItem.Text = "Open With Difftool";
+            this.openWithDifftoolToolStripMenuItem.Text = "Open with difftool";
             this.openWithDifftoolToolStripMenuItem.Click += new System.EventHandler(this.OpenWithDifftoolToolStripMenuItemClick);
             // 
             // toolStripSeparator4
@@ -266,7 +268,7 @@ namespace GitUI
             // 
             this.filenameToClipboardToolStripMenuItem.Name = "filenameToClipboardToolStripMenuItem";
             this.filenameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(229, 24);
-            this.filenameToClipboardToolStripMenuItem.Text = "Copy Filename";
+            this.filenameToClipboardToolStripMenuItem.Text = "Copy filename";
             this.filenameToClipboardToolStripMenuItem.Click += new System.EventHandler(this.FilenameToClipboardToolStripMenuItemClick);
             // 
             // fileTooltip
@@ -982,7 +984,7 @@ namespace GitUI
             this.openSubmoduleMenuItem.Name = "openSubmoduleMenuItem";
             this.openSubmoduleMenuItem.Size = new System.Drawing.Size(267, 24);
             this.openSubmoduleMenuItem.Tag = "1";
-            this.openSubmoduleMenuItem.Text = "Open with Git Extensions...";
+            this.openSubmoduleMenuItem.Text = "Open with Git Extensions";
             this.openSubmoduleMenuItem.Click += new System.EventHandler(this.openSubmoduleMenuItem_Click);
             // 
             // openFolderMenuItem
@@ -1015,6 +1017,13 @@ namespace GitUI
             // gitItemStatusBindingSource
             // 
             this.gitItemStatusBindingSource.DataSource = typeof(GitCommands.GitItemStatus);
+            // 
+            // openContainingFolderToolStripMenuItem
+            // 
+            this.openContainingFolderToolStripMenuItem.Name = "openContainingFolderToolStripMenuItem";
+            this.openContainingFolderToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.openContainingFolderToolStripMenuItem.Text = "Open containing folder";
+            this.openContainingFolderToolStripMenuItem.Click += new System.EventHandler(this.openContainingFolderToolStripMenuItem_Click);
             // 
             // FormCommit
             // 
@@ -1156,5 +1165,6 @@ namespace GitUI
         private ToolStripSeparator toolStripMenuItem1;
         private ToolStripMenuItem generateListOfChangesInSubmodulesChangesToolStripMenuItem;
         private ToolStripDropDownButton commitTemplatesToolStripMenuItem;
+        private ToolStripMenuItem openContainingFolderToolStripMenuItem;
     }
 }
