@@ -302,8 +302,11 @@ namespace GitUI
             combo.DisplayMember = "EncodingName";
         }
 
+        private bool loadingSettings;
+
         public void LoadSettings()
         {
+            loadingSettings = true;
             try
             {
                 GitCommandHelpers.SetEnvironmentVariable();
@@ -395,7 +398,6 @@ namespace GitUI
                 _NO_TRANSLATE_ColorSectionLabel.Text = Settings.DiffSectionColor.Name;
                 _NO_TRANSLATE_ColorSectionLabel.ForeColor =
                     ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorSectionLabel.BackColor);
-
 
                 SmtpServer.Text = Settings.Smtp;
 
@@ -510,6 +512,7 @@ namespace GitUI
                 // and has their day ruined.
                 DialogResult = DialogResult.Abort;
             }
+            loadingSettings = false;
         }
 
         private void Ok_Click(object sender, EventArgs e)
@@ -935,15 +938,19 @@ namespace GitUI
             string exeFile = MergeToolsHelper.Instance.FindDiffToolExeFile(GlobalDiffTool.Text, out exeName);
             if (String.IsNullOrEmpty(exeFile))
             {
-                DifftoolPath.Text = "";
-                DifftoolCmd.Text = "";
+                DifftoolPath.SelectAll();
+                DifftoolPath.SelectedText = "";
+                DifftoolCmd.SelectAll();
+                DifftoolCmd.SelectedText = "";
                 if (sender != null)
                     MessageBox.Show(this, String.Format(_toolSuggestPath.Text, exeName),
                         __diffToolSuggestCaption.Text);
                 return;
             }
-            DifftoolPath.Text = exeFile;
-            DifftoolCmd.Text = MergeToolsHelper.Instance.DiffToolCmdSuggest(GlobalDiffTool.Text, exeFile);
+            DifftoolPath.SelectAll(); // allow Undo action
+            DifftoolPath.SelectedText = exeFile;
+            DifftoolCmd.SelectAll();
+            DifftoolCmd.SelectedText = MergeToolsHelper.Instance.DiffToolCmdSuggest(GlobalDiffTool.Text, exeFile);
         }
 
         private void MergeToolCmdSuggest_Click(object sender, EventArgs e)
@@ -955,15 +962,19 @@ namespace GitUI
             string exeFile = MergeToolsHelper.Instance.FindMergeToolExeFile(GlobalMergeTool.Text, out exeName);
             if (String.IsNullOrEmpty(exeFile))
             {
-                MergetoolPath.Text = "";
-                MergeToolCmd.Text = "";
+                MergetoolPath.SelectAll();
+                MergetoolPath.SelectedText = "";
+                MergeToolCmd.SelectAll();
+                MergeToolCmd.SelectedText = "";
                 if (sender != null)
                     MessageBox.Show(this, String.Format(_toolSuggestPath.Text, exeName),
                         __mergeToolSuggestCaption.Text);
                 return;
             }
-            MergetoolPath.Text = exeFile;
-            MergeToolCmd.Text = MergeToolsHelper.Instance.MergeToolcmdSuggest(GlobalMergeTool.Text, exeFile);
+            MergetoolPath.SelectAll(); // allow Undo action
+            MergetoolPath.SelectedText = exeFile;
+            MergeToolCmd.SelectAll();
+            MergeToolCmd.SelectedText = MergeToolsHelper.Instance.MergeToolcmdSuggest(GlobalMergeTool.Text, exeFile);
         }
 
         private void AutoConfigMergeToolCmd(bool silent)
@@ -1071,9 +1082,10 @@ namespace GitUI
                 MergetoolPath.Text = SelectFile(".", "*.exe (*.exe)|*.exe", MergetoolPath.Text);
         }
 
-
-        private void ExternalDiffTool_TextChanged(object sender, EventArgs e)
+        private void GlobalDiffTool_TextChanged(object sender, EventArgs e)
         {
+            if (loadingSettings)
+                return;
             DifftoolPath.Text = Settings.Module.GetGlobalSetting(string.Format("difftool.{0}.path", GlobalDiffTool.Text.Trim()));
             DifftoolCmd.Text = Settings.Module.GetGlobalSetting(string.Format("difftool.{0}.cmd", GlobalDiffTool.Text.Trim()));
 
@@ -1100,6 +1112,8 @@ namespace GitUI
 
         private void GlobalMergeTool_TextChanged(object sender, EventArgs e)
         {
+            if (loadingSettings)
+                return;
             MergetoolPath.Text = Settings.Module.GetGlobalSetting(string.Format("mergetool.{0}.path", GlobalMergeTool.Text.Trim()));
             MergeToolCmd.Text = Settings.Module.GetGlobalSetting(string.Format("mergetool.{0}.cmd", GlobalMergeTool.Text.Trim()));
 
@@ -1202,6 +1216,8 @@ namespace GitUI
 
         private void GitPath_TextChanged(object sender, EventArgs e)
         {
+            if (loadingSettings)
+                return;
             Settings.GitCommand = GitPath.Text;
             LoadSettings();
         }

@@ -65,12 +65,11 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Commands\SearchFile.cs" />
     <Compile Include="Git\GitCommands.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>
-      </SubType>
-    </Compile>
     <Compile Include="Commands\About.cs" />
     <Compile Include="Commands\ApplyPatch.cs" />
     <Compile Include="Commands\Browse.cs" />
