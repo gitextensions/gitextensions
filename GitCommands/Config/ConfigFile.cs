@@ -31,9 +31,12 @@ namespace GitCommands.Config
         private readonly string _fileName;
         private readonly IList<ConfigSection> _sections;
 
-        public ConfigFile(string fileName)
+        public bool Local { get; private set; }
+
+        public ConfigFile(string fileName, bool aLocal)
         {
             _sections = new List<ConfigSection>();
+            Local = aLocal;
 
             _fileName = fileName;
             try
@@ -52,12 +55,17 @@ namespace GitCommands.Config
             return _sections;
         }
 
+        private Encoding GetEncoding()
+        {
+            return Local ? Settings.AppEncoding : Settings.GetAppEncoding(false);
+        }
+
         private void Load()
         {
             if (string.IsNullOrEmpty(Path.GetFileName(_fileName)) || !File.Exists(_fileName))
                 return;
 
-            FindSections(File.ReadAllLines(_fileName, Settings.AppEncoding));
+            FindSections(File.ReadAllLines(_fileName, GetEncoding()));
         }
 
         private void FindSections(IEnumerable<string> fileLines)
@@ -119,7 +127,7 @@ namespace GitCommands.Config
                 FileInfoExtensions
                     .MakeFileTemporaryWritable(_fileName,
                                        x =>
-                                       File.WriteAllText(_fileName, configFileContent.ToString(), Settings.AppEncoding));
+                                       File.WriteAllText(_fileName, configFileContent.ToString(), GetEncoding()));
             }
             catch (Exception ex)
             {
