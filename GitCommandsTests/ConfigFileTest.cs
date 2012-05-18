@@ -45,7 +45,7 @@ namespace GitCommandsTests
                 //Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), Settings.AppEncoding);
             }
-            ConfigFile configFile = new ConfigFile(GetConfigFileName() + "\\");
+            ConfigFile configFile = new ConfigFile(GetConfigFileName() + "\\", false);
             
             Assert.IsNotNull(configFile);
         }
