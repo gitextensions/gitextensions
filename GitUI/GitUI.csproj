@@ -1230,29 +1230,91 @@
     <None Include="Properties\DataSources\GitCommands.GitRevision.datasource" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\Bin\Logo\cow-head-blue.ico">
+      <Link>Resources\cow-head-blue.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\cow-head-green.ico">
+      <Link>Resources\cow-head-green.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\cow-head-purple.ico">
+      <Link>Resources\cow-head-purple.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\cow-head-red.ico">
+      <Link>Resources\cow-head-red.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\cow-head-yellow.ico">
+      <Link>Resources\cow-head-yellow.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\cow-head.ico">
+      <Link>Resources\cow-head.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\git-extensions-logo-final-128.png">
+      <Link>Resources\git-extensions-logo-final-128.png</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\git-extensions-logo-final.ico">
+      <Link>Resources\git-extensions-logo-final.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\git-extensions-logo-final_blue.ico">
+      <Link>Resources\git-extensions-logo-final_blue.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\git-extensions-logo-final_green.ico">
+      <Link>Resources\git-extensions-logo-final_green.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\git-extensions-logo-final_lightblue.ico">
+      <Link>Resources\git-extensions-logo-final_lightblue.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\git-extensions-logo-final_mixed.ico">
+      <Link>Resources\git-extensions-logo-final_mixed.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\git-extensions-logo-final_mixed_blue.ico">
+      <Link>Resources\git-extensions-logo-final_mixed_blue.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\git-extensions-logo-final_mixed_green.ico">
+      <Link>Resources\git-extensions-logo-final_mixed_green.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\git-extensions-logo-final_mixed_lightblue.ico">
+      <Link>Resources\git-extensions-logo-final_mixed_lightblue.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\git-extensions-logo-final_mixed_purple.ico">
+      <Link>Resources\git-extensions-logo-final_mixed_purple.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\git-extensions-logo-final_mixed_red.ico">
+      <Link>Resources\git-extensions-logo-final_mixed_red.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\git-extensions-logo-final_mixed_yellow.ico">
+      <Link>Resources\git-extensions-logo-final_mixed_yellow.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\git-extensions-logo-final_purple.ico">
+      <Link>Resources\git-extensions-logo-final_purple.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\git-extensions-logo-final_red.ico">
+      <Link>Resources\git-extensions-logo-final_red.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\git-extensions-logo-final_yellow.ico">
+      <Link>Resources\git-extensions-logo-final_yellow.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\x-with-arrow.ico">
+      <Link>Resources\x-with-arrow.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\x-with-arrow_blue.ico">
+      <Link>Resources\x-with-arrow_blue.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\x-with-arrow_green.ico">
+      <Link>Resources\x-with-arrow_green.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\x-with-arrow_lightblue.ico">
+      <Link>Resources\x-with-arrow_lightblue.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\x-with-arrow_purple.ico">
+      <Link>Resources\x-with-arrow_purple.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\x-with-arrow_red.ico">
+      <Link>Resources\x-with-arrow_red.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\x-with-arrow_yellow.ico">
+      <Link>Resources\x-with-arrow_yellow.ico</Link>
+    </Content>
     <Content Include="cow-head.ico" />
-    <None Include="Resources\git-extensions-logo-final.ico" />
-    <None Include="Resources\x-with-arrow_yellow.ico" />
-    <None Include="Resources\x-with-arrow.ico" />
-    <None Include="Resources\x-with-arrow_blue.ico" />
-    <None Include="Resources\x-with-arrow_green.ico" />
-    <None Include="Resources\x-with-arrow_lightblue.ico" />
-    <None Include="Resources\x-with-arrow_purple.ico" />
-    <None Include="Resources\x-with-arrow_red.ico" />
-    <None Include="Resources\git-extensions-logo-final_blue.ico" />
-    <None Include="Resources\git-extensions-logo-final_green.ico" />
-    <None Include="Resources\git-extensions-logo-final_lightblue.ico" />
-    <None Include="Resources\git-extensions-logo-final_purple.ico" />
-    <None Include="Resources\git-extensions-logo-final_red.ico" />
-    <None Include="Resources\git-extensions-logo-final_yellow.ico" />
-    <None Include="Resources\git-extensions-logo-final_mixed_yellow.ico" />
-    <None Include="Resources\git-extensions-logo-final_mixed.ico" />
-    <None Include="Resources\git-extensions-logo-final_mixed_blue.ico" />
-    <None Include="Resources\git-extensions-logo-final_mixed_green.ico" />
-    <None Include="Resources\git-extensions-logo-final_mixed_lightblue.ico" />
-    <None Include="Resources\git-extensions-logo-final_mixed_purple.ico" />
-    <None Include="Resources\git-extensions-logo-final_mixed_red.ico" />
-    <None Include="Resources\git-extensions-logo-final-128.png" />
     <None Include="Icons\commitRed.png" />
     <None Include="Icons\commitYellow.png" />
     <Content Include="Translation\German.gif">
@@ -1351,11 +1413,6 @@
     <None Include="Resources\Modified.bmp" />
     <None Include="Resources\Removed.bmp" />
     <None Include="Resources\Added.bmp" />
-    <None Include="Icons\cow-head-yellow.ico" />
-    <None Include="Icons\cow-head-red.ico" />
-    <None Include="Icons\cow-head-green.ico" />
-    <None Include="Icons\cow-head-blue.ico" />
-    <None Include="Icons\cow-head-purple.ico" />
     <None Include="Icons\stash.png" />
     <None Include="Icons\stash.bmp" />
     <None Include="Icons\90.png" />
