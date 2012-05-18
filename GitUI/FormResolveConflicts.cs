@@ -267,7 +267,7 @@ namespace GitUI
             {
                 if (Directory.Exists(Settings.WorkingDir + filename) && !File.Exists(Settings.WorkingDir + filename))
                 {
-                    var submoduleConfig = new ConfigFile(Settings.WorkingDir + ".gitmodules");
+                    var submoduleConfig = Settings.Module.GetSubmoduleConfigFile();
                     if (submoduleConfig.GetConfigSections().Any(configSection => configSection.GetPathValue("path").Trim().Equals(filename.Trim())))
                     {
                         if (MessageBox.Show(this, mergeConflictIsSubmodule.Text, mergeConflictIsSubmoduleCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)

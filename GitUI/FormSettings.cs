@@ -468,7 +468,7 @@ namespace GitUI
                         //practice this is only used to core.autocrlf. If there are more cases, we might
                         //need to consider a better solution.
                         var configFile =
-                            new ConfigFile(Path.GetDirectoryName(Settings.GitBinDir).Replace("bin", "etc\\gitconfig"));
+                            new ConfigFile(Path.GetDirectoryName(Settings.GitBinDir).Replace("bin", "etc\\gitconfig"), false);
                         globalAutocrlf = configFile.GetValue("core.autocrlf").ToLower();
                     }
                     catch

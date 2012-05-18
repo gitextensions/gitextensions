@@ -43,7 +43,7 @@ namespace GitCommandsTests
         {
             { //TESTDATA
                 //Write test config
-                File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), Encoding.UTF8);
+                File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), Settings.AppEncoding);
             }
             ConfigFile configFile = new ConfigFile(GetConfigFileName() + "\\");
             
@@ -55,7 +55,7 @@ namespace GitCommandsTests
         {
             { //TESTDATA
                 //Write test config
-                File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), Encoding.UTF8);
+                File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), Settings.AppEncoding);
 
                 //Make sure it is hidden
                 FileInfo configFile = new FileInfo(GetConfigFileName());
@@ -63,7 +63,7 @@ namespace GitCommandsTests
             }
 
             { //PERFORM TEST
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 Assert.AreEqual("value1", configFile.GetValue("section1.key1"));
                 Assert.AreEqual("value2", configFile.GetValue("section2.subsection.key2"));
                 Assert.AreEqual("value3", configFile.GetValue("section3.subsection.key3"));
@@ -74,7 +74,7 @@ namespace GitCommandsTests
 
             //CHECK WRITTEN VALUE
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 Assert.AreEqual("newvalue1", configFile.GetValue("section1.key1"));
             }
         }
@@ -84,17 +84,17 @@ namespace GitCommandsTests
         {
             { //TESTDATA
                 //Write test config
-                File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), Encoding.UTF8);
+                File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), Settings.AppEncoding);
             }
 
             { //PERFORM TEST
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 configFile.SetPathValue("directory.first", @"c:\program files\gitextensions\gitextensions.exe");
                 configFile.Save();
             }
 
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 Assert.AreEqual(@"c:/program files/gitextensions/gitextensions.exe", configFile.GetPathValue("directory.first"));
             }
         }
@@ -104,13 +104,13 @@ namespace GitCommandsTests
         {
 
             { //PERFORM TEST
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 configFile.SetPathValue("directory.first", @"c:\program files\gitextensions\gitextensions.exe");
                 configFile.Save();
             }
 
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 Assert.AreEqual(@"c:/program files/gitextensions/gitextensions.exe", configFile.GetPathValue("directory.first"));
             }
         }
@@ -125,25 +125,25 @@ namespace GitCommandsTests
                 content.AppendLine("path = test.test");
 
                 //Write test config
-                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Settings.AppEncoding);
             }
 
             //CHECK GET CONFIG VALUE
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 Assert.AreEqual("test.test", configFile.GetPathValue("submodule.test.test.path"));
             }
 
             //CHECK SET CONFIG VALUE
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 configFile.SetPathValue("submodule.test.test.path", "newvalue");
                 configFile.Save();
             }
 
             //CHECK WRITTEN VALUE
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 Assert.AreEqual("newvalue", configFile.GetPathValue("submodule.test.test.path"));
             }
         }
@@ -158,25 +158,25 @@ namespace GitCommandsTests
                 content.AppendLine("path = test.test");
 
                 //Write test config
-                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Settings.AppEncoding);
             }
 
             //CHECK GET CONFIG VALUE
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 Assert.AreEqual("test.test", configFile.GetPathValue("submodule.test.test.path"));
             }
 
             //CHECK SET CONFIG VALUE
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 configFile.SetPathValue("submodule.test.test.path", "newvalue");
                 configFile.Save();
             }
 
             //CHECK WRITTEN VALUE
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 Assert.AreEqual("newvalue", configFile.GetPathValue("submodule.test.test.path"));
             }
         }
@@ -203,25 +203,25 @@ namespace GitCommandsTests
                 content.AppendLine("	path = c:/Program Files (x86)/KDiff3/kdiff3.exe");
 
                 //Write test config
-                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Settings.AppEncoding);
             }
 
             //CHECK GET CONFIG VALUE
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 Assert.AreEqual("Sergey Pustovit", configFile.GetValue("user.name"));
             }
 
             //CHECK SET CONFIG VALUE
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 configFile.SetValue("user.name", "newvalue");
                 configFile.Save();
             }
 
             //CHECK WRITTEN VALUE
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 Assert.AreEqual("newvalue", configFile.GetValue("user.name"));
             }
         }
@@ -259,25 +259,25 @@ namespace GitCommandsTests
 
 
                 //Write test config
-                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Settings.AppEncoding);
             }
 
             //CHECK GET CONFIG VALUE
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 Assert.AreEqual("0", configFile.GetValue("core.repositoryformatversion"));
             }
 
             //CHECK SET CONFIG VALUE
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 configFile.SetValue("core.repositoryformatversion", "1");
                 configFile.Save();
             }
 
             //CHECK WRITTEN VALUE
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 Assert.AreEqual("1", configFile.GetValue("core.repositoryformatversion"));
             }
         }
@@ -297,25 +297,25 @@ namespace GitCommandsTests
                 content.AppendLine("	logregex = \\n([A-Z][A-Z0-9]+-/d+)");
 
                 //Write test config
-                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Settings.AppEncoding);
             }
 
             //CHECK GET CONFIG VALUE
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 Assert.AreEqual("\\n([A-Z][A-Z0-9]+-/d+)", configFile.GetValue("bugtraq.logregex"));
             }
 
             //CHECK SET CONFIG VALUE
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 configFile.SetValue("bugtraq.logregex", "data\\nnewline");
                 configFile.Save();
             }
 
             //CHECK WRITTEN VALUE
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 Assert.AreEqual("data\\nnewline", configFile.GetValue("bugtraq.logregex"));
             }
         }
@@ -330,25 +330,25 @@ namespace GitCommandsTests
                 content.AppendLine(@"	unc = //test/");
 
                 //Write test config
-                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Settings.AppEncoding);
             }
 
             //CHECK GET CONFIG VALUE
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 Assert.AreEqual(@"//test/", configFile.GetPathValue("path.unc"));
             }
 
             //CHECK SET CONFIG VALUE
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 configFile.SetPathValue("path.unc", @"//test/test2/");
                 configFile.Save();
             }
 
             //CHECK WRITTEN VALUE
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 Assert.AreEqual(@"//test/test2/", configFile.GetPathValue("path.unc"));
             }
         }
@@ -363,25 +363,25 @@ namespace GitCommandsTests
                 content.AppendLine(@"	unc = \\\\test\\"); //<- escaped value in config file
 
                 //Write test config
-                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Settings.AppEncoding);
             }
 
             //CHECK GET CONFIG VALUE
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 Assert.AreEqual(@"\\test\", configFile.GetPathValue("path.unc"));
             }
 
             //CHECK SET CONFIG VALUE
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 configFile.SetPathValue("path.unc", @"\\test\test2\");
                 configFile.Save();
             }
 
             //CHECK WRITTEN VALUE
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 Assert.AreEqual(@"\\test\test2\", configFile.GetPathValue("path.unc"));
             }
         }
@@ -396,25 +396,25 @@ namespace GitCommandsTests
                 content.AppendLine("	test = test");
 
                 //Write test config
-                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Settings.AppEncoding);
             }
 
             //CHECK GET CONFIG VALUE
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 Assert.AreEqual(@"test", configFile.GetValue("section.sub section.test"));
             }
 
             //CHECK SET CONFIG VALUE
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 configFile.SetValue("section.sub section.test", @"test2");
                 configFile.Save();
             }
 
             //CHECK WRITTEN VALUE
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 Assert.AreEqual(@"test2", configFile.GetValue("section.sub section.test"));
             }
         }
@@ -424,7 +424,7 @@ namespace GitCommandsTests
         {
             // create test data
             {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
 
                 configFile.AddValue("remote.origin.fetch", "+mypath");
                 configFile.AddValue("remote.origin.fetch", "+myotherpath");
@@ -435,7 +435,7 @@ namespace GitCommandsTests
             // verify
             {
 
-                ConfigFile configFile = new ConfigFile(GetConfigFileName());
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
 
                 IList<string> values = configFile.GetValues("remote.origin.fetch");
 
