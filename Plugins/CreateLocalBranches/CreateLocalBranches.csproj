@@ -47,6 +47,7 @@
       <DependentUpon>CreateLocalBranchesForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CreateLocalBranchesPlugin.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
