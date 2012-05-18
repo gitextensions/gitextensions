@@ -60,6 +60,7 @@
     </Compile>
     <Compile Include="IGitPluginForRepository.cs" />
     <Compile Include="IGitCommands.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryHosts\IRepositoryHostPlugin.cs" />
     <Compile Include="IGitPlugin.cs" />
     <Compile Include="IGitPluginSettingsContainer.cs" />

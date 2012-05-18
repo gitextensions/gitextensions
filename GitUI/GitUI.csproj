@@ -383,6 +383,7 @@
     <Compile Include="Google.cs" />
     <Compile Include="Lemmings.cs" />
     <Compile Include="ProcessOutputTimer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepoHosting\CreatePullRequestForm.cs">
       <SubType>Form</SubType>
     </Compile>
