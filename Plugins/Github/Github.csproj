@@ -5,17 +5,13 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{921F0443-C3A1-4A09-82E8-C4AFB9654943}</ProjectGuid>
+    <ProjectGuid>{5D0F8E21-48A2-4350-BB14-F8B64F24B948}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DeleteUnusedBranches</RootNamespace>
-    <AssemblyName>DeleteUnusedBranches</AssemblyName>
+    <RootNamespace>Github</RootNamespace>
+    <AssemblyName>Github</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <UpgradeBackupLocation />
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -36,42 +32,58 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GithubSharp.Core">
+      <HintPath>..\..\Bin\GithubSharp.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Branch.cs" />
-    <Compile Include="DeleteUnusedBranchesPlugin.cs" />
-    <Compile Include="DeleteUnusedBranchesForm.cs">
+    <Compile Include="ConfigureGithub.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DeleteUnusedBranchesForm.Designer.cs">
-      <DependentUpon>DeleteUnusedBranchesForm.cs</DependentUpon>
+    <Compile Include="ConfigureGithub.Designer.cs">
+      <DependentUpon>ConfigureGithub.cs</DependentUpon>
     </Compile>
+    <Compile Include="GithubHostedRepository.cs" />
+    <Compile Include="GithubPlugin.cs" />
+    <Compile Include="GithubHostedRemote.cs" />
+    <Compile Include="GithubPullRequestInformation.cs" />
+    <Compile Include="GithubHostedRemoteInformation.cs" />
+    <Compile Include="MiscHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SortableBranchesList.cs" />
+    <Compile Include="PullRequestDiscussion.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\GitCommands\GitCommands.csproj">
+      <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
+      <Name>GitCommands</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
       <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
       <Name>GitUIPluginInterfaces</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="DeleteUnusedBranchesForm.resx">
-      <DependentUpon>DeleteUnusedBranchesForm.cs</DependentUpon>
+    <EmbeddedResource Include="ConfigureGithub.resx">
+      <DependentUpon>ConfigureGithub.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Properties\DataSources\Branch.datasource" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetPath)" "..\..\..\..\GitExtensions\bin\Debug"
+copy "$(SolutionDir)\bin\GithubSharp.Core.Dll" "..\..\..\..\GitExtensions\bin\Debug"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
