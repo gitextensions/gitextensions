@@ -105,7 +105,7 @@ namespace GitCommands
         /// </summary>
         public IList<string> GetSubmodulesNames()
         {
-            var configFile = new ConfigFile(_workingdir + ".gitmodules");
+            var configFile = GetSubmoduleConfigFile();
             return configFile.GetConfigSections().Select(configSection => configSection.SubSection).ToList();
         }
 
@@ -890,15 +890,20 @@ namespace GitCommands
             return revisionsTab.Any(ex);
         }
 
+        public ConfigFile GetSubmoduleConfigFile()
+        {
+            return new ConfigFile(_workingdir + ".gitmodules", true);
+        }
+
         public string GetSubmoduleRemotePath(string name)
         {
-            var configFile = new ConfigFile(_workingdir + ".gitmodules");
+            var configFile = GetSubmoduleConfigFile();
             return configFile.GetPathValue(string.Format("submodule.{0}.url", name.Trim())).Trim();
         }
 
         public string GetSubmoduleLocalPath(string name)
         {
-            var configFile = new ConfigFile(_workingdir + ".gitmodules");
+            var configFile = GetSubmoduleConfigFile();
             return configFile.GetPathValue(string.Format("submodule.{0}.path", name.Trim())).Trim();
         }
 
@@ -952,7 +957,7 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(superprojectPath))
             {
                 var localPath = currentPath.Substring(superprojectPath.Length);
-                var configFile = new ConfigFile(superprojectPath + ".gitmodules");
+                var configFile = new ConfigFile(superprojectPath + ".gitmodules", true);
                 foreach (ConfigSection configSection in configFile.GetConfigSections())
                 {
                     if (configSection.GetPathValue("path") == localPath)
@@ -1456,7 +1461,7 @@ namespace GitCommands
 
         public ConfigFile GetLocalConfig()
         {
-            return new ConfigFile(WorkingDirGitDir() + Settings.PathSeparator.ToString() + "config");
+            return new ConfigFile(WorkingDirGitDir() + Settings.PathSeparator.ToString() + "config", true);
         }
 
         public string GetSetting(string setting)

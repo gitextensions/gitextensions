@@ -3,13 +3,13 @@
 rem
 rem Update this version number with every release
 rem
-set version=2.32
+set version=2.33
 
 set msiversion=%version:.=%
 set normal=GitExtensions%msiversion%Setup.msi
 set complete=GitExtensions%msiversion%SetupComplete.msi
 
-set msbuild="%windir%\Microsoft.NET\Framework\v3.5\MSBuild.exe"
+set msbuild="%windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe"
 set output=bin\Release\GitExtensions.msi
 set project=Setup.wixproj
 

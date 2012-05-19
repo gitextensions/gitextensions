@@ -15,6 +15,14 @@ namespace GitUI.SpellChecker
     [DefaultEvent("TextChanged")]
     public partial class EditNetSpell : GitExtensionsControl
     {
+        private readonly TranslationString undoMenuItemText = new TranslationString("Undo");
+        private readonly TranslationString redoMenuItemText = new TranslationString("Redo");
+        private readonly TranslationString cutMenuItemText = new TranslationString("Cut");
+        private readonly TranslationString copyMenuItemText = new TranslationString("Copy");
+        private readonly TranslationString pasteMenuItemText = new TranslationString("Paste");
+        private readonly TranslationString deleteMenuItemText = new TranslationString("Delete");
+        private readonly TranslationString selectAllMenuItemText = new TranslationString("Select all");
+        
         private readonly TranslationString translateEntireText = new TranslationString("Translate entire text to {0}");
         private readonly TranslationString translateCurrentWord = new TranslationString("Translate '{0}' to {1}");
         private readonly TranslationString addToDictionaryText = new TranslationString("Add to dictionary");
@@ -139,22 +147,28 @@ namespace GitUI.SpellChecker
         {
             _customUnderlines.IllFormedLines.Clear();
             _customUnderlines.Lines.Clear();
-            try
-            {
-                if (_spelling != null && TextBox.Text.Length < 5000)
-                {
-                    _spelling.Text = TextBox.Text;
-                    _spelling.ShowDialog = false;
 
-                    if (File.Exists(_spelling.Dictionary.DictionaryFile))
-                        _spelling.SpellCheck();
-                }
-            }
-            catch (Exception ex)
+            //Do not check spelling of watermark text
+            if (!IsWatermarkShowing)
             {
-                Trace.WriteLine(ex);
+                try
+                {
+                    if (_spelling != null && TextBox.Text.Length < 5000)
+                    {
+                        _spelling.Text = TextBox.Text;
+                        _spelling.ShowDialog = false;
+
+                        if (File.Exists(_spelling.Dictionary.DictionaryFile))
+                            _spelling.SpellCheck();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine(ex);
+                }
+                MarkLines();
             }
-            MarkLines();
+
             TextBox.Refresh();
         }
 
@@ -216,13 +230,51 @@ namespace GitUI.SpellChecker
 
         private void SpellCheckContextMenuOpening(object sender, CancelEventArgs e)
         {
+            TextBox.Focus();
+            
             SpellCheckContextMenu.Items.Clear();
+            
+            var undoMenuItem = (ToolStripMenuItem)SpellCheckContextMenu.Items.Add(undoMenuItemText.Text);
+            undoMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
+            undoMenuItem.Click += UndoMenuItemClick;
+            undoMenuItem.Enabled = TextBox.CanUndo;
+            var redoMenuItem = (ToolStripMenuItem)SpellCheckContextMenu.Items.Add(redoMenuItemText.Text);
+            redoMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
+            redoMenuItem.Click += RedoMenuItemClick;
+            redoMenuItem.Enabled = TextBox.CanRedo;
+            
+            SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
+
+            var cutMenuItem = (ToolStripMenuItem)SpellCheckContextMenu.Items.Add(cutMenuItemText.Text);
+            cutMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
+            cutMenuItem.Click += CutMenuItemClick;
+            cutMenuItem.Enabled = (TextBox.SelectedText.Length > 0);
+            var copyMenuItem = (ToolStripMenuItem)SpellCheckContextMenu.Items.Add(copyMenuItemText.Text);
+            copyMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            copyMenuItem.Click += CopyMenuItemdClick;
+            copyMenuItem.Enabled = (TextBox.SelectedText.Length > 0);
+            var pasteMenuItem = (ToolStripMenuItem)SpellCheckContextMenu.Items.Add(pasteMenuItemText.Text);
+            pasteMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
+            pasteMenuItem.Click += PasteMenuItemClick;
+            pasteMenuItem.Enabled = Clipboard.ContainsText();
+            var deleteMenuItem = (ToolStripMenuItem)SpellCheckContextMenu.Items.Add(deleteMenuItemText.Text);
+            deleteMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+            deleteMenuItem.Click += DeleteMenuItemClick;
+            deleteMenuItem.Enabled = (TextBox.SelectedText.Length > 0);
+            
+            SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
+
+            var selectAllMenuItem = (ToolStripMenuItem)SpellCheckContextMenu.Items.Add(selectAllMenuItemText.Text);
+            selectAllMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
+            selectAllMenuItem.Click += SelectAllMenuItemClick;
+
+            SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
 
             try
             {
                 var pos = TextBox.GetCharIndexFromPosition(TextBox.PointToClient(MousePosition));
 
-                if (pos <= 0)
+                if (pos < 0)
                 {
                     e.Cancel = true;
                     return;
@@ -239,10 +291,13 @@ namespace GitUI.SpellChecker
 
                 var addToDictionary = SpellCheckContextMenu.Items.Add(addToDictionaryText.Text);
                 addToDictionary.Click += AddToDictionaryClick;
+                addToDictionary.Enabled = (_spelling.CurrentWord.Length > 0);
                 var ignoreWord = SpellCheckContextMenu.Items.Add(ignoreWordText.Text);
                 ignoreWord.Click += IgnoreWordClick;
+                ignoreWord.Enabled = (_spelling.CurrentWord.Length > 0);
                 var removeWord = SpellCheckContextMenu.Items.Add(removeWordText.Text);
                 removeWord.Click += RemoveWordClick;
+                removeWord.Enabled = (_spelling.CurrentWord.Length > 0);
 
                 SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
 
@@ -441,7 +496,7 @@ namespace GitUI.SpellChecker
             {
                 if (!Clipboard.ContainsText())
                 {
-                    e.Handled = true;                
+                    e.Handled = true;
                     return;
                 }
                 // remove image data from clipboard
@@ -477,11 +532,56 @@ namespace GitUI.SpellChecker
             }
             IsWatermarkShowing = false;
         }
-
+        
         public new bool Focus()
         {
             HideWatermark();
             return base.Focus();
+        }
+        
+        private void UndoMenuItemClick(object sender, EventArgs e)
+        {
+            TextBox.Undo();
+            CheckSpelling();
+        }
+
+        private void RedoMenuItemClick(object sender, EventArgs e)
+        {
+            TextBox.Redo();
+            CheckSpelling();
+        }
+
+        private void CutMenuItemClick(object sender, EventArgs e)
+        {
+            TextBox.Cut();
+            CheckSpelling();
+        }
+
+        private void CopyMenuItemdClick(object sender, EventArgs e)
+        {
+            TextBox.Copy();
+        }
+
+        private void PasteMenuItemClick(object sender, EventArgs e)
+        {
+            if (!Clipboard.ContainsText()) return;
+            // remove image data from clipboard
+            string text = Clipboard.GetText();
+            Clipboard.SetText(text);
+
+            TextBox.Paste();
+            CheckSpelling();
+        }
+
+        private void DeleteMenuItemClick(object sender, EventArgs e)
+        {
+            TextBox.SelectedText = string.Empty;
+            CheckSpelling();
+        }
+
+        private void SelectAllMenuItemClick(object sender, EventArgs e)
+        {
+            TextBox.SelectAll();
         }
     }
 }
