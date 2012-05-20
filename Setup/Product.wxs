@@ -105,9 +105,6 @@
       <Component Id="PSTaskDialog.dll" Guid="*">
         <File Source="..\bin\PSTaskDialog.dll"/>
       </Component>
-      <!--Component Id="GithubSharp.Core.dll" Guid="*">
-        <File Source="..\bin\GithubSharp.Core.dll"/>
-      </Component-->
       <Component Id="NetSpell.SpellChecker.dll" Guid="*">
         <File Source="..\GitExtensions\bin\Release\NetSpell.SpellChecker.dll"/>
       </Component>
@@ -124,6 +121,10 @@
         <File Source="..\GitExtensions\bin\Release\Microsoft.WindowsAPICodePack.Shell.dll"/>
       </Component>
 
+      <!--Remove unused dll, installed in versions <= 2.31-->
+      <Component Id="GithubSharp.Core.dll" Guid="08F2D539-54CE-4895-ACA5-A7FBA73CA172">
+        <RemoveFile Name="GithubSharp.Core.dll" Id="GithubSharp.Core.dll" On="both"/>
+      </Component>
 
       <?define ShellExCLSID = "{3C16B20A-BA16-4156-916F-0A375ECFFE24}"?>
       
@@ -180,9 +181,12 @@
       <Component Id="Gource.dll" Guid="*">
         <File Source="..\Plugins\Gource\bin\Release\Gource.dll"/>
       </Component>
-      <!--Component Id="Github.dll" Guid="*">
-        <File Source="..\Plugins\Github\bin\Release\Github.dll"/>
-      </Component-->
+
+      <!--Remove unused dll, installed in versions <= 2.31-->
+      <Component Id="Github.dll" Guid="0DA13691-140A-4490-8B4C-8AF537DAEB67">
+        <RemoveFile Name="Github.dll" Id="Github.dll" On="both"/>
+      </Component>
+
       <Component Id="FindLargeFiles.dll" Guid="*">
         <File Source="..\Plugins\FindLargeFiles\bin\Release\FindLargeFiles.dll"/>
       </Component>      
@@ -460,6 +464,11 @@
       <ComponentRef Id="UserManual.startmenu"/>
 
       <ComponentRef Id="English.gif"/>
+
+      <!--Remove unused dll, installed in versions <= 2.31-->
+      <ComponentRef Id="Github.dll"/>
+      <!--Remove unused dll, installed in versions <= 2.31-->
+      <ComponentRef Id="GithubSharp.Core.dll"/>
 
       <Feature Id="Plugins" Title="Plugins" Level="1">
         <Feature Id="AutoCheckForUpdates" Title="Check for updates" Level="1">
