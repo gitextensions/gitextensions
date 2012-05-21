@@ -120,7 +120,7 @@
     <Compile Include="FormCheckoutBranch.Designer.cs">
       <DependentUpon>FormCheckoutBranch.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCommitTemplateSettings.designer.cs">
+    <Compile Include="FormCommitTemplateSettings.Designer.cs">
       <DependentUpon>FormCommitTemplateSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="FormCheckoutRemoteBranch.cs">
@@ -293,7 +293,7 @@
     <Compile Include="FormFixHome.Designer.cs">
       <DependentUpon>FormFixHome.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormStatus.designer.cs">
+    <Compile Include="FormStatus.Designer.cs">
       <DependentUpon>FormStatus.cs</DependentUpon>
     </Compile>
     <Compile Include="FormSplash.cs">
@@ -409,7 +409,7 @@
     <Compile Include="FindAndReplaceForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FindAndReplaceForm.designer.cs">
+    <Compile Include="FindAndReplaceForm.Designer.cs">
       <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
     </Compile>
     <Compile Include="FormAddFiles.cs">
