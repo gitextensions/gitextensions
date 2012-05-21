@@ -137,10 +137,7 @@ namespace GitCommands.Config
 
         private void SetStringValue(string setting, string value)
         {
-            var keyIndex = setting.LastIndexOf('.');
-
-            if (keyIndex < 0 && keyIndex == setting.Length)
-                throw new Exception("Invalid setting name: " + setting);
+            var keyIndex = FindAndCheckKeyIndex(setting);
 
             var configSectionName = setting.Substring(0, keyIndex);
             var keyName = setting.Substring(keyIndex + 1);
@@ -160,10 +157,7 @@ namespace GitCommands.Config
 
         private void AddStringValue(string setting, string value)
         {
-            var keyIndex = setting.LastIndexOf('.');
-
-            if (keyIndex < 0 && keyIndex == setting.Length)
-                throw new Exception("Invalid setting name: " + setting);
+            var keyIndex = FindAndCheckKeyIndex(setting);
 
             var configSectionName = setting.Substring(0, keyIndex);
             var keyName = setting.Substring(keyIndex + 1);
@@ -183,10 +177,7 @@ namespace GitCommands.Config
 
         public bool HasValue(string setting)
         {
-            var keyIndex = setting.LastIndexOf('.');
-
-            if (keyIndex < 0 && keyIndex == setting.Length)
-                throw new Exception("Invalid setting name: " + setting);
+            var keyIndex = FindAndCheckKeyIndex(setting);
 
             var configSectionName = setting.Substring(0, keyIndex);
             var keyName = setting.Substring(keyIndex + 1);
@@ -195,21 +186,36 @@ namespace GitCommands.Config
             return configSection != null && configSection.GetValue(keyName) != string.Empty;
         }
 
+        public int FindAndCheckKeyIndex(string setting)
+        {
+            var keyIndex = FindKeyIndex(setting);
+
+            if (keyIndex < 0 || keyIndex == setting.Length)
+                throw new Exception("Invalid setting name: " + setting);
+
+            return keyIndex;
+        }
+        
+        public int FindKeyIndex(string setting)
+        {
+            return setting.LastIndexOf('.');
+        }
+
         public bool HasConfigSection(string configSectionName)
         {
             var configSection = FindConfigSection(configSectionName);
             if (configSection != null)
                 return true;
-            else
-                return false;
+                
+            return false;
         }
 
         private string GetStringValue(string setting)
         {
-            var keyIndex = setting.LastIndexOf('.');
+            if(String.IsNullOrEmpty(setting))
+                throw new ArgumentNullException();
 
-            if (keyIndex < 0 && keyIndex == setting.Length)
-                throw new Exception("Invalid setting name: " + setting);
+            var keyIndex = FindAndCheckKeyIndex(setting);
 
             var configSectionName = setting.Substring(0, keyIndex);
             var keyName = setting.Substring(keyIndex + 1);
@@ -234,10 +240,7 @@ namespace GitCommands.Config
 
         public IList<string> GetValues(string setting)
         {
-            var keyIndex = setting.LastIndexOf('.');
-
-            if (keyIndex < 0 && keyIndex == setting.Length)
-                throw new Exception("Invalid setting name: " + setting);
+            var keyIndex = FindAndCheckKeyIndex(setting);
 
             var configSectionName = setting.Substring(0, keyIndex);
             var keyName = setting.Substring(keyIndex + 1);
@@ -252,10 +255,7 @@ namespace GitCommands.Config
 
         public void RemoveSetting(string setting)
         {
-            var keyIndex = setting.LastIndexOf('.');
-
-            if (keyIndex < 0 && keyIndex == setting.Length)
-                throw new Exception("Invalid setting name: " + setting);
+            var keyIndex = FindAndCheckKeyIndex(setting);
 
             var configSectionName = setting.Substring(0, keyIndex);
             var keyName = setting.Substring(keyIndex + 1);
