@@ -56,7 +56,7 @@ namespace GitCommandsTests
         {
             try
             {
-                ConfigFile file = new ConfigFile(null);
+                ConfigFile file = new ConfigFile(null, true);
                 file.GetValue("inexistentSetting");
             }
             catch (Exception e)
@@ -73,7 +73,7 @@ namespace GitCommandsTests
                 //Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), Encoding.UTF8);
             }
-            ConfigFile file = new ConfigFile(GetConfigFileName());
+            ConfigFile file = new ConfigFile(GetConfigFileName(), true);
             Assert.IsTrue(file.HasConfigSection("section1"));
             Assert.IsFalse(file.HasConfigSection("inexistent.section"));
             Assert.IsFalse(file.HasConfigSection("inexistent"));
@@ -86,7 +86,7 @@ namespace GitCommandsTests
                 //Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), Encoding.UTF8);
             }
-            ConfigFile file = new ConfigFile(GetConfigFileName());
+            ConfigFile file = new ConfigFile(GetConfigFileName(), true);
             Assert.IsTrue(file.HasValue("section1.key1"));
         }
 
@@ -97,7 +97,7 @@ namespace GitCommandsTests
                 //Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), Encoding.UTF8);
             }
-            ConfigFile configFile = new ConfigFile(GetConfigFileName());
+            ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
             Assert.IsTrue(configFile.GetConfigSections().Count == 3);
             configFile.RemoveConfigSection("section1");
             Assert.IsTrue(configFile.GetConfigSections().Count == 2);
@@ -107,7 +107,7 @@ namespace GitCommandsTests
         [ExpectedException(typeof(ArgumentNullException))]
         public void TestWithNullSettings()
         {
-            ConfigFile file = new ConfigFile(GetConfigFileName());
+            ConfigFile file = new ConfigFile(GetConfigFileName(), true);
             file.GetValue(null);
         }
 
