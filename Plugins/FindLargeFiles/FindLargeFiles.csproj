@@ -42,8 +42,10 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="GitObject.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FindLargeFilesPlugin.cs" />
     <Compile Include="FindLargeFilesForm.cs">
       <SubType>Form</SubType>
@@ -51,6 +53,7 @@
     <Compile Include="FindLargeFilesForm.Designer.cs">
       <DependentUpon>FindLargeFilesForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SortableObjectsList.cs" />
   </ItemGroup>
   <ItemGroup>

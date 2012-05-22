@@ -1696,10 +1696,15 @@ namespace GitUI
                 return;
 
             bool needRefresh;
-            if (!GitUICommands.Instance.CheckForDirtyDir(this, out needRefresh))
+            bool force;
+            if (!GitUICommands.Instance.CheckForDirtyDir(this, out needRefresh, out force))
             {
-                new FormProcess("checkout \"" + toolStripItem.Text + "\"").ShowDialog(this);
-                needRefresh = true;             
+                string args = force ? "-f" : null;
+
+                var command = "checkout".Join(" ", args).Join(" ", string.Format("\"{0}\"", toolStripItem.Text));
+                var form = new FormProcess(command);
+                form.ShowDialog(this);
+                needRefresh = true;
             }
 
             if (needRefresh)
@@ -1772,10 +1777,13 @@ namespace GitUI
                                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
+            bool force;
             bool needRefresh;
-            if (!GitUICommands.Instance.CheckForDirtyDir(this, out needRefresh))
+            if (!GitUICommands.Instance.CheckForDirtyDir(this, out needRefresh, out force))
             {
-                new FormProcess(string.Format("checkout \"{0}\"", GetRevision(LastRow).Guid)).ShowDialog(this);
+                string args = force ? "-f" : null;
+                string cmd = "checkout".Join(" ", args).Join(" ", string.Format("\"{0}\"", GetRevision(LastRow).Guid));
+                new FormProcess(cmd).ShowDialog(this);
                 needRefresh = true;
             }
 

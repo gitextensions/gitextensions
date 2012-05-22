@@ -52,6 +52,9 @@
     <Compile Include="OAuth.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="..\..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="OAuth.Designer.cs">
       <DependentUpon>OAuth.cs</DependentUpon>
     </Compile>
@@ -74,9 +77,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "..\..\..\..\GitExtensions\bin\Debug"
-copy "$(SolutionDir)\bin\Git.hub.dll" "..\..\..\..\GitExtensions\bin\Debug"
-copy "$(SolutionDir)\bin\RestSharp.dll" "..\..\..\..\GitExtensions\bin\Debug"
+    <PostBuildEvent>copy "$(TargetPath)" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
+copy "$(SolutionDir)\bin\Git.hub.dll" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
+copy "$(SolutionDir)\bin\RestSharp.dll" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

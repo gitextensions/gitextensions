@@ -16,7 +16,7 @@ namespace Github3
             this.repo = repo;
         }
 
-        public string Owner { get { return repo.Owner.Login; } }
+        public string Owner { get { return repo.Owner != null ? repo.Owner.Login : null; } }
         public string Name { get { return repo.Name; } }
         public string Description { get { return repo.Description; } }
         public bool IsAFork { get { return repo.Fork; } }

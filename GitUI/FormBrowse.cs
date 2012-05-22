@@ -360,7 +360,7 @@ namespace GitUI
                 splitter.SplitRecentRepos(Repositories.RepositoryHistory.Repositories, mostRecentRepos, mostRecentRepos);
             }
 
-            RecentRepoInfo ri = mostRecentRepos.Find(e => e.Repo.Equals(r));
+            RecentRepoInfo ri = mostRecentRepos.Find((e) => e.Repo.Path.Equals(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase));
 
             if (ri == null)
                 _NO_TRANSLATE_Workingdir.Text = Settings.WorkingDir;
@@ -1906,11 +1906,13 @@ namespace GitUI
         void BranchSelectToolStripItem_Click(object sender, EventArgs e)
         {
             bool needRefresh;
-            if (!GitUICommands.Instance.CheckForDirtyDir(this, out needRefresh))
+            bool force;
+            if (!GitUICommands.Instance.CheckForDirtyDir(this, out needRefresh, out force))
             {
                 var toolStripItem = (ToolStripItem)sender;
+                string args = force ? "-f": null;
 
-                var command = string.Format("checkout \"{0}\"", toolStripItem.Text);
+                var command = "checkout".Join(" ", args).Join(" ", string.Format("\"{0}\"", toolStripItem.Text));
                 var form = new FormProcess(command);
                 form.ShowDialog(this);
                 needRefresh = true;
