@@ -37,6 +37,12 @@ namespace GitCommandsTests
             content.AppendLine("key3=value3");
             return content.ToString();
         }
+		
+		private void AddConfigValue(string cfgFile, string section, string value)
+		{
+			string args = "config -f " + "\"" +cfgFile + "\"" + " --add " + section + " " + value;
+			Settings.Module.RunGitCmd(args);			
+		}
 
         [TestMethod]
         public void TestWithInvalidFileName()
@@ -444,7 +450,51 @@ namespace GitCommandsTests
             }
         }
 
-        /// <summary>
+
+        [TestMethod]
+        public void CaseSensitive()
+        {
+
+			// create test data
+			{
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+                configFile.AddValue("branch.BranchName1.remote", "origin1");
+                configFile.Save();
+
+				AddConfigValue(GetConfigFileName(), "branch.\"BranchName2\".remote", "origin2");
+				AddConfigValue(GetConfigFileName(), "branch.\"branchName2\".remote", "origin3");
+			}
+            // verify
+            {
+
+				ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+
+				string remote = "branch.BranchName1.remote";
+				Assert.AreEqual("origin1", configFile.GetValue(remote), remote);
+				
+				remote = "branch.branchName1.remote";
+				Assert.AreEqual("origin1", configFile.GetValue(remote), remote);
+				
+				remote = "branch \"branchName1\".remote";
+				Assert.AreNotEqual("origin1", configFile.GetValue(remote), remote);
+				
+				remote = "branch \"BranchName2\".remote";
+				Assert.AreEqual("origin2", configFile.GetValue(remote), remote);
+				
+				remote = "branch \"branchName2\".remote";
+				Assert.AreNotEqual("origin2", configFile.GetValue(remote), remote);
+				
+				remote = "branch \"branchName2\".remote";
+				Assert.AreEqual("origin3", configFile.GetValue(remote), remote);
+				
+				remote = "branch \"branchname2\".remote";
+				Assert.AreEqual("", configFile.GetValue(remote), remote);
+				
+            }
+        }
+		
+		
+		/// <summary>
         /// Always delete the test config file after each test
         /// </summary>
         [TestCleanup]
