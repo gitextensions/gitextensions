@@ -125,15 +125,6 @@ namespace GitExtensions
 
             if (args.Length <= 1)
                 return;
-
-            if (args[1].StartsWith("git://"))
-            {
-                args = new string[]{args[0], "clone", args[1]};
-            }
-            if (args[1].StartsWith("github-windows://openRepo/"))
-            {
-                args = new string[]{args[0], "clone", args[1].Replace("github-windows://openRepo/", "")};
-            }
             
             if (args[1].Equals("blame") && args.Length <= 2)
             {
@@ -314,6 +305,17 @@ namespace GitExtensions
             if (args[1] == "openrepo")
             {
                 RunOpenRepoCommand(args);
+                return;
+            }
+
+            if (args[1].StartsWith("git://"))
+            {
+                GitUICommands.Instance.StartCloneDialog(null, args[1], true);
+                return;
+            }
+            if (args[1].StartsWith("github-windows://openRepo/"))
+            {
+                GitUICommands.Instance.StartCloneDialog(null, args[1].Replace("github-windows://openRepo/", ""), true);
                 return;
             }
             Application.Run(new FormCommandlineHelp());
