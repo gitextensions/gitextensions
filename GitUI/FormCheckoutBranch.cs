@@ -14,23 +14,35 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
-
-            Initialize();
         }
 
         public FormCheckoutBranch(string branch, bool remote)
-            : this()
+            : this(branch, remote, null)
         {
-            LocalBranch.Checked = !remote;
-            Remotebranch.Checked = remote;
-
-            Branches.Text = branch;
         }
 
         public FormCheckoutBranch(string branch, bool remote, string containRevison)
-            : this(branch, remote)
+            : this()
         {
             _containRevison = containRevison;
+
+            Branches.Text = branch;
+
+            LocalBranch.Checked = !remote;
+            Remotebranch.Checked = remote;
+
+            Initialize();
+
+            if (containRevison != null)
+            {
+                if (Branches.Items.Count == 0)
+                {
+                    Remotebranch.Checked = true;
+                    Initialize();
+                }
+                if (Branches.Items.Count == 1)
+                    Branches.SelectedIndex = 0;
+            }
         }
 
 
@@ -80,7 +92,7 @@ namespace GitUI
         {
             if (Remotebranch.Checked)
             {
-                var checkoutRemote = new FormCheckoutRemoteBranch(Branches.Text, null, Force.Checked);
+                var checkoutRemote = new FormCheckoutRemoteBranch(Branches.Text, Force.Checked);
                 checkoutRemote.ShowDialog(this);
             }
             else
