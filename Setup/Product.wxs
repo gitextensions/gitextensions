@@ -227,6 +227,10 @@
       <!--Remove unused dll, installed in versions <= 2.31-->
       <Component Id="Github.dll" Guid="0DA13691-140A-4490-8B4C-8AF537DAEB67">
         <RemoveFile Name="Github.dll" Id="Github.dll" On="both"/>
+        <RemoveRegistryValue Id="GithubAPIToken" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubapitoken"/>
+        <RemoveRegistryValue Id="GithubUsername" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubusername"/>
+        <RemoveRegistryValue Id="GithubPassword" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubpassword"/>
+        <RemoveRegistryValue Id="GithubAccess" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubpreferred access method"/>
       </Component>
 
       <Component Id="FindLargeFiles.dll" Guid="*">
