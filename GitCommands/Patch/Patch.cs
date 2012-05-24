@@ -30,6 +30,8 @@ namespace PatchApply
             Text
         }
 
+        public string PatchHeader { get; set; }
+        public string PatchIndex { get; set; }
         public FileType File { get; set; }
         public string FileNameA { get; set; }
         public string FileNameB { get; set; }
