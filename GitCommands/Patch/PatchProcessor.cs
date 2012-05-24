@@ -21,6 +21,8 @@ namespace PatchApply
                 {
                     gitPatch = true;
                     patch = new Patch();
+                    patch.PatchHeader = input;
+                    patch.AppendTextLine(patch.PatchHeader);
                     patches.Add(patch);
                     input = GitCommandHelpers.ReEncodeFileName(input);
                     ExtractPatchFilenames(input, patch);
@@ -39,6 +41,11 @@ namespace PatchApply
                             {
                                 break;
                             }
+                        }
+                        else
+                        {
+                            patch.PatchIndex = input;
+                            patch.AppendTextLine(patch.PatchIndex);
                         }
                     }
 
@@ -84,7 +91,7 @@ namespace PatchApply
                         }
                     }
 
-                    continue;
+                    //continue;
                 }
 
                 if (!gitPatch || patch != null)
