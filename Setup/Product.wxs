@@ -166,6 +166,36 @@
       <Component Id="InstallDir.reg" Guid="*">
         <RegistryValue Name="InstallDir" Value="[INSTALLDIR]" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
       </Component>
+
+      <Component Id="Protocol.git" Guid="*">
+        <RegistryKey Key="git" Root="HKCR">
+          <RegistryValue Value="URL: Github for Windows Protocol" Type="string" />
+          <RegistryValue Name="URL Protocol" Value="" Type="string" />
+        </RegistryKey>
+        <RegistryKey Key="git\DefaultIcon" Root="HKCR">
+          <RegistryValue Value="[INSTALLDIR]GitExtensions.exe" Type="string" />
+        </RegistryKey>
+        <RegistryKey Root="HKCR" Key="git\shell"/>
+        <RegistryKey Root="HKCR" Key="git\shell\open"/>
+        <RegistryKey Root="HKCR" Key="git\shell\open\command">
+          <RegistryValue Value="&quot;[INSTALLDIR]GitExtensions.exe&quot; %1" Type="string" />
+        </RegistryKey>
+      </Component>
+
+      <Component Id="Protocol.github_windows" Guid="*">
+        <RegistryKey Key="github-windows" Root="HKCR">
+          <RegistryValue Value="URL: Github for Windows Protocol" Type="string" />
+          <RegistryValue Name="URL Protocol" Value="" Type="string" />
+        </RegistryKey>
+        <RegistryKey Key="github-windows\DefaultIcon" Root="HKCR">
+          <RegistryValue Value="[INSTALLDIR]GitExtensions.exe" Type="string" />
+        </RegistryKey>
+        <RegistryKey Root="HKCR" Key="github-windows\shell"/>
+        <RegistryKey Root="HKCR" Key="github-windows\shell\open"/>
+        <RegistryKey Root="HKCR" Key="github-windows\shell\open\command">
+          <RegistryValue Value="&quot;[INSTALLDIR]GitExtensions.exe&quot; %1" Type="string" />
+        </RegistryKey>
+      </Component>
     </DirectoryRef>
 
     <DirectoryRef Id="PluginsDir">
@@ -467,6 +497,9 @@
       <ComponentRef Id="GitExtensions.newstartmenu"/>
       <ComponentRef Id="GitExtensions.startmenu"/>
       <ComponentRef Id="GitExtensions.desktop"/>
+
+      <ComponentRef Id="Protocol.git"/>
+      <ComponentRef Id="Protocol.github_windows"/>
 
       <ComponentRef Id="English.gif"/>
 
