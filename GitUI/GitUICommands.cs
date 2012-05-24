@@ -332,7 +332,8 @@ namespace GitUI
                 return needRefresh;
 
             var form = new FormCheckoutBranch(branch, remote, containRevison, force);
-            form.ShowDialog(owner);
+            if (form.ShowDialog(owner) == DialogResult.Cancel)
+                return false;
 
             InvokeEvent(owner, PostCheckoutBranch);
 
@@ -377,8 +378,9 @@ namespace GitUI
             if (CheckForDirtyDir(owner, out needRefresh, out force))
                 return needRefresh;
 
-            var form = new FormCheckoutRemoteBranch(branch, null, force);
-            form.ShowDialog(owner);
+            var form = new FormCheckoutRemoteBranch(branch, force);
+            if (form.ShowDialog(owner) == DialogResult.Cancel)
+                return false;
 
             InvokeEvent(owner, PostCheckoutBranch);
 
