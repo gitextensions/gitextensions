@@ -19,7 +19,7 @@ namespace GitUI.RepoHosting
         private readonly TranslationString _strLoading = new TranslationString(" : LOADING : ");
         private readonly TranslationString _strYes = new TranslationString("Yes");
         private readonly TranslationString _strNo = new TranslationString("No");
-        private readonly TranslationString _strFailedToGetRepos = new TranslationString("Failed to get repos. Username/ApiToken incorrect?\r\n");
+        private readonly TranslationString _strFailedToGetRepos = new TranslationString("Failed to get repositories. This most likely means you didn't configure {0}, please do so via the menu \"Plugins/{0}\".");
         private readonly TranslationString _strWillCloneWithPushAccess = new TranslationString("Will clone {0} into {1}.\r\nYou will have push access. {2}");
         private readonly TranslationString _strWillCloneInfo = new TranslationString("Will clone {0} into {1}.\r\nYou can not push unless you are a collaborator. {2}");
         private readonly TranslationString _strWillBeAddedAsARemote = new TranslationString("\"{0}\" will be added as a remote.");
@@ -88,8 +88,8 @@ namespace GitUI.RepoHosting
 
                 ex =>
                 {
-                    MessageBox.Show(this, _strFailedToGetRepos.Text + ex.Message, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Close();
+                    _myReposLV.Items.Clear();
+                    this._helpTextLbl.Text = string.Format(_strFailedToGetRepos.Text, _gitHoster.Description) + "\r\n\r\nException: " + ex.Message + "\r\n\r\n" + this._helpTextLbl.Text;
                 });
         }
 
