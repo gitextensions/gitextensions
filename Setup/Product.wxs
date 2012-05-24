@@ -502,9 +502,6 @@
       <ComponentRef Id="GitExtensions.startmenu"/>
       <ComponentRef Id="GitExtensions.desktop"/>
 
-      <ComponentRef Id="Protocol.git"/>
-      <ComponentRef Id="Protocol.github_windows"/>
-
       <ComponentRef Id="English.gif"/>
 
       <!--Remove unused dll, installed in versions <= 2.31-->
@@ -646,6 +643,15 @@
         <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.resources.dll"/>
       </Feature>
       <?endforeach?>
+      
+      <Feature Id="Protocol.git" Title="Assign with git://-links" Level="1">
+        <ComponentRef Id="Protocol.git"/>
+      </Feature>
+      
+      <Feature Id="Protocol.github_windows" Title="Assign with github-windows://-links" Level="1">
+        <ComponentRef Id="Protocol.github_windows"/>
+      </Feature>
+
     </Feature>
 
     <?if $(var.IncludeRequiredSoftware) = 1 ?>
