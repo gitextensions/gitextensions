@@ -129,6 +129,9 @@
       <Component Id="Microsoft.WindowsAPICodePack.Shell.dll" Guid="*">
         <File Source="..\GitExtensions\bin\Release\Microsoft.WindowsAPICodePack.Shell.dll"/>
       </Component>
+      <Component Id="RemoveOldGithubPluginEx" Guid="">
+        <RemoveFile Id="GithubSharp.Core.dll" Name="GithubSharp.Core.dll" On="install"/>
+      </Component>
 
       <!--Remove unused dll, installed in versions <= 2.31-->
       <Component Id="GithubSharp.Core.dll" Guid="08F2D539-54CE-4895-ACA5-A7FBA73CA172">
@@ -201,7 +204,14 @@
 
       <Component Id="FindLargeFiles.dll" Guid="*">
         <File Source="..\Plugins\FindLargeFiles\bin\Release\FindLargeFiles.dll"/>
-      </Component>      
+      </Component>
+      <Component Id="RemoveOldGithubPlugin" Guid="">
+        <RemoveFile Id="Github.dll" Name="Github.dll" On="install"/>
+        <RemoveRegistryValue Id="GithubAPIToken" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubapitoken"/>
+        <RemoveRegistryValue Id="GithubUsername" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubusername"/>
+        <RemoveRegistryValue Id="GithubPassword" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubpassword"/>
+        <RemoveRegistryValue Id="GithubAccess" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubpreferred access method"/>
+      </Component>
     </DirectoryRef>
 
     <DirectoryRef Id="IconsDir">
@@ -469,6 +479,9 @@
       <ComponentRef Id="GitExtensions.desktop"/>
 
       <ComponentRef Id="English.gif"/>
+      
+      <ComponentRef Id="RemoveOldGithubPlugin"/>
+      <ComponentRef Id="RemoveOldGithubPluginEx"/>
 
       <!--Remove unused dll, installed in versions <= 2.31-->
       <ComponentRef Id="Github.dll"/>
