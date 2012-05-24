@@ -338,7 +338,7 @@ namespace GitCommands
         //to read/write config file
         public static Encoding GetAppEncoding(bool local)
         {
-            return GetEncoding(local, "AppEncoding", true);
+            return GetEncoding(local, "AppEncoding", true) ?? new UTF8Encoding(false);
         }
         public static void SetAppEncoding(bool local, Encoding encoding)
         {
