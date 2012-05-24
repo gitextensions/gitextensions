@@ -129,6 +129,9 @@
       <Component Id="Microsoft.WindowsAPICodePack.Shell.dll" Guid="*">
         <File Source="..\GitExtensions\bin\Release\Microsoft.WindowsAPICodePack.Shell.dll"/>
       </Component>
+      <Component Id="RemoveOldGithubPluginEx" Guid="">
+        <RemoveFile Id="GithubSharp.Core.dll" Name="GithubSharp.Core.dll" On="install"/>
+      </Component>
 
 
       <?define ShellExCLSID = "{3C16B20A-BA16-4156-916F-0A375ECFFE24}"?>
@@ -191,7 +194,14 @@
       </Component>
       <Component Id="FindLargeFiles.dll" Guid="*">
         <File Source="..\Plugins\FindLargeFiles\bin\Release\FindLargeFiles.dll"/>
-      </Component>      
+      </Component>
+      <Component Id="RemoveOldGithubPlugin" Guid="">
+        <RemoveFile Id="Github.dll" Name="Github.dll" On="install"/>
+        <RemoveRegistryValue Id="GithubAPIToken" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubapitoken"/>
+        <RemoveRegistryValue Id="GithubUsername" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubusername"/>
+        <RemoveRegistryValue Id="GithubPassword" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubpassword"/>
+        <RemoveRegistryValue Id="GithubAccess" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubpreferred access method"/>
+      </Component>
     </DirectoryRef>
 
     <DirectoryRef Id="IconsDir">
@@ -466,6 +476,9 @@
       <ComponentRef Id="UserManual.startmenu"/>
 
       <ComponentRef Id="English.gif"/>
+      
+      <ComponentRef Id="RemoveOldGithubPlugin"/>
+      <ComponentRef Id="RemoveOldGithubPluginEx"/>
 
       <Feature Id="Plugins" Title="Plugins" Level="1">
         <Feature Id="AutoCheckForUpdates" Title="Check for updates" Level="1">
