@@ -1051,6 +1051,13 @@ namespace GitCommands
             set { SafeSet("CommitTemplates", value, ref _CommitTemplates); }
         }
 
+        private static bool? _CreateLocalBranchForRemote;
+        public static bool CreateLocalBranchForRemote
+        {
+            get { return SafeGet("CreateLocalBranchForRemote", false, ref _CreateLocalBranchForRemote); }
+            set { SafeSet("CreateLocalBranchForRemote", value, ref _CreateLocalBranchForRemote); }
+        }
+
         public static string GetGitExtensionsFullPath()
         {
             return GetGitExtensionsDirectory() + "\\GitExtensions.exe";
@@ -1129,11 +1136,7 @@ namespace GitCommands
             get
             {
                 if (_VersionIndependentRegKey == null)
-                {
-                    _VersionIndependentRegKey = Registry.CurrentUser.OpenSubKey("Software\\GitExtensions\\GitExtensions", true);
-                    if (_VersionIndependentRegKey == null)
-                        _VersionIndependentRegKey = Registry.CurrentUser.CreateSubKey("Software\\GitExtensions\\GitExtensions", RegistryKeyPermissionCheck.ReadWriteSubTree);
-                }
+                    _VersionIndependentRegKey = Registry.CurrentUser.CreateSubKey("Software\\GitExtensions\\GitExtensions", RegistryKeyPermissionCheck.ReadWriteSubTree);
                 return _VersionIndependentRegKey;
             }
         }
