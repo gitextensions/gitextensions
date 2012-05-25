@@ -28,7 +28,7 @@ namespace GitUI
         private string _originalGitIgnoreFileContent = string.Empty;
 
         #region default patterns
-		private static readonly string DefaultIgnorePatternsFile = "./DefaultIgnorePatterns.txt";
+		private static readonly string DefaultIgnorePatternsFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GitExtensions/DefaultIgnorePatterns.txt");
         private static readonly string[] DefaultIgnorePatterns = new[]
         {
             "#ignore thumbnails created by windows",
