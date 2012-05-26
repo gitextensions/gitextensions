@@ -104,6 +104,7 @@ namespace GitUI
             this.closeDialogAfterEachCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeDialogAfterAllFilesCommittedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refreshDialogOnFormFocusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.signOffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolAuthorLabelItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolAuthor = new System.Windows.Forms.ToolStripTextBox();
@@ -782,6 +783,7 @@ namespace GitUI
             this.closeDialogAfterAllFilesCommittedToolStripMenuItem,
             this.refreshDialogOnFormFocusToolStripMenuItem,
             this.toolStripSeparator2,
+            this.signOffToolStripMenuItem,
             this.toolAuthorLabelItem,
             this.toolAuthor});
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
@@ -813,6 +815,13 @@ namespace GitUI
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
+            // 
+            // signOffToolStripMenuItem
+            // 
+            this.signOffToolStripMenuItem.Name = "signOffToolStripMenuItem";
+            this.signOffToolStripMenuItem.Size = new System.Drawing.Size(314, 22);
+            this.signOffToolStripMenuItem.Text = "Sign-off commit";
+            this.signOffToolStripMenuItem.Click += new System.EventHandler(this.signOffToolStripMenuItem_Click);
             this.toolStripSeparator2.Size = new System.Drawing.Size(377, 6);
             // 
             // toolAuthorLabelItem
@@ -1166,5 +1175,6 @@ namespace GitUI
         private ToolStripMenuItem generateListOfChangesInSubmodulesChangesToolStripMenuItem;
         private ToolStripDropDownButton commitTemplatesToolStripMenuItem;
         private ToolStripMenuItem openContainingFolderToolStripMenuItem;
+        private ToolStripMenuItem signOffToolStripMenuItem;
     }
 }
