@@ -711,7 +711,7 @@ namespace GitUI
 
                 ScriptManager.RunEventScripts(ScriptEvent.BeforeCommit);
 
-                var form = new FormProcess(Settings.Module.CommitCmd(amend, toolAuthor.Text));
+                var form = new FormProcess(Settings.Module.CommitCmd(amend, signOffToolStripMenuItem.Checked, toolAuthor.Text));
                 form.ShowDialog(this);
 
                 NeedRefresh = true;
@@ -1548,6 +1548,11 @@ namespace GitUI
                 RescanChanges();
 
             return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void signOffToolStripMenuItem_Click(object snder, EventArgs e)
+        {
+            signOffToolStripMenuItem.Checked = !signOffToolStripMenuItem.Checked;
         }
 
         private void toolAuthor_TextChanged(object sender, EventArgs e)
