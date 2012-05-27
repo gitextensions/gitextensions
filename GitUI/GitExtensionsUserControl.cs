@@ -61,7 +61,6 @@ namespace GitUI
             TranslationUtl.TranslateItemsFromFields(Name, this, translation);
         }
 
-
         #region Hotkeys
 
         /// <summary>Gets or sets a value that specifies if the hotkeys are used</summary>

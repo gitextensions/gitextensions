@@ -82,6 +82,7 @@ namespace GitUI.SpellChecker
 
         private bool IsWatermarkShowing;
         private string _WatermarkText = "";
+        [Category("Appearance")]
         public string WatermarkText
         {
             get { return _WatermarkText; }

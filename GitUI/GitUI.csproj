@@ -1314,7 +1314,6 @@
     <Content Include="..\Bin\Logo\x-with-arrow_yellow.ico">
       <Link>Resources\x-with-arrow_yellow.ico</Link>
     </Content>
-    <Content Include="cow-head.ico" />
     <None Include="Icons\commitRed.png" />
     <None Include="Icons\commitYellow.png" />
     <Content Include="Translation\German.gif">
