@@ -102,8 +102,6 @@ namespace GitUI
             var IssuesItem = new DashboardItem(Resources.bug, issues.Text);
             IssuesItem.Click += IssuesItem_Click;
             DonateCategory.AddItem(IssuesItem);
-
-            
         }
 
         public void SaveSplitterPositions()

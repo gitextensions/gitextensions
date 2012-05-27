@@ -470,6 +470,7 @@ namespace GitImpact
             return Color.Transparent;
         }
 
+        [Browsable(false)]
         public List<string> Authors { get { lock(data_lock) return author_stack; } }
         
         public ImpactLoader.DataPoint GetAuthorInfo(string author)
