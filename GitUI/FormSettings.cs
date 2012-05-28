@@ -19,6 +19,7 @@ namespace GitUI
 {
     public sealed partial class FormSettings : GitExtensionsForm
     {
+        #region Translation
         private readonly TranslationString _homeIsSetToString = new TranslationString("HOME is set to:");
         private readonly TranslationString __diffToolSuggestCaption = new TranslationString("Suggest difftool cmd");
         private readonly TranslationString __mergeToolSuggestCaption = new TranslationString("Suggest mergetool cmd");
@@ -191,8 +192,8 @@ namespace GitUI
 
         private readonly TranslationString _registryKeyGitExtensionsCorrect =
             new TranslationString("GitExtensions is properly registered.");
-
-
+        #endregion
+        
         private Font diffFont;
         private const string GitExtensionsShellExName = "GitExtensionsShellEx32.dll";
         private string IconName = "bug";

@@ -21,7 +21,7 @@ namespace GitUI
 {
     public sealed partial class FormCommit : GitExtensionsForm //, IHotkeyable
     {
-        #region Translation strings
+        #region Translation
         private readonly TranslationString _alsoDeleteUntrackedFiles =
             new TranslationString("Do you also want to delete the new files that are in the selection?" +
                                   Environment.NewLine + Environment.NewLine + "Choose 'No' to keep all new files.");

@@ -10,7 +10,7 @@ namespace GitUI
 {
     public partial class FormCheckoutRemoteBranch : GitExtensionsForm
     {
-        #region Translations
+        #region Translation
         private readonly TranslationString _applyShashedItemsAgain =
             new TranslationString("Apply stashed items to working dir again?");
 

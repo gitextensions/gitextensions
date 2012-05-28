@@ -20,7 +20,9 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
-            OpenFile(fileName);
+            // for translation form
+            if (fileName != null)
+                OpenFile(fileName);
             fileViewer.TextChanged += (s, e) => HasChanges = true;
             fileViewer.TextLoaded += (s, e) => HasChanges = false;
         }
