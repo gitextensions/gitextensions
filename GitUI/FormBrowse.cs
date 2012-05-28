@@ -26,7 +26,7 @@ namespace GitUI
 {
     public partial class FormBrowse : GitExtensionsForm
     {
-        #region Translations
+        #region Translation
 
         private readonly TranslationString _stashCount =
             new TranslationString("{0} saved {1}");
