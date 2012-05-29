@@ -148,9 +148,9 @@ namespace Github3
                 if (string.IsNullOrEmpty(url))
                     continue;
 
-                var m = Regex.Match(url, @"git(?:@|://)github.com[:/]([^/]+)/([\w_\.]+)\.git");
+                var m = Regex.Match(url, @"git(?:@|://)github.com[:/]([^/]+)/([\w_\.\-]+)\.git");
                 if (!m.Success)
-                    m = Regex.Match(url, @"https?://(?:[^@:]+)?(?::[^/@:]+)?@?github.com/([^/]+)/([\w_\.]+)(?:.git)?");
+                    m = Regex.Match(url, @"https?://(?:[^@:]+)?(?::[^/@:]+)?@?github.com/([^/]+)/([\w_\.\-]+)(?:.git)?");
                 if (m.Success)
                 {
                     var hostedRemote = new GithubHostedRemote(remote, m.Groups[1].Value, m.Groups[2].Value.Replace(".git", ""));
