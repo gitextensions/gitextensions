@@ -248,7 +248,7 @@ namespace GitUI
 
         private void ScheduleImmediateUpdate()
         {
-            nextUpdateTime = 0;
+            nextUpdateTime = Environment.TickCount;
             Update();
         }
 
