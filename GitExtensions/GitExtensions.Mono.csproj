@@ -15,7 +15,7 @@
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <NoWin32Manifest>true</NoWin32Manifest>
-    <ApplicationIcon>git-extensions-logo-final_mixed.ico</ApplicationIcon>
+    <ApplicationIcon>..\Bin\Logo\git-extensions-logo-final_mixed.ico</ApplicationIcon>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
@@ -61,6 +61,9 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LoadPlugins.cs" />
     <Compile Include="GitPluginSettingsContainer.cs" />
@@ -115,9 +118,15 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="cow-head.ico" />
-    <Content Include="git-extensions-logo-final.ico" />
-    <Content Include="git-extensions-logo-final_mixed.ico" />
+    <Content Include="..\Bin\Logo\cow-head.ico">
+      <Link>Resources\cow-head.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\git-extensions-logo-final.ico">
+      <Link>Resources\git-extensions-logo-final.ico</Link>
+    </Content>
+    <Content Include="..\Bin\Logo\git-extensions-logo-final_mixed.ico">
+      <Link>Resources\git-extensions-logo-final_mixed.ico</Link>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -128,21 +137,53 @@
   </Target>
   -->
   <ItemGroup>
-    <ProjectReference Include="..\GitCommands\GitCommands.Mono.csproj">
-      <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
-      <Name>GitCommands.Mono</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.Mono.csproj">
-      <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
-      <Name>GitUIPluginInterfaces.Mono</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GitUI\GitUI.Mono.csproj">
+    <ProjectReference Include="..\GitUI\GitUI.csproj">
       <Project>{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}</Project>
-      <Name>GitUI.Mono</Name>
+      <Name>GitUI</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ResourceManager\ResourceManager.Mono.csproj">
+    <ProjectReference Include="..\Plugins\AutoCheckForUpdates\AutoCheckForUpdates.csproj">
+      <Project>{330F1115-B3DE-47F1-8A7E-D181E59E96E0}</Project>
+      <Name>AutoCheckForUpdates</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\CreateLocalBranches\CreateLocalBranches.csproj">
+      <Project>{31D96116-16A6-45C2-9A6D-6DD5A1FC5F20}</Project>
+      <Name>CreateLocalBranches</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\DeleteUnusedBranches\DeleteUnusedBranches.csproj">
+      <Project>{921F0443-C3A1-4A09-82E8-C4AFB9654943}</Project>
+      <Name>DeleteUnusedBranches</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\FindLargeFiles\FindLargeFiles.csproj">
+      <Project>{F261BCD1-F5F7-4664-A229-E52032E6E9FD}</Project>
+      <Name>FindLargeFiles</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Github3\Github3.csproj">
+      <Project>{B1B0C273-AB3F-48BF-92C7-DE0BE90D5870}</Project>
+      <Name>Github3</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
+      <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
+      <Name>GitUIPluginInterfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Gource\Gource.csproj">
+      <Project>{687A73BB-12A0-4AF7-B420-4A9C47DB75CB}</Project>
+      <Name>Gource</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Statistics\GitImpact\GitImpact.csproj">
+      <Project>{0B131F9D-BB10-4C3E-9656-5AB858158DE5}</Project>
+      <Name>GitImpact</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Statistics\GitStatistics\GitStatistics.csproj">
+      <Project>{92B57383-233E-46AE-8A86-6E98BF349A72}</Project>
+      <Name>GitStatistics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GitCommands\GitCommands.csproj">
+      <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
+      <Name>GitCommands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ResourceManager\ResourceManager.csproj">
       <Project>{D3440FD7-AFC5-4351-8741-6CDBF15CE944}</Project>
-      <Name>ResourceManager.Mono</Name>
+      <Name>ResourceManager</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>
