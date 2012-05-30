@@ -80,9 +80,9 @@ namespace GitUI
         private readonly TranslationString _UnsupportedMultiselectAction =
             new TranslationString("Operation not supported");
 
-        private string _NoDiffFilesChangesText;
-
         #endregion
+
+        private string _NoDiffFilesChangesText;
 
         private readonly SynchronizationContext syncContext;
         private readonly IndexWatcher _indexWatcher = new IndexWatcher();
