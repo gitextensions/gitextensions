@@ -1325,7 +1325,9 @@
     <None Include="Resources\Icons\Modified.png" />
     <None Include="Resources\Icons\pageant.png" />
     <None Include="Resources\Icons\putty.png" />
-    <None Include="Resources\Icons\whitespace.ico" />
+    <None Include="Resources\Icons\success.png" />
+    <None Include="Resources\Icons\rss.png" />
+    <None Include="Resources\Icons\history.png" />
     <Content Include="Translation\German.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1338,33 +1340,13 @@
     <Content Include="Translation\Traditional Chinese.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Resources\Icons\24.png" />
-    <None Include="Resources\Icons\bash.png" />
     <None Include="Properties\DataSources\GitUI.Script.ScriptInfo.datasource" />
-    <None Include="Resources\Icons\file.jpg" />
-    <None Include="Resources\Icons\67.png" />
     <None Include="Resources\Icons\nonprintchar.png" />
-    <None Include="Resources\Icons\brokendocument.png" />
-    <None Include="Resources\Icons\22.png" />
     <None Include="Resources\Icons\bug.png" />
-    <None Include="Resources\Icons\loading.gif" />
-    <None Include="Resources\Icons\81.png" />
-    <None Include="Resources\Icons\83.png" />
-    <None Include="Resources\Icons\84.png" />
-    <None Include="Resources\Icons\_81.png" />
-    <None Include="Resources\Icons\_82.png" />
     <None Include="Resources\Icons\arrow_refresh.png" />
-    <None Include="Resources\Icons\39.png" />
-    <None Include="Resources\Icons\double_arrow_up.png" />
-    <None Include="Resources\Icons\double_arrow_down.png" />
-    <None Include="Resources\Icons\45.png" />
     <None Include="Resources\Icons\Renamed.png" />
-    <None Include="Resources\Icons\52.png" />
     <None Include="Resources\Icons\Copied.png" />
     <None Include="Resources\Icons\SplitViewLayout.png" />
-    <None Include="Resources\Icons\cardModeLayout.png" />
-    <None Include="Resources\Icons\success1.png" />
-    <None Include="Resources\Icons\whitespace.bmp" />
     <Content Include="Translation\Dutch.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1409,22 +1391,15 @@
     <None Include="Resources\Icons\Cow_sunglass.png" />
     <None Include="Resources\Icons\Cow_xmass.png" />
     <None Include="Resources\Icons\develop.ico" />
-    <None Include="Resources\Icons\rss.ico" />
     <None Include="Resources\Icons\dollar.ico" />
-    <None Include="Resources\Icons\history.ico" />
-    <None Include="Resources\Icons\User.PNG" />
+    <None Include="Resources\Icons\User.png" />
     <None Include="Properties\DataSources\GitCommands.Repository.datasource" />
-    <None Include="Resources\Icons\Modified.png" />
     <None Include="Resources\Icons\Removed.png" />
-    <None Include="Resources\Icons\Added.png" />
-    <None Include="Resources\Icons\stash.bmp" />
-    <None Include="Resources\Icons\90.png" />
     <None Include="Properties\DataSources\GitCommands.GitSubmodule.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Resources\Icons\arrow_refresh_dirty.png" />
     <None Include="Resources\ChangeLog.txt" />
     <None Include="Resources\Icons\merge.png" />
     <None Include="Resources\Icons\fetch.png" />
@@ -1435,32 +1410,8 @@
     <None Include="Properties\DataSources\PatchApply.PatchFile.datasource" />
     <None Include="Resources\Icons\Donate.jpg" />
     <None Include="Resources\Icons\Cow.png" />
-    <None Include="Resources\Icons\77.png" />
-    <None Include="Resources\Icons\78.png" />
-    <None Include="Resources\Icons\76.png" />
-    <None Include="Resources\Icons\75.png" />
     <None Include="Resources\Icons\IconStaged.png" />
-    <None Include="Resources\Icons\46.png" />
-    <None Include="Resources\Icons\34.png" />
-    <None Include="Resources\Icons\36.png" />
-    <None Include="Resources\Icons\14.png" />
-    <None Include="Resources\Icons\7.png" />
-    <None Include="Resources\Icons\8.png" />
-    <None Include="Resources\Icons\71.png" />
-    <None Include="Resources\Icons\11.png" />
-    <None Include="Resources\Icons\26.png" />
-    <None Include="Resources\Icons\27.png" />
-    <None Include="Resources\Icons\arrow_refresh.png" />
-    <None Include="Resources\Icons\40.png" />
-    <None Include="Resources\Icons\35.png" />
-    <None Include="Resources\Icons\33.png" />
-    <None Include="Resources\Icons\21.png" />
-    <None Include="Resources\Icons\49.png" />
-    <None Include="Resources\Icons\53.png" />
-    <None Include="Resources\Icons\4.png" />
-    <None Include="Resources\Icons\3.png" />
     <None Include="Resources\Icons\error.png" />
-    <None Include="Resources\Icons\error_button.png" />
     <None Include="Resources\Icons\loadingpanel.gif" />
   </ItemGroup>
   <ItemGroup>
