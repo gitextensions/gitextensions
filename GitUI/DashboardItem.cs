@@ -139,9 +139,9 @@ namespace GitUI
                 case RepositoryType.Repository:
                     return Resources.Star;
                 case RepositoryType.RssFeed:
-                    return Resources.rss.ToBitmap();
+                    return Resources.rss;
                 case RepositoryType.History:
-                    return Resources.history.ToBitmap();
+                    return Resources.history;
                 default:
                     throw new ArgumentException("Repository type is not supported.", "repository");
             }

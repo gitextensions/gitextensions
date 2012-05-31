@@ -135,7 +135,7 @@ namespace GitUI
 #endif
 
             if (isSuccess)
-                picBoxSuccessFail.Image = GitUI.Properties.Resources.success1;
+                picBoxSuccessFail.Image = GitUI.Properties.Resources.success;
             else
                 picBoxSuccessFail.Image = GitUI.Properties.Resources.error;
             splitContainer1.Panel2Collapsed = false;

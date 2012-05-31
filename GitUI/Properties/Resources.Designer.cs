@@ -60,132 +60,6 @@ namespace GitUI.Properties {
             }
         }
         
-        public static System.Drawing.Bitmap _11 {
-            get {
-                object obj = ResourceManager.GetObject("11", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap _34 {
-            get {
-                object obj = ResourceManager.GetObject("34", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap _351 {
-            get {
-                object obj = ResourceManager.GetObject("351", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap _352 {
-            get {
-                object obj = ResourceManager.GetObject("352", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap _36 {
-            get {
-                object obj = ResourceManager.GetObject("36", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap _491 {
-            get {
-                object obj = ResourceManager.GetObject("491", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap _7 {
-            get {
-                object obj = ResourceManager.GetObject("7", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap _71 {
-            get {
-                object obj = ResourceManager.GetObject("71", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap _76 {
-            get {
-                object obj = ResourceManager.GetObject("76", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap _761 {
-            get {
-                object obj = ResourceManager.GetObject("761", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap _771 {
-            get {
-                object obj = ResourceManager.GetObject("771", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap _78 {
-            get {
-                object obj = ResourceManager.GetObject("78", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap _8 {
-            get {
-                object obj = ResourceManager.GetObject("8", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap _81 {
-            get {
-                object obj = ResourceManager.GetObject("81", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap _82 {
-            get {
-                object obj = ResourceManager.GetObject("_82", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap _83 {
-            get {
-                object obj = ResourceManager.GetObject("_83", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap _84 {
-            get {
-                object obj = ResourceManager.GetObject("_84", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap Add {
-            get {
-                object obj = ResourceManager.GetObject("Add", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         public static System.Drawing.Bitmap Added {
             get {
                 object obj = ResourceManager.GetObject("Added", resourceCulture);
@@ -221,23 +95,9 @@ namespace GitUI.Properties {
             }
         }
         
-        public static System.Drawing.Bitmap brokendocument {
-            get {
-                object obj = ResourceManager.GetObject("brokendocument", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         public static System.Drawing.Bitmap bug {
             get {
                 object obj = ResourceManager.GetObject("bug", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap cardModeLayout {
-            get {
-                object obj = ResourceManager.GetObject("cardModeLayout", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -405,23 +265,9 @@ namespace GitUI.Properties {
             }
         }
         
-        public static System.Drawing.Bitmap entirefile {
-            get {
-                object obj = ResourceManager.GetObject("entirefile", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         public static System.Drawing.Bitmap error {
             get {
                 object obj = ResourceManager.GetObject("error", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap error_button {
-            get {
-                object obj = ResourceManager.GetObject("error_button", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -552,10 +398,10 @@ namespace GitUI.Properties {
             }
         }
         
-        public static System.Drawing.Icon history {
+        public static System.Drawing.Bitmap history {
             get {
                 object obj = ResourceManager.GetObject("history", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -594,13 +440,6 @@ namespace GitUI.Properties {
             }
         }
         
-        public static System.Drawing.Bitmap loading {
-            get {
-                object obj = ResourceManager.GetObject("loading", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         public static System.Drawing.Bitmap loadingpanel {
             get {
                 object obj = ResourceManager.GetObject("loadingpanel", resourceCulture);
@@ -618,13 +457,6 @@ namespace GitUI.Properties {
         public static System.Drawing.Bitmap Modified {
             get {
                 object obj = ResourceManager.GetObject("Modified", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap MoveUp {
-            get {
-                object obj = ResourceManager.GetObject("MoveUp", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -685,10 +517,10 @@ namespace GitUI.Properties {
             }
         }
         
-        public static System.Drawing.Icon rss {
+        public static System.Drawing.Bitmap rss {
             get {
                 object obj = ResourceManager.GetObject("rss", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -734,13 +566,6 @@ namespace GitUI.Properties {
             }
         }
         
-        public static System.Drawing.Bitmap stash {
-            get {
-                object obj = ResourceManager.GetObject("stash", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         public static System.Drawing.Bitmap Submodule {
             get {
                 object obj = ResourceManager.GetObject("Submodule", resourceCulture);
@@ -748,9 +573,9 @@ namespace GitUI.Properties {
             }
         }
         
-        public static System.Drawing.Bitmap success1 {
+        public static System.Drawing.Bitmap success {
             get {
-                object obj = ResourceManager.GetObject("success1", resourceCulture);
+                object obj = ResourceManager.GetObject("success", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -766,20 +591,6 @@ namespace GitUI.Properties {
             get {
                 object obj = ResourceManager.GetObject("User", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap whitespace {
-            get {
-                object obj = ResourceManager.GetObject("whitespace", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Icon witespace {
-            get {
-                object obj = ResourceManager.GetObject("witespace", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
             }
         }
         
