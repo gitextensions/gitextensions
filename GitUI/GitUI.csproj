@@ -380,6 +380,11 @@
     <Compile Include="Lemmings.cs" />
     <Compile Include="ProcessOutputTimer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="RepoHosting\CreatePullRequestForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -729,11 +734,6 @@
     </Compile>
     <Compile Include="PatchGrid.Designer.cs">
       <DependentUpon>PatchGrid.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -1163,8 +1163,8 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="RevisionGrid.resx">
       <DependentUpon>RevisionGrid.cs</DependentUpon>
@@ -1230,92 +1230,102 @@
     <None Include="Properties\DataSources\GitCommands.GitRevision.datasource" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Bin\Logo\cow-head-blue.ico">
-      <Link>Resources\cow-head-blue.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\cow-head-green.ico">
-      <Link>Resources\cow-head-green.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\cow-head-purple.ico">
-      <Link>Resources\cow-head-purple.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\cow-head-red.ico">
-      <Link>Resources\cow-head-red.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\cow-head-yellow.ico">
-      <Link>Resources\cow-head-yellow.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\cow-head.ico">
-      <Link>Resources\cow-head.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\git-extensions-logo-final-128.png">
-      <Link>Resources\git-extensions-logo-final-128.png</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\git-extensions-logo-final.ico">
-      <Link>Resources\git-extensions-logo-final.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\git-extensions-logo-final_blue.ico">
-      <Link>Resources\git-extensions-logo-final_blue.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\git-extensions-logo-final_green.ico">
-      <Link>Resources\git-extensions-logo-final_green.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\git-extensions-logo-final_lightblue.ico">
-      <Link>Resources\git-extensions-logo-final_lightblue.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\git-extensions-logo-final_mixed.ico">
-      <Link>Resources\git-extensions-logo-final_mixed.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\git-extensions-logo-final_mixed_blue.ico">
-      <Link>Resources\git-extensions-logo-final_mixed_blue.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\git-extensions-logo-final_mixed_green.ico">
-      <Link>Resources\git-extensions-logo-final_mixed_green.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\git-extensions-logo-final_mixed_lightblue.ico">
-      <Link>Resources\git-extensions-logo-final_mixed_lightblue.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\git-extensions-logo-final_mixed_purple.ico">
-      <Link>Resources\git-extensions-logo-final_mixed_purple.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\git-extensions-logo-final_mixed_red.ico">
-      <Link>Resources\git-extensions-logo-final_mixed_red.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\git-extensions-logo-final_mixed_yellow.ico">
-      <Link>Resources\git-extensions-logo-final_mixed_yellow.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\git-extensions-logo-final_purple.ico">
-      <Link>Resources\git-extensions-logo-final_purple.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\git-extensions-logo-final_red.ico">
-      <Link>Resources\git-extensions-logo-final_red.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\git-extensions-logo-final_yellow.ico">
-      <Link>Resources\git-extensions-logo-final_yellow.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\x-with-arrow.ico">
-      <Link>Resources\x-with-arrow.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\x-with-arrow_blue.ico">
-      <Link>Resources\x-with-arrow_blue.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\x-with-arrow_green.ico">
-      <Link>Resources\x-with-arrow_green.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\x-with-arrow_lightblue.ico">
-      <Link>Resources\x-with-arrow_lightblue.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\x-with-arrow_purple.ico">
-      <Link>Resources\x-with-arrow_purple.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\x-with-arrow_red.ico">
-      <Link>Resources\x-with-arrow_red.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\x-with-arrow_yellow.ico">
-      <Link>Resources\x-with-arrow_yellow.ico</Link>
-    </Content>
-    <None Include="Icons\commitRed.png" />
-    <None Include="Icons\commitYellow.png" />
+    <None Include="..\Bin\Logo\cow-head-blue.ico">
+      <Link>Resources\ApplicationIcons\cow-head-blue.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\cow-head-green.ico">
+      <Link>Resources\ApplicationIcons\cow-head-green.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\cow-head-purple.ico">
+      <Link>Resources\ApplicationIcons\cow-head-purple.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\cow-head-red.ico">
+      <Link>Resources\ApplicationIcons\cow-head-red.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\cow-head-yellow.ico">
+      <Link>Resources\ApplicationIcons\cow-head-yellow.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\cow-head.ico">
+      <Link>Resources\ApplicationIcons\cow-head.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\git-extensions-logo-final-128.png">
+      <Link>Resources\Icons\git-extensions-logo-final-128.png</Link>
+    </None>
+    <None Include="..\Bin\Logo\git-extensions-logo-final.ico">
+      <Link>Resources\ApplicationIcons\git-extensions-logo-final.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\git-extensions-logo-final_blue.ico">
+      <Link>Resources\ApplicationIcons\git-extensions-logo-final_blue.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\git-extensions-logo-final_green.ico">
+      <Link>Resources\ApplicationIcons\git-extensions-logo-final_green.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\git-extensions-logo-final_lightblue.ico">
+      <Link>Resources\ApplicationIcons\git-extensions-logo-final_lightblue.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\git-extensions-logo-final_mixed.ico">
+      <Link>Resources\ApplicationIcons\git-extensions-logo-final_mixed.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\git-extensions-logo-final_mixed_blue.ico">
+      <Link>Resources\ApplicationIcons\git-extensions-logo-final_mixed_blue.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\git-extensions-logo-final_mixed_green.ico">
+      <Link>Resources\ApplicationIcons\git-extensions-logo-final_mixed_green.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\git-extensions-logo-final_mixed_lightblue.ico">
+      <Link>Resources\ApplicationIcons\git-extensions-logo-final_mixed_lightblue.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\git-extensions-logo-final_mixed_purple.ico">
+      <Link>Resources\ApplicationIcons\git-extensions-logo-final_mixed_purple.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\git-extensions-logo-final_mixed_red.ico">
+      <Link>Resources\ApplicationIcons\git-extensions-logo-final_mixed_red.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\git-extensions-logo-final_mixed_yellow.ico">
+      <Link>Resources\ApplicationIcons\git-extensions-logo-final_mixed_yellow.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\git-extensions-logo-final_purple.ico">
+      <Link>Resources\ApplicationIcons\git-extensions-logo-final_purple.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\git-extensions-logo-final_red.ico">
+      <Link>Resources\ApplicationIcons\git-extensions-logo-final_red.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\git-extensions-logo-final_yellow.ico">
+      <Link>Resources\ApplicationIcons\git-extensions-logo-final_yellow.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\x-with-arrow.ico">
+      <Link>Resources\ApplicationIcons\x-with-arrow.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\x-with-arrow_blue.ico">
+      <Link>Resources\ApplicationIcons\x-with-arrow_blue.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\x-with-arrow_green.ico">
+      <Link>Resources\ApplicationIcons\x-with-arrow_green.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\x-with-arrow_lightblue.ico">
+      <Link>Resources\ApplicationIcons\x-with-arrow_lightblue.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\x-with-arrow_purple.ico">
+      <Link>Resources\ApplicationIcons\x-with-arrow_purple.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\x-with-arrow_red.ico">
+      <Link>Resources\ApplicationIcons\x-with-arrow_red.ico</Link>
+    </None>
+    <None Include="..\Bin\Logo\x-with-arrow_yellow.ico">
+      <Link>Resources\ApplicationIcons\x-with-arrow_yellow.ico</Link>
+    </None>
+    <None Include="Resources\Icons\IconDirty.png" />
+    <None Include="Resources\Icons\IconMixed.png" />
+    <None Include="Resources\Icons\IconClean.png" />
+    <None Include="Resources\Icons\WorkingDirChanges.png" />
+    <None Include="Resources\Icons\arrow_refresh_dirty.png" />
+    <None Include="Resources\Icons\double_arrow_down.png" />
+    <None Include="Resources\Icons\double_arrow_up.png" />
+    <None Include="Resources\Icons\Added.png" />
+    <None Include="Resources\Icons\Modified.png" />
+    <None Include="Resources\Icons\pageant.png" />
+    <None Include="Resources\Icons\putty.png" />
+    <None Include="Resources\Icons\whitespace.ico" />
     <Content Include="Translation\German.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1328,38 +1338,33 @@
     <Content Include="Translation\Traditional Chinese.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Icons\24.png" />
-    <None Include="Icons\bash.png" />
+    <None Include="Resources\Icons\24.png" />
+    <None Include="Resources\Icons\bash.png" />
     <None Include="Properties\DataSources\GitUI.Script.ScriptInfo.datasource" />
-    <None Include="Resources\minus.png" />
-    <None Include="Resources\minus.ico" />
-    <None Include="Resources\plus.png" />
-    <None Include="Icons\file.jpg" />
-    <None Include="Icons\67.png" />
-    <None Include="Icons\nonprintchar.png" />
-    <None Include="Icons\brokendocument.png" />
-    <None Include="Icons\22.png" />
-    <None Include="Icons\bug.png" />
-    <None Include="Icons\loading3.gif" />
-    <None Include="Icons\81.png" />
-    <None Include="Icons\83.png" />
-    <None Include="Icons\84.png" />
-    <None Include="Icons\_81.png" />
-    <None Include="Icons\_82.png" />
-    <None Include="Icons\arrow_refresh.png" />
-    <None Include="Icons\39.png" />
-    <None Include="Resources\double_arrow_up.png" />
-    <None Include="Resources\double_arrow_down.png" />
-    <None Include="Icons\45.png" />
-    <None Include="Icons\Renamed.png" />
-    <None Include="Icons\52.png" />
-    <None Include="Icons\Copied.png" />
-    <None Include="Icons\SplitViewLayout.png" />
-    <None Include="Icons\cardModeLayout.png" />
-    <Content Include="Resources\success1.png" />
-    <None Include="Resources\witespace.ico" />
-    <None Include="Resources\whitespace.bmp" />
-    <None Include="Resources\whitespace.png" />
+    <None Include="Resources\Icons\file.jpg" />
+    <None Include="Resources\Icons\67.png" />
+    <None Include="Resources\Icons\nonprintchar.png" />
+    <None Include="Resources\Icons\brokendocument.png" />
+    <None Include="Resources\Icons\22.png" />
+    <None Include="Resources\Icons\bug.png" />
+    <None Include="Resources\Icons\loading.gif" />
+    <None Include="Resources\Icons\81.png" />
+    <None Include="Resources\Icons\83.png" />
+    <None Include="Resources\Icons\84.png" />
+    <None Include="Resources\Icons\_81.png" />
+    <None Include="Resources\Icons\_82.png" />
+    <None Include="Resources\Icons\arrow_refresh.png" />
+    <None Include="Resources\Icons\39.png" />
+    <None Include="Resources\Icons\double_arrow_up.png" />
+    <None Include="Resources\Icons\double_arrow_down.png" />
+    <None Include="Resources\Icons\45.png" />
+    <None Include="Resources\Icons\Renamed.png" />
+    <None Include="Resources\Icons\52.png" />
+    <None Include="Resources\Icons\Copied.png" />
+    <None Include="Resources\Icons\SplitViewLayout.png" />
+    <None Include="Resources\Icons\cardModeLayout.png" />
+    <None Include="Resources\Icons\success1.png" />
+    <None Include="Resources\Icons\whitespace.bmp" />
     <Content Include="Translation\Dutch.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1401,68 +1406,62 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Properties\DataSources\FormTranslate.TranslateItem.datasource" />
-    <None Include="Resources\Cow_sunglass.png" />
-    <None Include="Resources\Cow_xmass.png" />
-    <None Include="Resources\develop.ico" />
-    <None Include="Resources\rss.ico" />
-    <None Include="Resources\dollar.ico" />
-    <None Include="Resources\history.ico" />
-    <None Include="Icons\User.PNG" />
+    <None Include="Resources\Icons\Cow_sunglass.png" />
+    <None Include="Resources\Icons\Cow_xmass.png" />
+    <None Include="Resources\Icons\develop.ico" />
+    <None Include="Resources\Icons\rss.ico" />
+    <None Include="Resources\Icons\dollar.ico" />
+    <None Include="Resources\Icons\history.ico" />
+    <None Include="Resources\Icons\User.PNG" />
     <None Include="Properties\DataSources\GitCommands.Repository.datasource" />
-    <None Include="Resources\Modified.bmp" />
-    <None Include="Resources\Removed.bmp" />
-    <None Include="Resources\Added.bmp" />
-    <None Include="Icons\stash.png" />
-    <None Include="Icons\stash.bmp" />
-    <None Include="Icons\90.png" />
+    <None Include="Resources\Icons\Modified.png" />
+    <None Include="Resources\Icons\Removed.png" />
+    <None Include="Resources\Icons\Added.png" />
+    <None Include="Resources\Icons\stash.bmp" />
+    <None Include="Resources\Icons\90.png" />
     <None Include="Properties\DataSources\GitCommands.GitSubmodule.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Resources\arrow_refresh_dirty.png" />
+    <None Include="Resources\Icons\arrow_refresh_dirty.png" />
     <None Include="Resources\ChangeLog.txt" />
-    <None Include="Icons\merge.png" />
-    <None Include="Icons\fetch.png" />
-    <None Include="Icons\Rebase.png" />
-    <None Include="Resources\puttygen.ico" />
-    <None Include="Resources\pageant.ico" />
-    <None Include="Resources\putty.ico" />
+    <None Include="Resources\Icons\merge.png" />
+    <None Include="Resources\Icons\fetch.png" />
+    <None Include="Resources\Icons\Rebase.png" />
     <None Include="Properties\DataSources\GitCommands.GitBlame.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitHead.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitStash.datasource" />
     <None Include="Properties\DataSources\PatchApply.PatchFile.datasource" />
-    <None Include="Resources\Donate.jpg" />
-    <None Include="Resources\Cow.png" />
-    <None Include="Icons\77.png" />
-    <None Include="Icons\78.png" />
-    <None Include="Icons\76.png" />
-    <None Include="Icons\75.png" />
-    <None Include="Icons\9.png" />
-    <None Include="Icons\89.png" />
-    <None Include="Icons\46.png" />
-    <None Include="Icons\34.png" />
-    <None Include="Icons\36.png" />
-    <None Include="Icons\14.png" />
-    <None Include="Icons\7.png" />
-    <None Include="Icons\8.png" />
-    <None Include="Icons\71.png" />
-    <None Include="Icons\10.png" />
-    <None Include="Icons\11.png" />
-    <None Include="Icons\26.png" />
-    <None Include="Icons\27.png" />
-    <None Include="Resources\arrow_refresh.png" />
-    <None Include="Icons\40.png" />
-    <None Include="Icons\35.png" />
-    <None Include="Icons\33.png" />
-    <None Include="Icons\21.png" />
-    <None Include="Icons\49.png" />
-    <None Include="Icons\53.png" />
-    <None Include="Icons\4.png" />
-    <None Include="Icons\3.png" />
-    <None Include="Resources\error.png" />
-    <None Include="Resources\error_button.png" />
-    <None Include="Resources\loadingpanel.gif" />
+    <None Include="Resources\Icons\Donate.jpg" />
+    <None Include="Resources\Icons\Cow.png" />
+    <None Include="Resources\Icons\77.png" />
+    <None Include="Resources\Icons\78.png" />
+    <None Include="Resources\Icons\76.png" />
+    <None Include="Resources\Icons\75.png" />
+    <None Include="Resources\Icons\IconStaged.png" />
+    <None Include="Resources\Icons\46.png" />
+    <None Include="Resources\Icons\34.png" />
+    <None Include="Resources\Icons\36.png" />
+    <None Include="Resources\Icons\14.png" />
+    <None Include="Resources\Icons\7.png" />
+    <None Include="Resources\Icons\8.png" />
+    <None Include="Resources\Icons\71.png" />
+    <None Include="Resources\Icons\11.png" />
+    <None Include="Resources\Icons\26.png" />
+    <None Include="Resources\Icons\27.png" />
+    <None Include="Resources\Icons\arrow_refresh.png" />
+    <None Include="Resources\Icons\40.png" />
+    <None Include="Resources\Icons\35.png" />
+    <None Include="Resources\Icons\33.png" />
+    <None Include="Resources\Icons\21.png" />
+    <None Include="Resources\Icons\49.png" />
+    <None Include="Resources\Icons\53.png" />
+    <None Include="Resources\Icons\4.png" />
+    <None Include="Resources\Icons\3.png" />
+    <None Include="Resources\Icons\error.png" />
+    <None Include="Resources\Icons\error_button.png" />
+    <None Include="Resources\Icons\loadingpanel.gif" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

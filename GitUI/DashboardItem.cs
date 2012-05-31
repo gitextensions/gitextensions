@@ -137,7 +137,7 @@ namespace GitUI
             switch (repository.RepositoryType)
             {
                 case RepositoryType.Repository:
-                    return Resources._14;
+                    return Resources.Star;
                 case RepositoryType.RssFeed:
                     return Resources.rss.ToBitmap();
                 case RepositoryType.History:

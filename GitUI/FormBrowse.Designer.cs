@@ -309,7 +309,7 @@ namespace GitUI
             // 
             // _NO_TRANSLATE_Workingdir
             // 
-            this._NO_TRANSLATE_Workingdir.Image = global::GitUI.Properties.Resources._40;
+            this._NO_TRANSLATE_Workingdir.Image = global::GitUI.Properties.Resources.Folder;
             this._NO_TRANSLATE_Workingdir.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this._NO_TRANSLATE_Workingdir.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._NO_TRANSLATE_Workingdir.Name = "_NO_TRANSLATE_Workingdir";
@@ -1272,7 +1272,7 @@ namespace GitUI
             // 
             // goToToolStripMenuItem
             // 
-            this.goToToolStripMenuItem.Image = global::GitUI.Properties.Resources._75;
+            this.goToToolStripMenuItem.Image = global::GitUI.Properties.Resources.Goto;
             this.goToToolStripMenuItem.Name = "goToToolStripMenuItem";
             this.goToToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
                         | System.Windows.Forms.Keys.G)));

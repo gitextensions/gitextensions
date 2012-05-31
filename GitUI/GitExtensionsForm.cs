@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Configuration;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -8,7 +9,6 @@ using GitUI.Properties;
 #if !__MonoCS__
 using Microsoft.WindowsAPICodePack.Taskbar;
 #endif
-using ResourceManager;
 using ResourceManager.Translation;
 using Settings = GitCommands.Settings;
 using System.Collections.Generic;
@@ -111,83 +111,105 @@ namespace GitUI
             ApplicationIcon = GetApplicationIcon(Settings.IconStyle, Settings.IconColor);
             Icon = ApplicationIcon;
         }
+        
+        protected enum ColorIndex
+        {
+            Default,
+            Blue,
+            Green,
+            LightBlue,
+            Purple,
+            Red,
+            Yellow,
+            Unknown = -1
+        }
+
+        protected static ColorIndex GetColorIndexByName(string color)
+        {
+            switch (color)
+            {
+                case "default":
+                    return ColorIndex.Default;
+                case "blue":
+                    return ColorIndex.Blue;
+                case "green":
+                    return ColorIndex.Green;
+                case "lightblue":
+                    return ColorIndex.LightBlue;
+                case "purple":
+                    return ColorIndex.Purple;
+                case "red":
+                    return ColorIndex.Red;
+                case "yellow":
+                    return ColorIndex.Yellow;
+                case "random":
+                    return (ColorIndex)new Random(DateTime.Now.Millisecond).Next(6);
+            }
+            return ColorIndex.Unknown;
+        }
 
         protected static Icon GetApplicationIcon(string iconStyle, string iconColor)
         {
-            var randomIcon = -1;
-            if (iconColor.Equals("random"))
-                randomIcon = new Random(DateTime.Now.Millisecond).Next(6);
+            var colorIndex = (int)GetColorIndexByName(iconColor);
+            if (colorIndex == (int) ColorIndex.Unknown)
+                colorIndex = 0;
 
             if (iconStyle.Equals("small", StringComparison.OrdinalIgnoreCase))
             {
-                if (iconColor.Equals("default") || randomIcon == 0)
-                    return Resources.x_with_arrow;
-                if (iconColor.Equals("blue") || randomIcon == 1)
-                    return Resources.x_with_arrow_blue;
-                if (iconColor.Equals("green") || randomIcon == 3)
-                    return Resources.x_with_arrow_green;
-                if (iconColor.Equals("lightblue") || randomIcon == 1)
-                    return Resources.x_with_arrow_lightblue;
-                if (iconColor.Equals("purple") || randomIcon == 2)
-                    return Resources.x_with_arrow_purple;
-                if (iconColor.Equals("red") || randomIcon == 4)
-                    return Resources.x_with_arrow_red;
-                if (iconColor.Equals("yellow") || randomIcon == 5)
-                    return Resources.x_with_arrow_yellow;
+                Icon[] icons = {
+                                    Resources.x_with_arrow,
+                                    Resources.x_with_arrow_blue,
+                                    Resources.x_with_arrow_green,
+                                    Resources.x_with_arrow_lightblue,
+                                    Resources.x_with_arrow_purple,
+                                    Resources.x_with_arrow_red,
+                                    Resources.x_with_arrow_yellow
+                                };
+                Debug.Assert(icons.Length == 7);
+                return icons[colorIndex];
             }
             else if (iconStyle.Equals("large", StringComparison.OrdinalIgnoreCase))
             {
-                if (iconColor.Equals("default") || randomIcon == 0)
-                    return Resources.git_extensions_logo_final;
-                if (iconColor.Equals("blue") || randomIcon == 1)
-                    return Resources.git_extensions_logo_final_blue;
-                if (iconColor.Equals("green") || randomIcon == 3)
-                    return Resources.git_extensions_logo_final_green;
-                if (iconColor.Equals("lightblue") || randomIcon == 1)
-                    return Resources.git_extensions_logo_final_lightblue;
-                if (iconColor.Equals("purple") || randomIcon == 2)
-                    return Resources.git_extensions_logo_final_purple;
-                if (iconColor.Equals("red") || randomIcon == 4)
-                    return Resources.git_extensions_logo_final_mixed_red;
-                if (iconColor.Equals("yellow") || randomIcon == 5)
-                    return Resources.git_extensions_logo_final_mixed_yellow;
+                Icon[] icons = {
+                                    Resources.git_extensions_logo_final,
+                                    Resources.git_extensions_logo_final_blue,
+                                    Resources.git_extensions_logo_final_green,
+                                    Resources.git_extensions_logo_final_lightblue,
+                                    Resources.git_extensions_logo_final_purple,
+                                    Resources.git_extensions_logo_final_red,
+                                    Resources.git_extensions_logo_final_yellow
+                                };
+                Debug.Assert(icons.Length == 7);
+                return icons[colorIndex];
             }
             else if (iconStyle.Equals("cow", StringComparison.OrdinalIgnoreCase))
             {
-                if (iconColor.Equals("default") || randomIcon == 0)
-                    return Resources.cow_head;
-                if (iconColor.Equals("blue") || randomIcon == 1)
-                    return Resources.cow_head_blue;
-                if (iconColor.Equals("green") || randomIcon == 3)
-                    return Resources.cow_head_green;
-                if (iconColor.Equals("lightblue") || randomIcon == 1)
-                    return Resources.cow_head_blue;
-                if (iconColor.Equals("purple") || randomIcon == 2)
-                    return Resources.cow_head_purple;
-                if (iconColor.Equals("red") || randomIcon == 4)
-                    return Resources.cow_head_red;
-                if (iconColor.Equals("yellow") || randomIcon == 5)
-                    return Resources.cow_head_yellow;
+                Icon[] icons = {
+                                    Resources.cow_head,
+                                    Resources.cow_head_blue,
+                                    Resources.cow_head_green,
+                                    Resources.cow_head_blue,
+                                    Resources.cow_head_purple,
+                                    Resources.cow_head_red,
+                                    Resources.cow_head_yellow
+                                };
+                Debug.Assert(icons.Length == 7);
+                return icons[colorIndex];
             }
             else
             {
-                if (iconColor.Equals("default") || randomIcon == 0)
-                    return Resources.git_extensions_logo_final_mixed;
-                if (iconColor.Equals("blue") || randomIcon == 1)
-                    return Resources.git_extensions_logo_final_mixed_blue;
-                if (iconColor.Equals("green") || randomIcon == 3)
-                    return Resources.git_extensions_logo_final_mixed_green;
-                if (iconColor.Equals("lightblue") || randomIcon == 1)
-                    return Resources.git_extensions_logo_final_mixed_lightblue;
-                if (iconColor.Equals("purple") || randomIcon == 2)
-                    return Resources.git_extensions_logo_final_mixed_purple;
-                if (iconColor.Equals("red") || randomIcon == 4)
-                    return Resources.git_extensions_logo_final_mixed_red;
-                if (iconColor.Equals("yellow") || randomIcon == 5)
-                    return Resources.git_extensions_logo_final_mixed_yellow;
+                Icon[] icons = {
+                                    Resources.git_extensions_logo_final_mixed,
+                                    Resources.git_extensions_logo_final_mixed_blue,
+                                    Resources.git_extensions_logo_final_mixed_green,
+                                    Resources.git_extensions_logo_final_mixed_lightblue,
+                                    Resources.git_extensions_logo_final_mixed_purple,
+                                    Resources.git_extensions_logo_final_mixed_red,
+                                    Resources.git_extensions_logo_final_mixed_yellow
+                                };
+                Debug.Assert(icons.Length == 7);
+                return icons[colorIndex];
             }
-
-            return Resources.git_extensions_logo_final_mixed;
         }
         #endregion
 
