@@ -136,9 +136,9 @@ namespace GitUI
             DiffText.SetFileLoader(getNextPatchFile);
 
             GitTree.ImageList = new ImageList();
-            GitTree.ImageList.Images.Add(Properties.Resources._21); //File
-            GitTree.ImageList.Images.Add(Properties.Resources._40); //Folder
-            GitTree.ImageList.Images.Add(Properties.Resources._39); //Submodule
+            GitTree.ImageList.Images.Add(Properties.Resources.New); //File
+            GitTree.ImageList.Images.Add(Properties.Resources.Folder); //Folder
+            GitTree.ImageList.Images.Add(Properties.Resources.Submodule); //Submodule
 
             GitTree.MouseDown += GitTree_MouseDown;
             GitTree.MouseMove += GitTree_MouseMove;

@@ -429,7 +429,7 @@ namespace GitUI
             this.deleteAllUntrackedFilesToolStripMenuItem,
             this.toolStripMenuItem2,
             this.selectionFilterToolStripMenuItem});
-            this.workingToolStripMenuItem.Image = global::GitUI.Properties.Resources._89;
+            this.workingToolStripMenuItem.Image = global::GitUI.Properties.Resources.WorkingDirChanges;
             this.workingToolStripMenuItem.Name = "workingToolStripMenuItem";
             this.workingToolStripMenuItem.Size = new System.Drawing.Size(174, 24);
             this.workingToolStripMenuItem.Text = "Working dir changes";
@@ -611,7 +611,7 @@ namespace GitUI
             // 
             this.toolStageItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStageItem.AutoToolTip = false;
-            this.toolStageItem.Image = global::GitUI.Properties.Resources._4;
+            this.toolStageItem.Image = global::GitUI.Properties.Resources.ArrowDown;
             this.toolStageItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStageItem.Name = "toolStageItem";
             this.toolStageItem.Size = new System.Drawing.Size(67, 23);
@@ -637,7 +637,7 @@ namespace GitUI
             // toolUnstageItem
             // 
             this.toolUnstageItem.AutoToolTip = false;
-            this.toolUnstageItem.Image = global::GitUI.Properties.Resources._31;
+            this.toolUnstageItem.Image = global::GitUI.Properties.Resources.ArrowUp;
             this.toolUnstageItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolUnstageItem.Name = "toolUnstageItem";
             this.toolUnstageItem.Size = new System.Drawing.Size(83, 23);
@@ -754,7 +754,7 @@ namespace GitUI
             this.commitMessageToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1,
             this.generateListOfChangesInSubmodulesChangesToolStripMenuItem});
-            this.commitMessageToolStripMenuItem.Image = global::GitUI.Properties.Resources._89;
+            this.commitMessageToolStripMenuItem.Image = global::GitUI.Properties.Resources.WorkingDirChanges;
             this.commitMessageToolStripMenuItem.Name = "commitMessageToolStripMenuItem";
             this.commitMessageToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.commitMessageToolStripMenuItem.Size = new System.Drawing.Size(153, 23);
@@ -841,7 +841,7 @@ namespace GitUI
             // 
             // commitTemplatesToolStripMenuItem
             // 
-            this.commitTemplatesToolStripMenuItem.Image = global::GitUI.Properties.Resources._27;
+            this.commitTemplatesToolStripMenuItem.Image = global::GitUI.Properties.Resources.CommitTemplates;
             this.commitTemplatesToolStripMenuItem.Name = "commitTemplatesToolStripMenuItem";
             this.commitTemplatesToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.commitTemplatesToolStripMenuItem.Size = new System.Drawing.Size(161, 24);
@@ -865,7 +865,7 @@ namespace GitUI
             // 
             // Commit
             // 
-            this.Commit.Image = global::GitUI.Properties.Resources._10;
+            this.Commit.Image = global::GitUI.Properties.Resources.IconClean;
             this.Commit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Commit.Location = new System.Drawing.Point(1, 3);
             this.Commit.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
@@ -879,7 +879,7 @@ namespace GitUI
             // 
             // CommitAndPush
             // 
-            this.CommitAndPush.Image = global::GitUI.Properties.Resources._31;
+            this.CommitAndPush.Image = global::GitUI.Properties.Resources.ArrowUp;
             this.CommitAndPush.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.CommitAndPush.Location = new System.Drawing.Point(1, 35);
             this.CommitAndPush.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);

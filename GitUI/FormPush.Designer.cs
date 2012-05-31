@@ -125,7 +125,7 @@
             // Push
             // 
             this.Push.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Push.Image = global::GitUI.Properties.Resources._31;
+            this.Push.Image = global::GitUI.Properties.Resources.ArrowUp;
             this.Push.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Push.Location = new System.Drawing.Point(530, 210);
             this.Push.Name = "Push";

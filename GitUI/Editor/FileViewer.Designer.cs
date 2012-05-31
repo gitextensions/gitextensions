@@ -179,7 +179,7 @@
             // nextChangeButton
             // 
             this.nextChangeButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.nextChangeButton.Image = global::GitUI.Properties.Resources._4;
+            this.nextChangeButton.Image = global::GitUI.Properties.Resources.ArrowDown;
             this.nextChangeButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.nextChangeButton.Name = "nextChangeButton";
             this.nextChangeButton.Size = new System.Drawing.Size(23, 20);
@@ -189,7 +189,7 @@
             // previousChangeButton
             // 
             this.previousChangeButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.previousChangeButton.Image = global::GitUI.Properties.Resources._3;
+            this.previousChangeButton.Image = global::GitUI.Properties.Resources.MoveUp;
             this.previousChangeButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.previousChangeButton.Name = "previousChangeButton";
             this.previousChangeButton.Size = new System.Drawing.Size(23, 20);
