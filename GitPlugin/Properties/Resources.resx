@@ -118,46 +118,46 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Edit.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="10" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="_10" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\commit112.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="11" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="_11" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\commit1121.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="12" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="_12" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\commit11211.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="13" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="_13" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\commit112111.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="14" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="_14" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\commit1121111.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="_2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Configure.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="_3" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Diff.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="_4" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Revert.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="_5" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\EditAll.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="_6" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\RevisionHistory.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="_7" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\commit.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="8" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="_8" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\commit1.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="9" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="_9" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\commit11.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
