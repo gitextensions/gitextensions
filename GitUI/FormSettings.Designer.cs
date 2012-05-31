@@ -3064,7 +3064,7 @@ namespace GitUI
             // 
             this.moveDownButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.moveDownButton.Enabled = false;
-            this.moveDownButton.Image = global::GitUI.Properties.Resources._4;
+            this.moveDownButton.Image = global::GitUI.Properties.Resources.ArrowDown;
             this.moveDownButton.Location = new System.Drawing.Point(739, 152);
             this.moveDownButton.Name = "moveDownButton";
             this.moveDownButton.Size = new System.Drawing.Size(26, 23);
@@ -3099,7 +3099,7 @@ namespace GitUI
             // 
             this.moveUpButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.moveUpButton.Enabled = false;
-            this.moveUpButton.Image = global::GitUI.Properties.Resources._3;
+            this.moveUpButton.Image = global::GitUI.Properties.Resources.MoveUp;
             this.moveUpButton.Location = new System.Drawing.Point(739, 61);
             this.moveUpButton.Name = "moveUpButton";
             this.moveUpButton.Size = new System.Drawing.Size(26, 23);

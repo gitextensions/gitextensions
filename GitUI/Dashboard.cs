@@ -65,27 +65,27 @@ namespace GitUI
             DonateCategory.Dock = DockStyle.Top;
             //Show buttons
             CommonActions.DisableContextMenu();
-            var openItem = new DashboardItem(Resources._40, openRepository.Text);
+            var openItem = new DashboardItem(Resources.Folder, openRepository.Text);
             openItem.Click += openItem_Click;
             CommonActions.AddItem(openItem);
 
-            var cloneItem = new DashboardItem(Resources._46, cloneRepository.Text);
+            var cloneItem = new DashboardItem(Resources.SaveAs, cloneRepository.Text);
             cloneItem.Click += cloneItem_Click;
             CommonActions.AddItem(cloneItem);
 
-            var cloneSvnItem = new DashboardItem(Resources._46, cloneSvnRepository.Text);
+            var cloneSvnItem = new DashboardItem(Resources.SaveAs, cloneSvnRepository.Text);
             cloneSvnItem.Click += cloneSvnItem_Click;
             CommonActions.AddItem(cloneSvnItem);
 
             foreach (IRepositoryHostPlugin el in RepoHosts.GitHosters)
             {
                 IRepositoryHostPlugin gitHoster = el;
-                var di = new DashboardItem(Resources._46, string.Format(cloneFork.Text, el.Description));
+                var di = new DashboardItem(Resources.SaveAs, string.Format(cloneFork.Text, el.Description));
                 di.Click += (repoSender, eventArgs) => GitUICommands.Instance.StartCloneForkFromHoster(this, gitHoster);
                 CommonActions.AddItem(di);
             }
 
-            var createItem = new DashboardItem(Resources._14, createRepository.Text);
+            var createItem = new DashboardItem(Resources.Star, createRepository.Text);
             createItem.Click += createItem_Click;
             CommonActions.AddItem(createItem);
 
@@ -96,7 +96,7 @@ namespace GitUI
             var DonateItem = new DashboardItem(Resources.dollar.ToBitmap(), donate.Text);
             DonateItem.Click += DonateItem_Click;
             DonateCategory.AddItem(DonateItem);
-            var TranslateItem = new DashboardItem(Resources._24, translate.Text);
+            var TranslateItem = new DashboardItem(Resources.EditItem, translate.Text);
             TranslateItem.Click += TranslateItem_Click;
             DonateCategory.AddItem(TranslateItem);
             var IssuesItem = new DashboardItem(Resources.bug, issues.Text);
