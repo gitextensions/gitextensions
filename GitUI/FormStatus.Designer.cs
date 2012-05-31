@@ -164,7 +164,7 @@ namespace GitUI
             // 
             // picBoxSuccessFail
             // 
-            this.picBoxSuccessFail.Image = global::GitUI.Properties.Resources.success1;
+            this.picBoxSuccessFail.Image = global::GitUI.Properties.Resources.success;
             this.picBoxSuccessFail.Location = new System.Drawing.Point(3, 3);
             this.picBoxSuccessFail.Name = "picBoxSuccessFail";
             this.picBoxSuccessFail.Size = new System.Drawing.Size(50, 50);

@@ -3099,7 +3099,7 @@ namespace GitUI
             // 
             this.moveUpButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.moveUpButton.Enabled = false;
-            this.moveUpButton.Image = global::GitUI.Properties.Resources.MoveUp;
+            this.moveUpButton.Image = global::GitUI.Properties.Resources.ArrowUp;
             this.moveUpButton.Location = new System.Drawing.Point(739, 61);
             this.moveUpButton.Name = "moveUpButton";
             this.moveUpButton.Size = new System.Drawing.Size(26, 23);
