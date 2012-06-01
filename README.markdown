@@ -12,7 +12,7 @@ The mailing list can be found at [http://groups.google.com/group/gitextensions](
 
 The installer is build using WiX. You need to install WiX when you want to build the installer. This can be downloaded here: [http://wix.sourceforge.net/](http://wix.sourceforge.net/). If you do not want to build the installer, just open the solution and ignore the warning.
 
-* Open the solution file (GitCommands.sln or GitCommands.VS2010.sln)
+* Open the solution file (GitExtensions.VS2010.sln or GitExtensions.VS2012.sln)
 * Hit F5 to compile and run GitExtensions
 
 ## How to contribute code
