@@ -143,7 +143,7 @@ namespace GitUI
                 case "yellow":
                     return ColorIndex.Yellow;
                 case "random":
-                    return (ColorIndex)new Random(DateTime.Now.Millisecond).Next(6);
+                    return (ColorIndex)new Random(DateTime.Now.Millisecond).Next(7);
             }
             return ColorIndex.Unknown;
         }
@@ -154,6 +154,7 @@ namespace GitUI
             if (colorIndex == (int) ColorIndex.Unknown)
                 colorIndex = 0;
 
+            Icon appIcon = null;
             if (iconStyle.Equals("small", StringComparison.OrdinalIgnoreCase))
             {
                 Icon[] icons = {
@@ -166,7 +167,7 @@ namespace GitUI
                                     Resources.x_with_arrow_yellow
                                 };
                 Debug.Assert(icons.Length == 7);
-                return icons[colorIndex];
+                appIcon = icons[colorIndex];
             }
             else if (iconStyle.Equals("large", StringComparison.OrdinalIgnoreCase))
             {
@@ -180,7 +181,7 @@ namespace GitUI
                                     Resources.git_extensions_logo_final_yellow
                                 };
                 Debug.Assert(icons.Length == 7);
-                return icons[colorIndex];
+                appIcon = icons[colorIndex];
             }
             else if (iconStyle.Equals("cow", StringComparison.OrdinalIgnoreCase))
             {
@@ -194,7 +195,7 @@ namespace GitUI
                                     Resources.cow_head_yellow
                                 };
                 Debug.Assert(icons.Length == 7);
-                return icons[colorIndex];
+                appIcon = icons[colorIndex];
             }
             else
             {
@@ -208,8 +209,10 @@ namespace GitUI
                                     Resources.git_extensions_logo_final_mixed_yellow
                                 };
                 Debug.Assert(icons.Length == 7);
-                return icons[colorIndex];
+                appIcon = icons[colorIndex];
             }
+            Debug.Assert(appIcon != null);
+            return appIcon;
         }
         #endregion
 
