@@ -21,7 +21,7 @@ namespace GitUI
 {
     public sealed partial class FormCommit : GitExtensionsForm //, IHotkeyable
     {
-        #region Translation strings
+        #region Translation
         private readonly TranslationString _alsoDeleteUntrackedFiles =
             new TranslationString("Do you also want to delete the new files that are in the selection?" +
                                   Environment.NewLine + Environment.NewLine + "Choose 'No' to keep all new files.");
@@ -697,7 +697,8 @@ namespace GitUI
                 {
                     case 0:
                         string revision = _editedCommit != null ? _editedCommit.Guid : "";
-                        GitUICommands.Instance.StartCheckoutBranchDialog(revision);
+                        if (!GitUICommands.Instance.StartCheckoutBranchDialog(revision))
+                            return;
                         break;
                     case -1:
                         return;
@@ -710,7 +711,7 @@ namespace GitUI
 
                 ScriptManager.RunEventScripts(ScriptEvent.BeforeCommit);
 
-                var form = new FormProcess(Settings.Module.CommitCmd(amend, toolAuthor.Text));
+                var form = new FormProcess(Settings.Module.CommitCmd(amend, signOffToolStripMenuItem.Checked, toolAuthor.Text));
                 form.ShowDialog(this);
 
                 NeedRefresh = true;
@@ -1547,6 +1548,11 @@ namespace GitUI
                 RescanChanges();
 
             return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void signOffToolStripMenuItem_Click(object snder, EventArgs e)
+        {
+            signOffToolStripMenuItem.Checked = !signOffToolStripMenuItem.Checked;
         }
 
         private void toolAuthor_TextChanged(object sender, EventArgs e)

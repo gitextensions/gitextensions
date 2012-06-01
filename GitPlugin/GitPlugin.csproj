@@ -166,26 +166,11 @@
     <Content Include="GitPlugin.AddIn">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Resources\commit113.bmp" />
-    <None Include="Resources\commit12.bmp" />
-    <None Include="Resources\commit2.bmp" />
-    <None Include="Resources\RevisionHistory1.bmp" />
-    <None Include="Resources\EditAll1.bmp" />
-    <None Include="Resources\Revert1.bmp" />
-    <None Include="Resources\Diff1.bmp" />
-    <None Include="Resources\Configure1.bmp" />
-    <None Include="Resources\commit11211111.bmp" />
-    <None Include="Resources\commit1121112.bmp" />
-    <None Include="Resources\commit112112.bmp" />
-    <None Include="Resources\commit11212.bmp" />
-    <None Include="Resources\commit1122.bmp" />
-    <None Include="Resources\Edit1.bmp" />
     <None Include="Resources\commit1121111.bmp" />
     <None Include="Resources\commit112111.bmp" />
     <None Include="Resources\commit11211.bmp" />
     <None Include="Resources\commit1121.bmp" />
     <None Include="Resources\commit112.bmp" />
-    <None Include="Resources\commit111.bmp" />
     <None Include="Resources\commit11.bmp" />
     <None Include="Resources\commit1.bmp" />
     <None Include="Resources\Commit.bmp" />
@@ -223,10 +208,10 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>cd "$(ProjectDir)"
-mkdir "$(ProjectDir)$(OutDir)en-US"
+    <PostBuildEvent>cd "$(TargetDir)"
+mkdir "$(TargetDir)en-US"
 "$(ProjectDir)Resgen\Resgen" "$(ProjectDir)Properties\Resources.resx"
-"$(ProjectDir)Resgen\Al" /embed:"$(ProjectDir)Properties\Resources.resources" /culture:en-US /out:"$(ProjectDir)$(OutDir)en-US\GitPlugin.resources.dll"</PostBuildEvent>
+"$(ProjectDir)Resgen\Al" /embed:"$(ProjectDir)Properties\Resources.resources" /culture:en-US /out:"$(TargetDir)en-US\GitPlugin.resources.dll"</PostBuildEvent>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>

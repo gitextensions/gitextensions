@@ -1,12 +1,14 @@
 ﻿using System;
-using System.Linq;
+using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands.Repository;
 using ResourceManager.Translation;
 
 namespace GitUI
 {
+    [DefaultEvent("DashboardItemClick")]
     public partial class DashboardCategory : GitExtensionsControl
     {
         #region Translation
@@ -55,12 +57,21 @@ namespace GitUI
                 m_repositoryCategory = value;
 
                 if (m_repositoryCategory != null && m_repositoryCategory.CategoryType == RepositoryCategoryType.RssFeed)
-                    m_repositoryCategory.DownloadRssFeed();
-
-                InitRepositoryCategory();
+                {
+                    AsyncHelpers.DoAsync(
+                        () => { m_repositoryCategory.DownloadRssFeed(); return this; },
+                        obj => { obj.InitRepositoryCategory(); },
+                        ex => { }
+                    );
+                }
+                else
+                {
+                    InitRepositoryCategory();
+                }
             }
         }
 
+        [Category("Appearance")]
         public string Title
         {
             get { return _NO_TRANSLATE_Caption.Text; }
@@ -249,6 +260,7 @@ namespace GitUI
             dashboardCategoryChanged(this, null);
         }
 
+        [Category("Action")]
         public event EventHandler DashboardItemClick;
 
         private void dashboardItem_Click(object sender, EventArgs e)

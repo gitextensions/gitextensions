@@ -443,7 +443,7 @@
             // merge
             // 
             this.merge.ContextMenuStrip = this.ConflictedFilesContextMenu;
-            this.merge.Image = global::GitUI.Properties.Resources._90;
+            this.merge.Image = global::GitUI.Properties.Resources.Select;
             this.merge.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.merge.Location = new System.Drawing.Point(315, 0);
             this.merge.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
@@ -468,7 +468,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackgroundImage = global::GitUI.Properties.Resources._49;
+            this.pictureBox1.BackgroundImage = global::GitUI.Properties.Resources.Info;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);

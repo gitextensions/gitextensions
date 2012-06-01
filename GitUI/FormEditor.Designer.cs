@@ -66,7 +66,7 @@
             // toolStripSaveButton
             // 
             this.toolStripSaveButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripSaveButton.Image = global::GitUI.Properties.Resources._45;
+            this.toolStripSaveButton.Image = global::GitUI.Properties.Resources.Save;
             this.toolStripSaveButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripSaveButton.Name = "toolStripSaveButton";
             this.toolStripSaveButton.Size = new System.Drawing.Size(23, 22);
