@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
@@ -22,8 +23,10 @@ namespace GitUI
             _gravatarImg.Visible = false;
         }
 
+        [Browsable(false)]
         public string Email { get; private set; }
 
+        [Browsable(false)]
         public string ImageFileName { get; private set; }
 
         public void LoadImageForEmail(string email)

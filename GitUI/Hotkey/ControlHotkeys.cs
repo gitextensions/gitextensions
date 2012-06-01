@@ -154,7 +154,5 @@ namespace GitUI.Hotkey
         }
 
         #endregion
-
-
     }
 }

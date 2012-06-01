@@ -126,21 +126,18 @@ namespace GitUI
             }
         }
 
+        [Browsable(false)]
         public Font HeadFont { get; private set; }
+        [Browsable(false)]
         public Font SuperprojectFont { get; private set; }
+        [Browsable(false)]
         public int LastScrollPos { get; private set; }
+        [Browsable(false)]
         public IComparable[] LastSelectedRows { get; private set; }
+        [Browsable(false)]
         public Font RefsFont { get; private set; }
-        public string Filter { get; set; }
-        public string FixedFilter { get; set; }
-        public bool InMemFilterIgnoreCase { get; set; }
-        public string InMemAuthorFilter { get; set; }
-        public string InMemCommitterFilter { get; set; }
-        public string InMemMessageFilter { get; set; }
-
-        public string BranchFilter { get; set; }
         private Font _normalFont;
-
+        [Category("Appearance")]
         public Font NormalFont
         {
             get { return _normalFont; }
@@ -156,10 +153,31 @@ namespace GitUI
             }
         }
 
-        public string CurrentCheckout { get; set; }
-        public string SuperprojectCurrentCheckout { get; set; }
-        public int LastRow { get; set; }
+        [Category("Filter")]
+        public string Filter { get; set; }
+        [Category("Filter")]
+        public string FixedFilter { get; set; }
+        [Category("Filter")]
+        [DefaultValue(false)]
+        public bool InMemFilterIgnoreCase { get; set; }
+        [Category("Filter")]
+        public string InMemAuthorFilter { get; set; }
+        [Category("Filter")]
+        public string InMemCommitterFilter { get; set; }
+        [Category("Filter")]
+        public string InMemMessageFilter { get; set; }
+        [Category("Filter")]
+        public string BranchFilter { get; set; }
+        [Category("Filter")]
+        [DefaultValue(false)]
         public bool AllowGraphWithFilter { get; set; }
+
+        [Browsable(false)]
+        public string CurrentCheckout { get; set; }
+        [Browsable(false)]
+        public string SuperprojectCurrentCheckout { get; set; }
+        [Browsable(false)]
+        public int LastRow { get; set; }
 
         [Description("Indicates whether the user is allowed to select more than one commit at a time.")]
         [Category("Behavior")]

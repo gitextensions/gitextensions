@@ -54,7 +54,7 @@
         <Directory Id="VS2005" Name="Visual Studio 2005"/>
         <Directory Id="VS2008" Name="Visual Studio 2008"/>
         <Directory Id="VS2010" Name="Visual Studio 2010"/>
-        <Directory Id="VS11"   Name="Visual Studio 11"/>
+        <Directory Id="VS2012" Name="Visual Studio 2012"/>
       </Directory>
       <Directory Id="ProgramMenuFolder">
         <Directory Id="StartMenuDir" Name="$(var.ProductName)"/>
@@ -62,7 +62,7 @@
       <Directory Id="DesktopFolder"/>
     </Directory>
 
-    <?define VsVersions = 2005;2008;2010;11?>
+    <?define VsVersions = 2005;2008;2010;2012?>
     
     <?foreach VsVersion in $(var.VsVersions)?>
     <Property Id="VS$(var.VsVersion)">
@@ -166,6 +166,36 @@
       <Component Id="InstallDir.reg" Guid="*">
         <RegistryValue Name="InstallDir" Value="[INSTALLDIR]" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
       </Component>
+
+      <Component Id="Protocol.git" Guid="*">
+        <RegistryKey Key="git" Root="HKCR">
+          <RegistryValue Value="URL: Github for Windows Protocol" Type="string" />
+          <RegistryValue Name="URL Protocol" Value="" Type="string" />
+        </RegistryKey>
+        <RegistryKey Key="git\DefaultIcon" Root="HKCR">
+          <RegistryValue Value="[INSTALLDIR]GitExtensions.exe" Type="string" />
+        </RegistryKey>
+        <RegistryKey Root="HKCR" Key="git\shell"/>
+        <RegistryKey Root="HKCR" Key="git\shell\open"/>
+        <RegistryKey Root="HKCR" Key="git\shell\open\command">
+          <RegistryValue Value="&quot;[INSTALLDIR]GitExtensions.exe&quot; %1" Type="string" />
+        </RegistryKey>
+      </Component>
+
+      <Component Id="Protocol.github_windows" Guid="*">
+        <RegistryKey Key="github-windows" Root="HKCR">
+          <RegistryValue Value="URL: Github for Windows Protocol" Type="string" />
+          <RegistryValue Name="URL Protocol" Value="" Type="string" />
+        </RegistryKey>
+        <RegistryKey Key="github-windows\DefaultIcon" Root="HKCR">
+          <RegistryValue Value="[INSTALLDIR]GitExtensions.exe" Type="string" />
+        </RegistryKey>
+        <RegistryKey Root="HKCR" Key="github-windows\shell"/>
+        <RegistryKey Root="HKCR" Key="github-windows\shell\open"/>
+        <RegistryKey Root="HKCR" Key="github-windows\shell\open\command">
+          <RegistryValue Value="&quot;[INSTALLDIR]GitExtensions.exe&quot; %1" Type="string" />
+        </RegistryKey>
+      </Component>
     </DirectoryRef>
 
     <DirectoryRef Id="PluginsDir">
@@ -197,6 +227,10 @@
       <!--Remove unused dll, installed in versions <= 2.31-->
       <Component Id="Github.dll" Guid="0DA13691-140A-4490-8B4C-8AF537DAEB67">
         <RemoveFile Name="Github.dll" Id="Github.dll" On="both"/>
+        <RemoveRegistryValue Id="GithubAPIToken" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubapitoken"/>
+        <RemoveRegistryValue Id="GithubUsername" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubusername"/>
+        <RemoveRegistryValue Id="GithubPassword" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubpassword"/>
+        <RemoveRegistryValue Id="GithubAccess" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubpreferred access method"/>
       </Component>
 
       <Component Id="FindLargeFiles.dll" Guid="*">
@@ -609,6 +643,15 @@
         <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.resources.dll"/>
       </Feature>
       <?endforeach?>
+      
+      <Feature Id="Protocol.git" Title="Assign with git://-links" Level="1">
+        <ComponentRef Id="Protocol.git"/>
+      </Feature>
+      
+      <Feature Id="Protocol.github_windows" Title="Assign with github-windows://-links" Level="1">
+        <ComponentRef Id="Protocol.github_windows"/>
+      </Feature>
+
     </Feature>
 
     <?if $(var.IncludeRequiredSoftware) = 1 ?>

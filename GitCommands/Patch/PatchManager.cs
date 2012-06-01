@@ -8,7 +8,7 @@ namespace PatchApply
     public class PatchManager
     {
         private List<Patch> _patches = new List<Patch>();
-        private readonly PatchProcessor patchProcessor = new PatchProcessor();
+        private readonly PatchProcessor _patchProcessor = new PatchProcessor();
 
         public string PatchFileName { get; set; }
 
@@ -33,12 +33,12 @@ namespace PatchApply
                 text = text.Remove(text.Length - "\n\\ No newline at end of file\n".Length);
 
             // Divide diff into header and patch
-            int patch_pos = text.IndexOf("@@");
-            string header = text.Substring(0, patch_pos);
-            string diff = text.Substring(patch_pos);
+            int patchPos = text.IndexOf("@@");
+            string header = text.Substring(0, patchPos);
+            string diff = text.Substring(patchPos);
 
             // Get selection position and length
-            int first = selectionPosition - patch_pos;
+            int first = selectionPosition - patchPos;
             int last = first + selectionLength;
 
             // Make sure the header is not in the selection
@@ -50,29 +50,29 @@ namespace PatchApply
             if (last < 0) return null;
 
             // Round selection to previous and next line breaks to select the whole lines
-            int first_l = diff.LastIndexOf("\n", first, first) + 1;
-            int last_l = diff.IndexOf("\n", last);
-            if (last_l == -1)
-                last_l = diff.Length - 1;
+            int firstLine = diff.LastIndexOf("\n", first, first) + 1;
+            int lastLine = diff.IndexOf("\n", last);
+            if (lastLine == -1)
+                lastLine = diff.Length - 1;
 
             // Are we looking at a diff from the working dir or the staging area
-            char to_context = staged ? '+' : '-';
+            char toContext = staged ? '+' : '-';
 
             // this will hold the entire patch at the end
             string wholepatch = "";
 
             // loop until $first_l has reached $last_l
             // ($first_l is modified inside the loop!)
-            while (first_l < last_l)
+            while (firstLine < lastLine)
             {
                 // search from $first_l backwards for lines starting with @@
-                int i_l = diff.LastIndexOf("\n@@", first_l, first_l);
-                if (i_l == -1 && diff.Substring(0, 2) != "@@")
+                int iLine = diff.LastIndexOf("\n@@", firstLine, firstLine);
+                if (iLine == -1 && diff.Substring(0, 2) != "@@")
                 {
                     // if there's not a @@ above, then the selected range
                     // must have come before the first @@
-                    i_l = diff.IndexOf("\n@@", first_l, last_l - first_l);
-                    if (i_l == -1)
+                    iLine = diff.IndexOf("\n@@", firstLine, lastLine - firstLine);
+                    if (iLine == -1)
                     {
                         // if the @@ is not even in the selected range then
                         // any further action is useless because there is no
@@ -80,13 +80,13 @@ namespace PatchApply
                         return null;
                     }
                 }
-                i_l++;
+                iLine++;
                 // $i_l is now at the beginning of the first @@ line in 
                 // front of first_l
 
                 // pick start line number from hunk header
                 // example: hh = "@@ -604,58 +604,105 @@ foo bar"
-                string hh = diff.Substring(i_l, diff.IndexOf("\n", i_l) - i_l);
+                string hh = diff.Substring(iLine, diff.IndexOf("\n", iLine) - iLine);
                 // example: hh = "@@ -604"
                 hh = hh.Split(',')[0];
                 // example: hlh = "604"
@@ -153,46 +153,46 @@ namespace PatchApply
                 // then it accumulates the consecutive "-" lines (after
                 // converting them to context lines) in order to be moved after
                 // "+" change lines.
-                string pre_context = "";
+                string preContext = "";
 
                 int n = 0;
                 int m = 0;
                 // move $i_l to the first line after the @@ line $i_l pointed at
-                i_l = diff.IndexOf("\n", i_l) + 1;
+                iLine = diff.IndexOf("\n", iLine) + 1;
                 string patch = "";
 
                 // while $i_l is not at the end of the file and not 
                 // at the next @@ line
-                while (i_l < diff.Length - 1 && diff.Substring(i_l, 2) != "@@")
+                while (iLine < diff.Length - 1 && diff.Substring(iLine, 2) != "@@")
                 {
                     // set $next_l to the beginning of the next 
                     // line after $i_l
-                    int next_l = diff.IndexOf("\n", i_l) + 1;
-                    if (next_l == 0)
+                    int nextLine = diff.IndexOf("\n", iLine) + 1;
+                    if (nextLine == 0)
                     {
-                        next_l = diff.Length;
+                        nextLine = diff.Length;
                         m--;
                         n--;
                     }
 
                     // get character at $i_l 
-                    char c1 = diff[i_l];
+                    char c1 = diff[iLine];
 
                     // if $i_l is in selected range and the line starts 
                     // with either - or + this is a line to stage/unstage
-                    if (first_l <= i_l && i_l < last_l && (c1 == '-' || c1 == '+'))
+                    if (firstLine <= iLine && iLine < lastLine && (c1 == '-' || c1 == '+'))
                     {
                         // set $ln to the content of the line at $i_l
-                        string ln = diff.Substring(i_l, next_l - i_l);
+                        string ln = diff.Substring(iLine, nextLine - iLine);
                         // if line starts with -
                         if (c1 == '-')
                         {
                             // increase n counter by one
                             n++;
                             // update $patch
-                            patch += pre_context + ln;
+                            patch += preContext + ln;
                             // reset $pre_context
-                            pre_context = "";
+                            preContext = "";
 
                             // if line starts with +
                         }
@@ -210,24 +210,24 @@ namespace PatchApply
                     else if (c1 != '-' && c1 != '+')
                     {
                         // set $ln to the content of the line at $i_l
-                        string ln = diff.Substring(i_l, next_l - i_l);
+                        string ln = diff.Substring(iLine, nextLine - iLine);
                         // update $patch
-                        patch += pre_context + ln;
+                        patch += preContext + ln;
                         // increase counters by one each
                         n++;
                         m++;
                         // reset $pre_context
-                        pre_context = "";
+                        preContext = "";
 
                         // if the line starts with $to_context (see earlier)
                         // the sign at the beginning should be stripped
                     }
-                    else if (c1 == to_context)
+                    else if (c1 == toContext)
                     {
                         // turn change line into context line
-                        string ln = diff.Substring(i_l + 1, next_l - i_l - 1);
+                        string ln = diff.Substring(iLine + 1, nextLine - iLine - 1);
                         if (c1 == '-')
-                            pre_context += " " + ln;
+                            preContext += " " + ln;
                         else
                             patch += " " + ln;
                         // increase counters by one each
@@ -242,22 +242,22 @@ namespace PatchApply
                         // a change in the opposite direction of
                         // to_context which is outside the range of
                         // lines to apply.
-                        patch += pre_context;
-                        pre_context = "";
+                        patch += preContext;
+                        preContext = "";
                     }
                     // set $i_l to the next line
-                    i_l = next_l;
+                    iLine = nextLine;
                 }
                 // finished current hunk (reached @@ or file/diff end)
 
                 // update $patch (makes sure $pre_context gets appended)
-                patch += pre_context;
+                patch += preContext;
                 // update $wholepatch with the current hunk
                 wholepatch += "@@ -" + hln + "," + n.ToString() + " +" + hln + "," + m.ToString() + " @@\n" + patch;
 
                 // set $first_l to first line after the next @@ line
-                first_l = diff.IndexOf("\n", i_l) + 1;
-                if (first_l == 0)
+                firstLine = diff.IndexOf("\n", iLine) + 1;
+                if (firstLine == 0)
                     break;
             }
             // we are almost done, $wholepatch should no contain all the 
@@ -303,7 +303,7 @@ namespace PatchApply
 
         private void LoadPatchStream(TextReader reader, bool applyPatch)
         {
-            _patches = patchProcessor.CreatePatchesFromReader(reader);
+            _patches = _patchProcessor.CreatePatchesFromReader(reader);
 
             if (!applyPatch)
                 return;

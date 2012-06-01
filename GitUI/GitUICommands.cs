@@ -332,7 +332,8 @@ namespace GitUI
                 return needRefresh;
 
             var form = new FormCheckoutBranch(branch, remote, containRevison, force);
-            form.ShowDialog(owner);
+            if (form.ShowDialog(owner) == DialogResult.Cancel)
+                return false;
 
             InvokeEvent(owner, PostCheckoutBranch);
 
@@ -377,8 +378,9 @@ namespace GitUI
             if (CheckForDirtyDir(owner, out needRefresh, out force))
                 return needRefresh;
 
-            var form = new FormCheckoutRemoteBranch(branch, null, force);
-            form.ShowDialog(owner);
+            var form = new FormCheckoutRemoteBranch(branch, force);
+            if (form.ShowDialog(owner) == DialogResult.Cancel)
+                return false;
 
             InvokeEvent(owner, PostCheckoutBranch);
 
@@ -448,17 +450,22 @@ namespace GitUI
             return StartCreateBranchDialog(null);
         }
 
-        public bool StartCloneDialog(IWin32Window owner, string url)
+        public bool StartCloneDialog(IWin32Window owner, string url, bool openedFromProtocolHandler)
         {
             if (!InvokeEvent(owner, PreClone))
                 return false;
 
-            var form = new FormClone(url);
+            var form = new FormClone(url, openedFromProtocolHandler);
             form.ShowDialog(owner);
 
             InvokeEvent(owner, PostClone);
 
             return true;
+        }
+
+        public bool StartCloneDialog(IWin32Window owner, string url)
+        {
+            return StartCloneDialog(owner, url, false);
         }
 
         public bool StartCloneDialog(IWin32Window owner)

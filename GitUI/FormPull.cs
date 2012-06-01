@@ -14,7 +14,7 @@ namespace GitUI
 {
     public partial class FormPull : GitExtensionsForm
     {
-        #region Translations
+        #region Translation
         private readonly TranslationString _areYouSureYouWantToRebaseMerge =
             new TranslationString("The current commit is a merge." + Environment.NewLine +
                                 //"." + Environment.NewLine +

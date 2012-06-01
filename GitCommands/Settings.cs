@@ -336,9 +336,12 @@ namespace GitCommands
         //it is better to encode this file in utf8 for international projects. To read config file properly
         //we must know its encoding, let user decide by setting AppEncoding property which encoding has to be used
         //to read/write config file
-        public static Encoding GetAppEncoding(bool local)
+        public static Encoding GetAppEncoding(bool local, bool returnDefault)
         {
-            return GetEncoding(local, "AppEncoding", true);
+            Encoding result = GetEncoding(local, "AppEncoding", true);
+            if (result == null && returnDefault)
+                result = new UTF8Encoding(false);
+            return result;
         }
         public static void SetAppEncoding(bool local, Encoding encoding)
         {
@@ -348,11 +351,9 @@ namespace GitCommands
         {
             get
             {
-                Encoding result = GetAppEncoding(true);
+                Encoding result = GetAppEncoding(true, false);
                 if (result == null)
-                    result = GetAppEncoding(false);
-                if (result == null)
-                    result = new UTF8Encoding(false);
+                    result = GetAppEncoding(false, true);
                 return result;
             }
         }
@@ -1051,6 +1052,13 @@ namespace GitCommands
             set { SafeSet("CommitTemplates", value, ref _CommitTemplates); }
         }
 
+        private static bool? _CreateLocalBranchForRemote;
+        public static bool CreateLocalBranchForRemote
+        {
+            get { return SafeGet("CreateLocalBranchForRemote", false, ref _CreateLocalBranchForRemote); }
+            set { SafeSet("CreateLocalBranchForRemote", value, ref _CreateLocalBranchForRemote); }
+        }
+
         public static string GetGitExtensionsFullPath()
         {
             return GetGitExtensionsDirectory() + "\\GitExtensions.exe";
@@ -1129,11 +1137,7 @@ namespace GitCommands
             get
             {
                 if (_VersionIndependentRegKey == null)
-                {
-                    _VersionIndependentRegKey = Registry.CurrentUser.OpenSubKey("Software\\GitExtensions\\GitExtensions", true);
-                    if (_VersionIndependentRegKey == null)
-                        _VersionIndependentRegKey = Registry.CurrentUser.CreateSubKey("Software\\GitExtensions\\GitExtensions", RegistryKeyPermissionCheck.ReadWriteSubTree);
-                }
+                    _VersionIndependentRegKey = Registry.CurrentUser.CreateSubKey("Software\\GitExtensions\\GitExtensions", RegistryKeyPermissionCheck.ReadWriteSubTree);
                 return _VersionIndependentRegKey;
             }
         }
