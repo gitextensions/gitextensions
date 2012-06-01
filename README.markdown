@@ -2,7 +2,7 @@
 
 ## Introduction
 
-GitExtensions is a shell extension, a Visual Studio 2008 / 2010 plugin and a standalone Git repository tool.
+GitExtensions is a shell extension, a Visual Studio 2008 / 2010 / 2012 plugin and a standalone Git repository tool.
 
 ## Mailing list
 
@@ -27,11 +27,7 @@ If you do not want to use github, I also accept mailed patches. Just make sure t
 ## How to create the installer
 
 * Download and install WiX [http://wix.sourceforge.net/](http://wix.sourceforge.net/)
-* Open the solution file (GitCommands.sln or GitCommands.VS2010.sln)
-* Compile SimpleShlExt in release for 64bit windows
-* Compile SimpleShlExt in release for 32bit windows
-* Compile entire solution in release, mixed platforms
-* Run Setup\MakeInstallers.bat to build the installers
+* Run Setup\BuildInstallers.bat to build the installers
 
 ## Links
 
