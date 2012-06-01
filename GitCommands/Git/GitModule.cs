@@ -554,7 +554,6 @@ namespace GitCommands
         {
             using (var ms = (MemoryStream)GetFileStream(blob)) //Ugly, has implementation info.
             {
-                ConfigFile localConfig = GetLocalConfig();
                 string autocrlf = Settings.Module.GetEffectiveSetting("core.autocrlf").ToLower();
                 bool convertcrlf = autocrlf == "true";
 
