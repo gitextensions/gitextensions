@@ -19,6 +19,7 @@ namespace GitUI
 {
     public sealed partial class FormSettings : GitExtensionsForm
     {
+        #region Translation
         private readonly TranslationString _homeIsSetToString = new TranslationString("HOME is set to:");
         private readonly TranslationString __diffToolSuggestCaption = new TranslationString("Suggest difftool cmd");
         private readonly TranslationString __mergeToolSuggestCaption = new TranslationString("Suggest mergetool cmd");
@@ -191,8 +192,8 @@ namespace GitUI
 
         private readonly TranslationString _registryKeyGitExtensionsCorrect =
             new TranslationString("GitExtensions is properly registered.");
-
-
+        #endregion
+        
         private Font diffFont;
         private const string GitExtensionsShellExName = "GitExtensionsShellEx32.dll";
         private string IconName = "bug";
@@ -314,9 +315,9 @@ namespace GitUI
 
                 scriptEvent.DataSource = Enum.GetValues(typeof(ScriptEvent));
                 EncodingToCombo(Settings.GetFilesEncoding(false), Global_FilesEncoding);
-                EncodingToCombo(Settings.GetAppEncoding(false), Global_AppEncoding);
+                EncodingToCombo(Settings.GetAppEncoding(false, false), Global_AppEncoding);
                 EncodingToCombo(Settings.GetFilesEncoding(true), Local_FilesEncoding);
-                EncodingToCombo(Settings.GetAppEncoding(true), Local_AppEncoding);
+                EncodingToCombo(Settings.GetAppEncoding(true, false), Local_AppEncoding);
 
                 chkWarnBeforeCheckout.Checked = Settings.DirtyDirWarnBeforeCheckoutBranch;
                 chkStartWithRecentWorkingDir.Checked = Settings.StartWithRecentWorkingDir;
@@ -2131,7 +2132,7 @@ namespace GitUI
 
         private void downloadDictionary_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(@"http://code.google.com/p/gitextensions/wiki/Spelling");
+            Process.Start(@"https://github.com/spdr870/gitextensions/wiki/Spelling");
         }
 
         private void ScriptList_SelectionChanged(object sender, EventArgs e)

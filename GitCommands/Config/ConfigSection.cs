@@ -107,10 +107,14 @@ namespace GitCommands.Config
 
         public override string ToString()
         {
-            return
-                string.IsNullOrEmpty(SubSection)
-                    ? string.Concat("[", SectionName, "]")
-                    : string.Concat("[", SectionName, " \"", SubSection, "\"]");
+			string result = "[" + SectionName;
+			if (!SubSection.IsNullOrEmpty())
+				if (SubSectionCaseSensitive)
+					result = result + " \"" + SubSection + "\"";
+			    else
+				    result = result + "." + SubSection;
+			result = result + "]";
+			return result;
         }
 
         public bool Equals(ConfigSection other)

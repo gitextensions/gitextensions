@@ -104,6 +104,7 @@ namespace GitUI
             this.closeDialogAfterEachCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeDialogAfterAllFilesCommittedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refreshDialogOnFormFocusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.signOffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolAuthorLabelItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolAuthor = new System.Windows.Forms.ToolStripTextBox();
@@ -428,7 +429,7 @@ namespace GitUI
             this.deleteAllUntrackedFilesToolStripMenuItem,
             this.toolStripMenuItem2,
             this.selectionFilterToolStripMenuItem});
-            this.workingToolStripMenuItem.Image = global::GitUI.Properties.Resources._89;
+            this.workingToolStripMenuItem.Image = global::GitUI.Properties.Resources.WorkingDirChanges;
             this.workingToolStripMenuItem.Name = "workingToolStripMenuItem";
             this.workingToolStripMenuItem.Size = new System.Drawing.Size(174, 24);
             this.workingToolStripMenuItem.Text = "Working dir changes";
@@ -610,7 +611,7 @@ namespace GitUI
             // 
             this.toolStageItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStageItem.AutoToolTip = false;
-            this.toolStageItem.Image = global::GitUI.Properties.Resources._4;
+            this.toolStageItem.Image = global::GitUI.Properties.Resources.ArrowDown;
             this.toolStageItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStageItem.Name = "toolStageItem";
             this.toolStageItem.Size = new System.Drawing.Size(67, 23);
@@ -636,7 +637,7 @@ namespace GitUI
             // toolUnstageItem
             // 
             this.toolUnstageItem.AutoToolTip = false;
-            this.toolUnstageItem.Image = global::GitUI.Properties.Resources._31;
+            this.toolUnstageItem.Image = global::GitUI.Properties.Resources.ArrowUp;
             this.toolUnstageItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolUnstageItem.Name = "toolUnstageItem";
             this.toolUnstageItem.Size = new System.Drawing.Size(83, 23);
@@ -753,7 +754,7 @@ namespace GitUI
             this.commitMessageToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1,
             this.generateListOfChangesInSubmodulesChangesToolStripMenuItem});
-            this.commitMessageToolStripMenuItem.Image = global::GitUI.Properties.Resources._89;
+            this.commitMessageToolStripMenuItem.Image = global::GitUI.Properties.Resources.WorkingDirChanges;
             this.commitMessageToolStripMenuItem.Name = "commitMessageToolStripMenuItem";
             this.commitMessageToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.commitMessageToolStripMenuItem.Size = new System.Drawing.Size(153, 23);
@@ -782,6 +783,7 @@ namespace GitUI
             this.closeDialogAfterAllFilesCommittedToolStripMenuItem,
             this.refreshDialogOnFormFocusToolStripMenuItem,
             this.toolStripSeparator2,
+            this.signOffToolStripMenuItem,
             this.toolAuthorLabelItem,
             this.toolAuthor});
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
@@ -813,6 +815,13 @@ namespace GitUI
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
+            // 
+            // signOffToolStripMenuItem
+            // 
+            this.signOffToolStripMenuItem.Name = "signOffToolStripMenuItem";
+            this.signOffToolStripMenuItem.Size = new System.Drawing.Size(314, 22);
+            this.signOffToolStripMenuItem.Text = "Sign-off commit";
+            this.signOffToolStripMenuItem.Click += new System.EventHandler(this.signOffToolStripMenuItem_Click);
             this.toolStripSeparator2.Size = new System.Drawing.Size(377, 6);
             // 
             // toolAuthorLabelItem
@@ -832,7 +841,7 @@ namespace GitUI
             // 
             // commitTemplatesToolStripMenuItem
             // 
-            this.commitTemplatesToolStripMenuItem.Image = global::GitUI.Properties.Resources._27;
+            this.commitTemplatesToolStripMenuItem.Image = global::GitUI.Properties.Resources.CommitTemplates;
             this.commitTemplatesToolStripMenuItem.Name = "commitTemplatesToolStripMenuItem";
             this.commitTemplatesToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.commitTemplatesToolStripMenuItem.Size = new System.Drawing.Size(161, 24);
@@ -856,7 +865,7 @@ namespace GitUI
             // 
             // Commit
             // 
-            this.Commit.Image = global::GitUI.Properties.Resources._10;
+            this.Commit.Image = global::GitUI.Properties.Resources.IconClean;
             this.Commit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Commit.Location = new System.Drawing.Point(1, 3);
             this.Commit.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
@@ -870,7 +879,7 @@ namespace GitUI
             // 
             // CommitAndPush
             // 
-            this.CommitAndPush.Image = global::GitUI.Properties.Resources._31;
+            this.CommitAndPush.Image = global::GitUI.Properties.Resources.ArrowUp;
             this.CommitAndPush.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.CommitAndPush.Location = new System.Drawing.Point(1, 35);
             this.CommitAndPush.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
@@ -1166,5 +1175,6 @@ namespace GitUI
         private ToolStripMenuItem generateListOfChangesInSubmodulesChangesToolStripMenuItem;
         private ToolStripDropDownButton commitTemplatesToolStripMenuItem;
         private ToolStripMenuItem openContainingFolderToolStripMenuItem;
+        private ToolStripMenuItem signOffToolStripMenuItem;
     }
 }

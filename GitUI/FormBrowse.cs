@@ -26,7 +26,7 @@ namespace GitUI
 {
     public partial class FormBrowse : GitExtensionsForm
     {
-        #region Translations
+        #region Translation
 
         private readonly TranslationString _stashCount =
             new TranslationString("{0} saved {1}");
@@ -80,9 +80,9 @@ namespace GitUI
         private readonly TranslationString _UnsupportedMultiselectAction =
             new TranslationString("Operation not supported");
 
-        private string _NoDiffFilesChangesText;
-
         #endregion
+
+        private string _NoDiffFilesChangesText;
 
         private readonly SynchronizationContext syncContext;
         private readonly IndexWatcher _indexWatcher = new IndexWatcher();
@@ -136,9 +136,9 @@ namespace GitUI
             DiffText.SetFileLoader(getNextPatchFile);
 
             GitTree.ImageList = new ImageList();
-            GitTree.ImageList.Images.Add(Properties.Resources._21); //File
-            GitTree.ImageList.Images.Add(Properties.Resources._40); //Folder
-            GitTree.ImageList.Images.Add(Properties.Resources._39); //Submodule
+            GitTree.ImageList.Images.Add(Properties.Resources.New); //File
+            GitTree.ImageList.Images.Add(Properties.Resources.Folder); //Folder
+            GitTree.ImageList.Images.Add(Properties.Resources.Submodule); //Submodule
 
             GitTree.MouseDown += GitTree_MouseDown;
             GitTree.MouseMove += GitTree_MouseMove;

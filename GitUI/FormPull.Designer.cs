@@ -185,7 +185,7 @@
             // 
             // Pull
             // 
-            this.Pull.Image = global::GitUI.Properties.Resources._4;
+            this.Pull.Image = global::GitUI.Properties.Resources.ArrowDown;
             this.Pull.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Pull.Location = new System.Drawing.Point(425, 282);
             this.Pull.Name = "Pull";

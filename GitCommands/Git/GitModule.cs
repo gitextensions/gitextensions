@@ -1390,14 +1390,22 @@ namespace GitCommands
 
         public string CommitCmd(bool amend)
         {
-            return CommitCmd(amend, "");
+            return CommitCmd(amend, false, "");
         }
 
         public string CommitCmd(bool amend, string author)
         {
+            return CommitCmd(amend, false, author);
+        }
+
+        public string CommitCmd(bool amend, bool signOff, string author)
+        {
             string command = "commit";
             if (amend)
                 command += " --amend";
+
+            if (signOff)
+                command += " --signoff";
 
             if (!string.IsNullOrEmpty(author))
                 command += " --author=\"" + author + "\"";

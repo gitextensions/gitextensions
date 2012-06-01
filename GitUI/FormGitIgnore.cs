@@ -28,6 +28,7 @@ namespace GitUI
         private string _originalGitIgnoreFileContent = string.Empty;
 
         #region default patterns
+		private static readonly string DefaultIgnorePatternsFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GitExtensions/DefaultIgnorePatterns.txt");
         private static readonly string[] DefaultIgnorePatterns = new[]
         {
             "#ignore thumbnails created by windows",
@@ -150,8 +151,10 @@ namespace GitUI
 
         private void AddDefaultClick(object sender, EventArgs e)
         {
+			var defaultIgnorePatterns = (File.Exists(DefaultIgnorePatternsFile)) ? File.ReadAllLines(DefaultIgnorePatternsFile) : DefaultIgnorePatterns;
+			
             var currentFileContent = _NO_TRANSLATE_GitIgnoreEdit.GetText();
-            var patternsToAdd = DefaultIgnorePatterns
+            var patternsToAdd = defaultIgnorePatterns
                 .Except(currentFileContent.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                 .ToArray();
             if (patternsToAdd.Length == 0)

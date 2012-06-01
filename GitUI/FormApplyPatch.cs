@@ -8,7 +8,7 @@ namespace GitUI
 {
     public partial class FormApplyPatch : GitExtensionsForm
     {
-        #region TranslationStrings
+        #region Translation
 
         private readonly TranslationString _conflictResolvedText =
             new TranslationString("Conflicts resolved");

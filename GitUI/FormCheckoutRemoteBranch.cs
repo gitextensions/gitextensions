@@ -10,7 +10,7 @@ namespace GitUI
 {
     public partial class FormCheckoutRemoteBranch : GitExtensionsForm
     {
-        #region Translations
+        #region Translation
         private readonly TranslationString _applyShashedItemsAgain =
             new TranslationString("Apply stashed items to working dir again?");
 
@@ -22,7 +22,6 @@ namespace GitUI
         string _remoteName = "";
         string _newLocalBranchName = "";
         string _localBranchName = "";
-        bool? resetLocalBranch;
 
         // for translation only
         public FormCheckoutRemoteBranch()
@@ -40,14 +39,8 @@ namespace GitUI
             Initialize();
         }
 
-        public FormCheckoutRemoteBranch(string branch, bool? resetLocalBranch)
+        public FormCheckoutRemoteBranch(string branch, bool force)
             : this(branch)
-        {
-            this.resetLocalBranch = resetLocalBranch;
-        }
-
-        public FormCheckoutRemoteBranch(string branch, bool? resetLocalBranch, bool force)
-            : this(branch, resetLocalBranch)
         {
             if (force)
                 rbReset.Checked = true;
@@ -69,13 +62,8 @@ namespace GitUI
             }
 
             bool existsLocalBranch = LocalBranchExists(_localBranchName);
-            if (!resetLocalBranch.HasValue)
-                resetLocalBranch = !existsLocalBranch;
 
-            if (resetLocalBranch.Value)
-                rbResetBranch.Checked = true;
-            else
-                rbCreateBranch.Checked = true;
+            rbCreateBranch.Checked = Settings.CreateLocalBranchForRemote;
            
             rbResetBranch.Text = String.Format(existsLocalBranch ? rbResetBranch.Text : rbCreateBranch.Text, _localBranchName);
             rbCreateBranch.Text = String.Format(rbCreateBranch.Text, _newLocalBranchName);
@@ -87,6 +75,7 @@ namespace GitUI
             try
             {
                 Settings.MergeAtCheckout = rbMerge.Checked;
+                Settings.CreateLocalBranchForRemote = rbCreateBranch.Checked;
                 var command = "checkout";
 
                 //Get a localbranch name
