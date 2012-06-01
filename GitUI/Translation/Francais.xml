@@ -7,7 +7,7 @@
           <Value>A propos</Value>
         </TranslationItem>
         <TranslationItem Name="thanksTo" Property="Text">
-          <Value>Remerciements</Value>
+          <Value>Merci à</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -131,7 +131,7 @@
           <Value>Type</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
-          <Value>fil RSS</Value>
+          <Value>Flux RSS</Value>
         </TranslationItem>
         <TranslationItem Name="pathDataGridViewTextBoxColumn" Property="HeaderText">
           <Value>Chemin</Value>
@@ -150,10 +150,81 @@
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="EditNetSpell">
+      <translationItems>
+        <TranslationItem Name="addToDictionaryText" Property="Text">
+          <Value>Ajouter au dictionnaire</Value>
+        </TranslationItem>
+        <TranslationItem Name="dictionaryText" Property="Text">
+          <Value>Dictionnaire</Value>
+        </TranslationItem>
+        <TranslationItem Name="ignoreWordText" Property="Text">
+          <Value>Ignorer</Value>
+        </TranslationItem>
+        <TranslationItem Name="removeWordText" Property="Text">
+          <Value>Supprimer mot</Value>
+        </TranslationItem>
+        <TranslationItem Name="translateCurrentWord" Property="Text">
+          <Value>Traduire '{0}' en {1}</Value>
+        </TranslationItem>
+        <TranslationItem Name="translateEntireText" Property="Text">
+          <Value>Traduire le texte entier en {0}</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FileStatusList">
       <translationItems>
         <TranslationItem Name="NoFiles" Property="Text">
           <Value>Pas de changements</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FileViewer">
+      <translationItems>
+        <TranslationItem Name="copyToolStripMenuItem" Property="Text">
+          <Value>Copier</Value>
+        </TranslationItem>
+        <TranslationItem Name="DecreaseNumberOfLines" Property="ToolTipText">
+          <Value>Diminuer nombre de lignes visibles</Value>
+        </TranslationItem>
+        <TranslationItem Name="descreaseNumberOfLinesToolStripMenuItem" Property="Text">
+          <Value>WAT</Value>
+        </TranslationItem>
+        <TranslationItem Name="findToolStripMenuItem" Property="Text">
+          <Value>Trouver</Value>
+        </TranslationItem>
+        <TranslationItem Name="ignoreWhitespaceChangesToolStripMenuItem" Property="Text">
+          <Value>Ignorer espaces</Value>
+        </TranslationItem>
+        <TranslationItem Name="ignoreWhiteSpaces" Property="ToolTipText">
+          <Value>Ignorer espaces</Value>
+        </TranslationItem>
+        <TranslationItem Name="increaseNumberOfLines" Property="ToolTipText">
+          <Value>Augmenter nombre de lignes visibles</Value>
+        </TranslationItem>
+        <TranslationItem Name="increaseNumberOfLinesToolStripMenuItem" Property="Text">
+          <Value>Augmenter nombre de lignes visibles</Value>
+        </TranslationItem>
+        <TranslationItem Name="nextChangeButton" Property="ToolTipText">
+          <Value>Changement suivant</Value>
+        </TranslationItem>
+        <TranslationItem Name="previousChangeButton" Property="ToolTipText">
+          <Value> Changement précédent</Value>
+        </TranslationItem>
+        <TranslationItem Name="showEntireFileButton" Property="ToolTipText">
+          <Value>Afficher fichier complet</Value>
+        </TranslationItem>
+        <TranslationItem Name="showEntireFileToolStripMenuItem" Property="Text">
+          <Value>Afficher fichier complet</Value>
+        </TranslationItem>
+        <TranslationItem Name="showNonprintableCharactersToolStripMenuItem" Property="Text">
+          <Value>Afficher caractères non-imprimables</Value>
+        </TranslationItem>
+        <TranslationItem Name="showNonPrintChars" Property="ToolTipText">
+          <Value>Afficher caractères non-imprimables</Value>
+        </TranslationItem>
+        <TranslationItem Name="treatAllFilesAsTextToolStripMenuItem" Property="Text">
+          <Value>Traiter tous les fichiers comme du texte</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -168,9 +239,6 @@
         <TranslationItem Name="AddToIngore" Property="Text">
           <Value>Ignorer</Value>
         </TranslationItem>
-        <TranslationItem Name="filesWillBeIgnored" Property="Text">
-          <Value>1 fichier(s) correspondant</Value>
-        </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Value>Prévisualisation</Value>
         </TranslationItem>
@@ -179,9 +247,6 @@
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Value>Aucun fichiers existants ne correspondent à ce motif.</Value>
-        </TranslationItem>
-        <TranslationItem Name="Preview" Property="Text">
-          <Value>fatal: N'est pas un dépôt git (ou aucun des dossiers parents): .git</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -426,13 +491,7 @@
         <TranslationItem Name="toolStripButtonPull" Property="Text">
           <Value>Récupérer</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripButtonPull" Property="ToolTipText">
-          <Value>Récupérer</Value>
-        </TranslationItem>
         <TranslationItem Name="toolStripButtonPush" Property="Text">
-          <Value>Pousser</Value>
-        </TranslationItem>
-        <TranslationItem Name="toolStripButtonPush" Property="ToolTipText">
           <Value>Pousser</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripLabel2" Property="Text">
@@ -442,7 +501,7 @@
           <Value>Traduire</Value>
         </TranslationItem>
         <TranslationItem Name="Tree" Property="Text">
-          <Value>Arbre des fichiers</Value>
+          <Value>Répertoire de travail</Value>
         </TranslationItem>
         <TranslationItem Name="userManualToolStripMenuItem" Property="Text">
           <Value>Manuel Utilisateur</Value>
@@ -465,6 +524,69 @@
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Value>Vous pouvez changez la langue dans le panneau de configuration</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormClone">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Cloner</Value>
+        </TranslationItem>
+        <TranslationItem Name="_infoDirectoryExists" Property="Text">
+          <Value>(Dossier déjà existant)</Value>
+        </TranslationItem>
+        <TranslationItem Name="_infoDirectoryNew" Property="Text">
+          <Value>(Nouveau dossier)</Value>
+        </TranslationItem>
+        <TranslationItem Name="_infoNewRepositoryLocation" Property="Text">
+          <Value>Le dépôt sera cloné dans un nouveau dossier situé ici:
+{0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="_questionOpenRepo" Property="Text">
+          <Value>Le dépôt a bien été cloné.
+Voulez-vous ouvrir le nouveau dépôt "{0}" maintenant ?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_questionOpenRepoCaption" Property="Text">
+          <Value>Ouvrir</Value>
+        </TranslationItem>
+        <TranslationItem Name="brachLabel" Property="Text">
+          <Value>&amp;Branche:</Value>
+        </TranslationItem>
+        <TranslationItem Name="Central" Property="Text">
+          <Value>Dépôt central, pas de répertoire de travail (--base, --shared=all)</Value>
+        </TranslationItem>
+        <TranslationItem Name="CentralRepository" Property="Text">
+          <Value>Dépôt public, pas de répertoire de tarvail (--bare)</Value>
+        </TranslationItem>
+        <TranslationItem Name="FromBrowse" Property="Text">
+          <Value>&amp;Parcourir</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Type de dépôt</Value>
+        </TranslationItem>
+        <TranslationItem Name="Info" Property="Text">
+          <Value>USELESS</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>&amp;Dépôt à cloner:</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Value>Sous-dossier à créer:</Value>
+        </TranslationItem>
+        <TranslationItem Name="LoadSSHKey" Property="Text">
+          <Value>&amp;Charger clef ssh</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Value>Cloner</Value>
+        </TranslationItem>
+        <TranslationItem Name="Personal" Property="Text">
+          <Value>Dépôt personnel</Value>
+        </TranslationItem>
+        <TranslationItem Name="PersonalRepository" Property="Text">
+          <Value>&amp;Dépôt personnel</Value>
+        </TranslationItem>
+        <TranslationItem Name="ToBrowse" Property="Text">
+          <Value>&amp;Parcourir</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -631,6 +753,47 @@
         </TranslationItem>
         <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
           <Value>Ouvrir Avec</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormInit">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Créer nouveau dépôt</Value>
+        </TranslationItem>
+        <TranslationItem Name="_chooseDirectory" Property="Text">
+          <Value>Veuillez choisir un dossier.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_chooseDirectoryCaption" Property="Text">
+          <Value>Choix dossier</Value>
+        </TranslationItem>
+        <TranslationItem Name="_chooseDirectoryNotFile" Property="Text">
+          <Value>Impossible de créer un dépôt sur un fichier.
+Veuillez entrer un dossier.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_chooseDirectoryNotFileCaption" Property="Text">
+          <Value>Erreur</Value>
+        </TranslationItem>
+        <TranslationItem Name="_initMsgBoxCaption" Property="Text">
+          <Value>Créer nouveau dépôt</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>Parcourir</Value>
+        </TranslationItem>
+        <TranslationItem Name="Central" Property="Text">
+          <Value>Dépôt central, pas de répertoire de travail (--base, --shard=all)</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Value>Type de dépôt</Value>
+        </TranslationItem>
+        <TranslationItem Name="Init" Property="Text">
+          <Value>Créer</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Dossier</Value>
+        </TranslationItem>
+        <TranslationItem Name="Personal" Property="Text">
+          <Value>Dépôt personnel</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -870,14 +1033,88 @@ Voulez-vous utilisez le comportement par défaut de push et pull pour ce dépôt
         <TranslationItem Name="$this" Property="Text">
           <Value>Configuration</Value>
         </TranslationItem>
+        <TranslationItem Name="_cantFindGitMessageCaption" Property="Text">
+          <Value>Chemin incorrect</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cantReadRegistry" Property="Text">
+          <Value>Git Extensions n'a pas les permissions suffisantes pour vérifier le registre.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cantReadRegistryAddEntryManually" Property="Text">
+          <Value>Git Extensions n'a pas les permissions suffisantes pour modifier le registre.
+Veuillez ajouter cette clef au registre manuellement.
+Chemin: {0}\{1}
+Valeur: {2} = {3}</Value>
+        </TranslationItem>
+        <TranslationItem Name="_emailSet" Property="Text">
+          <Value>Un nom d'utilisateur et une adresse email sont renseignés.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_gitCanBeRun" Property="Text">
+          <Value>Git peut être lancé par: {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="_gitCanBeRunCaption" Property="Text">
+          <Value>Emplacement Git</Value>
+        </TranslationItem>
+        <TranslationItem Name="_gitNotFound" Property="Text">
+          <Value>Git non trouvé. Pour corriger ce problème vous devez entrer un chemin valide. </Value>
+        </TranslationItem>
+        <TranslationItem Name="_gitVersionFound" Property="Text">
+          <Value>Git {0} a été trouvé sur votre ordinateur.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_homeIsSetToString" Property="Text">
+          <Value>HOME est définie à:</Value>
+        </TranslationItem>
+        <TranslationItem Name="_kdiff3NotFoundAuto" Property="Text">
+          <Value>Le chemin vers KDiff3 n'a pas pu être touvé automatiquement.
+Veuillez vérifier que KDiff3 est installé ou entrer un chemin manuellement. </Value>
+        </TranslationItem>
+        <TranslationItem Name="_kdiffAsDiffConfigured" Property="Text">
+          <Value>KDiff3 est défini comme difftool.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_kdiffAsDiffConfiguredButNotFound" Property="Text">
+          <Value>KDiff3 est défini comme difftool, mais le chemin vers kdiff.exe n'est pas renseigné.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_kdiffAsMergeConfigured" Property="Text">
+          <Value>KDiff3 est défini comme mergetool.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_kdiffAsMergeConfiguredButNotFound" Property="Text">
+          <Value>KDiff3 est défini comme mergetool, mais le chemin vers kdiff.exe n'est pas renseigné.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_languageConfigured" Property="Text">
+          <Value>La langue utilisée est {0}.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_linuxToolsShNotFound" Property="Text">
+          <Value>Le chemin vers les outils linux (sh) n'a pas pu être trouvé automatiquement.
+Veuillez vérifier que des outils linux sont installés (mysysgit ou cygwin) ou entrer un chemin valide manuellement.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_linuxToolsShNotFoundCaption" Property="Text">
+          <Value>Emplacement outils Linux</Value>
+        </TranslationItem>
+        <TranslationItem Name="_linuxToolsSshFound" Property="Text">
+          <Value>Les outils Linux (sh) ont été trouvés sur votre ordinateur.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_linuxToolsSshNotFound" Property="Text">
+          <Value>Outils Linux (sh) non-trouvés. Pour corriger ce problème vous devez entrer un chemin valide.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_loadingSettingsFailed" Property="Text">
+          <Value>Impossible de charger les paramètres.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noDictFilesFound" Property="Text">
+          <Value>Aucun dictionnaire trouvé dans: {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noEmailSet" Property="Text">
+          <Value>Vous devez renseigner un nom d'utilisateur et une adresse email.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noLanguageConfigured" Property="Text">
+          <Value>Il n'y a aucun langue configurée pour Git Extensions.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_opensshUsed" Property="Text">
+          <Value>Le client SSH par défaut (OpenSSH) sera utilisé. (Une console apparaitra pour les opérations pull, push et clonage)</Value>
+        </TranslationItem>
         <TranslationItem Name="addScriptButton" Property="Text">
           <Value>Ajouter</Value>
         </TranslationItem>
         <TranslationItem Name="addToRevisionGridContextMenuDataGridViewCheckBoxColumn" Property="HeaderText">
           <Value>Menu contextuel</Value>
-        </TranslationItem>
-        <TranslationItem Name="AppearancePage" Property="Text">
-          <Value>Apparence</Value>
         </TranslationItem>
         <TranslationItem Name="AutostartPageant" Property="Text">
           <Value>Lancer automatiquement le client d'authentification si une clef privée est définie pour un dépôt distant</Value>
@@ -902,9 +1139,6 @@ Voulez-vous utilisez le comportement par défaut de push et pull pour ce dépôt
         </TranslationItem>
         <TranslationItem Name="browseScriptButton" Property="Text">
           <Value>Parcourir</Value>
-        </TranslationItem>
-        <TranslationItem Name="button1" Property="Text">
-          <Value>Suggestions de commandes</Value>
         </TranslationItem>
         <TranslationItem Name="ChangeHomeButton" Property="Text">
           <Value>Changer HOME</Value>
@@ -951,9 +1185,6 @@ Voulez-vous utilisez le comportement par défaut de push et pull pour ce dépôt
         <TranslationItem Name="DiffTool_Fix" Property="Text">
           <Value>Réparer</Value>
         </TranslationItem>
-        <TranslationItem Name="DiffTool2_Fix" Property="Text">
-          <Value>Réparer</Value>
-        </TranslationItem>
         <TranslationItem Name="DiffToolCmdSuggest" Property="Text">
           <Value>Suggestions de commandes</Value>
         </TranslationItem>
@@ -974,9 +1205,6 @@ Voulez-vous utilisez le comportement par défaut de push et pull pour ce dépôt
         </TranslationItem>
         <TranslationItem Name="GitFound_Fix" Property="Text">
           <Value>Réparer</Value>
-        </TranslationItem>
-        <TranslationItem Name="GlobalSettingsPage" Property="Text">
-          <Value>Paramètres globaux</Value>
         </TranslationItem>
         <TranslationItem Name="GreenIcon" Property="Text">
           <Value>Vert</Value>
@@ -1105,9 +1333,6 @@ mais nécessite que le client d'authentification tourne en arrière-plan.</Value
         <TranslationItem Name="LightblueIcon" Property="Text">
           <Value>Bleu clair</Value>
         </TranslationItem>
-        <TranslationItem Name="LocalSettings" Property="Text">
-          <Value>Paramètres locaux</Value>
-        </TranslationItem>
         <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
           <Value>Nom</Value>
         </TranslationItem>
@@ -1153,11 +1378,26 @@ mais nécessite que le client d'authentification tourne en arrière-plan.</Value
         <TranslationItem Name="SshConfig_Fix" Property="Text">
           <Value>Réparer</Value>
         </TranslationItem>
-        <TranslationItem Name="StartPage" Property="Text">
-          <Value>Page de démarrage</Value>
+        <TranslationItem Name="tpAppearance" Property="Text">
+          <Value>Apparence</Value>
         </TranslationItem>
-        <TranslationItem Name="tabPageHotkeys" Property="Text">
-          <Value>Racourcis clavier</Value>
+        <TranslationItem Name="tpColors" Property="Text">
+          <Value>Couleurs</Value>
+        </TranslationItem>
+        <TranslationItem Name="tpGitExtensions" Property="Text">
+          <Value>Git Extensions</Value>
+        </TranslationItem>
+        <TranslationItem Name="tpGlobalSettings" Property="Text">
+          <Value>Paramètres globaux</Value>
+        </TranslationItem>
+        <TranslationItem Name="tpHotkeys" Property="Text">
+          <Value>Raccourcis clavier</Value>
+        </TranslationItem>
+        <TranslationItem Name="tpLocalSettings" Property="Text">
+          <Value>Paramètres locaux</Value>
+        </TranslationItem>
+        <TranslationItem Name="tpStart" Property="Text">
+          <Value>Ecran d'accueil</Value>
         </TranslationItem>
         <TranslationItem Name="translationConfig_Fix" Property="Text">
           <Value>Réparer</Value>
@@ -1193,8 +1433,18 @@ mais nécessite que le client d'authentification tourne en arrière-plan.</Value
         <TranslationItem Name="neutralValueDataGridViewTextBoxColumn" Property="HeaderText">
           <Value>Valeur Neutre</Value>
         </TranslationItem>
+        <TranslationItem Name="nextButton" Property="Text">
+          <Value>&amp;Suivant</Value>
+        </TranslationItem>
+        <TranslationItem Name="noLanguageCodeSelected" Property="Text">
+          <Value>Aucun code de langue sélectionné.
+Voulez-vous sélectionner un code de langue ?</Value>
+        </TranslationItem>
         <TranslationItem Name="noLanguageCodeSelectedCaption" Property="Text">
-          <Value>Code langage:</Value>
+          <Value>Code langue:</Value>
+        </TranslationItem>
+        <TranslationItem Name="previousButton" Property="Text">
+          <Value>&amp;Précédent</Value>
         </TranslationItem>
         <TranslationItem Name="propertyDataGridViewTextBoxColumn" Property="HeaderText">
           <Value>Propriété</Value>
@@ -1228,6 +1478,65 @@ mais nécessite que le client d'authentification tourne en arrière-plan.</Value
         </TranslationItem>
         <TranslationItem Name="translateProgressText" Property="Text">
           <Value>Traduits {0} sur {1}</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="Open">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Value>Ouvrir dossier</Value>
+        </TranslationItem>
+        <TranslationItem Name="_warningOpenFailed" Property="Text">
+          <Value>Ce dossier n'existe pas.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_warningOpenFailedCaption" Property="Text">
+          <Value>Erreur</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text">
+          <Value>Parcourir</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Value>Dossier</Value>
+        </TranslationItem>
+        <TranslationItem Name="Load" Property="Text">
+          <Value>Ouvrir</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="RevisionGrid">
+      <translationItems>
+        <TranslationItem Name="copyToClipboardToolStripMenuItem" Property="Text">
+          <Value>Copier</Value>
+        </TranslationItem>
+        <TranslationItem Name="createNewBranchToolStripMenuItem" Property="Text">
+          <Value>Créer nouvelle branche</Value>
+        </TranslationItem>
+        <TranslationItem Name="createTagToolStripMenuItem" Property="Text">
+          <Value>Créer nouveau tag</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
+          <Value>Supprimer branche</Value>
+        </TranslationItem>
+        <TranslationItem Name="deleteTagToolStripMenuItem" Property="Text">
+          <Value>Supprimer tag</Value>
+        </TranslationItem>
+        <TranslationItem Name="renameBranchToolStripMenuItem" Property="Text">
+          <Value>Renommer branche</Value>
+        </TranslationItem>
+        <TranslationItem Name="showAllBranchesToolStripMenuItem" Property="Text">
+          <Value>Toutes</Value>
+        </TranslationItem>
+        <TranslationItem Name="showBranchesToolStripMenuItem" Property="Text">
+          <Value>Affichage branches</Value>
+        </TranslationItem>
+        <TranslationItem Name="showCurrentBranchOnlyToolStripMenuItem" Property="Text">
+          <Value>Branche actuelle</Value>
+        </TranslationItem>
+        <TranslationItem Name="showFilteredBranchesToolStripMenuItem" Property="Text">
+          <Value>Branches filtrées</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowRemoteBranches" Property="Text">
+          <Value>Branches distantes</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
