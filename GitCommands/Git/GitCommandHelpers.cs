@@ -823,57 +823,39 @@ namespace GitCommands
 
             gitItemStatus = new GitItemStatus();
             //Find renamed files...
-            switch (x)
+            if (x == 'R' || x == 'C')
             {
-                case 'R':
-                    if (fromDiff)
-                    {
-                        gitItemStatus.OldName = fileName.Trim();
-                        gitItemStatus.Name = files[n + 1].Trim();
-                    }
-                    else
-                    {
-                        gitItemStatus.Name = fileName.Trim();
-                        gitItemStatus.OldName = files[n + 1].Trim();
-                    }
-                    gitItemStatus.IsNew = false;
-                    gitItemStatus.IsChanged = false;
-                    gitItemStatus.IsDeleted = false;
-                    gitItemStatus.IsRenamed = true;
-                    gitItemStatus.IsTracked = true;
-                    if (status.Length > 2)
-                        gitItemStatus.RenameCopyPercentage = status.Substring(1);
-                    n++;
-                    break;
-                case 'C':
-                    if (fromDiff)
-                    {
-                        gitItemStatus.OldName = fileName.Trim();
-                        gitItemStatus.Name = files[n + 1].Trim();
-                    }
-                    else
-                    {
-                        gitItemStatus.Name = fileName.Trim();
-                        gitItemStatus.OldName = files[n + 1].Trim();
-                    }
-                    gitItemStatus.IsNew = false;
-                    gitItemStatus.IsChanged = false;
-                    gitItemStatus.IsDeleted = false;
-                    gitItemStatus.IsCopied = true;
-                    gitItemStatus.IsTracked = true;
-                    if (status.Length > 2)
-                        gitItemStatus.RenameCopyPercentage = status.Substring(1);
-                    n++;
-                    break;
-                default:
+                if (fromDiff)
+                {
+                    gitItemStatus.OldName = fileName.Trim();
+                    gitItemStatus.Name = files[n + 1].Trim();
+                }
+                else
+                {
                     gitItemStatus.Name = fileName.Trim();
-                    gitItemStatus.IsNew = x == 'A' || x == '?' || x == '!';
-                    gitItemStatus.IsChanged = x == 'M';
-                    gitItemStatus.IsDeleted = x == 'D';
-                    gitItemStatus.IsRenamed = false;
-                    gitItemStatus.IsTracked = x != '?' && x != '!' && x != ' ' || !gitItemStatus.IsNew;
-                    gitItemStatus.IsConflict = x == 'U';
-                    break;
+                    gitItemStatus.OldName = files[n + 1].Trim();
+                }
+                gitItemStatus.IsNew = false;
+                gitItemStatus.IsChanged = false;
+                gitItemStatus.IsDeleted = false;
+                if (x == 'R')
+                    gitItemStatus.IsRenamed = true;
+                else
+                    gitItemStatus.IsCopied = true;
+                gitItemStatus.IsTracked = true;
+                if (status.Length > 2)
+                    gitItemStatus.RenameCopyPercentage = status.Substring(1);
+                n++;
+            }
+            else
+            {
+                gitItemStatus.Name = fileName.Trim();
+                gitItemStatus.IsNew = x == 'A' || x == '?' || x == '!';
+                gitItemStatus.IsChanged = x == 'M';
+                gitItemStatus.IsDeleted = x == 'D';
+                gitItemStatus.IsRenamed = false;
+                gitItemStatus.IsTracked = x != '?' && x != '!' && x != ' ' || !gitItemStatus.IsNew;
+                gitItemStatus.IsConflict = x == 'U';
             }
             return n;
         }
