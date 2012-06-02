@@ -2060,17 +2060,46 @@ namespace GitCommands
             return blame;
         }
 
-        public string GetFileRevisionText(string file, string revision)
+        public string GetFileRevisionText(string file, string revision, Encoding encoding)
         {
             return
                 this.RunCachableCmd(
                     Settings.GitCommand,
-                    string.Format("show {0}:\"{1}\"", revision, file.Replace('\\', '/')), Settings.FilesEncoding);
+                    string.Format("show {0}:\"{1}\"", revision, file.Replace('\\', '/')), encoding);
         }
 
-        public string GetFileText(string id)
+        public string GetFileText(string id, Encoding encoding)
         {
-            return RunCachableCmd(Settings.GitCommand, "cat-file blob \"" + id + "\"", Settings.FilesEncoding);
+            return RunCachableCmd(Settings.GitCommand, "cat-file blob \"" + id + "\"", encoding);
+        }
+
+        public string GetFileBlobHash(string fileName, string revision)
+        {
+            if (revision == GitRevision.UncommittedWorkingDirGuid) //working dir changes
+            {
+                return null;
+            }
+            else if (revision == GitRevision.IndexGuid) //index
+            {
+                string blob = RunGitCmd(string.Format("ls-files -s \"{0}\"", fileName));
+                string[] s = blob.Split(new char[] { ' ', '\t' });
+                if (s.Length >= 2)
+                    return s[1];
+                else
+                    return string.Empty;
+
+            }
+            else
+            {
+                string blob = RunGitCmd(string.Format("ls-tree -r {0} \"{1}\"", revision, fileName));
+                string[] s = blob.Split(new char[] { ' ', '\t' });
+                if (s.Length >= 3)
+                    return s[2];
+                else
+                    return string.Empty;
+            }
+
+
         }
 
         public static void StreamCopy(Stream input, Stream output)
