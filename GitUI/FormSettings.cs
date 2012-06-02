@@ -2194,23 +2194,27 @@ namespace GitUI
         private void ShowIconPreview()
         {
             string color = IconStyle.Text.ToLowerInvariant();
+            Icon icon = null;
             switch (color)
             {
                 case "default":
-                    IconPreview.Image = GetApplicationIcon("Large", GetSelectedApplicationIconColor()).ToBitmap();
-                    IconPreviewSmall.Image = GetApplicationIcon("Small", GetSelectedApplicationIconColor()).ToBitmap();
+                    IconPreview.Image = (new Icon(GetApplicationIcon("Large", GetSelectedApplicationIconColor()), 32, 32)).ToBitmap();
+                    IconPreviewSmall.Image = (new Icon(GetApplicationIcon("Small", GetSelectedApplicationIconColor()), 16, 16)).ToBitmap();
                     break;
                 case "small":
-                    IconPreview.Image = GetApplicationIcon("Small", GetSelectedApplicationIconColor()).ToBitmap();
-                    IconPreviewSmall.Image = IconPreview.Image;
+                    icon = GetApplicationIcon("Small", GetSelectedApplicationIconColor());
+                    IconPreview.Image = (new Icon(icon, 32, 32)).ToBitmap();
+                    IconPreviewSmall.Image = (new Icon(icon, 16, 16)).ToBitmap();
                     break;
                 case "large":
-                    IconPreview.Image = GetApplicationIcon("Large", GetSelectedApplicationIconColor()).ToBitmap();
-                    IconPreviewSmall.Image = IconPreview.Image;
+                    icon = GetApplicationIcon("Large", GetSelectedApplicationIconColor());
+                    IconPreview.Image = (new Icon(icon, 32, 32)).ToBitmap();
+                    IconPreviewSmall.Image = (new Icon(icon, 16, 16)).ToBitmap();
                     break;
                 case "cow":
-                    IconPreview.Image = GetApplicationIcon("Cow", GetSelectedApplicationIconColor()).ToBitmap();
-                    IconPreviewSmall.Image = IconPreview.Image;
+                    icon = GetApplicationIcon("Cow", GetSelectedApplicationIconColor());
+                    IconPreview.Image = (new Icon(icon, 32, 32)).ToBitmap();
+                    IconPreviewSmall.Image = (new Icon(icon, 16, 16)).ToBitmap();
                     break;
             }
         }

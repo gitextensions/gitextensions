@@ -15,7 +15,7 @@
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <NoWin32Manifest>true</NoWin32Manifest>
-    <ApplicationIcon>..\Bin\Logo\git-extensions-logo-final_mixed.ico</ApplicationIcon>
+    <ApplicationIcon>..\Bin\Logo\git-extensions-logo-final_mixed-256.ico</ApplicationIcon>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
@@ -173,14 +173,14 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Bin\Logo\cow-head.ico">
-      <Link>Resources\cow-head.ico</Link>
+    <Content Include="..\Bin\Logo\cow-head-256.ico">
+      <Link>Resources\cow-head-256.ico</Link>
     </Content>
-    <Content Include="..\Bin\Logo\git-extensions-logo-final.ico">
-      <Link>Resources\git-extensions-logo-final.ico</Link>
+    <Content Include="..\Bin\Logo\git-extensions-logo-final-256.ico">
+      <Link>Resources\git-extensions-logo-final-256.ico</Link>
     </Content>
-    <Content Include="..\Bin\Logo\git-extensions-logo-final_mixed.ico">
-      <Link>Resources\git-extensions-logo-final_mixed.ico</Link>
+    <Content Include="..\Bin\Logo\git-extensions-logo-final_mixed-256.ico">
+      <Link>Resources\git-extensions-logo-final_mixed-256.ico</Link>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
