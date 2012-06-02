@@ -1355,44 +1355,10 @@ namespace GitUI
             }
 
             GitItemStatus selectedItem = DiffFiles.SelectedItem;
-            var revisions = RevisionGrid.GetSelectedRevisions();
 
-            if (revisions.Count == 0)
-                return;
-
-            DiffText.ViewPatch(() =>
-                                   {
-                                       string selectedPatch = GetSelectedPatch(revisions, selectedItem);
-
-                                       return selectedPatch ?? String.Empty;
-                                   });
+            DiffText.ViewPatch(RevisionGrid, selectedItem, String.Empty);
         }
 
-        private string GetSelectedPatch(IList<GitRevision> revisions, GitItemStatus file)
-        {
-            if (revisions[0].Guid == GitRevision.UncommittedWorkingDirGuid) //working dir changes
-            {
-                if (file.IsTracked)
-                    return Settings.Module.GetCurrentChanges(file.Name, file.OldName, false, DiffText.GetExtraDiffArguments(), DiffText.Encoding);
-                return FileReader.ReadFileContent(Settings.WorkingDir + file.Name, Settings.FilesEncoding);
-            }
-            if (revisions[0].Guid == GitRevision.IndexGuid) //index
-            {
-                return Settings.Module.GetCurrentChanges(file.Name, file.OldName, true, DiffText.GetExtraDiffArguments(), DiffText.Encoding);
-            }
-            var secondRevision = revisions.Count == 2 ? revisions[1].Guid : revisions[0].ParentGuids[0];
-
-            PatchApply.Patch patch = Settings.Module.GetSingleDiff(revisions[0].Guid, secondRevision, file.Name, file.OldName,
-                                                    DiffText.GetExtraDiffArguments(), DiffText.Encoding);
-
-            if (patch == null)
-                return string.Empty;
-
-            if (file.IsSubmodule)
-                return GitCommandHelpers.ProcessSubmodulePatch(patch.Text);
-
-            return patch.Text;
-        }
 
         private void ChangelogToolStripMenuItemClick(object sender, EventArgs e)
         {
@@ -1594,39 +1560,16 @@ namespace GitUI
                 return;
 
             var selectedItem = (DiffFiles.SelectedItem).Name;
+            GitUIExtensions.DiffWithRevisionKind diffKind;
 
-            IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
-
-            if (revisions.Count == 0)
-                return;
-
-            string output;
             if (sender == diffBaseLocalToolStripMenuItem)
-            {
-                if (revisions[0].ParentGuids.Length == 0)
-                    return;
-                output = Settings.Module.OpenWithDifftool(selectedItem, revisions[0].ParentGuids[0]);
-
-            }
+                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffBaseLocal;
             else if (sender == difftoolRemoteLocalToolStripMenuItem)
-                output = Settings.Module.OpenWithDifftool(selectedItem, revisions[0].Guid);
+                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffRemoteLocal;
             else
-                if (revisions.Count == 1)   // single item selected
-                {
-                    if (revisions[0].Guid == GitRevision.UncommittedWorkingDirGuid) //working dir changes
-                        output = Settings.Module.OpenWithDifftool(selectedItem);
-                    else if (revisions[0].Guid == GitRevision.IndexGuid) //staged changes
-                        output = Settings.Module.OpenWithDifftool(selectedItem, null, null, "--cached");
-                    else
-                        output = Settings.Module.OpenWithDifftool(selectedItem, revisions[0].Guid,
-                                                                      revisions[0].ParentGuids[0]);
-                }
-                else                        // multiple items selected
-                    output = Settings.Module.OpenWithDifftool(selectedItem, revisions[0].Guid,
-                                                                  revisions[revisions.Count - 1].Guid);
+                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffAsSelected;
 
-            if (!string.IsNullOrEmpty(output))
-                MessageBox.Show(this, output);
+            RevisionGrid.OpenWithDifftool(selectedItem, diffKind);
         }
 
         private void AddWorkingdirDropDownItem(Repository repo, string caption)
@@ -2176,7 +2119,7 @@ namespace GitUI
             _dontUpdateOnIndexChange = true;
             DiffFiles.SelectedIndex = idx;
             _dontUpdateOnIndexChange = false;
-            return new Tuple<int, string>(idx, GetSelectedPatch(revisions, DiffFiles.SelectedItem));
+            return new Tuple<int, string>(idx, DiffText.GetSelectedPatch(RevisionGrid, DiffFiles.SelectedItem));
         }
 
         private void openContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
