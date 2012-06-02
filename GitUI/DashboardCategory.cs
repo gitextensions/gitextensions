@@ -140,10 +140,8 @@ namespace GitUI
             dashboardCategoryChanged(null, null);
         }
 
-        private void moveUpMenuItem_Click(object sender, EventArgs e)
+        private void MoveItem(ToolStripItem toolStripItem, bool moveUp)
         {
-            var toolStripItem = sender as ToolStripItem;
-
             if (toolStripItem == null)
                 return;
 
@@ -154,27 +152,22 @@ namespace GitUI
 
             int index = RepositoryCategory.Repositories.IndexOf(repository);
             RepositoryCategory.Repositories.Remove(repository);
-            RepositoryCategory.Repositories.Insert(Math.Max(index - 1, 0), repository);
+            int newIndex = moveUp ? Math.Max(index - 1, 0) : 
+                Math.Min(index + 1, RepositoryCategory.Repositories.Count);
+            RepositoryCategory.Repositories.Insert(newIndex, repository);
             Recalculate();
+        }
+
+        private void moveUpMenuItem_Click(object sender, EventArgs e)
+        {
+            var toolStripItem = sender as ToolStripItem;
+            MoveItem(toolStripItem, true);
         }
 
         private void moveDownMenuItem_Click(object sender, EventArgs e)
         {
             var toolStripItem = sender as ToolStripItem;
-
-            if (toolStripItem == null)
-                return;
-
-            var repository = toolStripItem.Tag as Repository;
-
-            if (repository == null)
-                return;
-
-            int index = RepositoryCategory.Repositories.IndexOf(repository);
-            RepositoryCategory.Repositories.Remove(repository);
-            RepositoryCategory.Repositories.Insert(Math.Min(index + 1, RepositoryCategory.Repositories.Count),
-                                                   repository);
-            Recalculate();
+            MoveItem(toolStripItem, false);
         }
 
         private void editMenuItem_Click(object sender, EventArgs e)
