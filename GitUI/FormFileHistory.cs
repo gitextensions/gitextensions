@@ -299,18 +299,19 @@ namespace GitUI
                 if (string.IsNullOrEmpty(orgFileName))
                     orgFileName = FileName;
 
-                string fileName = orgFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
-
+                string fullName = Settings.WorkingDir + orgFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
+                
                 var fileDialog = new SaveFileDialog
                 {
-                    FileName = Settings.WorkingDir + fileName,
+                    InitialDirectory = Path.GetDirectoryName(fullName),
+                    FileName = Path.GetFileName(fullName),
+                    DefaultExt = GitCommandHelpers.GetFileExtension(fullName),
                     AddExtension = true
                 };
-                fileDialog.DefaultExt = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
                 fileDialog.Filter =
                     "Current format (*." +
-                    GitCommandHelpers.GetFileExtension(fileDialog.FileName) + ")|*." +
-                    GitCommandHelpers.GetFileExtension(fileDialog.FileName) +
+                    fileDialog.DefaultExt + ")|*." +
+                    fileDialog.DefaultExt +
                     "|All files (*.*)|*.*";
                 if (fileDialog.ShowDialog(this) == DialogResult.OK)
                 {

@@ -228,6 +228,28 @@ namespace GitUI.Editor
             TextEditor.ActiveTextAreaControl.TextArea.Dock = DockStyle.Fill;
         }
 
+        private void ProcessLineSegment(ref int line, LineSegment lineSegment, char signChar, Color color)
+        {
+            var document = TextEditor.Document;
+            if (document.GetCharAt(lineSegment.Offset) == signChar)
+            {
+                var endLine = document.GetLineSegment(line);
+
+                for (; line < document.TotalNumberOfLines && document.GetCharAt(endLine.Offset) == signChar; line++)
+                {
+                    endLine = document.GetLineSegment(line);
+                }
+                line--;
+                line--;
+                endLine = document.GetLineSegment(line);
+
+                document.MarkerStrategy.AddMarker(new TextMarker(lineSegment.Offset,
+                                                        (endLine.Offset + endLine.TotalLength) -
+                                                        lineSegment.Offset, TextMarkerType.SolidBlock, color,
+                                                        ColorHelper.GetForeColorForBackColor(color)));
+            }
+        }
+
         public void AddPatchHighlighting()
         {
             var document = TextEditor.Document;
@@ -247,60 +269,9 @@ namespace GitUI.Editor
                 if (line == document.TotalNumberOfLines - 1)
                     forceAbort = true;
 
-                if (document.GetCharAt(lineSegment.Offset) == '+')
-                {
-                    var color = Settings.DiffAddedColor;
-                    var endLine = document.GetLineSegment(line);
-
-                    for (; line < document.TotalNumberOfLines && document.GetCharAt(endLine.Offset) == '+'; line++)
-                    {
-                        endLine = document.GetLineSegment(line);
-                    }
-                    line--;
-                    line--;
-                    endLine = document.GetLineSegment(line);
-
-                    markerStrategy.AddMarker(new TextMarker(lineSegment.Offset,
-                                                            (endLine.Offset + endLine.TotalLength) -
-                                                            lineSegment.Offset, TextMarkerType.SolidBlock, color,
-                                                            ColorHelper.GetForeColorForBackColor(color)));
-                }
-                if (document.GetCharAt(lineSegment.Offset) == '-')
-                {
-                    var color = Settings.DiffRemovedColor;
-                    var endLine = document.GetLineSegment(line);
-
-                    for (; line < document.TotalNumberOfLines && document.GetCharAt(endLine.Offset) == '-'; line++)
-                    {
-                        endLine = document.GetLineSegment(line);
-                    }
-                    line--;
-                    line--;
-                    endLine = document.GetLineSegment(line);
-
-                    markerStrategy.AddMarker(new TextMarker(lineSegment.Offset,
-                                                            (endLine.Offset + endLine.TotalLength) -
-                                                            lineSegment.Offset, TextMarkerType.SolidBlock, color,
-                                                            ColorHelper.GetForeColorForBackColor(color)));
-                }
-                if (document.GetCharAt(lineSegment.Offset) == '@')
-                {
-                    var color = Settings.DiffSectionColor;
-                    var endLine = document.GetLineSegment(line);
-
-                    for (; line < document.TotalNumberOfLines && document.GetCharAt(endLine.Offset) == '@'; line++)
-                    {
-                        endLine = document.GetLineSegment(line);
-                    }
-                    line--;
-                    line--;
-                    endLine = document.GetLineSegment(line);
-
-                    markerStrategy.AddMarker(new TextMarker(lineSegment.Offset,
-                                                            (endLine.Offset + endLine.TotalLength) -
-                                                            lineSegment.Offset, TextMarkerType.SolidBlock, color,
-                                                            ColorHelper.GetForeColorForBackColor(color)));
-                }
+                ProcessLineSegment(ref line, lineSegment, '+', Settings.DiffAddedColor);
+                ProcessLineSegment(ref line, lineSegment, '-', Settings.DiffRemovedColor);
+                ProcessLineSegment(ref line, lineSegment, '@', Settings.DiffSectionColor);
             }
         }
 
