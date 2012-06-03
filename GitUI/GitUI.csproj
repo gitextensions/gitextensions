@@ -1329,6 +1329,8 @@
     <None Include="Resources\Icons\success.png" />
     <None Include="Resources\Icons\rss.png" />
     <None Include="Resources\Icons\history.png" />
+    <Content Include="Translation\Francais.gif" />
+    <Content Include="Translation\Francais.xml" />
     <Content Include="Translation\German.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

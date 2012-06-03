@@ -329,17 +329,17 @@
       <Component Id="German.gif" Guid="*">
         <File Source="..\GitUI\Translation\German.gif"/>
       </Component>
-      <Component Id="SimplifiedChinese.xml" Guid="*">
-        <File Source="..\GitUI\Translation\Simplified Chinese.xml"/>
+      <Component Id="Francais.xml" Guid="*">
+        <File Source="..\GitUI\Translation\Francais.xml"/>
       </Component>
-      <Component Id="SimplifiedChinese.gif" Guid="*">
-        <File Source="..\GitUI\Translation\Simplified Chinese.gif"/>
+      <Component Id="Francais.gif" Guid="*">
+        <File Source="..\GitUI\Translation\Francais.gif"/>
       </Component>
-      <Component Id="TraditionalChinese.xml" Guid="*">
-        <File Source="..\GitUI\Translation\Traditional Chinese.xml"/>
+      <Component Id="Italiano.xml" Guid="*">
+        <File Source="..\GitUI\Translation\Italiano.xml"/>
       </Component>
-      <Component Id="TraditionalChinese.gif" Guid="*">
-        <File Source="..\GitUI\Translation\Traditional Chinese.gif"/>
+      <Component Id="Italiano.gif" Guid="*">
+        <File Source="..\GitUI\Translation\Italiano.gif"/>
       </Component>
       <Component Id="Japanese.xml" Guid="*">
         <File Source="..\GitUI\Translation\Japanese.xml"/>
@@ -347,11 +347,11 @@
       <Component Id="Japanese.gif" Guid="*">
         <File Source="..\GitUI\Translation\Japanese.gif"/>
       </Component>
-      <Component Id="Italiano.xml" Guid="*">
-        <File Source="..\GitUI\Translation\Italiano.xml"/>
+      <Component Id="SimplifiedChinese.xml" Guid="*">
+        <File Source="..\GitUI\Translation\Simplified Chinese.xml"/>
       </Component>
-      <Component Id="Italiano.gif" Guid="*">
-        <File Source="..\GitUI\Translation\Italiano.gif"/>
+      <Component Id="SimplifiedChinese.gif" Guid="*">
+        <File Source="..\GitUI\Translation\Simplified Chinese.gif"/>
       </Component>
       <Component Id="Spanish.xml" Guid="*">
         <File Source="..\GitUI\Translation\Spanish.xml"/>
@@ -364,6 +364,12 @@
       </Component>
       <Component Id="Russian.gif" Guid="*">
         <File Source="..\GitUI\Translation\Russian.gif"/>
+      </Component>
+      <Component Id="TraditionalChinese.xml" Guid="*">
+        <File Source="..\GitUI\Translation\Traditional Chinese.xml"/>
+      </Component>
+      <Component Id="TraditionalChinese.gif" Guid="*">
+        <File Source="..\GitUI\Translation\Traditional Chinese.gif"/>
       </Component>
     </DirectoryRef>
 
@@ -603,6 +609,10 @@
         <Feature Id="German" Title="German" Level="1">
           <ComponentRef Id="German.xml"/>
           <ComponentRef Id="German.gif"/>
+        </Feature>
+        <Feature Id="Francais" Title="Francais" Level="1">
+          <ComponentRef Id="Francais.xml"/>
+          <ComponentRef Id="Francais.gif"/>
         </Feature>
         <Feature Id="Japanese" Title="Japanese" Level="1">
           <ComponentRef Id="Japanese.xml"/>
