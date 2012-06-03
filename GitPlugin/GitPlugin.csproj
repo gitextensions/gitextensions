@@ -116,8 +116,8 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -128,6 +128,15 @@
       <Lcid>0</Lcid>
       <WrapperTool>primary</WrapperTool>
       <Isolated>False</Isolated>
+    </COMReference>
+    <COMReference Include="EnvDTE100">
+      <Guid>{26AD1324-4B7C-44BC-84F8-B86AED45729F}</Guid>
+      <VersionMajor>10</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
     <COMReference Include="EnvDTE80">
       <Guid>{1A31287A-4D7D-413E-8E32-3B374931BD89}</Guid>
@@ -166,14 +175,14 @@
     <Content Include="GitPlugin.AddIn">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Resources\commit1121111.bmp" />
-    <None Include="Resources\commit112111.bmp" />
-    <None Include="Resources\commit11211.bmp" />
-    <None Include="Resources\commit1121.bmp" />
-    <None Include="Resources\commit112.bmp" />
-    <None Include="Resources\commit11.bmp" />
-    <None Include="Resources\commit1.bmp" />
-    <None Include="Resources\Commit.bmp" />
+    <None Include="Resources\14.bmp" />
+    <None Include="Resources\13.bmp" />
+    <None Include="Resources\12.bmp" />
+    <None Include="Resources\11.bmp" />
+    <None Include="Resources\10.bmp" />
+    <None Include="Resources\9.bmp" />
+    <None Include="Resources\8.bmp" />
+    <None Include="Resources\7.bmp" />
     <None Include="Resources\RevisionHistory.bmp" />
     <None Include="Resources\EditAll.bmp" />
     <None Include="Resources\Revert.bmp" />
