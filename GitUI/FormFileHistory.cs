@@ -174,6 +174,16 @@ namespace GitUI
         {
             View.SaveCurrentScrollPos();
             Diff.SaveCurrentScrollPos();
+
+            var selectedRows = FileChanges.GetSelectedRevisions();
+            if (selectedRows.Count > 0)
+            {
+                GitRevision revision = selectedRows[0];
+                if (revision.IsArtificial())
+                    tabControl1.RemoveIfExists(Blame);
+                else
+                    tabControl1.InsertIfNotExists(2, Blame);
+            }
             UpdateSelectedFileViewers();
         }
 
@@ -190,7 +200,9 @@ namespace GitUI
             if (string.IsNullOrEmpty(fileName))
                 fileName = FileName;
 
-            Text = string.Format("File History ({0})", fileName);
+            Text = string.Format("File History - {0}", FileName);
+            if (!fileName.Equals(FileName))
+                Text = Text + string.Format(" ({0})", fileName);
 
             if (tabControl1.SelectedTab == Blame)
                 blameControl1.LoadBlame(revision.Guid, fileName, FileChanges);
@@ -202,47 +214,15 @@ namespace GitUI
                 View.ScrollPos = scrollpos;
             }
 
-            switch (selectedRows.Count)
+            if (tabControl1.SelectedTab == DiffTab)
             {
-                case 1:
-                    {
-                        IGitItem revision1 = selectedRows[0];
-
-                        if (tabControl1.SelectedTab == DiffTab)
-                        {
-                            Diff.ViewPatch(
-                                () =>
-                                {
-                                    Patch diff = Settings.Module.GetSingleDiff(revision1.Guid, revision1.Guid + "^", fileName,
-                                                                          Diff.GetExtraDiffArguments(), Diff.Encoding);
-                                    if (diff == null)
-                                        return string.Empty;
-                                    return diff.Text;
-                                }
-                                );
-                        }
-                    }
-                    break;
-                case 2:
-                    {
-                        IGitItem revision1 = selectedRows[0];
-                        IGitItem revision2 = selectedRows[1];
-
-                        if (tabControl1.SelectedTab == DiffTab)
-                        {
-                            Diff.ViewPatch(
-                                () =>
-                                Settings.Module.GetSingleDiff(revision1.Guid, revision2.Guid, fileName,
-                                                                      Diff.GetExtraDiffArguments(), Diff.Encoding).Text);
-                        }
-                    }
-                    break;
-                default:
-                    Diff.ViewPatch("You need to select 2 files to view diff.");
-                    break;
+                GitItemStatus file = new GitItemStatus();
+                file.IsTracked = true;
+                file.Name = fileName;
+                Diff.ViewPatch(FileChanges, file, "You need to select at least one revision to view diff.");
             }
-        }
 
+        }
 
         private void TabControl1SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -255,37 +235,8 @@ namespace GitUI
         }
 
         private void OpenWithDifftoolToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            var selectedRows = FileChanges.GetSelectedRevisions();
-            string rev1;
-            string rev2;
-            switch (selectedRows.Count)
-            {
-                case 1:
-                    {
-                        rev1 = selectedRows[0].Guid;
-                        var parentGuids = selectedRows[0].ParentGuids;
-                        if (parentGuids != null && parentGuids.Length > 0)
-                        {
-                            rev2 = parentGuids[0];
-                        }
-                        else
-                        {
-                            rev2 = rev1;
-                        }
-                    }
-                    break;
-                case 0:
-                    return;
-                default:
-                    rev1 = selectedRows[0].Guid;
-                    rev2 = selectedRows[1].Guid;
-                    break;
-            }
-
-            var output = Settings.Module.OpenWithDifftool(FileName, rev1, rev2);
-            if (!string.IsNullOrEmpty(output))
-                MessageBox.Show(this, output);
+        {            
+            FileChanges.OpenWithDifftool(FileName, GitUIExtensions.DiffWithRevisionKind.DiffAsSelected);
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
