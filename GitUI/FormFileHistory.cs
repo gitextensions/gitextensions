@@ -103,7 +103,7 @@ namespace GitUI
                 //
                 // But we can take a more complicated path to get reasonable results:
                 //  1. use git log --follow to get all previous filenames of the file we are interested in
-                //  2. use git log "list of filesnames" to get the histroy graph 
+                //  2. use git log "list of files names" to get the history graph 
                 //
                 // note: This implementation is quite a quick hack (by someone who does not speak C# fluently).
                 // 

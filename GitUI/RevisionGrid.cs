@@ -29,6 +29,7 @@ namespace GitUI
         LargeCardWithGraph = 8
     }
 
+    [DefaultEvent("DoubleClick")]
     public sealed partial class RevisionGrid : GitExtensionsControl
     {
         private readonly IndexWatcher _indexWatcher = new IndexWatcher();
