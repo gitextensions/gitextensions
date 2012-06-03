@@ -168,6 +168,7 @@ namespace GitCommands
 
                 Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arguments);
 
+                previousFileName = null;
                 if (BeginUpdate != null)
                     BeginUpdate(this, EventArgs.Empty);
 
@@ -188,6 +189,7 @@ namespace GitCommands
                     }
                 } while (line != null);
                 finishRevision();
+                previousFileName = null;
             }
             catch (ThreadAbortException)
             {
@@ -198,6 +200,7 @@ namespace GitCommands
                 if (Error != null)
                     Error(this, EventArgs.Empty);
                 ExceptionUtils.ShowException(ex, "Cannot load commit log.");
+                previousFileName = null;
                 return;
             }
 
@@ -228,8 +231,17 @@ namespace GitCommands
             return result;
         }
 
+        private string previousFileName = null;
+
         void finishRevision()
         {
+            if (revision != null)
+            {
+                if (revision.Name == null)                
+                    revision.Name = previousFileName;
+                else
+                    previousFileName = revision.Name;
+            }
             if (revision == null || revision.Guid.Trim(hexChars).Length == 0)
             {
                 if ((revision == null) || (InMemFilter == null) || InMemFilter.PassThru(revision))
