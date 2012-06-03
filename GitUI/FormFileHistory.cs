@@ -133,7 +133,7 @@ namespace GitUI
                 } while (line != null);
 
                 // here we need --name-only to get the previous filenames in the revision graph
-                filter = " --name-only --parents -- " + listOfFileNames;
+                filter = " -M -C --name-only --parents -- " + listOfFileNames;
             }
             else
             {
