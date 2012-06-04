@@ -114,6 +114,17 @@ namespace GitUI
             this.CommitAndPush = new System.Windows.Forms.Button();
             this.Amend = new System.Windows.Forms.Button();
             this.Reset = new System.Windows.Forms.Button();
+            this.StagedFileContext = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem10 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem11 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem14 = new System.Windows.Forms.ToolStripMenuItem();
             this.UnstagedSubmoduleContext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.commitSubmoduleChanges = new System.Windows.Forms.ToolStripMenuItem();
             this.resetSubmoduleChanges = new System.Windows.Forms.ToolStripMenuItem();
@@ -150,6 +161,7 @@ namespace GitUI
             this.splitRight.SuspendLayout();
             this.toolbarCommit.SuspendLayout();
             this.flowCommitButtons.SuspendLayout();
+            this.StagedFileContext.SuspendLayout();
             this.UnstagedSubmoduleContext.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -557,6 +569,7 @@ namespace GitUI
             // 
             // Staged
             // 
+            this.Staged.ContextMenuStrip = this.StagedFileContext;
             this.Staged.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Staged.Font = new System.Drawing.Font("Tahoma", 9.75F);
             this.Staged.GitItemStatuses = null;
@@ -915,6 +928,87 @@ namespace GitUI
             this.Reset.UseVisualStyleBackColor = true;
             this.Reset.Click += new System.EventHandler(this.ResetClick);
             // 
+            // StagedFileContext
+            // 
+            this.StagedFileContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem6,
+            this.toolStripSeparator14,
+            this.toolStripMenuItem7,
+            this.toolStripMenuItem8,
+            this.toolStripMenuItem9,
+            this.toolStripMenuItem10,
+            this.toolStripSeparator17,
+            this.toolStripMenuItem11,
+            this.toolStripSeparator18,
+            this.toolStripMenuItem14});
+            this.StagedFileContext.Name = "UnstagedFileContext";
+            this.StagedFileContext.Size = new System.Drawing.Size(195, 198);
+            // 
+            // toolStripMenuItem6
+            // 
+            this.toolStripMenuItem6.Name = "toolStripMenuItem6";
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(194, 22);
+            this.toolStripMenuItem6.Text = "View file history";
+            this.toolStripMenuItem6.Click += new System.EventHandler(this.ViewFileHistoryMenuItem_Click);
+            // 
+            // toolStripSeparator14
+            // 
+            this.toolStripSeparator14.Name = "toolStripSeparator14";
+            this.toolStripSeparator14.Size = new System.Drawing.Size(191, 6);
+            // 
+            // toolStripMenuItem7
+            // 
+            this.toolStripMenuItem7.Name = "toolStripMenuItem7";
+            this.toolStripMenuItem7.Size = new System.Drawing.Size(194, 22);
+            this.toolStripMenuItem7.Text = "Open";
+            this.toolStripMenuItem7.Click += new System.EventHandler(this.OpenToolStripMenuItemClick);
+            // 
+            // toolStripMenuItem8
+            // 
+            this.toolStripMenuItem8.Name = "toolStripMenuItem8";
+            this.toolStripMenuItem8.Size = new System.Drawing.Size(194, 22);
+            this.toolStripMenuItem8.Text = "Open with";
+            this.toolStripMenuItem8.Click += new System.EventHandler(this.OpenWithToolStripMenuItemClick);
+            // 
+            // toolStripMenuItem9
+            // 
+            this.toolStripMenuItem9.Name = "toolStripMenuItem9";
+            this.toolStripMenuItem9.ShortcutKeys = System.Windows.Forms.Keys.F3;
+            this.toolStripMenuItem9.Size = new System.Drawing.Size(194, 22);
+            this.toolStripMenuItem9.Text = "Open with difftool";
+            this.toolStripMenuItem9.Click += new System.EventHandler(this.toolStripMenuItem9_Click);
+            // 
+            // toolStripMenuItem10
+            // 
+            this.toolStripMenuItem10.Name = "toolStripMenuItem10";
+            this.toolStripMenuItem10.Size = new System.Drawing.Size(194, 22);
+            this.toolStripMenuItem10.Text = "Open containing folder";
+            this.toolStripMenuItem10.Click += new System.EventHandler(this.toolStripMenuItem10_Click);
+            // 
+            // toolStripSeparator17
+            // 
+            this.toolStripSeparator17.Name = "toolStripSeparator17";
+            this.toolStripSeparator17.Size = new System.Drawing.Size(191, 6);
+            // 
+            // toolStripMenuItem11
+            // 
+            this.toolStripMenuItem11.Name = "toolStripMenuItem11";
+            this.toolStripMenuItem11.Size = new System.Drawing.Size(194, 22);
+            this.toolStripMenuItem11.Text = "Edit file";
+            this.toolStripMenuItem11.Click += new System.EventHandler(this.editFileToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator18
+            // 
+            this.toolStripSeparator18.Name = "toolStripSeparator18";
+            this.toolStripSeparator18.Size = new System.Drawing.Size(191, 6);
+            // 
+            // toolStripMenuItem14
+            // 
+            this.toolStripMenuItem14.Name = "toolStripMenuItem14";
+            this.toolStripMenuItem14.Size = new System.Drawing.Size(194, 22);
+            this.toolStripMenuItem14.Text = "Copy filename";
+            this.toolStripMenuItem14.Click += new System.EventHandler(this.FilenameToClipboardToolStripMenuItemClick);
+            // 
             // UnstagedSubmoduleContext
             // 
             this.UnstagedSubmoduleContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1077,6 +1171,7 @@ namespace GitUI
             this.toolbarCommit.ResumeLayout(false);
             this.toolbarCommit.PerformLayout();
             this.flowCommitButtons.ResumeLayout(false);
+            this.StagedFileContext.ResumeLayout(false);
             this.UnstagedSubmoduleContext.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).EndInit();
             this.ResumeLayout(false);
@@ -1176,5 +1271,16 @@ namespace GitUI
         private ToolStripDropDownButton commitTemplatesToolStripMenuItem;
         private ToolStripMenuItem openContainingFolderToolStripMenuItem;
         private ToolStripMenuItem signOffToolStripMenuItem;
+        private ContextMenuStrip StagedFileContext;
+        private ToolStripMenuItem toolStripMenuItem6;
+        private ToolStripSeparator toolStripSeparator14;
+        private ToolStripMenuItem toolStripMenuItem7;
+        private ToolStripMenuItem toolStripMenuItem8;
+        private ToolStripMenuItem toolStripMenuItem9;
+        private ToolStripMenuItem toolStripMenuItem10;
+        private ToolStripSeparator toolStripSeparator17;
+        private ToolStripMenuItem toolStripMenuItem11;
+        private ToolStripSeparator toolStripSeparator18;
+        private ToolStripMenuItem toolStripMenuItem14;
     }
 }

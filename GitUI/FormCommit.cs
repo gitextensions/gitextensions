@@ -1340,10 +1340,14 @@ namespace GitUI
 
         private void OpenToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Unstaged.SelectedItems.Count == 0)
+            FileStatusList list = sender as FileStatusList;
+            if (!SenderToFileStatusList(sender, out list))
                 return;
 
-            var item = Unstaged.SelectedItem;
+            if (list.SelectedItems.Count == 0)
+                return;
+
+            var item = list.SelectedItem;
             var fileName = item.Name;
 
             Process.Start((Settings.WorkingDir + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
@@ -1351,10 +1355,14 @@ namespace GitUI
 
         private void OpenWithToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Unstaged.SelectedItems.Count == 0)
+            FileStatusList list;
+            if (!SenderToFileStatusList(sender, out list))
                 return;
 
-            var item = Unstaged.SelectedItem;
+            if (list.SelectedItems.Count == 0)
+                return;
+
+            var item = list.SelectedItem;
             var fileName = item.Name;
 
             OpenWith.OpenAs(Settings.WorkingDir + fileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
@@ -1362,11 +1370,15 @@ namespace GitUI
 
         private void FilenameToClipboardToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Unstaged.SelectedItems.Count == 0)
+            FileStatusList list;
+            if (!SenderToFileStatusList(sender, out list))
+                return;
+
+            if (list.SelectedItems.Count == 0)
                 return;
 
             var fileNames = new StringBuilder();
-            foreach (var item in Unstaged.SelectedItems)
+            foreach (var item in list.SelectedItems)
             {
                 //Only use appendline when multiple items are selected.
                 //This to make it easier to use the text from clipboard when 1 file is selected.
@@ -1467,7 +1479,11 @@ namespace GitUI
 
         private void editFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var item = Unstaged.SelectedItem;
+            FileStatusList list;
+            if (!SenderToFileStatusList(sender, out list))
+                return;
+
+            var item = list.SelectedItem;
             var fileName = Settings.WorkingDir + item.Name;
 
             new FormEditor(fileName).ShowDialog(this);
@@ -1486,11 +1502,39 @@ namespace GitUI
                 RescanChanges();
         }
 
+        private bool SenderToFileStatusList(object sender, out FileStatusList list)
+        {
+            if (sender is ToolStripMenuItem)
+            {
+                ToolStripMenuItem item = sender as ToolStripMenuItem;
+                if (item.Owner is ContextMenuStrip)
+                {
+                    ContextMenuStrip menu = item.Owner as ContextMenuStrip;
+                    if (menu.SourceControl is ListBox)
+                    {
+                        ListBox lb = menu.SourceControl as ListBox;
+                        if (lb.Parent is FileStatusList)
+                        {
+                            list = lb.Parent as FileStatusList;
+                            return true;
+                        }
+                    }
+                }
+                
+            }
+            list = null;
+            return false;
+        }
+
         private void ViewFileHistoryMenuItem_Click(object sender, EventArgs e)
         {
-            if (Unstaged.SelectedItems.Count == 1)
+            FileStatusList list;
+            if (!SenderToFileStatusList(sender, out list))
+                return;
+
+            if (list.SelectedItems.Count == 1)
             {
-                GitUICommands.Instance.StartFileHistoryDialog(this, Unstaged.SelectedItem.Name, null);
+                GitUICommands.Instance.StartFileHistoryDialog(this, list.SelectedItem.Name, null);
             }
             else
                 MessageBox.Show(this, _selectOnlyOneFile.Text, _selectOnlyOneFileCaption.Text);
@@ -1804,10 +1848,12 @@ namespace GitUI
 
         private void openContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Unstaged.SelectedItems.Count == 0)
-                return;
+            openContainingFolder(Unstaged);
+        }
 
-            foreach (var item in Unstaged.SelectedItems)
+        private void openContainingFolder(FileStatusList list)
+        {
+            foreach (var item in list.SelectedItems)
             {
                 var fileNames = new StringBuilder();
                 fileNames.Append((Settings.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
@@ -1818,6 +1864,23 @@ namespace GitUI
                     Process.Start("explorer.exe", "/select, " + filePath);
                 }
             }
+        }
+
+
+
+        private void toolStripMenuItem9_Click(object sender, EventArgs e)
+        {
+            foreach (var item in Staged.SelectedItems)
+            {
+                string output = Settings.Module.OpenWithDifftool(item.Name, null, null, "--cached");
+                if (!string.IsNullOrEmpty(output))
+                    MessageBox.Show(this, output);
+            }
+        }
+
+        private void toolStripMenuItem10_Click(object sender, EventArgs e)
+        {
+            openContainingFolder(Staged);
         }
 
     }
