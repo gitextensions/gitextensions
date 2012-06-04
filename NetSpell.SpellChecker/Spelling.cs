@@ -2,20 +2,14 @@
 // All rights reserved.
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Windows.Forms.Design;
-using System.Drawing;
-using System.Drawing.Design;
-using System.Globalization;
 
 using NetSpell.SpellChecker.Dictionary;
-using NetSpell.SpellChecker.Dictionary.Affix;
-using NetSpell.SpellChecker.Dictionary.Phonetic;
-using System.Collections.Generic;
 
 
 namespace NetSpell.SpellChecker
@@ -1011,8 +1005,6 @@ namespace NetSpell.SpellChecker
 		/// <seealso cref="TestWord"/>
 		public void Suggest()
 		{
-			
-			
 			// can't generate suggestions with out current word
 			if (this.CurrentWord.Length == 0)
 			{
@@ -1029,7 +1021,7 @@ namespace NetSpell.SpellChecker
 				&& _dictionary.PhoneticRules.Count > 0)
 			{
 				// generate phonetic code for possible root word
-				Hashtable codes = new Hashtable();
+                Dictionary<string, string> codes = new Dictionary<string, string>();
 				foreach (string tempWord in _dictionary.PossibleBaseWords)
 				{
 					string tempCode = _dictionary.PhoneticCode(tempWord);
@@ -1109,6 +1101,21 @@ namespace NetSpell.SpellChecker
 
 		} // suggest
 
+        /// <summary>
+        ///     Checks to see if the word is in the dictionary
+        /// </summary>
+        /// <returns>
+        ///     Returns true if word is found in dictionary
+        /// </returns>
+        public bool TestWord()
+        {
+            Initialize();
+
+            TraceWriter.TraceVerbose("Testing Word: {0}", CurrentWord);
+
+            return Dictionary.Contains(CurrentWord) || Dictionary.Contains(CurrentWord.ToLower());
+        }
+
 		/// <summary>
 		///     Checks to see if the word is in the dictionary
 		/// </summary>
@@ -1137,13 +1144,13 @@ namespace NetSpell.SpellChecker
 		private WordDictionary _dictionary;
 		private bool _ignoreAllCapsWords = true;
 		private bool _ignoreHtml = true;
-		private ArrayList _ignoreList = new ArrayList();
+		private List<string> _ignoreList = new List<string>();
 		private bool _ignoreWordsWithDigits;
 		private int _maxSuggestions = 25;
-		private Hashtable _replaceList = new Hashtable();
+        private Dictionary<string, string> _replaceList = new Dictionary<string, string>();
 		private string _replacementWord = "";
 		private bool _showDialog = true;
-		private ArrayList _suggestions = new ArrayList();
+        private List<string> _suggestions = new List<string>();
 		private StringBuilder _text = new StringBuilder();
 		private int _wordIndex;
 
@@ -1259,7 +1266,7 @@ namespace NetSpell.SpellChecker
 		/// </remarks>
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public ArrayList IgnoreList
+		public List<string> IgnoreList
 		{
 			get {return _ignoreList;}
 		}
@@ -1296,7 +1303,7 @@ namespace NetSpell.SpellChecker
 		/// </remarks>
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public Hashtable ReplaceList
+		public Dictionary<string, string> ReplaceList
 		{
 			get {return _replaceList;}
 		}
@@ -1351,7 +1358,7 @@ namespace NetSpell.SpellChecker
 		/// <seealso cref="MaxSuggestions"/>
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public ArrayList Suggestions
+		public List<string> Suggestions
 		{
 			get {return _suggestions;}
 		}
