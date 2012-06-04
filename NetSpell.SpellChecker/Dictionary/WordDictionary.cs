@@ -1,19 +1,14 @@
-using System;
-using System.Diagnostics;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.IsolatedStorage;
-using System.Threading;
 using System.ComponentModel;
-using System.Windows.Forms;
-using System.Windows.Forms.Design;
 using System.Drawing;
 using System.Drawing.Design;
 using System.Globalization;
+using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Windows.Forms.Design;
 
-using NetSpell.SpellChecker;
 using NetSpell.SpellChecker.Dictionary.Affix;
 using NetSpell.SpellChecker.Dictionary.Phonetic;
 
@@ -298,7 +293,7 @@ namespace NetSpell.SpellChecker.Dictionary
         ///     </para>
         /// </param>
         /// <returns>
-        ///     A System.Collections.ArrayList of words expanded from base word
+        ///     A System.Collections.Generic.List<string> of words expanded from base word
         /// </returns>
         public List<string> ExpandWord(Word word)
         {
@@ -549,7 +544,7 @@ namespace NetSpell.SpellChecker.Dictionary
                                 break; // rule fails if one condition fails
                             }
                         }
-                        // if all condtions passed
+                        // if all conditions passed
                         if (passCount == rule.ConditionCount)
                         {
                             if (rule.ReplaceMode)
