@@ -419,6 +419,13 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap IconDirtySubmodules {
+            get {
+                object obj = ResourceManager.GetObject("IconDirtySubmodules", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap IconMixed {
             get {
                 object obj = ResourceManager.GetObject("IconMixed", resourceCulture);
