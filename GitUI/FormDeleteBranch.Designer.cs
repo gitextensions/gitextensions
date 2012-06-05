@@ -55,7 +55,7 @@
             this.label1.ForeColor = System.Drawing.Color.Black;
             this.label1.Location = new System.Drawing.Point(7, 98);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(83, 13);
+            this.label1.Size = new System.Drawing.Size(89, 15);
             this.label1.TabIndex = 3;
             this.label1.Text = "Select branches";
             // 
@@ -65,14 +65,14 @@
             this.label2.ForeColor = System.Drawing.Color.Black;
             this.label2.Location = new System.Drawing.Point(37, 9);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(406, 52);
+            this.label2.Size = new System.Drawing.Size(449, 60);
             this.label2.TabIndex = 6;
             this.label2.Text = resources.GetString("label2.Text");
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.InitialImage")));
+            this.pictureBox1.Image = global::GitUI.Properties.Resources.Star;
+            this.pictureBox1.InitialImage = global::GitUI.Properties.Resources.Star;
             this.pictureBox1.Location = new System.Drawing.Point(10, 9);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(21, 20);
@@ -84,7 +84,7 @@
             this.ForceDelete.AutoSize = true;
             this.ForceDelete.Location = new System.Drawing.Point(146, 130);
             this.ForceDelete.Name = "ForceDelete";
-            this.ForceDelete.Size = new System.Drawing.Size(86, 17);
+            this.ForceDelete.Size = new System.Drawing.Size(90, 19);
             this.ForceDelete.TabIndex = 2;
             this.ForceDelete.Text = "Force delete";
             this.ForceDelete.UseVisualStyleBackColor = true;
@@ -102,7 +102,7 @@
             // FormDeleteBranch
             // 
             this.AcceptButton = this.Ok;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(448, 162);
             this.Controls.Add(this.Branches);

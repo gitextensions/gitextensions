@@ -863,10 +863,6 @@
       <DependentUpon>FormGitAttributes.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Dashboard.nl.resx">
-      <DependentUpon>Dashboard.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="FormBrowse.resx">
       <DependentUpon>FormBrowse.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1330,6 +1326,26 @@
     <None Include="Resources\Icons\rss.png" />
     <None Include="Resources\Icons\history.png" />
     <None Include="Resources\Icons\IconDirtySubmodules.png" />
+    <None Include="Resources\Icons\stash.png" />
+    <None Include="Resources\Icons\50.png" />
+    <None Include="Resources\Icons\increaseNumberOfLines.png" />
+    <None Include="Resources\Icons\showEntireFile.png" />
+    <None Include="Resources\Icons\whitespaces.png" />
+    <None Include="Resources\Icons\decreaseNumberOfLines.png" />
+    <None Include="Resources\Icons\33.png" />
+    <None Include="Resources\Icons\35.png" />
+    <None Include="Resources\Icons\3.png" />
+    <None Include="Resources\Icons\4.png" />
+    <None Include="Resources\Icons\bash.png" />
+    <None Include="Resources\Icons\open.png" />
+    <None Include="Resources\Icons\40.png" />
+    <None Include="Resources\Icons\refresh.png" />
+    <None Include="Resources\Icons\71.png" />
+    <None Include="Resources\Icons\77.png" />
+    <None Include="Resources\Icons\pageant_16.png" />
+    <None Include="Resources\Icons\puttygen.png" />
+    <None Include="Resources\Icons\82.png" />
+    <None Include="Resources\Icons\statistic.png" />
     <Content Include="Translation\Francais.gif" />
     <Content Include="Translation\Francais.xml" />
     <Content Include="Translation\German.gif">
