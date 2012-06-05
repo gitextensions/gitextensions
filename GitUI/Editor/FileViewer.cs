@@ -612,7 +612,7 @@ namespace GitUI.Editor
                 if (code.Contains("\n") && (code[0].Equals(' ') || code[0].Equals('+') || code[0].Equals('-')))
                     code = code.Substring(1);
 
-                code = code.Replace("\n+", "\n").Replace("\n-", "\n").Replace("\n ", "\n");
+                code = code.Replace("\n ", "\n").Replace("\n+", "\n").Replace("\n-", "\n");
             }
             else
                 code = _internalFileViewer.GetSelectedText();
