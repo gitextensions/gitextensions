@@ -11,7 +11,13 @@ Building installers for Git Extensions
    * CommonAssemblyInfo.cs
 
       [assembly: AssemblyVersion("2.33")]  
-      [assembly: AssemblyFileVersion("2.33")]  
+      [assembly: AssemblyFileVersion("2.33")]
+   * SimpleExt\SimpleExt.rc
+
+      FILEVERSION 2,30  
+      PRODUCTVERSION 2,30  
+      VALUE "FileVersion", "2, 33\0"  
+      VALUE "ProductVersion", "2, 33\0"
    * MakeInstallers.bat
 
       set version=2.33
