@@ -22,7 +22,7 @@ namespace GitUI.SpellChecker
         private readonly TranslationString pasteMenuItemText = new TranslationString("Paste");
         private readonly TranslationString deleteMenuItemText = new TranslationString("Delete");
         private readonly TranslationString selectAllMenuItemText = new TranslationString("Select all");
-        
+
         private readonly TranslationString translateEntireText = new TranslationString("Translate entire text to {0}");
         private readonly TranslationString translateCurrentWord = new TranslationString("Translate '{0}' to {1}");
         private readonly TranslationString addToDictionaryText = new TranslationString("Add to dictionary");
@@ -30,7 +30,7 @@ namespace GitUI.SpellChecker
         private readonly TranslationString removeWordText = new TranslationString("Remove word");
         private readonly TranslationString dictionaryText = new TranslationString("Dictionary");
         private readonly TranslationString markIllFormedLinesText = new TranslationString("Mark ill formed lines");
-       
+
         private readonly SpellCheckEditControl _customUnderlines;
         private Spelling _spelling;
         private static WordDictionary _wordDictionary;
@@ -38,7 +38,7 @@ namespace GitUI.SpellChecker
 
         public EditNetSpell()
         {
-            InitializeComponent();            
+            InitializeComponent();
             Translate();
 
             _customUnderlines = new SpellCheckEditControl(TextBox);
@@ -50,9 +50,9 @@ namespace GitUI.SpellChecker
 
         public override string Text
         {
-            get 
+            get
             {
-                return IsWatermarkShowing ? string.Empty : TextBox.Text; 
+                return IsWatermarkShowing ? string.Empty : TextBox.Text;
             }
             set
             {
@@ -65,6 +65,17 @@ namespace GitUI.SpellChecker
         [Description("The font for spelling errors.")]
         [Category("Appearance")]
         public Font MistakeFont { get; set; }
+
+
+        public int CurrentColumn
+        {
+            get { return TextBox.SelectionStart - TextBox.GetFirstCharIndexOfCurrentLine() + 1; }
+        }
+        public int CurrentLine
+        {
+            get { return TextBox.GetLineFromCharIndex(TextBox.SelectionStart) + 1; }
+        }
+        public event EventHandler SelectionChanged;
 
         private void EditNetSpellEnabledChanged(object sender, EventArgs e)
         {
@@ -87,12 +98,12 @@ namespace GitUI.SpellChecker
         {
             get { return _WatermarkText; }
 
-            set 
+            set
             {
                 HideWatermark();
                 _WatermarkText = value;
                 ShowWatermark();
-            }      
+            }
         }
 
         private void EditNetSpellLoad(object sender, EventArgs e)
@@ -244,7 +255,7 @@ namespace GitUI.SpellChecker
         private void SpellCheckContextMenuOpening(object sender, CancelEventArgs e)
         {
             TextBox.Focus();
-            
+
             SpellCheckContextMenu.Items.Clear();
 
             try
@@ -488,6 +499,17 @@ namespace GitUI.SpellChecker
             OnKeyDown(e);
         }
 
+        private void TextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            OnKeyPress(e);
+        }
+
+        private void TextBox_SelectionChanged(object sender, EventArgs e)
+        {
+            if (SelectionChanged != null)
+                SelectionChanged(sender, e);
+        }
+
         private void TextBox_Enter(object sender, EventArgs e)
         {
             HideWatermark();
@@ -495,7 +517,7 @@ namespace GitUI.SpellChecker
 
         private void ShowWatermark()
         {
-            if (!Focused && string.IsNullOrEmpty(TextBox.Text) && TextBoxFont!= null)
+            if (!Focused && string.IsNullOrEmpty(TextBox.Text) && TextBoxFont != null)
             {
                 TextBox.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
                 TextBox.ForeColor = SystemColors.InactiveCaption;
@@ -514,7 +536,7 @@ namespace GitUI.SpellChecker
             }
             IsWatermarkShowing = false;
         }
-        
+
         public new bool Focus()
         {
             HideWatermark();
@@ -552,6 +574,49 @@ namespace GitUI.SpellChecker
         private void SelectAllMenuItemClick(object sender, EventArgs e)
         {
             TextBox.SelectAll();
+        }
+
+        public void WrapWord()
+        {
+            var text = TextBox.Text;
+            var originalCursorPosition = TextBox.SelectionStart;
+            var cursor = originalCursorPosition - 1;
+            int newCursorPosition;
+            int endOfPreviousWord;
+
+            // Find the beginning of current word
+            while (!char.IsWhiteSpace(text[cursor])) cursor--;
+            endOfPreviousWord = cursor;
+
+            // Find the end of the previous word
+            while (char.IsWhiteSpace(text[endOfPreviousWord])) endOfPreviousWord--;
+
+            // Calculate the new cursor position which would keep the cursor
+            // at the same spot in the word being typed.
+            newCursorPosition = originalCursorPosition - (cursor - endOfPreviousWord) + 4;
+
+            string textBefore = text.Substring(0, endOfPreviousWord + 1);
+            string textAfter = text.Substring(cursor + 1);
+            TextBox.Text = textBefore + "\n   " + textAfter;
+
+            TextBox.SelectionStart = newCursorPosition;
+        }
+
+        /// <summary>
+        /// Make sure this line is empty by inserting a newline at its start.
+        /// </summary>
+        public void ForceNextLine(bool addBullet)
+        {
+            var bullet = addBullet ? " - " : "";
+            var text = TextBox.Text;
+            var originalCursorPosition = TextBox.SelectionStart;
+            var cursor = originalCursorPosition - (CurrentColumn - 1);
+
+            string textBefore = text.Substring(0, cursor);
+            string textAfter = text.Substring(cursor);
+            TextBox.Text = textBefore + "\n" + bullet + textAfter;
+
+            TextBox.SelectionStart = originalCursorPosition + 1 + bullet.Length;
         }
     }
 }
