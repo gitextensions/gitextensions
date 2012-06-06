@@ -7,6 +7,9 @@ Version 2.33
 	Fixed issue 954: improve RSS feed deletion
 	Fixed issue 955: GitHub plugin fixed for GitHub api 3
 	Fixed issue 965: integrated text editor usability improvements
+	Fixed issue 1000: added option to sign-off commits
+	Added French translation
+	Many bugfixes and minor changes
 	
 Version 2.32
 	Fixed issue 85: http authentication support
