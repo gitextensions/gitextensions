@@ -234,9 +234,23 @@ namespace GitUI
                    SolveEditor();
         }
 
+        private static string GetGlobalEditor()
+        {
+            string editor = Environment.GetEnvironmentVariable("GIT_EDITOR");
+            if (!string.IsNullOrEmpty(editor))
+                return editor;
+            editor = Settings.Module.GetGlobalPathSetting("core.editor");
+            if (!string.IsNullOrEmpty(editor))
+                return editor;
+            editor = Environment.GetEnvironmentVariable("VISUAL");
+            if (!string.IsNullOrEmpty(editor))
+                return editor;
+            return Environment.GetEnvironmentVariable("EDITOR");
+        }
+
         private static bool SolveEditor()
         {
-            string editor = Settings.Module.GetGlobalPathSetting("core.editor");
+            string editor = GetGlobalEditor();
             if (string.IsNullOrEmpty(editor))
             {
                 Settings.Module.SetGlobalPathSetting("core.editor", "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor");
