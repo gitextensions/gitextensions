@@ -67,10 +67,12 @@ namespace GitUI.SpellChecker
         public Font MistakeFont { get; set; }
 
 
+        [Browsable(false)]
         public int CurrentColumn
         {
             get { return TextBox.SelectionStart - TextBox.GetFirstCharIndexOfCurrentLine() + 1; }
         }
+        [Browsable(false)]
         public int CurrentLine
         {
             get { return TextBox.GetLineFromCharIndex(TextBox.SelectionStart) + 1; }
