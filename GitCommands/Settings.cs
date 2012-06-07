@@ -423,11 +423,30 @@ namespace GitCommands
             }
         }
 
-        private static string _pullMerge;
-        public static string PullMerge
+        public enum PullAction
         {
-            get { return SafeGet("pullmerge", "merge", ref _pullMerge); }
-            set { SafeSet("pullmerge", value, ref _pullMerge); }
+            None,
+            Merge,
+            Rebase,
+            Fetch
+        }
+
+        public static PullAction PullMerge
+        {
+            get { return GetEnum<PullAction>("pullmerge", PullAction.Merge); }
+            set { SetEnum<PullAction>("pullmerge", value); }
+        }
+
+        public static bool DonSetAsLastPullAction
+        {
+            get { return GetBool("DonSetAsLastPullAction", true).Value; }
+            set { SetBool("DonSetAsLastPullAction", value); }
+        }
+
+        public static PullAction LastPullAction
+        {
+            get { return GetEnum<PullAction>("LastPullAction", PullAction.None); }
+            set { SetEnum<PullAction>("LastPullAction", value); }
         }
 
 
@@ -1236,6 +1255,20 @@ namespace GitCommands
         public static void SetBool(string name, bool? value)
         {
             SetByName<bool?>(name, value, (bool? b) => b.Value ? "true" : "false");
+        }
+
+        public static void SetEnum<T>(string name, T value)
+        {
+            SetByName<T>(name, value, x => x.ToString());
+        }
+
+        public static T GetEnum<T>(string name, T defaultValue)
+        {
+            return GetByName<T>(name, defaultValue, x =>
+            {
+                var val = x.ToString();
+                return (T)Enum.Parse(typeof(T), val, true);
+            });
         }
 
         public static void SetString(string name, string value)

@@ -458,11 +458,11 @@ namespace GitExtensions
         private static void UpdateSettingsBasedOnArguments(Dictionary<string, string> arguments)
         {
             if (arguments.ContainsKey("merge"))
-                Settings.PullMerge = "merge";
+                Settings.PullMerge = Settings.PullAction.Merge;
             if (arguments.ContainsKey("rebase"))
-                Settings.PullMerge = "rebase";
+                Settings.PullMerge = Settings.PullAction.Rebase;
             if (arguments.ContainsKey("fetch"))
-                Settings.PullMerge = "fetch";
+                Settings.PullMerge = Settings.PullAction.Fetch;
             if (arguments.ContainsKey("autostash"))
                 Settings.AutoStash = true;
         }
