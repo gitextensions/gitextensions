@@ -24,7 +24,7 @@ namespace GitUI
         string _localBranchName = "";
 
         // for translation only
-        public FormCheckoutRemoteBranch()
+        internal FormCheckoutRemoteBranch()
         {
             InitializeComponent();
             Translate();
