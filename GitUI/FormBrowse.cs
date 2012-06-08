@@ -2367,19 +2367,23 @@ namespace GitUI
             switch (Settings.LastPullAction)
             {
                 case Settings.PullAction.Fetch:
-                    toolStripButtonPull.Image = Properties.Resources.PullFetch;    
+                    toolStripButtonPull.Image = Properties.Resources.PullFetch;
+                    toolStripButtonPull.ToolTipText = "Pull - fetch";
                     break;
 
                 case Settings.PullAction.Merge:
                     toolStripButtonPull.Image = Properties.Resources.PullMerge;
+                    toolStripButtonPull.ToolTipText = "Pull - merge";
                     break;
 
                 case Settings.PullAction.Rebase:
                     toolStripButtonPull.Image = Properties.Resources.PullRebase;
+                    toolStripButtonPull.ToolTipText = "Pull - rebase";
                     break;
                 
                 default:
                     toolStripButtonPull.Image = Properties.Resources._4;
+                    toolStripButtonPull.ToolTipText = "Open pull dialog";
                     break;
             }
         }
