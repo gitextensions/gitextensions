@@ -445,10 +445,9 @@ namespace GitCommands
 
         public static PullAction LastPullAction
         {
-            get { return GetEnum<PullAction>("LastPullAction", PullAction.None); }
-            set { SetEnum<PullAction>("LastPullAction", value); }
+            get { return GetEnum<PullAction>("LastPullAction_" + WorkingDir, PullAction.None); }
+            set { SetEnum<PullAction>("LastPullAction_" + WorkingDir, value); }
         }
-
 
         private static string _smtp;
         public static string Smtp
