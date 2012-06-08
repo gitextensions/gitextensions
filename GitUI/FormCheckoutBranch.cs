@@ -10,7 +10,7 @@ namespace GitUI
     {
         private string _containRevison;
 
-        public FormCheckoutBranch()
+        internal FormCheckoutBranch()
         {
             InitializeComponent();
             Translate();

@@ -19,6 +19,7 @@ namespace GitUI
         readonly TranslationString saveCurrentChangesText = new TranslationString("Do you want to save the current changes?");
         readonly TranslationString saveCurrentChangesCaption = new TranslationString("Save changes");
         readonly TranslationString saveAsText = new TranslationString("Save as");
+        readonly TranslationString saveAsTextFilter = new TranslationString("Translation file (*.xml)");
         readonly TranslationString selectLanguageCode = new TranslationString("Select a language code first.");
         readonly TranslationString noLanguageCodeSelected = new TranslationString("There is no languagecode selected." + 
             Environment.NewLine + "Do you want to select a language code first?");
@@ -172,7 +173,7 @@ namespace GitUI
                 {
                     foreach (Type type in assembly.GetTypes())
                     {
-                        if (typeof(ITranslate).IsAssignableFrom(type))
+                        if (type.IsClass && typeof(ITranslate).IsAssignableFrom(type))
                         {
                             translatableTypes.Add(type);
                         }
@@ -184,27 +185,29 @@ namespace GitUI
 
         private object CreateInstanceOfClass(Type type)
         {
+            BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
             object obj = null;
             if (type == GetType())
                 obj = this;
             else
             {
                 // try to find parameter less constructor first
-                foreach (ConstructorInfo constructor in type.GetConstructors())
+                foreach (ConstructorInfo constructor in type.GetConstructors(flags))
                 {
                     if (constructor.GetParameters().Length == 0)
-                        obj = Activator.CreateInstance(type);
+                        obj = Activator.CreateInstance(type, true);
                 }
             }
             if (obj == null && type.GetConstructors().Length > 0)
             {
-                ConstructorInfo parameterConstructor = type.GetConstructors()[0];
+                ConstructorInfo parameterConstructor = type.GetConstructors(flags)[0];
                 var parameters = new List<object>(parameterConstructor.GetParameters().Length);
                 for (int i = 0; i < parameterConstructor.GetParameters().Length; i++)
                     parameters.Add(null);
                 obj = parameterConstructor.Invoke(parameters.ToArray());
             }
 
+            Debug.Assert(obj != null);
             return obj;
         }
 
@@ -289,8 +292,16 @@ namespace GitUI
                     foreignTranslation.FindOrAddTranslationCategory(translateItem.Category).AddTranslationItem(ti);
                 }
             }
-
-            var fileDialog = new SaveFileDialog { Title = saveAsText.Text, FileName = translations.Text + ".xml" };
+            
+            var fileDialog =
+                new SaveFileDialog
+                    {
+                        Title = saveAsText.Text,
+                        FileName = translations.Text + ".xml",
+                        Filter = saveAsTextFilter.Text + "|*.xml", 
+                        DefaultExt = ".xml",
+                        AddExtension = true
+                    };
 
             if (fileDialog.ShowDialog(this) == DialogResult.OK)
             {
