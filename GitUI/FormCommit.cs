@@ -102,13 +102,13 @@ namespace GitUI
         private readonly TranslationString _selectionFilterToolTip = new TranslationString("Enter a regular expression to select unstaged files.");
         private readonly TranslationString _selectionFilterErrorToolTip = new TranslationString("Error {0}");
 
-        private readonly TranslationString _commitMsgFirstLineInvalid = new TranslationString("First line of commit message contains too many characters." 
+        private readonly TranslationString _commitMsgFirstLineInvalid = new TranslationString("First line of commit message contains too many characters."
             + Environment.NewLine + "Do you want to continue?");
 
         private readonly TranslationString _commitMsgLineInvalid = new TranslationString("The following line of commit message contains too many characters:"
             + Environment.NewLine + Environment.NewLine + "{0}" + Environment.NewLine + Environment.NewLine + "Do you want to continue?");
 
-        private readonly TranslationString _commitMsgSecondLineNotEmpty = new TranslationString("Second line of commit message is not empty."  + Environment.NewLine + "Do you want to continue?");
+        private readonly TranslationString _commitMsgSecondLineNotEmpty = new TranslationString("Second line of commit message is not empty." + Environment.NewLine + "Do you want to continue?");
 
         private readonly TranslationString _commitMsgRegExNotMatched = new TranslationString("Commit message does not match RegEx." + Environment.NewLine + "Do you want to continue?");
 
@@ -1290,7 +1290,7 @@ namespace GitUI
             if (modules.Count == 0)
                 return;
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("Submodule" + (modules.Count == 1 ? " " : "s ") + 
+            sb.AppendLine("Submodule" + (modules.Count == 1 ? " " : "s ") +
                 String.Join(", ", modules.ToArray()) + " updated.");
             sb.AppendLine();
             foreach (var item in modules)
@@ -1520,7 +1520,7 @@ namespace GitUI
                         }
                     }
                 }
-                
+
             }
             list = null;
             return false;
@@ -1565,6 +1565,35 @@ namespace GitUI
             // Prevent adding a line break when all we want is to commit
             if (e.Control && e.KeyCode == Keys.Enter)
                 e.Handled = true;
+        }
+
+        private void Message_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            int limit1 = Settings.CommitValidationMaxCntCharsFirstLine;
+            int limitX = Settings.CommitValidationMaxCntCharsPerLine;
+            bool empty2 = Settings.CommitValidationSecondLineMustBeEmpty;
+
+            if (limit1 > 0 && Message.CurrentLine == 1 && Message.CurrentColumn > limit1)
+            {
+                // TODO: I don't really know what to do in this case.
+            }
+
+            if (empty2 && Message.CurrentLine == 2)
+            {
+                // Force next line and add a bullet.
+                Message.ForceNextLine(true);
+            }
+
+            if (limitX > 0 && Message.CurrentLine >= (empty2 ? 3 : 2) && Message.CurrentColumn > limitX)
+            {
+                Message.WrapWord();
+            }
+        }
+
+        private void Message_SelectionChanged(object sender, EventArgs e)
+        {
+            commitCursorColumn.Text = Message.CurrentColumn.ToString();
+            commitCursorLine.Text = Message.CurrentLine.ToString();
         }
 
         private void closeDialogAfterEachCommitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1785,7 +1814,7 @@ namespace GitUI
 
         private void LoadCommitTemplates()
         {
-            CommitTemplateItem[] commitTemplates = 
+            CommitTemplateItem[] commitTemplates =
                 CommitTemplateItem.DeserializeCommitTemplates(Settings.CommitTemplates);
 
             commitTemplatesToolStripMenuItem.DropDownItems.Clear();
@@ -1882,7 +1911,6 @@ namespace GitUI
         {
             openContainingFolder(Staged);
         }
-
     }
 
     /// <summary>
