@@ -7,6 +7,15 @@ namespace ResourceManager.Translation
 {
     public static class TranslationUtl
     {
+        private static bool AllowTranslateProperty(string text)
+        {
+            if (text == null)
+                return false;
+            foreach (char c in text)
+                if (Char.IsLetter(c))
+                    return true;
+            return false;
+        }
 
         public static void AddTranslationItemsFromFields(string category, object obj, Translation translation)
         {
@@ -16,10 +25,8 @@ namespace ResourceManager.Translation
             Action<string, object, PropertyInfo> action = delegate(string item, object itemObj, PropertyInfo propertyInfo)
             {
                 var value = (string)propertyInfo.GetValue(itemObj, null);
-                if (!string.IsNullOrEmpty(value))
-                {
+                if (AllowTranslateProperty(value))
                     translation.AddTranslationItem(category, item, propertyInfo.Name, value);
-                }
             };
             ForEachField(obj, action);
         }
