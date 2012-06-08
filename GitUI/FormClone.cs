@@ -31,7 +31,9 @@ namespace GitUI
 
         private bool openedFromProtocolHandler;
 
-        public FormClone(): this(null, false)
+        // for translation only
+        internal FormClone()
+            : this(null, false)
         {
         }
 
