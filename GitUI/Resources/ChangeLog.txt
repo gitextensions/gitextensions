@@ -1,18 +1,29 @@
 ﻿Changelog
 =========
 
+Version 2.34
+	Fixed issue 980: spell check only covers first 5 visible lines in commit dialog
+	Fixed issue 988: status bar for commit message
+	Fixed issue 1018: Git Extensions sets core.editor to its own program without asking the user
+	Added line and column position to commit window.
+
 Version 2.33
+	Fixed issue 843: toolbar is disabled when in a wxs file
 	Fixed issue 922: error during merge conflict resolve
 	Fixed issue 951: install Git Extensions into 'All Progams' instead of 'All Programs\Git Extensions'
 	Fixed issue 954: improve RSS feed deletion
 	Fixed issue 955: GitHub plugin fixed for GitHub api 3
 	Fixed issue 965: integrated text editor usability improvements
+	Fixed issue 995: support github-windows and git URL link protocol
 	Fixed issue 1000: added option to sign-off commits
 	Added French translation
+	Seprate commit button status icon if dirty only submodules
 	Many bugfixes and minor changes
 	
 Version 2.32
 	Fixed issue 85: http authentication support
+	Fixed issue 357: commit Author name not using the correct encoding
+	Fixed issue 570: Cut, Copy, Paste, Delete, Select all menu items in the Commit message field
 	Fixed issue 605: submodule improvements
 	Fixed issue 772: push tag on creation
 	Fixed issue 773: file history dialog fails on large directory
@@ -25,6 +36,7 @@ Version 2.32
 	Fixed issue 898: Github plugin disabled because it doesn't work with new GitHub API v3
 	Fixed issue 906: fixed exception in blame dialog
 	Fixed issue 915: checkout branch dialog added if no branch selected at starting commit dialog
+	Fixed issue 925: apply patch should recognise unified format
 	Fixed issue: select all files in commit dialog performance fix
 	Fixed issue: merge conflict dialog crashwhen "Diff-Scripts" folder not exist
 	Updated msysgit to version 1.7.10
