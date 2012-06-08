@@ -89,7 +89,7 @@ namespace GitExtensions
                 //    Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
             }
 
-            if (string.IsNullOrEmpty(Settings.WorkingDir) && Settings.StartWithRecentWorkingDir) 
+            if (args.Length <= 1 && string.IsNullOrEmpty(Settings.WorkingDir) && Settings.StartWithRecentWorkingDir) 
             {
                 if (GitModule.ValidWorkingDir(Settings.RecentWorkingDir))
                     Settings.WorkingDir = Settings.RecentWorkingDir;
@@ -147,176 +147,120 @@ namespace GitExtensions
 
         private static void RunCommandBasedOnArgument(string[] args, Dictionary<string, string> arguments)
         {
-            if (args[1] == "mergetool" || args[1] == "mergeconflicts")
+            switch (args[1])
             {
-                RunMergeToolOrConflictCommand(arguments);
-                return;
-            }
-            if (args[1] == "gitbash")
-            {
-                Settings.Module.RunBash();
-                return;
-            }
-            if (args[1] == "gitignore")
-            {
-                GitUICommands.Instance.StartEditGitIgnoreDialog();
-                return;
-            }
-            if (args[1] == "remotes")
-            {
-                GitUICommands.Instance.StartRemotesDialog();
-                return;
-            }
-            if (args[1] == "blame")
-            {
-                RunBlameCommand(args);
-                return;
-            }
-            if (args[1] == "browse")
-            {
-                GitUICommands.Instance.StartBrowseDialog(GetParameterOrEmptyStringAsDefault(args, "-filter"));
-                return;
-            }
-            if (args[1] == "cleanup")
-            {
-                new FormCleanupRepository().ShowDialog();
-                return;
-            }
-            if (args[1] == "add" || args[1] == "addfiles")
-            {
-                GitUICommands.Instance.StartAddFilesDialog();
-                return;
-            }
-            if (args[1] == "apply" || args[1] == "applypatch")
-            {
-                GitUICommands.Instance.StartApplyPatchDialog();
-                return;
-            }
-            if (args[1] == "branch")
-            {
-                GitUICommands.Instance.StartCreateBranchDialog();
-                return;
-            }
-            if (args[1] == "checkout" || args[1] == "checkoutbranch")
-            {
-                GitUICommands.Instance.StartCheckoutBranchDialog();
-                return;
-            }
-            if (args[1] == "checkoutrevision")
-            {
-                GitUICommands.Instance.StartCheckoutRevisionDialog();
-                return;
-            }
-            if (args[1] == "init")
-            {
-                RunInitCommand(args);
-                return;
-            }
-            if (args[1] == "clone")
-            {
-                RunCloneCommand(args);
-                return;
-            }
-            if (args[1] == "commit")
-            {
-                Commit(arguments);
-                return;
-            }
-            if (args[1] == "filehistory")
-            {
-                RunFileHistoryCommand(args);
-                return;
-            }
-            if (args[1] == "fileeditor")
-            {
-                RunFileEditorCommand(args);
-                return;
-            }
-            if (args[1] == "formatpatch")
-            {
-                GitUICommands.Instance.StartFormatPatchDialog();
-                return;
-            }
-            if (args[1] == "pull")
-            {
-                Pull(arguments);
-                return;
-            }
-            if (args[1] == "push")
-            {
-                Push(arguments);
-                return;
-            }
-            if (args[1] == "settings")
-            {
-                GitUICommands.Instance.StartSettingsDialog();
-                return;
-            }
-            if (args[1] == "searchfile")
-            {
-                RunSearchFileCommand();
-                return;
-            }
-            if (args[1] == "viewdiff")
-            {
-                GitUICommands.Instance.StartCompareRevisionsDialog();
-                return;
-            }
-            if (args[1] == "rebase")
-            {
-                RunRebaseCommand(arguments);
-                return;
-            }
-            if (args[1] == "merge")
-            {
-                RunMergeCommand(arguments);
-                return;
-            }
-            if (args[1] == "cherry")
-            {
-                GitUICommands.Instance.StartCherryPickDialog();
-                return;
-            }
-            if (args[1] == "revert")
-            {
-                Application.Run(new FormRevert(args[2]));
-                return;
-            }
-            if (args[1] == "tag")
-            {
-                GitUICommands.Instance.StartCreateTagDialog();
-                return;
-            }
-            if (args[1] == "about")
-            {
-                Application.Run(new AboutBox());
-                return;
-            }
-            if (args[1] == "stash")
-            {
-                GitUICommands.Instance.StartStashDialog();
-                return;
-            }
-            if (args[1] == "synchronize")
-            {
-                RunSynchronizeCommand(arguments);
-                return;
-            }
-            if (args[1] == "openrepo")
-            {
-                RunOpenRepoCommand(args);
-                return;
-            }
-
-            if (args[1].StartsWith("git://"))
-            {
-                GitUICommands.Instance.StartCloneDialog(null, args[1], true);
-                return;
-            }
-            if (args[1].StartsWith("github-windows://openRepo/"))
-            {
-                GitUICommands.Instance.StartCloneDialog(null, args[1].Replace("github-windows://openRepo/", ""), true);
-                return;
+                case "mergeconflicts":
+                case "mergetool":
+                    RunMergeToolOrConflictCommand(arguments);
+                    return;
+                case "gitbash":
+                    Settings.Module.RunBash();
+                    return;
+                case "gitignore":
+                    GitUICommands.Instance.StartEditGitIgnoreDialog();
+                    return;
+                case "remotes":
+                    GitUICommands.Instance.StartRemotesDialog();
+                    return;
+                case "blame":
+                    RunBlameCommand(args);
+                    return;
+                case "browse":
+                    GitUICommands.Instance.StartBrowseDialog(GetParameterOrEmptyStringAsDefault(args, "-filter"));
+                    return;
+                case "cleanup":
+                    new FormCleanupRepository().ShowDialog();
+                    return;
+                case "add":
+                case "addfiles":
+                    GitUICommands.Instance.StartAddFilesDialog();
+                    return;
+                case "apply":
+                case "applypatch":
+                    GitUICommands.Instance.StartApplyPatchDialog();
+                    return;
+                case "branch":
+                    GitUICommands.Instance.StartCreateBranchDialog();
+                    return;
+                case "checkout":
+                case "checkoutbranch":
+                    GitUICommands.Instance.StartCheckoutBranchDialog();
+                    return;
+                case "checkoutrevision":
+                    GitUICommands.Instance.StartCheckoutRevisionDialog();
+                    return;
+                case "init":
+                    RunInitCommand(args);
+                    return;
+                case "clone":
+                    RunCloneCommand(args);
+                    return;
+                case "commit":
+                    Commit(arguments);
+                    return;
+                case "filehistory":
+                    RunFileHistoryCommand(args);
+                    return;
+                case "fileeditor":
+                    RunFileEditorCommand(args);
+                    return;
+                case "formatpatch":
+                    GitUICommands.Instance.StartFormatPatchDialog();
+                    return;
+                case "pull":
+                    Pull(arguments);
+                    return;
+                case "push":
+                    Push(arguments);
+                    return;
+                case "settings":
+                    GitUICommands.Instance.StartSettingsDialog();
+                    return;
+                case "searchfile":
+                    RunSearchFileCommand();
+                    return;
+                case "viewdiff":
+                    GitUICommands.Instance.StartCompareRevisionsDialog();
+                    return;
+                case "rebase":
+                    RunRebaseCommand(arguments);
+                    return;
+                case "merge":
+                    RunMergeCommand(arguments);
+                    return;
+                case "cherry":
+                    GitUICommands.Instance.StartCherryPickDialog();
+                    return;
+                case "revert":
+                    Application.Run(new FormRevert(args[2]));
+                    return;
+                case "tag":
+                    GitUICommands.Instance.StartCreateTagDialog();
+                    return;
+                case "about":
+                    Application.Run(new AboutBox());
+                    return;
+                case "stash":
+                    GitUICommands.Instance.StartStashDialog();
+                    return;
+                case "synchronize":
+                    RunSynchronizeCommand(arguments);
+                    return;
+                case "openrepo":
+                    RunOpenRepoCommand(args);
+                    return;
+                default:
+                    if (args[1].StartsWith("git://") || args[1].StartsWith("http://") || args[1].StartsWith("https://"))
+                    {
+                        GitUICommands.Instance.StartCloneDialog(null, args[1], true);
+                        return;
+                    }
+                    if (args[1].StartsWith("github-windows://openRepo/"))
+                    {
+                        GitUICommands.Instance.StartCloneDialog(null, args[1].Replace("github-windows://openRepo/", ""), true);
+                        return;
+                    }
+                    break;
             }
             Application.Run(new FormCommandlineHelp());
         }
