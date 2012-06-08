@@ -147,6 +147,7 @@ namespace GitUI
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             this.toolPanel.SplitterDistance = this.ToolStrip.Height;
             this._dontUpdateOnIndexChange = false;
+            Settings.WorkingDirChanged += (a, b, c) => RefreshPullIcon();
             RefreshPullIcon();
         }
 
@@ -2240,7 +2241,7 @@ namespace GitUI
         {
             IndexWatcher.Clear();
             RevisionGrid.ForceRefreshRevisions();
-            InternalInitialize(internalInitialize);
+            InternalInitialize(internalInitialize);            
             IndexWatcher.Reset();
         }
 
