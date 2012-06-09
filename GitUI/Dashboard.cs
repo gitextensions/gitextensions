@@ -207,22 +207,42 @@ namespace GitUI
         {
             try
             {
-                if (Properties.Settings.Default.Dashboard_CommonSplitContainer_SplitterDistance != 0)
-                    splitContainer6.SplitterDistance = Properties.Settings.Default.Dashboard_CommonSplitContainer_SplitterDistance;
-                else
-                    splitContainer6.SplitterDistance = (int)Math.Max(2, (CommonActions.Height * 1.2));
+                SetSplitterDistance(
+                    splitContainer6,
+                    Properties.Settings.Default.Dashboard_CommonSplitContainer_SplitterDistance,
+                    (int)Math.Max(2, (CommonActions.Height * 1.2)));
 
-                splitContainer7.SplitterDistance = Math.Max(2, splitContainer7.Height - (DonateCategory.Height + 25));
+                SetSplitterDistance(
+                    splitContainer7,
+                    0, // No settings property for this splitter. Will use default always.
+                    Math.Max(2, splitContainer7.Height - (DonateCategory.Height + 25)));
 
-                if (Properties.Settings.Default.Dashboard_MainSplitContainer_SplitterDistance != 0)
-                    splitContainer5.SplitterDistance = Properties.Settings.Default.Dashboard_MainSplitContainer_SplitterDistance;
-                else
-                    splitContainer5.SplitterDistance = 315;
+                SetSplitterDistance(
+                    splitContainer5,
+                    Properties.Settings.Default.Dashboard_MainSplitContainer_SplitterDistance,
+                    315);
             }
             catch (ConfigurationException)
             {
                 //TODO: howto restore a corrupted config? Properties.Settings.Default.Reset() doesn't work.
             }
+        }
+
+        private void SetSplitterDistance(SplitContainer splitContainer, int value, int @default)
+        {
+            if (value != 0)
+            {
+                try
+                {
+                    splitContainer.SplitterDistance = value;
+                }
+                catch
+                {
+                    splitContainer.SplitterDistance = @default;
+                }
+            }
+            else
+                splitContainer.SplitterDistance = @default;
         }
 
         private void TranslateItem_Click(object sender, EventArgs e)
