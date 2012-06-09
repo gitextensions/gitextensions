@@ -84,9 +84,9 @@ namespace GitUI
                 _NO_TRANSLATE_Remotes.Text = currentBranchRemote;
             _NO_TRANSLATE_localBranch.Text = branch;
 
-            Merge.Checked = Settings.PullMerge == "merge";
-            Rebase.Checked = Settings.PullMerge == "rebase";
-            Fetch.Checked = Settings.PullMerge == "fetch";
+            Merge.Checked = Settings.PullMerge == Settings.PullAction.Merge;
+            Rebase.Checked = Settings.PullMerge == Settings.PullAction.Rebase;
+            Fetch.Checked = Settings.PullMerge == Settings.PullAction.Fetch;
             AutoStash.Checked = Settings.AutoStash;
             ErrorOccurred = false;
         }
@@ -419,11 +419,11 @@ namespace GitUI
         private void UpdateSettingsDuringPull()
         {
             if (Merge.Checked)
-                Settings.PullMerge = "merge";
+                Settings.PullMerge = Settings.PullAction.Merge;
             if (Rebase.Checked)
-                Settings.PullMerge = "rebase";
+                Settings.PullMerge = Settings.PullAction.Rebase;
             if (Fetch.Checked)
-                Settings.PullMerge = "fetch";
+                Settings.PullMerge = Settings.PullAction.Fetch;
 
             Settings.AutoStash = AutoStash.Checked;
         }

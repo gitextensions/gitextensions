@@ -147,6 +147,8 @@ namespace GitUI
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             this.toolPanel.SplitterDistance = this.ToolStrip.Height;
             this._dontUpdateOnIndexChange = false;
+            Settings.WorkingDirChanged += (a, b, c) => RefreshPullIcon();
+            RefreshPullIcon();
         }
 
         private void ShowDashboard()
@@ -1107,9 +1109,28 @@ namespace GitUI
 
         private void PullToolStripMenuItemClick(object sender, EventArgs e)
         {
-            bool bSilent = (ModifierKeys & Keys.Shift) != 0;
+            bool bSilent;
+            if (sender == toolStripButtonPull)
+            {
+                if (Settings.LastPullAction == Settings.PullAction.None)
+                {
+                    bSilent = (ModifierKeys & Keys.Shift) != 0;
+                }
+                else
+                {
+                    bSilent = true;
+                    Settings.PullMerge = Settings.LastPullAction;
+                }
+            }
+            else
+            {
+                bSilent = sender != pullToolStripMenuItem1;
+                RefreshPullIcon();
+            }
+
             if (GitUICommands.Instance.StartPullDialog(this, bSilent))
                 Initialize();
+
         }
 
         private void RefreshToolStripMenuItemClick(object sender, EventArgs e)
@@ -2220,7 +2241,7 @@ namespace GitUI
         {
             IndexWatcher.Clear();
             RevisionGrid.ForceRefreshRevisions();
-            InternalInitialize(internalInitialize);
+            InternalInitialize(internalInitialize);            
             IndexWatcher.Reset();
         }
 
@@ -2308,6 +2329,64 @@ namespace GitUI
                 DiffFiles.SelectedItem = selectedItem;
             }
 
+        }
+
+        private void dontSetAsDefaultToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.DonSetAsLastPullAction = !dontSetAsDefaultToolStripMenuItem.Checked;
+            dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
+
+        }
+
+        private void mergeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.LastPullAction = Settings.PullAction.Merge;
+            PullToolStripMenuItemClick(sender, e);
+        }
+
+        private void rebaseToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Settings.LastPullAction = Settings.PullAction.Rebase;
+            PullToolStripMenuItemClick(sender, e);
+        }
+
+        private void fetchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.LastPullAction = Settings.PullAction.Fetch;
+            PullToolStripMenuItemClick(sender, e);
+        }
+
+        private void pullToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            if (!Settings.DonSetAsLastPullAction)
+                Settings.LastPullAction = Settings.PullAction.None;
+            PullToolStripMenuItemClick(sender, e);
+        }
+
+        private void RefreshPullIcon()
+        {
+            switch (Settings.LastPullAction)
+            {
+                case Settings.PullAction.Fetch:
+                    toolStripButtonPull.Image = Properties.Resources.PullFetch;
+                    toolStripButtonPull.ToolTipText = "Pull - fetch";
+                    break;
+
+                case Settings.PullAction.Merge:
+                    toolStripButtonPull.Image = Properties.Resources.PullMerge;
+                    toolStripButtonPull.ToolTipText = "Pull - merge";
+                    break;
+
+                case Settings.PullAction.Rebase:
+                    toolStripButtonPull.Image = Properties.Resources.PullRebase;
+                    toolStripButtonPull.ToolTipText = "Pull - rebase";
+                    break;
+                
+                default:
+                    toolStripButtonPull.Image = Properties.Resources._4;
+                    toolStripButtonPull.ToolTipText = "Open pull dialog";
+                    break;
+            }
         }
 
     }
