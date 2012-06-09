@@ -219,7 +219,7 @@ namespace GitUI
             ScriptManager.RunEventScripts(ScriptEvent.BeforePush);
 
             //controls can be accessed only from UI thread
-            candidateForRebasingMergeCommit = Settings.PullMerge == "rebase" && PullFromRemote.Checked && !PushAllBranches.Checked && TabControlTagBranch.SelectedTab == BranchTab;
+            candidateForRebasingMergeCommit = Settings.PullMerge == Settings.PullAction.Rebase && PullFromRemote.Checked && !PushAllBranches.Checked && TabControlTagBranch.SelectedTab == BranchTab;
             selectedBranch = _NO_TRANSLATE_Branch.Text;
             selectedBranchRemote = _NO_TRANSLATE_Remotes.Text;
             selectedRemoteBranchName = RemoteBranch.Text;
@@ -270,7 +270,7 @@ namespace GitUI
                 if (Settings.AutoPullOnRejected &&
                     form.OutputString.ToString().Contains("To prevent you from losing history, non-fast-forward updates were rejected"))
                 {
-                    if (Settings.PullMerge == "fetch")
+                    if (Settings.PullMerge == Settings.PullAction.Fetch)
                         form.AppendOutputLine(Environment.NewLine + "Can not perform auto pull, when merge option is set to fetch.");
                     else if (IsRebasingMergeCommit())
                         form.AppendOutputLine(Environment.NewLine + "Can not perform auto pull, when merge option is set to rebase " + Environment.NewLine
