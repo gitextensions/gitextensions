@@ -327,5 +327,9 @@ namespace GitUI
             TranslationUtl.TranslateItemsFromFields(FormBrowseName, filterBranchHelper, translation);
         }
 
+		private void diffToolremotelocalStripMenuItem_Click(object sender, EventArgs e)
+		{
+			FileChanges.OpenWithDifftool(FileName, GitUIExtensions.DiffWithRevisionKind.DiffRemoteLocal);
+		}
     }
 }
