@@ -1564,12 +1564,17 @@ namespace GitCommands
 
             from = FixPath(from);
             to = FixPath(to);
+            string commitRange = string.Empty;
+            if (!to.IsNullOrEmpty())
+                commitRange = "\"" + to + "\"";
+            if (!from.IsNullOrEmpty())
+                commitRange = commitRange.Join(" ", "\"" + from + "\"");
 
             if (Settings.UsePatienceDiffAlgorithm)
                 extraDiffArguments = string.Concat(extraDiffArguments, " --patience");
 
             var patchManager = new PatchManager();
-            var arguments = string.Format("diff{0} -M -C \"{1}\" \"{2}\" -- {3} {4}", extraDiffArguments, to, from, fileName, oldFileName);
+            var arguments = string.Format("diff {0} -M -C {1} -- {2} {3}", extraDiffArguments, commitRange, fileName, oldFileName);
             patchManager.LoadPatch(this.RunCachableCmd(Settings.GitCommand, arguments, encoding), false);
 
             return patchManager.Patches.Count > 0 ? patchManager.Patches[patchManager.Patches.Count-1] : null;
