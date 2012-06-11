@@ -149,6 +149,7 @@ namespace GitUI
             this._dontUpdateOnIndexChange = false;
             Settings.WorkingDirChanged += (a, b, c) => RefreshPullIcon();
             RefreshPullIcon();
+            dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
         }
 
         private void ShowDashboard()
@@ -1119,13 +1120,14 @@ namespace GitUI
                 else
                 {
                     bSilent = true;
-                    Settings.PullMerge = Settings.LastPullAction;
+                    Settings.LastPullActionToPullMerge();
                 }
             }
             else
             {
                 bSilent = sender != pullToolStripMenuItem1;
                 RefreshPullIcon();
+                Settings.LastPullActionToPullMerge();
             }
 
             if (GitUICommands.Instance.StartPullDialog(this, bSilent))
@@ -2335,7 +2337,6 @@ namespace GitUI
         {
             Settings.DonSetAsLastPullAction = !dontSetAsDefaultToolStripMenuItem.Checked;
             dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
-
         }
 
         private void mergeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2372,6 +2373,11 @@ namespace GitUI
                     toolStripButtonPull.ToolTipText = "Pull - fetch";
                     break;
 
+                case Settings.PullAction.FetchAll:
+                    toolStripButtonPull.Image = Properties.Resources.PullFetchAll;
+                    toolStripButtonPull.ToolTipText = "Pull - fetch all";
+                    break;
+
                 case Settings.PullAction.Merge:
                     toolStripButtonPull.Image = Properties.Resources.PullMerge;
                     toolStripButtonPull.ToolTipText = "Pull - merge";
@@ -2389,6 +2395,20 @@ namespace GitUI
             }
         }
 
+        private void fetchAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!Settings.DonSetAsLastPullAction)
+                Settings.LastPullAction = Settings.PullAction.FetchAll;
+            
+            RefreshPullIcon();
+            bool pullCompelted;
+            ConfigureFormPull configProc = (formPull) => formPull.SetForFetchAll();
+
+            if (GitUICommands.Instance.StartPullDialog(this, true, out pullCompelted, configProc))
+                Initialize();
+
+        }
+      
     }
 
 }

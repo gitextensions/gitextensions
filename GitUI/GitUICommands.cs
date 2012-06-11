@@ -647,7 +647,7 @@ namespace GitUI
         /// <param name="pullOnShow"></param>
         /// <param name="pullCompleted">true if pull completed with no errors</param>
         /// <returns>if revision grid should be refreshed</returns>
-        public bool StartPullDialog(IWin32Window owner, bool pullOnShow, out bool pullCompleted)
+        public bool StartPullDialog(IWin32Window owner, bool pullOnShow, out bool pullCompleted, ConfigureFormPull configProc)
         {
             pullCompleted = false;
 
@@ -658,6 +658,9 @@ namespace GitUI
                 return true;
 
             FormPull formPull = new FormPull();
+            if (configProc != null)
+                configProc(formPull);
+
             DialogResult dlgResult;
             if (pullOnShow)
                 dlgResult = formPull.PullAndShowDialogWhenFailed(owner);
@@ -673,15 +676,20 @@ namespace GitUI
             return true;//maybe InvokeEvent should have 'needRefresh' out parameter?
         }
 
+        public bool StartPullDialog(IWin32Window owner, bool pullOnShow, out bool pullCompleted)
+        {
+            return StartPullDialog(owner, pullOnShow, out pullCompleted, null);
+        }
+
         public bool StartPullDialog(IWin32Window owner, bool pullOnShow)
         {
             bool errorOccurred;
-            return StartPullDialog(owner, pullOnShow, out errorOccurred);
+            return StartPullDialog(owner, pullOnShow, out errorOccurred, null);
         }
 
         public bool StartPullDialog(bool pullOnShow, out bool pullCompleted)
         {
-            return StartPullDialog(null, pullOnShow, out pullCompleted);
+            return StartPullDialog(null, pullOnShow, out pullCompleted, null);
         }
 
         public bool StartPullDialog(bool pullOnShow)
@@ -693,7 +701,7 @@ namespace GitUI
         public bool StartPullDialog(IWin32Window owner)
         {
             bool errorOccurred;
-            return StartPullDialog(owner, false, out errorOccurred);
+            return StartPullDialog(owner, false, out errorOccurred, null);
         }
 
         public bool StartPullDialog()

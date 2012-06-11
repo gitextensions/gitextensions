@@ -12,6 +12,8 @@ using GitUI.Script;
 
 namespace GitUI
 {
+    public delegate void ConfigureFormPull(FormPull formPull);
+
     public partial class FormPull : GitExtensionsForm
     {
         #region Translation
@@ -489,6 +491,11 @@ namespace GitUI
         private bool PullAll()
         {
             return _NO_TRANSLATE_Remotes.Text.Equals("[ All ]", StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        public void SetForFetchAll()
+        {
+            _NO_TRANSLATE_Remotes.SelectedIndex = 0;
         }
 
         private void PullFromUrlCheckedChanged(object sender, EventArgs e)
