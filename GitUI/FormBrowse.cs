@@ -1110,7 +1110,7 @@ namespace GitUI
         private void PullToolStripMenuItemClick(object sender, EventArgs e)
         {
             bool bSilent;
-            if (sender == toolStripButtonPull)
+            if (sender == toolStripButtonPull || sender == pullToolStripMenuItem)
             {
                 if (Settings.LastPullAction == Settings.PullAction.None)
                 {
