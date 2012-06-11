@@ -404,6 +404,6 @@ namespace GitUI
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripTextBox toolStripTextBoxFilter;
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
-		private System.Windows.Forms.ToolStripMenuItem diffToolremotelocalStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem diffToolremotelocalStripMenuItem;
     }
 }
