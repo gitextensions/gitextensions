@@ -74,8 +74,13 @@ namespace GitCommands
 
         public bool IsArtificial()
         {
-            return Guid == UncommittedWorkingDirGuid ||
-                Guid == IndexGuid;
+            return IsArtificial(Guid);
+        }
+
+        public static bool IsArtificial(string guid)
+        {
+            return guid == UncommittedWorkingDirGuid ||
+                    guid == IndexGuid;
         }
 
     }

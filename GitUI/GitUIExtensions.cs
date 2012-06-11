@@ -6,6 +6,7 @@ using GitCommands;
 using System.Windows.Forms;
 using GitUI.Editor;
 using ICSharpCode.TextEditor.Util;
+using System.Diagnostics;
 
 namespace GitUI
 {
@@ -37,19 +38,56 @@ namespace GitUI
             else if (diffKind == DiffWithRevisionKind.DiffRemoteLocal)
                 output = Settings.Module.OpenWithDifftool(fileName, revisions[0].Guid);
             else
-                if (revisions.Count == 1)   // single item selected
+            {
+                string firstRevision = revisions[0].Guid;
+                var secondRevision = revisions.Count == 2 ? revisions[1].Guid : null;
+
+                //to simplify if-ology
+                if (GitRevision.IsArtificial(secondRevision) && firstRevision != GitRevision.UncommittedWorkingDirGuid)
                 {
-                    if (revisions[0].Guid == GitRevision.UncommittedWorkingDirGuid) //working dir changes
-                        output = Settings.Module.OpenWithDifftool(fileName);
-                    else if (revisions[0].Guid == GitRevision.IndexGuid) //staged changes
-                        output = Settings.Module.OpenWithDifftool(fileName, null, null, "--cached");
-                    else
-                        output = Settings.Module.OpenWithDifftool(fileName, revisions[0].Guid,
-                                                                      revisions[0].ParentGuids[0]);
+                    firstRevision = secondRevision;
+                    secondRevision = revisions[0].Guid;
                 }
-                else                        // multiple items selected
-                    output = Settings.Module.OpenWithDifftool(fileName, revisions[0].Guid,
-                                                                  revisions[revisions.Count - 1].Guid);
+
+                string extraDiffArgs = null;
+
+                if (firstRevision == GitRevision.UncommittedWorkingDirGuid) //working dir changes
+                {
+                    if (secondRevision == null || secondRevision == GitRevision.IndexGuid)
+                    {
+                        firstRevision = string.Empty;
+                        secondRevision = string.Empty;
+                    }
+                    else
+                    {
+                        // rev2 vs working dir changes
+                        firstRevision = secondRevision;
+                        secondRevision = string.Empty;
+                    }
+                }
+                if (firstRevision == GitRevision.IndexGuid) //index
+                {
+                    if (secondRevision == null)
+                    {
+                        firstRevision = string.Empty;
+                        secondRevision = string.Empty;
+                        extraDiffArgs = extraDiffArgs.Join(" ", "--cached");
+                    }
+                    else //rev1 vs index
+                    {
+                        firstRevision = secondRevision;
+                        secondRevision = string.Empty;
+                        extraDiffArgs = extraDiffArgs.Join(" ", "--cached");
+                    }
+                }
+
+                Debug.Assert(!GitRevision.IsArtificial(firstRevision), firstRevision.Join(" ", secondRevision));
+
+                if (secondRevision == null)
+                    secondRevision = firstRevision + "^";
+
+                output = Settings.Module.OpenWithDifftool(fileName, firstRevision, secondRevision, extraDiffArgs);
+            }
 
             if (!string.IsNullOrEmpty(output))
                 MessageBox.Show(grid, output);
@@ -63,23 +101,54 @@ namespace GitUI
             if (revisions.Count == 0)
                 return null;
 
-            if (revisions[0].Guid == GitRevision.UncommittedWorkingDirGuid) //working dir changes
-            {
-                if (file.IsTracked)
-                    return Settings.Module.GetCurrentChanges(file.Name, file.OldName, false, diffViewer.GetExtraDiffArguments(), diffViewer.Encoding);
-                return FileReader.ReadFileContent(Settings.WorkingDir + file.Name, diffViewer.Encoding);
-            }
-            if (revisions[0].Guid == GitRevision.IndexGuid) //index
-            {
-                return Settings.Module.GetCurrentChanges(file.Name, file.OldName, true, diffViewer.GetExtraDiffArguments(), diffViewer.Encoding);
-            }
-            var secondRevision = revisions.Count == 2 ? revisions[1].Guid : revisions[0].Guid + "^";
+            string firstRevision = revisions[0].Guid;
+            var secondRevision = revisions.Count == 2 ? revisions[1].Guid : null;
 
-            PatchApply.Patch patch = Settings.Module.GetSingleDiff(revisions[0].Guid, secondRevision, file.Name, file.OldName,
-                                                    diffViewer.GetExtraDiffArguments(), diffViewer.Encoding);
+            //to simplify if-ology
+            if (GitRevision.IsArtificial(secondRevision) && firstRevision != GitRevision.UncommittedWorkingDirGuid)
+            {
+                firstRevision = secondRevision;
+                secondRevision = revisions[0].Guid;
+            }
+
+            string extraDiffArgs = null;
+
+            if (firstRevision == GitRevision.UncommittedWorkingDirGuid) //working dir changes
+            {
+                if (secondRevision == null || secondRevision == GitRevision.IndexGuid)
+                {
+                    if (file.IsTracked)
+                        return Settings.Module.GetCurrentChanges(file.Name, file.OldName, false, diffViewer.GetExtraDiffArguments(), diffViewer.Encoding);
+                    return FileReader.ReadFileContent(Settings.WorkingDir + file.Name, diffViewer.Encoding);
+                }
+                else
+                {
+                    firstRevision = secondRevision;
+                    secondRevision = string.Empty;
+                }
+            }
+            if (firstRevision == GitRevision.IndexGuid) //index
+            {
+                if (secondRevision == null)
+                    return Settings.Module.GetCurrentChanges(file.Name, file.OldName, true, diffViewer.GetExtraDiffArguments(), diffViewer.Encoding);
+                else //rev1 vs index
+                {
+                    firstRevision = secondRevision;
+                    secondRevision = string.Empty;
+                    extraDiffArgs = extraDiffArgs.Join(" ", "--cached");                
+                }
+            }
+
+            Debug.Assert(!GitRevision.IsArtificial(firstRevision), firstRevision.Join(" ", secondRevision));                
+
+            if (secondRevision == null)
+                secondRevision = firstRevision + "^";            
+
+            PatchApply.Patch patch = Settings.Module.GetSingleDiff(firstRevision, secondRevision, file.Name, file.OldName,
+                                                    diffViewer.GetExtraDiffArguments().Join(" ", extraDiffArgs), diffViewer.Encoding);
 
             if (patch == null)
-                return null;
+                return string.Empty;
 
             if (file.IsSubmodule)
                 return GitCommandHelpers.ProcessSubmodulePatch(patch.Text);
