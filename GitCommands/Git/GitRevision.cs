@@ -68,7 +68,7 @@ namespace GitCommands
                 return true;
 
             return
-                Author.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase) ||
+                (Author != null && Author.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase)) ||
                 Message.ToLower().Contains(searchString);
         }
 
