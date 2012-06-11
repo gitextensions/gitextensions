@@ -1349,6 +1349,7 @@
     <None Include="Resources\Icons\PullFetch.png" />
     <None Include="Resources\Icons\PullMerge.png" />
     <None Include="Resources\Icons\PullRebase.png" />
+    <None Include="Resources\Icons\PullFetchAll.png" />
     <Content Include="Translation\Francais.gif" />
     <Content Include="Translation\Francais.xml" />
     <Content Include="Translation\German.gif">
