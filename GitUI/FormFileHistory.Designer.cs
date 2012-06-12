@@ -35,6 +35,7 @@ namespace GitUI
             this.FileChanges = new GitUI.RevisionGrid();
             this.DiffContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.diffToolremotelocalStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -115,6 +116,7 @@ namespace GitUI
             // 
             this.DiffContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openWithDifftoolToolStripMenuItem,
+            this.diffToolremotelocalStripMenuItem,
             this.saveAsToolStripMenuItem,
             this.viewCommitToolStripMenuItem,
             this.toolStripSeparator2,
@@ -123,7 +125,7 @@ namespace GitUI
             this.followFileHistoryToolStripMenuItem,
             this.fullHistoryToolStripMenuItem});
             this.DiffContextMenu.Name = "DiffContextMenu";
-            this.DiffContextMenu.Size = new System.Drawing.Size(216, 148);
+            this.DiffContextMenu.Size = new System.Drawing.Size(216, 192);
             // 
             // openWithDifftoolToolStripMenuItem
             // 
@@ -132,6 +134,13 @@ namespace GitUI
             this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
             this.openWithDifftoolToolStripMenuItem.Text = "Open with difftool";
             this.openWithDifftoolToolStripMenuItem.Click += new System.EventHandler(this.OpenWithDifftoolToolStripMenuItemClick);
+            // 
+            // diffToolremotelocalStripMenuItem
+            // 
+            this.diffToolremotelocalStripMenuItem.Name = "diffToolremotelocalStripMenuItem";
+            this.diffToolremotelocalStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.diffToolremotelocalStripMenuItem.Text = "Difftool remote < - > local";
+            this.diffToolremotelocalStripMenuItem.Click += new System.EventHandler(this.diffToolremotelocalStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
@@ -395,5 +404,6 @@ namespace GitUI
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripTextBox toolStripTextBoxFilter;
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
+        private System.Windows.Forms.ToolStripMenuItem diffToolremotelocalStripMenuItem;
     }
 }
