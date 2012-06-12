@@ -106,7 +106,7 @@ namespace GitUI
         }
         public DialogResult PullAndShowDialogWhenFailed(IWin32Window owner)
         {
-            if (PullChanges())
+            if (PullChanges(owner))
                 return DialogResult.OK;
             else
                 return ShowDialog(owner);
@@ -180,7 +180,7 @@ namespace GitUI
 
         private void PullClick(object sender, EventArgs e)
         {
-            if (PullChanges())
+            if (PullChanges(this))
             {
                 DialogResult = DialogResult.OK;
                 Close();
@@ -193,7 +193,7 @@ namespace GitUI
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
         }
 
-        public bool PullChanges()
+        public bool PullChanges(IWin32Window owner)
         {
             if (!ShouldPullChanges())
                 return false;
@@ -209,12 +209,12 @@ namespace GitUI
 
             ScriptManager.RunEventScripts(ScriptEvent.BeforePull);
 
-            var stashed = CalculateStashedValue();
+            var stashed = CalculateStashedValue(owner);
 
             FormProcess process = CreateFormProcess(source);
-            ShowProcessDialogBox(source, process);
+            ShowProcessDialogBox(owner, source, process);
 
-            return EvaluateProcessDialogResults(process, stashed);
+            return EvaluateProcessDialogResults(owner, process, stashed);
         }
 
         private bool ShouldPullChanges()
@@ -257,7 +257,7 @@ namespace GitUI
             return true;
         }
 
-        private bool EvaluateProcessDialogResults(FormProcess process, bool stashed)
+        private bool EvaluateProcessDialogResults(IWin32Window owner, FormProcess process, bool stashed)
         {
             try
             {
@@ -269,12 +269,12 @@ namespace GitUI
                 if (stashed)
                 {
                     bool messageBoxResult =
-                        MessageBox.Show(this, _applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text,
+                        MessageBox.Show(owner, _applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text,
                                         MessageBoxButtons.YesNo) == DialogResult.Yes;
                     if (ShouldStashPop(messageBoxResult, process, true))
                     {
-                        new FormProcess("stash pop").ShowDialog(this);
-                        MergeConflictHandler.HandleMergeConflicts(this);
+                        new FormProcess("stash pop").ShowDialog(owner);
+                        MergeConflictHandler.HandleMergeConflicts(owner);
                     }
                 }
 
@@ -322,22 +322,22 @@ namespace GitUI
             return false;
         }
 
-        private void ShowProcessDialogBox(string source, FormProcess process)
+        private void ShowProcessDialogBox(IWin32Window owner, string source, FormProcess process)
         {
             if (process == null)
                 return;
             if (!PullAll())
                 process.Remote = source;
-            process.ShowDialog(this);
+            process.ShowDialog(owner);
             ErrorOccurred = process.ErrorOccurred();
         }
 
-        private bool CalculateStashedValue()
+        private bool CalculateStashedValue(IWin32Window owner)
         {
             if (!Fetch.Checked && AutoStash.Checked &&
                 Settings.Module.GitStatus(UntrackedFilesMode.No, IgnoreSubmodulesMode.Default).Count > 0)
             {
-                GitUICommands.Instance.Stash(this);
+                GitUICommands.Instance.Stash(owner);
                 return true;
             }
             return false;
