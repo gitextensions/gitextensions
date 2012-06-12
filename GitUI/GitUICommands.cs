@@ -1121,7 +1121,7 @@ namespace GitUI
                 return false;
 
             var form = new FormBrowse(filter);
-            form.ShowDialog();
+            form.ShowDialog(owner);
 
             InvokeEvent(owner, PostBrowse);
 
