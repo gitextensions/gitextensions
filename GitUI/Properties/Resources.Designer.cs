@@ -809,6 +809,13 @@ namespace GitUI.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+
+        public static System.Drawing.Bitmap PullFetchAll {
+            get {
+                object obj = ResourceManager.GetObject("PullFetchAll", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
         
         public static System.Drawing.Bitmap PullMerge {
             get {

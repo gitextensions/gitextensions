@@ -428,7 +428,8 @@ namespace GitCommands
             None,
             Merge,
             Rebase,
-            Fetch
+            Fetch,
+            FetchAll
         }
 
         public static PullAction PullMerge
@@ -448,6 +449,15 @@ namespace GitCommands
             get { return GetEnum<PullAction>("LastPullAction_" + WorkingDir, PullAction.None); }
             set { SetEnum<PullAction>("LastPullAction_" + WorkingDir, value); }
         }
+
+        public static void LastPullActionToPullMerge()
+        {
+            if (LastPullAction == PullAction.FetchAll)
+                PullMerge = PullAction.Fetch;
+            else if (LastPullAction != PullAction.None)
+                PullMerge = LastPullAction;
+        }
+
 
         private static string _smtp;
         public static string Smtp
