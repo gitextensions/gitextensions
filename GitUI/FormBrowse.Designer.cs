@@ -204,6 +204,7 @@ namespace GitUI
             this.menuStrip1 = new GitUI.MenuStripEx();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.fetchAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolPanel.Panel1.SuspendLayout();
             this.toolPanel.Panel2.SuspendLayout();
             this.toolPanel.SuspendLayout();
@@ -401,6 +402,7 @@ namespace GitUI
             this.fetchToolStripMenuItem,
             this.toolStripSeparator14,
             this.pullToolStripMenuItem1,
+            this.fetchAllToolStripMenuItem,
             this.dontSetAsDefaultToolStripMenuItem});
             this.toolStripButtonPull.Image = global::GitUI.Properties.Resources._4;
             this.toolStripButtonPull.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -1703,6 +1705,14 @@ namespace GitUI
             this.menuStrip1.Size = new System.Drawing.Size(923, 24);
             this.menuStrip1.TabIndex = 3;
             // 
+            // fetchAllToolStripMenuItem
+            // 
+            this.fetchAllToolStripMenuItem.Image = global::GitUI.Properties.Resources.PullFetchAll;
+            this.fetchAllToolStripMenuItem.Name = "fetchAllToolStripMenuItem";
+            this.fetchAllToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.fetchAllToolStripMenuItem.Text = "Fetch all";
+            this.fetchAllToolStripMenuItem.Click += new System.EventHandler(this.fetchAllToolStripMenuItem_Click);
+            // 
             // FormBrowse
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1919,6 +1929,7 @@ namespace GitUI
         private ToolStripMenuItem fetchToolStripMenuItem;
         private ToolStripMenuItem pullToolStripMenuItem1;
         private ToolStripSeparator toolStripSeparator14;
-        private ToolStripMenuItem dontSetAsDefaultToolStripMenuItem;        
+        private ToolStripMenuItem dontSetAsDefaultToolStripMenuItem;
+        private ToolStripMenuItem fetchAllToolStripMenuItem;        
     }
 }
