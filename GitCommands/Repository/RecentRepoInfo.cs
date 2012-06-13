@@ -211,9 +211,9 @@ namespace GitCommands.Repository
                 return r;
             else
                 if (l.EndsWith(Path.DirectorySeparatorChar.ToString()))
-                    return l.Join("", r);
+                    return string.Join("", l, r);
                 else
-                    return l.Join(Path.DirectorySeparatorChar.ToString(), r);
+                    return string.Join(Path.DirectorySeparatorChar.ToString(), l, r);
 
         }
 

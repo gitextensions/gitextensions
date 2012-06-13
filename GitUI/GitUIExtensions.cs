@@ -71,17 +71,17 @@ namespace GitUI
                     {
                         firstRevision = string.Empty;
                         secondRevision = string.Empty;
-                        extraDiffArgs = extraDiffArgs.Join(" ", "--cached");
+                        extraDiffArgs = string.Join(" ", extraDiffArgs, "--cached");
                     }
                     else //rev1 vs index
                     {
                         firstRevision = secondRevision;
                         secondRevision = string.Empty;
-                        extraDiffArgs = extraDiffArgs.Join(" ", "--cached");
+                        extraDiffArgs = string.Join(" ", extraDiffArgs, "--cached");
                     }
                 }
 
-                Debug.Assert(!GitRevision.IsArtificial(firstRevision), firstRevision.Join(" ", secondRevision));
+                Debug.Assert(!GitRevision.IsArtificial(firstRevision), string.Join(" ", firstRevision, secondRevision));
 
                 if (secondRevision == null)
                     secondRevision = firstRevision + "^";
@@ -135,17 +135,17 @@ namespace GitUI
                 {
                     firstRevision = secondRevision;
                     secondRevision = string.Empty;
-                    extraDiffArgs = extraDiffArgs.Join(" ", "--cached");                
+                    extraDiffArgs = string.Join(" ", extraDiffArgs, "--cached");                
                 }
             }
 
-            Debug.Assert(!GitRevision.IsArtificial(firstRevision), firstRevision.Join(" ", secondRevision));                
+            Debug.Assert(!GitRevision.IsArtificial(firstRevision), string.Join(" ", firstRevision,secondRevision));                
 
             if (secondRevision == null)
                 secondRevision = firstRevision + "^";            
 
             PatchApply.Patch patch = Settings.Module.GetSingleDiff(firstRevision, secondRevision, file.Name, file.OldName,
-                                                    diffViewer.GetExtraDiffArguments().Join(" ", extraDiffArgs), diffViewer.Encoding);
+                                                    string.Join(" ", diffViewer.GetExtraDiffArguments(), extraDiffArgs), diffViewer.Encoding);
 
             if (patch == null)
                 return string.Empty;

@@ -1700,7 +1700,7 @@ namespace GitUI
             {
                 string args = force ? "-f" : null;
 
-                var command = "checkout".Join(" ", args).Join(" ", string.Format("\"{0}\"", toolStripItem.Text));
+                var command = string.Join(" ", "checkout", args, string.Format("\"{0}\"", toolStripItem.Text));
                 var form = new FormProcess(command);
                 form.ShowDialog(this);
                 needRefresh = true;
@@ -1781,7 +1781,7 @@ namespace GitUI
             if (!GitUICommands.Instance.CheckForDirtyDir(this, out needRefresh, out force))
             {
                 string args = force ? "-f" : null;
-                string cmd = "checkout".Join(" ", args).Join(" ", string.Format("\"{0}\"", GetRevision(LastRow).Guid));
+                string cmd = string.Join(" ", "checkout", args, string.Format("\"{0}\"", GetRevision(LastRow).Guid));
                 new FormProcess(cmd).ShowDialog(this);
                 needRefresh = true;
             }
