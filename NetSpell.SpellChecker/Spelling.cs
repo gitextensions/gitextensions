@@ -236,7 +236,7 @@ namespace NetSpell.SpellChecker
 			_words = _wordEx.Matches(_text.ToString());
 			
 			// remark html
-			this.MarkHtml();
+			MarkHtml();
 		}
 
 		/// <summary>
@@ -266,7 +266,7 @@ namespace NetSpell.SpellChecker
 			}
 			if(_ignoreHtml)
 			{
-				int startIndex = _words[this.WordIndex].Index;
+                int startIndex = GetWordIndex();
 				
 				foreach (Match item in _htmlTags) 
 				{
@@ -278,6 +278,11 @@ namespace NetSpell.SpellChecker
 			}
 			return true;
 		}
+
+        private int GetWordIndex()
+        {
+            return _words[WordIndex].Index;
+        }
 
 		private void Initialize()
 		{
@@ -350,7 +355,7 @@ namespace NetSpell.SpellChecker
 					StringBuilder tempWord = new StringBuilder(CurrentWord);
 					tempWord.Remove(i, 1);
 
-					if (this.TestWord(tempWord.ToString())) 
+					if (TestWord(tempWord.ToString())) 
 					{
 						Word ws = new Word();
 						ws.Text = tempWord.ToString().ToLower(CultureInfo.CurrentUICulture);
@@ -368,20 +373,20 @@ namespace NetSpell.SpellChecker
 		/// </summary>
         private void ForgotChar(ref List<Word> tempSuggestion)
 		{
-			char[] tryme = this.Dictionary.TryCharacters.ToCharArray();
+			char[] tryme = Dictionary.TryCharacters.ToCharArray();
 				
-			for (int i = 0; i <= this.CurrentWord.Length; i++)
+			for (int i = 0; i <= CurrentWord.Length; i++)
 			{
 				for (int x = 0; x < tryme.Length; x++)
 				{
-					StringBuilder tempWord = new StringBuilder(this.CurrentWord);
+					StringBuilder tempWord = new StringBuilder(CurrentWord);
 				
 					tempWord.Insert(i, tryme[x]);
-					if (this.TestWord(tempWord.ToString())) 
+					if (TestWord(tempWord.ToString())) 
 					{
 						Word ws = new Word();
-						ws.Text = tempWord.ToString().ToLower();
-						ws.EditDistance = this.EditDistance(this.CurrentWord, tempWord.ToString());
+						ws.Text = tempWord.ToString().ToLowerInvariant();
+						ws.EditDistance = EditDistance(CurrentWord, tempWord.ToString());
 				
 						tempSuggestion.Add(ws);
 					}
@@ -395,29 +400,29 @@ namespace NetSpell.SpellChecker
 		/// </summary>
         private void ReplaceChars(ref List<Word> tempSuggestion)
 		{
-			List<string> replacementChars = this.Dictionary.ReplaceCharacters;
+			List<string> replacementChars = Dictionary.ReplaceCharacters;
 			for (int i = 0; i < replacementChars.Count; i++)
 			{
 				int split = ((string)replacementChars[i]).IndexOf(' ');
 				string key = ((string)replacementChars[i]).Substring(0, split);
 				string replacement = ((string)replacementChars[i]).Substring(split+1);
 
-				int pos = this.CurrentWord.IndexOf(key);
+				int pos = CurrentWord.IndexOf(key, StringComparison.InvariantCulture);
 				while (pos > -1)
 				{
-					string tempWord = this.CurrentWord.Substring(0, pos);
+					string tempWord = CurrentWord.Substring(0, pos);
 					tempWord += replacement;
-					tempWord += this.CurrentWord.Substring(pos + key.Length);
+					tempWord += CurrentWord.Substring(pos + key.Length);
 
-					if (this.TestWord(tempWord))
+					if (TestWord(tempWord))
 					{
 						Word ws = new Word();
 						ws.Text = tempWord.ToLower();
-						ws.EditDistance = this.EditDistance(this.CurrentWord, tempWord);
+						ws.EditDistance = EditDistance(CurrentWord, tempWord);
 				
 						tempSuggestion.Add(ws);
 					}
-					pos = this.CurrentWord.IndexOf(key, pos+1);
+					pos = CurrentWord.IndexOf(key, pos+1, StringComparison.InvariantCulture);
 				}
 			}
 		}
@@ -427,20 +432,20 @@ namespace NetSpell.SpellChecker
 		/// </summary>
         private void SwapChar(ref List<Word> tempSuggestion)
 		{
-			for (int i = 0; i < this.CurrentWord.Length - 1; i++)
+			for (int i = 0; i < CurrentWord.Length - 1; i++)
 			{
-				StringBuilder tempWord = new StringBuilder(this.CurrentWord);
+				StringBuilder tempWord = new StringBuilder(CurrentWord);
 				
 				char swap = tempWord[i];
 				tempWord[i] = tempWord[i+1];
 				tempWord[i+1] = swap;
 
-				if (this.TestWord(tempWord.ToString())) 
+				if (TestWord(tempWord.ToString())) 
 				{
 					
 					Word ws = new Word();
 					ws.Text = tempWord.ToString().ToLower();
-					ws.EditDistance = this.EditDistance(this.CurrentWord, tempWord.ToString());
+					ws.EditDistance = EditDistance(CurrentWord, tempWord.ToString());
 				
 					tempSuggestion.Add(ws);
 				}	 
@@ -453,18 +458,18 @@ namespace NetSpell.SpellChecker
 		/// </summary>
         private void TwoWords(ref List<Word> tempSuggestion)
 		{
-			for (int i = 1; i < this.CurrentWord.Length - 1; i++)
+			for (int i = 1; i < CurrentWord.Length - 1; i++)
 			{
-				string firstWord = this.CurrentWord.Substring(0,i);
-				string secondWord = this.CurrentWord.Substring(i);
+				string firstWord = CurrentWord.Substring(0,i);
+				string secondWord = CurrentWord.Substring(i);
 				
-				if (this.TestWord(firstWord) && this.TestWord(secondWord)) 
+				if (TestWord(firstWord) && TestWord(secondWord)) 
 				{
 					string tempWord = firstWord + " " + secondWord;
 					
 					Word ws = new Word();
 					ws.Text = tempWord.ToLower();
-					ws.EditDistance = this.EditDistance(this.CurrentWord, tempWord);
+					ws.EditDistance = EditDistance(CurrentWord, tempWord);
 				
 					tempSuggestion.Add(ws);
 				}	 
@@ -489,7 +494,7 @@ namespace NetSpell.SpellChecker
 				TraceWriter.TraceWarning("No Words to Delete");
 				return;
 			}
-		    int replacedIndex = this.WordIndex;
+		    int replacedIndex = WordIndex;
 
 			int index = _words[replacedIndex].Index;
 			int length = _words[replacedIndex].Length;
@@ -530,8 +535,8 @@ namespace NetSpell.SpellChecker
 			string deletedWord = _text.ToString(index, length);
 			_text.Remove(index, length);
 			
-			this.CalculateWords();
-			this.OnDeletedWord(new SpellingEventArgs(deletedWord, replacedIndex, index));
+			CalculateWords();
+			OnDeletedWord(new SpellingEventArgs(deletedWord, replacedIndex, index));
 		}
 
 		/// <summary>
@@ -628,7 +633,7 @@ namespace NetSpell.SpellChecker
 		/// </remarks>
 		public int EditDistance(string source, string target)
 		{
-			return this.EditDistance(source, target, true);
+			return EditDistance(source, target, true);
 		}
 
 		/// <summary>
@@ -685,15 +690,15 @@ namespace NetSpell.SpellChecker
 		/// </summary>
 		public void IgnoreAllWord()
 		{
-			if (this.CurrentWord.Length == 0)
+			if (CurrentWord.Length == 0)
 			{
 				TraceWriter.TraceWarning("No current word");
 				return;
 			}
 
 			// Add current word to ignore list
-			_ignoreList.Add(this.CurrentWord);
-			this.IgnoreWord();
+			_ignoreList.Add(CurrentWord);
+			IgnoreWord();
 		}
 
 		/// <summary>
@@ -705,16 +710,16 @@ namespace NetSpell.SpellChecker
 		/// </remarks>
 		public void IgnoreWord()
 		{
-			if (_words == null || _words.Count == 0 || this.CurrentWord.Length == 0)
+			if (_words == null || _words.Count == 0 || CurrentWord.Length == 0)
 			{
 				TraceWriter.TraceWarning("No text or current word");
 				return;
 			}
 
-			this.OnIgnoredWord(new SpellingEventArgs(
-				this.CurrentWord, 
-				this.WordIndex, 
-				_words[this.WordIndex].Index));
+			OnIgnoredWord(new SpellingEventArgs(
+				CurrentWord, 
+				WordIndex,
+                GetWordIndex()));
 
 			// increment Word Index to skip over this word
             WordIndex = _wordIndex + 1;
@@ -725,19 +730,19 @@ namespace NetSpell.SpellChecker
 		/// </summary>
 		public void ReplaceAllWord()
 		{
-			if (this.CurrentWord.Length == 0)
+			if (CurrentWord.Length == 0)
 			{
 				TraceWriter.TraceWarning("No current word");
 				return;
 			}
 
 			// if not in list and replacement word has length
-			if(!_replaceList.ContainsKey(this.CurrentWord) && _replacementWord.Length > 0) 
+			if(!_replaceList.ContainsKey(CurrentWord) && _replacementWord.Length > 0) 
 			{
-				_replaceList.Add(this.CurrentWord, _replacementWord);
+				_replaceList.Add(CurrentWord, _replacementWord);
 			}
 			
-			this.ReplaceWord();
+			ReplaceWord();
 		}
 
 		/// <summary>
@@ -750,8 +755,8 @@ namespace NetSpell.SpellChecker
 		/// </param>
 		public void ReplaceAllWord(string replacementWord)
 		{
-			this.ReplacementWord = replacementWord;
-			this.ReplaceAllWord();
+			ReplacementWord = replacementWord;
+			ReplaceAllWord();
 		}
 
 
@@ -760,7 +765,7 @@ namespace NetSpell.SpellChecker
 		/// </summary>
 		public void ReplaceWord()
 		{
-			if (_words == null || _words.Count == 0 || this.CurrentWord.Length == 0)
+			if (_words == null || _words.Count == 0 || CurrentWord.Length == 0)
 			{
 				TraceWriter.TraceWarning("No text or current word");
 				return;
@@ -768,11 +773,11 @@ namespace NetSpell.SpellChecker
 
 			if (_replacementWord.Length == 0) 
 			{
-				this.DeleteWord();
+				DeleteWord();
 				return;
 			}
-			string replacedWord = this.CurrentWord;
-			int replacedIndex = this.WordIndex;
+			string replacedWord = CurrentWord;
+			int replacedIndex = WordIndex;
 
 			int index = _words[replacedIndex].Index;
 			int length = _words[replacedIndex].Length;
@@ -786,9 +791,9 @@ namespace NetSpell.SpellChecker
 			}
 			_text.Insert(index, _replacementWord);
 			
-			this.CalculateWords();
+			CalculateWords();
 
-			this.OnReplacedWord(new ReplaceWordEventArgs(
+			OnReplacedWord(new ReplaceWordEventArgs(
 				_replacementWord, 
 				replacedWord, 
 				replacedIndex, 
@@ -805,8 +810,8 @@ namespace NetSpell.SpellChecker
 		/// </param>
 		public void ReplaceWord(string replacementWord)
 		{
-			this.ReplacementWord = replacementWord;
-			this.ReplaceWord();
+			ReplacementWord = replacementWord;
+			ReplaceWord();
 		}
 
 		/// <summary>
@@ -821,7 +826,7 @@ namespace NetSpell.SpellChecker
 		/// <seealso cref="WordIndex"/>
 		public bool SpellCheck()
 		{
-			return SpellCheck(_wordIndex, this.WordCount-1);
+			return SpellCheck(_wordIndex, WordCount-1);
 		}
 
 		/// <summary>
@@ -871,11 +876,11 @@ namespace NetSpell.SpellChecker
 			if(startWordIndex > endWordIndex || _words == null || _words.Count == 0) 
 			{
 				// make sure end index is not greater then word count
-				this.OnEndOfText(System.EventArgs.Empty);	//raise event
+				OnEndOfText(System.EventArgs.Empty);	//raise event
 				return false;
 			}
 
-			this.Initialize();
+			Initialize();
 
 			string currentWord = "";
 			bool misspelledWord = false;
@@ -883,7 +888,7 @@ namespace NetSpell.SpellChecker
 			for (int i = startWordIndex; i <= endWordIndex; i++) 
 			{
                 WordIndex = i; // saving the current word index
-				currentWord = this.CurrentWord;
+				currentWord = CurrentWord;
 
 				if(CheckString(currentWord)) 
 				{
@@ -891,13 +896,13 @@ namespace NetSpell.SpellChecker
 					{
 						if(_replaceList.ContainsKey(currentWord)) 
 						{
-							this.ReplacementWord = _replaceList[currentWord].ToString();
-							this.ReplaceWord();
+							ReplacementWord = _replaceList[currentWord].ToString();
+							ReplaceWord();
 						}
 						else if(!_ignoreList.Contains(currentWord))
 						{
 							misspelledWord = true;
-							this.OnMisspelledWord(new SpellingEventArgs(currentWord, i, _words[i].Index));		//raise event
+							OnMisspelledWord(new SpellingEventArgs(currentWord, i, _words[i].Index));		//raise event
 							//break;
 						}
 					}
@@ -905,7 +910,7 @@ namespace NetSpell.SpellChecker
 						&& (_words[i-1].Index + _words[i-1].Length + 1) == _words[i].Index)
 					{
 						misspelledWord = true;
-						this.OnDoubledWord(new SpellingEventArgs(currentWord, i, _words[i].Index));		//raise event
+						OnDoubledWord(new SpellingEventArgs(currentWord, i, _words[i].Index));		//raise event
 						//break;
 					}
 				}
@@ -913,7 +918,7 @@ namespace NetSpell.SpellChecker
 
 			if(_wordIndex >= _words.Count-1 && !misspelledWord) 
 			{
-				this.OnEndOfText(System.EventArgs.Empty);	//raise event
+				OnEndOfText(System.EventArgs.Empty);	//raise event
 			}
 		
 			return misspelledWord;
@@ -938,7 +943,7 @@ namespace NetSpell.SpellChecker
 		/// <seealso cref="WordIndex"/>
 		public bool SpellCheck(string text)
 		{
-			this.Text = text;
+			Text = text;
 			return SpellCheck();
 		}
 
@@ -965,8 +970,8 @@ namespace NetSpell.SpellChecker
 		/// <seealso cref="WordIndex"/>
 		public bool SpellCheck(string text, int startWordIndex)
 		{
-			this.WordIndex = startWordIndex;
-			this.Text = text;
+			WordIndex = startWordIndex;
+			Text = text;
 			return SpellCheck();
 		}
 
@@ -990,9 +995,9 @@ namespace NetSpell.SpellChecker
 		/// <seealso cref="TestWord"/>
 		public void Suggest(string word)
 		{
-			this.Text = word;
-			if(!this.TestWord(word))
-				this.Suggest();
+			Text = word;
+			if(!TestWord(word))
+				Suggest();
 		}
 		/// <summary>
 		///     Populates the <see cref="Suggestions"/> property with word suggestions
@@ -1007,13 +1012,13 @@ namespace NetSpell.SpellChecker
 		public void Suggest()
 		{
 			// can't generate suggestions with out current word
-			if (this.CurrentWord.Length == 0)
+			if (CurrentWord.Length == 0)
 			{
 				TraceWriter.TraceWarning("No current word");
 				return;
 			}
 
-			this.Initialize();
+			Initialize();
 
             List<Word> tempSuggestion = new List<Word>();
 
@@ -1045,7 +1050,7 @@ namespace NetSpell.SpellChecker
 							{
 								Word newWord = new Word();
 								newWord.Text = expandedWord;
-								newWord.EditDistance = this.EditDistance(this.CurrentWord, expandedWord);
+								newWord.EditDistance = EditDistance(CurrentWord, expandedWord);
 								tempSuggestion.Add(newWord);
 							}
 						}
@@ -1059,24 +1064,24 @@ namespace NetSpell.SpellChecker
 			{
 				// suggestions for a typical fault of spelling, that
 				// differs with more, than 1 letter from the right form.
-				this.ReplaceChars(ref tempSuggestion);
+				ReplaceChars(ref tempSuggestion);
 
 				// swap out each char one by one and try all the tryme
 				// chars in its place to see if that makes a good word
-				this.BadChar(ref tempSuggestion);
+				BadChar(ref tempSuggestion);
 
 				// try omitting one char of word at a time
-				this.ExtraChar(ref tempSuggestion);
+				ExtraChar(ref tempSuggestion);
 
 				// try inserting a tryme character before every letter
-				this.ForgotChar(ref tempSuggestion);
+				ForgotChar(ref tempSuggestion);
 
 				// split the string into two pieces after every char
 				// if both pieces are good words make them a suggestion
-				this.TwoWords(ref tempSuggestion);
+				TwoWords(ref tempSuggestion);
 
 				// try swapping adjacent chars one by one
-				this.SwapChar(ref tempSuggestion);
+				SwapChar(ref tempSuggestion);
 			}
 
 			TraceWriter.TraceVerbose("Total Suggestiongs Found: {0}" , tempSuggestion.Count);
@@ -1370,8 +1375,8 @@ namespace NetSpell.SpellChecker
 			set 
 			{
 				_text = new StringBuilder(value);
-				this.CalculateWords();
-				this.Reset();
+				CalculateWords();
+				Reset();
 			}
 		}
 
@@ -1386,8 +1391,8 @@ namespace NetSpell.SpellChecker
 			{
 				if (_words == null || _words.Count == 0)
 					return 0;
-	
-				return _words[this.WordIndex].Index;			
+
+                return GetWordIndex();			
 			}
 		}
 
@@ -1420,7 +1425,7 @@ namespace NetSpell.SpellChecker
 					return 0;
 				
 				// make sure word index can't be higher then word count
-				return Math.Max(0, Math.Min(_wordIndex, (this.WordCount-1)));	
+				return Math.Max(0, Math.Min(_wordIndex, (WordCount-1)));	
 			}
 			set 
 			{
@@ -1429,7 +1434,7 @@ namespace NetSpell.SpellChecker
                 if (_words == null || _words.Count == 0)
                     _currentWord = string.Empty;
                 else
-                    _currentWord = _words[this.WordIndex].Value;
+                    _currentWord = _words[WordIndex].Value;
 			}
 		}
 

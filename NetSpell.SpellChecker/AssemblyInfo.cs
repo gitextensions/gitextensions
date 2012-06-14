@@ -51,7 +51,7 @@ namespace NetSpell.SpellChecker
 		/// </summary>
 		public AssemblyInfo(Type type)
 		{
-			this.myType = type;
+			myType = type;
 		}
 
 		/// <summary>
