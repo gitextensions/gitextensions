@@ -865,7 +865,7 @@ namespace GitUI
 
         private void UserNameSet_Click(object sender, EventArgs e)
         {
-            tabControl1.SelectTab("tpGlobalSettings");
+            tabControl1.SelectTab(tpGlobalSettings);
         }
 
         private static string GetMergeTool()
@@ -1021,7 +1021,7 @@ namespace GitUI
                 }
                 else
                 {
-                    tabControl1.SelectTab("tpGlobalSettings");
+                    tabControl1.SelectTab(tpGlobalSettings);
                     return;
                 }
             }
@@ -1035,7 +1035,7 @@ namespace GitUI
                 string.IsNullOrEmpty(Settings.Module.GetGlobalSetting("difftool.kdiff3.path")))
             {
                 MessageBox.Show(this, _kdiff3NotFoundAuto.Text);
-                tabControl1.SelectTab("tpGlobalSettings");
+                tabControl1.SelectTab(tpGlobalSettings);
                 return;
             }
 
@@ -1055,7 +1055,7 @@ namespace GitUI
                 }
                 else
                 {
-                    tabControl1.SelectTab("tpGlobalSettings");
+                    tabControl1.SelectTab(tpGlobalSettings);
                     return;
                 }
             }
@@ -1076,7 +1076,7 @@ namespace GitUI
                 string.IsNullOrEmpty(Settings.Module.GetGlobalSetting("mergetool.kdiff3.path")))
             {
                 MessageBox.Show(this, _kdiff3NotFoundAuto.Text);
-                tabControl1.SelectTab("tpGlobalSettings");
+                tabControl1.SelectTab(tpGlobalSettings);
                 return;
             }
 
@@ -1147,7 +1147,7 @@ namespace GitUI
             {
                 MessageBox.Show(this, _solveGitCommandFailed.Text, _solveGitCommandFailedCaption.Text);
 
-                tabControl1.SelectTab("tpGit");
+                tabControl1.SelectTab(tpGit);
                 return;
             }
 
@@ -1242,7 +1242,7 @@ namespace GitUI
             if (!SolveLinuxToolsDir())
             {
                 MessageBox.Show(this, _linuxToolsShNotFound.Text, _linuxToolsShNotFoundCaption.Text);
-                tabControl1.SelectTab("tpGit");
+                tabControl1.SelectTab(tpGit);
                 return;
             }
 
@@ -1435,7 +1435,7 @@ namespace GitUI
                 if (AutoFindPuttyPaths())
                     MessageBox.Show(this, _puttyFoundAuto.Text, _puttyFoundAutoCaption.Text);
                 else
-                    tabControl1.SelectTab("ssh");
+                    tabControl1.SelectTab(tpSsh);
             }
         }
 
@@ -1604,13 +1604,12 @@ namespace GitUI
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (((TabControl)sender).TabPages[((TabControl)sender).SelectedIndex].Name.ToLower() == "tabpagehotkeys")
-                controlHotkeys.ReloadSettings();
-            else if (((TabControl)sender).TabPages[((TabControl)sender).SelectedIndex].Name.ToLower() == "scriptstab")
+            var tc = (TabControl) sender;
+            if (tc.SelectedTab == tpScriptsTab)
                 populateSplitbutton();
-
-
-
+            else if (tc.SelectedTab == tpHotkeys)
+                controlHotkeys.ReloadSettings();
+            
             if (GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
                 string.IsNullOrEmpty(MergeToolCmd.Text))
                 MergeToolCmd.Enabled = false;
