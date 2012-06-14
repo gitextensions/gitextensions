@@ -33,7 +33,7 @@
             System.Windows.Forms.Panel panel2;
             System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormVerify));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnCloseDialog = new System.Windows.Forms.Button();
             this.btnRestoreSelectedObjects = new System.Windows.Forms.Button();
             this.DeleteAllLostAndFoundTags = new System.Windows.Forms.Button();
@@ -288,6 +288,7 @@
             this.Warnings.RowHeadersVisible = false;
             this.Warnings.RowTemplate.ContextMenuStrip = this.mnuLostObjects;
             this.Warnings.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.Warnings.ShowCellToolTips = false;
             this.Warnings.ShowEditingIcon = false;
             this.Warnings.Size = new System.Drawing.Size(859, 376);
             this.Warnings.TabIndex = 4;
@@ -325,9 +326,9 @@
             // 
             this.columnSubject.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.columnSubject.DataPropertyName = "Subject";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.columnSubject.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.columnSubject.DefaultCellStyle = dataGridViewCellStyle2;
             this.columnSubject.HeaderText = "Subject";
             this.columnSubject.Name = "columnSubject";
             this.columnSubject.ReadOnly = true;

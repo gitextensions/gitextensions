@@ -112,40 +112,37 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="splitContainer2.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="splitContainer2.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
   <data name="splitContainer2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 4, 3, 4</value>
+    <value>2, 3, 2, 3</value>
   </data>
   <data name="_NO_TRANSLATE_Categories.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="_NO_TRANSLATE_Categories.IntegralHeight" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
-  <data name="_NO_TRANSLATE_Categories.ItemHeight" type="System.Int32, mscorlib">
-    <value>16</value>
-  </data>
   <data name="_NO_TRANSLATE_Categories.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 33</value>
+    <value>0, 27</value>
   </data>
   <data name="_NO_TRANSLATE_Categories.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 4, 3, 4</value>
+    <value>2, 3, 2, 3</value>
   </data>
   <data name="_NO_TRANSLATE_Categories.Size" type="System.Drawing.Size, System.Drawing">
-    <value>200, 343</value>
+    <value>149, 278</value>
   </data>
   <data name="_NO_TRANSLATE_Categories.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -154,7 +151,7 @@
     <value>_NO_TRANSLATE_Categories</value>
   </data>
   <data name="&gt;&gt;_NO_TRANSLATE_Categories.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ListBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.ListBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;_NO_TRANSLATE_Categories.Parent" xml:space="preserve">
     <value>splitContainer2.Panel1</value>
@@ -172,13 +169,13 @@
     <value>NoControl</value>
   </data>
   <data name="Remove.Location" type="System.Drawing.Point, System.Drawing">
-    <value>103, 15</value>
+    <value>77, 12</value>
   </data>
   <data name="Remove.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 4, 3, 4</value>
+    <value>2, 3, 2, 3</value>
   </data>
   <data name="Remove.Size" type="System.Drawing.Size, System.Drawing">
-    <value>90, 28</value>
+    <value>68, 23</value>
   </data>
   <data name="Remove.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -190,7 +187,7 @@
     <value>Remove</value>
   </data>
   <data name="&gt;&gt;Remove.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;Remove.Parent" xml:space="preserve">
     <value>panel1</value>
@@ -208,13 +205,13 @@
     <value>NoControl</value>
   </data>
   <data name="Add.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 15</value>
+    <value>5, 12</value>
   </data>
   <data name="Add.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 4, 3, 4</value>
+    <value>2, 3, 2, 3</value>
   </data>
   <data name="Add.Size" type="System.Drawing.Size, System.Drawing">
-    <value>90, 28</value>
+    <value>68, 23</value>
   </data>
   <data name="Add.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -226,7 +223,7 @@
     <value>Add</value>
   </data>
   <data name="&gt;&gt;Add.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;Add.Parent" xml:space="preserve">
     <value>panel1</value>
@@ -238,10 +235,13 @@
     <value>Bottom</value>
   </data>
   <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 376</value>
+    <value>0, 305</value>
+  </data>
+  <data name="panel1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
   </data>
   <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>200, 56</value>
+    <value>149, 46</value>
   </data>
   <data name="panel1.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -250,7 +250,7 @@
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;panel1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;panel1.Parent" xml:space="preserve">
     <value>splitContainer2.Panel1</value>
@@ -267,8 +267,11 @@
   <data name="CategoriesLabel.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
+  <data name="CategoriesLabel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
+  </data>
   <data name="CategoriesLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>200, 33</value>
+    <value>149, 27</value>
   </data>
   <data name="CategoriesLabel.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -280,7 +283,7 @@
     <value>CategoriesLabel</value>
   </data>
   <data name="&gt;&gt;CategoriesLabel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;CategoriesLabel.Parent" xml:space="preserve">
     <value>splitContainer2.Panel1</value>
@@ -292,7 +295,7 @@
     <value>splitContainer2.Panel1</value>
   </data>
   <data name="&gt;&gt;splitContainer2.Panel1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;splitContainer2.Panel1.Parent" xml:space="preserve">
     <value>splitContainer2</value>
@@ -309,7 +312,7 @@
   <data name="pathDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
     <value>150</value>
   </data>
-  <metadata name="Title.UserAddedColumn" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <metadata name="Title.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <data name="Title.HeaderText" xml:space="preserve">
@@ -321,17 +324,17 @@
   <data name="descriptionDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
     <value>Description</value>
   </data>
-  <metadata name="repositoryBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="repositoryBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
   <data name="RepositoriesGrid.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 159</value>
+    <value>2, 129</value>
   </data>
   <data name="RepositoriesGrid.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 4, 3, 4</value>
+    <value>2, 3, 2, 3</value>
   </data>
   <data name="RepositoriesGrid.Size" type="System.Drawing.Size, System.Drawing">
-    <value>544, 268</value>
+    <value>409, 218</value>
   </data>
   <data name="RepositoriesGrid.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -340,7 +343,7 @@
     <value>RepositoriesGrid</value>
   </data>
   <data name="&gt;&gt;RepositoriesGrid.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;RepositoriesGrid.Parent" xml:space="preserve">
     <value>splitContainer2.Panel2</value>
@@ -355,13 +358,13 @@
     <value>NoControl</value>
   </data>
   <data name="RepositoriesType.Location" type="System.Drawing.Point, System.Drawing">
-    <value>144, 83</value>
+    <value>108, 67</value>
   </data>
   <data name="RepositoriesType.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 4, 3, 4</value>
+    <value>2, 3, 2, 3</value>
   </data>
   <data name="RepositoriesType.Size" type="System.Drawing.Size, System.Drawing">
-    <value>108, 21</value>
+    <value>83, 17</value>
   </data>
   <data name="RepositoriesType.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -373,7 +376,7 @@
     <value>RepositoriesType</value>
   </data>
   <data name="&gt;&gt;RepositoriesType.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;RepositoriesType.Parent" xml:space="preserve">
     <value>splitContainer2.Panel2</value>
@@ -385,13 +388,13 @@
     <value>Top, Left, Right</value>
   </data>
   <data name="_NO_TRANSLATE_RssFeed.Location" type="System.Drawing.Point, System.Drawing">
-    <value>144, 119</value>
+    <value>108, 97</value>
   </data>
   <data name="_NO_TRANSLATE_RssFeed.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 5, 3, 5</value>
+    <value>2, 3, 2, 3</value>
   </data>
   <data name="_NO_TRANSLATE_RssFeed.Size" type="System.Drawing.Size, System.Drawing">
-    <value>402, 22</value>
+    <value>303, 19</value>
   </data>
   <data name="_NO_TRANSLATE_RssFeed.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
@@ -400,7 +403,7 @@
     <value>_NO_TRANSLATE_RssFeed</value>
   </data>
   <data name="&gt;&gt;_NO_TRANSLATE_RssFeed.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;_NO_TRANSLATE_RssFeed.Parent" xml:space="preserve">
     <value>splitContainer2.Panel2</value>
@@ -415,10 +418,13 @@
     <value>NoControl</value>
   </data>
   <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 122</value>
+    <value>8, 99</value>
+  </data>
+  <data name="label3.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
   </data>
   <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>68, 17</value>
+    <value>53, 13</value>
   </data>
   <data name="label3.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -430,7 +436,7 @@
     <value>label3</value>
   </data>
   <data name="&gt;&gt;label3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label3.Parent" xml:space="preserve">
     <value>splitContainer2.Panel2</value>
@@ -445,13 +451,13 @@
     <value>NoControl</value>
   </data>
   <data name="RssFeedType.Location" type="System.Drawing.Point, System.Drawing">
-    <value>144, 48</value>
+    <value>108, 39</value>
   </data>
   <data name="RssFeedType.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 4, 3, 4</value>
+    <value>2, 3, 2, 3</value>
   </data>
   <data name="RssFeedType.Size" type="System.Drawing.Size, System.Drawing">
-    <value>93, 21</value>
+    <value>74, 17</value>
   </data>
   <data name="RssFeedType.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -463,7 +469,7 @@
     <value>RssFeedType</value>
   </data>
   <data name="&gt;&gt;RssFeedType.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;RssFeedType.Parent" xml:space="preserve">
     <value>splitContainer2.Panel2</value>
@@ -478,10 +484,13 @@
     <value>NoControl</value>
   </data>
   <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 50</value>
+    <value>8, 41</value>
+  </data>
+  <data name="label2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>40, 17</value>
+    <value>31, 13</value>
   </data>
   <data name="label2.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -493,7 +502,7 @@
     <value>label2</value>
   </data>
   <data name="&gt;&gt;label2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label2.Parent" xml:space="preserve">
     <value>splitContainer2.Panel2</value>
@@ -505,13 +514,13 @@
     <value>Top, Left, Right</value>
   </data>
   <data name="_NO_TRANSLATE_Caption.Location" type="System.Drawing.Point, System.Drawing">
-    <value>144, 7</value>
+    <value>108, 6</value>
   </data>
   <data name="_NO_TRANSLATE_Caption.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 5, 3, 5</value>
+    <value>2, 3, 2, 3</value>
   </data>
   <data name="_NO_TRANSLATE_Caption.Size" type="System.Drawing.Size, System.Drawing">
-    <value>402, 22</value>
+    <value>303, 19</value>
   </data>
   <data name="_NO_TRANSLATE_Caption.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -520,7 +529,7 @@
     <value>_NO_TRANSLATE_Caption</value>
   </data>
   <data name="&gt;&gt;_NO_TRANSLATE_Caption.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;_NO_TRANSLATE_Caption.Parent" xml:space="preserve">
     <value>splitContainer2.Panel2</value>
@@ -535,10 +544,13 @@
     <value>NoControl</value>
   </data>
   <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 10</value>
+    <value>8, 8</value>
+  </data>
+  <data name="label1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>56, 17</value>
+    <value>43, 13</value>
   </data>
   <data name="label1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -550,7 +562,7 @@
     <value>label1</value>
   </data>
   <data name="&gt;&gt;label1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label1.Parent" xml:space="preserve">
     <value>splitContainer2.Panel2</value>
@@ -565,7 +577,7 @@
     <value>splitContainer2.Panel2</value>
   </data>
   <data name="&gt;&gt;splitContainer2.Panel2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;splitContainer2.Panel2.Parent" xml:space="preserve">
     <value>splitContainer2</value>
@@ -574,13 +586,10 @@
     <value>1</value>
   </data>
   <data name="splitContainer2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>758, 432</value>
+    <value>568, 351</value>
   </data>
   <data name="splitContainer2.SplitterDistance" type="System.Int32, mscorlib">
-    <value>200</value>
-  </data>
-  <data name="splitContainer2.SplitterWidth" type="System.Int32, mscorlib">
-    <value>6</value>
+    <value>149</value>
   </data>
   <data name="splitContainer2.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -589,7 +598,7 @@
     <value>splitContainer2</value>
   </data>
   <data name="&gt;&gt;splitContainer2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;splitContainer2.Parent" xml:space="preserve">
     <value>$this</value>
@@ -597,49 +606,49 @@
   <data name="&gt;&gt;splitContainer2.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>8, 16</value>
+    <value>6, 13</value>
   </data>
   <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 7.8pt</value>
   </data>
   <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 4, 3, 4</value>
+    <value>2, 3, 2, 3</value>
   </data>
   <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
-    <value>758, 432</value>
+    <value>568, 351</value>
   </data>
   <data name="&gt;&gt;pathDataGridViewTextBoxColumn.Name" xml:space="preserve">
     <value>pathDataGridViewTextBoxColumn</value>
   </data>
   <data name="&gt;&gt;pathDataGridViewTextBoxColumn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;Title.Name" xml:space="preserve">
     <value>Title</value>
   </data>
   <data name="&gt;&gt;Title.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;descriptionDataGridViewTextBoxColumn.Name" xml:space="preserve">
     <value>descriptionDataGridViewTextBoxColumn</value>
   </data>
   <data name="&gt;&gt;descriptionDataGridViewTextBoxColumn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;repositoryBindingSource.Name" xml:space="preserve">
     <value>repositoryBindingSource</value>
   </data>
   <data name="&gt;&gt;repositoryBindingSource.Type" xml:space="preserve">
-    <value>System.Windows.Forms.BindingSource, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.BindingSource, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>DashboardEditor</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>GitUI.GitExtensionsControl, GitUI, Version=2.26.0.0, Culture=neutral, PublicKeyToken=null</value>
+    <value>GitUI.GitExtensionsControl, GitUI, Version=2.33.0.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
 </root>

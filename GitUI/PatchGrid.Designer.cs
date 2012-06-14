@@ -30,12 +30,12 @@
         {
             this.components = new System.ComponentModel.Container();
             this.Patches = new System.Windows.Forms.DataGridView();
-            this.patchFileBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.FileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.subjectDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.authorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.patchFileBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.Patches)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.patchFileBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -60,14 +60,10 @@
             this.Patches.ReadOnly = true;
             this.Patches.RowHeadersVisible = false;
             this.Patches.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.Patches.Size = new System.Drawing.Size(675, 406);
+            this.Patches.ShowCellToolTips = false;
+            this.Patches.Size = new System.Drawing.Size(787, 468);
             this.Patches.TabIndex = 0;
             this.Patches.DoubleClick += new System.EventHandler(this.Patches_DoubleClick);
-            this.Patches.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(dataGridView1_CellContentClick);
-            // 
-            // patchFileBindingSource
-            // 
-            this.patchFileBindingSource.DataSource = typeof(PatchApply.PatchFile);
             // 
             // FileName
             // 
@@ -112,13 +108,17 @@
             this.Status.ReadOnly = true;
             this.Status.Width = 80;
             // 
+            // patchFileBindingSource
+            // 
+            this.patchFileBindingSource.DataSource = typeof(PatchApply.PatchFile);
+            // 
             // PatchGrid
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.Patches);
             this.Name = "PatchGrid";
-            this.Size = new System.Drawing.Size(675, 406);
+            this.Size = new System.Drawing.Size(787, 468);
             this.Load += new System.EventHandler(this.PatchGrid_Load);
             ((System.ComponentModel.ISupportInitialize)(this.Patches)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.patchFileBindingSource)).EndInit();
