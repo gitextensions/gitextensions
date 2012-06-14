@@ -14,17 +14,18 @@ namespace GitCommands
 {
     public static class Settings
     {
-        //Constants
-        public const string GitExtensionsVersionString = "2.33";
-        public const int GitExtensionsVersionInt = 233;
-
         //semi-constants
+        public static readonly string GitExtensionsVersionString;
+        public static readonly int GitExtensionsVersionInt;
         public static readonly char PathSeparator = '\\';
         public static readonly char PathSeparatorWrong = '/';
 
         private static readonly Dictionary<String, object> byNameMap = new Dictionary<String, object>();
         static Settings()
         {
+            Version version = Assembly.GetCallingAssembly().GetName().Version;
+            GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
+            GitExtensionsVersionInt = version.Major * 100 + (version.Minor < 100 ? version.Minor : 99);
             if (!RunningOnWindows())
             {
                 PathSeparator = '/';
