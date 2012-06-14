@@ -28,8 +28,8 @@ namespace NetSpell.SpellChecker
 		private Regex _htmlRegex = new Regex(@"</[c-g\d]+>|</[i-o\d]+>|</[a\d]+>|</[q-z\d]+>|<[cg]+[^>]*>|<[i-o]+[^>]*>|<[q-z]+[^>]*>|<[a]+[^>]*>|<(\[^\]*\|'[^']*'|[^'\>])*>", RegexOptions.IgnoreCase & RegexOptions.Compiled);
 		private MatchCollection _htmlTags;
 		private Regex _letterRegex = new Regex(@"\D", RegexOptions.Compiled);
-		private Regex _upperRegex = new Regex(@"[^A-Z]", RegexOptions.Compiled);
-        private Regex _wordEx = new Regex(@"\b\w+\b", RegexOptions.Compiled);
+        private Regex _upperRegex = new Regex(@"[^\p{Lu}]", RegexOptions.Compiled); // @"[^A-Z]
+        private Regex _wordEx = new Regex(@"\b\w+\b", RegexOptions.Compiled); // @"\b[A-Za-z0-9_'À-ÿ]+\b"
 		private MatchCollection _words;
         private SuggestionEnum _suggestionMode = SuggestionEnum.PhoneticNearMiss;
         #endregion
@@ -316,29 +316,58 @@ namespace NetSpell.SpellChecker
 
 		#region ISpell Near Miss Suggetion methods
 
+        private void SuggestWord(string word, List<Word> tempSuggestion)
+        {
+            Word ws = new Word();
+            ws.Text = word;
+            ws.EditDistance = EditDistance(CurrentWord, word);
+            tempSuggestion.Add(ws);
+        }
+
+        /// <summary>
+        ///     suggestions for a typical fault of spelling, that
+        ///		differs with more, than 1 letter from the right form.
+        /// </summary>
+        private void ReplaceChars(List<Word> tempSuggestion)
+        {
+            List<string> replacementChars = Dictionary.ReplaceCharacters;
+            for (int i = 0; i < replacementChars.Count; i++)
+            {
+                int split = ((string)replacementChars[i]).IndexOf(' ');
+                string key = ((string)replacementChars[i]).Substring(0, split);
+                string replacement = ((string)replacementChars[i]).Substring(split + 1);
+
+                int pos = CurrentWord.IndexOf(key, StringComparison.InvariantCulture);
+                while (pos > -1)
+                {
+                    string tempWord = CurrentWord.Substring(0, pos);
+                    tempWord += replacement;
+                    tempWord += CurrentWord.Substring(pos + key.Length);
+
+                    if (FindWord(ref tempWord))
+                        SuggestWord(tempWord, tempSuggestion);
+
+                    pos = CurrentWord.IndexOf(key, pos + 1, StringComparison.InvariantCulture);
+                }
+            }
+        }
+
 		/// <summary>
 		///		swap out each char one by one and try all the tryme
 		///		chars in its place to see if that makes a good word
 		/// </summary>
-        private void BadChar(ref List<Word> tempSuggestion)
+        private void BadChar(List<Word> tempSuggestion)
 		{
-            string currentWordLower = CurrentWord.ToLowerInvariant();
 			for (int i = 0; i < CurrentWord.Length; i++)
 			{
 				StringBuilder tempWord = new StringBuilder(CurrentWord);
 				char[] tryme = Dictionary.TryCharacters.ToCharArray();
 				for (int x = 0; x < tryme.Length; x++)
 				{
-					tempWord[i] = tryme[x];
-                    if (currentWordLower[i] != char.ToLowerInvariant(tryme[x]) && 
-                        TestWord(tempWord.ToString())) 
-					{
-						Word ws = new Word();
-                        ws.Text = tempWord.ToString().ToLowerInvariant();
-						ws.EditDistance = EditDistance(CurrentWord, tempWord.ToString());
-				
-						tempSuggestion.Add(ws);
-					}
+                    tempWord[i] = tryme[x];
+                    string word = tempWord.ToString();
+                    if (FindWord(ref word))
+                        SuggestWord(word, tempSuggestion);
 				}			 
 			}
 		}
@@ -346,7 +375,7 @@ namespace NetSpell.SpellChecker
 		/// <summary>
 		///     try omitting one char of word at a time
 		/// </summary>
-        private void ExtraChar(ref List<Word> tempSuggestion)
+        private void ExtraChar(List<Word> tempSuggestion)
 		{
 			if (CurrentWord.Length > 1) 
 			{
@@ -355,15 +384,9 @@ namespace NetSpell.SpellChecker
 					StringBuilder tempWord = new StringBuilder(CurrentWord);
 					tempWord.Remove(i, 1);
 
-					if (TestWord(tempWord.ToString())) 
-					{
-						Word ws = new Word();
-						ws.Text = tempWord.ToString().ToLower(CultureInfo.CurrentUICulture);
-						ws.EditDistance = EditDistance(CurrentWord, tempWord.ToString());
-				
-						tempSuggestion.Add(ws);
-					}
-								 
+                    string word = tempWord.ToString();
+                    if (FindWord(ref word))
+                        SuggestWord(word, tempSuggestion);
 				}
 			}
 		}
@@ -371,7 +394,7 @@ namespace NetSpell.SpellChecker
 		/// <summary>
 		///     try inserting a tryme character before every letter
 		/// </summary>
-        private void ForgotChar(ref List<Word> tempSuggestion)
+        private void ForgotChar(List<Word> tempSuggestion)
 		{
 			char[] tryme = Dictionary.TryCharacters.ToCharArray();
 				
@@ -380,57 +403,19 @@ namespace NetSpell.SpellChecker
 				for (int x = 0; x < tryme.Length; x++)
 				{
 					StringBuilder tempWord = new StringBuilder(CurrentWord);
-				
-					tempWord.Insert(i, tryme[x]);
-					if (TestWord(tempWord.ToString())) 
-					{
-						Word ws = new Word();
-						ws.Text = tempWord.ToString().ToLowerInvariant();
-						ws.EditDistance = EditDistance(CurrentWord, tempWord.ToString());
-				
-						tempSuggestion.Add(ws);
-					}
+                    tempWord.Insert(i, tryme[x]);
+
+                    string word = tempWord.ToString();
+                    if (FindWord(ref word))
+                        SuggestWord(word, tempSuggestion);
 				}			 
-			}
-		}
-
-		/// <summary>
-		///     suggestions for a typical fault of spelling, that
-		///		differs with more, than 1 letter from the right form.
-		/// </summary>
-        private void ReplaceChars(ref List<Word> tempSuggestion)
-		{
-			List<string> replacementChars = Dictionary.ReplaceCharacters;
-			for (int i = 0; i < replacementChars.Count; i++)
-			{
-				int split = ((string)replacementChars[i]).IndexOf(' ');
-				string key = ((string)replacementChars[i]).Substring(0, split);
-				string replacement = ((string)replacementChars[i]).Substring(split+1);
-
-				int pos = CurrentWord.IndexOf(key, StringComparison.InvariantCulture);
-				while (pos > -1)
-				{
-					string tempWord = CurrentWord.Substring(0, pos);
-					tempWord += replacement;
-					tempWord += CurrentWord.Substring(pos + key.Length);
-
-					if (TestWord(tempWord))
-					{
-						Word ws = new Word();
-						ws.Text = tempWord.ToLower();
-						ws.EditDistance = EditDistance(CurrentWord, tempWord);
-				
-						tempSuggestion.Add(ws);
-					}
-					pos = CurrentWord.IndexOf(key, pos+1, StringComparison.InvariantCulture);
-				}
 			}
 		}
 
 		/// <summary>
 		///     try swapping adjacent chars one by one
 		/// </summary>
-        private void SwapChar(ref List<Word> tempSuggestion)
+        private void SwapChar(List<Word> tempSuggestion)
 		{
 			for (int i = 0; i < CurrentWord.Length - 1; i++)
 			{
@@ -440,15 +425,9 @@ namespace NetSpell.SpellChecker
 				tempWord[i] = tempWord[i+1];
 				tempWord[i+1] = swap;
 
-				if (TestWord(tempWord.ToString())) 
-				{
-					
-					Word ws = new Word();
-					ws.Text = tempWord.ToString().ToLower();
-					ws.EditDistance = EditDistance(CurrentWord, tempWord.ToString());
-				
-					tempSuggestion.Add(ws);
-				}	 
+                string word = tempWord.ToString();
+                if (FindWord(ref word))
+                    SuggestWord(word, tempSuggestion); 
 			}
 		}
 		
@@ -456,22 +435,17 @@ namespace NetSpell.SpellChecker
 		///     split the string into two pieces after every char
 		///		if both pieces are good words make them a suggestion
 		/// </summary>
-        private void TwoWords(ref List<Word> tempSuggestion)
+        private void TwoWords(List<Word> tempSuggestion)
 		{
 			for (int i = 1; i < CurrentWord.Length - 1; i++)
 			{
 				string firstWord = CurrentWord.Substring(0,i);
-				string secondWord = CurrentWord.Substring(i);
-				
-				if (TestWord(firstWord) && TestWord(secondWord)) 
-				{
-					string tempWord = firstWord + " " + secondWord;
-					
-					Word ws = new Word();
-					ws.Text = tempWord.ToLower();
-					ws.EditDistance = EditDistance(CurrentWord, tempWord);
-				
-					tempSuggestion.Add(ws);
+                string secondWord = CurrentWord.Substring(i);
+
+                if (FindWord(ref firstWord) && FindWord(ref secondWord))
+                {
+                    string tempWord = firstWord + " " + secondWord;
+                    SuggestWord(tempWord, tempSuggestion);
 				}	 
 			}
 		}
@@ -892,7 +866,7 @@ namespace NetSpell.SpellChecker
 
 				if(CheckString(currentWord)) 
 				{
-					if(!TestWord(currentWord)) 
+					if(!TestWord()) 
 					{
 						if(_replaceList.ContainsKey(currentWord)) 
 						{
@@ -999,6 +973,7 @@ namespace NetSpell.SpellChecker
 			if(!TestWord(word))
 				Suggest();
 		}
+
 		/// <summary>
 		///     Populates the <see cref="Suggestions"/> property with word suggestions
 		///     for the <see cref="CurrentWord"/>
@@ -1047,12 +1022,7 @@ namespace NetSpell.SpellChecker
 							List<string> words = _dictionary.ExpandWord(word);
 							// add expanded words
 							foreach (string expandedWord in words)
-							{
-								Word newWord = new Word();
-								newWord.Text = expandedWord;
-								newWord.EditDistance = EditDistance(CurrentWord, expandedWord);
-								tempSuggestion.Add(newWord);
-							}
+                                SuggestWord(expandedWord, tempSuggestion);
 						}
 					}
 				}
@@ -1064,24 +1034,24 @@ namespace NetSpell.SpellChecker
 			{
 				// suggestions for a typical fault of spelling, that
 				// differs with more, than 1 letter from the right form.
-				ReplaceChars(ref tempSuggestion);
+				ReplaceChars(tempSuggestion);
 
 				// swap out each char one by one and try all the tryme
 				// chars in its place to see if that makes a good word
-				BadChar(ref tempSuggestion);
+				BadChar(tempSuggestion);
 
 				// try omitting one char of word at a time
-				ExtraChar(ref tempSuggestion);
+				ExtraChar(tempSuggestion);
 
 				// try inserting a tryme character before every letter
-				ForgotChar(ref tempSuggestion);
+				ForgotChar(tempSuggestion);
 
 				// split the string into two pieces after every char
 				// if both pieces are good words make them a suggestion
-				TwoWords(ref tempSuggestion);
+				TwoWords(tempSuggestion);
 
 				// try swapping adjacent chars one by one
-				SwapChar(ref tempSuggestion);
+				SwapChar(tempSuggestion);
 			}
 
 			TraceWriter.TraceVerbose("Total Suggestiongs Found: {0}" , tempSuggestion.Count);
@@ -1091,7 +1061,7 @@ namespace NetSpell.SpellChecker
 
 			for (int i = 0; i < tempSuggestion.Count; i++)
 			{
-				string word = ((Word)tempSuggestion[i]).Text;
+				string word = tempSuggestion[i].Text;
 				// looking for duplicates
 				if (!_suggestions.Contains(word))
 				{
@@ -1115,32 +1085,56 @@ namespace NetSpell.SpellChecker
         /// </returns>
         public bool TestWord()
         {
-            Initialize();
-
-            TraceWriter.TraceVerbose("Testing Word: {0}", CurrentWord);
-
-            return Dictionary.Contains(CurrentWord) || Dictionary.Contains(CurrentWord.ToLower());
+            return TestWord(CurrentWord);
         }
 
-		/// <summary>
-		///     Checks to see if the word is in the dictionary
-		/// </summary>
-		/// <param name="word" type="string">
-		///     <para>
-		///         The word to check
-		///     </para>
-		/// </param>
-		/// <returns>
-		///     Returns true if word is found in dictionary
-		/// </returns>
-		public bool TestWord(string word)
-		{
-			Initialize();
+        /// <summary>
+        ///     Checks to see if the word is in the dictionary
+        /// </summary>
+        /// <param name="word" type="string">
+        ///     <para>
+        ///         The word to check
+        ///     </para>
+        /// </param>
+        /// <returns>
+        ///     Returns true if word is found in dictionary
+        /// </returns>
+        private bool TestWord(string word)
+        {
+            Initialize();
 
-			TraceWriter.TraceVerbose("Testing Word: {0}" , word);
+            TraceWriter.TraceVerbose("Testing Word: {0}", word);
 
-		    return Dictionary.Contains(word) || Dictionary.Contains(word.ToLower());
-		}
+            return Dictionary.Contains(word) || Dictionary.Contains(word.ToLower());
+        }
+
+        /// <summary>
+        ///     Checks to see if the word is in the dictionary
+        /// </summary>
+        /// <param name="word" type="string">
+        ///     <para>
+        ///         The word to check
+        ///     </para>
+        /// </param>
+        /// <returns>
+        ///     Returns true if word is found in dictionary
+        /// </returns>
+        public bool FindWord(ref string word)
+        {
+            Initialize();
+
+            TraceWriter.TraceVerbose("Find Word: {0}", word);
+
+            if (Dictionary.Contains(word))
+                return true;
+            string wordLower = word.ToLowerInvariant();
+            if (Dictionary.Contains(wordLower))
+            {
+                word = wordLower;
+                return true;
+            }
+            return false;
+        }
 
 		#endregion
 

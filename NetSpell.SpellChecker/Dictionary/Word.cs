@@ -8,7 +8,7 @@ namespace NetSpell.SpellChecker.Dictionary
 	public sealed class Word  : IComparable<Word>
 	{
 		private string _AffixKeys = "";
-		private int _EditDistance;
+		private int _editDistance;
 		private int _height;
 		private int _index;
 		private string _PhoneticCode = "";
@@ -122,7 +122,7 @@ namespace NetSpell.SpellChecker.Dictionary
 		internal Word(string text, int editDistance)
 		{
 			_text = text;
-			_EditDistance = editDistance;
+			_editDistance = editDistance;
 		}
 
 		/// <summary>
@@ -133,7 +133,7 @@ namespace NetSpell.SpellChecker.Dictionary
 		/// </remarks>
         public int CompareTo(Word word)
         {
-            int result = EditDistance.CompareTo(word.EditDistance);
+            int result = _editDistance.CompareTo(word._editDistance);
             return result; // * -1; // sorts desc order
         }
 
@@ -182,8 +182,8 @@ namespace NetSpell.SpellChecker.Dictionary
 		/// </summary>
 		internal int EditDistance
 		{
-			get {return _EditDistance;}
-			set {_EditDistance = value;}
+			get {return _editDistance;}
+			set {_editDistance = value;}
 		}
 
 		/// <summary>
