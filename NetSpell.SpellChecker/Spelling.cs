@@ -287,6 +287,7 @@ namespace NetSpell.SpellChecker
 			if(!_dictionary.Initialized)
 				_dictionary.Initialize();
 		}
+
 		/// <summary>
 		///     Calculates the position of html tags in the Text property
 		/// </summary>
@@ -301,7 +302,7 @@ namespace NetSpell.SpellChecker
 		/// </summary>
 		private void Reset()
 		{
-			_wordIndex = 0; // reset word index
+            WordIndex = 0; // reset word index
 			_replacementWord = "";
 			_suggestions.Clear();
 		}
@@ -316,18 +317,20 @@ namespace NetSpell.SpellChecker
 		/// </summary>
         private void BadChar(ref List<Word> tempSuggestion)
 		{
-			for (int i = 0; i < this.CurrentWord.Length; i++)
+            string currentWordLower = CurrentWord.ToLowerInvariant();
+			for (int i = 0; i < CurrentWord.Length; i++)
 			{
-				StringBuilder tempWord = new StringBuilder(this.CurrentWord);
-				char[] tryme = this.Dictionary.TryCharacters.ToCharArray();
+				StringBuilder tempWord = new StringBuilder(CurrentWord);
+				char[] tryme = Dictionary.TryCharacters.ToCharArray();
 				for (int x = 0; x < tryme.Length; x++)
 				{
 					tempWord[i] = tryme[x];
-					if (this.TestWord(tempWord.ToString())) 
+                    if (currentWordLower[i] != char.ToLowerInvariant(tryme[x]) && 
+                        TestWord(tempWord.ToString())) 
 					{
 						Word ws = new Word();
-						ws.Text = tempWord.ToString().ToLower();
-						ws.EditDistance = this.EditDistance(this.CurrentWord, tempWord.ToString());
+                        ws.Text = tempWord.ToString().ToLowerInvariant();
+						ws.EditDistance = EditDistance(CurrentWord, tempWord.ToString());
 				
 						tempSuggestion.Add(ws);
 					}
@@ -340,18 +343,18 @@ namespace NetSpell.SpellChecker
 		/// </summary>
         private void ExtraChar(ref List<Word> tempSuggestion)
 		{
-			if (this.CurrentWord.Length > 1) 
+			if (CurrentWord.Length > 1) 
 			{
-				for (int i = 0; i < this.CurrentWord.Length; i++)
+				for (int i = 0; i < CurrentWord.Length; i++)
 				{
-					StringBuilder tempWord = new StringBuilder(this.CurrentWord);
+					StringBuilder tempWord = new StringBuilder(CurrentWord);
 					tempWord.Remove(i, 1);
 
 					if (this.TestWord(tempWord.ToString())) 
 					{
 						Word ws = new Word();
 						ws.Text = tempWord.ToString().ToLower(CultureInfo.CurrentUICulture);
-						ws.EditDistance = this.EditDistance(this.CurrentWord, tempWord.ToString());
+						ws.EditDistance = EditDistance(CurrentWord, tempWord.ToString());
 				
 						tempSuggestion.Add(ws);
 					}
@@ -555,51 +558,50 @@ namespace NetSpell.SpellChecker
 		/// </returns>
 		public int EditDistance(string source, string target, bool positionPriority)
 		{
-		
 			// i.e. 2-D array
-			Array matrix = new int[source.Length+1, target.Length+1];
+			int [,] matrix = new int[source.Length+1, target.Length+1];
 
 			// boundary conditions
-			matrix.SetValue(0, 0, 0); 
+			matrix[0, 0] = 0; 
 
 			for(int j=1; j <= target.Length; j++)
 			{
 				// boundary conditions
-				int val = (int)matrix.GetValue(0,j-1);
-				matrix.SetValue(val+1, 0, j);
+				int val = matrix[0,j-1];
+                matrix[0, j] = val + 1;
 			}
 
 			// outer loop
 			for(int i=1; i <= source.Length; i++)                            
 			{ 
 				// boundary conditions
-				int val = (int)matrix.GetValue(i-1, 0);
-				matrix.SetValue(val+1, i, 0); 
+				int val = matrix[i-1, 0];
+				matrix[i, 0] = val+1; 
 
 				// inner loop
 				for(int j=1; j <= target.Length; j++)                         
 				{ 
-					int diag = (int)matrix.GetValue(i-1, j-1);
+					int diag = matrix[i-1, j-1];
 
 					if(source.Substring(i-1, 1) != target.Substring(j-1, 1)) 
-					{
 						diag++;
-					}
 
-					int deletion = (int)matrix.GetValue(i-1, j);
-					int insertion = (int)matrix.GetValue(i, j-1);
-					int match = Math.Min(deletion+1, insertion+1);		
-					matrix.SetValue(Math.Min(diag, match), i, j);
+					int deletion = matrix[i-1, j];
+					int insertion = matrix[i, j-1];
+					int match = Math.Min(deletion+1, insertion+1);
+                    matrix[i, j] = Math.Min(diag, match);
 				}//for j
 			}//for i
 
-			int dist = (int)matrix.GetValue(source.Length, target.Length);
+			int dist = matrix[source.Length, target.Length];
 
 			// extra edit on first and last chars
 			if (positionPriority)
 			{
-				if (source[0] != target[0]) dist++;
-				if (source[source.Length-1] != target[target.Length-1]) dist++;
+				if (char.ToLowerInvariant(source[0]) != char.ToLowerInvariant(target[0]))
+                    dist++;
+				if (char.ToLowerInvariant(source[source.Length-1]) != char.ToLowerInvariant(target[target.Length-1]))
+                    dist++;
 			}
 			return dist;
 		}
@@ -702,8 +704,7 @@ namespace NetSpell.SpellChecker
 		///		spell checking
 		/// </remarks>
 		public void IgnoreWord()
-		{	
-			
+		{
 			if (_words == null || _words.Count == 0 || this.CurrentWord.Length == 0)
 			{
 				TraceWriter.TraceWarning("No text or current word");
@@ -716,7 +717,7 @@ namespace NetSpell.SpellChecker
 				_words[this.WordIndex].Index));
 
 			// increment Word Index to skip over this word
-			_wordIndex++;
+            WordIndex = _wordIndex + 1;
 		}
 
 		/// <summary>
@@ -841,7 +842,7 @@ namespace NetSpell.SpellChecker
 		/// <seealso cref="WordIndex"/>
 		public bool SpellCheck(int startWordIndex)
 		{
-			_wordIndex = startWordIndex;
+            WordIndex = startWordIndex;
 			return SpellCheck();
 		}
 
@@ -881,7 +882,7 @@ namespace NetSpell.SpellChecker
 
 			for (int i = startWordIndex; i <= endWordIndex; i++) 
 			{
-				_wordIndex = i;		// saving the current word index 
+                WordIndex = i; // saving the current word index
 				currentWord = this.CurrentWord;
 
 				if(CheckString(currentWord)) 
@@ -1152,7 +1153,8 @@ namespace NetSpell.SpellChecker
 		private bool _showDialog = true;
         private List<string> _suggestions = new List<string>();
 		private StringBuilder _text = new StringBuilder();
-		private int _wordIndex;
+        private int _wordIndex;
+        private string _currentWord = string.Empty;
 
 
 		/// <summary>
@@ -1202,13 +1204,7 @@ namespace NetSpell.SpellChecker
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public string CurrentWord
 		{
-			get
-			{
-			    if(_words == null || _words.Count == 0)
-					return string.Empty;
-				else
-			    return _words[this.WordIndex].Value;
-			}
+            get { return _currentWord; }
 		}
 
 		/// <summary>
@@ -1427,8 +1423,13 @@ namespace NetSpell.SpellChecker
 				return Math.Max(0, Math.Min(_wordIndex, (this.WordCount-1)));	
 			}
 			set 
-			{	
-				_wordIndex = value;	
+			{
+                _wordIndex = value;
+
+                if (_words == null || _words.Count == 0)
+                    _currentWord = string.Empty;
+                else
+                    _currentWord = _words[this.WordIndex].Value;
 			}
 		}
 

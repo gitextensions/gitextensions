@@ -80,7 +80,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <DocumentationFile>
     </DocumentationFile>
-    <DebugSymbols>false</DebugSymbols>
+    <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
     <NoWarn>
@@ -90,7 +90,7 @@
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningLevel>4</WarningLevel>
-    <DebugType>none</DebugType>
+    <DebugType>pdbonly</DebugType>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
@@ -120,12 +120,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Dictionary\Phonetic\PhoneticRule.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Dictionary\Phonetic\PhoneticRuleCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Dictionary\Phonetic\PhoneticRuleEnumerator.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Dictionary\Phonetic\PhoneticUtility.cs">
