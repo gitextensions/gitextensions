@@ -3,7 +3,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
 	/// <summary>
 	/// Summary description for AffixUtility.
 	/// </summary>
-	public sealed class AffixUtility
+	public static class AffixUtility
 	{
 	    /// <summary>
 		///     Adds a prefix to a word
