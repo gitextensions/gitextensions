@@ -70,19 +70,21 @@ namespace GitUI
 
         private void selectMultipleBranchesButton_Click(object sender, EventArgs e)
         {
-            FormSelectMultipleBranches formSelectMultipleBranches = new FormSelectMultipleBranches(_branchesToSelect);
-            foreach (GitHead branch in GetSelectedBranches())
-                formSelectMultipleBranches.SelectBranch(branch.Name);
-            formSelectMultipleBranches.ShowDialog(this);
-            string branchesText = string.Empty;
-            foreach (GitHead branch in formSelectMultipleBranches.GetSelectedBranches())
+            using (FormSelectMultipleBranches formSelectMultipleBranches = new FormSelectMultipleBranches(_branchesToSelect))
             {
-                if (!string.IsNullOrEmpty(branchesText))
-                    branchesText += " ";
-                branchesText += branch.Name;
-            }
+                foreach (GitHead branch in GetSelectedBranches())
+                    formSelectMultipleBranches.SelectBranch(branch.Name);
+                formSelectMultipleBranches.ShowDialog(this);
+                string branchesText = string.Empty;
+                foreach (GitHead branch in formSelectMultipleBranches.GetSelectedBranches())
+                {
+                    if (!string.IsNullOrEmpty(branchesText))
+                        branchesText += " ";
+                    branchesText += branch.Name;
+                }
 
-            branches.Text = branchesText;
+                branches.Text = branchesText;
+            }
         }
     }
 }

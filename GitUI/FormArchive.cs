@@ -40,12 +40,14 @@ namespace GitUI
             }
             string revision = revisionGrid1.GetSelectedRevisions()[0].TreeGuid;
 
-            var saveFileDialog = new SaveFileDialog {Filter = _saveFileDialogFilter.Text + "|*.zip", Title = _saveFileDialogCaption.Text};
-
-            if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
+            using (var saveFileDialog = new SaveFileDialog { Filter = _saveFileDialogFilter.Text + "|*.zip", Title = _saveFileDialogCaption.Text })
             {
-                new FormProcess("archive --format=zip " + revision + " --output \"" + saveFileDialog.FileName + "\"").ShowDialog(this);
-                Close();
+
+                if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    new FormProcess("archive --format=zip " + revision + " --output \"" + saveFileDialog.FileName + "\"").ShowDialog(this);
+                    Close();
+                }
             }
         }
     }

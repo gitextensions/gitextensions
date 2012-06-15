@@ -76,9 +76,11 @@ namespace GitUI
 
         private void _NO_TRANSLATE_thanksToTicker_Click(object sender, EventArgs e)
         {
-            FormContributors formContributors = new FormContributors();
-            formContributors.LoadContributors(coders, translators, designers, other);
-            formContributors.ShowDialog(this);
+            using (FormContributors formContributors = new FormContributors())
+            {
+                formContributors.LoadContributors(coders, translators, designers, other);
+                formContributors.ShowDialog(this);
+            }
         }
     }
 }

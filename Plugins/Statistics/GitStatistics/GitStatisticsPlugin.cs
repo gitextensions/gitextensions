@@ -30,27 +30,29 @@ namespace GitStatistics
             if (string.IsNullOrEmpty(gitUiCommands.GitWorkingDir))
                 return false;
 
-            var formGitStatistics =
+            using (var formGitStatistics =
                 new FormGitStatistics(Settings.GetSetting("Code files"))
                     {
                         DirectoriesToIgnore =
                             Settings.GetSetting("Directories to ignore (EndsWith)")
-                    };
-
-            if (Settings.GetSetting("Ignore submodules (true/false)")
-                .Equals("true", StringComparison.InvariantCultureIgnoreCase))
+                    })
             {
-                foreach (var submodule in gitUiCommands.GitCommands.GetSubmodules())
+
+                if (Settings.GetSetting("Ignore submodules (true/false)")
+                    .Equals("true", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    formGitStatistics.DirectoriesToIgnore += ";";
-                    formGitStatistics.DirectoriesToIgnore += gitUiCommands.GitWorkingDir + submodule.LocalPath;
+                    foreach (var submodule in gitUiCommands.GitCommands.GetSubmodules())
+                    {
+                        formGitStatistics.DirectoriesToIgnore += ";";
+                        formGitStatistics.DirectoriesToIgnore += gitUiCommands.GitWorkingDir + submodule.LocalPath;
+                    }
                 }
+
+                formGitStatistics.DirectoriesToIgnore = formGitStatistics.DirectoriesToIgnore.Replace("/", "\\");
+                formGitStatistics.WorkingDir = new DirectoryInfo(gitUiCommands.GitWorkingDir);
+
+                formGitStatistics.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
             }
-
-            formGitStatistics.DirectoriesToIgnore = formGitStatistics.DirectoriesToIgnore.Replace("/", "\\");
-            formGitStatistics.WorkingDir = new DirectoryInfo(gitUiCommands.GitWorkingDir);
-
-            formGitStatistics.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
             return false;
         }
 

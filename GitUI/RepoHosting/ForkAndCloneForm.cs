@@ -201,12 +201,14 @@ namespace GitUI.RepoHosting
         {
             var initialDir = _destinationTB.Text.Length > 0 ? _destinationTB.Text : "C:\\";
 
-            var browseDialog = new FolderBrowserDialog { SelectedPath = initialDir };
-
-            if (browseDialog.ShowDialog(this) == DialogResult.OK)
+            using (var browseDialog = new FolderBrowserDialog { SelectedPath = initialDir })
             {
-                _destinationTB.Text = browseDialog.SelectedPath;
-                _destinationTB_TextChanged(sender, e);
+
+                if (browseDialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    _destinationTB.Text = browseDialog.SelectedPath;
+                    _destinationTB_TextChanged(sender, e);
+                }
             }
         }
 
@@ -268,11 +270,13 @@ namespace GitUI.RepoHosting
             string repoSrc = repo.CloneReadWriteUrl;
 
             string cmd = GitCommandHelpers.CloneCmd(repoSrc, targetDir);
-            var formProcess = new FormProcess(Settings.GitCommand, cmd);
-            formProcess.ShowDialog(this);
+            using (var formProcess = new FormProcess(Settings.GitCommand, cmd))
+            {
+                formProcess.ShowDialog(this);
 
-            if (formProcess.ErrorOccurred())
-                return;
+                if (formProcess.ErrorOccurred())
+                    return;
+            }
 
             Repositories.AddMostRecentRepository(targetDir);
             Settings.WorkingDir = targetDir;
