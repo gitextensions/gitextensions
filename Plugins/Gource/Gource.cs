@@ -96,12 +96,14 @@ namespace Gource
                 }
             }
 
-            var gourceStart = new GourceStart(pathToGource, gitUiCommands.GitWorkingDir,
-                                              Settings.GetSetting("Arguments"));
-            gourceStart.ShowDialog(ownerForm);
+            using (var gourceStart = new GourceStart(pathToGource, gitUiCommands.GitWorkingDir,
+                                              Settings.GetSetting("Arguments")))
+            {
+                gourceStart.ShowDialog(ownerForm);
 
-            Settings.SetSetting("Arguments", gourceStart.GourceArguments);
-            Settings.SetSetting("Path to \"gource\"", gourceStart.PathToGource);
+                Settings.SetSetting("Arguments", gourceStart.GourceArguments);
+                Settings.SetSetting("Path to \"gource\"", gourceStart.PathToGource);
+            }
             return false;
         }
 

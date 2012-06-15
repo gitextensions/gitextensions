@@ -23,7 +23,7 @@ namespace DeleteUnusedBranches
             if (!int.TryParse(Settings.GetSetting("Delete obsolete branches older than (days)"), out days))
                 days = 30;
 
-            new DeleteUnusedBranchesForm(days, gitUiCommands.GitCommands).ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+            using (var frm = new DeleteUnusedBranchesForm(days, gitUiCommands.GitCommands)) frm.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
             return true;
         }
     }

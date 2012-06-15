@@ -25,7 +25,7 @@ namespace GitUI
 
         private readonly TranslationString _applyPatchMsgBox =
             new TranslationString("Apply patch");
-                    
+
         #endregion
 
         public FormApplyPatch()
@@ -107,13 +107,15 @@ namespace GitUI
 
         private string SelectPatchFile(string initialDirectory)
         {
-            var dialog = new OpenFileDialog
+            using (var dialog = new OpenFileDialog
                              {
                                  Filter = _selectPatchFileFilter.Text + "|*.Patch",
                                  InitialDirectory = initialDirectory,
                                  Title = _selectPatchFileCaption.Text
-                             };
-            return (dialog.ShowDialog(this) == DialogResult.OK) ? dialog.FileName : PatchFile.Text;
+                             })
+            {
+                return (dialog.ShowDialog(this) == DialogResult.OK) ? dialog.FileName : PatchFile.Text;
+            }
         }
 
         private void BrowsePatch_Click(object sender, EventArgs e)
@@ -132,20 +134,20 @@ namespace GitUI
             if (PatchFileMode.Checked)
                 if (IgnoreWhitespace.Checked)
                 {
-                    new FormProcess(GitCommandHelpers.PatchCmdIgnoreWhitespace(PatchFile.Text)).ShowDialog(this);
+                    using (var frm = new FormProcess(GitCommandHelpers.PatchCmdIgnoreWhitespace(PatchFile.Text))) frm.ShowDialog(this);
                 }
                 else
                 {
-                    new FormProcess(GitCommandHelpers.PatchCmd(PatchFile.Text)).ShowDialog(this);
+                    using (var frm = new FormProcess(GitCommandHelpers.PatchCmd(PatchFile.Text))) frm.ShowDialog(this);
                 }
             else
                 if (IgnoreWhitespace.Checked)
                 {
-                    new FormProcess(GitCommandHelpers.PatchDirCmdIgnoreWhitespace(PatchDir.Text)).ShowDialog(this);
+                    using (var frm = new FormProcess(GitCommandHelpers.PatchDirCmdIgnoreWhitespace(PatchDir.Text))) frm.ShowDialog(this);
                 }
                 else
                 {
-                    new FormProcess(GitCommandHelpers.PatchDirCmd(PatchDir.Text)).ShowDialog(this);
+                    using (var frm = new FormProcess(GitCommandHelpers.PatchDirCmd(PatchDir.Text))) frm.ShowDialog(this);
                 }
 
             EnableButtons();
@@ -164,7 +166,7 @@ namespace GitUI
         private void Skip_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommandHelpers.SkipCmd()).ShowDialog(this);
+            using (var frm = new FormProcess(GitCommandHelpers.SkipCmd())) frm.ShowDialog(this);
             EnableButtons();
             Cursor.Current = Cursors.Default;
         }
@@ -172,7 +174,7 @@ namespace GitUI
         private void Resolved_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommandHelpers.ResolvedCmd()).ShowDialog(this);
+            using (var frm = new FormProcess(GitCommandHelpers.ResolvedCmd())) frm.ShowDialog(this);
             EnableButtons();
             Cursor.Current = Cursors.Default;
         }
@@ -180,7 +182,7 @@ namespace GitUI
         private void Abort_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommandHelpers.AbortCmd()).ShowDialog(this);
+            using (var frm = new FormProcess(GitCommandHelpers.AbortCmd())) frm.ShowDialog(this);
             EnableButtons();
             Cursor.Current = Cursors.Default;
         }
@@ -205,13 +207,14 @@ namespace GitUI
 
         private void BrowseDir_Click(object sender, EventArgs e)
         {
-            var browseDialog = new FolderBrowserDialog();
-
-            if (browseDialog.ShowDialog(this) == DialogResult.OK)
+            using (var browseDialog = new FolderBrowserDialog())
             {
-                PatchDir.Text = browseDialog.SelectedPath;
-            }
 
+                if (browseDialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    PatchDir.Text = browseDialog.SelectedPath;
+                }
+            }
         }
 
         private void PatchFileMode_CheckedChanged(object sender, EventArgs e)

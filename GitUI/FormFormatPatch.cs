@@ -38,9 +38,11 @@ namespace GitUI
 
         private void Browse_Click(object sender, EventArgs e)
         {
-            var dialog = new FolderBrowserDialog();
-            if (dialog.ShowDialog(this) == DialogResult.OK)
-                OutputPath.Text = dialog.SelectedPath;
+            using (var dialog = new FolderBrowserDialog())
+            {
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                    OutputPath.Text = dialog.SelectedPath;
+            }
         }
 
         private void FormFormatPath_Load(object sender, EventArgs e)

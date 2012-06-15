@@ -56,13 +56,15 @@ namespace GitUI
                 {
                     authorsfile = null;
                 }
-                var fromProcess = new FormProcess(
-                    Settings.GitCommand, GitSvnCommandHelpers.CloneCmd(this._NO_TRANSLATE_svnRepositoryComboBox.Text, dirTo, authorsfile));
-                
-                fromProcess.ShowDialog(this);
+                using (var fromProcess = new FormProcess(
+                    Settings.GitCommand, GitSvnCommandHelpers.CloneCmd(this._NO_TRANSLATE_svnRepositoryComboBox.Text, dirTo, authorsfile)))
+                {
 
-                if (fromProcess.ErrorOccurred() || Settings.Module.InTheMiddleOfPatch())
-                    return;
+                    fromProcess.ShowDialog(this);
+
+                    if (fromProcess.ErrorOccurred() || Settings.Module.InTheMiddleOfPatch())
+                        return;
+                }
                 if (ShowInTaskbar == false && AskIfNewRepositoryShouldBeOpened(dirTo))
                 {
                     Settings.WorkingDir = dirTo;
@@ -91,16 +93,20 @@ namespace GitUI
 
         private void browseButton_Click(object sender, EventArgs e)
         {
-            var dialog = new FolderBrowserDialog { SelectedPath = this._NO_TRANSLATE_destinationComboBox.Text };
-            if (dialog.ShowDialog(this) == DialogResult.OK)
-                this._NO_TRANSLATE_destinationComboBox.Text = dialog.SelectedPath;
+            using (var dialog = new FolderBrowserDialog { SelectedPath = this._NO_TRANSLATE_destinationComboBox.Text })
+            {
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                    this._NO_TRANSLATE_destinationComboBox.Text = dialog.SelectedPath;
+            }
         }
 
         private void authorsFileBrowseButton_Click(object sender, EventArgs e)
         {
-            var dialog = new OpenFileDialog() { InitialDirectory = this._NO_TRANSLATE_destinationComboBox.Text };
-            if (dialog.ShowDialog(this) == DialogResult.OK) 
-                this._NO_TRANSLATE_authorsFileTextBox.Text = dialog.FileName;
+            using (var dialog = new OpenFileDialog() { InitialDirectory = this._NO_TRANSLATE_destinationComboBox.Text })
+            {
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                    this._NO_TRANSLATE_authorsFileTextBox.Text = dialog.FileName;
+            }
         }
 
         private void destinationComboBox_DropDown(object sender, EventArgs e)
