@@ -70,22 +70,26 @@ namespace Gource
 
         private void GourceBrowseClick(object sender, EventArgs e)
         {
-            var fileDialog =
+            using (var fileDialog =
                 new OpenFileDialog
                     {
                         Filter = "Gource (gource.exe)|gource.exe",
                         FileName = GourcePath.Text
-                    };
-            fileDialog.ShowDialog(this);
+                    })
+            {
+                fileDialog.ShowDialog(this);
 
-            GourcePath.Text = fileDialog.FileName;
+                GourcePath.Text = fileDialog.FileName;
+            }
         }
 
         private void WorkingDirBrowseClick(object sender, EventArgs e)
         {
-            var folderDialog = new FolderBrowserDialog {SelectedPath = WorkingDir.Text};
-            folderDialog.ShowDialog(this);
-            WorkingDir.Text = folderDialog.SelectedPath;
+            using (var folderDialog = new FolderBrowserDialog { SelectedPath = WorkingDir.Text })
+            {
+                folderDialog.ShowDialog(this);
+                WorkingDir.Text = folderDialog.SelectedPath;
+            }
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

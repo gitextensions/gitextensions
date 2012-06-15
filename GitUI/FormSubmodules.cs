@@ -32,8 +32,8 @@ namespace GitUI
 
         private void AddSubmoduleClick(object sender, EventArgs e)
         {
-            var formAddSubmodule = new FormAddSubmodule();
-            formAddSubmodule.ShowDialog(this);
+            using (var formAddSubmodule = new FormAddSubmodule())
+                formAddSubmodule.ShowDialog(this);
             Initialize();
         }
 
@@ -81,8 +81,8 @@ namespace GitUI
         private void SynchronizeSubmoduleClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            var process = new FormProcess(GitCommandHelpers.SubmoduleSyncCmd(SubModuleName.Text));
-            process.ShowDialog(this);
+            using (var process = new FormProcess(GitCommandHelpers.SubmoduleSyncCmd(SubModuleName.Text)))
+                process.ShowDialog(this);
             Initialize();
             Cursor.Current = Cursors.Default;
         }
@@ -90,8 +90,8 @@ namespace GitUI
         private void UpdateSubmoduleClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(SubModuleName.Text));
-            process.ShowDialog(this);
+            using (var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(SubModuleName.Text)))
+                process.ShowDialog(this);
             Initialize();
             Cursor.Current = Cursors.Default;
         }

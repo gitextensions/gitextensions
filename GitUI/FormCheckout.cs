@@ -32,11 +32,11 @@ namespace GitUI
                 if (Force.Checked)
                     command += " --force";
 
-                new FormProcess(command).ShowDialog(this);
+                using (var frm = new FormProcess(command)) frm.ShowDialog(this);
 
                 Close();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Trace.WriteLine(ex.Message);
             }

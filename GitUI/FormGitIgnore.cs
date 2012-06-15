@@ -28,7 +28,7 @@ namespace GitUI
         private string _originalGitIgnoreFileContent = string.Empty;
 
         #region default patterns
-		private static readonly string DefaultIgnorePatternsFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GitExtensions/DefaultIgnorePatterns.txt");
+        private static readonly string DefaultIgnorePatternsFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GitExtensions/DefaultIgnorePatterns.txt");
         private static readonly string[] DefaultIgnorePatterns = new[]
         {
             "#ignore thumbnails created by windows",
@@ -151,8 +151,8 @@ namespace GitUI
 
         private void AddDefaultClick(object sender, EventArgs e)
         {
-			var defaultIgnorePatterns = (File.Exists(DefaultIgnorePatternsFile)) ? File.ReadAllLines(DefaultIgnorePatternsFile) : DefaultIgnorePatterns;
-			
+            var defaultIgnorePatterns = (File.Exists(DefaultIgnorePatternsFile)) ? File.ReadAllLines(DefaultIgnorePatternsFile) : DefaultIgnorePatterns;
+
             var currentFileContent = _NO_TRANSLATE_GitIgnoreEdit.GetText();
             var patternsToAdd = defaultIgnorePatterns
                 .Except(currentFileContent.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
@@ -171,7 +171,7 @@ namespace GitUI
         private void AddPattern_Click(object sender, EventArgs e)
         {
             SaveGitIgnore();
-            new FormAddToGitIgnore("*.dll").ShowDialog(this);
+            using (var frm = new FormAddToGitIgnore("*.dll")) frm.ShowDialog(this);
             LoadGitIgnore();
         }
 

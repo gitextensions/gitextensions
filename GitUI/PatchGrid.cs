@@ -28,9 +28,11 @@ namespace GitUI
 
             var patchFile = (PatchFile)Patches.SelectedRows[0].DataBoundItem;
 
-            var viewPatch = new ViewPatch();
-            viewPatch.LoadPatch(patchFile.FullName);
-            viewPatch.ShowDialog(this);
+            using (var viewPatch = new ViewPatch())
+            {
+                viewPatch.LoadPatch(patchFile.FullName);
+                viewPatch.ShowDialog(this);
+            }
         }
     }
 }

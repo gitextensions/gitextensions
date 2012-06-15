@@ -3,7 +3,7 @@ using GitUIPluginInterfaces;
 
 namespace CreateLocalBranches
 {
-	public class CreateLocalBranchesPlugin : IGitPluginForRepository
+    public class CreateLocalBranchesPlugin : IGitPluginForRepository
     {
         public string Description
         {
@@ -18,7 +18,7 @@ namespace CreateLocalBranches
 
         public bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
-            new CreateLocalBranchesForm(gitUiCommands).ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+            using (var frm = new CreateLocalBranchesForm(gitUiCommands)) frm.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
             return true;
         }
     }
