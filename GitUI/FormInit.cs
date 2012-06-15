@@ -76,10 +76,12 @@ namespace GitUI
 
         private void BrowseClick(object sender, EventArgs e)
         {
-            var browseDialog = new FolderBrowserDialog();
+            using (var browseDialog = new FolderBrowserDialog())
+            {
 
-            if (browseDialog.ShowDialog(this) == DialogResult.OK)
-                Directory.Text = browseDialog.SelectedPath;
+                if (browseDialog.ShowDialog(this) == DialogResult.OK)
+                    Directory.Text = browseDialog.SelectedPath;
+            }
         }
     }
 }

@@ -48,9 +48,11 @@ namespace GitUI
         /// <param name="hasNewFiles">Are there new (untracked) files selected?</param>
         public static ResultType ShowResetDialog(IWin32Window owner, bool hasExistingFiles, bool hasNewFiles)
         {
-            FormResetChanges form = new FormResetChanges(hasExistingFiles, hasNewFiles);
-            form.ShowDialog(owner);
-            return form.Result;
+            using (FormResetChanges form = new FormResetChanges(hasExistingFiles, hasNewFiles))
+            {
+                form.ShowDialog(owner);
+                return form.Result;
+            }
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

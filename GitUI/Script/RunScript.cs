@@ -210,14 +210,16 @@ namespace GitUI.Script
                             argument = argument.Replace(option, "");
                         break;
                     case "{UserInput}":
-                        SimplePrompt Prompt = new SimplePrompt();
-                        Prompt.ShowDialog();
-                        argument = argument.Replace(option, Prompt.UserInput);
+                        using (SimplePrompt Prompt = new SimplePrompt())
+                        {
+                            Prompt.ShowDialog();
+                            argument = argument.Replace(option, Prompt.UserInput);
+                        }
                         break;
                 }
             }
 
-            new FormProcess(command, argument).ShowDialog();
+            using (var frm = new FormProcess(command, argument)) frm.ShowDialog();
         }
 
         private static GitRevision CalculateSelectedRevision(RevisionGrid RevisionGrid, List<GitHead> selectedRemoteBranches,
@@ -338,16 +340,20 @@ namespace GitUI.Script
 
         private static string askToSpecify(IEnumerable<GitHead> options, string title)
         {
-            var f = new FormRunScriptSpecify(options, title);
-            f.ShowDialog();
-            return f.ret;
+            using (var f = new FormRunScriptSpecify(options, title))
+            {
+                f.ShowDialog();
+                return f.ret;
+            }
         }
 
         private static string askToSpecify(IEnumerable<string> options, string title)
         {
-            var f = new FormRunScriptSpecify(options, title);
-            f.ShowDialog();
-            return f.ret;
+            using (var f = new FormRunScriptSpecify(options, title))
+            {
+                f.ShowDialog();
+                return f.ret;
+            }
         }
     }
 }
