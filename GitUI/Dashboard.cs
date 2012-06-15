@@ -247,7 +247,7 @@ namespace GitUI
 
         private void TranslateItem_Click(object sender, EventArgs e)
         {
-            new FormTranslate().ShowDialog(this);
+            using (var frm = new FormTranslate()) frm.ShowDialog(this);
         }
 
         private static void GitHubItem_Click(object sender, EventArgs e)
@@ -305,9 +305,11 @@ namespace GitUI
 
         private void openItem_Click(object sender, EventArgs e)
         {
-            var open = new Open();
-            open.ShowDialog(this);
-            OnWorkingDirChanged();
+            using (var open = new Open())
+            {
+                open.ShowDialog(this);
+                OnWorkingDirChanged();
+            }
         }
 
         private void cloneItem_Click(object sender, EventArgs e)
@@ -337,7 +339,7 @@ namespace GitUI
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            new FormDashboardEditor().ShowDialog(this);
+            using (var frm = new FormDashboardEditor()) frm.ShowDialog(this);
             Refresh();
         }
 

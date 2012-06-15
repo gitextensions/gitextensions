@@ -180,7 +180,7 @@ namespace GitUI
                         return;
                 }
             }
-            new FormProcess(String.Format("stash save {0}{1}", arguments, msg)).ShowDialog(this);
+            using (var frm = new FormProcess(String.Format("stash save {0}{1}", arguments, msg))) frm.ShowDialog(this);
             NeedRefresh = true;
             Initialize();
             Cursor.Current = Cursors.Default;
@@ -189,7 +189,7 @@ namespace GitUI
         private void ClearClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(string.Format("stash drop {0}", Stashes.Text)).ShowDialog(this);
+            using (var frm = new FormProcess(string.Format("stash drop {0}", Stashes.Text))) frm.ShowDialog(this);
             NeedRefresh = true;
             Initialize();
             Cursor.Current = Cursors.Default;
@@ -197,7 +197,7 @@ namespace GitUI
 
         private void ApplyClick(object sender, EventArgs e)
         {
-            new FormProcess(string.Format("stash apply {0}", Stashes.Text)).ShowDialog(this);
+            using (var frm = new FormProcess(string.Format("stash apply {0}", Stashes.Text))) frm.ShowDialog(this);
 
             MergeConflictHandler.HandleMergeConflicts(this);
 

@@ -18,7 +18,7 @@ namespace GitUI
 
         private readonly TranslationString _noBranchSelectedText = new TranslationString("Please select a branch");
 
-        private readonly TranslationString _branchUpToDateText = 
+        private readonly TranslationString _branchUpToDateText =
             new TranslationString("Current branch a is up to date." + Environment.NewLine + "Nothing to rebase.");
         private readonly TranslationString _branchUpToDateCaption = new TranslationString("Rebase");
 
@@ -128,7 +128,7 @@ namespace GitUI
         private void ResolvedClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommandHelpers.ContinueRebaseCmd()).ShowDialog(this);
+            using (var frm = new FormProcess(GitCommandHelpers.ContinueRebaseCmd())) frm.ShowDialog(this);
 
             if (!Settings.Module.InTheMiddleOfRebase())
                 Close();
@@ -141,7 +141,7 @@ namespace GitUI
         private void SkipClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommandHelpers.SkipRebaseCmd()).ShowDialog(this);
+            using (var frm = new FormProcess(GitCommandHelpers.SkipRebaseCmd())) frm.ShowDialog(this);
 
             if (!Settings.Module.InTheMiddleOfRebase())
                 Close();
@@ -154,7 +154,7 @@ namespace GitUI
         private void AbortClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommandHelpers.AbortRebaseCmd()).ShowDialog(this);
+            using (var frm = new FormProcess(GitCommandHelpers.AbortRebaseCmd())) frm.ShowDialog(this);
 
             if (!Settings.Module.InTheMiddleOfRebase())
                 Close();
@@ -173,10 +173,12 @@ namespace GitUI
                 return;
             }
 
-            var form = new FormProcess(GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked, chkPreserveMerges.Checked, chkAutosquash.Checked));
-            form.ShowDialog(this);
-            if (form.OutputString.ToString().Trim() == "Current branch a is up to date.")
-                MessageBox.Show(this, _branchUpToDateText.Text, _branchUpToDateCaption.Text);
+            using (var form = new FormProcess(GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked, chkPreserveMerges.Checked, chkAutosquash.Checked)))
+            {
+                form.ShowDialog(this);
+                if (form.OutputString.ToString().Trim() == "Current branch a is up to date.")
+                    MessageBox.Show(this, _branchUpToDateText.Text, _branchUpToDateCaption.Text);
+            }
 
             if (!Settings.Module.InTheMiddleOfConflictedMerge() &&
                 !Settings.Module.InTheMiddleOfRebase() &&

@@ -60,13 +60,15 @@ namespace PatchApply
 
         private string SelectPatchFile(string initialDirectory)
         {
-            var dialog = new OpenFileDialog
+            using (var dialog = new OpenFileDialog
                              {
                                  Filter = _patchFileFilterString.Text + "|*.Patch",
                                  InitialDirectory = initialDirectory,
                                  Title = _patchFileFilterTitle.Text
-                             };
-            return (dialog.ShowDialog(this) == DialogResult.OK) ? dialog.FileName : PatchFileNameEdit.Text;
+                             })
+            {
+                return (dialog.ShowDialog(this) == DialogResult.OK) ? dialog.FileName : PatchFileNameEdit.Text;
+            }
         }
 
         private void BrowsePatch_Click(object sender, EventArgs e)

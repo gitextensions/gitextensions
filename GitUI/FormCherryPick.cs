@@ -48,12 +48,14 @@ namespace GitUI
             if (IsMerge && !autoParent.Checked)
             {
                 GitRevision[] ParentsRevisions = Settings.Module.GetParents(RevisionGrid.GetSelectedRevisions()[0].Guid);
-                var choose = new FormCherryPickMerge(ParentsRevisions);
-                choose.ShowDialog(this);
-                if (choose.OkClicked)
-                    arguments.Add("-m " + (choose.ParentsList.SelectedItems[0].Index + 1));
-                else
-                    formClosed = true;
+                using (var choose = new FormCherryPickMerge(ParentsRevisions))
+                {
+                    choose.ShowDialog(this);
+                    if (choose.OkClicked)
+                        arguments.Add("-m " + (choose.ParentsList.SelectedItems[0].Index + 1));
+                    else
+                        formClosed = true;
+                }
             }
             else if (IsMerge)
                 arguments.Add("-m 1");
