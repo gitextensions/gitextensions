@@ -84,7 +84,7 @@ namespace GitUI.RepoHosting
             _selectHostedRepoCB.Enabled = false;
             ResetAllAndShowLoadingPullRequests();
 
-            AsyncHelpers.DoAsync <List<IPullRequestInformation>>(
+            AsyncHelpers.DoAsync<List<IPullRequestInformation>>(
                hostedRepo.GetPullRequests,
                res => { SetPullRequestsData(res); _selectHostedRepoCB.Enabled = true; },
                ex => MessageBox.Show(this, _strFailedToFetchPullData.Text + ex.Message, _strError.Text)
@@ -185,8 +185,8 @@ namespace GitUI.RepoHosting
             AsyncHelpers.DoAsync(
                 () => _currentPullRequestInfo.Discussion,
                 LoadDiscussion,
-                ex => 
-                { 
+                ex =>
+                {
                     MessageBox.Show(this, _strCouldNotLoadDiscussion.Text + ex.Message, _strError.Text);
                     LoadDiscussion(null);
                 });
@@ -256,11 +256,14 @@ namespace GitUI.RepoHosting
             var localBranchName = string.Format("pr/n{0}_{1}", _currentPullRequestInfo.Id, _currentPullRequestInfo.Owner);
 
             var cmd = string.Format("fetch --no-tags --progress {0} {1}:{2}", _currentPullRequestInfo.HeadRepo.CloneReadOnlyUrl, _currentPullRequestInfo.HeadRef, localBranchName);
-            var formProcess = new FormProcess(Settings.GitCommand, cmd);
-            formProcess.ShowDialog(this);
+            using (var formProcess = new FormProcess(Settings.GitCommand, cmd))
+            {
+                formProcess.ShowDialog(this);
 
-            if (formProcess.ErrorOccurred())
-                return;
+                if (formProcess.ErrorOccurred())
+                    return;
+            }
+
             Close();
         }
 
@@ -294,15 +297,17 @@ namespace GitUI.RepoHosting
             }
 
             var cmd = string.Format("fetch --no-tags --progress {0} {1}:{0}/{1}", remoteName, remoteRef);
-            var formProcess = new FormProcess(Settings.GitCommand, cmd);
-            formProcess.ShowDialog(this);
+            using (var formProcess = new FormProcess(Settings.GitCommand, cmd))
+            {
+                formProcess.ShowDialog(this);
 
-            if (formProcess.ErrorOccurred())
-                return;
+                if (formProcess.ErrorOccurred())
+                    return;
+            }
 
             cmd = string.Format("checkout {0}/{1}", remoteName, remoteRef);
-            formProcess = new FormProcess(Settings.GitCommand, cmd);
-            formProcess.ShowDialog(this);
+            using (var formProcess = new FormProcess(Settings.GitCommand, cmd))
+                formProcess.ShowDialog(this);
 
             Close();
         }

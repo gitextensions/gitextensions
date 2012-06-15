@@ -12,7 +12,7 @@ namespace GitUI
 
         public FormBranch()
         {
-            InitializeComponent(); 
+            InitializeComponent();
             Translate();
         }
 
@@ -28,7 +28,7 @@ namespace GitUI
                 }
 
                 string cmd = GitCommandHelpers.BranchCmd(BName.Text, RevisionGrid.GetSelectedRevisions()[0].Guid, CheckoutAfterCreate.Checked);
-                new FormProcess(cmd).ShowDialog(this);
+                using (var frm = new FormProcess(cmd)) frm.ShowDialog(this);
 
                 Close();
 

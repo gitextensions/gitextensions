@@ -292,21 +292,23 @@ namespace GitUI
                     foreignTranslation.FindOrAddTranslationCategory(translateItem.Category).AddTranslationItem(ti);
                 }
             }
-            
-            var fileDialog =
+
+            using (var fileDialog =
                 new SaveFileDialog
                     {
                         Title = saveAsText.Text,
                         FileName = translations.Text + ".xml",
-                        Filter = saveAsTextFilter.Text + "|*.xml", 
+                        Filter = saveAsTextFilter.Text + "|*.xml",
                         DefaultExt = ".xml",
                         AddExtension = true
-                    };
-
-            if (fileDialog.ShowDialog(this) == DialogResult.OK)
+                    })
             {
-                TranslationSerializer.Serialize(foreignTranslation, fileDialog.FileName);
-                changesMade = false;
+
+                if (fileDialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    TranslationSerializer.Serialize(foreignTranslation, fileDialog.FileName);
+                    changesMade = false;
+                }
             }
         }
 

@@ -31,11 +31,13 @@ namespace GitUI
 
         private void BrowseClick(object sender, EventArgs e)
         {
-            var browseDialog = new FolderBrowserDialog {SelectedPath = _NO_TRANSLATE_Directory.Text};
-
-            if (browseDialog.ShowDialog(this) == DialogResult.OK)
+            using (var browseDialog = new FolderBrowserDialog { SelectedPath = _NO_TRANSLATE_Directory.Text })
             {
-                _NO_TRANSLATE_Directory.Text = browseDialog.SelectedPath;
+
+                if (browseDialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    _NO_TRANSLATE_Directory.Text = browseDialog.SelectedPath;
+                }
             }
         }
 

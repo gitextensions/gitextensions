@@ -235,7 +235,7 @@ namespace GitUI
         }
 
         private void OpenWithDifftoolToolStripMenuItemClick(object sender, EventArgs e)
-        {            
+        {
             FileChanges.OpenWithDifftool(FileName, GitUIExtensions.DiffWithRevisionKind.DiffAsSelected);
         }
 
@@ -251,22 +251,24 @@ namespace GitUI
                     orgFileName = FileName;
 
                 string fullName = Settings.WorkingDir + orgFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
-                
-                var fileDialog = new SaveFileDialog
+
+                using (var fileDialog = new SaveFileDialog
                 {
                     InitialDirectory = Path.GetDirectoryName(fullName),
                     FileName = Path.GetFileName(fullName),
                     DefaultExt = GitCommandHelpers.GetFileExtension(fullName),
                     AddExtension = true
-                };
-                fileDialog.Filter =
-                    "Current format (*." +
-                    fileDialog.DefaultExt + ")|*." +
-                    fileDialog.DefaultExt +
-                    "|All files (*.*)|*.*";
-                if (fileDialog.ShowDialog(this) == DialogResult.OK)
+                })
                 {
-                    Settings.Module.SaveBlobAs(fileDialog.FileName, selectedRows[0].Guid + ":\"" + orgFileName + "\"");
+                    fileDialog.Filter =
+                        "Current format (*." +
+                        fileDialog.DefaultExt + ")|*." +
+                        fileDialog.DefaultExt +
+                        "|All files (*.*)|*.*";
+                    if (fileDialog.ShowDialog(this) == DialogResult.OK)
+                    {
+                        Settings.Module.SaveBlobAs(fileDialog.FileName, selectedRows[0].Guid + ":\"" + orgFileName + "\"");
+                    }
                 }
             }
         }
@@ -291,8 +293,8 @@ namespace GitUI
             var selectedRevisions = FileChanges.GetSelectedRevisions();
             if (selectedRevisions.Count == 1)
             {
-                var frm = new FormCherryPickCommitSmall(selectedRevisions[0]);
-                frm.ShowDialog(this);
+                using (var frm = new FormCherryPickCommitSmall(selectedRevisions[0]))
+                    frm.ShowDialog(this);
             }
         }
 
@@ -327,9 +329,9 @@ namespace GitUI
             TranslationUtl.TranslateItemsFromFields(FormBrowseName, filterBranchHelper, translation);
         }
 
-		private void diffToolremotelocalStripMenuItem_Click(object sender, EventArgs e)
-		{
-			FileChanges.OpenWithDifftool(FileName, GitUIExtensions.DiffWithRevisionKind.DiffRemoteLocal);
-		}
+        private void diffToolremotelocalStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FileChanges.OpenWithDifftool(FileName, GitUIExtensions.DiffWithRevisionKind.DiffRemoteLocal);
+        }
     }
 }

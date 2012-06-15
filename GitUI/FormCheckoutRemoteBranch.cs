@@ -64,7 +64,7 @@ namespace GitUI
             bool existsLocalBranch = LocalBranchExists(_localBranchName);
 
             rbCreateBranch.Checked = Settings.CreateLocalBranchForRemote;
-           
+
             rbResetBranch.Text = String.Format(existsLocalBranch ? rbResetBranch.Text : rbCreateBranch.Text, _localBranchName);
             rbCreateBranch.Text = String.Format(rbCreateBranch.Text, _newLocalBranchName);
             rbMerge.Checked = Settings.MergeAtCheckout;
@@ -91,10 +91,12 @@ namespace GitUI
                     command += " --force";
 
                 command += " \"" + _branch + "\"";
-                var form = new FormProcess(command);
-                form.ShowDialog(this);
-                if (!form.ErrorOccurred())
-                    Close();
+                using (var form = new FormProcess(command))
+                {
+                    form.ShowDialog(this);
+                    if (!form.ErrorOccurred())
+                        Close();
+                }
             }
             catch (Exception ex)
             {
