@@ -45,17 +45,19 @@ namespace GitUI
         /// </summary>
         public static string Browse(IWin32Window parent)
         {
-            var dialog = new OpenFileDialog
+            using (var dialog = new OpenFileDialog
             {
                 Filter = " (*.ppk)|*.ppk",
                 InitialDirectory = ".",
                 Title = "Browse for key"
-            };
+            })
+            {
 
-            if (dialog.ShowDialog(parent) == DialogResult.OK)
-                return dialog.FileName;
+                if (dialog.ShowDialog(parent) == DialogResult.OK)
+                    return dialog.FileName;
 
-            return null;
+                return null;
+            }
         }
 
         /// <summary>

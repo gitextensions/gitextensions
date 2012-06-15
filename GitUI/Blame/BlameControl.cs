@@ -199,8 +199,8 @@ namespace GitUI.Blame
             }
             else
             {
-                var frm = new FormDiffSmall(gitRevision);
-                frm.ShowDialog(this);
+                using (var frm = new FormDiffSmall(gitRevision))
+                    frm.ShowDialog(this);
             }
         }
     }

@@ -20,18 +20,22 @@ namespace GitUI
 
         private void Preview_Click(object sender, EventArgs e)
         {
-            var form = new FormProcess(GitCommandHelpers.CleanUpCmd(true, RemoveDirectories.Checked, RemoveNonIgnored.Checked, RemoveIngnored.Checked));
-            form.ShowDialog(this);
-            PreviewOutput.Text = form.OutputString.ToString();
+            using (var form = new FormProcess(GitCommandHelpers.CleanUpCmd(true, RemoveDirectories.Checked, RemoveNonIgnored.Checked, RemoveIngnored.Checked)))
+            {
+                form.ShowDialog(this);
+                PreviewOutput.Text = form.OutputString.ToString();
+            }
         }
 
         private void Cleanup_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show(this, _reallyCleanupQuestion.Text, _reallyCleanupQuestionCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                var form = new FormProcess(GitCommandHelpers.CleanUpCmd(false, RemoveDirectories.Checked, RemoveNonIgnored.Checked, RemoveIngnored.Checked));
-                form.ShowDialog(this);
-                PreviewOutput.Text = form.OutputString.ToString();
+                using (var form = new FormProcess(GitCommandHelpers.CleanUpCmd(false, RemoveDirectories.Checked, RemoveNonIgnored.Checked, RemoveIngnored.Checked)))
+                {
+                    form.ShowDialog(this);
+                    PreviewOutput.Text = form.OutputString.ToString();
+                }
             }
         }
 

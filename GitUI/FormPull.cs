@@ -19,7 +19,7 @@ namespace GitUI
         #region Translation
         private readonly TranslationString _areYouSureYouWantToRebaseMerge =
             new TranslationString("The current commit is a merge." + Environment.NewLine +
-                                //"." + Environment.NewLine +
+            //"." + Environment.NewLine +
                                 "Are you sure you want to rebase this merge?");
 
         private readonly TranslationString _areYouSureYouWantToRebaseMergeCaption =
@@ -114,9 +114,11 @@ namespace GitUI
 
         private void BrowseSourceClick(object sender, EventArgs e)
         {
-            var dialog = new FolderBrowserDialog { SelectedPath = PullSource.Text };
-            if (dialog.ShowDialog(this) == DialogResult.OK)
-                PullSource.Text = dialog.SelectedPath;
+            using (var dialog = new FolderBrowserDialog { SelectedPath = PullSource.Text })
+            {
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                    PullSource.Text = dialog.SelectedPath;
+            }
         }
 
         private void MergetoolClick(object sender, EventArgs e)
@@ -126,7 +128,7 @@ namespace GitUI
             if (MessageBox.Show(this, _allMergeConflictSolvedQuestion.Text, _allMergeConflictSolvedQuestionCaption.Text,
                                 MessageBoxButtons.YesNo) != DialogResult.Yes)
                 return;
-            new FormCommit().ShowDialog(this);
+            using (var frm = new FormCommit()) frm.ShowDialog(this);
         }
 
         private void BranchesDropDown(object sender, EventArgs e)
@@ -211,10 +213,12 @@ namespace GitUI
 
             var stashed = CalculateStashedValue(owner);
 
-            FormProcess process = CreateFormProcess(source);
-            ShowProcessDialogBox(owner, source, process);
+            using (FormProcess process = CreateFormProcess(source))
+            {
+                ShowProcessDialogBox(owner, source, process);
 
-            return EvaluateProcessDialogResults(owner, process, stashed);
+                return EvaluateProcessDialogResults(owner, process, stashed);
+            }
         }
 
         private bool ShouldPullChanges()
@@ -273,7 +277,7 @@ namespace GitUI
                                         MessageBoxButtons.YesNo) == DialogResult.Yes;
                     if (ShouldStashPop(messageBoxResult, process, true))
                     {
-                        new FormProcess("stash pop").ShowDialog(owner);
+                        using (var frm = new FormProcess("stash pop")) frm.ShowDialog(owner);
                         MergeConflictHandler.HandleMergeConflicts(owner);
                     }
                 }
@@ -345,8 +349,8 @@ namespace GitUI
 
         private static bool ShouldStashPop(bool messageBoxResult, FormProcess process, bool stashed)
         {
-            return stashed && 
-                   process != null && 
+            return stashed &&
+                   process != null &&
                    !process.ErrorOccurred() &&
                    !Settings.Module.InTheMiddleOfConflictedMerge() &&
                    !Settings.Module.InTheMiddleOfRebase() &&
@@ -370,9 +374,9 @@ namespace GitUI
             var localBranch = CalculateLocalBranch();
 
             if (Merge.Checked)
-               return new FormRemoteProcess(Settings.Module.PullCmd(source, Branches.Text, localBranch, false));
+                return new FormRemoteProcess(Settings.Module.PullCmd(source, Branches.Text, localBranch, false));
             if (Rebase.Checked)
-                return  new FormRemoteProcess(Settings.Module.PullCmd(source, Branches.Text, localBranch, true));
+                return new FormRemoteProcess(Settings.Module.PullCmd(source, Branches.Text, localBranch, true));
             return null;
         }
 
