@@ -1561,7 +1561,7 @@ namespace GitUI
             this.LightblueIcon.TabStop = true;
             this.LightblueIcon.Text = "Light blue";
             this.LightblueIcon.UseVisualStyleBackColor = true;
-            this.LightblueIcon.CheckedChanged += new System.EventHandler(this.LightblueIcon_CheckedChanged);
+            this.LightblueIcon.CheckedChanged += new System.EventHandler(this.IconColor_CheckedChanged);
             // 
             // RandomIcon
             // 
@@ -1573,7 +1573,7 @@ namespace GitUI
             this.RandomIcon.TabStop = true;
             this.RandomIcon.Text = "Random";
             this.RandomIcon.UseVisualStyleBackColor = true;
-            this.RandomIcon.CheckedChanged += new System.EventHandler(this.RandomIcon_CheckedChanged);
+            this.RandomIcon.CheckedChanged += new System.EventHandler(this.IconColor_CheckedChanged);
             // 
             // YellowIcon
             // 
@@ -1585,7 +1585,7 @@ namespace GitUI
             this.YellowIcon.TabStop = true;
             this.YellowIcon.Text = "Yellow";
             this.YellowIcon.UseVisualStyleBackColor = true;
-            this.YellowIcon.CheckedChanged += new System.EventHandler(this.YellowIcon_CheckedChanged);
+            this.YellowIcon.CheckedChanged += new System.EventHandler(this.IconColor_CheckedChanged);
             // 
             // RedIcon
             // 
@@ -1597,7 +1597,7 @@ namespace GitUI
             this.RedIcon.TabStop = true;
             this.RedIcon.Text = "Red";
             this.RedIcon.UseVisualStyleBackColor = true;
-            this.RedIcon.CheckedChanged += new System.EventHandler(this.RedIcon_CheckedChanged);
+            this.RedIcon.CheckedChanged += new System.EventHandler(this.IconColor_CheckedChanged);
             // 
             // GreenIcon
             // 
@@ -1609,7 +1609,7 @@ namespace GitUI
             this.GreenIcon.TabStop = true;
             this.GreenIcon.Text = "Green";
             this.GreenIcon.UseVisualStyleBackColor = true;
-            this.GreenIcon.CheckedChanged += new System.EventHandler(this.GreenIcon_CheckedChanged);
+            this.GreenIcon.CheckedChanged += new System.EventHandler(this.IconColor_CheckedChanged);
             // 
             // PurpleIcon
             // 
@@ -1621,7 +1621,7 @@ namespace GitUI
             this.PurpleIcon.TabStop = true;
             this.PurpleIcon.Text = "Purple";
             this.PurpleIcon.UseVisualStyleBackColor = true;
-            this.PurpleIcon.CheckedChanged += new System.EventHandler(this.PurpleIcon_CheckedChanged);
+            this.PurpleIcon.CheckedChanged += new System.EventHandler(this.IconColor_CheckedChanged);
             // 
             // BlueIcon
             // 
@@ -1633,7 +1633,7 @@ namespace GitUI
             this.BlueIcon.TabStop = true;
             this.BlueIcon.Text = "Blue";
             this.BlueIcon.UseVisualStyleBackColor = true;
-            this.BlueIcon.CheckedChanged += new System.EventHandler(this.BlueIcon_CheckedChanged);
+            this.BlueIcon.CheckedChanged += new System.EventHandler(this.IconColor_CheckedChanged);
             // 
             // DefaultIcon
             // 
@@ -1645,7 +1645,7 @@ namespace GitUI
             this.DefaultIcon.TabStop = true;
             this.DefaultIcon.Text = "Default";
             this.DefaultIcon.UseVisualStyleBackColor = true;
-            this.DefaultIcon.CheckedChanged += new System.EventHandler(this.DefaultIcon_CheckedChanged);
+            this.DefaultIcon.CheckedChanged += new System.EventHandler(this.IconColor_CheckedChanged);
             // 
             // groupBox4
             // 
