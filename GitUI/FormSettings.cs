@@ -460,6 +460,8 @@ namespace GitUI
 
                 IconStyle.Text = Settings.IconStyle;
 
+                ShowIconPreview();
+
                 GlobalDiffTool.Text = GetGlobalDiffToolFromConfig();
 
                 if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
@@ -2052,7 +2054,7 @@ namespace GitUI
             ScriptList.ClearSelection();
             ScriptManager.GetScripts().AddNew();
             ScriptList.Rows[ScriptList.RowCount - 1].Selected = true;
-            ScriptList_SelectionChanged(null, null);//needed for linux
+            ScriptList_SelectionChanged(null, null); //needed for linux
         }
 
         private void removeScriptButton_Click(object sender, EventArgs e)
@@ -2234,46 +2236,26 @@ namespace GitUI
 
         private void IconStyle_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (loadingSettings)
+                return;
             ShowIconPreview();
+            try
+            {
+                string color = IconStyle.Text.ToLowerInvariant();
+                if (color == "cow")
+                {
+                    new System.Media.SoundPlayer(Properties.Resources.cow_moo).Play();
+                }
+            }
+            catch // This code is just for fun, we do not want the program to crash because of it.
+            {
+            }
         }
 
-        private void DefaultIcon_CheckedChanged(object sender, EventArgs e)
+        private void IconColor_CheckedChanged(object sender, EventArgs e)
         {
-            ShowIconPreview();
-        }
-
-        private void LightblueIcon_CheckedChanged(object sender, EventArgs e)
-        {
-            ShowIconPreview();
-        }
-
-        private void BlueIcon_CheckedChanged(object sender, EventArgs e)
-        {
-            ShowIconPreview();
-        }
-
-        private void PurpleIcon_CheckedChanged(object sender, EventArgs e)
-        {
-            ShowIconPreview();
-        }
-
-        private void GreenIcon_CheckedChanged(object sender, EventArgs e)
-        {
-            ShowIconPreview();
-        }
-
-        private void RedIcon_CheckedChanged(object sender, EventArgs e)
-        {
-            ShowIconPreview();
-        }
-
-        private void YellowIcon_CheckedChanged(object sender, EventArgs e)
-        {
-            ShowIconPreview();
-        }
-
-        private void RandomIcon_CheckedChanged(object sender, EventArgs e)
-        {
+            if (loadingSettings)
+                return;
             ShowIconPreview();
         }
 
