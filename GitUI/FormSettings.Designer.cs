@@ -275,6 +275,10 @@ namespace GitUI
             this.moveUpButton = new System.Windows.Forms.Button();
             this.tpHotkeys = new System.Windows.Forms.TabPage();
             this.controlHotkeys = new GitUI.Hotkey.ControlHotkeys();
+            this.tpShellExt = new System.Windows.Forms.TabPage();
+            this.lblMenuEntries = new System.Windows.Forms.Label();
+            this.chlMenuEntries = new System.Windows.Forms.CheckedListBox();
+            this.chkCascadedContextMenu = new System.Windows.Forms.CheckBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.Ok = new System.Windows.Forms.Button();
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
@@ -323,6 +327,7 @@ namespace GitUI
             ((System.ComponentModel.ISupportInitialize)(this.ScriptList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scriptInfoBindingSource)).BeginInit();
             this.tpHotkeys.SuspendLayout();
+            this.tpShellExt.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -613,6 +618,7 @@ namespace GitUI
             this.tabControl1.Controls.Add(this.tpSsh);
             this.tabControl1.Controls.Add(this.tpScriptsTab);
             this.tabControl1.Controls.Add(this.tpHotkeys);
+            this.tabControl1.Controls.Add(this.tpShellExt);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -3128,6 +3134,62 @@ namespace GitUI
             this.controlHotkeys.Size = new System.Drawing.Size(799, 512);
             this.controlHotkeys.TabIndex = 0;
             // 
+            // tpShellExt
+            // 
+            this.tpShellExt.Controls.Add(this.lblMenuEntries);
+            this.tpShellExt.Controls.Add(this.chlMenuEntries);
+            this.tpShellExt.Controls.Add(this.chkCascadedContextMenu);
+            this.tpShellExt.Location = new System.Drawing.Point(4, 24);
+            this.tpShellExt.Name = "tpShellExt";
+            this.tpShellExt.Padding = new System.Windows.Forms.Padding(3);
+            this.tpShellExt.Size = new System.Drawing.Size(805, 518);
+            this.tpShellExt.TabIndex = 11;
+            this.tpShellExt.Text = "Shell extension";
+            this.tpShellExt.UseVisualStyleBackColor = true;
+            // 
+            // lblMenuEntries
+            // 
+            this.lblMenuEntries.AutoSize = true;
+            this.lblMenuEntries.Location = new System.Drawing.Point(6, 41);
+            this.lblMenuEntries.Name = "lblMenuEntries";
+            this.lblMenuEntries.Size = new System.Drawing.Size(158, 15);
+            this.lblMenuEntries.TabIndex = 2;
+            this.lblMenuEntries.Text = "Visible context menu entries:";
+            // 
+            // chlMenuEntries
+            // 
+            this.chlMenuEntries.CheckOnClick = true;
+            this.chlMenuEntries.FormattingEnabled = true;
+            this.chlMenuEntries.Items.AddRange(new object[] {
+            "Add files",
+            "Apply patch",
+            "Browse",
+            "Create branch",
+            "Checkout branch",
+            "Checkout revision",
+            "Clone",
+            "Commit",
+            "File history",
+            "Reset file changes",
+            "Pull",
+            "Push",
+            "Settings",
+            "View diff"});
+            this.chlMenuEntries.Location = new System.Drawing.Point(8, 59);
+            this.chlMenuEntries.Name = "chlMenuEntries";
+            this.chlMenuEntries.Size = new System.Drawing.Size(240, 256);
+            this.chlMenuEntries.TabIndex = 1;
+            // 
+            // chkCascadedContextMenu
+            // 
+            this.chkCascadedContextMenu.AutoSize = true;
+            this.chkCascadedContextMenu.Location = new System.Drawing.Point(6, 6);
+            this.chkCascadedContextMenu.Name = "chkCascadedContextMenu";
+            this.chkCascadedContextMenu.Size = new System.Drawing.Size(153, 19);
+            this.chkCascadedContextMenu.TabIndex = 0;
+            this.chkCascadedContextMenu.Text = "Cascaded context menu";
+            this.chkCascadedContextMenu.UseVisualStyleBackColor = true;
+            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -3273,6 +3335,8 @@ namespace GitUI
             ((System.ComponentModel.ISupportInitialize)(this.ScriptList)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.scriptInfoBindingSource)).EndInit();
             this.tpHotkeys.ResumeLayout(false);
+            this.tpShellExt.ResumeLayout(false);
+            this.tpShellExt.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
@@ -3535,6 +3599,10 @@ namespace GitUI
         private NumericUpDown _NO_TRANSLATE_authorImageSize;
         private Button ClearImageCache;
         private CheckBox ShowAuthorGravatar;
+        private TabPage tpShellExt;
+        private Label lblMenuEntries;
+        private CheckedListBox chlMenuEntries;
+        private CheckBox chkCascadedContextMenu;
 
     }
 }
