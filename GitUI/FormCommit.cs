@@ -145,7 +145,7 @@ namespace GitUI
             InitializeComponent();
 
 #if !__MonoCS__ // animated GIFs are not supported in Mono/Linux
-            this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
+            Loading.Image = Properties.Resources.loadingpanel;
 #endif
 
             splitRight.Panel2MinSize = 130;
@@ -341,6 +341,10 @@ namespace GitUI
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
+#if !__MonoCS__ // animated GIFs are not supported in Mono/Linux
+            //trying to properly dispose loading image issue #1037
+            Loading.Image.Dispose();
+#endif
             DisposeGitGetUnstagedCommand();
 
             base.OnClosing(e);
