@@ -1833,8 +1833,8 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
 
-            var frm = new FormCommit(commitKind, GetRevision(LastRow));
-            frm.ShowDialog(this);
+            using(var frm = new FormCommit(commitKind, GetRevision(LastRow))) frm.ShowDialog(this);
+
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
         }
