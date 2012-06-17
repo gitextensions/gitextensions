@@ -31,7 +31,7 @@ namespace GitUI
 
         private GitCommandsInstance gitGetUnstagedCommand = new GitCommandsInstance();
         private readonly SynchronizationContext syncContext;
-        private readonly FileSystemWatcher watcher = new FileSystemWatcher();
+        private readonly FileSystemWatcher workTreeWatcher = new FileSystemWatcher();
         private readonly FileSystemWatcher gitDirWatcher = new FileSystemWatcher();
         private string gitPath;
         private int nextUpdateTime;
@@ -57,19 +57,19 @@ namespace GitUI
 
             // Setup a file watcher to detect changes to our files. When they
             // change, we'll update our status.
-            watcher.Changed += watcher_Changed;
-            watcher.Created += watcher_Changed;
-            watcher.Deleted += watcher_Changed;
-            watcher.Error += watcher_Error;
-            watcher.IncludeSubdirectories = true;
-            watcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite;
+            workTreeWatcher.Changed += WorkTreeChanged;
+            workTreeWatcher.Created += WorkTreeChanged;
+            workTreeWatcher.Deleted += WorkTreeChanged;
+            workTreeWatcher.Error += WorkTreeWatcherError;
+            workTreeWatcher.IncludeSubdirectories = true;
+            workTreeWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite;
 
             // Setup a file watcher to detect changes to the .git repo files. When they
             // change, we'll update our status.
-            gitDirWatcher.Changed += gitWatcher_Changed;
-            gitDirWatcher.Created += gitWatcher_Changed;
-            gitDirWatcher.Deleted += gitWatcher_Changed;
-            gitDirWatcher.Error += watcher_Error;
+            gitDirWatcher.Changed += GitDirChanged;
+            gitDirWatcher.Created += GitDirChanged;
+            gitDirWatcher.Deleted += GitDirChanged;
+            gitDirWatcher.Error += WorkTreeWatcherError;
             gitDirWatcher.IncludeSubdirectories = true;
             gitDirWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite;
 
@@ -87,7 +87,7 @@ namespace GitUI
             CurrentStatus = WorkingStatus.Started;
         }
 
-        private void TryStartWatchingChanges(string watchingPath, string watchingGitPath)
+        private void TryStartWatchingChanges(string workTreePath, string gitDirPath)
         {
             // reset status info, it was outdated
             Text = string.Empty;
@@ -95,12 +95,12 @@ namespace GitUI
 
             try
             {
-                if (!string.IsNullOrEmpty(watchingPath) && Directory.Exists(watchingPath) &&
-                    !string.IsNullOrEmpty(watchingGitPath) && Directory.Exists(watchingGitPath))
+                if (!string.IsNullOrEmpty(workTreePath) && Directory.Exists(workTreePath) &&
+                    !string.IsNullOrEmpty(gitDirPath) && Directory.Exists(gitDirPath))
                 {
-                    watcher.Path = watchingPath;
-                    gitDirWatcher.Path = watchingGitPath;
-                    gitPath = Path.GetDirectoryName(watchingGitPath);
+                    workTreeWatcher.Path = workTreePath;
+                    gitDirWatcher.Path = gitDirPath;
+                    gitPath = Path.GetDirectoryName(gitDirPath);
                     CurrentStatus = WorkingStatus.Started;
                 }
                 else
@@ -113,16 +113,16 @@ namespace GitUI
 
         // destructor shouldn't be used because it's not predictable when
         // it's going to be called by the GC!
-        private void watcher_Error(object sender, ErrorEventArgs e)
+        private void WorkTreeWatcherError(object sender, ErrorEventArgs e)
         {
             ScheduleNextRegularUpdate();
         }
 
-        private void watcher_Changed(object sender, FileSystemEventArgs e)
+        private void WorkTreeChanged(object sender, FileSystemEventArgs e)
         {
             if (e.FullPath.StartsWith(gitPath))
             {
-                gitWatcher_Changed(sender, e);
+                GitDirChanged(sender, e);
                 return;
             }
 
@@ -137,7 +137,7 @@ namespace GitUI
             ScheduleNextRegularUpdate();
         }
 
-        private void gitWatcher_Changed(object sender, FileSystemEventArgs e)
+        private void GitDirChanged(object sender, FileSystemEventArgs e)
         {
             // git directory changed
             if (e.FullPath.Length == gitPath.Length)
@@ -266,19 +266,19 @@ namespace GitUI
                 {
                     case WorkingStatus.Stopped:
                         timerRefresh.Stop();
-                        watcher.EnableRaisingEvents = false;
+                        workTreeWatcher.EnableRaisingEvents = false;
                         gitDirWatcher.EnableRaisingEvents = false;
                         Visible = false;
                         return;
                     case WorkingStatus.Paused:
                         timerRefresh.Stop();
-                        watcher.EnableRaisingEvents = false;
+                        workTreeWatcher.EnableRaisingEvents = false;
                         gitDirWatcher.EnableRaisingEvents = false;
                         return;
                     case WorkingStatus.Started:
                         timerRefresh.Start();
-                        watcher.EnableRaisingEvents = true;
-                        gitDirWatcher.EnableRaisingEvents = !gitDirWatcher.Path.StartsWith(watcher.Path);
+                        workTreeWatcher.EnableRaisingEvents = true;
+                        gitDirWatcher.EnableRaisingEvents = !gitDirWatcher.Path.StartsWith(workTreeWatcher.Path);
                         ScheduleImmediateUpdate();
                         Visible = true;
                         return;
