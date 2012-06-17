@@ -33,7 +33,7 @@ namespace GitUI
         private readonly SynchronizationContext syncContext;
         private readonly FileSystemWatcher workTreeWatcher = new FileSystemWatcher();
         private readonly FileSystemWatcher gitDirWatcher = new FileSystemWatcher();
-        private string gitPath;
+        private string gitPath, submodulesPath;
         private int nextUpdateTime;
         private WorkingStatus currentStatus;
         private bool hasDeferredUpdateRequests;
@@ -102,6 +102,7 @@ namespace GitUI
                     workTreeWatcher.Path = workTreePath;
                     gitDirWatcher.Path = gitDirPath;
                     gitPath = Path.GetDirectoryName(gitDirPath);
+                    submodulesPath = Path.Combine(gitPath, "modules");
                     CurrentStatus = WorkingStatus.Started;
                 }
                 else
@@ -147,10 +148,8 @@ namespace GitUI
             if (e.FullPath.EndsWith("\\index.lock"))
                 return;
 
-            // new submodule changed
-            const string modulePath = "\\modules\\";
-            int index = e.FullPath.IndexOf(modulePath, gitPath.Length);
-            if (index >= 0 && e.FullPath.IndexOf("\\", index + modulePath.Length) == -1)
+            // submodules directory's subdir changed - we don't expect cut/paste/rename/delete operations on directories inside nested .git dirs
+            if (e.FullPath.StartsWith(submodulesPath) && (Directory.Exists(e.FullPath)))
                 return;
 
             ScheduleNextRegularUpdate();
