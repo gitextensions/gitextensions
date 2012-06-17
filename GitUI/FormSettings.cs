@@ -510,6 +510,13 @@ namespace GitUI
                 chkUseFastChecks.Checked = Settings.UseFastChecks;
                 chkShowRelativeDate.Checked = Settings.RelativeDate;
 
+                chkCascadedContextMenu.Checked = Settings.ShellCascadeContextMenu;
+
+                for (int i = 0; i < Settings.ShellVisibleMenuItems.Length; i++)
+                {
+                    chlMenuEntries.SetItemChecked(i, Settings.ShellVisibleMenuItems[i] == '1');
+                }
+
                 if (string.IsNullOrEmpty(GitCommandHelpers.GetSsh()))
                     OpenSSH.Checked = true;
                 else if (GitCommandHelpers.Plink())
@@ -628,6 +635,25 @@ namespace GitUI
             Settings.IconColor = GetSelectedApplicationIconColor();
 
             Settings.IconStyle = IconStyle.Text;
+
+            // Shell Extension settings
+            Settings.ShellCascadeContextMenu = chkCascadedContextMenu.Checked;
+
+            String l_ShellVisibleMenuItems = "";
+
+            for (int i = 0; i < chlMenuEntries.Items.Count; i++)
+			{
+                if (chlMenuEntries.GetItemChecked(i))
+                {
+                    l_ShellVisibleMenuItems += "1";
+                }
+                else
+                {
+                    l_ShellVisibleMenuItems += "0";
+                }
+			}
+
+            Settings.ShellVisibleMenuItems = l_ShellVisibleMenuItems;
 
             EnableSettings();
 
