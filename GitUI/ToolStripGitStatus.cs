@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -12,11 +11,11 @@ namespace GitUI
 {
     public sealed partial class ToolStripGitStatus : ToolStripMenuItem
     {
-        private static readonly Bitmap ICON_CLEAN = Properties.Resources.IconClean;
-        private static readonly Bitmap ICON_DIRTY = Properties.Resources.IconDirty;
-        private static readonly Bitmap ICON_DIRTY_SUBMODULES = Properties.Resources.IconDirtySubmodules;
-        private static readonly Bitmap ICON_STAGED = Properties.Resources.IconStaged;
-        private static readonly Bitmap ICON_MIXED = Properties.Resources.IconMixed;
+        private static readonly Bitmap IconClean = Properties.Resources.IconClean;
+        private static readonly Bitmap IconDirty = Properties.Resources.IconDirty;
+        private static readonly Bitmap IconDirtySubmodules = Properties.Resources.IconDirtySubmodules;
+        private static readonly Bitmap IconStaged = Properties.Resources.IconStaged;
+        private static readonly Bitmap IconMixed = Properties.Resources.IconMixed;
 
         /// <summary>
         /// We often change several files at once.
@@ -43,9 +42,11 @@ namespace GitUI
         public ToolStripGitStatus()
         {
             syncContext = SynchronizationContext.Current;
-            gitGetUnstagedCommand.Exited += (o, ea) => syncContext.Post(_ => onData(), null);
+            gitGetUnstagedCommand.Exited += (o, ea) => syncContext.Post(_ => UpdatedStatusReceived(gitGetUnstagedCommand.Output.ToString()), null);
 
             InitializeComponent();
+            components.Add(workTreeWatcher);
+            components.Add(gitDirWatcher);
             CommitTranslatedString = "Commit";
 
             Settings.WorkingDirChanged += (_, newDir, newGitDir) => TryStartWatchingChanges(newDir, newGitDir);
@@ -148,7 +149,8 @@ namespace GitUI
             if (e.FullPath.EndsWith("\\index.lock"))
                 return;
 
-            // submodules directory's subdir changed - we don't expect cut/paste/rename/delete operations on directories inside nested .git dirs
+            // submodules directory's subdir changed
+            // cut/paste/rename/delete operations are not expected on directories inside nested .git dirs
             if (e.FullPath.StartsWith(submodulesPath) && (Directory.Exists(e.FullPath)))
                 return;
 
@@ -193,45 +195,33 @@ namespace GitUI
             }
         }
 
-        private void onData()
+        private void UpdatedStatusReceived(string updatedStatus)
         {
             if (CurrentStatus != WorkingStatus.Started)
                 return;
 
-            List<GitItemStatus> allChangedFiles =
-                GitCommandHelpers.GetAllChangedFilesFromString(gitGetUnstagedCommand.Output.ToString());
+            var allChangedFiles = GitCommandHelpers.GetAllChangedFilesFromString(updatedStatus);
+            var stagedCount = allChangedFiles.Count(status => status.IsStaged);
+            var unstagedCount = allChangedFiles.Count - stagedCount;
+            var unstagedSubmodulesCount = allChangedFiles.Count(status => status.IsSubmodule && !status.IsStaged);
 
-            var stagedCount = allChangedFiles.FindAll(status => status.IsStaged).Count;
-            var unstagedCount = allChangedFiles.FindAll(status => !status.IsStaged).Count;
-            var unstagedSubmodulesCount = allChangedFiles.FindAll(status => status.IsSubmodule && !status.IsStaged).Count;
-
-            if (stagedCount == 0 && unstagedCount == 0)
-            {
-                Image = ICON_CLEAN;
-            }
-            else
-            {
-                if (stagedCount == 0)
-                {
-                    if (unstagedCount != unstagedSubmodulesCount)
-                        Image = ICON_DIRTY;
-                    else
-                        Image = ICON_DIRTY_SUBMODULES;
-                }
-                else if (unstagedCount == 0)
-                {
-                    Image = ICON_STAGED;
-                }
-                else
-                {
-                    Image = ICON_MIXED;
-                }
-            }
+            Image = GetStatusIcon(stagedCount, unstagedCount, unstagedSubmodulesCount);
 
             if (allChangedFiles.Count == 0)
                 Text = CommitTranslatedString;
             else
                 Text = string.Format(CommitTranslatedString + " ({0})", allChangedFiles.Count.ToString());
+        }
+
+        private static Image GetStatusIcon(int stagedCount, int unstagedCount, int unstagedSubmodulesCount)
+        {
+            if (stagedCount == 0 && unstagedCount == 0)
+                return IconClean;
+
+            if (stagedCount == 0)
+                return unstagedCount != unstagedSubmodulesCount ? IconDirty : IconDirtySubmodules;
+
+            return unstagedCount == 0 ? IconStaged : IconMixed;
         }
 
         private void ScheduleNextRegularUpdate()
