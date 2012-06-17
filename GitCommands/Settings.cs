@@ -219,6 +219,13 @@ namespace GitCommands
             set { SafeSet("refreshcommitdialogonformfocus", value, ref _refreshCommitDialogOnFormFocus); }
         }
 
+        private static bool? _PlaySpecialStartupSound;
+        public static bool PlaySpecialStartupSound
+        {
+            get { return SafeGet("PlaySpecialStartupSound", false, ref _PlaySpecialStartupSound); }
+            set { SafeSet("PlaySpecialStartupSound", value, ref _PlaySpecialStartupSound); }
+        }
+
         private static bool? _followRenamesInFileHistory;
         public static bool FollowRenamesInFileHistory
         {
