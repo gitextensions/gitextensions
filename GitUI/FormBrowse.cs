@@ -206,6 +206,18 @@ namespace GitUI
             IndexWatcher.Changed += _indexWatcher_Changed;
 
             Cursor.Current = Cursors.Default;
+
+
+            try
+            {
+                if (Settings.PlaySpecialStartupSound)
+                {
+                    new System.Media.SoundPlayer(Properties.Resources.cow_moo).Play();
+                }
+            }
+            catch // This code is just for fun, we do not want the program to crash because of it.
+            {
+            }
         }
 
         void _indexWatcher_Changed(bool indexChanged)
