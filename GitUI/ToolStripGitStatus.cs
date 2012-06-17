@@ -60,9 +60,10 @@ namespace GitUI
             workTreeWatcher.Changed += WorkTreeChanged;
             workTreeWatcher.Created += WorkTreeChanged;
             workTreeWatcher.Deleted += WorkTreeChanged;
+            workTreeWatcher.Renamed += WorkTreeChanged;
             workTreeWatcher.Error += WorkTreeWatcherError;
             workTreeWatcher.IncludeSubdirectories = true;
-            workTreeWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite;
+            workTreeWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.LastWrite;
 
             // Setup a file watcher to detect changes to the .git repo files. When they
             // change, we'll update our status.
