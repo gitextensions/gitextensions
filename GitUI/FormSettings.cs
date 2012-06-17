@@ -336,6 +336,8 @@ namespace GitUI
                 chkWarnBeforeCheckout.Checked = Settings.DirtyDirWarnBeforeCheckoutBranch;
                 chkStartWithRecentWorkingDir.Checked = Settings.StartWithRecentWorkingDir;
 
+                chkPlaySpecialStartupSound.Checked = Settings.PlaySpecialStartupSound;
+
                 chkUsePatienceDiffAlgorithm.Checked = Settings.UsePatienceDiffAlgorithm;
 
                 chkShowCurrentBranchInVisualStudio.Checked = Settings.ShowCurrentBranchInVisualStudio;
@@ -548,6 +550,8 @@ namespace GitUI
 
             Settings.DirtyDirWarnBeforeCheckoutBranch = chkWarnBeforeCheckout.Checked;
             Settings.StartWithRecentWorkingDir = chkStartWithRecentWorkingDir.Checked;
+
+            Settings.PlaySpecialStartupSound = chkPlaySpecialStartupSound.Checked;
 
             Settings.UsePatienceDiffAlgorithm = chkUsePatienceDiffAlgorithm.Checked;
 
@@ -2239,17 +2243,6 @@ namespace GitUI
             if (loadingSettings)
                 return;
             ShowIconPreview();
-            try
-            {
-                string color = IconStyle.Text.ToLowerInvariant();
-                if (color == "cow")
-                {
-                    new System.Media.SoundPlayer(Properties.Resources.cow_moo).Play();
-                }
-            }
-            catch // This code is just for fun, we do not want the program to crash because of it.
-            {
-            }
         }
 
         private void IconColor_CheckedChanged(object sender, EventArgs e)
