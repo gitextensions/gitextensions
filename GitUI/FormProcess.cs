@@ -184,15 +184,6 @@ namespace GitUI
             }
             else
             {
-                //if (Output.InvokeRequired)
-                //{
-                //    // It's on a different thread, so use Invoke.
-                //    DataCallback d = new DataCallback(AddOutput);
-                //    this.Invoke(d, new object[] { e.Data });
-                //} else
-                //{
-                //    AddOutput(e.Data);
-                //}
                 AppendOutputLine(e.Data);
             }
 
