@@ -212,7 +212,8 @@ namespace GitUI
             {
                 if (Settings.IconStyle.Equals("Cow", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    new System.Media.SoundPlayer(Properties.Resources.cow_moo).Play();
+                    using (var cow_moo = Properties.Resources.cow_moo)
+                        new System.Media.SoundPlayer(cow_moo).Play();
                 }
             }
             catch // This code is just for fun, we do not want the program to crash because of it.
