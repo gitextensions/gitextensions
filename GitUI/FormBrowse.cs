@@ -150,6 +150,8 @@ namespace GitUI
             Settings.WorkingDirChanged += (a, b, c) => RefreshPullIcon();
             RefreshPullIcon();
             dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
+
+            GitUICommands.Instance.BrowseInitialize += (a, b) => Initialize();
         }
 
         private void ShowDashboard()
@@ -207,10 +209,9 @@ namespace GitUI
 
             Cursor.Current = Cursors.Default;
 
-
             try
             {
-                if (Settings.PlaySpecialStartupSound)
+                if (Settings.PlaySpecialStartupSound && Settings.IconStyle.Equals("Cow", StringComparison.CurrentCultureIgnoreCase))
                 {
                     new System.Media.SoundPlayer(Properties.Resources.cow_moo).Play();
                 }
@@ -299,6 +300,9 @@ namespace GitUI
         private void InternalInitialize(bool hard)
         {
             Cursor.Current = Cursors.WaitCursor;
+
+            GitUICommands.Instance.RaisePreBrowseInitialize(this);
+
             bool validWorkingDir = Settings.Module.ValidWorkingDir();
             bool hasWorkingDir = !string.IsNullOrEmpty(Settings.WorkingDir);
             branchSelect.Text = validWorkingDir ? Settings.Module.GetSelectedBranch() : "";
@@ -342,6 +346,8 @@ namespace GitUI
             UpdateStashCount();
             // load custom user menu
             LoadUserMenu();
+
+            GitUICommands.Instance.RaisePostBrowseInitialize(this);
 
             Cursor.Current = Cursors.Default;
         }
