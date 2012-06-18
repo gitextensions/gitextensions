@@ -859,10 +859,10 @@ namespace GitUI
                     FormStatus.ProcessStart processStart =
                         form =>
                         {
-                            form.AddOutput(string.Format(_stageFiles.Text,
+                            form.AddMessageLine(string.Format(_stageFiles.Text,
                                                          files.Count));
                             var output = GitCommandHelpers.StageFiles(files);
-                            form.AddOutput(output);
+                            form.AddMessageLine(output);
                             form.Done(string.IsNullOrEmpty(output));
                         };
                     using (var process = new FormStatus(processStart, null) { Text = _stageDetails.Text })

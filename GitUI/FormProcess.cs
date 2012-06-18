@@ -89,7 +89,7 @@ namespace GitUI
         private void processStart(FormStatus form)
         {
             BeforeProcessStart();
-            AddOutput(ProcessString + " " + ProcessArguments);
+            AddMessageLine(ProcessString + " " + ProcessArguments);
             gitCommand = new GitCommandsInstance { CollectOutput = false };
 
             try
@@ -102,12 +102,12 @@ namespace GitUI
                 {
                     Thread.Sleep(500);
                     Process.StandardInput.Write(ProcessInput);
-                    AddOutput(string.Format(":: Wrote [{0}] to process!\r\n", ProcessInput));
+                    AddMessageLine(string.Format(":: Wrote [{0}] to process!\r\n", ProcessInput));
                 }
             }
             catch (Exception e)
             {
-                AddOutput(e.Message);
+                AddMessageLine(e.Message);
                 gitCommand.ExitCode = 1;
                 gitCommand_Exited(null, null);
             }
@@ -203,8 +203,7 @@ namespace GitUI
         {
             OutputString.AppendLine(line);
 
-            AddToTimer(line);
-            AddToTimer(Environment.NewLine);
+            AddMessageLine(line);
         }
 
         public static bool IsOperationAborted(string dialogResult)
