@@ -5,7 +5,7 @@ Version 2.34
 	Fixed issue 980: spell check only covers first 5 visible lines in commit dialog
 	Fixed issue 988: status bar for commit message
 	Fixed issue 1018: Git Extensions sets core.editor to its own program without asking the user
-	Added line and column position to commit window.
+	Added line and column position to commit window
 
 Version 2.33
 	Fixed issue 843: toolbar is disabled when in a wxs file
