@@ -104,7 +104,8 @@ namespace GitUI
 
         private void AddMessageToTimer(string text)
         {
-            outpuTimer.Append(text);
+            if (outpuTimer != null)
+                outpuTimer.Append(text);
         }
         
         private void AppendMessage(string text)
@@ -122,7 +123,8 @@ namespace GitUI
 
         public void Done(bool isSuccess)
         {
-            outpuTimer.Stop(true);
+            if (outpuTimer != null)
+                outpuTimer.Stop(true);
             AppendMessage("Done");
             ProgressBar.Visible = false;
             Ok.Enabled = true;
