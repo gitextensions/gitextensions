@@ -46,6 +46,7 @@ namespace GitUIPluginInterfaces
         event GitUIEventHandler PostUpdateSubmodules;
         event GitUIEventHandler PostVerifyDatabase;
         event GitUIEventHandler PostViewPatch;
+        event GitUIEventHandler PostBrowseInitialize;
         event GitUIEventHandler PreAddFiles;
         event GitUIEventHandler PreApplyPatch;
         event GitUIEventHandler PreArchive;
@@ -85,9 +86,13 @@ namespace GitUIPluginInterfaces
         event GitUIEventHandler PreUpdateSubmodules;
         event GitUIEventHandler PreVerifyDatabase;
         event GitUIEventHandler PreViewPatch;
+        event GitUIEventHandler PreBrowseInitialize;
+        event GitUIEventHandler BrowseInitialize;
 
         string GitCommand(string arguments);
         string CommandLineCommand(string cmd, string arguments);
+        IGitRemoteCommand CreateRemoteCommand();
+        void RaiseBrowseInitialize();
 
         bool StartCommandLineProcessDialog(object ownerForm, string command, string arguments);
         bool StartCommandLineProcessDialog(string command, string arguments);
