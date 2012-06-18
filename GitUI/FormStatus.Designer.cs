@@ -18,6 +18,11 @@ namespace GitUI
             {
                 components.Dispose();
             }
+            if (outpuTimer != null)
+            {
+                outpuTimer.Dispose();
+                outpuTimer = null;
+            }
             base.Dispose(disposing);
         }
 
@@ -30,7 +35,7 @@ namespace GitUI
         private void InitializeComponent()
         {
             this.Ok = new System.Windows.Forms.Button();
-            this.Output = new System.Windows.Forms.RichTextBox();
+            this.MessageTextBox = new System.Windows.Forms.RichTextBox();
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
             this.KeepDialogOpen = new System.Windows.Forms.CheckBox();
             this.Abort = new System.Windows.Forms.Button();
@@ -60,16 +65,16 @@ namespace GitUI
             // 
             // Output
             // 
-            this.Output.BackColor = System.Drawing.SystemColors.Window;
-            this.Output.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Output.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Output.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Output.Location = new System.Drawing.Point(0, 0);
-            this.Output.Name = "Output";
-            this.Output.ReadOnly = true;
-            this.Output.Size = new System.Drawing.Size(489, 261);
-            this.Output.TabIndex = 0;
-            this.Output.Text = "";
+            this.MessageTextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.MessageTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.MessageTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MessageTextBox.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MessageTextBox.Location = new System.Drawing.Point(0, 0);
+            this.MessageTextBox.Name = "Output";
+            this.MessageTextBox.ReadOnly = true;
+            this.MessageTextBox.Size = new System.Drawing.Size(489, 261);
+            this.MessageTextBox.TabIndex = 0;
+            this.MessageTextBox.Text = "";
             // 
             // ProgressBar
             // 
@@ -153,7 +158,7 @@ namespace GitUI
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.Output);
+            this.splitContainer1.Panel1.Controls.Add(this.MessageTextBox);
             // 
             // splitContainer1.Panel2
             // 
@@ -200,7 +205,7 @@ namespace GitUI
         #endregion
 
         private System.Windows.Forms.ProgressBar ProgressBar;
-        private System.Windows.Forms.RichTextBox Output;
+        private System.Windows.Forms.RichTextBox MessageTextBox;
         protected System.Windows.Forms.Button Ok;
         protected System.Windows.Forms.CheckBox KeepDialogOpen;
         protected System.Windows.Forms.Button Abort;
