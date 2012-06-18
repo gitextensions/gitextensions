@@ -752,12 +752,12 @@ namespace GitUI
                 (
                     delegate(FormStatus form)
                     {
-                        form.AddOutput(string.Format(stageFilename.Text, filename));
+                        form.AddMessageLine(string.Format(stageFilename.Text, filename));
                         string output = Settings.Module.RunCmd
                             (
                             Settings.GitCommand, "add -- \"" + filename + "\""
                             );
-                        form.AddOutput(output);
+                        form.AddMessageLine(output);
                         form.Done(string.IsNullOrEmpty(output));
                     }
                 );
