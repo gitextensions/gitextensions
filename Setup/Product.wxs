@@ -20,9 +20,9 @@
     
     <Property Id="ALLUSERS" Value="1" />
     
-    <PropertyRef Id="NETFRAMEWORK35"/>
-    <Condition Message='.NET Framework 3.5 must be installed prior to installation of Git Extensions.'>
-      Installed OR NETFRAMEWORK35
+    <PropertyRef Id="NETFRAMEWORK40FULL"/>
+    <Condition Message='.NET Framework 4.0 must be installed prior to installation of Git Extensions.'>
+      Installed OR NETFRAMEWORK40FULL
     </Condition>
    
     <Icon Id="gitextensions.ico" SourceFile="../bin/logo/git-extensions-logo-final-256.ico"/>

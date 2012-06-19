@@ -40,7 +40,7 @@
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.Cancel = new System.Windows.Forms.Button();
             this.Delete = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.instructionLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.BranchesGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.branchBindingSource)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
@@ -114,7 +114,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.BranchesGrid, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.instructionLabel, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -162,15 +162,15 @@
             this.Delete.UseVisualStyleBackColor = true;
             this.Delete.Click += new System.EventHandler(this.Delete_Click);
             // 
-            // label1
+            // instructionLabel
             // 
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 6);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(340, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Choose branches to delete. Only fully merged branches will be deleted.";
+            this.instructionLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.instructionLabel.AutoSize = true;
+            this.instructionLabel.Location = new System.Drawing.Point(3, 6);
+            this.instructionLabel.Name = "instructionLabel";
+            this.instructionLabel.Size = new System.Drawing.Size(19, 13);
+            this.instructionLabel.TabIndex = 1;
+            this.instructionLabel.Text = "....";
             // 
             // DeleteUnusedBranchesForm
             // 
@@ -197,7 +197,7 @@
         private System.Windows.Forms.DataGridView BranchesGrid;
         private System.Windows.Forms.BindingSource branchBindingSource;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label instructionLabel;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.Button Cancel;
         private System.Windows.Forms.Button Delete;

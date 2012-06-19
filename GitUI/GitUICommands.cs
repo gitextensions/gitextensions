@@ -144,6 +144,10 @@ namespace GitUI
         public event GitUIEventHandler PreEditGitAttributes;
         public event GitUIEventHandler PostEditGitAttributes;
 
+        public event GitUIEventHandler PreBrowseInitialize;
+        public event GitUIEventHandler PostBrowseInitialize;
+        public event GitUIEventHandler BrowseInitialize;
+
         #endregion
 
         public string GitCommand(string arguments)
@@ -1423,6 +1427,78 @@ namespace GitUI
                                 {
                                     using (var frm = new CreatePullRequestForm(gitHoster, chooseRemote, chooseBranch)) frm.ShowDialog(owner);
                                 });
+        }
+
+        internal void RaisePreBrowseInitialize(IWin32Window owner)
+        {
+            InvokeEvent(owner, PreBrowseInitialize);
+        }
+
+        internal void RaisePostBrowseInitialize(IWin32Window owner)
+        {
+            InvokeEvent(owner, PostBrowseInitialize);
+        }
+
+        public void RaiseBrowseInitialize()
+        {
+            InvokeEvent(null, BrowseInitialize);
+        }
+
+        public IGitRemoteCommand CreateRemoteCommand()
+        {
+            return new GitRemoteCommand();
+        }
+
+        private class GitRemoteCommand : IGitRemoteCommand
+        {
+            public object OwnerForm { get; set; }
+
+            public string Remote { get; set; }
+
+            public string Title { get; set; }
+
+            public string CommandText { get; set; }
+
+            public bool ErrorOccurred { get; private set; }
+
+            public string CommandOutput { get; private set; }
+
+            public event GitRemoteCommandCompletedEventHandler Completed;
+
+            public void Execute()
+            {
+                if (CommandText == null)
+                    throw new InvalidOperationException("CommandText is required");
+
+                using (var form = new FormRemoteProcess(CommandText))
+                {
+                    if (Title != null)
+                        form.Text = Title;
+                    if (Remote != null)
+                        form.Remote = Remote;
+
+                    form.HandleOnExitCallback = HandleOnExit;
+
+                    form.ShowDialog(OwnerForm as IWin32Window);
+
+                    ErrorOccurred = form.ErrorOccurred();
+                    CommandOutput = form.OutputString.ToString();
+                }
+            }
+
+            private bool HandleOnExit(ref bool isError, FormProcess form)
+            {
+                CommandOutput = form.OutputString.ToString();
+
+                var e = new GitRemoteCommandCompletedEventArgs(this, isError, false);
+
+                if (Completed != null)
+                    Completed(form, e);
+
+                isError = e.IsError;
+
+                return e.Handled;
+            }
         }
     }
 }

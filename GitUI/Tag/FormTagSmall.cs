@@ -67,8 +67,11 @@ namespace GitUI.Tag
 
             if (!string.IsNullOrEmpty(s))
                 MessageBox.Show(this, s, _messageCaption.Text);
-            DialogResult = DialogResult.OK;
 
+            if (s.Contains("fatal:"))
+                return string.Empty;
+
+            DialogResult = DialogResult.OK;
             return TName.Text;
         }
 
