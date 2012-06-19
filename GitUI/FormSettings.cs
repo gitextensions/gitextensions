@@ -338,6 +338,8 @@ namespace GitUI
                 chkWarnBeforeCheckout.Checked = Settings.DirtyDirWarnBeforeCheckoutBranch;
                 chkStartWithRecentWorkingDir.Checked = Settings.StartWithRecentWorkingDir;
 
+                chkPlaySpecialStartupSound.Checked = Settings.PlaySpecialStartupSound;
+
                 chkUsePatienceDiffAlgorithm.Checked = Settings.UsePatienceDiffAlgorithm;
 
                 chkShowCurrentBranchInVisualStudio.Checked = Settings.ShowCurrentBranchInVisualStudio;
@@ -462,6 +464,8 @@ namespace GitUI
 
                 IconStyle.Text = Settings.IconStyle;
 
+                ShowIconPreview();
+
                 GlobalDiffTool.Text = GetGlobalDiffToolFromConfig();
 
                 if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
@@ -508,6 +512,13 @@ namespace GitUI
                 chkUseFastChecks.Checked = Settings.UseFastChecks;
                 chkShowRelativeDate.Checked = Settings.RelativeDate;
 
+                chkCascadedContextMenu.Checked = Settings.ShellCascadeContextMenu;
+
+                for (int i = 0; i < Settings.ShellVisibleMenuItems.Length; i++)
+                {
+                    chlMenuEntries.SetItemChecked(i, Settings.ShellVisibleMenuItems[i] == '1');
+                }
+
                 if (string.IsNullOrEmpty(GitCommandHelpers.GetSsh()))
                     OpenSSH.Checked = true;
                 else if (GitCommandHelpers.Plink())
@@ -548,6 +559,8 @@ namespace GitUI
 
             Settings.DirtyDirWarnBeforeCheckoutBranch = chkWarnBeforeCheckout.Checked;
             Settings.StartWithRecentWorkingDir = chkStartWithRecentWorkingDir.Checked;
+
+            Settings.PlaySpecialStartupSound = chkPlaySpecialStartupSound.Checked;
 
             Settings.UsePatienceDiffAlgorithm = chkUsePatienceDiffAlgorithm.Checked;
 
@@ -624,6 +637,25 @@ namespace GitUI
             Settings.IconColor = GetSelectedApplicationIconColor();
 
             Settings.IconStyle = IconStyle.Text;
+
+            // Shell Extension settings
+            Settings.ShellCascadeContextMenu = chkCascadedContextMenu.Checked;
+
+            String l_ShellVisibleMenuItems = "";
+
+            for (int i = 0; i < chlMenuEntries.Items.Count; i++)
+			{
+                if (chlMenuEntries.GetItemChecked(i))
+                {
+                    l_ShellVisibleMenuItems += "1";
+                }
+                else
+                {
+                    l_ShellVisibleMenuItems += "0";
+                }
+			}
+
+            Settings.ShellVisibleMenuItems = l_ShellVisibleMenuItems;
 
             EnableSettings();
 
@@ -2080,7 +2112,7 @@ namespace GitUI
             ScriptList.ClearSelection();
             ScriptManager.GetScripts().AddNew();
             ScriptList.Rows[ScriptList.RowCount - 1].Selected = true;
-            ScriptList_SelectionChanged(null, null);//needed for linux
+            ScriptList_SelectionChanged(null, null); //needed for linux
         }
 
         private void removeScriptButton_Click(object sender, EventArgs e)
@@ -2264,46 +2296,15 @@ namespace GitUI
 
         private void IconStyle_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (loadingSettings)
+                return;
             ShowIconPreview();
         }
 
-        private void DefaultIcon_CheckedChanged(object sender, EventArgs e)
+        private void IconColor_CheckedChanged(object sender, EventArgs e)
         {
-            ShowIconPreview();
-        }
-
-        private void LightblueIcon_CheckedChanged(object sender, EventArgs e)
-        {
-            ShowIconPreview();
-        }
-
-        private void BlueIcon_CheckedChanged(object sender, EventArgs e)
-        {
-            ShowIconPreview();
-        }
-
-        private void PurpleIcon_CheckedChanged(object sender, EventArgs e)
-        {
-            ShowIconPreview();
-        }
-
-        private void GreenIcon_CheckedChanged(object sender, EventArgs e)
-        {
-            ShowIconPreview();
-        }
-
-        private void RedIcon_CheckedChanged(object sender, EventArgs e)
-        {
-            ShowIconPreview();
-        }
-
-        private void YellowIcon_CheckedChanged(object sender, EventArgs e)
-        {
-            ShowIconPreview();
-        }
-
-        private void RandomIcon_CheckedChanged(object sender, EventArgs e)
-        {
+            if (loadingSettings)
+                return;
             ShowIconPreview();
         }
 

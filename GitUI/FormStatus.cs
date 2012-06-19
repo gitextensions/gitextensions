@@ -15,12 +15,14 @@ namespace GitUI
 
         protected readonly SynchronizationContext syncContext;
         private bool UseDialogSettings = true;
+        private ProcessOutputTimer outpuTimer;
 
         public FormStatus(): this(true)
         { }
 
         public FormStatus(bool useDialogSettings)
         {
+            outpuTimer = new ProcessOutputTimer(AppendMessageCrossThread);
             syncContext = SynchronizationContext.Current;
             UseDialogSettings = useDialogSettings;
 
@@ -82,38 +84,48 @@ namespace GitUI
             syncContext.Send(method, this);
         }
 
-        public void AddToTimer(string text)
+        public void AppendMessageCrossThread(string text)
         {
-            lock (ProcessOutputTimer.linesToAdd)
+            if (syncContext == SynchronizationContext.Current)
+                AppendMessage(text); 
+            else
+                syncContext.Post(o => AppendMessage(text), this);
+        }
+
+        public void AddMessage(string text)
+        {
+            AddMessageToTimer(text);
+        }
+
+        public void AddMessageLine(string text)
+        {
+            AddMessage(text + Environment.NewLine);
+        }
+
+        private void AddMessageToTimer(string text)
+        {
+            if (outpuTimer != null)
+                outpuTimer.Append(text);
+        }
+        
+        private void AppendMessage(string text)
+        {
+            //if not disposed
+            if (outpuTimer != null)
             {
-                ProcessOutputTimer.addLine(text);
+                MessageTextBox.Text += text;
+                MessageTextBox.SelectionStart = MessageTextBox.Text.Length;
+                MessageTextBox.ScrollToCaret();
+                MessageTextBox.Visible = true;
             }
         }
 
-        public void AddOutputCrossThread(string text)
-        {
-            SendOrPostCallback method = o =>
-                {
-                    Output.Text += text;
-                    Output.SelectionStart = Output.Text.Length;
-                    Output.ScrollToCaret();
-                    Output.Visible = true;
-                };
-            syncContext.Post(method, this);
-        }
-
-        public void AddOutput(string text)
-        {
-            Output.Text += text + Environment.NewLine;
-            Output.Visible = true;
-            Output.SelectionStart = Output.Text.Length;
-            Output.ScrollToCaret();
-        }
 
         public void Done(bool isSuccess)
         {
-            ProcessOutputTimer.Stop();
-            AddOutput("Done");
+            if (outpuTimer != null)
+                outpuTimer.Stop(true);
+            AppendMessage("Done");
             ProgressBar.Visible = false;
             Ok.Enabled = true;
             Ok.Focus();
@@ -159,8 +171,9 @@ namespace GitUI
 
         public void Reset()
         {
-            Output.Text = "";
-            Output.Visible = false;
+            outpuTimer.Clear();
+            MessageTextBox.Text = "";
+            MessageTextBox.Visible = false;
             ProgressBar.Visible = true;
             Ok.Enabled = false;
         }
@@ -245,7 +258,7 @@ namespace GitUI
                 catch (InvalidOperationException) { }
             }
 #endif
-            ProcessOutputTimer.Start(this);
+            outpuTimer.Start();
             Reset();
             ProcessCallback(this);
         }

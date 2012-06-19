@@ -66,22 +66,35 @@ STDMETHODIMP CSimpleShlExt::QueryContextMenu  (
 
     //InsertMenu (hmenu, uMenuIndex, MF_BYPOSITION, uidFirstCmd, _T("GitEx") );
 
-    int id = 1;
+    int id = 0;
 
-    HMENU popupMenu = CreateMenu();
+    CString szCascadeContextMenu = GetRegistryValue(HKEY_CURRENT_USER, "SOFTWARE\\GitExtensions\\GitExtensions", "ShellCascadeContextMenu");
 
-    id = PopulateMenu(popupMenu, uidFirstCmd + id);
+    CascadeContextMenu = !(szCascadeContextMenu == "False");
 
-    //InsertMenu(hmenu, uMenuIndex++, MF_STRING | MF_BYPOSITION | MF_POPUP, (int)popupMenu, "Git Extensions");	
-	MENUITEMINFO info;
+    if (CascadeContextMenu)
+    {
+        // show context menu cascaded in submenu
+        HMENU popupMenu = CreateMenu();
 
-	info.cbSize = sizeof( MENUITEMINFO );
-	info.fMask = MIIM_ID | MIIM_TYPE | MIIM_SUBMENU;
-	info.fType = MFT_STRING;
-	info.wID = uidFirstCmd + 1;
-	info.dwTypeData = _T("Git Extensions");
-	info.hSubMenu = popupMenu;
-	InsertMenuItem(hmenu, 0, true, &info);
+        id = PopulateMenu(popupMenu, uidFirstCmd + id, true);
+
+        //InsertMenu(hmenu, uMenuIndex++, MF_STRING | MF_BYPOSITION | MF_POPUP, (int)popupMenu, "Git Extensions");    
+        MENUITEMINFO info;
+
+        info.cbSize = sizeof( MENUITEMINFO );
+        info.fMask = MIIM_ID | MIIM_TYPE | MIIM_SUBMENU;
+        info.fType = MFT_STRING;
+        info.wID = uidFirstCmd + 1;
+        info.dwTypeData = _T("Git Extensions");
+        info.hSubMenu = popupMenu;
+        InsertMenuItem(hmenu, 0, true, &info);
+    }
+    else
+    {
+        // show menu items directly
+        id = PopulateMenu(hmenu, uidFirstCmd + id, false);
+    }
 
     return MAKE_HRESULT ( SEVERITY_SUCCESS, FACILITY_NULL, id-uidFirstCmd );
 }
@@ -102,22 +115,128 @@ void CSimpleShlExt::AddMenuItem(HMENU hMenu, LPSTR text, int id, UINT position)
     //InsertMenu(hMenu, position, MF_BYPOSITION, id, _T("test"));
 }
 
-int CSimpleShlExt::PopulateMenu(HMENU hMenu, int id)
+bool CSimpleShlExt::IsMenuItemVisible(CString settings, int id)
 {
-    AddMenuItem(hMenu, "Add files", id, AddFilesId=0);
-    AddMenuItem(hMenu, "Apply patch", ++id, ApplyPatchId=1);
-    AddMenuItem(hMenu, "Browse", ++id, BrowseId=2);
-    AddMenuItem(hMenu, "Create branch", ++id, CreateBranchId=3);
-    AddMenuItem(hMenu, "Checkout branch", ++id, CheckoutBranchId=4);
-    AddMenuItem(hMenu, "Checkout revision", ++id, CheckoutRevisionId=5);
-    AddMenuItem(hMenu, "Clone", ++id, CloneId=6);
-    AddMenuItem(hMenu, "Commit", ++id, CommitId=7);
-    AddMenuItem(hMenu, "File history", ++id, FileHistoryId=8);
-    AddMenuItem(hMenu, "Reset file changes", ++id, ResetFileChangesId=9);
-    AddMenuItem(hMenu, "Pull", ++id, PullId=10);
-    AddMenuItem(hMenu, "Push", ++id, PushId=11);
-    AddMenuItem(hMenu, "Settings", ++id, SettingsId=12);
-    AddMenuItem(hMenu, "View diff", ++id, ViewDiffId=13);
+    if (settings.GetLength() < id)
+    {
+        return true;
+    } else
+    {
+        return (settings[id] != '0');
+    }
+}
+
+int CSimpleShlExt::PopulateMenu(HMENU hMenu, int id, bool isSubMenu)
+{
+    CString szShellVisibleMenuItems = GetRegistryValue(HKEY_CURRENT_USER, "SOFTWARE\\GitExtensions\\GitExtensions", "ShellVisibleMenuItems");
+
+    // preset values, if not used
+    AddFilesId = -1;
+    ApplyPatchId = -1;
+    BrowseId = -1;
+    CreateBranchId = -1;
+    CheckoutBranchId = -1;
+    CheckoutRevisionId = -1;
+    CloneId = -1;
+    CommitId = -1;
+    FileHistoryId = -1;
+    PullId = -1;
+    PushId = -1;
+    SettingsId = -1;
+    ViewDiffId = -1;
+    ResetFileChangesId = -1;
+
+    int pos = 0;
+
+    if (isSubMenu)
+    {
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 0))
+            AddMenuItem(hMenu, "Add files", ++id, AddFilesId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 1))
+            AddMenuItem(hMenu, "Apply patch", ++id, ApplyPatchId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 2))
+            AddMenuItem(hMenu, "Browse", ++id, BrowseId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 3))
+            AddMenuItem(hMenu, "Create branch", ++id, CreateBranchId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 4))
+            AddMenuItem(hMenu, "Checkout branch", ++id, CheckoutBranchId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 5))
+            AddMenuItem(hMenu, "Checkout revision", ++id, CheckoutRevisionId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 6))
+            AddMenuItem(hMenu, "Clone", ++id, CloneId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 7))
+            AddMenuItem(hMenu, "Commit", ++id, CommitId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 8))
+            AddMenuItem(hMenu, "File history", ++id, FileHistoryId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 9))
+            AddMenuItem(hMenu, "Reset file changes", ++id, ResetFileChangesId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 10))
+            AddMenuItem(hMenu, "Pull", ++id, PullId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 11))
+            AddMenuItem(hMenu, "Push", ++id, PushId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 12))
+            AddMenuItem(hMenu, "Settings", ++id, SettingsId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 13))
+            AddMenuItem(hMenu, "View diff", ++id, ViewDiffId=pos++);
+    }
+
+    else
+    {
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 0))
+            AddMenuItem(hMenu, "GitExtensions Add files", ++id, AddFilesId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 1))
+            AddMenuItem(hMenu, "GitExtensions Apply patch", ++id, ApplyPatchId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 2))
+            AddMenuItem(hMenu, "GitExtensions Browse", ++id, BrowseId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 3))
+            AddMenuItem(hMenu, "GitExtensions Create branch", ++id, CreateBranchId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 4))
+            AddMenuItem(hMenu, "GitExtensions Checkout branch", ++id, CheckoutBranchId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 5))
+            AddMenuItem(hMenu, "GitExtensions Checkout revision", ++id, CheckoutRevisionId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 6))
+            AddMenuItem(hMenu, "GitExtensions Clone", ++id, CloneId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 7))
+            AddMenuItem(hMenu, "GitExtensions Commit", ++id, CommitId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 8))
+            AddMenuItem(hMenu, "GitExtensions File history", ++id, FileHistoryId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 9))
+            AddMenuItem(hMenu, "GitExtensions Reset file changes", ++id, ResetFileChangesId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 10))
+            AddMenuItem(hMenu, "GitExtensions Pull", ++id, PullId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 11))
+            AddMenuItem(hMenu, "GitExtensions Push", ++id, PushId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 12))
+            AddMenuItem(hMenu, "GitExtensions Settings", ++id, SettingsId=pos++);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 13))
+            AddMenuItem(hMenu, "GitExtensions View diff", ++id, ViewDiffId=pos++);
+    }
 
     ++id;
     return id;
