@@ -78,6 +78,8 @@ namespace GitUI.Tag
                 MessageBox.Show(this, s, _messageCaption.Text);
             Close();
 
+            if (s.Contains("fatal:"))
+                return string.Empty;
             return Tagname.Text;
         }
 

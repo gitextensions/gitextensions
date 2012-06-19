@@ -151,6 +151,7 @@ namespace GitUI
             RefreshPullIcon();
             dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
             //Close();
+            GitUICommands.Instance.BrowseInitialize += (a, b) => Initialize();
         }
 
         private void ShowDashboard()
@@ -208,9 +209,10 @@ namespace GitUI
 
             Cursor.Current = Cursors.Default;
 
+
             try
             {
-                if (Settings.IconStyle.Equals("Cow", StringComparison.CurrentCultureIgnoreCase))
+                if (Settings.PlaySpecialStartupSound)
                 {
                     using (var cow_moo = Properties.Resources.cow_moo)
                         new System.Media.SoundPlayer(cow_moo).Play();
@@ -300,6 +302,9 @@ namespace GitUI
         private void InternalInitialize(bool hard)
         {
             Cursor.Current = Cursors.WaitCursor;
+
+            GitUICommands.Instance.RaisePreBrowseInitialize(this);
+
             bool validWorkingDir = Settings.Module.ValidWorkingDir();
             bool hasWorkingDir = !string.IsNullOrEmpty(Settings.WorkingDir);
             branchSelect.Text = validWorkingDir ? Settings.Module.GetSelectedBranch() : "";
@@ -343,6 +348,8 @@ namespace GitUI
             UpdateStashCount();
             // load custom user menu
             LoadUserMenu();
+
+            GitUICommands.Instance.RaisePostBrowseInitialize(this);
 
             Cursor.Current = Cursors.Default;
         }
@@ -1904,7 +1911,7 @@ namespace GitUI
                 var toolStripItem = (ToolStripItem)sender;
                 string args = force ? "-f" : null;
 
-                var command = string.Join(" ", "checkout", args, string.Format("\"{0}\"", toolStripItem.Text));
+                var command = "checkout".Join(" ", args).Join(" ", string.Format("\"{0}\"", toolStripItem.Text));
                 using (var form = new FormProcess(command))
                     form.ShowDialog(this);
                 needRefresh = true;

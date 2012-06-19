@@ -219,6 +219,13 @@ namespace GitCommands
             set { SafeSet("refreshcommitdialogonformfocus", value, ref _refreshCommitDialogOnFormFocus); }
         }
 
+        private static bool? _PlaySpecialStartupSound;
+        public static bool PlaySpecialStartupSound
+        {
+            get { return SafeGet("PlaySpecialStartupSound", false, ref _PlaySpecialStartupSound); }
+            set { SafeSet("PlaySpecialStartupSound", value, ref _PlaySpecialStartupSound); }
+        }
+
         private static bool? _followRenamesInFileHistory;
         public static bool FollowRenamesInFileHistory
         {
@@ -1086,6 +1093,20 @@ namespace GitCommands
         {
             get { return SafeGet("CreateLocalBranchForRemote", false, ref _CreateLocalBranchForRemote); }
             set { SafeSet("CreateLocalBranchForRemote", value, ref _CreateLocalBranchForRemote); }
+        }
+
+        private static bool? _ShellCascadeContextMenu;
+        public static bool ShellCascadeContextMenu
+        {
+            get { return SafeGet("ShellCascadeContextMenu", true, ref _ShellCascadeContextMenu); }
+            set { SafeSet("ShellCascadeContextMenu", value, ref _ShellCascadeContextMenu); }
+        }
+
+        private static string _ShellVisibleMenuItems;
+        public static string ShellVisibleMenuItems
+        {
+            get { return SafeGet("ShellVisibleMenuItems", "11111111111111", ref _ShellVisibleMenuItems); }
+            set { SafeSet("ShellVisibleMenuItems", value, ref _ShellVisibleMenuItems); }
         }
 
         public static string GetGitExtensionsFullPath()
