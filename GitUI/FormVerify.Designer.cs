@@ -147,7 +147,7 @@
             panel2.Dock = System.Windows.Forms.DockStyle.Top;
             panel2.Location = new System.Drawing.Point(0, 0);
             panel2.Name = "panel2";
-            panel2.Size = new System.Drawing.Size(859, 138);
+            panel2.Size = new System.Drawing.Size(859, 132);
             panel2.TabIndex = 4;
             // 
             // flowLayoutPanel1
@@ -159,7 +159,7 @@
             flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
             flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(5);
-            flowLayoutPanel1.Size = new System.Drawing.Size(351, 138);
+            flowLayoutPanel1.Size = new System.Drawing.Size(296, 132);
             flowLayoutPanel1.TabIndex = 13;
             // 
             // label2
@@ -167,17 +167,17 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(8, 5);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(335, 105);
+            this.label2.Size = new System.Drawing.Size(280, 84);
             this.label2.TabIndex = 15;
             this.label2.Text = resources.GetString("label2.Text");
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 115);
+            this.label1.Location = new System.Drawing.Point(8, 94);
             this.label1.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(200, 15);
+            this.label1.Size = new System.Drawing.Size(166, 12);
             this.label1.TabIndex = 16;
             this.label1.Text = "Double-click on a row for quick view";
             // 
@@ -188,7 +188,7 @@
             this.ShowOnlyCommits.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ShowOnlyCommits.Location = new System.Drawing.Point(430, 9);
             this.ShowOnlyCommits.Name = "ShowOnlyCommits";
-            this.ShowOnlyCommits.Size = new System.Drawing.Size(131, 19);
+            this.ShowOnlyCommits.Size = new System.Drawing.Size(111, 16);
             this.ShowOnlyCommits.TabIndex = 0;
             this.ShowOnlyCommits.Text = "Show only commits";
             this.ShowOnlyCommits.UseVisualStyleBackColor = true;
@@ -201,7 +201,7 @@
             this.NoReflogs.CheckState = System.Windows.Forms.CheckState.Checked;
             this.NoReflogs.Location = new System.Drawing.Point(430, 35);
             this.NoReflogs.Name = "NoReflogs";
-            this.NoReflogs.Size = new System.Drawing.Size(375, 34);
+            this.NoReflogs.Size = new System.Drawing.Size(318, 28);
             this.NoReflogs.TabIndex = 1;
             this.NoReflogs.Text = "Do not consider commits that are referenced only by an entry in a \r\nreflog to be " +
     "reachable.";
@@ -213,7 +213,7 @@
             this.FullCheck.AutoSize = true;
             this.FullCheck.Location = new System.Drawing.Point(430, 101);
             this.FullCheck.Name = "FullCheck";
-            this.FullCheck.Size = new System.Drawing.Size(397, 34);
+            this.FullCheck.Size = new System.Drawing.Size(333, 28);
             this.FullCheck.TabIndex = 3;
             this.FullCheck.Text = "Check not just objects in GIT_OBJECT_DIRECTORY ($GIT_DIR/objects), \r\nbut also the" +
     " ones found in alternate object pools.\r\n";
@@ -225,7 +225,7 @@
             this.Unreachable.AutoSize = true;
             this.Unreachable.Location = new System.Drawing.Point(430, 68);
             this.Unreachable.Name = "Unreachable";
-            this.Unreachable.Size = new System.Drawing.Size(429, 34);
+            this.Unreachable.Size = new System.Drawing.Size(361, 28);
             this.Unreachable.TabIndex = 2;
             this.Unreachable.Text = "Print out objects that exist but that aren\'t readable from any of the reference \r" +
     "\nnodes.\r\n";
@@ -239,13 +239,13 @@
             this.mnuLostObjectsCreateTag,
             this.mnuLostObjectsCreateBranch});
             this.mnuLostObjects.Name = "mnuLostObjects";
-            this.mnuLostObjects.Size = new System.Drawing.Size(190, 70);
+            this.mnuLostObjects.Size = new System.Drawing.Size(164, 70);
             // 
             // mnuLostObjectView
             // 
             this.mnuLostObjectView.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.mnuLostObjectView.Name = "mnuLostObjectView";
-            this.mnuLostObjectView.Size = new System.Drawing.Size(189, 22);
+            this.mnuLostObjectView.Size = new System.Drawing.Size(163, 22);
             this.mnuLostObjectView.Text = "View";
             this.mnuLostObjectView.Click += new System.EventHandler(this.mnuLostObjectView_Click);
             // 
@@ -253,7 +253,7 @@
             // 
             this.mnuLostObjectsCreateTag.Name = "mnuLostObjectsCreateTag";
             this.mnuLostObjectsCreateTag.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
-            this.mnuLostObjectsCreateTag.Size = new System.Drawing.Size(189, 22);
+            this.mnuLostObjectsCreateTag.Size = new System.Drawing.Size(163, 22);
             this.mnuLostObjectsCreateTag.Text = "Create tag";
             this.mnuLostObjectsCreateTag.Click += new System.EventHandler(this.mnuLostObjectsCreateTag_Click);
             // 
@@ -261,7 +261,7 @@
             // 
             this.mnuLostObjectsCreateBranch.Name = "mnuLostObjectsCreateBranch";
             this.mnuLostObjectsCreateBranch.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
-            this.mnuLostObjectsCreateBranch.Size = new System.Drawing.Size(189, 22);
+            this.mnuLostObjectsCreateBranch.Size = new System.Drawing.Size(163, 22);
             this.mnuLostObjectsCreateBranch.Text = "Create branch";
             this.mnuLostObjectsCreateBranch.Click += new System.EventHandler(this.mnuLostObjectsCreateBranch_Click);
             // 
@@ -282,7 +282,7 @@
             this.columnHash});
             this.Warnings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Warnings.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.Warnings.Location = new System.Drawing.Point(0, 138);
+            this.Warnings.Location = new System.Drawing.Point(0, 132);
             this.Warnings.MultiSelect = false;
             this.Warnings.Name = "Warnings";
             this.Warnings.RowHeadersVisible = false;
@@ -290,7 +290,7 @@
             this.Warnings.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.Warnings.ShowCellToolTips = false;
             this.Warnings.ShowEditingIcon = false;
-            this.Warnings.Size = new System.Drawing.Size(859, 376);
+            this.Warnings.Size = new System.Drawing.Size(859, 382);
             this.Warnings.TabIndex = 4;
             this.Warnings.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Warnings_CellMouseDoubleClick);
             this.Warnings.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Warnings_CellMouseDown);
@@ -311,7 +311,7 @@
             this.columnDate.HeaderText = "Date";
             this.columnDate.Name = "columnDate";
             this.columnDate.ReadOnly = true;
-            this.columnDate.Width = 56;
+            this.columnDate.Width = 50;
             // 
             // columnType
             // 
@@ -320,7 +320,7 @@
             this.columnType.HeaderText = "Type";
             this.columnType.Name = "columnType";
             this.columnType.ReadOnly = true;
-            this.columnType.Width = 58;
+            this.columnType.Width = 51;
             // 
             // columnSubject
             // 
@@ -351,7 +351,7 @@
             // 
             // FormVerify
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCloseDialog;
             this.ClientSize = new System.Drawing.Size(859, 575);

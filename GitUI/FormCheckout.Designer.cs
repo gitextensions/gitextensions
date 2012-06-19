@@ -32,6 +32,7 @@
             this.RevisionGrid = new GitUI.RevisionGrid();
             this.Force = new System.Windows.Forms.CheckBox();
             this.Ok = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -59,15 +60,14 @@
             // 
             // RevisionGrid
             // 
-            this.RevisionGrid.AllowGraphWithFilter = false;
             this.RevisionGrid.BranchFilter = "";
             this.RevisionGrid.CurrentCheckout = "";
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RevisionGrid.Filter = "";
+            this.RevisionGrid.FixedFilter = "";
             this.RevisionGrid.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.RevisionGrid.InMemAuthorFilter = "";
             this.RevisionGrid.InMemCommitterFilter = "";
-            this.RevisionGrid.InMemFilterIgnoreCase = false;
             this.RevisionGrid.InMemMessageFilter = "";
             this.RevisionGrid.LastRow = 0;
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
@@ -75,6 +75,7 @@
             this.RevisionGrid.Name = "RevisionGrid";
             this.RevisionGrid.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RevisionGrid.Size = new System.Drawing.Size(699, 425);
+            this.RevisionGrid.SuperprojectCurrentCheckout = null;
             this.RevisionGrid.TabIndex = 0;
             // 
             // Force
@@ -82,7 +83,7 @@
             this.Force.AutoSize = true;
             this.Force.Location = new System.Drawing.Point(3, 5);
             this.Force.Name = "Force";
-            this.Force.Size = new System.Drawing.Size(53, 17);
+            this.Force.Size = new System.Drawing.Size(48, 16);
             this.Force.TabIndex = 3;
             this.Force.Text = "Force";
             this.Force.UseVisualStyleBackColor = true;
@@ -100,7 +101,7 @@
             // 
             // FormCheckout
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(699, 456);
             this.Controls.Add(this.splitContainer1);
@@ -108,11 +109,12 @@
             this.Name = "FormCheckout";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Checkout revision";
-            this.Load += new System.EventHandler(this.FormCheckoutLoad);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCheckoutFormClosing);
+            this.Load += new System.EventHandler(this.FormCheckoutLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 

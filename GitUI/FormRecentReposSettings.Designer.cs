@@ -72,34 +72,34 @@
             this.removeAnchorToolStripMenuItem,
             this.removeRecentToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(258, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(222, 92);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // anchorToMostToolStripMenuItem
             // 
             this.anchorToMostToolStripMenuItem.Name = "anchorToMostToolStripMenuItem";
-            this.anchorToMostToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.anchorToMostToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.anchorToMostToolStripMenuItem.Text = "Anchor to most recent repositories";
             this.anchorToMostToolStripMenuItem.Click += new System.EventHandler(this.anchorToMostToolStripMenuItem_Click);
             // 
             // anchorToLessToolStripMenuItem
             // 
             this.anchorToLessToolStripMenuItem.Name = "anchorToLessToolStripMenuItem";
-            this.anchorToLessToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.anchorToLessToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.anchorToLessToolStripMenuItem.Text = "Anchor to less recent repositories";
             this.anchorToLessToolStripMenuItem.Click += new System.EventHandler(this.anchorToLessToolStripMenuItem_Click);
             // 
             // removeAnchorToolStripMenuItem
             // 
             this.removeAnchorToolStripMenuItem.Name = "removeAnchorToolStripMenuItem";
-            this.removeAnchorToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.removeAnchorToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.removeAnchorToolStripMenuItem.Text = "Remove anchor";
             this.removeAnchorToolStripMenuItem.Click += new System.EventHandler(this.removeAnchorToolStripMenuItem_Click);
             // 
             // removeRecentToolStripMenuItem
             // 
             this.removeRecentToolStripMenuItem.Name = "removeRecentToolStripMenuItem";
-            this.removeRecentToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.removeRecentToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.removeRecentToolStripMenuItem.Text = "Remove from recent repositories";
             this.removeRecentToolStripMenuItem.Click += new System.EventHandler(this.removeRecentToolStripMenuItem_Click);
             // 
@@ -112,7 +112,7 @@
             0,
             0});
             this.comboMinWidthEdit.Name = "comboMinWidthEdit";
-            this.comboMinWidthEdit.Size = new System.Drawing.Size(61, 23);
+            this.comboMinWidthEdit.Size = new System.Drawing.Size(61, 21);
             this.comboMinWidthEdit.TabIndex = 8;
             this.comboMinWidthEdit.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
             // 
@@ -121,7 +121,7 @@
             this.comboMinWidthLabel.AutoSize = true;
             this.comboMinWidthLabel.Location = new System.Drawing.Point(15, 182);
             this.comboMinWidthLabel.Name = "comboMinWidthLabel";
-            this.comboMinWidthLabel.Size = new System.Drawing.Size(231, 15);
+            this.comboMinWidthLabel.Size = new System.Drawing.Size(192, 12);
             this.comboMinWidthLabel.TabIndex = 7;
             this.comboMinWidthLabel.Text = "Combobox minimum width (0 = Autosize)";
             // 
@@ -142,7 +142,7 @@
             this.dontShortenRB.AutoSize = true;
             this.dontShortenRB.Location = new System.Drawing.Point(6, 22);
             this.dontShortenRB.Name = "dontShortenRB";
-            this.dontShortenRB.Size = new System.Drawing.Size(110, 19);
+            this.dontShortenRB.Size = new System.Drawing.Size(96, 16);
             this.dontShortenRB.TabIndex = 0;
             this.dontShortenRB.TabStop = true;
             this.dontShortenRB.Text = "Do not shorten  ";
@@ -154,7 +154,7 @@
             this.middleDotRB.AutoSize = true;
             this.middleDotRB.Location = new System.Drawing.Point(6, 68);
             this.middleDotRB.Name = "middleDotRB";
-            this.middleDotRB.Size = new System.Drawing.Size(185, 19);
+            this.middleDotRB.Size = new System.Drawing.Size(156, 16);
             this.middleDotRB.TabIndex = 2;
             this.middleDotRB.TabStop = true;
             this.middleDotRB.Text = "Replace middle part with dots ";
@@ -166,7 +166,7 @@
             this.mostSigDirRB.AutoSize = true;
             this.mostSigDirRB.Location = new System.Drawing.Point(6, 45);
             this.mostSigDirRB.Name = "mostSigDirRB";
-            this.mostSigDirRB.Size = new System.Drawing.Size(186, 19);
+            this.mostSigDirRB.Size = new System.Drawing.Size(155, 16);
             this.mostSigDirRB.TabIndex = 1;
             this.mostSigDirRB.TabStop = true;
             this.mostSigDirRB.Text = "The most significant directory ";
@@ -194,17 +194,17 @@
             this.LessRecentLB.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LessRecentLB.FormattingEnabled = true;
             this.LessRecentLB.HorizontalScrollbar = true;
-            this.LessRecentLB.ItemHeight = 15;
-            this.LessRecentLB.Location = new System.Drawing.Point(0, 216);
+            this.LessRecentLB.ItemHeight = 12;
+            this.LessRecentLB.Location = new System.Drawing.Point(0, 207);
             this.LessRecentLB.Name = "LessRecentLB";
-            this.LessRecentLB.Size = new System.Drawing.Size(281, 206);
+            this.LessRecentLB.Size = new System.Drawing.Size(281, 215);
             this.LessRecentLB.TabIndex = 3;
             // 
             // panel3
             // 
             this.panel3.Controls.Add(this.label1);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(0, 191);
+            this.panel3.Location = new System.Drawing.Point(0, 182);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(281, 25);
             this.panel3.TabIndex = 2;
@@ -214,7 +214,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(129, 15);
+            this.label1.Size = new System.Drawing.Size(105, 12);
             this.label1.TabIndex = 0;
             this.label1.Text = "Less recent repositories";
             // 
@@ -225,10 +225,10 @@
             this.MostRecentLB.Dock = System.Windows.Forms.DockStyle.Top;
             this.MostRecentLB.FormattingEnabled = true;
             this.MostRecentLB.HorizontalScrollbar = true;
-            this.MostRecentLB.ItemHeight = 15;
+            this.MostRecentLB.ItemHeight = 12;
             this.MostRecentLB.Location = new System.Drawing.Point(0, 22);
             this.MostRecentLB.Name = "MostRecentLB";
-            this.MostRecentLB.Size = new System.Drawing.Size(281, 169);
+            this.MostRecentLB.Size = new System.Drawing.Size(281, 160);
             this.MostRecentLB.TabIndex = 1;
             // 
             // panel2
@@ -245,7 +245,7 @@
             this.MostRecentLabel.AutoSize = true;
             this.MostRecentLabel.Location = new System.Drawing.Point(3, 6);
             this.MostRecentLabel.Name = "MostRecentLabel";
-            this.MostRecentLabel.Size = new System.Drawing.Size(134, 15);
+            this.MostRecentLabel.Size = new System.Drawing.Size(109, 12);
             this.MostRecentLabel.TabIndex = 0;
             this.MostRecentLabel.Text = "Most recent repositories";
             // 
@@ -299,7 +299,7 @@
             0,
             0});
             this._NO_TRANSLATE_maxRecentRepositories.Name = "_NO_TRANSLATE_maxRecentRepositories";
-            this._NO_TRANSLATE_maxRecentRepositories.Size = new System.Drawing.Size(61, 23);
+            this._NO_TRANSLATE_maxRecentRepositories.Size = new System.Drawing.Size(61, 21);
             this._NO_TRANSLATE_maxRecentRepositories.TabIndex = 1;
             this._NO_TRANSLATE_maxRecentRepositories.ValueChanged += new System.EventHandler(this.sortMostRecentRepos_CheckedChanged);
             // 
@@ -308,7 +308,7 @@
             this.maxRecentRepositories.AutoSize = true;
             this.maxRecentRepositories.Location = new System.Drawing.Point(11, 14);
             this.maxRecentRepositories.Name = "maxRecentRepositories";
-            this.maxRecentRepositories.Size = new System.Drawing.Size(250, 15);
+            this.maxRecentRepositories.Size = new System.Drawing.Size(207, 12);
             this.maxRecentRepositories.TabIndex = 0;
             this.maxRecentRepositories.Text = "Maximum number of most recent repositories";
             // 
@@ -319,7 +319,7 @@
             this.sortLessRecentRepos.Location = new System.Drawing.Point(12, 58);
             this.sortLessRecentRepos.Name = "sortLessRecentRepos";
             this.sortLessRecentRepos.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.sortLessRecentRepos.Size = new System.Drawing.Size(245, 19);
+            this.sortLessRecentRepos.Size = new System.Drawing.Size(203, 16);
             this.sortLessRecentRepos.TabIndex = 3;
             this.sortLessRecentRepos.Text = "Sort less recent repositories alphabetically";
             this.sortLessRecentRepos.UseVisualStyleBackColor = true;
@@ -332,7 +332,7 @@
             this.sortMostRecentRepos.Location = new System.Drawing.Point(12, 35);
             this.sortMostRecentRepos.Name = "sortMostRecentRepos";
             this.sortMostRecentRepos.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.sortMostRecentRepos.Size = new System.Drawing.Size(253, 19);
+            this.sortMostRecentRepos.Size = new System.Drawing.Size(210, 16);
             this.sortMostRecentRepos.TabIndex = 2;
             this.sortMostRecentRepos.Text = "Sort most recent repositories alphabetically";
             this.sortMostRecentRepos.UseVisualStyleBackColor = true;
@@ -340,7 +340,7 @@
             // 
             // FormRecentReposSettings
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(631, 456);
             this.Controls.Add(this.comboMinWidthEdit);

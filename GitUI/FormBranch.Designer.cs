@@ -35,6 +35,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.Ok = new System.Windows.Forms.Button();
             this.BName = new System.Windows.Forms.TextBox();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -65,22 +66,21 @@
             // 
             // RevisionGrid
             // 
-            this.RevisionGrid.AllowGraphWithFilter = false;
             this.RevisionGrid.BranchFilter = "";
             this.RevisionGrid.CurrentCheckout = "";
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RevisionGrid.Filter = "";
+            this.RevisionGrid.FixedFilter = "";
             this.RevisionGrid.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.RevisionGrid.InMemAuthorFilter = "";
             this.RevisionGrid.InMemCommitterFilter = "";
-            this.RevisionGrid.InMemFilterIgnoreCase = false;
             this.RevisionGrid.InMemMessageFilter = "";
             this.RevisionGrid.LastRow = 0;
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
-            this.RevisionGrid.MultiSelect = false;
             this.RevisionGrid.Name = "RevisionGrid";
             this.RevisionGrid.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RevisionGrid.Size = new System.Drawing.Size(746, 445);
+            this.RevisionGrid.SuperprojectCurrentCheckout = null;
             this.RevisionGrid.TabIndex = 0;
             // 
             // CheckoutAfterCreate
@@ -89,9 +89,9 @@
             this.CheckoutAfterCreate.AutoSize = true;
             this.CheckoutAfterCreate.Checked = true;
             this.CheckoutAfterCreate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CheckoutAfterCreate.Location = new System.Drawing.Point(244, 9);
+            this.CheckoutAfterCreate.Location = new System.Drawing.Point(244, 10);
             this.CheckoutAfterCreate.Name = "CheckoutAfterCreate";
-            this.CheckoutAfterCreate.Size = new System.Drawing.Size(132, 17);
+            this.CheckoutAfterCreate.Size = new System.Drawing.Size(117, 16);
             this.CheckoutAfterCreate.TabIndex = 4;
             this.CheckoutAfterCreate.Text = "Checkout after create";
             this.CheckoutAfterCreate.UseVisualStyleBackColor = true;
@@ -113,7 +113,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(69, 13);
+            this.label1.Size = new System.Drawing.Size(64, 12);
             this.label1.TabIndex = 2;
             this.label1.Text = "Branch name";
             // 
@@ -139,17 +139,18 @@
             // FormBranch
             // 
             this.AcceptButton = this.Ok;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(746, 484);
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormBranch";
             this.Text = "Create Branch";
-            this.Load += new System.EventHandler(this.FormBranch_Load);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormBranch_FormClosing);
+            this.Load += new System.EventHandler(this.FormBranch_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 

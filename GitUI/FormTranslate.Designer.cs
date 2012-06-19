@@ -124,7 +124,7 @@ namespace GitUI
             this.toolStripButtonNew.Image = global::GitUI.Properties.Resources.New;
             this.toolStripButtonNew.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonNew.Name = "toolStripButtonNew";
-            this.toolStripButtonNew.Size = new System.Drawing.Size(51, 27);
+            this.toolStripButtonNew.Size = new System.Drawing.Size(44, 27);
             this.toolStripButtonNew.Text = "New";
             this.toolStripButtonNew.ToolTipText = "Create new translation";
             this.toolStripButtonNew.Click += new System.EventHandler(this.toolStripButtonNew_Click);
@@ -147,7 +147,7 @@ namespace GitUI
             // toolStripTranslationLabel
             // 
             this.toolStripTranslationLabel.Name = "toolStripTranslationLabel";
-            this.toolStripTranslationLabel.Size = new System.Drawing.Size(109, 27);
+            this.toolStripTranslationLabel.Size = new System.Drawing.Size(87, 27);
             this.toolStripTranslationLabel.Text = "Current translation:";
             // 
             // translations
@@ -162,7 +162,7 @@ namespace GitUI
             // toolStripTranslationLanguageCode
             // 
             this.toolStripTranslationLanguageCode.Name = "toolStripTranslationLanguageCode";
-            this.toolStripTranslationLanguageCode.Size = new System.Drawing.Size(91, 27);
+            this.toolStripTranslationLanguageCode.Size = new System.Drawing.Size(76, 27);
             this.toolStripTranslationLanguageCode.Text = "Language code:";
             // 
             // _NO_TRANSLATE_languageCode
@@ -226,7 +226,7 @@ namespace GitUI
             this.translateCategories.DisplayMember = "Name";
             this.translateCategories.Dock = System.Windows.Forms.DockStyle.Fill;
             this.translateCategories.FormattingEnabled = true;
-            this.translateCategories.ItemHeight = 15;
+            this.translateCategories.ItemHeight = 12;
             this.translateCategories.Location = new System.Drawing.Point(0, 0);
             this.translateCategories.Name = "translateCategories";
             this.translateCategories.Size = new System.Drawing.Size(151, 436);
@@ -426,7 +426,7 @@ namespace GitUI
             // 
             // FormTranslate
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(749, 472);
             this.Controls.Add(this.tableLayoutPanel1);

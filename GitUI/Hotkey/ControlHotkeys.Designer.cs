@@ -46,7 +46,7 @@
             this.lHotkey.Location = new System.Drawing.Point(3, 471);
             this.lHotkey.MinimumSize = new System.Drawing.Size(120, 0);
             this.lHotkey.Name = "lHotkey";
-            this.lHotkey.Size = new System.Drawing.Size(120, 20);
+            this.lHotkey.Size = new System.Drawing.Size(120, 12);
             this.lHotkey.TabIndex = 3;
             this.lHotkey.Text = "Hotkey";
             // 
@@ -77,7 +77,7 @@
             this.lHotkeyableItems.AutoSize = true;
             this.lHotkeyableItems.Location = new System.Drawing.Point(3, 3);
             this.lHotkeyableItems.Name = "lHotkeyableItems";
-            this.lHotkeyableItems.Size = new System.Drawing.Size(125, 20);
+            this.lHotkeyableItems.Size = new System.Drawing.Size(81, 12);
             this.lHotkeyableItems.TabIndex = 0;
             this.lHotkeyableItems.Text = "Hotkeyable Items";
             // 
@@ -128,7 +128,7 @@
             this.cmbSettings.DisplayMember = "Name";
             this.cmbSettings.FormattingEnabled = true;
             this.cmbSettings.IntegralHeight = false;
-            this.cmbSettings.ItemHeight = 20;
+            this.cmbSettings.ItemHeight = 12;
             this.cmbSettings.Location = new System.Drawing.Point(6, 27);
             this.cmbSettings.Name = "cmbSettings";
             this.cmbSettings.Size = new System.Drawing.Size(232, 433);
@@ -139,11 +139,11 @@
             // 
             this.txtHotkey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtHotkey.ForeColor = System.Drawing.Color.Black;
+            this.txtHotkey.ForeColor = System.Drawing.Color.Red;
             this.txtHotkey.KeyData = System.Windows.Forms.Keys.None;
             this.txtHotkey.Location = new System.Drawing.Point(129, 468);
             this.txtHotkey.Name = "txtHotkey";
-            this.txtHotkey.Size = new System.Drawing.Size(445, 27);
+            this.txtHotkey.Size = new System.Drawing.Size(445, 21);
             this.txtHotkey.TabIndex = 4;
             this.txtHotkey.Text = "None";
             // 

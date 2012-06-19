@@ -58,7 +58,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 5);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(31, 13);
+            this.label1.Size = new System.Drawing.Size(25, 12);
             this.label1.TabIndex = 0;
             this.label1.Text = "Filter";
             // 
@@ -77,14 +77,14 @@
             this.force.AutoSize = true;
             this.force.Location = new System.Drawing.Point(71, 32);
             this.force.Name = "force";
-            this.force.Size = new System.Drawing.Size(53, 17);
+            this.force.Size = new System.Drawing.Size(48, 16);
             this.force.TabIndex = 4;
             this.force.Text = "Force";
             this.force.UseVisualStyleBackColor = true;
             // 
             // FormAddFiles
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(443, 56);
             this.Controls.Add(this.force);

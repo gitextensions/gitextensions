@@ -47,9 +47,11 @@
             this.IgnoreWhitespace = new System.Windows.Forms.CheckBox();
             this.ContinuePanel = new System.Windows.Forms.Panel();
             this.MergeToolPanel = new System.Windows.Forms.Panel();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -71,7 +73,7 @@
             this.PatchFile.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
             this.PatchFile.Location = new System.Drawing.Point(166, 10);
             this.PatchFile.Name = "PatchFile";
-            this.PatchFile.Size = new System.Drawing.Size(281, 23);
+            this.PatchFile.Size = new System.Drawing.Size(281, 21);
             this.PatchFile.TabIndex = 1;
             // 
             // Apply
@@ -199,7 +201,7 @@
             this.PatchDir.Enabled = false;
             this.PatchDir.Location = new System.Drawing.Point(166, 36);
             this.PatchDir.Name = "PatchDir";
-            this.PatchDir.Size = new System.Drawing.Size(281, 23);
+            this.PatchDir.Size = new System.Drawing.Size(281, 21);
             this.PatchDir.TabIndex = 1;
             // 
             // BrowseDir
@@ -218,7 +220,7 @@
             this.PatchDirMode.AutoSize = true;
             this.PatchDirMode.Location = new System.Drawing.Point(13, 36);
             this.PatchDirMode.Name = "PatchDirMode";
-            this.PatchDirMode.Size = new System.Drawing.Size(72, 19);
+            this.PatchDirMode.Size = new System.Drawing.Size(62, 16);
             this.PatchDirMode.TabIndex = 1;
             this.PatchDirMode.Text = "Patch dir";
             this.PatchDirMode.UseVisualStyleBackColor = true;
@@ -230,7 +232,7 @@
             this.PatchFileMode.Checked = true;
             this.PatchFileMode.Location = new System.Drawing.Point(13, 11);
             this.PatchFileMode.Name = "PatchFileMode";
-            this.PatchFileMode.Size = new System.Drawing.Size(74, 19);
+            this.PatchFileMode.Size = new System.Drawing.Size(63, 16);
             this.PatchFileMode.TabIndex = 0;
             this.PatchFileMode.TabStop = true;
             this.PatchFileMode.Text = "Patch file";
@@ -242,6 +244,7 @@
             this.patchGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.patchGrid1.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.patchGrid1.Location = new System.Drawing.Point(0, 0);
+            this.patchGrid1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.patchGrid1.Name = "patchGrid1";
             this.patchGrid1.Size = new System.Drawing.Size(629, 315);
             this.patchGrid1.TabIndex = 10;
@@ -265,7 +268,7 @@
             this.IgnoreWhitespace.AutoSize = true;
             this.IgnoreWhitespace.Location = new System.Drawing.Point(8, 34);
             this.IgnoreWhitespace.Name = "IgnoreWhitespace";
-            this.IgnoreWhitespace.Size = new System.Drawing.Size(105, 19);
+            this.IgnoreWhitespace.Size = new System.Drawing.Size(90, 16);
             this.IgnoreWhitespace.TabIndex = 5;
             this.IgnoreWhitespace.Text = "Ignore Wh.spc.";
             this.IgnoreWhitespace.UseVisualStyleBackColor = true;
@@ -290,7 +293,7 @@
             // FormApplyPatch
             // 
             this.AcceptButton = this.Apply;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(764, 391);
             this.Controls.Add(this.splitContainer1);
@@ -298,15 +301,17 @@
             this.Name = "FormApplyPatch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Apply patch";
-            this.Load += new System.EventHandler(this.MergePatch_Load);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MergePatch_FormClosing);
+            this.Load += new System.EventHandler(this.MergePatch_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             this.ResumeLayout(false);
 

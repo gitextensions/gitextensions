@@ -40,6 +40,7 @@ namespace GitUI
             this.picBoxSuccessFail = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -77,7 +78,7 @@ namespace GitUI
             this.ProgressBar.Location = new System.Drawing.Point(3, 4);
             this.ProgressBar.MarqueeAnimationSpeed = 1;
             this.ProgressBar.Name = "ProgressBar";
-            this.ProgressBar.Size = new System.Drawing.Size(245, 25);
+            this.ProgressBar.Size = new System.Drawing.Size(262, 25);
             this.ProgressBar.Step = 50;
             this.ProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.ProgressBar.TabIndex = 3;
@@ -86,9 +87,9 @@ namespace GitUI
             // 
             this.KeepDialogOpen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.KeepDialogOpen.AutoSize = true;
-            this.KeepDialogOpen.Location = new System.Drawing.Point(254, 6);
+            this.KeepDialogOpen.Location = new System.Drawing.Point(271, 7);
             this.KeepDialogOpen.Name = "KeepDialogOpen";
-            this.KeepDialogOpen.Size = new System.Drawing.Size(120, 22);
+            this.KeepDialogOpen.Size = new System.Drawing.Size(103, 19);
             this.KeepDialogOpen.TabIndex = 3;
             this.KeepDialogOpen.Text = "Keep dialog open";
             this.KeepDialogOpen.UseCompatibleTextRendering = true;
@@ -173,7 +174,7 @@ namespace GitUI
             // 
             // FormStatus
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(565, 327);
             this.ControlBox = false;
@@ -190,6 +191,7 @@ namespace GitUI
             this.tableLayoutPanel2.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picBoxSuccessFail)).EndInit();
             this.ResumeLayout(false);
