@@ -32,11 +32,10 @@ namespace GitUI
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormStash));
             this.gitStashBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
-            this.toolStrip1 = new ToolStripEx();
+            this.toolStrip1 = new GitUI.ToolStripEx();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.Stashes = new System.Windows.Forms.ToolStripComboBox();
@@ -53,13 +52,16 @@ namespace GitUI
             this.Stashed = new GitUI.FileStatusList();
             this.View = new GitUI.Editor.FileViewer();
             ((System.ComponentModel.ISupportInitialize)(this.gitStashBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
             this.toolStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).BeginInit();
             this.splitContainer5.Panel1.SuspendLayout();
             this.splitContainer5.Panel2.SuspendLayout();
             this.splitContainer5.SuspendLayout();
@@ -112,6 +114,7 @@ namespace GitUI
             // toolStrip1
             // 
             this.toolStrip1.BackColor = System.Drawing.SystemColors.Control;
+            this.toolStrip1.ClickThrough = true;
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -142,7 +145,7 @@ namespace GitUI
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
             this.toolStripLabel1.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.toolStripLabel1.Size = new System.Drawing.Size(39, 24);
+            this.toolStripLabel1.Size = new System.Drawing.Size(31, 24);
             this.toolStripLabel1.Text = "Show:";
             // 
             // Stashes
@@ -216,9 +219,9 @@ namespace GitUI
             // 
             this.chkIncludeUntrackedFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.chkIncludeUntrackedFiles.AutoSize = true;
-            this.chkIncludeUntrackedFiles.Location = new System.Drawing.Point(136, 330);
+            this.chkIncludeUntrackedFiles.Location = new System.Drawing.Point(158, 333);
             this.chkIncludeUntrackedFiles.Name = "chkIncludeUntrackedFiles";
-            this.chkIncludeUntrackedFiles.Size = new System.Drawing.Size(145, 19);
+            this.chkIncludeUntrackedFiles.Size = new System.Drawing.Size(123, 16);
             this.chkIncludeUntrackedFiles.TabIndex = 14;
             this.chkIncludeUntrackedFiles.Text = "Include untracked files";
             this.chkIncludeUntrackedFiles.UseVisualStyleBackColor = true;
@@ -227,9 +230,9 @@ namespace GitUI
             // 
             this.StashKeepIndex.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.StashKeepIndex.AutoSize = true;
-            this.StashKeepIndex.Location = new System.Drawing.Point(5, 330);
+            this.StashKeepIndex.Location = new System.Drawing.Point(5, 333);
             this.StashKeepIndex.Name = "StashKeepIndex";
-            this.StashKeepIndex.Size = new System.Drawing.Size(83, 19);
+            this.StashKeepIndex.Size = new System.Drawing.Size(73, 16);
             this.StashKeepIndex.TabIndex = 13;
             this.StashKeepIndex.Text = "Keep index";
             this.StashKeepIndex.UseVisualStyleBackColor = true;
@@ -306,22 +309,15 @@ namespace GitUI
             // 
             this.View.Dock = System.Windows.Forms.DockStyle.Fill;
             this.View.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.View.IgnoreWhitespaceChanges = false;
-            this.View.IsReadOnly = true;
             this.View.Location = new System.Drawing.Point(0, 0);
             this.View.Margin = new System.Windows.Forms.Padding(4);
             this.View.Name = "View";
-            this.View.NumberOfVisibleLines = 3;
-            this.View.ScrollPos = 0;
-            this.View.ShowEntireFile = false;
-            this.View.ShowLineNumbers = true;
             this.View.Size = new System.Drawing.Size(420, 520);
             this.View.TabIndex = 0;
-            this.View.TreatAllFilesAsText = false;
             // 
             // FormStash
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(708, 520);
             this.Controls.Add(this.splitContainer2);
@@ -336,16 +332,19 @@ namespace GitUI
             ((System.ComponentModel.ISupportInitialize)(this.gitStashBindingSource)).EndInit();
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel1.PerformLayout();
             this.splitContainer3.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
             this.splitContainer3.ResumeLayout(false);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.splitContainer5.Panel1.ResumeLayout(false);
             this.splitContainer5.Panel2.ResumeLayout(false);
             this.splitContainer5.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).EndInit();
             this.splitContainer5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).EndInit();
             this.ResumeLayout(false);

@@ -42,7 +42,7 @@
             this.lineLabel.AutoSize = true;
             this.lineLabel.Location = new System.Drawing.Point(12, 9);
             this.lineLabel.Name = "lineLabel";
-            this.lineLabel.Size = new System.Drawing.Size(65, 13);
+            this.lineLabel.Size = new System.Drawing.Size(61, 12);
             this.lineLabel.TabIndex = 5;
             this.lineLabel.Text = "Line number";
             // 
@@ -87,7 +87,7 @@
             // FormGoToLine
             // 
             this.AcceptButton = this.okBtn;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(237, 91);
             this.Controls.Add(this.okBtn);

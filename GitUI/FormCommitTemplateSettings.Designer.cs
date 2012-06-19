@@ -141,7 +141,7 @@
             this.tableLayoutPanel3.Controls.Add(this.labelRegExCheck, 0, 3);
             this.tableLayoutPanel3.Controls.Add(this._NO_TRANSLATE_textBoxCommitValidationRegex, 1, 3);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 19);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 17);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 5;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -149,16 +149,16 @@
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(686, 135);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(686, 137);
             this.tableLayoutPanel3.TabIndex = 0;
             // 
             // labelMaxLineLength
             // 
             this.labelMaxLineLength.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.labelMaxLineLength.AutoSize = true;
-            this.labelMaxLineLength.Location = new System.Drawing.Point(3, 36);
+            this.labelMaxLineLength.Location = new System.Drawing.Point(3, 34);
             this.labelMaxLineLength.Name = "labelMaxLineLength";
-            this.labelMaxLineLength.Size = new System.Drawing.Size(336, 15);
+            this.labelMaxLineLength.Size = new System.Drawing.Size(280, 12);
             this.labelMaxLineLength.TabIndex = 4;
             this.labelMaxLineLength.Text = "Maximum numbers of characters per line (0 = check disabled):";
             // 
@@ -168,16 +168,16 @@
             this.labelMaxFirstLineLength.AutoSize = true;
             this.labelMaxFirstLineLength.Location = new System.Drawing.Point(3, 7);
             this.labelMaxFirstLineLength.Name = "labelMaxFirstLineLength";
-            this.labelMaxFirstLineLength.Size = new System.Drawing.Size(352, 15);
+            this.labelMaxFirstLineLength.Size = new System.Drawing.Size(292, 12);
             this.labelMaxFirstLineLength.TabIndex = 0;
             this.labelMaxFirstLineLength.Text = "Maximum numbers of characters in first line (0 = check disabled):";
             // 
             // _NO_TRANSLATE_numericMaxLineLength
             // 
             this._NO_TRANSLATE_numericMaxLineLength.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this._NO_TRANSLATE_numericMaxLineLength.Location = new System.Drawing.Point(623, 32);
+            this._NO_TRANSLATE_numericMaxLineLength.Location = new System.Drawing.Point(623, 30);
             this._NO_TRANSLATE_numericMaxLineLength.Name = "_NO_TRANSLATE_numericMaxLineLength";
-            this._NO_TRANSLATE_numericMaxLineLength.Size = new System.Drawing.Size(60, 23);
+            this._NO_TRANSLATE_numericMaxLineLength.Size = new System.Drawing.Size(60, 21);
             this._NO_TRANSLATE_numericMaxLineLength.TabIndex = 4;
             // 
             // _NO_TRANSLATE_numericMaxFirstLineLength
@@ -185,16 +185,16 @@
             this._NO_TRANSLATE_numericMaxFirstLineLength.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this._NO_TRANSLATE_numericMaxFirstLineLength.Location = new System.Drawing.Point(623, 3);
             this._NO_TRANSLATE_numericMaxFirstLineLength.Name = "_NO_TRANSLATE_numericMaxFirstLineLength";
-            this._NO_TRANSLATE_numericMaxFirstLineLength.Size = new System.Drawing.Size(60, 23);
+            this._NO_TRANSLATE_numericMaxFirstLineLength.Size = new System.Drawing.Size(60, 21);
             this._NO_TRANSLATE_numericMaxFirstLineLength.TabIndex = 3;
             // 
             // labelSecondLineEmpty
             // 
             this.labelSecondLineEmpty.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.labelSecondLineEmpty.AutoSize = true;
-            this.labelSecondLineEmpty.Location = new System.Drawing.Point(3, 60);
+            this.labelSecondLineEmpty.Location = new System.Drawing.Point(3, 58);
             this.labelSecondLineEmpty.Name = "labelSecondLineEmpty";
-            this.labelSecondLineEmpty.Size = new System.Drawing.Size(154, 15);
+            this.labelSecondLineEmpty.Size = new System.Drawing.Size(128, 12);
             this.labelSecondLineEmpty.TabIndex = 6;
             this.labelSecondLineEmpty.Text = "Second line must be empty:";
             // 
@@ -202,7 +202,7 @@
             // 
             this.checkBoxSecondLineEmpty.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.checkBoxSecondLineEmpty.AutoSize = true;
-            this.checkBoxSecondLineEmpty.Location = new System.Drawing.Point(668, 61);
+            this.checkBoxSecondLineEmpty.Location = new System.Drawing.Point(668, 57);
             this.checkBoxSecondLineEmpty.Name = "checkBoxSecondLineEmpty";
             this.checkBoxSecondLineEmpty.Size = new System.Drawing.Size(15, 14);
             this.checkBoxSecondLineEmpty.TabIndex = 5;
@@ -212,18 +212,18 @@
             // 
             this.labelRegExCheck.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.labelRegExCheck.AutoSize = true;
-            this.labelRegExCheck.Location = new System.Drawing.Point(3, 85);
+            this.labelRegExCheck.Location = new System.Drawing.Point(3, 81);
             this.labelRegExCheck.Name = "labelRegExCheck";
-            this.labelRegExCheck.Size = new System.Drawing.Size(345, 15);
+            this.labelRegExCheck.Size = new System.Drawing.Size(286, 12);
             this.labelRegExCheck.TabIndex = 7;
             this.labelRegExCheck.Text = "Commit must match following RegEx (Empty = check disabled):";
             // 
             // _NO_TRANSLATE_textBoxCommitValidationRegex
             // 
             this._NO_TRANSLATE_textBoxCommitValidationRegex.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this._NO_TRANSLATE_textBoxCommitValidationRegex.Location = new System.Drawing.Point(450, 81);
+            this._NO_TRANSLATE_textBoxCommitValidationRegex.Location = new System.Drawing.Point(450, 77);
             this._NO_TRANSLATE_textBoxCommitValidationRegex.Name = "_NO_TRANSLATE_textBoxCommitValidationRegex";
-            this._NO_TRANSLATE_textBoxCommitValidationRegex.Size = new System.Drawing.Size(233, 23);
+            this._NO_TRANSLATE_textBoxCommitValidationRegex.Size = new System.Drawing.Size(233, 21);
             this._NO_TRANSLATE_textBoxCommitValidationRegex.TabIndex = 8;
             // 
             // groupBoxCommitTemplates
@@ -245,11 +245,11 @@
             this.tableLayoutPanel4.Controls.Add(this.tableLayoutPanel5, 1, 0);
             this.tableLayoutPanel4.Controls.Add(this._NO_TRANSLATE_comboBoxCommitTemplates, 0, 0);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 19);
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 17);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 1;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(686, 135);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(686, 137);
             this.tableLayoutPanel4.TabIndex = 3;
             // 
             // tableLayoutPanel5
@@ -267,16 +267,16 @@
             this.tableLayoutPanel5.RowCount = 2;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(553, 129);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(553, 131);
             this.tableLayoutPanel5.TabIndex = 1;
             // 
             // labelCommitTemplate
             // 
             this.labelCommitTemplate.AutoSize = true;
-            this.labelCommitTemplate.Location = new System.Drawing.Point(3, 35);
+            this.labelCommitTemplate.Location = new System.Drawing.Point(3, 33);
             this.labelCommitTemplate.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
             this.labelCommitTemplate.Name = "labelCommitTemplate";
-            this.labelCommitTemplate.Size = new System.Drawing.Size(104, 15);
+            this.labelCommitTemplate.Size = new System.Drawing.Size(83, 12);
             this.labelCommitTemplate.TabIndex = 5;
             this.labelCommitTemplate.Text = "Commit template:";
             // 
@@ -286,7 +286,7 @@
             this.labelCommitTemplateName.AutoSize = true;
             this.labelCommitTemplateName.Location = new System.Drawing.Point(3, 7);
             this.labelCommitTemplateName.Name = "labelCommitTemplateName";
-            this.labelCommitTemplateName.Size = new System.Drawing.Size(104, 15);
+            this.labelCommitTemplateName.Size = new System.Drawing.Size(83, 12);
             this.labelCommitTemplateName.TabIndex = 7;
             this.labelCommitTemplateName.Text = "Name:";
             // 
@@ -295,20 +295,20 @@
             this._NO_TRANSLATE_textCommitTemplateText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._NO_TRANSLATE_textCommitTemplateText.Location = new System.Drawing.Point(113, 32);
+            this._NO_TRANSLATE_textCommitTemplateText.Location = new System.Drawing.Point(92, 30);
             this._NO_TRANSLATE_textCommitTemplateText.Multiline = true;
             this._NO_TRANSLATE_textCommitTemplateText.Name = "_NO_TRANSLATE_textCommitTemplateText";
             this._NO_TRANSLATE_textCommitTemplateText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this._NO_TRANSLATE_textCommitTemplateText.Size = new System.Drawing.Size(437, 94);
+            this._NO_TRANSLATE_textCommitTemplateText.Size = new System.Drawing.Size(458, 98);
             this._NO_TRANSLATE_textCommitTemplateText.TabIndex = 2;
             this._NO_TRANSLATE_textCommitTemplateText.TextChanged += new System.EventHandler(this.textCommitTemplateText_TextChanged);
             // 
             // _NO_TRANSLATE_textBoxCommitTemplateName
             // 
             this._NO_TRANSLATE_textBoxCommitTemplateName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this._NO_TRANSLATE_textBoxCommitTemplateName.Location = new System.Drawing.Point(113, 3);
+            this._NO_TRANSLATE_textBoxCommitTemplateName.Location = new System.Drawing.Point(92, 3);
             this._NO_TRANSLATE_textBoxCommitTemplateName.Name = "_NO_TRANSLATE_textBoxCommitTemplateName";
-            this._NO_TRANSLATE_textBoxCommitTemplateName.Size = new System.Drawing.Size(437, 23);
+            this._NO_TRANSLATE_textBoxCommitTemplateName.Size = new System.Drawing.Size(458, 21);
             this._NO_TRANSLATE_textBoxCommitTemplateName.TabIndex = 1;
             this._NO_TRANSLATE_textBoxCommitTemplateName.TextChanged += new System.EventHandler(this.textBoxCommitTemplateName_TextChanged);
             // 
@@ -320,13 +320,13 @@
             this._NO_TRANSLATE_comboBoxCommitTemplates.FormattingEnabled = true;
             this._NO_TRANSLATE_comboBoxCommitTemplates.Location = new System.Drawing.Point(3, 3);
             this._NO_TRANSLATE_comboBoxCommitTemplates.Name = "_NO_TRANSLATE_comboBoxCommitTemplates";
-            this._NO_TRANSLATE_comboBoxCommitTemplates.Size = new System.Drawing.Size(121, 23);
+            this._NO_TRANSLATE_comboBoxCommitTemplates.Size = new System.Drawing.Size(121, 20);
             this._NO_TRANSLATE_comboBoxCommitTemplates.TabIndex = 0;
             this._NO_TRANSLATE_comboBoxCommitTemplates.SelectedIndexChanged += new System.EventHandler(this.comboBoxCommitTemplates_SelectedIndexChanged);
             // 
             // FormCommitTemplateSettings
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(698, 362);
             this.Controls.Add(this.tableLayoutPanel1);

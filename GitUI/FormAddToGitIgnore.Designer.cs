@@ -55,13 +55,13 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Preview";
             // 
-            // filesWillBeIgnored
+            // _NO_TRANSLATE_filesWillBeIgnored
             // 
             this._NO_TRANSLATE_filesWillBeIgnored.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this._NO_TRANSLATE_filesWillBeIgnored.AutoSize = true;
             this._NO_TRANSLATE_filesWillBeIgnored.Location = new System.Drawing.Point(449, 211);
-            this._NO_TRANSLATE_filesWillBeIgnored.Name = "filesWillBeIgnored";
-            this._NO_TRANSLATE_filesWillBeIgnored.Size = new System.Drawing.Size(0, 15);
+            this._NO_TRANSLATE_filesWillBeIgnored.Name = "_NO_TRANSLATE_filesWillBeIgnored";
+            this._NO_TRANSLATE_filesWillBeIgnored.Size = new System.Drawing.Size(0, 12);
             this._NO_TRANSLATE_filesWillBeIgnored.TabIndex = 11;
             // 
             // noMatchPanel
@@ -96,14 +96,14 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
-            // Preview
+            // _NO_TRANSLATE_Preview
             // 
             this._NO_TRANSLATE_Preview.Dock = System.Windows.Forms.DockStyle.Fill;
             this._NO_TRANSLATE_Preview.FormattingEnabled = true;
-            this._NO_TRANSLATE_Preview.ItemHeight = 15;
-            this._NO_TRANSLATE_Preview.Location = new System.Drawing.Point(12, 24);
-            this._NO_TRANSLATE_Preview.Name = "Preview";
-            this._NO_TRANSLATE_Preview.Size = new System.Drawing.Size(528, 184);
+            this._NO_TRANSLATE_Preview.ItemHeight = 12;
+            this._NO_TRANSLATE_Preview.Location = new System.Drawing.Point(12, 22);
+            this._NO_TRANSLATE_Preview.Name = "_NO_TRANSLATE_Preview";
+            this._NO_TRANSLATE_Preview.Size = new System.Drawing.Size(528, 186);
             this._NO_TRANSLATE_Preview.TabIndex = 1;
             // 
             // AddToIngore
@@ -121,7 +121,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 19);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(157, 15);
+            this.label1.Size = new System.Drawing.Size(129, 12);
             this.label1.TabIndex = 5;
             this.label1.Text = "Enter a file pattern to ignore:";
             // 
@@ -129,7 +129,7 @@
             // 
             this.FilePattern.Location = new System.Drawing.Point(266, 16);
             this.FilePattern.Name = "FilePattern";
-            this.FilePattern.Size = new System.Drawing.Size(202, 23);
+            this.FilePattern.Size = new System.Drawing.Size(202, 21);
             this.FilePattern.TabIndex = 6;
             this.FilePattern.TextChanged += new System.EventHandler(this.FilePattern_TextChanged);
             // 

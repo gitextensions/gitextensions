@@ -37,7 +37,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(115, 13);
+            this.label1.Size = new System.Drawing.Size(105, 12);
             this.label1.TabIndex = 0;
             this.label1.Text = "Choose your language";
             // 
@@ -46,13 +46,13 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(12, 146);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(308, 13);
+            this.label2.Size = new System.Drawing.Size(285, 12);
             this.label2.TabIndex = 7;
             this.label2.Text = "You can change the language at any time in the settings dialog";
             // 
             // FormChooseTranslation
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(431, 168);
             this.Controls.Add(this.label2);

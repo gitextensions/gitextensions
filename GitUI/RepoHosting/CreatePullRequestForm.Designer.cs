@@ -49,7 +49,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this._titleTB.Location = new System.Drawing.Point(58, 19);
             this._titleTB.Name = "_titleTB";
-            this._titleTB.Size = new System.Drawing.Size(462, 27);
+            this._titleTB.Size = new System.Drawing.Size(462, 21);
             this._titleTB.TabIndex = 0;
             // 
             // label1
@@ -57,7 +57,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(6, 22);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(41, 20);
+            this.label1.Size = new System.Drawing.Size(24, 12);
             this.label1.TabIndex = 1;
             this.label1.Text = "Title:";
             // 
@@ -66,7 +66,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(6, 48);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(46, 20);
+            this.label2.Size = new System.Drawing.Size(30, 12);
             this.label2.TabIndex = 2;
             this.label2.Text = "Body:";
             // 
@@ -98,6 +98,7 @@
             this._bodyTB.Name = "_bodyTB";
             this._bodyTB.Size = new System.Drawing.Size(462, 124);
             this._bodyTB.TabIndex = 1;
+            this._bodyTB.WatermarkText = "";
             // 
             // _pullReqTargetsCB
             // 
@@ -106,7 +107,7 @@
             this._pullReqTargetsCB.FormattingEnabled = true;
             this._pullReqTargetsCB.Location = new System.Drawing.Point(141, 12);
             this._pullReqTargetsCB.Name = "_pullReqTargetsCB";
-            this._pullReqTargetsCB.Size = new System.Drawing.Size(246, 28);
+            this._pullReqTargetsCB.Size = new System.Drawing.Size(246, 20);
             this._pullReqTargetsCB.TabIndex = 3;
             this._pullReqTargetsCB.SelectedIndexChanged += new System.EventHandler(this._pullReqTargetsCB_SelectedIndexChanged);
             // 
@@ -115,7 +116,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(9, 15);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(126, 20);
+            this.label3.Size = new System.Drawing.Size(80, 12);
             this.label3.TabIndex = 5;
             this.label3.Text = "Target repository:";
             // 
@@ -135,7 +136,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(9, 42);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(91, 20);
+            this.label4.Size = new System.Drawing.Size(62, 12);
             this.label4.TabIndex = 7;
             this.label4.Text = "Your branch:";
             // 
@@ -144,7 +145,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(9, 69);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(104, 20);
+            this.label5.Size = new System.Drawing.Size(68, 12);
             this.label5.TabIndex = 8;
             this.label5.Text = "Target branch:";
             // 
@@ -154,7 +155,7 @@
             this._yourBranchesCB.FormattingEnabled = true;
             this._yourBranchesCB.Location = new System.Drawing.Point(141, 39);
             this._yourBranchesCB.Name = "_yourBranchesCB";
-            this._yourBranchesCB.Size = new System.Drawing.Size(246, 28);
+            this._yourBranchesCB.Size = new System.Drawing.Size(246, 20);
             this._yourBranchesCB.TabIndex = 0;
             this._yourBranchesCB.SelectedIndexChanged += new System.EventHandler(this._yourBranchCB_SelectedIndexChanged);
             // 
@@ -164,13 +165,13 @@
             this._remoteBranchesCB.FormattingEnabled = true;
             this._remoteBranchesCB.Location = new System.Drawing.Point(141, 66);
             this._remoteBranchesCB.Name = "_remoteBranchesCB";
-            this._remoteBranchesCB.Size = new System.Drawing.Size(246, 28);
+            this._remoteBranchesCB.Size = new System.Drawing.Size(246, 20);
             this._remoteBranchesCB.TabIndex = 1;
             this._remoteBranchesCB.SelectedIndexChanged += new System.EventHandler(this._yourBranchCB_SelectedIndexChanged);
             // 
             // CreatePullRequestForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(546, 323);
             this.Controls.Add(this._remoteBranchesCB);

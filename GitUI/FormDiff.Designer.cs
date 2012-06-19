@@ -30,14 +30,17 @@ namespace GitUI
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.RevisionGrid = new GitUI.RevisionGrid();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.DiffFiles = new GitUI.FileStatusList();
-            this.diffViewer = new FileViewer();
+            this.diffViewer = new GitUI.Editor.FileViewer();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
@@ -63,14 +66,22 @@ namespace GitUI
             // 
             // RevisionGrid
             // 
+            this.RevisionGrid.BranchFilter = "";
             this.RevisionGrid.CurrentCheckout = "\nfatal: Not a git repository\n";
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RevisionGrid.Filter = "";
+            this.RevisionGrid.FixedFilter = "";
+            this.RevisionGrid.Font = new System.Drawing.Font("Segoe UI", 7.5F);
+            this.RevisionGrid.InMemAuthorFilter = "";
+            this.RevisionGrid.InMemCommitterFilter = "";
+            this.RevisionGrid.InMemMessageFilter = "";
             this.RevisionGrid.LastRow = 0;
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Margin = new System.Windows.Forms.Padding(4);
             this.RevisionGrid.Name = "RevisionGrid";
+            this.RevisionGrid.NormalFont = new System.Drawing.Font("Tahoma", 8.75F);
             this.RevisionGrid.Size = new System.Drawing.Size(750, 205);
+            this.RevisionGrid.SuperprojectCurrentCheckout = null;
             this.RevisionGrid.TabIndex = 1;
             this.RevisionGrid.SelectionChanged += new System.EventHandler(this.RevisionGridSelectionChanged);
             // 
@@ -95,31 +106,30 @@ namespace GitUI
             // DiffFiles
             // 
             this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DiffFiles.Font = new System.Drawing.Font("Segoe UI", 7.5F);
             this.DiffFiles.GitItemStatuses = null;
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
             this.DiffFiles.Name = "DiffFiles";
+            this.DiffFiles.Revision = null;
+            this.DiffFiles.SelectedIndex = -1;
             this.DiffFiles.SelectedItem = null;
             this.DiffFiles.Size = new System.Drawing.Size(188, 320);
             this.DiffFiles.TabIndex = 0;
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFilesSelectedIndexChanged);
             // 
-            // DiffText
+            // diffViewer
             // 
             this.diffViewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.diffViewer.IgnoreWhitespaceChanges = false;
+            this.diffViewer.Font = new System.Drawing.Font("Segoe UI", 7.5F);
             this.diffViewer.Location = new System.Drawing.Point(0, 0);
             this.diffViewer.Margin = new System.Windows.Forms.Padding(4);
             this.diffViewer.Name = "diffViewer";
-            this.diffViewer.NumberOfVisibleLines = 3;
-            this.diffViewer.ScrollPos = 0;
-            this.diffViewer.ShowEntireFile = false;
             this.diffViewer.Size = new System.Drawing.Size(558, 320);
             this.diffViewer.TabIndex = 1;
-            this.diffViewer.TreatAllFilesAsText = false;
             // 
             // FormDiff
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(750, 529);
             this.Controls.Add(this.splitContainer1);
@@ -131,9 +141,11 @@ namespace GitUI
             this.Load += new System.EventHandler(this.FormDiffLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
             this.splitContainer3.ResumeLayout(false);
             this.ResumeLayout(false);
 
