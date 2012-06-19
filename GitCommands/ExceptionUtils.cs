@@ -29,7 +29,7 @@ namespace GitCommands
         public static void ShowException(Exception e, string info, bool canIgnore)
         {
             if (!(canIgnore && IsIgnorable(e)))
-                MessageBox.Show(string.Join(Environment.NewLine + Environment.NewLine, info, e.ToStringWithData()));            
+                MessageBox.Show(info.Join(Environment.NewLine + Environment.NewLine, e.ToStringWithData()));            
         }
 
         public static bool IsIgnorable(Exception e)
