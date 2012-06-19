@@ -11,7 +11,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GitCommands</RootNamespace>
     <AssemblyName>GitCommands</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>gitcommandkey.snk.pfx</AssemblyOriginatorKeyFile>
@@ -113,6 +113,7 @@
     <Compile Include="Statistics\ImpactLoader.cs" />
     <Compile Include="Strings.cs" />
     <Compile Include="FileInfoExtensions.cs" />
+    <Compile Include="System.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
