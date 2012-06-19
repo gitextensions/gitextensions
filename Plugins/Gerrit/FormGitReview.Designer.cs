@@ -79,12 +79,12 @@
             // 
             this.lnkGitReviewHelp.AutoSize = true;
             this.lnkGitReviewHelp.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lnkGitReviewHelp.Location = new System.Drawing.Point(98, 0);
+            this.lnkGitReviewHelp.Location = new System.Drawing.Point(82, 0);
             this.lnkGitReviewHelp.Name = "lnkGitReviewHelp";
-            this.lnkGitReviewHelp.Size = new System.Drawing.Size(132, 15);
+            this.lnkGitReviewHelp.Size = new System.Drawing.Size(148, 15);
             this.lnkGitReviewHelp.TabIndex = 6;
             this.lnkGitReviewHelp.TabStop = true;
-            this.lnkGitReviewHelp.Text = "Man page for .gitreview";
+            this.lnkGitReviewHelp.Text = "GitHub page for git-review";
             this.lnkGitReviewHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkGitReviewPatterns_LinkClicked);
             // 
             // splitContainer1

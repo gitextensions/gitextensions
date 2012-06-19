@@ -127,7 +127,7 @@ namespace Gerrit
 
         private void lnkGitReviewPatterns_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(@"https://arndtroide.homelinux.org/cgi-bin/man/man2html?git-review+1");
+            Process.Start(@"http://github.com/openstack-ci/git-review#git-review");
         }
     }
 }
