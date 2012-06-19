@@ -1,0 +1,37 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Diagnostics;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using GitUI;
+
+namespace Gerrit
+{
+    public partial class FormPluginInformation : GitExtensionsForm
+    {
+        public FormPluginInformation()
+        {
+            InitializeComponent();
+            Translate();
+        }
+
+        public static void ShowSubmitted(IWin32Window owner, string change)
+        {
+            var form = new FormPluginInformation();
+
+            form._NO_TRANSLATE_TargetLabel.Text = change;
+            form._NO_TRANSLATE_TargetLabel.Click += (s, e) => Process.Start(change);
+
+            form.ShowDialog(owner);
+        }
+
+        private void _NO_TRANSLATE_TargetLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(@"http://github.com/openstack-ci/git-review#git-review");
+        }
+    }
+}

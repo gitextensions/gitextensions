@@ -45,6 +45,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FormPluginInformation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPluginInformation.Designer.cs">
+      <DependentUpon>FormPluginInformation.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormGerritBase.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -99,6 +105,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="FormPluginInformation.resx">
+      <DependentUpon>FormPluginInformation.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormGerritChangeSubmitted.resx">
       <DependentUpon>FormGerritChangeSubmitted.cs</DependentUpon>
     </EmbeddedResource>
