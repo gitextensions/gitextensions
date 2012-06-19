@@ -45,7 +45,8 @@ namespace GitUI
         {
             base.OnLoad(e);
 
-            _NO_TRANSLATE_labelVersionInfo.Text = _NO_TRANSLATE_labelVersionInfo.Text + GitCommands.Settings.GitExtensionsVersionString;
+            _NO_TRANSLATE_labelVersionInfo.Text = string.Format("{0}{1} [.Net {2}]", _NO_TRANSLATE_labelVersionInfo.Text, 
+                GitCommands.Settings.GitExtensionsVersionString, Environment.Version.Major.ToString());
         }
 
         //Contributers list 
