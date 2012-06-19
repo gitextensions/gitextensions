@@ -7,6 +7,7 @@ using System.Text;
 using GitUIPluginInterfaces;
 using System.Windows.Forms;
 using System.Drawing;
+using ResourceManager.Translation;
 
 namespace Gerrit
 {
@@ -18,9 +19,16 @@ namespace Gerrit
         private Form _mainForm;
         private IGitUICommands _gitUiCommands;
 
+        #region Translation
+        private readonly TranslationString _pluginDescription = new TranslationString("Gerrit Code Review");
+        private readonly TranslationString _editGitReview = new TranslationString("Edit .gitreview");
+        private readonly TranslationString _downloadGerritChange = new TranslationString("Download Gerrit Change");
+        private readonly TranslationString _publishGerritChange = new TranslationString("Publish Gerrit Change");
+        #endregion
+
         public string Description
         {
-            get { return "Gerrit Code Review"; }
+            get { return _pluginDescription.Text; }
         }
 
         public IGitPluginSettingsContainer Settings { get; set; }
@@ -84,7 +92,7 @@ namespace Gerrit
 
             _gitReviewMenuItem = new ToolStripMenuItem
             {
-                Text = "Edit .gitreview"
+                Text = _editGitReview.Text
             };
 
             _gitReviewMenuItem.Click += gitReviewMenuItem_Click;
@@ -108,7 +116,7 @@ namespace Gerrit
 
             var downloadMenuItem = new ToolStripButton
             {
-                Text = "Download Gerrit change",
+                Text = _downloadGerritChange.Text,
                 Image = Properties.Resources.GerritDownload,
                 DisplayStyle = ToolStripItemDisplayStyle.Image,
                 Visible = false
@@ -120,7 +128,7 @@ namespace Gerrit
 
             var publishMenuItem = new ToolStripButton
             {
-                Text = "Publish Gerrit change",
+                Text = _publishGerritChange.Text,
                 Image = Properties.Resources.GerritPublish,
                 DisplayStyle = ToolStripItemDisplayStyle.Image,
                 Visible = false
@@ -198,6 +206,11 @@ namespace Gerrit
 
         public bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
+            using (var form = new FormPluginInformation())
+            {
+                form.ShowDialog();
+            }
+
             return false;
         }
     }
