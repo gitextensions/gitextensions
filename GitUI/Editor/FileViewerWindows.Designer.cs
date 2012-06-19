@@ -36,19 +36,17 @@
             this.TextEditor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TextEditor.IsReadOnly = false;
             this.TextEditor.Location = new System.Drawing.Point(0, 0);
-            this.TextEditor.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextEditor.Name = "TextEditor";
-            this.TextEditor.Size = new System.Drawing.Size(757, 553);
+            this.TextEditor.Size = new System.Drawing.Size(649, 415);
             this.TextEditor.TabIndex = 3;
             // 
             // FileViewerWindows
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.TextEditor);
-            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FileViewerWindows";
-            this.Size = new System.Drawing.Size(757, 553);
+            this.Size = new System.Drawing.Size(649, 415);
             this.ResumeLayout(false);
 
         }

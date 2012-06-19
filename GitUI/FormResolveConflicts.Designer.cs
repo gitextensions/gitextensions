@@ -146,7 +146,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(4, 4);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(151, 15);
+            this.label1.Size = new System.Drawing.Size(124, 12);
             this.label1.TabIndex = 0;
             this.label1.Text = "Unresolved merge conflicts";
             // 
@@ -235,129 +235,129 @@
             this.toolStripSeparator4,
             this.fileHistoryToolStripMenuItem});
             this.ConflictedFilesContextMenu.Name = "ConflictedFilesContextMenu";
-            this.ConflictedFilesContextMenu.Size = new System.Drawing.Size(196, 342);
+            this.ConflictedFilesContextMenu.Size = new System.Drawing.Size(171, 342);
             this.ConflictedFilesContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.ConflictedFilesContextMenu_Opening);
             // 
             // OpenMergetool
             // 
             this.OpenMergetool.Name = "OpenMergetool";
-            this.OpenMergetool.Size = new System.Drawing.Size(195, 22);
+            this.OpenMergetool.Size = new System.Drawing.Size(170, 22);
             this.OpenMergetool.Text = "Open in mergetool";
             this.OpenMergetool.Click += new System.EventHandler(this.OpenMergetool_Click);
             // 
             // ContextMarkAsSolved
             // 
             this.ContextMarkAsSolved.Name = "ContextMarkAsSolved";
-            this.ContextMarkAsSolved.Size = new System.Drawing.Size(195, 22);
+            this.ContextMarkAsSolved.Size = new System.Drawing.Size(170, 22);
             this.ContextMarkAsSolved.Text = "Mark conflict as solved";
             this.ContextMarkAsSolved.Click += new System.EventHandler(this.ContextMarkAsSolved_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(192, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(167, 6);
             // 
             // ContextChooseBase
             // 
             this.ContextChooseBase.Name = "ContextChooseBase";
-            this.ContextChooseBase.Size = new System.Drawing.Size(195, 22);
+            this.ContextChooseBase.Size = new System.Drawing.Size(170, 22);
             this.ContextChooseBase.Text = "Choose base";
             this.ContextChooseBase.Click += new System.EventHandler(this.ContextChooseBase_Click);
             // 
             // ContextChooseLocal
             // 
             this.ContextChooseLocal.Name = "ContextChooseLocal";
-            this.ContextChooseLocal.Size = new System.Drawing.Size(195, 22);
+            this.ContextChooseLocal.Size = new System.Drawing.Size(170, 22);
             this.ContextChooseLocal.Text = "Choose local";
             this.ContextChooseLocal.Click += new System.EventHandler(this.ContextChooseLocal_Click);
             // 
             // ContextChooseRemote
             // 
             this.ContextChooseRemote.Name = "ContextChooseRemote";
-            this.ContextChooseRemote.Size = new System.Drawing.Size(195, 22);
+            this.ContextChooseRemote.Size = new System.Drawing.Size(170, 22);
             this.ContextChooseRemote.Text = "Choose remote";
             this.ContextChooseRemote.Click += new System.EventHandler(this.ContextChooseRemote_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(192, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(167, 6);
             // 
             // ContextOpenBaseWith
             // 
             this.ContextOpenBaseWith.Name = "ContextOpenBaseWith";
-            this.ContextOpenBaseWith.Size = new System.Drawing.Size(195, 22);
+            this.ContextOpenBaseWith.Size = new System.Drawing.Size(170, 22);
             this.ContextOpenBaseWith.Text = "Open base with";
             this.ContextOpenBaseWith.Click += new System.EventHandler(this.ContextOpenBaseWith_Click);
             // 
             // ContextOpenLocalWith
             // 
             this.ContextOpenLocalWith.Name = "ContextOpenLocalWith";
-            this.ContextOpenLocalWith.Size = new System.Drawing.Size(195, 22);
+            this.ContextOpenLocalWith.Size = new System.Drawing.Size(170, 22);
             this.ContextOpenLocalWith.Text = "Open local with";
             this.ContextOpenLocalWith.Click += new System.EventHandler(this.ContextOpenLocalWith_Click);
             // 
             // ContextOpenRemoteWith
             // 
             this.ContextOpenRemoteWith.Name = "ContextOpenRemoteWith";
-            this.ContextOpenRemoteWith.Size = new System.Drawing.Size(195, 22);
+            this.ContextOpenRemoteWith.Size = new System.Drawing.Size(170, 22);
             this.ContextOpenRemoteWith.Text = "Open remote with";
             this.ContextOpenRemoteWith.Click += new System.EventHandler(this.ContextOpenRemoteWith_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(192, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(167, 6);
             // 
             // ContextSaveBaseAs
             // 
             this.ContextSaveBaseAs.Name = "ContextSaveBaseAs";
-            this.ContextSaveBaseAs.Size = new System.Drawing.Size(195, 22);
+            this.ContextSaveBaseAs.Size = new System.Drawing.Size(170, 22);
             this.ContextSaveBaseAs.Text = "Save base as";
             this.ContextSaveBaseAs.Click += new System.EventHandler(this.ContextSaveBaseAs_Click);
             // 
             // ContextSaveLocalAs
             // 
             this.ContextSaveLocalAs.Name = "ContextSaveLocalAs";
-            this.ContextSaveLocalAs.Size = new System.Drawing.Size(195, 22);
+            this.ContextSaveLocalAs.Size = new System.Drawing.Size(170, 22);
             this.ContextSaveLocalAs.Text = "Save local as";
             this.ContextSaveLocalAs.Click += new System.EventHandler(this.ContextSaveLocalAs_Click);
             // 
             // ContextSaveRemoteAs
             // 
             this.ContextSaveRemoteAs.Name = "ContextSaveRemoteAs";
-            this.ContextSaveRemoteAs.Size = new System.Drawing.Size(195, 22);
+            this.ContextSaveRemoteAs.Size = new System.Drawing.Size(170, 22);
             this.ContextSaveRemoteAs.Text = "Save remote as";
             this.ContextSaveRemoteAs.Click += new System.EventHandler(this.ContextSaveRemoteAs_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(192, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(167, 6);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // openWithToolStripMenuItem
             // 
             this.openWithToolStripMenuItem.Name = "openWithToolStripMenuItem";
-            this.openWithToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.openWithToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.openWithToolStripMenuItem.Text = "Open With";
             this.openWithToolStripMenuItem.Click += new System.EventHandler(this.openWithToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(192, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(167, 6);
             // 
             // fileHistoryToolStripMenuItem
             // 
             this.fileHistoryToolStripMenuItem.Name = "fileHistoryToolStripMenuItem";
-            this.fileHistoryToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.fileHistoryToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.fileHistoryToolStripMenuItem.Text = "File history";
             this.fileHistoryToolStripMenuItem.Click += new System.EventHandler(this.fileHistoryToolStripMenuItem_Click);
             // 
@@ -392,7 +392,7 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(3, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(35, 15);
+            this.label7.Size = new System.Drawing.Size(28, 12);
             this.label7.TabIndex = 1;
             this.label7.Text = "Local";
             // 
@@ -401,7 +401,7 @@
             this.localFileName.AutoSize = true;
             this.localFileName.Location = new System.Drawing.Point(62, 0);
             this.localFileName.Name = "localFileName";
-            this.localFileName.Size = new System.Drawing.Size(16, 15);
+            this.localFileName.Size = new System.Drawing.Size(11, 12);
             this.localFileName.TabIndex = 3;
             this.localFileName.Text = "...";
             // 
@@ -410,7 +410,7 @@
             this.baseFileName.AutoSize = true;
             this.baseFileName.Location = new System.Drawing.Point(62, 25);
             this.baseFileName.Name = "baseFileName";
-            this.baseFileName.Size = new System.Drawing.Size(16, 15);
+            this.baseFileName.Size = new System.Drawing.Size(11, 12);
             this.baseFileName.TabIndex = 4;
             this.baseFileName.Text = "...";
             // 
@@ -419,7 +419,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(3, 25);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(31, 15);
+            this.label2.Size = new System.Drawing.Size(25, 12);
             this.label2.TabIndex = 2;
             this.label2.Text = "Base";
             // 
@@ -428,7 +428,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(3, 50);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(48, 15);
+            this.label5.Size = new System.Drawing.Size(39, 12);
             this.label5.TabIndex = 5;
             this.label5.Text = "Remote";
             // 
@@ -437,7 +437,7 @@
             this.remoteFileName.AutoSize = true;
             this.remoteFileName.Location = new System.Drawing.Point(62, 50);
             this.remoteFileName.Name = "remoteFileName";
-            this.remoteFileName.Size = new System.Drawing.Size(16, 15);
+            this.remoteFileName.Size = new System.Drawing.Size(11, 12);
             this.remoteFileName.TabIndex = 6;
             this.remoteFileName.Text = "...";
             // 
@@ -601,7 +601,7 @@
             // FormResolveConflicts
             // 
             this.AcceptButton = this.merge;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(620, 388);
             this.Controls.Add(this.splitContainer1);

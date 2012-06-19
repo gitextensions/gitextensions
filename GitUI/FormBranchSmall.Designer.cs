@@ -39,7 +39,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(77, 15);
+            this.label1.Size = new System.Drawing.Size(64, 12);
             this.label1.TabIndex = 5;
             this.label1.Text = "Branch name";
             // 
@@ -61,7 +61,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BranchNameTextBox.Location = new System.Drawing.Point(143, 6);
             this.BranchNameTextBox.Name = "BranchNameTextBox";
-            this.BranchNameTextBox.Size = new System.Drawing.Size(187, 23);
+            this.BranchNameTextBox.Size = new System.Drawing.Size(187, 21);
             this.BranchNameTextBox.TabIndex = 3;
             // 
             // CheckoutAfterCreate
@@ -71,7 +71,7 @@
             this.CheckoutAfterCreate.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CheckoutAfterCreate.Location = new System.Drawing.Point(143, 33);
             this.CheckoutAfterCreate.Name = "CheckoutAfterCreate";
-            this.CheckoutAfterCreate.Size = new System.Drawing.Size(139, 19);
+            this.CheckoutAfterCreate.Size = new System.Drawing.Size(117, 16);
             this.CheckoutAfterCreate.TabIndex = 6;
             this.CheckoutAfterCreate.Text = "Checkout after create";
             this.CheckoutAfterCreate.UseVisualStyleBackColor = true;
@@ -79,7 +79,7 @@
             // FormBranchSmall
             // 
             this.AcceptButton = this.Ok;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(471, 58);
             this.Controls.Add(this.CheckoutAfterCreate);

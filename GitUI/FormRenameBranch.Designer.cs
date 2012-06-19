@@ -72,9 +72,9 @@
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.Color.Black;
-            this.label1.Location = new System.Drawing.Point(3, 10);
+            this.label1.Location = new System.Drawing.Point(3, 12);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(63, 21);
+            this.label1.Size = new System.Drawing.Size(53, 18);
             this.label1.TabIndex = 3;
             this.label1.Text = "New name";
             this.label1.UseCompatibleTextRendering = true;
@@ -82,15 +82,15 @@
             // Branches
             // 
             this.Branches.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.Branches.Location = new System.Drawing.Point(72, 9);
+            this.Branches.Location = new System.Drawing.Point(62, 10);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(344, 23);
+            this.Branches.Size = new System.Drawing.Size(354, 21);
             this.Branches.TabIndex = 4;
             // 
             // FormRenameBranch
             // 
             this.AcceptButton = this.Ok;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(484, 42);
             this.Controls.Add(this.tableLayoutPanel1);

@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormDeleteTag));
             this.Ok = new System.Windows.Forms.Button();
             this.Tags = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -52,7 +51,7 @@
             this.Tags.FormattingEnabled = true;
             this.Tags.Location = new System.Drawing.Point(126, 12);
             this.Tags.Name = "Tags";
-            this.Tags.Size = new System.Drawing.Size(236, 21);
+            this.Tags.Size = new System.Drawing.Size(236, 20);
             this.Tags.TabIndex = 7;
             // 
             // label1
@@ -61,20 +60,19 @@
             this.label1.ForeColor = System.Drawing.Color.Black;
             this.label1.Location = new System.Drawing.Point(7, 15);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(55, 13);
+            this.label1.Size = new System.Drawing.Size(47, 12);
             this.label1.TabIndex = 6;
             this.label1.Text = "Select tag";
             // 
             // FormDeleteTag
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(453, 40);
             this.Controls.Add(this.Ok);
             this.Controls.Add(this.Tags);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormDeleteTag";

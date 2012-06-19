@@ -160,7 +160,7 @@
             // 
             // FormModifiedDeletedCreated
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(496, 98);
             this.Controls.Add(this.tableLayoutPanel1);
@@ -170,8 +170,8 @@
             this.Name = "FormModifiedDeletedCreated";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Solve mergeconflict";
-            this.Load += new System.EventHandler(this.FormModifiedDeletedCreated_Load);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormModifiedDeletedCreated_FormClosing);
+            this.Load += new System.EventHandler(this.FormModifiedDeletedCreated_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel3.ResumeLayout(false);

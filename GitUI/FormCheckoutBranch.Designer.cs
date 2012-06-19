@@ -43,7 +43,7 @@ namespace GitUI
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 45);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(78, 15);
+            this.label1.Size = new System.Drawing.Size(64, 12);
             this.label1.TabIndex = 0;
             this.label1.Text = "Select branch";
             // 
@@ -56,7 +56,7 @@ namespace GitUI
             this.Branches.FormattingEnabled = true;
             this.Branches.Location = new System.Drawing.Point(158, 42);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(263, 23);
+            this.Branches.Size = new System.Drawing.Size(263, 20);
             this.Branches.TabIndex = 1;
             // 
             // Ok
@@ -76,7 +76,7 @@ namespace GitUI
             this.LocalBranch.Checked = true;
             this.LocalBranch.Location = new System.Drawing.Point(13, 13);
             this.LocalBranch.Name = "LocalBranch";
-            this.LocalBranch.Size = new System.Drawing.Size(93, 19);
+            this.LocalBranch.Size = new System.Drawing.Size(80, 16);
             this.LocalBranch.TabIndex = 3;
             this.LocalBranch.TabStop = true;
             this.LocalBranch.Text = "Local branch";
@@ -88,7 +88,7 @@ namespace GitUI
             this.Remotebranch.AutoSize = true;
             this.Remotebranch.Location = new System.Drawing.Point(168, 13);
             this.Remotebranch.Name = "Remotebranch";
-            this.Remotebranch.Size = new System.Drawing.Size(106, 19);
+            this.Remotebranch.Size = new System.Drawing.Size(91, 16);
             this.Remotebranch.TabIndex = 4;
             this.Remotebranch.Text = "Remote branch";
             this.Remotebranch.UseVisualStyleBackColor = true;
@@ -99,7 +99,7 @@ namespace GitUI
             this.Force.AutoSize = true;
             this.Force.Location = new System.Drawing.Point(13, 80);
             this.Force.Name = "Force";
-            this.Force.Size = new System.Drawing.Size(55, 19);
+            this.Force.Size = new System.Drawing.Size(48, 16);
             this.Force.TabIndex = 5;
             this.Force.Text = "Force";
             this.Force.UseVisualStyleBackColor = true;
@@ -107,7 +107,7 @@ namespace GitUI
             // FormCheckoutBranch
             // 
             this.AcceptButton = this.Ok;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(433, 111);
             this.Controls.Add(this.Force);
