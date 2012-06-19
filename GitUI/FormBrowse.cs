@@ -151,6 +151,7 @@ namespace GitUI
             RefreshPullIcon();
             dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
             //Close();
+            GitUICommands.Instance.BrowseInitialize += (a, b) => Initialize();
         }
 
         private void ShowDashboard()
@@ -208,11 +209,13 @@ namespace GitUI
 
             Cursor.Current = Cursors.Default;
 
+
             try
             {
-                if (Settings.IconStyle.Equals("Cow", StringComparison.CurrentCultureIgnoreCase))
+                if (Settings.PlaySpecialStartupSound)
                 {
-                    new System.Media.SoundPlayer(Properties.Resources.cow_moo).Play();
+                    using (var cow_moo = Properties.Resources.cow_moo)
+                        new System.Media.SoundPlayer(cow_moo).Play();
                 }
             }
             catch // This code is just for fun, we do not want the program to crash because of it.
@@ -299,6 +302,9 @@ namespace GitUI
         private void InternalInitialize(bool hard)
         {
             Cursor.Current = Cursors.WaitCursor;
+
+            GitUICommands.Instance.RaisePreBrowseInitialize(this);
+
             bool validWorkingDir = Settings.Module.ValidWorkingDir();
             bool hasWorkingDir = !string.IsNullOrEmpty(Settings.WorkingDir);
             branchSelect.Text = validWorkingDir ? Settings.Module.GetSelectedBranch() : "";
@@ -342,6 +348,8 @@ namespace GitUI
             UpdateStashCount();
             // load custom user menu
             LoadUserMenu();
+
+            GitUICommands.Instance.RaisePostBrowseInitialize(this);
 
             Cursor.Current = Cursors.Default;
         }
