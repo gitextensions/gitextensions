@@ -34,9 +34,9 @@
             // 
             // branches
             // 
-            this.branches.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.branches.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.branches.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.branches.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.branches.FormattingEnabled = true;
@@ -47,8 +47,8 @@
             // 
             // selectMultipleBranchesButton
             // 
-            this.selectMultipleBranchesButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.selectMultipleBranchesButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.selectMultipleBranchesButton.Image = global::GitUI.Properties.Resources.Select;
             this.selectMultipleBranchesButton.Location = new System.Drawing.Point(264, 0);
             this.selectMultipleBranchesButton.Margin = new System.Windows.Forms.Padding(0);

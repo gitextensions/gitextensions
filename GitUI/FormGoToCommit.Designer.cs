@@ -49,7 +49,7 @@
             // 
             this.commitExpression.Location = new System.Drawing.Point(157, 23);
             this.commitExpression.Name = "commitExpression";
-            this.commitExpression.Size = new System.Drawing.Size(274, 27);
+            this.commitExpression.Size = new System.Drawing.Size(274, 21);
             this.commitExpression.TabIndex = 0;
             // 
             // label1
@@ -57,14 +57,14 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 27);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(139, 20);
+            this.label1.Size = new System.Drawing.Size(91, 12);
             this.label1.TabIndex = 2;
             this.label1.Text = "Commit expression:";
             // 
             // FormGoToCommit
             // 
             this.AcceptButton = this.goButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(524, 69);
             this.Controls.Add(this.label1);

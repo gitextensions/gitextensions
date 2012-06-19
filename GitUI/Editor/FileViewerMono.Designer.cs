@@ -36,20 +36,18 @@
             this.TextEditor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TextEditor.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextEditor.Location = new System.Drawing.Point(0, 0);
-            this.TextEditor.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextEditor.Name = "TextEditor";
-            this.TextEditor.Size = new System.Drawing.Size(660, 512);
+            this.TextEditor.Size = new System.Drawing.Size(566, 384);
             this.TextEditor.TabIndex = 0;
             this.TextEditor.Text = "";
             // 
             // FileViewerMono
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.TextEditor);
-            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FileViewerMono";
-            this.Size = new System.Drawing.Size(660, 512);
+            this.Size = new System.Drawing.Size(566, 384);
             this.ResumeLayout(false);
 
         }

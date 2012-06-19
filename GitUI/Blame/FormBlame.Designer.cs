@@ -42,6 +42,7 @@ namespace GitUI.Blame
             // blameControl1
             // 
             this.blameControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.blameControl1.Font = new System.Drawing.Font("Segoe UI", 7.5F);
             this.blameControl1.Location = new System.Drawing.Point(0, 0);
             this.blameControl1.Name = "blameControl1";
             this.blameControl1.Size = new System.Drawing.Size(784, 762);

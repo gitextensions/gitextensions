@@ -47,7 +47,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(62, 15);
+            this.label1.Size = new System.Drawing.Size(50, 12);
             this.label1.TabIndex = 0;
             this.label1.Text = "Fi&nd what:";
             // 
@@ -56,26 +56,26 @@
             this.lblReplaceWith.AutoSize = true;
             this.lblReplaceWith.Location = new System.Drawing.Point(12, 35);
             this.lblReplaceWith.Name = "lblReplaceWith";
-            this.lblReplaceWith.Size = new System.Drawing.Size(77, 15);
+            this.lblReplaceWith.Size = new System.Drawing.Size(62, 12);
             this.lblReplaceWith.TabIndex = 2;
             this.lblReplaceWith.Text = "Re&place with:";
             // 
             // txtLookFor
             // 
-            this.txtLookFor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtLookFor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtLookFor.Location = new System.Drawing.Point(90, 6);
             this.txtLookFor.Name = "txtLookFor";
-            this.txtLookFor.Size = new System.Drawing.Size(317, 23);
+            this.txtLookFor.Size = new System.Drawing.Size(317, 21);
             this.txtLookFor.TabIndex = 1;
             // 
             // txtReplaceWith
             // 
-            this.txtReplaceWith.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtReplaceWith.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtReplaceWith.Location = new System.Drawing.Point(90, 32);
             this.txtReplaceWith.Name = "txtReplaceWith";
-            this.txtReplaceWith.Size = new System.Drawing.Size(317, 23);
+            this.txtReplaceWith.Size = new System.Drawing.Size(317, 21);
             this.txtReplaceWith.TabIndex = 3;
             // 
             // btnFindNext
@@ -116,7 +116,7 @@
             this.chkMatchWholeWord.AutoSize = true;
             this.chkMatchWholeWord.Location = new System.Drawing.Point(90, 81);
             this.chkMatchWholeWord.Name = "chkMatchWholeWord";
-            this.chkMatchWholeWord.Size = new System.Drawing.Size(125, 19);
+            this.chkMatchWholeWord.Size = new System.Drawing.Size(106, 16);
             this.chkMatchWholeWord.TabIndex = 5;
             this.chkMatchWholeWord.Text = "Match &whole word";
             this.chkMatchWholeWord.UseVisualStyleBackColor = true;
@@ -126,7 +126,7 @@
             this.chkMatchCase.AutoSize = true;
             this.chkMatchCase.Location = new System.Drawing.Point(90, 58);
             this.chkMatchCase.Name = "chkMatchCase";
-            this.chkMatchCase.Size = new System.Drawing.Size(86, 19);
+            this.chkMatchCase.Size = new System.Drawing.Size(74, 16);
             this.chkMatchCase.TabIndex = 4;
             this.chkMatchCase.Text = "Match &case";
             this.chkMatchCase.UseVisualStyleBackColor = true;
@@ -169,7 +169,7 @@
             // FindAndReplaceForm
             // 
             this.AcceptButton = this.btnFindNext;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(419, 169);
