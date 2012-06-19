@@ -121,7 +121,7 @@ namespace Gerrit
             string[] branchParts = branchName.Split('/');
 
             if (branchParts.Length >= 3 && branchParts[0] == "review")
-                return String.Join("/", branchParts.Skip(2));
+                return String.Join("/", branchParts.Skip(2).ToArray());
 
             return branchName;
         }
