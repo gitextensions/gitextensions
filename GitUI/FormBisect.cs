@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git;
 using ResourceManager.Translation;
 
 namespace GitUI
@@ -47,7 +48,7 @@ namespace GitUI
             }
         }
 
-        private void BisectRange( string startRevision, string endRevision )
+        private void BisectRange(string startRevision, string endRevision)
         {
             var command = GitCommandHelpers.MarkRevisionBisectCmd(true, startRevision);
             var form = new FormProcess(command);
@@ -62,19 +63,22 @@ namespace GitUI
 
         private void Good_Click(object sender, EventArgs e)
         {
-            new FormProcess(GitCommandHelpers.ContinueBisectCmd(true), false).ShowDialog(this);
-            Close();
+            ContinueBisect(GitBisectOption.Good);
         }
 
         private void Bad_Click(object sender, EventArgs e)
         {
-            new FormProcess(GitCommandHelpers.ContinueBisectCmd(false), false).ShowDialog(this);
-            Close();
+            ContinueBisect(GitBisectOption.Bad);
         }
 
         private void Stop_Click(object sender, EventArgs e)
         {
             new FormProcess(GitCommandHelpers.StopBisectCmd()).ShowDialog(this);
+            Close();
+        }
+        private void ContinueBisect(GitBisectOption bisectOption)
+        {
+            new FormProcess(GitCommandHelpers.ContinueBisectCmd(bisectOption), false).ShowDialog(this);
             Close();
         }
     }
