@@ -30,6 +30,7 @@ namespace GitUI
             Good.Enabled = inTheMiddleOfBisect;
             Bad.Enabled = inTheMiddleOfBisect;
             Stop.Enabled = inTheMiddleOfBisect;
+            btnSkip.Enabled = inTheMiddleOfBisect;
         }
 
         private void Start_Click(object sender, EventArgs e)
@@ -76,6 +77,12 @@ namespace GitUI
             new FormProcess(GitCommandHelpers.StopBisectCmd()).ShowDialog(this);
             Close();
         }
+
+        private void btnSkip_Click(object sender, EventArgs e)
+        {
+            ContinueBisect(GitBisectOption.Skip);
+        }
+
         private void ContinueBisect(GitBisectOption bisectOption)
         {
             new FormProcess(GitCommandHelpers.ContinueBisectCmd(bisectOption), false).ShowDialog(this);
