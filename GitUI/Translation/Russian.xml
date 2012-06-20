@@ -414,6 +414,9 @@
         <TranslationItem Name="label3" Property="Text">
           <Value>Ветка</Value>
         </TranslationItem>
+        <TranslationItem Name="chkForce" Property="Text">
+          <Value>Принудительно</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormAddToGitIgnore">
