@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git;
 using GitUI.Hotkey;
 using GitUI.Script;
 using GitUI.Tag;
@@ -2025,7 +2026,7 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
 
-            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(false, GetRevision(LastRow).Guid), false).ShowDialog(this);
+            FormProcess.ShowDialog(this, GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Bad, GetRevision(LastRow).Guid), false);
             RefreshRevisions();
         }
 
@@ -2034,7 +2035,7 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
 
-            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(true, GetRevision(LastRow).Guid), false).ShowDialog(this);
+            FormProcess.ShowDialog(this, GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Good, GetRevision(LastRow).Guid), false);
             RefreshRevisions();
         }
 
