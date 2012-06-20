@@ -3,6 +3,7 @@
     public enum GitBisectOption
     {
         Good,
-        Bad
+        Bad,
+        Skip
     }
 }

@@ -564,6 +564,8 @@ namespace GitCommands
                     return "bisect good";
                 case GitBisectOption.Bad:
                     return "bisect bad";
+                case GitBisectOption.Skip:
+                    return "bisect skip";
                 default:
                     throw new NotSupportedException(string.Format("Bisect option {0} is not supported", bisectOption));
             }
