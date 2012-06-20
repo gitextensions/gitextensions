@@ -2023,19 +2023,25 @@ namespace GitUI
 
         private void markRevisionAsBadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Revisions.RowCount <= LastRow || LastRow < 0)
-                return;
-
-            FormProcess.ShowDialog(this, GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Bad, GetRevision(LastRow).Guid), false);
-            RefreshRevisions();
+            ContinueBisect(GitBisectOption.Bad);
         }
 
         private void markRevisionAsGoodToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ContinueBisect(GitBisectOption.Good);
+        }
+
+        private void bisectSkipRevisionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ContinueBisect(GitBisectOption.Skip);
+        }
+
+        private void ContinueBisect(GitBisectOption bisectOption)
+        {
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
 
-            FormProcess.ShowDialog(this, GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Good, GetRevision(LastRow).Guid), false);
+            FormProcess.ShowDialog(this, GitCommandHelpers.ContinueBisectCmd(bisectOption, GetRevision(LastRow).Guid), false);
             RefreshRevisions();
         }
 
@@ -2351,7 +2357,6 @@ namespace GitUI
                     item.DropDown.Items[0].PerformClick();
             }
         }
-
     }
 
     public class FilterBranchHelper
