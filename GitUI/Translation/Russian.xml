@@ -527,7 +527,7 @@
           <Value>Отметить как хорошую</Value>
         </TranslationItem>
         <TranslationItem Name="btnSkip" Property="Text">
-          <Value>Пропустить коммит</Value>
+          <Value>Пропустить ревизию</Value>
         </TranslationItem>
         <TranslationItem Name="Start" Property="Text">
           <Value>Начать bisect</Value>
@@ -3535,6 +3535,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         </TranslationItem>
         <TranslationItem Name="markRevisionAsGoodToolStripMenuItem" Property="Text">
           <Value>Отметить ревизию как хорошую</Value>
+        </TranslationItem>
+        <TranslationItem Name="bisectSkipRevisionToolStripMenuItem" Property="Text">
+          <Value>Пропустить ревизию</Value>
         </TranslationItem>
         <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
           <Value>Объединить текущую ветку с</Value>
