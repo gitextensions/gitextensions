@@ -32,6 +32,7 @@
             this.Good = new System.Windows.Forms.Button();
             this.Bad = new System.Windows.Forms.Button();
             this.Stop = new System.Windows.Forms.Button();
+            this.btnSkip = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // Start
@@ -66,7 +67,7 @@
             // 
             // Stop
             // 
-            this.Stop.Location = new System.Drawing.Point(12, 99);
+            this.Stop.Location = new System.Drawing.Point(12, 132);
             this.Stop.Name = "Stop";
             this.Stop.Size = new System.Drawing.Size(224, 25);
             this.Stop.TabIndex = 3;
@@ -74,11 +75,22 @@
             this.Stop.UseVisualStyleBackColor = true;
             this.Stop.Click += new System.EventHandler(this.Stop_Click);
             // 
+            // btnSkip
+            // 
+            this.btnSkip.Location = new System.Drawing.Point(12, 101);
+            this.btnSkip.Name = "btnSkip";
+            this.btnSkip.Size = new System.Drawing.Size(224, 25);
+            this.btnSkip.TabIndex = 4;
+            this.btnSkip.Text = "Skip current revision";
+            this.btnSkip.UseVisualStyleBackColor = true;
+            this.btnSkip.Click += new System.EventHandler(this.btnSkip_Click);
+            // 
             // FormBisect
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(248, 134);
+            this.ClientSize = new System.Drawing.Size(248, 166);
+            this.Controls.Add(this.btnSkip);
             this.Controls.Add(this.Stop);
             this.Controls.Add(this.Bad);
             this.Controls.Add(this.Good);
@@ -99,5 +111,6 @@
         private System.Windows.Forms.Button Good;
         private System.Windows.Forms.Button Bad;
         private System.Windows.Forms.Button Stop;
+        private System.Windows.Forms.Button btnSkip;
     }
 }
