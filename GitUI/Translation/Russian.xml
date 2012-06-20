@@ -518,13 +518,16 @@
     <TranslationCategory Name="FormBisect">
       <translationItems>
         <TranslationItem Name="_bisectStart" Property="Text">
-          <Value>Отметить выделенные ревизии как стартовый диапозон для bisect?</Value>
+          <Value>Отметить выделенные ревизии как стартовый диапазон для bisect?</Value>
         </TranslationItem>
         <TranslationItem Name="Bad" Property="Text">
           <Value>Отметить как плохую</Value>
         </TranslationItem>
         <TranslationItem Name="Good" Property="Text">
           <Value>Отметить как хорошую</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnSkip" Property="Text">
+          <Value>Пропустить коммит</Value>
         </TranslationItem>
         <TranslationItem Name="Start" Property="Text">
           <Value>Начать bisect</Value>
