@@ -556,7 +556,15 @@ namespace GitCommands
             return "bisect start";
         }
 
-        public static string ContinueBisectCmd(GitBisectOption bisectOption)
+        public static string ContinueBisectCmd(GitBisectOption bisectOption, params string[] revisions)
+        {
+            var bisectCommand = GetBisectCommand(bisectOption);
+            if (revisions.Length == 0)
+                return bisectCommand;
+            return string.Format("{0} {1}", bisectCommand, string.Join(" ", revisions));
+        }
+
+        private static string GetBisectCommand(GitBisectOption bisectOption)
         {
             switch (bisectOption)
             {
@@ -569,13 +577,6 @@ namespace GitCommands
                 default:
                     throw new NotSupportedException(string.Format("Bisect option {0} is not supported", bisectOption));
             }
-        }
-
-        public static string MarkRevisionBisectCmd(bool good, string revision)
-        {
-            if (good)
-                return "bisect good " + revision;
-            return "bisect bad " + revision;
         }
 
         public static string StopBisectCmd()
