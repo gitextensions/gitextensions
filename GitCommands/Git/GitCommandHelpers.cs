@@ -329,7 +329,7 @@ namespace GitCommands
             return "submodule sync \"" + name.Trim() + "\"";
         }
 
-        public static string AddSubmoduleCmd(string remotePath, string localPath, string branch)
+        public static string AddSubmoduleCmd(string remotePath, string localPath, string branch, bool force)
         {
             remotePath = FixPath(remotePath);
             localPath = FixPath(localPath);
@@ -337,7 +337,9 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(branch))
                 branch = " -b \"" + branch.Trim() + "\"";
 
-            return "submodule add" + branch + " \"" + remotePath.Trim() + "\" \"" + localPath.Trim() + "\"";
+            var forceCmd = force ? " -f" : string.Empty;
+
+            return "submodule add" + forceCmd + branch + " \"" + remotePath.Trim() + "\" \"" + localPath.Trim() + "\"";
         }
 
         public static GitSubmodule CreateGitSubmodule(string submodule)
