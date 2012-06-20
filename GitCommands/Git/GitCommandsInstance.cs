@@ -110,6 +110,11 @@ namespace GitCommands
             return Settings.Module.RunGitCmd(arguments);
         }
 
+        public string RunGit(string arguments, out int exitCode)
+        {
+            return Settings.Module.RunGitCmd(arguments, out exitCode);
+        }
+
         public string RunBatchFile(string batchFile)
         {
             return Settings.Module.RunBatchFile(batchFile);
