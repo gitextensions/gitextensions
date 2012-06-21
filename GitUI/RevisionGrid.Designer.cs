@@ -334,7 +334,7 @@ namespace GitUI
             // 
             // createTagToolStripMenuItem
             // 
-            this.createTagToolStripMenuItem.Image = global::GitUI.Properties.Resources._33;
+            this.createTagToolStripMenuItem.Image = global::GitUI.Properties.Resources.CreateTag;
             this.createTagToolStripMenuItem.Name = "createTagToolStripMenuItem";
             this.createTagToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
             this.createTagToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
@@ -350,7 +350,7 @@ namespace GitUI
             // 
             // createNewBranchToolStripMenuItem
             // 
-            this.createNewBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources._35;
+            this.createNewBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources.CreateNewBranch;
             this.createNewBranchToolStripMenuItem.Name = "createNewBranchToolStripMenuItem";
             this.createNewBranchToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
             this.createNewBranchToolStripMenuItem.Size = new System.Drawing.Size(225, 22);

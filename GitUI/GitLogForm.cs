@@ -9,7 +9,7 @@ namespace GitUI
     {
         private readonly SynchronizationContext syncContext;
 
-        private GitLogForm()
+        internal GitLogForm()
         {
             ShowInTaskbar = true;
             syncContext = SynchronizationContext.Current;

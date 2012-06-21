@@ -332,7 +332,8 @@ namespace GitUI
                 return needRefresh;
 
             var form = new FormCheckoutBranch(branch, remote, containRevison, force);
-            form.ShowDialog(owner);
+            if (form.ShowDialog(owner) == DialogResult.Cancel)
+                return false;
 
             InvokeEvent(owner, PostCheckoutBranch);
 
@@ -377,8 +378,9 @@ namespace GitUI
             if (CheckForDirtyDir(owner, out needRefresh, out force))
                 return needRefresh;
 
-            var form = new FormCheckoutRemoteBranch(branch, null, force);
-            form.ShowDialog(owner);
+            var form = new FormCheckoutRemoteBranch(branch, force);
+            if (form.ShowDialog(owner) == DialogResult.Cancel)
+                return false;
 
             InvokeEvent(owner, PostCheckoutBranch);
 
@@ -448,17 +450,22 @@ namespace GitUI
             return StartCreateBranchDialog(null);
         }
 
-        public bool StartCloneDialog(IWin32Window owner, string url)
+        public bool StartCloneDialog(IWin32Window owner, string url, bool openedFromProtocolHandler)
         {
             if (!InvokeEvent(owner, PreClone))
                 return false;
 
-            var form = new FormClone(url);
+            var form = new FormClone(url, openedFromProtocolHandler);
             form.ShowDialog(owner);
 
             InvokeEvent(owner, PostClone);
 
             return true;
+        }
+
+        public bool StartCloneDialog(IWin32Window owner, string url)
+        {
+            return StartCloneDialog(owner, url, false);
         }
 
         public bool StartCloneDialog(IWin32Window owner)
@@ -640,7 +647,7 @@ namespace GitUI
         /// <param name="pullOnShow"></param>
         /// <param name="pullCompleted">true if pull completed with no errors</param>
         /// <returns>if revision grid should be refreshed</returns>
-        public bool StartPullDialog(IWin32Window owner, bool pullOnShow, out bool pullCompleted)
+        public bool StartPullDialog(IWin32Window owner, bool pullOnShow, out bool pullCompleted, ConfigureFormPull configProc)
         {
             pullCompleted = false;
 
@@ -651,6 +658,9 @@ namespace GitUI
                 return true;
 
             FormPull formPull = new FormPull();
+            if (configProc != null)
+                configProc(formPull);
+
             DialogResult dlgResult;
             if (pullOnShow)
                 dlgResult = formPull.PullAndShowDialogWhenFailed(owner);
@@ -666,15 +676,20 @@ namespace GitUI
             return true;//maybe InvokeEvent should have 'needRefresh' out parameter?
         }
 
+        public bool StartPullDialog(IWin32Window owner, bool pullOnShow, out bool pullCompleted)
+        {
+            return StartPullDialog(owner, pullOnShow, out pullCompleted, null);
+        }
+
         public bool StartPullDialog(IWin32Window owner, bool pullOnShow)
         {
             bool errorOccurred;
-            return StartPullDialog(owner, pullOnShow, out errorOccurred);
+            return StartPullDialog(owner, pullOnShow, out errorOccurred, null);
         }
 
         public bool StartPullDialog(bool pullOnShow, out bool pullCompleted)
         {
-            return StartPullDialog(null, pullOnShow, out pullCompleted);
+            return StartPullDialog(null, pullOnShow, out pullCompleted, null);
         }
 
         public bool StartPullDialog(bool pullOnShow)
@@ -686,7 +701,7 @@ namespace GitUI
         public bool StartPullDialog(IWin32Window owner)
         {
             bool errorOccurred;
-            return StartPullDialog(owner, false, out errorOccurred);
+            return StartPullDialog(owner, false, out errorOccurred, null);
         }
 
         public bool StartPullDialog()
@@ -1106,7 +1121,7 @@ namespace GitUI
                 return false;
 
             var form = new FormBrowse(filter);
-            form.ShowDialog();
+            form.ShowDialog(owner);
 
             InvokeEvent(owner, PostBrowse);
 

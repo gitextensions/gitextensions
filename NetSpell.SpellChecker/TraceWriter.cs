@@ -6,7 +6,7 @@ using System.Reflection;
 /// <summary>
 /// Summary description for TraceWriter.
 /// </summary>
-internal sealed class TraceWriter
+internal static class TraceWriter
 {
 	
 	public static TraceSwitch Switch = new TraceSwitch(Assembly.GetAssembly(typeof(TraceWriter)).GetName().Name, "Trace Helper Switch");
@@ -64,10 +64,6 @@ internal sealed class TraceWriter
 		string className = frame.GetMethod().DeclaringType.ToString();
 		string functionName = frame.GetMethod().Name;
 		return string.Format("{0}.{1}", className, functionName);
-	}
-	
-	private TraceWriter()
-	{
 	}
 
 }

@@ -77,9 +77,13 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
+    <PostBuildEvent Condition=" '$(OS)' == 'Windows_NT' ">copy "$(TargetPath)" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
 copy "$(SolutionDir)\bin\Git.hub.dll" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
 copy "$(SolutionDir)\bin\RestSharp.dll" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
+</PostBuildEvent>
+    <PostBuildEvent Condition=" '$(OS)' != 'Windows_NT' ">cp `echo "$(TargetPath)" | tr -s "//" "/"` "../../../../GitExtensions/bin/$(ConfigurationName)/"
+cp "$(SolutionDir)Bin/Git.hub.dll" "../../../../GitExtensions/bin/$(ConfigurationName)/"
+cp "$(SolutionDir)Bin/RestSharp.dll" "../../../../GitExtensions/bin/$(ConfigurationName)/"
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

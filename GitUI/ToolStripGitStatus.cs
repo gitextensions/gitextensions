@@ -12,10 +12,11 @@ namespace GitUI
 {
     public sealed partial class ToolStripGitStatus : ToolStripMenuItem
     {
-        private static readonly Bitmap ICON_CLEAN = Properties.Resources._10;
-        private static readonly Bitmap ICON_DIRTY = Properties.Resources.commitRed;
-        private static readonly Bitmap ICON_STAGED = Properties.Resources._9;
-        private static readonly Bitmap ICON_MIXED = Properties.Resources.commitYellow;
+        private static readonly Bitmap ICON_CLEAN = Properties.Resources.IconClean;
+        private static readonly Bitmap ICON_DIRTY = Properties.Resources.IconDirty;
+        private static readonly Bitmap ICON_DIRTY_SUBMODULES = Properties.Resources.IconDirtySubmodules;
+        private static readonly Bitmap ICON_STAGED = Properties.Resources.IconStaged;
+        private static readonly Bitmap ICON_MIXED = Properties.Resources.IconMixed;
 
         /// <summary>
         /// We often change several files at once.
@@ -202,6 +203,7 @@ namespace GitUI
 
             var stagedCount = allChangedFiles.FindAll(status => status.IsStaged).Count;
             var unstagedCount = allChangedFiles.FindAll(status => !status.IsStaged).Count;
+            var unstagedSubmodulesCount = allChangedFiles.FindAll(status => status.IsSubmodule && !status.IsStaged).Count;
 
             if (stagedCount == 0 && unstagedCount == 0)
             {
@@ -209,10 +211,12 @@ namespace GitUI
             }
             else
             {
-
                 if (stagedCount == 0)
                 {
-                    Image = ICON_DIRTY;
+                    if (unstagedCount != unstagedSubmodulesCount)
+                        Image = ICON_DIRTY;
+                    else
+                        Image = ICON_DIRTY_SUBMODULES;
                 }
                 else if (unstagedCount == 0)
                 {
@@ -248,7 +252,7 @@ namespace GitUI
 
         private void ScheduleImmediateUpdate()
         {
-            nextUpdateTime = 0;
+            nextUpdateTime = Environment.TickCount;
             Update();
         }
 

@@ -2,10 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using GitCommands.Config;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using GitCommands;
+using GitCommands.Config;
+#if !NUNIT
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Category = Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute;
+#else
+using NUnit.Framework;
+using TestInitialize = NUnit.Framework.SetUpAttribute;
+using TestContext = System.Object;
+using TestProperty = NUnit.Framework.PropertyAttribute;
+using TestClass = NUnit.Framework.TestFixtureAttribute;
+using TestMethod = NUnit.Framework.TestAttribute;
+using TestCleanup = NUnit.Framework.TearDownAttribute;
+#endif
 
 namespace GitCommandsTests
 {
@@ -38,6 +49,12 @@ namespace GitCommandsTests
             content.AppendLine("key3=value3");
             return content.ToString();
         }
+		
+		private void AddConfigValue(string cfgFile, string section, string value)
+		{
+			string args = "config -f " + "\"" +cfgFile + "\"" + " --add " + section + " " + value;
+			Settings.Module.RunGitCmd(args);			
+		}
 
         [TestMethod]
         public void TestWithInvalidFileName()
@@ -56,7 +73,7 @@ namespace GitCommandsTests
         {
             try
             {
-                ConfigFile file = new ConfigFile(null);
+                ConfigFile file = new ConfigFile(null, true);
                 file.GetValue("inexistentSetting");
             }
             catch (Exception e)
@@ -73,7 +90,7 @@ namespace GitCommandsTests
                 //Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), Encoding.UTF8);
             }
-            ConfigFile file = new ConfigFile(GetConfigFileName());
+            ConfigFile file = new ConfigFile(GetConfigFileName(), true);
             Assert.IsTrue(file.HasConfigSection("section1"));
             Assert.IsFalse(file.HasConfigSection("inexistent.section"));
             Assert.IsFalse(file.HasConfigSection("inexistent"));
@@ -86,7 +103,7 @@ namespace GitCommandsTests
                 //Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), Encoding.UTF8);
             }
-            ConfigFile file = new ConfigFile(GetConfigFileName());
+            ConfigFile file = new ConfigFile(GetConfigFileName(), true);
             Assert.IsTrue(file.HasValue("section1.key1"));
         }
 
@@ -97,7 +114,7 @@ namespace GitCommandsTests
                 //Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), Encoding.UTF8);
             }
-            ConfigFile configFile = new ConfigFile(GetConfigFileName());
+            ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
             Assert.IsTrue(configFile.GetConfigSections().Count == 3);
             configFile.RemoveConfigSection("section1");
             Assert.IsTrue(configFile.GetConfigSections().Count == 2);
@@ -107,7 +124,7 @@ namespace GitCommandsTests
         [ExpectedException(typeof(ArgumentNullException))]
         public void TestWithNullSettings()
         {
-            ConfigFile file = new ConfigFile(GetConfigFileName());
+            ConfigFile file = new ConfigFile(GetConfigFileName(), true);
             file.GetValue(null);
         }
 
@@ -505,7 +522,51 @@ namespace GitCommandsTests
             }
         }
 
-        /// <summary>
+
+        [TestMethod]
+        public void CaseSensitive()
+        {
+
+			// create test data
+			{
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+                configFile.AddValue("branch.BranchName1.remote", "origin1");
+                configFile.Save();
+
+				AddConfigValue(GetConfigFileName(), "branch.\"BranchName2\".remote", "origin2");
+				AddConfigValue(GetConfigFileName(), "branch.\"branchName2\".remote", "origin3");
+			}
+            // verify
+            {
+
+				ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+
+				string remote = "branch.BranchName1.remote";
+				Assert.AreEqual("origin1", configFile.GetValue(remote), remote);
+				
+				remote = "branch.branchName1.remote";
+				Assert.AreEqual("origin1", configFile.GetValue(remote), remote);
+				
+				remote = "branch \"branchName1\".remote";
+				Assert.AreNotEqual("origin1", configFile.GetValue(remote), remote);
+				
+				remote = "branch \"BranchName2\".remote";
+				Assert.AreEqual("origin2", configFile.GetValue(remote), remote);
+				
+				remote = "branch \"branchName2\".remote";
+				Assert.AreNotEqual("origin2", configFile.GetValue(remote), remote);
+				
+				remote = "branch \"branchName2\".remote";
+				Assert.AreEqual("origin3", configFile.GetValue(remote), remote);
+				
+				remote = "branch \"branchname2\".remote";
+				Assert.AreEqual("", configFile.GetValue(remote), remote);
+				
+            }
+        }
+		
+		
+		/// <summary>
         /// Always delete the test config file after each test
         /// </summary>
         [TestCleanup]

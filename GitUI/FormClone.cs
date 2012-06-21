@@ -29,11 +29,15 @@ namespace GitUI
         private readonly TranslationString _questionOpenRepoCaption = 
             new TranslationString("Open");
 
-        public FormClone(): this(null)
+        private bool openedFromProtocolHandler;
+
+        // for translation only
+        internal FormClone()
+            : this(null, false)
         {
         }
 
-        public FormClone(string url)
+        public FormClone(string url, bool openedFromProtocolHandler)
         {
             InitializeComponent();
             Translate();
@@ -53,6 +57,8 @@ namespace GitUI
                 else
                     _NO_TRANSLATE_To.Text = Settings.WorkingDir;
             }
+
+            this.openedFromProtocolHandler = openedFromProtocolHandler;
 
             FromTextUpdate(null, null);
         }
@@ -88,7 +94,13 @@ namespace GitUI
                 if (fromProcess.ErrorOccurred() || Settings.Module.InTheMiddleOfPatch())
                     return;
 
-                if (ShowInTaskbar == false && AskIfNewRepositoryShouldBeOpened(dirTo))
+                if (openedFromProtocolHandler && AskIfNewRepositoryShouldBeOpened(dirTo))
+                {
+                    Settings.WorkingDir = dirTo;
+                    Hide();
+                    GitUICommands.Instance.StartBrowseDialog();
+                }
+                else if (ShowInTaskbar == false && AskIfNewRepositoryShouldBeOpened(dirTo))
                     Settings.WorkingDir = dirTo;
                 Close();
             }

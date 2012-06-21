@@ -68,14 +68,19 @@ namespace GitCommands
                 return true;
 
             return
-                Author.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase) ||
+                (Author != null && Author.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase)) ||
                 Message.ToLower().Contains(searchString);
         }
 
         public bool IsArtificial()
         {
-            return Guid == UncommittedWorkingDirGuid ||
-                Guid == IndexGuid;
+            return IsArtificial(Guid);
+        }
+
+        public static bool IsArtificial(string guid)
+        {
+            return guid == UncommittedWorkingDirGuid ||
+                    guid == IndexGuid;
         }
 
     }

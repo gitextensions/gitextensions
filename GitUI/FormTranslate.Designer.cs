@@ -117,7 +117,7 @@ namespace GitUI
             // 
             // toolStripButtonNew
             // 
-            this.toolStripButtonNew.Image = global::GitUI.Properties.Resources._21;
+            this.toolStripButtonNew.Image = global::GitUI.Properties.Resources.New;
             this.toolStripButtonNew.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonNew.Name = "toolStripButtonNew";
             this.toolStripButtonNew.Size = new System.Drawing.Size(59, 27);
@@ -128,7 +128,7 @@ namespace GitUI
             // saveAs
             // 
             this.saveAs.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.saveAs.Image = global::GitUI.Properties.Resources._46;
+            this.saveAs.Image = global::GitUI.Properties.Resources.SaveAs;
             this.saveAs.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.saveAs.Name = "saveAs";
             this.saveAs.Size = new System.Drawing.Size(23, 27);
@@ -173,7 +173,7 @@ namespace GitUI
             // 
             // translateProgress
             // 
-            this.translateProgress.Image = global::GitUI.Properties.Resources._53;
+            this.translateProgress.Image = global::GitUI.Properties.Resources.TranslateProgress;
             this.translateProgress.Name = "translateProgress";
             this.translateProgress.Size = new System.Drawing.Size(16, 27);
             // 
@@ -181,7 +181,7 @@ namespace GitUI
             // 
             this.hideTranslatedItems.CheckOnClick = true;
             this.hideTranslatedItems.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.hideTranslatedItems.Image = global::GitUI.Properties.Resources._10;
+            this.hideTranslatedItems.Image = global::GitUI.Properties.Resources.IconClean;
             this.hideTranslatedItems.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.hideTranslatedItems.Name = "hideTranslatedItems";
             this.hideTranslatedItems.Size = new System.Drawing.Size(23, 27);
@@ -193,7 +193,7 @@ namespace GitUI
             this._toolStripButton1.CheckOnClick = true;
             this._toolStripButton1.CheckState = System.Windows.Forms.CheckState.Checked;
             this._toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this._toolStripButton1.Image = global::GitUI.Properties.Resources._26;
+            this._toolStripButton1.Image = global::GitUI.Properties.Resources.Options;
             this._toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._toolStripButton1.Name = "_toolStripButton1";
             this._toolStripButton1.Size = new System.Drawing.Size(23, 27);
