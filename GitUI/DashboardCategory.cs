@@ -1,12 +1,14 @@
 ﻿using System;
-using System.Linq;
+using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands.Repository;
 using ResourceManager.Translation;
 
 namespace GitUI
 {
+    [DefaultEvent("DashboardItemClick")]
     public partial class DashboardCategory : GitExtensionsControl
     {
         #region Translation
@@ -55,12 +57,21 @@ namespace GitUI
                 m_repositoryCategory = value;
 
                 if (m_repositoryCategory != null && m_repositoryCategory.CategoryType == RepositoryCategoryType.RssFeed)
-                    m_repositoryCategory.DownloadRssFeed();
-
-                InitRepositoryCategory();
+                {
+                    AsyncHelpers.DoAsync(
+                        () => { m_repositoryCategory.DownloadRssFeed(); return this; },
+                        obj => { obj.InitRepositoryCategory(); },
+                        ex => { }
+                    );
+                }
+                else
+                {
+                    InitRepositoryCategory();
+                }
             }
         }
 
+        [Category("Appearance")]
         public string Title
         {
             get { return _NO_TRANSLATE_Caption.Text; }
@@ -111,7 +122,7 @@ namespace GitUI
                     contextMenu.Items.Add(editMenuItem);
 
                     var showCurrentBranchMenuItem = new ToolStripMenuItem(_showCurrentBranch.Text);
-                    showCurrentBranchMenuItem.Click += new EventHandler(showCurrentBranchMenuItem_Click);
+                    showCurrentBranchMenuItem.Click += showCurrentBranchMenuItem_Click;
                     showCurrentBranchMenuItem.Checked = GitCommands.Settings.DashboardShowCurrentBranch;
                     contextMenu.Items.Add(showCurrentBranchMenuItem);
 
@@ -129,10 +140,8 @@ namespace GitUI
             dashboardCategoryChanged(null, null);
         }
 
-        private void moveUpMenuItem_Click(object sender, EventArgs e)
+        private void MoveItem(ToolStripItem toolStripItem, bool moveUp)
         {
-            var toolStripItem = sender as ToolStripItem;
-
             if (toolStripItem == null)
                 return;
 
@@ -143,27 +152,22 @@ namespace GitUI
 
             int index = RepositoryCategory.Repositories.IndexOf(repository);
             RepositoryCategory.Repositories.Remove(repository);
-            RepositoryCategory.Repositories.Insert(Math.Max(index - 1, 0), repository);
+            int newIndex = moveUp ? Math.Max(index - 1, 0) : 
+                Math.Min(index + 1, RepositoryCategory.Repositories.Count);
+            RepositoryCategory.Repositories.Insert(newIndex, repository);
             Recalculate();
+        }
+
+        private void moveUpMenuItem_Click(object sender, EventArgs e)
+        {
+            var toolStripItem = sender as ToolStripItem;
+            MoveItem(toolStripItem, true);
         }
 
         private void moveDownMenuItem_Click(object sender, EventArgs e)
         {
             var toolStripItem = sender as ToolStripItem;
-
-            if (toolStripItem == null)
-                return;
-
-            var repository = toolStripItem.Tag as Repository;
-
-            if (repository == null)
-                return;
-
-            int index = RepositoryCategory.Repositories.IndexOf(repository);
-            RepositoryCategory.Repositories.Remove(repository);
-            RepositoryCategory.Repositories.Insert(Math.Min(index + 1, RepositoryCategory.Repositories.Count),
-                                                   repository);
-            Recalculate();
+            MoveItem(toolStripItem, false);
         }
 
         private void editMenuItem_Click(object sender, EventArgs e)
@@ -249,6 +253,7 @@ namespace GitUI
             dashboardCategoryChanged(this, null);
         }
 
+        [Category("Action")]
         public event EventHandler DashboardItemClick;
 
         private void dashboardItem_Click(object sender, EventArgs e)

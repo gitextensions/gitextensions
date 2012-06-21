@@ -6,6 +6,7 @@ using System.IO;
 using System.Security.Permissions;
 using System.Text;
 using GitCommands.Config;
+using GitCommands.Git;
 
 namespace GitCommands
 {
@@ -128,7 +129,7 @@ namespace GitCommands
                            RedirectStandardError = true,
                            StandardOutputEncoding = Settings.LogOutputEncoding,
                            StandardErrorEncoding = Settings.LogOutputEncoding
-                        };
+                       };
         }
 
         internal static bool UseSsh(string arguments)
@@ -289,7 +290,7 @@ namespace GitCommands
             string CherryPickCmd = commit ? "cherry-pick" : "cherry-pick --no-commit";
             return CherryPickCmd + " " + arguments + " \"" + cherry + "\"";
         }
-        
+
         public static string DeleteBranchCmd(string branchName, bool force, bool remoteBranch)
         {
             StringBuilder cmd = new StringBuilder("branch");
@@ -307,12 +308,12 @@ namespace GitCommands
 
             return cmd.ToString();
         }
-        
+
         public static string DeleteTagCmd(string tagName)
         {
             return "tag -d \"" + tagName + "\"";
         }
-        
+
         public static string SubmoduleUpdateCmd(string name)
         {
             if (string.IsNullOrEmpty(name))
@@ -329,7 +330,7 @@ namespace GitCommands
             return "submodule sync \"" + name.Trim() + "\"";
         }
 
-        public static string AddSubmoduleCmd(string remotePath, string localPath, string branch)
+        public static string AddSubmoduleCmd(string remotePath, string localPath, string branch, bool force)
         {
             remotePath = FixPath(remotePath);
             localPath = FixPath(localPath);
@@ -337,7 +338,9 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(branch))
                 branch = " -b \"" + branch.Trim() + "\"";
 
-            return "submodule add" + branch + " \"" + remotePath.Trim() + "\" \"" + localPath.Trim() + "\"";
+            var forceCmd = force ? " -f" : string.Empty;
+
+            return "submodule add" + forceCmd + branch + " \"" + remotePath.Trim() + "\" \"" + localPath.Trim() + "\"";
         }
 
         public static GitSubmodule CreateGitSubmodule(string submodule)
@@ -446,7 +449,7 @@ namespace GitCommands
             return PushCmd(path, null, branch, all, false, true, false);
         }
 
-        public static string PushCmd(string path, string fromBranch, string toBranch, 
+        public static string PushCmd(string path, string fromBranch, string toBranch,
             bool all, bool force, bool track, bool recursiveSubmodulesCheck)
         {
             path = FixPath(path);
@@ -555,18 +558,27 @@ namespace GitCommands
             return "bisect start";
         }
 
-        public static string ContinueBisectCmd(bool good)
+        public static string ContinueBisectCmd(GitBisectOption bisectOption, params string[] revisions)
         {
-            if (good)
-                return "bisect good";
-            return "bisect bad";
+            var bisectCommand = GetBisectCommand(bisectOption);
+            if (revisions.Length == 0)
+                return bisectCommand;
+            return string.Format("{0} {1}", bisectCommand, string.Join(" ", revisions));
         }
 
-        public static string MarkRevisionBisectCmd(bool good, string revision)
+        private static string GetBisectCommand(GitBisectOption bisectOption)
         {
-            if (good)
-                return "bisect good " + revision;
-            return "bisect bad " + revision;
+            switch (bisectOption)
+            {
+                case GitBisectOption.Good:
+                    return "bisect good";
+                case GitBisectOption.Bad:
+                    return "bisect bad";
+                case GitBisectOption.Skip:
+                    return "bisect skip";
+                default:
+                    throw new NotSupportedException(string.Format("Bisect option {0} is not supported", bisectOption));
+            }
         }
 
         public static string StopBisectCmd()
@@ -586,7 +598,7 @@ namespace GitCommands
 
             if (preserveMerges)
             {
-               sb.Append("--preserve-merges ");
+                sb.Append("--preserve-merges ");
             }
 
             sb.Append('"');
@@ -617,12 +629,18 @@ namespace GitCommands
 
         public static string PatchCmd(string patchFile)
         {
-            return "am --3way --signoff \"" + FixPath(patchFile) + "\"";
+            if (IsDiffFile(patchFile))
+                return "apply \"" + FixPath(patchFile) + "\"";
+            else
+                return "am --3way --signoff \"" + FixPath(patchFile) + "\"";
         }
 
         public static string PatchCmdIgnoreWhitespace(string patchFile)
         {
-            return "am --3way --signoff --ignore-whitespace \"" + FixPath(patchFile) + "\"";
+            if (IsDiffFile(patchFile))
+                return "apply --ignore-whitespace \"" + FixPath(patchFile) + "\"";
+            else
+                return "am --3way --signoff --ignore-whitespace \"" + FixPath(patchFile) + "\"";
         }
 
         public static string PatchDirCmd(string patchDir)
@@ -634,7 +652,7 @@ namespace GitCommands
         {
             return "am --3way --signoff --ignore-whitespace --directory=\"" + FixPath(patchDir) + "\"";
         }
-        
+
         public static string CleanUpCmd(bool dryrun, bool directories, bool nonignored, bool ignored)
         {
             var stringBuilder = new StringBuilder("clean");
@@ -655,12 +673,12 @@ namespace GitCommands
 
         public static ConfigFile GetGlobalConfig()
         {
-            return new ConfigFile(GetHomeDir() + Settings.PathSeparator.ToString() + ".gitconfig");
+            return new ConfigFile(GetHomeDir() + Settings.PathSeparator.ToString() + ".gitconfig", false);
         }
 
         public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, bool untrackedFiles)
         {
-            return GetAllChangedFilesCmd( excludeIgnoredFiles, untrackedFiles ? UntrackedFilesMode.Default : UntrackedFilesMode.No );
+            return GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles ? UntrackedFilesMode.Default : UntrackedFilesMode.No);
         }
 
         public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles)
@@ -675,7 +693,7 @@ namespace GitCommands
 
             StringBuilder stringBuilder = new StringBuilder("status --porcelain -z");
 
-            switch(untrackedFiles)
+            switch (untrackedFiles)
             {
                 case UntrackedFilesMode.Default:
                     stringBuilder.Append(" --untracked-files");
@@ -743,7 +761,7 @@ namespace GitCommands
                 int ind = trimmedStatus.LastIndexOf('\0');
                 if (ind < lastNewLinePos) //Warning at end
                 {
-                    lastNewLinePos = trimmedStatus.IndexOfAny(nl, ind >= 0 ? ind: 0);
+                    lastNewLinePos = trimmedStatus.IndexOfAny(nl, ind >= 0 ? ind : 0);
                     trimmedStatus = trimmedStatus.Substring(0, lastNewLinePos).Trim(nl);
                 }
                 else                                              //Warning at beginning
@@ -817,61 +835,43 @@ namespace GitCommands
 
             gitItemStatus = new GitItemStatus();
             //Find renamed files...
-            switch (x)
+            if (x == 'R' || x == 'C')
             {
-                case 'R':
-                    if (fromDiff)
-                    {
-                        gitItemStatus.OldName = fileName.Trim();
-                        gitItemStatus.Name = files[n + 1].Trim();
-                    }
-                    else
-                    {
-                        gitItemStatus.Name = fileName.Trim();
-                        gitItemStatus.OldName = files[n + 1].Trim();
-                    }
-                    gitItemStatus.IsNew = false;
-                    gitItemStatus.IsChanged = false;
-                    gitItemStatus.IsDeleted = false;
-                    gitItemStatus.IsRenamed = true;
-                    gitItemStatus.IsTracked = true;
-                    if (status.Length > 2)
-                        gitItemStatus.RenameCopyPercentage = status.Substring(1);
-                    n++;
-                    break;
-                case 'C':
-                    if (fromDiff)
-                    {
-                        gitItemStatus.OldName = fileName.Trim();
-                        gitItemStatus.Name = files[n + 1].Trim();
-                    }
-                    else
-                    {
-                        gitItemStatus.Name = fileName.Trim();
-                        gitItemStatus.OldName = files[n + 1].Trim();
-                    }
-                    gitItemStatus.IsNew = false;
-                    gitItemStatus.IsChanged = false;
-                    gitItemStatus.IsDeleted = false;
-                    gitItemStatus.IsCopied = true;
-                    gitItemStatus.IsTracked = true;
-                    if (status.Length > 2)
-                        gitItemStatus.RenameCopyPercentage = status.Substring(1);
-                    n++;
-                    break;
-                default:
+                if (fromDiff)
+                {
+                    gitItemStatus.OldName = fileName.Trim();
+                    gitItemStatus.Name = files[n + 1].Trim();
+                }
+                else
+                {
                     gitItemStatus.Name = fileName.Trim();
-                    gitItemStatus.IsNew = x == 'A' || x == '?' || x == '!';
-                    gitItemStatus.IsChanged = x == 'M';
-                    gitItemStatus.IsDeleted = x == 'D';
-                    gitItemStatus.IsRenamed = false;
-                    gitItemStatus.IsTracked = x != '?' && x != '!' && x != ' ' || !gitItemStatus.IsNew;
-                    gitItemStatus.IsConflict = x == 'U';
-                    break;
+                    gitItemStatus.OldName = files[n + 1].Trim();
+                }
+                gitItemStatus.IsNew = false;
+                gitItemStatus.IsChanged = false;
+                gitItemStatus.IsDeleted = false;
+                if (x == 'R')
+                    gitItemStatus.IsRenamed = true;
+                else
+                    gitItemStatus.IsCopied = true;
+                gitItemStatus.IsTracked = true;
+                if (status.Length > 2)
+                    gitItemStatus.RenameCopyPercentage = status.Substring(1);
+                n++;
+            }
+            else
+            {
+                gitItemStatus.Name = fileName.Trim();
+                gitItemStatus.IsNew = x == 'A' || x == '?' || x == '!';
+                gitItemStatus.IsChanged = x == 'M';
+                gitItemStatus.IsDeleted = x == 'D';
+                gitItemStatus.IsRenamed = false;
+                gitItemStatus.IsTracked = x != '?' && x != '!' && x != ' ' || !gitItemStatus.IsNew;
+                gitItemStatus.IsConflict = x == 'U';
             }
             return n;
         }
-        
+
         public static string StageFiles(IList<GitItemStatus> files)
         {
             var gitCommand = new GitCommandsInstance();
@@ -1038,7 +1038,7 @@ namespace GitCommands
                             {
                                 sb.AppendLine("\t\t\t\t\t" + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + commitData.CommitDate.LocalDateTime.ToString(" (ddd MMM dd HH':'mm':'ss yyyy)"));
                                 var delim = new char[] { '\n', '\r' };
-                                var lines = commitData.Body.Trim(delim).Split(new string[] {"\r\n"}, 0);
+                                var lines = commitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
                                 foreach (var curline in lines)
                                     sb.AppendLine("\t\t" + curline);
                             }
@@ -1082,7 +1082,7 @@ namespace GitCommands
 
             return string.Empty;
         }
-        
+
         public static string MergeBranchCmd(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy)
         {
             StringBuilder command = new StringBuilder("merge");
@@ -1111,13 +1111,14 @@ namespace GitCommands
 
             return null;
         }
-        
+
         /// <summary>
         /// Takes a date/time which and determines a friendly string for time from now to be displayed for the relative time from the date.
         /// It is important to note that times are compared using the current timezone, so the date that is passed in should be converted 
         /// to the local timezone before passing it in.
         /// </summary>
-        /// <param name="theDate">The date to get relative time string for.</param>
+        /// <param name="originDate">Current date.</param>
+        /// <param name="previousDate">The date to get relative time string for.</param>
         /// <returns>The human readable string for relative date.</returns>
         /// <see cref="http://stackoverflow.com/questions/11/how-do-i-calculate-relative-time"/>
         public static string GetRelativeDateString(DateTime originDate, DateTime previousDate)
@@ -1365,5 +1366,22 @@ namespace GitCommands
             return header + diffHeader + diffContent;
         }
 
+        // look into patch file and try to figure out if it's a raw diff (i.e from git diff -p)
+        // only looks at start, as all we want is to tell from automail format
+        // returns false on any problem, never throws
+        private static bool IsDiffFile(string path)
+        {
+            try
+            {
+                using (StreamReader sr = new StreamReader(path))
+                {
+                    return sr.ReadLine().StartsWith("diff ");
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }

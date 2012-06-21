@@ -258,9 +258,8 @@ namespace GitUI
                 }
             }
 
-            public bool Prune()
+            public void Prune()
             {
-                bool isPruned = false;
             // Remove all nodes that don't have a value associated with them.
             start_over:
                 foreach (Node n in Nodes.Values)
@@ -273,12 +272,9 @@ namespace GitUI
                         {
                             j.Remove(n);
                         }
-                        isPruned = true;
                         goto start_over;
                     }
                 }
-
-                return isPruned;
             }
 
             public IEnumerable<Node> GetHeads()

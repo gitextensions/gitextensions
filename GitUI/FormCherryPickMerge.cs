@@ -16,7 +16,6 @@ namespace GitUI
         
         public bool OkClicked;
         public FormCherryPickMerge(GitRevision[] parents)
-            : base()
         {
             InitializeComponent();
 

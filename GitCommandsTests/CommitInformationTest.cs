@@ -1,15 +1,27 @@
-﻿using System;
+﻿#if !NUNIT
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Category = Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute;
+#else
+using NUnit.Framework;
+using TestInitialize = NUnit.Framework.SetUpAttribute;
+using TestContext = System.Object;
+using TestProperty = NUnit.Framework.PropertyAttribute;
+using TestClass = NUnit.Framework.TestFixtureAttribute;
+using TestMethod = NUnit.Framework.TestAttribute;
+using TestCleanup = NUnit.Framework.TearDownAttribute;
+#endif
+using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using GitCommands;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GitCommandsTests
 {
     [TestClass]
     public class CommitInformationTest
     {
+
         [TestMethod]
         public void CanCreateCommitInformationFromFormatedData()
         {
@@ -49,6 +61,29 @@ namespace GitCommandsTests
             
             Assert.AreEqual(expectedHeader,commitInformation.Header);
             Assert.AreEqual(expectedBody, commitInformation.Body);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void CanCreateCommitInformationFromFormatedDataThrowsException()
+        {
+            CommitInformation.GetCommitInfo(data: null);
+        }
+
+        [TestMethod]
+        public void GetCommitInfoTestWhenDataIsNull()
+        {
+            var actualResult = CommitInformation.GetCommitInfo(new GitModule(""), "fakesha1");
+            Assert.AreEqual("Cannot find commit fakesha1", actualResult.Header);
+        }
+
+        [TestMethod]
+        public void GetAllBranchesWhichContainGivenCommitTestReturnsEmptyList()
+        {
+            var actualResult = CommitInformation.GetAllBranchesWhichContainGivenCommit("fakesha1", false, false);
+
+            Assert.IsNotNull(actualResult);
+            Assert.IsTrue(!actualResult.Any());
         }
     }
 }

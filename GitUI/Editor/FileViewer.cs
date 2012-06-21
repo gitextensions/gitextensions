@@ -61,8 +61,8 @@ namespace GitUI.Editor
             _internalFileViewer.MouseMove += TextAreaMouseMove;
             _internalFileViewer.MouseLeave += TextAreaMouseLeave;
             _internalFileViewer.TextChanged += TextEditor_TextChanged;
-            _internalFileViewer.ScrollPosChanged += new EventHandler(_internalFileViewer_ScrollPosChanged);
-            _internalFileViewer.SelectedLineChanged += new SelectedLineChangedEventHandler(_internalFileViewer_SelectedLineChanged);
+            _internalFileViewer.ScrollPosChanged += _internalFileViewer_ScrollPosChanged;
+            _internalFileViewer.SelectedLineChanged += _internalFileViewer_SelectedLineChanged;
             _internalFileViewer.DoubleClick += (sender, args) => OnRequestDiffView(EventArgs.Empty);
 
             this.HotkeysEnabled = true;
@@ -378,12 +378,20 @@ namespace GitUI.Editor
 
         public void ViewGitItemRevision(string fileName, string guid)
         {
-            ViewItem(fileName, () => GetImage(fileName, guid), () => Settings.Module.GetFileRevisionText(fileName, guid));
+            if (guid == GitRevision.UncommittedWorkingDirGuid) //working dir changes
+            {
+                ViewFile(fileName);
+            }
+            else
+            {
+                string blob = Settings.Module.GetFileBlobHash(fileName, guid);
+                ViewGitItem(fileName, blob);
+            }
         }
 
         public void ViewGitItem(string fileName, string guid)
         {
-            ViewItem(fileName, () => GetImage(fileName, guid), () => Settings.Module.GetFileText(guid));
+            ViewItem(fileName, () => GetImage(fileName, guid), () => Settings.Module.GetFileText(guid, Encoding));
         }
 
         private void ViewItem(string fileName, Func<Image> getImage, Func<string> getFileText)
@@ -521,7 +529,7 @@ namespace GitUI.Editor
                 ResetForDiff();
             }
         }
-        private bool patchHighlighting = false;
+        private bool patchHighlighting;
         private void ResetForDiff()
         {
             Reset(true, true);
@@ -604,7 +612,7 @@ namespace GitUI.Editor
                 if (code.Contains("\n") && (code[0].Equals(' ') || code[0].Equals('+') || code[0].Equals('-')))
                     code = code.Substring(1);
 
-                code = code.Replace("\n+", "\n").Replace("\n-", "\n").Replace("\n ", "\n");
+                code = code.Replace("\n ", "\n").Replace("\n+", "\n").Replace("\n-", "\n");
             }
             else
                 code = _internalFileViewer.GetSelectedText();
@@ -753,7 +761,7 @@ namespace GitUI.Editor
 
         public const string HotkeySettingsName = "FileViewer";
 
-        internal enum Commands : int
+        internal enum Commands
         {
             Find,
             GoToLine,

@@ -414,6 +414,9 @@
         <TranslationItem Name="label3" Property="Text">
           <Value>Ветка</Value>
         </TranslationItem>
+        <TranslationItem Name="chkForce" Property="Text">
+          <Value>Принудительно</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormAddToGitIgnore">
@@ -518,13 +521,16 @@
     <TranslationCategory Name="FormBisect">
       <translationItems>
         <TranslationItem Name="_bisectStart" Property="Text">
-          <Value>Отметить выделенные ревизии как стартовый диапозон для bisect?</Value>
+          <Value>Отметить выделенные ревизии как стартовый диапазон для bisect?</Value>
         </TranslationItem>
         <TranslationItem Name="Bad" Property="Text">
           <Value>Отметить как плохую</Value>
         </TranslationItem>
         <TranslationItem Name="Good" Property="Text">
           <Value>Отметить как хорошую</Value>
+        </TranslationItem>
+        <TranslationItem Name="btnSkip" Property="Text">
+          <Value>Пропустить ревизию</Value>
         </TranslationItem>
         <TranslationItem Name="Start" Property="Text">
           <Value>Начать bisect</Value>
@@ -1644,6 +1650,9 @@ obj/
 [Rr]elease*/
 _ReSharper*/
 </Value>
+        </TranslationItem>
+        <TranslationItem Name="lnkGitIgnorePatterns" Property="Text">
+          <Value>Коллекция шаблонов игнорирования</Value>
         </TranslationItem>
         <TranslationItem Name="Save" Property="Text">
           <Value>Сохранить</Value>
@@ -3529,6 +3538,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         </TranslationItem>
         <TranslationItem Name="markRevisionAsGoodToolStripMenuItem" Property="Text">
           <Value>Отметить ревизию как хорошую</Value>
+        </TranslationItem>
+        <TranslationItem Name="bisectSkipRevisionToolStripMenuItem" Property="Text">
+          <Value>Пропустить ревизию</Value>
         </TranslationItem>
         <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
           <Value>Объединить текущую ветку с</Value>

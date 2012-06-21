@@ -39,6 +39,8 @@ public:
 	int ViewDiffId;
 	int ResetFileChangesId;
 
+    bool CascadeContextMenu;
+
 public:
     // IShellExtInit
     STDMETHODIMP Initialize(LPCITEMIDLIST, LPDATAOBJECT, HKEY);
@@ -50,7 +52,7 @@ public:
 
 	void RunGitEx(const char * command);
 
-	int PopulateMenu(HMENU hMenu, int id);
+	int PopulateMenu(HMENU hMenu, int id, bool isSubMenu);
 	void AddMenuItem(HMENU hmenu, LPSTR text, int id, UINT position);
 
 protected:
@@ -87,6 +89,9 @@ protected:
 		
 			return result;
 	}
+
+private:
+    bool CSimpleShlExt::IsMenuItemVisible(CString settings, int id);
 };
 
 #endif //__SIMPLESHLEXT_H_

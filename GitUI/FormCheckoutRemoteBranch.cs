@@ -10,7 +10,7 @@ namespace GitUI
 {
     public partial class FormCheckoutRemoteBranch : GitExtensionsForm
     {
-        #region Translations
+        #region Translation
         private readonly TranslationString _applyShashedItemsAgain =
             new TranslationString("Apply stashed items to working dir again?");
 
@@ -24,7 +24,7 @@ namespace GitUI
         string _localBranchName = "";
 
         // for translation only
-        public FormCheckoutRemoteBranch()
+        internal FormCheckoutRemoteBranch()
         {
             InitializeComponent();
             Translate();
@@ -43,9 +43,9 @@ namespace GitUI
             : this(branch)
         {
             if (force)
-                rbResetBranch.Checked = true;
+                rbReset.Checked = true;
             else
-                rbCreateBranch.Checked = true;
+                rbMerge.Checked = true;
         }
 
         private void Initialize()
@@ -60,16 +60,22 @@ namespace GitUI
                 _newLocalBranchName = string.Concat(_remoteName, "_", _localBranchName, "_", i.ToString());
                 i++;
             }
-            rbResetBranch.Text = String.Format(rbResetBranch.Text, _localBranchName);
+
+            bool existsLocalBranch = LocalBranchExists(_localBranchName);
+
+            rbCreateBranch.Checked = Settings.CreateLocalBranchForRemote;
+           
+            rbResetBranch.Text = String.Format(existsLocalBranch ? rbResetBranch.Text : rbCreateBranch.Text, _localBranchName);
             rbCreateBranch.Text = String.Format(rbCreateBranch.Text, _newLocalBranchName);
-            cbMerge.Checked = Settings.MergeAtCheckout;
+            rbMerge.Checked = Settings.MergeAtCheckout;
         }
 
         private void OkClick(object sender, EventArgs e)
         {
             try
             {
-                Settings.MergeAtCheckout = cbMerge.Checked;
+                Settings.MergeAtCheckout = rbMerge.Checked;
+                Settings.CreateLocalBranchForRemote = rbCreateBranch.Checked;
                 var command = "checkout";
 
                 //Get a localbranch name
@@ -78,8 +84,11 @@ namespace GitUI
                 else if (rbResetBranch.Checked)
                     command += string.Format(" -B {0}", _localBranchName);
 
-                if (cbMerge.Checked)
+                if (rbMerge.Checked)
                     command += " -m";
+
+                if (rbReset.Checked)
+                    command += " --force";
 
                 command += " \"" + _branch + "\"";
                 var form = new FormProcess(command);
