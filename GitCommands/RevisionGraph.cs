@@ -46,6 +46,8 @@ namespace GitCommands
 
         private Thread backgroundThread;
 
+        private volatile bool abortThread = false;
+
         private enum ReadStep
         {
             Commit,
@@ -81,6 +83,8 @@ namespace GitCommands
         {
             if (backgroundThread != null)
             {
+                abortThread = true;
+                Thread.Sleep(50);
                 backgroundThread.Abort();
                 backgroundThread = null;
             }
@@ -102,8 +106,11 @@ namespace GitCommands
             {
                 if (backgroundThread != null)
                 {
+                    abortThread = true;
+                    Thread.Sleep(50);
                     backgroundThread.Abort();
                 }
+                abortThread = false;
                 backgroundThread = new Thread(execute) { IsBackground = true };
                 backgroundThread.Start();
             }
@@ -180,6 +187,12 @@ namespace GitCommands
                     if (nextStep != ReadStep.CommitMessage)
                         line = GitCommandHelpers.ReEncodeString(line, Settings.LosslessEncoding, LogOutputEncoding);
 
+                    if (abortThread)
+                    {
+                        if (Exited != null)
+                            Exited(this, EventArgs.Empty);
+                        return;
+                    }
                     if (line != null)
                     {
                         foreach (string entry in line.Split('\0'))
