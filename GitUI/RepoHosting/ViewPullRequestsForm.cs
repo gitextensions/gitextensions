@@ -27,7 +27,8 @@ namespace GitUI.RepoHosting
         private readonly IRepositoryHostPlugin _gitHoster;
         private bool _isFirstLoad;
 
-        public ViewPullRequestsForm()
+        // for translation only
+        internal ViewPullRequestsForm()
         {
             InitializeComponent();
             Translate();

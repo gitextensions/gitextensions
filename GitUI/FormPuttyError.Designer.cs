@@ -44,7 +44,7 @@
             this.lblMustAuthenticate.Location = new System.Drawing.Point(65, 47);
             this.lblMustAuthenticate.Name = "lblMustAuthenticate";
             this.lblMustAuthenticate.Size = new System.Drawing.Size(258, 22);
-            this.lblMustAuthenticate.TabIndex = 0;
+            this.lblMustAuthenticate.TabIndex = 3;
             this.lblMustAuthenticate.Text = "You must authenticate to run this command.";
             // 
             // pictureBox1
@@ -65,7 +65,7 @@
             this.LoadSSHKey.Location = new System.Drawing.Point(23, 86);
             this.LoadSSHKey.Name = "LoadSSHKey";
             this.LoadSSHKey.Size = new System.Drawing.Size(140, 25);
-            this.LoadSSHKey.TabIndex = 26;
+            this.LoadSSHKey.TabIndex = 4;
             this.LoadSSHKey.Text = "Load SSH key";
             this.LoadSSHKey.UseVisualStyleBackColor = true;
             this.LoadSSHKey.Click += new System.EventHandler(this.LoadSSHKey_Click);
@@ -77,7 +77,7 @@
             this.Cancel.Location = new System.Drawing.Point(252, 86);
             this.Cancel.Name = "Cancel";
             this.Cancel.Size = new System.Drawing.Size(77, 25);
-            this.Cancel.TabIndex = 28;
+            this.Cancel.TabIndex = 1;
             this.Cancel.Text = "Cancel";
             this.Cancel.UseVisualStyleBackColor = true;
             // 
@@ -90,7 +90,7 @@
             this.lblPleaseLoadKey.Location = new System.Drawing.Point(64, 18);
             this.lblPleaseLoadKey.Name = "lblPleaseLoadKey";
             this.lblPleaseLoadKey.Size = new System.Drawing.Size(259, 34);
-            this.lblPleaseLoadKey.TabIndex = 29;
+            this.lblPleaseLoadKey.TabIndex = 2;
             this.lblPleaseLoadKey.Text = "Please load your SSH private key";
             // 
             // Retry
@@ -100,13 +100,13 @@
             this.Retry.Location = new System.Drawing.Point(169, 86);
             this.Retry.Name = "Retry";
             this.Retry.Size = new System.Drawing.Size(77, 25);
-            this.Retry.TabIndex = 30;
+            this.Retry.TabIndex = 0;
             this.Retry.Text = "Retry";
             this.Retry.UseVisualStyleBackColor = true;
             // 
             // FormPuttyError
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(353, 125);
             this.Controls.Add(this.Retry);

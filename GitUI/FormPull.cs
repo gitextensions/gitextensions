@@ -12,9 +12,11 @@ using GitUI.Script;
 
 namespace GitUI
 {
+    public delegate void ConfigureFormPull(FormPull formPull);
+
     public partial class FormPull : GitExtensionsForm
     {
-        #region Translations
+        #region Translation
         private readonly TranslationString _areYouSureYouWantToRebaseMerge =
             new TranslationString("The current commit is a merge." + Environment.NewLine +
                                 //"." + Environment.NewLine +
@@ -84,9 +86,9 @@ namespace GitUI
                 _NO_TRANSLATE_Remotes.Text = currentBranchRemote;
             _NO_TRANSLATE_localBranch.Text = branch;
 
-            Merge.Checked = Settings.PullMerge == "merge";
-            Rebase.Checked = Settings.PullMerge == "rebase";
-            Fetch.Checked = Settings.PullMerge == "fetch";
+            Merge.Checked = Settings.PullMerge == Settings.PullAction.Merge;
+            Rebase.Checked = Settings.PullMerge == Settings.PullAction.Rebase;
+            Fetch.Checked = Settings.PullMerge == Settings.PullAction.Fetch;
             AutoStash.Checked = Settings.AutoStash;
             ErrorOccurred = false;
         }
@@ -104,7 +106,7 @@ namespace GitUI
         }
         public DialogResult PullAndShowDialogWhenFailed(IWin32Window owner)
         {
-            if (PullChanges())
+            if (PullChanges(owner))
                 return DialogResult.OK;
             else
                 return ShowDialog(owner);
@@ -178,7 +180,7 @@ namespace GitUI
 
         private void PullClick(object sender, EventArgs e)
         {
-            if (PullChanges())
+            if (PullChanges(this))
             {
                 DialogResult = DialogResult.OK;
                 Close();
@@ -191,7 +193,7 @@ namespace GitUI
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
         }
 
-        public bool PullChanges()
+        public bool PullChanges(IWin32Window owner)
         {
             if (!ShouldPullChanges())
                 return false;
@@ -207,12 +209,12 @@ namespace GitUI
 
             ScriptManager.RunEventScripts(ScriptEvent.BeforePull);
 
-            var stashed = CalculateStashedValue();
+            var stashed = CalculateStashedValue(owner);
 
             FormProcess process = CreateFormProcess(source);
-            ShowProcessDialogBox(source, process);
+            ShowProcessDialogBox(owner, source, process);
 
-            return EvaluateProcessDialogResults(process, stashed);
+            return EvaluateProcessDialogResults(owner, process, stashed);
         }
 
         private bool ShouldPullChanges()
@@ -255,7 +257,7 @@ namespace GitUI
             return true;
         }
 
-        private bool EvaluateProcessDialogResults(FormProcess process, bool stashed)
+        private bool EvaluateProcessDialogResults(IWin32Window owner, FormProcess process, bool stashed)
         {
             try
             {
@@ -267,12 +269,12 @@ namespace GitUI
                 if (stashed)
                 {
                     bool messageBoxResult =
-                        MessageBox.Show(this, _applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text,
+                        MessageBox.Show(owner, _applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text,
                                         MessageBoxButtons.YesNo) == DialogResult.Yes;
                     if (ShouldStashPop(messageBoxResult, process, true))
                     {
-                        new FormProcess("stash pop").ShowDialog(this);
-                        MergeConflictHandler.HandleMergeConflicts(this);
+                        new FormProcess("stash pop").ShowDialog(owner);
+                        MergeConflictHandler.HandleMergeConflicts(owner);
                     }
                 }
 
@@ -320,22 +322,22 @@ namespace GitUI
             return false;
         }
 
-        private void ShowProcessDialogBox(string source, FormProcess process)
+        private void ShowProcessDialogBox(IWin32Window owner, string source, FormProcess process)
         {
             if (process == null)
                 return;
             if (!PullAll())
                 process.Remote = source;
-            process.ShowDialog(this);
+            process.ShowDialog(owner);
             ErrorOccurred = process.ErrorOccurred();
         }
 
-        private bool CalculateStashedValue()
+        private bool CalculateStashedValue(IWin32Window owner)
         {
             if (!Fetch.Checked && AutoStash.Checked &&
                 Settings.Module.GitStatus(UntrackedFilesMode.No, IgnoreSubmodulesMode.Default).Count > 0)
             {
-                GitUICommands.Instance.Stash(this);
+                GitUICommands.Instance.Stash(owner);
                 return true;
             }
             return false;
@@ -419,11 +421,11 @@ namespace GitUI
         private void UpdateSettingsDuringPull()
         {
             if (Merge.Checked)
-                Settings.PullMerge = "merge";
+                Settings.PullMerge = Settings.PullAction.Merge;
             if (Rebase.Checked)
-                Settings.PullMerge = "rebase";
+                Settings.PullMerge = Settings.PullAction.Rebase;
             if (Fetch.Checked)
-                Settings.PullMerge = "fetch";
+                Settings.PullMerge = Settings.PullAction.Fetch;
 
             Settings.AutoStash = AutoStash.Checked;
         }
@@ -489,6 +491,11 @@ namespace GitUI
         private bool PullAll()
         {
             return _NO_TRANSLATE_Remotes.Text.Equals("[ All ]", StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        public void SetForFetchAll()
+        {
+            _NO_TRANSLATE_Remotes.SelectedIndex = 0;
         }
 
         private void PullFromUrlCheckedChanged(object sender, EventArgs e)

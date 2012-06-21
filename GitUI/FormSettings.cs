@@ -19,6 +19,7 @@ namespace GitUI
 {
     public sealed partial class FormSettings : GitExtensionsForm
     {
+        #region Translation
         private readonly TranslationString _homeIsSetToString = new TranslationString("HOME is set to:");
         private readonly TranslationString __diffToolSuggestCaption = new TranslationString("Suggest difftool cmd");
         private readonly TranslationString __mergeToolSuggestCaption = new TranslationString("Suggest mergetool cmd");
@@ -191,8 +192,8 @@ namespace GitUI
 
         private readonly TranslationString _registryKeyGitExtensionsCorrect =
             new TranslationString("GitExtensions is properly registered.");
-
-
+        #endregion
+        
         private Font diffFont;
         private const string GitExtensionsShellExName = "GitExtensionsShellEx32.dll";
         private string IconName = "bug";
@@ -233,9 +234,23 @@ namespace GitUI
                    SolveEditor();
         }
 
+        private static string GetGlobalEditor()
+        {
+            string editor = Environment.GetEnvironmentVariable("GIT_EDITOR");
+            if (!string.IsNullOrEmpty(editor))
+                return editor;
+            editor = Settings.Module.GetGlobalPathSetting("core.editor");
+            if (!string.IsNullOrEmpty(editor))
+                return editor;
+            editor = Environment.GetEnvironmentVariable("VISUAL");
+            if (!string.IsNullOrEmpty(editor))
+                return editor;
+            return Environment.GetEnvironmentVariable("EDITOR");
+        }
+
         private static bool SolveEditor()
         {
-            string editor = Settings.Module.GetGlobalPathSetting("core.editor");
+            string editor = GetGlobalEditor();
             if (string.IsNullOrEmpty(editor))
             {
                 Settings.Module.SetGlobalPathSetting("core.editor", "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor");
@@ -314,9 +329,9 @@ namespace GitUI
 
                 scriptEvent.DataSource = Enum.GetValues(typeof(ScriptEvent));
                 EncodingToCombo(Settings.GetFilesEncoding(false), Global_FilesEncoding);
-                EncodingToCombo(Settings.GetAppEncoding(false), Global_AppEncoding);
+                EncodingToCombo(Settings.GetAppEncoding(false, false), Global_AppEncoding);
                 EncodingToCombo(Settings.GetFilesEncoding(true), Local_FilesEncoding);
-                EncodingToCombo(Settings.GetAppEncoding(true), Local_AppEncoding);
+                EncodingToCombo(Settings.GetAppEncoding(true, false), Local_AppEncoding);
 
                 chkWarnBeforeCheckout.Checked = Settings.DirtyDirWarnBeforeCheckoutBranch;
                 chkStartWithRecentWorkingDir.Checked = Settings.StartWithRecentWorkingDir;
@@ -850,7 +865,7 @@ namespace GitUI
 
         private void UserNameSet_Click(object sender, EventArgs e)
         {
-            tabControl1.SelectTab("tpGlobalSettings");
+            tabControl1.SelectTab(tpGlobalSettings);
         }
 
         private static string GetMergeTool()
@@ -1006,7 +1021,7 @@ namespace GitUI
                 }
                 else
                 {
-                    tabControl1.SelectTab("tpGlobalSettings");
+                    tabControl1.SelectTab(tpGlobalSettings);
                     return;
                 }
             }
@@ -1020,7 +1035,7 @@ namespace GitUI
                 string.IsNullOrEmpty(Settings.Module.GetGlobalSetting("difftool.kdiff3.path")))
             {
                 MessageBox.Show(this, _kdiff3NotFoundAuto.Text);
-                tabControl1.SelectTab("tpGlobalSettings");
+                tabControl1.SelectTab(tpGlobalSettings);
                 return;
             }
 
@@ -1040,7 +1055,7 @@ namespace GitUI
                 }
                 else
                 {
-                    tabControl1.SelectTab("tpGlobalSettings");
+                    tabControl1.SelectTab(tpGlobalSettings);
                     return;
                 }
             }
@@ -1061,7 +1076,7 @@ namespace GitUI
                 string.IsNullOrEmpty(Settings.Module.GetGlobalSetting("mergetool.kdiff3.path")))
             {
                 MessageBox.Show(this, _kdiff3NotFoundAuto.Text);
-                tabControl1.SelectTab("tpGlobalSettings");
+                tabControl1.SelectTab(tpGlobalSettings);
                 return;
             }
 
@@ -1132,7 +1147,7 @@ namespace GitUI
             {
                 MessageBox.Show(this, _solveGitCommandFailed.Text, _solveGitCommandFailedCaption.Text);
 
-                tabControl1.SelectTab("tpGit");
+                tabControl1.SelectTab(tpGit);
                 return;
             }
 
@@ -1227,7 +1242,7 @@ namespace GitUI
             if (!SolveLinuxToolsDir())
             {
                 MessageBox.Show(this, _linuxToolsShNotFound.Text, _linuxToolsShNotFoundCaption.Text);
-                tabControl1.SelectTab("tpGit");
+                tabControl1.SelectTab(tpGit);
                 return;
             }
 
@@ -1420,7 +1435,7 @@ namespace GitUI
                 if (AutoFindPuttyPaths())
                     MessageBox.Show(this, _puttyFoundAuto.Text, _puttyFoundAutoCaption.Text);
                 else
-                    tabControl1.SelectTab("ssh");
+                    tabControl1.SelectTab(tpSsh);
             }
         }
 
@@ -1589,13 +1604,12 @@ namespace GitUI
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (((TabControl)sender).TabPages[((TabControl)sender).SelectedIndex].Name.ToLower() == "tabpagehotkeys")
-                controlHotkeys.ReloadSettings();
-            else if (((TabControl)sender).TabPages[((TabControl)sender).SelectedIndex].Name.ToLower() == "scriptstab")
+            var tc = (TabControl) sender;
+            if (tc.SelectedTab == tpScriptsTab)
                 populateSplitbutton();
-
-
-
+            else if (tc.SelectedTab == tpHotkeys)
+                controlHotkeys.ReloadSettings();
+            
             if (GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
                 string.IsNullOrEmpty(MergeToolCmd.Text))
                 MergeToolCmd.Enabled = false;
@@ -2131,7 +2145,7 @@ namespace GitUI
 
         private void downloadDictionary_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(@"http://code.google.com/p/gitextensions/wiki/Spelling");
+            Process.Start(@"https://github.com/spdr870/gitextensions/wiki/Spelling");
         }
 
         private void ScriptList_SelectionChanged(object sender, EventArgs e)
@@ -2193,23 +2207,27 @@ namespace GitUI
         private void ShowIconPreview()
         {
             string color = IconStyle.Text.ToLowerInvariant();
+            Icon icon = null;
             switch (color)
             {
                 case "default":
-                    IconPreview.Image = GetApplicationIcon("Large", GetSelectedApplicationIconColor()).ToBitmap();
-                    IconPreviewSmall.Image = GetApplicationIcon("Small", GetSelectedApplicationIconColor()).ToBitmap();
+                    IconPreview.Image = (new Icon(GetApplicationIcon("Large", GetSelectedApplicationIconColor()), 32, 32)).ToBitmap();
+                    IconPreviewSmall.Image = (new Icon(GetApplicationIcon("Small", GetSelectedApplicationIconColor()), 16, 16)).ToBitmap();
                     break;
                 case "small":
-                    IconPreview.Image = GetApplicationIcon("Small", GetSelectedApplicationIconColor()).ToBitmap();
-                    IconPreviewSmall.Image = IconPreview.Image;
+                    icon = GetApplicationIcon("Small", GetSelectedApplicationIconColor());
+                    IconPreview.Image = (new Icon(icon, 32, 32)).ToBitmap();
+                    IconPreviewSmall.Image = (new Icon(icon, 16, 16)).ToBitmap();
                     break;
                 case "large":
-                    IconPreview.Image = GetApplicationIcon("Large", GetSelectedApplicationIconColor()).ToBitmap();
-                    IconPreviewSmall.Image = IconPreview.Image;
+                    icon = GetApplicationIcon("Large", GetSelectedApplicationIconColor());
+                    IconPreview.Image = (new Icon(icon, 32, 32)).ToBitmap();
+                    IconPreviewSmall.Image = (new Icon(icon, 16, 16)).ToBitmap();
                     break;
                 case "cow":
-                    IconPreview.Image = GetApplicationIcon("Cow", GetSelectedApplicationIconColor()).ToBitmap();
-                    IconPreviewSmall.Image = IconPreview.Image;
+                    icon = GetApplicationIcon("Cow", GetSelectedApplicationIconColor());
+                    IconPreview.Image = (new Icon(icon, 32, 32)).ToBitmap();
+                    IconPreviewSmall.Image = (new Icon(icon, 16, 16)).ToBitmap();
                     break;
             }
         }

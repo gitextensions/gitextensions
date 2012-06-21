@@ -378,12 +378,20 @@ namespace GitUI.Editor
 
         public void ViewGitItemRevision(string fileName, string guid)
         {
-            ViewItem(fileName, () => GetImage(fileName, guid), () => Settings.Module.GetFileRevisionText(fileName, guid));
+            if (guid == GitRevision.UncommittedWorkingDirGuid) //working dir changes
+            {
+                ViewFile(fileName);
+            }
+            else
+            {
+                string blob = Settings.Module.GetFileBlobHash(fileName, guid);
+                ViewGitItem(fileName, blob);
+            }
         }
 
         public void ViewGitItem(string fileName, string guid)
         {
-            ViewItem(fileName, () => GetImage(fileName, guid), () => Settings.Module.GetFileText(guid));
+            ViewItem(fileName, () => GetImage(fileName, guid), () => Settings.Module.GetFileText(guid, Encoding));
         }
 
         private void ViewItem(string fileName, Func<Image> getImage, Func<string> getFileText)
@@ -604,7 +612,7 @@ namespace GitUI.Editor
                 if (code.Contains("\n") && (code[0].Equals(' ') || code[0].Equals('+') || code[0].Equals('-')))
                     code = code.Substring(1);
 
-                code = code.Replace("\n+", "\n").Replace("\n-", "\n").Replace("\n ", "\n");
+                code = code.Replace("\n ", "\n").Replace("\n+", "\n").Replace("\n-", "\n");
             }
             else
                 code = _internalFileViewer.GetSelectedText();

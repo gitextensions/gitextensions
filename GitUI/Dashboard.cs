@@ -65,27 +65,27 @@ namespace GitUI
             DonateCategory.Dock = DockStyle.Top;
             //Show buttons
             CommonActions.DisableContextMenu();
-            var openItem = new DashboardItem(Resources._40, openRepository.Text);
+            var openItem = new DashboardItem(Resources.Folder, openRepository.Text);
             openItem.Click += openItem_Click;
             CommonActions.AddItem(openItem);
 
-            var cloneItem = new DashboardItem(Resources._46, cloneRepository.Text);
+            var cloneItem = new DashboardItem(Resources.SaveAs, cloneRepository.Text);
             cloneItem.Click += cloneItem_Click;
             CommonActions.AddItem(cloneItem);
 
-            var cloneSvnItem = new DashboardItem(Resources._46, cloneSvnRepository.Text);
+            var cloneSvnItem = new DashboardItem(Resources.SaveAs, cloneSvnRepository.Text);
             cloneSvnItem.Click += cloneSvnItem_Click;
             CommonActions.AddItem(cloneSvnItem);
 
             foreach (IRepositoryHostPlugin el in RepoHosts.GitHosters)
             {
                 IRepositoryHostPlugin gitHoster = el;
-                var di = new DashboardItem(Resources._46, string.Format(cloneFork.Text, el.Description));
+                var di = new DashboardItem(Resources.SaveAs, string.Format(cloneFork.Text, el.Description));
                 di.Click += (repoSender, eventArgs) => GitUICommands.Instance.StartCloneForkFromHoster(this, gitHoster);
                 CommonActions.AddItem(di);
             }
 
-            var createItem = new DashboardItem(Resources._14, createRepository.Text);
+            var createItem = new DashboardItem(Resources.Star, createRepository.Text);
             createItem.Click += createItem_Click;
             CommonActions.AddItem(createItem);
 
@@ -96,14 +96,12 @@ namespace GitUI
             var DonateItem = new DashboardItem(Resources.dollar.ToBitmap(), donate.Text);
             DonateItem.Click += DonateItem_Click;
             DonateCategory.AddItem(DonateItem);
-            var TranslateItem = new DashboardItem(Resources._24, translate.Text);
+            var TranslateItem = new DashboardItem(Resources.EditItem, translate.Text);
             TranslateItem.Click += TranslateItem_Click;
             DonateCategory.AddItem(TranslateItem);
             var IssuesItem = new DashboardItem(Resources.bug, issues.Text);
             IssuesItem.Click += IssuesItem_Click;
             DonateCategory.AddItem(IssuesItem);
-
-            
         }
 
         public void SaveSplitterPositions()
@@ -209,22 +207,42 @@ namespace GitUI
         {
             try
             {
-                if (Properties.Settings.Default.Dashboard_CommonSplitContainer_SplitterDistance != 0)
-                    splitContainer6.SplitterDistance = Properties.Settings.Default.Dashboard_CommonSplitContainer_SplitterDistance;
-                else
-                    splitContainer6.SplitterDistance = (int)Math.Max(2, (CommonActions.Height * 1.2));
+                SetSplitterDistance(
+                    splitContainer6,
+                    Properties.Settings.Default.Dashboard_CommonSplitContainer_SplitterDistance,
+                    (int)Math.Max(2, (CommonActions.Height * 1.2)));
 
-                splitContainer7.SplitterDistance = Math.Max(2, splitContainer7.Height - (DonateCategory.Height + 25));
+                SetSplitterDistance(
+                    splitContainer7,
+                    0, // No settings property for this splitter. Will use default always.
+                    Math.Max(2, splitContainer7.Height - (DonateCategory.Height + 25)));
 
-                if (Properties.Settings.Default.Dashboard_MainSplitContainer_SplitterDistance != 0)
-                    splitContainer5.SplitterDistance = Properties.Settings.Default.Dashboard_MainSplitContainer_SplitterDistance;
-                else
-                    splitContainer5.SplitterDistance = 315;
+                SetSplitterDistance(
+                    splitContainer5,
+                    Properties.Settings.Default.Dashboard_MainSplitContainer_SplitterDistance,
+                    315);
             }
             catch (ConfigurationException)
             {
                 //TODO: howto restore a corrupted config? Properties.Settings.Default.Reset() doesn't work.
             }
+        }
+
+        private void SetSplitterDistance(SplitContainer splitContainer, int value, int @default)
+        {
+            if (value != 0)
+            {
+                try
+                {
+                    splitContainer.SplitterDistance = value;
+                }
+                catch
+                {
+                    splitContainer.SplitterDistance = @default;
+                }
+            }
+            else
+                splitContainer.SplitterDistance = @default;
         }
 
         private void TranslateItem_Click(object sender, EventArgs e)

@@ -29,6 +29,7 @@ namespace GitUI
         LargeCardWithGraph = 8
     }
 
+    [DefaultEvent("DoubleClick")]
     public sealed partial class RevisionGrid : GitExtensionsControl
     {
         private readonly IndexWatcher _indexWatcher = new IndexWatcher();
@@ -126,21 +127,18 @@ namespace GitUI
             }
         }
 
+        [Browsable(false)]
         public Font HeadFont { get; private set; }
+        [Browsable(false)]
         public Font SuperprojectFont { get; private set; }
+        [Browsable(false)]
         public int LastScrollPos { get; private set; }
+        [Browsable(false)]
         public IComparable[] LastSelectedRows { get; private set; }
+        [Browsable(false)]
         public Font RefsFont { get; private set; }
-        public string Filter { get; set; }
-        public string FixedFilter { get; set; }
-        public bool InMemFilterIgnoreCase { get; set; }
-        public string InMemAuthorFilter { get; set; }
-        public string InMemCommitterFilter { get; set; }
-        public string InMemMessageFilter { get; set; }
-
-        public string BranchFilter { get; set; }
         private Font _normalFont;
-
+        [Category("Appearance")]
         public Font NormalFont
         {
             get { return _normalFont; }
@@ -156,10 +154,31 @@ namespace GitUI
             }
         }
 
-        public string CurrentCheckout { get; set; }
-        public string SuperprojectCurrentCheckout { get; set; }
-        public int LastRow { get; set; }
+        [Category("Filter")]
+        public string Filter { get; set; }
+        [Category("Filter")]
+        public string FixedFilter { get; set; }
+        [Category("Filter")]
+        [DefaultValue(false)]
+        public bool InMemFilterIgnoreCase { get; set; }
+        [Category("Filter")]
+        public string InMemAuthorFilter { get; set; }
+        [Category("Filter")]
+        public string InMemCommitterFilter { get; set; }
+        [Category("Filter")]
+        public string InMemMessageFilter { get; set; }
+        [Category("Filter")]
+        public string BranchFilter { get; set; }
+        [Category("Filter")]
+        [DefaultValue(false)]
         public bool AllowGraphWithFilter { get; set; }
+
+        [Browsable(false)]
+        public string CurrentCheckout { get; set; }
+        [Browsable(false)]
+        public string SuperprojectCurrentCheckout { get; set; }
+        [Browsable(false)]
+        public int LastRow { get; set; }
 
         [Description("Indicates whether the user is allowed to select more than one commit at a time.")]
         [Category("Behavior")]
@@ -227,106 +246,86 @@ namespace GitUI
             HideQuickSearchString();
         }
 
+        private void RestartQuickSearchTimer()
+        {
+            quickSearchTimer.Stop();
+            quickSearchTimer.Interval = Settings.RevisionGridQuickSearchTimeout;
+            quickSearchTimer.Start();
+        }
+
         private void RevisionsKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Alt && e.KeyCode == Keys.Up)
+            var curIndex = -1;
+            if (Revisions.SelectedRows.Count > 0)
+                curIndex = Revisions.SelectedRows[0].Index;
+            if (e.Alt && (e.KeyCode == Keys.Up || e.KeyCode == Keys.Down))
             {
-                quickSearchTimer.Stop();
-                quickSearchTimer.Interval = Settings.RevisionGridQuickSearchTimeout;
-                quickSearchTimer.Start();
+                RestartQuickSearchTimer();
 
+                bool reverse = e.KeyCode == Keys.Up;
                 var nextIndex = 0;
-                if (Revisions.SelectedRows.Count > 0)
-                    nextIndex = Revisions.SelectedRows[0].Index - 1;
+                if (curIndex >= 0)
+                    nextIndex = reverse ? curIndex - 1 : curIndex + 1;
                 _quickSearchString = _lastQuickSearchString;
-                FindNextMatch(nextIndex, _quickSearchString, true);
-                ShowQuickSearchString();
-                e.Handled = true;
-                return;
-            }
-            if (e.Alt && e.KeyCode == Keys.Down)
-            {
-                quickSearchTimer.Stop();
-                quickSearchTimer.Interval = Settings.RevisionGridQuickSearchTimeout;
-                quickSearchTimer.Start();
-
-                var nextIndex = 0;
-                if (Revisions.SelectedRows.Count > 0)
-                    nextIndex = Revisions.SelectedRows[0].Index + 1;
-                _quickSearchString = _lastQuickSearchString;
-                FindNextMatch(nextIndex, _quickSearchString, false);
+                FindNextMatch(nextIndex, _quickSearchString, reverse);
                 ShowQuickSearchString();
                 e.Handled = true;
                 return;
             }
 
-
+            curIndex = curIndex >= 0 ? curIndex : 0;
             int key = e.KeyValue;
             if (!e.Alt && !e.Control && key == 8 && _quickSearchString.Length > 1) //backspace
             {
-                quickSearchTimer.Stop();
-                quickSearchTimer.Interval = Settings.RevisionGridQuickSearchTimeout;
-                quickSearchTimer.Start();
+                RestartQuickSearchTimer();
 
                 _quickSearchString = _quickSearchString.Substring(0, _quickSearchString.Length - 1);
 
-                var oldIndex = 0;
-                if (Revisions.SelectedRows.Count > 0)
-                    oldIndex = Revisions.SelectedRows[0].Index;
+                FindNextMatch(curIndex, _quickSearchString, false);
+                _lastQuickSearchString = _quickSearchString;
 
-                FindNextMatch(oldIndex, _quickSearchString, false);
+                e.Handled = true;
+                ShowQuickSearchString();
+            }
+            else if (!e.Alt && !e.Control && (char.IsLetterOrDigit((char)key) || char.IsNumber((char)key) || char.IsSeparator((char)key) || key == 191))
+            {
+                RestartQuickSearchTimer();
+
+                //The code below is meant to fix the weird keyvalues when pressing keys e.g. ".".
+                switch (key)
+                {
+                    case 51:
+                        _quickSearchString = e.Shift ? string.Concat(_quickSearchString, "#").ToLower() : string.Concat(_quickSearchString, "3").ToLower();
+                        break;
+                    case 188:
+                        _quickSearchString = string.Concat(_quickSearchString, ",").ToLower();
+                        break;
+                    case 189:
+                        _quickSearchString = e.Shift ? string.Concat(_quickSearchString, "_").ToLower() : string.Concat(_quickSearchString, "-").ToLower();
+                        break;
+                    case 190:
+                        _quickSearchString = string.Concat(_quickSearchString, ".").ToLower();
+                        break;
+                    case 191:
+                        _quickSearchString = string.Concat(_quickSearchString, "/").ToLower();
+                        break;
+                    default:
+                        _quickSearchString = string.Concat(_quickSearchString, (char)e.KeyValue).ToLower();
+                        break;
+                }
+
+                FindNextMatch(curIndex, _quickSearchString, false);
                 _lastQuickSearchString = _quickSearchString;
 
                 e.Handled = true;
                 ShowQuickSearchString();
             }
             else
-                if (!e.Alt && !e.Control && (char.IsLetterOrDigit((char)key) || char.IsNumber((char)key) || char.IsSeparator((char)key) || key == 191))
-                {
-                    quickSearchTimer.Stop();
-                    quickSearchTimer.Interval = Settings.RevisionGridQuickSearchTimeout;
-                    quickSearchTimer.Start();
-
-                    //The code below is ment to fix the wierd keyvalues when pressing keys e.g. ".".
-                    switch (key)
-                    {
-                        case 51:
-                            _quickSearchString = e.Shift ? string.Concat(_quickSearchString, "#").ToLower() : string.Concat(_quickSearchString, "3").ToLower();
-                            break;
-                        case 188:
-                            _quickSearchString = string.Concat(_quickSearchString, ",").ToLower();
-                            break;
-                        case 189:
-                            _quickSearchString = e.Shift ? string.Concat(_quickSearchString, "_").ToLower() : string.Concat(_quickSearchString, "-").ToLower();
-                            break;
-                        case 190:
-                            _quickSearchString = string.Concat(_quickSearchString, ".").ToLower();
-                            break;
-                        case 191:
-                            _quickSearchString = string.Concat(_quickSearchString, "/").ToLower();
-                            break;
-                        default:
-                            _quickSearchString = string.Concat(_quickSearchString, (char)e.KeyValue).ToLower();
-                            break;
-                    }
-
-                    var oldIndex = 0;
-                    if (Revisions.SelectedRows.Count > 0)
-                        oldIndex = Revisions.SelectedRows[0].Index;
-
-                    FindNextMatch(oldIndex, _quickSearchString, false);
-                    _lastQuickSearchString = _quickSearchString;
-
-                    e.Handled = true;
-                    ShowQuickSearchString();
-                }
-                else
-                {
-                    _quickSearchString = "";
-                    HideQuickSearchString();
-                    e.Handled = false;
-                    return;
-                }
+            {
+                _quickSearchString = "";
+                HideQuickSearchString();
+                e.Handled = false;
+            }
         }
 
         private void FindNextMatch(int startIndex, string searchString, bool reverse)

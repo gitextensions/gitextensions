@@ -16,7 +16,7 @@ namespace GitUI
             Translator.Translate(this, Settings.Translation);            
         }
 
-        #region Translation strings
+        #region Translation
         private readonly TranslationString _abortCurrentOpperation =
             new TranslationString("You can abort the current operation by resetting changes." + Environment.NewLine + 
                 "All changes since the last commit will be deleted." + Environment.NewLine + 

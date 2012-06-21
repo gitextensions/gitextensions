@@ -554,7 +554,6 @@ namespace GitCommands
         {
             using (var ms = (MemoryStream)GetFileStream(blob)) //Ugly, has implementation info.
             {
-                ConfigFile localConfig = GetLocalConfig();
                 string autocrlf = Settings.Module.GetEffectiveSetting("core.autocrlf").ToLower();
                 bool convertcrlf = autocrlf == "true";
 
@@ -1390,14 +1389,22 @@ namespace GitCommands
 
         public string CommitCmd(bool amend)
         {
-            return CommitCmd(amend, "");
+            return CommitCmd(amend, false, "");
         }
 
         public string CommitCmd(bool amend, string author)
         {
+            return CommitCmd(amend, false, author);
+        }
+
+        public string CommitCmd(bool amend, bool signOff, string author)
+        {
             string command = "commit";
             if (amend)
                 command += " --amend";
+
+            if (signOff)
+                command += " --signoff";
 
             if (!string.IsNullOrEmpty(author))
                 command += " --author=\"" + author + "\"";
@@ -1557,12 +1564,17 @@ namespace GitCommands
 
             from = FixPath(from);
             to = FixPath(to);
+            string commitRange = string.Empty;
+            if (!to.IsNullOrEmpty())
+                commitRange = "\"" + to + "\"";
+            if (!from.IsNullOrEmpty())
+                commitRange = commitRange.Join(" ", "\"" + from + "\"");
 
             if (Settings.UsePatienceDiffAlgorithm)
                 extraDiffArguments = string.Concat(extraDiffArguments, " --patience");
 
             var patchManager = new PatchManager();
-            var arguments = string.Format("diff{0} -M -C \"{1}\" \"{2}\" -- {3} {4}", extraDiffArguments, to, from, fileName, oldFileName);
+            var arguments = string.Format("diff {0} -M -C {1} -- {2} {3}", extraDiffArguments, commitRange, fileName, oldFileName);
             patchManager.LoadPatch(this.RunCachableCmd(Settings.GitCommand, arguments, encoding), false);
 
             return patchManager.Patches.Count > 0 ? patchManager.Patches[patchManager.Patches.Count-1] : null;
@@ -2053,17 +2065,46 @@ namespace GitCommands
             return blame;
         }
 
-        public string GetFileRevisionText(string file, string revision)
+        public string GetFileRevisionText(string file, string revision, Encoding encoding)
         {
             return
                 this.RunCachableCmd(
                     Settings.GitCommand,
-                    string.Format("show {0}:\"{1}\"", revision, file.Replace('\\', '/')), Settings.FilesEncoding);
+                    string.Format("show {0}:\"{1}\"", revision, file.Replace('\\', '/')), encoding);
         }
 
-        public string GetFileText(string id)
+        public string GetFileText(string id, Encoding encoding)
         {
-            return RunCachableCmd(Settings.GitCommand, "cat-file blob \"" + id + "\"", Settings.FilesEncoding);
+            return RunCachableCmd(Settings.GitCommand, "cat-file blob \"" + id + "\"", encoding);
+        }
+
+        public string GetFileBlobHash(string fileName, string revision)
+        {
+            if (revision == GitRevision.UncommittedWorkingDirGuid) //working dir changes
+            {
+                return null;
+            }
+            else if (revision == GitRevision.IndexGuid) //index
+            {
+                string blob = RunGitCmd(string.Format("ls-files -s \"{0}\"", fileName));
+                string[] s = blob.Split(new char[] { ' ', '\t' });
+                if (s.Length >= 2)
+                    return s[1];
+                else
+                    return string.Empty;
+
+            }
+            else
+            {
+                string blob = RunGitCmd(string.Format("ls-tree -r {0} \"{1}\"", revision, fileName));
+                string[] s = blob.Split(new char[] { ' ', '\t' });
+                if (s.Length >= 3)
+                    return s[2];
+                else
+                    return string.Empty;
+            }
+
+
         }
 
         public static void StreamCopy(Stream input, Stream output)
