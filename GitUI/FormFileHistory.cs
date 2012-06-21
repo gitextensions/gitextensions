@@ -103,7 +103,7 @@ namespace GitUI
                 //
                 // But we can take a more complicated path to get reasonable results:
                 //  1. use git log --follow to get all previous filenames of the file we are interested in
-                //  2. use git log "list of filesnames" to get the histroy graph 
+                //  2. use git log "list of files names" to get the history graph 
                 //
                 // note: This implementation is quite a quick hack (by someone who does not speak C# fluently).
                 // 
@@ -133,7 +133,7 @@ namespace GitUI
                 } while (line != null);
 
                 // here we need --name-only to get the previous filenames in the revision graph
-                filter = " --name-only --parents -- " + listOfFileNames;
+                filter = " -M -C --name-only --parents -- " + listOfFileNames;
             }
             else
             {
@@ -174,6 +174,16 @@ namespace GitUI
         {
             View.SaveCurrentScrollPos();
             Diff.SaveCurrentScrollPos();
+
+            var selectedRows = FileChanges.GetSelectedRevisions();
+            if (selectedRows.Count > 0)
+            {
+                GitRevision revision = selectedRows[0];
+                if (revision.IsArtificial())
+                    tabControl1.RemoveIfExists(Blame);
+                else
+                    tabControl1.InsertIfNotExists(2, Blame);
+            }
             UpdateSelectedFileViewers();
         }
 
@@ -190,7 +200,9 @@ namespace GitUI
             if (string.IsNullOrEmpty(fileName))
                 fileName = FileName;
 
-            Text = string.Format("File History ({0})", fileName);
+            Text = string.Format("File History - {0}", FileName);
+            if (!fileName.Equals(FileName))
+                Text = Text + string.Format(" ({0})", fileName);
 
             if (tabControl1.SelectedTab == Blame)
                 blameControl1.LoadBlame(revision.Guid, fileName, FileChanges);
@@ -202,47 +214,15 @@ namespace GitUI
                 View.ScrollPos = scrollpos;
             }
 
-            switch (selectedRows.Count)
+            if (tabControl1.SelectedTab == DiffTab)
             {
-                case 1:
-                    {
-                        IGitItem revision1 = selectedRows[0];
-
-                        if (tabControl1.SelectedTab == DiffTab)
-                        {
-                            Diff.ViewPatch(
-                                () =>
-                                {
-                                    Patch diff = Settings.Module.GetSingleDiff(revision1.Guid, revision1.Guid + "^", fileName,
-                                                                          Diff.GetExtraDiffArguments(), Diff.Encoding);
-                                    if (diff == null)
-                                        return string.Empty;
-                                    return diff.Text;
-                                }
-                                );
-                        }
-                    }
-                    break;
-                case 2:
-                    {
-                        IGitItem revision1 = selectedRows[0];
-                        IGitItem revision2 = selectedRows[1];
-
-                        if (tabControl1.SelectedTab == DiffTab)
-                        {
-                            Diff.ViewPatch(
-                                () =>
-                                Settings.Module.GetSingleDiff(revision1.Guid, revision2.Guid, fileName,
-                                                                      Diff.GetExtraDiffArguments(), Diff.Encoding).Text);
-                        }
-                    }
-                    break;
-                default:
-                    Diff.ViewPatch("You need to select 2 files to view diff.");
-                    break;
+                GitItemStatus file = new GitItemStatus();
+                file.IsTracked = true;
+                file.Name = fileName;
+                Diff.ViewPatch(FileChanges, file, "You need to select at least one revision to view diff.");
             }
-        }
 
+        }
 
         private void TabControl1SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -255,37 +235,8 @@ namespace GitUI
         }
 
         private void OpenWithDifftoolToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            var selectedRows = FileChanges.GetSelectedRevisions();
-            string rev1;
-            string rev2;
-            switch (selectedRows.Count)
-            {
-                case 1:
-                    {
-                        rev1 = selectedRows[0].Guid;
-                        var parentGuids = selectedRows[0].ParentGuids;
-                        if (parentGuids != null && parentGuids.Length > 0)
-                        {
-                            rev2 = parentGuids[0];
-                        }
-                        else
-                        {
-                            rev2 = rev1;
-                        }
-                    }
-                    break;
-                case 0:
-                    return;
-                default:
-                    rev1 = selectedRows[0].Guid;
-                    rev2 = selectedRows[1].Guid;
-                    break;
-            }
-
-            var output = Settings.Module.OpenWithDifftool(FileName, rev1, rev2);
-            if (!string.IsNullOrEmpty(output))
-                MessageBox.Show(this, output);
+        {            
+            FileChanges.OpenWithDifftool(FileName, GitUIExtensions.DiffWithRevisionKind.DiffAsSelected);
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -299,18 +250,19 @@ namespace GitUI
                 if (string.IsNullOrEmpty(orgFileName))
                     orgFileName = FileName;
 
-                string fileName = orgFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
-
+                string fullName = Settings.WorkingDir + orgFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
+                
                 var fileDialog = new SaveFileDialog
                 {
-                    FileName = Settings.WorkingDir + fileName,
+                    InitialDirectory = Path.GetDirectoryName(fullName),
+                    FileName = Path.GetFileName(fullName),
+                    DefaultExt = GitCommandHelpers.GetFileExtension(fullName),
                     AddExtension = true
                 };
-                fileDialog.DefaultExt = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
                 fileDialog.Filter =
                     "Current format (*." +
-                    GitCommandHelpers.GetFileExtension(fileDialog.FileName) + ")|*." +
-                    GitCommandHelpers.GetFileExtension(fileDialog.FileName) +
+                    fileDialog.DefaultExt + ")|*." +
+                    fileDialog.DefaultExt +
                     "|All files (*.*)|*.*";
                 if (fileDialog.ShowDialog(this) == DialogResult.OK)
                 {
@@ -375,5 +327,9 @@ namespace GitUI
             TranslationUtl.TranslateItemsFromFields(FormBrowseName, filterBranchHelper, translation);
         }
 
+		private void diffToolremotelocalStripMenuItem_Click(object sender, EventArgs e)
+		{
+			FileChanges.OpenWithDifftool(FileName, GitUIExtensions.DiffWithRevisionKind.DiffRemoteLocal);
+		}
     }
 }

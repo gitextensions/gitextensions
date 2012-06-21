@@ -21,7 +21,7 @@ namespace GitUI
 {
     public sealed partial class FormCommit : GitExtensionsForm //, IHotkeyable
     {
-        #region Translation strings
+        #region Translation
         private readonly TranslationString _alsoDeleteUntrackedFiles =
             new TranslationString("Do you also want to delete the new files that are in the selection?" +
                                   Environment.NewLine + Environment.NewLine + "Choose 'No' to keep all new files.");
@@ -102,13 +102,13 @@ namespace GitUI
         private readonly TranslationString _selectionFilterToolTip = new TranslationString("Enter a regular expression to select unstaged files.");
         private readonly TranslationString _selectionFilterErrorToolTip = new TranslationString("Error {0}");
 
-        private readonly TranslationString _commitMsgFirstLineInvalid = new TranslationString("First line of commit message contains too many characters." 
+        private readonly TranslationString _commitMsgFirstLineInvalid = new TranslationString("First line of commit message contains too many characters."
             + Environment.NewLine + "Do you want to continue?");
 
         private readonly TranslationString _commitMsgLineInvalid = new TranslationString("The following line of commit message contains too many characters:"
             + Environment.NewLine + Environment.NewLine + "{0}" + Environment.NewLine + Environment.NewLine + "Do you want to continue?");
 
-        private readonly TranslationString _commitMsgSecondLineNotEmpty = new TranslationString("Second line of commit message is not empty."  + Environment.NewLine + "Do you want to continue?");
+        private readonly TranslationString _commitMsgSecondLineNotEmpty = new TranslationString("Second line of commit message is not empty." + Environment.NewLine + "Do you want to continue?");
 
         private readonly TranslationString _commitMsgRegExNotMatched = new TranslationString("Commit message does not match RegEx." + Environment.NewLine + "Do you want to continue?");
 
@@ -697,7 +697,8 @@ namespace GitUI
                 {
                     case 0:
                         string revision = _editedCommit != null ? _editedCommit.Guid : "";
-                        GitUICommands.Instance.StartCheckoutBranchDialog(revision);
+                        if (!GitUICommands.Instance.StartCheckoutBranchDialog(revision))
+                            return;
                         break;
                     case -1:
                         return;
@@ -710,7 +711,7 @@ namespace GitUI
 
                 ScriptManager.RunEventScripts(ScriptEvent.BeforeCommit);
 
-                var form = new FormProcess(Settings.Module.CommitCmd(amend, toolAuthor.Text));
+                var form = new FormProcess(Settings.Module.CommitCmd(amend, signOffToolStripMenuItem.Checked, toolAuthor.Text));
                 form.ShowDialog(this);
 
                 NeedRefresh = true;
@@ -1289,7 +1290,7 @@ namespace GitUI
             if (modules.Count == 0)
                 return;
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("Submodule" + (modules.Count == 1 ? " " : "s ") + 
+            sb.AppendLine("Submodule" + (modules.Count == 1 ? " " : "s ") +
                 String.Join(", ", modules.ToArray()) + " updated.");
             sb.AppendLine();
             foreach (var item in modules)
@@ -1339,10 +1340,14 @@ namespace GitUI
 
         private void OpenToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Unstaged.SelectedItems.Count == 0)
+            FileStatusList list = sender as FileStatusList;
+            if (!SenderToFileStatusList(sender, out list))
                 return;
 
-            var item = Unstaged.SelectedItem;
+            if (list.SelectedItems.Count == 0)
+                return;
+
+            var item = list.SelectedItem;
             var fileName = item.Name;
 
             Process.Start((Settings.WorkingDir + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
@@ -1350,10 +1355,14 @@ namespace GitUI
 
         private void OpenWithToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Unstaged.SelectedItems.Count == 0)
+            FileStatusList list;
+            if (!SenderToFileStatusList(sender, out list))
                 return;
 
-            var item = Unstaged.SelectedItem;
+            if (list.SelectedItems.Count == 0)
+                return;
+
+            var item = list.SelectedItem;
             var fileName = item.Name;
 
             OpenWith.OpenAs(Settings.WorkingDir + fileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
@@ -1361,11 +1370,15 @@ namespace GitUI
 
         private void FilenameToClipboardToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Unstaged.SelectedItems.Count == 0)
+            FileStatusList list;
+            if (!SenderToFileStatusList(sender, out list))
+                return;
+
+            if (list.SelectedItems.Count == 0)
                 return;
 
             var fileNames = new StringBuilder();
-            foreach (var item in Unstaged.SelectedItems)
+            foreach (var item in list.SelectedItems)
             {
                 //Only use appendline when multiple items are selected.
                 //This to make it easier to use the text from clipboard when 1 file is selected.
@@ -1466,7 +1479,11 @@ namespace GitUI
 
         private void editFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var item = Unstaged.SelectedItem;
+            FileStatusList list;
+            if (!SenderToFileStatusList(sender, out list))
+                return;
+
+            var item = list.SelectedItem;
             var fileName = Settings.WorkingDir + item.Name;
 
             new FormEditor(fileName).ShowDialog(this);
@@ -1485,11 +1502,39 @@ namespace GitUI
                 RescanChanges();
         }
 
+        private bool SenderToFileStatusList(object sender, out FileStatusList list)
+        {
+            if (sender is ToolStripMenuItem)
+            {
+                ToolStripMenuItem item = sender as ToolStripMenuItem;
+                if (item.Owner is ContextMenuStrip)
+                {
+                    ContextMenuStrip menu = item.Owner as ContextMenuStrip;
+                    if (menu.SourceControl is ListBox)
+                    {
+                        ListBox lb = menu.SourceControl as ListBox;
+                        if (lb.Parent is FileStatusList)
+                        {
+                            list = lb.Parent as FileStatusList;
+                            return true;
+                        }
+                    }
+                }
+
+            }
+            list = null;
+            return false;
+        }
+
         private void ViewFileHistoryMenuItem_Click(object sender, EventArgs e)
         {
-            if (Unstaged.SelectedItems.Count == 1)
+            FileStatusList list;
+            if (!SenderToFileStatusList(sender, out list))
+                return;
+
+            if (list.SelectedItems.Count == 1)
             {
-                GitUICommands.Instance.StartFileHistoryDialog(this, Unstaged.SelectedItem.Name, null);
+                GitUICommands.Instance.StartFileHistoryDialog(this, list.SelectedItem.Name, null);
             }
             else
                 MessageBox.Show(this, _selectOnlyOneFile.Text, _selectOnlyOneFileCaption.Text);
@@ -1522,6 +1567,35 @@ namespace GitUI
                 e.Handled = true;
         }
 
+        private void Message_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            int limit1 = Settings.CommitValidationMaxCntCharsFirstLine;
+            int limitX = Settings.CommitValidationMaxCntCharsPerLine;
+            bool empty2 = Settings.CommitValidationSecondLineMustBeEmpty;
+
+            if (limit1 > 0 && Message.CurrentLine == 1 && Message.CurrentColumn > limit1)
+            {
+                // TODO: I don't really know what to do in this case.
+            }
+
+            if (empty2 && Message.CurrentLine == 2)
+            {
+                // Force next line and add a bullet.
+                Message.ForceNextLine(true);
+            }
+
+            if (limitX > 0 && Message.CurrentLine >= (empty2 ? 3 : 2) && Message.CurrentColumn > limitX)
+            {
+                Message.WrapWord();
+            }
+        }
+
+        private void Message_SelectionChanged(object sender, EventArgs e)
+        {
+            commitCursorColumn.Text = Message.CurrentColumn.ToString();
+            commitCursorLine.Text = Message.CurrentLine.ToString();
+        }
+
         private void closeDialogAfterEachCommitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             closeDialogAfterEachCommitToolStripMenuItem.Checked = !closeDialogAfterEachCommitToolStripMenuItem.Checked;
@@ -1547,6 +1621,11 @@ namespace GitUI
                 RescanChanges();
 
             return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void signOffToolStripMenuItem_Click(object snder, EventArgs e)
+        {
+            signOffToolStripMenuItem.Checked = !signOffToolStripMenuItem.Checked;
         }
 
         private void toolAuthor_TextChanged(object sender, EventArgs e)
@@ -1735,7 +1814,7 @@ namespace GitUI
 
         private void LoadCommitTemplates()
         {
-            CommitTemplateItem[] commitTemplates = 
+            CommitTemplateItem[] commitTemplates =
                 CommitTemplateItem.DeserializeCommitTemplates(Settings.CommitTemplates);
 
             commitTemplatesToolStripMenuItem.DropDownItems.Clear();
@@ -1798,10 +1877,12 @@ namespace GitUI
 
         private void openContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Unstaged.SelectedItems.Count == 0)
-                return;
+            openContainingFolder(Unstaged);
+        }
 
-            foreach (var item in Unstaged.SelectedItems)
+        private void openContainingFolder(FileStatusList list)
+        {
+            foreach (var item in list.SelectedItems)
             {
                 var fileNames = new StringBuilder();
                 fileNames.Append((Settings.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
@@ -1814,6 +1895,22 @@ namespace GitUI
             }
         }
 
+
+
+        private void toolStripMenuItem9_Click(object sender, EventArgs e)
+        {
+            foreach (var item in Staged.SelectedItems)
+            {
+                string output = Settings.Module.OpenWithDifftool(item.Name, null, null, "--cached");
+                if (!string.IsNullOrEmpty(output))
+                    MessageBox.Show(this, output);
+            }
+        }
+
+        private void toolStripMenuItem10_Click(object sender, EventArgs e)
+        {
+            openContainingFolder(Staged);
+        }
     }
 
     /// <summary>

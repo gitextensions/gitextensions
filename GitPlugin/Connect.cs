@@ -88,7 +88,9 @@ namespace GitPlugin
 
             try
             {
+#if DEBUG
                 this._gitPlugin.OutputPane.OutputString("Git Extensions plugin connected" + Environment.NewLine);
+#endif
 
                 this.RegiserGitPluginCommand();
 

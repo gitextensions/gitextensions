@@ -2,12 +2,12 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
 using NetSpell.SpellChecker;
 using NetSpell.SpellChecker.Dictionary;
-using System.Globalization;
 using ResourceManager.Translation;
 
 namespace GitUI.SpellChecker
@@ -22,7 +22,7 @@ namespace GitUI.SpellChecker
         private readonly TranslationString pasteMenuItemText = new TranslationString("Paste");
         private readonly TranslationString deleteMenuItemText = new TranslationString("Delete");
         private readonly TranslationString selectAllMenuItemText = new TranslationString("Select all");
-        
+
         private readonly TranslationString translateEntireText = new TranslationString("Translate entire text to {0}");
         private readonly TranslationString translateCurrentWord = new TranslationString("Translate '{0}' to {1}");
         private readonly TranslationString addToDictionaryText = new TranslationString("Add to dictionary");
@@ -30,7 +30,7 @@ namespace GitUI.SpellChecker
         private readonly TranslationString removeWordText = new TranslationString("Remove word");
         private readonly TranslationString dictionaryText = new TranslationString("Dictionary");
         private readonly TranslationString markIllFormedLinesText = new TranslationString("Mark ill formed lines");
-       
+
         private readonly SpellCheckEditControl _customUnderlines;
         private Spelling _spelling;
         private static WordDictionary _wordDictionary;
@@ -38,7 +38,7 @@ namespace GitUI.SpellChecker
 
         public EditNetSpell()
         {
-            InitializeComponent();            
+            InitializeComponent();
             Translate();
 
             _customUnderlines = new SpellCheckEditControl(TextBox);
@@ -50,9 +50,9 @@ namespace GitUI.SpellChecker
 
         public override string Text
         {
-            get 
+            get
             {
-                return IsWatermarkShowing ? string.Empty : TextBox.Text; 
+                return IsWatermarkShowing ? string.Empty : TextBox.Text;
             }
             set
             {
@@ -65,6 +65,19 @@ namespace GitUI.SpellChecker
         [Description("The font for spelling errors.")]
         [Category("Appearance")]
         public Font MistakeFont { get; set; }
+
+
+        [Browsable(false)]
+        public int CurrentColumn
+        {
+            get { return TextBox.SelectionStart - TextBox.GetFirstCharIndexOfCurrentLine() + 1; }
+        }
+        [Browsable(false)]
+        public int CurrentLine
+        {
+            get { return TextBox.GetLineFromCharIndex(TextBox.SelectionStart) + 1; }
+        }
+        public event EventHandler SelectionChanged;
 
         private void EditNetSpellEnabledChanged(object sender, EventArgs e)
         {
@@ -82,16 +95,17 @@ namespace GitUI.SpellChecker
 
         private bool IsWatermarkShowing;
         private string _WatermarkText = "";
+        [Category("Appearance")]
         public string WatermarkText
         {
             get { return _WatermarkText; }
 
-            set 
+            set
             {
                 HideWatermark();
                 _WatermarkText = value;
                 ShowWatermark();
-            }      
+            }
         }
 
         private void EditNetSpellLoad(object sender, EventArgs e)
@@ -228,47 +242,23 @@ namespace GitUI.SpellChecker
             TextBox.Select(start, length);
         }
 
+        private ToolStripMenuItem AddContextMenuItem(String text, EventHandler eventHandler)
+        {
+            ToolStripMenuItem menuItem = new ToolStripMenuItem(text, null, eventHandler);
+            SpellCheckContextMenu.Items.Add(menuItem);
+            return menuItem;
+        }
+
+        private void AddContextMenuSeparator()
+        {
+            SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
+        }
+
         private void SpellCheckContextMenuOpening(object sender, CancelEventArgs e)
         {
             TextBox.Focus();
-            
+
             SpellCheckContextMenu.Items.Clear();
-            
-            var undoMenuItem = (ToolStripMenuItem)SpellCheckContextMenu.Items.Add(undoMenuItemText.Text);
-            undoMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            undoMenuItem.Click += UndoMenuItemClick;
-            undoMenuItem.Enabled = TextBox.CanUndo;
-            var redoMenuItem = (ToolStripMenuItem)SpellCheckContextMenu.Items.Add(redoMenuItemText.Text);
-            redoMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-            redoMenuItem.Click += RedoMenuItemClick;
-            redoMenuItem.Enabled = TextBox.CanRedo;
-            
-            SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
-
-            var cutMenuItem = (ToolStripMenuItem)SpellCheckContextMenu.Items.Add(cutMenuItemText.Text);
-            cutMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            cutMenuItem.Click += CutMenuItemClick;
-            cutMenuItem.Enabled = (TextBox.SelectedText.Length > 0);
-            var copyMenuItem = (ToolStripMenuItem)SpellCheckContextMenu.Items.Add(copyMenuItemText.Text);
-            copyMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            copyMenuItem.Click += CopyMenuItemdClick;
-            copyMenuItem.Enabled = (TextBox.SelectedText.Length > 0);
-            var pasteMenuItem = (ToolStripMenuItem)SpellCheckContextMenu.Items.Add(pasteMenuItemText.Text);
-            pasteMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            pasteMenuItem.Click += PasteMenuItemClick;
-            pasteMenuItem.Enabled = Clipboard.ContainsText();
-            var deleteMenuItem = (ToolStripMenuItem)SpellCheckContextMenu.Items.Add(deleteMenuItemText.Text);
-            deleteMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-            deleteMenuItem.Click += DeleteMenuItemClick;
-            deleteMenuItem.Enabled = (TextBox.SelectedText.Length > 0);
-            
-            SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
-
-            var selectAllMenuItem = (ToolStripMenuItem)SpellCheckContextMenu.Items.Add(selectAllMenuItemText.Text);
-            selectAllMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
-            selectAllMenuItem.Click += SelectAllMenuItemClick;
-
-            SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
 
             try
             {
@@ -281,55 +271,60 @@ namespace GitUI.SpellChecker
                 }
 
                 _spelling.Text = TextBox.Text;
-
                 _spelling.WordIndex = _spelling.GetWordIndexFromTextIndex(pos);
-                _spelling.ShowDialog = false;
-                _spelling.MaxSuggestions = 10;
 
-                //generate suggestions
-                _spelling.Suggest();
-
-                var addToDictionary = SpellCheckContextMenu.Items.Add(addToDictionaryText.Text);
-                addToDictionary.Click += AddToDictionaryClick;
-                addToDictionary.Enabled = (_spelling.CurrentWord.Length > 0);
-                var ignoreWord = SpellCheckContextMenu.Items.Add(ignoreWordText.Text);
-                ignoreWord.Click += IgnoreWordClick;
-                ignoreWord.Enabled = (_spelling.CurrentWord.Length > 0);
-                var removeWord = SpellCheckContextMenu.Items.Add(removeWordText.Text);
-                removeWord.Click += RemoveWordClick;
-                removeWord.Enabled = (_spelling.CurrentWord.Length > 0);
-
-                SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
-
-                bool suggestionsFound = false;
-                foreach (var suggestion in (string[])_spelling.Suggestions.ToArray(typeof(string)))
+                if (_spelling.CurrentWord.Length != 0 && !_spelling.TestWord())
                 {
-                    var suggestionToolStripItem = SpellCheckContextMenu.Items.Add(suggestion);
-                    suggestionToolStripItem.Click += SuggestionToolStripItemClick;
+                    _spelling.ShowDialog = false;
+                    _spelling.MaxSuggestions = 5;
 
-                    suggestionsFound = true;
+                    //generate suggestions
+                    _spelling.Suggest();
+
+                    foreach (var suggestion in _spelling.Suggestions)
+                    {
+                        var si = AddContextMenuItem(suggestion, SuggestionToolStripItemClick);
+                        si.Font = new System.Drawing.Font(si.Font, FontStyle.Bold);
+                    }
+
+                    AddContextMenuItem(addToDictionaryText.Text, AddToDictionaryClick)
+                        .Enabled = (_spelling.CurrentWord.Length > 0);
+                    AddContextMenuItem(ignoreWordText.Text, IgnoreWordClick)
+                        .Enabled = (_spelling.CurrentWord.Length > 0);
+                    AddContextMenuItem(removeWordText.Text, RemoveWordClick)
+                        .Enabled = (_spelling.CurrentWord.Length > 0);
+
+                    if (_spelling.Suggestions.Count > 0)
+                        AddContextMenuSeparator();
                 }
-
-                if (suggestionsFound)
-                    SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
             }
             catch (Exception ex)
             {
                 Trace.WriteLine(ex);
             }
 
+            AddContextMenuItem(cutMenuItemText.Text, CutMenuItemClick)
+                .Enabled = (TextBox.SelectedText.Length > 0);
+            AddContextMenuItem(copyMenuItemText.Text, CopyMenuItemdClick)
+                .Enabled = (TextBox.SelectedText.Length > 0);
+            AddContextMenuItem(pasteMenuItemText.Text, PasteMenuItemClick)
+                .Enabled = Clipboard.ContainsText();
+            AddContextMenuItem(deleteMenuItemText.Text, DeleteMenuItemClick)
+                .Enabled = (TextBox.SelectedText.Length > 0);
+            AddContextMenuItem(selectAllMenuItemText.Text, SelectAllMenuItemClick);
+
+            AddContextMenuSeparator();
+
             if (!string.IsNullOrEmpty(_spelling.CurrentWord))
             {
-                var translate = new ToolStripMenuItem(string.Format(translateCurrentWord.Text, _spelling.CurrentWord, CultureCodeToString(Settings.Dictionary)));
-                translate.Click += translate_Click;
-                SpellCheckContextMenu.Items.Add(translate);
+                string text = string.Format(translateCurrentWord.Text, _spelling.CurrentWord, CultureCodeToString(Settings.Dictionary));
+                AddContextMenuItem(text, translate_Click);
             }
 
-            var translateText = new ToolStripMenuItem(string.Format(translateEntireText.Text, CultureCodeToString(Settings.Dictionary)));
-            translateText.Click += translateText_Click;
-            SpellCheckContextMenu.Items.Add(translateText);
+            string entireText = string.Format(translateEntireText.Text, CultureCodeToString(Settings.Dictionary));
+            AddContextMenuItem(entireText, translateText_Click);
 
-            SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
+            AddContextMenuSeparator();
 
             try
             {
@@ -370,7 +365,7 @@ namespace GitUI.SpellChecker
                 Trace.WriteLine(ex);
             }
 
-            SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
+            AddContextMenuSeparator();
 
             var mi =
                 new ToolStripMenuItem(markIllFormedLinesText.Text)
@@ -506,6 +501,17 @@ namespace GitUI.SpellChecker
             OnKeyDown(e);
         }
 
+        private void TextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            OnKeyPress(e);
+        }
+
+        private void TextBox_SelectionChanged(object sender, EventArgs e)
+        {
+            if (SelectionChanged != null)
+                SelectionChanged(sender, e);
+        }
+
         private void TextBox_Enter(object sender, EventArgs e)
         {
             HideWatermark();
@@ -513,7 +519,7 @@ namespace GitUI.SpellChecker
 
         private void ShowWatermark()
         {
-            if (!Focused && string.IsNullOrEmpty(TextBox.Text) && TextBoxFont!= null)
+            if (!Focused && string.IsNullOrEmpty(TextBox.Text) && TextBoxFont != null)
             {
                 TextBox.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
                 TextBox.ForeColor = SystemColors.InactiveCaption;
@@ -532,23 +538,11 @@ namespace GitUI.SpellChecker
             }
             IsWatermarkShowing = false;
         }
-        
+
         public new bool Focus()
         {
             HideWatermark();
             return base.Focus();
-        }
-        
-        private void UndoMenuItemClick(object sender, EventArgs e)
-        {
-            TextBox.Undo();
-            CheckSpelling();
-        }
-
-        private void RedoMenuItemClick(object sender, EventArgs e)
-        {
-            TextBox.Redo();
-            CheckSpelling();
         }
 
         private void CutMenuItemClick(object sender, EventArgs e)
@@ -582,6 +576,49 @@ namespace GitUI.SpellChecker
         private void SelectAllMenuItemClick(object sender, EventArgs e)
         {
             TextBox.SelectAll();
+        }
+
+        public void WrapWord()
+        {
+            var text = TextBox.Text;
+            var originalCursorPosition = TextBox.SelectionStart;
+            var cursor = originalCursorPosition - 1;
+            int newCursorPosition;
+            int endOfPreviousWord;
+
+            // Find the beginning of current word
+            while (!char.IsWhiteSpace(text[cursor])) cursor--;
+            endOfPreviousWord = cursor;
+
+            // Find the end of the previous word
+            while (char.IsWhiteSpace(text[endOfPreviousWord])) endOfPreviousWord--;
+
+            // Calculate the new cursor position which would keep the cursor
+            // at the same spot in the word being typed.
+            newCursorPosition = originalCursorPosition - (cursor - endOfPreviousWord) + 4;
+
+            string textBefore = text.Substring(0, endOfPreviousWord + 1);
+            string textAfter = text.Substring(cursor + 1);
+            TextBox.Text = textBefore + "\n   " + textAfter;
+
+            TextBox.SelectionStart = newCursorPosition;
+        }
+
+        /// <summary>
+        /// Make sure this line is empty by inserting a newline at its start.
+        /// </summary>
+        public void ForceNextLine(bool addBullet)
+        {
+            var bullet = addBullet ? " - " : "";
+            var text = TextBox.Text;
+            var originalCursorPosition = TextBox.SelectionStart;
+            var cursor = originalCursorPosition - (CurrentColumn - 1);
+
+            string textBefore = text.Substring(0, cursor);
+            string textAfter = text.Substring(cursor);
+            TextBox.Text = textBefore + "\n" + bullet + textAfter;
+
+            TextBox.SelectionStart = originalCursorPosition + 1 + bullet.Length;
         }
     }
 }

@@ -14,17 +14,18 @@ namespace GitCommands
 {
     public static class Settings
     {
-        //Constants
-        public const string GitExtensionsVersionString = "2.33";
-        public const int GitExtensionsVersionInt = 233;
-
         //semi-constants
+        public static readonly string GitExtensionsVersionString;
+        public static readonly int GitExtensionsVersionInt;
         public static readonly char PathSeparator = '\\';
         public static readonly char PathSeparatorWrong = '/';
 
         private static readonly Dictionary<String, object> byNameMap = new Dictionary<String, object>();
         static Settings()
         {
+            Version version = Assembly.GetCallingAssembly().GetName().Version;
+            GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
+            GitExtensionsVersionInt = version.Major * 100 + (version.Minor < 100 ? version.Minor : 99);
             if (!RunningOnWindows())
             {
                 PathSeparator = '/';
@@ -336,9 +337,12 @@ namespace GitCommands
         //it is better to encode this file in utf8 for international projects. To read config file properly
         //we must know its encoding, let user decide by setting AppEncoding property which encoding has to be used
         //to read/write config file
-        public static Encoding GetAppEncoding(bool local)
+        public static Encoding GetAppEncoding(bool local, bool returnDefault)
         {
-            return GetEncoding(local, "AppEncoding", true);
+            Encoding result = GetEncoding(local, "AppEncoding", true);
+            if (result == null && returnDefault)
+                result = new UTF8Encoding(false);
+            return result;
         }
         public static void SetAppEncoding(bool local, Encoding encoding)
         {
@@ -348,11 +352,9 @@ namespace GitCommands
         {
             get
             {
-                Encoding result = GetAppEncoding(true);
+                Encoding result = GetAppEncoding(true, false);
                 if (result == null)
-                    result = GetAppEncoding(false);
-                if (result == null)
-                    result = new UTF8Encoding(false);
+                    result = GetAppEncoding(false, true);
                 return result;
             }
         }
@@ -422,11 +424,39 @@ namespace GitCommands
             }
         }
 
-        private static string _pullMerge;
-        public static string PullMerge
+        public enum PullAction
         {
-            get { return SafeGet("pullmerge", "merge", ref _pullMerge); }
-            set { SafeSet("pullmerge", value, ref _pullMerge); }
+            None,
+            Merge,
+            Rebase,
+            Fetch,
+            FetchAll
+        }
+
+        public static PullAction PullMerge
+        {
+            get { return GetEnum<PullAction>("pullmerge", PullAction.Merge); }
+            set { SetEnum<PullAction>("pullmerge", value); }
+        }
+
+        public static bool DonSetAsLastPullAction
+        {
+            get { return GetBool("DonSetAsLastPullAction", true).Value; }
+            set { SetBool("DonSetAsLastPullAction", value); }
+        }
+
+        public static PullAction LastPullAction
+        {
+            get { return GetEnum<PullAction>("LastPullAction_" + WorkingDir, PullAction.None); }
+            set { SetEnum<PullAction>("LastPullAction_" + WorkingDir, value); }
+        }
+
+        public static void LastPullActionToPullMerge()
+        {
+            if (LastPullAction == PullAction.FetchAll)
+                PullMerge = PullAction.Fetch;
+            else if (LastPullAction != PullAction.None)
+                PullMerge = LastPullAction;
         }
 
 
@@ -1051,6 +1081,13 @@ namespace GitCommands
             set { SafeSet("CommitTemplates", value, ref _CommitTemplates); }
         }
 
+        private static bool? _CreateLocalBranchForRemote;
+        public static bool CreateLocalBranchForRemote
+        {
+            get { return SafeGet("CreateLocalBranchForRemote", false, ref _CreateLocalBranchForRemote); }
+            set { SafeSet("CreateLocalBranchForRemote", value, ref _CreateLocalBranchForRemote); }
+        }
+
         public static string GetGitExtensionsFullPath()
         {
             return GetGitExtensionsDirectory() + "\\GitExtensions.exe";
@@ -1129,11 +1166,7 @@ namespace GitCommands
             get
             {
                 if (_VersionIndependentRegKey == null)
-                {
-                    _VersionIndependentRegKey = Registry.CurrentUser.OpenSubKey("Software\\GitExtensions\\GitExtensions", true);
-                    if (_VersionIndependentRegKey == null)
-                        _VersionIndependentRegKey = Registry.CurrentUser.CreateSubKey("Software\\GitExtensions\\GitExtensions", RegistryKeyPermissionCheck.ReadWriteSubTree);
-                }
+                    _VersionIndependentRegKey = Registry.CurrentUser.CreateSubKey("Software\\GitExtensions\\GitExtensions", RegistryKeyPermissionCheck.ReadWriteSubTree);
                 return _VersionIndependentRegKey;
             }
         }
@@ -1232,6 +1265,20 @@ namespace GitCommands
         public static void SetBool(string name, bool? value)
         {
             SetByName<bool?>(name, value, (bool? b) => b.Value ? "true" : "false");
+        }
+
+        public static void SetEnum<T>(string name, T value)
+        {
+            SetByName<T>(name, value, x => x.ToString());
+        }
+
+        public static T GetEnum<T>(string name, T defaultValue)
+        {
+            return GetByName<T>(name, defaultValue, x =>
+            {
+                var val = x.ToString();
+                return (T)Enum.Parse(typeof(T), val, true);
+            });
         }
 
         public static void SetString(string name, string value)

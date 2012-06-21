@@ -244,7 +244,9 @@ namespace GitPlugin.Commands
             {
                 if (!HasCommand(popup.CommandBar, caption))
                 {
+#if DEBUG
                     OutputPane.OutputString("Add popup command: " + caption + Environment.NewLine);
+#endif
 
                     command.AddControl(popup.CommandBar, insertIndex);
                 }
