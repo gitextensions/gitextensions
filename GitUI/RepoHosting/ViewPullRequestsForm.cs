@@ -27,7 +27,8 @@ namespace GitUI.RepoHosting
         private readonly IRepositoryHostPlugin _gitHoster;
         private bool _isFirstLoad;
 
-        public ViewPullRequestsForm()
+        // for translation only
+        internal ViewPullRequestsForm()
         {
             InitializeComponent();
             Translate();
@@ -85,8 +86,8 @@ namespace GitUI.RepoHosting
 
             AsyncHelpers.DoAsync <List<IPullRequestInformation>>(
                hostedRepo.GetPullRequests,
-               (res) => { SetPullRequestsData(res); _selectHostedRepoCB.Enabled = true; },
-               (ex) => MessageBox.Show(this, _strFailedToFetchPullData.Text + ex.Message, _strError.Text)
+               res => { SetPullRequestsData(res); _selectHostedRepoCB.Enabled = true; },
+               ex => MessageBox.Show(this, _strFailedToFetchPullData.Text + ex.Message, _strError.Text)
             );
         }
 

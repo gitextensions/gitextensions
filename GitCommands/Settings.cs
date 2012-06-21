@@ -14,17 +14,18 @@ namespace GitCommands
 {
     public static class Settings
     {
-        //Constants
-        public static readonly string GitExtensionsVersionString = "2.32";
-        public static readonly int GitExtensionsVersionInt = 232;
-
         //semi-constants
+        public static readonly string GitExtensionsVersionString;
+        public static readonly int GitExtensionsVersionInt;
         public static readonly char PathSeparator = '\\';
         public static readonly char PathSeparatorWrong = '/';
 
-        private static Dictionary<String, object> byNameMap = new Dictionary<String, object>();
+        private static readonly Dictionary<String, object> byNameMap = new Dictionary<String, object>();
         static Settings()
         {
+            Version version = Assembly.GetCallingAssembly().GetName().Version;
+            GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
+            GitExtensionsVersionInt = version.Major * 100 + (version.Minor < 100 ? version.Minor : 99);
             if (!RunningOnWindows())
             {
                 PathSeparator = '/';
@@ -218,6 +219,13 @@ namespace GitCommands
             set { SafeSet("refreshcommitdialogonformfocus", value, ref _refreshCommitDialogOnFormFocus); }
         }
 
+        private static bool? _PlaySpecialStartupSound;
+        public static bool PlaySpecialStartupSound
+        {
+            get { return SafeGet("PlaySpecialStartupSound", false, ref _PlaySpecialStartupSound); }
+            set { SafeSet("PlaySpecialStartupSound", value, ref _PlaySpecialStartupSound); }
+        }
+
         private static bool? _followRenamesInFileHistory;
         public static bool FollowRenamesInFileHistory
         {
@@ -260,7 +268,7 @@ namespace GitCommands
             set { SafeSet("revisiongraphdrawnonrelativestextgray", value, ref _revisionGraphDrawNonRelativesTextGray); }
         }
 
-        public static Dictionary<string, Encoding> availableEncodings = new Dictionary<string, Encoding>();
+        public static readonly Dictionary<string, Encoding> availableEncodings = new Dictionary<string, Encoding>();
            
         private static Encoding GetEncoding(bool local, string settingName, bool fromSettings)
         {
@@ -336,9 +344,12 @@ namespace GitCommands
         //it is better to encode this file in utf8 for international projects. To read config file properly
         //we must know its encoding, let user decide by setting AppEncoding property which encoding has to be used
         //to read/write config file
-        public static Encoding GetAppEncoding(bool local)
+        public static Encoding GetAppEncoding(bool local, bool returnDefault)
         {
-            return GetEncoding(local, "AppEncoding", true);
+            Encoding result = GetEncoding(local, "AppEncoding", true);
+            if (result == null && returnDefault)
+                result = new UTF8Encoding(false);
+            return result;
         }
         public static void SetAppEncoding(bool local, Encoding encoding)
         {
@@ -348,11 +359,9 @@ namespace GitCommands
         {
             get
             {
-                Encoding result = GetAppEncoding(true);
+                Encoding result = GetAppEncoding(true, false);
                 if (result == null)
-                    result = GetAppEncoding(false);
-                if (result == null)
-                    result = new UTF8Encoding(false);
+                    result = GetAppEncoding(false, true);
                 return result;
             }
         }
@@ -422,11 +431,39 @@ namespace GitCommands
             }
         }
 
-        private static string _pullMerge;
-        public static string PullMerge
+        public enum PullAction
         {
-            get { return SafeGet("pullmerge", "merge", ref _pullMerge); }
-            set { SafeSet("pullmerge", value, ref _pullMerge); }
+            None,
+            Merge,
+            Rebase,
+            Fetch,
+            FetchAll
+        }
+
+        public static PullAction PullMerge
+        {
+            get { return GetEnum<PullAction>("pullmerge", PullAction.Merge); }
+            set { SetEnum<PullAction>("pullmerge", value); }
+        }
+
+        public static bool DonSetAsLastPullAction
+        {
+            get { return GetBool("DonSetAsLastPullAction", true).Value; }
+            set { SetBool("DonSetAsLastPullAction", value); }
+        }
+
+        public static PullAction LastPullAction
+        {
+            get { return GetEnum<PullAction>("LastPullAction_" + WorkingDir, PullAction.None); }
+            set { SetEnum<PullAction>("LastPullAction_" + WorkingDir, value); }
+        }
+
+        public static void LastPullActionToPullMerge()
+        {
+            if (LastPullAction == PullAction.FetchAll)
+                PullMerge = PullAction.Fetch;
+            else if (LastPullAction != PullAction.None)
+                PullMerge = LastPullAction;
         }
 
 
@@ -608,7 +645,7 @@ namespace GitCommands
         public delegate void WorkingDirChangedEventHandler(string oldDir, string newDir, string newGitDir);
         public static event WorkingDirChangedEventHandler WorkingDirChanged;
 
-        private static GitModule _module = new GitModule();
+        private static readonly GitModule _module = new GitModule();
         public static GitModule Module
         {
             [DebuggerStepThrough]
@@ -790,7 +827,7 @@ namespace GitCommands
         {
             //This setting MUST be set to false by default, otherwise it will not work in Visual Studio without
             //other changes in the Visual Studio plugin itself.
-            get { return SafeGet("showcurrentbranchinvisualstudio", false, ref _showCurrentBranchInVisualStudio); }
+            get { return SafeGet("showcurrentbranchinvisualstudio", true, ref _showCurrentBranchInVisualStudio); }
             set { SafeSet("showcurrentbranchinvisualstudio", value, ref _showCurrentBranchInVisualStudio); }
         }
 
@@ -1051,6 +1088,27 @@ namespace GitCommands
             set { SafeSet("CommitTemplates", value, ref _CommitTemplates); }
         }
 
+        private static bool? _CreateLocalBranchForRemote;
+        public static bool CreateLocalBranchForRemote
+        {
+            get { return SafeGet("CreateLocalBranchForRemote", false, ref _CreateLocalBranchForRemote); }
+            set { SafeSet("CreateLocalBranchForRemote", value, ref _CreateLocalBranchForRemote); }
+        }
+
+        private static bool? _ShellCascadeContextMenu;
+        public static bool ShellCascadeContextMenu
+        {
+            get { return SafeGet("ShellCascadeContextMenu", true, ref _ShellCascadeContextMenu); }
+            set { SafeSet("ShellCascadeContextMenu", value, ref _ShellCascadeContextMenu); }
+        }
+
+        private static string _ShellVisibleMenuItems;
+        public static string ShellVisibleMenuItems
+        {
+            get { return SafeGet("ShellVisibleMenuItems", "11111111111111", ref _ShellVisibleMenuItems); }
+            set { SafeSet("ShellVisibleMenuItems", value, ref _ShellVisibleMenuItems); }
+        }
+
         public static string GetGitExtensionsFullPath()
         {
             return GetGitExtensionsDirectory() + "\\GitExtensions.exe";
@@ -1129,11 +1187,7 @@ namespace GitCommands
             get
             {
                 if (_VersionIndependentRegKey == null)
-                {
-                    _VersionIndependentRegKey = Registry.CurrentUser.OpenSubKey("Software\\GitExtensions\\GitExtensions", true);
-                    if (_VersionIndependentRegKey == null)
-                        _VersionIndependentRegKey = Registry.CurrentUser.CreateSubKey("Software\\GitExtensions\\GitExtensions", RegistryKeyPermissionCheck.ReadWriteSubTree);
-                }
+                    _VersionIndependentRegKey = Registry.CurrentUser.CreateSubKey("Software\\GitExtensions\\GitExtensions", RegistryKeyPermissionCheck.ReadWriteSubTree);
                 return _VersionIndependentRegKey;
             }
         }
@@ -1197,12 +1251,8 @@ namespace GitCommands
             }
             else
             {
-                T result;
                 o = GetValue<object>(name, null);
-                if (o == null)
-                    result = defaultValue;
-                else
-                    result = decode(o);
+                T result = o == null ? defaultValue : decode(o);
 
                 byNameMap[name] = result;
                 return result;
@@ -1225,24 +1275,42 @@ namespace GitCommands
 
         public static bool? GetBool(string name, bool? defaultValue)
         {
-            return GetByName<bool?>(name, defaultValue, x => x.ToString().Equals(bool.TrueString));
+            return GetByName<bool?>(name, defaultValue, x => {
+                var val = x.ToString().ToLower();
+                if (val == "true") return true;
+                if (val == "false") return false;
+                return null;
+            });
+        }
+
+        public static void SetBool(string name, bool? value)
+        {
+            SetByName<bool?>(name, value, (bool? b) => b.Value ? "true" : "false");
+        }
+
+        public static void SetEnum<T>(string name, T value)
+        {
+            SetByName<T>(name, value, x => x.ToString());
+        }
+
+        public static T GetEnum<T>(string name, T defaultValue)
+        {
+            return GetByName<T>(name, defaultValue, x =>
+            {
+                var val = x.ToString();
+                return (T)Enum.Parse(typeof(T), val, true);
+            });
         }
 
         public static void SetString(string name, string value)
         {
-            SetByName<string>(name, value, (string s) => s);
+            SetByName<string>(name, value, s => s);
         }
 
         public static string GetString(string name, string defaultValue)
         {
             return GetByName<string>(name, defaultValue, x => x.ToString());
         }
-
-        public static void SetBool(string name, bool? value)
-        {
-            SetByName<bool?>(name, value, (bool? b) => b.Value ? bool.TrueString : bool.FalseString);
-        }
-
 
         public static string PrefixedName(string prefix, string name) 
         {

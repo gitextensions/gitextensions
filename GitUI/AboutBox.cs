@@ -8,7 +8,7 @@ namespace GitUI
     {
         public AboutBox()
         {
-            contributersList = string.Concat(coders, translators, designers, other).Split(',');
+            contributersList = string.Concat(coders, ", ", translators, ", ", designers, ", ", other).Split(new char[]{','}, StringSplitOptions.RemoveEmptyEntries);
 
             InitializeComponent(); 
             Translate();
@@ -58,15 +58,16 @@ namespace GitUI
             "showell, Daniel Doubrovkine, mdk, Marc Murray, rferriz, Jacek Pasternak, miloja, Ed Starback, Alberto Chiesa, " +
             "Airat Salikhov, Max Malook, ikke, Simon Walker, Arnaud Fabre, Andy Lee, Janusz Bialobrzewski, Joe Brown, " +
             "Rodrigo, John Gietzen, Ralph Haußmann, Rodrigo Fraga, Michael West, David Vierra, Mark Pizzolato, " +
-            "Arkadiy Shapkin, Alexander Mueller, marcinmagier, Alexander Puzynia, ferow2k, lynxstv, nitoyon, iamxail, " + 
-            "Basewq, Edward Brey, Sergey, Nils Fenner, Burim Kameri, Phillip Cohen, Andy Royle, Masanori Tanaka, Alex Ford, Arne Janbu";
+            "Arkadiy Shapkin, Alexander Mueller, marcinmagier, Alexander Puzynia, ferow2k, lynxstv, nitoyon, iamxail, " +
+            "Basewq, Edward Brey, Sergey, Nils Fenner, Burim Kameri, Phillip Cohen, Andy Royle, Masanori Tanaka, Alex Ford, Arne Janbu, " +
+            "Dan Rigby, pravic, Linquize, Clinton Daniel, Reto Schoening, mabako";
         private const string translators = "Gianni Rosa Gallina, Cheng Huang, Floyd Hung, superlongman, rferriz, gor, " + 
             "xaro, bleis-tift, Ralph Haußmann, Jasper Chien, Arkadiy Shapkin, ferow2k";
         private const string designers = "Andréj Telle, Oliver Friedrich";
         private const string other = "";
 
-        private string[] contributersList;
-        private Random random = new Random();
+        private readonly string[] contributersList;
+        private readonly Random random = new Random();
 
         private void thanksTimer_Tick(object sender, EventArgs e)
         {

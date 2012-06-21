@@ -34,7 +34,12 @@ namespace GitUI
                 SendOrPostCallback cb = tres => continueWith((T)tres);
                 syncContext.Post(cb, res);
             };
-            a.BeginInvoke(null, null);
+            a.BeginInvoke(EndAsync, a);
+        }
+
+        private static void EndAsync(IAsyncResult result)
+        {
+            (result.AsyncState as Action).EndInvoke(result);
         }
     }
 }

@@ -1,23 +1,19 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows.Forms;
 using GitCommands;
-using ResourceManager.Translation;
 using System.Collections.Generic;
 
 namespace GitUI
 {
     public partial class FormCheckoutBranch : GitExtensionsForm
     {
-        private string _containRevison = null;
+        private string _containRevison;
 
-        public FormCheckoutBranch()
+        internal FormCheckoutBranch()
         {
             InitializeComponent();
             Translate();
-
-            Initialize();
         }
 
         public FormCheckoutBranch(string branch, bool remote)
@@ -26,19 +22,36 @@ namespace GitUI
         }
 
         public FormCheckoutBranch(string branch, bool remote, string containRevison)
+            : this()
         {
-            InitializeComponent();
-            Translate();
+            _containRevison = containRevison;
 
-            Initialize();
+            Branches.Text = branch;
 
             LocalBranch.Checked = !remote;
             Remotebranch.Checked = remote;
 
-            Branches.Text = branch;
-            _containRevison = containRevison;
+            Initialize();
+
+            if (containRevison != null)
+            {
+                if (Branches.Items.Count == 0)
+                {
+                    Remotebranch.Checked = true;
+                    Initialize();
+                }
+                if (Branches.Items.Count == 1)
+                    Branches.SelectedIndex = 0;
+            }
         }
 
+
+        public FormCheckoutBranch(string branch, bool remote, string containRevison, bool force)
+            : this(branch, remote, containRevison)
+        {
+            Force.Checked = force;
+        }
+        
         private void Initialize()
         {
             Branches.DisplayMember = "Name";

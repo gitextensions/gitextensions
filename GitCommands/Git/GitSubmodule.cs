@@ -1,8 +1,9 @@
-﻿using GitUIPluginInterfaces;
+﻿using System;
+using GitUIPluginInterfaces;
 
 namespace GitCommands
 {
-    public class GitSubmodule : IGitSubmodule
+    public sealed class GitSubmodule : IGitSubmodule
     {
         public string Name { get; set; }
         public string RemotePath
@@ -67,6 +68,17 @@ namespace GitCommands
         public static bool operator !=(GitSubmodule a, GitSubmodule b)
         {
             return !(a == b);
+        }
+
+        public override bool Equals(Object obj)
+        {
+            return obj is GitSubmodule && this == (GitSubmodule)obj;
+        }
+
+        public override int GetHashCode()
+        {
+            return (Name != null ? Name.GetHashCode() : 0) &
+                (LocalPath != null ? LocalPath.GetHashCode() : 0);
         }
     }
 }

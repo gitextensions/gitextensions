@@ -36,6 +36,7 @@
             this.LocalPath = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.Branch = new System.Windows.Forms.ComboBox();
+            this.chkForce = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // Add
@@ -113,11 +114,22 @@
             this.Branch.TabIndex = 11;
             this.Branch.DropDown += new System.EventHandler(this.BranchDropDown);
             // 
+            // chkForce
+            // 
+            this.chkForce.AutoSize = true;
+            this.chkForce.Location = new System.Drawing.Point(8, 100);
+            this.chkForce.Name = "chkForce";
+            this.chkForce.Size = new System.Drawing.Size(55, 19);
+            this.chkForce.TabIndex = 12;
+            this.chkForce.Text = "Force";
+            this.chkForce.UseVisualStyleBackColor = true;
+            // 
             // FormAddSubmodule
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(492, 131);
+            this.Controls.Add(this.chkForce);
             this.Controls.Add(this.Branch);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.LocalPath);
@@ -148,5 +160,6 @@
         private System.Windows.Forms.TextBox LocalPath;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox Branch;
+        private System.Windows.Forms.CheckBox chkForce;
     }
 }

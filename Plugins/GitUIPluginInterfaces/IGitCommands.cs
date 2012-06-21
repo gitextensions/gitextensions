@@ -8,6 +8,8 @@ namespace GitUIPluginInterfaces
 
         string RunGit(string arguments);
 
+        string RunGit(string arguments, out int exitCode);
+
         string RunBatchFile(string batchFile);
     }
 }

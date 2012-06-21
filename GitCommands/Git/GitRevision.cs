@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace GitCommands
 {
     public sealed class GitRevision : IGitItem
     {
-        public static string UncommittedWorkingDirGuid = "0000000000000000000000000000000000000000";
-        public static string IndexGuid = "1111111111111111111111111111111111111111";
+        public const string UncommittedWorkingDirGuid = "0000000000000000000000000000000000000000";
+        public const string IndexGuid = "1111111111111111111111111111111111111111";
+        public const string Sha1HashPattern = @"[a-f\d]{40}";
+        public static readonly Regex Sha1HashRegex = new Regex("^" + GitRevision.Sha1HashPattern + "$", RegexOptions.Compiled);
+
 
         public String[] ParentGuids;
         private List<IGitItem> _subItems;
@@ -64,8 +68,20 @@ namespace GitCommands
                 return true;
 
             return
-                Author.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase) ||
+                (Author != null && Author.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase)) ||
                 Message.ToLower().Contains(searchString);
         }
+
+        public bool IsArtificial()
+        {
+            return IsArtificial(Guid);
+        }
+
+        public static bool IsArtificial(string guid)
+        {
+            return guid == UncommittedWorkingDirGuid ||
+                    guid == IndexGuid;
+        }
+
     }
 }

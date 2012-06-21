@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -49,6 +50,16 @@ namespace GitUI
             }
         }
 
+        public new void Focus()
+        {
+            if (FileStatusListBox.Items.Count > 0)
+            {
+                if (FileStatusListBox.SelectedItem == null)
+                    FileStatusListBox.SelectedIndex = 0;
+                FileStatusListBox.Focus();
+            }
+        }
+
         void FileStatusListBox_MeasureItem(object sender, MeasureItemEventArgs e)
         {
             var gitItemStatus = (GitItemStatus)FileStatusListBox.Items[e.Index];
@@ -68,6 +79,11 @@ namespace GitUI
         public void SetNoFilesText(string text)
         {
             NoFiles.Text = text;
+        }
+
+        public string GetNoFilesText()
+        {
+            return NoFiles.Text;
         }
 
 #if !__MonoCS__ // TODO Drag'n'Drop doesnt work on Mono/Linux
@@ -205,6 +221,7 @@ namespace GitUI
         }
 #endif
 
+        [Browsable(false)]
         public IList<GitItemStatus> AllItems
         {
             get
@@ -217,6 +234,7 @@ namespace GitUI
             }
         }
 
+        [Browsable(false)]
         public IList<GitItemStatus> SelectedItems
         {
             get
@@ -225,6 +243,7 @@ namespace GitUI
             }
         }
 
+        [Browsable(false)]
         public GitItemStatus SelectedItem
         {
             get
@@ -238,6 +257,7 @@ namespace GitUI
             }
         }
 
+        [Browsable(false)]
         public int SelectedIndex
         {
             get
@@ -336,11 +356,13 @@ namespace GitUI
                 listBox.HorizontalExtent = width;
         }
 
+        [Browsable(false)]
         public bool IsEmpty
         {
             get { return GitItemStatuses == null || GitItemStatuses.Count == 0; }
         }
 
+        [Browsable(false)]
         public IList<GitItemStatus> GitItemStatuses
         {
             get
@@ -369,6 +391,7 @@ namespace GitUI
         /// Gets or sets the revision.
         /// </summary>
         /// <value>The revision.</value>
+        [Browsable(false)]
         public GitRevision Revision { get; set; }
 
         private void NoFiles_SizeChanged(object sender, EventArgs e)

@@ -19,6 +19,7 @@ namespace GitUI
 {
     public sealed partial class FormSettings : GitExtensionsForm
     {
+        #region Translation
         private readonly TranslationString _homeIsSetToString = new TranslationString("HOME is set to:");
         private readonly TranslationString __diffToolSuggestCaption = new TranslationString("Suggest difftool cmd");
         private readonly TranslationString __mergeToolSuggestCaption = new TranslationString("Suggest mergetool cmd");
@@ -191,8 +192,8 @@ namespace GitUI
 
         private readonly TranslationString _registryKeyGitExtensionsCorrect =
             new TranslationString("GitExtensions is properly registered.");
-
-
+        #endregion
+        
         private Font diffFont;
         private const string GitExtensionsShellExName = "GitExtensionsShellEx32.dll";
         private string IconName = "bug";
@@ -233,12 +234,26 @@ namespace GitUI
                    SolveEditor();
         }
 
+        private static string GetGlobalEditor()
+        {
+            string editor = Environment.GetEnvironmentVariable("GIT_EDITOR");
+            if (!string.IsNullOrEmpty(editor))
+                return editor;
+            editor = Settings.Module.GetGlobalPathSetting("core.editor");
+            if (!string.IsNullOrEmpty(editor))
+                return editor;
+            editor = Environment.GetEnvironmentVariable("VISUAL");
+            if (!string.IsNullOrEmpty(editor))
+                return editor;
+            return Environment.GetEnvironmentVariable("EDITOR");
+        }
+
         private static bool SolveEditor()
         {
-            string editor = Settings.Module.GetGlobalSetting("core.editor");
+            string editor = GetGlobalEditor();
             if (string.IsNullOrEmpty(editor))
             {
-                Settings.Module.SetGlobalSetting("core.editor", "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor");
+                Settings.Module.SetGlobalPathSetting("core.editor", "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor");
             }
 
             return true;
@@ -293,10 +308,7 @@ namespace GitUI
 
         private Encoding ComboToEncoding(ComboBox combo)
         {
-            if (combo.SelectedItem == null)
-                return null;
-            else
-                return combo.SelectedItem as Encoding;
+            return combo.SelectedItem as Encoding;
         }
 
         private void FillEncodings(ComboBox combo)
@@ -305,8 +317,11 @@ namespace GitUI
             combo.DisplayMember = "EncodingName";
         }
 
+        private bool loadingSettings;
+
         public void LoadSettings()
         {
+            loadingSettings = true;
             try
             {
                 GitCommandHelpers.SetEnvironmentVariable();
@@ -314,12 +329,14 @@ namespace GitUI
 
                 scriptEvent.DataSource = Enum.GetValues(typeof(ScriptEvent));
                 EncodingToCombo(Settings.GetFilesEncoding(false), Global_FilesEncoding);
-                EncodingToCombo(Settings.GetAppEncoding(false), Global_AppEncoding);
+                EncodingToCombo(Settings.GetAppEncoding(false, false), Global_AppEncoding);
                 EncodingToCombo(Settings.GetFilesEncoding(true), Local_FilesEncoding);
-                EncodingToCombo(Settings.GetAppEncoding(true), Local_AppEncoding);
+                EncodingToCombo(Settings.GetAppEncoding(true, false), Local_AppEncoding);
 
                 chkWarnBeforeCheckout.Checked = Settings.DirtyDirWarnBeforeCheckoutBranch;
                 chkStartWithRecentWorkingDir.Checked = Settings.StartWithRecentWorkingDir;
+
+                chkPlaySpecialStartupSound.Checked = Settings.PlaySpecialStartupSound;
 
                 chkUsePatienceDiffAlgorithm.Checked = Settings.UsePatienceDiffAlgorithm;
 
@@ -399,7 +416,6 @@ namespace GitUI
                 _NO_TRANSLATE_ColorSectionLabel.ForeColor =
                     ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorSectionLabel.BackColor);
 
-
                 SmtpServer.Text = Settings.Smtp;
 
                 _NO_TRANSLATE_MaxCommits.Value = Settings.MaxRevisionGraphCommits;
@@ -412,33 +428,28 @@ namespace GitUI
 
                 UserName.Text = localConfig.GetValue("user.name");
                 UserEmail.Text = localConfig.GetValue("user.email");
-                Editor.Text = localConfig.GetValue("core.editor");
+                Editor.Text = localConfig.GetPathValue("core.editor");
                 LocalMergeTool.Text = localConfig.GetValue("merge.tool");
 
                 Dictionary.Text = Settings.Dictionary;
 
                 GlobalUserName.Text = globalConfig.GetValue("user.name");
                 GlobalUserEmail.Text = globalConfig.GetValue("user.email");
-                GlobalEditor.Text = globalConfig.GetValue("core.editor");
+                GlobalEditor.Text = globalConfig.GetPathValue("core.editor");
                 GlobalMergeTool.Text = globalConfig.GetValue("merge.tool");
                 CommitTemplatePath.Text = globalConfig.GetValue("commit.template");
 
                 SetCheckboxFromString(KeepMergeBackup, localConfig.GetValue("mergetool.keepBackup"));
 
-                localAutoCrlfFalse.Checked = localConfig.GetValue("core.autocrlf").Equals("false",
-                                                                                          StringComparison.
-                                                                                              OrdinalIgnoreCase);
-                localAutoCrlfInput.Checked = localConfig.GetValue("core.autocrlf").Equals("input",
-                                                                                          StringComparison.
-                                                                                              OrdinalIgnoreCase);
-                localAutoCrlfTrue.Checked = localConfig.GetValue("core.autocrlf").Equals("true",
-                                                                                         StringComparison.
-                                                                                             OrdinalIgnoreCase);
+                string autocrlf = localConfig.GetValue("core.autocrlf").ToLower();
+                localAutoCrlfFalse.Checked = autocrlf == "false";
+                localAutoCrlfInput.Checked = autocrlf == "input";
+                localAutoCrlfTrue.Checked = autocrlf == "true";
 
                 if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
-                    MergetoolPath.Text = globalConfig.GetValue("mergetool." + GlobalMergeTool.Text + ".path");
+                    MergetoolPath.Text = globalConfig.GetPathValue(string.Format("mergetool.{0}.path", GlobalMergeTool.Text));
                 if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
-                    MergeToolCmd.Text = globalConfig.GetValue("mergetool." + GlobalMergeTool.Text + ".cmd");
+                    MergeToolCmd.Text = globalConfig.GetPathValue(string.Format("mergetool.{0}.cmd", GlobalMergeTool.Text));
 
                 string iconColor = Settings.IconColor.ToLower();
                 DefaultIcon.Checked = iconColor == "default";
@@ -451,19 +462,21 @@ namespace GitUI
 
                 IconStyle.Text = Settings.IconStyle;
 
+                ShowIconPreview();
+
                 GlobalDiffTool.Text = GetGlobalDiffToolFromConfig();
 
                 if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
-                    DifftoolPath.Text = globalConfig.GetValue("difftool." + GlobalDiffTool.Text + ".path");
+                    DifftoolPath.Text = globalConfig.GetPathValue(string.Format("difftool.{0}.path", GlobalDiffTool.Text));
                 if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
-                    DifftoolCmd.Text = globalConfig.GetValue("difftool." + GlobalDiffTool.Text + ".cmd");
+                    DifftoolCmd.Text = globalConfig.GetPathValue(string.Format("difftool.{0}.cmd", GlobalDiffTool.Text));
 
                 SetCheckboxFromString(GlobalKeepMergeBackup, globalConfig.GetValue("mergetool.keepBackup"));
 
                 string globalAutocrlf = string.Empty;
                 if (globalConfig.HasValue("core.autocrlf"))
                 {
-                    globalAutocrlf = globalConfig.GetValue("core.autocrlf");
+                    globalAutocrlf = globalConfig.GetValue("core.autocrlf").ToLower();
                 }
                 else if (!string.IsNullOrEmpty(Settings.GitBinDir))
                 {
@@ -474,17 +487,17 @@ namespace GitUI
                         //practice this is only used to core.autocrlf. If there are more cases, we might
                         //need to consider a better solution.
                         var configFile =
-                            new ConfigFile(Path.GetDirectoryName(Settings.GitBinDir).Replace("bin", "etc\\gitconfig"));
-                        globalAutocrlf = configFile.GetValue("core.autocrlf");
+                            new ConfigFile(Path.GetDirectoryName(Settings.GitBinDir).Replace("bin", "etc\\gitconfig"), false);
+                        globalAutocrlf = configFile.GetValue("core.autocrlf").ToLower();
                     }
                     catch
                     {
                     }
                 }
 
-                globalAutoCrlfFalse.Checked = globalAutocrlf.Equals("false", StringComparison.OrdinalIgnoreCase);
-                globalAutoCrlfInput.Checked = globalAutocrlf.Equals("input", StringComparison.OrdinalIgnoreCase);
-                globalAutoCrlfTrue.Checked = globalAutocrlf.Equals("true", StringComparison.OrdinalIgnoreCase);
+                globalAutoCrlfFalse.Checked = globalAutocrlf == "false";
+                globalAutoCrlfInput.Checked = globalAutocrlf == "input";
+                globalAutoCrlfTrue.Checked = globalAutocrlf == "true";
 
                 PlinkPath.Text = Settings.Plink;
                 PuttygenPath.Text = Settings.Puttygen;
@@ -496,6 +509,13 @@ namespace GitUI
 
                 chkUseFastChecks.Checked = Settings.UseFastChecks;
                 chkShowRelativeDate.Checked = Settings.RelativeDate;
+
+                chkCascadedContextMenu.Checked = Settings.ShellCascadeContextMenu;
+
+                for (int i = 0; i < Settings.ShellVisibleMenuItems.Length; i++)
+                {
+                    chlMenuEntries.SetItemChecked(i, Settings.ShellVisibleMenuItems[i] == '1');
+                }
 
                 if (string.IsNullOrEmpty(GitCommandHelpers.GetSsh()))
                     OpenSSH.Checked = true;
@@ -518,6 +538,7 @@ namespace GitUI
                 // and has their day ruined.
                 DialogResult = DialogResult.Abort;
             }
+            loadingSettings = false;
         }
 
         private void Ok_Click(object sender, EventArgs e)
@@ -536,6 +557,8 @@ namespace GitUI
 
             Settings.DirtyDirWarnBeforeCheckoutBranch = chkWarnBeforeCheckout.Checked;
             Settings.StartWithRecentWorkingDir = chkStartWithRecentWorkingDir.Checked;
+
+            Settings.PlaySpecialStartupSound = chkPlaySpecialStartupSound.Checked;
 
             Settings.UsePatienceDiffAlgorithm = chkUsePatienceDiffAlgorithm.Checked;
 
@@ -613,6 +636,25 @@ namespace GitUI
 
             Settings.IconStyle = IconStyle.Text;
 
+            // Shell Extension settings
+            Settings.ShellCascadeContextMenu = chkCascadedContextMenu.Checked;
+
+            String l_ShellVisibleMenuItems = "";
+
+            for (int i = 0; i < chlMenuEntries.Items.Count; i++)
+			{
+                if (chlMenuEntries.GetItemChecked(i))
+                {
+                    l_ShellVisibleMenuItems += "1";
+                }
+                else
+                {
+                    l_ShellVisibleMenuItems += "0";
+                }
+			}
+
+            Settings.ShellVisibleMenuItems = l_ShellVisibleMenuItems;
+
             EnableSettings();
 
             if (!CanFindGitCmd())
@@ -668,7 +710,7 @@ namespace GitUI
                 localConfig.SetValue("user.name", UserName.Text);
             if (string.IsNullOrEmpty(UserEmail.Text) || !UserEmail.Text.Equals(localConfig.GetValue("user.email")))
                 localConfig.SetValue("user.email", UserEmail.Text);
-            localConfig.SetValue("core.editor", Editor.Text);
+            localConfig.SetPathValue("core.editor", Editor.Text);
             localConfig.SetValue("merge.tool", LocalMergeTool.Text);
 
 
@@ -690,21 +732,21 @@ namespace GitUI
             if (string.IsNullOrEmpty(CommitTemplatePath.Text) ||
                 !CommitTemplatePath.Text.Equals(globalConfig.GetValue("commit.template")))
                 globalConfig.SetValue("commit.template", CommitTemplatePath.Text);
-            globalConfig.SetValue("core.editor", GlobalEditor.Text);
+            globalConfig.SetPathValue("core.editor", GlobalEditor.Text);
 
             SetGlobalDiffToolToConfig(globalConfig, GlobalDiffTool.Text);
 
             if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
-                globalConfig.SetValue("difftool." + GlobalDiffTool.Text + ".path", DifftoolPath.Text);
+                globalConfig.SetPathValue(string.Format("difftool.{0}.path", GlobalDiffTool.Text), DifftoolPath.Text);
             if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
-                globalConfig.SetValue("difftool." + GlobalDiffTool.Text + ".cmd", DifftoolCmd.Text);
+                globalConfig.SetPathValue(string.Format("difftool.{0}.cmd", GlobalDiffTool.Text), DifftoolCmd.Text);
 
             globalConfig.SetValue("merge.tool", GlobalMergeTool.Text);
 
             if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
-                globalConfig.SetValue("mergetool." + GlobalMergeTool.Text + ".path", MergetoolPath.Text);
+                globalConfig.SetPathValue(string.Format("mergetool.{0}.path", GlobalMergeTool.Text), MergetoolPath.Text);
             if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
-                globalConfig.SetValue("mergetool." + GlobalMergeTool.Text + ".cmd", MergeToolCmd.Text);
+                globalConfig.SetPathValue(string.Format("mergetool.{0}.cmd", GlobalMergeTool.Text), MergeToolCmd.Text);
 
             if (GlobalKeepMergeBackup.CheckState == CheckState.Checked)
                 globalConfig.SetValue("mergetool.keepBackup", "true");
@@ -855,7 +897,7 @@ namespace GitUI
 
         private void UserNameSet_Click(object sender, EventArgs e)
         {
-            tabControl1.SelectTab("tpGlobalSettings");
+            tabControl1.SelectTab(tpGlobalSettings);
         }
 
         private static string GetMergeTool()
@@ -907,7 +949,7 @@ namespace GitUI
             if (string.IsNullOrEmpty(kdiff3path))
                 return false;
 
-            Settings.Module.SetGlobalSetting("difftool.kdiff3.path", kdiff3path);
+            Settings.Module.SetGlobalPathSetting("difftool.kdiff3.path", kdiff3path);
             return true;
         }
 
@@ -917,7 +959,7 @@ namespace GitUI
             if (string.IsNullOrEmpty(kdiff3path))
                 return false;
 
-            Settings.Module.SetGlobalSetting("mergetool.kdiff3.path", kdiff3path);
+            Settings.Module.SetGlobalPathSetting("mergetool.kdiff3.path", kdiff3path);
             return true;
         }
 
@@ -943,15 +985,19 @@ namespace GitUI
             string exeFile = MergeToolsHelper.Instance.FindDiffToolExeFile(GlobalDiffTool.Text, out exeName);
             if (String.IsNullOrEmpty(exeFile))
             {
-                DifftoolPath.Text = "";
-                DifftoolCmd.Text = "";
+                DifftoolPath.SelectAll();
+                DifftoolPath.SelectedText = "";
+                DifftoolCmd.SelectAll();
+                DifftoolCmd.SelectedText = "";
                 if (sender != null)
                     MessageBox.Show(this, String.Format(_toolSuggestPath.Text, exeName),
                         __diffToolSuggestCaption.Text);
                 return;
             }
-            DifftoolPath.Text = exeFile;
-            DifftoolCmd.Text = MergeToolsHelper.Instance.DiffToolCmdSuggest(GlobalDiffTool.Text, exeFile);
+            DifftoolPath.SelectAll(); // allow Undo action
+            DifftoolPath.SelectedText = exeFile;
+            DifftoolCmd.SelectAll();
+            DifftoolCmd.SelectedText = MergeToolsHelper.Instance.DiffToolCmdSuggest(GlobalDiffTool.Text, exeFile);
         }
 
         private void MergeToolCmdSuggest_Click(object sender, EventArgs e)
@@ -963,15 +1009,19 @@ namespace GitUI
             string exeFile = MergeToolsHelper.Instance.FindMergeToolExeFile(GlobalMergeTool.Text, out exeName);
             if (String.IsNullOrEmpty(exeFile))
             {
-                MergetoolPath.Text = "";
-                MergeToolCmd.Text = "";
+                MergetoolPath.SelectAll();
+                MergetoolPath.SelectedText = "";
+                MergeToolCmd.SelectAll();
+                MergeToolCmd.SelectedText = "";
                 if (sender != null)
                     MessageBox.Show(this, String.Format(_toolSuggestPath.Text, exeName),
                         __mergeToolSuggestCaption.Text);
                 return;
             }
-            MergetoolPath.Text = exeFile;
-            MergeToolCmd.Text = MergeToolsHelper.Instance.MergeToolcmdSuggest(GlobalMergeTool.Text, exeFile);
+            MergetoolPath.SelectAll(); // allow Undo action
+            MergetoolPath.SelectedText = exeFile;
+            MergeToolCmd.SelectAll();
+            MergeToolCmd.SelectedText = MergeToolsHelper.Instance.MergeToolcmdSuggest(GlobalMergeTool.Text, exeFile);
         }
 
         private void AutoConfigMergeToolCmd(bool silent)
@@ -1003,7 +1053,7 @@ namespace GitUI
                 }
                 else
                 {
-                    tabControl1.SelectTab("tpGlobalSettings");
+                    tabControl1.SelectTab(tpGlobalSettings);
                     return;
                 }
             }
@@ -1017,7 +1067,7 @@ namespace GitUI
                 string.IsNullOrEmpty(Settings.Module.GetGlobalSetting("difftool.kdiff3.path")))
             {
                 MessageBox.Show(this, _kdiff3NotFoundAuto.Text);
-                tabControl1.SelectTab("tpGlobalSettings");
+                tabControl1.SelectTab(tpGlobalSettings);
                 return;
             }
 
@@ -1037,7 +1087,7 @@ namespace GitUI
                 }
                 else
                 {
-                    tabControl1.SelectTab("tpGlobalSettings");
+                    tabControl1.SelectTab(tpGlobalSettings);
                     return;
                 }
             }
@@ -1050,15 +1100,15 @@ namespace GitUI
             {
                 AutoConfigMergeToolCmd(true);
 
-                Settings.Module.SetGlobalSetting(
-                    "mergetool." + GetMergeTool() + ".cmd", MergeToolCmd.Text);
+                Settings.Module.SetGlobalPathSetting(
+                    string.Format("mergetool.{0}.cmd", GetMergeTool()), MergeToolCmd.Text);
             }
             
             if (IsMergeTool("kdiff3") &&
                 string.IsNullOrEmpty(Settings.Module.GetGlobalSetting("mergetool.kdiff3.path")))
             {
                 MessageBox.Show(this, _kdiff3NotFoundAuto.Text);
-                tabControl1.SelectTab("tpGlobalSettings");
+                tabControl1.SelectTab(tpGlobalSettings);
                 return;
             }
 
@@ -1079,11 +1129,12 @@ namespace GitUI
                 MergetoolPath.Text = SelectFile(".", "*.exe (*.exe)|*.exe", MergetoolPath.Text);
         }
 
-
-        private void ExternalDiffTool_TextChanged(object sender, EventArgs e)
+        private void GlobalDiffTool_TextChanged(object sender, EventArgs e)
         {
-            DifftoolPath.Text = Settings.Module.GetGlobalSetting("difftool." + GlobalDiffTool.Text.Trim() + ".path");
-            DifftoolCmd.Text = Settings.Module.GetGlobalSetting("difftool." + GlobalDiffTool.Text.Trim() + ".cmd");
+            if (loadingSettings)
+                return;
+            DifftoolPath.Text = Settings.Module.GetGlobalSetting(string.Format("difftool.{0}.path", GlobalDiffTool.Text.Trim()));
+            DifftoolCmd.Text = Settings.Module.GetGlobalSetting(string.Format("difftool.{0}.cmd", GlobalDiffTool.Text.Trim()));
 
             if (GlobalDiffTool.Text.Trim().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
                 ResolveDiffToolPath();
@@ -1108,8 +1159,10 @@ namespace GitUI
 
         private void GlobalMergeTool_TextChanged(object sender, EventArgs e)
         {
-            MergetoolPath.Text = Settings.Module.GetGlobalSetting("mergetool." + GlobalMergeTool.Text.Trim() + ".path");
-            MergeToolCmd.Text = Settings.Module.GetGlobalSetting("mergetool." + GlobalMergeTool.Text.Trim() + ".cmd");
+            if (loadingSettings)
+                return;
+            MergetoolPath.Text = Settings.Module.GetGlobalSetting(string.Format("mergetool.{0}.path", GlobalMergeTool.Text.Trim()));
+            MergeToolCmd.Text = Settings.Module.GetGlobalSetting(string.Format("mergetool.{0}.cmd", GlobalMergeTool.Text.Trim()));
 
             if (GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
                 string.IsNullOrEmpty(MergeToolCmd.Text))
@@ -1126,7 +1179,7 @@ namespace GitUI
             {
                 MessageBox.Show(this, _solveGitCommandFailed.Text, _solveGitCommandFailedCaption.Text);
 
-                tabControl1.SelectTab("tpGit");
+                tabControl1.SelectTab(tpGit);
                 return;
             }
 
@@ -1175,7 +1228,7 @@ namespace GitUI
 
         private void CheckAtStartup_CheckedChanged(object sender, EventArgs e)
         {
-            Settings.SetValue("checksettings", CheckAtStartup.Checked ? "true" : "false");
+            Settings.SetBool("checksettings", CheckAtStartup.Checked);
         }
 
         private void Rescan_Click(object sender, EventArgs e)
@@ -1210,6 +1263,8 @@ namespace GitUI
 
         private void GitPath_TextChanged(object sender, EventArgs e)
         {
+            if (loadingSettings)
+                return;
             Settings.GitCommand = GitPath.Text;
             LoadSettings();
         }
@@ -1219,7 +1274,7 @@ namespace GitUI
             if (!SolveLinuxToolsDir())
             {
                 MessageBox.Show(this, _linuxToolsShNotFound.Text, _linuxToolsShNotFoundCaption.Text);
-                tabControl1.SelectTab("tpGit");
+                tabControl1.SelectTab(tpGit);
                 return;
             }
 
@@ -1412,7 +1467,7 @@ namespace GitUI
                 if (AutoFindPuttyPaths())
                     MessageBox.Show(this, _puttyFoundAuto.Text, _puttyFoundAutoCaption.Text);
                 else
-                    tabControl1.SelectTab("ssh");
+                    tabControl1.SelectTab(tpSsh);
             }
         }
 
@@ -1581,13 +1636,12 @@ namespace GitUI
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (((TabControl)sender).TabPages[((TabControl)sender).SelectedIndex].Name.ToLower() == "tabpagehotkeys")
-                controlHotkeys.ReloadSettings();
-            else if (((TabControl)sender).TabPages[((TabControl)sender).SelectedIndex].Name.ToLower() == "scriptstab")
+            var tc = (TabControl) sender;
+            if (tc.SelectedTab == tpScriptsTab)
                 populateSplitbutton();
-
-
-
+            else if (tc.SelectedTab == tpHotkeys)
+                controlHotkeys.ReloadSettings();
+            
             if (GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
                 string.IsNullOrEmpty(MergeToolCmd.Text))
                 MergeToolCmd.Enabled = false;
@@ -1603,7 +1657,7 @@ namespace GitUI
                             System.Reflection.Assembly.GetExecutingAssembly());
 
             // dummy request; for some strange reason the ResourceSets are not loaded untill after the first object request... bug?
-            var dummy = rm.GetObject("dummy");
+            rm.GetObject("dummy");
 
             System.Resources.ResourceSet resourceSet = rm.GetResourceSet(System.Globalization.CultureInfo.CurrentUICulture, true, true);
 
@@ -1822,7 +1876,7 @@ namespace GitUI
                 string mergetool = GetMergeTool().ToLowerInvariant();
                 if (mergetool == "p4merge" || mergetool == "tmerge")
                 {
-                    string p = Settings.Module.GetGlobalSetting("mergetool." + mergetool + ".cmd");
+                    string p = Settings.Module.GetGlobalSetting(string.Format("mergetool.{0}.cmd", mergetool));
                     if (string.IsNullOrEmpty(p))
                     {
                         MergeTool.BackColor = Color.LightSalmon;
@@ -2030,7 +2084,7 @@ namespace GitUI
             ScriptList.ClearSelection();
             ScriptManager.GetScripts().AddNew();
             ScriptList.Rows[ScriptList.RowCount - 1].Selected = true;
-            ScriptList_SelectionChanged(null, null);//needed for linux
+            ScriptList_SelectionChanged(null, null); //needed for linux
         }
 
         private void removeScriptButton_Click(object sender, EventArgs e)
@@ -2123,14 +2177,13 @@ namespace GitUI
 
         private void downloadDictionary_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(@"http://code.google.com/p/gitextensions/wiki/Spelling");
+            Process.Start(@"https://github.com/spdr870/gitextensions/wiki/Spelling");
         }
 
         private void ScriptList_SelectionChanged(object sender, EventArgs e)
         {
             if (ScriptList.SelectedRows.Count > 0)
             {
-                ScriptInfo selectedScriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
                 RefreshScriptDetails();
 
                 removeScriptButton.Enabled = true;
@@ -2186,69 +2239,42 @@ namespace GitUI
         private void ShowIconPreview()
         {
             string color = IconStyle.Text.ToLowerInvariant();
+            Icon icon = null;
             switch (color)
             {
                 case "default":
-                    IconPreview.Image = GetApplicationIcon("Large", GetSelectedApplicationIconColor()).ToBitmap();
-                    IconPreviewSmall.Image = GetApplicationIcon("Small", GetSelectedApplicationIconColor()).ToBitmap();
+                    IconPreview.Image = (new Icon(GetApplicationIcon("Large", GetSelectedApplicationIconColor()), 32, 32)).ToBitmap();
+                    IconPreviewSmall.Image = (new Icon(GetApplicationIcon("Small", GetSelectedApplicationIconColor()), 16, 16)).ToBitmap();
                     break;
                 case "small":
-                    IconPreview.Image = GetApplicationIcon("Small", GetSelectedApplicationIconColor()).ToBitmap();
-                    IconPreviewSmall.Image = IconPreview.Image;
+                    icon = GetApplicationIcon("Small", GetSelectedApplicationIconColor());
+                    IconPreview.Image = (new Icon(icon, 32, 32)).ToBitmap();
+                    IconPreviewSmall.Image = (new Icon(icon, 16, 16)).ToBitmap();
                     break;
                 case "large":
-                    IconPreview.Image = GetApplicationIcon("Large", GetSelectedApplicationIconColor()).ToBitmap();
-                    IconPreviewSmall.Image = IconPreview.Image;
+                    icon = GetApplicationIcon("Large", GetSelectedApplicationIconColor());
+                    IconPreview.Image = (new Icon(icon, 32, 32)).ToBitmap();
+                    IconPreviewSmall.Image = (new Icon(icon, 16, 16)).ToBitmap();
                     break;
                 case "cow":
-                    IconPreview.Image = GetApplicationIcon("Cow", GetSelectedApplicationIconColor()).ToBitmap();
-                    IconPreviewSmall.Image = IconPreview.Image;
+                    icon = GetApplicationIcon("Cow", GetSelectedApplicationIconColor());
+                    IconPreview.Image = (new Icon(icon, 32, 32)).ToBitmap();
+                    IconPreviewSmall.Image = (new Icon(icon, 16, 16)).ToBitmap();
                     break;
             }
         }
 
         private void IconStyle_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (loadingSettings)
+                return;
             ShowIconPreview();
         }
 
-        private void DefaultIcon_CheckedChanged(object sender, EventArgs e)
+        private void IconColor_CheckedChanged(object sender, EventArgs e)
         {
-            ShowIconPreview();
-        }
-
-        private void LightblueIcon_CheckedChanged(object sender, EventArgs e)
-        {
-            ShowIconPreview();
-        }
-
-        private void BlueIcon_CheckedChanged(object sender, EventArgs e)
-        {
-            ShowIconPreview();
-        }
-
-        private void PurpleIcon_CheckedChanged(object sender, EventArgs e)
-        {
-            ShowIconPreview();
-        }
-
-        private void GreenIcon_CheckedChanged(object sender, EventArgs e)
-        {
-            ShowIconPreview();
-        }
-
-        private void RedIcon_CheckedChanged(object sender, EventArgs e)
-        {
-            ShowIconPreview();
-        }
-
-        private void YellowIcon_CheckedChanged(object sender, EventArgs e)
-        {
-            ShowIconPreview();
-        }
-
-        private void RandomIcon_CheckedChanged(object sender, EventArgs e)
-        {
+            if (loadingSettings)
+                return;
             ShowIconPreview();
         }
 

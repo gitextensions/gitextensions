@@ -5,48 +5,37 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormEditor : GitExtensionsForm
+    public sealed partial class FormEditor : GitExtensionsForm
     {
         private readonly TranslationString _saveChanges = new TranslationString("Do you want to save changes?");
         private readonly TranslationString _saveChangesCaption = new TranslationString("Save changes");
         private readonly TranslationString _cannotOpenFile = new TranslationString("Cannot open file: ");
         private readonly TranslationString _cannotSaveFile = new TranslationString("Cannot save file: ");
         private readonly TranslationString _error = new TranslationString("Error");
-        private bool _textIsChanged = false;
-
-
-        public FormEditor()
-        {
-            InitializeComponent();
-            Translate();
-            fileViewer.TextChanged += fileViewer_TextChanged;
-        }
+        private bool _hasChanges;
+        private string _fileName;
 
         public FormEditor(string fileName)
         {
             InitializeComponent();
             Translate();
 
-            OpenFile(fileName);
-            fileViewer.TextChanged += fileViewer_TextChanged;
-            fileViewer.TextLoaded += fileViewer_TextLoaded;
+            // for translation form
+            if (fileName != null)
+                OpenFile(fileName);
+            fileViewer.TextChanged += (s, e) => HasChanges = true;
+            fileViewer.TextLoaded += (s, e) => HasChanges = false;
         }
 
-        void fileViewer_TextChanged(object sender, EventArgs e)
+        private bool HasChanges
         {
-            // I don't care what the old value is, it ought to be set to true whatever the old value is.
-            _textIsChanged = true;
-            toolStripSaveButton.Enabled = _textIsChanged;
+            get { return _hasChanges; }
+            set
+            {
+                _hasChanges = value;
+                toolStripSaveButton.Enabled = value;
+            }
         }
-
-        void fileViewer_TextLoaded(object sender, EventArgs e)
-        {
-            //reset 'changed' flag
-            _textIsChanged = false;
-            toolStripSaveButton.Enabled = _textIsChanged;
-        }
-
-        private string _fileName;
 
         private void OpenFile(string fileName)
         {
@@ -61,7 +50,7 @@ namespace GitUI
                 Text = _fileName;
 
                 // loading a new file from disk, the text hasn't been changed yet.
-                _textIsChanged = false;
+                HasChanges = false;
             }
             catch (Exception ex)
             {
@@ -73,41 +62,42 @@ namespace GitUI
 
         private void FormEditor_FormClosing(object sender, FormClosingEventArgs e)
         {
-            try
+            // only offer to save if there's something to save.
+            if (HasChanges)
             {
-                this.DialogResult = DialogResult.No;
-
-                DialogResult result = DialogResult.No;
-                // only offer to save if there's something to save.
-                if (_textIsChanged)
+                var saveChangesAnswer = MessageBox.Show(this, _saveChanges.Text, _saveChangesCaption.Text,
+                                         MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                switch (saveChangesAnswer)
                 {
-                    result = MessageBox.Show(this, _saveChanges.Text, _saveChangesCaption.Text,
-                                             MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-
-                }
-
-
-
-                if (result == DialogResult.Yes)
-                {
-                    SaveChanges();
-                    this.DialogResult = DialogResult.Yes;
-                }
-
-                if (result == DialogResult.Cancel)
-                {
-                    this.DialogResult = DialogResult.Cancel;
-                }
-
-                SavePosition("fileeditor");
-            }
-            catch (Exception ex)
-            {
-                if (MessageBox.Show(this, _cannotSaveFile.Text + Environment.NewLine + ex.Message, _error.Text, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.Cancel)
-                {
-                    e.Cancel = true;
+                    case DialogResult.Yes:
+                        try
+                        {
+                            SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            if (MessageBox.Show(this, _cannotSaveFile.Text + Environment.NewLine + ex.Message, _error.Text, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.Cancel)
+                            {
+                                e.Cancel = true;
+                                return;
+                            }
+                        }
+                        DialogResult = DialogResult.OK;
+                        break;
+                    case DialogResult.Cancel:
+                        e.Cancel = true;
+                        return;
+                    default:
+                        DialogResult = DialogResult.Cancel;
+                        break;
                 }
             }
+            else
+            {
+                DialogResult = DialogResult.Cancel;
+            }
+
+            SavePosition("fileeditor");
         }
 
         private void toolStripSaveButton_Click(object sender, EventArgs e)
@@ -127,9 +117,24 @@ namespace GitUI
             if (!string.IsNullOrEmpty(_fileName))
             {
                 File.WriteAllText(_fileName, fileViewer.GetText(), GitCommands.Settings.FilesEncoding);
-                
+
                 // we've written the changes out to disk now, nothing to save.
-                _textIsChanged = false;
+                HasChanges = false;
+            }
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            switch (keyData)
+            {
+                case Keys.Escape:
+                    Close();
+                    return true;
+                case Keys.Control | Keys.S:
+                    SaveChanges();
+                    return true;
+                default:
+                    return base.ProcessCmdKey(ref msg, keyData);
             }
         }
     }

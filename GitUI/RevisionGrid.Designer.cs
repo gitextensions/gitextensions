@@ -112,6 +112,7 @@ namespace GitUI
             this.showAuthorDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showRelativeDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showGitNotesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bisectSkipRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
             this.CreateTag.SuspendLayout();
             this.NoCommits.SuspendLayout();
@@ -210,6 +211,7 @@ namespace GitUI
             this.CreateTag.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.markRevisionAsBadToolStripMenuItem,
             this.markRevisionAsGoodToolStripMenuItem,
+            this.bisectSkipRevisionToolStripMenuItem,
             this.stopBisectToolStripMenuItem,
             this.bisectSeparator,
             this.copyToClipboardToolStripMenuItem,
@@ -239,7 +241,7 @@ namespace GitUI
             this.toolStripSeparator7,
             this.runScriptToolStripMenuItem});
             this.CreateTag.Name = "CreateTag";
-            this.CreateTag.Size = new System.Drawing.Size(226, 568);
+            this.CreateTag.Size = new System.Drawing.Size(224, 612);
             this.CreateTag.Opening += new System.ComponentModel.CancelEventHandler(this.CreateTagOpening);
             // 
             // markRevisionAsBadToolStripMenuItem
@@ -334,7 +336,7 @@ namespace GitUI
             // 
             // createTagToolStripMenuItem
             // 
-            this.createTagToolStripMenuItem.Image = global::GitUI.Properties.Resources._33;
+            this.createTagToolStripMenuItem.Image = global::GitUI.Properties.Resources.CreateTag;
             this.createTagToolStripMenuItem.Name = "createTagToolStripMenuItem";
             this.createTagToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
             this.createTagToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
@@ -350,7 +352,7 @@ namespace GitUI
             // 
             // createNewBranchToolStripMenuItem
             // 
-            this.createNewBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources._35;
+            this.createNewBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources.CreateNewBranch;
             this.createNewBranchToolStripMenuItem.Name = "createNewBranchToolStripMenuItem";
             this.createNewBranchToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
             this.createNewBranchToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
@@ -709,6 +711,13 @@ namespace GitUI
             this.showRevisionGraphToolStripMenuItem.Click += new System.EventHandler(this.ShowRevisionGraphToolStripMenuItemClick);
             this.renameBranchToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.renameBranchToolStripMenuItem.Text = "Rename branch";
+            //
+            // bisectSkipRevisionToolStripMenuItem
+            //
+            this.bisectSkipRevisionToolStripMenuItem.Name = "bisectSkipRevisionToolStripMenuItem";
+            this.bisectSkipRevisionToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.bisectSkipRevisionToolStripMenuItem.Text = "Skip revision";
+            this.bisectSkipRevisionToolStripMenuItem.Click += new System.EventHandler(this.bisectSkipRevisionToolStripMenuItem_Click);
             // 
             // RevisionGrid
             // 
@@ -802,5 +811,6 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem squashCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem renameBranchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem hashToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bisectSkipRevisionToolStripMenuItem;
     }
 }

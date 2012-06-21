@@ -61,12 +61,17 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="CommitData.cs" />
+    <Compile Include="DateTimeUtils.cs" />
+    <Compile Include="ExceptionUtils.cs" />
     <Compile Include="FileHelper.cs" />
+    <Compile Include="Git\GitBisectOption.cs" />
     <Compile Include="Git\GitCommand.cs" />
     <Compile Include="Git\EncodingHelper.cs" />
     <Compile Include="Git\GitDeleteBranchCmd.cs" />
@@ -75,7 +80,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Git\GitSvnCommandHelpers.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Git\GitCommandsInstance.cs" />
     <Compile Include="Logging\CommandLogger.cs" />
     <Compile Include="Commit.cs" />
@@ -84,6 +88,7 @@
     <Compile Include="Config\ConfigSection.cs" />
     <Compile Include="Git\GitCommandCache.cs" />
     <Compile Include="Patch\PatchProcessor.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\Repository.cs" />
     <Compile Include="Repository\RepositoryCategory.cs" />
     <Compile Include="Git\GitBlame.cs" />
@@ -105,7 +110,6 @@
     <Compile Include="Repository\RepositoryType.cs" />
     <Compile Include="RevisionGraph.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="SplitEnumerator.cs" />
     <Compile Include="Statistics\CommitCounter.cs" />
     <Compile Include="Statistics\ImpactLoader.cs" />
     <Compile Include="Strings.cs" />
