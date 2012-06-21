@@ -1135,6 +1135,31 @@ namespace GitUI
             dataGrid_Scroll(null, null);
         }
 
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Home)
+            {
+                if (RowCount != 0)
+                {
+                    ClearSelection();
+                    Rows[0].Selected = true;
+                    CurrentCell = Rows[0].Cells[1];
+                }
+                return;
+            }
+            else if (e.KeyData == Keys.End)
+            {
+                if (RowCount != 0)
+                {
+                    ClearSelection();
+                    Rows[RowCount - 1].Selected = true;
+                    CurrentCell = Rows[RowCount - 1].Cells[1];
+                }
+                return;
+            }
+            base.OnKeyDown(e);
+        }
+
         #region Nested type: Node
 
         private sealed class Node
