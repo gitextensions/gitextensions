@@ -77,6 +77,18 @@ namespace GitUI
             return "";
         }
 
+        private static string UnquoteString(string str)
+        {
+            if (String.IsNullOrEmpty(str))
+                return str;
+
+            int length = str.Length;
+            if (length > 1 && str[0] == '\"' && str[length - 1] == '\"')
+                str = str.Substring(1, length - 2);
+
+            return str;
+        }
+
         public static string FindPathForKDiff(string pathFromConfig)
         {
             if (string.IsNullOrEmpty(pathFromConfig) || !File.Exists(pathFromConfig))
@@ -110,7 +122,7 @@ namespace GitUI
             switch (globalDiffTool)
             {
                 case "beyondcompare3":
-                    string bcomppath = GetGlobalSetting("difftool.beyondcompare3.path");
+                    string bcomppath = UnquoteString(GetGlobalSetting("difftool.beyondcompare3.path"));
                     
                     exeName = "bcomp.exe";
 
@@ -118,7 +130,7 @@ namespace GitUI
                                                           @"Beyond Compare 3 (x86)\",
                                                           @"Beyond Compare 3\");
                 case "kdiff3":
-                    string kdiff3path = GetGlobalSetting("difftool.kdiff3.path");
+                    string kdiff3path = UnquoteString(GetGlobalSetting("difftool.kdiff3.path"));
                     string regkdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "") + "\\kdiff3.exe";
 
                     exeName = "kdiff3.exe";
@@ -133,7 +145,7 @@ namespace GitUI
                     return difftoolPath;
                 case "winmerge":
                     exeName = "winmergeu.exe";
-                    string winmergepath = GetGlobalSetting("difftool.winmerge.path");
+                    string winmergepath = UnquoteString(GetGlobalSetting("difftool.winmerge.path"));
 
                     return FindFileInFolders("winmergeu.exe", winmergepath,
                                                           @"WinMerge\");
@@ -154,7 +166,7 @@ namespace GitUI
                 case "tmerge":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
                 case "winmerge":
-                    return "\"" + exeFile + "\" -e -u -dl \"Local\" -dr \"Remote\" \"$LOCAL\" \"$REMOTE\"";
+                    return "\"" + exeFile + "\" -e -u \"$LOCAL\" \"$REMOTE\"";
             }
             return "";
         }
@@ -167,14 +179,14 @@ namespace GitUI
             {
                 case "kdiff3":
                     exeName = "kdiff3.exe";
-                    string kdiff3path = GetGlobalSetting("mergetool.kdiff3.path");
+                    string kdiff3path = UnquoteString(GetGlobalSetting("mergetool.kdiff3.path"));
                     string regkdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "");
                     if (regkdiff3path != "")
                         regkdiff3path += "\\" + exeName;
 
                     return FindFileInFolders(exeName, kdiff3path, @"KDiff3\", regkdiff3path);
                 case "winmerge":
-                    string winmergepath = GetGlobalSetting("mergetool.winmerge.path");
+                    string winmergepath = UnquoteString(GetGlobalSetting("mergetool.winmerge.path"));
 
                     exeName = "winmergeu.exe";
                     return FindFileInFolders(exeName, winmergepath, @"WinMerge\");

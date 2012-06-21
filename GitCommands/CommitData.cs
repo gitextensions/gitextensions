@@ -82,8 +82,6 @@ namespace GitCommands
         /// <summary>
         /// Gets the commit info.
         /// </summary>
-        /// <param name="sha1">The sha1.</param>
-        /// <returns></returns>
         public static CommitData GetCommitData(string sha1, ref string error)
         {
             return GetCommitData(Settings.Module, sha1, ref error);
@@ -92,8 +90,6 @@ namespace GitCommands
         /// <summary>
         /// Gets the commit info for submodule.
         /// </summary>
-        /// <param name="sha1">The sha1.</param>
-        /// <returns></returns>
         public static CommitData GetCommitData(GitModule module, string sha1, ref string error)
         {
             if (module == null)
@@ -113,7 +109,7 @@ namespace GitCommands
 
             if (info.Trim().StartsWith("fatal"))
             {
-                error = "Cannot find commit" + sha1;
+                error = "Cannot find commit " + sha1;
                 return null;
             }
 
@@ -121,7 +117,7 @@ namespace GitCommands
 
             if (index < 0)
             {
-                error = "Cannot find commit" + sha1;
+                error = "Cannot find commit " + sha1;
                 return null;
             }
             if (index >= info.Length)
@@ -135,7 +131,7 @@ namespace GitCommands
             return commitInformation;
         }
 
-        public static readonly string LogFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N";
+        public const string LogFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N"; 
 
         /// <summary>
         /// Creates a CommitData object from formated commit info data from git.  The string passed in should be
@@ -160,10 +156,10 @@ namespace GitCommands
             ReadOnlyCollection<string> parentGuids = parentLines.ToList().AsReadOnly();
 
             var author = GitCommandHelpers.ReEncodeStringFromLossless(lines[3]);
-            var authorDate = GetTimeFromUtcTimeLine(lines[4]);
+            var authorDate = DateTimeUtils.ParseUnixTime(lines[4]);
 
             var committer = GitCommandHelpers.ReEncodeStringFromLossless(lines[5]);
-            var commitDate = GetTimeFromUtcTimeLine(lines[6]);
+            var commitDate = DateTimeUtils.ParseUnixTime(lines[6]);
 
             string commitEncoding = lines[7];
 
@@ -209,14 +205,6 @@ namespace GitCommands
             }
 
             return input;
-        }
-
-        private static DateTimeOffset GetTimeFromUtcTimeLine(string data)
-        {
-            var unixTime = long.Parse(data);
-            var time = (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddSeconds(unixTime);
-
-            return new DateTimeOffset(time, new TimeSpan(0));
         }
 
         private static string RemoveRedundancies(string info)

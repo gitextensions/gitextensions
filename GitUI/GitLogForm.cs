@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Windows.Forms;
 using GitCommands;
-using System.Linq;
-using GitCommands.Logging;
 using System.Threading;
 
 namespace GitUI
 {
-    public partial class GitLogForm : GitExtensionsForm
+    public sealed partial class GitLogForm : GitExtensionsForm
     {
+        private readonly SynchronizationContext syncContext;
 
-        protected readonly SynchronizationContext syncContext;
-
-        public GitLogForm()
+        internal GitLogForm()
         {
             ShowInTaskbar = true;
             syncContext = SynchronizationContext.Current;
@@ -20,67 +17,50 @@ namespace GitUI
             Translate();
         }
 
+        private void GitLogFormLoad(object sender, EventArgs e)
+        {
+            RestorePosition("log");
+
+            SubscribeToEvents();
+            RefreshLogItems();
+
+            RefreshCommandCacheItems();
+        }
+
         private void GitLogFormFormClosing(object sender, FormClosingEventArgs e)
         {
             SavePosition("log");
         }
 
-        private void GitLogFormLoad(object sender, EventArgs e)
+        private void GitLogForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            RestorePosition("log");
-
-            Settings.GitLog.CommandsChanged += (CommandLogger log) =>
-            {
-                RefreshLogItems(log);
-            };
-
-            GitCommandCache.CachedCommandsChanged += () =>
-            {
-                RefreshCommandCacheItems();
-            };
-
-            RefreshLogItems(Settings.GitLog);
-
-            RefreshCommandCacheItems();
-
+            UnsubscribeFromEvents();
+            instance = null;
         }
 
-        protected void RefreshLogItems(CommandLogger log)
+        private void RefreshLogItems()
         {
-            SendOrPostCallback method = o =>
-            {
-                if (TabControl.SelectedTab == tabPageCommandLog)
-                {
-                    bool selectLastIndex = LogItems.Items.Count == 0 || LogItems.SelectedIndex == LogItems.Items.Count - 1;
-                    LogItems.DataSource = log.Commands();
-                    if (selectLastIndex && LogItems.Items.Count > 0)
-                        LogItems.SelectedIndex = LogItems.Items.Count - 1;
-                }
-            };
-            syncContext.Post(method, this);
-
+            if (TabControl.SelectedTab == tabPageCommandLog)
+                RefreshListBox(LogItems, Settings.GitLog.GetCommands());
         }
 
-        protected void RefreshCommandCacheItems()
+        private void RefreshCommandCacheItems()
         {
-            SendOrPostCallback method = o =>
-            {
-                if (TabControl.SelectedTab == tabPageCommandCache)
-                {
-                    bool selectLastIndex = CommandCacheItems.Items.Count == 0 || CommandCacheItems.SelectedIndex == CommandCacheItems.Items.Count - 1;
-                    CommandCacheItems.DataSource = GitCommandCache.CachedCommands();
-                    if (selectLastIndex && CommandCacheItems.Items.Count > 0)
-                        CommandCacheItems.SelectedIndex = CommandCacheItems.Items.Count - 1;
-                }
-
-            };
-            syncContext.Post(method, this);
+            if (TabControl.SelectedTab == tabPageCommandCache)
+                RefreshListBox(CommandCacheItems, GitCommandCache.CachedCommands());
         }
 
+        private static void RefreshListBox(ListBox log, string[] items)
+        {
+            var selectLastIndex = log.Items.Count == 0 || log.SelectedIndex == log.Items.Count - 1;
+            log.DataSource = items;
+            if (selectLastIndex && log.Items.Count > 0)
+                log.SelectedIndex = log.Items.Count - 1;
+        }
 
         private void CommandCacheItems_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string command = CommandCacheItems.SelectedItem as string;
+            string command = (string)CommandCacheItems.SelectedItem;
 
             string output;
             if (GitCommandCache.TryGet(command, Settings.LogOutputEncoding, out output))
@@ -96,21 +76,55 @@ namespace GitUI
 
         private void LogItems_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string command = LogItems.SelectedItem as string;
-
-            LogOutput.Text = command;
+            LogOutput.Text = (string)LogItems.SelectedItem;
         }
 
         private void TabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
-            RefreshLogItems(Settings.GitLog);
+            RefreshLogItems();
             RefreshCommandCacheItems();
         }
 
         private void alwaysOnTopCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            this.TopMost = !this.TopMost;
-            alwaysOnTopCheckBox.Checked = this.TopMost;
+            TopMost = !TopMost;
+            alwaysOnTopCheckBox.Checked = TopMost;
         }
+
+        private void UnsubscribeFromEvents()
+        {
+            Settings.GitLog.CommandsChanged -= OnCommandsLogChanged;
+            GitCommandCache.CachedCommandsChanged -= OnCachedCommandsLogChanged;
+        }
+
+        private void SubscribeToEvents()
+        {
+            Settings.GitLog.CommandsChanged += OnCommandsLogChanged;
+            GitCommandCache.CachedCommandsChanged += OnCachedCommandsLogChanged;
+        }
+
+        private void OnCommandsLogChanged()
+        {
+            syncContext.Post(_ => RefreshLogItems(), null);
+        }
+
+        private void OnCachedCommandsLogChanged()
+        {
+            syncContext.Post(_ => RefreshCommandCacheItems(), null);
+        }
+
+        #region Single instance static members
+        private static GitLogForm instance;
+
+        public static void ShowOrActivate(IWin32Window owner)
+        {
+            if (instance == null)
+                (instance = new GitLogForm()).Show(owner);
+            else if (instance.WindowState == FormWindowState.Minimized)
+                instance.WindowState = FormWindowState.Normal;
+            else
+                instance.Activate();
+        }
+        #endregion
     }
 }

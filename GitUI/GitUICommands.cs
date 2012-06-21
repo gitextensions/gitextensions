@@ -144,6 +144,10 @@ namespace GitUI
         public event GitUIEventHandler PreEditGitAttributes;
         public event GitUIEventHandler PostEditGitAttributes;
 
+        public event GitUIEventHandler PreBrowseInitialize;
+        public event GitUIEventHandler PostBrowseInitialize;
+        public event GitUIEventHandler BrowseInitialize;
+
         #endregion
 
         public string GitCommand(string arguments)
@@ -196,7 +200,7 @@ namespace GitUI
                 writer.Write(batchFile);
             }
             var process = new FormProcess("cmd.exe", "/C \"" + tempFileName + "\"");
-            bool result = process.ShowDialog(owner as IWin32Window) == DialogResult.OK;
+            process.ShowDialog(owner as IWin32Window);
             File.Delete(tempFileName);
             return true;
         }
@@ -287,9 +291,10 @@ namespace GitUI
             return StartCheckoutRevisionDialog(null);
         }
 
-        public bool CheckForDirtyDir(IWin32Window owner, out bool needRefresh)
+        public bool CheckForDirtyDir(IWin32Window owner, out bool needRefresh, out bool force)
         {
             needRefresh = false;
+            force = false;
             if (!Settings.DirtyDirWarnBeforeCheckoutBranch || Settings.Module.GitStatus(UntrackedFilesMode.All, IgnoreSubmodulesMode.Default).Count == 0)
                 return false;
             switch (new FormDirtyDirWarn().ShowDialog(owner))
@@ -302,6 +307,9 @@ namespace GitUI
                 case DialogResult.Abort:
                     needRefresh = StartCommitDialog(owner);
                     return true;
+                case DialogResult.Retry:
+                    force = true;
+                    return false;
                 default:
                     return false;
             }
@@ -323,11 +331,13 @@ namespace GitUI
                 return false;
 
             bool needRefresh;
-            if (CheckForDirtyDir(owner, out needRefresh))
+            bool force;
+            if (CheckForDirtyDir(owner, out needRefresh, out force))
                 return needRefresh;
 
-            var form = new FormCheckoutBranch(branch, remote, containRevison);
-            form.ShowDialog(owner);
+            var form = new FormCheckoutBranch(branch, remote, containRevison, force);
+            if (form.ShowDialog(owner) == DialogResult.Cancel)
+                return false;
 
             InvokeEvent(owner, PostCheckoutBranch);
 
@@ -368,11 +378,13 @@ namespace GitUI
                 return false;
 
             bool needRefresh;
-            if (CheckForDirtyDir(owner, out needRefresh))
+            bool force;
+            if (CheckForDirtyDir(owner, out needRefresh, out force))
                 return needRefresh;
 
-            var form = new FormCheckoutRemoteBranch(branch);
-            form.ShowDialog(owner);
+            var form = new FormCheckoutRemoteBranch(branch, force);
+            if (form.ShowDialog(owner) == DialogResult.Cancel)
+                return false;
 
             InvokeEvent(owner, PostCheckoutBranch);
 
@@ -442,17 +454,22 @@ namespace GitUI
             return StartCreateBranchDialog(null);
         }
 
-        public bool StartCloneDialog(IWin32Window owner, string url)
+        public bool StartCloneDialog(IWin32Window owner, string url, bool openedFromProtocolHandler)
         {
             if (!InvokeEvent(owner, PreClone))
                 return false;
 
-            var form = new FormClone(url);
+            var form = new FormClone(url, openedFromProtocolHandler);
             form.ShowDialog(owner);
 
             InvokeEvent(owner, PostClone);
 
             return true;
+        }
+
+        public bool StartCloneDialog(IWin32Window owner, string url)
+        {
+            return StartCloneDialog(owner, url, false);
         }
 
         public bool StartCloneDialog(IWin32Window owner)
@@ -634,7 +651,7 @@ namespace GitUI
         /// <param name="pullOnShow"></param>
         /// <param name="pullCompleted">true if pull completed with no errors</param>
         /// <returns>if revision grid should be refreshed</returns>
-        public bool StartPullDialog(IWin32Window owner, bool pullOnShow, out bool pullCompleted)
+        public bool StartPullDialog(IWin32Window owner, bool pullOnShow, out bool pullCompleted, ConfigureFormPull configProc)
         {
             pullCompleted = false;
 
@@ -645,6 +662,9 @@ namespace GitUI
                 return true;
 
             FormPull formPull = new FormPull();
+            if (configProc != null)
+                configProc(formPull);
+
             DialogResult dlgResult;
             if (pullOnShow)
                 dlgResult = formPull.PullAndShowDialogWhenFailed(owner);
@@ -660,15 +680,20 @@ namespace GitUI
             return true;//maybe InvokeEvent should have 'needRefresh' out parameter?
         }
 
+        public bool StartPullDialog(IWin32Window owner, bool pullOnShow, out bool pullCompleted)
+        {
+            return StartPullDialog(owner, pullOnShow, out pullCompleted, null);
+        }
+
         public bool StartPullDialog(IWin32Window owner, bool pullOnShow)
         {
             bool errorOccurred;
-            return StartPullDialog(owner, pullOnShow, out errorOccurred);
+            return StartPullDialog(owner, pullOnShow, out errorOccurred, null);
         }
 
         public bool StartPullDialog(bool pullOnShow, out bool pullCompleted)
         {
-            return StartPullDialog(null, pullOnShow, out pullCompleted);
+            return StartPullDialog(null, pullOnShow, out pullCompleted, null);
         }
 
         public bool StartPullDialog(bool pullOnShow)
@@ -680,7 +705,7 @@ namespace GitUI
         public bool StartPullDialog(IWin32Window owner)
         {
             bool errorOccurred;
-            return StartPullDialog(owner, false, out errorOccurred);
+            return StartPullDialog(owner, false, out errorOccurred, null);
         }
 
         public bool StartPullDialog()
@@ -1100,7 +1125,7 @@ namespace GitUI
                 return false;
 
             var form = new FormBrowse(filter);
-            form.ShowDialog();
+            form.ShowDialog(owner);
 
             InvokeEvent(owner, PostBrowse);
 
@@ -1365,6 +1390,78 @@ namespace GitUI
         {
             WrapRepoHostingCall("Create pull request", gitHoster,
                                 gh => (new CreatePullRequestForm(gitHoster, chooseRemote, chooseBranch)).ShowDialog(owner));
+        }
+
+        internal void RaisePreBrowseInitialize(IWin32Window owner)
+        {
+            InvokeEvent(owner, PreBrowseInitialize);
+        }
+
+        internal void RaisePostBrowseInitialize(IWin32Window owner)
+        {
+            InvokeEvent(owner, PostBrowseInitialize);
+        }
+
+        public void RaiseBrowseInitialize()
+        {
+            InvokeEvent(null, BrowseInitialize);
+        }
+
+        public IGitRemoteCommand CreateRemoteCommand()
+        {
+            return new GitRemoteCommand();
+        }
+
+        private class GitRemoteCommand : IGitRemoteCommand
+        {
+            public object OwnerForm { get; set; }
+
+            public string Remote { get; set; }
+
+            public string Title { get; set; }
+
+            public string CommandText { get; set; }
+
+            public bool ErrorOccurred { get; private set; }
+
+            public string CommandOutput { get; private set; }
+
+            public event GitRemoteCommandCompletedEventHandler Completed;
+
+            public void Execute()
+            {
+                if (CommandText == null)
+                    throw new InvalidOperationException("CommandText is required");
+
+                using (var form = new FormRemoteProcess(CommandText))
+                {
+                    if (Title != null)
+                        form.Text = Title;
+                    if (Remote != null)
+                        form.Remote = Remote;
+
+                    form.HandleOnExitCallback = HandleOnExit;
+
+                    form.ShowDialog(OwnerForm as IWin32Window);
+
+                    ErrorOccurred = form.ErrorOccurred();
+                    CommandOutput = form.OutputString.ToString();
+                }
+            }
+
+            private bool HandleOnExit(ref bool isError, FormProcess form)
+            {
+                CommandOutput = form.OutputString.ToString();
+
+                var e = new GitRemoteCommandCompletedEventArgs(this, isError, false);
+
+                if (Completed != null)
+                    Completed(form, e);
+
+                isError = e.IsError;
+
+                return e.Handled;
+            }
         }
     }
 }

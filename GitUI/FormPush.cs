@@ -18,7 +18,7 @@ namespace GitUI
         private const string HeadText = "HEAD";
         private readonly string _currentBranch;
         private readonly string _currentBranchRemote;
-        private bool candidateForRebasingMergeCommit = false;
+        private bool candidateForRebasingMergeCommit;
         private string selectedBranch;
         private string selectedBranchRemote;
         private string selectedRemoteBranchName;
@@ -219,7 +219,7 @@ namespace GitUI
             ScriptManager.RunEventScripts(ScriptEvent.BeforePush);
 
             //controls can be accessed only from UI thread
-            candidateForRebasingMergeCommit = Settings.PullMerge == "rebase" && PullFromRemote.Checked && !PushAllBranches.Checked && TabControlTagBranch.SelectedTab == BranchTab;
+            candidateForRebasingMergeCommit = Settings.PullMerge == Settings.PullAction.Rebase && PullFromRemote.Checked && !PushAllBranches.Checked && TabControlTagBranch.SelectedTab == BranchTab;
             selectedBranch = _NO_TRANSLATE_Branch.Text;
             selectedBranchRemote = _NO_TRANSLATE_Remotes.Text;
             selectedRemoteBranchName = RemoteBranch.Text;
@@ -228,7 +228,7 @@ namespace GitUI
                        {
                            Remote = remote,
                            Text = string.Format(_pushToCaption.Text, destination),
-                           HandleOnExitCallback = new HandleOnExit(HandlePushOnExit)
+                           HandleOnExitCallback = HandlePushOnExit
                        };
 
             form.ShowDialog(owner);
@@ -270,7 +270,7 @@ namespace GitUI
                 if (Settings.AutoPullOnRejected &&
                     form.OutputString.ToString().Contains("To prevent you from losing history, non-fast-forward updates were rejected"))
                 {
-                    if (Settings.PullMerge == "fetch")
+                    if (Settings.PullMerge == Settings.PullAction.Fetch)
                         form.AppendOutputLine(Environment.NewLine + "Can not perform auto pull, when merge option is set to fetch.");
                     else if (IsRebasingMergeCommit())
                         form.AppendOutputLine(Environment.NewLine + "Can not perform auto pull, when merge option is set to rebase " + Environment.NewLine
@@ -405,7 +405,7 @@ namespace GitUI
 
             EnableLoadSshButton();
 
-            var pushSettingValue = Settings.Module.GetSetting("remote." + _NO_TRANSLATE_Remotes.Text + ".push");
+            var pushSettingValue = Settings.Module.GetSetting(string.Format("remote.{0}.push", _NO_TRANSLATE_Remotes.Text));
 
             if (PullFromRemote.Checked && !string.IsNullOrEmpty(pushSettingValue))
             {

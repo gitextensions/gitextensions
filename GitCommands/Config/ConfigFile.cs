@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 
 namespace GitCommands.Config
 {
@@ -32,9 +31,12 @@ namespace GitCommands.Config
         private readonly string _fileName;
         private readonly IList<ConfigSection> _sections;
 
-        public ConfigFile(string fileName)
+        public bool Local { get; private set; }
+
+        public ConfigFile(string fileName, bool aLocal)
         {
             _sections = new List<ConfigSection>();
+            Local = aLocal;
 
             _fileName = fileName;
             try
@@ -43,7 +45,8 @@ namespace GitCommands.Config
             }
             catch (Exception ex)
             {
-                throw new Exception("Could not load config file: " + _fileName, ex);
+                ex.Data.Add(GetType().Name + ".Load", "Could not load config file: " + _fileName);
+                throw;
             }
         }
 
@@ -52,12 +55,17 @@ namespace GitCommands.Config
             return _sections;
         }
 
+        private Encoding GetEncoding()
+        {
+            return Local ? Settings.AppEncoding : Settings.GetAppEncoding(false, true);
+        }
+
         private void Load()
         {
             if (string.IsNullOrEmpty(Path.GetFileName(_fileName)) || !File.Exists(_fileName))
                 return;
 
-            FindSections(File.ReadAllLines(_fileName, Settings.AppEncoding));
+            FindSections(File.ReadAllLines(_fileName, GetEncoding()));
         }
 
         private void FindSections(IEnumerable<string> fileLines)
@@ -80,7 +88,7 @@ namespace GitCommands.Config
                     if (m.Success) //this line is a key
                     {
                         var key = m.Groups["Key"].Value;
-                        var value = UnescapeString(m.Groups["Value"].Value);
+                        var value = m.Groups["Value"].Value;
 
                         if (configSection == null)
                             throw new Exception(
@@ -108,7 +116,7 @@ namespace GitCommands.Config
                 {
                     foreach (var value in key.Value)
                     {
-                        configFileContent.AppendLine(string.Concat("\t", key.Key, " = ", EscapeString(value)));
+                        configFileContent.AppendLine(string.Concat("\t", key.Key, " = ", value));
                     }
                 }
             }
@@ -119,21 +127,17 @@ namespace GitCommands.Config
                 FileInfoExtensions
                     .MakeFileTemporaryWritable(_fileName,
                                        x =>
-                                       File.WriteAllText(_fileName, configFileContent.ToString(), Settings.AppEncoding));
+                                       File.WriteAllText(_fileName, configFileContent.ToString(), GetEncoding()));
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                ExceptionUtils.ShowException(ex, false);
             }
         }
 
-        public void SetValue(string setting, string value)
+        private void SetStringValue(string setting, string value)
         {
-            var keyIndex = setting.LastIndexOf('.');
-
-            if (keyIndex < 0 && keyIndex == setting.Length)
-                throw new Exception("Invalid setting name: " + setting);
-
+            var keyIndex = FindAndCheckKeyIndex(setting);
 
             var configSectionName = setting.Substring(0, keyIndex);
             var keyName = setting.Substring(keyIndex + 1);
@@ -141,13 +145,19 @@ namespace GitCommands.Config
             FindOrCreateConfigSection(configSectionName).SetValue(keyName, value);
         }
 
-        public void AddValue(string setting, string value)
+        public void SetValue(string setting, string value)
         {
-            var keyIndex = setting.LastIndexOf('.');
+            SetStringValue(setting, value);
+        }
 
-            if (keyIndex < 0 && keyIndex == setting.Length)
-                throw new Exception("Invalid setting name: " + setting);
+        public void SetPathValue(string setting, string value)
+        {
+            SetStringValue(setting, ConfigSection.EscapeString(value));
+        }
 
+        private void AddStringValue(string setting, string value)
+        {
+            var keyIndex = FindAndCheckKeyIndex(setting);
 
             var configSectionName = setting.Substring(0, keyIndex);
             var keyName = setting.Substring(keyIndex + 1);
@@ -155,29 +165,57 @@ namespace GitCommands.Config
             FindOrCreateConfigSection(configSectionName).AddValue(keyName, value);
         }
 
+        public void AddValue(string setting, string value)
+        {
+            AddStringValue(setting, value);
+        }
+
+        public void AddPathValue(string setting, string value)
+        {
+            AddStringValue(setting, ConfigSection.EscapeString(value));
+        }
+
         public bool HasValue(string setting)
         {
-            var keyIndex = setting.LastIndexOf('.');
-
-            if (keyIndex < 0 && keyIndex == setting.Length)
-                throw new Exception("Invalid setting name: " + setting);
+            var keyIndex = FindAndCheckKeyIndex(setting);
 
             var configSectionName = setting.Substring(0, keyIndex);
             var keyName = setting.Substring(keyIndex + 1);
 
             var configSection = FindConfigSection(configSectionName);
-            if (configSection != null)
-                return configSection.GetValue(keyName) != string.Empty;
-            else
-                return false;
+            return configSection != null && configSection.GetValue(keyName) != string.Empty;
         }
 
-        public string GetValue(string setting)
+        public int FindAndCheckKeyIndex(string setting)
         {
-            var keyIndex = setting.LastIndexOf('.');
+            var keyIndex = FindKeyIndex(setting);
 
-            if (keyIndex < 0 && keyIndex == setting.Length)
+            if (keyIndex < 0 || keyIndex == setting.Length)
                 throw new Exception("Invalid setting name: " + setting);
+
+            return keyIndex;
+        }
+        
+        public int FindKeyIndex(string setting)
+        {
+            return setting.LastIndexOf('.');
+        }
+
+        public bool HasConfigSection(string configSectionName)
+        {
+            var configSection = FindConfigSection(configSectionName);
+            if (configSection != null)
+                return true;
+                
+            return false;
+        }
+
+        private string GetStringValue(string setting)
+        {
+            if(String.IsNullOrEmpty(setting))
+                throw new ArgumentNullException();
+
+            var keyIndex = FindAndCheckKeyIndex(setting);
 
             var configSectionName = setting.Substring(0, keyIndex);
             var keyName = setting.Substring(keyIndex + 1);
@@ -190,13 +228,19 @@ namespace GitCommands.Config
             return configSection.GetValue(keyName);
         }
 
+        public string GetValue(string setting)
+        {
+            return GetStringValue(setting);
+        }
+
+        public string GetPathValue(string setting)
+        {
+            return ConfigSection.UnescapeString(GetStringValue(setting));
+        }
 
         public IList<string> GetValues(string setting)
         {
-            var keyIndex = setting.LastIndexOf('.');
-
-            if (keyIndex < 0 && keyIndex == setting.Length)
-                throw new Exception("Invalid setting name: " + setting);
+            var keyIndex = FindAndCheckKeyIndex(setting);
 
             var configSectionName = setting.Substring(0, keyIndex);
             var keyName = setting.Substring(keyIndex + 1);
@@ -211,10 +255,7 @@ namespace GitCommands.Config
 
         public void RemoveSetting(string setting)
         {
-            var keyIndex = setting.LastIndexOf('.');
-
-            if (keyIndex < 0 && keyIndex == setting.Length)
-                throw new Exception("Invalid setting name: " + setting);
+            var keyIndex = FindAndCheckKeyIndex(setting);
 
             var configSectionName = setting.Substring(0, keyIndex);
             var keyName = setting.Substring(keyIndex + 1);
@@ -259,29 +300,6 @@ namespace GitCommands.Config
                     return configSection;
             }
             return null;
-        }
-
-        private static string UnescapeString(string value)
-        {
-            // The .gitconfig escapes some character sequences -> 
-            // \" = "
-            // \\ = \
-            return value.Replace("\\\"", "\"").Replace("\\\\", "\\");
-        }
-
-        private static string EscapeString(string path)
-        {
-            // The .gitconfig escapes some character sequences
-            path = path.Replace("\"", "$QUOTE$");
-
-            path = path.Trim();
-
-            if (path.StartsWith("\\\\")) //for using unc paths -> these need to be backward slashes
-                path = path.Replace("\\", "\\\\");
-            else //for directories -> git only supports forward slashes
-                path = path.Replace('\\', '/');
-
-            return path.Replace("$QUOTE$", "\\\"");
         }
     }
 }

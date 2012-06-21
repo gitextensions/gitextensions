@@ -27,11 +27,10 @@ namespace GitUI
         #endregion
 
         public bool Plink { get; set; }
-        private bool restart = false;
+        private bool restart;
 
         //constructor for VS designer
         protected FormRemoteProcess()
-            : base()
         {
 
         }
@@ -104,8 +103,8 @@ namespace GitUI
                     {
                         // To prevent future authentication errors, save this key for this remote.
                         if (!String.IsNullOrEmpty(loadedKey) && !String.IsNullOrEmpty(this.Remote) && 
-                            String.IsNullOrEmpty(Settings.Module.GetSetting("remote.{0}.puttykeyfile")))
-                            Settings.Module.SetSetting(string.Format("remote.{0}.puttykeyfile", this.Remote), loadedKey);
+                            String.IsNullOrEmpty(Settings.Module.GetPathSetting("remote.{0}.puttykeyfile")))
+                            Settings.Module.SetPathSetting(string.Format("remote.{0}.puttykeyfile", this.Remote), loadedKey);
 
                         // Retry the command.
                         Retry();
@@ -118,7 +117,7 @@ namespace GitUI
 
                     if (string.IsNullOrEmpty(UrlTryingToConnect))
                     {
-                        remoteUrl = Settings.Module.GetSetting("remote." + Remote + ".url");
+                        remoteUrl = Settings.Module.GetPathSetting(string.Format("remote.{0}.url", Remote));
                         if (string.IsNullOrEmpty(remoteUrl))
                             remoteUrl = Remote;
                     }
@@ -149,7 +148,7 @@ namespace GitUI
                 {
                     if (MessageBox.Show(this, _fingerprintNotRegistredText.Text, _fingerprintNotRegistredTextCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        string remoteUrl = Settings.Module.GetSetting("remote." + Remote + ".url");
+                        string remoteUrl = Settings.Module.GetPathSetting(string.Format("remote.{0}.url", Remote));
 
                         if (string.IsNullOrEmpty(remoteUrl))
                             Settings.Module.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + Remote + "\"");

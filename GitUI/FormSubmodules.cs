@@ -51,8 +51,7 @@ namespace GitUI
             {
                 DataGridViewRow row = Submodules.Rows
                     .Cast<DataGridViewRow>()
-                    .Where(r => r.DataBoundItem as GitSubmodule == submodule)
-                    .FirstOrDefault();
+                    .FirstOrDefault(r => r.DataBoundItem as GitSubmodule == submodule);
 
                 if (row != null)
                     row.Selected = true;
@@ -107,7 +106,7 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             Settings.Module.RunGitCmd("rm --cached \"" + SubModuleName.Text + "\"");
 
-            var modules = new ConfigFile(Settings.WorkingDir + ".gitmodules");
+            var modules = Settings.Module.GetSubmoduleConfigFile();
             modules.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
             if (modules.GetConfigSections().Count > 0)
                 modules.Save();

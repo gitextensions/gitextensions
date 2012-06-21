@@ -28,7 +28,7 @@ namespace GitCommands
                 Revision = revision;
             }
 
-            public GitRevision Revision;
+            public readonly GitRevision Revision;
         }
 
         public bool BackgroundThread { get; set; }
@@ -38,13 +38,13 @@ namespace GitCommands
 
         private readonly char[] hexChars = "0123456789ABCDEFabcdef".ToCharArray();
 
-        private readonly string COMMIT_BEGIN = "<(__BEGIN_COMMIT__)>"; // Something unlikely to show up in a comment
+        private const string COMMIT_BEGIN = "<(__BEGIN_COMMIT__)>"; // Something unlikely to show up in a comment
 
         private List<GitHead> heads;
 
         private GitCommandsInstance gitGetGraphCommand;
 
-        private Thread backgroundThread = null;
+        private Thread backgroundThread;
 
         private enum ReadStep
         {
@@ -93,7 +93,7 @@ namespace GitCommands
 
         public string LogParam = "HEAD --all";//--branches --remotes --tags";
         public string BranchFilter = String.Empty;
-        public RevisionGraphInMemFilter InMemFilter = null;
+        public RevisionGraphInMemFilter InMemFilter;
         private string selectedBranchName;
 
         public void Execute()
@@ -104,8 +104,7 @@ namespace GitCommands
                 {
                     backgroundThread.Abort();
                 }
-                backgroundThread = new Thread(new ThreadStart(execute));
-                backgroundThread.IsBackground = true;
+                backgroundThread = new Thread(execute) { IsBackground = true };
                 backgroundThread.Start();
             }
             else
@@ -131,9 +130,9 @@ namespace GitCommands
                         /* Tree                    */ "%T%n" +
                         /* Author Name             */ "%aN%n" +
                         /* Author Email            */ "%aE%n" +
-                        /* Author Date             */ "%ai%n" +
+                        /* Author Date             */ "%at%n" +
                         /* Committer Name          */ "%cN%n" +
-                        /* Committer Date          */ "%ci%n" +
+                        /* Committer Date          */ "%ct%n" +
                         /* Commit message encoding */ "%e%n" + //there is a bug: git does not recode commit message when format is given
                         /* Commit Message          */ "%s";
                 }
@@ -161,7 +160,7 @@ namespace GitCommands
                 gitGetGraphCommand.StreamOutput = true;
                 gitGetGraphCommand.CollectOutput = false;                
                 Encoding LogOutputEncoding = Settings.LogOutputEncoding;
-                gitGetGraphCommand.SetupStartInfoCallback = (ProcessStartInfo startInfo) =>
+                gitGetGraphCommand.SetupStartInfoCallback = startInfo =>
                 {
                     startInfo.StandardOutputEncoding = Settings.LosslessEncoding;
                     startInfo.StandardErrorEncoding = Settings.LosslessEncoding;
@@ -169,6 +168,7 @@ namespace GitCommands
 
                 Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arguments);
 
+                previousFileName = null;
                 if (BeginUpdate != null)
                     BeginUpdate(this, EventArgs.Empty);
 
@@ -182,13 +182,14 @@ namespace GitCommands
 
                     if (line != null)
                     {
-                        foreach (string entry in line.SplitString(new char[] {'\0'}))
+                        foreach (string entry in line.Split('\0'))
                         {
                             dataReceived(entry);
                         }
                     }
                 } while (line != null);
                 finishRevision();
+                previousFileName = null;
             }
             catch (ThreadAbortException)
             {
@@ -198,7 +199,8 @@ namespace GitCommands
             {
                 if (Error != null)
                     Error(this, EventArgs.Empty);
-                MessageBox.Show("Cannot load commit log." + Environment.NewLine + Environment.NewLine + ex.ToString());
+                ExceptionUtils.ShowException(ex, "Cannot load commit log.");
+                previousFileName = null;
                 return;
             }
 
@@ -229,8 +231,17 @@ namespace GitCommands
             return result;
         }
 
+        private string previousFileName = null;
+
         void finishRevision()
         {
+            if (revision != null)
+            {
+                if (revision.Name == null)                
+                    revision.Name = previousFileName;
+                else
+                    previousFileName = revision.Name;
+            }
             if (revision == null || revision.Guid.Trim(hexChars).Length == 0)
             {
                 if ((revision == null) || (InMemFilter == null) || InMemFilter.PassThru(revision))
@@ -305,8 +316,8 @@ namespace GitCommands
                 case ReadStep.AuthorDate:
                     {
                         DateTime dateTime;
-                        DateTime.TryParse(line, out dateTime);
-                        revision.AuthorDate = dateTime;
+                        if (DateTimeUtils.TryParseUnixTime(line, out dateTime))
+                            revision.AuthorDate = dateTime;
                     }
                     break;
 
@@ -317,8 +328,8 @@ namespace GitCommands
                 case ReadStep.CommitterDate:
                     {
                         DateTime dateTime;
-                        DateTime.TryParse(line, out dateTime);
-                        revision.CommitDate = dateTime;
+                        if (DateTimeUtils.TryParseUnixTime(line, out dateTime))
+                            revision.CommitDate = dateTime;
                     }
                     break;
 

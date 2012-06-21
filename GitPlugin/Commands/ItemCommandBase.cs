@@ -93,7 +93,7 @@ namespace GitPlugin.Commands
 
         private static CommandTarget GetProjectItemTarget(ProjectItem projectItem)
         {
-            switch (projectItem.Kind)
+            switch (projectItem.Kind.ToUpper())
             {
                 case Constants.vsProjectItemKindPhysicalFile:
                     return CommandTarget.File;

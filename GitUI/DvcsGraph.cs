@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -101,7 +102,7 @@ namespace GitUI
             syncContext = SynchronizationContext.Current;
             graphData = new Graph();
 
-            backgroundThread = new Thread(backgroundThreadEntry)
+            backgroundThread = new Thread(BackgroundThreadEntry)
                                    {
                                        IsBackground = true,
                                        Priority = ThreadPriority.BelowNormal,
@@ -136,6 +137,8 @@ namespace GitUI
             this.Columns[3].Visible = show;
         }
 
+        [DefaultValue(FilterType.None)]
+        [Category("Behavior")]
         public FilterType FilterMode
         {
             get { return filterMode; }
@@ -167,6 +170,7 @@ namespace GitUI
             }
         }
 
+        [Browsable(false)]
         public object[] SelectedData
         {
             get
@@ -184,6 +188,7 @@ namespace GitUI
             }
         }
 
+        [Browsable(false)]
         public IComparable[] SelectedIds
         {
             get
@@ -254,26 +259,25 @@ namespace GitUI
             base.Dispose(disposing);
         }
 
-        /// <summary>
-        /// Loading Handler. NOTE: This will often happen on a background thread
-        /// so UI operations may not be safe!
-        /// </summary>
+        [Description("Loading Handler. NOTE: This will often happen on a background thread so UI operations may not be safe!")]
+        [Category("Behavior")]
         public event LoadingEventHandler Loading;
 
         public void ShowRevisionGraph()
         {
             Columns[0].Visible = true;
-            //            updateData();
+            //updateData();
             backgroundEvent.Set();
         }
 
         public void HideRevisionGraph()
         {
             Columns[0].Visible = false;
-            //            updateData();
+            //updateData();
             backgroundEvent.Set();
         }
 
+        [Browsable(false)]
         public bool RevisionGraphVisible
         {
             get
@@ -284,14 +288,12 @@ namespace GitUI
 
         public void Add(IComparable aId, IComparable[] aParentIds, DataType aType, GitRevision aData)
         {
-            int lastItem = -1;
             lock (graphData)
             {
-                lastItem = graphData.Count;
                 graphData.Add(aId, aParentIds, aType, aData);
             }
 
-            updateData();
+            UpdateData();
         }
 
         public void Clear()
@@ -302,7 +304,7 @@ namespace GitUI
             }
             lock (graphData)
             {
-                setRowCount(0);
+                SetRowCount(0);
                 junctionColors.Clear();
                 graphData.Clear();
                 graphDataCount = 0;
@@ -387,17 +389,15 @@ namespace GitUI
             }
         }
 
-        public bool Prune()
+        public void Prune()
         {
-            bool status;
             int count;
             lock (graphData)
             {
-                status = graphData.Prune();
+                graphData.Prune();
                 count = graphData.Count;
             }
-            setRowCount(count);
-            return status;
+            SetRowCount(count);
         }
 
         private void RebuildGraph()
@@ -405,12 +405,12 @@ namespace GitUI
             // Redraw
             cacheHead = -1;
             cacheHeadRow = 0;
-            clearDrawCache();
-            updateData();
+            ClearDrawCache();
+            UpdateData();
             Invalidate(true);
         }
 
-        private void setRowCount(int count)
+        private void SetRowCount(int count)
         {
             if (InvokeRequired)
             {
@@ -446,7 +446,7 @@ namespace GitUI
             // need in order to re-draw the graph.
             syncContext.Post(o =>
                 {
-                    clearDrawCache();
+                    ClearDrawCache();
                     Invalidate();
                 }, this);
         }
@@ -464,44 +464,42 @@ namespace GitUI
             lock (graphData)
             {
                 Graph.ILaneRow row = graphData[e.RowIndex];
-                if (row != null && (e.State & DataGridViewElementStates.Visible) != 0)
+                if (row == null || (e.State & DataGridViewElementStates.Visible) == 0)
+                    return;
+                if (e.ColumnIndex != 0)
+                    return;
+                var brush = (e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected
+                                ? selectionBrush : new SolidBrush(Color.White);
+                e.Graphics.FillRectangle(brush, e.CellBounds);
+
+                Rectangle srcRect = DrawGraph(e.RowIndex);
+                if (!srcRect.IsEmpty)
                 {
-                    if (e.ColumnIndex == 0)
-                    {
-                        var brush = (e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected
-                            ? selectionBrush : new SolidBrush(Color.White);
-                        e.Graphics.FillRectangle(brush, e.CellBounds);
-
-                        Rectangle srcRect = drawGraph(e.RowIndex);
-                        if (!srcRect.IsEmpty)
-                        {
-                            e.Graphics.DrawImage
-                                (
-                                    graphBitmap,
-                                    e.CellBounds,
-                                    srcRect,
-                                    GraphicsUnit.Pixel
-                                );
-                        }
-
-                        e.Handled = true;
-                    }
+                    e.Graphics.DrawImage
+                        (
+                            graphBitmap,
+                            e.CellBounds,
+                            srcRect,
+                            GraphicsUnit.Pixel
+                        );
                 }
+
+                e.Handled = true;
             }
         }
 
         private void dataGrid_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
         {
-            clearDrawCache();
+            ClearDrawCache();
         }
 
         private void dataGrid_Scroll(object sender, ScrollEventArgs e)
         {
-            updateData();
-            updateColumnWidth();
+            UpdateData();
+            UpdateColumnWidth();
         }
 
-        private void backgroundThreadEntry()
+        private void BackgroundThreadEntry()
         {
             while (backgroundEvent.WaitOne())
             {
@@ -520,60 +518,61 @@ namespace GitUI
                         graphDataCount = graphData.CachedCount;
                     }
 
-                    if (!RevisionGraphVisible)//do nothing... do not cache, the graph is invisible
-                    {
-                        syncContext.Post(o => updateRow((int)o), curCount);
-                        Thread.Sleep(100);
-                    }
+                    if (RevisionGraphVisible)
+                        UpdateGraph(curCount, scrollTo);
                     else
-                        while (curCount < scrollTo)
-                        {
-                            lock (graphData)
-                            {
-                                // Cache the next item
-                                if (!graphData.CacheTo(curCount))
-                                {
-                                    Console.WriteLine("Cached item FAILED {0}", curCount.ToString());
-                                    lock (backgroundThread)
-                                    {
-                                        backgroundScrollTo = curCount;
-                                    }
-                                    break;
-                                }
-
-                                // Update the row (if needed)
-                                if (curCount < visibleBottom || toBeSelected.Count > 0)
-                                {
-                                    syncContext.Post(o => updateRow((int)o), curCount);
-                                }
-
-                                if (curCount ==
-                                    (FirstDisplayedCell == null ? 0 : FirstDisplayedCell.RowIndex + DisplayedRowCount(true)))
-                                {
-                                    syncContext.Post(state1 => updateColumnWidth(), null);
-                                }
-
-                                curCount = graphData.CachedCount;
-                                graphDataCount = curCount;
-                            }
-                        }
-
-                    lock (backgroundThread)
                     {
-                        int rowCount = RowCount;
+                        //do nothing... do not cache, the graph is invisible
+                        syncContext.Post(o => UpdateRow((int) o), curCount);
+                        Thread.Sleep(100);
                     }
                 }
             }
         }
 
-        private void updateData()
+        private void UpdateGraph(int curCount, int scrollTo)
+        {
+            while (curCount < scrollTo)
+            {
+                lock (graphData)
+                {
+                    // Cache the next item
+                    if (!graphData.CacheTo(curCount))
+                    {
+                        Console.WriteLine("Cached item FAILED {0}", curCount.ToString());
+                        lock (backgroundThread)
+                        {
+                            backgroundScrollTo = curCount;
+                        }
+                        break;
+                    }
+
+                    // Update the row (if needed)
+                    if (curCount < visibleBottom || toBeSelected.Count > 0)
+                    {
+                        syncContext.Post(o => UpdateRow((int)o), curCount);
+                    }
+
+                    int count = 0;
+                    if (FirstDisplayedCell != null)
+                        count = FirstDisplayedCell.RowIndex + DisplayedRowCount(true);
+                    if (curCount == count)
+                        syncContext.Post(state1 => UpdateColumnWidth(), null);
+
+                    curCount = graphData.CachedCount;
+                    graphDataCount = curCount;
+                }
+            }
+        }
+
+        private void UpdateData()
         {
             lock (backgroundThread)
             {
                 visibleTop = FirstDisplayedCell == null ? 0 : FirstDisplayedCell.RowIndex;
                 visibleBottom = rowHeight > 0 ? visibleTop + (Height / rowHeight) : visibleTop;
 
-                //Subtract 2 for safe marge (1 for rounding and 1 for whitspace)....
+                //Subtract 2 for safe merge (1 for rounding and 1 for whitespace)....
                 if (visibleBottom - 2 > graphData.Count)
                 {
                     //Currently we are doing some important work; we are recieving
@@ -621,13 +620,13 @@ namespace GitUI
             backgroundThread.Priority = ThreadPriority.BelowNormal;
         }
 
-        private void updateRow(int row)
+        private void UpdateRow(int row)
         {
             lock (graphData)
             {
                 if (RowCount < graphData.Count)
                 {
-                    setRowCount(graphData.Count);
+                    SetRowCount(graphData.Count);
                 }
 
                 // Check to see if the newly added item should be selected
@@ -672,7 +671,7 @@ namespace GitUI
             }
         }
 
-        private void updateColumnWidth()
+        private void UpdateColumnWidth()
         {
             lock (graphData)
             {
@@ -700,12 +699,12 @@ namespace GitUI
 
         //Color of non-relative branches.
 
-        private List<Color> getJunctionColors(IEnumerable<Junction> aJunction)
+        private List<Color> GetJunctionColors(IEnumerable<Junction> aJunction)
         {
             List<Color> colors = new List<Color>();
             foreach (Junction j in aJunction)
             {
-                colors.Add(getJunctionColor(j));
+                colors.Add(GetJunctionColor(j));
             }
 
             if (colors.Count == 0)
@@ -718,7 +717,7 @@ namespace GitUI
 
         // http://en.wikipedia.org/wiki/File:RBG_color_wheel.svg
 
-        private Color getJunctionColor(Junction aJunction)
+        private Color GetJunctionColor(Junction aJunction)
         {
             //Draw non-relative branches gray
             if (!aJunction.IsRelative && Settings.RevisionGraphDrawNonRelativesGray)
@@ -735,7 +734,6 @@ namespace GitUI
             {
                 return possibleColors[colorIndex];
             }
-
 
             // Get adjacent junctions
             var adjacentJunctions = new List<Junction>();
@@ -785,17 +783,17 @@ namespace GitUI
 
         public override void Refresh()
         {
-            clearDrawCache();
+            ClearDrawCache();
             base.Refresh();
         }
 
-        private void clearDrawCache()
+        private void ClearDrawCache()
         {
             cacheHead = 0;
             cacheCount = 0;
         }
 
-        private Rectangle drawGraph(int aNeededRow)
+        private Rectangle DrawGraph(int aNeededRow)
         {
             lock (graphData)
             {
@@ -885,59 +883,68 @@ namespace GitUI
                 }
 
                 if (RevisionGraphVisible)
-                    for (int rowIndex = start; rowIndex < end; rowIndex++)
-                    {
-                        Graph.ILaneRow row = graphData[rowIndex];
-                        if (row == null)
-                        {
-                            // This shouldn't be happening...If it does, clear the cache so we
-                            // eventually pick it up.
-                            Console.WriteLine("Draw lane {0} NO DATA", rowIndex.ToString());
-                            clearDrawCache();
-                            return Rectangle.Empty;
-                        }
-
-                        Region oldClip = graphWorkArea.Clip;
-
-                        // Get the x,y value of the current item's upper left in the cache
-                        int curCacheRow = (cacheHeadRow + rowIndex - cacheHead) % cacheCountMax;
-                        int x = 0;
-                        int y = curCacheRow * rowHeight;
-
-                        var laneRect = new Rectangle(0, y, Width, rowHeight);
-                        if (rowIndex == start || curCacheRow == 0)
-                        {
-                            // Draw previous row first. Clip top to row. We also need to clear the area
-                            // before we draw since nothing else would clear the top 1/2 of the item to draw.
-                            graphWorkArea.RenderingOrigin = new Point(x, y - rowHeight);
-                            var newClip = new Region(laneRect);
-                            graphWorkArea.Clip = newClip;
-                            graphWorkArea.Clear(Color.Transparent);
-                            drawItem(graphWorkArea, graphData[rowIndex - 1]);
-                            graphWorkArea.Clip = oldClip;
-                        }
-
-                        bool isLast = (rowIndex == end - 1);
-                        if (isLast)
-                        {
-                            var newClip = new Region(laneRect);
-                            graphWorkArea.Clip = newClip;
-                        }
-
-                        graphWorkArea.RenderingOrigin = new Point(x, y);
-                        bool success = drawItem(graphWorkArea, row);
-
-                        graphWorkArea.Clip = oldClip;
-
-                        if (!success)
-                        {
-                            clearDrawCache();
-                            return Rectangle.Empty;
-                        }
-                    }
+                {
+                    if (!DrawVisibleGraph(start, end))
+                        return Rectangle.Empty;
+                }
 
                 return CreateRectangle(aNeededRow, width);
             } // end lock
+        }
+
+        private bool DrawVisibleGraph(int start, int end)
+        {
+            for (int rowIndex = start; rowIndex < end; rowIndex++)
+            {
+                Graph.ILaneRow row = graphData[rowIndex];
+                if (row == null)
+                {
+                    // This shouldn't be happening...If it does, clear the cache so we
+                    // eventually pick it up.
+                    Console.WriteLine("Draw lane {0} NO DATA", rowIndex.ToString());
+                    ClearDrawCache();
+                    return false;
+                }
+
+                Region oldClip = graphWorkArea.Clip;
+
+                // Get the x,y value of the current item's upper left in the cache
+                int curCacheRow = (cacheHeadRow + rowIndex - cacheHead) % cacheCountMax;
+                int x = 0;
+                int y = curCacheRow * rowHeight;
+
+                var laneRect = new Rectangle(0, y, Width, rowHeight);
+                if (rowIndex == start || curCacheRow == 0)
+                {
+                    // Draw previous row first. Clip top to row. We also need to clear the area
+                    // before we draw since nothing else would clear the top 1/2 of the item to draw.
+                    graphWorkArea.RenderingOrigin = new Point(x, y - rowHeight);
+                    var newClip = new Region(laneRect);
+                    graphWorkArea.Clip = newClip;
+                    graphWorkArea.Clear(Color.Transparent);
+                    DrawItem(graphWorkArea, graphData[rowIndex - 1]);
+                    graphWorkArea.Clip = oldClip;
+                }
+
+                bool isLast = (rowIndex == end - 1);
+                if (isLast)
+                {
+                    var newClip = new Region(laneRect);
+                    graphWorkArea.Clip = newClip;
+                }
+
+                graphWorkArea.RenderingOrigin = new Point(x, y);
+                bool success = DrawItem(graphWorkArea, row);
+
+                graphWorkArea.Clip = oldClip;
+
+                if (!success)
+                {
+                    ClearDrawCache();
+                    return false;
+                }
+            }
+            return true;
         }
 
         private Rectangle CreateRectangle(int aNeededRow, int width)
@@ -953,7 +960,7 @@ namespace GitUI
 
         // end drawGraph
 
-        private bool drawItem(Graphics wa, Graph.ILaneRow row)
+        private bool DrawItem(Graphics wa, Graph.ILaneRow row)
         {
             if (row == null || row.NodeLane == -1)
             {
@@ -986,7 +993,7 @@ namespace GitUI
                             if (laneInfo.Junctions.First().IsRelative == (r == 0))
                                 continue;
 
-                        List<Color> curColors = getJunctionColors(laneInfo.Junctions);
+                        List<Color> curColors = GetJunctionColors(laneInfo.Junctions);
 
                         // Create the brush for drawing the line
                         Brush brushLineColor;
@@ -1067,7 +1074,7 @@ namespace GitUI
 
                 Brush nodeBrush;
                 bool drawBorder = Settings.BranchBorders;
-                List<Color> nodeColors = getJunctionColors(row.Node.Ancestors);
+                List<Color> nodeColors = GetJunctionColors(row.Node.Ancestors);
                 if (nodeColors.Count == 1)
                 {
                     nodeBrush = new SolidBrush(nodeColors[0]);
@@ -1124,7 +1131,7 @@ namespace GitUI
             rowHeight = RowTemplate.Height;
             // Keep an extra page in the cache
             cacheCountMax = Height * 2 / rowHeight + 1;
-            clearDrawCache();
+            ClearDrawCache();
             dataGrid_Scroll(null, null);
         }
 
