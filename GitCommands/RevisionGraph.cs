@@ -53,8 +53,6 @@ namespace GitCommands
 
         private List<GitHead> heads;
 
-        private GitCommandsInstance gitGetGraphCommand;
-
         private enum ReadStep
         {
             Commit,
@@ -91,11 +89,6 @@ namespace GitCommands
         public void Dispose()
         {
             backgroundLoader.Cancel();
-            if (gitGetGraphCommand != null)
-            {
-                gitGetGraphCommand.Kill();
-                gitGetGraphCommand = null;
-            }
         }
 
         public string LogParam = "HEAD --all";//--branches --remotes --tags";
@@ -111,63 +104,67 @@ namespace GitCommands
             }
             else
             {
-                execute();
+                execute(new FixedLoadingTaskState(false));
                 executed();
             }
         }
 
-        private void execute()
+        private void execute(ILoadingTaskState taskState)
         {
-                RevisionCount = 0;
-                heads = GetHeads();
+            RevisionCount = 0;
+            heads = GetHeads();
 
-                string formatString =
-                    /* <COMMIT>       */ COMMIT_BEGIN + "%n" +
-                    /* Hash           */ "%H%n" +
-                    /* Parents        */ "%P%n";
-                if (!ShaOnly)
-                {
-                    formatString +=
-                        /* Tree                    */ "%T%n" +
-                        /* Author Name             */ "%aN%n" +
-                        /* Author Email            */ "%aE%n" +
-                        /* Author Date             */ "%at%n" +
-                        /* Committer Name          */ "%cN%n" +
-                        /* Committer Date          */ "%ct%n" +
-                        /* Commit message encoding */ "%e%n" + //there is a bug: git does not recode commit message when format is given
-                        /* Commit Message          */ "%s";
-                }
+            string formatString =
+                /* <COMMIT>       */ COMMIT_BEGIN + "%n" +
+                /* Hash           */ "%H%n" +
+                /* Parents        */ "%P%n";
+            if (!ShaOnly)
+            {
+                formatString +=
+                    /* Tree                    */ "%T%n" +
+                    /* Author Name             */ "%aN%n" +
+                    /* Author Email            */ "%aE%n" +
+                    /* Author Date             */ "%at%n" +
+                    /* Committer Name          */ "%cN%n" +
+                    /* Committer Date          */ "%ct%n" +
+                    /* Commit message encoding */ "%e%n" + //there is a bug: git does not recode commit message when format is given
+                    /* Commit Message          */ "%s";
+            }
 
-                // NOTE:
-                // when called from FileHistory and FollowRenamesInFileHistory is enabled the "--name-only" argument is set.
-                // the filename is the next line after the commit-format defined above.
+            // NOTE:
+            // when called from FileHistory and FollowRenamesInFileHistory is enabled the "--name-only" argument is set.
+            // the filename is the next line after the commit-format defined above.
 
-                if (Settings.OrderRevisionByDate)
-                {
-                    LogParam = " --date-order " + LogParam;
-                }
-                else
-                {
-                    LogParam = " --topo-order " + LogParam;
-                }
+            if (Settings.OrderRevisionByDate)
+            {
+                LogParam = " --date-order " + LogParam;
+            }
+            else
+            {
+                LogParam = " --topo-order " + LogParam;
+            }
 
-                string arguments = String.Format(CultureInfo.InvariantCulture,
-                    "log -z {2} --pretty=format:\"{1}\" {0}",
-                    LogParam,
-                    formatString,
-                    BranchFilter);
+            string arguments = String.Format(CultureInfo.InvariantCulture,
+                "log -z {2} --pretty=format:\"{1}\" {0}",
+                LogParam,
+                formatString,
+                BranchFilter);
 
-                gitGetGraphCommand = new GitCommandsInstance();
+            using (GitCommandsInstance gitGetGraphCommand = new GitCommandsInstance())
+            {
                 gitGetGraphCommand.StreamOutput = true;
-                gitGetGraphCommand.CollectOutput = false;                
+                gitGetGraphCommand.CollectOutput = false;
                 Encoding LogOutputEncoding = Settings.LogOutputEncoding;
                 gitGetGraphCommand.SetupStartInfoCallback = startInfo =>
                 {
                     startInfo.StandardOutputEncoding = Settings.LosslessEncoding;
                     startInfo.StandardErrorEncoding = Settings.LosslessEncoding;
-                }; 
+                };
 
                 Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arguments);
+                
+                if (taskState.IsCanceled())
+                    return;
 
                 previousFileName = null;
                 if (BeginUpdate != null)
@@ -188,7 +185,9 @@ namespace GitCommands
                             dataReceived(entry);
                         }
                     }
-                } while (line != null);
+                } while (line != null && !taskState.IsCanceled());
+
+            }
         }
 
         private void executed()
@@ -197,7 +196,7 @@ namespace GitCommands
             previousFileName = null;
 
             if (Exited != null)
-                Exited(this, EventArgs.Empty);
+                Exited(this, EventArgs.Empty);            
         }
 
         private List<GitHead> GetHeads()
