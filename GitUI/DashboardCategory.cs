@@ -59,7 +59,7 @@ namespace GitUI
 
                 if (m_repositoryCategory != null && m_repositoryCategory.CategoryType == RepositoryCategoryType.RssFeed)
                 {
-                    AsyncHelpers.DoAsync(
+                    AsyncLoader.DoAsync(
                         () => { m_repositoryCategory.DownloadRssFeed(); return this; },
                         obj => { obj.InitRepositoryCategory(); },
                         ex => { }
