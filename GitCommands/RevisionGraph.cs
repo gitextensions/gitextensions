@@ -16,7 +16,18 @@ namespace GitCommands
     public sealed class RevisionGraph : IDisposable
     {
         public event EventHandler Exited;
-        public event EventHandler Error;
+        public event EventHandler<AsyncErrorEventArgs> Error 
+        {
+            add 
+            {
+                backgroundLoader.LoadingError += value;
+            }
+            
+            remove 
+            {
+                backgroundLoader.LoadingError -= value;
+            }
+        }
         public event EventHandler Updated;
         public event EventHandler BeginUpdate;
         public int RevisionCount { get; set; }
@@ -44,8 +55,6 @@ namespace GitCommands
 
         private GitCommandsInstance gitGetGraphCommand;
 
-        private Thread backgroundThread;
-
         private enum ReadStep
         {
             Commit,
@@ -67,6 +76,8 @@ namespace GitCommands
 
         private GitRevision revision;
 
+        private AsyncLoader backgroundLoader = new AsyncLoader();
+
         public RevisionGraph()
         {
             BackgroundThread = true;
@@ -79,11 +90,7 @@ namespace GitCommands
 
         public void Dispose()
         {
-            if (backgroundThread != null)
-            {
-                backgroundThread.Abort();
-                backgroundThread = null;
-            }
+            backgroundLoader.Cancel();
             if (gitGetGraphCommand != null)
             {
                 gitGetGraphCommand.Kill();
@@ -100,23 +107,17 @@ namespace GitCommands
         {
             if (BackgroundThread)
             {
-                if (backgroundThread != null)
-                {
-                    backgroundThread.Abort();
-                }
-                backgroundThread = new Thread(execute) { IsBackground = true };
-                backgroundThread.Start();
+                backgroundLoader.Load(execute, executed);
             }
             else
             {
                 execute();
+                executed();
             }
         }
 
         private void execute()
         {
-            try
-            {
                 RevisionCount = 0;
                 heads = GetHeads();
 
@@ -188,21 +189,12 @@ namespace GitCommands
                         }
                     }
                 } while (line != null);
-                finishRevision();
-                previousFileName = null;
-            }
-            catch (ThreadAbortException)
-            {
-                //Silently ignore this exception...
-            }
-            catch (Exception ex)
-            {
-                if (Error != null)
-                    Error(this, EventArgs.Empty);
-                ExceptionUtils.ShowException(ex, "Cannot load commit log.");
-                previousFileName = null;
-                return;
-            }
+        }
+
+        private void executed()
+        {
+            finishRevision();
+            previousFileName = null;
 
             if (Exited != null)
                 Exited(this, EventArgs.Empty);
