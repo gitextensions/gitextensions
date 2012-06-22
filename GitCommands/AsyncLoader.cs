@@ -36,14 +36,24 @@ namespace GitCommands
             AsyncLoader loader = new AsyncLoader();
             loader.LoadingError += (object sender, AsyncErrorEventArgs e) => { onError(e.Exception);  };
             loader.Load(doMe, continueWith);
-        }    
-        
-        public void Load(Action loadContent, Action onLoaded)
+        }
+
+        public void Load(Action<ILoadingTaskState> loadContent, Action onLoaded)
         { 
-            Load(() => { loadContent(); return true; }, (b) => onLoaded() );
+            Load((state) => { loadContent(state); return true; }, (b) => onLoaded() );
+        }
+
+        public void Load(Action loadContent, Action onLoaded)
+        {
+            Load(() => { loadContent(); return true; }, (b) => onLoaded());
         }
 
         public void Load<T>(Func<T> loadContent, Action<T> onLoaded)
+        {
+            Load((state) => { return loadContent(); }, onLoaded);
+        }
+
+        public void Load<T>(Func<ILoadingTaskState, T> loadContent, Action<T> onLoaded)
         {
             var newTask = new LoadingTask<T>(_syncContext, loadContent, onLoaded, OnLoadingError);
 
@@ -82,20 +92,20 @@ namespace GitCommands
 
         #region Nested type: LoadingTask
 
-        private sealed class LoadingTask<T> : ILoadingTask
+        private sealed class LoadingTask<T> : ILoadingTask, ILoadingTaskState
         {
-            private readonly Func<T> _loadContent;
+            private readonly Func<ILoadingTaskState, T> _loadContent;
             private readonly Action<Exception> _onError;
             private readonly Action<T> _onLoaded;
             private readonly SynchronizationContext _syncContext;
-            private bool _cancelled;
+            private volatile bool _cancelled;
 
             public LoadingTask()
             {
                 _cancelled = true;
             }
 
-            public LoadingTask(SynchronizationContext syncContext, Func<T> loadContent,
+            public LoadingTask(SynchronizationContext syncContext, Func<ILoadingTaskState, T> loadContent,
                                Action<T> onLoaded, Action<Exception> onError)
             {
                 _syncContext = syncContext;
@@ -111,6 +121,11 @@ namespace GitCommands
                 _cancelled = true;
             }
 
+            public bool IsCanceled()
+            {
+                return _cancelled;
+            }
+
             public void RunAsync()
             {
                 if (_cancelled) return;
@@ -120,7 +135,7 @@ namespace GitCommands
                         try
                         {
                             if (_cancelled) return;
-                            var content = _loadContent();
+                            var content = _loadContent(this);
 
                             if (_cancelled) return;
                             RunOnUiThread(
@@ -175,6 +190,27 @@ namespace GitCommands
         }
 
         public Exception Exception { get; private set; }
+    }
+
+    public interface ILoadingTaskState
+    {
+        bool IsCanceled();
+    }
+
+    public class FixedLoadingTaskState : ILoadingTaskState
+    {
+        private bool canceled;
+
+        public FixedLoadingTaskState(bool canceled)
+        {
+            this.canceled = canceled;
+        }
+
+        public bool IsCanceled()
+        {
+            return canceled;
+        }
+
     }
 
 }
