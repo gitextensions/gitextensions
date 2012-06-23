@@ -13,11 +13,6 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && gitGetUnstagedCommand != null)
-            {
-                gitGetUnstagedCommand.Kill();
-                gitGetUnstagedCommand = null;
-            }
             if (disposing && (components != null))
             {
                 components.Dispose();
@@ -39,7 +34,7 @@
             // timerRefresh
             // 
             this.timerRefresh.Enabled = true;
-            this.timerRefresh.Interval = 1000;
+            this.timerRefresh.Interval = 500;
             this.timerRefresh.Tick += new System.EventHandler(this.timerRefresh_Tick);
 
         }
