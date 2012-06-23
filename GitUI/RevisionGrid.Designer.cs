@@ -14,11 +14,8 @@ namespace GitUI
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && _revisionGraphCommand != null)
-            {
-                _revisionGraphCommand.Dispose();
-                _revisionGraphCommand = null;
-            }
+            if (disposing)
+                DisposeRevisionGraphCommand();                
 
             if (disposing && (components != null))
             {

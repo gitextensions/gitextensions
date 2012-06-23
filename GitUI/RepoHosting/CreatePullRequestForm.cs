@@ -92,7 +92,7 @@ namespace GitUI.RepoHosting
             _remoteBranchesCB.Items.Clear();
             _remoteBranchesCB.Text = _strLoading.Text;
 
-            AsyncHelpers.DoAsync(
+            AsyncLoader.DoAsync(
                 () => _currentHostedRemote.GetHostedRepository().Branches,
                 branches =>
                 {
@@ -120,7 +120,7 @@ namespace GitUI.RepoHosting
 
             _yourBranchesCB.Items.Clear();
 
-            AsyncHelpers.DoAsync(
+            AsyncLoader.DoAsync(
                 () => myRemote.GetHostedRepository().Branches,
                 branches =>
                 {
