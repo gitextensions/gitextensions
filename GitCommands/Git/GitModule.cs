@@ -2024,7 +2024,7 @@ namespace GitCommands
                     else if (line.StartsWith("author-mail"))
                         blameHeader.AuthorMail = GitCommandHelpers.ReEncodeStringFromLossless(line.Substring("author-mail".Length).Trim());
                     else if (line.StartsWith("author-time"))
-                        blameHeader.AuthorTime = (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddSeconds(int.Parse(line.Substring("author-time".Length).Trim()));
+                        blameHeader.AuthorTime = DateTimeUtils.ParseUnixTime(line.Substring("author-time".Length).Trim());
                     else if (line.StartsWith("author-tz"))
                         blameHeader.AuthorTimeZone = line.Substring("author-tz".Length).Trim();
                     else if (line.StartsWith("author"))
@@ -2037,7 +2037,7 @@ namespace GitCommands
                     else if (line.StartsWith("committer-mail"))
                         blameHeader.CommitterMail = line.Substring("committer-mail".Length).Trim();
                     else if (line.StartsWith("committer-time"))
-                        blameHeader.CommitterTime = (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddSeconds(int.Parse(line.Substring("committer-time".Length).Trim()));
+                        blameHeader.CommitterTime = DateTimeUtils.ParseUnixTime(line.Substring("committer-time".Length).Trim());
                     else if (line.StartsWith("committer-tz"))
                         blameHeader.CommitterTimeZone = line.Substring("committer-tz".Length).Trim();
                     else if (line.StartsWith("committer"))
