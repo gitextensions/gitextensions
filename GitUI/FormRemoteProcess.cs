@@ -117,7 +117,7 @@ namespace GitUI
 
                     if (string.IsNullOrEmpty(UrlTryingToConnect))
                     {
-                        remoteUrl = Settings.Module.GetSetting(string.Format("remote.{0}.url", Remote));
+                        remoteUrl = Settings.Module.GetPathSetting(string.Format("remote.{0}.url", Remote));
                         if (string.IsNullOrEmpty(remoteUrl))
                             remoteUrl = Remote;
                     }
@@ -148,7 +148,7 @@ namespace GitUI
                 {
                     if (MessageBox.Show(this, _fingerprintNotRegistredText.Text, _fingerprintNotRegistredTextCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        string remoteUrl = Settings.Module.GetSetting(string.Format("remote.{0}.url", Remote));
+                        string remoteUrl = Settings.Module.GetPathSetting(string.Format("remote.{0}.url", Remote));
 
                         if (string.IsNullOrEmpty(remoteUrl))
                             Settings.Module.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + Remote + "\"");

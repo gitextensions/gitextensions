@@ -68,10 +68,12 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AsyncLoader.cs" />
     <Compile Include="CommitData.cs" />
     <Compile Include="DateTimeUtils.cs" />
     <Compile Include="ExceptionUtils.cs" />
     <Compile Include="FileHelper.cs" />
+    <Compile Include="Git\GitBisectOption.cs" />
     <Compile Include="Git\GitCommand.cs" />
     <Compile Include="Git\EncodingHelper.cs" />
     <Compile Include="Git\GitDeleteBranchCmd.cs" />

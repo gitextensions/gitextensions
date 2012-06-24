@@ -133,7 +133,7 @@ namespace GitUI
                 output = Settings.Module.AddRemote(RemoteName.Text, Url.Text);
 
                 if (checkBoxSepPushUrl.Checked)
-                    Settings.Module.SetSetting(string.Format("remote.{0}.pushurl", RemoteName.Text), comboBoxPushUrl.Text);
+                    Settings.Module.SetPathSetting(string.Format("remote.{0}.pushurl", RemoteName.Text), comboBoxPushUrl.Text);
 
                 if (MessageBox.Show(this, _questionAutoPullBehaviour.Text, _questionAutoPullBehaviourCaption.Text,
                     MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -156,10 +156,10 @@ namespace GitUI
                     output = Settings.Module.RenameRemote(_remote, RemoteName.Text);
                 }
 
-                Settings.Module.SetSetting(string.Format("remote.{0}.url", RemoteName.Text), Url.Text);
+                Settings.Module.SetPathSetting(string.Format("remote.{0}.url", RemoteName.Text), Url.Text);
                 Settings.Module.SetPathSetting(string.Format("remote.{0}.puttykeyfile", RemoteName.Text), PuttySshKey.Text);
                 if (checkBoxSepPushUrl.Checked)
-                    Settings.Module.SetSetting(string.Format("remote.{0}.pushurl", RemoteName.Text), comboBoxPushUrl.Text);
+                    Settings.Module.SetPathSetting(string.Format("remote.{0}.pushurl", RemoteName.Text), comboBoxPushUrl.Text);
                 else
                     Settings.Module.UnsetSetting(string.Format("remote.{0}.pushurl", RemoteName.Text));
             }
@@ -302,7 +302,7 @@ namespace GitUI
             if (string.IsNullOrEmpty(head.TrackingRemote) || string.IsNullOrEmpty(currentSelectedRemote))
                 return;
 
-            var remoteUrl = Settings.Module.GetSetting(string.Format("remote.{0}.url", currentSelectedRemote));
+            var remoteUrl = Settings.Module.GetPathSetting(string.Format("remote.{0}.url", currentSelectedRemote));
 
             if (string.IsNullOrEmpty(remoteUrl))
                 return;
@@ -353,9 +353,9 @@ namespace GitUI
             _remote = (string)Remotes.SelectedItem;
             RemoteName.Text = _remote;
 
-            Url.Text = Settings.Module.GetSetting(string.Format("remote.{0}.url", _remote));
+            Url.Text = Settings.Module.GetPathSetting(string.Format("remote.{0}.url", _remote));
 
-            comboBoxPushUrl.Text = Settings.Module.GetSetting(string.Format("remote.{0}.pushurl", _remote));
+            comboBoxPushUrl.Text = Settings.Module.GetPathSetting(string.Format("remote.{0}.pushurl", _remote));
             if (string.IsNullOrEmpty(comboBoxPushUrl.Text))
                 checkBoxSepPushUrl.Checked = false;
             else
