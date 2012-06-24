@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git;
 using GitUI.Hotkey;
 using GitUI.Script;
 using GitUI.Tag;
@@ -2022,19 +2023,25 @@ namespace GitUI
 
         private void markRevisionAsBadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Revisions.RowCount <= LastRow || LastRow < 0)
-                return;
-
-            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(false, GetRevision(LastRow).Guid), false).ShowDialog(this);
-            RefreshRevisions();
+            ContinueBisect(GitBisectOption.Bad);
         }
 
         private void markRevisionAsGoodToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ContinueBisect(GitBisectOption.Good);
+        }
+
+        private void bisectSkipRevisionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ContinueBisect(GitBisectOption.Skip);
+        }
+
+        private void ContinueBisect(GitBisectOption bisectOption)
+        {
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
 
-            new FormProcess(GitCommandHelpers.MarkRevisionBisectCmd(true, GetRevision(LastRow).Guid), false).ShowDialog(this);
+            FormProcess.ShowDialog(this, GitCommandHelpers.ContinueBisectCmd(bisectOption, GetRevision(LastRow).Guid), false);
             RefreshRevisions();
         }
 
@@ -2350,7 +2357,6 @@ namespace GitUI
                     item.DropDown.Items[0].PerformClick();
             }
         }
-
     }
 
     public class FilterBranchHelper
