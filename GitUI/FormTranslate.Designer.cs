@@ -439,14 +439,17 @@ namespace GitUI
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
+
             this.splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.translateGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.translateItemBindingSource)).EndInit();
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
+
             this.splitContainer3.ResumeLayout(false);
             this.splitContainer4.Panel1.ResumeLayout(false);
             this.splitContainer4.Panel2.ResumeLayout(false);
+
             this.splitContainer4.ResumeLayout(false);
             this.ResumeLayout(false);
 

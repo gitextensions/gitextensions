@@ -43,7 +43,9 @@
             panel2 = new System.Windows.Forms.Panel();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
+#if !__MonoCS__ //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+#endif
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -177,7 +179,9 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
+#if !__MonoCS__ //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+#endif
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 

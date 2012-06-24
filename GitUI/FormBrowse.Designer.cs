@@ -208,25 +208,33 @@ namespace GitUI
             this.menuStrip1 = new GitUI.MenuStripEx();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+#if !__MonoCS__ //waiting for mono 2.12					
             ((System.ComponentModel.ISupportInitialize)(this.toolPanel)).BeginInit();
+#endif
             this.toolPanel.Panel1.SuspendLayout();
             this.toolPanel.Panel2.SuspendLayout();
             this.toolPanel.SuspendLayout();
             this.ToolStrip.SuspendLayout();
+#if !__MonoCS__ //waiting for mono 2.12					
             ((System.ComponentModel.ISupportInitialize)(this.MainSplitContainer)).BeginInit();
+#endif
             this.MainSplitContainer.Panel1.SuspendLayout();
             this.MainSplitContainer.Panel2.SuspendLayout();
             this.MainSplitContainer.SuspendLayout();
             this.CommitInfoTabControl.SuspendLayout();
             this.CommitInfo.SuspendLayout();
             this.Tree.SuspendLayout();
+#if !__MonoCS__ //waiting for mono 2.12					
             ((System.ComponentModel.ISupportInitialize)(this.FileTreeSplitContainer)).BeginInit();
+#endif
             this.FileTreeSplitContainer.Panel1.SuspendLayout();
             this.FileTreeSplitContainer.Panel2.SuspendLayout();
             this.FileTreeSplitContainer.SuspendLayout();
             this.FileTreeContextMenu.SuspendLayout();
             this.Diff.SuspendLayout();
+#if !__MonoCS__ //waiting for mono 2.12					
             ((System.ComponentModel.ISupportInitialize)(this.DiffSplitContainer)).BeginInit();
+#endif
             this.DiffSplitContainer.Panel1.SuspendLayout();
             this.DiffSplitContainer.Panel2.SuspendLayout();
             this.DiffSplitContainer.SuspendLayout();
@@ -1764,26 +1772,34 @@ namespace GitUI
             this.toolPanel.Panel1.ResumeLayout(false);
             this.toolPanel.Panel1.PerformLayout();
             this.toolPanel.Panel2.ResumeLayout(false);
+#if !__MonoCS__ //waiting for mono 2.12					
             ((System.ComponentModel.ISupportInitialize)(this.toolPanel)).EndInit();
+#endif
             this.toolPanel.ResumeLayout(false);
             this.ToolStrip.ResumeLayout(false);
             this.ToolStrip.PerformLayout();
             this.MainSplitContainer.Panel1.ResumeLayout(false);
             this.MainSplitContainer.Panel2.ResumeLayout(false);
+#if !__MonoCS__ //waiting for mono 2.12					
             ((System.ComponentModel.ISupportInitialize)(this.MainSplitContainer)).EndInit();
+#endif
             this.MainSplitContainer.ResumeLayout(false);
             this.CommitInfoTabControl.ResumeLayout(false);
             this.CommitInfo.ResumeLayout(false);
             this.Tree.ResumeLayout(false);
             this.FileTreeSplitContainer.Panel1.ResumeLayout(false);
             this.FileTreeSplitContainer.Panel2.ResumeLayout(false);
+#if !__MonoCS__ //waiting for mono 2.12					
             ((System.ComponentModel.ISupportInitialize)(this.FileTreeSplitContainer)).EndInit();
+#endif
             this.FileTreeSplitContainer.ResumeLayout(false);
             this.FileTreeContextMenu.ResumeLayout(false);
             this.Diff.ResumeLayout(false);
             this.DiffSplitContainer.Panel1.ResumeLayout(false);
             this.DiffSplitContainer.Panel2.ResumeLayout(false);
+#if !__MonoCS__ //waiting for mono 2.12					
             ((System.ComponentModel.ISupportInitialize)(this.DiffSplitContainer)).EndInit();
+#endif
             this.DiffSplitContainer.ResumeLayout(false);
             this.DiffContextMenu.ResumeLayout(false);
             this.TreeContextMenu.ResumeLayout(false);

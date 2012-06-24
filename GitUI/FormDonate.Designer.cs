@@ -33,11 +33,15 @@ namespace GitUI
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+#if !__MonoCS__ //waiting for mono 2.12					
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+#endif
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+#if !__MonoCS__ //waiting for mono 2.12					
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+#endif
             this.SuspendLayout();
             // 
             // richTextBox1
@@ -90,9 +94,13 @@ namespace GitUI
             this.Text = "Donate";
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+#if !__MonoCS__ //waiting for mono 2.12					
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+#endif
             this.splitContainer1.ResumeLayout(false);
+#if !__MonoCS__ //waiting for mono 2.12					
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+#endif
             this.ResumeLayout(false);
 
         }

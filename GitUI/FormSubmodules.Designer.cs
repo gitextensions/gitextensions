@@ -391,11 +391,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.gitSubmoduleBindingSource)).EndInit();
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
+
             this.splitContainer3.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.splitContainer4.Panel2.ResumeLayout(false);
+
             this.splitContainer4.ResumeLayout(false);
             this.ResumeLayout(false);
 
