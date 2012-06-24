@@ -287,7 +287,9 @@ namespace GitUI
             this.contextMenuStrip_SplitButton.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
+#if !__MonoCS__ //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+#endif
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -3254,7 +3256,9 @@ namespace GitUI
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+#if !__MonoCS__ //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+#endif
             this.splitContainer1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tpChecklist.ResumeLayout(false);

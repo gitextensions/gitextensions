@@ -60,7 +60,9 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_Limit)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
+#if !__MonoCS__ //waiting for mono 2.12					
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+#endif
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -408,7 +410,9 @@
             this.tableLayoutPanel1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+#if !__MonoCS__ //waiting for mono 2.12					
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+#endif
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 

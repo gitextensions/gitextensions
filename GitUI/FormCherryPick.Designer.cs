@@ -36,11 +36,15 @@
             this.autoParent = new System.Windows.Forms.CheckBox();
             this.AutoCommit = new System.Windows.Forms.CheckBox();
             this.CherryPick = new System.Windows.Forms.Button();
+#if !__MonoCS__ //waiting for mono 2.12					
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+#endif
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+#if !__MonoCS__ //waiting for mono 2.12					
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+#endif
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -174,12 +178,16 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
+#if !__MonoCS__ //waiting for mono 2.12					
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+#endif
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
+#if !__MonoCS__ //waiting for mono 2.12					
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+#endif
             this.splitContainer2.ResumeLayout(false);
             this.ResumeLayout(false);
 

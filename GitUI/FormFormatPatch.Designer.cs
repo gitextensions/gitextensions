@@ -47,11 +47,15 @@ namespace GitUI
             this.CurrentBranch = new System.Windows.Forms.Label();
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
+#if !__MonoCS__ //waiting for mono 2.12					
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+#endif
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+#if !__MonoCS__ //waiting for mono 2.12					
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+#endif
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -271,12 +275,16 @@ namespace GitUI
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
+#if !__MonoCS__ //waiting for mono 2.12					
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+#endif
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.Panel2.PerformLayout();
+#if !__MonoCS__ //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+#endif
             this.splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
