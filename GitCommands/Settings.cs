@@ -976,14 +976,14 @@ namespace GitCommands
             { }
         }
 
-        public static bool? _dashboardShowCurrentBranch;
+        private static bool? _dashboardShowCurrentBranch;
         public static bool DashboardShowCurrentBranch
         {
             get { return SafeGet("dashboardshowcurrentbranch", true, ref _dashboardShowCurrentBranch); }
             set { SafeSet("dashboardshowcurrentbranch", value, ref _dashboardShowCurrentBranch); }
         }
 
-        public static string _ownScripts;
+        private static string _ownScripts;
         public static string ownScripts
         {
             get { return SafeGet("ownScripts", "", ref _ownScripts); }
