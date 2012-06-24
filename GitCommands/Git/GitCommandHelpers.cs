@@ -761,61 +761,54 @@ namespace GitCommands
 
             //Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)
             var files = trimmedStatus.Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
-            try
+            for (int n = 0; n < files.Length; n++)
             {
-                for (int n = 0; n < files.Length; n++)
+                if (string.IsNullOrEmpty(files[n]))
+                    continue;
+
+                int splitIndex = files[n].IndexOfAny(new char[] { '\0', '\t', ' ' }, 1);
+
+                string status = string.Empty;
+                string fileName = string.Empty;
+
+                if (splitIndex < 0)
                 {
-                    if (string.IsNullOrEmpty(files[n]))
-                        continue;
-
-                    int splitIndex = files[n].IndexOfAny(new char[] { '\0', '\t', ' ' }, 1);
-
-                    string status = string.Empty;
-                    string fileName = string.Empty;
-
-                    if (splitIndex < 0)
-                    {
-                        status = files[n];
-                        fileName = files[n + 1];
-                        n++;
-                    }
-                    else
-                    {
-                        status = files[n].Substring(0, splitIndex);
-                        fileName = files[n].Substring(splitIndex);
-                    }
-
-                    char x = status[0];
-                    char y = status.Length > 1 ? status[1] : ' ';
-
-                    GitItemStatus gitItemStatus = null;
-
-                    if (x != '?' && x != '!')
-                    {
-                        n = GitItemStatusFromStatusCharacter(fromDiff, files, n, status, fileName, x, out gitItemStatus);
-                        if (gitItemStatus != null)
-                        {
-                            gitItemStatus.IsStaged = true;
-                            if (Submodules.Contains(gitItemStatus.Name))
-                                gitItemStatus.IsSubmodule = true;
-                            diffFiles.Add(gitItemStatus);
-                        }
-                    }
-
-                    if (fromDiff)
-                        continue;
-                    n = GitItemStatusFromStatusCharacter(false, files, n, status, fileName, y, out gitItemStatus);
-                    if (gitItemStatus == null)
-                        continue;
-                    gitItemStatus.IsStaged = false;
-                    if (Submodules.Contains(gitItemStatus.Name))
-                        gitItemStatus.IsSubmodule = true;
-                    diffFiles.Add(gitItemStatus);
+                    status = files[n];
+                    fileName = files[n + 1];
+                    n++;
                 }
-            }
-            catch (IndexOutOfRangeException)
-            {
-                Debug.WriteLine("Git status incorrect data");
+                else
+                {
+                    status = files[n].Substring(0, splitIndex);
+                    fileName = files[n].Substring(splitIndex);
+                }
+
+                char x = status[0];
+                char y = status.Length > 1 ? status[1] : ' ';
+
+                GitItemStatus gitItemStatus = null;
+
+                if (x != '?' && x != '!')
+                {
+                    n = GitItemStatusFromStatusCharacter(fromDiff, files, n, status, fileName, x, out gitItemStatus);
+                    if (gitItemStatus != null)
+                    {
+                        gitItemStatus.IsStaged = true;
+                        if (Submodules.Contains(gitItemStatus.Name))
+                            gitItemStatus.IsSubmodule = true;
+                        diffFiles.Add(gitItemStatus);
+                    }
+                }
+
+                if (fromDiff)
+                    continue;
+                n = GitItemStatusFromStatusCharacter(false, files, n, status, fileName, y, out gitItemStatus);
+                if (gitItemStatus == null)
+                    continue;
+                gitItemStatus.IsStaged = false;
+                if (Submodules.Contains(gitItemStatus.Name))
+                    gitItemStatus.IsSubmodule = true;
+                diffFiles.Add(gitItemStatus);
             }
 
             return diffFiles;
