@@ -36,7 +36,7 @@ namespace GitUI
             }
 
             Cursor.Current = Cursors.WaitCursor;
-            var addSubmoduleCmd = GitCommandHelpers.AddSubmoduleCmd(Directory.Text, LocalPath.Text, Branch.Text);
+            var addSubmoduleCmd = GitCommandHelpers.AddSubmoduleCmd(Directory.Text, LocalPath.Text, Branch.Text, chkForce.Checked);
             using (var frm = new FormProcess(addSubmoduleCmd)) frm.ShowDialog(this);
 
             Close();
