@@ -1568,7 +1568,7 @@ namespace GitCommands
             if (!to.IsNullOrEmpty())
                 commitRange = "\"" + to + "\"";
             if (!from.IsNullOrEmpty())
-                commitRange = commitRange.Join(" ", "\"" + from + "\"");
+                commitRange = string.Join(" ", commitRange, "\"" + from + "\"");
 
             if (Settings.UsePatienceDiffAlgorithm)
                 extraDiffArguments = string.Concat(extraDiffArguments, " --patience");
@@ -2194,7 +2194,7 @@ namespace GitCommands
         public string OpenWithDifftool(string filename, string revision1, string revision2, string extraDiffArguments)
         {
             var output = "";
-            string args = extraDiffArguments.Join(" ", revision2).Join(" ", revision1).Join(" ", "-- \"" + filename + "\"");
+            string args = string.Join(" ", extraDiffArguments, revision2, revision1, "-- \"" + filename + "\"");
             if (GitCommandHelpers.VersionInUse.GuiDiffToolExist)
                 RunCmdAsync(Settings.GitCommand,
                             "difftool --gui --no-prompt " + args);

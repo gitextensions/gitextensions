@@ -23,8 +23,8 @@ namespace GitImpact
             if (string.IsNullOrEmpty(gitUiCommands.GitWorkingDir))
                 return false;
 
-            FormImpact form = new FormImpact();
-            form.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+            using (FormImpact form = new FormImpact())
+                form.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
             return false;
         }
 

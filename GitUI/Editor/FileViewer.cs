@@ -840,10 +840,12 @@ namespace GitUI.Editor
 
         private void goToLineToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormGoToLine formGoToLine = new FormGoToLine();
-            formGoToLine.SetMaxLineNumber(_internalFileViewer.TotalNumberOfLines);
-            if (formGoToLine.ShowDialog(this) == DialogResult.OK)            
-                _internalFileViewer.GoToLine(formGoToLine.GetLineNumber() - 1);
+            using (FormGoToLine formGoToLine = new FormGoToLine())
+            {
+                formGoToLine.SetMaxLineNumber(_internalFileViewer.TotalNumberOfLines);
+                if (formGoToLine.ShowDialog(this) == DialogResult.OK)
+                    _internalFileViewer.GoToLine(formGoToLine.GetLineNumber() - 1);
+            }
         }
     }
 }

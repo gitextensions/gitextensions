@@ -76,7 +76,7 @@ namespace GitUI
                 {
                     MessageBox.Show(this, _noneParentSelectedText.Text, _noneParentSelectedTextCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     CanExecute = false;
-                }                  
+                }
                 else
                 {
                     argumentsList.Add("-m " + (ParentsList.SelectedItems[0].Index + 1));
@@ -88,10 +88,10 @@ namespace GitUI
             }
             if (CanExecute)
             {
-                new FormProcess(GitCommandHelpers.CherryPickCmd(Revision.Guid, AutoCommit.Checked, string.Join(" ", argumentsList.ToArray()))).ShowDialog(this);
+                using (var frm = new FormProcess(GitCommandHelpers.CherryPickCmd(Revision.Guid, AutoCommit.Checked, string.Join(" ", argumentsList.ToArray())))) frm.ShowDialog(this);
                 MergeConflictHandler.HandleMergeConflicts(this);
                 Close();
-            }            
+            }
         }
     }
 }

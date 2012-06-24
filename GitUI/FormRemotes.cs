@@ -21,19 +21,19 @@ namespace GitUI
         private readonly TranslationString _questionAutoPullBehaviourCaption =
             new TranslationString("New remote");
 
-        private readonly TranslationString _warningValidRemote = 
+        private readonly TranslationString _warningValidRemote =
             new TranslationString("You need to configure a valid url for this remote");
-        
+
         private readonly TranslationString _warningValidRemoteCaption =
             new TranslationString("Url needed");
 
         private readonly TranslationString _hintDelete =
             new TranslationString("Delete");
 
-        private readonly TranslationString _questionDeleteRemote = 
+        private readonly TranslationString _questionDeleteRemote =
             new TranslationString("Are you sure you want to delete this remote?");
-        
-        private readonly TranslationString _questionDeleteRemoteCaption = 
+
+        private readonly TranslationString _questionDeleteRemoteCaption =
             new TranslationString("Delete");
 
         private readonly TranslationString _sshKeyOpenFilter =
@@ -64,7 +64,7 @@ namespace GitUI
 
         private void RemoteBranchesDataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-            MessageBox.Show(this, 
+            MessageBox.Show(this,
                 string.Format(_remoteBranchDataError.Text, RemoteBranches.Rows[e.RowIndex].Cells[0].Value,
                     RemoteBranches.Columns[e.ColumnIndex].HeaderText));
 
@@ -74,8 +74,8 @@ namespace GitUI
         private void Initialize()
         {
             FillUrlDropDown();
-            FillPushUrlDropDown(); 
-            
+            FillPushUrlDropDown();
+
             Remotes.DataSource = Settings.Module.GetRemotes();
 
             var heads = Settings.Module.GetHeads(false, true);
@@ -100,16 +100,20 @@ namespace GitUI
 
         private void BrowseClick(object sender, EventArgs e)
         {
-            var dialog = new FolderBrowserDialog();
-            if (dialog.ShowDialog(this) == DialogResult.OK)
-                Url.Text = dialog.SelectedPath;
+            using (var dialog = new FolderBrowserDialog())
+            {
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                    Url.Text = dialog.SelectedPath;
+            }
         }
 
         private void buttonBrowsePushUrl_Click(object sender, EventArgs e)
         {
-            var dialog = new FolderBrowserDialog();
-            if (dialog.ShowDialog(this) == DialogResult.OK)
-                comboBoxPushUrl.Text = dialog.SelectedPath;
+            using (var dialog = new FolderBrowserDialog())
+            {
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                    comboBoxPushUrl.Text = dialog.SelectedPath;
+            }
 
         }
 
@@ -138,11 +142,11 @@ namespace GitUI
 
                     if (!string.IsNullOrEmpty(remoteUrl))
                     {
-                        new FormRemoteProcess("remote update").ShowDialog(this);
+                        using (var frm = new FormRemoteProcess("remote update")) frm.ShowDialog(this);
                         ConfigureRemotes();
                     }
                     else
-                        MessageBox.Show(this, _warningValidRemote.Text,_warningValidRemoteCaption.Text);
+                        MessageBox.Show(this, _warningValidRemote.Text, _warningValidRemoteCaption.Text);
                 }
             }
             else
@@ -213,15 +217,17 @@ namespace GitUI
 
         private void SshBrowseClick(object sender, EventArgs e)
         {
-            var dialog =
+            using (var dialog =
                 new OpenFileDialog
                     {
                         Filter = _sshKeyOpenFilter.Text + "|*.ppk",
                         InitialDirectory = ".",
                         Title = _sshKeyOpenCaption.Text
-                    };
-            if (dialog.ShowDialog(this) == DialogResult.OK)
-                PuttySshKey.Text = dialog.FileName;
+                    })
+            {
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                    PuttySshKey.Text = dialog.FileName;
+            }
         }
 
         private void LoadSshKeyClick(object sender, EventArgs e)
@@ -252,7 +258,7 @@ namespace GitUI
 
         private void PruneClick(object sender, EventArgs e)
         {
-            new FormRemoteProcess("remote prune " + _remote).ShowDialog(this);
+            using (var frm = new FormRemoteProcess("remote prune " + _remote)) frm.ShowDialog(this);
         }
 
         private void RemoteBranchesSelectionChanged(object sender, EventArgs e)
@@ -361,7 +367,7 @@ namespace GitUI
 
         private void UpdateBranchClick(object sender, EventArgs e)
         {
-            new FormRemoteProcess("remote update").ShowDialog(this);
+            using (var frm = new FormRemoteProcess("remote update")) frm.ShowDialog(this);
         }
 
         private void FormRemotes_FormClosing(object sender, FormClosingEventArgs e)
@@ -372,7 +378,7 @@ namespace GitUI
         private void checkBoxSepPushUrl_CheckedChanged(object sender, EventArgs e)
         {
             ShowSeperatePushUrl(checkBoxSepPushUrl.Checked);
-    }
+        }
 
         private void ShowSeperatePushUrl(bool visible)
         {

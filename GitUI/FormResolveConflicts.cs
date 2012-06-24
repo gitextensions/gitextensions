@@ -71,7 +71,7 @@ namespace GitUI
         private readonly TranslationString _allFilesFilter =
             new TranslationString("All files (*.*)");
         #endregion
-        
+
         public FormResolveConflicts()
         {
             InitializeComponent(); Translate();
@@ -505,17 +505,19 @@ namespace GitUI
                                             GetLocalSideString(),
                                             GetRemoteSideString());
 
-            var frm = new FormModifiedDeletedCreated(string.Format(chooseLocalButtonText.Text + " ({0})", GetLocalSideString()),
+            using (var frm = new FormModifiedDeletedCreated(string.Format(chooseLocalButtonText.Text + " ({0})", GetLocalSideString()),
                                                                             string.Format(chooseRemoteButtonText.Text + " ({0})", GetRemoteSideString()),
                                                                             keepBaseButtonText.Text,
-                                                                            caption);
-            frm.ShowDialog(this);
-            if (frm.KeepBase) //base
-                Settings.Module.HandleConflictSelectBase(GetFileName());
-            if (frm.KeepLocal) //local
-                Settings.Module.HandleConflictSelectLocal(GetFileName());
-            if (frm.KeepRemote) //remote
-                Settings.Module.HandleConflictSelectRemote(GetFileName());
+                                                                            caption))
+            {
+                frm.ShowDialog(this);
+                if (frm.KeepBase) //base
+                    Settings.Module.HandleConflictSelectBase(GetFileName());
+                if (frm.KeepLocal) //local
+                    Settings.Module.HandleConflictSelectLocal(GetFileName());
+                if (frm.KeepRemote) //remote
+                    Settings.Module.HandleConflictSelectRemote(GetFileName());
+            }
         }
 
         private bool CheckForBaseRevision(string filename)
@@ -527,17 +529,19 @@ namespace GitUI
                                                 GetLocalSideString(),
                                                 GetRemoteSideString());
 
-                var frm = new FormModifiedDeletedCreated(string.Format(chooseLocalButtonText.Text + " ({0})", GetLocalSideString()),
+                using (var frm = new FormModifiedDeletedCreated(string.Format(chooseLocalButtonText.Text + " ({0})", GetLocalSideString()),
                                                                                 string.Format(chooseRemoteButtonText.Text + " ({0})", GetRemoteSideString()),
                                                                                 deleteFileButtonText.Text,
-                                                                                caption);
-                frm.ShowDialog(this);
-                if (frm.KeepBase) //delete
-                    Settings.Module.RunGitCmd("rm -- \"" + filename + "\"");
-                if (frm.KeepLocal) //local
-                    Settings.Module.HandleConflictSelectLocal(GetFileName());
-                if (frm.KeepRemote) //remote
-                    Settings.Module.HandleConflictSelectRemote(GetFileName());
+                                                                                caption))
+                {
+                    frm.ShowDialog(this);
+                    if (frm.KeepBase) //delete
+                        Settings.Module.RunGitCmd("rm -- \"" + filename + "\"");
+                    if (frm.KeepLocal) //local
+                        Settings.Module.HandleConflictSelectLocal(GetFileName());
+                    if (frm.KeepRemote) //remote
+                        Settings.Module.HandleConflictSelectRemote(GetFileName());
+                }
                 return false;
             }
             return true;
@@ -552,17 +556,19 @@ namespace GitUI
                                                 GetLocalSideString(),
                                                 GetRemoteSideString());
 
-                var frm = new FormModifiedDeletedCreated(string.Format(deleteFileButtonText.Text + " ({0})", GetLocalSideString()),
+                using (var frm = new FormModifiedDeletedCreated(string.Format(deleteFileButtonText.Text + " ({0})", GetLocalSideString()),
                                                                                 string.Format(keepModifiedButtonText.Text + " ({0})", GetRemoteSideString()),
                                                                                 keepBaseButtonText.Text,
-                                                                                caption);
-                frm.ShowDialog(this);
-                if (frm.KeepBase) //base
-                    Settings.Module.HandleConflictSelectBase(GetFileName());
-                if (frm.KeepLocal) //delete
-                    Settings.Module.RunGitCmd("rm -- \"" + filename + "\"");
-                if (frm.KeepRemote) //remote
-                    Settings.Module.HandleConflictSelectRemote(GetFileName());
+                                                                                caption))
+                {
+                    frm.ShowDialog(this);
+                    if (frm.KeepBase) //base
+                        Settings.Module.HandleConflictSelectBase(GetFileName());
+                    if (frm.KeepLocal) //delete
+                        Settings.Module.RunGitCmd("rm -- \"" + filename + "\"");
+                    if (frm.KeepRemote) //remote
+                        Settings.Module.HandleConflictSelectRemote(GetFileName());
+                }
                 return false;
             }
             return true;
@@ -577,17 +583,19 @@ namespace GitUI
                                                 GetLocalSideString(),
                                                 GetRemoteSideString());
 
-                var frm = new FormModifiedDeletedCreated(string.Format(keepModifiedButtonText.Text + " ({0})", GetLocalSideString()),
+                using (var frm = new FormModifiedDeletedCreated(string.Format(keepModifiedButtonText.Text + " ({0})", GetLocalSideString()),
                                                                                 string.Format(deleteFileButtonText.Text + " ({0})", GetRemoteSideString()),
                                                                                 keepBaseButtonText.Text,
-                                                                                caption);
-                frm.ShowDialog(this);
-                if (frm.KeepBase) //base
-                    Settings.Module.HandleConflictSelectBase(GetFileName());
-                if (frm.KeepLocal) //delete
-                    Settings.Module.HandleConflictSelectLocal(GetFileName());
-                if (frm.KeepRemote) //remote
-                    Settings.Module.RunGitCmd("rm -- \"" + filename + "\"");
+                                                                                caption))
+                {
+                    frm.ShowDialog(this);
+                    if (frm.KeepBase) //base
+                        Settings.Module.HandleConflictSelectBase(GetFileName());
+                    if (frm.KeepLocal) //delete
+                        Settings.Module.HandleConflictSelectLocal(GetFileName());
+                    if (frm.KeepRemote) //remote
+                        Settings.Module.RunGitCmd("rm -- \"" + filename + "\"");
+                }
                 return false;
             }
             return true;
@@ -679,19 +687,21 @@ namespace GitUI
             string fileName = GetFileName();
             fileName = GetShortFileName(fileName);
 
-            var fileDialog = new SaveFileDialog
+            using (var fileDialog = new SaveFileDialog
                                  {
                                      FileName = fileName,
                                      InitialDirectory = Settings.WorkingDir + GetDirectoryFromFileName(GetFileName()),
                                      AddExtension = true
-                                 };
-            fileDialog.DefaultExt = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
-            fileDialog.Filter = string.Format(_currentFormatFilter.Text, GitCommandHelpers.GetFileExtension(fileDialog.FileName)) + "|*." +
-                                GitCommandHelpers.GetFileExtension(fileDialog.FileName) + "|" + _allFilesFilter.Text + "|*.*";
-
-            if (fileDialog.ShowDialog(this) == DialogResult.OK)
+                                 })
             {
-                Settings.Module.HandleConflictsSaveSide(GetFileName(), fileDialog.FileName, side);
+                fileDialog.DefaultExt = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
+                fileDialog.Filter = string.Format(_currentFormatFilter.Text, GitCommandHelpers.GetFileExtension(fileDialog.FileName)) + "|*." +
+                                    GitCommandHelpers.GetFileExtension(fileDialog.FileName) + "|" + _allFilesFilter.Text + "|*.*";
+
+                if (fileDialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    Settings.Module.HandleConflictsSaveSide(GetFileName(), fileDialog.FileName, side);
+                }
             }
             Cursor.Current = Cursors.Default;
         }
@@ -742,17 +752,17 @@ namespace GitUI
                 (
                     delegate(FormStatus form)
                     {
-                        form.AddOutput(string.Format(stageFilename.Text, filename));
+                        form.AddMessageLine(string.Format(stageFilename.Text, filename));
                         string output = Settings.Module.RunCmd
                             (
                             Settings.GitCommand, "add -- \"" + filename + "\""
                             );
-                        form.AddOutput(output);
+                        form.AddMessageLine(output);
                         form.Done(string.IsNullOrEmpty(output));
                     }
                 );
-            var process = new FormStatus(processStart, null) { Text = string.Format(stageFilename.Text, filename) };
-            process.ShowDialogOnError(this);
+            using (var process = new FormStatus(processStart, null) { Text = string.Format(stageFilename.Text, filename) })
+                process.ShowDialogOnError(this);
         }
 
 
@@ -778,7 +788,7 @@ namespace GitUI
 
         private void fileHistoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormFileHistory(GetFileName()).ShowDialog(this);
+            using (var frm = new FormFileHistory(GetFileName())) frm.ShowDialog(this);
         }
 
         #region Hotkey commands

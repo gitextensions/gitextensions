@@ -87,12 +87,14 @@ namespace GitUI
 
                 var cloneCmd = GitCommandHelpers.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
                             CentralRepository.Checked, cbIntializeAllSubmodules.Checked, Branches.Text, null);
-                var fromProcess = new FormRemoteProcess(Settings.GitCommand, cloneCmd);
-                fromProcess.SetUrlTryingToConnect(_NO_TRANSLATE_From.Text);
-                fromProcess.ShowDialog(this);
+                using (var fromProcess = new FormRemoteProcess(Settings.GitCommand, cloneCmd))
+                {
+                    fromProcess.SetUrlTryingToConnect(_NO_TRANSLATE_From.Text);
+                    fromProcess.ShowDialog(this);
 
-                if (fromProcess.ErrorOccurred() || Settings.Module.InTheMiddleOfPatch())
-                    return;
+                    if (fromProcess.ErrorOccurred() || Settings.Module.InTheMiddleOfPatch())
+                        return;
+                }
 
                 if (openedFromProtocolHandler && AskIfNewRepositoryShouldBeOpened(dirTo))
                 {
@@ -118,18 +120,22 @@ namespace GitUI
 
         private void FromBrowseClick(object sender, EventArgs e)
         {
-            var dialog = new FolderBrowserDialog { SelectedPath = _NO_TRANSLATE_From.Text };
-            if (dialog.ShowDialog(this) == DialogResult.OK)
-                _NO_TRANSLATE_From.Text = dialog.SelectedPath;
+            using (var dialog = new FolderBrowserDialog { SelectedPath = _NO_TRANSLATE_From.Text })
+            {
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                    _NO_TRANSLATE_From.Text = dialog.SelectedPath;
+            }
 
             FromTextUpdate(sender, e);
         }
 
         private void ToBrowseClick(object sender, EventArgs e)
         {
-            var dialog = new FolderBrowserDialog { SelectedPath = _NO_TRANSLATE_To.Text };
-            if (dialog.ShowDialog(this) == DialogResult.OK)
-                _NO_TRANSLATE_To.Text = dialog.SelectedPath;
+            using (var dialog = new FolderBrowserDialog { SelectedPath = _NO_TRANSLATE_To.Text })
+            {
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                    _NO_TRANSLATE_To.Text = dialog.SelectedPath;
+            }
 
             ToTextUpdate(sender, e);
         }

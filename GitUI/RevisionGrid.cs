@@ -441,7 +441,7 @@ namespace GitUI
 
         public bool SetAndApplyBranchFilter(string filter)
         {
-            if (filter.Equals(_revisionFilter.GetBranchFilter())) 
+            if (filter.Equals(_revisionFilter.GetBranchFilter()))
                 return false;
             if (filter.Equals(""))
             {
@@ -458,7 +458,7 @@ namespace GitUI
             return true;
         }
 
-        public void SetLimit(int limit)         
+        public void SetLimit(int limit)
         {
             _revisionFilter.SetLimit(limit);
         }
@@ -1600,7 +1600,7 @@ namespace GitUI
                 toolStripItem.Click += ToolStripItemClickMergeBranch;
                 mergeBranchDropDown.Items.Add(toolStripItem);
             }
-            
+
 
             foreach (var head in allBranches)
             {
@@ -1701,7 +1701,7 @@ namespace GitUI
             {
                 string args = force ? "-f" : null;
 
-                var command = "checkout".Join(" ", args).Join(" ", string.Format("\"{0}\"", toolStripItem.Text));
+                var command = string.Join(" ", "checkout", args, string.Format("\"{0}\"", toolStripItem.Text));
                 var form = new FormProcess(command);
                 form.ShowDialog(this);
                 needRefresh = true;
@@ -1782,7 +1782,7 @@ namespace GitUI
             if (!GitUICommands.Instance.CheckForDirtyDir(this, out needRefresh, out force))
             {
                 string args = force ? "-f" : null;
-                string cmd = "checkout".Join(" ", args).Join(" ", string.Format("\"{0}\"", GetRevision(LastRow).Guid));
+                string cmd = string.Join(" ", "checkout", args, string.Format("\"{0}\"", GetRevision(LastRow).Guid));
                 new FormProcess(cmd).ShowDialog(this);
                 needRefresh = true;
             }
@@ -1834,8 +1834,8 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
 
-            var frm = new FormCommit(commitKind, GetRevision(LastRow));
-            frm.ShowDialog(this);
+            using(var frm = new FormCommit(commitKind, GetRevision(LastRow))) frm.ShowDialog(this);
+
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
         }
@@ -1857,7 +1857,7 @@ namespace GitUI
 
 
             var span = DateTime.Now - time;
-            
+
             #region Relative time output note
             /*
             To summarise, the output always rounds down the relative time. eg. 2.9 days = "2 days ago"
@@ -2047,7 +2047,7 @@ namespace GitUI
 
         private void stopBisectToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormProcess(GitCommandHelpers.StopBisectCmd()).ShowDialog(this);
+            using (var frm = new FormProcess(GitCommandHelpers.StopBisectCmd())) frm.ShowDialog(this);
             RefreshRevisions();
         }
 
@@ -2386,7 +2386,7 @@ namespace GitUI
             this.remoteToolStripMenuItem.Name = "remoteToolStripMenuItem";
             this.remoteToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
             this.remoteToolStripMenuItem.Text = "Remote";
-        
+
         }
 
         public FilterBranchHelper(ToolStripComboBox toolStripBranches, ToolStripDropDownButton toolStripDropDownButton2, RevisionGrid RevisionGrid)
@@ -2524,7 +2524,7 @@ namespace GitUI
     }
 
 
-    public class FilterRevisionsHelper 
+    public class FilterRevisionsHelper
     {
 
         private ToolStripTextBox _NO_TRANSLATE_toolStripTextBoxFilter;
@@ -2581,7 +2581,7 @@ namespace GitUI
             this.hashToolStripMenuItem.CheckOnClick = true;
             this.hashToolStripMenuItem.Name = "hashToolStripMenuItem";
             this.hashToolStripMenuItem.Size = new System.Drawing.Size(216, 24);
-            this.hashToolStripMenuItem.Text = "Hash";        
+            this.hashToolStripMenuItem.Text = "Hash";
         }
 
         public FilterRevisionsHelper(ToolStripTextBox toolStripTextBoxFilter, ToolStripDropDownButton toolStripDropDownButton1, RevisionGrid RevisionGrid, ToolStripLabel toolStripLabel2, Form form)
@@ -2603,7 +2603,7 @@ namespace GitUI
             this._NO_TRANSLATE_toolStripTextBoxFilter.Leave += this.ToolStripTextBoxFilterLeave;
             this._NO_TRANSLATE_toolStripTextBoxFilter.KeyPress += this.ToolStripTextBoxFilterKeyPress;
 
-        
+
         }
 
         public void SetFilter(string filter)
@@ -2682,9 +2682,10 @@ namespace GitUI
             else
                 commitToolStripMenuItem1.Checked = true;
         }
-        
 
-        public void SetLimit(int limit) {
+
+        public void SetLimit(int limit)
+        {
             _NO_TRANSLATE_RevisionGrid.SetLimit(limit);
         }
 

@@ -23,7 +23,7 @@ namespace FindLargeFiles
             if (!float.TryParse(Settings.GetSetting("Find large files bigger than (Mb)"), out threshold))
                 threshold = 1;
 
-            new FindLargeFilesForm(threshold, gitUiCommands).ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+            using (var frm = new FindLargeFilesForm(threshold, gitUiCommands)) frm.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
             return true;
         }
     }

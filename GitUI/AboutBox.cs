@@ -45,7 +45,8 @@ namespace GitUI
         {
             base.OnLoad(e);
 
-            _NO_TRANSLATE_labelVersionInfo.Text = _NO_TRANSLATE_labelVersionInfo.Text + GitCommands.Settings.GitExtensionsVersionString;
+            _NO_TRANSLATE_labelVersionInfo.Text = string.Format("{0}{1} [.Net {2}]", _NO_TRANSLATE_labelVersionInfo.Text, 
+                GitCommands.Settings.GitExtensionsVersionString, Environment.Version.Major.ToString());
         }
 
         //Contributers list 
@@ -60,9 +61,10 @@ namespace GitUI
             "Rodrigo, John Gietzen, Ralph Haußmann, Rodrigo Fraga, Michael West, David Vierra, Mark Pizzolato, " +
             "Arkadiy Shapkin, Alexander Mueller, marcinmagier, Alexander Puzynia, ferow2k, lynxstv, nitoyon, iamxail, " +
             "Basewq, Edward Brey, Sergey, Nils Fenner, Burim Kameri, Phillip Cohen, Andy Royle, Masanori Tanaka, Alex Ford, Arne Janbu, " +
-            "Dan Rigby, pravic, Linquize, Clinton Daniel, Reto Schoening, mabako";
-        private const string translators = "Gianni Rosa Gallina, Cheng Huang, Floyd Hung, superlongman, rferriz, gor, " + 
-            "xaro, bleis-tift, Ralph Haußmann, Jasper Chien, Arkadiy Shapkin, ferow2k";
+            "Dan Rigby, pravic, Linquize, Clinton Daniel, Reto Schoening, mabako, Tal952, Aviad Pineles, Markus Stein, Marcus Bauer, " +
+            "Nay, Joe Phillips";
+        private const string translators = "Gianni Rosa Gallina, Cheng Huang, Floyd Hung, superlongman, rferriz, gor, " +
+            "xaro, bleis-tift, Ralph Haußmann, Jasper Chien, Arkadiy Shapkin, ferow2k, Thibault D'Archivio";
         private const string designers = "Andréj Telle, Oliver Friedrich";
         private const string other = "";
 
@@ -76,9 +78,11 @@ namespace GitUI
 
         private void _NO_TRANSLATE_thanksToTicker_Click(object sender, EventArgs e)
         {
-            FormContributors formContributors = new FormContributors();
-            formContributors.LoadContributors(coders, translators, designers, other);
-            formContributors.ShowDialog(this);
+            using (FormContributors formContributors = new FormContributors())
+            {
+                formContributors.LoadContributors(coders, translators, designers, other);
+                formContributors.ShowDialog(this);
+            }
         }
     }
 }

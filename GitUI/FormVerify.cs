@@ -54,20 +54,20 @@ namespace GitUI
         {
             var options = GetOptions();
 
-            var process = new FormProcess("fsck-objects --lost-found" + options);
-            process.ShowDialog(this);
+            using (var process = new FormProcess("fsck-objects --lost-found" + options))
+                process.ShowDialog(this);
             UpdateLostObjects();
         }
 
         private void RemoveClick(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, 
+            if (MessageBox.Show(this,
                 _removeDanglingObjectsQuestion.Text,
                 _removeDanglingObjectsCaption.Text,
                 MessageBoxButtons.YesNo) != DialogResult.Yes)
                 return;
 
-            new FormProcess("prune").ShowDialog(this);
+            using (var frm = new FormProcess("prune")) frm.ShowDialog(this);
             UpdateLostObjects();
         }
 
@@ -231,7 +231,7 @@ namespace GitUI
             var currenItem = CurrentItem;
             if (currenItem == null)
                 return;
-            new FormEdit(Settings.Module.ShowSha1(currenItem.Hash)).ShowDialog(this);
+            using (var frm = new FormEdit(Settings.Module.ShowSha1(currenItem.Hash))) frm.ShowDialog(this);
         }
 
         private int CreateLostFoundTags()

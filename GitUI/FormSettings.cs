@@ -193,7 +193,7 @@ namespace GitUI
         private readonly TranslationString _registryKeyGitExtensionsCorrect =
             new TranslationString("GitExtensions is properly registered.");
         #endregion
-        
+
         private Font diffFont;
         private const string GitExtensionsShellExName = "GitExtensionsShellEx32.dll";
         private string IconName = "bug";
@@ -209,7 +209,7 @@ namespace GitUI
             FillEncodings(Global_AppEncoding);
             FillEncodings(Local_FilesEncoding);
             FillEncodings(Local_AppEncoding);
-            
+
             GlobalEditor.Items.AddRange(new Object[] { "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", "notepad++" });
 
             SetCurrentDiffFont(Settings.DiffFont);
@@ -218,6 +218,8 @@ namespace GitUI
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             base.OnClosing(e);
+            if (!e.Cancel)
+                diffFontDialog.Dispose();
             SavePosition("settings");
         }
 
@@ -303,7 +305,7 @@ namespace GitUI
             if (encoding == null)
                 combo.Text = "";
             else
-                combo.Text = encoding.EncodingName;           
+                combo.Text = encoding.EncodingName;
         }
 
         private Encoding ComboToEncoding(ComboBox combo)
@@ -453,12 +455,12 @@ namespace GitUI
 
                 string iconColor = Settings.IconColor.ToLower();
                 DefaultIcon.Checked = iconColor == "default";
-                BlueIcon.Checked    = iconColor == "blue";
-                GreenIcon.Checked   = iconColor == "green";
-                PurpleIcon.Checked  = iconColor == "purple";
-                RedIcon.Checked     = iconColor == "red";
-                YellowIcon.Checked  = iconColor == "yellow";
-                RandomIcon.Checked  = iconColor == "random";
+                BlueIcon.Checked = iconColor == "blue";
+                GreenIcon.Checked = iconColor == "green";
+                PurpleIcon.Checked = iconColor == "purple";
+                RedIcon.Checked = iconColor == "red";
+                YellowIcon.Checked = iconColor == "yellow";
+                RandomIcon.Checked = iconColor == "random";
 
                 IconStyle.Text = Settings.IconStyle;
 
@@ -757,7 +759,7 @@ namespace GitUI
             if (globalAutoCrlfInput.Checked) globalConfig.SetValue("core.autocrlf", "input");
             if (globalAutoCrlfTrue.Checked) globalConfig.SetValue("core.autocrlf", "true");
 
-            Action<Encoding, bool, string> setEncoding = delegate(Encoding e, bool local, string name) 
+            Action<Encoding, bool, string> setEncoding = delegate(Encoding e, bool local, string name)
             {
                 string value = e == null ? "" : e.HeaderName;
                 if (local)
@@ -770,7 +772,7 @@ namespace GitUI
             setEncoding(Settings.GetCommitEncoding(false), false, "i18n.commitEncoding");
             setEncoding(Settings.GetCommitEncoding(true), true, "i18n.commitEncoding");
             setEncoding(Settings.GetFilesEncoding(false), false, "i18n.filesEncoding");
-            setEncoding(Settings.GetFilesEncoding(true), true, "i18n.filesEncoding");            
+            setEncoding(Settings.GetFilesEncoding(true), true, "i18n.filesEncoding");
 
 
             globalConfig.Save();
@@ -1045,7 +1047,7 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(GetGlobalDiffToolFromConfig()))
             {
-                if (MessageBox.Show(this, _noDiffToolConfigured.Text, _noDiffToolConfiguredCaption.Text, 
+                if (MessageBox.Show(this, _noDiffToolConfigured.Text, _noDiffToolConfiguredCaption.Text,
                         MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     SolveDiffToolForKDiff();
@@ -1103,7 +1105,7 @@ namespace GitUI
                 Settings.Module.SetGlobalPathSetting(
                     string.Format("mergetool.{0}.cmd", GetMergeTool()), MergeToolCmd.Text);
             }
-            
+
             if (IsMergeTool("kdiff3") &&
                 string.IsNullOrEmpty(Settings.Module.GetGlobalSetting("mergetool.kdiff3.path")))
             {
@@ -1244,15 +1246,17 @@ namespace GitUI
         {
             SolveGitCommand();
 
-            var browseDialog = new OpenFileDialog
+            using (var browseDialog = new OpenFileDialog
                                    {
                                        FileName = Settings.GitCommand,
                                        Filter = "Git.cmd (git.cmd)|git.cmd|Git.exe (git.exe)|git.exe|Git (git)|git"
-                                   };
-
-            if (browseDialog.ShowDialog(this) == DialogResult.OK)
+                                   })
             {
-                GitPath.Text = browseDialog.FileName;
+
+                if (browseDialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    GitPath.Text = browseDialog.FileName;
+                }
             }
         }
 
@@ -1410,13 +1414,15 @@ namespace GitUI
 
         private static string SelectFile(string initialDirectory, string filter, string prev)
         {
-            var dialog = new OpenFileDialog
+            using (var dialog = new OpenFileDialog
                              {
                                  Filter = filter,
                                  InitialDirectory = initialDirectory,
                                  Title = _selectFile.Text
-                             };
-            return (dialog.ShowDialog() == DialogResult.OK) ? dialog.FileName : prev;
+                             })
+            {
+                return (dialog.ShowDialog() == DialogResult.OK) ? dialog.FileName : prev;
+            }
         }
 
         private void OtherSshBrowse_Click(object sender, EventArgs e)
@@ -1475,11 +1481,13 @@ namespace GitUI
         {
             SolveLinuxToolsDir();
 
-            var browseDialog = new FolderBrowserDialog { SelectedPath = Settings.GitBinDir };
-
-            if (browseDialog.ShowDialog(this) == DialogResult.OK)
+            using (var browseDialog = new FolderBrowserDialog { SelectedPath = Settings.GitBinDir })
             {
-                GitBinPath.Text = browseDialog.SelectedPath;
+
+                if (browseDialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    GitBinPath.Text = browseDialog.SelectedPath;
+                }
             }
         }
 
@@ -1524,112 +1532,132 @@ namespace GitUI
 
         private void ColorAddedLineDiffLabel_Click(object sender, EventArgs e)
         {
-            var colorDialog = new ColorDialog
+            using (var colorDialog = new ColorDialog
                                   {
                                       Color = _NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor
-                                  };
-            colorDialog.ShowDialog(this);
-            _NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor = colorDialog.Color;
-            _NO_TRANSLATE_ColorAddedLineDiffLabel.Text = colorDialog.Color.Name;
+                                  })
+            {
+                colorDialog.ShowDialog(this);
+                _NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor = colorDialog.Color;
+                _NO_TRANSLATE_ColorAddedLineDiffLabel.Text = colorDialog.Color.Name;
+            }
             _NO_TRANSLATE_ColorAddedLineDiffLabel.ForeColor =
                 ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor);
         }
 
         private void _ColorGraphLabel_Click(object sender, EventArgs e)
         {
-            var colorDialog = new ColorDialog { Color = _NO_TRANSLATE_ColorGraphLabel.BackColor };
-            colorDialog.ShowDialog(this);
-            _NO_TRANSLATE_ColorGraphLabel.BackColor = colorDialog.Color;
-            _NO_TRANSLATE_ColorGraphLabel.Text = colorDialog.Color.Name;
+            using (var colorDialog = new ColorDialog { Color = _NO_TRANSLATE_ColorGraphLabel.BackColor })
+            {
+                colorDialog.ShowDialog(this);
+                _NO_TRANSLATE_ColorGraphLabel.BackColor = colorDialog.Color;
+                _NO_TRANSLATE_ColorGraphLabel.Text = colorDialog.Color.Name;
+            }
             _NO_TRANSLATE_ColorGraphLabel.ForeColor =
                 ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor);
         }
 
         private void label28_Click(object sender, EventArgs e)
         {
-            var colorDialog = new ColorDialog
+            using (var colorDialog = new ColorDialog
                                   {
                                       Color = _NO_TRANSLATE_ColorAddedLineLabel.BackColor
-                                  };
-            colorDialog.ShowDialog(this);
-            _NO_TRANSLATE_ColorAddedLineLabel.BackColor = colorDialog.Color;
-            _NO_TRANSLATE_ColorAddedLineLabel.Text = colorDialog.Color.Name;
+                                  })
+            {
+                colorDialog.ShowDialog(this);
+                _NO_TRANSLATE_ColorAddedLineLabel.BackColor = colorDialog.Color;
+                _NO_TRANSLATE_ColorAddedLineLabel.Text = colorDialog.Color.Name;
+            }
             _NO_TRANSLATE_ColorAddedLineLabel.ForeColor =
                 ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorAddedLineLabel.BackColor);
         }
 
         private void ColorRemovedLineDiffLabel_Click(object sender, EventArgs e)
         {
-            var colorDialog = new ColorDialog
+            using (var colorDialog = new ColorDialog
                                   {
                                       Color = _NO_TRANSLATE_ColorRemovedLineDiffLabel.BackColor
-                                  };
-            colorDialog.ShowDialog(this);
-            _NO_TRANSLATE_ColorRemovedLineDiffLabel.BackColor = colorDialog.Color;
-            _NO_TRANSLATE_ColorRemovedLineDiffLabel.Text = colorDialog.Color.Name;
+                                  })
+            {
+                colorDialog.ShowDialog(this);
+                _NO_TRANSLATE_ColorRemovedLineDiffLabel.BackColor = colorDialog.Color;
+                _NO_TRANSLATE_ColorRemovedLineDiffLabel.Text = colorDialog.Color.Name;
+            }
             _NO_TRANSLATE_ColorRemovedLineDiffLabel.ForeColor =
                 ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorRemovedLineDiffLabel.BackColor);
         }
 
         private void ColorRemovedLine_Click(object sender, EventArgs e)
         {
-            var colorDialog = new ColorDialog { Color = _NO_TRANSLATE_ColorRemovedLine.BackColor };
-            colorDialog.ShowDialog(this);
-            _NO_TRANSLATE_ColorRemovedLine.BackColor = colorDialog.Color;
-            _NO_TRANSLATE_ColorRemovedLine.Text = colorDialog.Color.Name;
+            using (var colorDialog = new ColorDialog { Color = _NO_TRANSLATE_ColorRemovedLine.BackColor })
+            {
+                colorDialog.ShowDialog(this);
+                _NO_TRANSLATE_ColorRemovedLine.BackColor = colorDialog.Color;
+                _NO_TRANSLATE_ColorRemovedLine.Text = colorDialog.Color.Name;
+            }
             _NO_TRANSLATE_ColorRemovedLine.ForeColor =
                 ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorRemovedLine.BackColor);
         }
 
         private void ColorSectionLabel_Click(object sender, EventArgs e)
         {
-            var colorDialog = new ColorDialog { Color = _NO_TRANSLATE_ColorSectionLabel.BackColor };
-            colorDialog.ShowDialog(this);
-            _NO_TRANSLATE_ColorSectionLabel.BackColor = colorDialog.Color;
-            _NO_TRANSLATE_ColorSectionLabel.Text = colorDialog.Color.Name;
+            using (var colorDialog = new ColorDialog { Color = _NO_TRANSLATE_ColorSectionLabel.BackColor })
+            {
+                colorDialog.ShowDialog(this);
+                _NO_TRANSLATE_ColorSectionLabel.BackColor = colorDialog.Color;
+                _NO_TRANSLATE_ColorSectionLabel.Text = colorDialog.Color.Name;
+            }
             _NO_TRANSLATE_ColorSectionLabel.ForeColor =
                 ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorSectionLabel.BackColor);
         }
 
         private void ColorTagLabel_Click(object sender, EventArgs e)
         {
-            var colorDialog = new ColorDialog { Color = _NO_TRANSLATE_ColorTagLabel.BackColor };
-            colorDialog.ShowDialog(this);
-            _NO_TRANSLATE_ColorTagLabel.BackColor = colorDialog.Color;
-            _NO_TRANSLATE_ColorTagLabel.Text = colorDialog.Color.Name;
+            using (var colorDialog = new ColorDialog { Color = _NO_TRANSLATE_ColorTagLabel.BackColor })
+            {
+                colorDialog.ShowDialog(this);
+                _NO_TRANSLATE_ColorTagLabel.BackColor = colorDialog.Color;
+                _NO_TRANSLATE_ColorTagLabel.Text = colorDialog.Color.Name;
+            }
             _NO_TRANSLATE_ColorTagLabel.ForeColor =
                 ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorTagLabel.BackColor);
         }
 
         private void ColorBranchLabel_Click(object sender, EventArgs e)
         {
-            var colorDialog = new ColorDialog { Color = _NO_TRANSLATE_ColorBranchLabel.BackColor };
-            colorDialog.ShowDialog(this);
-            _NO_TRANSLATE_ColorBranchLabel.BackColor = colorDialog.Color;
-            _NO_TRANSLATE_ColorBranchLabel.Text = colorDialog.Color.Name;
+            using (var colorDialog = new ColorDialog { Color = _NO_TRANSLATE_ColorBranchLabel.BackColor })
+            {
+                colorDialog.ShowDialog(this);
+                _NO_TRANSLATE_ColorBranchLabel.BackColor = colorDialog.Color;
+                _NO_TRANSLATE_ColorBranchLabel.Text = colorDialog.Color.Name;
+            }
             _NO_TRANSLATE_ColorBranchLabel.ForeColor =
                 ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorBranchLabel.BackColor);
         }
 
         private void ColorRemoteBranchLabel_Click(object sender, EventArgs e)
         {
-            var colorDialog = new ColorDialog
+            using (var colorDialog = new ColorDialog
                                   {
                                       Color = _NO_TRANSLATE_ColorRemoteBranchLabel.BackColor
-                                  };
-            colorDialog.ShowDialog(this);
-            _NO_TRANSLATE_ColorRemoteBranchLabel.BackColor = colorDialog.Color;
-            _NO_TRANSLATE_ColorRemoteBranchLabel.Text = colorDialog.Color.Name;
+                                  })
+            {
+                colorDialog.ShowDialog(this);
+                _NO_TRANSLATE_ColorRemoteBranchLabel.BackColor = colorDialog.Color;
+                _NO_TRANSLATE_ColorRemoteBranchLabel.Text = colorDialog.Color.Name;
+            }
             _NO_TRANSLATE_ColorRemoteBranchLabel.ForeColor =
                 ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorRemoteBranchLabel.BackColor);
         }
 
         private void ColorOtherLabel_Click(object sender, EventArgs e)
         {
-            var colorDialog = new ColorDialog { Color = _NO_TRANSLATE_ColorOtherLabel.BackColor };
-            colorDialog.ShowDialog(this);
-            _NO_TRANSLATE_ColorOtherLabel.BackColor = colorDialog.Color;
-            _NO_TRANSLATE_ColorOtherLabel.Text = colorDialog.Color.Name;
+            using (var colorDialog = new ColorDialog { Color = _NO_TRANSLATE_ColorOtherLabel.BackColor })
+            {
+                colorDialog.ShowDialog(this);
+                _NO_TRANSLATE_ColorOtherLabel.BackColor = colorDialog.Color;
+                _NO_TRANSLATE_ColorOtherLabel.Text = colorDialog.Color.Name;
+            }
             _NO_TRANSLATE_ColorOtherLabel.ForeColor =
                 ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorOtherLabel.BackColor);
         }
@@ -1697,7 +1725,7 @@ namespace GitUI
 
         private void helpTranslate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            new FormTranslate().ShowDialog(this);
+            using (var frm = new FormTranslate()) frm.ShowDialog(this);
         }
 
         private void MulticolorBranches_CheckedChanged(object sender, EventArgs e)
@@ -2147,14 +2175,16 @@ namespace GitUI
 
         private void browseScriptButton_Click(object sender, EventArgs e)
         {
-            var ofd = new OpenFileDialog
+            using (var ofd = new OpenFileDialog
                           {
                               InitialDirectory = "c:\\",
                               Filter = "Executable files (*.exe)|*.exe|All files (*.*)|*.*",
                               RestoreDirectory = true
-                          };
-            if (ofd.ShowDialog(this) == DialogResult.OK)
-                commandTextBox.Text = ofd.FileName;
+                          })
+            {
+                if (ofd.ShowDialog(this) == DialogResult.OK)
+                    commandTextBox.Text = ofd.FileName;
+            }
         }
 
         private void argumentsTextBox_Enter(object sender, EventArgs e)
@@ -2169,7 +2199,7 @@ namespace GitUI
 
         private void translationConfig_Click(object sender, EventArgs e)
         {
-            new FormChooseTranslation().ShowDialog(this);
+            using (var frm = new FormChooseTranslation()) frm.ShowDialog(this);
             Translate();
             Language.Text = Settings.Translation;
             Rescan_Click(null, null);
@@ -2352,7 +2382,7 @@ namespace GitUI
         private void ChangeHomeButton_Click(object sender, EventArgs e)
         {
             Save();
-            new FormFixHome().ShowDialog(this);
+            using (var frm = new FormFixHome()) frm.ShowDialog(this);
             LoadSettings();
             Rescan_Click(null, null);
         }

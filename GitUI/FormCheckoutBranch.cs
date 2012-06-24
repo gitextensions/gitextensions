@@ -51,7 +51,7 @@ namespace GitUI
         {
             Force.Checked = force;
         }
-        
+
         private void Initialize()
         {
             Branches.DisplayMember = "Name";
@@ -92,8 +92,8 @@ namespace GitUI
         {
             if (Remotebranch.Checked)
             {
-                var checkoutRemote = new FormCheckoutRemoteBranch(Branches.Text, Force.Checked);
-                checkoutRemote.ShowDialog(this);
+                using (var checkoutRemote = new FormCheckoutRemoteBranch(Branches.Text, Force.Checked))
+                    checkoutRemote.ShowDialog(this);
             }
             else
             {
@@ -103,10 +103,12 @@ namespace GitUI
                     if (Force.Checked)
                         command += " --force";
                     command += " \"" + Branches.Text + "\"";
-                    var form = new FormProcess(command);
-                    form.ShowDialog(this);
-                    if (!form.ErrorOccurred())
-                        Close();
+                    using (var form = new FormProcess(command))
+                    {
+                        form.ShowDialog(this);
+                        if (!form.ErrorOccurred())
+                            Close();
+                    }
                 }
                 catch (Exception ex)
                 {

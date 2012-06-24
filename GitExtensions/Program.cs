@@ -19,7 +19,7 @@ namespace GitExtensions
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            
+
             string[] args = Environment.GetCommandLineArgs();
             FormSplash.ShowSplash();
             Application.DoEvents();
@@ -89,7 +89,7 @@ namespace GitExtensions
                 //    Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
             }
 
-            if (args.Length <= 1 && string.IsNullOrEmpty(Settings.WorkingDir) && Settings.StartWithRecentWorkingDir) 
+            if (args.Length <= 1 && string.IsNullOrEmpty(Settings.WorkingDir) && Settings.StartWithRecentWorkingDir)
             {
                 if (GitModule.ValidWorkingDir(Settings.RecentWorkingDir))
                     Settings.WorkingDir = Settings.RecentWorkingDir;
@@ -125,7 +125,7 @@ namespace GitExtensions
 
             if (args.Length <= 1)
                 return;
-            
+
             if (args[1].Equals("blame") && args.Length <= 2)
             {
                 MessageBox.Show("Cannot open blame, there is no file selected.", "Blame");
@@ -169,7 +169,7 @@ namespace GitExtensions
                     GitUICommands.Instance.StartBrowseDialog(GetParameterOrEmptyStringAsDefault(args, "-filter"));
                     return;
                 case "cleanup":
-                    new FormCleanupRepository().ShowDialog();
+                    using (var frm = new FormCleanupRepository()) frm.ShowDialog();
                     return;
                 case "add":
                 case "addfiles":
@@ -419,9 +419,9 @@ namespace GitExtensions
                 {
                     return args[2].Replace(paramName + "=", "");
 
-                }                    
+                }
             }
-                
+
             return string.Empty;
         }
     }

@@ -15,13 +15,13 @@ namespace GitUI
         #region Translation
         private readonly TranslationString _moveToCategory =
             new TranslationString("Move to category");
-        private readonly TranslationString _moveCategoryUp = 
+        private readonly TranslationString _moveCategoryUp =
             new TranslationString("Move up");
         private readonly TranslationString _moveCategoryDown =
             new TranslationString("Move down");
-        private readonly TranslationString _removeCategory = 
+        private readonly TranslationString _removeCategory =
             new TranslationString("Remove");
-        private readonly TranslationString _editCategory = 
+        private readonly TranslationString _editCategory =
             new TranslationString("Edit");
         private readonly TranslationString _showCurrentBranch =
             new TranslationString("Show current branch");
@@ -153,7 +153,7 @@ namespace GitUI
 
             int index = RepositoryCategory.Repositories.IndexOf(repository);
             RepositoryCategory.Repositories.Remove(repository);
-            int newIndex = moveUp ? Math.Max(index - 1, 0) : 
+            int newIndex = moveUp ? Math.Max(index - 1, 0) :
                 Math.Min(index + 1, RepositoryCategory.Repositories.Count);
             RepositoryCategory.Repositories.Insert(newIndex, repository);
             Recalculate();
@@ -173,7 +173,7 @@ namespace GitUI
 
         private void editMenuItem_Click(object sender, EventArgs e)
         {
-            new FormDashboardEditor().ShowDialog(this);
+            using (var frm = new FormDashboardEditor()) frm.ShowDialog(this);
             dashboardCategoryChanged(this, null);
         }
 
@@ -203,7 +203,7 @@ namespace GitUI
 
         private void moveToMenuItem_DropDownOpening(object sender, EventArgs e)
         {
-            var moveToMenuItem = (ToolStripMenuItem) sender;
+            var moveToMenuItem = (ToolStripMenuItem)sender;
 
             moveToMenuItem.DropDownItems.Clear();
 
@@ -237,13 +237,17 @@ namespace GitUI
             if (repository == null)
                 return;
 
-            var formDashboardCategoryTitle = new FormDashboardCategoryTitle();
-            formDashboardCategoryTitle.ShowDialog(this);
+            RepositoryCategory newRepositoryCategory;
 
-            if (string.IsNullOrEmpty(formDashboardCategoryTitle.GetTitle()))
-                return;
+            using (var formDashboardCategoryTitle = new FormDashboardCategoryTitle())
+            {
+                formDashboardCategoryTitle.ShowDialog(this);
 
-            var newRepositoryCategory = new RepositoryCategory(formDashboardCategoryTitle.GetTitle());
+                if (string.IsNullOrEmpty(formDashboardCategoryTitle.GetTitle()))
+                    return;
+
+                newRepositoryCategory = new RepositoryCategory(formDashboardCategoryTitle.GetTitle());
+            }
 
             RepositoryCategory.RemoveRepository(repository);
             repository.RepositoryType = RepositoryType.Repository;
@@ -328,7 +332,7 @@ namespace GitUI
 
         private void editToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormDashboardEditor().ShowDialog(this);
+            using (var frm = new FormDashboardEditor()) frm.ShowDialog(this);
             dashboardCategoryChanged(this, null);
         }
 

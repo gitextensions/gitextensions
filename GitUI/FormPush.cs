@@ -102,9 +102,11 @@ namespace GitUI
 
         private void BrowseSourceClick(object sender, EventArgs e)
         {
-            var dialog = new FolderBrowserDialog { SelectedPath = PushDestination.Text };
-            if (dialog.ShowDialog(this) == DialogResult.OK)
-                PushDestination.Text = dialog.SelectedPath;
+            using (var dialog = new FolderBrowserDialog { SelectedPath = PushDestination.Text })
+            {
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                    PushDestination.Text = dialog.SelectedPath;
+            }
         }
 
         private void PushClick(object sender, EventArgs e)
@@ -224,22 +226,24 @@ namespace GitUI
             selectedBranchRemote = _NO_TRANSLATE_Remotes.Text;
             selectedRemoteBranchName = RemoteBranch.Text;
 
-            var form = new FormRemoteProcess(pushCmd)
+            using (var form = new FormRemoteProcess(pushCmd)
                        {
                            Remote = remote,
                            Text = string.Format(_pushToCaption.Text, destination),
                            HandleOnExitCallback = HandlePushOnExit
-                       };
-
-            form.ShowDialog(owner);
-
-            if (!Settings.Module.InTheMiddleOfConflictedMerge() &&
-                !Settings.Module.InTheMiddleOfRebase() && !form.ErrorOccurred())
+                       })
             {
-                ScriptManager.RunEventScripts(ScriptEvent.AfterPush);
-                if (_createPullRequestCB.Checked)
-                    GitUICommands.Instance.StartCreatePullRequest(owner);
-                return true;
+
+                form.ShowDialog(owner);
+
+                if (!Settings.Module.InTheMiddleOfConflictedMerge() &&
+                    !Settings.Module.InTheMiddleOfRebase() && !form.ErrorOccurred())
+                {
+                    ScriptManager.RunEventScripts(ScriptEvent.AfterPush);
+                    if (_createPullRequestCB.Checked)
+                        GitUICommands.Instance.StartCreatePullRequest(owner);
+                    return true;
+                }
             }
 
             return false;

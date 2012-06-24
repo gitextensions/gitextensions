@@ -145,7 +145,7 @@ namespace GitUI
             InitializeComponent();
 
 #if !__MonoCS__ // animated GIFs are not supported in Mono/Linux
-            this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
+            Loading.Image = Properties.Resources.loadingpanel;
 #endif
 
             splitRight.Panel2MinSize = 130;
@@ -341,6 +341,10 @@ namespace GitUI
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
+#if !__MonoCS__ // animated GIFs are not supported in Mono/Linux
+            //trying to properly dispose loading image issue #1037
+            Loading.Image.Dispose();
+#endif
             DisposeGitGetUnstagedCommand();
 
             base.OnClosing(e);
@@ -711,13 +715,15 @@ namespace GitUI
 
                 ScriptManager.RunEventScripts(ScriptEvent.BeforeCommit);
 
-                var form = new FormProcess(Settings.Module.CommitCmd(amend, signOffToolStripMenuItem.Checked, toolAuthor.Text));
-                form.ShowDialog(this);
+                using (var form = new FormProcess(Settings.Module.CommitCmd(amend, signOffToolStripMenuItem.Checked, toolAuthor.Text)))
+                {
+                    form.ShowDialog(this);
 
-                NeedRefresh = true;
+                    NeedRefresh = true;
 
-                if (form.ErrorOccurred())
-                    return;
+                    if (form.ErrorOccurred())
+                        return;
+                }
 
                 ScriptManager.RunEventScripts(ScriptEvent.AfterCommit);
 
@@ -853,14 +859,14 @@ namespace GitUI
                     FormStatus.ProcessStart processStart =
                         form =>
                         {
-                            form.AddOutput(string.Format(_stageFiles.Text,
+                            form.AddMessageLine(string.Format(_stageFiles.Text,
                                                          files.Count));
                             var output = GitCommandHelpers.StageFiles(files);
-                            form.AddOutput(output);
+                            form.AddMessageLine(output);
                             form.Done(string.IsNullOrEmpty(output));
                         };
-                    var process = new FormStatus(processStart, null) { Text = _stageDetails.Text };
-                    process.ShowDialogOnError(this);
+                    using (var process = new FormStatus(processStart, null) { Text = _stageDetails.Text })
+                        process.ShowDialogOnError(this);
                 }
                 else
                 {
@@ -1229,7 +1235,7 @@ namespace GitUI
                 MessageBoxButtons.YesNo) !=
                 DialogResult.Yes)
                 return;
-            new FormProcess("clean -f").ShowDialog(this);
+            using (var frm = new FormProcess("clean -f")) frm.ShowDialog(this);
             Initialize();
         }
 
@@ -1324,7 +1330,7 @@ namespace GitUI
 
             SelectedDiff.Clear();
             var item = Unstaged.SelectedItem;
-            new FormAddToGitIgnore(item.Name).ShowDialog(this);
+            using (var frm = new FormAddToGitIgnore(item.Name)) frm.ShowDialog(this);
             Initialize();
         }
 
@@ -1486,7 +1492,7 @@ namespace GitUI
             var item = list.SelectedItem;
             var fileName = Settings.WorkingDir + item.Name;
 
-            new FormEditor(fileName).ShowDialog(this);
+            using (var frm = new FormEditor(fileName)) frm.ShowDialog(this);
 
             UntrackedSelectionChanged(null, null);
         }
@@ -1755,8 +1761,8 @@ namespace GitUI
 
             foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
             {
-                var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(item.Name));
-                process.ShowDialog(this);
+                using (var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(item.Name)))
+                    process.ShowDialog(this);
             }
 
             Initialize();
@@ -1773,8 +1779,8 @@ namespace GitUI
             foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
             {
                 GitModule module = new GitModule(Settings.WorkingDir + item.Name + Settings.PathSeparator.ToString());
-                var process = new FormProcess(module, arguments);
-                process.ShowDialog(this);
+                using (var process = new FormProcess(module, arguments))
+                    process.ShowDialog(this);
             }
 
             Initialize();
@@ -1783,7 +1789,7 @@ namespace GitUI
         private void submoduleSummaryMenuItem_Click(object sender, EventArgs e)
         {
             string summary = Settings.Module.GetSubmoduleSummary(_currentItem.Name);
-            new FormEdit(summary).ShowDialog(this);
+            using (var frm = new FormEdit(summary)) frm.ShowDialog(this);
         }
 
         private void viewHistoryMenuItem_Click(object sender, EventArgs e)
@@ -1808,7 +1814,7 @@ namespace GitUI
 
         private void commitTemplatesConfigtoolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormCommitTemplateSettings().ShowDialog(this);
+            using (var frm = new FormCommitTemplateSettings()) frm.ShowDialog(this);
             _shouldReloadCommitTemplates = true;
         }
 

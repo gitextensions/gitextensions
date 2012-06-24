@@ -199,8 +199,8 @@ namespace GitUI
                 writer.WriteLine("@prompt $G");
                 writer.Write(batchFile);
             }
-            var process = new FormProcess("cmd.exe", "/C \"" + tempFileName + "\"");
-            process.ShowDialog(owner as IWin32Window);
+            using (var process = new FormProcess("cmd.exe", "/C \"" + tempFileName + "\""))
+                process.ShowDialog(owner as IWin32Window);
             File.Delete(tempFileName);
             return true;
         }
@@ -217,14 +217,21 @@ namespace GitUI
                 process = new FormRemoteProcess(cmd.ToLine());
             else
                 process = new FormProcess(cmd.ToLine());
-            process.ShowDialog(parentForm);
+            try
+            {
+                process.ShowDialog(parentForm);
+            }
+            finally
+            {
+                process.Dispose();
+            }
             return true;
         }
 
         public bool StartCommandLineProcessDialog(object owner, string command, string arguments)
         {
-            var process = new FormProcess(command, arguments);
-            process.ShowDialog(owner as IWin32Window);
+            using (var process = new FormProcess(command, arguments))
+                process.ShowDialog(owner as IWin32Window);
             return true;
         }
 
@@ -235,8 +242,8 @@ namespace GitUI
 
         public bool StartGitCommandProcessDialog(IWin32Window owner, string arguments)
         {
-            var process = new FormProcess(arguments);
-            process.ShowDialog(owner);
+            using (var process = new FormProcess(arguments))
+                process.ShowDialog(owner);
             return true;
         }
 
@@ -258,8 +265,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreDeleteBranch))
                 return false;
 
-            var form = new FormDeleteBranch(branch);
-            form.ShowDialog(owner);
+            using (var form = new FormDeleteBranch(branch))
+                form.ShowDialog(owner);
 
             InvokeEvent(owner, PostDeleteBranch);
 
@@ -279,8 +286,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreCheckoutRevision))
                 return false;
 
-            var form = new FormCheckout();
-            form.ShowDialog(owner);
+            using (var form = new FormCheckout())
+                form.ShowDialog(owner);
 
             InvokeEvent(owner, PostCheckoutRevision);
 
@@ -297,21 +304,24 @@ namespace GitUI
             force = false;
             if (!Settings.DirtyDirWarnBeforeCheckoutBranch || Settings.Module.GitStatus(UntrackedFilesMode.All, IgnoreSubmodulesMode.Default).Count == 0)
                 return false;
-            switch (new FormDirtyDirWarn().ShowDialog(owner))
+            using (FormDirtyDirWarn frm = new FormDirtyDirWarn())
             {
-                case DialogResult.Cancel:
-                    return true;
-                case DialogResult.Yes:
-                    Stash(owner);
-                    return false;
-                case DialogResult.Abort:
-                    needRefresh = StartCommitDialog(owner);
-                    return true;
-                case DialogResult.Retry:
-                    force = true;
-                    return false;
-                default:
-                    return false;
+                switch (frm.ShowDialog(owner))
+                {
+                    case DialogResult.Cancel:
+                        return true;
+                    case DialogResult.Yes:
+                        Stash(owner);
+                        return false;
+                    case DialogResult.Abort:
+                        needRefresh = StartCommitDialog(owner);
+                        return true;
+                    case DialogResult.Retry:
+                        force = true;
+                        return false;
+                    default:
+                        return false;
+                }
             }
         }
 
@@ -319,7 +329,7 @@ namespace GitUI
         {
             var arguments = GitCommandHelpers.StashSaveCmd(Settings.IncludeUntrackedFilesInAutoStash);
 
-            new FormProcess(arguments).ShowDialog(owner);
+            using (var frm = new FormProcess(arguments)) frm.ShowDialog(owner);
         }
 
         public bool StartCheckoutBranchDialog(IWin32Window owner, string branch, bool remote, string containRevison)
@@ -335,9 +345,11 @@ namespace GitUI
             if (CheckForDirtyDir(owner, out needRefresh, out force))
                 return needRefresh;
 
-            var form = new FormCheckoutBranch(branch, remote, containRevison, force);
-            if (form.ShowDialog(owner) == DialogResult.Cancel)
-                return false;
+            using (var form = new FormCheckoutBranch(branch, remote, containRevison, force))
+            {
+                if (form.ShowDialog(owner) == DialogResult.Cancel)
+                    return false;
+            }
 
             InvokeEvent(owner, PostCheckoutBranch);
 
@@ -382,9 +394,11 @@ namespace GitUI
             if (CheckForDirtyDir(owner, out needRefresh, out force))
                 return needRefresh;
 
-            var form = new FormCheckoutRemoteBranch(branch, force);
-            if (form.ShowDialog(owner) == DialogResult.Cancel)
-                return false;
+            using (var form = new FormCheckoutRemoteBranch(branch, force))
+            {
+                if (form.ShowDialog(owner) == DialogResult.Cancel)
+                    return false;
+            }
 
             InvokeEvent(owner, PostCheckoutBranch);
 
@@ -399,8 +413,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreCompareRevisions))
                 return false;
 
-            var form = new FormDiff();
-            form.ShowDialog(owner);
+            using (var form = new FormDiff())
+                form.ShowDialog(owner);
 
             InvokeEvent(owner, PostCompareRevisions);
 
@@ -420,8 +434,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreAddFiles))
                 return false;
 
-            var form = new FormAddFiles();
-            form.ShowDialog(owner);
+            using (var form = new FormAddFiles())
+                form.ShowDialog(owner);
 
             InvokeEvent(owner, PostAddFiles);
 
@@ -441,8 +455,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreCreateBranch))
                 return false;
 
-            var form = new FormBranch();
-            form.ShowDialog(owner);
+            using (var form = new FormBranch())
+                form.ShowDialog(owner);
 
             InvokeEvent(owner, PostCreateBranch);
 
@@ -459,8 +473,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreClone))
                 return false;
 
-            var form = new FormClone(url, openedFromProtocolHandler);
-            form.ShowDialog(owner);
+            using (var form = new FormClone(url, openedFromProtocolHandler))
+                form.ShowDialog(owner);
 
             InvokeEvent(owner, PostClone);
 
@@ -492,8 +506,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreSvnClone))
                 return false;
 
-            var form = new FormSvnClone();
-            form.ShowDialog(owner);
+            using (var form = new FormSvnClone())
+                form.ShowDialog(owner);
 
             InvokeEvent(owner, PostSvnClone);
 
@@ -513,16 +527,18 @@ namespace GitUI
             if (!InvokeEvent(owner, PreCommit))
                 return true;
 
-            var form = new FormCommit();
-            if (showWhenNoChanges)
-                form.ShowDialogWhenChanges(owner);
-            else
-                form.ShowDialog(owner);
+            using (var form = new FormCommit())
+            {
+                if (showWhenNoChanges)
+                    form.ShowDialogWhenChanges(owner);
+                else
+                    form.ShowDialog(owner);
 
-            InvokeEvent(owner, PostCommit);
+                InvokeEvent(owner, PostCommit);
 
-            if (!form.NeedRefresh)
-                return false;
+                if (!form.NeedRefresh)
+                    return false;
+            }
 
             return true;
         }
@@ -550,8 +566,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreSvnDcommit))
                 return true;
 
-            var fromProcess = new FormProcess(Settings.GitCommand, GitSvnCommandHelpers.DcommitCmd());
-            fromProcess.ShowDialog(owner);
+            using (var fromProcess = new FormProcess(Settings.GitCommand, GitSvnCommandHelpers.DcommitCmd()))
+                fromProcess.ShowDialog(owner);
 
             InvokeEvent(owner, PostSvnDcommit);
 
@@ -571,8 +587,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreSvnRebase))
                 return true;
 
-            var fromProcess = new FormProcess(Settings.GitCommand, GitSvnCommandHelpers.RebaseCmd());
-            fromProcess.ShowDialog(owner);
+            using (var fromProcess = new FormProcess(Settings.GitCommand, GitSvnCommandHelpers.RebaseCmd()))
+                fromProcess.ShowDialog(owner);
 
             InvokeEvent(owner, PostSvnRebase);
 
@@ -592,8 +608,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreSvnFetch))
                 return true;
 
-            var fromProcess = new FormProcess(Settings.GitCommand, GitSvnCommandHelpers.FetchCmd());
-            fromProcess.ShowDialog(owner);
+            using (var fromProcess = new FormProcess(Settings.GitCommand, GitSvnCommandHelpers.FetchCmd()))
+                fromProcess.ShowDialog(owner);
 
             InvokeEvent(owner, PostSvnFetch);
 
@@ -610,7 +626,7 @@ namespace GitUI
             if (!InvokeEvent(owner, PreInitialize))
                 return true;
 
-            new FormInit().ShowDialog(owner);
+            using (var frm = new FormInit()) frm.ShowDialog(owner);
 
             InvokeEvent(owner, PostInitialize);
 
@@ -627,7 +643,7 @@ namespace GitUI
             if (!InvokeEvent(owner, PreInitialize))
                 return true;
 
-            new FormInit(dir).ShowDialog(owner);
+            using (var frm = new FormInit(dir)) frm.ShowDialog(owner);
 
             InvokeEvent(owner, PostInitialize);
 
@@ -661,20 +677,22 @@ namespace GitUI
             if (!InvokeEvent(owner, PrePull))
                 return true;
 
-            FormPull formPull = new FormPull();
-            if (configProc != null)
-                configProc(formPull);
-
-            DialogResult dlgResult;
-            if (pullOnShow)
-                dlgResult = formPull.PullAndShowDialogWhenFailed(owner);
-            else
-                dlgResult = formPull.ShowDialog(owner);
-
-            if (dlgResult == DialogResult.OK)
+            using (FormPull formPull = new FormPull())
             {
-                InvokeEvent(owner, PostPull);
-                pullCompleted = !formPull.ErrorOccurred;
+                if (configProc != null)
+                    configProc(formPull);
+
+                DialogResult dlgResult;
+                if (pullOnShow)
+                    dlgResult = formPull.PullAndShowDialogWhenFailed(owner);
+                else
+                    dlgResult = formPull.ShowDialog(owner);
+
+                if (dlgResult == DialogResult.OK)
+                {
+                    InvokeEvent(owner, PostPull);
+                    pullCompleted = !formPull.ErrorOccurred;
+                }
             }
 
             return true;//maybe InvokeEvent should have 'needRefresh' out parameter?
@@ -718,8 +736,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreViewPatch))
                 return true;
 
-            var applyPatch = new ViewPatch();
-            applyPatch.ShowDialog(owner);
+            using (var applyPatch = new ViewPatch())
+                applyPatch.ShowDialog(owner);
 
             InvokeEvent(owner, PostViewPatch);
 
@@ -739,8 +757,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreFormatPatch))
                 return true;
 
-            var form = new FormFormatPatch();
-            form.ShowDialog(owner);
+            using (var form = new FormFormatPatch())
+                form.ShowDialog(owner);
 
             InvokeEvent(owner, PostFormatPatch);
 
@@ -760,8 +778,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreStash))
                 return true;
 
-            var form = new FormStash();
-            form.ShowDialog(owner);
+            using (var form = new FormStash())
+                form.ShowDialog(owner);
 
             InvokeEvent(owner, PostStash);
 
@@ -781,8 +799,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreResolveConflicts))
                 return true;
 
-            var form = new FormResolveConflicts();
-            form.ShowDialog(owner);
+            using (var form = new FormResolveConflicts())
+                form.ShowDialog(owner);
 
             InvokeEvent(owner, PostResolveConflicts);
 
@@ -802,8 +820,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreCherryPick))
                 return true;
 
-            var form = new FormCherryPick();
-            form.ShowDialog(owner);
+            using (var form = new FormCherryPick())
+                form.ShowDialog(owner);
 
             InvokeEvent(owner, PostCherryPick);
 
@@ -823,8 +841,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreMergeBranch))
                 return true;
 
-            var form = new FormMergeBranch(branch);
-            form.ShowDialog(owner);
+            using (var form = new FormMergeBranch(branch))
+                form.ShowDialog(owner);
 
             InvokeEvent(owner, PostMergeBranch);
 
@@ -844,8 +862,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreCreateTag))
                 return true;
 
-            var form = new FormTag();
-            form.ShowDialog(owner);
+            using (var form = new FormTag())
+                form.ShowDialog(owner);
 
             InvokeEvent(owner, PostCreateTag);
 
@@ -865,8 +883,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreDeleteTag))
                 return true;
 
-            var form = new FormDeleteTag();
-            form.ShowDialog(owner);
+            using (var form = new FormDeleteTag())
+                form.ShowDialog(owner);
 
             InvokeEvent(owner, PostDeleteTag);
 
@@ -886,8 +904,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreEditGitIgnore))
                 return true;
 
-            var form = new FormGitIgnore();
-            form.ShowDialog(owner);
+            using (var form = new FormGitIgnore())
+                form.ShowDialog(owner);
 
             InvokeEvent(owner, PostEditGitIgnore);
 
@@ -904,8 +922,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreSettings))
                 return true;
 
-            var form = new FormSettings();
-            form.ShowDialog(owner);
+            using (var form = new FormSettings())
+                form.ShowDialog(owner);
 
             InvokeEvent(owner, PostSettings);
 
@@ -925,8 +943,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreArchive))
                 return true;
 
-            var form = new FormArchive();
-            form.ShowDialog(owner);
+            using (var form = new FormArchive())
+                form.ShowDialog(owner);
 
             InvokeEvent(owner, PostArchive);
 
@@ -946,8 +964,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreMailMap))
                 return true;
 
-            var form = new FormMailMap();
-            form.ShowDialog(owner);
+            using (var form = new FormMailMap())
+                form.ShowDialog(owner);
 
             InvokeEvent(owner, PostMailMap);
 
@@ -967,8 +985,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreVerifyDatabase))
                 return true;
 
-            var form = new FormVerify();
-            form.ShowDialog(owner);
+            using (var form = new FormVerify())
+                form.ShowDialog(owner);
 
             InvokeEvent(owner, PostVerifyDatabase);
 
@@ -988,8 +1006,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreRemotes))
                 return true;
 
-            var form = new FormRemotes();
-            form.ShowDialog(owner);
+            using (var form = new FormRemotes())
+                form.ShowDialog(owner);
 
             InvokeEvent(owner, PostRemotes);
 
@@ -1009,8 +1027,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreRebase))
                 return true;
 
-            var form = new FormRebase(branch);
-            form.ShowDialog(owner);
+            using (var form = new FormRebase(branch))
+                form.ShowDialog(owner);
 
             InvokeEvent(owner, PostRebase);
 
@@ -1030,10 +1048,12 @@ namespace GitUI
             if (!InvokeEvent(owner, PreRename))
                 return true;
 
-            var form = new FormRenameBranch(branch);
+            using (var form = new FormRenameBranch(branch))
+            {
 
-            if (form.ShowDialog(owner) != DialogResult.OK)
-                return false;
+                if (form.ShowDialog(owner) != DialogResult.OK)
+                    return false;
+            }
 
             InvokeEvent(owner, PostRename);
 
@@ -1053,8 +1073,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreSubmodulesEdit))
                 return true;
 
-            var form = new FormSubmodules();
-            form.ShowDialog(owner);
+            using (var form = new FormSubmodules())
+                form.ShowDialog(owner);
 
             InvokeEvent(owner, PostSubmodulesEdit);
 
@@ -1074,8 +1094,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreUpdateSubmodules))
                 return true;
 
-            var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(""));
-            process.ShowDialog(owner);
+            using (var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd("")))
+                process.ShowDialog(owner);
 
             InvokeEvent(owner, PostUpdateSubmodules);
 
@@ -1095,8 +1115,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreSyncSubmodules))
                 return true;
 
-            var process = new FormProcess(GitCommandHelpers.SubmoduleSyncCmd(""));
-            process.ShowDialog(owner);
+            using (var process = new FormProcess(GitCommandHelpers.SubmoduleSyncCmd("")))
+                process.ShowDialog(owner);
 
             InvokeEvent(owner, PostSyncSubmodules);
 
@@ -1110,7 +1130,7 @@ namespace GitUI
 
         public bool StartPluginSettingsDialog(IWin32Window owner)
         {
-            new FormPluginSettings().ShowDialog(owner);
+            using (var frm = new FormPluginSettings()) frm.ShowDialog(owner);
             return true;
         }
 
@@ -1124,8 +1144,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreBrowse))
                 return false;
 
-            var form = new FormBrowse(filter);
-            form.ShowDialog(owner);
+            using (var form = new FormBrowse(filter))
+                form.ShowDialog(owner);
 
             InvokeEvent(owner, PostBrowse);
 
@@ -1145,10 +1165,12 @@ namespace GitUI
             if (!InvokeEvent(owner, PreFileHistory))
                 return false;
 
-            var form = new FormFileHistory(fileName, revision, filterByRevision);
-            if (showBlame)
-                form.SelectBlameTab();
-            form.ShowDialog(owner);
+            using (var form = new FormFileHistory(fileName, revision, filterByRevision))
+            {
+                if (showBlame)
+                    form.SelectBlameTab();
+                form.ShowDialog(owner);
+            }
 
             InvokeEvent(owner, PostFileHistory);
 
@@ -1156,7 +1178,7 @@ namespace GitUI
         }
 
         public bool StartFileHistoryDialog(IWin32Window owner, string fileName, GitRevision revision, bool filterByRevision)
-        {           
+        {
             return StartFileHistoryDialog(owner, fileName, revision, filterByRevision, false);
         }
 
@@ -1188,11 +1210,13 @@ namespace GitUI
             if (!InvokeEvent(owner, PrePush))
                 return true;
 
-            var form = new FormPush();
-            if (pushOnShow)
-                form.PushAndShowDialogWhenFailed(owner);
-            else
-                form.ShowDialog(owner);
+            using (var form = new FormPush())
+            {
+                if (pushOnShow)
+                    form.PushAndShowDialogWhenFailed(owner);
+                else
+                    form.ShowDialog(owner);
+            }
 
             InvokeEvent(owner, PostPush);
 
@@ -1212,9 +1236,11 @@ namespace GitUI
             if (!InvokeEvent(owner, PreApplyPatch))
                 return true;
 
-            var form = new FormApplyPatch();
-            form.SetPatchFile(patchFile);
-            form.ShowDialog(owner);
+            using (var form = new FormApplyPatch())
+            {
+                form.SetPatchFile(patchFile);
+                form.ShowDialog(owner);
+            }
 
             InvokeEvent(owner, PostApplyPatch);
 
@@ -1244,8 +1270,10 @@ namespace GitUI
             if (!InvokeEvent(owner, PreEditGitAttributes))
                 return true;
 
-            var form = new FormGitAttributes();
-            form.ShowDialog(owner);
+            using (var form = new FormGitAttributes())
+            {
+                form.ShowDialog(owner);
+            }
 
             InvokeEvent(owner, PostEditGitAttributes);
 
@@ -1256,7 +1284,7 @@ namespace GitUI
         {
             return StartEditGitAttributesDialog(null);
         }
-        
+
         private bool InvokeEvent(IWin32Window ownerForm, GitUIEventHandler gitUIEventHandler)
         {
             return InvokeEvent(this, ownerForm, gitUIEventHandler);
@@ -1292,7 +1320,7 @@ namespace GitUI
             if (!InvokeEvent(owner, PreBlame))
                 return false;
 
-            new FormBlame(fileName, revision).ShowDialog(owner);
+            using (var frm = new FormBlame(fileName, revision)) frm.ShowDialog(owner);
 
             InvokeEvent(owner, PostBlame);
 
@@ -1335,7 +1363,10 @@ namespace GitUI
 
         public void StartCloneForkFromHoster(IWin32Window owner, IRepositoryHostPlugin gitHoster)
         {
-            WrapRepoHostingCall("View pull requests", gitHoster, gh => (new ForkAndCloneForm(gitHoster)).ShowDialog(owner));
+            WrapRepoHostingCall("View pull requests", gitHoster, gh =>
+            {
+                using (var frm = new ForkAndCloneForm(gitHoster)) frm.ShowDialog(owner);
+            });
         }
 
         public void StartCloneForkFromHoster(IRepositoryHostPlugin gitHoster)
@@ -1346,7 +1377,10 @@ namespace GitUI
         internal void StartPullRequestsDialog(IWin32Window owner, IRepositoryHostPlugin gitHoster)
         {
             WrapRepoHostingCall("View pull requests", gitHoster,
-                                gh => (new ViewPullRequestsForm(gitHoster)).ShowDialog(owner));
+                                gh =>
+                                {
+                                    using (var frm = new ViewPullRequestsForm(gitHoster)) frm.ShowDialog(owner);
+                                });
         }
 
         internal void StartPullRequestsDialog(IRepositoryHostPlugin gitHoster)
@@ -1389,7 +1423,10 @@ namespace GitUI
         public void StartCreatePullRequest(IWin32Window owner, IRepositoryHostPlugin gitHoster, string chooseRemote, string chooseBranch)
         {
             WrapRepoHostingCall("Create pull request", gitHoster,
-                                gh => (new CreatePullRequestForm(gitHoster, chooseRemote, chooseBranch)).ShowDialog(owner));
+                                gh =>
+                                {
+                                    using (var frm = new CreatePullRequestForm(gitHoster, chooseRemote, chooseBranch)) frm.ShowDialog(owner);
+                                });
         }
 
         internal void RaisePreBrowseInitialize(IWin32Window owner)

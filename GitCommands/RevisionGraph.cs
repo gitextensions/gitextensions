@@ -53,6 +53,7 @@ namespace GitCommands
 
         private List<GitHead> heads;
 
+
         private enum ReadStep
         {
             Commit,

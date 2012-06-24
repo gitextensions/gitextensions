@@ -36,7 +36,7 @@ namespace GitUI
 
         private void Start_Click(object sender, EventArgs e)
         {
-            new FormProcess(GitCommandHelpers.StartBisectCmd()).ShowDialog(this);
+            using (var frm = new FormProcess(GitCommandHelpers.StartBisectCmd())) frm.ShowDialog(this);
             UpdateButtonsState();
 
             IList<GitRevision> revisions = _revisionGrid.GetSelectedRevisions();

@@ -99,7 +99,7 @@ namespace Github3
         {
             if (GithubLoginInfo.OAuthToken.Length == 0)
             {
-                new OAuth().ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+                using (var frm = new OAuth()) frm.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
             }
             else
             {
@@ -112,12 +112,12 @@ namespace Github3
 
         public IList<IHostedRepository> SearchForRepository(string search)
         {
-            return github.searchRepositories(search).Select(repo => (IHostedRepository) new GithubRepo(repo)).ToList();
+            return github.searchRepositories(search).Select(repo => (IHostedRepository)new GithubRepo(repo)).ToList();
         }
 
         public IList<IHostedRepository> GetRepositoriesOfUser(string user)
         {
-            return github.getRepositories(user).Select(repo => (IHostedRepository) new GithubRepo(repo)).ToList();
+            return github.getRepositories(user).Select(repo => (IHostedRepository)new GithubRepo(repo)).ToList();
         }
 
         public IHostedRepository GetRepository(string user, string repositoryName)
@@ -142,7 +142,7 @@ namespace Github3
             var repoInfos = new List<IHostedRemote>();
 
             string[] remotes = GitCommands.Settings.Module.GetRemotes(false);
-            foreach(string remote in remotes)
+            foreach (string remote in remotes)
             {
                 var url = GitCommands.Settings.Module.GetSetting(string.Format("remote.{0}.url", remote));
                 if (string.IsNullOrEmpty(url))

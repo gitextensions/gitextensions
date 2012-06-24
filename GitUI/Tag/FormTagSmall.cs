@@ -82,18 +82,20 @@ namespace GitUI.Tag
 
             ScriptManager.RunEventScripts(ScriptEvent.BeforePush);
 
-            var form = new FormRemoteProcess(pushCmd)
+            using (var form = new FormRemoteProcess(pushCmd)
             {
                 Remote = currentBranchRemote,
                 Text = string.Format(_pushToCaption.Text, currentBranchRemote),
-            };
-
-            form.ShowDialog();
-
-            if (!Settings.Module.InTheMiddleOfConflictedMerge() &&
-                !Settings.Module.InTheMiddleOfRebase() && !form.ErrorOccurred())
+            })
             {
-                ScriptManager.RunEventScripts(ScriptEvent.AfterPush);
+
+                form.ShowDialog();
+
+                if (!Settings.Module.InTheMiddleOfConflictedMerge() &&
+                    !Settings.Module.InTheMiddleOfRebase() && !form.ErrorOccurred())
+                {
+                    ScriptManager.RunEventScripts(ScriptEvent.AfterPush);
+                }
             }
         }
 
