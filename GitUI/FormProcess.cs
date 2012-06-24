@@ -27,7 +27,8 @@ namespace GitUI
 
         private GitCommandsInstance gitCommand;
 
-        protected FormProcess() : this(true)
+        protected FormProcess()
+            : this(true)
         { }
 
         //constructor for VS designer
@@ -81,9 +82,25 @@ namespace GitUI
             : this(process, arguments, null, input, useDialogSettings)
         { }
 
+        public static void ShowDialog(IWin32Window owner, string arguments)
+        {
+            using (var formProcess = new FormProcess(arguments))
+            {
+                formProcess.ShowDialog(owner);
+            }
+        }
+
+        public static void ShowDialog(IWin32Window owner, string arguments, bool useDialogSettings)
+        {
+            using (var formProcess = new FormProcess(arguments, useDialogSettings))
+            {
+                formProcess.ShowDialog(owner);
+            }
+        }
+
         protected virtual void BeforeProcessStart()
         {
-            
+
         }
 
         private void processStart(FormStatus form)
@@ -121,7 +138,7 @@ namespace GitUI
             }
         }
 
-        protected void KillGitCommand() 
+        protected void KillGitCommand()
         {
             try
             {
@@ -129,7 +146,7 @@ namespace GitUI
             }
             catch
             {
-            }            
+            }
         }
 
         void gitCommand_Exited(object sender, EventArgs e)
@@ -169,8 +186,8 @@ namespace GitUI
         }
 
         protected virtual void DataReceived(object sender, DataReceivedEventArgs e)
-        { 
-        
+        {
+
         }
 
         void gitCommand_DataReceived(object sender, DataReceivedEventArgs e)
