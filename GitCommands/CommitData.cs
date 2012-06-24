@@ -156,10 +156,10 @@ namespace GitCommands
             ReadOnlyCollection<string> parentGuids = parentLines.ToList().AsReadOnly();
 
             var author = GitCommandHelpers.ReEncodeStringFromLossless(lines[3]);
-            var authorDate = GetTimeFromUtcTimeLine(lines[4]);
+            var authorDate = DateTimeUtils.ParseUnixTime(lines[4]);
 
             var committer = GitCommandHelpers.ReEncodeStringFromLossless(lines[5]);
-            var commitDate = GetTimeFromUtcTimeLine(lines[6]);
+            var commitDate = DateTimeUtils.ParseUnixTime(lines[6]);
 
             string commitEncoding = lines[7];
 
@@ -205,14 +205,6 @@ namespace GitCommands
             }
 
             return input;
-        }
-
-        private static DateTimeOffset GetTimeFromUtcTimeLine(string data)
-        {
-            var unixTime = long.Parse(data);
-            var time = (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddSeconds(unixTime);
-
-            return new DateTimeOffset(time, new TimeSpan(0));
         }
 
         private static string RemoveRedundancies(string info)

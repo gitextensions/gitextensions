@@ -176,7 +176,7 @@ namespace GitUI
 
                 commandIsRunning = true;
                 statusIsUpToDate = true;
-                AsyncHelpers.DoAsync(RunStatusCommand, UpdatedStatusReceived, (e) => { CurrentStatus = WorkingStatus.Stopped; });
+                AsyncLoader.DoAsync(RunStatusCommand, UpdatedStatusReceived, (e) => { CurrentStatus = WorkingStatus.Stopped; });
                 // Always update every 5 min, even if we don't know anything changed
                 ScheduleNextJustInCaseUpdate();
             }

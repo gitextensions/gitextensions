@@ -416,9 +416,9 @@ namespace GitUI
             {
                 return Branches.Text;
             }
-            string remoteBranchName = Settings.Module.GetSetting("branch." + branch + ".merge");
+            string remoteBranchName = Settings.Module.GetSetting(string.Format("branch.{0}.merge", branch));
             if (!remoteBranchName.IsNullOrEmpty())
-                remoteBranchName = Settings.Module.RunGitCmd("name-rev --name-only \"" + remoteBranchName + "\"").Trim();
+                remoteBranchName = Settings.Module.RunGitCmd(string.Format("name-rev --name-only \"{0}\"", remoteBranchName)).Trim();
             return remoteBranchName;
         }
 
