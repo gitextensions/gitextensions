@@ -28,21 +28,20 @@ namespace GitUI
         /// </summary>
         private const int MaxUpdatePeriod = 5 * 60 * 1000;
 
-        private GitCommandsInstance gitGetUnstagedCommand = new GitCommandsInstance();
+        private bool commandIsRunning = false;
+        private bool statusIsUpToDate = true;
         private readonly SynchronizationContext syncContext;
         private readonly FileSystemWatcher workTreeWatcher = new FileSystemWatcher();
         private readonly FileSystemWatcher gitDirWatcher = new FileSystemWatcher();
         private string gitPath, submodulesPath;
         private int nextUpdateTime;
         private WorkingStatus currentStatus;
-        private bool hasDeferredUpdateRequests;
 
         public string CommitTranslatedString { get; set; }
 
         public ToolStripGitStatus()
         {
             syncContext = SynchronizationContext.Current;
-            gitGetUnstagedCommand.Exited += (o, ea) => syncContext.Post(_ => UpdatedStatusReceived(gitGetUnstagedCommand.Output.ToString()), null);
 
             InitializeComponent();
             components.Add(workTreeWatcher);
@@ -118,7 +117,7 @@ namespace GitUI
         // it's going to be called by the GC!
         private void WorkTreeWatcherError(object sender, ErrorEventArgs e)
         {
-            ScheduleNextRegularUpdate();
+            ScheduleDeferredUpdate();
         }
 
         private void WorkTreeChanged(object sender, FileSystemEventArgs e)
@@ -137,7 +136,7 @@ namespace GitUI
             if (e.FullPath.EndsWith("\\.git\\index.lock"))
                 return;
 
-            ScheduleNextRegularUpdate();
+            ScheduleDeferredUpdate();
         }
 
         private void GitDirChanged(object sender, FileSystemEventArgs e)
@@ -154,7 +153,7 @@ namespace GitUI
             if (e.FullPath.StartsWith(submodulesPath) && (Directory.Exists(e.FullPath)))
                 return;
 
-            ScheduleNextRegularUpdate();
+            ScheduleDeferredUpdate();
         }
 
         private void timerRefresh_Tick(object sender, EventArgs e)
@@ -164,53 +163,54 @@ namespace GitUI
 
         private void Update()
         {
-            // If the previous status call hasn't exited yet, we'll wait until it is
-            // so we don't queue up a bunch of commands
-            if (gitGetUnstagedCommand.IsRunning)
+            if (Environment.TickCount >= nextUpdateTime || 
+                (Environment.TickCount < 0 && nextUpdateTime > 0))
             {
-                hasDeferredUpdateRequests = true; // defer this update request
-                return;
-            }
-
-            hasDeferredUpdateRequests = false;
-
-            if (Environment.TickCount > nextUpdateTime)
-            {
-                try
+                // If the previous status call hasn't exited yet, we'll wait until it is
+                // so we don't queue up a bunch of commands
+                if (commandIsRunning)
                 {
-                    string command = GitCommandHelpers.GetAllChangedFilesCmd(true, true);
-                    gitGetUnstagedCommand.CmdStartProcess(Settings.GitCommand, command);
+                    statusIsUpToDate = false;//tell that computed status isn't up to date
+                    return;
+                }
 
-                    if (hasDeferredUpdateRequests)
-                        // New changes were detected while processing previous changes, schedule deferred update
-                        ScheduleDeferredUpdate();
-                    else
-                        // Always update every 5 min, even if we don't know anything changed
-                        ScheduleNextJustInCaseUpdate();
-                }
-                catch (Exception)
-                {
-                    CurrentStatus = WorkingStatus.Stopped;
-                }
+                commandIsRunning = true;
+                statusIsUpToDate = true;
+                AsyncHelpers.DoAsync(RunStatusCommand, UpdatedStatusReceived, (e) => { CurrentStatus = WorkingStatus.Stopped; });
+                // Always update every 5 min, even if we don't know anything changed
+                ScheduleNextJustInCaseUpdate();
             }
+        }
+
+        private String RunStatusCommand()
+        {
+            string command = GitCommandHelpers.GetAllChangedFilesCmd(true, true);
+            return Settings.Module.RunGitCmd(command);
         }
 
         private void UpdatedStatusReceived(string updatedStatus)
         {
+            commandIsRunning = false;
+
             if (CurrentStatus != WorkingStatus.Started)
                 return;
 
-            var allChangedFiles = GitCommandHelpers.GetAllChangedFilesFromString(updatedStatus);
-            var stagedCount = allChangedFiles.Count(status => status.IsStaged);
-            var unstagedCount = allChangedFiles.Count - stagedCount;
-            var unstagedSubmodulesCount = allChangedFiles.Count(status => status.IsSubmodule && !status.IsStaged);
+            if (statusIsUpToDate)
+            {
+                var allChangedFiles = GitCommandHelpers.GetAllChangedFilesFromString(updatedStatus);
+                var stagedCount = allChangedFiles.Count(status => status.IsStaged);
+                var unstagedCount = allChangedFiles.Count - stagedCount;
+                var unstagedSubmodulesCount = allChangedFiles.Count(status => status.IsSubmodule && !status.IsStaged);
 
-            Image = GetStatusIcon(stagedCount, unstagedCount, unstagedSubmodulesCount);
+                Image = GetStatusIcon(stagedCount, unstagedCount, unstagedSubmodulesCount);
 
-            if (allChangedFiles.Count == 0)
-                Text = CommitTranslatedString;
+                if (allChangedFiles.Count == 0)
+                    Text = CommitTranslatedString;
+                else
+                    Text = string.Format(CommitTranslatedString + " ({0})", allChangedFiles.Count.ToString());
+            }
             else
-                Text = string.Format(CommitTranslatedString + " ({0})", allChangedFiles.Count.ToString());
+                UpdateImmediately();
         }
 
         private static Image GetStatusIcon(int stagedCount, int unstagedCount, int unstagedSubmodulesCount)
@@ -222,12 +222,6 @@ namespace GitUI
                 return unstagedCount != unstagedSubmodulesCount ? IconDirty : IconDirtySubmodules;
 
             return unstagedCount == 0 ? IconStaged : IconMixed;
-        }
-
-        private void ScheduleNextRegularUpdate()
-        {
-            nextUpdateTime = Math.Min(nextUpdateTime, Environment.TickCount + UpdateDelay);
-            hasDeferredUpdateRequests = true;
         }
 
         private void ScheduleNextJustInCaseUpdate()
@@ -243,9 +237,14 @@ namespace GitUI
         private void ScheduleImmediateUpdate()
         {
             nextUpdateTime = Environment.TickCount;
-            Update();
         }
 
+        private void UpdateImmediately()
+        {
+            ScheduleImmediateUpdate();
+            Update();
+        }
+        
         private WorkingStatus CurrentStatus
         {
             get { return currentStatus; }
@@ -269,7 +268,7 @@ namespace GitUI
                         timerRefresh.Start();
                         workTreeWatcher.EnableRaisingEvents = true;
                         gitDirWatcher.EnableRaisingEvents = !gitDirWatcher.Path.StartsWith(workTreeWatcher.Path);
-                        ScheduleImmediateUpdate();
+                        UpdateImmediately();
                         Visible = true;
                         return;
                     default:
