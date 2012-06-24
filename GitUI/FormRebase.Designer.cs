@@ -53,20 +53,28 @@
             this.MergeToolPanel = new System.Windows.Forms.Panel();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+#if !__MonoCS__ //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+#endif
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+#if !__MonoCS__ //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+#endif
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.OptionsPanel.SuspendLayout();
+#if !__MonoCS__ //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
+#endif
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
+#if !__MonoCS__ //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
+#endif
             this.splitContainer4.Panel1.SuspendLayout();
             this.splitContainer4.Panel2.SuspendLayout();
             this.splitContainer4.SuspendLayout();
@@ -394,23 +402,31 @@
             this.Load += new System.EventHandler(this.FormRebaseLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+#if !__MonoCS__ //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+#endif
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
+#if !__MonoCS__ //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+#endif
             this.splitContainer2.ResumeLayout(false);
             this.OptionsPanel.ResumeLayout(false);
             this.OptionsPanel.PerformLayout();
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel1.PerformLayout();
             this.splitContainer3.Panel2.ResumeLayout(false);
+#if !__MonoCS__ //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
+#endif			
             this.splitContainer3.ResumeLayout(false);
             this.splitContainer4.Panel1.ResumeLayout(false);
             this.splitContainer4.Panel2.ResumeLayout(false);
+#if !__MonoCS__ //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
+#endif
             this.splitContainer4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);

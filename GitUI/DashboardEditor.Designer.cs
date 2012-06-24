@@ -1,5 +1,4 @@
 ﻿using GitCommands.Repository;
-
 namespace GitUI
 {
     partial class DashboardEditor
@@ -50,12 +49,15 @@ namespace GitUI
             this.label2 = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_Caption = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+
+			((System.ComponentModel.ISupportInitialize)(this.RepositoriesGrid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
+
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.RepositoriesGrid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
+            
             this.SuspendLayout();
             // 
             // splitContainer2
@@ -208,9 +210,14 @@ namespace GitUI
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.Panel2.PerformLayout();
+            
             this.splitContainer2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.RepositoriesGrid)).EndInit();
+            
+#if !__MonoCS__ //waiting for mono 2.12
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+#endif
+			((System.ComponentModel.ISupportInitialize)(this.RepositoriesGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).EndInit();
             this.ResumeLayout(false);
 

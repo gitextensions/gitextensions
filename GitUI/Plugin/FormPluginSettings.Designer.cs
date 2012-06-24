@@ -30,7 +30,9 @@
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.PluginList = new System.Windows.Forms.ListBox();
+#if !__MonoCS__ //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+#endif
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
@@ -71,7 +73,9 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormPluginSettingsFormClosing);
             this.Load += new System.EventHandler(this.FormPluginSettingsLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
+#if !__MonoCS__ //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+#endif
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 

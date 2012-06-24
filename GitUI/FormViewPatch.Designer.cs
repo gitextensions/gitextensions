@@ -43,13 +43,17 @@ namespace PatchApply
             this.PatchFileNameEdit = new System.Windows.Forms.TextBox();
             this.labelPatch = new System.Windows.Forms.Label();
             this.changedFileBindingSource = new System.Windows.Forms.BindingSource(this.components);
+#if !__MonoCS__ //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+#endif
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GridChangedFiles)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.patchBindingSource)).BeginInit();
+#if !__MonoCS__ //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
+#endif
             this.splitContainer4.Panel1.SuspendLayout();
             this.splitContainer4.Panel2.SuspendLayout();
             this.splitContainer4.SuspendLayout();
@@ -196,14 +200,18 @@ namespace PatchApply
             this.Load += new System.EventHandler(this.ViewPatch_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+#if !__MonoCS__ //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+#endif
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.GridChangedFiles)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.patchBindingSource)).EndInit();
             this.splitContainer4.Panel1.ResumeLayout(false);
             this.splitContainer4.Panel1.PerformLayout();
             this.splitContainer4.Panel2.ResumeLayout(false);
+#if !__MonoCS__ //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
+#endif
             this.splitContainer4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.changedFileBindingSource)).EndInit();
             this.ResumeLayout(false);
