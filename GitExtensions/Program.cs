@@ -167,8 +167,8 @@ namespace GitExtensions
                 case "branch":
                     GitUICommands.Instance.StartCreateBranchDialog();
                     return;
-                case "browse":      // [-filter]
-                    GitUICommands.Instance.StartBrowseDialog(GetParameterOrEmptyStringAsDefault(args, "-filter"));
+                case "browse":      // [path] [-filter]
+                    RunBrowseCommand(args);
                     return;
                 case "checkout":
                 case "checkoutbranch":
@@ -215,7 +215,7 @@ namespace GitExtensions
                 case "mergetool":
                     RunMergeToolOrConflictCommand(arguments);
                     return;
-                case "openrepo":    // [path]
+                case "openrepo":    // [file]
                     RunOpenRepoCommand(args);
                     return;
                 case "pull":        //  [--rebase] [--merge] [--fetch] [--quiet]
@@ -282,13 +282,26 @@ namespace GitExtensions
             Console.WriteLine(Settings.WorkingDir + searchWindow.SelectedItem);
         }
 
+        private static void RunBrowseCommand(string[] args)
+        {
+            if (args.Length > 2)
+            {
+                if (Directory.Exists(args[2]))
+                {
+                    Settings.WorkingDir = args[2];
+                }
+            }
+
+            GitUICommands.Instance.StartBrowseDialog(GetParameterOrEmptyStringAsDefault(args, "-filter"));
+        }
+
         private static void RunOpenRepoCommand(string[] args)
         {
             if (args.Length > 2)
             {
                 if (File.Exists(args[2]))
                 {
-                    string path = File.ReadAllText(args[2]);
+                    string path = File.ReadAllText(args[2]).Trim().Split(new char[] {'\n'}, 1).FirstOrDefault();
                     if (Directory.Exists(path))
                     {
                         Settings.WorkingDir = path;
@@ -296,7 +309,7 @@ namespace GitExtensions
                 }
             }
 
-            GitUICommands.Instance.StartBrowseDialog();
+            GitUICommands.Instance.StartBrowseDialog(GetParameterOrEmptyStringAsDefault(args, "-filter"));
         }
 
         private static void RunSynchronizeCommand(Dictionary<string, string> arguments)
@@ -415,13 +428,13 @@ namespace GitExtensions
 
         private static string GetParameterOrEmptyStringAsDefault(string[] args, string paramName)
         {
-            foreach (string arg in args)
+            for ( int i = 2; i < args.Length; i++ )
             {
+                string arg = args[i];
                 if (arg.StartsWith(paramName + "="))
                 {
-                    return args[2].Replace(paramName + "=", "");
-
-                }                    
+                    return arg.Replace(paramName + "=", "");
+                }
             }
                 
             return string.Empty;
