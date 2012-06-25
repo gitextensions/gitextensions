@@ -145,31 +145,13 @@ namespace GitExtensions
             RunCommandBasedOnArgument(args, arguments);
         }
 
+        // Please update FormCommandlineHelp if you add or change commands
         private static void RunCommandBasedOnArgument(string[] args, Dictionary<string, string> arguments)
         {
             switch (args[1])
             {
-                case "mergeconflicts":
-                case "mergetool":
-                    RunMergeToolOrConflictCommand(arguments);
-                    return;
-                case "gitbash":
-                    Settings.Module.RunBash();
-                    return;
-                case "gitignore":
-                    GitUICommands.Instance.StartEditGitIgnoreDialog();
-                    return;
-                case "remotes":
-                    GitUICommands.Instance.StartRemotesDialog();
-                    return;
-                case "blame":
-                    RunBlameCommand(args);
-                    return;
-                case "browse":
-                    GitUICommands.Instance.StartBrowseDialog(GetParameterOrEmptyStringAsDefault(args, "-filter"));
-                    return;
-                case "cleanup":
-                    new FormCleanupRepository().ShowDialog();
+                case "about":
+                    Application.Run(new AboutBox());
                     return;
                 case "add":
                 case "addfiles":
@@ -179,8 +161,14 @@ namespace GitExtensions
                 case "applypatch":
                     GitUICommands.Instance.StartApplyPatchDialog();
                     return;
+                case "blame":       // file
+                    RunBlameCommand(args);
+                    return;
                 case "branch":
                     GitUICommands.Instance.StartCreateBranchDialog();
+                    return;
+                case "browse":      // [-filter]
+                    GitUICommands.Instance.StartBrowseDialog(GetParameterOrEmptyStringAsDefault(args, "-filter"));
                     return;
                 case "checkout":
                 case "checkoutbranch":
@@ -189,65 +177,79 @@ namespace GitExtensions
                 case "checkoutrevision":
                     GitUICommands.Instance.StartCheckoutRevisionDialog();
                     return;
-                case "init":
-                    RunInitCommand(args);
+                case "cherry":
+                    GitUICommands.Instance.StartCherryPickDialog();
                     return;
-                case "clone":
+                case "cleanup":
+                    using (var form = new FormCleanupRepository())
+                        form.ShowDialog();
+                    return;
+                case "clone":       // [path]
                     RunCloneCommand(args);
                     return;
-                case "commit":
+                case "commit":      // [--quiet]
                     Commit(arguments);
                     return;
-                case "filehistory":
+                case "filehistory": // [filename]
                     RunFileHistoryCommand(args);
                     return;
-                case "fileeditor":
+                case "fileeditor":  // [filename]
                     RunFileEditorCommand(args);
                     return;
                 case "formatpatch":
                     GitUICommands.Instance.StartFormatPatchDialog();
                     return;
-                case "pull":
+                case "gitbash":
+                    Settings.Module.RunBash();
+                    return;
+                case "gitignore":
+                    GitUICommands.Instance.StartEditGitIgnoreDialog();
+                    return;
+                case "init":        // [path]
+                    RunInitCommand(args);
+                    return;
+                case "merge":       // [--branch name]
+                    RunMergeCommand(arguments);
+                    return;
+                case "mergeconflicts": // [--quiet]
+                case "mergetool":
+                    RunMergeToolOrConflictCommand(arguments);
+                    return;
+                case "openrepo":    // [path]
+                    RunOpenRepoCommand(args);
+                    return;
+                case "pull":        //  [--rebase] [--merge] [--fetch] [--quiet]
                     Pull(arguments);
                     return;
-                case "push":
+                case "push":        // [--quiet]
                     Push(arguments);
                     return;
-                case "settings":
-                    GitUICommands.Instance.StartSettingsDialog();
+                case "rebase":      // [--branch name]
+                    RunRebaseCommand(arguments);
+                    return;
+                case "remotes":
+                    GitUICommands.Instance.StartRemotesDialog();
+                    return;
+                case "revert":      // [filename]
+                    Application.Run(new FormRevert(args[2]));
                     return;
                 case "searchfile":
                     RunSearchFileCommand();
                     return;
-                case "viewdiff":
-                    GitUICommands.Instance.StartCompareRevisionsDialog();
-                    return;
-                case "rebase":
-                    RunRebaseCommand(arguments);
-                    return;
-                case "merge":
-                    RunMergeCommand(arguments);
-                    return;
-                case "cherry":
-                    GitUICommands.Instance.StartCherryPickDialog();
-                    return;
-                case "revert":
-                    Application.Run(new FormRevert(args[2]));
-                    return;
-                case "tag":
-                    GitUICommands.Instance.StartCreateTagDialog();
-                    return;
-                case "about":
-                    Application.Run(new AboutBox());
+                case "settings":
+                    GitUICommands.Instance.StartSettingsDialog();
                     return;
                 case "stash":
                     GitUICommands.Instance.StartStashDialog();
                     return;
-                case "synchronize":
+                case "synchronize": // [--rebase] [--merge] [--fetch] [--quiet]
                     RunSynchronizeCommand(arguments);
                     return;
-                case "openrepo":
-                    RunOpenRepoCommand(args);
+                case "tag":
+                    GitUICommands.Instance.StartCreateTagDialog();
+                    return;
+                case "viewdiff":
+                    GitUICommands.Instance.StartCompareRevisionsDialog();
                     return;
                 default:
                     if (args[1].StartsWith("git://") || args[1].StartsWith("http://") || args[1].StartsWith("https://"))
