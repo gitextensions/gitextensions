@@ -120,7 +120,7 @@
   <data name="label1.Text" xml:space="preserve">
     <value>Supported commandline arguments:
 
-browse
+browse [path] [-filter=]
 about
 add
 addfiles
@@ -144,7 +144,7 @@ init [path]
 merge [--branch name]
 mergeconflicts [--quiet]
 mergetool [--quiet]
-openrepo [path]
+openrepo [file] [-filter=]
 pull [--rebase] [--merge] [--fetch] [--quiet]
 push [--quiet]
 rebase [--branch name]
