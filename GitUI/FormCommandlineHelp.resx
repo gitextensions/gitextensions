@@ -121,29 +121,40 @@
     <value>Supported commandline arguments:
 
 browse
+about
 add
 addfiles
 apply
 applypatch
+blame [file]
 branch
 checkout
 checkoutbranch
 checkoutrevision
+cherry
 cleanup
 clone [path]
 commit [--quiet]
 filehistory [file]
+fileeditor [file]
 formatpatch
-init
+gitbash
+gitignore
+init [path]
+merge [--branch name]
+mergeconflicts [--quiet]
+mergetool [--quiet]
+openrepo [path]
 pull [--rebase] [--merge] [--fetch] [--quiet]
 push [--quiet]
-settings
-viewdiff
 rebase [--branch name]
-merge [--branch name]
-cherry
-tag
+remotes
+revert [filename]
+searchfile
+settings
 stash
-synchronize [--rebase] [--merge] [--fetch] [--quiet]</value>
+synchronize [--rebase] [--merge] [--fetch] [--quiet]
+tag
+viewdiff</value>
   </data>
 </root>
