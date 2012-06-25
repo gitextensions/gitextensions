@@ -1543,6 +1543,7 @@ namespace GitUI
             var inTheMiddleOfBisect = Settings.Module.InTheMiddleOfBisect();
             markRevisionAsBadToolStripMenuItem.Visible = inTheMiddleOfBisect;
             markRevisionAsGoodToolStripMenuItem.Visible = inTheMiddleOfBisect;
+            bisectSkipRevisionToolStripMenuItem.Visible = inTheMiddleOfBisect;
             stopBisectToolStripMenuItem.Visible = inTheMiddleOfBisect;
             bisectSeparator.Visible = inTheMiddleOfBisect;
 
