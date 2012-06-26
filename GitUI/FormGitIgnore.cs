@@ -171,7 +171,7 @@ namespace GitUI
         private void AddPattern_Click(object sender, EventArgs e)
         {
             SaveGitIgnore();
-            using (var frm = new FormAddToGitIgnore("*.dll")) frm.ShowDialog(this);
+            GitUICommands.Instance.StartAddToGitIgnoreDialog(this, "*.dll");
             LoadGitIgnore();
         }
 
