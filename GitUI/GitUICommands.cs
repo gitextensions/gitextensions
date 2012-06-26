@@ -917,6 +917,27 @@ namespace GitUI
             return StartEditGitIgnoreDialog(null);
         }
 
+        public bool StartAddToGitIgnoreDialog(IWin32Window owner, string filePattern)
+        {
+            if (!RequiresValidWorkingDir())
+                return false;
+
+            try
+            {
+                if (!InvokeEvent(owner, PreEditGitIgnore))
+                    return false;
+
+                using (var frm = new FormAddToGitIgnore(filePattern))
+                    frm.ShowDialog(owner);
+            }
+            finally
+            {
+                InvokeEvent(owner, PostEditGitIgnore);
+            }
+
+            return false;
+        }
+
         public bool StartSettingsDialog(IWin32Window owner)
         {
             if (!InvokeEvent(owner, PreSettings))

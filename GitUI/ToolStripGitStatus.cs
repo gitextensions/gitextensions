@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -6,6 +6,7 @@ using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitUIPluginInterfaces;
+using System.Collections.Generic;
 
 namespace GitUI
 {
@@ -21,7 +22,7 @@ namespace GitUI
         /// We often change several files at once.
         /// Wait a second so they're all changed before we try to get the status.
         /// </summary>
-        private const int UpdateDelay = 1000;
+        private const int UpdateDelay = 500;
 
         /// <summary>
         /// Update every 5min, just to make sure something didn't slip through the cracks.
@@ -36,6 +37,7 @@ namespace GitUI
         private string gitPath, submodulesPath;
         private int nextUpdateTime;
         private WorkingStatus currentStatus;
+        private HashSet<string> ignoredFiles = new HashSet<string>(); 
 
         public string CommitTranslatedString { get; set; }
 
@@ -47,6 +49,7 @@ namespace GitUI
             components.Add(workTreeWatcher);
             components.Add(gitDirWatcher);
             CommitTranslatedString = "Commit";
+            ignoredFilesTimer.Interval = MaxUpdatePeriod;
 
             Settings.WorkingDirChanged += (_, newDir, newGitDir) => TryStartWatchingChanges(newDir, newGitDir);
 
@@ -54,6 +57,7 @@ namespace GitUI
             GitUICommands.Instance.PreCheckoutRevision += GitUICommands_PreCheckout;
             GitUICommands.Instance.PostCheckoutBranch += GitUICommands_PostCheckout;
             GitUICommands.Instance.PostCheckoutRevision += GitUICommands_PostCheckout;
+            GitUICommands.Instance.PostEditGitIgnore += GitUICommands_PostEditGitIgnore;
 
             // Setup a file watcher to detect changes to our files. When they
             // change, we'll update our status.
@@ -88,6 +92,11 @@ namespace GitUI
             CurrentStatus = WorkingStatus.Started;
         }
 
+        private void GitUICommands_PostEditGitIgnore(object sender, GitUIBaseEventArgs e)
+        {
+            UpdateIgnoredFiles(true);
+        }
+        
         private void TryStartWatchingChanges(string workTreePath, string gitDirPath)
         {
             // reset status info, it was outdated
@@ -103,6 +112,9 @@ namespace GitUI
                     gitDirWatcher.Path = gitDirPath;
                     gitPath = Path.GetDirectoryName(gitDirPath);
                     submodulesPath = Path.Combine(gitPath, "modules");
+                    UpdateIgnoredFiles(true);
+                    ignoredFilesTimer.Stop();
+                    ignoredFilesTimer.Start();
                     CurrentStatus = WorkingStatus.Started;
                 }
                 else
@@ -122,6 +134,10 @@ namespace GitUI
 
         private void WorkTreeChanged(object sender, FileSystemEventArgs e)
         {
+            var fileName = GitCommandHelpers.FixPath(e.FullPath.Substring(workTreeWatcher.Path.Length));
+            if (ignoredFiles.Contains(fileName))
+                return;
+
             if (e.FullPath.StartsWith(gitPath))
             {
                 GitDirChanged(sender, e);
@@ -154,6 +170,25 @@ namespace GitUI
                 return;
 
             ScheduleDeferredUpdate();
+        }
+
+        private HashSet<string> LoadIgnoredFiles()
+        { 
+            string lsOutput = Settings.Module.RunGitCmd("ls-files -o -i --exclude-standard");
+            string[] tab = lsOutput.Split(new char[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
+            return new HashSet<string>(tab);
+        }
+
+        private void UpdateIgnoredFiles(bool clearImmediately)
+        {
+            if (clearImmediately)
+                ignoredFiles = new HashSet<string>();
+
+            AsyncLoader.DoAsync(
+                LoadIgnoredFiles, 
+                (ignoredSet) => { ignoredFiles = ignoredSet; },
+                (e) => { ignoredFiles = new HashSet<string>(); }
+                );   
         }
 
         private void timerRefresh_Tick(object sender, EventArgs e)
@@ -282,6 +317,11 @@ namespace GitUI
             Stopped,
             Paused,
             Started
+        }
+
+        private void ignoredFilesTimer_Tick(object sender, EventArgs e)
+        {
+            UpdateIgnoredFiles(false);
         }
     }
 }

@@ -30,17 +30,24 @@
         {
             this.components = new System.ComponentModel.Container();
             this.timerRefresh = new System.Windows.Forms.Timer(this.components);
+            this.ignoredFilesTimer = new System.Windows.Forms.Timer(this.components);
             // 
             // timerRefresh
             // 
             this.timerRefresh.Enabled = true;
             this.timerRefresh.Interval = 500;
             this.timerRefresh.Tick += new System.EventHandler(this.timerRefresh_Tick);
+            // 
+            // ignoredFilesTimer
+            // 
+            this.ignoredFilesTimer.Interval = 500;
+            this.ignoredFilesTimer.Tick += new System.EventHandler(this.ignoredFilesTimer_Tick);
 
         }
 
         #endregion
 
         private System.Windows.Forms.Timer timerRefresh;
+        private System.Windows.Forms.Timer ignoredFilesTimer;
     }
 }

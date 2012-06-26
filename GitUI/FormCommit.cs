@@ -1330,7 +1330,7 @@ namespace GitUI
 
             SelectedDiff.Clear();
             var item = Unstaged.SelectedItem;
-            using (var frm = new FormAddToGitIgnore(item.Name)) frm.ShowDialog(this);
+            GitUICommands.Instance.StartAddToGitIgnoreDialog(this, item.Name);
             Initialize();
         }
 
