@@ -112,7 +112,7 @@ namespace GitCommands
             }
         }
 
-        internal static string FixPath(string path)
+        public static string FixPath(string path)
         {
             path = path.Trim();
             return path.Replace('\\', '/');
