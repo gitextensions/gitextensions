@@ -391,14 +391,19 @@ namespace GitUI
             mergetoolPath = Settings.Module.GetEffectivePathSetting(string.Format("mergetool.{0}.path", mergetool));
 
             if (string.IsNullOrEmpty(mergetool) || mergetool == "kdiff3")
-                mergetoolCmd = mergetoolPath + " \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"";
-
-            const string executablePattern = ".exe";
-            int idx = mergetoolCmd.IndexOf(executablePattern);
-            if (idx >= 0)
             {
-                mergetoolPath = mergetoolCmd.Substring(0, idx + executablePattern.Length + 1).Trim(new[] { '\"', ' ' });
-                mergetoolCmd = mergetoolCmd.Substring(idx + executablePattern.Length + 1);
+                mergetoolCmd = "\"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"";
+            }
+            else
+            {
+                //This only works when on Windows....
+                const string executablePattern = ".exe";
+                int idx = mergetoolCmd.IndexOf(executablePattern);
+                if (idx >= 0)
+                {
+                    mergetoolPath = mergetoolCmd.Substring(0, idx + executablePattern.Length + 1).Trim(new[] { '\"', ' ' });
+                    mergetoolCmd = mergetoolCmd.Substring(idx + executablePattern.Length + 1);
+                }
             }
             Cursor.Current = Cursors.Default;
         }
