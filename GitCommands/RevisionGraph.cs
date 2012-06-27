@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using GitCommands.Config;
 
 namespace GitCommands
 {
@@ -210,10 +211,12 @@ namespace GitCommands
             {
                 selectedHead.Selected = true;
 
+                ConfigFile localConfigFile = Settings.Module.GetLocalConfig();
+
                 GitHead selectedHeadMergeSource =
                     result.Find(head => head.IsRemote
-                                        && selectedHead.TrackingRemote == head.Remote
-                                        && selectedHead.MergeWith == head.LocalName);
+                                        && selectedHead.GetTrackingRemote(localConfigFile) == head.Remote
+                                        && selectedHead.GetMergeWith(localConfigFile) == head.LocalName);
 
                 if (selectedHeadMergeSource != null)
                     selectedHeadMergeSource.SelectedHeadMergeSource = true;
