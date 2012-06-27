@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GitCommands.Config;
 
 namespace GitCommands
 {
@@ -50,7 +51,10 @@ namespace GitCommands
 
         public string TrackingRemote
         {
-            get { return Settings.Module.GetSetting(_remoteSettingName); }
+            get 
+            {
+                return GetTrackingRemote(Settings.Module.GetLocalConfig());    
+            }
             set
             {
                 if (String.IsNullOrEmpty(value))
@@ -65,12 +69,21 @@ namespace GitCommands
             }
         }
 
+        /// <summary>
+        /// This method is a faster than the property above. The property reads the config file
+        /// every time it is accessed. This method accepts a configfile what makes it faster when loading
+        /// the revisiongraph.
+        /// </summary>
+        public string GetTrackingRemote(ConfigFile configFile)
+        {
+            return configFile.GetValue(_remoteSettingName);
+        }
+
         public string MergeWith
         {
             get
             {
-                var merge = Settings.Module.GetSetting(_mergeSettingName);
-                return merge.StartsWith("refs/heads/") ? merge.Substring(11) : merge;
+                return GetMergeWith(Settings.Module.GetLocalConfig());
             }
             set
             {
@@ -80,6 +93,19 @@ namespace GitCommands
                     Settings.Module.SetSetting(_mergeSettingName, "refs/heads/" + value);
             }
         }
+
+        /// <summary>
+        /// This method is a faster than the property above. The property reads the config file
+        /// every time it is accessed. This method accepts a configfile what makes it faster when loading
+        /// the revisiongraph.
+        /// </summary>
+        public string GetMergeWith(ConfigFile configFile)
+        {
+            string merge = configFile.GetValue(_mergeSettingName);
+            return merge.StartsWith("refs/heads/") ? merge.Substring(11) : merge;
+
+        }
+
 
         public static GitHead NoHead
         {
