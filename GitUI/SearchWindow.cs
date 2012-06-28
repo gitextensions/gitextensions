@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using GitCommands;
 
 namespace GitUI
 {
@@ -12,9 +13,8 @@ namespace GitUI
     public partial class SearchWindow<T> : Form where T : class
     {
         private readonly Func<string, IList<T>> getCandidates;
-        private Thread backgroundThread;
-        private string _selectedText;
-
+        private AsyncLoader backgroundLoader = new AsyncLoader();
+        
         public SearchWindow(Func<string, IList<T>> getCandidates)
         {
             InitializeComponent();
@@ -34,30 +34,26 @@ namespace GitUI
             }
         }
 
-        private void SearchForCandidates()
+        private void SearchForCandidates(IList<T> candidates)
         {
-            IList<T> candidates = getCandidates(_selectedText);
-            BeginInvoke(new Action(delegate
+            var selectionStart = textBox1.SelectionStart;
+            var selectionLength = textBox1.SelectionLength;
+            listBox1.BeginUpdate();
+            listBox1.Items.Clear();
+
+            for (int i = 0; i < candidates.Count && i < 20; i++)
             {
-                var selectionStart = textBox1.SelectionStart;
-                var selectionLength = textBox1.SelectionLength;
-                listBox1.BeginUpdate();
-                listBox1.Items.Clear();
+                listBox1.Items.Add(candidates[i]);
+            }
 
-                for (int i = 0; i < candidates.Count && i < 20; i++)
-                {
-                    listBox1.Items.Add(candidates[i]);
-                }
-
-                listBox1.EndUpdate();
-                if (candidates.Count > 0)
-                {
-                    listBox1.SelectedIndex = 0;
-                }
-                textBox1.SelectionStart = selectionStart;
-                textBox1.SelectionLength = selectionLength;
-                AutoFit();
-            }));
+            listBox1.EndUpdate();
+            if (candidates.Count > 0)
+            {
+                listBox1.SelectedIndex = 0;
+            }
+            textBox1.SelectionStart = selectionStart;
+            textBox1.SelectionLength = selectionLength;
+            AutoFit();
         }
 
         private void AutoFit()
@@ -91,28 +87,14 @@ namespace GitUI
 
         private void SearchWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (backgroundThread == null)
-            {
-                return;
-            }
-            backgroundThread.Abort();
+            backgroundLoader.Cancel();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            if (backgroundThread != null)
-                backgroundThread.Abort();
+            string  _selectedText = textBox1.Text;
 
-            backgroundThread = new Thread(SearchForCandidates)
-            {
-                IsBackground = true,
-                Priority = ThreadPriority.BelowNormal
-            };
-
-            backgroundThread.SetApartmentState(ApartmentState.STA);
-
-            _selectedText = textBox1.Text;
-            backgroundThread.Start();
+            backgroundLoader.Load(() => getCandidates(_selectedText), SearchForCandidates);
         }
 
         private void textBox1_KeyUp(object sender, KeyEventArgs e)
