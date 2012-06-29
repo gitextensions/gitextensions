@@ -18,7 +18,18 @@ namespace GitCommands.Statistics
         public bool RespectMailmap { get; set; }
 
         public event EventHandler Exited;
-        public event EventHandler Error;
+        public event EventHandler<AsyncErrorEventArgs> Error
+        {
+            add
+            {
+                backgroundLoader.LoadingError += value;
+            }
+
+            remove
+            {
+                backgroundLoader.LoadingError -= value;
+            }
+        }
         public event UpdateEventHandler Updated;
 
         public struct DataPoint
@@ -53,10 +64,9 @@ namespace GitCommands.Statistics
             public string author;
             public DataPoint data;
         }
+        
 
-        private GitCommandsInstance git;
-
-        private Thread backgroundThread;
+        private AsyncLoader backgroundLoader = new AsyncLoader();
 
         ~ImpactLoader()
         {
@@ -65,37 +75,22 @@ namespace GitCommands.Statistics
 
         public void Dispose()
         {
-            if (backgroundThread != null)
-            {
-                backgroundThread.Abort();
-                backgroundThread = null;
-            }
-            if (git != null)
-            {
-                git.Dispose();
-                git = null;
-            }
+            backgroundLoader.Cancel();
         }
 
         public void Execute()
         {
-            if (backgroundThread != null)
-            {
-                backgroundThread.Abort();
-            }
-            backgroundThread = new Thread(execute) {IsBackground = true};
-            backgroundThread.Start();
+            backgroundLoader.Load(execute, executed);
         }
 
-        private void execute()
+        private void execute(ILoadingTaskState taskState)
         {
-            try
+            string authorName = this.RespectMailmap ? "%aN" : "%an";
+
+            string command = "log --pretty=tformat:\"--- %ad --- " + authorName + "\" --numstat --date=iso -C --all --no-merges";
+
+            using (GitCommandsInstance git = new GitCommandsInstance())
             {
-                string authorName = this.RespectMailmap ? "%aN" : "%an";
-
-                string command = "log --pretty=tformat:\"--- %ad --- " + authorName + "\" --numstat --date=iso -C --all --no-merges";
-
-                git = new GitCommandsInstance();
                 git.StreamOutput = true;
                 git.CollectOutput = false;
                 Process p = git.CmdStartProcess(Settings.GitCommand, command);
@@ -104,7 +99,7 @@ namespace GitCommands.Statistics
                 string line = p.StandardOutput.ReadLine();
 
                 // Analyze commit listing
-                while (true)
+                while (!taskState.IsCanceled())
                 {
                     Commit commit = new Commit();
 
@@ -141,7 +136,7 @@ namespace GitCommands.Statistics
                     commit.data.DeletedLines = 0;
 
                     // Parse commit lines
-                    while ((line = p.StandardOutput.ReadLine()) != null && !line.StartsWith("--- "))
+                    while ((line = p.StandardOutput.ReadLine()) != null && !line.StartsWith("--- ") && !taskState.IsCanceled())
                     {
                         // Skip empty line
                         if (string.IsNullOrEmpty(line))
@@ -157,25 +152,19 @@ namespace GitCommands.Statistics
                         }
                     }
 
-                    if (Updated != null)
+                    if (Updated != null && !taskState.IsCanceled())
                         Updated(commit);
                 }
             }
-            catch (ThreadAbortException)
-            {
-                //Silently ignore this exception...
-            }
-            catch (Exception ex)
-            {
-                if (Error != null)
-                    Error(this, EventArgs.Empty);
-                MessageBox.Show("Cannot load commit log." + Environment.NewLine + Environment.NewLine + ex);
-                return;
-            }
 
-            if (Exited != null)
-                Exited(this, EventArgs.Empty);
         }
+
+        private void executed()
+        {
+            if (Exited != null)
+                Exited(this, EventArgs.Empty);        
+        }
+        
 
         public static void AddIntermediateEmptyWeeks(
             ref SortedDictionary<DateTime, Dictionary<string, DataPoint>> impact, Dictionary<string, DataPoint> authors)

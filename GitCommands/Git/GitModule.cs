@@ -1261,7 +1261,6 @@ namespace GitCommands
             return File.Exists(WorkingDirGitDir() + Settings.PathSeparator.ToString() + "BISECT_START");
         }
 
-
         public bool InTheMiddleOfRebase()
         {
             return !File.Exists(GetRebaseDir() + "applying") &&
@@ -1273,7 +1272,6 @@ namespace GitCommands
             return !File.Exists(GetRebaseDir() + "rebasing") &&
                    Directory.Exists(GetRebaseDir());
         }
-
 
         public string GetNextRebasePatch()
         {
