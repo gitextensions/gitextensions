@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
 using ResourceManager.Translation;
+using System.Collections.Generic;
 
 namespace GitUI
 {
@@ -67,11 +68,8 @@ namespace GitUI
         {
             try
             {
-                if (threadUpdateBranchList != null)
-                {
-                    Cursor = Cursors.Default;
-                    threadUpdateBranchList.Abort();
-                }
+                Cursor = Cursors.Default;
+                branchListLoader.Cancel();
 
                 var dirTo = _NO_TRANSLATE_To.Text;
                 if (!dirTo.EndsWith(Settings.PathSeparator.ToString()) && !dirTo.EndsWith(Settings.PathSeparatorWrong.ToString()))
@@ -251,32 +249,23 @@ namespace GitUI
             ToTextUpdate(sender, e);
         }
 
-        private delegate void UpdateBranchesList();
+        private AsyncLoader branchListLoader = new AsyncLoader();
 
-        private Thread threadUpdateBranchList;
-
-        private void UpdateBranches(string from)
+        private void UpdateBranches(List<GitHead> branchList)
         {
-            var result = Settings.Module.GetRemoteHeads(from, false, true);
-            Branches.Invoke(new UpdateBranchesList(() =>
-                {
-                    string text = Branches.Text;
-                    Branches.DataSource = result;
-                    if (result.Any(a => a.LocalName == text))
-                        Branches.Text = text;
-                    Cursor = Cursors.Default;
-                }));            
+            string text = Branches.Text;
+            Branches.DataSource = branchList;
+            if (branchList.Any(a => a.LocalName == text))
+                Branches.Text = text;
+            Cursor = Cursors.Default;
         }
 
         private void Branches_DropDown(object sender, EventArgs e)
         {
             Branches.DisplayMember = "LocalName";
-            if (threadUpdateBranchList != null)
-                threadUpdateBranchList.Abort();
             string from = _NO_TRANSLATE_From.Text;
             Cursor = Cursors.AppStarting;
-            threadUpdateBranchList = new Thread(() => UpdateBranches(from));
-            threadUpdateBranchList.Start();
+            branchListLoader.Load(() => { return Settings.Module.GetRemoteHeads(from, false, true); }, UpdateBranches);
         }
     }
 }

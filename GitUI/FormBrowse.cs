@@ -1463,6 +1463,7 @@ namespace GitUI
         {
             using (var frm = new FormProcess("stash pop")) frm.ShowDialog(this);
             Initialize();
+            MergeConflictHandler.HandleMergeConflicts(this, false);
         }
 
         private void ViewStashToolStripMenuItemClick(object sender, EventArgs e)
