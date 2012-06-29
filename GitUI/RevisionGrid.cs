@@ -1594,6 +1594,14 @@ namespace GitUI
                 }
             }
 
+            //if there is no branch to rebase on, then allow user to rebase on selected commit 
+            if (rebaseDropDown.Items.Count == 0 && !currentBranchPointsToRevision)
+            {
+                ToolStripItem toolStripItem = new ToolStripMenuItem(revision.Guid);
+                toolStripItem.Click += ToolStripItemClickRebaseBranch;
+                rebaseDropDown.Items.Add(toolStripItem);
+            }
+
             //if there is no branch to merge, then let user to merge selected commit into current branch 
             if (mergeBranchDropDown.Items.Count == 0 && !currentBranchPointsToRevision)
             {
