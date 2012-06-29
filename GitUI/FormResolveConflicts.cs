@@ -72,10 +72,12 @@ namespace GitUI
             new TranslationString("All files (*.*)");
         #endregion
 
-        public FormResolveConflicts()
+        public FormResolveConflicts(bool offerCommit)
         {
-            InitializeComponent(); Translate();
-            ThereWhereMergeConflicts = Settings.Module.InTheMiddleOfConflictedMerge();
+            InitializeComponent();
+            Translate();
+            _thereWhereMergeConflicts = Settings.Module.InTheMiddleOfConflictedMerge();
+            _offerCommit = offerCommit;
             merge.Focus();
             merge.Select();
 
@@ -83,6 +85,10 @@ namespace GitUI
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
         }
 
+        public FormResolveConflicts()
+            : this(true)
+        {
+        }
 
         private void Mergetool_Click(object sender, EventArgs e)
         {
@@ -93,7 +99,8 @@ namespace GitUI
             Cursor.Current = Cursors.Default;
         }
 
-        public bool ThereWhereMergeConflicts { get; set; }
+        private bool _offerCommit;
+        private bool _thereWhereMergeConflicts;
 
         private void FormResolveConflicts_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -143,7 +150,8 @@ namespace GitUI
                 ContextChooseRemote.Text = _contextChooseRemoteMergeText.Text;
             }
 
-            if (!Settings.Module.InTheMiddleOfPatch() && !Settings.Module.InTheMiddleOfRebase() && !Settings.Module.InTheMiddleOfConflictedMerge() && ThereWhereMergeConflicts)
+            if (!Settings.Module.InTheMiddleOfPatch() && !Settings.Module.InTheMiddleOfRebase() &&
+                !Settings.Module.InTheMiddleOfConflictedMerge() && _thereWhereMergeConflicts && _offerCommit)
             {
                 if (MessageBox.Show(this, allConflictsResolved.Text, allConflictsResolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
@@ -151,7 +159,7 @@ namespace GitUI
                 }
             }
 
-            if (!Settings.Module.InTheMiddleOfConflictedMerge() && ThereWhereMergeConflicts)
+            if (!Settings.Module.InTheMiddleOfConflictedMerge() && _thereWhereMergeConflicts)
             {
                 Close();
             }
