@@ -1631,7 +1631,7 @@ namespace GitCommands
             bool gitShowsUntrackedFiles = false;
 
             var list = GetDiffFiles(stashName, stashName + "^", true);
-            if (!gitShowsUntrackedFiled)
+            if (!gitShowsUntrackedFiles)
             {
                 string untrackedTreeHash = RunGitCmd("log " + stashName + "^3 --pretty=format:\"%T\" --max-count=1");
                 if (GitRevision.Sha1HashRegex.IsMatch(untrackedTreeHash))
