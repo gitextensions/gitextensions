@@ -67,7 +67,6 @@
             this.RowTemplate.DefaultCellStyle.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             this.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.ShowCellToolTips = false;
             this.Size = new System.Drawing.Size(806, 487);
             this.StandardTab = true;
             this.Resize += new System.EventHandler(this.dataGrid_Resize);
