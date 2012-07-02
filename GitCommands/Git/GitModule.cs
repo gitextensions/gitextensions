@@ -1626,6 +1626,21 @@ namespace GitCommands
             return GitCommandHelpers.GetAllChangedFilesFromString(result, true);
         }
 
+        public List<GitItemStatus> GetStashDiffFiles(string stashName)
+        {
+            bool gitShowsUntrackedFiles = false;
+
+            var list = GetDiffFiles(stashName, stashName + "^", true);
+            if (!gitShowsUntrackedFiled)
+            {
+                string untrackedTreeHash = RunGitCmd("log " + stashName + "^3 --pretty=format:\"%T\" --max-count=1");
+                if (GitRevision.Sha1HashRegex.IsMatch(untrackedTreeHash))
+                    list.AddRange(GetTreeFiles(untrackedTreeHash, true));
+            }
+
+            return list;
+        }
+
         public List<GitItemStatus> GetUntrackedFiles()
         {
             var status = RunCmd(Settings.GitCommand,
@@ -1645,6 +1660,24 @@ namespace GitCommands
                 .ToList();
 
         }
+
+        public List<GitItemStatus> GetTreeFiles(string treeGuid, bool full)
+        {
+            var tree = GetTree(treeGuid, full);
+
+            return tree               
+                .Select(file => new GitItemStatus
+                {
+                    IsNew = true,
+                    IsChanged = false,
+                    IsDeleted = false,
+                    IsStaged = false,
+                    Name = file.Name,
+                    TreeGuid = file.Guid
+                })
+                .ToList();
+        }
+
 
         public List<GitItemStatus> GetAllChangedFiles()
         {
@@ -1967,25 +2000,12 @@ namespace GitCommands
             return tree.Split(new char[] { '\0', '\n' });
         }
 
-        public List<IGitItem> GetTree(string id)
+        public List<IGitItem> GetTree(string id, bool full)
         {
-            var tree = this.RunCachableCmd(Settings.GitCommand, "ls-tree -z \"" + id + "\"", Settings.SystemEncoding);
+            string args = "-z".Join(" ", full ? "-r" : string.Empty);
+            var tree = this.RunCachableCmd(Settings.GitCommand, "ls-tree "+ args +" \"" + id + "\"", Settings.SystemEncoding);
 
-            var itemsStrings = tree.Split(new char[] { '\0', '\n' });
-
-            var items = new List<IGitItem>();
-
-            foreach (var itemsString in itemsStrings)
-            {
-                if (itemsString.Length <= 53)
-                    continue;
-
-                var item = GitItem.CreateGitItemFromString(itemsString);
-
-                items.Add(item);
-            }
-
-            return items;
+            return GitItem.CreateIGitItemsFromString(tree);
         }
 
         public GitBlame Blame(string filename, string from)
