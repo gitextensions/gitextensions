@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands.Config;
+using System.Linq;
 
 namespace GitCommands
 {
@@ -52,7 +53,7 @@ namespace GitCommands
 
         private const string COMMIT_BEGIN = "<(__BEGIN_COMMIT__)>"; // Something unlikely to show up in a comment
 
-        private List<GitHead> heads;
+        private Dictionary<string, List<GitHead>> heads;
 
         private enum ReadStep
         {
@@ -113,7 +114,7 @@ namespace GitCommands
         private void execute(ILoadingTaskState taskState)
         {
             RevisionCount = 0;
-            heads = GetHeads();
+            heads = GetHeads().ToDictionaryOfList(head => head.Guid);
 
             string formatString =
                 /* <COMMIT>       */ COMMIT_BEGIN + "%n" +
@@ -279,16 +280,11 @@ namespace GitCommands
 
                 case ReadStep.Hash:
                     revision.Guid = line;
-                    for (int i = heads.Count - 1; i >= 0; i--)
-                    {
-                        if (heads[i].Guid == revision.Guid)
-                        {
-                            revision.Heads.Add(heads[i]);
 
-                            //Only search for a head once, remove it from list
-                            heads.Remove(heads[i]);
-                        }
-                    }
+                    List<GitHead> headList;
+                    if (heads.TryGetValue(revision.Guid, out headList))
+                        revision.Heads.AddRange(headList);
+                    
                     break;
 
                 case ReadStep.Parents:
