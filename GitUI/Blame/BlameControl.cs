@@ -11,6 +11,7 @@ namespace GitUI.Blame
         private GitBlame _blame;
         private string _lastRevision;
         private RevisionGrid _revGrid;
+        private string _fileName;
 
         public BlameControl()
         {
@@ -152,40 +153,59 @@ namespace GitUI.Blame
         {
             BlameCommitter.ScrollPos = BlameFile.ScrollPos;
         }
+        
+        private AsyncLoader blameLoader = new AsyncLoader();
 
-        public void LoadBlame(string guid, string fileName, RevisionGrid revGrid)
+        public void LoadBlame(string guid, string fileName, RevisionGrid revGrid, Control controlToMask)
         {
+            //refresh only when something changed
+            if (guid.Equals(commitInfo.GetRevision()) && fileName.Equals(fileName) && revGrid == _revGrid)
+                return;
+
+            if (controlToMask != null)
+                controlToMask.Mask();
+
             var scrollpos = BlameFile.ScrollPos;
 
             var blameCommitter = new StringBuilder();
             var blameFile = new StringBuilder();
             _revGrid = revGrid;
+            _fileName = fileName;
 
-            _blame = Settings.Module.Blame(fileName, guid);
-
-            for (int i = 0; i < _blame.Lines.Count; i++)
+            blameLoader.Load(() =>
             {
-                GitBlameLine blameLine = _blame.Lines[i];
-                GitBlameHeader blameHeader = _blame.FindHeaderForCommitGuid(blameLine.CommitGuid);
-                if (i > 0 && _blame.Lines[i - 1].CommitGuid == blameLine.CommitGuid)
-                {
-                    blameCommitter.AppendLine(new string(' ', 200));
-                }
-                else
-                {
-                    blameCommitter.AppendLine((blameHeader.Author + " - " + blameHeader.AuthorTime + " - " + blameHeader.FileName + new string(' ', 100)).Trim(new[] { '\r', '\n' }));
-                }
-                if (blameLine.LineText == null)
-                    blameFile.AppendLine("");
-                else
-                    blameFile.AppendLine(blameLine.LineText.Trim(new char[] { '\r', '\n' }));
-            }
+                _blame = Settings.Module.Blame(fileName, guid);
+            },
+            () =>
+            {
 
-            BlameCommitter.ViewText("committer.txt", blameCommitter.ToString());
-            BlameFile.ViewText(fileName, blameFile.ToString());
-            BlameFile.ScrollPos = scrollpos;
+                for (int i = 0; i < _blame.Lines.Count; i++)
+                {
+                    GitBlameLine blameLine = _blame.Lines[i];
+                    GitBlameHeader blameHeader = _blame.FindHeaderForCommitGuid(blameLine.CommitGuid);
+                    if (i > 0 && _blame.Lines[i - 1].CommitGuid == blameLine.CommitGuid)
+                    {
+                        blameCommitter.AppendLine(new string(' ', 200));
+                    }
+                    else
+                    {
+                        blameCommitter.AppendLine((blameHeader.Author + " - " + blameHeader.AuthorTime + " - " + blameHeader.FileName + new string(' ', 100)).Trim(new[] { '\r', '\n' }));
+                    }
+                    if (blameLine.LineText == null)
+                        blameFile.AppendLine("");
+                    else
+                        blameFile.AppendLine(blameLine.LineText.Trim(new char[] { '\r', '\n' }));
+                }
 
-            commitInfo.SetRevision(guid);
+                BlameCommitter.ViewText("committer.txt", blameCommitter.ToString());
+                BlameFile.ViewText(fileName, blameFile.ToString());
+                BlameFile.ScrollPos = scrollpos;
+
+                commitInfo.SetRevision(guid);
+
+                if (controlToMask != null)
+                    controlToMask.UnMask();
+            });
         }
 
         private void ActiveTextAreaControlDoubleClick(object sender, EventArgs e)
