@@ -39,12 +39,12 @@ namespace ResourceManager.Translation
             Action<string, object, PropertyInfo> action = delegate(string item, object itemObj, PropertyInfo propertyInfo)
             {
                 string value = translation.TranslateItem(category, item, propertyInfo.Name, null);
-                if (value != null)
+                if (!String.IsNullOrEmpty(value))
                     propertyInfo.SetValue(itemObj, value, null);
                 else if (propertyInfo.Name == "ToolTipText" && !String.IsNullOrEmpty((string)propertyInfo.GetValue(itemObj, null)))
                 {
                     value = translation.TranslateItem(category, item, "Text", null);
-                    if (value != null)
+                    if (!String.IsNullOrEmpty(value))
                         propertyInfo.SetValue(itemObj, value, null);
                 }
             };
