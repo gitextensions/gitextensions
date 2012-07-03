@@ -1348,6 +1348,7 @@
     <None Include="Resources\Icons\PullMerge.png" />
     <None Include="Resources\Icons\PullRebase.png" />
     <None Include="Resources\Icons\PullFetchAll.png" />
+    <None Include="Resources\Icons\loadingpanel_static.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif" />
     <Content Include="Translation\Francais.xml" />

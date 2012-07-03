@@ -22,9 +22,7 @@ namespace GitUI
         public FormStash()
         {
             InitializeComponent();
-#if !__MonoCS__ // animated GIFs are not supported in Mono/Linux
             Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
-#endif
             Translate();
             View.ExtraDiffArgumentsChanged += ViewExtraDiffArgumentsChanged;
         }
