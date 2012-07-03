@@ -853,12 +853,31 @@ namespace GitUI.Properties
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap loadingpanel_animated
+        {
+            get {
+                object obj = ResourceManager.GetObject("loadingpanel_animated", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap loadingpanel_static
+        {
+            get {
+                object obj = ResourceManager.GetObject("loadingpanel_static", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+
         public static System.Drawing.Bitmap loadingpanel
         {
             get
             {
-                object obj = ResourceManager.GetObject("loadingpanel", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+#if !__MonoCS__ // animated GIFs are not supported in Mono/Linux
+                return loadingpanel_animated;
+#else
+                return loadingpanel_static;
+#endif
             }
         }
 

@@ -58,6 +58,11 @@ namespace GitUI
             ReloadCommitInfo();
         }
 
+        public string GetRevision()
+        {
+            return _revision;
+        }
+
         private string _revisionInfo;
         private string _tagInfo;
         private string _branchInfo;
