@@ -9,9 +9,7 @@ namespace GitUI.Statistics
         public FormCommitCount()
         {
             InitializeComponent();
-#if !__MonoCS__ // animated GIFs are not supported in Mono/Linux
             this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
-#endif
             Translate();
         }
 
