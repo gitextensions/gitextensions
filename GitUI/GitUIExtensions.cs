@@ -186,6 +186,43 @@ namespace GitUI
                 tabControl.TabPages.Insert(index, page);
         }
 
+        public static void Mask(this Control control)
+        {
+            if (control.FindMaskPanel() == null)
+            {
+                MaskPanel panel = new MaskPanel();
+                control.Controls.Add(panel);
+                panel.Dock = DockStyle.Fill;
+                panel.BringToFront();
+            }
+        }
 
+        public static void UnMask(this Control control)
+        {
+            MaskPanel panel = control.FindMaskPanel();
+            if (panel != null)
+            {
+                control.Controls.Remove(panel);
+                panel.Dispose();
+            }
+        }
+
+        private static MaskPanel FindMaskPanel(this Control control)
+        {
+            foreach (var c in control.Controls)
+                if (c is MaskPanel)
+                    return c as MaskPanel;
+
+            return null;
+        }
+
+        public class MaskPanel : PictureBox
+        {
+            public MaskPanel() 
+            {
+                Image = Properties.Resources.loadingpanel;
+                SizeMode = PictureBoxSizeMode.CenterImage;
+            }
+        }
     }
 }

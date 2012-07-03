@@ -2014,7 +2014,7 @@ namespace GitCommands
             filename = FixPath(filename);
             string blameCommand = string.Format("blame --porcelain -M -w -l \"{0}\" -- \"{1}\"", from, filename);
             var itemsStrings =
-                RunCmd(
+                RunCachableCmd(
                     Settings.GitCommand,
                     blameCommand,
                     Settings.LosslessEncoding
