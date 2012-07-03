@@ -159,6 +159,13 @@ namespace GitUI
 
         public static void ViewPatch(this FileViewer diffViewer, RevisionGrid grid, GitItemStatus file, string defaultText)
         {
+            IList<GitRevision> revisions = grid.GetSelectedRevisions();
+
+            if (revisions.Count == 1 && revisions[0].ParentGuids == null || revisions[0].ParentGuids.Length == 0)
+            {
+                diffViewer.ViewGitItem(file.Name, file.TreeGuid);
+            }
+            else
             diffViewer.ViewPatch(() =>
                                    {
                                        string selectedPatch = diffViewer.GetSelectedPatch(grid, file);
