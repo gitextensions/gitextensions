@@ -9,6 +9,5 @@ namespace ResourceManager.Translation
         void AddTranslationItems(Translation translation);
 
         void TranslateItems(Translation translation);
-
     }
 }
