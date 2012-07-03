@@ -2002,7 +2002,7 @@ namespace GitCommands
 
         public List<IGitItem> GetTree(string id, bool full)
         {
-            string args = "-z".Join(" ", full ? "-r" : string.Empty);
+            string args = "-z".Combine(" ", full ? "-r" : string.Empty);
             var tree = this.RunCachableCmd(Settings.GitCommand, "ls-tree "+ args +" \"" + id + "\"", Settings.SystemEncoding);
 
             return GitItem.CreateIGitItemsFromString(tree);
