@@ -100,8 +100,8 @@ namespace GitUI
         private void TryStartWatchingChanges(string workTreePath, string gitDirPath)
         {
             // reset status info, it was outdated
-            Text = string.Empty;
-            Image = null;
+            Text = CommitTranslatedString;
+            Image = IconClean;
 
             try
             {

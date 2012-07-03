@@ -837,10 +837,14 @@ namespace GitUI
                     return;
                 default:
                     var revision = revisions[0];
+                    
+                    DiffFiles.Revision = revision;
 
-                    if (revision != null &&
-                        revision.ParentGuids != null &&
-                        revision.ParentGuids.Length > 0)
+                    if (revision == null)
+                        DiffFiles.GitItemStatuses = null;
+                    else if (revision.ParentGuids == null || revision.ParentGuids.Length == 0)
+                        DiffFiles.GitItemStatuses = Settings.Module.GetTreeFiles(revision.TreeGuid, true);
+                    else
                     {
                         if (revision.Guid == GitRevision.UncommittedWorkingDirGuid) //working dir changes
                             DiffFiles.GitItemStatuses = Settings.Module.GetAllChangedFiles();
@@ -848,11 +852,8 @@ namespace GitUI
                             if (revision.Guid == GitRevision.IndexGuid) //index
                                 DiffFiles.GitItemStatuses = Settings.Module.GetStagedFiles();
                             else
-                                DiffFiles.GitItemStatuses = Settings.Module.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
-                        DiffFiles.Revision = revision;
+                                DiffFiles.GitItemStatuses = Settings.Module.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);                        
                     }
-                    else
-                        DiffFiles.GitItemStatuses = null;
                     break;
             }
         }
@@ -1043,21 +1044,19 @@ namespace GitUI
         {
             try
             {
-                if (RevisionGrid.GetSelectedRevisions().Count > 0 &&
-                    (RevisionGrid.GetSelectedRevisions()[0].Guid == GitRevision.UncommittedWorkingDirGuid ||
-                     RevisionGrid.GetSelectedRevisions()[0].Guid == GitRevision.IndexGuid))
+                var revisions = RevisionGrid.GetSelectedRevisions();
+
+                if (revisions.Count > 0 &&
+                    (revisions[0].Guid == GitRevision.UncommittedWorkingDirGuid ||
+                     revisions[0].Guid == GitRevision.IndexGuid))
                 {
-                    if (CommitInfoTabControl.TabPages.Contains(CommitInfo))
-                        CommitInfoTabControl.TabPages.Remove(CommitInfo);
-                    if (CommitInfoTabControl.TabPages.Contains(Tree))
-                        CommitInfoTabControl.TabPages.Remove(Tree);
+                    CommitInfoTabControl.RemoveIfExists(CommitInfo);
+                    CommitInfoTabControl.RemoveIfExists(Tree);
                 }
                 else
                 {
-                    if (!CommitInfoTabControl.TabPages.Contains(CommitInfo))
-                        CommitInfoTabControl.TabPages.Insert(0, CommitInfo);
-                    if (!CommitInfoTabControl.TabPages.Contains(Tree))
-                        CommitInfoTabControl.TabPages.Insert(1, Tree);
+                    CommitInfoTabControl.InsertIfNotExists(0, CommitInfo);
+                    CommitInfoTabControl.InsertIfNotExists(1, Tree);
                 }
 
                 FillFileTree();
@@ -1463,6 +1462,7 @@ namespace GitUI
         {
             using (var frm = new FormProcess("stash pop")) frm.ShowDialog(this);
             Initialize();
+            MergeConflictHandler.HandleMergeConflicts(this, false);
         }
 
         private void ViewStashToolStripMenuItemClick(object sender, EventArgs e)

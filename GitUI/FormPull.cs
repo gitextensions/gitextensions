@@ -278,7 +278,7 @@ namespace GitUI
                     if (ShouldStashPop(messageBoxResult, process, true))
                     {
                         using (var frm = new FormProcess("stash pop")) frm.ShowDialog(owner);
-                        MergeConflictHandler.HandleMergeConflicts(owner);
+                        MergeConflictHandler.HandleMergeConflicts(owner, false);
                     }
                 }
 

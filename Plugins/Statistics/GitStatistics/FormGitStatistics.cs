@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands.Statistics;
+using GitCommands;
 using GitStatistics.PieChart;
 using System.Threading;
 using System.Collections.Generic;
@@ -36,7 +37,7 @@ namespace GitStatistics
         public DirectoryInfo WorkingDir;
         private SynchronizationContext syncContext;
         private LineCounter lineCounter;
-        private Thread loadThread;
+        private AsyncLoader loadThread = new AsyncLoader();
 
         public FormGitStatistics(string codeFilePattern)
         {
@@ -138,9 +139,7 @@ namespace GitStatistics
             lineCounter = new LineCounter(WorkingDir);
             lineCounter.LinesOfCodeUpdated += lineCounter_LinesOfCodeUpdated;
 
-            loadThread = new Thread(LoadLinesOfCode);
-
-            loadThread.Start();
+            loadThread.Load(LoadLinesOfCode, () => { });
         }
         
         public void LoadLinesOfCode()
@@ -255,15 +254,8 @@ namespace GitStatistics
 
         private void FormGitStatistics_FormClosing(object sender, FormClosingEventArgs e)
         {
-            try
-            {
-                if (loadThread != null)
-                    loadThread.Abort();
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(this, ex.ToString());
-            }
+            lineCounter.LinesOfCodeUpdated -= lineCounter_LinesOfCodeUpdated;
+            loadThread.Cancel();
         }
     }
 }
