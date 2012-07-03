@@ -791,7 +791,7 @@ namespace GitUI
             return StartStashDialog(null);
         }
 
-        public bool StartResolveConflictsDialog(IWin32Window owner)
+        public bool StartResolveConflictsDialog(IWin32Window owner, bool offerCommit)
         {
             if (!RequiresValidWorkingDir())
                 return false;
@@ -799,7 +799,7 @@ namespace GitUI
             if (!InvokeEvent(owner, PreResolveConflicts))
                 return true;
 
-            using (var form = new FormResolveConflicts())
+            using (var form = new FormResolveConflicts(offerCommit))
                 form.ShowDialog(owner);
 
             InvokeEvent(owner, PostResolveConflicts);
@@ -807,9 +807,19 @@ namespace GitUI
             return true;
         }
 
+        public bool StartResolveConflictsDialog(IWin32Window owner)
+        {
+            return StartResolveConflictsDialog(owner, true);
+        }
+
+        public bool StartResolveConflictsDialog(bool offerCommit)
+        {
+            return StartResolveConflictsDialog(null, offerCommit);
+        }
+
         public bool StartResolveConflictsDialog()
         {
-            return StartResolveConflictsDialog(null);
+            return StartResolveConflictsDialog(null, true);
         }
 
         public bool StartCherryPickDialog(IWin32Window owner)
