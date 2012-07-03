@@ -161,7 +161,7 @@ namespace GitUI
         {
             IList<GitRevision> revisions = grid.GetSelectedRevisions();
 
-            if (revisions.Count == 1 && revisions[0].ParentGuids == null || revisions[0].ParentGuids.Length == 0)
+            if (revisions.Count == 1 && (revisions[0].ParentGuids == null || revisions[0].ParentGuids.Length == 0))
             {
                 diffViewer.ViewGitItem(file.Name, file.TreeGuid);
             }
