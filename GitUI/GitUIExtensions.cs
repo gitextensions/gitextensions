@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using GitUI.Editor;
 using ICSharpCode.TextEditor.Util;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace GitUI
 {
@@ -222,6 +223,7 @@ namespace GitUI
             {
                 Image = Properties.Resources.loadingpanel;
                 SizeMode = PictureBoxSizeMode.CenterImage;
+                BackColor = SystemColors.AppWorkspace;
             }
         }
     }
