@@ -52,8 +52,6 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(Settings.GitBinDir) && !path.Contains(Settings.GitBinDir))
                 Environment.SetEnvironmentVariable("PATH", string.Concat(path, ";", Settings.GitBinDir), EnvironmentVariableTarget.Process);
 
-            Environment.SetEnvironmentVariable("GIT_ASKPASS", "git-gui--askpass");
-
             if (!string.IsNullOrEmpty(Settings.CustomHomeDir))
             {
                 Environment.SetEnvironmentVariable(
