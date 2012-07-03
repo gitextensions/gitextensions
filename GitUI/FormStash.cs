@@ -5,7 +5,6 @@ using GitCommands;
 using PatchApply;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Threading;
 using ResourceManager.Translation;
 
 namespace GitUI
@@ -19,12 +18,9 @@ namespace GitUI
 
 
         public bool NeedRefresh;
-        private readonly SynchronizationContext _syncContext;
 
         public FormStash()
         {
-            _syncContext = SynchronizationContext.Current;
-
             InitializeComponent();
 #if !__MonoCS__ // animated GIFs are not supported in Mono/Linux
             Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
@@ -96,22 +92,10 @@ namespace GitUI
             else if (gitStash == currentWorkingDirStashItem)
             {
                 toolStripButton_customMessage.Enabled = true;
-                ThreadPool.QueueUserWorkItem(
-                o =>
-                {
-                    IList<GitItemStatus> gitItemStatuses = Settings.Module.GetAllChangedFiles();
-                    _syncContext.Post(state1 => LoadGitItemStatuses(gitItemStatuses), null);
-                });
+                AsyncLoader.DoAsync(() => Settings.Module.GetAllChangedFiles(), LoadGitItemStatuses);
             }
             else
-            {
-                ThreadPool.QueueUserWorkItem(
-                o =>
-                {
-                    IList<GitItemStatus> gitItemStatuses = Settings.Module.GetDiffFiles(gitStash.Name, gitStash.Name + "^", true);
-                    _syncContext.Post(state1 => LoadGitItemStatuses(gitItemStatuses), null);
-                });
-            }
+                AsyncLoader.DoAsync(() => Settings.Module.GetStashDiffFiles(gitStash.Name), LoadGitItemStatuses);
         }
 
         private void LoadGitItemStatuses(IList<GitItemStatus> gitItemStatuses)
@@ -135,16 +119,20 @@ namespace GitUI
             }
             else if (stashedItem != null)
             {
-                string extraDiffArguments = View.GetExtraDiffArguments();
-                Encoding encoding = this.View.Encoding;
-                View.ViewPatch(() =>
+                if (stashedItem.IsNew && !stashedItem.IsTracked)
+                    View.ViewGitItem(stashedItem.Name, stashedItem.TreeGuid);
+                else
                 {
-                    PatchApply.Patch patch = Settings.Module.GetSingleDiff(gitStash.Name, gitStash.Name + "^", stashedItem.Name, stashedItem.OldName, extraDiffArguments, encoding);
-                    if (patch == null)
-                        return String.Empty;
-                    return patch.Text;
-                });
-
+                    string extraDiffArguments = View.GetExtraDiffArguments();
+                    Encoding encoding = this.View.Encoding;
+                    View.ViewPatch(() =>
+                    {
+                        PatchApply.Patch patch = Settings.Module.GetSingleDiff(gitStash.Name, gitStash.Name + "^", stashedItem.Name, stashedItem.OldName, extraDiffArguments, encoding);
+                        if (patch == null)
+                            return String.Empty;
+                        return patch.Text;
+                    });
+                }
             }
             else
                 View.ViewText(string.Empty, string.Empty);
