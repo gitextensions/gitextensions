@@ -63,21 +63,17 @@ namespace GitUI
             this.nextButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.translateGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.translateItemBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
             this.splitContainer4.Panel1.SuspendLayout();
             this.splitContainer4.Panel2.SuspendLayout();
             this.splitContainer4.SuspendLayout();
@@ -95,7 +91,7 @@ namespace GitUI
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(749, 472);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(749, 465);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
             // toolStrip1
@@ -124,7 +120,7 @@ namespace GitUI
             this.toolStripButtonNew.Image = global::GitUI.Properties.Resources.New;
             this.toolStripButtonNew.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonNew.Name = "toolStripButtonNew";
-            this.toolStripButtonNew.Size = new System.Drawing.Size(51, 27);
+            this.toolStripButtonNew.Size = new System.Drawing.Size(59, 27);
             this.toolStripButtonNew.Text = "New";
             this.toolStripButtonNew.ToolTipText = "Create new translation";
             this.toolStripButtonNew.Click += new System.EventHandler(this.toolStripButtonNew_Click);
@@ -147,7 +143,7 @@ namespace GitUI
             // toolStripTranslationLabel
             // 
             this.toolStripTranslationLabel.Name = "toolStripTranslationLabel";
-            this.toolStripTranslationLabel.Size = new System.Drawing.Size(109, 27);
+            this.toolStripTranslationLabel.Size = new System.Drawing.Size(134, 27);
             this.toolStripTranslationLabel.Text = "Current translation:";
             // 
             // translations
@@ -162,7 +158,7 @@ namespace GitUI
             // toolStripTranslationLanguageCode
             // 
             this.toolStripTranslationLanguageCode.Name = "toolStripTranslationLanguageCode";
-            this.toolStripTranslationLanguageCode.Size = new System.Drawing.Size(91, 27);
+            this.toolStripTranslationLanguageCode.Size = new System.Drawing.Size(114, 27);
             this.toolStripTranslationLanguageCode.Text = "Language code:";
             // 
             // _NO_TRANSLATE_languageCode
@@ -217,7 +213,7 @@ namespace GitUI
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(743, 436);
+            this.splitContainer1.Size = new System.Drawing.Size(743, 429);
             this.splitContainer1.SplitterDistance = 151;
             this.splitContainer1.TabIndex = 2;
             // 
@@ -226,10 +222,10 @@ namespace GitUI
             this.translateCategories.DisplayMember = "Name";
             this.translateCategories.Dock = System.Windows.Forms.DockStyle.Fill;
             this.translateCategories.FormattingEnabled = true;
-            this.translateCategories.ItemHeight = 15;
+            this.translateCategories.ItemHeight = 20;
             this.translateCategories.Location = new System.Drawing.Point(0, 0);
             this.translateCategories.Name = "translateCategories";
-            this.translateCategories.Size = new System.Drawing.Size(151, 436);
+            this.translateCategories.Size = new System.Drawing.Size(151, 429);
             this.translateCategories.TabIndex = 0;
             this.translateCategories.SelectedIndexChanged += new System.EventHandler(this.translateCategories_SelectedIndexChanged);
             // 
@@ -248,8 +244,8 @@ namespace GitUI
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
-            this.splitContainer2.Size = new System.Drawing.Size(588, 436);
-            this.splitContainer2.SplitterDistance = 279;
+            this.splitContainer2.Size = new System.Drawing.Size(588, 429);
+            this.splitContainer2.SplitterDistance = 272;
             this.splitContainer2.TabIndex = 2;
             // 
             // translateGrid
@@ -270,8 +266,7 @@ namespace GitUI
             this.translateGrid.Name = "translateGrid";
             this.translateGrid.RowHeadersVisible = false;
             this.translateGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.translateGrid.ShowCellToolTips = false;
-            this.translateGrid.Size = new System.Drawing.Size(588, 279);
+            this.translateGrid.Size = new System.Drawing.Size(588, 272);
             this.translateGrid.TabIndex = 1;
             this.translateGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.translateGrid_CellEndEdit);
             this.translateGrid.SelectionChanged += new System.EventHandler(this.translateGrid_SelectionChanged);
@@ -426,9 +421,9 @@ namespace GitUI
             // 
             // FormTranslate
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(749, 472);
+            this.ClientSize = new System.Drawing.Size(749, 465);
             this.Controls.Add(this.tableLayoutPanel1);
             this.MinimumSize = new System.Drawing.Size(680, 510);
             this.Name = "FormTranslate";
@@ -441,21 +436,17 @@ namespace GitUI
             this.toolStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.translateGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.translateItemBindingSource)).EndInit();
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
             this.splitContainer3.ResumeLayout(false);
             this.splitContainer4.Panel1.ResumeLayout(false);
             this.splitContainer4.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
             this.splitContainer4.ResumeLayout(false);
             this.ResumeLayout(false);
 
