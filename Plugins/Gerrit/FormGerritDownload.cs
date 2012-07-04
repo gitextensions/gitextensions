@@ -174,8 +174,20 @@ namespace Gerrit
             if (projectName.EndsWith(".git"))
                 projectName = projectName.Substring(0, projectName.Length - 4);
 
+
+            var sshCmd = GitCommandHelpers.GetSsh();
+            if (GitCommandHelpers.Plink())
+            {
+                sshCmd = GitCommands.Settings.Plink;
+            }
+            if (string.IsNullOrEmpty(sshCmd))
+            {
+                sshCmd = "ssh.exe";
+            }
+
             string hostname = fetchUrl.Host;
             string username = fetchUrl.UserInfo;
+            string portFlag = GitCommandHelpers.Plink() ? " -P " : " -p ";
             int port = fetchUrl.Port;
 
             if (port == -1 && fetchUrl.Scheme == "ssh")
@@ -183,7 +195,7 @@ namespace Gerrit
 
             var sb = new StringBuilder();
 
-            sb.Append("\"");
+            sb.Append('"');
 
             if (!string.IsNullOrEmpty(username))
             {
@@ -192,7 +204,8 @@ namespace Gerrit
             }
 
             sb.Append(hostname);
-            sb.Append("\" -P ");
+            sb.Append('"');            
+            sb.Append(portFlag);
             sb.Append(port);
 
             sb.Append(" \"gerrit query --format=JSON project:");
@@ -201,8 +214,10 @@ namespace Gerrit
             sb.Append(_NO_TRANSLATE_Change.Text);
             sb.Append('"');
 
+
+
             string change = GitCommands.Settings.Module.RunCmd(
-                GitCommands.Settings.Plink,
+                sshCmd,
                 sb.ToString()
             );
 

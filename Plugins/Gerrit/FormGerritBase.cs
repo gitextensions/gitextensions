@@ -44,13 +44,6 @@ namespace Gerrit
                 return;
             }
 
-            if (!GitCommandHelpers.Plink())
-            {
-                MessageBox.Show(this, "Ssh must be configured with PuTTY to be able to communicate to communicate with Gerrit.");
-                Dispose();
-                return;
-            }
-
             base.OnLoad(e);
         }
 
