@@ -1,6 +1,8 @@
 ﻿using System.Windows.Forms;
 using System;
 using Git.hub;
+using System.Web;
+
 namespace Github3
 {
     partial class OAuth
@@ -88,8 +90,8 @@ namespace Github3
 
             if(url.Contains("?code="))
             {
-                string code = url.SkipStr("?code=");
-                code = code.TakeUntilStr("&");
+                Uri uri = new Uri(url);
+                string code = HttpUtility.ParseQueryString(uri.Query).Get("code");               
                 if (!code.IsNullOrEmpty())
                 {
                     this.Hide();
