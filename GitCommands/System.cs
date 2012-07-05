@@ -63,8 +63,32 @@ namespace System
                 return left;
             else
                 return left + sep + right;
-        }  
+        }
 
+        public static string Quote(this string s)
+        {
+            return s.Quote("\"");
+        }
+
+        public static string Quote(this string s, string quotationMark)
+        {
+            if (s == null)
+                return string.Empty;
+
+            return quotationMark + s + quotationMark;
+        }
+
+
+    }
+
+    public static class BoolExtensions
+    {
+
+        public static string AsForce(this bool force)
+        {
+            return force ? " -f " : string.Empty;
+        }
+        
     }
 
 }

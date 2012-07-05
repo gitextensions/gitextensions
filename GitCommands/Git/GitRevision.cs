@@ -83,5 +83,10 @@ namespace GitCommands
                     guid == IndexGuid;
         }
 
+        public bool HasParent()
+        {
+            return ParentGuids != null && ParentGuids.Length > 0;
+        }
+
     }
 }
