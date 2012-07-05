@@ -64,5 +64,11 @@ namespace System.Linq
 
             return result;
         }
+
+        public static string Join(this IEnumerable<string> source, string separator)
+        {
+            return string.Join(separator, source.ToArray());
+        }
+
     }
 }

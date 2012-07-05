@@ -105,6 +105,9 @@ namespace GitUI
             this.difftoolRemoteLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openContainingFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.findInDiffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetFileToToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetFileToBaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetFileToRemoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DiffText = new GitUI.Editor.FileViewer();
             this.TreeContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -851,7 +854,8 @@ namespace GitUI
             this.diffBaseLocalToolStripMenuItem,
             this.difftoolRemoteLocalToolStripMenuItem,
             this.openContainingFolderToolStripMenuItem,
-            this.findInDiffToolStripMenuItem});
+            this.findInDiffToolStripMenuItem,
+            this.resetFileToToolStripMenuItem});
             this.DiffContextMenu.Name = "DiffContextMenu";
             this.DiffContextMenu.Size = new System.Drawing.Size(261, 202);
             this.DiffContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.DiffContextMenu_Opening);
@@ -922,6 +926,29 @@ namespace GitUI
             this.findInDiffToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.findInDiffToolStripMenuItem.Text = "Find";
             this.findInDiffToolStripMenuItem.Click += new System.EventHandler(this.findInDiffToolStripMenuItem_Click);
+            // 
+            // resetFileToToolStripMenuItem
+            // 
+            this.resetFileToToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.resetFileToBaseToolStripMenuItem,
+            this.resetFileToRemoteToolStripMenuItem});
+            this.resetFileToToolStripMenuItem.Name = "resetFileToToolStripMenuItem";
+            this.resetFileToToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.resetFileToToolStripMenuItem.Text = "Reset file to";
+            // 
+            // resetFileToBaseToolStripMenuItem
+            // 
+            this.resetFileToBaseToolStripMenuItem.Name = "resetFileToBaseToolStripMenuItem";
+            this.resetFileToBaseToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.resetFileToBaseToolStripMenuItem.Text = "Base";
+            this.resetFileToBaseToolStripMenuItem.Click += new System.EventHandler(this.resetFileToBaseToolStripMenuItem_Click);
+            // 
+            // resetFileToRemoteToolStripMenuItem
+            // 
+            this.resetFileToRemoteToolStripMenuItem.Name = "resetFileToRemoteToolStripMenuItem";
+            this.resetFileToRemoteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.resetFileToRemoteToolStripMenuItem.Text = "Remote";
+            this.resetFileToRemoteToolStripMenuItem.Click += new System.EventHandler(this.resetFileToRemoteToolStripMenuItem_Click);
             // 
             // DiffText
             // 
@@ -1930,6 +1957,9 @@ namespace GitUI
         private ToolStripMenuItem pullToolStripMenuItem1;
         private ToolStripSeparator toolStripSeparator14;
         private ToolStripMenuItem dontSetAsDefaultToolStripMenuItem;
-        private ToolStripMenuItem fetchAllToolStripMenuItem;        
+        private ToolStripMenuItem fetchAllToolStripMenuItem;
+        private ToolStripMenuItem resetFileToToolStripMenuItem;
+        private ToolStripMenuItem resetFileToBaseToolStripMenuItem;
+        private ToolStripMenuItem resetFileToRemoteToolStripMenuItem;        
     }
 }
