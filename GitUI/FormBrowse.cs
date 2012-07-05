@@ -2427,6 +2427,41 @@ namespace GitUI
                 Initialize();
 
         }
+
+
+        private void resetFileToRemoteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
+
+            if (revisions.Count == 0)
+                return;
+
+            if (DiffFiles.SelectedItems.Count == 0)
+                return;
+
+            var files = DiffFiles.SelectedItems.Select(item => item.Name);
+
+            Settings.Module.CheckoutFiles(files, revisions[0].Guid, false);
+        }
+
+        private void resetFileToBaseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
+
+            if (revisions.Count == 0)
+                return;
+
+            if (!revisions[0].HasParent())
+                return;
+
+            if (DiffFiles.SelectedItems.Count == 0)
+                return;
+
+            var files = DiffFiles.SelectedItems.Select(item => item.Name);
+
+            Settings.Module.CheckoutFiles(files, revisions[0].Guid + "^", false);
+
+        }
       
     }
 
