@@ -43,11 +43,13 @@ namespace PatchApply
             this.PatchFileNameEdit = new System.Windows.Forms.TextBox();
             this.labelPatch = new System.Windows.Forms.Label();
             this.changedFileBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GridChangedFiles)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.patchBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
             this.splitContainer4.Panel1.SuspendLayout();
             this.splitContainer4.Panel2.SuspendLayout();
             this.splitContainer4.SuspendLayout();
@@ -126,17 +128,11 @@ namespace PatchApply
             // 
             this.ChangesList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ChangesList.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.ChangesList.IgnoreWhitespaceChanges = false;
-            this.ChangesList.IsReadOnly = true;
             this.ChangesList.Location = new System.Drawing.Point(0, 0);
+            this.ChangesList.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.ChangesList.Name = "ChangesList";
-            this.ChangesList.NumberOfVisibleLines = 3;
-            this.ChangesList.ScrollPos = 0;
-            this.ChangesList.ShowEntireFile = false;
-            this.ChangesList.ShowLineNumbers = true;
             this.ChangesList.Size = new System.Drawing.Size(689, 292);
             this.ChangesList.TabIndex = 1;
-            this.ChangesList.TreatAllFilesAsText = false;
             // 
             // splitContainer4
             // 
@@ -184,13 +180,13 @@ namespace PatchApply
             this.labelPatch.AutoSize = true;
             this.labelPatch.Location = new System.Drawing.Point(3, 13);
             this.labelPatch.Name = "labelPatch";
-            this.labelPatch.Size = new System.Drawing.Size(34, 13);
+            this.labelPatch.Size = new System.Drawing.Size(30, 12);
             this.labelPatch.TabIndex = 1;
             this.labelPatch.Text = "Patch";
             // 
             // ViewPatch
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(689, 501);
             this.Controls.Add(this.splitContainer4);
@@ -200,12 +196,14 @@ namespace PatchApply
             this.Load += new System.EventHandler(this.ViewPatch_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.GridChangedFiles)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.patchBindingSource)).EndInit();
             this.splitContainer4.Panel1.ResumeLayout(false);
             this.splitContainer4.Panel1.PerformLayout();
             this.splitContainer4.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
             this.splitContainer4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.changedFileBindingSource)).EndInit();
             this.ResumeLayout(false);

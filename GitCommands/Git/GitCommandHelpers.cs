@@ -178,6 +178,7 @@ namespace GitCommands
                 stdOutput = ReadByte(process.StandardOutput.BaseStream);
                 stdError = ReadByte(process.StandardError.BaseStream);
                 process.WaitForExit();
+                startInfo = null;
                 return process.ExitCode;
             }
         }

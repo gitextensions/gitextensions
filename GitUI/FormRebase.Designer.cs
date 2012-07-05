@@ -53,16 +53,20 @@
             this.MergeToolPanel = new System.Windows.Forms.Panel();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.OptionsPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
             this.splitContainer4.Panel1.SuspendLayout();
             this.splitContainer4.Panel2.SuspendLayout();
             this.splitContainer4.SuspendLayout();
@@ -74,7 +78,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 3);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(241, 13);
+            this.label1.Size = new System.Drawing.Size(220, 12);
             this.label1.TabIndex = 0;
             this.label1.Text = "Rebase current branch on top of another branch";
             // 
@@ -83,7 +87,7 @@
             this.Currentbranch.AutoSize = true;
             this.Currentbranch.Location = new System.Drawing.Point(4, 26);
             this.Currentbranch.Name = "Currentbranch";
-            this.Currentbranch.Size = new System.Drawing.Size(44, 13);
+            this.Currentbranch.Size = new System.Drawing.Size(37, 12);
             this.Currentbranch.TabIndex = 2;
             this.Currentbranch.Text = "Current";
             // 
@@ -104,7 +108,7 @@
             this.Branches.FormattingEnabled = true;
             this.Branches.Location = new System.Drawing.Point(88, 47);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(218, 21);
+            this.Branches.Size = new System.Drawing.Size(218, 20);
             this.Branches.TabIndex = 6;
             // 
             // label2
@@ -112,7 +116,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(3, 50);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(58, 13);
+            this.label2.Size = new System.Drawing.Size(51, 12);
             this.label2.TabIndex = 5;
             this.label2.Text = "Rebase on";
             // 
@@ -235,7 +239,7 @@
             this.chkInteractive.AutoSize = true;
             this.chkInteractive.Location = new System.Drawing.Point(1, 3);
             this.chkInteractive.Name = "chkInteractive";
-            this.chkInteractive.Size = new System.Drawing.Size(118, 17);
+            this.chkInteractive.Size = new System.Drawing.Size(103, 16);
             this.chkInteractive.TabIndex = 7;
             this.chkInteractive.Text = "Interactive Rebase";
             this.chkInteractive.UseVisualStyleBackColor = true;
@@ -246,7 +250,7 @@
             this.chkPreserveMerges.AutoSize = true;
             this.chkPreserveMerges.Location = new System.Drawing.Point(162, 3);
             this.chkPreserveMerges.Name = "chkPreserveMerges";
-            this.chkPreserveMerges.Size = new System.Drawing.Size(107, 17);
+            this.chkPreserveMerges.Size = new System.Drawing.Size(95, 16);
             this.chkPreserveMerges.TabIndex = 7;
             this.chkPreserveMerges.Text = "Preserve Merges";
             this.chkPreserveMerges.UseVisualStyleBackColor = true;
@@ -259,7 +263,7 @@
             this.chkAutosquash.Enabled = false;
             this.chkAutosquash.Location = new System.Drawing.Point(330, 3);
             this.chkAutosquash.Name = "chkAutosquash";
-            this.chkAutosquash.Size = new System.Drawing.Size(83, 17);
+            this.chkAutosquash.Size = new System.Drawing.Size(76, 16);
             this.chkAutosquash.TabIndex = 7;
             this.chkAutosquash.Text = "Autosquash";
             this.chkAutosquash.UseVisualStyleBackColor = true;
@@ -269,7 +273,7 @@
             this.ShowOptions.AutoSize = true;
             this.ShowOptions.Location = new System.Drawing.Point(312, 50);
             this.ShowOptions.Name = "ShowOptions";
-            this.ShowOptions.Size = new System.Drawing.Size(71, 13);
+            this.ShowOptions.Size = new System.Drawing.Size(65, 12);
             this.ShowOptions.TabIndex = 27;
             this.ShowOptions.TabStop = true;
             this.ShowOptions.Text = "Show options";
@@ -301,7 +305,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(3, 1);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(107, 13);
+            this.label3.Size = new System.Drawing.Size(97, 12);
             this.label3.TabIndex = 0;
             this.label3.Text = "Commits to re-apply:";
             // 
@@ -310,6 +314,7 @@
             this.patchGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.patchGrid1.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.patchGrid1.Location = new System.Drawing.Point(0, 0);
+            this.patchGrid1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.patchGrid1.Name = "patchGrid1";
             this.patchGrid1.Size = new System.Drawing.Size(544, 244);
             this.patchGrid1.TabIndex = 16;
@@ -377,7 +382,7 @@
             // FormRebase
             // 
             this.AcceptButton = this.Ok;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(803, 368);
@@ -389,19 +394,23 @@
             this.Load += new System.EventHandler(this.FormRebaseLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             this.OptionsPanel.ResumeLayout(false);
             this.OptionsPanel.PerformLayout();
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel1.PerformLayout();
             this.splitContainer3.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
             this.splitContainer3.ResumeLayout(false);
             this.splitContainer4.Panel1.ResumeLayout(false);
             this.splitContainer4.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
             this.splitContainer4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);

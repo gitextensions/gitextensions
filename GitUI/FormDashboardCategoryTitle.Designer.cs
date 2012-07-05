@@ -39,9 +39,9 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 15);
+            this.label1.Location = new System.Drawing.Point(3, 17);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(77, 21);
+            this.label1.Size = new System.Drawing.Size(64, 18);
             this.label1.TabIndex = 0;
             this.label1.Text = "Enter caption";
             this.label1.UseCompatibleTextRendering = true;
@@ -49,9 +49,9 @@
             // Title
             // 
             this.Title.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.Title.Location = new System.Drawing.Point(86, 14);
+            this.Title.Location = new System.Drawing.Point(73, 15);
             this.Title.Name = "Title";
-            this.Title.Size = new System.Drawing.Size(324, 23);
+            this.Title.Size = new System.Drawing.Size(337, 21);
             this.Title.TabIndex = 1;
             // 
             // OkButton
@@ -87,7 +87,7 @@
             // FormDashboardCategoryTitle
             // 
             this.AcceptButton = this.OkButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(494, 52);
             this.Controls.Add(this.tableLayoutPanel1);

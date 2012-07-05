@@ -58,33 +58,33 @@
             this.removeToolStripMenuItem,
             this.editToolStripMenuItem});
             this.CategoryContextMenuStrip1.Name = "CategoryContextMenuStrip1";
-            this.CategoryContextMenuStrip1.Size = new System.Drawing.Size(156, 92);
+            this.CategoryContextMenuStrip1.Size = new System.Drawing.Size(125, 92);
             // 
             // moveUpToolStripMenuItem
             // 
             this.moveUpToolStripMenuItem.Name = "moveUpToolStripMenuItem";
-            this.moveUpToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.moveUpToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.moveUpToolStripMenuItem.Text = "Move Up";
             this.moveUpToolStripMenuItem.Click += new System.EventHandler(this.moveUpToolStripMenuItem_Click);
             // 
             // moveDownToolStripMenuItem
             // 
             this.moveDownToolStripMenuItem.Name = "moveDownToolStripMenuItem";
-            this.moveDownToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.moveDownToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.moveDownToolStripMenuItem.Text = "Move Down";
             this.moveDownToolStripMenuItem.Click += new System.EventHandler(this.moveDownToolStripMenuItem_Click);
             // 
             // removeToolStripMenuItem
             // 
             this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.removeToolStripMenuItem.Text = "Remove";
             this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click_1);
             // 
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.editToolStripMenuItem.Text = "Edit";
             this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
             // 
@@ -92,9 +92,10 @@
             // 
             this.flowLayoutPanel.AutoSize = true;
             this.flowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel.Location = new System.Drawing.Point(0, 23);
+            this.flowLayoutPanel.Location = new System.Drawing.Point(0, 22);
+            this.flowLayoutPanel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.flowLayoutPanel.Name = "flowLayoutPanel";
-            this.flowLayoutPanel.Size = new System.Drawing.Size(256, 22);
+            this.flowLayoutPanel.Size = new System.Drawing.Size(255, 22);
             this.flowLayoutPanel.TabIndex = 9;
             this.flowLayoutPanel.WrapContents = false;
             // 
@@ -106,8 +107,9 @@
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Controls.Add(this.flowLayoutPanel);
             this.Controls.Add(this._NO_TRANSLATE_Caption);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "DashboardCategory";
-            this.Size = new System.Drawing.Size(259, 48);
+            this.Size = new System.Drawing.Size(258, 46);
             this.CategoryContextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

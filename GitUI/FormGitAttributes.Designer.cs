@@ -34,6 +34,7 @@
             this._NO_TRANSLATE_GitAttributesText = new GitUI.Editor.FileViewer();
             this.label1 = new System.Windows.Forms.Label();
             this.Save = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -59,28 +60,23 @@
             // 
             // _NO_TRANSLATE_GitAttributesText
             // 
-            this._NO_TRANSLATE_GitAttributesText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this._NO_TRANSLATE_GitAttributesText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this._NO_TRANSLATE_GitAttributesText.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this._NO_TRANSLATE_GitAttributesText.IgnoreWhitespaceChanges = false;
             this._NO_TRANSLATE_GitAttributesText.IsReadOnly = false;
             this._NO_TRANSLATE_GitAttributesText.Location = new System.Drawing.Point(0, 0);
+            this._NO_TRANSLATE_GitAttributesText.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this._NO_TRANSLATE_GitAttributesText.Name = "_NO_TRANSLATE_GitAttributesText";
-            this._NO_TRANSLATE_GitAttributesText.NumberOfVisibleLines = 3;
-            this._NO_TRANSLATE_GitAttributesText.ScrollPos = 0;
-            this._NO_TRANSLATE_GitAttributesText.ShowEntireFile = false;
-            this._NO_TRANSLATE_GitAttributesText.ShowLineNumbers = true;
             this._NO_TRANSLATE_GitAttributesText.Size = new System.Drawing.Size(381, 474);
             this._NO_TRANSLATE_GitAttributesText.TabIndex = 0;
-            this._NO_TRANSLATE_GitAttributesText.TreatAllFilesAsText = false;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(134, 195);
+            this.label1.Size = new System.Drawing.Size(121, 180);
             this.label1.TabIndex = 1;
             this.label1.Text = resources.GetString("label1.Text");
             // 
@@ -97,17 +93,18 @@
             // 
             // FormGitAttributes
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(634, 474);
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormGitAttributes";
             this.Text = "Edit .gitattributes";
-            this.Load += new System.EventHandler(this.FormMailMapLoad);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMailMapFormClosing);
+            this.Load += new System.EventHandler(this.FormMailMapLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 
