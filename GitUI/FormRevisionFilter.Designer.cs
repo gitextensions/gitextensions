@@ -60,6 +60,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_Limit)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -85,28 +86,28 @@
             0,
             0});
             this._NO_TRANSLATE_Limit.Name = "_NO_TRANSLATE_Limit";
-            this._NO_TRANSLATE_Limit.Size = new System.Drawing.Size(116, 27);
+            this._NO_TRANSLATE_Limit.Size = new System.Drawing.Size(116, 21);
             this._NO_TRANSLATE_Limit.TabIndex = 18;
             // 
             // Message
             // 
             this.Message.Location = new System.Drawing.Point(209, 103);
             this.Message.Name = "Message";
-            this.Message.Size = new System.Drawing.Size(241, 27);
+            this.Message.Size = new System.Drawing.Size(241, 21);
             this.Message.TabIndex = 14;
             // 
             // Author
             // 
             this.Author.Location = new System.Drawing.Point(209, 53);
             this.Author.Name = "Author";
-            this.Author.Size = new System.Drawing.Size(241, 27);
+            this.Author.Size = new System.Drawing.Size(241, 21);
             this.Author.TabIndex = 9;
             // 
             // Since
             // 
             this.Since.Location = new System.Drawing.Point(209, 3);
             this.Since.Name = "Since";
-            this.Since.Size = new System.Drawing.Size(200, 27);
+            this.Since.Size = new System.Drawing.Size(200, 21);
             this.Since.TabIndex = 3;
             // 
             // label1
@@ -114,7 +115,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(44, 20);
+            this.label1.Size = new System.Drawing.Size(28, 12);
             this.label1.TabIndex = 2;
             this.label1.Text = "Since";
             // 
@@ -123,7 +124,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(3, 25);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(40, 20);
+            this.label2.Size = new System.Drawing.Size(25, 12);
             this.label2.TabIndex = 6;
             this.label2.Text = "Until";
             // 
@@ -131,7 +132,7 @@
             // 
             this.Until.Location = new System.Drawing.Point(209, 28);
             this.Until.Name = "Until";
-            this.Until.Size = new System.Drawing.Size(200, 27);
+            this.Until.Size = new System.Drawing.Size(200, 21);
             this.Until.TabIndex = 7;
             // 
             // label3
@@ -139,7 +140,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(3, 50);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(54, 20);
+            this.label3.Size = new System.Drawing.Size(35, 12);
             this.label3.TabIndex = 8;
             this.label3.Text = "Author";
             // 
@@ -148,7 +149,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(3, 75);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(80, 20);
+            this.label4.Size = new System.Drawing.Size(51, 12);
             this.label4.TabIndex = 11;
             this.label4.Text = "Committer";
             // 
@@ -156,7 +157,7 @@
             // 
             this.Committer.Location = new System.Drawing.Point(209, 78);
             this.Committer.Name = "Committer";
-            this.Committer.Size = new System.Drawing.Size(241, 27);
+            this.Committer.Size = new System.Drawing.Size(241, 21);
             this.Committer.TabIndex = 12;
             // 
             // label5
@@ -164,7 +165,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(3, 100);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(67, 20);
+            this.label5.Size = new System.Drawing.Size(43, 12);
             this.label5.TabIndex = 13;
             this.label5.Text = "Message";
             // 
@@ -173,7 +174,7 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(3, 150);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(42, 20);
+            this.label7.Size = new System.Drawing.Size(26, 12);
             this.label7.TabIndex = 17;
             this.label7.Text = "Limit";
             // 
@@ -182,7 +183,7 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(3, 125);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(85, 20);
+            this.label6.Size = new System.Drawing.Size(56, 12);
             this.label6.TabIndex = 15;
             this.label6.Text = "Ignore case";
             // 
@@ -241,7 +242,7 @@
             this.LimitCheck.AutoSize = true;
             this.LimitCheck.Location = new System.Drawing.Point(187, 153);
             this.LimitCheck.Name = "LimitCheck";
-            this.LimitCheck.Size = new System.Drawing.Size(16, 17);
+            this.LimitCheck.Size = new System.Drawing.Size(15, 14);
             this.LimitCheck.TabIndex = 27;
             this.LimitCheck.UseVisualStyleBackColor = true;
             this.LimitCheck.CheckedChanged += new System.EventHandler(this.SinceCheckCheckedChanged);
@@ -253,7 +254,7 @@
             this.IgnoreCase.CheckState = System.Windows.Forms.CheckState.Checked;
             this.IgnoreCase.Location = new System.Drawing.Point(187, 128);
             this.IgnoreCase.Name = "IgnoreCase";
-            this.IgnoreCase.Size = new System.Drawing.Size(16, 17);
+            this.IgnoreCase.Size = new System.Drawing.Size(15, 14);
             this.IgnoreCase.TabIndex = 26;
             this.IgnoreCase.UseVisualStyleBackColor = true;
             // 
@@ -262,7 +263,7 @@
             this.MessageCheck.AutoSize = true;
             this.MessageCheck.Location = new System.Drawing.Point(187, 103);
             this.MessageCheck.Name = "MessageCheck";
-            this.MessageCheck.Size = new System.Drawing.Size(16, 17);
+            this.MessageCheck.Size = new System.Drawing.Size(15, 14);
             this.MessageCheck.TabIndex = 25;
             this.MessageCheck.UseVisualStyleBackColor = true;
             this.MessageCheck.CheckedChanged += new System.EventHandler(this.SinceCheckCheckedChanged);
@@ -272,7 +273,7 @@
             this.CommitterCheck.AutoSize = true;
             this.CommitterCheck.Location = new System.Drawing.Point(187, 78);
             this.CommitterCheck.Name = "CommitterCheck";
-            this.CommitterCheck.Size = new System.Drawing.Size(16, 17);
+            this.CommitterCheck.Size = new System.Drawing.Size(15, 14);
             this.CommitterCheck.TabIndex = 24;
             this.CommitterCheck.UseVisualStyleBackColor = true;
             this.CommitterCheck.CheckedChanged += new System.EventHandler(this.SinceCheckCheckedChanged);
@@ -282,7 +283,7 @@
             this.AuthorCheck.AutoSize = true;
             this.AuthorCheck.Location = new System.Drawing.Point(187, 53);
             this.AuthorCheck.Name = "AuthorCheck";
-            this.AuthorCheck.Size = new System.Drawing.Size(16, 17);
+            this.AuthorCheck.Size = new System.Drawing.Size(15, 14);
             this.AuthorCheck.TabIndex = 23;
             this.AuthorCheck.UseVisualStyleBackColor = true;
             this.AuthorCheck.CheckedChanged += new System.EventHandler(this.SinceCheckCheckedChanged);
@@ -292,7 +293,7 @@
             this.CheckUntil.AutoSize = true;
             this.CheckUntil.Location = new System.Drawing.Point(187, 28);
             this.CheckUntil.Name = "CheckUntil";
-            this.CheckUntil.Size = new System.Drawing.Size(16, 17);
+            this.CheckUntil.Size = new System.Drawing.Size(15, 14);
             this.CheckUntil.TabIndex = 22;
             this.CheckUntil.UseVisualStyleBackColor = true;
             this.CheckUntil.CheckedChanged += new System.EventHandler(this.SinceCheckCheckedChanged);
@@ -302,7 +303,7 @@
             this.SinceCheck.AutoSize = true;
             this.SinceCheck.Location = new System.Drawing.Point(187, 3);
             this.SinceCheck.Name = "SinceCheck";
-            this.SinceCheck.Size = new System.Drawing.Size(16, 17);
+            this.SinceCheck.Size = new System.Drawing.Size(15, 14);
             this.SinceCheck.TabIndex = 21;
             this.SinceCheck.UseVisualStyleBackColor = true;
             this.SinceCheck.CheckedChanged += new System.EventHandler(this.SinceCheckCheckedChanged);
@@ -312,7 +313,7 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(3, 175);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(67, 20);
+            this.label8.Size = new System.Drawing.Size(40, 12);
             this.label8.TabIndex = 28;
             this.label8.Text = "File filter";
             // 
@@ -321,7 +322,7 @@
             this.FileFilterCheck.AutoSize = true;
             this.FileFilterCheck.Location = new System.Drawing.Point(187, 178);
             this.FileFilterCheck.Name = "FileFilterCheck";
-            this.FileFilterCheck.Size = new System.Drawing.Size(16, 17);
+            this.FileFilterCheck.Size = new System.Drawing.Size(15, 14);
             this.FileFilterCheck.TabIndex = 29;
             this.FileFilterCheck.UseVisualStyleBackColor = true;
             this.FileFilterCheck.CheckedChanged += new System.EventHandler(this.SinceCheckCheckedChanged);
@@ -330,7 +331,7 @@
             // 
             this.FileFilter.Location = new System.Drawing.Point(209, 178);
             this.FileFilter.Name = "FileFilter";
-            this.FileFilter.Size = new System.Drawing.Size(241, 27);
+            this.FileFilter.Size = new System.Drawing.Size(241, 21);
             this.FileFilter.TabIndex = 30;
             // 
             // label9
@@ -338,7 +339,7 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(3, 200);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(68, 20);
+            this.label9.Size = new System.Drawing.Size(45, 12);
             this.label9.TabIndex = 31;
             this.label9.Text = "Branches";
             // 
@@ -346,7 +347,7 @@
             // 
             this.BranchFilter.Location = new System.Drawing.Point(209, 203);
             this.BranchFilter.Name = "BranchFilter";
-            this.BranchFilter.Size = new System.Drawing.Size(241, 27);
+            this.BranchFilter.Size = new System.Drawing.Size(241, 21);
             this.BranchFilter.TabIndex = 32;
             // 
             // CurrentBranchOnlyCheck
@@ -354,7 +355,7 @@
             this.CurrentBranchOnlyCheck.AutoSize = true;
             this.CurrentBranchOnlyCheck.Location = new System.Drawing.Point(209, 228);
             this.CurrentBranchOnlyCheck.Name = "CurrentBranchOnlyCheck";
-            this.CurrentBranchOnlyCheck.Size = new System.Drawing.Size(198, 24);
+            this.CurrentBranchOnlyCheck.Size = new System.Drawing.Size(138, 16);
             this.CurrentBranchOnlyCheck.TabIndex = 33;
             this.CurrentBranchOnlyCheck.Text = "Show current branch only";
             this.CurrentBranchOnlyCheck.UseVisualStyleBackColor = true;
@@ -365,7 +366,7 @@
             this.BranchFilterCheck.AutoSize = true;
             this.BranchFilterCheck.Location = new System.Drawing.Point(187, 203);
             this.BranchFilterCheck.Name = "BranchFilterCheck";
-            this.BranchFilterCheck.Size = new System.Drawing.Size(16, 17);
+            this.BranchFilterCheck.Size = new System.Drawing.Size(15, 14);
             this.BranchFilterCheck.TabIndex = 34;
             this.BranchFilterCheck.UseVisualStyleBackColor = true;
             this.BranchFilterCheck.CheckedChanged += new System.EventHandler(this.OnBranchFilterCheckedChanged);
@@ -391,7 +392,7 @@
             // 
             // FormRevisionFilter
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(457, 288);
             this.Controls.Add(this.splitContainer1);
@@ -407,6 +408,7 @@
             this.tableLayoutPanel1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 

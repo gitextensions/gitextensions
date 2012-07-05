@@ -43,8 +43,6 @@ namespace Github3
             this.webBrowser1.Name = "webBrowser1";
             this.webBrowser1.Size = new System.Drawing.Size(980, 600);
             this.webBrowser1.TabIndex = 0;
-            this.webBrowser1.Navigated += web_Navigated;
-            this.webBrowser1.Navigating += web_Navigating;
             // 
             // OAuth
             // 

@@ -40,7 +40,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(9, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(246, 15);
+            this.label1.Size = new System.Drawing.Size(206, 12);
             this.label1.TabIndex = 0;
             this.label1.Text = "Are you sure you want to reset your changes?";
             // 
@@ -71,9 +71,9 @@
             // 
             this.cbDeleteNewFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cbDeleteNewFiles.AutoSize = true;
-            this.cbDeleteNewFiles.Location = new System.Drawing.Point(12, 66);
+            this.cbDeleteNewFiles.Location = new System.Drawing.Point(12, 69);
             this.cbDeleteNewFiles.Name = "cbDeleteNewFiles";
-            this.cbDeleteNewFiles.Size = new System.Drawing.Size(133, 19);
+            this.cbDeleteNewFiles.Size = new System.Drawing.Size(111, 16);
             this.cbDeleteNewFiles.TabIndex = 3;
             this.cbDeleteNewFiles.Text = "Also delete new files";
             this.cbDeleteNewFiles.UseVisualStyleBackColor = true;
@@ -83,14 +83,14 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(9, 24);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(215, 15);
+            this.label2.Size = new System.Drawing.Size(175, 12);
             this.label2.TabIndex = 4;
             this.label2.Text = "This will delete any uncommitted work.";
             // 
             // FormResetChanges
             // 
             this.AcceptButton = this.btnCancel;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(392, 101);

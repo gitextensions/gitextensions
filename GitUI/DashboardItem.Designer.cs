@@ -44,10 +44,11 @@
             panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             panel1.Controls.Add(this._NO_TRANSLATE_BranchName);
             panel1.Controls.Add(this._NO_TRANSLATE_Title);
-            panel1.Location = new System.Drawing.Point(28, 2);
-            panel1.MinimumSize = new System.Drawing.Size(250, 15);
+            panel1.Location = new System.Drawing.Point(24, 2);
+            panel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            panel1.MinimumSize = new System.Drawing.Size(214, 12);
             panel1.Name = "panel1";
-            panel1.Size = new System.Drawing.Size(250, 15);
+            panel1.Size = new System.Drawing.Size(214, 12);
             panel1.TabIndex = 5;
             panel1.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
             panel1.MouseLeave += new System.EventHandler(this.DashboardItem_MouseLeave);
@@ -57,9 +58,9 @@
             this._NO_TRANSLATE_BranchName.AutoSize = true;
             this._NO_TRANSLATE_BranchName.Cursor = System.Windows.Forms.Cursors.Hand;
             this._NO_TRANSLATE_BranchName.Dock = System.Windows.Forms.DockStyle.Left;
-            this._NO_TRANSLATE_BranchName.Location = new System.Drawing.Point(52, 0);
+            this._NO_TRANSLATE_BranchName.Location = new System.Drawing.Point(42, 0);
             this._NO_TRANSLATE_BranchName.Name = "_NO_TRANSLATE_BranchName";
-            this._NO_TRANSLATE_BranchName.Size = new System.Drawing.Size(58, 15);
+            this._NO_TRANSLATE_BranchName.Size = new System.Drawing.Size(48, 12);
             this._NO_TRANSLATE_BranchName.TabIndex = 4;
             this._NO_TRANSLATE_BranchName.Text = "##branch";
             this._NO_TRANSLATE_BranchName.Click += new System.EventHandler(this.Title_Click);
@@ -74,7 +75,7 @@
             this._NO_TRANSLATE_Title.Dock = System.Windows.Forms.DockStyle.Left;
             this._NO_TRANSLATE_Title.Location = new System.Drawing.Point(0, 0);
             this._NO_TRANSLATE_Title.Name = "_NO_TRANSLATE_Title";
-            this._NO_TRANSLATE_Title.Size = new System.Drawing.Size(52, 15);
+            this._NO_TRANSLATE_Title.Size = new System.Drawing.Size(42, 12);
             this._NO_TRANSLATE_Title.TabIndex = 1;
             this._NO_TRANSLATE_Title.TabStop = true;
             this._NO_TRANSLATE_Title.Text = "##label1";
@@ -86,8 +87,9 @@
             this.Icon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.Icon.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Icon.Location = new System.Drawing.Point(0, 2);
+            this.Icon.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Icon.Name = "Icon";
-            this.Icon.Size = new System.Drawing.Size(19, 18);
+            this.Icon.Size = new System.Drawing.Size(16, 14);
             this.Icon.TabIndex = 0;
             this.Icon.TabStop = false;
             this.Icon.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
@@ -97,9 +99,9 @@
             // 
             this._NO_TRANSLATE_Description.AutoSize = true;
             this._NO_TRANSLATE_Description.Cursor = System.Windows.Forms.Cursors.Hand;
-            this._NO_TRANSLATE_Description.Location = new System.Drawing.Point(29, 25);
+            this._NO_TRANSLATE_Description.Location = new System.Drawing.Point(25, 20);
             this._NO_TRANSLATE_Description.Name = "_NO_TRANSLATE_Description";
-            this._NO_TRANSLATE_Description.Size = new System.Drawing.Size(40, 15);
+            this._NO_TRANSLATE_Description.Size = new System.Drawing.Size(33, 12);
             this._NO_TRANSLATE_Description.TabIndex = 3;
             this._NO_TRANSLATE_Description.Text = "##text";
             this._NO_TRANSLATE_Description.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
@@ -107,7 +109,7 @@
             // 
             // DashboardItem
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
@@ -116,8 +118,9 @@
             this.Controls.Add(this.Icon);
             this.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "DashboardItem";
-            this.Size = new System.Drawing.Size(281, 40);
+            this.Size = new System.Drawing.Size(241, 32);
             this.SizeChanged += new System.EventHandler(this.DashboardItem_SizeChanged);
             this.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
             this.MouseLeave += new System.EventHandler(this.DashboardItem_MouseLeave);

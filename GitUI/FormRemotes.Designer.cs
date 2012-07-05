@@ -119,7 +119,7 @@ namespace GitUI
             this.splitContainer1.Panel2.Controls.Add(this.Delete);
             this.splitContainer1.Panel2.Controls.Add(this.New);
             this.splitContainer1.Panel2.Controls.Add(this.Save);
-            this.splitContainer1.Size = new System.Drawing.Size(640, 253);
+            this.splitContainer1.Size = new System.Drawing.Size(640, 256);
             this.splitContainer1.SplitterDistance = 162;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -127,10 +127,10 @@ namespace GitUI
             // 
             this.Remotes.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Remotes.FormattingEnabled = true;
-            this.Remotes.ItemHeight = 15;
+            this.Remotes.ItemHeight = 12;
             this.Remotes.Location = new System.Drawing.Point(0, 0);
             this.Remotes.Name = "Remotes";
-            this.Remotes.Size = new System.Drawing.Size(162, 253);
+            this.Remotes.Size = new System.Drawing.Size(162, 256);
             this.Remotes.TabIndex = 0;
             this.Remotes.SelectedIndexChanged += new System.EventHandler(this.RemotesSelectedIndexChanged);
             // 
@@ -169,7 +169,7 @@ namespace GitUI
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.PuttySshKey.Location = new System.Drawing.Point(130, 13);
             this.PuttySshKey.Name = "PuttySshKey";
-            this.PuttySshKey.Size = new System.Drawing.Size(224, 23);
+            this.PuttySshKey.Size = new System.Drawing.Size(224, 21);
             this.PuttySshKey.TabIndex = 7;
             // 
             // TestConnection
@@ -190,7 +190,7 @@ namespace GitUI
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(6, 16);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(83, 15);
+            this.label3.Size = new System.Drawing.Size(67, 12);
             this.label3.TabIndex = 5;
             this.label3.Text = "Private key file";
             // 
@@ -230,7 +230,7 @@ namespace GitUI
             this.labelPushUrl.AutoSize = true;
             this.labelPushUrl.Location = new System.Drawing.Point(13, 99);
             this.labelPushUrl.Name = "labelPushUrl";
-            this.labelPushUrl.Size = new System.Drawing.Size(51, 15);
+            this.labelPushUrl.Size = new System.Drawing.Size(42, 12);
             this.labelPushUrl.TabIndex = 6;
             this.labelPushUrl.Text = "Push Url";
             this.labelPushUrl.Visible = false;
@@ -244,7 +244,7 @@ namespace GitUI
             this.comboBoxPushUrl.FormattingEnabled = true;
             this.comboBoxPushUrl.Location = new System.Drawing.Point(136, 96);
             this.comboBoxPushUrl.Name = "comboBoxPushUrl";
-            this.comboBoxPushUrl.Size = new System.Drawing.Size(218, 23);
+            this.comboBoxPushUrl.Size = new System.Drawing.Size(218, 20);
             this.comboBoxPushUrl.TabIndex = 7;
             this.comboBoxPushUrl.Visible = false;
             // 
@@ -265,7 +265,7 @@ namespace GitUI
             this.checkBoxSepPushUrl.AutoSize = true;
             this.checkBoxSepPushUrl.Location = new System.Drawing.Point(16, 77);
             this.checkBoxSepPushUrl.Name = "checkBoxSepPushUrl";
-            this.checkBoxSepPushUrl.Size = new System.Drawing.Size(118, 19);
+            this.checkBoxSepPushUrl.Size = new System.Drawing.Size(101, 16);
             this.checkBoxSepPushUrl.TabIndex = 5;
             this.checkBoxSepPushUrl.Text = "Separate Push Url";
             this.checkBoxSepPushUrl.UseVisualStyleBackColor = true;
@@ -277,7 +277,7 @@ namespace GitUI
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.RemoteName.Location = new System.Drawing.Point(136, 19);
             this.RemoteName.Name = "RemoteName";
-            this.RemoteName.Size = new System.Drawing.Size(218, 23);
+            this.RemoteName.Size = new System.Drawing.Size(218, 21);
             this.RemoteName.TabIndex = 1;
             // 
             // label1
@@ -285,7 +285,7 @@ namespace GitUI
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(13, 22);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(39, 15);
+            this.label1.Size = new System.Drawing.Size(31, 12);
             this.label1.TabIndex = 0;
             this.label1.Text = "Name";
             // 
@@ -294,7 +294,7 @@ namespace GitUI
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(13, 51);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(22, 15);
+            this.label2.Size = new System.Drawing.Size(17, 12);
             this.label2.TabIndex = 2;
             this.label2.Text = "Url";
             // 
@@ -307,7 +307,7 @@ namespace GitUI
             this.Url.FormattingEnabled = true;
             this.Url.Location = new System.Drawing.Point(136, 48);
             this.Url.Name = "Url";
-            this.Url.Size = new System.Drawing.Size(218, 23);
+            this.Url.Size = new System.Drawing.Size(218, 20);
             this.Url.TabIndex = 3;
             // 
             // Browse
@@ -324,7 +324,7 @@ namespace GitUI
             // Delete
             // 
             this.Delete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Delete.Location = new System.Drawing.Point(225, 225);
+            this.Delete.Location = new System.Drawing.Point(225, 228);
             this.Delete.Name = "Delete";
             this.Delete.Size = new System.Drawing.Size(75, 25);
             this.Delete.TabIndex = 7;
@@ -335,7 +335,7 @@ namespace GitUI
             // New
             // 
             this.New.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.New.Location = new System.Drawing.Point(306, 225);
+            this.New.Location = new System.Drawing.Point(306, 228);
             this.New.Name = "New";
             this.New.Size = new System.Drawing.Size(75, 25);
             this.New.TabIndex = 6;
@@ -346,7 +346,7 @@ namespace GitUI
             // Save
             // 
             this.Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Save.Location = new System.Drawing.Point(387, 225);
+            this.Save.Location = new System.Drawing.Point(387, 228);
             this.Save.Name = "Save";
             this.Save.Size = new System.Drawing.Size(75, 25);
             this.Save.TabIndex = 5;
@@ -368,10 +368,10 @@ namespace GitUI
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.splitContainer1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 24);
+            this.tabPage1.Location = new System.Drawing.Point(4, 21);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(646, 259);
+            this.tabPage1.Size = new System.Drawing.Size(646, 262);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Remote repositories";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -379,7 +379,7 @@ namespace GitUI
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.splitContainer2);
-            this.tabPage2.Location = new System.Drawing.Point(4, 24);
+            this.tabPage2.Location = new System.Drawing.Point(4, 21);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(644, 252);
@@ -607,7 +607,7 @@ namespace GitUI
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(7, 62);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(108, 15);
+            this.label6.Size = new System.Drawing.Size(88, 12);
             this.label6.TabIndex = 2;
             this.label6.Text = "Default merge with";
             // 
@@ -616,7 +616,7 @@ namespace GitUI
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(7, 35);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(104, 15);
+            this.label5.Size = new System.Drawing.Size(85, 12);
             this.label5.TabIndex = 1;
             this.label5.Text = "Remote repository";
             // 
@@ -625,7 +625,7 @@ namespace GitUI
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(7, 9);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(108, 15);
+            this.label4.Size = new System.Drawing.Size(90, 12);
             this.label4.TabIndex = 0;
             this.label4.Text = "Local branch name";
             // 
@@ -673,7 +673,7 @@ namespace GitUI
             // 
             // FormRemotes
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(654, 287);
             this.Controls.Add(this.tabControl1);

@@ -35,21 +35,19 @@ namespace GitUI.Tag
             this.TName = new System.Windows.Forms.TextBox();
             this.annotate = new System.Windows.Forms.CheckBox();
             this.pushTag = new System.Windows.Forms.CheckBox();
-            this.tagMessage = new EditNetSpell();
+            this.tagMessage = new GitUI.SpellChecker.EditNetSpell();
             this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            
-			// 
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(8, 10);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(60, 15);
+            this.label1.Size = new System.Drawing.Size(49, 12);
             this.label1.TabIndex = 8;
             this.label1.Text = "Tag name";
-            
-			// 
+            // 
             // Ok
             // 
             this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -64,10 +62,10 @@ namespace GitUI.Tag
             // TName
             // 
             this.TName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-						| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.TName.Location = new System.Drawing.Point(108, 7);
             this.TName.Name = "TName";
-            this.TName.Size = new System.Drawing.Size(227, 23);
+            this.TName.Size = new System.Drawing.Size(227, 21);
             this.TName.TabIndex = 6;
             this.TName.KeyUp += new System.Windows.Forms.KeyEventHandler(this.NameKeyUp);
             // 
@@ -76,7 +74,7 @@ namespace GitUI.Tag
             this.annotate.AutoSize = true;
             this.annotate.Location = new System.Drawing.Point(108, 53);
             this.annotate.Name = "annotate";
-            this.annotate.Size = new System.Drawing.Size(137, 19);
+            this.annotate.Size = new System.Drawing.Size(116, 16);
             this.annotate.TabIndex = 9;
             this.annotate.Text = "Create annotated tag";
             this.annotate.UseVisualStyleBackColor = true;
@@ -87,7 +85,7 @@ namespace GitUI.Tag
             this.pushTag.AutoSize = true;
             this.pushTag.Location = new System.Drawing.Point(108, 34);
             this.pushTag.Name = "pushTag";
-            this.pushTag.Size = new System.Drawing.Size(72, 19);
+            this.pushTag.Size = new System.Drawing.Size(63, 16);
             this.pushTag.TabIndex = 10;
             this.pushTag.Text = "Push tag";
             this.pushTag.UseVisualStyleBackColor = true;
@@ -98,23 +96,27 @@ namespace GitUI.Tag
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tagMessage.Enabled = false;
+            this.tagMessage.Font = new System.Drawing.Font("Segoe UI", 7.5F);
             this.tagMessage.Location = new System.Drawing.Point(108, 73);
+            this.tagMessage.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tagMessage.MistakeFont = new System.Drawing.Font("Segoe UI", 7.5F, System.Drawing.FontStyle.Underline);
             this.tagMessage.Name = "tagMessage";
             this.tagMessage.Size = new System.Drawing.Size(339, 82);
             this.tagMessage.TabIndex = 11;
+            this.tagMessage.WatermarkText = "";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(8, 73);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(53, 15);
+            this.label2.Size = new System.Drawing.Size(43, 12);
             this.label2.TabIndex = 12;
             this.label2.Text = "Message";
             // 
             // FormTagSmall
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(459, 167);
             this.Controls.Add(this.label2);
