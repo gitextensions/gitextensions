@@ -37,6 +37,8 @@ namespace GitUI
 
             followFileHistoryToolStripMenuItem.Checked = Settings.FollowRenamesInFileHistory;
             fullHistoryToolStripMenuItem.Checked = Settings.FullHistoryInFileHistory;
+            loadHistoryOnShowToolStripMenuItem.Checked = Settings.LoadFileHistoryOnShow;
+            loadBlameOnShowToolStripMenuItem.Checked = Settings.LoadBlameOnShow;
 
             if (filterByRevision && revision != null && revision.Guid != null)
                 filterBranchHelper.SetBranchFilter(revision.Guid, false);
@@ -47,11 +49,16 @@ namespace GitUI
         {
         }
 
-        protected override void OnLoad(EventArgs e)
+        protected override void OnRuntimeLoad(EventArgs e)
         {
-            base.OnLoad(e);
+            base.OnRuntimeLoad(e);
 
-            ThreadPool.QueueUserWorkItem(o => LoadFileHistory(FileName));
+            bool autoLoad = (tabControl1.SelectedTab == Blame && Settings.LoadBlameOnShow) || Settings.LoadFileHistoryOnShow;
+
+            if (autoLoad)
+                LoadFileHistory();
+            else
+                FileChanges.Visible = false;
         }
 
         private string FileName { get; set; }
@@ -59,6 +66,12 @@ namespace GitUI
         public void SelectBlameTab()
         {
             tabControl1.SelectedTab = Blame;
+        }
+
+        private void LoadFileHistory()
+        {
+            FileChanges.Visible = true;
+            ThreadPool.QueueUserWorkItem(o => LoadFileHistory(FileName));
         }
 
         private void LoadFileHistory(string fileName)
@@ -276,14 +289,14 @@ namespace GitUI
             Settings.FollowRenamesInFileHistory = !Settings.FollowRenamesInFileHistory;
             followFileHistoryToolStripMenuItem.Checked = Settings.FollowRenamesInFileHistory;
 
-            ThreadPool.QueueUserWorkItem(o => LoadFileHistory(FileName));
+            LoadFileHistory();
         }
 
         private void fullHistoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Settings.FullHistoryInFileHistory = !Settings.FullHistoryInFileHistory;
             fullHistoryToolStripMenuItem.Checked = Settings.FullHistoryInFileHistory;
-            ThreadPool.QueueUserWorkItem(o => LoadFileHistory(FileName));
+            LoadFileHistory();
         }
 
         private void cherryPickThisCommitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -331,5 +344,22 @@ namespace GitUI
 		{
 			FileChanges.OpenWithDifftool(FileName, GitUIExtensions.DiffWithRevisionKind.DiffRemoteLocal);
 		}
+
+        private void toolStripSplitLoad_ButtonClick(object sender, EventArgs e)
+        {
+            LoadFileHistory();
+        }
+
+        private void loadHistoryOnShowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.LoadFileHistoryOnShow = !Settings.LoadFileHistoryOnShow;
+            loadHistoryOnShowToolStripMenuItem.Checked = Settings.LoadFileHistoryOnShow;
+        }
+
+        private void loadBlameOnShowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.LoadBlameOnShow = !Settings.LoadBlameOnShow;
+            loadBlameOnShowToolStripMenuItem.Checked = Settings.LoadBlameOnShow;
+        }
     }
 }

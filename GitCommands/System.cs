@@ -19,4 +19,52 @@ namespace System
             return new Tuple<T1, T2>(item1, item2);
         }
     }
+
+    public static class StringExtensions
+    {
+
+        public static string SkipStr(this string str, string toSkip)
+        {
+            if (str == null)
+                return null;
+
+            int idx;
+            idx = str.IndexOf(toSkip);
+            if (idx != -1)
+                return str.Substring(idx + toSkip.Length);
+            else
+                return null;
+        }
+
+        public static String TakeUntilStr(this string str, String untilStr)
+        {
+            if (str == null)
+                return null;
+
+            int idx;
+            idx = str.IndexOf(untilStr);
+            if (idx != -1)
+                return str.Substring(0, idx);
+            else
+                return str;
+        }
+
+        public static bool IsNullOrEmpty(this string s)
+        {
+            return string.IsNullOrEmpty(s);
+        }
+
+
+        public static string Join(this string left, string sep, string right)
+        {
+            if (left.IsNullOrEmpty())
+                return right;
+            else if (right.IsNullOrEmpty())
+                return left;
+            else
+                return left + sep + right;
+        }  
+
+    }
+
 }

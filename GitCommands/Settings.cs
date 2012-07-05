@@ -240,6 +240,18 @@ namespace GitCommands
             set { SafeSet("fullhistoryinfilehistory", value, ref _fullHistoryInFileHistory); }
         }
 
+        public static bool LoadFileHistoryOnShow
+        {
+            get { return GetBool("LoadFileHistoryOnShow", true).Value; }
+            set { SetBool("LoadFileHistoryOnShow", value); }
+        }
+
+        public static bool LoadBlameOnShow
+        {
+            get { return GetBool("LoadBlameOnShow", true).Value; }
+            set { SetBool("LoadBlameOnShow", value); }
+        }
+
         private static bool? _revisionGraphShowWorkingDirChanges;
         public static bool RevisionGraphShowWorkingDirChanges
         {
