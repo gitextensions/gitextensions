@@ -1110,6 +1110,13 @@ namespace GitCommands
             return RunGitCmd(GitCommandHelpers.BranchCmd(branchName, revision, checkout));
         }
 
+        public string CheckoutFiles(IEnumerable<string> fileList, string revision, bool force)
+        {
+            string files = fileList.Select( s => s.Quote()).Join(" ");
+            return RunGitCmd("checkout " + force.AsForce() + revision.Quote() + " -- " + files);
+        }
+
+        
         public string Push(string path)
         {
             return RunGitCmd("push \"" + FixPath(path).Trim() + "\"");
