@@ -1212,6 +1212,10 @@ namespace GitCommands
                 string r = Application.UserAppDataRegistry.Name.Replace(Application.ProductVersion, "1.0.0.0");
                 r = r.Substring(Registry.CurrentUser.Name.Length + 1, r.Length - Registry.CurrentUser.Name.Length - 1);
                 RegistryKey versionDependentRegKey = Registry.CurrentUser.OpenSubKey(r, true);
+                SetBool("TransferedVerDependentReg", true);
+                if (versionDependentRegKey == null)
+                    return;
+
                 try
                 {
                     foreach (string key in versionDependentRegKey.GetValueNames())
@@ -1226,7 +1230,6 @@ namespace GitCommands
                 {
                     versionDependentRegKey.Close();
                 }
-                SetBool("TransferedVerDependentReg", true);
             }
             
         }

@@ -115,6 +115,8 @@
     <Compile Include="Editor\FormGoToLine.Designer.cs">
       <DependentUpon>FormGoToLine.cs</DependentUpon>
     </Compile>
+    <Compile Include="FilterBranchHelper.cs" />
+    <Compile Include="FilterRevisionsHelper.cs" />
     <Compile Include="FormCheckoutBranch.cs">
       <SubType>Form</SubType>
     </Compile>
