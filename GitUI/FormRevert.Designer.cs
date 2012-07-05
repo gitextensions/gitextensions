@@ -78,14 +78,14 @@
             this._NO_TRANSLATE_RevertLabel.MaximumSize = new System.Drawing.Size(460, 0);
             this._NO_TRANSLATE_RevertLabel.Name = "_NO_TRANSLATE_RevertLabel";
             this._NO_TRANSLATE_RevertLabel.Padding = new System.Windows.Forms.Padding(15);
-            this._NO_TRANSLATE_RevertLabel.Size = new System.Drawing.Size(80, 50);
+            this._NO_TRANSLATE_RevertLabel.Size = new System.Drawing.Size(60, 42);
             this._NO_TRANSLATE_RevertLabel.TabIndex = 5;
             this._NO_TRANSLATE_RevertLabel.Text = "label1";
             // 
             // FormRevert
             // 
             this.AcceptButton = this.Revert;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.CancelButton = this.btnCancel;

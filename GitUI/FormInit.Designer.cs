@@ -43,7 +43,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(55, 15);
+            this.label1.Size = new System.Drawing.Size(44, 12);
             this.label1.TabIndex = 0;
             this.label1.Text = "Directory";
             // 
@@ -54,7 +54,7 @@
             this.Directory.FormattingEnabled = true;
             this.Directory.Location = new System.Drawing.Point(98, 6);
             this.Directory.Name = "Directory";
-            this.Directory.Size = new System.Drawing.Size(338, 23);
+            this.Directory.Size = new System.Drawing.Size(338, 20);
             this.Directory.TabIndex = 1;
             this.Directory.DropDown += new System.EventHandler(this.DirectoryDropDown);
             // 
@@ -84,7 +84,7 @@
             this.Central.AutoSize = true;
             this.Central.Location = new System.Drawing.Point(6, 42);
             this.Central.Name = "Central";
-            this.Central.Size = new System.Drawing.Size(317, 19);
+            this.Central.Size = new System.Drawing.Size(263, 16);
             this.Central.TabIndex = 1;
             this.Central.Text = "Central repository, no working dir  (--bare --shared=all)";
             this.Central.UseVisualStyleBackColor = true;
@@ -95,7 +95,7 @@
             this.Personal.Checked = true;
             this.Personal.Location = new System.Drawing.Point(6, 19);
             this.Personal.Name = "Personal";
-            this.Personal.Size = new System.Drawing.Size(126, 19);
+            this.Personal.Size = new System.Drawing.Size(106, 16);
             this.Personal.TabIndex = 0;
             this.Personal.TabStop = true;
             this.Personal.Text = "Personal repository";
@@ -113,7 +113,7 @@
             // 
             // FormInit
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(548, 113);
             this.Controls.Add(this.Init);

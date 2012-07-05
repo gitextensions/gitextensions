@@ -38,9 +38,10 @@
             // 
             this.FileStatusListBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FileStatusListBox.FormattingEnabled = true;
+            this.FileStatusListBox.ItemHeight = 12;
             this.FileStatusListBox.Location = new System.Drawing.Point(0, 0);
             this.FileStatusListBox.Name = "FileStatusListBox";
-            this.FileStatusListBox.Size = new System.Drawing.Size(585, 420);
+            this.FileStatusListBox.Size = new System.Drawing.Size(585, 388);
             this.FileStatusListBox.TabIndex = 0;
             this.FileStatusListBox.SizeChanged += new System.EventHandler(this.NoFiles_SizeChanged);
             this.FileStatusListBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FileStatusListBox_KeyDown);
@@ -52,18 +53,18 @@
             this.NoFiles.Location = new System.Drawing.Point(5, 5);
             this.NoFiles.Margin = new System.Windows.Forms.Padding(0);
             this.NoFiles.Name = "NoFiles";
-            this.NoFiles.Size = new System.Drawing.Size(172, 49);
+            this.NoFiles.Size = new System.Drawing.Size(172, 45);
             this.NoFiles.TabIndex = 1;
             this.NoFiles.Text = "No changes";
             // 
             // FileStatusList
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.NoFiles);
             this.Controls.Add(this.FileStatusListBox);
             this.Name = "FileStatusList";
-            this.Size = new System.Drawing.Size(585, 420);
+            this.Size = new System.Drawing.Size(585, 388);
             this.ResumeLayout(false);
 
         }

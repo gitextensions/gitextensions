@@ -29,7 +29,6 @@ namespace GitUI.Statistics
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormCommitCount));
             this.CommitCount = new System.Windows.Forms.RichTextBox();
             this.Loading = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).BeginInit();
@@ -38,7 +37,6 @@ namespace GitUI.Statistics
             // CommitCount
             // 
             this.CommitCount.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CommitCount.LanguageOption = RichTextBoxLanguageOptions.UIFonts;
             this.CommitCount.Location = new System.Drawing.Point(0, 0);
             this.CommitCount.Name = "CommitCount";
             this.CommitCount.ReadOnly = true;
@@ -58,12 +56,11 @@ namespace GitUI.Statistics
             // 
             // FormCommitCount
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(367, 317);
             this.Controls.Add(this.Loading);
             this.Controls.Add(this.CommitCount);
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "FormCommitCount";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Commit count";

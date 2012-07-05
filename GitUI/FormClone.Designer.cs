@@ -51,6 +51,7 @@
             this.Ok = new System.Windows.Forms.Button();
             this.Central = new System.Windows.Forms.RadioButton();
             this.Personal = new System.Windows.Forms.RadioButton();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -77,8 +78,8 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.LoadSSHKey);
             this.splitContainer1.Panel2.Controls.Add(this.Ok);
-            this.splitContainer1.Size = new System.Drawing.Size(616, 315);
-            this.splitContainer1.SplitterDistance = 272;
+            this.splitContainer1.Size = new System.Drawing.Size(616, 322);
+            this.splitContainer1.SplitterDistance = 278;
             this.splitContainer1.TabIndex = 0;
             // 
             // tableLayoutPanel1
@@ -114,7 +115,7 @@
             this.label1.Dock = System.Windows.Forms.DockStyle.Left;
             this.label1.Location = new System.Drawing.Point(3, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(141, 30);
+            this.label1.Size = new System.Drawing.Size(92, 30);
             this.label1.TabIndex = 1;
             this.label1.Text = "&Repository to clone:";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -126,9 +127,9 @@
             this._NO_TRANSLATE_From.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this._NO_TRANSLATE_From.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this._NO_TRANSLATE_From.FormattingEnabled = true;
-            this._NO_TRANSLATE_From.Location = new System.Drawing.Point(168, 3);
+            this._NO_TRANSLATE_From.Location = new System.Drawing.Point(112, 3);
             this._NO_TRANSLATE_From.Name = "_NO_TRANSLATE_From";
-            this._NO_TRANSLATE_From.Size = new System.Drawing.Size(345, 28);
+            this._NO_TRANSLATE_From.Size = new System.Drawing.Size(401, 20);
             this._NO_TRANSLATE_From.TabIndex = 2;
             this._NO_TRANSLATE_From.SelectedIndexChanged += new System.EventHandler(this.FromSelectedIndexChanged);
             this._NO_TRANSLATE_From.TextUpdate += new System.EventHandler(this.FromTextUpdate);
@@ -138,9 +139,9 @@
             this.Branches.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.Branches.FormattingEnabled = true;
-            this.Branches.Location = new System.Drawing.Point(168, 93);
+            this.Branches.Location = new System.Drawing.Point(112, 93);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(345, 28);
+            this.Branches.Size = new System.Drawing.Size(401, 20);
             this.Branches.TabIndex = 9;
             this.Branches.DropDown += new System.EventHandler(this.Branches_DropDown);
             // 
@@ -172,7 +173,7 @@
             this.brachLabel.Dock = System.Windows.Forms.DockStyle.Left;
             this.brachLabel.Location = new System.Drawing.Point(3, 90);
             this.brachLabel.Name = "brachLabel";
-            this.brachLabel.Size = new System.Drawing.Size(57, 32);
+            this.brachLabel.Size = new System.Drawing.Size(38, 32);
             this.brachLabel.TabIndex = 8;
             this.brachLabel.Text = "&Branch:";
             this.brachLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -181,9 +182,9 @@
             // 
             this._NO_TRANSLATE_NewDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._NO_TRANSLATE_NewDirectory.Location = new System.Drawing.Point(168, 63);
+            this._NO_TRANSLATE_NewDirectory.Location = new System.Drawing.Point(112, 63);
             this._NO_TRANSLATE_NewDirectory.Name = "_NO_TRANSLATE_NewDirectory";
-            this._NO_TRANSLATE_NewDirectory.Size = new System.Drawing.Size(345, 27);
+            this._NO_TRANSLATE_NewDirectory.Size = new System.Drawing.Size(401, 21);
             this._NO_TRANSLATE_NewDirectory.TabIndex = 7;
             this._NO_TRANSLATE_NewDirectory.TextChanged += new System.EventHandler(this.NewDirectoryTextChanged);
             // 
@@ -193,7 +194,7 @@
             this.label2.Dock = System.Windows.Forms.DockStyle.Left;
             this.label2.Location = new System.Drawing.Point(3, 30);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(88, 30);
+            this.label2.Size = new System.Drawing.Size(56, 30);
             this.label2.TabIndex = 3;
             this.label2.Text = "&Destination:";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -204,7 +205,7 @@
             this.label3.Dock = System.Windows.Forms.DockStyle.Left;
             this.label3.Location = new System.Drawing.Point(3, 60);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(159, 30);
+            this.label3.Size = new System.Drawing.Size(103, 30);
             this.label3.TabIndex = 6;
             this.label3.Text = "&Subdirectory to create:";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -216,9 +217,9 @@
             this._NO_TRANSLATE_To.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this._NO_TRANSLATE_To.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this._NO_TRANSLATE_To.FormattingEnabled = true;
-            this._NO_TRANSLATE_To.Location = new System.Drawing.Point(168, 33);
+            this._NO_TRANSLATE_To.Location = new System.Drawing.Point(112, 33);
             this._NO_TRANSLATE_To.Name = "_NO_TRANSLATE_To";
-            this._NO_TRANSLATE_To.Size = new System.Drawing.Size(345, 28);
+            this._NO_TRANSLATE_To.Size = new System.Drawing.Size(401, 20);
             this._NO_TRANSLATE_To.TabIndex = 4;
             this._NO_TRANSLATE_To.DropDown += new System.EventHandler(this.ToDropDown);
             this._NO_TRANSLATE_To.SelectedIndexChanged += new System.EventHandler(this.ToSelectedIndexChanged);
@@ -231,7 +232,7 @@
             this.cbIntializeAllSubmodules.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbIntializeAllSubmodules.Location = new System.Drawing.Point(21, 244);
             this.cbIntializeAllSubmodules.Name = "cbIntializeAllSubmodules";
-            this.cbIntializeAllSubmodules.Size = new System.Drawing.Size(191, 24);
+            this.cbIntializeAllSubmodules.Size = new System.Drawing.Size(128, 16);
             this.cbIntializeAllSubmodules.TabIndex = 25;
             this.cbIntializeAllSubmodules.Text = "Initialize all submodules";
             this.cbIntializeAllSubmodules.UseVisualStyleBackColor = true;
@@ -266,7 +267,7 @@
             this.CentralRepository.AutoSize = true;
             this.CentralRepository.Location = new System.Drawing.Point(6, 42);
             this.CentralRepository.Name = "CentralRepository";
-            this.CentralRepository.Size = new System.Drawing.Size(304, 24);
+            this.CentralRepository.Size = new System.Drawing.Size(204, 16);
             this.CentralRepository.TabIndex = 1;
             this.CentralRepository.Text = "P&ublic repository, no working dir  (--bare)";
             this.CentralRepository.UseVisualStyleBackColor = true;
@@ -277,7 +278,7 @@
             this.PersonalRepository.Checked = true;
             this.PersonalRepository.Location = new System.Drawing.Point(6, 19);
             this.PersonalRepository.Name = "PersonalRepository";
-            this.PersonalRepository.Size = new System.Drawing.Size(157, 24);
+            this.PersonalRepository.Size = new System.Drawing.Size(106, 16);
             this.PersonalRepository.TabIndex = 0;
             this.PersonalRepository.TabStop = true;
             this.PersonalRepository.Text = "&Personal repository";
@@ -331,9 +332,9 @@
             // FormClone
             // 
             this.AcceptButton = this.Ok;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(616, 315);
+            this.ClientSize = new System.Drawing.Size(616, 322);
             this.Controls.Add(this.splitContainer1);
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(933, 360);
@@ -346,6 +347,7 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();

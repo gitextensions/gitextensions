@@ -45,6 +45,7 @@ namespace GitUI
             this.addNoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RevisionInfo = new System.Windows.Forms.RichTextBox();
             this.tableLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -208,6 +209,7 @@ namespace GitUI
             this.tableLayout.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.commitInfoContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);

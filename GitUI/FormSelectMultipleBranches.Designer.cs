@@ -35,9 +35,9 @@
             // 
             // Branches
             // 
-            this.Branches.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.Branches.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.Branches.CheckOnClick = true;
             this.Branches.ColumnWidth = 250;
             this.Branches.FormattingEnabled = true;
@@ -62,13 +62,13 @@
             this.selectBranchesLabel.AutoSize = true;
             this.selectBranchesLabel.Location = new System.Drawing.Point(12, 9);
             this.selectBranchesLabel.Name = "selectBranchesLabel";
-            this.selectBranchesLabel.Size = new System.Drawing.Size(83, 13);
+            this.selectBranchesLabel.Size = new System.Drawing.Size(73, 12);
             this.selectBranchesLabel.TabIndex = 4;
             this.selectBranchesLabel.Text = "Select branches";
             // 
             // FormSelectMultipleBranches
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(263, 252);
             this.Controls.Add(this.selectBranchesLabel);

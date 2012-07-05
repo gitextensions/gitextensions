@@ -30,14 +30,17 @@ namespace GitUI
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.DiffFiles = new GitUI.FileStatusList();
-            this.DiffText = new FileViewer();
+            this.DiffText = new GitUI.Editor.FileViewer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.commitInfo = new GitUI.CommitInfo();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -63,9 +66,12 @@ namespace GitUI
             // DiffFiles
             // 
             this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DiffFiles.Font = new System.Drawing.Font("Segoe UI", 7.5F);
             this.DiffFiles.GitItemStatuses = null;
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
             this.DiffFiles.Name = "DiffFiles";
+            this.DiffFiles.Revision = null;
+            this.DiffFiles.SelectedIndex = -1;
             this.DiffFiles.SelectedItem = null;
             this.DiffFiles.Size = new System.Drawing.Size(239, 410);
             this.DiffFiles.TabIndex = 0;
@@ -74,16 +80,12 @@ namespace GitUI
             // DiffText
             // 
             this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DiffText.IgnoreWhitespaceChanges = false;
+            this.DiffText.Font = new System.Drawing.Font("Segoe UI", 7.5F);
             this.DiffText.Location = new System.Drawing.Point(0, 0);
             this.DiffText.Margin = new System.Windows.Forms.Padding(4);
             this.DiffText.Name = "DiffText";
-            this.DiffText.NumberOfVisibleLines = 3;
-            this.DiffText.ScrollPos = 0;
-            this.DiffText.ShowEntireFile = false;
             this.DiffText.Size = new System.Drawing.Size(474, 410);
             this.DiffText.TabIndex = 0;
-            this.DiffText.TreatAllFilesAsText = false;
             // 
             // splitContainer2
             // 
@@ -106,6 +108,7 @@ namespace GitUI
             // commitInfo
             // 
             this.commitInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.commitInfo.Font = new System.Drawing.Font("Segoe UI", 7.5F);
             this.commitInfo.Location = new System.Drawing.Point(0, 0);
             this.commitInfo.Name = "commitInfo";
             this.commitInfo.Size = new System.Drawing.Size(717, 115);
@@ -113,7 +116,7 @@ namespace GitUI
             // 
             // FormDiffSmall
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(717, 529);
             this.Controls.Add(this.splitContainer2);
@@ -125,9 +128,11 @@ namespace GitUI
             this.Load += new System.EventHandler(this.FormDiffSmall_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             this.ResumeLayout(false);
 

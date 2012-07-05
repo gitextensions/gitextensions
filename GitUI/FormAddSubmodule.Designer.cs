@@ -66,7 +66,7 @@
             this.Directory.FormattingEnabled = true;
             this.Directory.Location = new System.Drawing.Point(144, 14);
             this.Directory.Name = "Directory";
-            this.Directory.Size = new System.Drawing.Size(228, 23);
+            this.Directory.Size = new System.Drawing.Size(228, 20);
             this.Directory.TabIndex = 5;
             this.Directory.SelectedIndexChanged += new System.EventHandler(this.DirectorySelectedIndexChanged);
             this.Directory.TextUpdate += new System.EventHandler(this.DirectoryTextUpdate);
@@ -76,7 +76,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(5, 17);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(108, 15);
+            this.label1.Size = new System.Drawing.Size(90, 12);
             this.label1.TabIndex = 4;
             this.label1.Text = "Path to submodule";
             // 
@@ -85,7 +85,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(5, 44);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(62, 15);
+            this.label2.Size = new System.Drawing.Size(51, 12);
             this.label2.TabIndex = 8;
             this.label2.Text = "Local path";
             // 
@@ -93,7 +93,7 @@
             // 
             this.LocalPath.Location = new System.Drawing.Point(144, 41);
             this.LocalPath.Name = "LocalPath";
-            this.LocalPath.Size = new System.Drawing.Size(228, 23);
+            this.LocalPath.Size = new System.Drawing.Size(228, 21);
             this.LocalPath.TabIndex = 9;
             // 
             // label3
@@ -101,7 +101,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(5, 71);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(44, 15);
+            this.label3.Size = new System.Drawing.Size(36, 12);
             this.label3.TabIndex = 10;
             this.label3.Text = "Branch";
             // 
@@ -110,7 +110,7 @@
             this.Branch.FormattingEnabled = true;
             this.Branch.Location = new System.Drawing.Point(144, 68);
             this.Branch.Name = "Branch";
-            this.Branch.Size = new System.Drawing.Size(228, 23);
+            this.Branch.Size = new System.Drawing.Size(228, 20);
             this.Branch.TabIndex = 11;
             this.Branch.DropDown += new System.EventHandler(this.BranchDropDown);
             // 
@@ -126,7 +126,7 @@
             // 
             // FormAddSubmodule
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(492, 131);
             this.Controls.Add(this.chkForce);
