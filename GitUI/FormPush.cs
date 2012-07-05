@@ -113,6 +113,37 @@ namespace GitUI
                 Close();
         }
 
+        private string GetDefaultPushLocal(String remote)
+        {
+            string localRef = null;
+
+            //Get default push for this remote (if any). Local branch name is left of ":"
+            var pushSettingValue = Settings.Module.GetSetting(string.Format("remote.{0}.push", remote));
+            if (!string.IsNullOrEmpty(pushSettingValue))
+            {
+                var values = pushSettingValue.Split(':');
+                if (values.Length > 0)
+                    localRef = values[0];
+            }
+            return localRef;
+        }
+
+        private string GetDefaultPushRemote(String remote)
+        {
+            string remoteRef = null;
+
+            //Get default push for this remote (if any). Remote branch name is right of ":"
+            var pushSettingValue = Settings.Module.GetSetting(string.Format("remote.{0}.push", remote));
+            if (!string.IsNullOrEmpty(pushSettingValue))
+            {
+                var values = pushSettingValue.Split(':');
+                if (values.Length > 1)
+                    remoteRef = values[1];
+            }
+
+            return remoteRef;
+        }
+
         private bool PushChanges(IWin32Window owner)
         {
             if (PullFromUrl.Checked && string.IsNullOrEmpty(PushDestination.Text))
@@ -139,9 +170,11 @@ namespace GitUI
             //known remotes anyway.
             if (TabControlTagBranch.SelectedTab == BranchTab && PullFromRemote.Checked)
             {
-                //The current branch is not known by the remote (as far as we now since we are disconnected....)
-                if (!Settings.Module.GetHeads(true, true).Exists(x => x.Remote == _NO_TRANSLATE_Remotes.Text && x.LocalName == RemoteBranch.Text))
-                    //Ask if this is what the user wants
+                //If the current branch is not the default push, and not known by the remote 
+                //(as far as we know since we are disconnected....)
+                if (RemoteBranch.Text != GetDefaultPushRemote(_NO_TRANSLATE_Remotes.Text) &&
+                    !Settings.Module.GetHeads(true, true).Exists(x => x.Remote == _NO_TRANSLATE_Remotes.Text && x.LocalName == RemoteBranch.Text) )
+                    //Ask if this is really what the user wants
                     if (MessageBox.Show(owner, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo) ==
                         DialogResult.No)
                     {
@@ -409,17 +442,18 @@ namespace GitUI
 
             if (PullFromRemote.Checked && !string.IsNullOrEmpty(pushSettingValue))
             {
-                var values = pushSettingValue.Split(':');
+                string defaultLocal = GetDefaultPushLocal(_NO_TRANSLATE_Remotes.Text);
+                string defaultRemote = GetDefaultPushRemote(_NO_TRANSLATE_Remotes.Text);
+
                 RemoteBranch.Text = "";
-                if (values.Length > 0)
+                if (!string.IsNullOrEmpty(defaultLocal))
                 {
-                    var currentBranch = new GitHead(null, values[0], _NO_TRANSLATE_Remotes.Text);
+                    var currentBranch = new GitHead(null, defaultLocal, _NO_TRANSLATE_Remotes.Text);
                     _NO_TRANSLATE_Branch.Items.Add(currentBranch);
                     _NO_TRANSLATE_Branch.SelectedItem = currentBranch;
                 }
-                if (values.Length > 1)
-                    RemoteBranch.Text = values[1];
-
+                if (!string.IsNullOrEmpty(defaultRemote))
+                    RemoteBranch.Text = defaultRemote;
                 return;
             }
 
