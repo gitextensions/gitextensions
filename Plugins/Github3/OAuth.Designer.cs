@@ -65,6 +65,8 @@ namespace Github3
 
         protected override void OnLoad(System.EventArgs e)
         {
+            webBrowser1.ScriptErrorsSuppressed = true;
+            webBrowser1.CausesValidation = false;
             this.webBrowser1.Navigate("https://github.com/login/oauth/authorize?client_id=" + GithubAPIInfo.client_id + "&scope=repo,public_repo");
         }
 
@@ -86,12 +88,12 @@ namespace Github3
 
             if(url.Contains("?code="))
             {
-                string[] splits = url.Split(new string[]{"?code="}, StringSplitOptions.RemoveEmptyEntries);
-                if (splits.Length == 2)
+                string code = url.SkipStr("?code=");
+                code = code.TakeUntilStr("&");
+                if (!code.IsNullOrEmpty())
                 {
                     this.Hide();
                     this.Close();
-                    string code = splits[1];
                     string token = OAuth2Helper.requestToken(GithubAPIInfo.client_id, GithubAPIInfo.client_secret, code);
                     if (token == null)
                         return;
