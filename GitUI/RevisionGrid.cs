@@ -2504,7 +2504,10 @@ namespace GitUI
         {
             bool success = _NO_TRANSLATE_RevisionGrid.SetAndApplyBranchFilter(_NO_TRANSLATE_toolStripBranches.Text);
             if (success && refresh)
+            {
+                _NO_TRANSLATE_RevisionGrid.Visible = true;
                 _NO_TRANSLATE_RevisionGrid.ForceRefreshRevisions();
+            }
         }
 
         private void UpdateBranchFilterItems()
@@ -2658,6 +2661,7 @@ namespace GitUI
             _NO_TRANSLATE_RevisionGrid.InMemCommitterFilter = inMemCommitterFilter;
             _NO_TRANSLATE_RevisionGrid.InMemAuthorFilter = inMemAuthorFilter;
             _NO_TRANSLATE_RevisionGrid.InMemFilterIgnoreCase = true;
+            _NO_TRANSLATE_RevisionGrid.Visible = true;
             _NO_TRANSLATE_RevisionGrid.ForceRefreshRevisions();
         }
 
