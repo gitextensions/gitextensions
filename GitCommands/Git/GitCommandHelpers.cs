@@ -641,14 +641,14 @@ namespace GitCommands
                 return "am --3way --signoff --ignore-whitespace \"" + FixPath(patchFile) + "\"";
         }
 
-        public static string PatchDirCmd(string patchDir)
+        public static string PatchDirCmd()
         {
-            return "am --3way --signoff --directory=\"" + FixPath(patchDir) + "\"";
+            return "am --3way --signoff";
         }
 
-        public static string PatchDirCmdIgnoreWhitespace(string patchDir)
+        public static string PatchDirCmdIgnoreWhitespace()
         {
-            return "am --3way --signoff --ignore-whitespace --directory=\"" + FixPath(patchDir) + "\"";
+            return PatchDirCmd() + " --ignore-whitespace";
         }
 
         public static string CleanUpCmd(bool dryrun, bool directories, bool nonignored, bool ignored)
@@ -869,6 +869,37 @@ namespace GitCommands
             }
             return n;
         }
+
+        public static string ApplyPatch(string dir, string amCommand)
+        {
+            var output = string.Empty;
+
+            using (var gitCommand = new GitCommandsInstance())
+            {
+
+                var files = Directory.GetFiles(dir);
+
+                if (files.Length > 0)
+                    using (Process process1 = gitCommand.CmdStartProcess(Settings.GitCommand, amCommand))
+                    {
+                        foreach (var file in files)
+                        {
+                            using (FileStream fs = new FileStream(file, FileMode.Open))
+                            {
+                                fs.CopyTo(process1.StandardInput.BaseStream);
+                            }
+                        }
+                        process1.StandardInput.Close();
+                        process1.WaitForExit();
+
+                        if (gitCommand.Output != null)
+                            output = gitCommand.Output.ToString().Trim();
+                    }
+            }
+
+            return output;
+        }
+
 
         public static string StageFiles(IList<GitItemStatus> files)
         {
