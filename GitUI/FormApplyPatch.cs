@@ -141,11 +141,11 @@ namespace GitUI
             else
                 if (IgnoreWhitespace.Checked)
                 {
-                    new FormProcess(GitCommandHelpers.PatchDirCmdIgnoreWhitespace(PatchDir.Text)).ShowDialog(this);
+                    GitCommandHelpers.ApplyPatch(PatchDir.Text, GitCommandHelpers.PatchDirCmdIgnoreWhitespace());
                 }
                 else
                 {
-                    new FormProcess(GitCommandHelpers.PatchDirCmd(PatchDir.Text)).ShowDialog(this);
+                    GitCommandHelpers.ApplyPatch(PatchDir.Text, GitCommandHelpers.PatchDirCmd());
                 }
 
             EnableButtons();
