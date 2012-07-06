@@ -1150,59 +1150,45 @@ namespace GitCommands
         /// <param name="previousDate">The date to get relative time string for.</param>
         /// <returns>The human readable string for relative date.</returns>
         /// <see cref="http://stackoverflow.com/questions/11/how-do-i-calculate-relative-time"/>
-        public static string GetRelativeDateString(DateTime originDate, DateTime previousDate)
+        public static string GetRelativeDateString(DateTime originDate, DateTime previousDate, bool displayWeeks)
         {
             var ts = new TimeSpan(originDate.Ticks - previousDate.Ticks);
-            double delta = ts.TotalSeconds;
+            double delta = Math.Abs(ts.TotalSeconds);
 
             if (delta < 60)
             {
-                if (ts.Seconds == 1)
-                    return String.Format(Strings.Get1SecondAgoText(), 1.ToString());
-                return String.Format(Strings.GetNSecondsAgoText(), ts.Seconds.ToString());
+                return Strings.GetNSecondsAgoText(ts.Seconds);
             }
-            if (delta < 120)
+            if (delta < 45 * 60)
             {
-                return String.Format(Strings.Get1MinuteAgoText(), 1.ToString());
+                return Strings.GetNMinutesAgoText(ts.Minutes);
             }
-            if (delta < 2700) // 45 * 60
+            if (delta < 24 * 60 * 60)
             {
-                return String.Format(Strings.GetNMinutesAgoText(), ts.Minutes.ToString());
+                return Strings.GetNHoursAgoText(ts.Hours);
             }
-            if (delta < 5400) // 90 * 60
+            // 30.417 = 365 days / 12 months - note that the if statement only bothers with 30 days for "1 month ago" because ts.Days is int
+            if (delta < (displayWeeks ? 7 : 30) * 24 * 60 * 60)
             {
-                return String.Format(Strings.Get1HourAgoText(), 1.ToString());
+                return Strings.GetNDaysAgoText(ts.Days);
             }
-            if (delta < 86400) // 24 * 60 * 60
+            if (displayWeeks && delta < 30 * 24 * 60 * 60)
             {
-                return String.Format(Strings.GetNHoursAgoText(), ts.Hours.ToString());
+                int weeks = Convert.ToInt32(Math.Floor(ts.Days / 7.0));
+                return Strings.GetNWeeksAgoText(weeks);
             }
-            if (delta < 172800) // 48 * 60 * 60
+            if (delta < 12 * 30 * 24 * 60 * 60)
             {
-                return String.Format(Strings.Get1DayAgoText(), 1.ToString());
+                int months = Convert.ToInt32(Math.Floor(ts.Days / 30.0));
+                return Strings.GetNMonthsAgoText(months);
             }
-            if (delta < 604800) // 7 * 24 * 60 * 60
-            {
-                return String.Format(Strings.GetNDaysAgoText(), ts.Days.ToString());
-            }
-            if (delta < 2592000) // 30 * 24 * 60 * 60
-            {
-                int weeks = Convert.ToInt32(Math.Floor((double)ts.Days / 7));
-                if (weeks <= 1)
-                    return String.Format(Strings.Get1WeekAgoText(), 1.ToString());
-                return String.Format(Strings.GetNWeeksAgoText(), weeks.ToString());
-            }
-            if (delta < 31104000) // 12 * 30 * 24 * 60 * 60
-            {
-                int months = Convert.ToInt32(Math.Floor((double)ts.Days / 30));
-                if (months <= 1)
-                    return String.Format(Strings.Get1MonthAgoText(), 1.ToString());
-                return String.Format(Strings.GetNMonthsAgoText(), months.ToString());
-            }
-            int years = Convert.ToInt32(Math.Floor((double)ts.Days / 365));
-            if (years <= 1)
-                return String.Format(Strings.Get1YearAgoText(), 1.ToString());
-            return String.Format(Strings.GetNYearsAgoText(), years.ToString());
+            int years = Convert.ToInt32(Math.Floor(ts.Days / 365.0));
+            return Strings.GetNYearsAgoText(years);
+        }
+
+        public static string GetRelativeDateString(DateTime originDate, DateTime previousDate)
+        {
+            return  GetRelativeDateString(originDate, previousDate, true);
         }
 
         public static string ReEncodeFileName(string diffStr, int headerLines)
