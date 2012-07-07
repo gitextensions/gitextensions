@@ -32,9 +32,7 @@ namespace GitUI
         private void Revert_Click(object sender, EventArgs e)
         {
             new FormProcess(GitCommandHelpers.RevertCmd(Revision.Guid, AutoCommit.Checked)).ShowDialog(this);
-
-            MergeConflictHandler.HandleMergeConflicts(this);
-
+            MergeConflictHandler.HandleMergeConflicts(this, AutoCommit.Checked);
             Close();
         }
     }
