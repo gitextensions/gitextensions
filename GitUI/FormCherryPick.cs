@@ -64,14 +64,10 @@ namespace GitUI
             if (!formClosed)
             {
                 MessageBox.Show(this, _cmdExecutedMsgBox.Text + " " + Environment.NewLine + Settings.Module.CherryPick(RevisionGrid.GetSelectedRevisions()[0].Guid, AutoCommit.Checked, string.Join(" ", arguments.ToArray())), _cmdExecutedMsgBoxCaption.Text);
-
-                MergeConflictHandler.HandleMergeConflicts(this);
-
+                MergeConflictHandler.HandleMergeConflicts(this, AutoCommit.Checked);
                 RevisionGrid.RefreshRevisions();
-
                 Cursor.Current = Cursors.Default;
             }
-            
         }
     }
 }
