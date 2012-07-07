@@ -316,14 +316,14 @@ namespace GitCommands
                     }
                     catch (ArgumentException ex)
                     {
-                        throw new Exception(ex.Message + Environment.NewLine + "Unsupported encoding set in git config file: " + encodingName + Environment.NewLine + "Please check the setting i18n.commitencoding in your local and/or global config files. Command aborted.", ex);
+                        Debug.WriteLine(string.Format("Unsupported encoding set in git config file: {0}\nPlease check the setting {1} in your {2} config file.", encodingName, settingName, (local ? "local" : "global")));
+                        result = null;
                     }
                 }
-                byNameMap[lname] = result;                
+                byNameMap[lname] = result; 
             }
 
             return result;
-
         }
 
         private static void SetEncoding(bool local, string settingName, Encoding encoding, bool toSettings)
