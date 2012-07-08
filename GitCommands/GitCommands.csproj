@@ -117,6 +117,7 @@
     <Compile Include="Statistics\ImpactLoader.cs" />
     <Compile Include="Strings.cs" />
     <Compile Include="FileInfoExtensions.cs" />
+    <Compile Include="System.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

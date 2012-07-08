@@ -1110,6 +1110,13 @@ namespace GitCommands
             return RunGitCmd(GitCommandHelpers.BranchCmd(branchName, revision, checkout));
         }
 
+        public string CheckoutFiles(IEnumerable<string> fileList, string revision, bool force)
+        {
+            string files = fileList.Select( s => s.Quote()).Join(" ");
+            return RunGitCmd("checkout " + force.AsForce() + revision.Quote() + " -- " + files);
+        }
+
+        
         public string Push(string path)
         {
             return RunGitCmd("push \"" + FixPath(path).Trim() + "\"");
@@ -2002,7 +2009,9 @@ namespace GitCommands
 
         public List<IGitItem> GetTree(string id, bool full)
         {
-            string args = "-z".Combine(" ", full ? "-r" : string.Empty);
+            string args = "-z";
+            if (full)
+                args += " -r";
             var tree = this.RunCachableCmd(Settings.GitCommand, "ls-tree "+ args +" \"" + id + "\"", Settings.SystemEncoding);
 
             return GitItem.CreateIGitItemsFromString(tree);
