@@ -223,7 +223,9 @@
       <Component Id="Github3.dll" Guid="*">
         <File Source="..\Plugins\Github3\bin\Release\Github3.dll"/>
       </Component>
-
+      <Component Id="Gerrit.dll" Guid="*">
+        <File Source="..\Plugins\Gerrit\bin\Release\Gerrit.dll"/>
+      </Component>
       <!--Remove unused dll, installed in versions <= 2.31-->
       <Component Id="Github.dll" Guid="0DA13691-140A-4490-8B4C-8AF537DAEB67">
         <RemoveFile Name="Github.dll" Id="Github.dll" On="both"/>
@@ -530,6 +532,9 @@
         </Feature>
         <Feature Id="FindLargeFiles" Title="Find large files" Level="1">
           <ComponentRef Id="FindLargeFiles.dll"/>
+        </Feature>
+        <Feature Id="Gerrit" Title="Gerrit code review" Level="1">
+          <ComponentRef Id="Gerrit.dll"/>
         </Feature>
         <Feature Id="Github" Title="Github integration" Level="1">
           <ComponentRef Id="Github3.dll"/>
