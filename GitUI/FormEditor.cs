@@ -94,7 +94,7 @@ namespace GitUI
             }
             else
             {
-                DialogResult = DialogResult.Cancel;
+                DialogResult = DialogResult.OK;
             }
 
             SavePosition("fileeditor");
