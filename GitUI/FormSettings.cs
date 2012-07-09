@@ -209,8 +209,14 @@ namespace GitUI
             FillEncodings(Global_AppEncoding);
             FillEncodings(Local_FilesEncoding);
             FillEncodings(Local_AppEncoding);
-            
-            GlobalEditor.Items.AddRange(new Object[] { "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", "notepad++" });
+
+            string npp = MergeToolsHelper.FindFileInFolders("notepad++.exe", "Notepad++");
+            if (string.IsNullOrEmpty(npp))
+                npp = "notepad++";
+            else
+                npp = "\"" + npp + "\"";
+
+            GlobalEditor.Items.AddRange(new Object[] { "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", npp + " -multiInst -nosession" });
 
             SetCurrentDiffFont(Settings.DiffFont);
         }
