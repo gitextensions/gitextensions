@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
-using System.Text;
-using System.Threading;
-using System.Windows.Forms;
 
 namespace GitCommands.Statistics
 {
@@ -83,17 +79,42 @@ namespace GitCommands.Statistics
             backgroundLoader.Load(execute, executed);
         }
 
+        private bool showSubmodules;
+        public bool ShowSubmodules
+        {
+            get { return showSubmodules; }
+            set { Dispose(); showSubmodules = value; }
+        }
+
         private void execute(ILoadingTaskState taskState)
         {
             string authorName = this.RespectMailmap ? "%aN" : "%an";
 
             string command = "log --pretty=tformat:\"--- %ad --- " + authorName + "\" --numstat --date=iso -C --all --no-merges";
 
+            LoadModuleInfo(command, Settings.WorkingDir, taskState);
+
+            if (ShowSubmodules)
+            {
+                IList<string> submodules = Settings.Module.GetSubmodulesNames();
+                GitModule submodule = new GitModule();
+                foreach (var submoduleName in submodules)
+                {
+                    submodule.WorkingDir = Settings.Module.WorkingDir + submoduleName +
+                                           Settings.PathSeparator.ToString();
+                    if (submodule.ValidWorkingDir())
+                        LoadModuleInfo(command, submodule.WorkingDir, taskState);
+                }
+            }
+        }
+
+        private void LoadModuleInfo(string command, string workingDir, ILoadingTaskState taskState)
+        {
             using (GitCommandsInstance git = new GitCommandsInstance())
             {
                 git.StreamOutput = true;
                 git.CollectOutput = false;
-                Process p = git.CmdStartProcess(Settings.GitCommand, command);
+                Process p = git.CmdStartProcess(Settings.GitCommand, command, workingDir);
 
                 // Read line
                 string line = p.StandardOutput.ReadLine();
@@ -156,7 +177,6 @@ namespace GitCommands.Statistics
                         Updated(commit);
                 }
             }
-
         }
 
         private void executed()
