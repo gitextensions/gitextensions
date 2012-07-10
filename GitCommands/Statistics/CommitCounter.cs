@@ -7,16 +7,21 @@ namespace GitCommands.Statistics
     {
         public static Tuple<Dictionary<string, int>, int> GroupAllCommitsByContributor()
         {
-            return GroupAllCommitsByContributor(DateTime.MinValue, DateTime.MaxValue);
+            return GroupAllCommitsByContributor(Settings.Module);
         }
 
-        private static Tuple<Dictionary<string, int>, int> GroupAllCommitsByContributor(DateTime since, DateTime until)
+        public static Tuple<Dictionary<string, int>, int> GroupAllCommitsByContributor(GitModule module)
+        {
+            return GroupAllCommitsByContributor(module, DateTime.MinValue, DateTime.MaxValue);
+        }
+
+        private static Tuple<Dictionary<string, int>, int> GroupAllCommitsByContributor(GitModule module, DateTime since, DateTime until)
         {
             var sinceParam = since != DateTime.MinValue ? GetDateParameter(since, "since") : "";
             var untilParam = until != DateTime.MaxValue ? GetDateParameter(since, "until") : "";
 
             var unformattedCommitsPerContributor =
-                Settings.Module.RunGitCmd(
+                module.RunGitCmd(
                         "shortlog --all -s -n --no-merges" + sinceParam + untilParam)
                     .Split('\n');
 
