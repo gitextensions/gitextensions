@@ -49,14 +49,7 @@ namespace GitImpact
             impact_loader.RespectMailmap = true; // respect the .mailmap file
             impact_loader.Updated += OnImpactUpdate;
 
-            authors = new Dictionary<string, ImpactLoader.DataPoint>();
-            impact = new SortedDictionary<DateTime, Dictionary<string, ImpactLoader.DataPoint>>();
-
-            author_stack = new List<string>();
-            paths = new Dictionary<string, GraphicsPath>();
-            brushes = new Dictionary<string, SolidBrush>();
-            line_labels = new Dictionary<string,List<Tuple<PointF, int>>>();
-            week_labels = new List<Tuple<PointF,DateTime>>();
+            Clear();
 
             InitializeComponent();
             Translate();
@@ -66,6 +59,21 @@ namespace GitImpact
                 ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
 
             MouseWheel += ImpactControl_MouseWheel;
+        }
+
+        private void Clear()
+        {
+            lock (data_lock)
+            {
+                authors = new Dictionary<string, ImpactLoader.DataPoint>();
+                impact = new SortedDictionary<DateTime, Dictionary<string, ImpactLoader.DataPoint>>();
+
+                author_stack = new List<string>();
+                paths = new Dictionary<string, GraphicsPath>();
+                brushes = new Dictionary<string, SolidBrush>();
+                line_labels = new Dictionary<string, List<Tuple<PointF, int>>>();
+                week_labels = new List<Tuple<PointF, DateTime>>();
+            }
         }
 
         public void Stop()
@@ -130,7 +138,21 @@ namespace GitImpact
 
         public void UpdateData()
         {
+            impact_loader.ShowSubmodules = showSubmodules;
             impact_loader.Execute();
+        }
+
+        private bool showSubmodules;
+        public bool ShowSubmodules
+        {
+            get { return showSubmodules; }
+            set
+            {
+                showSubmodules = value;
+                impact_loader.Dispose();
+                Clear();
+                UpdateData();
+            }
         }
 
         private void InitializeComponent()
@@ -212,7 +234,6 @@ namespace GitImpact
                 string selectedAuthor = author_stack[author_stack.Count - 1];
                 if (brushes.ContainsKey(selectedAuthor) && paths.ContainsKey(selectedAuthor))
                     e.Graphics.DrawPath(new Pen(Color.Black, 2), paths[selectedAuthor]);
-
 
                 foreach (var author in author_stack)
                     DrawAuthorLinesLabels(e.Graphics, author);
