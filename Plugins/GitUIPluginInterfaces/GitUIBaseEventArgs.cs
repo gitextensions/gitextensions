@@ -31,6 +31,8 @@ namespace GitUIPluginInterfaces
         public abstract string GitCommand { get; }
 
         public abstract string GitVersion { get; }
+
+        public abstract string GravatarCacheDir { get; }
     }
 
 }

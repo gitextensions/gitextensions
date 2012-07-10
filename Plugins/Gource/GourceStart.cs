@@ -1,17 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using GitUIPluginInterfaces;
 
 namespace Gource
 {
     public partial class GourceStart : Form
     {
-        public GourceStart(string pathToGource, string gitWorkingDir, string gourceArguments)
+        public GourceStart(string pathToGource, GitUIBaseEventArgs gitUiCommands, string gourceArguments)
         {
             InitializeComponent();
             PathToGource = pathToGource;
-            GitWorkingDir = gitWorkingDir;
+            GitCommands = gitUiCommands.GitCommands;
+            GitWorkingDir = gitUiCommands.GitWorkingDir;
+            AvatarsDir = gitUiCommands.GravatarCacheDir;
             GourceArguments = gourceArguments;
 
             WorkingDir.Text = GitWorkingDir;
@@ -19,9 +23,13 @@ namespace Gource
             Arguments.Text = GourceArguments;
         }
 
+        private IGitCommands GitCommands { get; set; }
+
         public string PathToGource { get; set; }
 
         public string GitWorkingDir { get; set; }
+
+        public string AvatarsDir { get; set; }
 
         public string GourceArguments { get; set; }
 
@@ -61,11 +69,39 @@ namespace Gource
             }
 
             GourceArguments = Arguments.Text;
+            string gourceAvatarsDir = "";
+            if (GourceArguments.Contains("$(AVATARS)"))
+                gourceAvatarsDir = LoadAvatars();
+            string arguments = GourceArguments.Replace("$(AVATARS)", gourceAvatarsDir);
             PathToGource = GourcePath.Text;
             GitWorkingDir = WorkingDir.Text;
 
-            RunRealCmdDetatched(GourcePath.Text, GourceArguments);
+            RunRealCmdDetatched(GourcePath.Text, arguments);
             Close();
+        }
+
+        private string LoadAvatars()
+        {
+            var gourceAvatarsDir = Path.Combine(Path.GetTempPath(), "GitAvatars");
+            Directory.CreateDirectory(gourceAvatarsDir);
+            foreach (var file in Directory.GetFiles(gourceAvatarsDir))
+                File.Delete(file);
+            var lines = GitCommands.RunGit("log --pretty=format:\"%ae|%an\"").Split('\n');
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            foreach (var line in lines)
+            {
+                var data = line.Split('|');
+                var email = data[0];
+                var author = data[1];
+                if (!dict.ContainsKey(author))
+                {
+                    dict.Add(author, email);
+                    string source = Path.Combine(AvatarsDir, email + ".png");
+                    if (File.Exists(source))
+                        File.Copy(source, Path.Combine(gourceAvatarsDir, author + ".png"), true);
+                }
+            }
+            return gourceAvatarsDir;
         }
 
         private void GourceBrowseClick(object sender, EventArgs e)

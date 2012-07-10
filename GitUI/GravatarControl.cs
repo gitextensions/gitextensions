@@ -70,7 +70,7 @@ namespace GitUI
                                              Resources.User,
                                              Settings.AuthorImageCacheDays,
                                              Settings.AuthorImageSize,
-                                             Settings.ApplicationDataPath + "Images\\",
+                                             Settings.GravatarCachePath,
                                              RefreshImage,
                                              gravatarFallBack));
         }
