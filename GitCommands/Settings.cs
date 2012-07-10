@@ -142,6 +142,11 @@ namespace GitCommands
 
         public static string ApplicationDataPath { get; private set; }
 
+        public static string GravatarCachePath
+        {
+            get { return ApplicationDataPath + "Images\\"; }
+        }
+
         private static string _translation;
         public static string Translation
         {

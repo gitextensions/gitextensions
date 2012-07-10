@@ -50,5 +50,13 @@ namespace GitUI
                 return Settings.GitExtensionsVersionInt.ToString();
             }
         }
+
+        public override string GravatarCacheDir
+        {
+            get
+            {
+                return Settings.GravatarCachePath;
+            }
+        }
     }
 }
