@@ -7,11 +7,14 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.Blame;
 using GitUI.Plugin;
+using GitUI.Properties;
 using GitUI.RepoHosting;
 using GitUI.Tag;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using PatchApply;
+using Settings = GitCommands.Settings;
+using Gravatar;
 
 namespace GitUI
 {
@@ -189,6 +192,22 @@ namespace GitUI
             }
 
             return true;
+        }
+
+        public void CacheAvatar(string email)
+        {
+            FallBackService gravatarFallBack = FallBackService.Identicon;
+            try
+            {
+                gravatarFallBack =
+                    (FallBackService)Enum.Parse(typeof(FallBackService), Settings.GravatarFallbackService);
+            }
+            catch
+            {
+                Settings.GravatarFallbackService = gravatarFallBack.ToString();
+            }
+            GravatarService.CacheImage(email + ".png", email, Settings.AuthorImageSize,
+                gravatarFallBack);
         }
 
         public bool StartBatchFileProcessDialog(object owner, string batchFile)
