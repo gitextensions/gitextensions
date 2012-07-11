@@ -116,7 +116,6 @@ namespace Gravatar
 
         public static void RemoveImageFromCache(string imageFileName)
         {
-
             if (cache != null)
             {
                 cache.DeleteCachedFile(imageFileName);
@@ -149,6 +148,30 @@ namespace Gravatar
                 Trace.WriteLine(ex.Message);
             }
             return null;
+        }
+
+        public static void CacheImage(string imageFileName, string email, int imageSize, 
+                                        FallBackService fallBack)
+        {
+            try
+            {
+                if (cache == null)
+                    return;
+
+                if (!cache.FileIsCached(imageFileName))
+                {
+                    //Lock added to make sure gravatar doesn't block this ip..
+                    lock (gravatarServiceLock)
+                    {
+                        GetImageFromGravatar(imageFileName, email, imageSize, fallBack);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //catch IO errors
+                Trace.WriteLine(ex.Message);
+            }
         }
 
         public static void LoadCachedImage(string imageFileName, string email, Bitmap defaultBitmap, int cacheDays,

@@ -26,8 +26,6 @@ namespace Gource
             //Register settings
             Settings.AddSetting("Path to \"gource\"", "");
             Settings.AddSetting("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
-            if (Settings.GetSetting("Arguments") == "--hide filenames")
-                Settings.SetSetting("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
         }
 
         public bool Execute(GitUIBaseEventArgs gitUiCommands)
