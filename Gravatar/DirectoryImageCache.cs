@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
 using System.Drawing;
+using System.IO;
 
 namespace Gravatar
 {
     internal class DirectoryImageCache : IImageCache
     {
         private static Object padlock = new Object();
+
         string cachePath;
+        public string Path { get { return cachePath; } }
 
         public DirectoryImageCache(string cachePath)
         {
@@ -72,13 +72,12 @@ namespace Gravatar
             return false;
         }
 
-        public System.Drawing.Image LoadImageFromCache(string imageFileName, System.Drawing.Bitmap defaultBitmap)
+        public Image LoadImageFromCache(string imageFileName, Bitmap defaultBitmap)
         {
             lock (padlock)
             {
                 try
                 {
-
                     if (!File.Exists(cachePath + imageFileName))
                         return null;
 
@@ -94,7 +93,7 @@ namespace Gravatar
             }
         }
 
-        public void CacheImage(string imageFileName, System.IO.Stream imageStream)
+        public void CacheImage(string imageFileName, Stream imageStream)
         {
             if (!Directory.Exists(cachePath))
                 Directory.CreateDirectory(cachePath);

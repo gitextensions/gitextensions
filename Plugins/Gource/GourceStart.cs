@@ -13,7 +13,7 @@ namespace Gource
         {
             InitializeComponent();
             PathToGource = pathToGource;
-            GitCommands = gitUiCommands.GitCommands;
+            GitUIArgs = gitUiCommands;
             GitWorkingDir = gitUiCommands.GitWorkingDir;
             AvatarsDir = gitUiCommands.GravatarCacheDir;
             GourceArguments = gourceArguments;
@@ -23,7 +23,7 @@ namespace Gource
             Arguments.Text = GourceArguments;
         }
 
-        private IGitCommands GitCommands { get; set; }
+        private GitUIBaseEventArgs GitUIArgs { get; set; }
 
         public string PathToGource { get; set; }
 
@@ -86,19 +86,28 @@ namespace Gource
             Directory.CreateDirectory(gourceAvatarsDir);
             foreach (var file in Directory.GetFiles(gourceAvatarsDir))
                 File.Delete(file);
-            var lines = GitCommands.RunGit("log --pretty=format:\"%ae|%an\"").Split('\n');
-            Dictionary<string, string> dict = new Dictionary<string, string>();
+            var lines = GitUIArgs.GitCommands.RunGit("log --pretty=format:\"%aE|%aN\"").Split('\n');
+            HashSet<string> authors = new HashSet<string>();
             foreach (var line in lines)
             {
                 var data = line.Split('|');
                 var email = data[0];
                 var author = data[1];
-                if (!dict.ContainsKey(author))
+                if (!authors.Contains(author))
                 {
-                    dict.Add(author, email);
+                    authors.Add(author);
                     string source = Path.Combine(AvatarsDir, email + ".png");
+                    GitUIArgs.GitUICommands.CacheAvatar(email);
                     if (File.Exists(source))
-                        File.Copy(source, Path.Combine(gourceAvatarsDir, author + ".png"), true);
+                    {
+                        try
+                        {
+                            File.Copy(source, Path.Combine(gourceAvatarsDir, author + ".png"), true);
+                        }
+                        catch (IOException)
+                        {
+                        }
+                    }
                 }
             }
             return gourceAvatarsDir;
