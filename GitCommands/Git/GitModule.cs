@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Permissions;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands.Config;
 using PatchApply;
@@ -18,6 +19,8 @@ namespace GitCommands
     /// </summary>
     public sealed class GitModule
     {
+        private static readonly Regex DefaultHeadPattern = new Regex("refs/remotes/[^/]+/HEAD", RegexOptions.Compiled);
+
         public GitModule()
         {
         }
@@ -1921,14 +1924,18 @@ namespace GitCommands
             var heads = new List<GitHead>();
 
             var remotes = GetRemotes(false);
-
+                
             foreach (var itemsString in itemsStrings)
             {
-                if (itemsString == null || itemsString.Length <= 42) continue;
+                if (itemsString == null || itemsString.Length <= 42) 
+                    continue;
 
-                var guid = itemsString.Substring(0, 40);
                 var completeName = itemsString.Substring(41).Trim();
-                heads.Add(new GitHead(guid, completeName, GetRemoteName(completeName, remotes)));
+                if (DefaultHeadPattern.IsMatch(completeName))
+                    continue;
+                var guid = itemsString.Substring(0, 40);
+                var remoteName = GetRemoteName(completeName, remotes);
+                heads.Add(new GitHead(guid, completeName, remoteName));
             }
 
             return heads;
