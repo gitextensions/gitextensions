@@ -61,7 +61,7 @@ namespace GitUI
 
         private void RemoveClick(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, 
+            if (MessageBox.Show(this,
                 _removeDanglingObjectsQuestion.Text,
                 _removeDanglingObjectsCaption.Text,
                 MessageBoxButtons.YesNo) != DialogResult.Yes)
@@ -78,7 +78,7 @@ namespace GitUI
 
         private void mnuLostObjectsCreateTag_Click(object sender, EventArgs e)
         {
-            using (var frm = new FormTagSmall { Revision = GetCurrentGitRevision() })
+            using (var frm = new FormTagSmall(GetCurrentGitRevision()))
             {
                 var dialogResult = frm.ShowDialog(this);
                 if (dialogResult == DialogResult.OK)
