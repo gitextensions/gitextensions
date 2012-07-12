@@ -439,7 +439,7 @@ namespace GitUI
 
         public bool SetAndApplyBranchFilter(string filter)
         {
-            if (filter.Equals(_revisionFilter.GetBranchFilter())) 
+            if (filter.Equals(_revisionFilter.GetBranchFilter()))
                 return false;
             if (filter.Equals(""))
             {
@@ -456,7 +456,7 @@ namespace GitUI
             return true;
         }
 
-        public void SetLimit(int limit)         
+        public void SetLimit(int limit)
         {
             _revisionFilter.SetLimit(limit);
         }
@@ -1384,8 +1384,11 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
 
-            var frm = new FormTagSmall { Revision = GetRevision(LastRow) };
-            frm.ShowDialog(this);
+            using (var frm = new FormTagSmall(GetRevision(LastRow)))
+            {
+                frm.ShowDialog(this);    
+            }
+            
             RefreshRevisions();
         }
 
@@ -1607,7 +1610,7 @@ namespace GitUI
                 toolStripItem.Click += ToolStripItemClickMergeBranch;
                 mergeBranchDropDown.Items.Add(toolStripItem);
             }
-            
+
 
             foreach (var head in allBranches)
             {
@@ -2317,7 +2320,7 @@ namespace GitUI
             this.remoteToolStripMenuItem.Name = "remoteToolStripMenuItem";
             this.remoteToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
             this.remoteToolStripMenuItem.Text = "Remote";
-        
+
         }
 
         public FilterBranchHelper(ToolStripComboBox toolStripBranches, ToolStripDropDownButton toolStripDropDownButton2, RevisionGrid RevisionGrid)
@@ -2458,7 +2461,7 @@ namespace GitUI
     }
 
 
-    public class FilterRevisionsHelper 
+    public class FilterRevisionsHelper
     {
 
         private ToolStripTextBox _NO_TRANSLATE_toolStripTextBoxFilter;
@@ -2515,7 +2518,7 @@ namespace GitUI
             this.hashToolStripMenuItem.CheckOnClick = true;
             this.hashToolStripMenuItem.Name = "hashToolStripMenuItem";
             this.hashToolStripMenuItem.Size = new System.Drawing.Size(216, 24);
-            this.hashToolStripMenuItem.Text = "Hash";        
+            this.hashToolStripMenuItem.Text = "Hash";
         }
 
         public FilterRevisionsHelper(ToolStripTextBox toolStripTextBoxFilter, ToolStripDropDownButton toolStripDropDownButton1, RevisionGrid RevisionGrid, ToolStripLabel toolStripLabel2, Form form)
@@ -2537,7 +2540,7 @@ namespace GitUI
             this._NO_TRANSLATE_toolStripTextBoxFilter.Leave += this.ToolStripTextBoxFilterLeave;
             this._NO_TRANSLATE_toolStripTextBoxFilter.KeyPress += this.ToolStripTextBoxFilterKeyPress;
 
-        
+
         }
 
         public void SetFilter(string filter)
@@ -2617,9 +2620,10 @@ namespace GitUI
             else
                 commitToolStripMenuItem1.Checked = true;
         }
-        
 
-        public void SetLimit(int limit) {
+
+        public void SetLimit(int limit)
+        {
             _NO_TRANSLATE_RevisionGrid.SetLimit(limit);
         }
 
