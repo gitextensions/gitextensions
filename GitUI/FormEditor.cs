@@ -46,7 +46,7 @@ namespace GitUI
                 _fileName = fileName;
                 fileViewer.ViewFile(_fileName);
                 fileViewer.IsReadOnly = false;
-                fileViewer.EnableDiffContextMenu(false);
+                fileViewer.SetVisibilityDiffContextMenu(false);
                 Text = _fileName;
 
                 // loading a new file from disk, the text hasn't been changed yet.

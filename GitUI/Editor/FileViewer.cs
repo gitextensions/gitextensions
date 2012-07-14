@@ -67,7 +67,15 @@ namespace GitUI.Editor
 
             this.HotkeysEnabled = true;
 
-            ContextMenu.Opening += ContextMenu_Opening; 
+            if (RunTime() && ContextMenuStrip == null)
+                ContextMenuStrip = contextMenu;
+            contextMenu.Opening += ContextMenu_Opening; 
+        }
+
+        private bool RunTime()
+        {
+
+            return (System.Diagnostics.Process.GetCurrentProcess().ProcessName != "devenv");
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
@@ -135,6 +143,7 @@ namespace GitUI.Editor
 
         void ContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            copyToolStripMenuItem.Enabled = (_internalFileViewer.GetSelectionLength() > 0);
             if (ContextMenuOpening != null)
                 ContextMenuOpening(sender, e);
         }
@@ -173,11 +182,11 @@ namespace GitUI.Editor
             if (string.IsNullOrEmpty(text))
             {
                 ToolStripSeparator separator =new ToolStripSeparator();
-                ContextMenu.Items.Add(separator);
+                contextMenu.Items.Add(separator);
                 return separator;
             }
 
-            ToolStripItem toolStripItem = ContextMenu.Items.Add(text);
+            ToolStripItem toolStripItem = contextMenu.Items.Add(text);
             toolStripItem.Click += toolStripItem_Click;
             return toolStripItem;
         }
@@ -229,14 +238,15 @@ namespace GitUI.Editor
 
         public event EventHandler<EventArgs> ExtraDiffArgumentsChanged;
 
-        public void EnableDiffContextMenu(bool enable)
+        public void SetVisibilityDiffContextMenu(bool visible)
         {
-            _currentViewIsPatch = enable;
-            ignoreWhitespaceChangesToolStripMenuItem.Enabled = enable;
-            increaseNumberOfLinesToolStripMenuItem.Enabled = enable;
-            descreaseNumberOfLinesToolStripMenuItem.Enabled = enable;
-            showEntireFileToolStripMenuItem.Enabled = enable;
-            treatAllFilesAsTextToolStripMenuItem.Enabled = enable;
+            _currentViewIsPatch = visible;
+            ignoreWhitespaceChangesToolStripMenuItem.Visible = visible;
+            increaseNumberOfLinesToolStripMenuItem.Visible = visible;
+            descreaseNumberOfLinesToolStripMenuItem.Visible = visible;
+            showEntireFileToolStripMenuItem.Visible = visible;
+            toolStripSeparator2.Visible = visible;
+            treatAllFilesAsTextToolStripMenuItem.Visible = visible;
         }
 
 
@@ -545,7 +555,7 @@ namespace GitUI.Editor
         private void Reset(bool diff, bool text, bool staging_diff)
         {
             patchHighlighting = diff;
-            EnableDiffContextMenu(diff);
+            SetVisibilityDiffContextMenu(diff);
             ClearImage();
             PictureBox.Visible = !text;
             _internalFileViewer.Visible = text;
@@ -601,21 +611,17 @@ namespace GitUI.Editor
 
         private void CopyToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(_internalFileViewer.GetSelectedText()))
+            string code = _internalFileViewer.GetSelectedText();
+            if (string.IsNullOrEmpty(code))
                 return;
 
-            string code;
             if (_currentViewIsPatch)
             {
-                code = _internalFileViewer.GetSelectedText();
-
                 if (code.Contains("\n") && (code[0].Equals(' ') || code[0].Equals('+') || code[0].Equals('-')))
                     code = code.Substring(1);
 
                 code = code.Replace("\n ", "\n").Replace("\n+", "\n").Replace("\n-", "\n");
             }
-            else
-                code = _internalFileViewer.GetSelectedText();
 
             Clipboard.SetText(code);
         }
