@@ -2017,9 +2017,14 @@ namespace GitCommands
 
         public GitBlame Blame(string filename, string from)
         {
+            return Blame(filename, from, null);
+        }
+
+        public GitBlame Blame(string filename, string from, string lines)
+        {
             from = FixPath(from);
             filename = FixPath(filename);
-            string blameCommand = string.Format("blame --porcelain -M -w -l \"{0}\" -- \"{1}\"", from, filename);
+            string blameCommand = string.Format("blame --porcelain -M -w -l{0} \"{1}\" -- \"{2}\"", lines != null ? " -L " + lines : "", from, filename);
             var itemsStrings =
                 RunCachableCmd(
                     Settings.GitCommand,
@@ -2085,7 +2090,6 @@ namespace GitCommands
                     Settings.GitLog.Log("Error parsing output from command: " + blameCommand + "\n\nPlease report a bug!");
                 }
             }
-
 
             return blame;
         }
