@@ -1947,11 +1947,15 @@ namespace GitCommands
             return string.Empty;
         }
 
-        public IList<string> GetFiles(string filePattern)
+        public IList<string> GetFiles(IEnumerable<string> filePatterns)
         {
+            var quotedPatterns = filePatterns
+                .Where(pattern => !pattern.Contains("\""))
+                .Select(pattern => pattern.Quote())
+                .Join(" ");
             // filter duplicates out of the result because options -c and -m may return 
             // same files at times
-            return RunGitCmd("ls-files -z -o -m -c \"" + filePattern + "\"")
+            return RunGitCmd("ls-files -z -o -m -c " + quotedPatterns)
                 .Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries)
                 .Distinct()
                 .ToList();
