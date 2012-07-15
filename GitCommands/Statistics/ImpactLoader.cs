@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
-using System.Text;
-using System.Threading;
-using System.Windows.Forms;
 
 namespace GitCommands.Statistics
 {
@@ -18,7 +14,18 @@ namespace GitCommands.Statistics
         public bool RespectMailmap { get; set; }
 
         public event EventHandler Exited;
-        public event EventHandler Error;
+        public event EventHandler<AsyncErrorEventArgs> Error
+        {
+            add
+            {
+                backgroundLoader.LoadingError += value;
+            }
+
+            remove
+            {
+                backgroundLoader.LoadingError -= value;
+            }
+        }
         public event UpdateEventHandler Updated;
 
         public struct DataPoint
@@ -53,10 +60,9 @@ namespace GitCommands.Statistics
             public string author;
             public DataPoint data;
         }
+        
 
-        private GitCommandsInstance git;
-
-        private Thread backgroundThread;
+        private AsyncLoader backgroundLoader = new AsyncLoader();
 
         ~ImpactLoader()
         {
@@ -65,46 +71,56 @@ namespace GitCommands.Statistics
 
         public void Dispose()
         {
-            if (backgroundThread != null)
-            {
-                backgroundThread.Abort();
-                backgroundThread = null;
-            }
-            if (git != null)
-            {
-                git.Dispose();
-                git = null;
-            }
+            backgroundLoader.Cancel();
         }
 
         public void Execute()
         {
-            if (backgroundThread != null)
-            {
-                backgroundThread.Abort();
-            }
-            backgroundThread = new Thread(execute) {IsBackground = true};
-            backgroundThread.Start();
+            backgroundLoader.Load(execute, executed);
         }
 
-        private void execute()
+        private bool showSubmodules;
+        public bool ShowSubmodules
         {
-            try
+            get { return showSubmodules; }
+            set { Dispose(); showSubmodules = value; }
+        }
+
+        private void execute(ILoadingTaskState taskState)
+        {
+            string authorName = this.RespectMailmap ? "%aN" : "%an";
+
+            string command = "log --pretty=tformat:\"--- %ad --- " + authorName + "\" --numstat --date=iso -C --all --no-merges";
+
+            LoadModuleInfo(command, Settings.WorkingDir, taskState);
+
+            if (ShowSubmodules)
             {
-                string authorName = this.RespectMailmap ? "%aN" : "%an";
+                IList<string> submodules = Settings.Module.GetSubmodulesNames();
+                GitModule submodule = new GitModule();
+                foreach (var submoduleName in submodules)
+                {
+                    submodule.WorkingDir = Settings.Module.WorkingDir + submoduleName +
+                                           Settings.PathSeparator.ToString();
+                    if (submodule.ValidWorkingDir())
+                        LoadModuleInfo(command, submodule.WorkingDir, taskState);
+                }
+            }
+        }
 
-                string command = "log --pretty=tformat:\"--- %ad --- " + authorName + "\" --numstat --date=iso -C --all --no-merges";
-
-                git = new GitCommandsInstance();
+        private void LoadModuleInfo(string command, string workingDir, ILoadingTaskState taskState)
+        {
+            using (GitCommandsInstance git = new GitCommandsInstance())
+            {
                 git.StreamOutput = true;
                 git.CollectOutput = false;
-                Process p = git.CmdStartProcess(Settings.GitCommand, command);
+                Process p = git.CmdStartProcess(Settings.GitCommand, command, workingDir);
 
                 // Read line
                 string line = p.StandardOutput.ReadLine();
 
                 // Analyze commit listing
-                while (true)
+                while (!taskState.IsCanceled())
                 {
                     Commit commit = new Commit();
 
@@ -141,7 +157,7 @@ namespace GitCommands.Statistics
                     commit.data.DeletedLines = 0;
 
                     // Parse commit lines
-                    while ((line = p.StandardOutput.ReadLine()) != null && !line.StartsWith("--- "))
+                    while ((line = p.StandardOutput.ReadLine()) != null && !line.StartsWith("--- ") && !taskState.IsCanceled())
                     {
                         // Skip empty line
                         if (string.IsNullOrEmpty(line))
@@ -157,25 +173,18 @@ namespace GitCommands.Statistics
                         }
                     }
 
-                    if (Updated != null)
+                    if (Updated != null && !taskState.IsCanceled())
                         Updated(commit);
                 }
             }
-            catch (ThreadAbortException)
-            {
-                //Silently ignore this exception...
-            }
-            catch (Exception ex)
-            {
-                if (Error != null)
-                    Error(this, EventArgs.Empty);
-                MessageBox.Show("Cannot load commit log." + Environment.NewLine + Environment.NewLine + ex);
-                return;
-            }
-
-            if (Exited != null)
-                Exited(this, EventArgs.Empty);
         }
+
+        private void executed()
+        {
+            if (Exited != null)
+                Exited(this, EventArgs.Empty);        
+        }
+        
 
         public static void AddIntermediateEmptyWeeks(
             ref SortedDictionary<DateTime, Dictionary<string, DataPoint>> impact, Dictionary<string, DataPoint> authors)

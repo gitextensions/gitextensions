@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
 using ResourceManager.Translation;
+using GitCommands.Config;
 
 namespace GitUI
 {
@@ -168,14 +169,16 @@ namespace GitUI
 
         private void ConfigureRemotes()
         {
+            ConfigFile localConfig = Settings.Module.GetLocalConfig();
+
             foreach (var remoteHead in Settings.Module.GetHeads(true, true))
             {
                 foreach (var localHead in Settings.Module.GetHeads(true, true))
                 {
                     if (!remoteHead.IsRemote ||
                         localHead.IsRemote ||
-                        !string.IsNullOrEmpty(localHead.TrackingRemote) ||
-                        !string.IsNullOrEmpty(localHead.TrackingRemote) ||
+                        !string.IsNullOrEmpty(localHead.GetTrackingRemote(localConfig)) ||
+                        !string.IsNullOrEmpty(localHead.GetTrackingRemote(localConfig)) ||
                         remoteHead.IsTag ||
                         localHead.IsTag ||
                         !remoteHead.Name.ToLower().Contains(localHead.Name.ToLower()) ||

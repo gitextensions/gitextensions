@@ -5,29 +5,29 @@ namespace GitUI
 {
     public static class MergeConflictHandler
     {
-        public static bool HandleMergeConflicts(IWin32Window owner)
+        public static bool HandleMergeConflicts(IWin32Window owner, bool offerCommit)
         {
             if (Settings.Module.InTheMiddleOfConflictedMerge())
             {
                 if (MessageBox.Show(owner, "There are unresolved mergeconflicts, solve conflicts now?", "Merge conflicts", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    SolveMergeConflicts();
+                    SolveMergeConflicts(owner, offerCommit);
                 }
                 return true;
             }
             return false;
         }
 
-        public static bool HandleMergeConflicts()
+        public static bool HandleMergeConflicts(IWin32Window owner)
         {
-            return HandleMergeConflicts(null);
+            return HandleMergeConflicts(owner, true);
         }
 
-        public static void SolveMergeConflicts(IWin32Window owner)
+        private static void SolveMergeConflicts(IWin32Window owner, bool offerCommit)
         {
             if (Settings.Module.InTheMiddleOfConflictedMerge())
             {
-                GitUICommands.Instance.StartResolveConflictsDialog(owner);
+                GitUICommands.Instance.StartResolveConflictsDialog(owner, offerCommit);
             }
 
             if (Settings.Module.InTheMiddleOfPatch())
@@ -37,21 +37,14 @@ namespace GitUI
                     GitUICommands.Instance.StartApplyPatchDialog(owner);
                 }
             }
-            else
-                if (Settings.Module.InTheMiddleOfRebase())
+            else if (Settings.Module.InTheMiddleOfRebase())
+            {
+                if (MessageBox.Show(owner, "You are in the middle of a rebase , continue rebase?", "Rebase", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    if (MessageBox.Show(owner, "You are in the middle of a rebase , continue rebase?", "Rebase", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        GitUICommands.Instance.StartRebaseDialog(owner, null);
-                    }
+                    GitUICommands.Instance.StartRebaseDialog(owner, null);
                 }
+            }
 
         }
-
-        public static void SolveMergeConflicts()
-        {
-            SolveMergeConflicts(null);
-        }
-
     }
 }

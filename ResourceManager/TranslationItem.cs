@@ -1,10 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Xml.Serialization;
 
 namespace ResourceManager.Translation
 {
+    public enum TranslationType
+    {
+        [XmlEnum(Name = "translated")]
+        Translated,
+        [XmlEnum(Name = "unfinished")]
+        Unfinished,
+        [XmlEnum(Name = "obsolete")]
+        Obsolete,
+        [XmlEnum(Name = "new")]
+        New
+    }
+
     [DebuggerDisplay("{name}.{property}={value}")]
     public class TranslationItem : IComparable<TranslationItem>
     {
@@ -12,10 +24,19 @@ namespace ResourceManager.Translation
         {
 
         }
+
         public TranslationItem(string name, string property, string value)
         {
             this.name = name;
             this.property = property;
+            this.value = value;
+        }
+
+        public TranslationItem(string name, string property, string source, string value)
+        {
+            this.name = name;
+            this.property = property;
+            this.source = source;
             this.value = value;
         }
 
@@ -35,7 +56,7 @@ namespace ResourceManager.Translation
 
         private string property;
         [XmlAttribute]
-        public string Property 
+        public string Property
         {
             get
             {
@@ -44,6 +65,33 @@ namespace ResourceManager.Translation
             set
             {
                 property = value;
+            }
+        }
+
+        private TranslationType status;
+        [XmlAttribute("type"), DefaultValue(0)]
+        public TranslationType Status
+        {
+            get
+            {
+                return status;
+            }
+            set
+            {
+                status = value;
+            }
+        }
+
+        private string source;
+        public string Source
+        {
+            get
+            {
+                return source;
+            }
+            set
+            {
+                this.source = value;
             }
         }
 

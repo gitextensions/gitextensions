@@ -16,6 +16,5 @@ namespace ResourceManager.Translation
         {
             TranslationUtl.TranslateItemsFromFields(GetType().Name, this, translation);
         }
-
     }
 }

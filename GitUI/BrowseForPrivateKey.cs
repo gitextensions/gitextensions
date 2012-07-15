@@ -10,7 +10,7 @@ namespace GitUI
     /// <summary>
     /// Shows a dialog to let the user browse for a SSH key.
     /// </summary>
-    public partial class BrowseForPrivateKey : Translate
+    public class BrowseForPrivateKey : Translate
     {
         private static readonly TranslationString _pageantNotFound =
             new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");

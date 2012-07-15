@@ -69,5 +69,14 @@ namespace ResourceManager.Translation
             TranslationItem ti = tc.GetTranslationItem(item, property);
             return ti == null ? defaultValue : ti.Value;
         }
+
+        public void ClearSource()
+        {
+            foreach (var translationCategory in translationCategories)
+            {
+                foreach (var translationItem in translationCategory.GetTranslationItems())
+                    translationItem.Source = null;
+            }
+        }
     }
 }

@@ -11,6 +11,7 @@ namespace GitUI.Blame
         private GitBlame _blame;
         private string _lastRevision;
         private RevisionGrid _revGrid;
+        private string _fileName;
 
         public BlameControl()
         {
@@ -152,40 +153,59 @@ namespace GitUI.Blame
         {
             BlameCommitter.ScrollPos = BlameFile.ScrollPos;
         }
+        
+        private AsyncLoader blameLoader = new AsyncLoader();
 
-        public void LoadBlame(string guid, string fileName, RevisionGrid revGrid)
+        public void LoadBlame(string guid, string fileName, RevisionGrid revGrid, Control controlToMask)
         {
+            //refresh only when something changed
+            if (guid.Equals(commitInfo.GetRevision()) && fileName.Equals(fileName) && revGrid == _revGrid)
+                return;
+
+            if (controlToMask != null)
+                controlToMask.Mask();
+
             var scrollpos = BlameFile.ScrollPos;
 
             var blameCommitter = new StringBuilder();
             var blameFile = new StringBuilder();
             _revGrid = revGrid;
+            _fileName = fileName;
 
-            _blame = Settings.Module.Blame(fileName, guid);
-
-            for (int i = 0; i < _blame.Lines.Count; i++)
+            blameLoader.Load(() =>
             {
-                GitBlameLine blameLine = _blame.Lines[i];
-                GitBlameHeader blameHeader = _blame.FindHeaderForCommitGuid(blameLine.CommitGuid);
-                if (i > 0 && _blame.Lines[i - 1].CommitGuid == blameLine.CommitGuid)
-                {
-                    blameCommitter.AppendLine(new string(' ', 200));
-                }
-                else
-                {
-                    blameCommitter.AppendLine((blameHeader.Author + " - " + blameHeader.AuthorTime + " - " + blameHeader.FileName + new string(' ', 100)).Trim(new[] { '\r', '\n' }));
-                }
-                if (blameLine.LineText == null)
-                    blameFile.AppendLine("");
-                else
-                    blameFile.AppendLine(blameLine.LineText.Trim(new char[] { '\r', '\n' }));
-            }
+                _blame = Settings.Module.Blame(fileName, guid);
+            },
+            () =>
+            {
 
-            BlameCommitter.ViewText("committer.txt", blameCommitter.ToString());
-            BlameFile.ViewText(fileName, blameFile.ToString());
-            BlameFile.ScrollPos = scrollpos;
+                for (int i = 0; i < _blame.Lines.Count; i++)
+                {
+                    GitBlameLine blameLine = _blame.Lines[i];
+                    GitBlameHeader blameHeader = _blame.FindHeaderForCommitGuid(blameLine.CommitGuid);
+                    if (i > 0 && _blame.Lines[i - 1].CommitGuid == blameLine.CommitGuid)
+                    {
+                        blameCommitter.AppendLine(new string(' ', 200));
+                    }
+                    else
+                    {
+                        blameCommitter.AppendLine((blameHeader.Author + " - " + blameHeader.AuthorTime + " - " + blameHeader.FileName + new string(' ', 100)).Trim(new[] { '\r', '\n' }));
+                    }
+                    if (blameLine.LineText == null)
+                        blameFile.AppendLine("");
+                    else
+                        blameFile.AppendLine(blameLine.LineText.Trim(new char[] { '\r', '\n' }));
+                }
 
-            commitInfo.SetRevision(guid);
+                BlameCommitter.ViewText("committer.txt", blameCommitter.ToString());
+                BlameFile.ViewText(fileName, blameFile.ToString());
+                BlameFile.ScrollPos = scrollpos;
+
+                commitInfo.SetRevision(guid);
+
+                if (controlToMask != null)
+                    controlToMask.UnMask();
+            });
         }
 
         private void ActiveTextAreaControlDoubleClick(object sender, EventArgs e)
@@ -199,9 +219,81 @@ namespace GitUI.Blame
             }
             else
             {
-                var frm = new FormDiffSmall(gitRevision);
-                frm.ShowDialog(this);
+                using (var frm = new FormDiffSmall(gitRevision))
+                    frm.ShowDialog(this);
             }
+        }
+
+        private int GetBlameLine()
+        {
+            if (_blame == null)
+                return -1;
+
+            Point position = BlameCommitter.PointToClient(MousePosition);
+
+            int line = BlameCommitter.GetLineFromVisualPosY(position.Y);
+
+            if (line >= _blame.Lines.Count)
+                return -1;
+
+            return line;
+        }
+
+        private void contextMenu_Opened(object sender, EventArgs e)
+        {
+            contextMenu.Tag = GetBlameLine();
+        }
+
+        private string GetBlameCommit()
+        {
+            int line = (int?)contextMenu.Tag ?? -1;
+
+            if (line < 0)
+                return null;
+
+            return _blame.Lines[line].CommitGuid;
+        }
+
+        private void copyLogMessageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string commit = GetBlameCommit();
+            if (commit == null)
+                return;
+            GitBlameHeader blameHeader = _blame.FindHeaderForCommitGuid(commit);
+            Clipboard.SetText(blameHeader.Summary);
+        }
+
+        private void blamePreviousRevisionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int line = (int?)contextMenu.Tag ?? -1;
+            if (line < 0)
+                return;
+            string commit = _blame.Lines[line].CommitGuid;
+            GitBlame blame = Settings.Module.Blame(_fileName, commit + "^", line + ",+1");
+            if (blame.Headers.Count > 0)
+            {
+                commit = blame.Headers[0].CommitGuid;
+                var gitRevision = new GitRevision(commit) { ParentGuids = new[] { commit + "^" } };
+                if (_revGrid != null)
+                {
+                    _revGrid.SetSelectedRevision(gitRevision);
+                }
+                else
+                {
+                    using (var frm = new FormDiffSmall(gitRevision))
+                        frm.ShowDialog(this);
+                }
+            }
+        }
+
+        private void showChangesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string commit = GetBlameCommit();
+            if (commit == null)
+                return;
+            var gitRevision = new GitRevision(commit) { ParentGuids = new[] { commit + "^" } };
+            using (var frm = new FormDiffSmall(gitRevision))
+                frm.ShowDialog(this);
         }
     }
 }

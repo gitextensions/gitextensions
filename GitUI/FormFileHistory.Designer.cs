@@ -61,6 +61,10 @@ namespace GitUI
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripTextBoxFilter = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSplitLoad = new System.Windows.Forms.ToolStripSplitButton();
+            this.loadHistoryOnShowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadBlameOnShowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -291,7 +295,9 @@ namespace GitUI
             this.toolStripSeparator19,
             this.toolStripLabel2,
             this.toolStripTextBoxFilter,
-            this.toolStripDropDownButton1});
+            this.toolStripDropDownButton1,
+            this.toolStripSeparator3,
+            this.toolStripSplitLoad});
             this.ToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.ToolStrip.Location = new System.Drawing.Point(0, 0);
             this.ToolStrip.Name = "ToolStrip";
@@ -343,6 +349,42 @@ namespace GitUI
             this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
             this.toolStripDropDownButton1.Size = new System.Drawing.Size(29, 22);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripSplitLoad
+            // 
+            this.toolStripSplitLoad.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripSplitLoad.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.loadHistoryOnShowToolStripMenuItem,
+            this.loadBlameOnShowToolStripMenuItem});
+            this.toolStripSplitLoad.Image = global::GitUI.Properties.Resources.arrow_refresh;
+            this.toolStripSplitLoad.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripSplitLoad.Name = "toolStripSplitLoad";
+            this.toolStripSplitLoad.Size = new System.Drawing.Size(32, 22);
+            this.toolStripSplitLoad.ToolTipText = "Load file history";
+            this.toolStripSplitLoad.ButtonClick += new System.EventHandler(this.toolStripSplitLoad_ButtonClick);
+            // 
+            // loadHistoryOnShowToolStripMenuItem
+            // 
+            this.loadHistoryOnShowToolStripMenuItem.Checked = true;
+            this.loadHistoryOnShowToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.loadHistoryOnShowToolStripMenuItem.Name = "loadHistoryOnShowToolStripMenuItem";
+            this.loadHistoryOnShowToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.loadHistoryOnShowToolStripMenuItem.Text = "Load history on show";
+            this.loadHistoryOnShowToolStripMenuItem.Click += new System.EventHandler(this.loadHistoryOnShowToolStripMenuItem_Click);
+            // 
+            // loadBlameOnShowToolStripMenuItem
+            // 
+            this.loadBlameOnShowToolStripMenuItem.Checked = true;
+            this.loadBlameOnShowToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.loadBlameOnShowToolStripMenuItem.Name = "loadBlameOnShowToolStripMenuItem";
+            this.loadBlameOnShowToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.loadBlameOnShowToolStripMenuItem.Text = "Load blame on show";
+            this.loadBlameOnShowToolStripMenuItem.Click += new System.EventHandler(this.loadBlameOnShowToolStripMenuItem_Click);
             // 
             // FormFileHistory
             // 
@@ -405,5 +447,9 @@ namespace GitUI
         private System.Windows.Forms.ToolStripTextBox toolStripTextBoxFilter;
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
         private System.Windows.Forms.ToolStripMenuItem diffToolremotelocalStripMenuItem;
+        private System.Windows.Forms.ToolStripSplitButton toolStripSplitLoad;
+        private System.Windows.Forms.ToolStripMenuItem loadHistoryOnShowToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripMenuItem loadBlameOnShowToolStripMenuItem;
     }
 }
