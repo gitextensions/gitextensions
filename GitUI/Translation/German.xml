@@ -851,7 +851,7 @@ You will have push access. {2}</Source>
           <Source>Preview</Source>
           <Value>Vorschau</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
+        <TranslationItem Name="groupFilePattern" Property="Text">
           <Source>Enter a file pattern to ignore:</Source>
           <Value>Geben Sie das zu ignorierende Dateimuster an:</Value>
         </TranslationItem>

@@ -854,7 +854,7 @@ U heeft rechten om commits te verzenden. {2}
           <Source>Preview</Source>
           <Value>Voorbeeld</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
+        <TranslationItem Name="groupFilePattern" Property="Text">
           <Source>Enter a file pattern to ignore:</Source>
           <Value>Bestandsnaam patroon om te negeren</Value>
         </TranslationItem>
