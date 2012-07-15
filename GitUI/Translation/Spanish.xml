@@ -852,7 +852,7 @@ Tendrá acceso para hacer Push. {2}</Value>
           <Source>Preview</Source>
           <Value>Previsualización</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
+        <TranslationItem Name="groupFilePattern" Property="Text">
           <Source>Enter a file pattern to ignore:</Source>
           <Value>Patrón de archivos a ignorar</Value>
         </TranslationItem>
