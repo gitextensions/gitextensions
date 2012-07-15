@@ -132,7 +132,7 @@ This program is destributed in the hope that it will be useful, but WITHOUT ANY 
         </TranslationItem>
         <TranslationItem Name="bResetToDefaults" Property="Text">
           <Source>Reset all Hotkeys to defaults</Source>
-          <Value>Сбросить на значения по-умолчанию</Value>
+          <Value>Сбросить на значения по умолчанию</Value>
         </TranslationItem>
         <TranslationItem Name="columnCommand" Property="Text">
           <Source>Command</Source>
@@ -838,11 +838,11 @@ You will have push access. {2}</Source>
         </TranslationItem>
         <TranslationItem Name="_matchingFilesString" Property="Text">
           <Source>{0} file(s) matched</Source>
-          <Value>{0} файл(ов) найденно</Value>
+          <Value>{0} файл(ов) найдено</Value>
         </TranslationItem>
         <TranslationItem Name="AddToIngore" Property="Text">
           <Source>Ignore</Source>
-          <Value>Добавить в .gitignore</Value>
+          <Value>Добавить</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Source>Preview</Source>
@@ -878,7 +878,7 @@ You will have push access. {2}</Source>
         </TranslationItem>
         <TranslationItem Name="_noFileSelectedText" Property="Text">
           <Source>Please select a patch to apply</Source>
-          <Value>Пожалуйста выберить патч чтобы применить</Value>
+          <Value>Пожалуйста, выберите патч для применения</Value>
         </TranslationItem>
         <TranslationItem Name="_selectPatchFileCaption" Property="Text">
           <Source>Select patch file</Source>
@@ -926,7 +926,7 @@ You will have push access. {2}</Source>
         </TranslationItem>
         <TranslationItem Name="Resolved" Property="Text">
           <Source>Conflicts resolved</Source>
-          <Value>Конфлиты решены</Value>
+          <Value>Конфликты решены</Value>
         </TranslationItem>
         <TranslationItem Name="Skip" Property="Text">
           <Source>Skip patch</Source>
@@ -1071,7 +1071,7 @@ You will have push access. {2}</Source>
         </TranslationItem>
         <TranslationItem Name="_configureWorkingDirMenu" Property="Text">
           <Source>Configure this menu</Source>
-          <Value>Настроить эту меню</Value>
+          <Value>Настроить этот список</Value>
         </TranslationItem>
         <TranslationItem Name="_createPullRequestsToolStripMenuItem" Property="Text">
           <Source>Create pull requests</Source>
@@ -1687,7 +1687,7 @@ You will have push access. {2}</Source>
         </TranslationItem>
         <TranslationItem Name="_noRevisionSelectedMsgBox" Property="Text">
           <Source>Select 1 revision to checkout.</Source>
-          <Value>Выберите 1 ревизию чтобы забрать.</Value>
+          <Value>Выберите одну ревизию, чтобы забрать её.</Value>
         </TranslationItem>
         <TranslationItem Name="_noRevisionSelectedMsgBoxCaption" Property="Text">
           <Source>Checkout</Source>
@@ -3521,7 +3521,7 @@ defaultrebase=0</Source>
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Initialize new repository</Source>
-          <Value>Создать новый репозоиторий</Value>
+          <Value>Создать новый репозиторий</Value>
         </TranslationItem>
         <TranslationItem Name="_chooseDirectory" Property="Text">
           <Source>Please choose a directory.</Source>
@@ -3551,7 +3551,7 @@ Please choose a directory.</Source>
         </TranslationItem>
         <TranslationItem Name="Central" Property="Text">
           <Source>Central repository, no working dir  (--bare --shared=all)</Source>
-          <Value>Центральний репозиторий, без рабочей копии  (--bare --shared=all)</Value>
+          <Value>Центральный репозиторий, без рабочей копии  (--bare --shared=all)</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Source>Repository type</Source>
@@ -4058,7 +4058,7 @@ Are you sure you want to push this branch?</Source>
         </TranslationItem>
         <TranslationItem Name="lblPleaseLoadKey" Property="Text">
           <Source>Please load your SSH private key</Source>
-          <Value>Пожалуйста загрузите ваш закрытый SSH ключ</Value>
+          <Value>Пожалуйста, загрузите ваш закрытый SSH ключ</Value>
         </TranslationItem>
         <TranslationItem Name="LoadSSHKey" Property="Text">
           <Source>Load SSH key</Source>
@@ -4466,7 +4466,7 @@ Value has been reset to empty value.</Source>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Source>This will delete any uncommitted work.</Source>
-          <Value>Это удалит все измения, которые вы не commit'или.</Value>
+          <Value>Это удалит все изменения, которые вы не commit'или.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4671,7 +4671,7 @@ Is the mergeconflict solved?</Source>
         </TranslationItem>
         <TranslationItem Name="ContextOpenLocalWith" Property="Text">
           <Source>Open local with</Source>
-          <Value>Открыть локальную с помщью</Value>
+          <Value>Открыть локальную с помощью</Value>
         </TranslationItem>
         <TranslationItem Name="ContextOpenRemoteWith" Property="Text">
           <Source>Open remote with</Source>
@@ -4757,7 +4757,7 @@ Are you sure you want to open this file in {0}?</Source>
 The file has been modified locally({1}) but deleted remotely({2}).
 
 Choose to delete the file or keep the modified version.</Source>
-          <Value>У файла {0} не существует удаленой ревизии.
+          <Value>У файла {0} не существует удаленной ревизии.
 Файл был изменен локально({1}) и удален удаленно({2}).
 
 Можно оставить локальную версию или удалить файл.</Value>
@@ -4820,7 +4820,7 @@ The merge conflict will not be marked as solved. Please try again.</Source>
         </TranslationItem>
         <TranslationItem Name="mergeConflictIsSubmoduleCaption" Property="Text">
           <Source>Submodule</Source>
-          <Value>Сумбодуль</Value>
+          <Value>Субмодуль</Value>
         </TranslationItem>
         <TranslationItem Name="modeDataGridViewTextBoxColumn" Property="HeaderText">
           <Source>Mode</Source>
@@ -5602,7 +5602,7 @@ When OpenSSH is used, command line dialogs are shown!
         </TranslationItem>
         <TranslationItem Name="label19" Property="Text">
           <Source>Mergetool command</Source>
-          <Value>Mergetool команада</Value>
+          <Value>Mergetool команда</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Source>User email</Source>
@@ -5779,7 +5779,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
 git before you can change
 global settings.
 </Source>
-          <Value>Перед тем как менять глобавльные настройки,
+          <Value>Перед тем как менять глобальные настройки,
 необходимо установить корректный путь к git.</Value>
         </TranslationItem>
         <TranslationItem Name="labelOnEvent" Property="Text">
@@ -6096,7 +6096,7 @@ Do you want to trust this host key and then try again?</Source>
         </TranslationItem>
         <TranslationItem Name="_removeSelectedSubmodule" Property="Text">
           <Source>Are you sure you want remove the selected submodule?</Source>
-          <Value>Вы уверены что хотите удалить выделенный субмодуль?</Value>
+          <Value>Вы уверены, что хотите удалить выделенный субмодуль?</Value>
         </TranslationItem>
         <TranslationItem Name="_removeSelectedSubmoduleCaption" Property="Text">
           <Source>Remove</Source>
@@ -6257,7 +6257,7 @@ Do you want to open the new repository "{0}" now?</Source>
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Create tag</Source>
-          <Value>Содать метку</Value>
+          <Value>Создать метку</Value>
         </TranslationItem>
         <TranslationItem Name="_messageCaption" Property="Text">
           <Source>Tag</Source>
@@ -6269,7 +6269,7 @@ Do you want to open the new repository "{0}" now?</Source>
         </TranslationItem>
         <TranslationItem Name="_noTagMassage" Property="Text">
           <Source>Please enter a tag message</Source>
-          <Value>Пожалуйста введите сообщение метки</Value>
+          <Value>Пожалуйста, введите сообщение метки</Value>
         </TranslationItem>
         <TranslationItem Name="_pushToCaption" Property="Text">
           <Source>Push tag to {0}</Source>
@@ -6375,7 +6375,7 @@ Do you want to select a language code first?</Source>
         </TranslationItem>
         <TranslationItem Name="selectLanguageCode" Property="Text">
           <Source>Select a language code first.</Source>
-          <Value>Сначало выбирите код языка.</Value>
+          <Value>Сначала выберите код языка.</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripButtonNew" Property="Text">
           <Source>New</Source>
@@ -6582,7 +6582,7 @@ nodes.
         </TranslationItem>
         <TranslationItem Name="registerAtGravatarcomToolStripMenuItem" Property="Text">
           <Source>Register at gravatar.com</Source>
-          <Value>Зарегестрироваться на gravatar.com</Value>
+          <Value>Зарегистрироваться на gravatar.com</Value>
         </TranslationItem>
         <TranslationItem Name="retroToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Retro</Source>
@@ -6650,7 +6650,7 @@ nodes.
       <translationItems>
         <TranslationItem Name="_areYouSureYouWantCheckout" Property="Text">
           <Source>Are you sure to checkout the selected revision?</Source>
-          <Value>Вы уверенны что хотите забрать выделенную ревизию?</Value>
+          <Value>Вы уверены, что хотите забрать выделенную ревизию?</Value>
         </TranslationItem>
         <TranslationItem Name="_areYouSureYouWantCheckoutCaption" Property="Text">
           <Source>Checkout revision</Source>
