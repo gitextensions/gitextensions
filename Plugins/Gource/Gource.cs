@@ -25,7 +25,7 @@ namespace Gource
         {
             //Register settings
             Settings.AddSetting("Path to \"gource\"", "");
-            Settings.AddSetting("Arguments", "--hide filenames");
+            Settings.AddSetting("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
         }
 
         public bool Execute(GitUIBaseEventArgs gitUiCommands)
@@ -44,8 +44,7 @@ namespace Gource
             {
                 if (!File.Exists(pathToGource))
                 {
-                    if (
-                        MessageBox.Show(gitUiCommands.OwnerForm as IWin32Window,
+                    if (MessageBox.Show(gitUiCommands.OwnerForm as IWin32Window,
                             "Cannot find \"gource\" in the configured path: " + pathToGource +
                             ".\n\n.Do you want to reset the configured path?", "Gource", MessageBoxButtons.YesNo) ==
                         DialogResult.Yes)
@@ -58,8 +57,7 @@ namespace Gource
 
             if (string.IsNullOrEmpty(pathToGource))
             {
-                if (
-                    MessageBox.Show(ownerForm,
+                if (MessageBox.Show(ownerForm,
                         "There is no path to \"gource\" configured.\n\nDo you want to automaticly download \"gource\"?",
                         "Download", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
@@ -71,7 +69,7 @@ namespace Gource
                             "Cannot find \"gource\".\nPlease download \"gource\" and set the path in the plugins settings dialog.");
                         return false;
                     }
-                    var downloadDir = Environment.GetFolderPath(Environment.SpecialFolder.InternetCache);
+                    var downloadDir = Path.GetTempPath();
                     var fileName = downloadDir + "\\gource.zip";
                     var downloadSize = DownloadFile(gourceUrl, fileName);
                     if (downloadSize > 0)
@@ -96,8 +94,7 @@ namespace Gource
                 }
             }
 
-            var gourceStart = new GourceStart(pathToGource, gitUiCommands.GitWorkingDir,
-                                              Settings.GetSetting("Arguments"));
+            var gourceStart = new GourceStart(pathToGource, gitUiCommands, Settings.GetSetting("Arguments"));
             gourceStart.ShowDialog(ownerForm);
 
             Settings.SetSetting("Arguments", gourceStart.GourceArguments);

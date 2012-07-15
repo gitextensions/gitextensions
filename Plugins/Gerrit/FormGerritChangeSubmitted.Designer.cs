@@ -30,7 +30,7 @@
         {
             this.labelSubmitted = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_TargetLabel = new System.Windows.Forms.LinkLabel();
-            this.Close = new System.Windows.Forms.Button();
+            this.btnClose = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // labelSubmitted
@@ -52,25 +52,25 @@
             this._NO_TRANSLATE_TargetLabel.TabStop = true;
             this._NO_TRANSLATE_TargetLabel.Text = "Location of link";
             // 
-            // Close
+            // btnClose
             // 
-            this.Close.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Close.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Close.Location = new System.Drawing.Point(364, 71);
-            this.Close.Name = "Close";
-            this.Close.Size = new System.Drawing.Size(75, 23);
-            this.Close.TabIndex = 2;
-            this.Close.Text = "Close";
-            this.Close.UseVisualStyleBackColor = true;
+            this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnClose.Location = new System.Drawing.Point(364, 71);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(75, 23);
+            this.btnClose.TabIndex = 2;
+            this.btnClose.Text = "Close";
+            this.btnClose.UseVisualStyleBackColor = true;
             // 
             // FormGerritChangeSubmitted
             // 
-            this.AcceptButton = this.Close;
+            this.AcceptButton = this.btnClose;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.Close;
+            this.CancelButton = this.btnClose;
             this.ClientSize = new System.Drawing.Size(462, 109);
-            this.Controls.Add(this.Close);
+            this.Controls.Add(this.btnClose);
             this.Controls.Add(this._NO_TRANSLATE_TargetLabel);
             this.Controls.Add(this.labelSubmitted);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -88,6 +88,6 @@
 
         private System.Windows.Forms.Label labelSubmitted;
         private System.Windows.Forms.LinkLabel _NO_TRANSLATE_TargetLabel;
-        private System.Windows.Forms.Button Close;
+        private System.Windows.Forms.Button btnClose;
     }
 }

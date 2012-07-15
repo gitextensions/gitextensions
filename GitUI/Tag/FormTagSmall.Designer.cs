@@ -69,7 +69,6 @@ namespace GitUI.Tag
             this.TName.Name = "TName";
             this.TName.Size = new System.Drawing.Size(227, 23);
             this.TName.TabIndex = 6;
-            this.TName.KeyUp += new System.Windows.Forms.KeyEventHandler(this.NameKeyUp);
             // 
             // annotate
             // 
@@ -114,6 +113,7 @@ namespace GitUI.Tag
             // 
             // FormTagSmall
             // 
+            this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(459, 167);

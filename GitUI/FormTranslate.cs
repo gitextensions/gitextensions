@@ -26,7 +26,7 @@ namespace GitUI
         readonly TranslationString noLanguageCodeSelectedCaption = new TranslationString("Language code");
         readonly TranslationString editingCellPrefixText = new TranslationString("[EDITING]");
 
-        [DebuggerDisplay("{Category} - {NeutralValue}")]
+        [DebuggerDisplay("{DebuggerDisplay,nq}")]
         public class TranslateItem : INotifyPropertyChanged
         {
             public string Category { get; set; }
@@ -47,8 +47,15 @@ namespace GitUI
                     _translatedValue = value;
                 }
             }
+            public TranslationType Status { get; set; }
 
             public event PropertyChangedEventHandler PropertyChanged;
+
+            private string DebuggerDisplay
+            {
+                get { return string.Format("\"{0}\" - \"{1}\"{2}", Category, NeutralValue, 
+                    Status == TranslationType.Translated ? "" : " " + Status.ToString()); }
+            }
         }
 
         private List<TranslateItem> translate;
@@ -109,24 +116,104 @@ namespace GitUI
         {
             translate = new List<TranslateItem>();
 
-            foreach (TranslationCategory translationCategory in neutralTranslation.GetTranslationCategories())
-            {
-
-                foreach (TranslationItem translationItem in translationCategory.GetTranslationItems())
+            var neutralItems =
+                from translationCategory in neutralTranslation.GetTranslationCategories()
+                from translationItem in translationCategory.GetTranslationItems()
+                select new
                 {
-                    var translateItem = new TranslateItem
-                                            {
-                                                Category = translationCategory.Name,
-                                                Name = translationItem.Name,
-                                                Property = translationItem.Property,
-                                                NeutralValue = translationItem.Value
-                                            };
+                    Category = translationCategory.Name,
+                    Name = translationItem.Name,
+                    Property = translationItem.Property,
+                    Source = translationItem.Source,
+                    Value = translationItem.Value
+                };
+            var translationItems = translation != null ? 
+                (from translationCategory in translation.GetTranslationCategories()
+                 from translationItem in translationCategory.GetTranslationItems()
+                 select new
+                 {
+                     Category = translationCategory.Name,
+                     Name = translationItem.Name,
+                     Property = translationItem.Property,
+                     Source = translationItem.Source,
+                     Value = translationItem.Value
+                 }).ToList() : null;
 
-                    if (translation != null)
-                        translateItem.TranslatedValue = translation.TranslateItem(translationCategory.Name, translateItem.Name, translateItem.Property, string.Empty);
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            foreach (var item in neutralItems)
+            {
+                var translateItem = new TranslateItem
+                                        {
+                                            Category = item.Category,
+                                            Name = item.Name,
+                                            Property = item.Property,
+                                            NeutralValue = item.Value,
+                                            Status = TranslationType.New
+                                        };
 
-                    translate.Add(translateItem);
+                if (translation != null)
+                {
+                    var curItem =
+                        (from trItem in translationItems
+                         where trItem.Category.TrimStart('_') == item.Category.TrimStart('_') &&
+                         trItem.Name.TrimStart('_') == item.Name.TrimStart('_') &&
+                         trItem.Property == item.Property
+                         select trItem).FirstOrDefault();
+
+                    if (curItem != null)
+                    {
+                        translateItem.TranslatedValue = curItem.Value;
+                        if (curItem.Source == null || item.Value == curItem.Source)
+                        {
+                            if (!String.IsNullOrEmpty(curItem.Value))
+                                translateItem.Status = TranslationType.Translated;
+                            else
+                                translateItem.Status = TranslationType.Unfinished;
+                        }
+                        else
+                            translateItem.Status = TranslationType.Obsolete;
+                        translationItems.Remove(curItem);
+                        string source = curItem.Source ?? item.Value;
+                        if (!String.IsNullOrEmpty(curItem.Value) && !dict.ContainsKey(source))
+                            dict.Add(source, curItem.Value);
+                    }
                 }
+
+                translate.Add(translateItem);
+            }
+
+            if (translationItems != null)
+            {
+                foreach (var item in translationItems)
+                {
+                    if (!String.IsNullOrEmpty(item.Value))
+                    {
+                        var translateItem = new TranslateItem
+                            {
+                                Category = item.Category,
+                                Name = item.Name,
+                                Property = item.Property,
+                                NeutralValue = item.Source,
+                                TranslatedValue = item.Value,
+                                Status = TranslationType.Obsolete
+                            };
+
+                        translate.Add(translateItem);
+                        if (item.Source != null && !dict.ContainsKey(item.Source))
+                            dict.Add(item.Source, item.Value);
+                    }
+                }
+            }
+
+            var untranlatedItems = from trItem in translate
+                                   where trItem.Status == TranslationType.New &&
+                                   dict.ContainsKey(trItem.NeutralValue)
+                                   select trItem;
+
+            foreach (var untranlatedItem in untranlatedItems)
+            {
+                untranlatedItem.Status = TranslationType.Unfinished;
+                untranlatedItem.TranslatedValue = dict[untranlatedItem.NeutralValue];
             }
 
             UpdateProgress();
@@ -271,26 +358,24 @@ namespace GitUI
         private void SaveAs()
         {
             var foreignTranslation = new Translation { LanguageCode = GetSelectedLanguageCode() };
-            if (foreignTranslation.LanguageCode != null)
+            foreach (TranslateItem translateItem in translate)
             {
-                foreach (TranslateItem translateItem in translate)
+                string value = translateItem.TranslatedValue ?? String.Empty;
+                TranslationItem ti = new TranslationItem(translateItem.Name, translateItem.Property,
+                    translateItem.NeutralValue, value);
+                ti.Status = translateItem.Status;
+                if (string.IsNullOrEmpty(value))
                 {
-                    //Item is not translated (yet), skip it
-                    if (string.IsNullOrEmpty(translateItem.TranslatedValue))
-                        continue;
-
-                    TranslationItem ti = new TranslationItem(translateItem.Name, translateItem.Property, translateItem.TranslatedValue);
-                    foreignTranslation.FindOrAddTranslationCategory(translateItem.Category).AddTranslationItem(ti);
+                    if (ti.Status == TranslationType.Translated || ti.Status == TranslationType.New)
+                        ti.Status = TranslationType.Unfinished;
                 }
-            }
-            else
-            {
-                // English language
-                foreach (TranslateItem translateItem in translate)
+                else
                 {
-                    TranslationItem ti = new TranslationItem(translateItem.Name, translateItem.Property, translateItem.NeutralValue);
-                    foreignTranslation.FindOrAddTranslationCategory(translateItem.Category).AddTranslationItem(ti);
+                    // TODO: Support in form
+                    if (ti.Status == TranslationType.Unfinished)
+                        ti.Status = TranslationType.Translated;
                 }
+                foreignTranslation.FindOrAddTranslationCategory(translateItem.Category).AddTranslationItem(ti);
             }
             
             var fileDialog =

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using GitCommands;
 using GitCommands.Repository;
 using ResourceManager.Translation;
 
@@ -58,7 +59,7 @@ namespace GitUI
 
                 if (m_repositoryCategory != null && m_repositoryCategory.CategoryType == RepositoryCategoryType.RssFeed)
                 {
-                    AsyncHelpers.DoAsync(
+                    AsyncLoader.DoAsync(
                         () => { m_repositoryCategory.DownloadRssFeed(); return this; },
                         obj => { obj.InitRepositoryCategory(); },
                         ex => { }

@@ -29,7 +29,7 @@ namespace NetSpell.SpellChecker
 		private MatchCollection _htmlTags;
 		private Regex _letterRegex = new Regex(@"\D", RegexOptions.Compiled);
         private Regex _upperRegex = new Regex(@"[^\p{Lu}]", RegexOptions.Compiled); // @"[^A-Z]
-        private Regex _wordEx = new Regex(@"\b\w+\b", RegexOptions.Compiled); // @"\b[A-Za-z0-9_'À-ÿ]+\b"
+        private Regex _wordEx = new Regex(@"\b[\w']+\b", RegexOptions.Compiled); // @"\b[A-Za-z0-9_'À-ÿ]+\b"
 		private MatchCollection _words;
         private SuggestionEnum _suggestionMode = SuggestionEnum.PhoneticNearMiss;
         #endregion

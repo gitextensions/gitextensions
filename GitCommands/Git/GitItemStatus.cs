@@ -21,6 +21,7 @@ namespace GitCommands
 
         public string Name { get; set; }
         public string OldName { get; set; }
+        public string TreeGuid { get; set; }
 
         public string ChangeString
         {

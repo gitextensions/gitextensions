@@ -226,6 +226,19 @@ namespace GitUI
             return (site != null) && site.DesignMode;
         }
 
+        protected virtual void OnRuntimeLoad(EventArgs e)
+        { 
+        
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            if (!CheckComponent(this))
+                OnRuntimeLoad(e);
+        }
+
         private void GitExtensionsFormLoad(object sender, EventArgs e)
         {
             // find out if the value is a component and is currently in design mode

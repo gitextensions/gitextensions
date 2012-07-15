@@ -93,6 +93,7 @@ namespace GitUIPluginInterfaces
         string CommandLineCommand(string cmd, string arguments);
         IGitRemoteCommand CreateRemoteCommand();
         void RaiseBrowseInitialize();
+        void CacheAvatar(string email);
 
         bool StartCommandLineProcessDialog(object ownerForm, string command, string arguments);
         bool StartCommandLineProcessDialog(string command, string arguments);
