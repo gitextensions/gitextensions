@@ -242,7 +242,7 @@
         <TranslationItem Name="groupBox1" Property="Text">
           <Value>Prévisualisation</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
+        <TranslationItem Name="groupFilePattern" Property="Text">
           <Value>Entrer un motif de fichier à ignorer:</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
