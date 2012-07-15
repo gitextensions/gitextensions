@@ -38,13 +38,13 @@
             this.FilePattern = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.GroupBox();
+            this.groupFilePattern = new System.Windows.Forms.GroupBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.groupBox1.SuspendLayout();
             this.noMatchPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
-            this.label1.SuspendLayout();
+            this.groupFilePattern.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -156,17 +156,17 @@
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
-            // label1
+            // groupFilePattern
             // 
-            this.label1.Controls.Add(this.FilePattern);
-            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Name = "label1";
-            this.label1.Padding = new System.Windows.Forms.Padding(12, 3, 12, 3);
-            this.label1.Size = new System.Drawing.Size(599, 57);
-            this.label1.TabIndex = 11;
-            this.label1.TabStop = false;
-            this.label1.Text = "Enter a file pattern to ignore:";
+            this.groupFilePattern.Controls.Add(this.FilePattern);
+            this.groupFilePattern.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupFilePattern.Location = new System.Drawing.Point(0, 0);
+            this.groupFilePattern.Name = "groupFilePattern";
+            this.groupFilePattern.Padding = new System.Windows.Forms.Padding(12, 3, 12, 3);
+            this.groupFilePattern.Size = new System.Drawing.Size(599, 57);
+            this.groupFilePattern.TabIndex = 11;
+            this.groupFilePattern.TabStop = false;
+            this.groupFilePattern.Text = "Enter a file pattern to ignore:";
             // 
             // panel2
             // 
@@ -184,7 +184,7 @@
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(599, 341);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.groupFilePattern);
             this.Controls.Add(this.panel1);
             this.MinimizeBox = false;
             this.Name = "FormAddToGitIgnore";
@@ -195,8 +195,8 @@
             this.noMatchPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel1.ResumeLayout(false);
-            this.label1.ResumeLayout(false);
-            this.label1.PerformLayout();
+            this.groupFilePattern.ResumeLayout(false);
+            this.groupFilePattern.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.ResumeLayout(false);
@@ -215,7 +215,7 @@
         private System.Windows.Forms.Label _NO_TRANSLATE_filesWillBeIgnored;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.GroupBox label1;
+        private System.Windows.Forms.GroupBox groupFilePattern;
         private System.Windows.Forms.Panel panel2;
 
     }
