@@ -54,10 +54,10 @@
             this.groupBox1.Controls.Add(this.noMatchPanel);
             this.groupBox1.Controls.Add(this._NO_TRANSLATE_Preview);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(0, 57);
+            this.groupBox1.Location = new System.Drawing.Point(0, 93);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(12, 8, 12, 0);
-            this.groupBox1.Size = new System.Drawing.Size(599, 240);
+            this.groupBox1.Size = new System.Drawing.Size(599, 204);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Preview";
@@ -78,7 +78,7 @@
             this.noMatchPanel.BackColor = System.Drawing.Color.White;
             this.noMatchPanel.Controls.Add(this.label2);
             this.noMatchPanel.Controls.Add(this.pictureBox1);
-            this.noMatchPanel.Location = new System.Drawing.Point(161, 107);
+            this.noMatchPanel.Location = new System.Drawing.Point(161, 89);
             this.noMatchPanel.Name = "noMatchPanel";
             this.noMatchPanel.Size = new System.Drawing.Size(233, 26);
             this.noMatchPanel.TabIndex = 2;
@@ -112,7 +112,7 @@
             this._NO_TRANSLATE_Preview.ItemHeight = 15;
             this._NO_TRANSLATE_Preview.Location = new System.Drawing.Point(12, 24);
             this._NO_TRANSLATE_Preview.Name = "_NO_TRANSLATE_Preview";
-            this._NO_TRANSLATE_Preview.Size = new System.Drawing.Size(575, 216);
+            this._NO_TRANSLATE_Preview.Size = new System.Drawing.Size(575, 180);
             this._NO_TRANSLATE_Preview.TabIndex = 1;
             // 
             // AddToIngore
@@ -128,11 +128,15 @@
             // 
             // FilePattern
             // 
+            this.FilePattern.AcceptsReturn = true;
             this.FilePattern.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FilePattern.Location = new System.Drawing.Point(12, 19);
+            this.FilePattern.Multiline = true;
             this.FilePattern.Name = "FilePattern";
-            this.FilePattern.Size = new System.Drawing.Size(575, 23);
+            this.FilePattern.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.FilePattern.Size = new System.Drawing.Size(575, 71);
             this.FilePattern.TabIndex = 6;
+            this.FilePattern.WordWrap = false;
             this.FilePattern.TextChanged += new System.EventHandler(this.FilePattern_TextChanged);
             // 
             // panel1
@@ -163,7 +167,7 @@
             this.groupFilePattern.Location = new System.Drawing.Point(0, 0);
             this.groupFilePattern.Name = "groupFilePattern";
             this.groupFilePattern.Padding = new System.Windows.Forms.Padding(12, 3, 12, 3);
-            this.groupFilePattern.Size = new System.Drawing.Size(599, 57);
+            this.groupFilePattern.Size = new System.Drawing.Size(599, 93);
             this.groupFilePattern.TabIndex = 11;
             this.groupFilePattern.TabStop = false;
             this.groupFilePattern.Text = "Enter a file pattern to ignore:";
@@ -172,7 +176,7 @@
             // 
             this.panel2.Controls.Add(this._NO_TRANSLATE_filesWillBeIgnored);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(12, 217);
+            this.panel2.Location = new System.Drawing.Point(12, 181);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(575, 23);
             this.panel2.TabIndex = 12;
