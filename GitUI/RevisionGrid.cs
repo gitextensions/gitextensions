@@ -66,9 +66,7 @@ namespace GitUI
 
             InitLayout();
             InitializeComponent();
-#if !__MonoCS__ // animated GIFs are not supported in Mono/Linux
             this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
-#endif
 
             Translate();
 
@@ -441,7 +439,7 @@ namespace GitUI
 
         public bool SetAndApplyBranchFilter(string filter)
         {
-            if (filter.Equals(_revisionFilter.GetBranchFilter())) 
+            if (filter.Equals(_revisionFilter.GetBranchFilter()))
                 return false;
             if (filter.Equals(""))
             {
@@ -458,7 +456,7 @@ namespace GitUI
             return true;
         }
 
-        public void SetLimit(int limit)         
+        public void SetLimit(int limit)
         {
             _revisionFilter.SetLimit(limit);
         }
@@ -1120,12 +1118,12 @@ namespace GitUI
                             int gravatarLeft = e.CellBounds.Left + baseOffset + 2;
 
 
-                            Image gravatar = Gravatar.GravatarService.GetImageFromCache(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, Settings.AuthorImageCacheDays, gravatarSize, Settings.ApplicationDataPath + "Images\\", FallBackService.MonsterId);
+                            Image gravatar = Gravatar.GravatarService.GetImageFromCache(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, Settings.AuthorImageCacheDays, gravatarSize, Settings.GravatarCachePath, FallBackService.MonsterId);
 
                             if (gravatar == null && !string.IsNullOrEmpty(revision.AuthorEmail))
                             {
                                 ThreadPool.QueueUserWorkItem(o =>
-                                        Gravatar.GravatarService.LoadCachedImage(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, null, Settings.AuthorImageCacheDays, gravatarSize, Settings.ApplicationDataPath + "Images\\", RefreshGravatar, FallBackService.MonsterId));
+                                        Gravatar.GravatarService.LoadCachedImage(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, null, Settings.AuthorImageCacheDays, gravatarSize, Settings.GravatarCachePath, RefreshGravatar, FallBackService.MonsterId));
                             }
 
                             if (gravatar != null)
@@ -1386,8 +1384,11 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
 
-            var frm = new FormTagSmall { Revision = GetRevision(LastRow) };
-            frm.ShowDialog(this);
+            using (var frm = new FormTagSmall(GetRevision(LastRow)))
+            {
+                frm.ShowDialog(this);    
+            }
+            
             RefreshRevisions();
         }
 
@@ -1543,6 +1544,7 @@ namespace GitUI
             var inTheMiddleOfBisect = Settings.Module.InTheMiddleOfBisect();
             markRevisionAsBadToolStripMenuItem.Visible = inTheMiddleOfBisect;
             markRevisionAsGoodToolStripMenuItem.Visible = inTheMiddleOfBisect;
+            bisectSkipRevisionToolStripMenuItem.Visible = inTheMiddleOfBisect;
             stopBisectToolStripMenuItem.Visible = inTheMiddleOfBisect;
             bisectSeparator.Visible = inTheMiddleOfBisect;
 
@@ -1593,6 +1595,14 @@ namespace GitUI
                 }
             }
 
+            //if there is no branch to rebase on, then allow user to rebase on selected commit 
+            if (rebaseDropDown.Items.Count == 0 && !currentBranchPointsToRevision)
+            {
+                ToolStripItem toolStripItem = new ToolStripMenuItem(revision.Guid);
+                toolStripItem.Click += ToolStripItemClickRebaseBranch;
+                rebaseDropDown.Items.Add(toolStripItem);
+            }
+
             //if there is no branch to merge, then let user to merge selected commit into current branch 
             if (mergeBranchDropDown.Items.Count == 0 && !currentBranchPointsToRevision)
             {
@@ -1600,7 +1610,7 @@ namespace GitUI
                 toolStripItem.Click += ToolStripItemClickMergeBranch;
                 mergeBranchDropDown.Items.Add(toolStripItem);
             }
-            
+
 
             foreach (var head in allBranches)
             {
@@ -1855,83 +1865,7 @@ namespace GitUI
             if (!Settings.RelativeDate)
                 return string.Format("{0} {1}", time.ToShortDateString(), time.ToLongTimeString());
 
-
-            var span = DateTime.Now - time;
-            
-            #region Relative time output note
-            /*
-            To summarise, the output always rounds down the relative time. eg. 2.9 days = "2 days ago"
-            The following table describes the output in detail:
-            
-            displayed  |                 |  time unit for
-             output    |  time interval  |  time interval
-           ------------+-----------------+-------------------
-            0 seconds     [0.0, 1.0)        seconds
-            1 second      [1.0, 2.0)        seconds
-            n seconds     [2.0, 60.0)       seconds
-
-            1 minute      [1.0, 2.0)        minutes
-            n minutes     [2.0, 60.0)       minutes
-
-            1 hour        [1.0, 2.0)        hours
-            n hours       [2.0, 24.0)       hours
-
-            1 day         [1.0, 2.0)        days
-            n days        [2.0, 30.0)       days
-
-            1 month       [30.0, 60.0)      days
-            n months      [60.0, 365.0)     days
-
-            1 year        [365.0, 730.0)    days
-            n years       [730.0, inf)      days
-            
-             */
-            #endregion
-
-            if (span.TotalMinutes < 1.0)
-            {
-                if (span.Seconds == 1)
-                    return string.Format(Strings.Get1SecondAgoText(), "1");
-                else
-                    return string.Format(Strings.GetNSecondsAgoText(), span.Seconds);
-            }
-
-            if (span.TotalHours < 1.0)
-            {
-                if (span.Minutes == 1)
-                    return string.Format(Strings.Get1MinuteAgoText(), "1");
-                else
-                    return string.Format(Strings.GetNMinutesAgoText(), span.Minutes);
-            }
-
-            if (span.TotalHours < 24.0)
-            {
-                if (span.Hours == 1)
-                    return string.Format(Strings.Get1HourAgoText(), "1");
-                else
-                    return string.Format(Strings.GetNHoursAgoText(), span.Hours);
-            }
-
-            if (span.TotalDays < 30.0)
-            {
-                if (span.Days == 1)
-                    return string.Format(Strings.Get1DayAgoText(), "1");
-                else
-                    return string.Format(Strings.GetNDaysAgoText(), span.Days);
-            }
-
-            if (span.TotalDays < 365.0)
-            {
-                if (span.Days < 60)
-                    return string.Format(Strings.Get1MonthAgoText(), "1");
-                else    // 30.417 = 365 days / 12 months - note that the if statement only bothers with 30 days for "1 month ago" because span.Days is int.
-                    return string.Format(Strings.GetNMonthsAgoText(), (int)(span.TotalDays / 30.417));  // round down
-            }
-
-            if (span.TotalDays < 730.0)  // less than 2.0 years = "1 year"
-                return string.Format(Strings.Get1YearAgoText(), "1");
-            else
-                return string.Format(Strings.GetNYearsAgoText(), (int)(span.TotalDays / 365.0));        // round down
+            return GitCommandHelpers.GetRelativeDateString(DateTime.Now, time, false);
         }
 
         private void UpdateGraph(GitRevision rev)
@@ -1946,7 +1880,7 @@ namespace GitUI
                     bool uncommittedChanges = false;
                     bool stagedChanges = false;
                     //Only check for tracked files. This usually makes more sense and it performs a lot
-                    //better then checking for untrackd files.
+                    //better then checking for untracked files.
                     if (Settings.Module.GetTrackedChangedFiles().Count > 0)
                         uncommittedChanges = true;
                     if (Settings.Module.GetStagedFiles().Count > 0)
@@ -2386,7 +2320,7 @@ namespace GitUI
             this.remoteToolStripMenuItem.Name = "remoteToolStripMenuItem";
             this.remoteToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
             this.remoteToolStripMenuItem.Text = "Remote";
-        
+
         }
 
         public FilterBranchHelper(ToolStripComboBox toolStripBranches, ToolStripDropDownButton toolStripDropDownButton2, RevisionGrid RevisionGrid)
@@ -2497,7 +2431,10 @@ namespace GitUI
         {
             bool success = _NO_TRANSLATE_RevisionGrid.SetAndApplyBranchFilter(_NO_TRANSLATE_toolStripBranches.Text);
             if (success && refresh)
+            {
+                _NO_TRANSLATE_RevisionGrid.Visible = true;
                 _NO_TRANSLATE_RevisionGrid.ForceRefreshRevisions();
+            }
         }
 
         private void UpdateBranchFilterItems()
@@ -2524,7 +2461,7 @@ namespace GitUI
     }
 
 
-    public class FilterRevisionsHelper 
+    public class FilterRevisionsHelper
     {
 
         private ToolStripTextBox _NO_TRANSLATE_toolStripTextBoxFilter;
@@ -2581,7 +2518,7 @@ namespace GitUI
             this.hashToolStripMenuItem.CheckOnClick = true;
             this.hashToolStripMenuItem.Name = "hashToolStripMenuItem";
             this.hashToolStripMenuItem.Size = new System.Drawing.Size(216, 24);
-            this.hashToolStripMenuItem.Text = "Hash";        
+            this.hashToolStripMenuItem.Text = "Hash";
         }
 
         public FilterRevisionsHelper(ToolStripTextBox toolStripTextBoxFilter, ToolStripDropDownButton toolStripDropDownButton1, RevisionGrid RevisionGrid, ToolStripLabel toolStripLabel2, Form form)
@@ -2603,7 +2540,7 @@ namespace GitUI
             this._NO_TRANSLATE_toolStripTextBoxFilter.Leave += this.ToolStripTextBoxFilterLeave;
             this._NO_TRANSLATE_toolStripTextBoxFilter.KeyPress += this.ToolStripTextBoxFilterKeyPress;
 
-        
+
         }
 
         public void SetFilter(string filter)
@@ -2651,6 +2588,7 @@ namespace GitUI
             _NO_TRANSLATE_RevisionGrid.InMemCommitterFilter = inMemCommitterFilter;
             _NO_TRANSLATE_RevisionGrid.InMemAuthorFilter = inMemAuthorFilter;
             _NO_TRANSLATE_RevisionGrid.InMemFilterIgnoreCase = true;
+            _NO_TRANSLATE_RevisionGrid.Visible = true;
             _NO_TRANSLATE_RevisionGrid.ForceRefreshRevisions();
         }
 
@@ -2682,9 +2620,10 @@ namespace GitUI
             else
                 commitToolStripMenuItem1.Checked = true;
         }
-        
 
-        public void SetLimit(int limit) {
+
+        public void SetLimit(int limit)
+        {
             _NO_TRANSLATE_RevisionGrid.SetLimit(limit);
         }
 

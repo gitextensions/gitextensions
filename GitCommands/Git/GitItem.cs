@@ -38,7 +38,7 @@ namespace GitCommands
             {
                 if (subItems == null)
                 {
-                    subItems = Settings.Module.GetTree(Guid);
+                    subItems = Settings.Module.GetTree(Guid, false);
 
                     foreach (GitItem item in subItems)
                     {
@@ -68,5 +68,37 @@ namespace GitCommands
             item.FileName = item.Name;
             return item;
         }
+
+
+        public static List<GitItem> CreateGitItemsFromString(string tree)
+        {
+            var itemsStrings = tree.Split(new char[] { '\0', '\n' });
+
+            var items = new List<GitItem>();
+
+            foreach (var itemsString in itemsStrings)
+            {
+                if (itemsString.Length <= 53)
+                    continue;
+
+                var item = GitItem.CreateGitItemFromString(itemsString);
+
+                items.Add(item);
+            }
+
+            return items;
+        }
+
+        public static List<IGitItem> CreateIGitItemsFromString(string tree)
+        {
+            var items = new List<IGitItem>();
+
+            foreach (var item in CreateGitItemsFromString(tree))
+                items.Add(item);
+
+            return items;
+        }
+
+
     }
 }

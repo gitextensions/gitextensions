@@ -56,7 +56,7 @@ namespace GitUI.RepoHosting
         {
             _isFirstLoad = true;
 
-            AsyncHelpers.DoAsync(
+            AsyncLoader.DoAsync(
                 () =>
                 {
                     var t = _gitHoster.GetHostedRemotesForCurrentWorkingDirRepo().ToList();
@@ -84,7 +84,7 @@ namespace GitUI.RepoHosting
             _selectHostedRepoCB.Enabled = false;
             ResetAllAndShowLoadingPullRequests();
 
-            AsyncHelpers.DoAsync <List<IPullRequestInformation>>(
+            AsyncLoader.DoAsync<List<IPullRequestInformation>>(
                hostedRepo.GetPullRequests,
                res => { SetPullRequestsData(res); _selectHostedRepoCB.Enabled = true; },
                ex => MessageBox.Show(this, _strFailedToFetchPullData.Text + ex.Message, _strError.Text)
@@ -182,7 +182,7 @@ namespace GitUI.RepoHosting
 
         private void LoadDiscussion()
         {
-            AsyncHelpers.DoAsync(
+            AsyncLoader.DoAsync(
                 () => _currentPullRequestInfo.Discussion,
                 LoadDiscussion,
                 ex => 
@@ -209,7 +209,7 @@ namespace GitUI.RepoHosting
 
         private void LoadDiffPatch()
         {
-            AsyncHelpers.DoAsync(
+            AsyncLoader.DoAsync(
                 () => _currentPullRequestInfo.DiffData,
                 SplitAndLoadDiff,
                 ex => MessageBox.Show(this, _strFailedToLoadDiffData.Text + ex.Message, _strError.Text));

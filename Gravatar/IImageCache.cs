@@ -1,6 +1,6 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
+
 namespace Gravatar
 {
     interface IImageCache
@@ -9,7 +9,7 @@ namespace Gravatar
         void DeleteCachedFile(string imageFileName);
         bool FileIsCached(string imageFileName);
         bool FileIsExpired(string imageFileName, int cacheDays);
-        Image LoadImageFromCache(string imageFileName, System.Drawing.Bitmap defaultBitmap);
+        Image LoadImageFromCache(string imageFileName, Bitmap defaultBitmap);
         void CacheImage(string imageFileName, Stream imageStream);
     }
 }

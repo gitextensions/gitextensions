@@ -70,7 +70,7 @@ namespace GitUI.RepoHosting
             _myReposLV.Items.Clear();
             _myReposLV.Items.Add(new ListViewItem { Text = _strLoading.Text });
 
-            AsyncHelpers.DoAsync(
+            AsyncLoader.DoAsync(
                 () => _gitHoster.GetMyRepos(),
 
                 repos =>
@@ -102,7 +102,7 @@ namespace GitUI.RepoHosting
 
             PrepareSearch(sender, e);
 
-            AsyncHelpers.DoAsync(
+            AsyncLoader.DoAsync(
                 () => _gitHoster.SearchForRepository(search),
                 HandleSearchResult,
                 ex => { MessageBox.Show(this, _strSearchFailed.Text + ex.Message, _strError.Text); _searchBtn.Enabled = true; });
@@ -114,7 +114,7 @@ namespace GitUI.RepoHosting
                 return;
             PrepareSearch(sender, e);
 
-            AsyncHelpers.DoAsync(
+            AsyncLoader.DoAsync(
                 () => _gitHoster.GetRepositoriesOfUser(search.Trim()),
                 HandleSearchResult,
                 ex =>

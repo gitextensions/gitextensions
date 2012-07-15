@@ -142,6 +142,11 @@ namespace GitCommands
 
         public static string ApplicationDataPath { get; private set; }
 
+        public static string GravatarCachePath
+        {
+            get { return ApplicationDataPath + "Images\\"; }
+        }
+
         private static string _translation;
         public static string Translation
         {
@@ -240,6 +245,18 @@ namespace GitCommands
             set { SafeSet("fullhistoryinfilehistory", value, ref _fullHistoryInFileHistory); }
         }
 
+        public static bool LoadFileHistoryOnShow
+        {
+            get { return GetBool("LoadFileHistoryOnShow", true).Value; }
+            set { SetBool("LoadFileHistoryOnShow", value); }
+        }
+
+        public static bool LoadBlameOnShow
+        {
+            get { return GetBool("LoadBlameOnShow", true).Value; }
+            set { SetBool("LoadBlameOnShow", value); }
+        }
+
         private static bool? _revisionGraphShowWorkingDirChanges;
         public static bool RevisionGraphShowWorkingDirChanges
         {
@@ -304,14 +321,14 @@ namespace GitCommands
                     }
                     catch (ArgumentException ex)
                     {
-                        throw new Exception(ex.Message + Environment.NewLine + "Unsupported encoding set in git config file: " + encodingName + Environment.NewLine + "Please check the setting i18n.commitencoding in your local and/or global config files. Command aborted.", ex);
+                        Debug.WriteLine(string.Format("Unsupported encoding set in git config file: {0}\nPlease check the setting {1} in your {2} config file.", encodingName, settingName, (local ? "local" : "global")));
+                        result = null;
                     }
                 }
-                byNameMap[lname] = result;                
+                byNameMap[lname] = result; 
             }
 
             return result;
-
         }
 
         private static void SetEncoding(bool local, string settingName, Encoding encoding, bool toSettings)
@@ -976,14 +993,14 @@ namespace GitCommands
             { }
         }
 
-        public static bool? _dashboardShowCurrentBranch;
+        private static bool? _dashboardShowCurrentBranch;
         public static bool DashboardShowCurrentBranch
         {
             get { return SafeGet("dashboardshowcurrentbranch", true, ref _dashboardShowCurrentBranch); }
             set { SafeSet("dashboardshowcurrentbranch", value, ref _dashboardShowCurrentBranch); }
         }
 
-        public static string _ownScripts;
+        private static string _ownScripts;
         public static string ownScripts
         {
             get { return SafeGet("ownScripts", "", ref _ownScripts); }

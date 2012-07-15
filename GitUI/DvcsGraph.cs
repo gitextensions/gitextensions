@@ -74,6 +74,7 @@ namespace GitUI
         private readonly List<IComparable> toBeSelected = new List<IComparable>();
         private int backgroundScrollTo;
         private Thread backgroundThread;
+        private volatile bool shouldRun = true;
         private int cacheCount; // Number of elements in the cache.
         private int cacheCountMax; // Number of elements allowed in the cache. Is based on control height.
         private int cacheHead = -1; // The 'slot' that is the head of the circular bitmap
@@ -243,11 +244,7 @@ namespace GitUI
 
         protected override void Dispose(bool disposing)
         {
-            if (backgroundThread != null)
-            {
-                backgroundThread.Abort();
-                backgroundThread = null;
-            }
+            shouldRun = false;
             if (disposing)
             {
                 if (graphBitmap != null)
@@ -501,7 +498,7 @@ namespace GitUI
 
         private void BackgroundThreadEntry()
         {
-            while (backgroundEvent.WaitOne())
+            while (shouldRun && backgroundEvent.WaitOne())
             {
                 lock (backgroundEvent)
                 {
@@ -1133,6 +1130,31 @@ namespace GitUI
             cacheCountMax = Height * 2 / rowHeight + 1;
             ClearDrawCache();
             dataGrid_Scroll(null, null);
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Home)
+            {
+                if (RowCount != 0)
+                {
+                    ClearSelection();
+                    Rows[0].Selected = true;
+                    CurrentCell = Rows[0].Cells[1];
+                }
+                return;
+            }
+            else if (e.KeyData == Keys.End)
+            {
+                if (RowCount != 0)
+                {
+                    ClearSelection();
+                    Rows[RowCount - 1].Selected = true;
+                    CurrentCell = Rows[RowCount - 1].Cells[1];
+                }
+                return;
+            }
+            base.OnKeyDown(e);
         }
 
         #region Nested type: Node

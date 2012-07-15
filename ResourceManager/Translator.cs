@@ -25,6 +25,8 @@ namespace ResourceManager.Translation
                     Translator._translation = TranslationSerializer.Deserialize(Translator.GetTranslationDir() + @"\" + translationName + ".xml");
                 else
                     Translator._translation = TranslationSerializer.Deserialize(Translator.GetTranslationDir() + @"/" + translationName + ".xml");
+                if (Translator._translation != null)
+                    Translator._translation.ClearSource();
             }
             Translator._name = translationName;
             return Translator._translation;

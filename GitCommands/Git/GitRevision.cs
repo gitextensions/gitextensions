@@ -44,7 +44,7 @@ namespace GitCommands
 
         public List<IGitItem> SubItems
         {
-            get { return _subItems ?? (_subItems = Settings.Module.GetTree(TreeGuid)); }
+            get { return _subItems ?? (_subItems = Settings.Module.GetTree(TreeGuid, false)); }
         }
 
         #endregion
@@ -81,6 +81,11 @@ namespace GitCommands
         {
             return guid == UncommittedWorkingDirGuid ||
                     guid == IndexGuid;
+        }
+
+        public bool HasParent()
+        {
+            return ParentGuids != null && ParentGuids.Length > 0;
         }
 
     }
