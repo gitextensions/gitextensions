@@ -338,6 +338,7 @@ namespace GitUI
             this.branchSelect.ToolTipText = "Change current branch";
             this.branchSelect.ButtonClick += new System.EventHandler(this.CurrentBranchClick);
             this.branchSelect.DropDownOpening += new System.EventHandler(this.CurrentBranchDropDownOpening);
+            this.branchSelect.MouseUp += new System.Windows.Forms.MouseEventHandler(this.CurrentBranchMouseUp);
             // 
             // toolStripSeparator1
             // 
