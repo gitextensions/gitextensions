@@ -1904,6 +1904,11 @@ namespace GitCommands
             return GetHeads(tree);
         }
 
+        public ICollection<string> GetMergedBranches()
+        {
+            return Settings.Module.RunGitCmd(GitCommandHelpers.MergedBranches()).Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);                
+        }
+
         private string GetTree(bool tags, bool branches)
         {
             if (tags && branches)
