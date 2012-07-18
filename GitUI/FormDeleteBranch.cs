@@ -15,6 +15,8 @@ namespace GitUI
             "Are you sure you want to delete selected branches?" + Environment.NewLine + "Deleting a branch can cause commits to be deleted too!");
         private readonly TranslationString _deleteUnmergedBranchForcingSuggestion =
             new TranslationString("You cannot delete unmerged branch until you set “force delete” mode.");
+        private readonly TranslationString _cannotDeleteCurrentBranchMessage =
+            new TranslationString("Cannot delete the branch “{0}” which you are currently on.");
 
         private readonly string _defaultBranch;
         private string _currentBranch;
@@ -47,6 +49,13 @@ namespace GitUI
             try
             {
                 var selectedBranches = Branches.GetSelectedBranches().ToArray();
+
+                if (_currentBranch != null && selectedBranches.Any(branch => branch.Name == _currentBranch))
+                {
+                    MessageBox.Show(this, string.Format(_cannotDeleteCurrentBranchMessage.Text, _currentBranch), _deleteBranchCaption.Text);
+                    return;
+                }
+
                 // always treat branches as unmerged if there is no current branch (HEAD is detached)
                 var hasUnmergedBranches = _currentBranch == null || selectedBranches.Any(branch => !mergedBranches.Contains(branch.Name));
 
