@@ -91,9 +91,8 @@ namespace GitUI
                     command += " --force";
 
                 command += " \"" + _branch + "\"";
-                var form = new FormProcess(command);
-                form.ShowDialog(this);
-                if (!form.ErrorOccurred())
+                var successfullyCheckedOut = FormProcess.ShowDialog(this, command);
+                if (successfullyCheckedOut)
                     Close();
             }
             catch (Exception ex)
