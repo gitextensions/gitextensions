@@ -2772,6 +2772,9 @@ Deleting a branch can cause commits to be deleted too!</Source>
         <TranslationItem Name="_deleteUnmergedBranchForcingSuggestion" Property="Text">
           <Value>Для удаления неполностью слитой ветки необходимо установить режим «Принудительное удаление».</Value>
         </TranslationItem>
+        <TranslationItem Name="_cannotDeleteCurrentBranchMessage" Property="Text">
+          <Value>Вы не можете удалить ветку «{0}», на которой в данный момент находитесь.</Value>
+        </TranslationItem>
         <TranslationItem Name="ForceDelete" Property="Text">
           <Source>Force delete</Source>
           <Value>Принудительное удаление</Value>
