@@ -28,7 +28,7 @@ namespace GitUI
                 }
 
                 string cmd = GitCommandHelpers.BranchCmd(BName.Text, RevisionGrid.GetSelectedRevisions()[0].Guid, CheckoutAfterCreate.Checked);
-                new FormProcess(cmd).ShowDialog(this);
+                FormProcess.ShowDialog(this, cmd);
 
                 Close();
 
