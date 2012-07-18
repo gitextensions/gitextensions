@@ -13,6 +13,8 @@ namespace GitUI
         private readonly TranslationString _deleteBranchCaption = new TranslationString("Delete branches");
         private readonly TranslationString _deleteBranchQuestion = new TranslationString(
             "Are you sure you want to delete selected branches?" + Environment.NewLine + "Deleting a branch can cause commits to be deleted too!");
+        private readonly TranslationString _deleteUnmergedBranchForcingSuggestion =
+            new TranslationString("You cannot delete unmerged branch until you set “force delete” mode.");
 
         private readonly string _defaultBranch;
         private string _currentBranch;
@@ -48,10 +50,19 @@ namespace GitUI
                 // always treat branches as unmerged if there is no current branch (HEAD is detached)
                 var hasUnmergedBranches = _currentBranch == null || selectedBranches.Any(branch => !mergedBranches.Contains(branch.Name));
 
-                if (hasUnmergedBranches &&
-                    MessageBox.Show(this, _deleteBranchQuestion.Text, _deleteBranchCaption.Text, MessageBoxButtons.YesNo) != DialogResult.Yes)
+                // we could show yes/no dialog and set forcing checkbox automatically, but more safe way is asking user to do it himself
+                if (hasUnmergedBranches && !ForceDelete.Checked)
+                {
+                    MessageBox.Show(this, _deleteUnmergedBranchForcingSuggestion.Text, _deleteBranchCaption.Text);
                     return;
-                
+                }
+
+                // ask for confirmation to delete unmerged branch that may cause loosing commits
+                // (actually we could check if there are another branches pointing to that commit)
+                if (hasUnmergedBranches
+                    && MessageBox.Show(this, _deleteBranchQuestion.Text, _deleteBranchCaption.Text, MessageBoxButtons.YesNo) != DialogResult.Yes)
+                    return;
+
                 var cmd = new GitDeleteBranchCmd(selectedBranches, ForceDelete.Checked);
                 GitUICommands.Instance.StartCommandLineProcessDialog(cmd, this);
             }
