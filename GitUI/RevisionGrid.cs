@@ -1682,7 +1682,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            new FormProcess(GitCommandHelpers.DeleteTagCmd(toolStripItem.Text)).ShowDialog(this);
+            FormProcess.ShowDialog(this, GitCommandHelpers.DeleteTagCmd(toolStripItem.Text));
             ForceRefreshRevisions();
         }
 
@@ -1712,8 +1712,7 @@ namespace GitUI
                 string args = force ? "-f" : null;
 
                 var command = "checkout".Join(" ", args).Join(" ", string.Format("\"{0}\"", toolStripItem.Text));
-                var form = new FormProcess(command);
-                form.ShowDialog(this);
+                FormProcess.ShowDialog(this, command);
                 needRefresh = true;
             }
 
@@ -1793,7 +1792,7 @@ namespace GitUI
             {
                 string args = force ? "-f" : null;
                 string cmd = "checkout".Join(" ", args).Join(" ", string.Format("\"{0}\"", GetRevision(LastRow).Guid));
-                new FormProcess(cmd).ShowDialog(this);
+                FormProcess.ShowDialog(this, cmd);
                 needRefresh = true;
             }
 
@@ -1981,7 +1980,7 @@ namespace GitUI
 
         private void stopBisectToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormProcess(GitCommandHelpers.StopBisectCmd()).ShowDialog(this);
+            FormProcess.ShowDialog(this, GitCommandHelpers.StopBisectCmd());
             RefreshRevisions();
         }
 

@@ -709,12 +709,11 @@ namespace GitUI
 
                 ScriptManager.RunEventScripts(ScriptEvent.BeforeCommit);
 
-                var form = new FormProcess(Settings.Module.CommitCmd(amend, signOffToolStripMenuItem.Checked, toolAuthor.Text));
-                form.ShowDialog(this);
+                var errorOccurred = !FormProcess.ShowDialog(this, Settings.Module.CommitCmd(amend, signOffToolStripMenuItem.Checked, toolAuthor.Text));
 
                 NeedRefresh = true;
 
-                if (form.ErrorOccurred())
+                if (errorOccurred)
                     return;
 
                 ScriptManager.RunEventScripts(ScriptEvent.AfterCommit);
@@ -1227,7 +1226,7 @@ namespace GitUI
                 MessageBoxButtons.YesNo) !=
                 DialogResult.Yes)
                 return;
-            new FormProcess("clean -f").ShowDialog(this);
+            FormProcess.ShowDialog(this, "clean -f");
             Initialize();
         }
 
@@ -1753,8 +1752,7 @@ namespace GitUI
 
             foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
             {
-                var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(item.Name));
-                process.ShowDialog(this);
+                FormProcess.ShowDialog(this, GitCommandHelpers.SubmoduleUpdateCmd(item.Name));
             }
 
             Initialize();
@@ -1771,8 +1769,7 @@ namespace GitUI
             foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
             {
                 GitModule module = new GitModule(Settings.WorkingDir + item.Name + Settings.PathSeparator.ToString());
-                var process = new FormProcess(module, arguments);
-                process.ShowDialog(this);
+                FormProcess.ShowDialog(this, module, arguments);                
             }
 
             Initialize();
