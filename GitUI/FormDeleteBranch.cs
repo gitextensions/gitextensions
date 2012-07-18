@@ -28,8 +28,7 @@ namespace GitUI
         private void FormDeleteBranchLoad(object sender, EventArgs e)
         {
             Heads = Settings.Module.GetHeads(true, true);
-            List<GitHead> branchList = Heads.FindAll(h => h.IsHead == true && h.IsRemote == false);
-            Branches.BranchesToSelect = branchList;
+            Branches.BranchesToSelect = Heads.FindAll(h => h.IsHead && !h.IsRemote);
 
             if (_defaultBranch != null)
             {
