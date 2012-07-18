@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
 using GitCommands;
@@ -15,7 +9,7 @@ namespace GitUI
     /// <summary>
     /// Form that handles Plink exceptions
     /// </summary>
-    public partial class FormRemoteProcess : FormProcess
+    public sealed partial class FormRemoteProcess : FormProcess
     {
         #region Translation
         private readonly TranslationString _serverHotkeyNotCachedText =
@@ -29,28 +23,25 @@ namespace GitUI
         public bool Plink { get; set; }
         private bool restart;
 
-        //constructor for VS designer
-        protected FormRemoteProcess()
-        {
-
-        }
-
-        public FormRemoteProcess(string process, string arguments, string input)
-            : base(process, arguments, input)
-        {
-
-        }
-
         public FormRemoteProcess(string process, string arguments)
-            : base(process, arguments)
+            : base(process, arguments, null, null, true)
         {
 
         }
 
         public FormRemoteProcess(string arguments)
-            : base(arguments)
+            : base(null, arguments, null, null, true)
         {
 
+        }
+
+        public new static bool ShowDialog(IWin32Window owner, string arguments)
+        {
+            using (var formRemoteProcess = new FormRemoteProcess(arguments) )
+            {
+                formRemoteProcess.ShowDialog(owner);
+                return !formRemoteProcess.ErrorOccurred();
+            }
         }
 
         private string UrlTryingToConnect = string.Empty;
