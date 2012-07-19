@@ -132,11 +132,11 @@ namespace GitUI
             if (PatchFileMode.Checked)
                 if (IgnoreWhitespace.Checked)
                 {
-                    new FormProcess(GitCommandHelpers.PatchCmdIgnoreWhitespace(PatchFile.Text)).ShowDialog(this);
+                    FormProcess.ShowDialog(this, GitCommandHelpers.PatchCmdIgnoreWhitespace(PatchFile.Text));
                 }
                 else
                 {
-                    new FormProcess(GitCommandHelpers.PatchCmd(PatchFile.Text)).ShowDialog(this);
+                    FormProcess.ShowDialog(this, GitCommandHelpers.PatchCmd(PatchFile.Text));
                 }
             else
                 if (IgnoreWhitespace.Checked)
@@ -164,7 +164,7 @@ namespace GitUI
         private void Skip_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommandHelpers.SkipCmd()).ShowDialog(this);
+            FormProcess.ShowDialog(this, GitCommandHelpers.SkipCmd());
             EnableButtons();
             Cursor.Current = Cursors.Default;
         }
@@ -172,7 +172,7 @@ namespace GitUI
         private void Resolved_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommandHelpers.ResolvedCmd()).ShowDialog(this);
+            FormProcess.ShowDialog(this, (GitCommandHelpers.ResolvedCmd()));
             EnableButtons();
             Cursor.Current = Cursors.Default;
         }
@@ -180,7 +180,7 @@ namespace GitUI
         private void Abort_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(GitCommandHelpers.AbortCmd()).ShowDialog(this);
+            FormProcess.ShowDialog(this, GitCommandHelpers.AbortCmd());
             EnableButtons();
             Cursor.Current = Cursors.Default;
         }

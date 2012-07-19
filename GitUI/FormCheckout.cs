@@ -32,7 +32,7 @@ namespace GitUI
                 if (Force.Checked)
                     command += " --force";
 
-                new FormProcess(command).ShowDialog(this);
+                FormProcess.ShowDialog(this, command);
 
                 Close();
             }

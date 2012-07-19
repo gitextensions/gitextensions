@@ -273,7 +273,7 @@ namespace GitUI
                                         MessageBoxButtons.YesNo) == DialogResult.Yes;
                     if (ShouldStashPop(messageBoxResult, process, true))
                     {
-                        new FormProcess("stash pop").ShowDialog(owner);
+                        FormProcess.ShowDialog(owner, "stash pop");
                         MergeConflictHandler.HandleMergeConflicts(owner, false);
                     }
                 }

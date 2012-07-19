@@ -46,12 +46,12 @@ namespace GitUI
         {
             Settings.NoFastForwardMerge = noFastForward.Checked;
 
-            var process = new FormProcess(GitCommandHelpers.MergeBranchCmd(Branches.GetSelectedText(), fastForward.Checked, squash.Checked, noCommit.Checked, _NO_TRANSLATE_mergeStrategy.Text));
-            process.ShowDialog(this);
-
+            var successfullyMerged = FormProcess.ShowDialog(this, 
+                GitCommandHelpers.MergeBranchCmd(Branches.GetSelectedText(), fastForward.Checked, squash.Checked, noCommit.Checked, _NO_TRANSLATE_mergeStrategy.Text));
+            
             var wasConflict = MergeConflictHandler.HandleMergeConflicts(this);
 
-            if (!process.ErrorOccurred() || wasConflict)
+            if (successfullyMerged || wasConflict)
                 Close();
         }
 
