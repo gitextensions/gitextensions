@@ -48,7 +48,7 @@ namespace GitUI
 
                 var authorsfile = this._NO_TRANSLATE_authorsFileTextBox.Text;
                 bool resetauthorsfile = false;
-                if (authorsfile != null && authorsfile.Trim().Length != 0 && !File.Exists(authorsfile.Trim()) && !(resetauthorsfile = this.AskContinutWithoutAuthorsFile(authorsfile)))
+                if (authorsfile != null && authorsfile.Trim().Length != 0 && !File.Exists(authorsfile.Trim()) && !(resetauthorsfile = AskContinutWithoutAuthorsFile(authorsfile)))
                 {
                     return;
                 }
@@ -56,12 +56,10 @@ namespace GitUI
                 {
                     authorsfile = null;
                 }
-                var fromProcess = new FormProcess(
-                    Settings.GitCommand, GitSvnCommandHelpers.CloneCmd(this._NO_TRANSLATE_svnRepositoryComboBox.Text, dirTo, authorsfile));
+                var errorOccurred = !FormProcess.ShowDialog(this, Settings.GitCommand, 
+                    GitSvnCommandHelpers.CloneCmd(_NO_TRANSLATE_svnRepositoryComboBox.Text, dirTo, authorsfile));
                 
-                fromProcess.ShowDialog(this);
-
-                if (fromProcess.ErrorOccurred() || Settings.Module.InTheMiddleOfPatch())
+                if (errorOccurred || Settings.Module.InTheMiddleOfPatch())
                     return;
                 if (ShowInTaskbar == false && AskIfNewRepositoryShouldBeOpened(dirTo))
                 {

@@ -218,8 +218,7 @@ namespace GitUI
                 writer.WriteLine("@prompt $G");
                 writer.Write(batchFile);
             }
-            var process = new FormProcess("cmd.exe", "/C \"" + tempFileName + "\"");
-            process.ShowDialog(owner as IWin32Window);
+            FormProcess.ShowDialog(owner as IWin32Window, "cmd.exe", "/C \"" + tempFileName + "\"");
             File.Delete(tempFileName);
             return true;
         }
@@ -231,19 +230,15 @@ namespace GitUI
 
         public bool StartCommandLineProcessDialog(GitCommand cmd, Form parentForm)
         {
-            FormProcess process;
             if (cmd.AccessesRemote())
-                process = new FormRemoteProcess(cmd.ToLine());
+                return FormRemoteProcess.ShowDialog(parentForm, cmd.ToLine());
             else
-                process = new FormProcess(cmd.ToLine());
-            process.ShowDialog(parentForm);
-            return true;
+                return FormProcess.ShowDialog(parentForm, cmd.ToLine());
         }
 
         public bool StartCommandLineProcessDialog(object owner, string command, string arguments)
         {
-            var process = new FormProcess(command, arguments);
-            process.ShowDialog(owner as IWin32Window);
+            FormProcess.ShowDialog(owner as IWin32Window, command, arguments);
             return true;
         }
 
@@ -254,8 +249,7 @@ namespace GitUI
 
         public bool StartGitCommandProcessDialog(IWin32Window owner, string arguments)
         {
-            var process = new FormProcess(arguments);
-            process.ShowDialog(owner);
+            FormProcess.ShowDialog(owner, arguments);
             return true;
         }
 
@@ -338,7 +332,7 @@ namespace GitUI
         {
             var arguments = GitCommandHelpers.StashSaveCmd(Settings.IncludeUntrackedFilesInAutoStash);
 
-            new FormProcess(arguments).ShowDialog(owner);
+            FormProcess.ShowDialog(owner, arguments);
         }
 
         public bool StartCheckoutBranchDialog(IWin32Window owner, string branch, bool remote, string containRevison)
@@ -569,8 +563,7 @@ namespace GitUI
             if (!InvokeEvent(owner, PreSvnDcommit))
                 return true;
 
-            var fromProcess = new FormProcess(Settings.GitCommand, GitSvnCommandHelpers.DcommitCmd());
-            fromProcess.ShowDialog(owner);
+            FormProcess.ShowDialog(owner, Settings.GitCommand, GitSvnCommandHelpers.DcommitCmd());
 
             InvokeEvent(owner, PostSvnDcommit);
 
@@ -590,8 +583,7 @@ namespace GitUI
             if (!InvokeEvent(owner, PreSvnRebase))
                 return true;
 
-            var fromProcess = new FormProcess(Settings.GitCommand, GitSvnCommandHelpers.RebaseCmd());
-            fromProcess.ShowDialog(owner);
+            FormProcess.ShowDialog(owner, Settings.GitCommand, GitSvnCommandHelpers.RebaseCmd());
 
             InvokeEvent(owner, PostSvnRebase);
 
@@ -611,8 +603,7 @@ namespace GitUI
             if (!InvokeEvent(owner, PreSvnFetch))
                 return true;
 
-            var fromProcess = new FormProcess(Settings.GitCommand, GitSvnCommandHelpers.FetchCmd());
-            fromProcess.ShowDialog(owner);
+            FormProcess.ShowDialog(owner, Settings.GitCommand, GitSvnCommandHelpers.FetchCmd());
 
             InvokeEvent(owner, PostSvnFetch);
 
@@ -1103,8 +1094,7 @@ namespace GitUI
             if (!InvokeEvent(owner, PreUpdateSubmodules))
                 return true;
 
-            var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(""));
-            process.ShowDialog(owner);
+            FormProcess.ShowDialog(owner, GitCommandHelpers.SubmoduleUpdateCmd(""));
 
             InvokeEvent(owner, PostUpdateSubmodules);
 
@@ -1124,8 +1114,7 @@ namespace GitUI
             if (!InvokeEvent(owner, PreSyncSubmodules))
                 return true;
 
-            var process = new FormProcess(GitCommandHelpers.SubmoduleSyncCmd(""));
-            process.ShowDialog(owner);
+            FormProcess.ShowDialog(owner, GitCommandHelpers.SubmoduleSyncCmd(""));
 
             InvokeEvent(owner, PostSyncSubmodules);
 
