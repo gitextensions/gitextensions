@@ -256,14 +256,10 @@ namespace GitUI.RepoHosting
             var localBranchName = string.Format("pr/n{0}_{1}", _currentPullRequestInfo.Id, _currentPullRequestInfo.Owner);
 
             var cmd = string.Format("fetch --no-tags --progress {0} {1}:{2}", _currentPullRequestInfo.HeadRepo.CloneReadOnlyUrl, _currentPullRequestInfo.HeadRef, localBranchName);
-            using (var formProcess = new FormProcess(Settings.GitCommand, cmd))
-            {
-                formProcess.ShowDialog(this);
+            var errorOccurred = !FormProcess.ShowDialog(this, Settings.GitCommand, cmd);
 
-                if (formProcess.ErrorOccurred())
-                    return;
-            }
-
+            if (errorOccurred)
+                return;
             Close();
         }
 
@@ -297,17 +293,13 @@ namespace GitUI.RepoHosting
             }
 
             var cmd = string.Format("fetch --no-tags --progress {0} {1}:{0}/{1}", remoteName, remoteRef);
-            using (var formProcess = new FormProcess(Settings.GitCommand, cmd))
-            {
-                formProcess.ShowDialog(this);
+            var errorOccurred = !FormProcess.ShowDialog(this, Settings.GitCommand, cmd);
 
-                if (formProcess.ErrorOccurred())
-                    return;
-            }
+            if (errorOccurred)
+                return;
 
             cmd = string.Format("checkout {0}/{1}", remoteName, remoteRef);
-            using (var formProcess = new FormProcess(Settings.GitCommand, cmd))
-                formProcess.ShowDialog(this);
+            FormProcess.ShowDialog(this, Settings.GitCommand, cmd);
 
             Close();
         }

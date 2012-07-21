@@ -1118,12 +1118,12 @@ namespace GitUI
                             int gravatarLeft = e.CellBounds.Left + baseOffset + 2;
 
 
-                            Image gravatar = Gravatar.GravatarService.GetImageFromCache(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, Settings.AuthorImageCacheDays, gravatarSize, Settings.ApplicationDataPath + "Images\\", FallBackService.MonsterId);
+                            Image gravatar = Gravatar.GravatarService.GetImageFromCache(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, Settings.AuthorImageCacheDays, gravatarSize, Settings.GravatarCachePath, FallBackService.MonsterId);
 
                             if (gravatar == null && !string.IsNullOrEmpty(revision.AuthorEmail))
                             {
                                 ThreadPool.QueueUserWorkItem(o =>
-                                        Gravatar.GravatarService.LoadCachedImage(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, null, Settings.AuthorImageCacheDays, gravatarSize, Settings.ApplicationDataPath + "Images\\", RefreshGravatar, FallBackService.MonsterId));
+                                        Gravatar.GravatarService.LoadCachedImage(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, null, Settings.AuthorImageCacheDays, gravatarSize, Settings.GravatarCachePath, RefreshGravatar, FallBackService.MonsterId));
                             }
 
                             if (gravatar != null)
@@ -1387,8 +1387,11 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
 
-            var frm = new FormTagSmall { Revision = GetRevision(LastRow) };
-            frm.ShowDialog(this);
+            using (var frm = new FormTagSmall(GetRevision(LastRow)))
+            {
+                frm.ShowDialog(this);    
+            }
+            
             RefreshRevisions();
         }
 
@@ -1682,7 +1685,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            new FormProcess(GitCommandHelpers.DeleteTagCmd(toolStripItem.Text)).ShowDialog(this);
+            FormProcess.ShowDialog(this, GitCommandHelpers.DeleteTagCmd(toolStripItem.Text));
             ForceRefreshRevisions();
         }
 
@@ -1712,8 +1715,7 @@ namespace GitUI
                 string args = force ? "-f" : null;
 
                 var command = string.Join(" ", "checkout", args, string.Format("\"{0}\"", toolStripItem.Text));
-                var form = new FormProcess(command);
-                form.ShowDialog(this);
+                FormProcess.ShowDialog(this, command);
                 needRefresh = true;
             }
 
@@ -1793,7 +1795,7 @@ namespace GitUI
             {
                 string args = force ? "-f" : null;
                 string cmd = string.Join(" ", "checkout", args, string.Format("\"{0}\"", GetRevision(LastRow).Guid));
-                new FormProcess(cmd).ShowDialog(this);
+                FormProcess.ShowDialog(this, cmd);
                 needRefresh = true;
             }
 
@@ -1981,7 +1983,7 @@ namespace GitUI
 
         private void stopBisectToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var frm = new FormProcess(GitCommandHelpers.StopBisectCmd())) frm.ShowDialog(this);
+            FormProcess.ShowDialog(this, GitCommandHelpers.StopBisectCmd());
             RefreshRevisions();
         }
 

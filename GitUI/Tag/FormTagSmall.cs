@@ -8,7 +8,7 @@ using GitUI.Script;
 
 namespace GitUI.Tag
 {
-    public partial class FormTagSmall : GitExtensionsForm
+    public sealed partial class FormTagSmall : GitExtensionsForm
     {
         private readonly TranslationString _messageCaption = new TranslationString("Tag");
 
@@ -18,22 +18,22 @@ namespace GitUI.Tag
         private readonly TranslationString _noTagMassage = new TranslationString("Please enter a tag message");
 
         private readonly TranslationString _pushToCaption = new TranslationString("Push tag to {0}");
+        private readonly GitRevision revision;
 
-        public FormTagSmall()
+        public FormTagSmall(GitRevision revision)
         {
             InitializeComponent();
             Translate();
 
             tagMessage.MistakeFont = new Font(SystemFonts.MessageBoxFont, FontStyle.Underline);
+            this.revision = revision;
         }
-
-        public GitRevision Revision { get; set; }
 
         private void OkClick(object sender, EventArgs e)
         {
             try
             {
-                var tagName = CreateTag(sender, e);
+                var tagName = CreateTag();
 
                 if (pushTag.Checked && !string.IsNullOrEmpty(tagName))
                     PushTag(tagName);
@@ -44,9 +44,9 @@ namespace GitUI.Tag
             }
         }
 
-        private string CreateTag(object sender, EventArgs e)
+        private string CreateTag()
         {
-            if (Revision == null)
+            if (revision == null)
             {
                 MessageBox.Show(this, _noRevisionSelected.Text, _messageCaption.Text);
                 return string.Empty;
@@ -63,7 +63,7 @@ namespace GitUI.Tag
             }
 
 
-            var s = Settings.Module.Tag(TName.Text, Revision.Guid, annotate.Checked);
+            var s = Settings.Module.Tag(TName.Text, revision.Guid, annotate.Checked);
 
             if (!string.IsNullOrEmpty(s))
                 MessageBox.Show(this, s, _messageCaption.Text);
@@ -97,12 +97,6 @@ namespace GitUI.Tag
                     ScriptManager.RunEventScripts(ScriptEvent.AfterPush);
                 }
             }
-        }
-
-        private void NameKeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-                OkClick(null, null);
         }
 
         private void AnnotateCheckedChanged(object sender, EventArgs e)

@@ -88,7 +88,7 @@ namespace GitUI
             }
             if (CanExecute)
             {
-                using (var frm = new FormProcess(GitCommandHelpers.CherryPickCmd(Revision.Guid, AutoCommit.Checked, string.Join(" ", argumentsList.ToArray())))) frm.ShowDialog(this);
+                FormProcess.ShowDialog(this, GitCommandHelpers.CherryPickCmd(Revision.Guid, AutoCommit.Checked, string.Join(" ", argumentsList.ToArray())));
                 MergeConflictHandler.HandleMergeConflicts(this, AutoCommit.Checked);
                 Close();
             }

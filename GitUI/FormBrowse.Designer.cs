@@ -1068,6 +1068,8 @@ namespace GitUI
             this.fileExplorerToolStripMenuItem.Image = global::GitUI.Properties.Resources.open;
             this.fileExplorerToolStripMenuItem.Name = "fileExplorerToolStripMenuItem";
             this.fileExplorerToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.fileExplorerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.O)));
             this.fileExplorerToolStripMenuItem.Text = "File Explorer";
             this.fileExplorerToolStripMenuItem.Click += new System.EventHandler(this.FileExplorerToolStripMenuItemClick);
             // 
