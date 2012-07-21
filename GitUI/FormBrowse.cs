@@ -1350,7 +1350,7 @@ namespace GitUI
 
         private void CompressGitDatabaseToolStripMenuItemClick(object sender, EventArgs e)
         {
-            using (var frm = new FormProcess("gc")) frm.ShowDialog(this);
+            FormProcess.ShowDialog(this, "gc");
         }
 
         private void VerifyGitDatabaseToolStripMenuItemClick(object sender, EventArgs e)
@@ -1454,13 +1454,13 @@ namespace GitUI
         private void StashChangesToolStripMenuItemClick(object sender, EventArgs e)
         {
             var arguments = GitCommandHelpers.StashSaveCmd(Settings.IncludeUntrackedFilesInManualStash);
-            using (var frm = new FormProcess(arguments)) frm.ShowDialog(this);
+            FormProcess.ShowDialog(this, arguments);
             Initialize();
         }
 
         private void StashPopToolStripMenuItemClick(object sender, EventArgs e)
         {
-            using (var frm = new FormProcess("stash pop")) frm.ShowDialog(this);
+            FormProcess.ShowDialog(this, "stash pop");
             Initialize();
             MergeConflictHandler.HandleMergeConflicts(this, false);
         }
@@ -1912,8 +1912,7 @@ namespace GitUI
                 string args = force ? "-f" : null;
 
                 var command = string.Join(" ", "checkout", args, string.Format("\"{0}\"", toolStripItem.Text));
-                using (var form = new FormProcess(command))
-                    form.ShowDialog(this);
+                FormProcess.ShowDialog(this, command);
                 needRefresh = true;
             }
 
@@ -2000,7 +1999,7 @@ namespace GitUI
 
         private void QuickFetch()
         {
-            using (var frm = new FormProcess(Settings.Module.FetchCmd(string.Empty, string.Empty, string.Empty))) frm.ShowDialog(this);
+            FormProcess.ShowDialog(this, Settings.Module.FetchCmd(string.Empty, string.Empty, string.Empty));
             Initialize();
         }
 

@@ -418,6 +418,11 @@ namespace GitCommands
             return "branch \"" + branchName.Trim() + "\" \"" + revision + "\"";
         }
 
+        public static string MergedBranches()
+        {
+            return "branch --merged";
+        }
+
         public static void UnsetSsh()
         {
             Environment.SetEnvironmentVariable("GIT_SSH", "", EnvironmentVariableTarget.Process);

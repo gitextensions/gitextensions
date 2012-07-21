@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Permissions;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands.Config;
 using PatchApply;
@@ -18,6 +19,8 @@ namespace GitCommands
     /// </summary>
     public sealed class GitModule
     {
+        private static readonly Regex DefaultHeadPattern = new Regex("refs/remotes/[^/]+/HEAD", RegexOptions.Compiled);
+
         public GitModule()
         {
         }
@@ -134,7 +137,7 @@ namespace GitCommands
             configFile.SetPathValue(setting, value);
             configFile.Save();
         }
-        
+
         public static string FindGitWorkingDir(string startDir)
         {
             if (string.IsNullOrEmpty(startDir))
@@ -884,7 +887,7 @@ namespace GitCommands
             Func<string, bool> ex = (string parents) =>
                 {
                     string[] tab = parents.Split(' ');
-                    return tab.Length > 2 && tab.All( parent => GitRevision.Sha1HashRegex.IsMatch(parent));
+                    return tab.Length > 2 && tab.All(parent => GitRevision.Sha1HashRegex.IsMatch(parent));
                 };
             return revisionsTab.Any(ex);
         }
@@ -1112,11 +1115,11 @@ namespace GitCommands
 
         public string CheckoutFiles(IEnumerable<string> fileList, string revision, bool force)
         {
-            string files = fileList.Select( s => s.Quote()).Join(" ");
+            string files = fileList.Select(s => s.Quote()).Join(" ");
             return RunGitCmd("checkout " + force.AsForce() + revision.Quote() + " -- " + files);
         }
 
-        
+
         public string Push(string path)
         {
             return RunGitCmd("push \"" + FixPath(path).Trim() + "\"");
@@ -1582,7 +1585,7 @@ namespace GitCommands
             var arguments = string.Format("diff {0} -M -C {1} -- {2} {3}", extraDiffArguments, commitRange, fileName, oldFileName);
             patchManager.LoadPatch(this.RunCachableCmd(Settings.GitCommand, arguments, encoding), false);
 
-            return patchManager.Patches.Count > 0 ? patchManager.Patches[patchManager.Patches.Count-1] : null;
+            return patchManager.Patches.Count > 0 ? patchManager.Patches[patchManager.Patches.Count - 1] : null;
         }
 
         public Patch GetSingleDiff(string @from, string to, string fileName, string extraDiffArguments, Encoding encoding)
@@ -1672,7 +1675,7 @@ namespace GitCommands
         {
             var tree = GetTree(treeGuid, full);
 
-            return tree               
+            return tree
                 .Select(file => new GitItemStatus
                 {
                     IsNew = true,
@@ -1688,7 +1691,12 @@ namespace GitCommands
 
         public List<GitItemStatus> GetAllChangedFiles()
         {
-            var status = RunGitCmd(GitCommandHelpers.GetAllChangedFilesCmd(true, true));
+            return GetAllChangedFiles(true, true);
+        }
+
+        public List<GitItemStatus> GetAllChangedFiles(bool excludeIgnoredFiles, bool untrackedFiles)
+        {
+            var status = RunGitCmd(GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles));
 
             return GitCommandHelpers.GetAllChangedFilesFromString(status);
         }
@@ -1901,6 +1909,11 @@ namespace GitCommands
             return GetHeads(tree);
         }
 
+        public ICollection<string> GetMergedBranches()
+        {
+            return Settings.Module.RunGitCmd(GitCommandHelpers.MergedBranches()).Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);                
+        }
+
         private string GetTree(bool tags, bool branches)
         {
             if (tags && branches)
@@ -1919,17 +1932,32 @@ namespace GitCommands
             var itemsStrings = tree.Split('\n');
 
             var heads = new List<GitHead>();
-
+            var defaultHeads = new Dictionary<string, GitHead>(); // remote -> HEAD
             var remotes = GetRemotes(false);
 
             foreach (var itemsString in itemsStrings)
             {
-                if (itemsString == null || itemsString.Length <= 42) continue;
+                if (itemsString == null || itemsString.Length <= 42)
+                    continue;
 
-                var guid = itemsString.Substring(0, 40);
                 var completeName = itemsString.Substring(41).Trim();
-                heads.Add(new GitHead(guid, completeName, GetRemoteName(completeName, remotes)));
+                var guid = itemsString.Substring(0, 40);
+                var remoteName = GetRemoteName(completeName, remotes);
+                var head = new GitHead(guid, completeName, remoteName);
+                if (DefaultHeadPattern.IsMatch(completeName))
+                    defaultHeads[remoteName] = head;
+                else
+                    heads.Add(head);
             }
+
+            // do not show default head if remote has a branch on the same commit
+            GitHead defaultHead;
+            foreach (var head in heads.Where(head => defaultHeads.TryGetValue(head.Remote, out defaultHead) && head.Guid == defaultHead.Guid))
+            {
+                defaultHeads.Remove(head.Remote);
+            }
+
+            heads.AddRange(defaultHeads.Values);
 
             return heads;
         }
@@ -1947,11 +1975,15 @@ namespace GitCommands
             return string.Empty;
         }
 
-        public IList<string> GetFiles(string filePattern)
+        public IList<string> GetFiles(IEnumerable<string> filePatterns)
         {
+            var quotedPatterns = filePatterns
+                .Where(pattern => !pattern.Contains("\""))
+                .Select(pattern => pattern.Quote())
+                .Join(" ");
             // filter duplicates out of the result because options -c and -m may return 
             // same files at times
-            return RunGitCmd("ls-files -z -o -m -c \"" + filePattern + "\"")
+            return RunGitCmd("ls-files -z -o -m -c " + quotedPatterns)
                 .Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries)
                 .Distinct()
                 .ToList();
@@ -2012,16 +2044,21 @@ namespace GitCommands
             string args = "-z";
             if (full)
                 args += " -r";
-            var tree = this.RunCachableCmd(Settings.GitCommand, "ls-tree "+ args +" \"" + id + "\"", Settings.SystemEncoding);
+            var tree = this.RunCachableCmd(Settings.GitCommand, "ls-tree " + args + " \"" + id + "\"", Settings.SystemEncoding);
 
             return GitItem.CreateIGitItemsFromString(tree);
         }
 
         public GitBlame Blame(string filename, string from)
         {
+            return Blame(filename, from, null);
+        }
+
+        public GitBlame Blame(string filename, string from, string lines)
+        {
             from = FixPath(from);
             filename = FixPath(filename);
-            string blameCommand = string.Format("blame --porcelain -M -w -l \"{0}\" -- \"{1}\"", from, filename);
+            string blameCommand = string.Format("blame --porcelain -M -w -l{0} \"{1}\" -- \"{2}\"", lines != null ? " -L " + lines : "", from, filename);
             var itemsStrings =
                 RunCachableCmd(
                     Settings.GitCommand,
@@ -2047,7 +2084,7 @@ namespace GitCommands
                         blameLine.LineText = line.Substring(1) //trim ONLY first tab
                                                  .Trim(new char[] { '\r' }); //trim \r, this is a workaround for a \r\n bug
                         blameLine.LineText = GitCommandHelpers.ReEncodeStringFromLossless(blameLine.LineText, Settings.FilesEncoding);
-                    }                                                 
+                    }
                     else if (line.StartsWith("author-mail"))
                         blameHeader.AuthorMail = GitCommandHelpers.ReEncodeStringFromLossless(line.Substring("author-mail".Length).Trim());
                     else if (line.StartsWith("author-time"))
@@ -2087,7 +2124,6 @@ namespace GitCommands
                     Settings.GitLog.Log("Error parsing output from command: " + blameCommand + "\n\nPlease report a bug!");
                 }
             }
-
 
             return blame;
         }
@@ -2214,8 +2250,8 @@ namespace GitCommands
         }
 
         public string OpenWithDifftool(string filename, string revision1, string revision2)
-        { 
-            return OpenWithDifftool(filename, revision1, revision2, string.Empty);        
+        {
+            return OpenWithDifftool(filename, revision1, revision2, string.Empty);
         }
 
         public string OpenWithDifftool(string filename, string revision1, string revision2, string extraDiffArguments)

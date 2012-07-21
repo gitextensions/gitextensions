@@ -270,13 +270,10 @@ namespace GitUI.RepoHosting
             string repoSrc = repo.CloneReadWriteUrl;
 
             string cmd = GitCommandHelpers.CloneCmd(repoSrc, targetDir);
-            using (var formProcess = new FormProcess(Settings.GitCommand, cmd))
-            {
-                formProcess.ShowDialog(this);
+            var errorOccurred = !FormProcess.ShowDialog(this, Settings.GitCommand, cmd);
 
-                if (formProcess.ErrorOccurred())
-                    return;
-            }
+            if (errorOccurred)
+                return;
 
             Repositories.AddMostRecentRepository(targetDir);
             Settings.WorkingDir = targetDir;

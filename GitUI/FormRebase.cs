@@ -128,7 +128,7 @@ namespace GitUI
         private void ResolvedClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            using (var frm = new FormProcess(GitCommandHelpers.ContinueRebaseCmd())) frm.ShowDialog(this);
+            FormProcess.ShowDialog(this, GitCommandHelpers.ContinueRebaseCmd());
 
             if (!Settings.Module.InTheMiddleOfRebase())
                 Close();
@@ -141,7 +141,7 @@ namespace GitUI
         private void SkipClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            using (var frm = new FormProcess(GitCommandHelpers.SkipRebaseCmd())) frm.ShowDialog(this);
+            FormProcess.ShowDialog(this, GitCommandHelpers.SkipRebaseCmd());
 
             if (!Settings.Module.InTheMiddleOfRebase())
                 Close();
@@ -154,7 +154,7 @@ namespace GitUI
         private void AbortClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            using (var frm = new FormProcess(GitCommandHelpers.AbortRebaseCmd())) frm.ShowDialog(this);
+            FormProcess.ShowDialog(this, GitCommandHelpers.AbortRebaseCmd());
 
             if (!Settings.Module.InTheMiddleOfRebase())
                 Close();
@@ -173,12 +173,10 @@ namespace GitUI
                 return;
             }
 
-            using (var form = new FormProcess(GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked, chkPreserveMerges.Checked, chkAutosquash.Checked)))
-            {
-                form.ShowDialog(this);
-                if (form.OutputString.ToString().Trim() == "Current branch a is up to date.")
-                    MessageBox.Show(this, _branchUpToDateText.Text, _branchUpToDateCaption.Text);
-            }
+            var rebaseCmd = GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked, chkPreserveMerges.Checked, chkAutosquash.Checked);
+            var dialogResult = FormProcess.ReadDialog(this, rebaseCmd);
+            if (dialogResult.Trim() == "Current branch a is up to date.")
+                MessageBox.Show(this, _branchUpToDateText.Text, _branchUpToDateCaption.Text);
 
             if (!Settings.Module.InTheMiddleOfConflictedMerge() &&
                 !Settings.Module.InTheMiddleOfRebase() &&

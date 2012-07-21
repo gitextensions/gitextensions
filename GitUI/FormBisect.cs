@@ -36,7 +36,7 @@ namespace GitUI
 
         private void Start_Click(object sender, EventArgs e)
         {
-            using (var frm = new FormProcess(GitCommandHelpers.StartBisectCmd())) frm.ShowDialog(this);
+            FormProcess.ShowDialog(this, GitCommandHelpers.StartBisectCmd());
             UpdateButtonsState();
 
             IList<GitRevision> revisions = _revisionGrid.GetSelectedRevisions();
@@ -53,12 +53,9 @@ namespace GitUI
         private void BisectRange(string startRevision, string endRevision)
         {
             var command = GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Good, startRevision);
-            using (var form = new FormProcess(command))
-            {
-                form.ShowDialog(this);
-                if (form.ErrorOccurred())
-                    return;
-            }
+            var errorOccurred = !FormProcess.ShowDialog(this, command);
+            if (errorOccurred)
+                return;
 
             command = GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Bad, endRevision);
             FormProcess.ShowDialog(this, command);

@@ -210,7 +210,13 @@ namespace GitUI
             FillEncodings(Local_FilesEncoding);
             FillEncodings(Local_AppEncoding);
 
-            GlobalEditor.Items.AddRange(new Object[] { "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", "notepad++" });
+            string npp = MergeToolsHelper.FindFileInFolders("notepad++.exe", "Notepad++");
+            if (string.IsNullOrEmpty(npp))
+                npp = "notepad++";
+            else
+                npp = "\"" + npp + "\"";
+
+            GlobalEditor.Items.AddRange(new Object[] { "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", npp + " -multiInst -nosession" });
 
             SetCurrentDiffFont(Settings.DiffFont);
         }
@@ -1287,63 +1293,6 @@ namespace GitUI
             Rescan_Click(null, null);
         }
 
-        public static bool CheckIfFileIsInPath(string fileName)
-        {
-            string path = string.Concat(Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.User), ";",
-                                        Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Machine));
-
-            return path.Split(';').Any(dir => File.Exists(dir + " \\" + fileName) || File.Exists(dir + fileName));
-        }
-
-        public static bool SolveLinuxToolsDir()
-        {
-            if (!Settings.RunningOnWindows())
-            {
-                Settings.GitBinDir = "";
-                return true;
-            }
-
-            if (CheckIfFileIsInPath("sh.exe") || CheckIfFileIsInPath("sh"))
-            {
-                Settings.GitBinDir = "";
-                return true;
-            }
-
-            if (!File.Exists(Settings.GitBinDir + "sh.exe") && !File.Exists(Settings.GitBinDir + "sh"))
-            {
-                Settings.GitBinDir = @"c:\Program Files\Git\bin\";
-                if (!File.Exists(Settings.GitBinDir + "sh.exe") && !File.Exists(Settings.GitBinDir + "sh"))
-                {
-                    Settings.GitBinDir = @"c:\Program Files (x86)\Git\bin\";
-                    if (!File.Exists(Settings.GitBinDir + "sh.exe") && !File.Exists(Settings.GitBinDir + "sh"))
-                    {
-                        Settings.GitBinDir = "C:\\cygwin\\bin\\";
-                        if (!File.Exists(Settings.GitBinDir + "sh.exe") && !File.Exists(Settings.GitBinDir + "sh"))
-                        {
-                            Settings.GitBinDir = Settings.GitCommand;
-                            Settings.GitBinDir =
-                                Settings.GitBinDir.Replace("\\cmd\\git.cmd", "\\bin\\").Replace("\\bin\\git.exe",
-                                                                                                "\\bin\\");
-                            if (!File.Exists(Settings.GitBinDir + "sh.exe") && !File.Exists(Settings.GitBinDir + "sh"))
-                            {
-                                Settings.GitBinDir =
-                                    GetRegistryValue(Registry.LocalMachine,
-                                                     "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1",
-                                                     "InstallLocation") + "\\bin\\";
-                                if (!File.Exists(Settings.GitBinDir + "sh.exe") &&
-                                    !File.Exists(Settings.GitBinDir + "sh"))
-                                {
-                                    Settings.GitBinDir = "";
-                                    return false;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return true;
-        }
-
         private void OpenSSH_CheckedChanged(object sender, EventArgs e)
         {
             EnableSshOptions();
@@ -1358,23 +1307,38 @@ namespace GitUI
             EnableSshOptions();
         }
 
+        private static IEnumerable<string> GetPuttyLocations()
+        {
+            string programFiles = Environment.GetEnvironmentVariable("ProgramFiles");
+            string programFilesX86 = null;
+            if (8 == IntPtr.Size
+                || !String.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432")))
+                programFilesX86 = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
+            yield return programFiles + @"\PuTTY\";
+            if (programFilesX86 != null)
+                yield return programFilesX86 + @"\PuTTY\";
+            yield return programFiles + @"\TortoiseGit\bin\";
+            if (programFilesX86 != null)
+                yield return programFilesX86 + @"\TortoiseGit\bin\";
+            yield return programFiles + @"\TortoiseSvn\bin\";
+            if (programFilesX86 != null)
+                yield return programFilesX86 + @"\TortoiseSvn\bin\";
+            yield return GetRegistryValue(Registry.LocalMachine,
+                                                        "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\PuTTY_is1",
+                                                        "InstallLocation");
+            yield return Settings.GetInstallDir() + @"\PuTTY\";
+        }
+
         private bool AutoFindPuttyPaths()
         {
             if (!Settings.RunningOnWindows())
                 return false;
 
-            if (AutoFindPuttyPathsInDir("c:\\Program Files\\PuTTY\\")) return true;
-            if (AutoFindPuttyPathsInDir("c:\\Program Files (x86)\\PuTTY\\")) return true;
-            if (AutoFindPuttyPathsInDir("C:\\Program Files\\TortoiseGit\\bin")) return true;
-            if (AutoFindPuttyPathsInDir("C:\\Program Files (x86)\\TortoiseGit\\bin")) return true;
-            if (AutoFindPuttyPathsInDir("C:\\Program Files\\TortoiseSvn\\bin")) return true;
-            if (AutoFindPuttyPathsInDir("C:\\Program Files (x86)\\TortoiseSvn\\bin")) return true;
-            if (
-                AutoFindPuttyPathsInDir(GetRegistryValue(Registry.LocalMachine,
-                                                         "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\PuTTY_is1",
-                                                         "InstallLocation"))) return true;
-            if (AutoFindPuttyPathsInDir(Settings.GetInstallDir() + "\\PuTTY\\")) return true;
-
+            foreach (var path in GetPuttyLocations())
+            {
+                if (AutoFindPuttyPathsInDir(path))
+                    return true;
+            }
             return false;
         }
 
@@ -1387,14 +1351,13 @@ namespace GitUI
             {
                 if (File.Exists(installdir + "plink.exe"))
                     PlinkPath.Text = installdir + "plink.exe";
+                if (!File.Exists(PlinkPath.Text))
+                {
+                    if (File.Exists(installdir + "TortoisePlink.exe"))
+                        PlinkPath.Text = installdir + "TortoisePlink.exe";
+                }
             }
-
-            if (!File.Exists(PlinkPath.Text))
-            {
-                if (File.Exists(installdir + "TortoisePlink.exe"))
-                    PlinkPath.Text = installdir + "TortoisePlink.exe";
-            }
-
+            
             if (!File.Exists(PuttygenPath.Text))
             {
                 if (File.Exists(installdir + "puttygen.exe"))
@@ -1948,8 +1911,7 @@ namespace GitUI
 
             ShellExtensionsRegistered.Visible = true;
 
-            if (
-                string.IsNullOrEmpty(GetRegistryValue(Registry.LocalMachine,
+            if (string.IsNullOrEmpty(GetRegistryValue(Registry.LocalMachine,
                                                       "Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved",
                                                       "{3C16B20A-BA16-4156-916F-0A375ECFFE24}")) ||
                 string.IsNullOrEmpty(GetRegistryValue(Registry.ClassesRoot,
@@ -2007,39 +1969,79 @@ namespace GitUI
             return true;
         }
 
-        private static IEnumerable<string> GetWindowsCommandLocations()
+        private static IEnumerable<string> GetGitLocations()
         {
-            if (!string.IsNullOrEmpty(Settings.GitCommand))
-                yield return Settings.GitCommand;
-
-            yield return @"C:\cygwin\bin\git.exe";
-            yield return @"C:\cygwin\bin\git";
+            yield return @"C:\cygwin\";
             yield return
                 GetRegistryValue(Registry.LocalMachine,
-                                 "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") +
-                "bin\\git.exe";
+                                 "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation");
             string programFiles = Environment.GetEnvironmentVariable("ProgramFiles");
             string programFilesX86 = null;
             if (8 == IntPtr.Size
                 || !String.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432")))
                 programFilesX86 = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
             if (programFilesX86 != null)
-                yield return programFilesX86 + @"\Git\bin\git.exe";
-            yield return programFiles + @"\Git\bin\git.exe";
+                yield return programFilesX86 + @"\Git\";
+            yield return programFiles + @"\Git\";
             if (programFilesX86 != null)
-                yield return programFilesX86 + @"\msysgit\bin\git.exe";
-            yield return programFiles + @"\msysgit\bin\git.exe";
-            yield return
-                GetRegistryValue(Registry.LocalMachine,
-                                 "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation") +
-                "cmd\\git.cmd";
-            if (programFilesX86 != null)
-                yield return programFilesX86 + @"\Git\cmd\git.cmd";
-            yield return programFiles + @"\Git\cmd\git.cmd";
+                yield return programFilesX86 + @"\msysgit\";
+            yield return programFiles + @"\msysgit\";
+            yield return @"C:\msysgit\";
+        }
+
+
+        public static bool CheckIfFileIsInPath(string fileName)
+        {
+            string path = string.Concat(Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.User), ";",
+                                        Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Machine));
+
+            return path.Split(';').Any(dir => File.Exists(dir + " \\" + fileName) || File.Exists(dir + fileName));
+        }
+
+        public static bool SolveLinuxToolsDir()
+        {
+            if (!Settings.RunningOnWindows())
+            {
+                Settings.GitBinDir = "";
+                return true;
+            }
+
+            if (CheckIfFileIsInPath("sh.exe") || CheckIfFileIsInPath("sh"))
+            {
+                Settings.GitBinDir = "";
+                return true;
+            }
+
+            foreach (var path in GetGitLocations())
+            {
+                if (Directory.Exists(path + @"bin\"))
+                {
+                    if (File.Exists(path + @"bin\sh.exe") || File.Exists(path + @"bin\sh"))
+                    {
+                        Settings.GitBinDir = path + @"bin\";
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private static IEnumerable<string> GetWindowsCommandLocations()
+        {
+            if (!string.IsNullOrEmpty(Settings.GitCommand) && File.Exists(Settings.GitCommand))
+                yield return Settings.GitCommand;
+            foreach (var path in GetGitLocations())
+            {
+                if (Directory.Exists(path + @"bin\"))
+                    yield return path + @"bin\git.exe";
+            }
+            foreach (var path in GetGitLocations())
+            {
+                if (Directory.Exists(path + @"cmd\"))
+                    yield return path + @"cmd\git.cmd";
+            }
             yield return "git";
             yield return "git.cmd";
-            yield return @"C:\msysgit\bin\git.exe";
-            yield return @"C:\msysgit\cmd\git.cmd";
         }
 
         private static bool SolveGitCommand()

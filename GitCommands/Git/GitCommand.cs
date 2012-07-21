@@ -16,14 +16,13 @@ namespace GitCommands
         /// <summary>
         /// here commands should add theirs arguments
         /// </summary>
-        /// <param name="argumentsList"></param>
-        public abstract void CollectArguments(List<string> argumentsList);
+        protected abstract IEnumerable<string> CollectArguments();
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns>name of git command eg. push, pull</returns>
-        public abstract string GitComandName();
+        protected abstract string GitComandName();
 
 
         /// <summary>
@@ -39,11 +38,7 @@ namespace GitCommands
         /// <returns>git command arguments as single line</returns>
         public virtual string ToLine()
         {
-            List<string> argumentsList = new List<string>();
-            CollectArguments(argumentsList);
-            String args = null;
-            args = string.Join(" ", argumentsList);
-            return string.Join(" ", GitComandName(), args);           
+            return GitComandName() + " " + CollectArguments().Join(" ");
         }
 
         public override string ToString()

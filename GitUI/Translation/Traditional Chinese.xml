@@ -852,7 +852,7 @@ You will have push access. {2}</Source>
           <Source>Preview</Source>
           <Value>預覽</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
+        <TranslationItem Name="groupFilePattern" Property="Text">
           <Source>Enter a file pattern to ignore:</Source>
           <Value>忽略的檔案模式</Value>
         </TranslationItem>
