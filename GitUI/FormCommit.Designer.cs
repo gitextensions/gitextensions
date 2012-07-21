@@ -19,7 +19,7 @@ namespace GitUI
         {
             if (disposing)
             {
-                _gitGetUnstagedCommand.Dispose();
+                unstagedLoader.Cancel();
             }
 
             if (disposing && (components != null))
