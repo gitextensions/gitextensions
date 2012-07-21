@@ -21,7 +21,7 @@ namespace GitUI
         }
 
         private IList<GitHead> _branchesToSelect;
-        public IList<GitHead> BranchesToSelect 
+        public IList<GitHead> BranchesToSelect
         {
             get
             {
@@ -40,22 +40,16 @@ namespace GitUI
                 branches.Items.AddRange(_branchesToSelect.ToArray());
         }
 
-        public IList<GitHead> GetSelectedBranches()
+        public IEnumerable<GitHead> GetSelectedBranches()
         {
-            IList<GitHead> selectedBranches = new List<GitHead>();
-            if (!string.IsNullOrEmpty(branches.Text))
+            foreach (var branchName in branches.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                foreach (string branch in branches.Text.Split(new char[]{',', ' '}, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    GitHead gitHead = _branchesToSelect.FirstOrDefault(g => g.Name == branch);
-                    if (gitHead == null)
-                        MessageBox.Show("Branch '" + branch + "' is not selectable, this branch has been removed from the selection.");
-                    else
-                        selectedBranches.Add(gitHead);
-                }
+                GitHead gitHead = _branchesToSelect.FirstOrDefault(g => g.Name == branchName);
+                if (gitHead == null)
+                    MessageBox.Show("Branch '" + branchName + "' is not selectable, this branch has been removed from the selection.");
+                else
+                    yield return gitHead;
             }
-
-            return selectedBranches;
         }
 
         public string GetSelectedText()
@@ -65,6 +59,9 @@ namespace GitUI
 
         public void SetSelectedText(string text)
         {
+            if (text == null)
+                throw new ArgumentNullException("text");
+
             branches.Text = text;
         }
 

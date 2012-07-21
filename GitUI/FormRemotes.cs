@@ -143,7 +143,7 @@ namespace GitUI
 
                     if (!string.IsNullOrEmpty(remoteUrl))
                     {
-                        using (var frm = new FormRemoteProcess("remote update")) frm.ShowDialog(this);
+                        FormRemoteProcess.ShowDialog(this, "remote update");
                         ConfigureRemotes();
                     }
                     else
@@ -261,7 +261,7 @@ namespace GitUI
 
         private void PruneClick(object sender, EventArgs e)
         {
-            using (var frm = new FormRemoteProcess("remote prune " + _remote)) frm.ShowDialog(this);
+            FormRemoteProcess.ShowDialog(this, "remote prune " + _remote);
         }
 
         private void RemoteBranchesSelectionChanged(object sender, EventArgs e)
@@ -370,7 +370,7 @@ namespace GitUI
 
         private void UpdateBranchClick(object sender, EventArgs e)
         {
-            using (var frm = new FormRemoteProcess("remote update")) frm.ShowDialog(this);
+            FormRemoteProcess.ShowDialog(this, "remote update");
         }
 
         private void FormRemotes_FormClosing(object sender, FormClosingEventArgs e)

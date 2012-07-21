@@ -54,8 +54,7 @@ namespace GitUI
         {
             var options = GetOptions();
 
-            using (var process = new FormProcess("fsck-objects --lost-found" + options))
-                process.ShowDialog(this);
+            FormProcess.ShowDialog(this, "fsck-objects --lost-found" + options);
             UpdateLostObjects();
         }
 
@@ -67,7 +66,7 @@ namespace GitUI
                 MessageBoxButtons.YesNo) != DialogResult.Yes)
                 return;
 
-            using (var frm = new FormProcess("prune")) frm.ShowDialog(this);
+            FormProcess.ShowDialog(this, "prune");
             UpdateLostObjects();
         }
 
@@ -78,7 +77,7 @@ namespace GitUI
 
         private void mnuLostObjectsCreateTag_Click(object sender, EventArgs e)
         {
-            using (var frm = new FormTagSmall { Revision = GetCurrentGitRevision() })
+            using (var frm = new FormTagSmall(GetCurrentGitRevision()))
             {
                 var dialogResult = frm.ShowDialog(this);
                 if (dialogResult == DialogResult.OK)
@@ -170,12 +169,7 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            string dialogResult;
-            using (var process = new FormProcess("fsck-objects" + GetOptions()))
-            {
-                process.ShowDialog(this);
-                dialogResult = process.OutputString.ToString();
-            }
+            var dialogResult = FormProcess.ReadDialog(this, "fsck-objects" + GetOptions());
 
             if (FormProcess.IsOperationAborted(dialogResult))
             {
