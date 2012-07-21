@@ -1691,7 +1691,12 @@ namespace GitCommands
 
         public List<GitItemStatus> GetAllChangedFiles()
         {
-            var status = RunGitCmd(GitCommandHelpers.GetAllChangedFilesCmd(true, true));
+            return GetAllChangedFiles(true, true);
+        }
+
+        public List<GitItemStatus> GetAllChangedFiles(bool excludeIgnoredFiles, bool untrackedFiles)
+        {
+            var status = RunGitCmd(GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles));
 
             return GitCommandHelpers.GetAllChangedFilesFromString(status);
         }
