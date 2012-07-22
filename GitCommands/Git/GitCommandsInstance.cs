@@ -10,7 +10,7 @@ namespace GitCommands
 {
     public delegate void SetupStartInfo(ProcessStartInfo startInfo);
     
-    public sealed class GitCommandsInstance : IGitCommands, IDisposable
+    public sealed class GitCommandsInstance : IDisposable
     {
         private readonly object processLock = new object();
         public SetupStartInfo SetupStartInfoCallback { get; set; }
@@ -105,21 +105,6 @@ namespace GitCommands
             Kill();
         }
 
-        public string RunGit(string arguments)
-        {
-            return Settings.Module.RunGitCmd(arguments);
-        }
-
-        public string RunGit(string arguments, out int exitCode)
-        {
-            return Settings.Module.RunGitCmd(arguments, out exitCode);
-        }
-
-        public string RunBatchFile(string batchFile)
-        {
-            return Settings.Module.RunBatchFile(batchFile);
-        }
-
         public event DataReceivedEventHandler DataReceived;
         public event EventHandler Exited;
 
@@ -166,30 +151,6 @@ namespace GitCommands
                 Output.Append(e.Data + Environment.NewLine);
             if (DataReceived != null)
                 DataReceived(this, e);
-        }
-
-        public IList<IGitSubmodule> GetSubmodules()
-        {
-            var submodules = Settings.Module.RunGitCmd("submodule status").Split('\n');
-
-            IList<IGitSubmodule> submoduleList = new List<IGitSubmodule>();
-
-            string lastLine = null;
-
-            foreach (var submodule in submodules)
-            {
-                if (submodule.Length < 43)
-                    continue;
-
-                if (submodule.Equals(lastLine))
-                    continue;
-
-                lastLine = submodule;
-
-                submoduleList.Add(GitModule.CreateGitSubmodule(submodule));
-            }
-
-            return submoduleList;
         }
 
         public bool CollectOutput = true;

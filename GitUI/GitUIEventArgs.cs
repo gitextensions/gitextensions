@@ -13,7 +13,7 @@ namespace GitUI
         {
             get
             {
-                return new GitCommandsInstance();
+                return Settings.Module;
             }
         }
 
