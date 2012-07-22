@@ -46,7 +46,7 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
             var submodule = Submodules.SelectedRows.Count == 1 ? Submodules.SelectedRows[0].DataBoundItem as GitSubmodule : null;
-            Submodules.DataSource = (new GitCommandsInstance()).GetSubmodules();
+            Submodules.DataSource = Settings.Module.GetSubmodules();
             if (submodule != null)
             {
                 DataGridViewRow row = Submodules.Rows
