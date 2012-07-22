@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands.Config;
 using PatchApply;
+using GitUIPluginInterfaces;
 
 namespace GitCommands
 {
@@ -17,7 +18,7 @@ namespace GitCommands
     /// Class provide non-static methods for manipulation with git module.
     /// You can create several instances for submodules.
     /// </summary>
-    public sealed class GitModule
+    public sealed class GitModule : IGitCommands
     {
         private static readonly Regex DefaultHeadPattern = new Regex("refs/remotes/[^/]+/HEAD", RegexOptions.Compiled);
 
@@ -403,6 +404,16 @@ namespace GitCommands
         public string RunGitCmd(string arguments, Encoding encoding)
         {
             return RunGitCmd(arguments, null, encoding);
+        }
+
+        public string RunGit(string arguments)
+        {
+            return RunGitCmd(arguments);
+        }
+
+        public string RunGit(string arguments, out int exitCode)
+        {
+            return RunGitCmd(arguments, out exitCode);
         }
 
         public string RunBatchFile(string batchFile)
@@ -912,6 +923,30 @@ namespace GitCommands
         public string GetSubmoduleFullPath(string name)
         {
             return _workingdir + FixPath(GetSubmoduleLocalPath(name)) + Settings.PathSeparator.ToString();
+        }
+
+        public IList<IGitSubmodule> GetSubmodules()
+        {
+            var submodules = RunGitCmd("submodule status").Split('\n');
+
+            IList<IGitSubmodule> submoduleList = new List<IGitSubmodule>();
+
+            string lastLine = null;
+
+            foreach (var submodule in submodules)
+            {
+                if (submodule.Length < 43)
+                    continue;
+
+                if (submodule.Equals(lastLine))
+                    continue;
+
+                lastLine = submodule;
+
+                submoduleList.Add(GitModule.CreateGitSubmodule(submodule));
+            }
+
+            return submoduleList;
         }
 
         public string FindGitSuperprojectPath(out string submoduleName)
