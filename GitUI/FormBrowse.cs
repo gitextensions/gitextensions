@@ -1891,6 +1891,15 @@ namespace GitUI
             }
         }
 
+        private void CurrentBranchMouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                CurrentBranchDropDownOpening(sender, e);
+                branchSelect.DropDown.Show(Point.Empty);
+            }
+        }
+
         void BranchSelectToolStripItem_Click(object sender, EventArgs e)
         {
             bool needRefresh;
