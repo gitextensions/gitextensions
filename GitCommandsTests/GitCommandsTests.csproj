@@ -84,6 +84,10 @@
       <Name>GitCommands</Name>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
+      <Project>{27559302-f35e-4b62-a6ec-11ff21a5fa6f}</Project>
+      <Name>GitUIPluginInterfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
