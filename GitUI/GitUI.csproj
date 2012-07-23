@@ -1352,8 +1352,12 @@
     <None Include="Resources\Icons\PullFetchAll.png" />
     <None Include="Resources\Icons\loadingpanel_static.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
-    <Content Include="Translation\Francais.gif" />
-    <Content Include="Translation\Francais.xml" />
+    <Content Include="Translation\Francais.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Translation\Francais.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Translation\German.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
