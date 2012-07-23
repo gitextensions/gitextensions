@@ -6,6 +6,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Statistics", "Statistics", "{AF6D7B1B-FAF6-4793-AC05-00C63A5BC0F5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtensions", "GitExtensions\GitExtensions.csproj", "{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EC6988F6-0E8E-42D2-8E41-E562C5FB65BC} = {EC6988F6-0E8E-42D2-8E41-E562C5FB65BC}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimpleExt", "SimpleExt\SimpleExt.VS2012.vcxproj", "{BBE7B8AD-D175-4679-A614-38BFF28B0269}"
 EndProject
