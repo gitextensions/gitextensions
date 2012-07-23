@@ -262,6 +262,14 @@ namespace GitUI
             if (File.Exists(localFileName)) File.Delete(localFileName);
         }
 
+        private void Use2WayMerge(ref string arguments)
+        {
+            arguments = arguments.Replace("-merge -3", "-merge"); // Araxis
+            arguments = arguments.Replace("base:\"$BASE\"", ""); // TortoiseMerge
+            arguments = arguments.Replace("mine:\"$LOCAL\"", "base:\"$LOCAL\""); // TortoiseMerge
+            arguments = arguments.Replace("\"$BASE\"", ""); // Perforce, Beyond Compare 3, Araxis, DiffMerge
+        }
+
         private void ConflictedFiles_DoubleClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -316,17 +324,10 @@ namespace GitUI
                     {
                         DialogResult result = MessageBox.Show(this, string.Format(noBaseRevision.Text, filename), _noBaseFileMergeCaption.Text, MessageBoxButtons.YesNoCancel);
                         if (result == DialogResult.Yes)
-                        {
-                            arguments = arguments.Replace("-merge -3", "-merge"); // Araxis
-                            arguments = arguments.Replace("base:\"$BASE\"", ""); // TortoiseMerge
-                            arguments = arguments.Replace("mine:\"$LOCAL\"", "base:\"$LOCAL\""); // TortoiseMerge
-                            arguments = arguments.Replace("\"$BASE\"", ""); // Perforce, Beyond Compare 3, Araxis, DiffMerge
-                        }
+                            Use2WayMerge(ref arguments);
 
                         if (result == DialogResult.Cancel)
-                        {
                             return;
-                        }
                     }
 
                     arguments = arguments.Replace("$BASE", filenames[0]);
