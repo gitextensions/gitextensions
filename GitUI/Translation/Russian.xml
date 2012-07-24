@@ -48,6 +48,30 @@ This program is destributed in the hope that it will be useful, but WITHOUT ANY 
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="BlameControl">
+      <translationItems>
+        <TranslationItem Name="blamePreviousRevisionToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Blame previous revision</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="copyLogMessageToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Copy log message to clipboard</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="showChangesToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Show changes</Source>
+          <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="BranchComboBox">
+      <translationItems>
+        <TranslationItem Name="_branchCheckoutError" Property="Text" type="unfinished">
+          <Source>Branch '{0}' is not selectable, this branch has been removed from the selection.</Source>
+          <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="BrowseForPrivateKey">
       <translationItems>
         <TranslationItem Name="_browsePrivateKeyCaption" Property="Text">
@@ -251,7 +275,7 @@ This program is destributed in the hope that it will be useful, but WITHOUT ANY 
           <Source>Develop</Source>
           <Value>Разрабатывать</Value>
         </TranslationItem>
-        <TranslationItem Name="directoryIsNotAValidRepository" Property="Text">
+        <TranslationItem Name="directoryIsNotAValidRepository" Property="Text" type="obsolete">
           <Source>The selected item is not a valid git repository.
 
 Do you want to abort and remove it from the recent repositories list?</Source>
@@ -844,6 +868,10 @@ You will have push access. {2}</Source>
           <Source>Ignore</Source>
           <Value>Добавить</Value>
         </TranslationItem>
+        <TranslationItem Name="btnCancel" Property="Text">
+          <Source>Cancel</Source>
+          <Value>Отмена</Value>
+        </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Source>Preview</Source>
           <Value>Предпросмотр</Value>
@@ -1077,6 +1105,10 @@ You will have push access. {2}</Source>
           <Source>Create pull requests</Source>
           <Value>Создать pull request</Value>
         </TranslationItem>
+        <TranslationItem Name="_errorCaption" Property="Text">
+          <Source>Error</Source>
+          <Value>Ошибка</Value>
+        </TranslationItem>
         <TranslationItem Name="_forkCloneRepositoryToolStripMenuItem" Property="Text">
           <Source>Fork/Clone repository</Source>
           <Value>Fork/Clone репозиторий</Value>
@@ -1101,17 +1133,9 @@ You will have push access. {2}</Source>
           <Source>Could not find any relevant repository hosts for the currently open repository.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_noReposHostFoundCaption" Property="Text">
-          <Source>Error</Source>
-          <Value>Ошибка</Value>
-        </TranslationItem>
         <TranslationItem Name="_noReposHostPluginLoaded" Property="Text" type="unfinished">
           <Source>No repository host plugin loaded.</Source>
           <Value />
-        </TranslationItem>
-        <TranslationItem Name="_noReposHostPluginLoadedCaption" Property="Text">
-          <Source>Error</Source>
-          <Value>Ошибка</Value>
         </TranslationItem>
         <TranslationItem Name="_noRevisionFoundError" Property="Text">
           <Source>No revision found.</Source>
@@ -1529,6 +1553,18 @@ You will have push access. {2}</Source>
           <Source>Remote</Source>
           <Value>Внешние</Value>
         </TranslationItem>
+        <TranslationItem Name="resetFileToBaseToolStripMenuItem" Property="Text">
+          <Source>Base</Source>
+          <Value>Базовый</Value>
+        </TranslationItem>
+        <TranslationItem Name="resetFileToRemoteToolStripMenuItem" Property="Text">
+          <Source>Remote</Source>
+          <Value>Внешние</Value>
+        </TranslationItem>
+        <TranslationItem Name="resetFileToToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Reset file to</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="runMergetoolToolStripMenuItem" Property="Text">
           <Source>Solve mergeconflicts</Source>
           <Value>Решить конфликты</Value>
@@ -1617,10 +1653,6 @@ You will have push access. {2}</Source>
           <Source>Pull</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="toolStripButtonPull" Property="ToolTipText" type="unfinished">
-          <Source>Pull - rebase</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="toolStripButtonPush" Property="Text">
           <Source>Push</Source>
           <Value>Отправить</Value>
@@ -1669,6 +1701,14 @@ You will have push access. {2}</Source>
           <Source>View stash</Source>
           <Value>Просмотреть stash</Value>
         </TranslationItem>
+        <TranslationItem Name="_noReposHostFoundCaption" Property="Text" type="obsolete">
+          <Source>Error</Source>
+          <Value>Ошибка</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noReposHostPluginLoadedCaption" Property="Text" type="obsolete">
+          <Source>Error</Source>
+          <Value>Ошибка</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormChangeLog">
@@ -1709,10 +1749,6 @@ You will have push access. {2}</Source>
           <Source>Checkout branch</Source>
           <Value>Выбор ветки</Value>
         </TranslationItem>
-        <TranslationItem Name="Force" Property="Text">
-          <Source>Force</Source>
-          <Value>Принудительно</Value>
-        </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Select branch</Source>
           <Value>Выберите ветку</Value>
@@ -1721,13 +1757,33 @@ You will have push access. {2}</Source>
           <Source>Local branch</Source>
           <Value>Локальная ветка</Value>
         </TranslationItem>
+        <TranslationItem Name="localChangesGB" Property="Text" type="unfinished">
+          <Source>Local changes</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Source>Checkout</Source>
           <Value>Забрать</Value>
         </TranslationItem>
+        <TranslationItem Name="rbDontChange" Property="Text" type="unfinished">
+          <Source>Don't change</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="rbMerge" Property="Text">
+          <Source>Merge</Source>
+          <Value>Объединить</Value>
+        </TranslationItem>
+        <TranslationItem Name="rbReset" Property="Text">
+          <Source>Reset</Source>
+          <Value>Сбросить</Value>
+        </TranslationItem>
         <TranslationItem Name="Remotebranch" Property="Text">
           <Source>Remote branch</Source>
           <Value>Внешняя ветка</Value>
+        </TranslationItem>
+        <TranslationItem Name="Force" Property="Text" type="obsolete">
+          <Source>Force</Source>
+          <Value>Принудительно</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1745,10 +1801,6 @@ You will have push access. {2}</Source>
           <Source>Auto stash</Source>
           <Value>Авто stash</Value>
         </TranslationItem>
-        <TranslationItem Name="btCancel" Property="Text">
-          <Source>Cancel</Source>
-          <Value>Отмена</Value>
-        </TranslationItem>
         <TranslationItem Name="btOk" Property="Text">
           <Source>Checkout</Source>
           <Value>Забрать</Value>
@@ -1760,6 +1812,10 @@ You will have push access. {2}</Source>
         <TranslationItem Name="rbCreateBranch" Property="Text">
           <Source>Create local branch with the name '{0}'</Source>
           <Value>Создать локальную ветку с именем '{0}'</Value>
+        </TranslationItem>
+        <TranslationItem Name="rbDontChange" Property="Text" type="unfinished">
+          <Source>Don't change</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="rbDontCreate" Property="Text">
           <Source>Do not create local branch</Source>
@@ -1776,6 +1832,10 @@ You will have push access. {2}</Source>
         <TranslationItem Name="rbResetBranch" Property="Text">
           <Source>Reset local branch with the name '{0}'</Source>
           <Value>Сбросить локальную ветку с именем '{0}'</Value>
+        </TranslationItem>
+        <TranslationItem Name="btCancel" Property="Text" type="obsolete">
+          <Source>Cancel</Source>
+          <Value>Отмена</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2258,7 +2318,7 @@ Do you want to continue?</Source>
           <Source>Merge conflicts</Source>
           <Value>Конфликты слияния</Value>
         </TranslationItem>
-        <TranslationItem Name="_noFilesStagedAndConfirmAnEmptyMergeCommit" Property="Text">
+        <TranslationItem Name="_noFilesStagedAndConfirmAnEmptyMergeCommit" Property="Text" type="obsolete">
           <Source>There are no files staged for this commit.
 Are you sure you want to commit?</Source>
           <Value>Нет сохранённых файлов для этого коммита.
@@ -2635,6 +2695,10 @@ Do you want to continue?</Source>
           <Source>Commit count</Source>
           <Value>Количество коммитов</Value>
         </TranslationItem>
+        <TranslationItem Name="cbIncludeSubmodules" Property="Text" type="unfinished">
+          <Source>Include submodules</Source>
+          <Value />
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormCommitTemplateSettings">
@@ -2759,6 +2823,10 @@ Do you want to continue?</Source>
           <Source>Delete branch</Source>
           <Value>Удалить ветку</Value>
         </TranslationItem>
+        <TranslationItem Name="_cannotDeleteCurrentBranchMessage" Property="Text">
+          <Source>Cannot delete the branch “{0}” which you are currently on.</Source>
+          <Value>Вы не можете удалить ветку «{0}», на которой в данный момент находитесь.</Value>
+        </TranslationItem>
         <TranslationItem Name="_deleteBranchCaption" Property="Text">
           <Source>Delete branches</Source>
           <Value>Удалить ветку</Value>
@@ -2770,10 +2838,8 @@ Deleting a branch can cause commits to be deleted too!</Source>
 Удаление ветки также приведет к удалению коммитов, которые есть только в этой ветке!</Value>
         </TranslationItem>
         <TranslationItem Name="_deleteUnmergedBranchForcingSuggestion" Property="Text">
+          <Source>You cannot delete unmerged branch until you set “force delete” mode.</Source>
           <Value>Для удаления неполностью слитой ветки необходимо установить режим «Принудительное удаление».</Value>
-        </TranslationItem>
-        <TranslationItem Name="_cannotDeleteCurrentBranchMessage" Property="Text">
-          <Value>Вы не можете удалить ветку «{0}», на которой в данный момент находитесь.</Value>
         </TranslationItem>
         <TranslationItem Name="ForceDelete" Property="Text">
           <Source>Force delete</Source>
@@ -2832,38 +2898,6 @@ this using `force delete´.
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="unfinished">
           <Source>Diff</Source>
-          <Value />
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormDirtyDirWarn">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Source>Warning</Source>
-          <Value>Предупреждение</Value>
-        </TranslationItem>
-        <TranslationItem Name="button1" Property="Text" type="unfinished">
-          <Source>Stash&amp;&amp;Continue</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="button2" Property="Text" type="unfinished">
-          <Source>Continue forced</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="button3" Property="Text" type="unfinished">
-          <Source>Continue</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="button4" Property="Text">
-          <Source>Commit</Source>
-          <Value>Коммит</Value>
-        </TranslationItem>
-        <TranslationItem Name="button5" Property="Text">
-          <Source>Cancel</Source>
-          <Value>Отмена</Value>
-        </TranslationItem>
-        <TranslationItem Name="richTextBox1" Property="Text" type="unfinished">
-          <Source>You have not committed changes.</Source>
           <Value />
         </TranslationItem>
       </translationItems>
@@ -2954,6 +2988,14 @@ Click on the "Support this project" button to get more information about making 
           <Source>Full history</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="loadBlameOnShowToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Load blame on show</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="loadHistoryOnShowToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Load history on show</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="manipuleerCommitToolStripMenuItem" Property="Text">
           <Source>Manipulate commit</Source>
           <Value>Manipulate коммит</Value>
@@ -2981,6 +3023,10 @@ Click on the "Support this project" button to get more information about making 
         <TranslationItem Name="toolStripLabel2" Property="Text">
           <Source>Filter:</Source>
           <Value>Фильтр:</Value>
+        </TranslationItem>
+        <TranslationItem Name="toolStripSplitLoad" Property="ToolTipText" type="unfinished">
+          <Source>Load file history</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="viewCommitToolStripMenuItem" Property="Text">
           <Source>View commit</Source>
@@ -3093,18 +3139,6 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         </TranslationItem>
         <TranslationItem Name="_patchResultCaption" Property="Text" type="unfinished">
           <Source>Patch result</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_sendMailResult" Property="Text" type="unfinished">
-          <Source>
-
-Send to:</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_sendMailResultFailed" Property="Text" type="unfinished">
-          <Source>
-
-Failed to send mail.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_twoRevisionsNeededCaption" Property="Text" type="unfinished">
@@ -3469,10 +3503,6 @@ defaultremote=review
 defaultrebase=0</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="lnkGitReviewHelp" Property="Text" type="unfinished">
-          <Source>Man page for .gitreview</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="Save" Property="Text">
           <Source>Save</Source>
           <Value>Сохранить</Value>
@@ -3537,7 +3567,7 @@ defaultrebase=0</Source>
           <Source>Choose directory</Source>
           <Value>Выберите папку</Value>
         </TranslationItem>
-        <TranslationItem Name="_chooseDirectoryNotFile" Property="Text">
+        <TranslationItem Name="_chooseDirectoryNotFile" Property="Text" type="obsolete">
           <Source>Cannot initialize a new repository on a file.
 Please choose a directory.</Source>
           <Value>Файл не может быть использован в качестве пути репозитория.
@@ -3721,6 +3751,24 @@ ancestor tree. </Source>
         <TranslationItem Name="Abort" Property="Text">
           <Source>Abort</Source>
           <Value>Отмена</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormPluginInformation">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="unfinished">
+          <Source>Gerrit Plugin</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="btnClose" Property="Text">
+          <Source>Close</Source>
+          <Value>Закрыть</Value>
+        </TranslationItem>
+        <TranslationItem Name="informationLabel" Property="Text" type="unfinished">
+          <Source>The Gerrit plugin for GitExtensions provides integration with Gerrit for GitExtensions. This plugin has been based on the git-review tool.
+
+To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Settings | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</Source>
+          <Value />
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4017,10 +4065,6 @@ Are you sure you want to push this branch?</Source>
         <TranslationItem Name="RecursiveSubmodulesCheck" Property="Text">
           <Source>Recursive submodules check</Source>
           <Value>Рекурсивно проверять субмодули</Value>
-        </TranslationItem>
-        <TranslationItem Name="RemoteBranch" Property="Text" type="unfinished">
-          <Source>master</Source>
-          <Value />
         </TranslationItem>
         <TranslationItem Name="RemoteColumn" Property="HeaderText">
           <Source>Remote Branch</Source>
@@ -4707,11 +4751,6 @@ Is the mergeconflict solved?</Source>
           <Source>Delete file</Source>
           <Value>Удалить файл</Value>
         </TranslationItem>
-        <TranslationItem Name="fileBinairyChooseLocalBaseRemote" Property="Text" type="unfinished">
-          <Source>File ({0}) appears to be a binairy file.
-Choose to keep the local({1}), remote({2}) or base file.</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="fileChangeLocallyAndRemotely" Property="Text">
           <Source>The file has been changed both locally({0}) and remotely({1}). Merge the changes.</Source>
           <Value>Файл был изменен локально({0}) и удаленно({1}). Слейте изменения.</Value>
@@ -4720,7 +4759,7 @@ Choose to keep the local({1}), remote({2}) or base file.</Source>
           <Source>A file with the same name has been created locally({0}) and remotely({1}). Choose the file you want to keep or merge the files.</Source>
           <Value>Файл с одинаковым именем был создан локально({0}) и удалено({1}). Выберите файл, который Вы хотите оставить, или слейте их.</Value>
         </TranslationItem>
-        <TranslationItem Name="fileCreatedLocallyAndRemotelyLong" Property="Text">
+        <TranslationItem Name="fileCreatedLocallyAndRemotelyLong" Property="Text" type="obsolete">
           <Source>File {0} does not have a base revision.
 A file with the same name has been created locally({1}) and remotely({2}) causing this conflict.
 
@@ -4734,7 +4773,7 @@ Choose the file you want to keep, merge the files or delete the file?</Source>
           <Source>The file has been deleted locally({0}) and modified remotely({1}). Choose to delete the file or keep the modified version.</Source>
           <Value>Файл был удален локально и изменен удаленно. Удалите или оставьте измененную версию.</Value>
         </TranslationItem>
-        <TranslationItem Name="fileDeletedLocallyAndModifiedRemotelyLong" Property="Text">
+        <TranslationItem Name="fileDeletedLocallyAndModifiedRemotelyLong" Property="Text" type="obsolete">
           <Source>File {0} does not have a local revision.
 The file has been deleted locally({1}) but modified remotely({2}).
 
@@ -4758,7 +4797,7 @@ Are you sure you want to open this file in {0}?</Source>
           <Source>The file has been modified locally({0}) and deleted remotely({1}). Choose to delete the file or keep the modified version.</Source>
           <Value>Файл был изменен локально и удален удаленно. Можно оставить локальную версию или удалить файл.</Value>
         </TranslationItem>
-        <TranslationItem Name="fileModifiedLocallyAndDelededRemotelyLong" Property="Text">
+        <TranslationItem Name="fileModifiedLocallyAndDelededRemotelyLong" Property="Text" type="obsolete">
           <Source>File {0} does not have a remote revision.
 The file has been modified locally({1}) but deleted remotely({2}).
 
@@ -4840,7 +4879,7 @@ The merge conflict will not be marked as solved. Please try again.</Source>
           <Source>no base</Source>
           <Value>нет базы</Value>
         </TranslationItem>
-        <TranslationItem Name="noBaseRevision" Property="Text">
+        <TranslationItem Name="noBaseRevision" Property="Text" type="obsolete">
           <Source>There is no base revision for {0}.
 Fall back to 2-way merge?</Source>
           <Value>Базы слияния для не  {0} существует.
@@ -4914,7 +4953,7 @@ Do you want to use this custom merge script?</Source>
           <Source>Reset changes</Source>
           <Value>Отменить изменения</Value>
         </TranslationItem>
-        <TranslationItem Name="_undoChangesIn" Property="Text">
+        <TranslationItem Name="_undoChangesIn" Property="Text" type="obsolete">
           <Source>Undo changes in:
 {0}?</Source>
           <Value>Отменить изменения в файле
@@ -5411,10 +5450,6 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
           <Source>Use patience diff algorithm</Source>
           <Value>Показывать граф ревизий в логе коммитов</Value>
         </TranslationItem>
-        <TranslationItem Name="chkWarnBeforeCheckout" Property="Text" type="unfinished">
-          <Source>Warn of not committed changes before checkout</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="ClearImageCache" Property="Text">
           <Source>Clear image cache</Source>
           <Value>Очистить кеш картинок</Value>
@@ -5599,7 +5634,7 @@ any global setting.
           <Source>Path to pageant</Source>
           <Value>Путь к pageant</Value>
         </TranslationItem>
-        <TranslationItem Name="label18" Property="Text">
+        <TranslationItem Name="label18" Property="Text" type="obsolete">
           <Source>OpenSSH is a commandline tool. PuTTY is more userfriendly to use for windows users, 
 but requires the PuTTY authentication client to run  in the background.
 When OpenSSH is used, command line dialogs are shown!
@@ -5730,11 +5765,6 @@ local settings.
         <TranslationItem Name="label50" Property="Text">
           <Source>Git Extensions can use msysgit or cygwin to access git repositories. Set the correct paths below.</Source>
           <Value>Для доступа к git репозиториям в Git Extensions возможно использовать как msysgit, так и cygwin. Установите корректный путь ниже.</Value>
-        </TranslationItem>
-        <TranslationItem Name="label51" Property="Text" type="unfinished">
-          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
-          <Value />
         </TranslationItem>
         <TranslationItem Name="label53" Property="Text">
           <Source>No image service</Source>
@@ -6072,12 +6102,6 @@ Do you want to register the host's fingerprint and restart the process?</Source>
         </TranslationItem>
         <TranslationItem Name="_fingerprintNotRegistredTextCaption" Property="Text" type="unfinished">
           <Source>Host Fingerprint not registered</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_serverHotkeyNotCachedText" Property="Text" type="unfinished">
-          <Source>The server's host key is not cached in the registry.
-
-Do you want to trust this host key and then try again?</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="Abort" Property="Text">
@@ -6600,6 +6624,50 @@ nodes.
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="MessageBoxes">
+      <translationItems>
+        <TranslationItem Name="_error" Property="Text">
+          <Source>Error</Source>
+          <Value>Ошибка</Value>
+        </TranslationItem>
+        <TranslationItem Name="_middleOfPatchApply" Property="Text" type="unfinished">
+          <Source>You are in the middle of a patch apply, continue patch apply?</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_middleOfPatchApplyCaption" Property="Text" type="unfinished">
+          <Source>Patch apply</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_middleOfRebase" Property="Text" type="unfinished">
+          <Source>You are in the middle of a rebase, continue rebase?</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_middleOfRebaseCaption" Property="Text" type="unfinished">
+          <Source>Rebase</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_notValidGitDirectory" Property="Text" type="unfinished">
+          <Source>The current directory is not a valid git repository.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_notValidGitSVNDirectory" Property="Text" type="unfinished">
+          <Source>The current directory is not a valid git-svn repository.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_unableGetSVNInformation" Property="Text" type="unfinished">
+          <Source>Unable to determine upstream SVN information.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_unresolvedMergeConflicts" Property="Text" type="unfinished">
+          <Source>There are unresolved merge conflicts, solve conflicts now?</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_unresolvedMergeConflictsCaption" Property="Text">
+          <Source>Merge conflicts</Source>
+          <Value>Конфликты слияния</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="Open">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -6766,7 +6834,7 @@ nodes.
           <Source>Initialize repository</Source>
           <Value>Инициализировать репозиторий</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
+        <TranslationItem Name="label1" Property="Text" type="obsolete">
           <Source>There are no commits made to this repository yet.
 
 If this is a normal repository, these steps are recommended:
@@ -7090,6 +7158,22 @@ Details: Is {1} expected {2}</Source>
         <TranslationItem Name="columnHeader4" Property="Text" type="unfinished">
           <Source>Created</Source>
           <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormDirtyDirWarn">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="obsolete">
+          <Source>Warning</Source>
+          <Value>Предупреждение</Value>
+        </TranslationItem>
+        <TranslationItem Name="button4" Property="Text" type="obsolete">
+          <Source>Commit</Source>
+          <Value>Коммит</Value>
+        </TranslationItem>
+        <TranslationItem Name="button5" Property="Text" type="obsolete">
+          <Source>Cancel</Source>
+          <Value>Отмена</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
