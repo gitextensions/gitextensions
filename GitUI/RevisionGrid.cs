@@ -15,6 +15,7 @@ using GitUI.Script;
 using GitUI.Tag;
 using Gravatar;
 using ResourceManager.Translation;
+using System.DirectoryServices;
 
 namespace GitUI
 {
@@ -536,10 +537,24 @@ namespace GitUI
 
         public List<GitRevision> GetSelectedRevisions()
         {
-            return Revisions
+            return GetSelectedRevisions(null);
+        }
+
+        public List<GitRevision> GetSelectedRevisions(SortDirection? direction)
+        {
+            var rows = Revisions
                 .SelectedRows
                 .Cast<DataGridViewRow>()
-                .Where(row => Revisions.RowCount > row.Index)
+                .Where(row => Revisions.RowCount > row.Index);
+
+            
+            if (direction.HasValue)
+            {
+                int d = direction.Value == SortDirection.Ascending ? 1 : -1;
+                rows = rows.OrderBy((row) => row.Index, (r1, r2) => d * (r1 - r2));
+            }
+
+            return rows
                 .Select(row => GetRevision(row.Index))
                 .ToList();
         }
@@ -1819,11 +1834,31 @@ namespace GitUI
 
         private void CherryPickCommitToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Revisions.RowCount <= LastRow || LastRow < 0)
-                return;
+            var revisions = GetSelectedRevisions(SortDirection.Descending);
 
-            var frm = new FormCherryPickCommitSmall(GetRevision(LastRow));
-            frm.ShowDialog(this);
+            FormCherryPickCommitSmall prevForm = null;
+
+            try
+            {
+                foreach (var r in revisions)
+                {
+                    var frm = new FormCherryPickCommitSmall(r);
+                    if (prevForm != null)
+                    {
+                        frm.CopyOptions(prevForm);
+                        prevForm.Dispose();
+                    }
+                    prevForm = frm;
+                    if (frm.ShowDialog(this) != DialogResult.OK)
+                        break;
+                }
+            }
+            finally
+            {
+                if (prevForm != null)
+                    prevForm.Dispose();
+            }
+
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
         }
