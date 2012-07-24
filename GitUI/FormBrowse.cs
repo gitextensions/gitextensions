@@ -1232,12 +1232,12 @@ namespace GitUI
 
         private void WorkingdirClick(object sender, EventArgs e)
         {
-            OpenToolStripMenuItemClick(sender, e);
+            _NO_TRANSLATE_Workingdir.ShowDropDown();
         }
 
         private void CurrentBranchClick(object sender, EventArgs e)
         {
-            CheckoutBranchToolStripMenuItemClick(sender, e);
+            branchSelect.ShowDropDown();
         }
 
         private void DeleteBranchToolStripMenuItemClick(object sender, EventArgs e)
@@ -2460,6 +2460,18 @@ namespace GitUI
 
             Settings.Module.CheckoutFiles(files, revisions[0].Guid + "^", false);
 
+        }
+
+        private void _NO_TRANSLATE_Workingdir_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                OpenToolStripMenuItemClick(sender, e);
+        }
+
+        private void branchSelect_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right) 
+                CheckoutBranchToolStripMenuItemClick(sender, e);
         }
       
     }
