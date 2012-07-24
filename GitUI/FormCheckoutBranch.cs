@@ -44,13 +44,6 @@ namespace GitUI
                     Branches.SelectedIndex = 0;
             }
         }
-
-
-        public FormCheckoutBranch(string branch, bool remote, string containRevison, bool force)
-            : this(branch, remote, containRevison)
-        {
-            Force.Checked = force;
-        }
         
         private void Initialize()
         {
@@ -90,19 +83,24 @@ namespace GitUI
 
         private void OkClick(object sender, EventArgs e)
         {
+            LocalChanges changes;
+            if (rbReset.Checked)
+                changes = LocalChanges.Reset;
+            else if (rbMerge.Checked)
+                changes = LocalChanges.Merge;
+            else
+                changes = LocalChanges.DontChange;
+            Settings.CheckoutBranchAction = (int)changes;
             if (Remotebranch.Checked)
             {
-                var checkoutRemote = new FormCheckoutRemoteBranch(Branches.Text, Force.Checked);
-                checkoutRemote.ShowDialog(this);
+                using (var checkoutRemote = new FormCheckoutRemoteBranch(Branches.Text, changes))
+                    checkoutRemote.ShowDialog(this);
             }
             else
             {
                 try
                 {
-                    var command = "checkout";
-                    if (Force.Checked)
-                        command += " --force";
-                    command += " \"" + Branches.Text + "\"";
+                    var command = GitCommandHelpers.CheckoutCmd(Branches.Text, changes);
                     var successfullyCheckedOut = FormProcess.ShowDialog(this, command);
                     if (successfullyCheckedOut)
                         Close();
