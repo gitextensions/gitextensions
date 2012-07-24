@@ -5,22 +5,8 @@ using Microsoft.Win32;
 
 namespace GitUI
 {
-    class MergeToolsHelper
+    static class MergeToolsHelper
     {     
-        private static MergeToolsHelper instance;
-
-        public static MergeToolsHelper Instance
-        {
-            get 
-            {
-                if (instance == null)
-                {
-                    instance = new MergeToolsHelper();
-                }
-                return instance;
-            }
-        }
-
         private static string GetGlobalSetting(string setting)
         {
             var configFile = GitCommandHelpers.GetGlobalConfig();
@@ -116,7 +102,7 @@ namespace GitUI
             return null;
         }
 
-        public string FindDiffToolExeFile(string globalDifftoolText, out string exeName)
+        public static string FindDiffToolExeFile(string globalDifftoolText, out string exeName)
         {
             string globalDiffTool = globalDifftoolText.ToLowerInvariant();
             switch (globalDiffTool)
@@ -154,7 +140,7 @@ namespace GitUI
             return GetFullPath(exeName);
         }
 
-        public string DiffToolCmdSuggest(string globalDifftoolText, string exeFile)
+        public static string DiffToolCmdSuggest(string globalDifftoolText, string exeFile)
         {
             string globalDiffTool = globalDifftoolText.ToLowerInvariant();
             switch (globalDiffTool)
@@ -171,7 +157,7 @@ namespace GitUI
             return "";
         }
 
-        public string FindMergeToolExeFile(string globalMergeToolText, out string exeName)
+        public static string FindMergeToolExeFile(string globalMergeToolText, out string exeName)
         {
             string globalMergeTool = globalMergeToolText.ToLowerInvariant();
 
@@ -215,7 +201,7 @@ namespace GitUI
             return GetFullPath(exeName);
         }
 
-        public string MergeToolcmdSuggest(string globalMergetoolText, string exeFile)
+        public static string MergeToolcmdSuggest(string globalMergetoolText, string exeFile)
         {
             string globalMergeTool = globalMergetoolText.ToLowerInvariant();
             switch (globalMergeTool)
@@ -228,7 +214,7 @@ namespace GitUI
             return AutoConfigMergeToolCmd(globalMergetoolText, exeFile);
         }
 
-        public string AutoConfigMergeToolCmd(string globalMergetoolText, string exeFile)
+        public static string AutoConfigMergeToolCmd(string globalMergetoolText, string exeFile)
         {
             string globalMergeTool = globalMergetoolText.ToLowerInvariant();
             switch (globalMergeTool)

@@ -163,31 +163,31 @@ namespace GitUI
             return Settings.Module.RunCmd(cmd, arguments);
         }
 
-        private bool RequiresValidWorkingDir()
+        private bool RequiresValidWorkingDir(object owner)
         {
             if (!Settings.Module.ValidWorkingDir())
             {
-                MessageBox.Show("The current directory is not a valid git repository.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.NotValidGitDirectory(owner as IWin32Window);
                 return false;
             }
 
             return true;
         }
 
-        private bool RequiredValidGitSvnWorikingDir()
+        private bool RequiredValidGitSvnWorikingDir(object owner)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!GitSvnCommandHelpers.ValidSvnWorkingDir())
             {
-                MessageBox.Show("The current directory is not a valid git-svn repository.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.NotValidGitSVNDirectory(owner as IWin32Window);
                 return false;
             }
 
             if (!GitSvnCommandHelpers.CheckRefsRemoteSvn())
             {
-                MessageBox.Show("Unable to determine upstream SVN information.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.UnableGetSVNInformation(owner as IWin32Window);
                 return false;
             }
 
@@ -265,7 +265,7 @@ namespace GitUI
 
         public bool StartDeleteBranchDialog(IWin32Window owner, string branch)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreDeleteBranch))
@@ -286,7 +286,7 @@ namespace GitUI
 
         public bool StartCheckoutRevisionDialog(IWin32Window owner)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreCheckoutRevision))
@@ -299,58 +299,31 @@ namespace GitUI
 
             return true;
         }
+
         public bool StartCheckoutRevisionDialog()
         {
             return StartCheckoutRevisionDialog(null);
         }
 
-        public bool CheckForDirtyDir(IWin32Window owner, out bool needRefresh, out bool force)
-        {
-            needRefresh = false;
-            force = false;
-            if (!Settings.DirtyDirWarnBeforeCheckoutBranch || Settings.Module.GitStatus(UntrackedFilesMode.All, IgnoreSubmodulesMode.Default).Count == 0)
-                return false;
-            switch (new FormDirtyDirWarn().ShowDialog(owner))
-            {
-                case DialogResult.Cancel:
-                    return true;
-                case DialogResult.Yes:
-                    Stash(owner);
-                    return false;
-                case DialogResult.Abort:
-                    needRefresh = StartCommitDialog(owner);
-                    return true;
-                case DialogResult.Retry:
-                    force = true;
-                    return false;
-                default:
-                    return false;
-            }
-        }
-
         public void Stash(IWin32Window owner)
         {
             var arguments = GitCommandHelpers.StashSaveCmd(Settings.IncludeUntrackedFilesInAutoStash);
-
             FormProcess.ShowDialog(owner, arguments);
         }
 
         public bool StartCheckoutBranchDialog(IWin32Window owner, string branch, bool remote, string containRevison)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreCheckoutBranch))
                 return false;
 
-            bool needRefresh;
-            bool force;
-            if (CheckForDirtyDir(owner, out needRefresh, out force))
-                return needRefresh;
-
-            var form = new FormCheckoutBranch(branch, remote, containRevison, force);
-            if (form.ShowDialog(owner) == DialogResult.Cancel)
-                return false;
+            using (var form = new FormCheckoutBranch(branch, remote, containRevison))
+            {
+                if (form.ShowDialog(owner) == DialogResult.Cancel)
+                    return false;
+            }
 
             InvokeEvent(owner, PostCheckoutBranch);
 
@@ -384,20 +357,17 @@ namespace GitUI
 
         public bool StartCheckoutRemoteBranchDialog(IWin32Window owner, string branch)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreCheckoutBranch))
                 return false;
 
-            bool needRefresh;
-            bool force;
-            if (CheckForDirtyDir(owner, out needRefresh, out force))
-                return needRefresh;
-
-            var form = new FormCheckoutRemoteBranch(branch, force);
-            if (form.ShowDialog(owner) == DialogResult.Cancel)
-                return false;
+            using (var form = new FormCheckoutRemoteBranch(branch))
+            {
+                if (form.ShowDialog(owner) == DialogResult.Cancel)
+                    return false;
+            }
 
             InvokeEvent(owner, PostCheckoutBranch);
 
@@ -406,7 +376,7 @@ namespace GitUI
 
         public bool StartCompareRevisionsDialog(IWin32Window owner)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreCompareRevisions))
@@ -427,7 +397,7 @@ namespace GitUI
 
         public bool StartAddFilesDialog(IWin32Window owner)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreAddFiles))
@@ -448,7 +418,7 @@ namespace GitUI
 
         public bool StartCreateBranchDialog(IWin32Window owner)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreCreateBranch))
@@ -520,7 +490,7 @@ namespace GitUI
 
         public bool StartCommitDialog(IWin32Window owner, bool showWhenNoChanges)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreCommit))
@@ -557,7 +527,7 @@ namespace GitUI
 
         public bool StartSvnDcommitDialog(IWin32Window owner)
         {
-            if (!RequiredValidGitSvnWorikingDir())
+            if (!RequiredValidGitSvnWorikingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreSvnDcommit))
@@ -577,7 +547,7 @@ namespace GitUI
 
         public bool StartSvnRebaseDialog(IWin32Window owner)
         {
-            if (!RequiredValidGitSvnWorikingDir())
+            if (!RequiredValidGitSvnWorikingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreSvnRebase))
@@ -597,7 +567,7 @@ namespace GitUI
 
         public bool StartSvnFetchDialog(IWin32Window owner)
         {
-            if (!RequiredValidGitSvnWorikingDir())
+            if (!RequiredValidGitSvnWorikingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreSvnFetch))
@@ -665,7 +635,7 @@ namespace GitUI
         {
             pullCompleted = false;
 
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PrePull))
@@ -743,7 +713,7 @@ namespace GitUI
 
         public bool StartFormatPatchDialog(IWin32Window owner)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreFormatPatch))
@@ -764,7 +734,7 @@ namespace GitUI
 
         public bool StartStashDialog(IWin32Window owner)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreStash))
@@ -785,7 +755,7 @@ namespace GitUI
 
         public bool StartResolveConflictsDialog(IWin32Window owner, bool offerCommit)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreResolveConflicts))
@@ -816,7 +786,7 @@ namespace GitUI
 
         public bool StartCherryPickDialog(IWin32Window owner)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreCherryPick))
@@ -837,7 +807,7 @@ namespace GitUI
 
         public bool StartMergeBranchDialog(IWin32Window owner, string branch)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreMergeBranch))
@@ -858,7 +828,7 @@ namespace GitUI
 
         public bool StartCreateTagDialog(IWin32Window owner)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreCreateTag))
@@ -879,7 +849,7 @@ namespace GitUI
 
         public bool StartDeleteTagDialog(IWin32Window owner)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreDeleteTag))
@@ -900,7 +870,7 @@ namespace GitUI
 
         public bool StartEditGitIgnoreDialog(IWin32Window owner)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreEditGitIgnore))
@@ -929,7 +899,7 @@ namespace GitUI
 
             InvokeEvent(owner, PostSettings);
 
-            return false;
+            return true;
         }
 
         public bool StartSettingsDialog()
@@ -939,7 +909,7 @@ namespace GitUI
 
         public bool StartArchiveDialog(IWin32Window owner)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreArchive))
@@ -960,7 +930,7 @@ namespace GitUI
 
         public bool StartMailMapDialog(IWin32Window owner)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreMailMap))
@@ -981,7 +951,7 @@ namespace GitUI
 
         public bool StartVerifyDatabaseDialog(IWin32Window owner)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreVerifyDatabase))
@@ -1002,7 +972,7 @@ namespace GitUI
 
         public bool StartRemotesDialog(IWin32Window owner)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreRemotes))
@@ -1023,7 +993,7 @@ namespace GitUI
 
         public bool StartRebaseDialog(IWin32Window owner, string branch)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreRebase))
@@ -1044,7 +1014,7 @@ namespace GitUI
 
         public bool StartRenameDialog(IWin32Window owner, string branch)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreRename))
@@ -1067,7 +1037,7 @@ namespace GitUI
 
         public bool StartSubmodulesDialog(IWin32Window owner)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreSubmodulesEdit))
@@ -1088,7 +1058,7 @@ namespace GitUI
 
         public bool StartUpdateSubmodulesDialog(IWin32Window owner)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreUpdateSubmodules))
@@ -1108,7 +1078,7 @@ namespace GitUI
 
         public bool StartSyncSubmodulesDialog(IWin32Window owner)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreSyncSubmodules))
@@ -1157,7 +1127,7 @@ namespace GitUI
 
         public bool StartFileHistoryDialog(IWin32Window owner, string fileName, GitRevision revision, bool filterByRevision, bool showBlame)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreFileHistory))
@@ -1200,7 +1170,7 @@ namespace GitUI
 
         public bool StartPushDialog(IWin32Window owner, bool pushOnShow)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PrePush))
@@ -1224,7 +1194,7 @@ namespace GitUI
 
         public bool StartApplyPatchDialog(IWin32Window owner, string patchFile)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreApplyPatch))
@@ -1256,7 +1226,7 @@ namespace GitUI
 
         public bool StartEditGitAttributesDialog(IWin32Window owner)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreEditGitAttributes))
@@ -1304,7 +1274,7 @@ namespace GitUI
 
         private bool StartBlameDialog(IWin32Window owner, string fileName, GitRevision revision)
         {
-            if (!RequiresValidWorkingDir())
+            if (!RequiresValidWorkingDir(owner))
                 return false;
 
             if (!InvokeEvent(owner, PreBlame))

@@ -103,7 +103,6 @@ namespace GitUI
             this.RevisionGridQuickSearchTimeout = new System.Windows.Forms.NumericUpDown();
             this.chkStashUntrackedFiles = new System.Windows.Forms.CheckBox();
             this.label24 = new System.Windows.Forms.Label();
-            this.chkWarnBeforeCheckout = new System.Windows.Forms.CheckBox();
             this.chkUsePatienceDiffAlgorithm = new System.Windows.Forms.CheckBox();
             this.chkShowErrorsWhenStagingFiles = new System.Windows.Forms.CheckBox();
             this.chkFollowRenamesInFileHistory = new System.Windows.Forms.CheckBox();
@@ -422,7 +421,7 @@ namespace GitUI
             this.argumentsTextBox.Location = new System.Drawing.Point(107, 299);
             this.argumentsTextBox.Name = "argumentsTextBox";
             this.helpProvider1.SetShowHelp(this.argumentsTextBox, true);
-            this.argumentsTextBox.Size = new System.Drawing.Size(532, 179);
+            this.argumentsTextBox.Size = new System.Drawing.Size(532, 181);
             this.argumentsTextBox.TabIndex = 8;
             this.argumentsTextBox.Text = "";
             this.argumentsTextBox.Enter += new System.EventHandler(this.argumentsTextBox_Enter);
@@ -1067,7 +1066,6 @@ namespace GitUI
             this.groupBox12.Controls.Add(this.RevisionGridQuickSearchTimeout);
             this.groupBox12.Controls.Add(this.chkStashUntrackedFiles);
             this.groupBox12.Controls.Add(this.label24);
-            this.groupBox12.Controls.Add(this.chkWarnBeforeCheckout);
             this.groupBox12.Controls.Add(this.chkUsePatienceDiffAlgorithm);
             this.groupBox12.Controls.Add(this.chkShowErrorsWhenStagingFiles);
             this.groupBox12.Controls.Add(this.chkFollowRenamesInFileHistory);
@@ -1081,7 +1079,7 @@ namespace GitUI
             // chkPlaySpecialStartupSound
             // 
             this.chkPlaySpecialStartupSound.AutoSize = true;
-            this.chkPlaySpecialStartupSound.Location = new System.Drawing.Point(10, 199);
+            this.chkPlaySpecialStartupSound.Location = new System.Drawing.Point(10, 183);
             this.chkPlaySpecialStartupSound.Name = "chkPlaySpecialStartupSound";
             this.chkPlaySpecialStartupSound.Size = new System.Drawing.Size(166, 19);
             this.chkPlaySpecialStartupSound.TabIndex = 53;
@@ -1111,7 +1109,7 @@ namespace GitUI
             // chkStartWithRecentWorkingDir
             // 
             this.chkStartWithRecentWorkingDir.AutoSize = true;
-            this.chkStartWithRecentWorkingDir.Location = new System.Drawing.Point(10, 178);
+            this.chkStartWithRecentWorkingDir.Location = new System.Drawing.Point(10, 158);
             this.chkStartWithRecentWorkingDir.Name = "chkStartWithRecentWorkingDir";
             this.chkStartWithRecentWorkingDir.Size = new System.Drawing.Size(196, 19);
             this.chkStartWithRecentWorkingDir.TabIndex = 52;
@@ -1121,7 +1119,7 @@ namespace GitUI
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(6, 257);
+            this.label23.Location = new System.Drawing.Point(7, 245);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(224, 15);
             this.label23.TabIndex = 18;
@@ -1129,7 +1127,7 @@ namespace GitUI
             // 
             // SmtpServer
             // 
-            this.SmtpServer.Location = new System.Drawing.Point(394, 250);
+            this.SmtpServer.Location = new System.Drawing.Point(395, 238);
             this.SmtpServer.Name = "SmtpServer";
             this.SmtpServer.Size = new System.Drawing.Size(242, 23);
             this.SmtpServer.TabIndex = 17;
@@ -1141,7 +1139,7 @@ namespace GitUI
             0,
             0,
             0});
-            this.RevisionGridQuickSearchTimeout.Location = new System.Drawing.Point(394, 219);
+            this.RevisionGridQuickSearchTimeout.Location = new System.Drawing.Point(395, 207);
             this.RevisionGridQuickSearchTimeout.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -1174,21 +1172,11 @@ namespace GitUI
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(6, 226);
+            this.label24.Location = new System.Drawing.Point(7, 214);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(216, 15);
             this.label24.TabIndex = 32;
             this.label24.Text = "Revision grid quick search timeout [ms]";
-            // 
-            // chkWarnBeforeCheckout
-            // 
-            this.chkWarnBeforeCheckout.AutoSize = true;
-            this.chkWarnBeforeCheckout.Location = new System.Drawing.Point(10, 156);
-            this.chkWarnBeforeCheckout.Name = "chkWarnBeforeCheckout";
-            this.chkWarnBeforeCheckout.Size = new System.Drawing.Size(287, 19);
-            this.chkWarnBeforeCheckout.TabIndex = 49;
-            this.chkWarnBeforeCheckout.Text = "Warn of not committed changes before checkout";
-            this.chkWarnBeforeCheckout.UseVisualStyleBackColor = true;
             // 
             // chkUsePatienceDiffAlgorithm
             // 
@@ -2918,7 +2906,7 @@ namespace GitUI
             // 
             this.lbl_icon.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lbl_icon.AutoSize = true;
-            this.lbl_icon.Location = new System.Drawing.Point(324, 488);
+            this.lbl_icon.Location = new System.Drawing.Point(324, 490);
             this.lbl_icon.Name = "lbl_icon";
             this.lbl_icon.Size = new System.Drawing.Size(33, 15);
             this.lbl_icon.TabIndex = 23;
@@ -2929,7 +2917,7 @@ namespace GitUI
             // 
             this.scriptNeedsConfirmation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.scriptNeedsConfirmation.AutoSize = true;
-            this.scriptNeedsConfirmation.Location = new System.Drawing.Point(107, 516);
+            this.scriptNeedsConfirmation.Location = new System.Drawing.Point(107, 518);
             this.scriptNeedsConfirmation.Name = "scriptNeedsConfirmation";
             this.scriptNeedsConfirmation.Size = new System.Drawing.Size(135, 19);
             this.scriptNeedsConfirmation.TabIndex = 21;
@@ -2941,7 +2929,7 @@ namespace GitUI
             // 
             this.labelOnEvent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelOnEvent.AutoSize = true;
-            this.labelOnEvent.Location = new System.Drawing.Point(8, 490);
+            this.labelOnEvent.Location = new System.Drawing.Point(8, 492);
             this.labelOnEvent.Name = "labelOnEvent";
             this.labelOnEvent.Size = new System.Drawing.Size(58, 15);
             this.labelOnEvent.TabIndex = 20;
@@ -2952,7 +2940,7 @@ namespace GitUI
             this.scriptEvent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.scriptEvent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.scriptEvent.FormattingEnabled = true;
-            this.scriptEvent.Location = new System.Drawing.Point(107, 484);
+            this.scriptEvent.Location = new System.Drawing.Point(107, 486);
             this.scriptEvent.Name = "scriptEvent";
             this.scriptEvent.Size = new System.Drawing.Size(188, 23);
             this.scriptEvent.TabIndex = 19;
@@ -3054,7 +3042,7 @@ namespace GitUI
             this.helpLabel.AutoSize = true;
             this.helpLabel.BackColor = System.Drawing.SystemColors.Info;
             this.helpLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.helpLabel.Location = new System.Drawing.Point(485, 488);
+            this.helpLabel.Location = new System.Drawing.Point(485, 490);
             this.helpLabel.Name = "helpLabel";
             this.helpLabel.Size = new System.Drawing.Size(177, 17);
             this.helpLabel.TabIndex = 16;
@@ -3065,7 +3053,7 @@ namespace GitUI
             // 
             this.inMenuCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.inMenuCheckBox.AutoSize = true;
-            this.inMenuCheckBox.Location = new System.Drawing.Point(107, 555);
+            this.inMenuCheckBox.Location = new System.Drawing.Point(107, 557);
             this.inMenuCheckBox.Name = "inMenuCheckBox";
             this.inMenuCheckBox.Size = new System.Drawing.Size(206, 19);
             this.inMenuCheckBox.TabIndex = 15;
@@ -3184,7 +3172,7 @@ namespace GitUI
             this.sbtn_icon.AutoSize = true;
             this.sbtn_icon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.sbtn_icon.ContextMenuStrip = this.contextMenuStrip_SplitButton;
-            this.sbtn_icon.Location = new System.Drawing.Point(370, 483);
+            this.sbtn_icon.Location = new System.Drawing.Point(370, 485);
             this.sbtn_icon.Name = "sbtn_icon";
             this.sbtn_icon.Size = new System.Drawing.Size(109, 30);
             this.sbtn_icon.SplitMenuStrip = this.contextMenuStrip_SplitButton;
@@ -3592,7 +3580,6 @@ namespace GitUI
         private DataGridViewTextBoxColumn OnEvent;
         private DataGridViewCheckBoxColumn AskConfirmation;
         private DataGridViewCheckBoxColumn addToRevisionGridContextMenuDataGridViewCheckBoxColumn;
-        private CheckBox chkWarnBeforeCheckout;
         private CheckBox chkStashUntrackedFiles;
         private ComboBox Global_AppEncoding;
         private Label label59;

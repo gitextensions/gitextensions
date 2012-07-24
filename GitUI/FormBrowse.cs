@@ -61,15 +61,14 @@ namespace GitUI
         private readonly TranslationString _indexLockNotFound =
             new TranslationString("index.lock not found at:");
 
+        private readonly TranslationString _errorCaption =
+            new TranslationString("Error");
+
         private readonly TranslationString _noReposHostPluginLoaded =
             new TranslationString("No repository host plugin loaded.");
-        private readonly TranslationString _noReposHostPluginLoadedCaption =
-            new TranslationString("Error");
 
         private readonly TranslationString _noReposHostFound =
             new TranslationString("Could not find any relevant repository hosts for the currently open repository.");
-        private readonly TranslationString _noReposHostFoundCaption =
-            new TranslationString("Error");
 
         private readonly TranslationString _noRevisionFoundError =
             new TranslationString("No revision found.");
@@ -294,7 +293,7 @@ namespace GitUI
             }
             catch (Exception exception)
             {
-                MessageBox.Show(this, exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, exception.Message, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -1320,9 +1319,11 @@ namespace GitUI
 
         private void SettingsToolStripMenuItem2Click(object sender, EventArgs e)
         {
+            var translation = Settings.Translation;
             GitUICommands.Instance.StartSettingsDialog(this);
+            if (translation != Settings.Translation)
+                Translate();
 
-            Translate();
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             Initialize();
             RevisionGrid.ReloadHotkeys();
@@ -1893,20 +1894,12 @@ namespace GitUI
 
         void BranchSelectToolStripItem_Click(object sender, EventArgs e)
         {
-            bool needRefresh;
-            bool force;
-            if (!GitUICommands.Instance.CheckForDirtyDir(this, out needRefresh, out force))
-            {
-                var toolStripItem = (ToolStripItem)sender;
-                string args = force ? "-f": null;
+            var toolStripItem = (ToolStripItem)sender;
 
-                var command = "checkout".Join(" ", args).Join(" ", string.Format("\"{0}\"", toolStripItem.Text));
-                FormProcess.ShowDialog(this, command);
-                needRefresh = true;
-            }
+            var command = GitCommandHelpers.CheckoutCmd(toolStripItem.Text);
+            FormProcess.ShowDialog(this, command);
 
-            if (needRefresh)
-                Initialize();
+            Initialize();
         }
 
         private void _forkCloneMenuItem_Click(object sender, EventArgs e)
@@ -1918,7 +1911,7 @@ namespace GitUI
             }
             else
             {
-                MessageBox.Show(this, _noReposHostPluginLoaded.Text, _noReposHostPluginLoadedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _noReposHostPluginLoaded.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -1927,7 +1920,7 @@ namespace GitUI
             var repoHost = RepoHosts.TryGetGitHosterForCurrentWorkingDir();
             if (repoHost == null)
             {
-                MessageBox.Show(this, _noReposHostFound.Text, _noReposHostFoundCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _noReposHostFound.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -1940,7 +1933,7 @@ namespace GitUI
             var repoHost = RepoHosts.TryGetGitHosterForCurrentWorkingDir();
             if (repoHost == null)
             {
-                MessageBox.Show(this, _noReposHostFound.Text, _noReposHostFoundCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _noReposHostFound.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
