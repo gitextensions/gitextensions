@@ -1688,6 +1688,8 @@ namespace GitUI
             toolStripSeparator6.Visible = tagNameCopy.Items.Count > 0 || branchNameCopy.Items.Count > 0;
 
             RefreshOwnScripts();
+
+            goToParentToolStripMenuItem.Visible = revision.HasParent();
         }
 
         private void ToolStripItemClick(object sender, EventArgs e)
@@ -2324,6 +2326,13 @@ namespace GitUI
                 if (item.DropDown != null && item.DropDown.Items.Count == 1)
                     item.DropDown.Items[0].PerformClick();
             }
+        }
+
+        private void goToParentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var r = GetRevision(LastRow);
+            if (r.HasParent())
+                SetSelectedRevision(new GitRevision(r.ParentGuids[0]));
         }
     }
 
