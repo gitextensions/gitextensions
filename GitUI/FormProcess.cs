@@ -28,23 +28,10 @@ namespace GitUI
         private GitCommandsInstance gitCommand;
 
         protected FormProcess()
-            : this(true)
+            : base(true)
         { }
 
-        //constructor for VS designer
-        protected FormProcess(bool useDialogSettings)
-            : base(useDialogSettings)
-        { }
-
-        public FormProcess(string process, string arguments)
-            : this(process, arguments, null, null, true)
-        { }
-
-        public FormProcess(string process, string arguments, GitModule module, bool useDialogSettings)
-            : this(process, arguments, module, null, true)
-        { }
-
-        public FormProcess(string process, string arguments, GitModule module, string input, bool useDialogSettings)
+        protected FormProcess(string process, string arguments, GitModule module, string input, bool useDialogSettings)
             : base(useDialogSettings)
         {
             ProcessCallback = processStart;
@@ -56,45 +43,46 @@ namespace GitUI
             ProcessInput = input;
         }
 
-        public FormProcess(string arguments)
-            : this(arguments, true)
-        { }
-
-        public FormProcess(string arguments, bool useDialogSettings)
-            : this(null, arguments, null, null, useDialogSettings)
-        { }
-
-        public FormProcess(GitModule module, string arguments)
-            : this(module, arguments, true)
-        { }
-
-        public FormProcess(GitModule module, string arguments, bool useDialogSettings)
-            : this(null, arguments, module, useDialogSettings)
-        { }
-
-        //Input does not work for password inputs. I don't know why, but it turned out not to be really necessary.
-        //For other inputs, it is not tested.
-        public FormProcess(string process, string arguments, string input)
-            : this(process, arguments, input, true)
-        { }
-
-        public FormProcess(string process, string arguments, string input, bool useDialogSettings)
-            : this(process, arguments, null, input, useDialogSettings)
-        { }
-
-        public static void ShowDialog(IWin32Window owner, string arguments)
+        public static bool ShowDialog(IWin32Window owner, GitModule module, string arguments)
         {
-            using (var formProcess = new FormProcess(arguments))
+            return ShowDialog(owner, null, arguments, module, null, true);
+        }
+
+        public static bool ShowDialog(IWin32Window owner, string arguments)
+        {
+            return ShowDialog(owner, arguments, true);
+        }
+
+        public static bool ShowDialog(IWin32Window owner, string process, string arguments)
+        {
+            return ShowDialog(owner, process, arguments, null, null, true);
+        }
+
+        public static bool ShowDialog(IWin32Window owner, string arguments, bool useDialogSettings)
+        {
+            return ShowDialog(owner, null, arguments, null, null, useDialogSettings);
+        }
+
+        public static bool ShowDialog(IWin32Window owner, string process, string arguments, GitModule module, string input, bool useDialogSettings)
+        {
+            using (var formProcess = new FormProcess(process, arguments, module, input, useDialogSettings))
             {
                 formProcess.ShowDialog(owner);
+                return !formProcess.ErrorOccurred();
             }
         }
 
-        public static void ShowDialog(IWin32Window owner, string arguments, bool useDialogSettings)
+        public static string ReadDialog(IWin32Window owner, string arguments)
         {
-            using (var formProcess = new FormProcess(arguments, useDialogSettings))
+            return ReadDialog(owner, null, arguments, null, null, true);
+        }
+
+        public static string ReadDialog(IWin32Window owner, string process, string arguments, GitModule module, string input, bool useDialogSettings)
+        {
+            using (var formProcess = new FormProcess(process, arguments, module, input, useDialogSettings))
             {
                 formProcess.ShowDialog(owner);
+                return formProcess.OutputString.ToString();
             }
         }
 

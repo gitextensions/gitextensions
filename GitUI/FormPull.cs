@@ -104,12 +104,17 @@ namespace GitUI
         {
             return PullAndShowDialogWhenFailed(null);
         }
+
         public DialogResult PullAndShowDialogWhenFailed(IWin32Window owner)
         {
-            if (PullChanges(owner))
-                return DialogResult.OK;
+            DialogResult result = PullChanges(owner);
+
+            if (result == DialogResult.No)
+                result = ShowDialog(owner);
             else
-                return ShowDialog(owner);
+                Close();
+
+            return result;
         }
 
         private void BrowseSourceClick(object sender, EventArgs e)
@@ -180,9 +185,11 @@ namespace GitUI
 
         private void PullClick(object sender, EventArgs e)
         {
-            if (PullChanges(this))
+            DialogResult dialogResult = PullChanges(this);
+
+            if (dialogResult != DialogResult.No)
             {
-                DialogResult = DialogResult.OK;
+                DialogResult = dialogResult;
                 Close();
             }
         }
@@ -193,15 +200,16 @@ namespace GitUI
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
         }
 
-        public bool PullChanges(IWin32Window owner)
+        public DialogResult PullChanges(IWin32Window owner)
         {
             if (!ShouldPullChanges())
-                return false;
+                return DialogResult.No;
 
             UpdateSettingsDuringPull();
 
-            if (!IsCommitNotPushedToRemoteYet())
-                return false;
+            DialogResult dr = ShouldRebaseMergeCommit();
+            if (dr != DialogResult.Yes)
+                return dr;
 
             Repositories.RepositoryHistory.AddMostRecentRepository(PullSource.Text);
 
@@ -238,31 +246,29 @@ namespace GitUI
             return true;
         }
 
-        private bool IsCommitNotPushedToRemoteYet()
+        private DialogResult ShouldRebaseMergeCommit()
         {
+            DialogResult dialogResult;
+
             //ask only if exists commit not pushed to remote yet
             if (Rebase.Checked && PullFromRemote.Checked && MergeCommitExists())
             {
-                DialogResult dialogResult = MessageBox.Show(this, _areYouSureYouWantToRebaseMerge.Text,
+                dialogResult = MessageBox.Show(this, _areYouSureYouWantToRebaseMerge.Text,
                                                   _areYouSureYouWantToRebaseMergeCaption.Text,
                                                   MessageBoxButtons.YesNoCancel);
-                if (dialogResult == DialogResult.Cancel)
-                {
-                    Close();
-                    return false;
-                }
-                if (dialogResult != DialogResult.Yes)
-                    return false;
             }
-            return true;
+            else
+                dialogResult = DialogResult.Yes;
+
+            return dialogResult;
         }
 
-        private bool EvaluateProcessDialogResults(IWin32Window owner, FormProcess process, bool stashed)
+        private DialogResult EvaluateProcessDialogResults(IWin32Window owner, FormProcess process, bool stashed)
         {
             try
             {
                 if (EvaluateResultsBasedOnSettings(stashed, process))
-                    return true;
+                    return DialogResult.OK;
             }
             finally
             {
@@ -273,7 +279,7 @@ namespace GitUI
                                         MessageBoxButtons.YesNo) == DialogResult.Yes;
                     if (ShouldStashPop(messageBoxResult, process, true))
                     {
-                        new FormProcess("stash pop").ShowDialog(owner);
+                        FormProcess.ShowDialog(owner, "stash pop");
                         MergeConflictHandler.HandleMergeConflicts(owner, false);
                     }
                 }
@@ -281,7 +287,7 @@ namespace GitUI
                 ScriptManager.RunEventScripts(ScriptEvent.AfterPull);
             }
 
-            return false;
+            return DialogResult.No;
         }
 
         private bool EvaluateResultsBasedOnSettings(bool stashed, FormProcess process)
