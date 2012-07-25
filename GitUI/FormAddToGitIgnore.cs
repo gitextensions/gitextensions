@@ -17,7 +17,8 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
-            FilePattern.Text = string.Join(Environment.NewLine, filePatterns);
+            if (filePatterns != null)
+                FilePattern.Text = string.Join(Environment.NewLine, filePatterns);
             UpdatePreviewPanel();
         }
 

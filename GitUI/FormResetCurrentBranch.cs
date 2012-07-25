@@ -41,17 +41,17 @@ namespace GitUI
         {
             if (Soft.Checked)
             {
-                new FormProcess(GitCommandHelpers.ResetSoftCmd(Revision.Guid)).ShowDialog(this);
+                FormProcess.ShowDialog(this, GitCommandHelpers.ResetSoftCmd(Revision.Guid));
             }
             else if (Mixed.Checked)
             {
-                new FormProcess(GitCommandHelpers.ResetMixedCmd(Revision.Guid)).ShowDialog(this);
+                FormProcess.ShowDialog(this, GitCommandHelpers.ResetMixedCmd(Revision.Guid));
             }
             else if (Hard.Checked)
             {
                 if (MessageBox.Show(this, resetHardWarning.Text, resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
-                    new FormProcess(GitCommandHelpers.ResetHardCmd(Revision.Guid)).ShowDialog(this);
+                    FormProcess.ShowDialog(this, GitCommandHelpers.ResetHardCmd(Revision.Guid));
                 }
                 else
                 {

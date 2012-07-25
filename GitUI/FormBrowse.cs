@@ -1232,12 +1232,12 @@ namespace GitUI
 
         private void WorkingdirClick(object sender, EventArgs e)
         {
-            OpenToolStripMenuItemClick(sender, e);
+            _NO_TRANSLATE_Workingdir.ShowDropDown();
         }
 
         private void CurrentBranchClick(object sender, EventArgs e)
         {
-            CheckoutBranchToolStripMenuItemClick(sender, e);
+            branchSelect.ShowDropDown();
         }
 
         private void DeleteBranchToolStripMenuItemClick(object sender, EventArgs e)
@@ -1343,7 +1343,7 @@ namespace GitUI
 
         private void CompressGitDatabaseToolStripMenuItemClick(object sender, EventArgs e)
         {
-            new FormProcess("gc").ShowDialog(this);
+            FormProcess.ShowDialog(this, "gc");
         }
 
         private void VerifyGitDatabaseToolStripMenuItemClick(object sender, EventArgs e)
@@ -1447,13 +1447,13 @@ namespace GitUI
         private void StashChangesToolStripMenuItemClick(object sender, EventArgs e)
         {
             var arguments = GitCommandHelpers.StashSaveCmd(Settings.IncludeUntrackedFilesInManualStash);
-            new FormProcess(arguments).ShowDialog(this);
+            FormProcess.ShowDialog(this, arguments);
             Initialize();
         }
 
         private void StashPopToolStripMenuItemClick(object sender, EventArgs e)
         {
-            new FormProcess("stash pop").ShowDialog(this);
+            FormProcess.ShowDialog(this, "stash pop");
             Initialize();
             MergeConflictHandler.HandleMergeConflicts(this, false);
         }
@@ -1901,8 +1901,7 @@ namespace GitUI
                 string args = force ? "-f": null;
 
                 var command = "checkout".Join(" ", args).Join(" ", string.Format("\"{0}\"", toolStripItem.Text));
-                var form = new FormProcess(command);
-                form.ShowDialog(this);
+                FormProcess.ShowDialog(this, command);
                 needRefresh = true;
             }
 
@@ -1989,7 +1988,7 @@ namespace GitUI
 
         private void QuickFetch()
         {
-            new FormProcess(Settings.Module.FetchCmd(string.Empty, string.Empty, string.Empty)).ShowDialog(this);
+            FormProcess.ShowDialog(this, Settings.Module.FetchCmd(string.Empty, string.Empty, string.Empty));
             Initialize();
         }
 
@@ -2461,6 +2460,18 @@ namespace GitUI
 
             Settings.Module.CheckoutFiles(files, revisions[0].Guid + "^", false);
 
+        }
+
+        private void _NO_TRANSLATE_Workingdir_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                OpenToolStripMenuItemClick(sender, e);
+        }
+
+        private void branchSelect_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right) 
+                CheckoutBranchToolStripMenuItemClick(sender, e);
         }
       
     }

@@ -70,5 +70,56 @@ namespace System.Linq
             return string.Join(separator, source.ToArray());
         }
 
+
+        //
+        // Summary:
+        //     Sorts the elements of a sequence in ascending order by using a specified
+        //     comparer.
+        //
+        // Parameters:
+        //   source:
+        //     A sequence of values to order.
+        //
+        //   keySelector:
+        //     A function to extract a key from an element.
+        //
+        //   comparer:
+        //     A function to compare keys.
+        //
+        // Type parameters:
+        //   TSource:
+        //     The type of the elements of source.
+        //
+        //   TKey:
+        //     The type of the key returned by keySelector.
+        //
+        // Returns:
+        //     An System.Linq.IOrderedEnumerable<TElement> whose elements are sorted according
+        //     to a key.
+        //
+        // Exceptions:
+        //   System.ArgumentNullException:
+        //     source or keySelector is null.
+        public static IOrderedEnumerable<TSource> OrderBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TKey, TKey, int> comparer)
+        {
+            FuncComparer<TKey> fc = new FuncComparer<TKey>(comparer);
+
+            return source.OrderBy(keySelector, fc);
+        }
+
+        private class FuncComparer<T> : IComparer<T>
+        {
+            private Func<T, T, int> comparer;
+
+            public FuncComparer(Func<T, T, int> comparer)
+            {
+                this.comparer = comparer;
+            }
+
+            public int Compare(T x, T y)
+            {
+                return comparer(x, y);
+            }
+        }
     }
 }

@@ -119,7 +119,6 @@ namespace GitUI
 
         #endregion
 
-        private GitCommandsInstance _gitGetUnstagedCommand;
         private readonly SynchronizationContext _syncContext;
         public bool NeedRefresh;
         private GitItemStatus _currentItem;
@@ -132,6 +131,7 @@ namespace GitUI
         private bool IsMergeCommit { get; set; }
         private bool shouldRescanChanges = true;
         private bool _shouldReloadCommitTemplates = true;
+        private AsyncLoader unstagedLoader = new AsyncLoader();
 
 
         public FormCommit()
@@ -318,39 +318,30 @@ namespace GitUI
             ShowDialogWhenChanges(null);
         }
 
+        private void ComputeUnstagedFiles(Action<List<GitItemStatus>> onComputed)
+        {
+            unstagedLoader.Load(() =>
+                Settings.Module.GetAllChangedFiles(
+                    !showIgnoredFilesToolStripMenuItem.Checked,
+                    showUntrackedFilesToolStripMenuItem.Checked),
+                    onComputed);
+        }
+
+
         public void ShowDialogWhenChanges(IWin32Window owner)
         {
-            Initialize();
-            while (_gitGetUnstagedCommand.IsRunning)
-            {
-                Thread.Sleep(200);
-            }
-
-            var allChangedFiles = GitCommandHelpers.GetAllChangedFilesFromString(_gitGetUnstagedCommand.Output.ToString());
-            if (allChangedFiles.Count > 0)
-            {
-                ShowDialog(owner);
-            }
-            else
-            {
-                DisposeGitGetUnstagedCommand();
-            }
-        }
-
-        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
-        {
-            DisposeGitGetUnstagedCommand();
-
-            base.OnClosing(e);
-        }
-
-        private void DisposeGitGetUnstagedCommand()
-        {
-            if (_gitGetUnstagedCommand != null)
-            {
-                _gitGetUnstagedCommand.Exited -= GitCommandsExited;
-                _gitGetUnstagedCommand.Dispose();
-            }
+            ComputeUnstagedFiles((allChangedFiles) =>
+                {
+                    if (allChangedFiles.Count > 0)
+                    {
+                        LoadUnstagedOutput(allChangedFiles);
+                        Initialize(false);
+                        ShowDialog(owner);
+                    }
+                    else
+                        Close();
+                }
+            );
         }
 
         private void StageSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
@@ -407,31 +398,18 @@ namespace GitUI
             workingToolStripMenuItem.Enabled = enable;
         }
 
-        private void Initialize()
+        private bool initialized = false;
+
+        private void Initialize(bool loadUnstaged)
         {
+            initialized = true;
+
             EnableStageButtons(false);
 
             Cursor.Current = Cursors.WaitCursor;
 
-            if (_gitGetUnstagedCommand == null)
-            {
-                _gitGetUnstagedCommand = new GitCommandsInstance()
-                {
-                    SetupStartInfoCallback = startInfo =>
-                    {
-                        startInfo.StandardOutputEncoding = Settings.SystemEncoding;
-                        startInfo.StandardErrorEncoding = Settings.SystemEncoding;
-                    }
-                };
-                _gitGetUnstagedCommand.Exited += GitCommandsExited;
-            }
-
-            // Load unstaged files
-            var allChangedFilesCmd =
-                GitCommandHelpers.GetAllChangedFilesCmd(
-                    !showIgnoredFilesToolStripMenuItem.Checked,
-                    showUntrackedFilesToolStripMenuItem.Checked);
-            _gitGetUnstagedCommand.CmdStartProcess(Settings.GitCommand, allChangedFilesCmd);
+            if (loadUnstaged)
+                ComputeUnstagedFiles(LoadUnstagedOutput);
 
             UpdateMergeHead();
 
@@ -458,6 +436,11 @@ namespace GitUI
             Cursor.Current = Cursors.Default;
         }
 
+        private void Initialize()
+        {
+            Initialize(true);        
+        }
+
         private void UpdateMergeHead()
         {
             var mergeHead = Settings.Module.RevParse("MERGE_HEAD");
@@ -480,10 +463,8 @@ namespace GitUI
         ///   This method is passed in to the SetTextCallBack delegate
         ///   to set the Text property of textBox1.
         /// </summary>
-        private void LoadUnstagedOutput()
+        private void LoadUnstagedOutput(List<GitItemStatus> allChangedFiles)
         {
-            var allChangedFiles = GitCommandHelpers.GetAllChangedFilesFromString(_gitGetUnstagedCommand.Output.ToString());
-
             var unStagedFiles = new List<GitItemStatus>();
             var stagedFiles = new List<GitItemStatus>();
 
@@ -709,12 +690,11 @@ namespace GitUI
 
                 ScriptManager.RunEventScripts(ScriptEvent.BeforeCommit);
 
-                var form = new FormProcess(Settings.Module.CommitCmd(amend, signOffToolStripMenuItem.Checked, toolAuthor.Text));
-                form.ShowDialog(this);
+                var errorOccurred = !FormProcess.ShowDialog(this, Settings.Module.CommitCmd(amend, signOffToolStripMenuItem.Checked, toolAuthor.Text));
 
                 NeedRefresh = true;
 
-                if (form.ErrorOccurred())
+                if (errorOccurred)
                     return;
 
                 ScriptManager.RunEventScripts(ScriptEvent.AfterCommit);
@@ -1135,7 +1115,7 @@ namespace GitUI
 
         private void FormCommitShown(object sender, EventArgs e)
         {
-            if (_gitGetUnstagedCommand == null)
+            if (!initialized)
                 Initialize();
 
             AcceptButton = Commit;
@@ -1227,7 +1207,7 @@ namespace GitUI
                 MessageBoxButtons.YesNo) !=
                 DialogResult.Yes)
                 return;
-            new FormProcess("clean -f").ShowDialog(this);
+            FormProcess.ShowDialog(this, "clean -f");
             Initialize();
         }
 
@@ -1422,11 +1402,6 @@ namespace GitUI
         private void FormCommitLoad(object sender, EventArgs e)
         {
             RestorePosition("commit");
-        }
-
-        private void GitCommandsExited(object sender, EventArgs e)
-        {
-            _syncContext.Post(_ => LoadUnstagedOutput(), null);
         }
 
         private void ResetClick(object sender, EventArgs e)
@@ -1753,8 +1728,7 @@ namespace GitUI
 
             foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
             {
-                var process = new FormProcess(GitCommandHelpers.SubmoduleUpdateCmd(item.Name));
-                process.ShowDialog(this);
+                FormProcess.ShowDialog(this, GitCommandHelpers.SubmoduleUpdateCmd(item.Name));
             }
 
             Initialize();
@@ -1771,8 +1745,7 @@ namespace GitUI
             foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
             {
                 GitModule module = new GitModule(Settings.WorkingDir + item.Name + Settings.PathSeparator.ToString());
-                var process = new FormProcess(module, arguments);
-                process.ShowDialog(this);
+                FormProcess.ShowDialog(this, module, arguments);                
             }
 
             Initialize();
