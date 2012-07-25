@@ -332,6 +332,7 @@ namespace GitUI
             this._NO_TRANSLATE_Workingdir.ToolTipText = "Change working directory";
             this._NO_TRANSLATE_Workingdir.ButtonClick += new System.EventHandler(this.WorkingdirClick);
             this._NO_TRANSLATE_Workingdir.DropDownOpening += new System.EventHandler(this.WorkingdirDropDownOpening);
+            this._NO_TRANSLATE_Workingdir.MouseUp += new System.Windows.Forms.MouseEventHandler(this._NO_TRANSLATE_Workingdir_MouseUp);
             // 
             // branchSelect
             // 
@@ -342,6 +343,7 @@ namespace GitUI
             this.branchSelect.ToolTipText = "Change current branch";
             this.branchSelect.ButtonClick += new System.EventHandler(this.CurrentBranchClick);
             this.branchSelect.DropDownOpening += new System.EventHandler(this.CurrentBranchDropDownOpening);
+            this.branchSelect.MouseUp += new System.Windows.Forms.MouseEventHandler(this.branchSelect_MouseUp);
             // 
             // toolStripSeparator1
             // 
