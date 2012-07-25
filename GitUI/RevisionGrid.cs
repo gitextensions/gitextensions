@@ -15,6 +15,7 @@ using GitUI.Script;
 using GitUI.Tag;
 using Gravatar;
 using ResourceManager.Translation;
+using System.DirectoryServices;
 
 namespace GitUI
 {
@@ -536,10 +537,24 @@ namespace GitUI
 
         public List<GitRevision> GetSelectedRevisions()
         {
-            return Revisions
+            return GetSelectedRevisions(null);
+        }
+
+        public List<GitRevision> GetSelectedRevisions(SortDirection? direction)
+        {
+            var rows = Revisions
                 .SelectedRows
                 .Cast<DataGridViewRow>()
-                .Where(row => Revisions.RowCount > row.Index)
+                .Where(row => Revisions.RowCount > row.Index);
+
+            
+            if (direction.HasValue)
+            {
+                int d = direction.Value == SortDirection.Ascending ? 1 : -1;
+                rows = rows.OrderBy((row) => row.Index, (r1, r2) => d * (r1 - r2));
+            }
+
+            return rows
                 .Select(row => GetRevision(row.Index))
                 .ToList();
         }
@@ -1676,6 +1691,8 @@ namespace GitUI
             toolStripSeparator6.Visible = tagNameCopy.Items.Count > 0 || branchNameCopy.Items.Count > 0;
 
             RefreshOwnScripts();
+
+            goToParentToolStripMenuItem.Visible = revision.HasParent();
         }
 
         private void ToolStripItemClick(object sender, EventArgs e)
@@ -1822,11 +1839,31 @@ namespace GitUI
 
         private void CherryPickCommitToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Revisions.RowCount <= LastRow || LastRow < 0)
-                return;
+            var revisions = GetSelectedRevisions(SortDirection.Descending);
 
-            var frm = new FormCherryPickCommitSmall(GetRevision(LastRow));
-            frm.ShowDialog(this);
+            FormCherryPickCommitSmall prevForm = null;
+
+            try
+            {
+                foreach (var r in revisions)
+                {
+                    var frm = new FormCherryPickCommitSmall(r);
+                    if (prevForm != null)
+                    {
+                        frm.CopyOptions(prevForm);
+                        prevForm.Dispose();
+                    }
+                    prevForm = frm;
+                    if (frm.ShowDialog(this) != DialogResult.OK)
+                        break;
+                }
+            }
+            finally
+            {
+                if (prevForm != null)
+                    prevForm.Dispose();
+            }
+
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
         }
@@ -2292,6 +2329,13 @@ namespace GitUI
                 if (item.DropDown != null && item.DropDown.Items.Count == 1)
                     item.DropDown.Items[0].PerformClick();
             }
+        }
+
+        private void goToParentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var r = GetRevision(LastRow);
+            if (r.HasParent())
+                SetSelectedRevision(new GitRevision(r.ParentGuids[0]));
         }
     }
 }
