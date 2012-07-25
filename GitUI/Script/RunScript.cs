@@ -217,7 +217,7 @@ namespace GitUI.Script
                 }
             }
 
-            new FormProcess(command, argument).ShowDialog();
+            FormProcess.ShowDialog(null, command, argument);
         }
 
         private static GitRevision CalculateSelectedRevision(RevisionGrid RevisionGrid, List<GitHead> selectedRemoteBranches,

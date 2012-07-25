@@ -110,6 +110,7 @@ namespace GitUI
             this.showRelativeDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showGitNotesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bisectSkipRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.goToParentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
             this.CreateTag.SuspendLayout();
             this.NoCommits.SuspendLayout();
@@ -236,7 +237,8 @@ namespace GitUI
             this.toolStripSeparator3,
             this.filterToolStripMenuItem,
             this.toolStripSeparator7,
-            this.runScriptToolStripMenuItem});
+            this.runScriptToolStripMenuItem,
+            this.goToParentToolStripMenuItem});
             this.CreateTag.Name = "CreateTag";
             this.CreateTag.Size = new System.Drawing.Size(224, 612);
             this.CreateTag.Opening += new System.ComponentModel.CancelEventHandler(this.CreateTagOpening);
@@ -715,6 +717,13 @@ namespace GitUI
             this.bisectSkipRevisionToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.bisectSkipRevisionToolStripMenuItem.Text = "Skip revision";
             this.bisectSkipRevisionToolStripMenuItem.Click += new System.EventHandler(this.bisectSkipRevisionToolStripMenuItem_Click);
+            //
+            // goToParentToolStripMenuItem
+            // 
+            this.goToParentToolStripMenuItem.Name = "goToParentToolStripMenuItem";
+            this.goToParentToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.goToParentToolStripMenuItem.Text = "Go to parent";
+            this.goToParentToolStripMenuItem.Click += new System.EventHandler(this.goToParentToolStripMenuItem_Click);
             // 
             // RevisionGrid
             // 
@@ -809,5 +818,6 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem renameBranchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem hashToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bisectSkipRevisionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem goToParentToolStripMenuItem;
     }
 }

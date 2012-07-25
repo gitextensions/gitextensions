@@ -88,10 +88,17 @@ namespace GitUI
             }
             if (CanExecute)
             {
-                new FormProcess(GitCommandHelpers.CherryPickCmd(Revision.Guid, AutoCommit.Checked, string.Join(" ", argumentsList.ToArray()))).ShowDialog(this);
+                FormProcess.ShowDialog(this, GitCommandHelpers.CherryPickCmd(Revision.Guid, AutoCommit.Checked, string.Join(" ", argumentsList.ToArray())));
                 MergeConflictHandler.HandleMergeConflicts(this, AutoCommit.Checked);
+                DialogResult = DialogResult.OK;
                 Close();
             }            
+        }
+
+        public void CopyOptions(FormCherryPickCommitSmall source)
+        {
+            AutoCommit.Checked = source.AutoCommit.Checked;
+            checkAddReference.Checked = source.checkAddReference.Checked;
         }
     }
 }
