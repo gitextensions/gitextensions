@@ -27,6 +27,7 @@ namespace GitUI.RepoHosting
         private readonly string _chooseRemote;
         private List<IHostedRemote> _hostedRemotes;
         private string _currentBranch;
+        private AsyncLoader remoteLoader = new AsyncLoader();
 
         public CreatePullRequestForm(IRepositoryHostPlugin repoHost, string chooseRemote, string chooseBranch)
         {
@@ -48,18 +49,25 @@ namespace GitUI.RepoHosting
             _createBtn.Enabled = false;
             _yourBranchesCB.Text = _strLoading.Text;
             _hostedRemotes = _repoHost.GetHostedRemotesForCurrentWorkingDirRepo();
-            IHostedRemote[] foreignHostedRemotes = _hostedRemotes.Where(r => !r.IsOwnedByMe).ToArray();
-            if (foreignHostedRemotes.Length == 0)
-            {
-                MessageBox.Show(this, _strFailedToCreatePullRequest.Text + _strPleaseCloneGitHubRep.Text, "", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Close();
-                return;
-            }
+            this.Mask();
+            remoteLoader.Load(
+                () => _hostedRemotes.Where(r => !r.IsOwnedByMe).ToArray(),
+                (IHostedRemote[] foreignHostedRemotes) =>
+                {
+                    if (foreignHostedRemotes.Length == 0)
+                    {
+                        MessageBox.Show(this, _strFailedToCreatePullRequest.Text + _strPleaseCloneGitHubRep.Text, "",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Close();
+                        return;
+                    }
 
-            _currentBranch = Settings.Module.ValidWorkingDir() ? Settings.Module.GetSelectedBranch() : "";
-            LoadRemotes(foreignHostedRemotes);
-            LoadMyBranches();
+                    this.UnMask();
+
+                    _currentBranch = Settings.Module.ValidWorkingDir() ? Settings.Module.GetSelectedBranch() : "";
+                    LoadRemotes(foreignHostedRemotes);
+                    LoadMyBranches();
+                });
         }
 
         private void LoadRemotes(IHostedRemote[] foreignHostedRemotes)
