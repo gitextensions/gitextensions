@@ -13,7 +13,7 @@ namespace GitUI.RepoHosting
         #region Translation
         private readonly TranslationString _strLoading = new TranslationString("Loading...");
         private readonly TranslationString _strCouldNotLocateARemoteThatBelongsToYourUser = new TranslationString("Could not locate a remote that belongs to your user!");
-        private readonly TranslationString _strYouMustSpecifyATitleAndABody = new TranslationString("You must specify a title and a body.");
+        private readonly TranslationString _strYouMustSpecifyATitle = new TranslationString("You must specify a title.");
         private readonly TranslationString _strPullRequest = new TranslationString("Pull request");
         private readonly TranslationString _strFailedToCreatePullRequest = new TranslationString("Failed to create pull request.\r\n");
         private readonly TranslationString _strPleaseCloneGitHubRep = new TranslationString("Please clone GitHub repository before pull request.");
@@ -150,9 +150,9 @@ namespace GitUI.RepoHosting
 
             var title = _titleTB.Text.Trim();
             var body = _bodyTB.Text.Trim();
-            if (title.Length == 0 || body.Length == 0)
+            if (title.Length == 0)
             {
-                MessageBox.Show(this, _strYouMustSpecifyATitleAndABody.Text , _strError.Text);
+                MessageBox.Show(this, _strYouMustSpecifyATitle.Text , _strError.Text);
                 return;
             }
 
