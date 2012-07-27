@@ -1662,14 +1662,20 @@ namespace GitUI
             }
 
             _NO_TRANSLATE_Workingdir.DropDownItems.Add(new ToolStripSeparator());
-            ToolStripMenuItem toolStripItem = new ToolStripMenuItem(_configureWorkingDirMenu.Text);
-            _NO_TRANSLATE_Workingdir.DropDownItems.Add(toolStripItem);
 
+            ToolStripMenuItem toolStripItem = new ToolStripMenuItem(openToolStripMenuItem.Text);
+            toolStripItem.ShortcutKeys = openToolStripMenuItem.ShortcutKeys;
+            _NO_TRANSLATE_Workingdir.DropDownItems.Add(toolStripItem);
+            toolStripItem.Click += (hs, he) => OpenToolStripMenuItemClick(hs, he);
+
+            toolStripItem = new ToolStripMenuItem(_configureWorkingDirMenu.Text);
+            _NO_TRANSLATE_Workingdir.DropDownItems.Add(toolStripItem);
             toolStripItem.Click += (hs, he) =>
             {
                 using (var frm = new FormRecentReposSettings()) frm.ShowDialog(this);
                 RefreshWorkingDirCombo();
             };
+
         }
 
         private void SetWorkingDir(string path)
@@ -1899,6 +1905,14 @@ namespace GitUI
                 var toolStripItem = branchSelect.DropDownItems.Add(branch.Name);
                 toolStripItem.Click += BranchSelectToolStripItem_Click;
             }
+
+            branchSelect.DropDownItems.Add(new ToolStripSeparator());
+
+            ToolStripMenuItem item = new ToolStripMenuItem(checkoutBranchToolStripMenuItem.Text);
+            item.ShortcutKeys = checkoutBranchToolStripMenuItem.ShortcutKeys;
+            item.ShortcutKeyDisplayString = checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString;
+            branchSelect.DropDownItems.Add(item);
+            item.Click += (hs, he) => CheckoutBranchToolStripMenuItemClick(hs, he);
         }
 
         void BranchSelectToolStripItem_Click(object sender, EventArgs e)
