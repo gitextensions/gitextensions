@@ -169,35 +169,37 @@ namespace GitUI.Editor
 
                 if (document.GetCharAt(lineSegment1.Offset) != ' ' ||
                     document.GetCharAt(lineSegment2.Offset) != '-' ||
-                    document.GetCharAt(lineSegment3.Offset) != '+' ||
-                    (lineSegment4.Length > 0 && document.GetCharAt(lineSegment4.Offset) != ' ')) //fix for issue 173
+                    document.GetCharAt(lineSegment3.Offset) != '+' )
                     continue;
 
                 var beginOffset = 0;
-                var endOffset = lineSegment3.Length;
+                var endOffset2 = lineSegment2.Length;
+                var endOffset3 = lineSegment3.Length;
+                var endOffsetMin = Math.Min(endOffset2, endOffset3);
                 var reverseOffset = 0;
 
-                for (; beginOffset < endOffset; beginOffset++)
+                while (beginOffset < endOffsetMin)
                 {
                     if (!document.GetCharAt(lineSegment3.Offset + beginOffset).Equals('+') &&
                         !document.GetCharAt(lineSegment2.Offset + beginOffset).Equals('-') &&
                         !document.GetCharAt(lineSegment3.Offset + beginOffset).Equals(
                             document.GetCharAt(lineSegment2.Offset + beginOffset)))
                         break;
+
+                    beginOffset++;
                 }
 
-                for (; endOffset > beginOffset; endOffset--)
+                while (endOffset3 > beginOffset && endOffset2 > beginOffset)
                 {
-                    reverseOffset = lineSegment3.Length - endOffset;
+                    reverseOffset = lineSegment3.Length - endOffset3;
 
-                    if (!document.GetCharAt(lineSegment3.Offset + lineSegment3.Length - 1 - reverseOffset)
-                             .Equals('+') &&
-                        !document.GetCharAt(lineSegment2.Offset + lineSegment2.Length - 1 - reverseOffset)
-                             .Equals('-') &&
-                        !document.GetCharAt(lineSegment3.Offset + lineSegment3.Length - 1 - reverseOffset).
+                    if (!document.GetCharAt(lineSegment3.Offset + lineSegment3.Length - 1 - reverseOffset).
                              Equals(document.GetCharAt(lineSegment2.Offset + lineSegment2.Length - 1 -
                                                        reverseOffset)))
                         break;
+
+                    endOffset2--;
+                    endOffset3--;
                 }
 
                 Color color;
