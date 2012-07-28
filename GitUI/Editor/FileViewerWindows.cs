@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using GitCommands;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
+using System.Collections.Generic;
 
 namespace GitUI.Editor
 {
@@ -155,71 +156,108 @@ namespace GitUI.Editor
             return 0;
         }
 
-        private void AddExtraPatchHighlighting()
+        private List<LineSegment> GetLinesStartingWith(IDocument document, ref int beginIndex, char startingChar, ref bool found)
         {
-            var document = TextEditor.Document;
+            List<LineSegment> result = new List<LineSegment>();
+
+            while (beginIndex < document.TotalNumberOfLines)
+            {
+                var lineSegment = document.GetLineSegment(beginIndex);
+
+                if (lineSegment.Length > 0 && document.GetCharAt(lineSegment.Offset) == startingChar)
+                {
+                    found = true;
+                    result.Add(lineSegment);
+                    beginIndex++;
+                }
+                else
+                {
+                    if (found)
+                        break;
+                    else
+                        beginIndex++;
+                }
+            }
+
+            return result;
+        }
+
+        private void MarkDifference(IDocument document, List<LineSegment> linesRemoved, List<LineSegment> linesAdded)
+        {            
+            int count = Math.Min(linesRemoved.Count, linesAdded.Count);
+
+            for (int i = 0; i < count; i++)
+                MarkDifference(document, linesRemoved[i], linesAdded[i]);        
+        }
+
+        private void MarkDifference(IDocument document, LineSegment lineRemoved, LineSegment lineAdded)
+        {
+            var beginOffset = 0;
+            var lineRemovedEndOffset = lineRemoved.Length;
+            var lineAddedEndOffset = lineAdded.Length;
+            var endOffsetMin = Math.Min(lineRemovedEndOffset, lineAddedEndOffset);
+            var reverseOffset = 0;
+
+            while (beginOffset < endOffsetMin)
+            {
+                if (!document.GetCharAt(lineAdded.Offset + beginOffset).Equals('+') &&
+                    !document.GetCharAt(lineRemoved.Offset + beginOffset).Equals('-') &&
+                    !document.GetCharAt(lineAdded.Offset + beginOffset).Equals(
+                        document.GetCharAt(lineRemoved.Offset + beginOffset)))
+                    break;
+
+                beginOffset++;
+            }
+
+            while (lineAddedEndOffset > beginOffset && lineRemovedEndOffset > beginOffset)
+            {
+                reverseOffset = lineAdded.Length - lineAddedEndOffset;
+
+                if (!document.GetCharAt(lineAdded.Offset + lineAdded.Length - 1 - reverseOffset).
+                         Equals(document.GetCharAt(lineRemoved.Offset + lineRemoved.Length - 1 -
+                                                   reverseOffset)))
+                    break;
+
+                lineRemovedEndOffset--;
+                lineAddedEndOffset--;
+            }
+
+            Color color;
             var markerStrategy = document.MarkerStrategy;
 
-            for (var line = 0; line + 3 < document.TotalNumberOfLines; line++)
+            if (lineAdded.Length - beginOffset - reverseOffset > 0)
             {
-                var lineSegment1 = document.GetLineSegment(line);
-                var lineSegment2 = document.GetLineSegment(line + 1);
-                var lineSegment3 = document.GetLineSegment(line + 2);
-                var lineSegment4 = document.GetLineSegment(line + 3);
+                color = Settings.DiffAddedExtraColor;
+                markerStrategy.AddMarker(new TextMarker(lineAdded.Offset + beginOffset,
+                                                        lineAdded.Length - beginOffset - reverseOffset,
+                                                        TextMarkerType.SolidBlock, color,
+                                                        ColorHelper.GetForeColorForBackColor(color)));
+            }
 
-                if (document.GetCharAt(lineSegment1.Offset) != ' ' ||
-                    document.GetCharAt(lineSegment2.Offset) != '-' ||
-                    document.GetCharAt(lineSegment3.Offset) != '+' )
-                    continue;
+            if (lineRemoved.Length - beginOffset - reverseOffset > 0)
+            {
+                color = Settings.DiffRemovedExtraColor;
+                markerStrategy.AddMarker(new TextMarker(lineRemoved.Offset + beginOffset,
+                                                        lineRemoved.Length - beginOffset - reverseOffset,
+                                                        TextMarkerType.SolidBlock, color,
+                                                        ColorHelper.GetForeColorForBackColor(color)));
+            }
 
-                var beginOffset = 0;
-                var endOffset2 = lineSegment2.Length;
-                var endOffset3 = lineSegment3.Length;
-                var endOffsetMin = Math.Min(endOffset2, endOffset3);
-                var reverseOffset = 0;
+        }
 
-                while (beginOffset < endOffsetMin)
-                {
-                    if (!document.GetCharAt(lineSegment3.Offset + beginOffset).Equals('+') &&
-                        !document.GetCharAt(lineSegment2.Offset + beginOffset).Equals('-') &&
-                        !document.GetCharAt(lineSegment3.Offset + beginOffset).Equals(
-                            document.GetCharAt(lineSegment2.Offset + beginOffset)))
-                        break;
 
-                    beginOffset++;
-                }
+        private void AddExtraPatchHighlighting()
+        {
+            var document = TextEditor.Document;      
 
-                while (endOffset3 > beginOffset && endOffset2 > beginOffset)
-                {
-                    reverseOffset = lineSegment3.Length - endOffset3;
+            var line = 0;
+            while (line < document.TotalNumberOfLines)
+            {
+                bool found = false;
+                var linesRemoved = GetLinesStartingWith(document, ref line, '-', ref found);
+                var linesAdded = GetLinesStartingWith(document, ref line, '+', ref found);
 
-                    if (!document.GetCharAt(lineSegment3.Offset + lineSegment3.Length - 1 - reverseOffset).
-                             Equals(document.GetCharAt(lineSegment2.Offset + lineSegment2.Length - 1 -
-                                                       reverseOffset)))
-                        break;
-
-                    endOffset2--;
-                    endOffset3--;
-                }
-
-                Color color;
-                if (lineSegment3.Length - beginOffset - reverseOffset > 0)
-                {
-                    color = Settings.DiffAddedExtraColor;
-                    markerStrategy.AddMarker(new TextMarker(lineSegment3.Offset + beginOffset,
-                                                            lineSegment3.Length - beginOffset - reverseOffset,
-                                                            TextMarkerType.SolidBlock, color,
-                                                            ColorHelper.GetForeColorForBackColor(color)));
-                }
-
-                if (lineSegment2.Length - beginOffset - reverseOffset > 0)
-                {
-                    color = Settings.DiffRemovedExtraColor;
-                    markerStrategy.AddMarker(new TextMarker(lineSegment2.Offset + beginOffset,
-                                                            lineSegment2.Length - beginOffset - reverseOffset,
-                                                            TextMarkerType.SolidBlock, color,
-                                                            ColorHelper.GetForeColorForBackColor(color)));
-                }
+                MarkDifference(document, linesRemoved, linesAdded);                
             }
         }
 
