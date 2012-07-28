@@ -158,13 +158,13 @@ This program is destributed in the hope that it will be useful, but WITHOUT ANY 
     </TranslationCategory>
     <TranslationCategory Name="CreatePullRequestForm">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Create Pull Request</Source>
-          <Value />
+          <Value>Создать Pull Request</Value>
         </TranslationItem>
-        <TranslationItem Name="_createBtn" Property="Text" type="unfinished">
+        <TranslationItem Name="_createBtn" Property="Text">
           <Source>Create</Source>
-          <Value />
+          <Value>Создать</Value>
         </TranslationItem>
         <TranslationItem Name="_strCouldNotLocateARemoteThatBelongsToYourUser" Property="Text" type="unfinished">
           <Source>Could not locate a remote that belongs to your user!</Source>
@@ -395,9 +395,9 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Copy</Source>
           <Value>Копировать</Value>
         </TranslationItem>
-        <TranslationItem Name="cutMenuItemText" Property="Text" type="unfinished">
+        <TranslationItem Name="cutMenuItemText" Property="Text">
           <Source>Cut</Source>
-          <Value />
+          <Value>Вырезать</Value>
         </TranslationItem>
         <TranslationItem Name="deleteMenuItemText" Property="Text">
           <Source>Delete</Source>
@@ -415,9 +415,9 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Mark ill formed lines</Source>
           <Value>Отметить плохо форматированные строки</Value>
         </TranslationItem>
-        <TranslationItem Name="pasteMenuItemText" Property="Text" type="unfinished">
+        <TranslationItem Name="pasteMenuItemText" Property="Text">
           <Source>Paste</Source>
-          <Value />
+          <Value>Вставить</Value>
         </TranslationItem>
         <TranslationItem Name="redoMenuItemText" Property="Text" type="unfinished">
           <Source>Redo</Source>
@@ -5094,21 +5094,21 @@ Value:  {2} = {3}</Source>
           <Source>Could not register the shell extension because '{0}' could not be found.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_configureMergeTool" Property="Text" type="unfinished">
+        <TranslationItem Name="_configureMergeTool" Property="Text">
           <Source>You need to configure merge tool in order to solve mergeconflicts (kdiff3 for example).</Source>
-          <Value />
+          <Value>Необходимо настроить инструмент слияния для решения конфликтов (например, kdiff3).</Value>
         </TranslationItem>
-        <TranslationItem Name="_customMergeToolXConfigured" Property="Text" type="unfinished">
+        <TranslationItem Name="_customMergeToolXConfigured" Property="Text">
           <Source>There is a custom mergetool configured: {0}</Source>
-          <Value />
+          <Value>Настроен инструмент слияния: {0}</Value>
         </TranslationItem>
-        <TranslationItem Name="_diffToolXConfigured" Property="Text" type="unfinished">
+        <TranslationItem Name="_diffToolXConfigured" Property="Text">
           <Source>There is a difftool configured: {0}</Source>
-          <Value />
+          <Value>Настроен инструмент сравнения: {0}</Value>
         </TranslationItem>
-        <TranslationItem Name="_emailSet" Property="Text" type="unfinished">
+        <TranslationItem Name="_emailSet" Property="Text">
           <Source>A username and an email address are configured.</Source>
-          <Value />
+          <Value>Имя пользователя и электронная почта настроены.</Value>
         </TranslationItem>
         <TranslationItem Name="_gitCanBeRun" Property="Text" type="unfinished">
           <Source>Git can be run using: {0}</Source>
@@ -5118,9 +5118,9 @@ Value:  {2} = {3}</Source>
           <Source>Locate git</Source>
           <Value>Найти git</Value>
         </TranslationItem>
-        <TranslationItem Name="_gitNotFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_gitNotFound" Property="Text">
           <Source>Git not found. To solve this problem you can set the correct path in settings.</Source>
-          <Value />
+          <Value>Git не найден. Укажите путь к git в настройках.</Value>
         </TranslationItem>
         <TranslationItem Name="_gitVersionFound" Property="Text">
           <Source>Git {0} is found on your computer.</Source>
@@ -5222,9 +5222,9 @@ Select no if you want to configure a different mergetool yourself.</Source>
           <Source>PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_puttyConfigured" Property="Text" type="unfinished">
+        <TranslationItem Name="_puttyConfigured" Property="Text">
           <Source>SSH client PuTTY is configured properly.</Source>
-          <Value />
+          <Value>В качестве SSH-клиента настроен PuTTY.</Value>
         </TranslationItem>
         <TranslationItem Name="_puttyFoundAuto" Property="Text" type="unfinished">
           <Source>All paths needed for PuTTY could be automatically found and are set.</Source>
@@ -5571,9 +5571,9 @@ any global setting.
           <Value>Перед тем как менять какие-либо глобальные настройки,
 необходимо установить корректный путь к git.cmd.</Value>
         </TranslationItem>
-        <TranslationItem Name="label11" Property="Text" type="unfinished">
+        <TranslationItem Name="label11" Property="Text">
           <Source>The checklist below validates the basic settings needed for GitExtensions to work properly.</Source>
-          <Value />
+          <Value>Контрольный список проверяет основные настройки, необходимые для работы GitExtensions.</Value>
         </TranslationItem>
         <TranslationItem Name="label12" Property="Text">
           <Source>Limit number of commits that will be loaded at startup.</Source>
@@ -6828,6 +6828,9 @@ If this is a central repository (bare repository without a working dir):
         <TranslationItem Name="runScriptToolStripMenuItem" Property="Text">
           <Source>Run script</Source>
           <Value>Запустить скрипт</Value>
+        </TranslationItem>
+        <TranslationItem Name="goToParentToolStripMenuItem" Property="Text">
+          <Value>Перейти к родителю</Value>
         </TranslationItem>
         <TranslationItem Name="showAllBranchesToolStripMenuItem" Property="Text">
           <Source>Show all branches</Source>
