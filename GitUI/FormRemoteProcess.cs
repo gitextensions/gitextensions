@@ -9,7 +9,7 @@ namespace GitUI
     /// <summary>
     /// Form that handles Plink exceptions
     /// </summary>
-    public sealed partial class FormRemoteProcess : FormProcess
+    public partial class FormRemoteProcess : FormProcess
     {
         #region Translation
         private readonly TranslationString _serverHotkeyNotCachedText =
