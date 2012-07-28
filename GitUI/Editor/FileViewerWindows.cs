@@ -156,10 +156,9 @@ namespace GitUI.Editor
             return 0;
         }
 
-        private List<LineSegment> GetLinesStartingWith(IDocument document, ref int beginIndex, char startingChar)
+        private List<LineSegment> GetLinesStartingWith(IDocument document, ref int beginIndex, char startingChar, ref bool found)
         {
             List<LineSegment> result = new List<LineSegment>();
-            bool found = false;
 
             while (beginIndex < document.TotalNumberOfLines)
             {
@@ -254,9 +253,9 @@ namespace GitUI.Editor
             var line = 0;
             while (line < document.TotalNumberOfLines)
             {
-
-                var linesRemoved = GetLinesStartingWith(document, ref line, '-');
-                var linesAdded = GetLinesStartingWith(document, ref line, '+');
+                bool found = false;
+                var linesRemoved = GetLinesStartingWith(document, ref line, '-', ref found);
+                var linesAdded = GetLinesStartingWith(document, ref line, '+', ref found);
 
                 MarkDifference(document, linesRemoved, linesAdded);                
             }
