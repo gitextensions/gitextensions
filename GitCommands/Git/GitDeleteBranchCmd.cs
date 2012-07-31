@@ -18,12 +18,12 @@ namespace GitCommands
             this.force = force;
         }
 
-        protected override string GitComandName()
+        public override string GitComandName()
         {
             return "branch";
         }
 
-        protected override IEnumerable<string> CollectArguments()
+        public override IEnumerable<string> CollectArguments()
         {
             yield return force ? "-D" : "-d";
 

@@ -16,13 +16,13 @@ namespace GitCommands
         /// <summary>
         /// here commands should add theirs arguments
         /// </summary>
-        protected abstract IEnumerable<string> CollectArguments();
+        public abstract IEnumerable<string> CollectArguments();
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns>name of git command eg. push, pull</returns>
-        protected abstract string GitComandName();
+        public abstract string GitComandName();
 
 
         /// <summary>
