@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
@@ -543,7 +544,7 @@ namespace GitUI.Editor
         private void ResetForDiff()
         {
             Reset(true, true);
-            _internalFileViewer.SetHighlighting("Patch");
+            _internalFileViewer.SetHighlighting("");
             patchHighlighting = true;
         }
 
@@ -617,10 +618,22 @@ namespace GitUI.Editor
 
             if (_currentViewIsPatch)
             {
-                if (code.Contains("\n") && (code[0].Equals(' ') || code[0].Equals('+') || code[0].Equals('-')))
-                    code = code.Substring(1);
+                //add artificail space if selected text is not starting from line begining, it will be removed later
+                int pos = _internalFileViewer.GetSelectionPosition();
+                string fileText = _internalFileViewer.GetText();
+                int hpos = fileText.IndexOf("\n@@");                
+                //if header is selected then don't remove diff extra chars
+                if (hpos <= pos)
+                {
+                    if (pos > 0)
+                        if (fileText[pos - 1] != '\n')
+                            code = " " + code;
 
-                code = code.Replace("\n ", "\n").Replace("\n+", "\n").Replace("\n-", "\n");
+                    string[] lines = code.Split('\n');
+                    char[] specials = new char[] { ' ', '-', '+' };
+                    lines.Transform(s => s.Length > 0 && specials.Any(c => c == s[0]) ? s.Substring(1) : s);
+                    code = string.Join("\n", lines);
+                }
             }
 
             Clipboard.SetText(code);
