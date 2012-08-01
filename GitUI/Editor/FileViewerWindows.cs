@@ -182,17 +182,16 @@ namespace GitUI.Editor
             return result;
         }
 
-        private void MarkDifference(IDocument document, List<LineSegment> linesRemoved, List<LineSegment> linesAdded)
+        private void MarkDifference(IDocument document, List<LineSegment> linesRemoved, List<LineSegment> linesAdded, int beginOffset)
         {            
             int count = Math.Min(linesRemoved.Count, linesAdded.Count);
 
             for (int i = 0; i < count; i++)
-                MarkDifference(document, linesRemoved[i], linesAdded[i]);        
+                MarkDifference(document, linesRemoved[i], linesAdded[i], beginOffset);        
         }
 
-        private void MarkDifference(IDocument document, LineSegment lineRemoved, LineSegment lineAdded)
+        private void MarkDifference(IDocument document, LineSegment lineRemoved, LineSegment lineAdded, int beginOffset)
         {
-            var beginOffset = 0;
             var lineRemovedEndOffset = lineRemoved.Length;
             var lineAddedEndOffset = lineAdded.Length;
             var endOffsetMin = Math.Min(lineRemovedEndOffset, lineAddedEndOffset);
@@ -200,9 +199,7 @@ namespace GitUI.Editor
 
             while (beginOffset < endOffsetMin)
             {
-                if (!document.GetCharAt(lineAdded.Offset + beginOffset).Equals('+') &&
-                    !document.GetCharAt(lineRemoved.Offset + beginOffset).Equals('-') &&
-                    !document.GetCharAt(lineAdded.Offset + beginOffset).Equals(
+                if (!document.GetCharAt(lineAdded.Offset + beginOffset).Equals(
                         document.GetCharAt(lineRemoved.Offset + beginOffset)))
                     break;
 
@@ -251,13 +248,34 @@ namespace GitUI.Editor
             var document = TextEditor.Document;      
 
             var line = 0;
+
+            bool found = false;
+            int numberOfParents;
+            var linesRemoved = GetLinesStartingWith(document, ref line, '-', ref found);
+            var linesAdded = GetLinesStartingWith(document, ref line, '+', ref found);
+            if (linesAdded.Count == 1 && linesRemoved.Count == 1)
+            {
+                var lineA = linesRemoved[0];
+                var lineB = linesAdded[0];
+                if (lineA.Length > 4 && lineB.Length > 4 &&
+                    document.GetCharAt(lineA.Offset + 4) == 'a' &&
+                    document.GetCharAt(lineB.Offset + 4) == 'b')
+                    numberOfParents = 5;
+                else
+                    numberOfParents = 4;
+
+                MarkDifference(document, linesRemoved, linesAdded, numberOfParents);
+            }
+            
+            //TODO add support of combined diff format
+            numberOfParents = 1;
             while (line < document.TotalNumberOfLines)
             {
-                bool found = false;
-                var linesRemoved = GetLinesStartingWith(document, ref line, '-', ref found);
-                var linesAdded = GetLinesStartingWith(document, ref line, '+', ref found);
+                found = false;
+                linesRemoved = GetLinesStartingWith(document, ref line, '-', ref found);
+                linesAdded = GetLinesStartingWith(document, ref line, '+', ref found);
 
-                MarkDifference(document, linesRemoved, linesAdded);                
+                MarkDifference(document, linesRemoved, linesAdded, numberOfParents);                
             }
         }
 
