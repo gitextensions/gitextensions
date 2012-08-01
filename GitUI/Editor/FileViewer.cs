@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
@@ -543,7 +544,7 @@ namespace GitUI.Editor
         private void ResetForDiff()
         {
             Reset(true, true);
-            _internalFileViewer.SetHighlighting("Patch");
+            _internalFileViewer.SetHighlighting("");
             patchHighlighting = true;
         }
 
