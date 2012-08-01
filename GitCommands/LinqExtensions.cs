@@ -121,5 +121,70 @@ namespace System.Linq
                 return comparer(x, y);
             }
         }
+
+
+        //
+        // Summary:
+        //     Transforms each element of an array into a new form by incorporating the
+        //     element's index.
+        //
+        // Parameters:
+        //   source:
+        //     A sequence of values to invoke a transform function on.
+        //
+        //   transformer:
+        //     A transform function to apply to each source element; the second parameter
+        //     of the function represents the index of the source element.
+        //
+        // Type parameters:
+        //   TSource:
+        //     The type of the elements of source.
+        //
+        // Exceptions:
+        //   System.ArgumentNullException:
+        //     source or selector is null.
+        public static void Select<TSource>(this TSource[] source, Func<TSource, int, TSource> transformer)
+        {
+            if (source == null)
+                throw new ArgumentNullException("source");
+
+            if (transformer == null)
+                throw new ArgumentNullException("transformer");
+
+            for (int i = 0; i < source.Length; i++)
+                source[i] = transformer(source[i], i);
+        }
+
+        //
+        // Summary:
+        //     Transforms each element of an array into a new form.
+        //
+        // Parameters:
+        //   source:
+        //     A sequence of values to invoke a transform function on.
+        //
+        //   transformer:
+        //     A transform function to apply to each element.
+        //
+        // Type parameters:
+        //   TSource:
+        //     The type of the elements of source.
+        //
+        // Exceptions:
+        //   System.ArgumentNullException:
+        //     source or selector is null.
+        public static void Transform<TSource>(this TSource[] source, Func<TSource, TSource> transformer)
+        {
+            if (source == null)
+                throw new ArgumentNullException("source");
+
+            if (transformer == null)
+                throw new ArgumentNullException("transformer");
+
+            for (int i = 0; i < source.Length; i++)
+                source[i] = transformer(source[i]);
+        }
+
+
     }
 }
