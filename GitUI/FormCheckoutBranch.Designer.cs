@@ -39,6 +39,7 @@ namespace GitUI
             this.rbDontChange = new System.Windows.Forms.RadioButton();
             this.rbReset = new System.Windows.Forms.RadioButton();
             this.rbMerge = new System.Windows.Forms.RadioButton();
+            this.lnkSettings = new System.Windows.Forms.LinkLabel();
             this.localChangesGB.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -67,7 +68,7 @@ namespace GitUI
             // 
             this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Ok.Location = new System.Drawing.Point(330, 95);
+            this.Ok.Location = new System.Drawing.Point(330, 72);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(87, 25);
             this.Ok.TabIndex = 2;
@@ -105,12 +106,13 @@ namespace GitUI
             this.localChangesGB.Controls.Add(this.rbDontChange);
             this.localChangesGB.Controls.Add(this.rbReset);
             this.localChangesGB.Controls.Add(this.rbMerge);
-            this.localChangesGB.Location = new System.Drawing.Point(12, 77);
+            this.localChangesGB.Location = new System.Drawing.Point(12, 54);
             this.localChangesGB.Name = "localChangesGB";
             this.localChangesGB.Size = new System.Drawing.Size(300, 43);
             this.localChangesGB.TabIndex = 17;
             this.localChangesGB.TabStop = false;
             this.localChangesGB.Text = "Local changes";
+            this.localChangesGB.Visible = false;
             // 
             // rbDontChange
             // 
@@ -135,27 +137,38 @@ namespace GitUI
             // rbMerge
             // 
             this.rbMerge.AutoSize = true;
-            this.rbMerge.Checked = true;
             this.rbMerge.Location = new System.Drawing.Point(13, 17);
             this.rbMerge.Name = "rbMerge";
             this.rbMerge.Size = new System.Drawing.Size(59, 19);
             this.rbMerge.TabIndex = 0;
-            this.rbMerge.TabStop = true;
             this.rbMerge.Text = "Merge";
             this.rbMerge.UseVisualStyleBackColor = true;
+            // 
+            // lnkSettings
+            // 
+            this.lnkSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lnkSettings.AutoSize = true;
+            this.lnkSettings.Location = new System.Drawing.Point(13, 78);
+            this.lnkSettings.Name = "lnkSettings";
+            this.lnkSettings.Size = new System.Drawing.Size(81, 15);
+            this.lnkSettings.TabIndex = 19;
+            this.lnkSettings.TabStop = true;
+            this.lnkSettings.Text = "Show Settings";
+            this.lnkSettings.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkSettings_LinkClicked);
             // 
             // FormCheckoutBranch
             // 
             this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(429, 132);
-            this.Controls.Add(this.localChangesGB);
+            this.ClientSize = new System.Drawing.Size(429, 109);
+            this.Controls.Add(this.lnkSettings);
             this.Controls.Add(this.Remotebranch);
             this.Controls.Add(this.LocalBranch);
             this.Controls.Add(this.Ok);
             this.Controls.Add(this.Branches);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.localChangesGB);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -180,5 +193,6 @@ namespace GitUI
         private System.Windows.Forms.RadioButton rbDontChange;
         private System.Windows.Forms.RadioButton rbReset;
         private System.Windows.Forms.RadioButton rbMerge;
+        private System.Windows.Forms.LinkLabel lnkSettings;
     }
 }

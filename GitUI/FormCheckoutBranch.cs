@@ -126,5 +126,12 @@ namespace GitUI
         {
             BranchTypeChanged();
         }
+
+        private void lnkSettings_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
+        {
+            localChangesGB.Show();
+            lnkSettings.Hide();
+            Height += (localChangesGB.Height - lnkSettings.Height) / 2;
+        }
     }
 }
