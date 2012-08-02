@@ -845,17 +845,15 @@ namespace GitUI
                     else
                     {
                         if (revision.Guid == GitRevision.UncommittedWorkingDirGuid) //working dir changes
-                            DiffFiles.GitItemStatuses = Settings.Module.GetAllChangedFiles();
+                            DiffFiles.GitItemStatuses = Settings.Module.GetUnstagedFiles();
+                        else if (revision.Guid == GitRevision.IndexGuid) //index
+                            DiffFiles.GitItemStatuses = Settings.Module.GetStagedFiles();
                         else
-                            if (revision.Guid == GitRevision.IndexGuid) //index
-                                DiffFiles.GitItemStatuses = Settings.Module.GetStagedFiles();
-                            else
-                                DiffFiles.GitItemStatuses = Settings.Module.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);                        
+                            DiffFiles.GitItemStatuses = Settings.Module.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);                    
                     }
                     break;
             }
         }
-
 
         private void FillCommitInfo()
         {
