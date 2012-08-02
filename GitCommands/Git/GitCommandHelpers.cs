@@ -801,78 +801,82 @@ namespace GitCommands
                 char x = status[0];
                 char y = status.Length > 1 ? status[1] : ' ';
 
-                GitItemStatus gitItemStatus = null;
-
-                if (x != '?' && x != '!')
+                if (x != '?' && x != '!' && x != ' ')
                 {
-                    n = GitItemStatusFromStatusCharacter(fromDiff, files, n, status, fileName, x, out gitItemStatus);
-                    if (gitItemStatus != null)
+                    GitItemStatus gitItemStatusX = null;
+                    if (x == 'R' || x == 'C') // Find renamed files...
                     {
-                        gitItemStatus.IsStaged = true;
-                        if (Submodules.Contains(gitItemStatus.Name))
-                            gitItemStatus.IsSubmodule = true;
-                        diffFiles.Add(gitItemStatus);
+                        string nextfile = n + 1 < files.Length ? files[n + 1] : "";
+                        gitItemStatusX = GitItemStatusFromCopyRename(fromDiff, nextfile, fileName, x, status);
+                        n++;
                     }
+                    else
+                        gitItemStatusX = GitItemStatusFromStatusCharacter(fileName, x);
+
+                    gitItemStatusX.IsStaged = true;
+                    if (Submodules.Contains(gitItemStatusX.Name))
+                        gitItemStatusX.IsSubmodule = true;
+                    diffFiles.Add(gitItemStatusX);
                 }
 
-                if (fromDiff)
+                if (fromDiff || y == ' ')
                     continue;
-                n = GitItemStatusFromStatusCharacter(false, files, n, status, fileName, y, out gitItemStatus);
-                if (gitItemStatus == null)
-                    continue;
-                gitItemStatus.IsStaged = false;
-                if (Submodules.Contains(gitItemStatus.Name))
-                    gitItemStatus.IsSubmodule = true;
-                diffFiles.Add(gitItemStatus);
+                GitItemStatus gitItemStatusY = null;
+                if (y == 'R' || y == 'C') // Find renamed files...
+                {
+                    string nextfile = n + 1 < files.Length ? files[n + 1] : "";
+                    gitItemStatusY = GitItemStatusFromCopyRename(false, nextfile, fileName, y, status);
+                    n++;
+                }
+                else
+                    gitItemStatusY = GitItemStatusFromStatusCharacter(fileName, y);
+                gitItemStatusY.IsStaged = false;
+                if (Submodules.Contains(gitItemStatusY.Name))
+                    gitItemStatusY.IsSubmodule = true;
+                diffFiles.Add(gitItemStatusY);
             }
 
             return diffFiles;
         }
 
-        private static int GitItemStatusFromStatusCharacter(bool fromDiff, string[] files, int n, string status, string fileName, char x, out GitItemStatus gitItemStatus)
+        private static GitItemStatus GitItemStatusFromCopyRename(bool fromDiff, string nextfile, string fileName, char x, string status)
         {
-            gitItemStatus = null;
-
-            if (x == ' ')
-                return n;
-
-            gitItemStatus = new GitItemStatus();
+            var gitItemStatus = new GitItemStatus();
             //Find renamed files...
-            if (x == 'R' || x == 'C')
+            if (fromDiff)
             {
-                if (fromDiff)
-                {
-                    gitItemStatus.OldName = fileName.Trim();
-                    gitItemStatus.Name = files[n + 1].Trim();
-                }
-                else
-                {
-                    gitItemStatus.Name = fileName.Trim();
-                    gitItemStatus.OldName = files[n + 1].Trim();
-                }
-                gitItemStatus.IsNew = false;
-                gitItemStatus.IsChanged = false;
-                gitItemStatus.IsDeleted = false;
-                if (x == 'R')
-                    gitItemStatus.IsRenamed = true;
-                else
-                    gitItemStatus.IsCopied = true;
-                gitItemStatus.IsTracked = true;
-                if (status.Length > 2)
-                    gitItemStatus.RenameCopyPercentage = status.Substring(1);
-                n++;
+                gitItemStatus.OldName = fileName.Trim();
+                gitItemStatus.Name = nextfile.Trim();
             }
             else
             {
                 gitItemStatus.Name = fileName.Trim();
-                gitItemStatus.IsNew = x == 'A' || x == '?' || x == '!';
-                gitItemStatus.IsChanged = x == 'M';
-                gitItemStatus.IsDeleted = x == 'D';
-                gitItemStatus.IsRenamed = false;
-                gitItemStatus.IsTracked = x != '?' && x != '!' && x != ' ' || !gitItemStatus.IsNew;
-                gitItemStatus.IsConflict = x == 'U';
+                gitItemStatus.OldName = nextfile.Trim();
             }
-            return n;
+            gitItemStatus.IsNew = false;
+            gitItemStatus.IsChanged = false;
+            gitItemStatus.IsDeleted = false;
+            if (x == 'R')
+                gitItemStatus.IsRenamed = true;
+            else
+                gitItemStatus.IsCopied = true;
+            gitItemStatus.IsTracked = true;
+            if (status.Length > 2)
+                gitItemStatus.RenameCopyPercentage = status.Substring(1);
+            return gitItemStatus;
+        }
+
+        private static GitItemStatus GitItemStatusFromStatusCharacter(string fileName, char x)
+        {
+            var gitItemStatus = new GitItemStatus();
+            gitItemStatus.Name = fileName.Trim();
+            gitItemStatus.IsNew = x == 'A' || x == '?' || x == '!';
+            gitItemStatus.IsChanged = x == 'M';
+            gitItemStatus.IsDeleted = x == 'D';
+            gitItemStatus.IsRenamed = false;
+            gitItemStatus.IsTracked = x != '?' && x != '!' && x != ' ' || !gitItemStatus.IsNew;
+            gitItemStatus.IsConflict = x == 'U';
+            return gitItemStatus;
         }
 
         public static string ApplyPatch(string dir, string amCommand)

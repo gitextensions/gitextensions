@@ -94,7 +94,6 @@ namespace GitUI
                 MessageBox.Show(grid, output);
         }
 
-
         public static string GetSelectedPatch(this FileViewer diffViewer, RevisionGrid grid, GitItemStatus file)
         {
             IList<GitRevision> revisions = grid.GetSelectedRevisions();
@@ -119,7 +118,11 @@ namespace GitUI
                 if (secondRevision == null || secondRevision == GitRevision.IndexGuid)
                 {
                     if (file.IsTracked)
-                        return Settings.Module.GetCurrentChanges(file.Name, file.OldName, false, diffViewer.GetExtraDiffArguments(), diffViewer.Encoding);
+                    {
+                        return ProcessDiffText(Settings.Module.GetCurrentChanges(file.Name, file.OldName, false,
+                            diffViewer.GetExtraDiffArguments(), diffViewer.Encoding), file.IsSubmodule);
+                    }
+
                     return FileReader.ReadFileContent(Settings.WorkingDir + file.Name, diffViewer.Encoding);
                 }
                 else
@@ -131,13 +134,15 @@ namespace GitUI
             if (firstRevision == GitRevision.IndexGuid) //index
             {
                 if (secondRevision == null)
-                    return Settings.Module.GetCurrentChanges(file.Name, file.OldName, true, diffViewer.GetExtraDiffArguments(), diffViewer.Encoding);
-                else //rev1 vs index
                 {
-                    firstRevision = secondRevision;
-                    secondRevision = string.Empty;
-                    extraDiffArgs = extraDiffArgs.Join(" ", "--cached");                
+                    return ProcessDiffText(Settings.Module.GetCurrentChanges(file.Name, file.OldName, true,
+                        diffViewer.GetExtraDiffArguments(), diffViewer.Encoding), file.IsSubmodule);
                 }
+
+                //rev1 vs index
+                firstRevision = secondRevision;
+                secondRevision = string.Empty;
+                extraDiffArgs = extraDiffArgs.Join(" ", "--cached");
             }
 
             Debug.Assert(!GitRevision.IsArtificial(firstRevision), firstRevision.Join(" ", secondRevision));                
@@ -151,12 +156,16 @@ namespace GitUI
             if (patch == null)
                 return string.Empty;
 
-            if (file.IsSubmodule)
-                return GitCommandHelpers.ProcessSubmodulePatch(patch.Text);
-
-            return patch.Text;
+            return ProcessDiffText(patch.Text, file.IsSubmodule);
         }
 
+        private static string ProcessDiffText(string diff, bool isSubmodule)
+        {
+            if (isSubmodule)
+                return GitCommandHelpers.ProcessSubmodulePatch(diff);
+
+            return diff;
+        }
 
         public static void ViewPatch(this FileViewer diffViewer, RevisionGrid grid, GitItemStatus file, string defaultText)
         {
@@ -167,12 +176,13 @@ namespace GitUI
                 diffViewer.ViewGitItem(file.Name, file.TreeGuid);
             }
             else
-            diffViewer.ViewPatch(() =>
-                                   {
-                                       string selectedPatch = diffViewer.GetSelectedPatch(grid, file);
-
-                                       return selectedPatch ?? defaultText;
-                                   });
+            {
+                diffViewer.ViewPatch(() =>
+                                       {
+                                           string selectedPatch = diffViewer.GetSelectedPatch(grid, file);
+                                           return selectedPatch ?? defaultText;
+                                       });
+            }
         }
 
         public static void RemoveIfExists(this TabControl tabControl, TabPage page)
