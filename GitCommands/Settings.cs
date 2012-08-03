@@ -59,6 +59,12 @@ namespace GitCommands
             set { SafeSet("stashkeepindex", value, ref _stashKeepIndex); }
         }
 
+        private static bool? _stashConfirmDropShow;
+        public static bool StashConfirmDropShow
+        {
+            get { return SafeGet("stashconfirmdropshow", true, ref _stashConfirmDropShow); }
+            set { SafeSet("stashconfirmdropshow", value, ref _stashConfirmDropShow); }
+        }
 
         private static bool? _applyPatchIgnoreWhitespace;
         public static bool ApplyPatchIgnoreWhitespace
