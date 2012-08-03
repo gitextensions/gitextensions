@@ -163,6 +163,7 @@ namespace GitUI
             Output.Visible = false;
             ProgressBar.Visible = true;
             Ok.Enabled = false;
+            ActiveControl = null;
         }
 
         public void Retry()
