@@ -341,25 +341,16 @@ namespace GitUI
                 EncodingToCombo(Settings.GetFilesEncoding(true), Local_FilesEncoding);
                 EncodingToCombo(Settings.GetAppEncoding(true, false), Local_AppEncoding);
 
-                chkWarnBeforeCheckout.Checked = Settings.DirtyDirWarnBeforeCheckoutBranch;
                 chkStartWithRecentWorkingDir.Checked = Settings.StartWithRecentWorkingDir;
-
                 chkPlaySpecialStartupSound.Checked = Settings.PlaySpecialStartupSound;
-
                 chkUsePatienceDiffAlgorithm.Checked = Settings.UsePatienceDiffAlgorithm;
-
                 chkShowCurrentBranchInVisualStudio.Checked = Settings.ShowCurrentBranchInVisualStudio;
-
                 RevisionGridQuickSearchTimeout.Value = Settings.RevisionGridQuickSearchTimeout;
-
                 chkFollowRenamesInFileHistory.Checked = Settings.FollowRenamesInFileHistory;
-
                 _NO_TRANSLATE_DaysToCacheImages.Value = Settings.AuthorImageCacheDays;
-
                 _NO_TRANSLATE_authorImageSize.Value = Settings.AuthorImageSize;
                 ShowAuthorGravatar.Checked = Settings.ShowAuthorGravatar;
                 noImageService.Text = Settings.GravatarFallbackService;
-
                 chkShowErrorsWhenStagingFiles.Checked = Settings.ShowErrorsWhenStagingFiles;
                 chkStashUntrackedFiles.Checked = Settings.IncludeUntrackedFilesInAutoStash;
 
@@ -376,7 +367,6 @@ namespace GitUI
                 chkShowStashCountInBrowseWindow.Checked = Settings.ShowStashCount;
                 BranchBorders.Checked = Settings.BranchBorders;
                 StripedBanchChange.Checked = Settings.StripedBranchChange;
-
                 chkShowGitStatusInToolbar.Checked = Settings.ShowGitStatusInBrowseToolbar;
 
                 _NO_TRANSLATE_truncatePathMethod.Text = Settings.TruncatePathMethod;
@@ -563,20 +553,13 @@ namespace GitUI
 
             GitCommandHelpers.SetEnvironmentVariable(true);
 
-            Settings.DirtyDirWarnBeforeCheckoutBranch = chkWarnBeforeCheckout.Checked;
             Settings.StartWithRecentWorkingDir = chkStartWithRecentWorkingDir.Checked;
-
             Settings.PlaySpecialStartupSound = chkPlaySpecialStartupSound.Checked;
-
             Settings.UsePatienceDiffAlgorithm = chkUsePatienceDiffAlgorithm.Checked;
-
             Settings.TruncatePathMethod = _NO_TRANSLATE_truncatePathMethod.Text;
-
             Settings.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.Checked;
-
             Settings.ShowErrorsWhenStagingFiles = chkShowErrorsWhenStagingFiles.Checked;
             Settings.IncludeUntrackedFilesInAutoStash = chkStashUntrackedFiles.Checked;
-
             Settings.FollowRenamesInFileHistory = chkFollowRenamesInFileHistory.Checked;
 
             if ((int)_NO_TRANSLATE_authorImageSize.Value != Settings.AuthorImageSize)
@@ -637,11 +620,9 @@ namespace GitUI
             Settings.DiffAddedExtraColor = _NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor;
             Settings.DiffRemovedExtraColor = _NO_TRANSLATE_ColorRemovedLineDiffLabel.BackColor;
             Settings.DiffFont = diffFont;
-
             Settings.DiffSectionColor = _NO_TRANSLATE_ColorSectionLabel.BackColor;
 
             Settings.IconColor = GetSelectedApplicationIconColor();
-
             Settings.IconStyle = IconStyle.Text;
 
             // Shell Extension settings
@@ -990,7 +971,7 @@ namespace GitUI
                 return;
 
             string exeName;
-            string exeFile = MergeToolsHelper.Instance.FindDiffToolExeFile(GlobalDiffTool.Text, out exeName);
+            string exeFile = MergeToolsHelper.FindDiffToolExeFile(GlobalDiffTool.Text, out exeName);
             if (String.IsNullOrEmpty(exeFile))
             {
                 DifftoolPath.SelectAll();
@@ -1005,7 +986,7 @@ namespace GitUI
             DifftoolPath.SelectAll(); // allow Undo action
             DifftoolPath.SelectedText = exeFile;
             DifftoolCmd.SelectAll();
-            DifftoolCmd.SelectedText = MergeToolsHelper.Instance.DiffToolCmdSuggest(GlobalDiffTool.Text, exeFile);
+            DifftoolCmd.SelectedText = MergeToolsHelper.DiffToolCmdSuggest(GlobalDiffTool.Text, exeFile);
         }
 
         private void MergeToolCmdSuggest_Click(object sender, EventArgs e)
@@ -1014,7 +995,7 @@ namespace GitUI
                 return;
 
             string exeName;
-            string exeFile = MergeToolsHelper.Instance.FindMergeToolExeFile(GlobalMergeTool.Text, out exeName);
+            string exeFile = MergeToolsHelper.FindMergeToolExeFile(GlobalMergeTool.Text, out exeName);
             if (String.IsNullOrEmpty(exeFile))
             {
                 MergetoolPath.SelectAll();
@@ -1029,13 +1010,13 @@ namespace GitUI
             MergetoolPath.SelectAll(); // allow Undo action
             MergetoolPath.SelectedText = exeFile;
             MergeToolCmd.SelectAll();
-            MergeToolCmd.SelectedText = MergeToolsHelper.Instance.MergeToolcmdSuggest(GlobalMergeTool.Text, exeFile);
+            MergeToolCmd.SelectedText = MergeToolsHelper.MergeToolcmdSuggest(GlobalMergeTool.Text, exeFile);
         }
 
         private void AutoConfigMergeToolCmd(bool silent)
         {
             string exeName;
-            string exeFile = MergeToolsHelper.Instance.FindMergeToolExeFile(GlobalMergeTool.Text, out exeName);
+            string exeFile = MergeToolsHelper.FindMergeToolExeFile(GlobalMergeTool.Text, out exeName);
             if (String.IsNullOrEmpty(exeFile))
             {
                 MergetoolPath.Text = "";
@@ -1046,7 +1027,7 @@ namespace GitUI
                 return;
             }
             MergetoolPath.Text = exeFile;
-            MergeToolCmd.Text = MergeToolsHelper.Instance.AutoConfigMergeToolCmd(GlobalMergeTool.Text, exeFile);
+            MergeToolCmd.Text = MergeToolsHelper.AutoConfigMergeToolCmd(GlobalMergeTool.Text, exeFile);
         }
 
         private void DiffToolFix_Click(object sender, EventArgs e)

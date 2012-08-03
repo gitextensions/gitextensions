@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace GitUI
 {
-    public class FilterRevisionsHelper
+    public class FilterRevisionsHelper 
     {
         private ToolStripTextBox _NO_TRANSLATE_toolStripTextBoxFilter;
         private ToolStripDropDownButton _NO_TRANSLATE_toolStripDropDownButton1;
@@ -20,7 +20,6 @@ namespace GitUI
 
         public FilterRevisionsHelper()
         {
-
             this.commitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.committerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.authorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,7 +58,7 @@ namespace GitUI
             this.hashToolStripMenuItem.CheckOnClick = true;
             this.hashToolStripMenuItem.Name = "hashToolStripMenuItem";
             this.hashToolStripMenuItem.Size = new System.Drawing.Size(216, 24);
-            this.hashToolStripMenuItem.Text = "Hash";
+            this.hashToolStripMenuItem.Text = "Hash";        
         }
 
         public FilterRevisionsHelper(ToolStripTextBox toolStripTextBoxFilter, ToolStripDropDownButton toolStripDropDownButton1, RevisionGrid RevisionGrid, ToolStripLabel toolStripLabel2, Form form)
@@ -72,10 +71,10 @@ namespace GitUI
             this._NO_TRANSLATE_form = form;
 
             this._NO_TRANSLATE_toolStripDropDownButton1.DropDownItems.AddRange(new ToolStripItem[] {
-                                                    this.commitToolStripMenuItem1,
-                                                    this.committerToolStripMenuItem,
-                                                    this.authorToolStripMenuItem,
-                                                    this.diffContainsToolStripMenuItem});
+                this.commitToolStripMenuItem1,
+                this.committerToolStripMenuItem,
+                this.authorToolStripMenuItem,
+                this.diffContainsToolStripMenuItem});
 
             this._NO_TRANSLATE_toolStripLabel2.Click += this.ToolStripLabel2Click;
             this._NO_TRANSLATE_toolStripTextBoxFilter.Leave += this.ToolStripTextBoxFilterLeave;
@@ -103,11 +102,11 @@ namespace GitUI
             try
             {
                 _NO_TRANSLATE_RevisionGrid.FormatQuickFilter(_NO_TRANSLATE_toolStripTextBoxFilter.Text,
-                                                             filterParams,
-                                                             out revListArgs,
-                                                             out inMemMessageFilter,
-                                                             out inMemCommitterFilter,
-                                                             out inMemAuthorFilter);
+                                               filterParams,
+                                               out revListArgs,
+                                               out inMemMessageFilter,
+                                               out inMemCommitterFilter,
+                                               out inMemAuthorFilter);
             }
             catch (InvalidOperationException ex)
             {
@@ -127,6 +126,7 @@ namespace GitUI
             _NO_TRANSLATE_RevisionGrid.InMemCommitterFilter = inMemCommitterFilter;
             _NO_TRANSLATE_RevisionGrid.InMemAuthorFilter = inMemAuthorFilter;
             _NO_TRANSLATE_RevisionGrid.InMemFilterIgnoreCase = true;
+            _NO_TRANSLATE_RevisionGrid.Visible = true;
             _NO_TRANSLATE_RevisionGrid.ForceRefreshRevisions();
         }
 
@@ -159,8 +159,7 @@ namespace GitUI
                 commitToolStripMenuItem1.Checked = true;
         }
 
-        public void SetLimit(int limit)
-        {
+        public void SetLimit(int limit) {
             _NO_TRANSLATE_RevisionGrid.SetLimit(limit);
         }
     }

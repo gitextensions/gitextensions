@@ -264,13 +264,6 @@ namespace GitCommands
             set { SafeSet("revisiongraphshowworkingdirchanges", value, ref _revisionGraphShowWorkingDirChanges); }
         }
 
-        private static bool? _DirtyDirWarnBeforeCheckoutBranch;
-        public static bool DirtyDirWarnBeforeCheckoutBranch
-        {
-            get { return SafeGet("DirtyDirWarnBeforeCheckoutBranch", false, ref _DirtyDirWarnBeforeCheckoutBranch); }
-            set { SafeSet("DirtyDirWarnBeforeCheckoutBranch", value, ref _DirtyDirWarnBeforeCheckoutBranch); }
-        }
-
         private static bool? _revisionGraphDrawNonRelativesGray;
         public static bool RevisionGraphDrawNonRelativesGray
         {
@@ -498,11 +491,11 @@ namespace GitCommands
             set { SafeSet("autostash", value, ref _autoStash); }
         }
 
-        private static bool? _mergeAtCheckout;
-        public static bool MergeAtCheckout
+        private static int? _checkoutBranchAction;
+        public static int CheckoutBranchAction
         {
-            get { return SafeGet("mergeAtCheckout", true, ref _mergeAtCheckout); }
-            set { SafeSet("mergeAtCheckout", value, ref _mergeAtCheckout); }
+            get { return SafeGet("checkoutBranchAction", 1, ref _checkoutBranchAction); }
+            set { SafeSet("checkoutBranchAction", value, ref _checkoutBranchAction); }
         }
 
         private static bool? _includeUntrackedFilesInAutoStash;

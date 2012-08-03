@@ -13,7 +13,7 @@ namespace GitUI
         private RevisionGrid _NO_TRANSLATE_RevisionGrid;
         private ToolStripMenuItem localToolStripMenuItem;
         private ToolStripMenuItem remoteToolStripMenuItem;
-        
+
         public FilterBranchHelper()
         {
             this.localToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -31,7 +31,7 @@ namespace GitUI
             this.remoteToolStripMenuItem.CheckOnClick = true;
             this.remoteToolStripMenuItem.Name = "remoteToolStripMenuItem";
             this.remoteToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
-            this.remoteToolStripMenuItem.Text = "Remote";
+            this.remoteToolStripMenuItem.Text = "Remote";        
         }
 
         public FilterBranchHelper(ToolStripComboBox toolStripBranches, ToolStripDropDownButton toolStripDropDownButton2, RevisionGrid RevisionGrid)
@@ -42,8 +42,8 @@ namespace GitUI
             this._NO_TRANSLATE_RevisionGrid = RevisionGrid;
 
             this._NO_TRANSLATE_toolStripDropDownButton2.DropDownItems.AddRange(new ToolStripItem[] {
-                                                            this.localToolStripMenuItem,
-                                                            this.remoteToolStripMenuItem});
+                this.localToolStripMenuItem,
+                this.remoteToolStripMenuItem});
 
             this._NO_TRANSLATE_toolStripBranches.DropDown += this.toolStripBranches_DropDown;
             this._NO_TRANSLATE_toolStripBranches.TextUpdate += this.toolStripBranches_TextUpdate;

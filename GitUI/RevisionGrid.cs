@@ -1718,6 +1718,15 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
+        private void CheckoutBranch(string branch)
+        {
+            var command = GitCommandHelpers.CheckoutCmd(branch);
+            FormProcess.ShowDialog(this, command);
+
+            ForceRefreshRevisions();
+            OnActionOnRepositoryPerformed();
+        }
+
         private void ToolStripItemClickCheckoutBranch(object sender, EventArgs e)
         {
             var toolStripItem = sender as ToolStripItem;
@@ -1725,23 +1734,8 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            bool needRefresh;
-            bool force;
-            if (!GitUICommands.Instance.CheckForDirtyDir(this, out needRefresh, out force))
-            {
-                string args = force ? "-f" : null;
-
-                var command = string.Join(" ", "checkout", args, string.Format("\"{0}\"", toolStripItem.Text));
-                FormProcess.ShowDialog(this, command);
-                needRefresh = true;
+            CheckoutBranch(toolStripItem.Text);
             }
-
-            if (needRefresh)
-            {
-                ForceRefreshRevisions();
-                OnActionOnRepositoryPerformed();
-            }
-        }
 
         private void ToolStripItemClickCheckoutRemoteBranch(object sender, EventArgs e)
         {
@@ -1806,22 +1800,8 @@ namespace GitUI
                                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
-            bool force;
-            bool needRefresh;
-            if (!GitUICommands.Instance.CheckForDirtyDir(this, out needRefresh, out force))
-            {
-                string args = force ? "-f" : null;
-                string cmd = string.Join(" ", "checkout", args, string.Format("\"{0}\"", GetRevision(LastRow).Guid));
-                FormProcess.ShowDialog(this, cmd);
-                needRefresh = true;
+            CheckoutBranch(GetRevision(LastRow).Guid);
             }
-
-            if (needRefresh)
-            {
-                ForceRefreshRevisions();
-                OnActionOnRepositoryPerformed();
-            }
-        }
 
         private void ShowAuthorDateToolStripMenuItemClick(object sender, EventArgs e)
         {

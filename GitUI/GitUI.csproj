@@ -135,14 +135,8 @@
     <Compile Include="FormCheckoutRemoteBranch.Designer.cs">
       <DependentUpon>FormCheckoutRemoteBranch.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormDirtyDirWarn.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="FormRecentReposSettings.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormDirtyDirWarn.Designer.cs">
-      <DependentUpon>FormDirtyDirWarn.cs</DependentUpon>
     </Compile>
     <Compile Include="FormRecentReposSettings.Designer.cs">
       <DependentUpon>FormRecentReposSettings.cs</DependentUpon>
@@ -212,6 +206,7 @@
     <Compile Include="MenuStripEx.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="MessageBoxes.cs" />
     <Compile Include="MouseWheelRedirector.cs" />
     <Compile Include="MergeToolsHelper.cs" />
     <Compile Include="PathFormatter.cs" />
@@ -791,9 +786,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormRecentReposSettings.resx">
       <DependentUpon>FormRecentReposSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormDirtyDirWarn.resx">
-      <DependentUpon>FormDirtyDirWarn.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormRenameBranch.resx">
       <DependentUpon>FormRenameBranch.cs</DependentUpon>

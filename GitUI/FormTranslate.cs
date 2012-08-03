@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -112,6 +112,14 @@ namespace GitUI
             }
         }
 
+        private bool CompareSourceString(string origin, string current)
+        {
+            bool equal = (origin == current);
+            if (!equal)
+                return origin == current.Replace("\n", Environment.NewLine);
+            return equal;
+        }
+
         private void LoadTranslation()
         {
             translate = new List<TranslateItem>();
@@ -163,7 +171,7 @@ namespace GitUI
                     if (curItem != null)
                     {
                         translateItem.TranslatedValue = curItem.Value;
-                        if (curItem.Source == null || item.Value == curItem.Source)
+                        if (curItem.Source == null || CompareSourceString(item.Value, curItem.Source))
                         {
                             if (!String.IsNullOrEmpty(curItem.Value))
                                 translateItem.Status = TranslationType.Translated;
@@ -364,6 +372,9 @@ namespace GitUI
                 TranslationItem ti = new TranslationItem(translateItem.Name, translateItem.Property,
                     translateItem.NeutralValue, value);
                 ti.Status = translateItem.Status;
+                if (ti.Status == TranslationType.Obsolete && 
+                    (String.IsNullOrEmpty(value) || String.IsNullOrEmpty(translateItem.NeutralValue)))
+                    continue;
                 if (string.IsNullOrEmpty(value))
                 {
                     if (ti.Status == TranslationType.Translated || ti.Status == TranslationType.New)
