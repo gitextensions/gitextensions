@@ -15,8 +15,10 @@ namespace GitUI
         readonly TranslationString noStashes = new TranslationString("There are no stashes.");
         readonly TranslationString stashUntrackedFilesNotSupportedCaption = new TranslationString("Stash untracked files");
         readonly TranslationString stashUntrackedFilesNotSupported = new TranslationString("Stash untracked files is not supported in the version of msysgit you are using. Please update msysgit to at least version 1.7.7 to use this option.");
-
-
+        readonly TranslationString stashDropConfirmTitle = new TranslationString("Drop Stash Confirmation");
+        readonly TranslationString cannotBeUndone = new TranslationString("This action cannot be undone.");
+        readonly TranslationString areYouSure = new TranslationString("Are you sure you want to drop the stash? This action cannot be undone.");
+        readonly TranslationString dontShowAgain = new TranslationString("Don't show me this message again.");
         public bool NeedRefresh;
 
         public FormStash()
@@ -172,10 +174,43 @@ namespace GitUI
         private void ClearClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            FormProcess.ShowDialog(this, string.Format("stash drop {0}", Stashes.Text));
-            NeedRefresh = true;
-            Initialize();
-            Cursor.Current = Cursors.Default;
+
+            if (Settings.StashConfirmDropShow)
+            {
+                
+                DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
+                                        this,
+                                       stashDropConfirmTitle.Text,
+                                       cannotBeUndone.Text,
+                                       areYouSure.Text,
+                                       "",
+                                       "",
+                                       dontShowAgain.Text,
+                                       PSTaskDialog.eTaskDialogButtons.OKCancel,
+                                       PSTaskDialog.eSysIcons.Information,
+                                       PSTaskDialog.eSysIcons.Information);
+                if (res == DialogResult.OK)
+                {
+                    FormProcess.ShowDialog(this, string.Format("stash drop {0}", Stashes.Text));
+                    NeedRefresh = true;
+                    Initialize();
+                    Cursor.Current = Cursors.Default;
+                }
+
+                if (PSTaskDialog.cTaskDialog.VerificationChecked)
+                {
+                    Settings.StashConfirmDropShow = false;
+                }
+            }
+            else
+            {
+                FormProcess.ShowDialog(this, string.Format("stash drop {0}", Stashes.Text));
+                NeedRefresh = true;
+                Initialize();
+                Cursor.Current = Cursors.Default;
+            }
+            
+
         }
 
         private void ApplyClick(object sender, EventArgs e)
