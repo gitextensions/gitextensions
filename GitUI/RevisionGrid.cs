@@ -1732,7 +1732,7 @@ namespace GitUI
                 return;
 
             CheckoutBranch(toolStripItem.Text);
-            }
+        }
 
         private void ToolStripItemClickCheckoutRemoteBranch(object sender, EventArgs e)
         {
@@ -1798,7 +1798,7 @@ namespace GitUI
                 return;
 
             CheckoutBranch(GetRevision(LastRow).Guid);
-            }
+        }
 
         private void ShowAuthorDateToolStripMenuItemClick(object sender, EventArgs e)
         {
