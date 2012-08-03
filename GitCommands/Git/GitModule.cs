@@ -1775,7 +1775,7 @@ namespace GitCommands
             return !string.IsNullOrEmpty(status);
         }
 
-        public List<GitItemStatus> GetStagedFiles()
+        public IList<GitItemStatus> GetStagedFiles()
         {
             string status = RunGitCmd("diff -M -C -z --cached --name-status", Settings.SystemEncoding);
 
@@ -1791,12 +1791,17 @@ namespace GitCommands
             return GitCommandHelpers.GetAllChangedFilesFromString(status, true);
         }
 
-        public List<GitItemStatus> GitStatus()
+        public IList<GitItemStatus> GetUnstagedFiles()
+        {
+            return GetAllChangedFiles().Where(x => !x.IsStaged).ToArray();
+        }
+
+        public IList<GitItemStatus> GitStatus()
         {
             return GitStatus(UntrackedFilesMode.Default, 0);
         }
 
-        public List<GitItemStatus> GitStatus(UntrackedFilesMode untrackedFilesMode, IgnoreSubmodulesMode ignoreSubmodulesMode)
+        public IList<GitItemStatus> GitStatus(UntrackedFilesMode untrackedFilesMode, IgnoreSubmodulesMode ignoreSubmodulesMode)
         {
             if (!GitCommandHelpers.VersionInUse.SupportGitStatusPorcelain)
                 throw new Exception("The version of git you are using is not supported for this action. Please upgrade to git 1.7.3 or newer.");
