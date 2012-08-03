@@ -45,13 +45,6 @@ namespace GitUI
             }
         }
 
-
-        public FormCheckoutBranch(string branch, bool remote, string containRevison, bool force)
-            : this(branch, remote, containRevison)
-        {
-            Force.Checked = force;
-        }
-
         private void Initialize()
         {
             Branches.DisplayMember = "Name";
@@ -90,19 +83,24 @@ namespace GitUI
 
         private void OkClick(object sender, EventArgs e)
         {
+            LocalChanges changes;
+            if (rbReset.Checked)
+                changes = LocalChanges.Reset;
+            else if (rbMerge.Checked)
+                changes = LocalChanges.Merge;
+            else
+                changes = LocalChanges.DontChange;
+            Settings.CheckoutBranchAction = (int)changes;
             if (Remotebranch.Checked)
             {
-                using (var checkoutRemote = new FormCheckoutRemoteBranch(Branches.Text, Force.Checked))
+                using (var checkoutRemote = new FormCheckoutRemoteBranch(Branches.Text, changes))
                     checkoutRemote.ShowDialog(this);
             }
             else
             {
                 try
                 {
-                    var command = "checkout";
-                    if (Force.Checked)
-                        command += " --force";
-                    command += " \"" + Branches.Text + "\"";
+                    var command = GitCommandHelpers.CheckoutCmd(Branches.Text, changes);
                     var successfullyCheckedOut = FormProcess.ShowDialog(this, command);
                     if (successfullyCheckedOut)
                         Close();
@@ -127,6 +125,13 @@ namespace GitUI
         private void RemoteBranchCheckedChanged(object sender, EventArgs e)
         {
             BranchTypeChanged();
+        }
+
+        private void lnkSettings_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
+        {
+            localChangesGB.Show();
+            lnkSettings.Hide();
+            Height += (localChangesGB.Height - lnkSettings.Height) / 2;
         }
     }
 }

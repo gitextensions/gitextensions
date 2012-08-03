@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows.Forms;
+using GitCommands;
 using ResourceManager.Translation;
 
 namespace GitUI
@@ -28,9 +29,8 @@ namespace GitUI
                     return;
                 }
 
-                var command = "checkout \"" + RevisionGrid.GetSelectedRevisions()[0].Guid + "\"";
-                if (Force.Checked)
-                    command += " --force";
+                string command = GitCommandHelpers.CheckoutCmd(RevisionGrid.GetSelectedRevisions()[0].Guid, 
+                    Force.Checked ? LocalChanges.Reset : 0);
 
                 FormProcess.ShowDialog(this, command);
 

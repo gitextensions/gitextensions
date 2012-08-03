@@ -7,11 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public partial class BranchComboBox : GitExtensionsControl
     {
+        private readonly TranslationString _branchCheckoutError = new TranslationString("Branch '{0}' is not selectable, this branch has been removed from the selection.");
+        
         public BranchComboBox()
         {
             InitializeComponent();
@@ -44,11 +47,14 @@ namespace GitUI
         {
             foreach (var branchName in branches.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                GitHead gitHead = _branchesToSelect.FirstOrDefault(g => g.Name == branchName);
-                if (gitHead == null)
-                    MessageBox.Show("Branch '" + branchName + "' is not selectable, this branch has been removed from the selection.");
-                else
-                    yield return gitHead;
+                foreach (string branch in branches.Text.Split(new char[]{',', ' '}, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    GitHead gitHead = _branchesToSelect.FirstOrDefault(g => g.Name == branch);
+                    if (gitHead == null)
+                        MessageBox.Show(string.Format(_branchCheckoutError.Text, branch));
+                    else
+                        yield return gitHead;
+                }
             }
         }
 

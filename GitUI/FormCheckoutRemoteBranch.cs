@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
-using System.Collections.Generic;
 
 namespace GitUI
 {
@@ -39,13 +36,12 @@ namespace GitUI
             Initialize();
         }
 
-        public FormCheckoutRemoteBranch(string branch, bool force)
+        public FormCheckoutRemoteBranch(string branch, LocalChanges changes)
             : this(branch)
         {
-            if (force)
-                rbReset.Checked = true;
-            else
-                rbMerge.Checked = true;
+            rbReset.Checked = changes == LocalChanges.Reset;
+            rbMerge.Checked = changes == LocalChanges.Merge;
+            rbDontChange.Checked = changes == LocalChanges.DontChange;
         }
 
         private void Initialize()
@@ -67,15 +63,24 @@ namespace GitUI
 
             rbResetBranch.Text = String.Format(existsLocalBranch ? rbResetBranch.Text : rbCreateBranch.Text, _localBranchName);
             rbCreateBranch.Text = String.Format(rbCreateBranch.Text, _newLocalBranchName);
-            rbMerge.Checked = Settings.MergeAtCheckout;
+            rbReset.Checked = Settings.CheckoutBranchAction == (int)LocalChanges.Reset;
+            rbMerge.Checked = Settings.CheckoutBranchAction == (int)LocalChanges.Merge;
         }
 
         private void OkClick(object sender, EventArgs e)
         {
             try
             {
-                Settings.MergeAtCheckout = rbMerge.Checked;
+                LocalChanges changes;
+                if (rbReset.Checked)
+                    changes = LocalChanges.Reset;
+                else if (rbMerge.Checked)
+                    changes = LocalChanges.Merge;
+                else
+                    changes = LocalChanges.DontChange;
+                Settings.CheckoutBranchAction = (int)changes;
                 Settings.CreateLocalBranchForRemote = rbCreateBranch.Checked;
+
                 var command = "checkout";
 
                 //Get a localbranch name
@@ -84,10 +89,9 @@ namespace GitUI
                 else if (rbResetBranch.Checked)
                     command += string.Format(" -B {0}", _localBranchName);
 
-                if (rbMerge.Checked)
-                    command += " -m";
-
-                if (rbReset.Checked)
+                if (changes == LocalChanges.Merge)
+                    command += " --merge";
+                else if (changes == LocalChanges.Reset)
                     command += " --force";
 
                 command += " \"" + _branch + "\"";
@@ -109,6 +113,13 @@ namespace GitUI
                     return true;
             }
             return false;
+        }
+
+        private void lnkSettings_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
+        {
+            localChangesGB.Show();
+            lnkSettings.Hide();
+            Height += (localChangesGB.Height - lnkSettings.Height) / 2;
         }
     }
 }
