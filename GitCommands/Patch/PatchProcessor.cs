@@ -21,10 +21,10 @@ namespace PatchApply
                 {
                     gitPatch = true;
                     patch = new Patch();
+                    input = GitCommandHelpers.ReEncodeFileName(input);
                     patch.PatchHeader = input;
                     patch.AppendTextLine(patch.PatchHeader);
                     patches.Add(patch);
-                    input = GitCommandHelpers.ReEncodeFileName(input);
                     ExtractPatchFilenames(input, patch);
                     if ((input = textReader.ReadLine()) != null)
                     {
