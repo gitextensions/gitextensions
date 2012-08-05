@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMailMap));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this._NO_TRANSLATE_MailMapText = new GitUI.Editor.FileViewer();
             this.label1 = new System.Windows.Forms.Label();
@@ -58,31 +58,24 @@
             // 
             // _NO_TRANSLATE_MailMapText
             // 
-            this._NO_TRANSLATE_MailMapText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this._NO_TRANSLATE_MailMapText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this._NO_TRANSLATE_MailMapText.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this._NO_TRANSLATE_MailMapText.IgnoreWhitespaceChanges = false;
             this._NO_TRANSLATE_MailMapText.IsReadOnly = false;
             this._NO_TRANSLATE_MailMapText.Location = new System.Drawing.Point(0, 0);
             this._NO_TRANSLATE_MailMapText.Name = "_NO_TRANSLATE_MailMapText";
-            this._NO_TRANSLATE_MailMapText.NumberOfVisibleLines = 3;
-            this._NO_TRANSLATE_MailMapText.ScrollPos = 0;
-            this._NO_TRANSLATE_MailMapText.ShowEntireFile = false;
-            this._NO_TRANSLATE_MailMapText.ShowLineNumbers = true;
             this._NO_TRANSLATE_MailMapText.Size = new System.Drawing.Size(381, 474);
             this._NO_TRANSLATE_MailMapText.TabIndex = 0;
-            this._NO_TRANSLATE_MailMapText.TreatAllFilesAsText = false;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(235, 78);
+            this.label1.Size = new System.Drawing.Size(261, 135);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Edit the mailmap.\r\nThis file is meant to correct usernames.\r\n\r\nExample:\r\nHenk Wes" +
-                "thuis <Henk@.(none)>\r\nHenk Westhuis <henk_westhuis@hotmail.com>";
+            this.label1.Text = resources.GetString("label1.Text");
             // 
             // Save
             // 
@@ -97,14 +90,14 @@
             // 
             // FormMailMap
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(634, 474);
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormMailMap";
             this.Text = "Edit .mailmap";
-            this.Load += new System.EventHandler(this.FormMailMapLoad);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMailMapFormClosing);
+            this.Load += new System.EventHandler(this.FormMailMapLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
