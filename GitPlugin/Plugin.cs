@@ -55,9 +55,16 @@ namespace GitPlugin.Commands
 
         public CommandBar GetMenuBar()
         {
-            return ((CommandBars)m_application.CommandBars)["MenuBar"];
+            return CommandBars["MenuBar"];
         }
 
+        public CommandBars CommandBars
+        {
+            get
+            {
+                return (CommandBars)m_application.CommandBars;
+            }
+        }
 
 
         public void RegisterCommand(string commandName, CommandBase command)
