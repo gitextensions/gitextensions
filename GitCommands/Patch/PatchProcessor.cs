@@ -35,7 +35,11 @@ namespace PatchApply
 
                         SetPatchType(input, patch);
 
-                        if (!IsIndexLine(input))
+                        if (patch.Type == Patch.PatchType.ChangeFileMode)
+                        {
+                            patch.AppendTextLine(input);
+                        }
+                        else if (!IsIndexLine(input))
                         {
                             if (textReader.ReadLine() == null)
                             {
@@ -51,8 +55,8 @@ namespace PatchApply
 
                     if ((input = textReader.ReadLine()) != null)
                     {
-                       input = GitCommandHelpers.ReEncodeFileName(input);
-                       if (IsUnlistedBinaryFileDelete(input))
+                        input = GitCommandHelpers.ReEncodeFileName(input);
+                        if (IsUnlistedBinaryFileDelete(input))
                         {
                             patch.File = Patch.FileType.Binary;
 
@@ -90,8 +94,6 @@ namespace PatchApply
                             continue;
                         }
                     }
-
-                    //continue;
                 }
 
                 if (!gitPatch || patch != null)
@@ -199,6 +201,8 @@ namespace PatchApply
                 patch.Type = Patch.PatchType.NewFile;
             else if (input.StartsWith("deleted file mode "))
                 patch.Type = Patch.PatchType.DeleteFile;
+            else if (input.StartsWith("old mode "))
+                patch.Type = Patch.PatchType.ChangeFileMode;
             else
                 patch.Type = Patch.PatchType.ChangeFile;
         }

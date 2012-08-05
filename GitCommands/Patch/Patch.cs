@@ -21,7 +21,8 @@ namespace PatchApply
         {
             NewFile,
             DeleteFile,
-            ChangeFile
+            ChangeFile,
+            ChangeFileMode
         }
 
         public enum FileType
