@@ -18,6 +18,8 @@ namespace GitUI
 
         private readonly TranslationString _customBranchNameIsEmpty =
             new TranslationString("Custom branch name is empty.\nEnter valid branch name or select predefined value.");
+        private readonly TranslationString _customBranchNameIsNotValid =
+            new TranslationString("“{0}” is not valid branch name.\nEnter valid branch name or select predefined value.");
         #endregion
 
         string _branch = "";
@@ -75,11 +77,21 @@ namespace GitUI
 
         private void OkClick(object sender, EventArgs e)
         {
-            if (rbCreateBranchWithCustomName.Checked && txtCustomBranchName.Text.IsNullOrWhiteSpace())
+            var customBranchName = txtCustomBranchName.Text.Trim();
+            if (rbCreateBranchWithCustomName.Checked)
             {
-                MessageBox.Show(_customBranchNameIsEmpty.Text, Text);
-                DialogResult = DialogResult.None;
-                return;
+                if (customBranchName.IsNullOrWhiteSpace())
+                {
+                    MessageBox.Show(_customBranchNameIsEmpty.Text, Text);
+                    DialogResult = DialogResult.None;
+                    return;
+                }
+                if (!Settings.Module.CheckRefFormat(customBranchName))
+                {
+                    MessageBox.Show(string.Format(_customBranchNameIsNotValid.Text, customBranchName), Text);
+                    DialogResult = DialogResult.None;
+                    return;
+                }
             }
 
             try
@@ -102,7 +114,7 @@ namespace GitUI
                 else if (rbResetBranch.Checked)
                     command += string.Format(" -B {0}", _localBranchName);
                 else if (rbCreateBranchWithCustomName.Checked)
-                    command += string.Format(" -b {0}", txtCustomBranchName.Text);
+                    command += string.Format(" -b {0}", customBranchName);
 
                 if (changes == LocalChanges.Merge)
                     command += " --merge";
