@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
 
@@ -13,6 +15,9 @@ namespace GitUI
 
         private readonly TranslationString _applyShashedItemsAgainCaption =
             new TranslationString("Auto stash");
+
+        private readonly TranslationString _customBranchNameIsEmpty =
+            new TranslationString("Custom branch name is empty.\nEnter valid branch name or select predefined value.");
         #endregion
 
         string _branch = "";
@@ -60,15 +65,23 @@ namespace GitUI
             bool existsLocalBranch = LocalBranchExists(_localBranchName);
 
             rbCreateBranch.Checked = Settings.CreateLocalBranchForRemote;
-           
+
             rbResetBranch.Text = String.Format(existsLocalBranch ? rbResetBranch.Text : rbCreateBranch.Text, _localBranchName);
             rbCreateBranch.Text = String.Format(rbCreateBranch.Text, _newLocalBranchName);
+            txtCustomBranchName.Text = _localBranchName;
             rbReset.Checked = Settings.CheckoutBranchAction == (int)LocalChanges.Reset;
             rbMerge.Checked = Settings.CheckoutBranchAction == (int)LocalChanges.Merge;
         }
 
         private void OkClick(object sender, EventArgs e)
         {
+            if (rbCreateBranchWithCustomName.Checked && txtCustomBranchName.Text.IsNullOrWhiteSpace())
+            {
+                MessageBox.Show(_customBranchNameIsEmpty.Text, Text);
+                DialogResult = DialogResult.None;
+                return;
+            }
+
             try
             {
                 LocalChanges changes;
@@ -88,6 +101,8 @@ namespace GitUI
                     command += string.Format(" -b {0}", _newLocalBranchName);
                 else if (rbResetBranch.Checked)
                     command += string.Format(" -B {0}", _localBranchName);
+                else if (rbCreateBranchWithCustomName.Checked)
+                    command += string.Format(" -b {0}", txtCustomBranchName.Text);
 
                 if (changes == LocalChanges.Merge)
                     command += " --merge";
@@ -107,19 +122,21 @@ namespace GitUI
 
         private static bool LocalBranchExists(string name)
         {
-            foreach (GitHead head in Settings.Module.GetHeads(false))
-            {
-                if (head.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
-                    return true;
-            }
-            return false;
+            return Settings.Module.GetHeads(false).Any(head => head.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
 
-        private void lnkSettings_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
+        private void lnkSettings_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             localChangesGB.Show();
             lnkSettings.Hide();
             Height += (localChangesGB.Height - lnkSettings.Height) / 2;
+        }
+
+        private void rbCreateBranchWithCustomName_CheckedChanged(object sender, EventArgs e)
+        {
+            txtCustomBranchName.Enabled = rbCreateBranchWithCustomName.Checked;
+            if (rbCreateBranchWithCustomName.Checked)
+                txtCustomBranchName.SelectAll();
         }
     }
 }
