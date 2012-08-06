@@ -39,6 +39,8 @@ namespace GitUI
             this.rbDontChange = new System.Windows.Forms.RadioButton();
             this.rbReset = new System.Windows.Forms.RadioButton();
             this.rbMerge = new System.Windows.Forms.RadioButton();
+            this.rbCreateBranchWithCustomName = new System.Windows.Forms.RadioButton();
+            this.txtCustomBranchName = new System.Windows.Forms.TextBox();
             this.localChangesGB.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -46,7 +48,7 @@ namespace GitUI
             // 
             this.btOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btOk.Location = new System.Drawing.Point(330, 92);
+            this.btOk.Location = new System.Drawing.Point(330, 122);
             this.btOk.Name = "btOk";
             this.btOk.Size = new System.Drawing.Size(87, 25);
             this.btOk.TabIndex = 2;
@@ -58,7 +60,7 @@ namespace GitUI
             // 
             this.lnkSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lnkSettings.AutoSize = true;
-            this.lnkSettings.Location = new System.Drawing.Point(12, 99);
+            this.lnkSettings.Location = new System.Drawing.Point(12, 129);
             this.lnkSettings.Name = "lnkSettings";
             this.lnkSettings.Size = new System.Drawing.Size(81, 15);
             this.lnkSettings.TabIndex = 20;
@@ -69,7 +71,7 @@ namespace GitUI
             // rbDontCreate
             // 
             this.rbDontCreate.AutoSize = true;
-            this.rbDontCreate.Location = new System.Drawing.Point(12, 63);
+            this.rbDontCreate.Location = new System.Drawing.Point(12, 87);
             this.rbDontCreate.Name = "rbDontCreate";
             this.rbDontCreate.Size = new System.Drawing.Size(164, 19);
             this.rbDontCreate.TabIndex = 9;
@@ -104,7 +106,7 @@ namespace GitUI
             this.localChangesGB.Controls.Add(this.rbDontChange);
             this.localChangesGB.Controls.Add(this.rbReset);
             this.localChangesGB.Controls.Add(this.rbMerge);
-            this.localChangesGB.Location = new System.Drawing.Point(12, 74);
+            this.localChangesGB.Location = new System.Drawing.Point(12, 104);
             this.localChangesGB.Name = "localChangesGB";
             this.localChangesGB.Size = new System.Drawing.Size(300, 43);
             this.localChangesGB.TabIndex = 16;
@@ -145,12 +147,33 @@ namespace GitUI
             this.rbMerge.Text = "Merge";
             this.rbMerge.UseVisualStyleBackColor = true;
             // 
+            // rbCreateBranchWithCustomName
+            // 
+            this.rbCreateBranchWithCustomName.AutoSize = true;
+            this.rbCreateBranchWithCustomName.Location = new System.Drawing.Point(12, 62);
+            this.rbCreateBranchWithCustomName.Name = "rbCreateBranchWithCustomName";
+            this.rbCreateBranchWithCustomName.Size = new System.Drawing.Size(232, 19);
+            this.rbCreateBranchWithCustomName.TabIndex = 21;
+            this.rbCreateBranchWithCustomName.Text = "Create local branch with custom name:";
+            this.rbCreateBranchWithCustomName.UseVisualStyleBackColor = true;
+            this.rbCreateBranchWithCustomName.CheckedChanged += new System.EventHandler(this.rbCreateBranchWithCustomName_CheckedChanged);
+            // 
+            // txtCustomBranchName
+            // 
+            this.txtCustomBranchName.Enabled = false;
+            this.txtCustomBranchName.Location = new System.Drawing.Point(247, 62);
+            this.txtCustomBranchName.Name = "txtCustomBranchName";
+            this.txtCustomBranchName.Size = new System.Drawing.Size(170, 23);
+            this.txtCustomBranchName.TabIndex = 22;
+            // 
             // FormCheckoutRemoteBranch
             // 
             this.AcceptButton = this.btOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(429, 127);
+            this.ClientSize = new System.Drawing.Size(429, 157);
+            this.Controls.Add(this.txtCustomBranchName);
+            this.Controls.Add(this.rbCreateBranchWithCustomName);
             this.Controls.Add(this.lnkSettings);
             this.Controls.Add(this.rbDontCreate);
             this.Controls.Add(this.rbCreateBranch);
@@ -181,5 +204,7 @@ namespace GitUI
         private System.Windows.Forms.RadioButton rbReset;
         private System.Windows.Forms.RadioButton rbDontChange;
         private System.Windows.Forms.LinkLabel lnkSettings;
+        private System.Windows.Forms.RadioButton rbCreateBranchWithCustomName;
+        private System.Windows.Forms.TextBox txtCustomBranchName;
     }
 }
