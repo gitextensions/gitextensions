@@ -1,3 +1,6 @@
+using System.Linq;
+using JetBrains.Annotations;
+
 namespace System
 {
     public class Tuple<T1, T2>
@@ -78,7 +81,21 @@ namespace System
             return quotationMark + s + quotationMark;
         }
 
-
+        /// <summary>
+        /// Indicates whether a specified string is null, empty, or consists only of white-space characters.
+        /// </summary>
+        /// <param name="value">The string to test.</param>
+        /// <remarks>
+        /// This method is copied from .Net Framework 4.0 and should be deleted after leaving 3.5.
+        /// </remarks>
+        /// <returns>
+        /// true if the value parameter is null or <see cref="string.Empty"/>, or if value consists exclusively of white-space characters.
+        /// </returns>
+        [Pure]
+        public static bool IsNullOrWhiteSpace([CanBeNull] this string value)
+        {
+            return value == null || value.All(Char.IsWhiteSpace);
+        }
     }
 
     public static class BoolExtensions
@@ -88,7 +105,7 @@ namespace System
         {
             return force ? " -f " : string.Empty;
         }
-        
+
     }
 
     public static class StreamExtensions

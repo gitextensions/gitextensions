@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands.Config;
+using JetBrains.Annotations;
 using PatchApply;
 
 namespace GitCommands
@@ -1916,7 +1917,7 @@ namespace GitCommands
 
         public ICollection<string> GetMergedBranches()
         {
-            return Settings.Module.RunGitCmd(GitCommandHelpers.MergedBranches()).Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);                
+            return Settings.Module.RunGitCmd(GitCommandHelpers.MergedBranches()).Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         private string GetTree(bool tags, bool branches)
@@ -2284,6 +2285,27 @@ namespace GitCommands
                 return repositoryPath;
             var candidatePath = GetGitDirectory(repositoryPath);
             return Directory.Exists(candidatePath) ? candidatePath : repositoryPath;
+        }
+
+        // NOTE: probably the rules should be inlined to avoid external process call overhead
+        /// <summary>
+        /// Uses check-ref-format to ensure that a reference name is well formed.
+        /// </summary>
+        /// <param name="refName">Reference name to test.</param>
+        /// <returns>true if <see cref="refName"/> is valid reference name, otherwise false.</returns>
+        public bool CheckRefFormat([NotNull] string refName)
+        {
+            if (refName == null)
+                throw new ArgumentNullException("refName");
+
+            if (refName.IsNullOrWhiteSpace())
+                return false;
+
+            refName = refName.Replace("\"", "\\\"");
+
+            int exitCode;
+            RunCmd(Settings.GitCommand, string.Format("check-ref-format --allow-onelevel \"{0}\"", refName), out exitCode);
+            return exitCode == 0;
         }
     }
 }
