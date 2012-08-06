@@ -1505,7 +1505,8 @@ namespace GitUI
             if (button == null)
                 return;
 
-            Settings.WorkingDir += Settings.Module.GetSubmoduleLocalPath(button.Text);
+            string dir = Settings.WorkingDir + Settings.Module.GetSubmoduleLocalPath(button.Text);
+            Settings.WorkingDir = Path.GetFullPath(dir); // fix slashes
 
             if (Settings.Module.ValidWorkingDir())
                 Repositories.AddMostRecentRepository(Settings.WorkingDir);
