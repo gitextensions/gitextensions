@@ -1236,7 +1236,7 @@ namespace GitCommands
             while (headerLines > 0 && (line = r.ReadLine()) != null)
             {
                 headerLines--;
-                line = ReEncodeFileName(line);
+                line = ReEncodeFileNameFromLossless(line);
                 w.WriteLine(line);
             }
             w.Write(r.ReadToEnd());
@@ -1244,9 +1244,9 @@ namespace GitCommands
             return w.ToString();
         }
 
-        public static string ReEncodeFileName(string header)
+        public static string UnquoteFileName(string fileName)
         {
-            char[] chars = header.ToCharArray();
+            char[] chars = fileName.ToCharArray();
             List<byte> blist = new List<byte>();
             int i = 0;
             StringBuilder sb = new StringBuilder();
@@ -1289,6 +1289,12 @@ namespace GitCommands
                 blist.Clear();
             }
             return sb.ToString();
+        }
+
+        public static string ReEncodeFileNameFromLossless(string fileName)
+        {
+            fileName = ReEncodeStringFromLossless(fileName, Settings.SystemEncoding);
+            return UnquoteFileName(fileName);
         }
 
         public static string ReEncodeString(string s, Encoding fromEncoding, Encoding toEncoding)
@@ -1394,8 +1400,7 @@ namespace GitCommands
             }
 
             header = ReEncodeString(header, Settings.LosslessEncoding, Settings.LogOutputEncoding);
-            diffHeader = ReEncodeString(diffHeader, Settings.LosslessEncoding, Settings.LogOutputEncoding);
-            diffHeader = ReEncodeFileName(diffHeader);
+            diffHeader = ReEncodeFileNameFromLossless(diffHeader);
             diffContent = ReEncodeString(diffContent, Settings.LosslessEncoding, Settings.FilesEncoding);
             return header + diffHeader + diffContent;
         }
