@@ -96,6 +96,18 @@ namespace System
         {
             return value == null || value.All(Char.IsWhiteSpace);
         }
+
+        /// <summary>
+        /// Determines whether the beginning of this instance matches any of the specified strings.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="starts">array of strings to compare</param>
+        /// <returns>true if any starts element matches the beginning of this string; otherwise, false.</returns>
+        public static bool StartsWithAny([CanBeNull] this string value, string[] starts)
+        {
+            return value != null && starts.Any(s => value.StartsWith(s));
+        }
+
     }
 
     public static class BoolExtensions
