@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
@@ -299,9 +300,11 @@ namespace GitUI
         {
             if (isError)
             {
+                //auto pull only if current branch was rejected
+                Regex IsRejected = new Regex(Regex.Escape("! [rejected] ") + ".*" + Regex.Escape(_currentBranch) + ".*" + Regex.Escape(" (non-fast-forward)"), RegexOptions.Compiled);
 
-                if (Settings.AutoPullOnRejected &&
-                    form.OutputString.ToString().Contains("To prevent you from losing history, non-fast-forward updates were rejected"))
+                if (Settings.AutoPullOnRejected && IsRejected.IsMatch(form.OutputString.ToString()))
+                    
                 {
                     if (Settings.PullMerge == Settings.PullAction.Fetch)
                         form.AppendOutputLine(Environment.NewLine + "Can not perform auto pull, when merge option is set to fetch.");
