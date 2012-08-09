@@ -346,44 +346,15 @@ namespace GitCommands
         //encoding for files paths
         public static Encoding SystemEncoding;
         //Encoding that let us read all bytes without replacing any char
-        public static readonly Encoding LosslessEncoding = Encoding.GetEncoding("ISO-8859-1");//is any better?
-        //follow by git i18n CommitEncoding and LogOutputEncoding is a hell
-        //command output may consist of:
-        //1) commit message encoded in CommitEncoding, recoded to LogOutputEncoding or not dependent of 
+        //It is using to read output of commands, which may consist of:
+        //1) commit header (message, author, ...) encoded in CommitEncoding, recoded to LogOutputEncoding or not dependent of 
         //   pretty parameter (pretty=raw - recoded, pretty=format - not recoded)
-        //2) author name encoded dependently on config file encoding, not recoded to LogOutputEncoding
-        //3) file content encoded in its original encoding, not recoded to LogOutputEncoding
-        //4) file path (file name is encoded in system default encoding), not recoded to LogOutputEncoding,
-        //   every not ASCII character is escaped with \ followed by its code as a three digit octal number
-        //5) branch or tag name encoded in system default encoding, not recoded to LogOutputEncoding
-        //saying that "At the core level, git is character encoding agnostic." is not enough
-        //In my opinion every data not encoded in utf8 should contain information
-		//about its encoding, also git should emit structured data
-        //i18n CommitEncoding and LogOutputEncoding properties are stored in config file, because of 2)
-        //it is better to encode this file in utf8 for international projects. To read config file properly
-        //we must know its encoding, let user decide by setting AppEncoding property which encoding has to be used
-        //to read/write config file
-        public static Encoding GetAppEncoding(bool local, bool returnDefault)
-        {
-            Encoding result = GetEncoding(local, "AppEncoding", true);
-            if (result == null && returnDefault)
-                result = new UTF8Encoding(false);
-            return result;
-        }
-        public static void SetAppEncoding(bool local, Encoding encoding)
-        {
-            SetEncoding(local, "AppEncoding", encoding, true);
-        }
-        public static Encoding AppEncoding
-        {
-            get
-            {
-                Encoding result = GetAppEncoding(true, false);
-                if (result == null)
-                    result = GetAppEncoding(false, true);
-                return result;
-            }
-        }
+        //2) file content encoded in its original encoding
+        //3) file path (file name is encoded in system default encoding),
+        //   when core.quotepath is on, every non ASCII character is escaped 
+        //   with \ followed by its code as a three digit octal number
+        //4) branch, tag name, errors, warnings, hints encoded in system default encoding
+        public static readonly Encoding LosslessEncoding = Encoding.GetEncoding("ISO-8859-1");//is any better?
 
         public static Encoding GetFilesEncoding(bool local) 
         {
@@ -435,6 +406,9 @@ namespace GitCommands
         {
             SetEncoding(local, "i18n.logoutputencoding", encoding, false);
         }
+        /// <summary>
+        /// Encoding for commit header (message, notes, author, commiter, emails)
+        /// </summary>
         public static Encoding LogOutputEncoding
         {
             get
@@ -939,7 +913,6 @@ namespace GitCommands
                     _encoding = new UTF8Encoding(false);
 
                 SetFilesEncoding(false, _encoding);
-                SetAppEncoding(false, _encoding);
                 SetValue("encoding", null as string);
             }
         }
@@ -992,7 +965,6 @@ namespace GitCommands
             { }
 
             Debug.WriteLine("Files encoding: " + FilesEncoding.EncodingName);
-            Debug.WriteLine("App encoding: " + AppEncoding.EncodingName);
             Debug.WriteLine("Commit encoding: " + CommitEncoding.EncodingName);
             if (LogOutputEncoding != CommitEncoding)
                 Debug.WriteLine("Log output encoding: " + LogOutputEncoding.EncodingName);

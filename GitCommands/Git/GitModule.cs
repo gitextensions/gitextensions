@@ -282,7 +282,7 @@ namespace GitCommands
         public string RunCachableCmd(string cmd, string arguments, Encoding encoding)
         {
             if (encoding == null)
-                encoding = Settings.LogOutputEncoding;
+                encoding = Settings.SystemEncoding;
 
             string output;
             if (GitCommandCache.TryGet(arguments, encoding, out output))
@@ -299,7 +299,7 @@ namespace GitCommands
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public string RunCachableCmd(string cmd, string arguments)
         {
-            return RunCachableCmd(cmd, arguments, Settings.LogOutputEncoding);
+            return RunCachableCmd(cmd, arguments, Settings.SystemEncoding);
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
@@ -337,7 +337,7 @@ namespace GitCommands
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public string RunCmd(string cmd, string arguments, out int exitCode, string stdInput)
         {
-            return RunCmd(cmd, arguments, out exitCode, stdInput, Settings.LogOutputEncoding);
+            return RunCmd(cmd, arguments, out exitCode, stdInput, Settings.SystemEncoding);
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
@@ -371,7 +371,7 @@ namespace GitCommands
 
         public string RunGitCmd(string arguments, out int exitCode, string stdInput)
         {
-            return RunGitCmd(arguments, out exitCode, stdInput, Settings.LogOutputEncoding);
+            return RunGitCmd(arguments, out exitCode, stdInput, Settings.SystemEncoding);
         }
 
         public string RunGitCmd(string arguments, out int exitCode, string stdInput, Encoding encoding)
