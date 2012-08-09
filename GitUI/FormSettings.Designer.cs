@@ -43,8 +43,6 @@ namespace GitUI
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
-            this.Global_AppEncoding = new System.Windows.Forms.ComboBox();
-            this.Local_AppEncoding = new System.Windows.Forms.ComboBox();
             this.argumentsTextBox = new System.Windows.Forms.RichTextBox();
             this.diffFontDialog = new System.Windows.Forms.FontDialog();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -175,7 +173,6 @@ namespace GitUI
             this.tpStart = new System.Windows.Forms.TabPage();
             this.dashboardEditor1 = new GitUI.DashboardEditor();
             this.tpGlobalSettings = new System.Windows.Forms.TabPage();
-            this.label59 = new System.Windows.Forms.Label();
             this.label60 = new System.Windows.Forms.Label();
             this.Global_FilesEncoding = new System.Windows.Forms.ComboBox();
             this.BrowseCommitTemplate = new System.Windows.Forms.Button();
@@ -213,7 +210,6 @@ namespace GitUI
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.tpLocalSettings = new System.Windows.Forms.TabPage();
-            this.LogEncodingLabel = new System.Windows.Forms.Label();
             this.label61 = new System.Windows.Forms.Label();
             this.Local_FilesEncoding = new System.Windows.Forms.ComboBox();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
@@ -393,24 +389,6 @@ namespace GitUI
             // repositoryBindingSource
             // 
             this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository.Repository);
-            // 
-            // Global_AppEncoding
-            // 
-            this.Global_AppEncoding.FormattingEnabled = true;
-            this.Global_AppEncoding.Location = new System.Drawing.Point(153, 462);
-            this.Global_AppEncoding.Name = "Global_AppEncoding";
-            this.helpProvider1.SetShowHelp(this.Global_AppEncoding, true);
-            this.Global_AppEncoding.Size = new System.Drawing.Size(250, 23);
-            this.Global_AppEncoding.TabIndex = 51;
-            // 
-            // Local_AppEncoding
-            // 
-            this.Local_AppEncoding.FormattingEnabled = true;
-            this.Local_AppEncoding.Location = new System.Drawing.Point(150, 286);
-            this.Local_AppEncoding.Name = "Local_AppEncoding";
-            this.helpProvider1.SetShowHelp(this.Local_AppEncoding, true);
-            this.Local_AppEncoding.Size = new System.Drawing.Size(250, 23);
-            this.Local_AppEncoding.TabIndex = 47;
             // 
             // argumentsTextBox
             // 
@@ -2003,8 +1981,6 @@ namespace GitUI
             // 
             // tpGlobalSettings
             // 
-            this.tpGlobalSettings.Controls.Add(this.Global_AppEncoding);
-            this.tpGlobalSettings.Controls.Add(this.label59);
             this.tpGlobalSettings.Controls.Add(this.label60);
             this.tpGlobalSettings.Controls.Add(this.Global_FilesEncoding);
             this.tpGlobalSettings.Controls.Add(this.BrowseCommitTemplate);
@@ -2044,15 +2020,6 @@ namespace GitUI
             this.tpGlobalSettings.Text = "Global settings";
             this.tpGlobalSettings.UseVisualStyleBackColor = true;
             // 
-            // label59
-            // 
-            this.label59.AutoSize = true;
-            this.label59.Location = new System.Drawing.Point(9, 464);
-            this.label59.Name = "label59";
-            this.label59.Size = new System.Drawing.Size(130, 15);
-            this.label59.TabIndex = 50;
-            this.label59.Text = "GitExtensions encoding";
-            // 
             // label60
             // 
             this.label60.AutoSize = true;
@@ -2060,7 +2027,7 @@ namespace GitUI
             this.label60.Name = "label60";
             this.label60.Size = new System.Drawing.Size(83, 15);
             this.label60.TabIndex = 49;
-            this.label60.Text = "Files encoding";
+            this.label60.Text = "Files content encoding";
             // 
             // Global_FilesEncoding
             // 
@@ -2412,8 +2379,6 @@ namespace GitUI
             // 
             // tpLocalSettings
             // 
-            this.tpLocalSettings.Controls.Add(this.Local_AppEncoding);
-            this.tpLocalSettings.Controls.Add(this.LogEncodingLabel);
             this.tpLocalSettings.Controls.Add(this.label61);
             this.tpLocalSettings.Controls.Add(this.Local_FilesEncoding);
             this.tpLocalSettings.Controls.Add(this.groupBox10);
@@ -2438,15 +2403,6 @@ namespace GitUI
             this.tpLocalSettings.Text = "Local settings";
             this.tpLocalSettings.UseVisualStyleBackColor = true;
             // 
-            // LogEncodingLabel
-            // 
-            this.LogEncodingLabel.AutoSize = true;
-            this.LogEncodingLabel.Location = new System.Drawing.Point(15, 289);
-            this.LogEncodingLabel.Name = "LogEncodingLabel";
-            this.LogEncodingLabel.Size = new System.Drawing.Size(130, 15);
-            this.LogEncodingLabel.TabIndex = 46;
-            this.LogEncodingLabel.Text = "GitExtensions encoding";
-            // 
             // label61
             // 
             this.label61.AutoSize = true;
@@ -2454,7 +2410,7 @@ namespace GitUI
             this.label61.Name = "label61";
             this.label61.Size = new System.Drawing.Size(83, 15);
             this.label61.TabIndex = 45;
-            this.label61.Text = "Files encoding";
+            this.label61.Text = "Files content encoding";
             // 
             // Local_FilesEncoding
             // 
@@ -3581,12 +3537,8 @@ namespace GitUI
         private DataGridViewCheckBoxColumn AskConfirmation;
         private DataGridViewCheckBoxColumn addToRevisionGridContextMenuDataGridViewCheckBoxColumn;
         private CheckBox chkStashUntrackedFiles;
-        private ComboBox Global_AppEncoding;
-        private Label label59;
         private Label label60;
         private ComboBox Global_FilesEncoding;
-        private ComboBox Local_AppEncoding;
-        private Label LogEncodingLabel;
         private Label label61;
         private ComboBox Local_FilesEncoding;
         private CheckBox chkStartWithRecentWorkingDir;

@@ -57,7 +57,7 @@ namespace GitCommands.Config
 
         private Encoding GetEncoding()
         {
-            return Local ? Settings.AppEncoding : Settings.GetAppEncoding(false, true);
+            return Settings.SystemEncoding;
         }
 
         private void Load()
