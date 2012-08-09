@@ -134,8 +134,8 @@ namespace GitCommands
                            RedirectStandardOutput = true,
                            RedirectStandardInput = true,
                            RedirectStandardError = true,
-                           StandardOutputEncoding = Settings.LogOutputEncoding,
-                           StandardErrorEncoding = Settings.LogOutputEncoding
+                           StandardOutputEncoding = Settings.SystemEncoding,
+                           StandardErrorEncoding = Settings.SystemEncoding
                        };
         }
 
