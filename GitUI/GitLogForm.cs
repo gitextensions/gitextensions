@@ -63,7 +63,7 @@ namespace GitUI
             string command = (string)CommandCacheItems.SelectedItem;
 
             string output;
-            if (GitCommandCache.TryGet(command, Settings.LogOutputEncoding, out output))
+            if (GitCommandCache.TryGet(command, Settings.SystemEncoding, out output))
             {
                 commandCacheOutput.Text = command + "\n-------------------------------------\n\n";
                 commandCacheOutput.Text += output.Replace("\0", "\\0");
