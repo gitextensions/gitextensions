@@ -70,7 +70,7 @@ namespace GitUI
                             if (!this.MailMapFile.EndsWith(Environment.NewLine))
                                 this.MailMapFile += Environment.NewLine;
 
-                            File.WriteAllBytes(x, Settings.AppEncoding.GetBytes(this.MailMapFile));
+                            File.WriteAllBytes(x, Settings.SystemEncoding.GetBytes(this.MailMapFile));
                         });
                 return true;
             }
