@@ -294,11 +294,6 @@ namespace PatchApply
             }
         }
 
-        public void LoadPatch(string text, bool applyPatch)
-        {
-            LoadPatch(text, applyPatch, Settings.FilesEncoding);
-        }
-
         public void LoadPatchFile(bool applyPatch, Encoding filesContentEncoding)
         {
             using (var re = new StreamReader(PatchFileName, Settings.LosslessEncoding))

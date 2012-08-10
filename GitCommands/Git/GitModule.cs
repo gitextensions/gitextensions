@@ -1534,7 +1534,7 @@ namespace GitCommands
         public List<Patch> GetStashedItems(string stashName)
         {
             var patchManager = new PatchManager();
-            patchManager.LoadPatch(RunGitCmd("stash show -p " + stashName, Settings.LosslessEncoding), false);
+            patchManager.LoadPatch(RunGitCmd("stash show -p " + stashName, Settings.LosslessEncoding), false, Settings.FilesEncoding);
 
             return patchManager.Patches;
         }
