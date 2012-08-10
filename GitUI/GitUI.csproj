@@ -1422,7 +1422,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Resources\ChangeLog.txt" />
+    <None Include="Resources\ChangeLog.md" />
     <None Include="Resources\Icons\merge.png" />
     <None Include="Resources\Icons\fetch.png" />
     <None Include="Resources\Icons\Rebase.png" />
