@@ -12,6 +12,7 @@ using TestCleanup = NUnit.Framework.TearDownAttribute;
 #endif
 using System.Linq;
 using System.Text;
+using GitCommands;
 using PatchApply;
 
 namespace GitCommandsTests
@@ -19,6 +20,16 @@ namespace GitCommandsTests
     [TestClass]
     public class PatchManagerTest
     {
+        /// <summary>
+        ///Initialize() is called once during test execution before
+        ///test methods in this test class are executed.
+        ///</summary>
+        [TestInitialize()]
+        public void Initialize()
+        {
+            Settings.SetupSystemEncoding();
+        }
+
         [TestMethod]
         public void TestPatchManagerInstanceNotNull()
         {
