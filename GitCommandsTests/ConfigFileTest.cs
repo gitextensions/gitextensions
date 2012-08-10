@@ -61,7 +61,7 @@ namespace GitCommandsTests
         {
             { //TESTDATA
                 //Write test config
-                File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), Settings.AppEncoding);
+                File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), Encoding.UTF8);
             }
             ConfigFile configFile = new ConfigFile(GetConfigFileName() + "\\", false);
             
@@ -133,7 +133,7 @@ namespace GitCommandsTests
         {
             { //TESTDATA
                 //Write test config
-                File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), Settings.AppEncoding);
+                File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), Encoding.UTF8);
 
                 //Make sure it is hidden
                 FileInfo configFile = new FileInfo(GetConfigFileName());
@@ -162,7 +162,7 @@ namespace GitCommandsTests
         {
             { //TESTDATA
                 //Write test config
-                File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), Settings.AppEncoding);
+                File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), Encoding.UTF8);
             }
 
             { //PERFORM TEST
@@ -203,7 +203,7 @@ namespace GitCommandsTests
                 content.AppendLine("path = test.test");
 
                 //Write test config
-                File.WriteAllText(GetConfigFileName(), content.ToString(), Settings.AppEncoding);
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
             }
 
             //CHECK GET CONFIG VALUE
@@ -236,7 +236,7 @@ namespace GitCommandsTests
                 content.AppendLine("path = test.test");
 
                 //Write test config
-                File.WriteAllText(GetConfigFileName(), content.ToString(), Settings.AppEncoding);
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
             }
 
             //CHECK GET CONFIG VALUE
@@ -281,7 +281,7 @@ namespace GitCommandsTests
                 content.AppendLine("	path = c:/Program Files (x86)/KDiff3/kdiff3.exe");
 
                 //Write test config
-                File.WriteAllText(GetConfigFileName(), content.ToString(), Settings.AppEncoding);
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
             }
 
             //CHECK GET CONFIG VALUE
@@ -337,7 +337,7 @@ namespace GitCommandsTests
 
 
                 //Write test config
-                File.WriteAllText(GetConfigFileName(), content.ToString(), Settings.AppEncoding);
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
             }
 
             //CHECK GET CONFIG VALUE
@@ -375,7 +375,7 @@ namespace GitCommandsTests
                 content.AppendLine("	logregex = \\n([A-Z][A-Z0-9]+-/d+)");
 
                 //Write test config
-                File.WriteAllText(GetConfigFileName(), content.ToString(), Settings.AppEncoding);
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
             }
 
             //CHECK GET CONFIG VALUE
@@ -408,7 +408,7 @@ namespace GitCommandsTests
                 content.AppendLine(@"	unc = //test/");
 
                 //Write test config
-                File.WriteAllText(GetConfigFileName(), content.ToString(), Settings.AppEncoding);
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
             }
 
             //CHECK GET CONFIG VALUE
@@ -441,7 +441,7 @@ namespace GitCommandsTests
                 content.AppendLine(@"	unc = \\\\test\\"); //<- escaped value in config file
 
                 //Write test config
-                File.WriteAllText(GetConfigFileName(), content.ToString(), Settings.AppEncoding);
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
             }
 
             //CHECK GET CONFIG VALUE
@@ -474,7 +474,7 @@ namespace GitCommandsTests
                 content.AppendLine("	test = test");
 
                 //Write test config
-                File.WriteAllText(GetConfigFileName(), content.ToString(), Settings.AppEncoding);
+                File.WriteAllText(GetConfigFileName(), content.ToString(), Encoding.UTF8);
             }
 
             //CHECK GET CONFIG VALUE
