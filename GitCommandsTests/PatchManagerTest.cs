@@ -10,6 +10,7 @@ using TestClass = NUnit.Framework.TestFixtureAttribute;
 using TestMethod = NUnit.Framework.TestAttribute;
 using TestCleanup = NUnit.Framework.TearDownAttribute;
 #endif
+using GitCommands;
 using System.Linq;
 using System.Text;
 using PatchApply;
@@ -47,7 +48,7 @@ namespace GitCommandsTests
             expectedPatch.AppendTextLine("-asdkjaldskjlaksd");
             expectedPatch.AppendTextLine("+changed again");
 
-            manager.LoadPatch(expectedPatch.Text, false);
+            manager.LoadPatch(expectedPatch.Text, false, Settings.LosslessEncoding);
            
             Patch createdPatch = manager.Patches.First();
             Assert.AreEqual(expectedPatch.Text, createdPatch.Text);
@@ -58,8 +59,8 @@ namespace GitCommandsTests
         public void TestCorrectlyLoadsTheRightNumberOfDiffsInAPatchFile()
         {
             PatchManager manager = NewManager();
-            var testPatch = Encoding.UTF8.GetString(TestResource.TestPatch);
-            manager.LoadPatch(testPatch, false);
+            var testPatch = Settings.LosslessEncoding.GetString(TestResource.TestPatch);
+            manager.LoadPatch(testPatch, false, Encoding.UTF8);
 
             Assert.AreEqual(12, manager.Patches.Count);
         }
@@ -68,8 +69,8 @@ namespace GitCommandsTests
         public void TestCorrectlyLoadsTheRightFilenamesInAPatchFile()
         {
             PatchManager manager = NewManager();
-            var testPatch = Encoding.UTF8.GetString(TestResource.TestPatch);
-            manager.LoadPatch(testPatch, false);
+            var testPatch = Settings.LosslessEncoding.GetString(TestResource.TestPatch);
+            manager.LoadPatch(testPatch, false, Encoding.UTF8);
 
             Assert.AreEqual(12, manager.Patches.Select(p => p.FileNameA).Distinct().Count());
             Assert.AreEqual(12, manager.Patches.Select(p => p.FileNameB).Distinct().Count());
@@ -79,8 +80,8 @@ namespace GitCommandsTests
         public void TestCorrectlyLoadsOneBinaryPatch()
         {
             PatchManager manager = NewManager();
-            var testPatch = Encoding.UTF8.GetString(TestResource.TestPatch);
-            manager.LoadPatch(testPatch, false);
+            var testPatch = Settings.LosslessEncoding.GetString(TestResource.TestPatch);
+            manager.LoadPatch(testPatch, false, Encoding.UTF8);
             
             Assert.AreEqual(1, manager.Patches.Count(p => p.File == Patch.FileType.Binary));
         }
@@ -89,8 +90,8 @@ namespace GitCommandsTests
         public void TestCorrectlyLoadsOneNewFile()
         {
             PatchManager manager = NewManager();
-            var testPatch = Encoding.UTF8.GetString(TestResource.TestPatch);
-            manager.LoadPatch(testPatch, false);
+            var testPatch = Settings.LosslessEncoding.GetString(TestResource.TestPatch);
+            manager.LoadPatch(testPatch, false, Encoding.UTF8);
 
             Assert.AreEqual(1, manager.Patches.Count(p => p.Type == Patch.PatchType.NewFile));
         }
@@ -99,8 +100,8 @@ namespace GitCommandsTests
         public void TestCorrectlyLoadsOneDeleteFile()
         {
             PatchManager manager = NewManager();
-            var testPatch = Encoding.UTF8.GetString(TestResource.TestPatch);
-            manager.LoadPatch(testPatch, false);
+            var testPatch = Settings.LosslessEncoding.GetString(TestResource.TestPatch);
+            manager.LoadPatch(testPatch, false, Encoding.UTF8);
 
             Assert.AreEqual(1, manager.Patches.Count(p => p.Type == Patch.PatchType.DeleteFile));
         }
@@ -109,8 +110,8 @@ namespace GitCommandsTests
         public void TestCorrectlyLoadsTenChangeFiles()
         {
             PatchManager manager = NewManager();
-            var testPatch = Encoding.UTF8.GetString(TestResource.TestPatch);
-            manager.LoadPatch(testPatch, false);
+            var testPatch = Settings.LosslessEncoding.GetString(TestResource.TestPatch);
+            manager.LoadPatch(testPatch, false, Encoding.UTF8);
 
             Assert.AreEqual(10, manager.Patches.Count(p => p.Type == Patch.PatchType.ChangeFile));
         }
