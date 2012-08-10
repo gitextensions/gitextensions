@@ -28,6 +28,16 @@ namespace GitCommandsTests
     [TestClass]
     public class ConfigFileTest
     {
+        /// <summary>
+        ///Initialize() is called once during test execution before
+        ///test methods in this test class are executed.
+        ///</summary>
+        [TestInitialize()]
+        public void Initialize()
+        {
+            Settings.SetupSystemEncoding();
+        }
+
         private string GetTempFolder()
         {
             return Path.GetTempPath();
