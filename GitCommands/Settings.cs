@@ -917,7 +917,7 @@ namespace GitCommands
             }
         }
 
-        private static void SetupSystemEncoding()
+        public static void SetupSystemEncoding()
         {
             //check whether GitExtensions works with standard msysgit or msysgit-unicode
 
