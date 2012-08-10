@@ -48,7 +48,8 @@ namespace GitCommandsTests
             expectedPatch.AppendTextLine("-asdkjaldskjlaksd");
             expectedPatch.AppendTextLine("+changed again");
 
-            manager.LoadPatch(expectedPatch.Text, false, Settings.LosslessEncoding);
+            var patchStr = GitCommandHelpers.ReEncodeString(expectedPatch.Text, Encoding.Unicode, Settings.LosslessEncoding);
+            manager.LoadPatch(patchStr, false, Encoding.Unicode);
            
             Patch createdPatch = manager.Patches.First();
             Assert.AreEqual(expectedPatch.Text, createdPatch.Text);
