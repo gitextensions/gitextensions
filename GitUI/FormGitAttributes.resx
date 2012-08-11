@@ -131,8 +131,8 @@ Mark sln files as binary:
 Mark single file as text:
 weirdchars.txt text
 
-For more information refer
-to git help
+For more information run
+command "git help gitattributes"
 </value>
   </data>
 </root>

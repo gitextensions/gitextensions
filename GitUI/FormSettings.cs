@@ -206,9 +206,7 @@ namespace GitUI
             noImageService.Items.AddRange(GravatarService.DynamicServices.Cast<object>().ToArray());
 
             FillEncodings(Global_FilesEncoding);
-            FillEncodings(Global_AppEncoding);
             FillEncodings(Local_FilesEncoding);
-            FillEncodings(Local_AppEncoding);
 
             string npp = MergeToolsHelper.FindFileInFolders("notepad++.exe", "Notepad++");
             if (string.IsNullOrEmpty(npp))
@@ -337,9 +335,7 @@ namespace GitUI
 
                 scriptEvent.DataSource = Enum.GetValues(typeof(ScriptEvent));
                 EncodingToCombo(Settings.GetFilesEncoding(false), Global_FilesEncoding);
-                EncodingToCombo(Settings.GetAppEncoding(false, false), Global_AppEncoding);
                 EncodingToCombo(Settings.GetFilesEncoding(true), Local_FilesEncoding);
-                EncodingToCombo(Settings.GetAppEncoding(true, false), Local_AppEncoding);
 
                 chkStartWithRecentWorkingDir.Checked = Settings.StartWithRecentWorkingDir;
                 chkPlaySpecialStartupSound.Checked = Settings.PlaySpecialStartupSound;
@@ -598,9 +594,7 @@ namespace GitUI
             Settings.Pageant = PageantPath.Text;
             Settings.AutoStartPageant = AutostartPageant.Checked;
             Settings.SetFilesEncoding(false, ComboToEncoding(Global_FilesEncoding));
-            Settings.SetAppEncoding(false, ComboToEncoding(Global_AppEncoding));
             Settings.SetFilesEncoding(true, ComboToEncoding(Local_FilesEncoding));
-            Settings.SetAppEncoding(true, ComboToEncoding(Local_AppEncoding));
             Settings.RevisionGridQuickSearchTimeout = (int)RevisionGridQuickSearchTimeout.Value;
             Settings.MulticolorBranches = MulticolorBranches.Checked;
             Settings.RevisionGraphDrawNonRelativesGray = DrawNonRelativesGray.Checked;
