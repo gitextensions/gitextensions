@@ -132,7 +132,7 @@ namespace AutoCheckForUpdates
 
         private void linkChangeLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://github.com/spdr870/gitextensions/blob/master/GitUI/Resources/ChangeLog.txt");
+            Process.Start("https://github.com/spdr870/gitextensions/blob/master/GitUI/Resources/ChangeLog.md");
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using GitCommands;
 
 namespace PatchApply
@@ -8,7 +9,6 @@ namespace PatchApply
     public class PatchManager
     {
         private List<Patch> _patches = new List<Patch>();
-        private readonly PatchProcessor _patchProcessor = new PatchProcessor();
 
         public string PatchFileName { get; set; }
 
@@ -284,25 +284,28 @@ namespace PatchApply
             bs = x.ComputeHash(bs);
             return bs;
         }
-        
-        public void LoadPatch(string text, bool applyPatch)
+
+        //TODO encoding for each file in patch should be obtained separatly from .gitattributes
+        public void LoadPatch(string text, bool applyPatch, Encoding filesContentEncoding)
         {
             using (var stream = new StringReader(text))
             {
-                LoadPatchStream(stream, applyPatch);
+                LoadPatchStream(stream, applyPatch, filesContentEncoding);
             }
         }
 
-        public void LoadPatchFile(bool applyPatch)
+        public void LoadPatchFile(bool applyPatch, Encoding filesContentEncoding)
         {
-            using (var re = new StreamReader(PatchFileName, Settings.FilesEncoding))
+            using (var re = new StreamReader(PatchFileName, Settings.LosslessEncoding))
             {
-                LoadPatchStream(re, applyPatch);
+                LoadPatchStream(re, applyPatch, filesContentEncoding);
             }
         }
 
-        private void LoadPatchStream(TextReader reader, bool applyPatch)
+        private void LoadPatchStream(TextReader reader, bool applyPatch, Encoding filesContentEncoding)
         {
+            PatchProcessor _patchProcessor = new PatchProcessor(filesContentEncoding);
+
             _patches = _patchProcessor.CreatePatchesFromReader(reader);
 
             if (!applyPatch)

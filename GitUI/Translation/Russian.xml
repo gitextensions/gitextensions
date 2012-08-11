@@ -1089,6 +1089,12 @@ You will have push access. {2}</Source>
           <Source>Create branch</Source>
           <Value>Создать ветку</Value>
         </TranslationItem>
+        <TranslationItem Name="_branchNameIsEmpty" Property="Text">
+          <Value>Введите имя ветки.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_branchNameIsNotValud" Property="Text">
+          <Value>«{0}» — недопустимое имя для ветки.</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormBrowse">
@@ -1791,7 +1797,7 @@ You will have push access. {2}</Source>
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Checkout remote branch '{0}'</Source>
-          <Value>Забрать удаленную ветку '{0}'</Value>
+          <Value>Забрать удаленную ветку «{0}»</Value>
         </TranslationItem>
         <TranslationItem Name="_applyShashedItemsAgain" Property="Text">
           <Source>Apply stashed items to working dir again?</Source>
@@ -1811,7 +1817,7 @@ You will have push access. {2}</Source>
         </TranslationItem>
         <TranslationItem Name="rbCreateBranch" Property="Text">
           <Source>Create local branch with the name '{0}'</Source>
-          <Value>Создать локальную ветку с именем '{0}'</Value>
+          <Value>Создать локальную ветку с именем «{0}»</Value>
         </TranslationItem>
         <TranslationItem Name="rbDontChange" Property="Text" type="unfinished">
           <Source>Don't change</Source>
@@ -1831,11 +1837,22 @@ You will have push access. {2}</Source>
         </TranslationItem>
         <TranslationItem Name="rbResetBranch" Property="Text">
           <Source>Reset local branch with the name '{0}'</Source>
-          <Value>Сбросить локальную ветку с именем '{0}'</Value>
+          <Value>Сбросить локальную ветку с именем «{0}»</Value>
         </TranslationItem>
         <TranslationItem Name="btCancel" Property="Text" type="obsolete">
           <Source>Cancel</Source>
           <Value>Отмена</Value>
+        </TranslationItem>
+        <TranslationItem Name="_customBranchNameIsEmpty" Property="Text">
+          <Value>Не указано имя ветки.
+Введите имя ветки или выберите один из предложенных вариантов.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_customBranchNameIsNotValid" Property="Text">
+          <Value>«{0}» — недопустимое имя для ветки.
+Введите корректное имя ветки или выберите один из предложенных вариантов.</Value>
+        </TranslationItem>
+        <TranslationItem Name="rbCreateBranchWithCustomName" Property="Text">
+          <Value>Создать локальную ветку с именем:</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

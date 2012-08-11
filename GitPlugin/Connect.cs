@@ -213,9 +213,7 @@ namespace GitPlugin
                     _gitPlugin.OutputPane.OutputString("Error creating contextmenu: " + ex);
                 }
 
-               
 
-                AddContextMenuItemsToContextMenu("XML Editor");
                 AddContextMenuItemsToContextMenu("Web Item");
                 AddContextMenuItemsToContextMenu("Item");
                 AddContextMenuItemsToContextMenu("Easy MDI Document Window");
@@ -227,21 +225,10 @@ namespace GitPlugin
                  * Uncomment the code block below to help find the name of commandbars in
                  * visual studio. All commandbars (and context menu's) will get a new entry
                  * with the name of that commandbar.
-                foreach (var commandBar in ((CommandBars)_applicationObject.CommandBars))
+                foreach (var commandBar in _gitPlugin.CommandBars)
                 {
-                    try
-                    {
-                        var name = Guid.NewGuid().ToString("N");
-                        _gitPlugin.RegisterCommand(name, new ToolbarCommand<Remotes>());
-                        _gitPlugin.AddMenuCommand(((CommandBar)commandBar).Name, name, ((CommandBar)commandBar).Name, ((CommandBar)commandBar).Name, 6, 4);
-                    }
-                    catch
-                    {
-                    }
-
                     _gitPlugin.OutputPane.OutputString(((CommandBar)commandBar).Name + Environment.NewLine);
-                }
-                */
+                }*/
             }
             catch (Exception ex)
             {
@@ -289,8 +276,8 @@ namespace GitPlugin
         {
             try
             {
-                _gitPlugin.AddMenuCommand(toolbarName, "GitExtensionsFileHistory", "File history", "Show file history", 6,
-                                         4);
+                _gitPlugin.AddMenuCommand(toolbarName, "GitExtensionsFileHistory", "File history", "Show file history", 
+                                         6, 4);
                 _gitPlugin.AddMenuCommand(toolbarName, "GitExtensionsRevert", "Undo file changes",
                                          "Undo changes made to this file", 4, 5);
             }

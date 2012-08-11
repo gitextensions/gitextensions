@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMailMap));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this._NO_TRANSLATE_MailMapText = new GitUI.Editor.FileViewer();
             this.label1 = new System.Windows.Forms.Label();
@@ -75,10 +75,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(215, 72);
+            this.label1.Size = new System.Drawing.Size(261, 135);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Edit the mailmap.\r\nThis file is meant to correct usernames.\r\n\r\nExample:\r\nHenk Wes" +
-    "thuis <Henk@.(none)>\r\nHenk Westhuis <henk_westhuis@hotmail.com>";
+            this.label1.Text = resources.GetString("label1.Text");
             // 
             // Save
             // 
@@ -93,7 +92,7 @@
             // 
             // FormMailMap
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(634, 474);
             this.Controls.Add(this.splitContainer1);
