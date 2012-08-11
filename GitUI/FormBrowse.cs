@@ -1511,7 +1511,8 @@ namespace GitUI
             if (button == null)
                 return;
 
-            Settings.WorkingDir += Settings.Module.GetSubmoduleLocalPath(button.Text);
+            string dir = Settings.WorkingDir + Settings.Module.GetSubmoduleLocalPath(button.Text);
+            Settings.WorkingDir = Path.GetFullPath(dir); // fix slashes
 
             if (Settings.Module.ValidWorkingDir())
                 Repositories.AddMostRecentRepository(Settings.WorkingDir);
@@ -2400,6 +2401,10 @@ namespace GitUI
             if (!Settings.DonSetAsLastPullAction)
                 Settings.LastPullAction = Settings.PullAction.None;
             PullToolStripMenuItemClick(sender, e);
+
+            //restore Settings.PullMerge value
+            if (Settings.DonSetAsLastPullAction)
+                Settings.LastPullActionToPullMerge();
         }
 
         private void RefreshPullIcon()
@@ -2445,6 +2450,9 @@ namespace GitUI
             if (GitUICommands.Instance.StartPullDialog(this, true, out pullCompelted, configProc))
                 Initialize();
 
+            //restore Settings.PullMerge value
+            if (Settings.DonSetAsLastPullAction)
+                Settings.LastPullActionToPullMerge();
         }
 
 

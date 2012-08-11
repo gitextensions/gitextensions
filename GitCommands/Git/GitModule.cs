@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands.Config;
+using JetBrains.Annotations;
 using PatchApply;
 using GitUIPluginInterfaces;
 
@@ -282,7 +283,7 @@ namespace GitCommands
         public string RunCachableCmd(string cmd, string arguments, Encoding encoding)
         {
             if (encoding == null)
-                encoding = Settings.LogOutputEncoding;
+                encoding = Settings.SystemEncoding;
 
             string output;
             if (GitCommandCache.TryGet(arguments, encoding, out output))
@@ -299,7 +300,7 @@ namespace GitCommands
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public string RunCachableCmd(string cmd, string arguments)
         {
-            return RunCachableCmd(cmd, arguments, Settings.LogOutputEncoding);
+            return RunCachableCmd(cmd, arguments, Settings.SystemEncoding);
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
@@ -337,7 +338,7 @@ namespace GitCommands
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public string RunCmd(string cmd, string arguments, out int exitCode, string stdInput)
         {
-            return RunCmd(cmd, arguments, out exitCode, stdInput, Settings.LogOutputEncoding);
+            return RunCmd(cmd, arguments, out exitCode, stdInput, Settings.SystemEncoding);
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
@@ -371,7 +372,7 @@ namespace GitCommands
 
         public string RunGitCmd(string arguments, out int exitCode, string stdInput)
         {
-            return RunGitCmd(arguments, out exitCode, stdInput, Settings.LogOutputEncoding);
+            return RunGitCmd(arguments, out exitCode, stdInput, Settings.SystemEncoding);
         }
 
         public string RunGitCmd(string arguments, out int exitCode, string stdInput, Encoding encoding)
@@ -1568,7 +1569,7 @@ namespace GitCommands
         public List<Patch> GetStashedItems(string stashName)
         {
             var patchManager = new PatchManager();
-            patchManager.LoadPatch(RunGitCmd("stash show -p " + stashName, Settings.FilesEncoding), false);
+            patchManager.LoadPatch(RunGitCmd("stash show -p " + stashName, Settings.LosslessEncoding), false, Settings.FilesEncoding);
 
             return patchManager.Patches;
         }
@@ -1618,7 +1619,7 @@ namespace GitCommands
 
             var patchManager = new PatchManager();
             var arguments = string.Format("diff {0} -M -C {1} -- {2} {3}", extraDiffArguments, commitRange, fileName, oldFileName);
-            patchManager.LoadPatch(this.RunCachableCmd(Settings.GitCommand, arguments, encoding), false);
+            patchManager.LoadPatch(this.RunCachableCmd(Settings.GitCommand, arguments, Settings.LosslessEncoding), false, encoding);
 
             return patchManager.Patches.Count > 0 ? patchManager.Patches[patchManager.Patches.Count - 1] : null;
         }
@@ -1626,18 +1627,6 @@ namespace GitCommands
         public Patch GetSingleDiff(string @from, string to, string fileName, string extraDiffArguments, Encoding encoding)
         {
             return this.GetSingleDiff(from, to, fileName, null, extraDiffArguments, encoding);
-        }
-
-        public List<Patch> GetDiff(string from, string to, string extraDiffArguments)
-        {
-            if (Settings.UsePatienceDiffAlgorithm)
-                extraDiffArguments = string.Concat(extraDiffArguments, " --patience");
-
-            var patchManager = new PatchManager();
-            var arguments = string.Format("diff{0} \"{1}\" \"{2}\"", extraDiffArguments, from, to);
-            patchManager.LoadPatch(this.RunCachableCmd(Settings.GitCommand, arguments), false);
-
-            return patchManager.Patches;
         }
 
         public string GetStatusText(bool untracked)
@@ -1824,8 +1813,11 @@ namespace GitCommands
             if (staged)
                 args = string.Concat("diff -M -C --cached", extraDiffArguments, " -- ", fileName, " ", oldFileName);
 
-            String result = RunGitCmd(args, encoding);
-            return GitCommandHelpers.ReEncodeFileName(result, 4);
+            String result = RunGitCmd(args, Settings.LosslessEncoding);
+            var patchManager = new PatchManager();
+            patchManager.LoadPatch(result, false, encoding);
+
+            return patchManager.Patches.Count > 0 ? patchManager.Patches[patchManager.Patches.Count - 1].Text : string.Empty;
         }
 
         public string StageFile(string file)
@@ -1951,7 +1943,7 @@ namespace GitCommands
 
         public ICollection<string> GetMergedBranches()
         {
-            return Settings.Module.RunGitCmd(GitCommandHelpers.MergedBranches()).Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);                
+            return Settings.Module.RunGitCmd(GitCommandHelpers.MergedBranches()).Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         private string GetTree(bool tags, bool branches)
@@ -2149,7 +2141,7 @@ namespace GitCommands
                     else if (line.StartsWith("summary"))
                         blameHeader.Summary = GitCommandHelpers.ReEncodeStringFromLossless(line.Substring("summary".Length).Trim());
                     else if (line.StartsWith("filename"))
-                        blameHeader.FileName = GitCommandHelpers.ReEncodeFileName(line.Substring("filename".Length).Trim());
+                        blameHeader.FileName = GitCommandHelpers.ReEncodeFileNameFromLossless(line.Substring("filename".Length).Trim());
                     else if (line.IndexOf(' ') == 40) //SHA1, create new line!
                     {
                         blameLine = new GitBlameLine();
@@ -2321,6 +2313,27 @@ namespace GitCommands
                 return repositoryPath;
             var candidatePath = GetGitDirectory(repositoryPath);
             return Directory.Exists(candidatePath) ? candidatePath : repositoryPath;
+        }
+
+        // NOTE: probably the rules should be inlined to avoid external process call overhead
+        /// <summary>
+        /// Uses check-ref-format to ensure that a reference name is well formed.
+        /// </summary>
+        /// <param name="refName">Reference name to test.</param>
+        /// <returns>true if <see cref="refName"/> is valid reference name, otherwise false.</returns>
+        public bool CheckRefFormat([NotNull] string refName)
+        {
+            if (refName == null)
+                throw new ArgumentNullException("refName");
+
+            if (refName.IsNullOrWhiteSpace())
+                return false;
+
+            refName = refName.Replace("\"", "\\\"");
+
+            int exitCode;
+            RunCmd(Settings.GitCommand, string.Format("check-ref-format --allow-onelevel \"{0}\"", refName), out exitCode);
+            return exitCode == 0;
         }
     }
 }
