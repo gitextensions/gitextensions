@@ -160,18 +160,15 @@ namespace GitCommands.Repository
             List<RecentRepoInfo> list = null;
             bool existsShortName;
             //if there is no short name for a repo, then try to find unique caption extendig short directory path
-            if (shortenPath)
+            if (shortenPath && repoInfo.DirInfo != null)
             {
-                if (repoInfo.DirInfo != null)
-                {
-                    string s = repoInfo.DirName.Substring(repoInfo.DirInfo.FullName.Length);
-                    s = s.Trim(Path.DirectorySeparatorChar);
-                    //candidate for short name
-                    repoInfo.Caption = repoInfo.ShortName;
-                    if (!s.IsNullOrEmpty())
-                        repoInfo.Caption += " (" + s + ")";
-                    repoInfo.DirInfo = repoInfo.DirInfo.Parent;
-                }
+                string s = repoInfo.DirName.Substring(repoInfo.DirInfo.FullName.Length);
+                s = s.Trim(Path.DirectorySeparatorChar);
+                //candidate for short name
+                repoInfo.Caption = repoInfo.ShortName;
+                if (!s.IsNullOrEmpty())
+                    repoInfo.Caption += " (" + s + ")";
+                repoInfo.DirInfo = repoInfo.DirInfo.Parent;
             }
             else
                 repoInfo.Caption = repoInfo.Repo.Path;
