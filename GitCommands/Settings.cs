@@ -344,7 +344,35 @@ namespace GitCommands
         }
 
         //encoding for files paths
-        public static Encoding SystemEncoding;
+        private static Encoding _SystemEncoding = null;
+        public static Encoding SystemEncoding 
+        {
+            get 
+            {
+                if (_SystemEncoding == null)
+                {
+                    //check whether GitExtensions works with standard msysgit or msysgit-unicode
+
+                    // invoke a git command that returns an invalid argument in its response, and
+                    // check if a unicode-only character is reported back. If so assume msysgit-unicode
+
+                    // git config --get with a malformed key (no section) returns:
+                    // "error: key does not contain a section: <key>"
+                    const string controlStr = "ą"; // "a caudata"
+                    string arguments = string.Format("config --get {0}", controlStr);
+
+                    int exitCode;
+                    String s = Module.RunGitCmd(arguments, out exitCode, null, Encoding.UTF8);
+                    if (s != null && s.IndexOf(controlStr) != -1)
+                        _SystemEncoding = Encoding.UTF8;
+                    else
+                        _SystemEncoding = Encoding.Default;
+                    Debug.WriteLine("System encoding: " + _SystemEncoding.EncodingName);
+                }
+
+                return _SystemEncoding;
+            }
+        }
         //Encoding that let us read all bytes without replacing any char
         //It is using to read output of commands, which may consist of:
         //1) commit header (message, author, ...) encoded in CommitEncoding, recoded to LogOutputEncoding or not dependent of 
@@ -917,31 +945,9 @@ namespace GitCommands
             }
         }
 
-        public static void SetupSystemEncoding()
-        {
-            //check whether GitExtensions works with standard msysgit or msysgit-unicode
-
-            // invoke a git command that returns an invalid argument in its response, and
-            // check if a unicode-only character is reported back. If so assume msysgit-unicode
-
-            // git config --get with a malformed key (no section) returns:
-            // "error: key does not contain a section: <key>"
-            const string controlStr = "ą"; // "a caudata"
-            string arguments = string.Format("config --get {0}", controlStr);
-
-            int exitCode;
-            String s = Module.RunGitCmd(arguments, out exitCode, null, Encoding.UTF8);
-            if (s != null && s.IndexOf(controlStr) != -1)
-                SystemEncoding = Encoding.UTF8;
-            else
-                SystemEncoding = Encoding.Default;
-            Debug.WriteLine("System encoding: " + SystemEncoding.EncodingName);
-        }
 
         public static void LoadSettings()
         {
-            SetupSystemEncoding();
-
             Action<Encoding> addEncoding = delegate(Encoding e) { availableEncodings[e.HeaderName] = e; };
             addEncoding(Encoding.Default);
             addEncoding(new ASCIIEncoding());
