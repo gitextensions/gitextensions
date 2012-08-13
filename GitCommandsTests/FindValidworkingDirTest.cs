@@ -25,7 +25,7 @@ namespace GitCommandsTests
     [TestClass]
     public class FindValidworkingDirTest
     {
-        private string GetCurrentDir()
+        private static string GetCurrentDir()
         {
             string path = typeof(FindValidworkingDirTest).Assembly.Location;
 
@@ -52,10 +52,10 @@ namespace GitCommandsTests
         private static void CheckWorkingDir()
         {
             //Should not contain double slashes -> \\
-            Assert.IsFalse(Settings.WorkingDir.Contains("\\\\"));
+            Assert.IsFalse(Settings.WorkingDir.Contains("\\\\"), "WorkingDir" + Settings.WorkingDir + "\n" + GetCurrentDir());
 
             //Should end with slash
-            Assert.IsTrue(Settings.WorkingDir.EndsWith("\\"));
+            Assert.IsTrue(Settings.WorkingDir.EndsWith("\\"), "WorkingDir" + Settings.WorkingDir + "\n" + GetCurrentDir());
         }
     }
 }

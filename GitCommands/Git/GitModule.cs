@@ -144,14 +144,19 @@ namespace GitCommands
             if (string.IsNullOrEmpty(startDir))
                 return "";
 
-            if (!startDir.EndsWith(Settings.PathSeparator.ToString()) && !startDir.EndsWith(Settings.PathSeparatorWrong.ToString()))
-                startDir += Settings.PathSeparator.ToString();
+            var pathSeparators = new[] { Settings.PathSeparator, Settings.PathSeparatorWrong };
+            var len = startDir.Length;
+
+            while (len > 0 && pathSeparators.Any(s => s == startDir[len - 1]))
+                len--;
+
+            startDir = startDir.Substring(0, len) + Settings.PathSeparator.ToString();
 
             var dir = startDir;
 
-            while (dir.LastIndexOfAny(new[] { Settings.PathSeparator, Settings.PathSeparatorWrong }) > 0)
+            while (dir.LastIndexOfAny(pathSeparators) > 0)
             {
-                dir = dir.Substring(0, dir.LastIndexOfAny(new[] { Settings.PathSeparator, Settings.PathSeparatorWrong }));
+                dir = dir.Substring(0, dir.LastIndexOfAny(pathSeparators));
 
                 if (ValidWorkingDir(dir))
                     return dir + Settings.PathSeparator.ToString();
