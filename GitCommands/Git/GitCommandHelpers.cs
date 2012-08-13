@@ -7,6 +7,7 @@ using System.Security.Permissions;
 using System.Text;
 using GitCommands.Config;
 using GitCommands.Git;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -125,8 +126,11 @@ namespace GitCommands
             return path.Replace('\\', '/');
         }
 
-        internal static ProcessStartInfo CreateProcessStartInfo()
+        internal static ProcessStartInfo CreateProcessStartInfo([CanBeNull] Encoding outputEncoding)
         {
+            if (outputEncoding == null)
+                outputEncoding = Settings.SystemEncoding;
+
             return new ProcessStartInfo
                        {
                            UseShellExecute = false,
@@ -134,8 +138,8 @@ namespace GitCommands
                            RedirectStandardOutput = true,
                            RedirectStandardInput = true,
                            RedirectStandardError = true,
-                           StandardOutputEncoding = Settings.SystemEncoding,
-                           StandardErrorEncoding = Settings.SystemEncoding
+                           StandardOutputEncoding = outputEncoding,
+                           StandardErrorEncoding = outputEncoding
                        };
         }
 
@@ -169,7 +173,8 @@ namespace GitCommands
             Settings.GitLog.Log(cmd + " " + arguments);
             //process used to execute external commands
 
-            var startInfo = CreateProcessStartInfo();
+            //data is read from base stream, so encoding doesn't matter
+            var startInfo = CreateProcessStartInfo(Encoding.Default);
             startInfo.CreateNoWindow = true;
             startInfo.FileName = cmd;
             startInfo.Arguments = arguments;
@@ -229,7 +234,7 @@ namespace GitCommands
             Settings.GitLog.Log(cmd + " " + arguments);
             //process used to execute external commands
 
-            var startInfo = CreateProcessStartInfo();
+            var startInfo = CreateProcessStartInfo(null);
             startInfo.CreateNoWindow = true;
             startInfo.FileName = cmd;
             startInfo.Arguments = arguments;
