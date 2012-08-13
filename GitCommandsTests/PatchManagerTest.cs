@@ -34,26 +34,27 @@ namespace GitCommandsTests
         {
             PatchManager manager = NewManager();
 
-            Patch expectedPatch = new Patch();
-            expectedPatch.Type = Patch.PatchType.ChangeFile;
-            expectedPatch.Apply = true;
-            expectedPatch.PatchHeader = "diff --git a/thisisatest.txt b/thisisatest.txt";
-            expectedPatch.PatchIndex = "index 5e4dce2..5eb1e6f 100644";
-            expectedPatch.FileNameA = "thisisatest.txt";
-            expectedPatch.FileNameB = "thisisatest.txt";
-            expectedPatch.AppendTextLine(expectedPatch.PatchHeader);
-            expectedPatch.AppendTextLine(expectedPatch.PatchIndex);
-            expectedPatch.AppendTextLine("--- a/thisisatest.txt");
-            expectedPatch.AppendTextLine("+++ b/thisisatest.txt");
-            expectedPatch.AppendTextLine("@@ -1,2 +1,2 @@");
-            expectedPatch.AppendTextLine("iiiiii");
-            expectedPatch.AppendTextLine("-asdkjaldskjlaksd");
-            expectedPatch.AppendTextLine("+changed again");
+            TestPatch expectedPatch = new TestPatch();
+            Encoding fileEncoding = Encoding.UTF8;
+            expectedPatch.Patch.Type = Patch.PatchType.ChangeFile;
+            expectedPatch.Patch.Apply = true;
+            expectedPatch.Patch.PatchHeader = "diff --git a/thisisatest.txt b/thisisatest.txt";
+            expectedPatch.Patch.PatchIndex = "index 5e4dce2..5eb1e6f 100644";
+            expectedPatch.Patch.FileNameA = "thisisatest.txt";
+            expectedPatch.Patch.FileNameB = "thisisatest.txt";
+            expectedPatch.AppendHeaderLine(expectedPatch.Patch.PatchHeader);
+            expectedPatch.AppendHeaderLine(expectedPatch.Patch.PatchIndex);
+            expectedPatch.AppendHeaderLine("--- a/" + expectedPatch.Patch.FileNameA);
+            expectedPatch.AppendHeaderLine("+++ b/" + expectedPatch.Patch.FileNameB);
+            expectedPatch.AppendDiffLine("@@ -1,2 +1,2 @@", fileEncoding);
+            expectedPatch.AppendDiffLine("iiiiii", fileEncoding);
+            expectedPatch.AppendDiffLine("-ąśdkjaldskjlaksd", fileEncoding);
+            expectedPatch.AppendDiffLine("+changed again€", fileEncoding);
 
-            manager.LoadPatch(expectedPatch.Text, false, Settings.LosslessEncoding);
-           
+            manager.LoadPatch(expectedPatch.PatchOutput.ToString(), false, fileEncoding);
+
             Patch createdPatch = manager.Patches.First();
-            Assert.AreEqual(expectedPatch.Text, createdPatch.Text);
+            Assert.AreEqual(expectedPatch.Patch.Text, createdPatch.Text);
         }
 
 
@@ -128,5 +129,30 @@ namespace GitCommandsTests
         {
             return new PatchManager();
         }
+    }
+
+    public class TestPatch
+    {
+        public Patch Patch { get; private set; }
+        public StringBuilder PatchOutput { get; private set; }
+
+        public TestPatch()
+        {
+            Patch = new Patch();
+            PatchOutput = new StringBuilder();
+        }
+
+        public void AppendHeaderLine(string line)
+        {
+            Patch.AppendTextLine(line);
+            PatchOutput.AppendLine(GitCommandHelpers.ReEncodeString(line, Settings.SystemEncoding, Settings.LosslessEncoding));
+        }
+
+        public void AppendDiffLine(string line, Encoding fileEncoding)
+        {
+            Patch.AppendTextLine(line);
+            PatchOutput.AppendLine(GitCommandHelpers.ReEncodeString(line, fileEncoding, Settings.LosslessEncoding));
+        }
+
     }
 }
