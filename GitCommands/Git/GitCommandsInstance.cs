@@ -29,7 +29,7 @@ namespace GitCommands
                 Settings.GitLog.Log(cmd + " " + arguments);
 
                 //process used to execute external commands
-                var process = new Process { StartInfo = GitCommandHelpers.CreateProcessStartInfo() };
+                var process = new Process { StartInfo = GitCommandHelpers.CreateProcessStartInfo(null) };
                 process.StartInfo.CreateNoWindow = (!ssh && !Settings.ShowGitCommandLine);
                 process.StartInfo.FileName = cmd;
                 process.StartInfo.Arguments = arguments;
