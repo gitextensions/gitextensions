@@ -1123,6 +1123,12 @@ namespace GitUI
             DiffToolCmdSuggest_Click(null, null);
         }
 
+        private void DifftoolPath_TextChanged(object sender, EventArgs e)
+        {
+            Settings.Module.SetGlobalPathSetting(string.Format("difftool.{0}.path", GlobalMergeTool.Text.Trim()), MergetoolPath.Text.Trim());
+            DiffToolCmdSuggest_Click(null, null);
+        }
+
         private void BrowseDiffTool_Click(object sender, EventArgs e)
         {
             if (GlobalDiffTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
@@ -1151,6 +1157,12 @@ namespace GitUI
             else
                 MergeToolCmd.Enabled = true;
 
+            MergeToolCmdSuggest_Click(null, null);
+        }
+
+        private void MergetoolPath_TextChanged(object sender, EventArgs e)
+        {
+            Settings.Module.SetGlobalPathSetting(string.Format("mergetool.{0}.path", GlobalMergeTool.Text.Trim()), MergetoolPath.Text.Trim());
             MergeToolCmdSuggest_Click(null, null);
         }
 

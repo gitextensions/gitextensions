@@ -2164,6 +2164,7 @@ namespace GitUI
             this.DifftoolPath.Name = "DifftoolPath";
             this.DifftoolPath.Size = new System.Drawing.Size(347, 23);
             this.DifftoolPath.TabIndex = 25;
+            this.DifftoolPath.TextChanged += new System.EventHandler(this.DifftoolPath_TextChanged);
             // 
             // GlobalDiffTool
             // 
@@ -2307,6 +2308,7 @@ namespace GitUI
             this.MergetoolPath.Name = "MergetoolPath";
             this.MergetoolPath.Size = new System.Drawing.Size(347, 23);
             this.MergetoolPath.TabIndex = 10;
+            this.MergetoolPath.TextChanged += new System.EventHandler(this.MergetoolPath_TextChanged);
             // 
             // GlobalKeepMergeBackup
             // 
