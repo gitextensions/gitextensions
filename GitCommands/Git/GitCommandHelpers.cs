@@ -800,7 +800,7 @@ namespace GitCommands
             }
 
             // Doesn't work with removed submodules
-            IList<string> Submodules = Settings.Module.GetSubmodulesNames();
+            IList<string> Submodules = Settings.Module.GetSubmodulesLocalPathes();
 
             //Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)
             var files = trimmedStatus.Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
@@ -1059,7 +1059,7 @@ namespace GitCommands
                         module = list.Length > 0 ? list[0] : "";
                         if (module.Length > 2 && module[1] == '/')
                         {
-                            module = module.Substring(2);
+                            module = module.Substring(2).Trim();
                             break;
                         }
                     }

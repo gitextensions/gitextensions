@@ -439,11 +439,11 @@ namespace GitUI
         private bool IsSubmodulesIntialized()
         {
             // Fast submodules check
-            var submodules = Settings.Module.GetSubmodulesNames();
+            var submodules = Settings.Module.GetSubmodulesLocalPathes();
             GitModule submodule = new GitModule();
             foreach (var submoduleName in submodules)
             {
-                submodule.WorkingDir = Settings.Module.WorkingDir + submoduleName + Settings.PathSeparator.ToString();
+                submodule.WorkingDir = Settings.Module.GetSubmoduleFullPath(submoduleName);
                 if (!submodule.ValidWorkingDir())
                     return false;
             }
