@@ -40,6 +40,7 @@ namespace GitUI
             this.rbReset = new System.Windows.Forms.RadioButton();
             this.rbMerge = new System.Windows.Forms.RadioButton();
             this.lnkSettings = new System.Windows.Forms.LinkLabel();
+            this.rbStash = new System.Windows.Forms.RadioButton();
             this.localChangesGB.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -48,7 +49,7 @@ namespace GitUI
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 45);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(78, 15);
+            this.label1.Size = new System.Drawing.Size(98, 20);
             this.label1.TabIndex = 0;
             this.label1.Text = "Select branch";
             // 
@@ -61,14 +62,14 @@ namespace GitUI
             this.Branches.FormattingEnabled = true;
             this.Branches.Location = new System.Drawing.Point(158, 42);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(259, 23);
+            this.Branches.Size = new System.Drawing.Size(318, 28);
             this.Branches.TabIndex = 1;
             // 
             // Ok
             // 
             this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Ok.Location = new System.Drawing.Point(330, 72);
+            this.Ok.Location = new System.Drawing.Point(389, 72);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(87, 25);
             this.Ok.TabIndex = 2;
@@ -82,7 +83,7 @@ namespace GitUI
             this.LocalBranch.Checked = true;
             this.LocalBranch.Location = new System.Drawing.Point(13, 13);
             this.LocalBranch.Name = "LocalBranch";
-            this.LocalBranch.Size = new System.Drawing.Size(93, 19);
+            this.LocalBranch.Size = new System.Drawing.Size(114, 24);
             this.LocalBranch.TabIndex = 3;
             this.LocalBranch.TabStop = true;
             this.LocalBranch.Text = "Local branch";
@@ -94,7 +95,7 @@ namespace GitUI
             this.Remotebranch.AutoSize = true;
             this.Remotebranch.Location = new System.Drawing.Point(168, 13);
             this.Remotebranch.Name = "Remotebranch";
-            this.Remotebranch.Size = new System.Drawing.Size(106, 19);
+            this.Remotebranch.Size = new System.Drawing.Size(131, 24);
             this.Remotebranch.TabIndex = 4;
             this.Remotebranch.Text = "Remote branch";
             this.Remotebranch.UseVisualStyleBackColor = true;
@@ -103,12 +104,13 @@ namespace GitUI
             // localChangesGB
             // 
             this.localChangesGB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.localChangesGB.Controls.Add(this.rbStash);
             this.localChangesGB.Controls.Add(this.rbDontChange);
             this.localChangesGB.Controls.Add(this.rbReset);
             this.localChangesGB.Controls.Add(this.rbMerge);
             this.localChangesGB.Location = new System.Drawing.Point(12, 54);
             this.localChangesGB.Name = "localChangesGB";
-            this.localChangesGB.Size = new System.Drawing.Size(300, 43);
+            this.localChangesGB.Size = new System.Drawing.Size(369, 43);
             this.localChangesGB.TabIndex = 17;
             this.localChangesGB.TabStop = false;
             this.localChangesGB.Text = "Local changes";
@@ -117,9 +119,9 @@ namespace GitUI
             // rbDontChange
             // 
             this.rbDontChange.AutoSize = true;
-            this.rbDontChange.Location = new System.Drawing.Point(176, 17);
+            this.rbDontChange.Location = new System.Drawing.Point(240, 17);
             this.rbDontChange.Name = "rbDontChange";
-            this.rbDontChange.Size = new System.Drawing.Size(96, 19);
+            this.rbDontChange.Size = new System.Drawing.Size(118, 24);
             this.rbDontChange.TabIndex = 2;
             this.rbDontChange.Text = "Don\'t change";
             this.rbDontChange.UseVisualStyleBackColor = true;
@@ -129,7 +131,7 @@ namespace GitUI
             this.rbReset.AutoSize = true;
             this.rbReset.Location = new System.Drawing.Point(97, 17);
             this.rbReset.Name = "rbReset";
-            this.rbReset.Size = new System.Drawing.Size(53, 19);
+            this.rbReset.Size = new System.Drawing.Size(66, 24);
             this.rbReset.TabIndex = 1;
             this.rbReset.Text = "Reset";
             this.rbReset.UseVisualStyleBackColor = true;
@@ -139,7 +141,7 @@ namespace GitUI
             this.rbMerge.AutoSize = true;
             this.rbMerge.Location = new System.Drawing.Point(13, 17);
             this.rbMerge.Name = "rbMerge";
-            this.rbMerge.Size = new System.Drawing.Size(59, 19);
+            this.rbMerge.Size = new System.Drawing.Size(73, 24);
             this.rbMerge.TabIndex = 0;
             this.rbMerge.Text = "Merge";
             this.rbMerge.UseVisualStyleBackColor = true;
@@ -150,18 +152,28 @@ namespace GitUI
             this.lnkSettings.AutoSize = true;
             this.lnkSettings.Location = new System.Drawing.Point(13, 78);
             this.lnkSettings.Name = "lnkSettings";
-            this.lnkSettings.Size = new System.Drawing.Size(81, 15);
+            this.lnkSettings.Size = new System.Drawing.Size(102, 20);
             this.lnkSettings.TabIndex = 19;
             this.lnkSettings.TabStop = true;
             this.lnkSettings.Text = "Show Settings";
             this.lnkSettings.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkSettings_LinkClicked);
             // 
+            // rbStash
+            // 
+            this.rbStash.AutoSize = true;
+            this.rbStash.Location = new System.Drawing.Point(169, 17);
+            this.rbStash.Name = "rbStash";
+            this.rbStash.Size = new System.Drawing.Size(65, 24);
+            this.rbStash.TabIndex = 3;
+            this.rbStash.Text = "Stash";
+            this.rbStash.UseVisualStyleBackColor = true;
+            // 
             // FormCheckoutBranch
             // 
             this.AcceptButton = this.Ok;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(429, 109);
+            this.ClientSize = new System.Drawing.Size(488, 109);
             this.Controls.Add(this.lnkSettings);
             this.Controls.Add(this.Remotebranch);
             this.Controls.Add(this.LocalBranch);
@@ -194,5 +206,6 @@ namespace GitUI
         private System.Windows.Forms.RadioButton rbReset;
         private System.Windows.Forms.RadioButton rbMerge;
         private System.Windows.Forms.LinkLabel lnkSettings;
+        private System.Windows.Forms.RadioButton rbStash;
     }
 }
