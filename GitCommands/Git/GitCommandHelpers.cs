@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Security.Permissions;
 using System.Text;
+using System.Text.RegularExpressions;
 using GitCommands.Config;
 using GitCommands.Git;
 using JetBrains.Annotations;
@@ -1048,21 +1049,13 @@ namespace GitCommands
             StringBuilder sb = new StringBuilder();
             using (StringReader reader = new StringReader(text))
             {
-                string line;
+                string line = reader.ReadLine();
                 string module = "";
-                while ((line = reader.ReadLine()) != null)
+                if (line != null)
                 {
-                    if (line.StartsWith("+++ "))
-                    {
-                        module = line.Substring("+++ ".Length);
-                        var list = module.Split(new char[] { ' ' }, 2);
-                        module = list.Length > 0 ? list[0] : "";
-                        if (module.Length > 2 && module[1] == '/')
-                        {
-                            module = module.Substring(2).Trim();
-                            break;
-                        }
-                    }
+                    var match = Regex.Match(line, @"diff --git a/(\S+) b/(\S+)");
+                    if (match != null && match.Groups.Count > 0)
+                        module = match.Groups[1].Value;
                 }
                 sb.AppendLine("Submodule " + module + " Change");
                 string fromHash = null;
