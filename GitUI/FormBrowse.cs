@@ -1474,7 +1474,7 @@ namespace GitUI
 
             RemoveSubmoduleButtons();
 
-            foreach (var submodule in Settings.Module.GetSubmodulesNames().OrderBy(submoduleName => submoduleName))
+            foreach (var submodule in Settings.Module.GetSubmodulesLocalPathes().OrderBy(submoduleName => submoduleName))
             {
                 var submenu = new ToolStripMenuItem(submodule);
                 submenu.Click += SubmoduleToolStripButtonClick;
@@ -1505,8 +1505,7 @@ namespace GitUI
             if (button == null)
                 return;
 
-            string dir = Settings.WorkingDir + Settings.Module.GetSubmoduleLocalPath(button.Text);
-            Settings.WorkingDir = Path.GetFullPath(dir); // fix slashes
+            Settings.WorkingDir = Settings.Module.GetSubmoduleFullPath(button.Text.Trim());
 
             if (Settings.Module.ValidWorkingDir())
                 Repositories.AddMostRecentRepository(Settings.WorkingDir);
