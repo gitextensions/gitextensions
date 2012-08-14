@@ -107,10 +107,10 @@ namespace GitCommands
         /// This is a faster function to get the names of all submodules then the 
         /// GetSubmodules() function. The command @git submodule is very slow.
         /// </summary>
-        public IList<string> GetSubmodulesNames()
+        public IList<string> GetSubmodulesLocalPathes()
         {
             var configFile = GetSubmoduleConfigFile();
-            return configFile.GetConfigSections().Select(configSection => configSection.SubSection).ToList();
+            return configFile.GetConfigSections().Select(configSection => configSection.GetPathValue("path").Trim()).ToList();
         }
 
         public string GetGlobalSetting(string setting)
@@ -903,21 +903,31 @@ namespace GitCommands
             return new ConfigFile(_workingdir + ".gitmodules", true);
         }
 
-        public string GetSubmoduleRemotePath(string name)
+        public string GetSubmoduleNameByPath(string localPath)
         {
             var configFile = GetSubmoduleConfigFile();
-            return configFile.GetPathValue(string.Format("submodule.{0}.url", name.Trim())).Trim();
+            var submodule = configFile.GetConfigSections().FirstOrDefault(configSection => configSection.GetPathValue("path").Trim() == localPath);
+            if (submodule != null)
+                return submodule.SubSection.Trim();
+            return null;
         }
 
         public string GetSubmoduleLocalPath(string name)
         {
             var configFile = GetSubmoduleConfigFile();
-            return configFile.GetPathValue(string.Format("submodule.{0}.path", name.Trim())).Trim();
+            return configFile.GetPathValue(string.Format("submodule.{0}.path", name)).Trim();
         }
 
-        public string GetSubmoduleFullPath(string name)
+        public string GetSubmoduleRemotePath(string name)
         {
-            return _workingdir + FixPath(GetSubmoduleLocalPath(name)) + Settings.PathSeparator.ToString();
+            var configFile = GetSubmoduleConfigFile();
+            return configFile.GetPathValue(string.Format("submodule.{0}.url", name)).Trim();
+        }
+
+        public string GetSubmoduleFullPath(string localPath)
+        {
+            string dir = _workingdir + localPath + Settings.PathSeparator.ToString();
+            return Path.GetFullPath(dir); // fix slashes
         }
 
         public string FindGitSuperprojectPath(out string submoduleName)
@@ -989,14 +999,14 @@ namespace GitCommands
                         CurrentCommitGuid = submodule.Substring(1, 40).Trim()
                     };
 
-            var name = submodule.Substring(42).Trim();
-            if (name.Contains("("))
+            var localPath = submodule.Substring(42).Trim();
+            if (localPath.Contains("("))
             {
-                gitSubmodule.Name = name.Substring(0, name.IndexOf("(")).TrimEnd();
-                gitSubmodule.Branch = name.Substring(name.IndexOf("(")).Trim(new[] { '(', ')', ' ' });
+                gitSubmodule.LocalPath = localPath.Substring(0, localPath.IndexOf("(")).TrimEnd();
+                gitSubmodule.Branch = localPath.Substring(localPath.IndexOf("(")).Trim(new[] { '(', ')', ' ' });
             }
             else
-                gitSubmodule.Name = name;
+                gitSubmodule.LocalPath = localPath;
             return gitSubmodule;
         }
 
