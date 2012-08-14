@@ -1105,13 +1105,13 @@ namespace GitCommands
         }
 
 
-        public string Tag(string tagName, string revision, bool annotation)
+        public string Tag(string tagName, string revision, bool annotation, bool force)
         {
             return annotation
                 ? RunCmd(Settings.GitCommand,
-                                "tag \"" + tagName.Trim() + "\" -a -F \"" + WorkingDirGitDir() +
+                                "tag \"" + tagName.Trim() + "\" -a " + (force ? "-f" : "")  + " -F \"" + WorkingDirGitDir() +
                                 "\\TAGMESSAGE\" -- \"" + revision + "\"")
-                : RunGitCmd("tag \"" + tagName.Trim() + "\" \"" + revision + "\"");
+                : RunGitCmd("tag " + (force ? "-f" : "") + " \"" + tagName.Trim() + "\" \"" + revision + "\"");
         }
 
         public string Branch(string branchName, string revision, bool checkout)
