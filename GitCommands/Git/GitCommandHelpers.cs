@@ -40,13 +40,6 @@ namespace GitCommands
         All = 5
     }
 
-    public enum LocalChanges
-    {
-        DontChange,
-        Merge,
-        Reset
-    }
-
     public static class GitCommandHelpers
     {
         public static void SetEnvironmentVariable()
@@ -424,15 +417,15 @@ namespace GitCommands
             return "clone " + string.Join(" ", options.ToArray());
         }
 
-        public static string CheckoutCmd(string branchOrRevisionName, LocalChanges changes)
+        public static string CheckoutCmd(string branchOrRevisionName, Settings.LocalChanges changes)
         {
             string args = "";
             switch (changes)
             {
-                case LocalChanges.Merge:
+                case Settings.LocalChanges.Merge:
                     args = " --merge";
                     break;
-                case LocalChanges.Reset:
+                case Settings.LocalChanges.Reset:
                     args = " --force";
                     break;
             }
@@ -441,7 +434,7 @@ namespace GitCommands
 
         public static string CheckoutCmd(string branchOrRevisionName)
         {
-            LocalChanges changes = (LocalChanges)Settings.CheckoutBranchAction;
+            Settings.LocalChanges changes = Settings.CheckoutBranchAction;
             return CheckoutCmd(branchOrRevisionName, changes);
         }
 

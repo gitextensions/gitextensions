@@ -30,7 +30,7 @@ namespace GitUI
                 }
 
                 string command = GitCommandHelpers.CheckoutCmd(RevisionGrid.GetSelectedRevisions()[0].Guid, 
-                    Force.Checked ? LocalChanges.Reset : 0);
+                    Force.Checked ? Settings.LocalChanges.Reset : 0);
 
                 FormProcess.ShowDialog(this, command);
 
