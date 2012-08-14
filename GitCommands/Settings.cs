@@ -500,11 +500,19 @@ namespace GitCommands
             set { SafeSet("autostash", value, ref _autoStash); }
         }
 
-        private static int? _checkoutBranchAction;
-        public static int CheckoutBranchAction
+
+        public enum LocalChanges
         {
-            get { return SafeGet("checkoutBranchAction", 1, ref _checkoutBranchAction); }
-            set { SafeSet("checkoutBranchAction", value, ref _checkoutBranchAction); }
+            DontChange,
+            Merge,
+            Reset,
+            Stash
+        }
+
+        public static LocalChanges CheckoutBranchAction
+        {
+            get { return GetEnum<LocalChanges>("checkoutbranchaction", LocalChanges.Merge); }
+            set { SetEnum<LocalChanges>("checkoutbranchaction", value); }
         }
 
         private static bool? _includeUntrackedFilesInAutoStash;

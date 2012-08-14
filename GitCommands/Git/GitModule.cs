@@ -1770,6 +1770,11 @@ namespace GitCommands
             return GitCommandHelpers.GetAllChangedFilesFromString(status);
         }
 
+        public bool IsDirtyDir()
+        {
+            return GitStatus(UntrackedFilesMode.All, IgnoreSubmodulesMode.Default).Count == 0;
+        }
+
         public string GetCurrentChanges(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
         {
             fileName = string.Concat("\"", FixPath(fileName), "\"");
