@@ -177,12 +177,15 @@ namespace GitUI
                     exeName = "winmergeu.exe";
                     return FindFileInFolders(exeName, winmergepath, @"WinMerge\");
                 case "beyondcompare3":
+                    string bcomppath = UnquoteString(GetGlobalSetting("mergetool.beyondcompare3.path"));
+
                     exeName = "bcomp.exe";
-                    return FindFileInFolders(exeName,   @"Beyond Compare 3 (x86)\",
-                                                        @"Beyond Compare 3\");
+                    return FindFileInFolders(exeName, bcomppath, @"Beyond Compare 3 (x86)\",
+                                                                 @"Beyond Compare 3\");
                 case "p4merge":
+                    string p4mergepath = UnquoteString(GetGlobalSetting("mergetool.p4merge.path"));
                     exeName = "p4merge.exe";
-                    return FindFileInFolders(exeName, @"Perforce\");
+                    return FindFileInFolders(exeName, p4mergepath, @"Perforce\");
                 case "araxis":
                     exeName = "Compare.exe";
                     return FindFileInFolders(exeName,   @"Araxis\Araxis Merge\",
