@@ -165,6 +165,17 @@ namespace GitUI.Tag
             this.splitContainer1.Panel2.PerformLayout();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
+          this.ForceTag = new System.Windows.Forms.CheckBox();
+          // 
+          // ForceTag
+          // 
+          this.ForceTag.AutoSize = true;
+          this.ForceTag.Location = new System.Drawing.Point(275, 33);
+          this.ForceTag.Name = "ForceTag";
+          this.ForceTag.Size = new System.Drawing.Size(55, 19);
+          this.ForceTag.TabIndex = 15;
+          this.ForceTag.Text = "Force";
+          this.ForceTag.UseVisualStyleBackColor = true;
 
         }
 
@@ -179,5 +190,6 @@ namespace GitUI.Tag
         private System.Windows.Forms.Label label2;
         private EditNetSpell tagMessage;
         private System.Windows.Forms.CheckBox annotate;
+        private System.Windows.Forms.CheckBox ForceTag;
     }
 }
