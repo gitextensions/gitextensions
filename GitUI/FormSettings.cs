@@ -962,8 +962,9 @@ namespace GitUI
             if (!Settings.RunningOnWindows())
                 return;
 
+            Settings.Module.SetGlobalPathSetting(string.Format("difftool.{0}.path", GlobalMergeTool.Text.Trim()), MergetoolPath.Text.Trim());
             string exeName;
-            string exeFile = MergeToolsHelper.FindDiffToolExeFile(GlobalDiffTool.Text, out exeName);
+            string exeFile = MergeToolsHelper.FindDiffToolFullPath(GlobalDiffTool.Text, out exeName);
             if (String.IsNullOrEmpty(exeFile))
             {
                 DifftoolPath.SelectAll();
@@ -986,8 +987,9 @@ namespace GitUI
             if (!Settings.RunningOnWindows())
                 return;
 
+            Settings.Module.SetGlobalPathSetting(string.Format("mergetool.{0}.path", GlobalMergeTool.Text.Trim()), MergetoolPath.Text.Trim());
             string exeName;
-            string exeFile = MergeToolsHelper.FindMergeToolExeFile(GlobalMergeTool.Text, out exeName);
+            string exeFile = MergeToolsHelper.FindMergeToolFullPath(GlobalMergeTool.Text, out exeName);
             if (String.IsNullOrEmpty(exeFile))
             {
                 MergetoolPath.SelectAll();
@@ -1008,7 +1010,7 @@ namespace GitUI
         private void AutoConfigMergeToolCmd(bool silent)
         {
             string exeName;
-            string exeFile = MergeToolsHelper.FindMergeToolExeFile(GlobalMergeTool.Text, out exeName);
+            string exeFile = MergeToolsHelper.FindMergeToolFullPath(GlobalMergeTool.Text, out exeName);
             if (String.IsNullOrEmpty(exeFile))
             {
                 MergetoolPath.Text = "";
@@ -1099,49 +1101,37 @@ namespace GitUI
         private void BrowseMergeTool_Click(object sender, EventArgs e)
         {
             string mergeTool = GlobalMergeTool.Text.ToLowerInvariant();
-            if (mergeTool == "kdiff3")
-                MergetoolPath.Text = SelectFile(".", "kdiff3.exe (kdiff3.exe)|kdiff3.exe", MergetoolPath.Text);
-            else if (mergeTool == "p4merge")
-                MergetoolPath.Text = SelectFile(".", "p4merge.exe (p4merge.exe)|p4merge.exe", MergetoolPath.Text);
-            else if (mergeTool == "tortoisemerge")
-                MergetoolPath.Text = SelectFile(".", "TortoiseMerge.exe (TortoiseMerge.exe)|TortoiseMerge.exe",
-                                                MergetoolPath.Text);
+            string exeFile = MergeToolsHelper.GetMergeToolExeFile(mergeTool);
+
+            if (exeFile != null)
+                MergetoolPath.Text = SelectFile(".", string.Format("{0} ({1})|{1}", GlobalMergeTool.Text, exeFile), MergetoolPath.Text);
             else
-                MergetoolPath.Text = SelectFile(".", "*.exe (*.exe)|*.exe", MergetoolPath.Text);
+                MergetoolPath.Text = SelectFile(".", string.Format("{0} (*.exe)|*.exe", GlobalMergeTool.Text), MergetoolPath.Text);
         }
 
         private void GlobalDiffTool_TextChanged(object sender, EventArgs e)
         {
             if (loadingSettings)
                 return;
-            DifftoolPath.Text = Settings.Module.GetGlobalSetting(string.Format("difftool.{0}.path", GlobalDiffTool.Text.Trim()));
-            DifftoolCmd.Text = Settings.Module.GetGlobalSetting(string.Format("difftool.{0}.cmd", GlobalDiffTool.Text.Trim()));
+            string diffTool = GlobalDiffTool.Text.Trim();
+            DifftoolPath.Text = Settings.Module.GetGlobalSetting(string.Format("difftool.{0}.path", diffTool));
+            DifftoolCmd.Text = Settings.Module.GetGlobalSetting(string.Format("difftool.{0}.cmd", diffTool));
 
-            if (GlobalDiffTool.Text.Trim().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
+            if (diffTool.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
                 ResolveDiffToolPath();
 
             DiffToolCmdSuggest_Click(null, null);
         }
 
-        private void DifftoolPath_TextChanged(object sender, EventArgs e)
-        {
-            Settings.Module.SetGlobalPathSetting(string.Format("difftool.{0}.path", GlobalMergeTool.Text.Trim()), MergetoolPath.Text.Trim());
-            DiffToolCmdSuggest_Click(null, null);
-        }
-
         private void BrowseDiffTool_Click(object sender, EventArgs e)
         {
-            if (GlobalDiffTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
-            {
-                DifftoolPath.Text = SelectFile(".", "kdiff3.exe (kdiff3.exe)|kdiff3.exe", DifftoolPath.Text);
-            }
-            else if (GlobalDiffTool.Text.Equals("p4merge", StringComparison.CurrentCultureIgnoreCase))
-                DifftoolPath.Text = SelectFile(".", "p4merge.exe (p4merge.exe)|p4merge.exe", DifftoolPath.Text);
-            else if (GlobalDiffTool.Text.Equals("tmerge", StringComparison.CurrentCultureIgnoreCase))
-                DifftoolPath.Text = SelectFile(".", "TortoiseMerge.exe (TortoiseMerge.exe)|TortoiseMerge.exe",
-                                               DifftoolPath.Text);
+            string diffTool = GlobalDiffTool.Text.ToLowerInvariant();
+            string exeFile = MergeToolsHelper.GetDiffToolExeFile(diffTool);
+
+            if (exeFile != null)
+                DifftoolPath.Text = SelectFile(".", string.Format("{0} ({1})|{1}", GlobalDiffTool.Text, exeFile), DifftoolPath.Text);
             else
-                DifftoolPath.Text = SelectFile(".", "*.exe (*.exe)|*.exe", DifftoolPath.Text);
+                DifftoolPath.Text = SelectFile(".", string.Format("{0} (*.exe)|*.exe", GlobalDiffTool.Text), DifftoolPath.Text);
         }
 
         private void GlobalMergeTool_TextChanged(object sender, EventArgs e)
@@ -1157,12 +1147,6 @@ namespace GitUI
             else
                 MergeToolCmd.Enabled = true;
 
-            MergeToolCmdSuggest_Click(null, null);
-        }
-
-        private void MergetoolPath_TextChanged(object sender, EventArgs e)
-        {
-            Settings.Module.SetGlobalPathSetting(string.Format("mergetool.{0}.path", GlobalMergeTool.Text.Trim()), MergetoolPath.Text.Trim());
             MergeToolCmdSuggest_Click(null, null);
         }
 
