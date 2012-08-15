@@ -63,7 +63,7 @@ namespace GitUI.Tag
             }
 
 
-            var s = Settings.Module.Tag(TName.Text, revision.Guid, annotate.Checked);
+            var s = Settings.Module.Tag(TName.Text, revision.Guid, annotate.Checked, ForceTag.Checked);
 
             if (!string.IsNullOrEmpty(s))
                 MessageBox.Show(this, s, _messageCaption.Text);

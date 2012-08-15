@@ -1718,13 +1718,12 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-        private void CheckoutBranch(string branch)
+        private void CheckoutBranch(string branch, Settings.LocalChanges changes)
         {
-            var command = GitCommandHelpers.CheckoutCmd(branch);
+            if (changes == Settings.LocalChanges.Stash && Settings.Module.IsDirtyDir())
+                GitUICommands.Instance.Stash(this);
+            var command = GitCommandHelpers.CheckoutCmd(branch, changes);
             FormProcess.ShowDialog(this, command);
-
-            ForceRefreshRevisions();
-            OnActionOnRepositoryPerformed();
         }
 
         private void ToolStripItemClickCheckoutBranch(object sender, EventArgs e)
@@ -1734,7 +1733,15 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            CheckoutBranch(toolStripItem.Text);
+            string branch = toolStripItem.Text;
+            // TODO: do-do do-do checkbox in checkout branch dialog
+            if (!Settings.Module.IsDirtyDir())
+                CheckoutBranch(toolStripItem.Text, Settings.CheckoutBranchAction);
+            else
+                GitUICommands.Instance.StartCheckoutBranchDialog(this, branch, false, true);
+
+            ForceRefreshRevisions();
+            OnActionOnRepositoryPerformed();
         }
 
         private void ToolStripItemClickCheckoutRemoteBranch(object sender, EventArgs e)
@@ -1800,7 +1807,9 @@ namespace GitUI
                                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
-            CheckoutBranch(GetRevision(LastRow).Guid);
+            CheckoutBranch(GetRevision(LastRow).Guid, Settings.CheckoutBranchAction);
+            ForceRefreshRevisions();
+            OnActionOnRepositoryPerformed();
         }
 
         private void ShowAuthorDateToolStripMenuItemClick(object sender, EventArgs e)

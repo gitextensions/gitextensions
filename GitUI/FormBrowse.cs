@@ -1480,7 +1480,7 @@ namespace GitUI
 
             RemoveSubmoduleButtons();
 
-            foreach (var submodule in Settings.Module.GetSubmodulesNames().OrderBy(submoduleName => submoduleName))
+            foreach (var submodule in Settings.Module.GetSubmodulesLocalPathes().OrderBy(submoduleName => submoduleName))
             {
                 var submenu = new ToolStripMenuItem(submodule);
                 submenu.Click += SubmoduleToolStripButtonClick;
@@ -1511,8 +1511,7 @@ namespace GitUI
             if (button == null)
                 return;
 
-            string dir = Settings.WorkingDir + Settings.Module.GetSubmoduleLocalPath(button.Text);
-            Settings.WorkingDir = Path.GetFullPath(dir); // fix slashes
+            Settings.WorkingDir = Settings.Module.GetSubmoduleFullPath(button.Text.Trim());
 
             if (Settings.Module.ValidWorkingDir())
                 Repositories.AddMostRecentRepository(Settings.WorkingDir);
@@ -1918,11 +1917,16 @@ namespace GitUI
         void BranchSelectToolStripItem_Click(object sender, EventArgs e)
         {
             var toolStripItem = (ToolStripItem)sender;
-
-            var command = GitCommandHelpers.CheckoutCmd(toolStripItem.Text);
-            FormProcess.ShowDialog(this, command);
-
+            CheckoutBranch(toolStripItem.Text, Settings.CheckoutBranchAction);
             Initialize();
+        }
+
+        private void CheckoutBranch(string branch, Settings.LocalChanges changes)
+        {
+            if (changes == Settings.LocalChanges.Stash && Settings.Module.IsDirtyDir())
+                GitUICommands.Instance.Stash(this);
+            var command = GitCommandHelpers.CheckoutCmd(branch, changes);
+            FormProcess.ShowDialog(this, command);
         }
 
         private void _forkCloneMenuItem_Click(object sender, EventArgs e)

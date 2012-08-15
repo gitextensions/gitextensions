@@ -72,7 +72,7 @@ namespace GitUI.Tag
             }
             
             var s = Settings.Module.Tag(Tagname.Text, GitRevisions.GetSelectedRevisions()[0].Guid,
-                                                annotate.Checked);
+                                                annotate.Checked, ForceTag.Checked);
 
             if (!string.IsNullOrEmpty(s))
                 MessageBox.Show(this, s, _messageCaption.Text);
