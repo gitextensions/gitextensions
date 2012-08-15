@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Security.Permissions;
 using System.Text;
+using System.Text.RegularExpressions;
 using GitCommands.Config;
 using GitCommands.Git;
 using JetBrains.Annotations;
@@ -38,13 +39,6 @@ namespace GitCommands
         Untracked = 3,
         Dirty = 4,
         All = 5
-    }
-
-    public enum LocalChanges
-    {
-        DontChange,
-        Merge,
-        Reset
     }
 
     public static class GitCommandHelpers
@@ -425,15 +419,15 @@ namespace GitCommands
             return "clone " + string.Join(" ", options.ToArray());
         }
 
-        public static string CheckoutCmd(string branchOrRevisionName, LocalChanges changes)
+        public static string CheckoutCmd(string branchOrRevisionName, Settings.LocalChanges changes)
         {
             string args = "";
             switch (changes)
             {
-                case LocalChanges.Merge:
+                case Settings.LocalChanges.Merge:
                     args = " --merge";
                     break;
-                case LocalChanges.Reset:
+                case Settings.LocalChanges.Reset:
                     args = " --force";
                     break;
             }
@@ -442,7 +436,7 @@ namespace GitCommands
 
         public static string CheckoutCmd(string branchOrRevisionName)
         {
-            LocalChanges changes = (LocalChanges)Settings.CheckoutBranchAction;
+            Settings.LocalChanges changes = Settings.CheckoutBranchAction;
             return CheckoutCmd(branchOrRevisionName, changes);
         }
 
@@ -808,7 +802,7 @@ namespace GitCommands
             }
 
             // Doesn't work with removed submodules
-            IList<string> Submodules = Settings.Module.GetSubmodulesNames();
+            IList<string> Submodules = Settings.Module.GetSubmodulesLocalPathes();
 
             //Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)
             var files = trimmedStatus.Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
@@ -1056,21 +1050,13 @@ namespace GitCommands
             StringBuilder sb = new StringBuilder();
             using (StringReader reader = new StringReader(text))
             {
-                string line;
+                string line = reader.ReadLine();
                 string module = "";
-                while ((line = reader.ReadLine()) != null)
+                if (line != null)
                 {
-                    if (line.StartsWith("+++ "))
-                    {
-                        module = line.Substring("+++ ".Length);
-                        var list = module.Split(new char[] { ' ' }, 2);
-                        module = list.Length > 0 ? list[0] : "";
-                        if (module.Length > 2 && module[1] == '/')
-                        {
-                            module = module.Substring(2);
-                            break;
-                        }
-                    }
+                    var match = Regex.Match(line, @"diff --git a/(\S+) b/(\S+)");
+                    if (match != null && match.Groups.Count > 0)
+                        module = match.Groups[1].Value;
                 }
                 sb.AppendLine("Submodule " + module + " Change");
                 string fromHash = null;

@@ -43,12 +43,13 @@ namespace GitUI
             Initialize();
         }
 
-        public FormCheckoutRemoteBranch(string branch, LocalChanges changes)
+        public FormCheckoutRemoteBranch(string branch, Settings.LocalChanges changes)
             : this(branch)
         {
-            rbReset.Checked = changes == LocalChanges.Reset;
-            rbMerge.Checked = changes == LocalChanges.Merge;
-            rbDontChange.Checked = changes == LocalChanges.DontChange;
+            rbReset.Checked = changes == Settings.LocalChanges.Reset;
+            rbMerge.Checked = changes == Settings.LocalChanges.Merge;
+            rbStash.Checked = changes == Settings.LocalChanges.Stash;
+            rbDontChange.Checked = changes == Settings.LocalChanges.DontChange;
         }
 
         private void Initialize()
@@ -71,10 +72,31 @@ namespace GitUI
             rbResetBranch.Text = String.Format(existsLocalBranch ? rbResetBranch.Text : rbCreateBranch.Text, _localBranchName);
             rbCreateBranch.Text = String.Format(rbCreateBranch.Text, _newLocalBranchName);
             txtCustomBranchName.Text = _localBranchName;
-            rbReset.Checked = Settings.CheckoutBranchAction == (int)LocalChanges.Reset;
-            rbMerge.Checked = Settings.CheckoutBranchAction == (int)LocalChanges.Merge;
+            ChangesMode = Settings.CheckoutBranchAction;
         }
 
+        private Settings.LocalChanges ChangesMode
+        {
+            get
+            {
+                if (rbReset.Checked)
+                    return Settings.LocalChanges.Reset;
+                else if (rbMerge.Checked)
+                    return Settings.LocalChanges.Merge;
+                else if (rbStash.Checked)
+                    return Settings.LocalChanges.Merge;
+                else
+                    return Settings.LocalChanges.DontChange;
+            }
+            set
+            {
+                rbReset.Checked = value == Settings.LocalChanges.Reset;
+                rbMerge.Checked = value == Settings.LocalChanges.Merge;
+                rbStash.Checked = value == Settings.LocalChanges.Stash;
+                rbDontChange.Checked = value == Settings.LocalChanges.DontChange;
+            }
+        }
+        
         private void OkClick(object sender, EventArgs e)
         {
             var customBranchName = txtCustomBranchName.Text.Trim();
@@ -96,15 +118,12 @@ namespace GitUI
 
             try
             {
-                LocalChanges changes;
-                if (rbReset.Checked)
-                    changes = LocalChanges.Reset;
-                else if (rbMerge.Checked)
-                    changes = LocalChanges.Merge;
-                else
-                    changes = LocalChanges.DontChange;
-                Settings.CheckoutBranchAction = (int)changes;
+                Settings.LocalChanges changes = ChangesMode;
+                Settings.CheckoutBranchAction = changes;
                 Settings.CreateLocalBranchForRemote = rbCreateBranch.Checked;
+
+                if (changes == Settings.LocalChanges.Stash)
+                    GitUICommands.Instance.Stash(this);
 
                 var command = "checkout";
 
@@ -116,9 +135,9 @@ namespace GitUI
                 else if (rbCreateBranchWithCustomName.Checked)
                     command += string.Format(" -b {0}", customBranchName);
 
-                if (changes == LocalChanges.Merge)
+                if (changes == Settings.LocalChanges.Merge)
                     command += " --merge";
-                else if (changes == LocalChanges.Reset)
+                else if (changes == Settings.LocalChanges.Reset)
                     command += " --force";
 
                 command += " \"" + _branch + "\"";

@@ -5,23 +5,24 @@ namespace GitCommands
 {
     public sealed class GitSubmodule : IGitSubmodule
     {
-        public string Name { get; set; }
-        public string RemotePath
+        public string LocalPath { get; set; }
+
+        public string Name
         {
             get
             {
-                return Settings.Module.GetSubmoduleRemotePath(Name);
+                return Settings.Module.GetSubmoduleNameByPath(LocalPath);
             }
             set
             {
             }
         }
 
-        public string LocalPath
+        public string RemotePath
         {
             get
             {
-                return Settings.Module.GetSubmoduleLocalPath(Name);
+                return Settings.Module.GetSubmoduleRemotePath(Name);
             }
             set
             {
@@ -62,7 +63,7 @@ namespace GitCommands
             }
 
             // Return true if the fields match:
-            return a.Name == b.Name && a.LocalPath == b.LocalPath;
+            return a.LocalPath == b.LocalPath;
         }
 
         public static bool operator !=(GitSubmodule a, GitSubmodule b)
@@ -77,8 +78,7 @@ namespace GitCommands
 
         public override int GetHashCode()
         {
-            return (Name != null ? Name.GetHashCode() : 0) &
-                (LocalPath != null ? LocalPath.GetHashCode() : 0);
+            return LocalPath != null ? LocalPath.GetHashCode() : 0;
         }
     }
 }
