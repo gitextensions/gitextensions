@@ -246,7 +246,7 @@ namespace GitUI
             foreach (var lostObject in selectedLostObjects)
             {
                 currentTag++;
-                Settings.Module.Tag(RestoredObjectsTagPrefix + currentTag, lostObject.Hash, false);
+                Settings.Module.Tag(RestoredObjectsTagPrefix + currentTag, lostObject.Hash, false, false);
             }
 
             return currentTag;

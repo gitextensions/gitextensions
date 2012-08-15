@@ -17,11 +17,11 @@ namespace GitUI
         }
 
         public FormCheckoutBranch(string branch, bool remote)
-            : this(branch, remote, null)
+            : this(branch, remote, null, false)
         {
         }
 
-        public FormCheckoutBranch(string branch, bool remote, string containRevison)
+        public FormCheckoutBranch(string branch, bool remote, string containRevison, bool showOptions)
             : this()
         {
             _containRevison = containRevison;
@@ -30,6 +30,9 @@ namespace GitUI
 
             LocalBranch.Checked = !remote;
             Remotebranch.Checked = remote;
+
+            if (showOptions)
+                lnkSettings_LinkClicked(null, null);
 
             Initialize();
 
@@ -81,16 +84,32 @@ namespace GitUI
             Branches.Text = null;
         }
 
+        private Settings.LocalChanges ChangesMode
+        {
+            get
+            {
+                if (rbReset.Checked)
+                    return Settings.LocalChanges.Reset;
+                else if (rbMerge.Checked)
+                    return Settings.LocalChanges.Merge;
+                else if (rbStash.Checked)
+                    return Settings.LocalChanges.Merge;
+                else
+                    return Settings.LocalChanges.DontChange;
+            }
+            set
+            {
+                rbReset.Checked = value == Settings.LocalChanges.Reset;
+                rbMerge.Checked = value == Settings.LocalChanges.Merge;
+                rbStash.Checked = value == Settings.LocalChanges.Stash;
+                rbDontChange.Checked = value == Settings.LocalChanges.DontChange;
+            }
+        }
+
         private void OkClick(object sender, EventArgs e)
         {
-            LocalChanges changes;
-            if (rbReset.Checked)
-                changes = LocalChanges.Reset;
-            else if (rbMerge.Checked)
-                changes = LocalChanges.Merge;
-            else
-                changes = LocalChanges.DontChange;
-            Settings.CheckoutBranchAction = (int)changes;
+            Settings.LocalChanges changes = ChangesMode;
+            Settings.CheckoutBranchAction = changes;
             if (Remotebranch.Checked)
             {
                 using (var checkoutRemote = new FormCheckoutRemoteBranch(Branches.Text, changes))
