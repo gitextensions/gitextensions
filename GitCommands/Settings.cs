@@ -977,11 +977,6 @@ namespace GitCommands
             }
             catch
             { }
-
-            Debug.WriteLine("Files encoding: " + FilesEncoding.EncodingName);
-            Debug.WriteLine("Commit encoding: " + CommitEncoding.EncodingName);
-            if (LogOutputEncoding != CommitEncoding)
-                Debug.WriteLine("Log output encoding: " + LogOutputEncoding.EncodingName);
         }
 
         private static bool? _dashboardShowCurrentBranch;
