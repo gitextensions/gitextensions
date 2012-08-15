@@ -102,10 +102,29 @@ namespace GitUI
             return null;
         }
 
-        public static string FindDiffToolExeFile(string globalDifftoolText, out string exeName)
+        public static string GetDiffToolExeFile(string difftoolText)
         {
-            string globalDiffTool = globalDifftoolText.ToLowerInvariant();
-            switch (globalDiffTool)
+            string diffTool = difftoolText.ToLowerInvariant();
+            switch (diffTool)
+            {
+                case "araxis":
+                    return "Compare.exe";
+                case "beyondcompare3":
+                    return "bcomp.exe";
+                case "kdiff3":
+                    return "kdiff3.exe";
+                case "tmerge":
+                    return "TortoiseMerge.exe";
+                case "winmerge":
+                    return "winmergeu.exe";
+            }
+            return null;
+        }
+
+        public static string FindDiffToolFullPath(string difftoolText, out string exeName)
+        {
+            string diffTool = difftoolText.ToLowerInvariant();
+            switch (diffTool)
             {
                 case "beyondcompare3":
                     string bcomppath = UnquoteString(GetGlobalSetting("difftool.beyondcompare3.path"));
@@ -136,14 +155,14 @@ namespace GitUI
                     return FindFileInFolders("winmergeu.exe", winmergepath,
                                                           @"WinMerge\");
             }
-            exeName = globalDifftoolText + ".exe";
+            exeName = difftoolText + ".exe";
             return GetFullPath(exeName);
         }
 
-        public static string DiffToolCmdSuggest(string globalDifftoolText, string exeFile)
+        public static string DiffToolCmdSuggest(string diffToolText, string exeFile)
         {
-            string globalDiffTool = globalDifftoolText.ToLowerInvariant();
-            switch (globalDiffTool)
+            string diffTool = diffToolText.ToLowerInvariant();
+            switch (diffTool)
             {
                 case "beyondcompare3":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
@@ -157,12 +176,49 @@ namespace GitUI
             return "";
         }
 
-        public static string FindMergeToolExeFile(string globalMergeToolText, out string exeName)
+        public static string GetMergeToolExeFile(string mergeToolText)
         {
-            string globalMergeTool = globalMergeToolText.ToLowerInvariant();
+            string mergeTool = mergeToolText.ToLowerInvariant();
 
-            switch (globalMergeTool)
+            switch (mergeTool)
             {
+                case "araxis":
+                    return "Compare.exe";
+                case "beyondcompare3":
+                    return "bcomp.exe";
+                case "diffmerge":
+                    return "DiffMerge.exe";
+                case "kdiff3":
+                    return "kdiff3.exe";
+                case "p4merge":
+                    return "p4merge.exe";
+                case "tortoisemerge":
+                    return "TortoiseMerge.exe";
+                case "winmerge":
+                    return "winmergeu.exe";
+            }
+            return null;
+        }
+
+        public static string FindMergeToolFullPath(string mergeToolText, out string exeName)
+        {
+            string mergeTool = mergeToolText.ToLowerInvariant();
+
+            switch (mergeTool)
+            {
+                case "araxis":
+                    exeName = "Compare.exe";
+                    return FindFileInFolders(exeName, @"Araxis\Araxis Merge\",
+                                                        @"Araxis 6.5\Araxis Merge\");
+                case "beyondcompare3":
+                    string bcomppath = UnquoteString(GetGlobalSetting("mergetool.beyondcompare3.path"));
+
+                    exeName = "bcomp.exe";
+                    return FindFileInFolders(exeName, bcomppath, @"Beyond Compare 3 (x86)\",
+                                                                 @"Beyond Compare 3\");
+                case "diffmerge":
+                    exeName = "DiffMerge.exe";
+                    return FindFileInFolders(exeName, @"SourceGear\DiffMerge\");
                 case "kdiff3":
                     exeName = "kdiff3.exe";
                     string kdiff3path = UnquoteString(GetGlobalSetting("mergetool.kdiff3.path"));
@@ -171,72 +227,59 @@ namespace GitUI
                         regkdiff3path += "\\" + exeName;
 
                     return FindFileInFolders(exeName, kdiff3path, @"KDiff3\", regkdiff3path);
-                case "winmerge":
-                    string winmergepath = UnquoteString(GetGlobalSetting("mergetool.winmerge.path"));
-
-                    exeName = "winmergeu.exe";
-                    return FindFileInFolders(exeName, winmergepath, @"WinMerge\");
-                case "beyondcompare3":
-                    string bcomppath = UnquoteString(GetGlobalSetting("mergetool.beyondcompare3.path"));
-
-                    exeName = "bcomp.exe";
-                    return FindFileInFolders(exeName, bcomppath, @"Beyond Compare 3 (x86)\",
-                                                                 @"Beyond Compare 3\");
                 case "p4merge":
                     string p4mergepath = UnquoteString(GetGlobalSetting("mergetool.p4merge.path"));
                     exeName = "p4merge.exe";
                     return FindFileInFolders(exeName, p4mergepath, @"Perforce\");
-                case "araxis":
-                    exeName = "Compare.exe";
-                    return FindFileInFolders(exeName,   @"Araxis\Araxis Merge\",
-                                                        @"Araxis 6.5\Araxis Merge\");
                 case "tortoisemerge":
                     exeName = "TortoiseMerge.exe";
                     string path = FindFileInFolders(exeName, @"TortoiseSVN\bin\");
                     if (string.IsNullOrEmpty(path))
                         path = FindFileInFolders(exeName, @"TortoiseGit\bin\");
                     return path;
-                case "diffmerge":
-                    exeName = "DiffMerge.exe";
-                    return FindFileInFolders(exeName, @"SourceGear\DiffMerge\");
+                case "winmerge":
+                    string winmergepath = UnquoteString(GetGlobalSetting("mergetool.winmerge.path"));
+
+                    exeName = "winmergeu.exe";
+                    return FindFileInFolders(exeName, winmergepath, @"WinMerge\");
             }
-            exeName = globalMergeToolText + ".exe";
+            exeName = mergeToolText + ".exe";
             return GetFullPath(exeName);
         }
 
-        public static string MergeToolcmdSuggest(string globalMergetoolText, string exeFile)
+        public static string MergeToolcmdSuggest(string mergeToolText, string exeFile)
         {
-            string globalMergeTool = globalMergetoolText.ToLowerInvariant();
-            switch (globalMergeTool)
+            string mergeTool = mergeToolText.ToLowerInvariant();
+            switch (mergeTool)
             {
                 case "kdiff3":
                     return "";
                 case "winmerge":
                     return "\"" + exeFile + "\" -e -u -dl \"Original\" -dr \"Modified\" \"$MERGED\" \"$REMOTE\"";
             }
-            return AutoConfigMergeToolCmd(globalMergetoolText, exeFile);
+            return AutoConfigMergeToolCmd(mergeToolText, exeFile);
         }
 
-        public static string AutoConfigMergeToolCmd(string globalMergetoolText, string exeFile)
+        public static string AutoConfigMergeToolCmd(string mergetoolText, string exeFile)
         {
-            string globalMergeTool = globalMergetoolText.ToLowerInvariant();
-            switch (globalMergeTool)
+            string mergeTool = mergetoolText.ToLowerInvariant();
+            switch (mergeTool)
             {
-                case "beyondcompare3":
-                    return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"";
-                case "p4merge":
-                    return "\"" + exeFile + "\" \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"";
                 case "araxis":
                     return "\"" + exeFile +
                                         "\" -wait -merge -3 -a1 \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"";
+                case "beyondcompare3":
+                    return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"";
+                case "diffmerge":
+                    return "\"" + exeFile + "\" /m /r=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"";
+                case "p4merge":
+                    return "\"" + exeFile + "\" \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"";
                 case "tortoisemerge":
                     string command = "\"{0}\" /base:\"$BASE\" /mine:\"$LOCAL\" /theirs:\"$REMOTE\" /merged:\"$MERGED\"";
                     if (exeFile.ToLower().Contains("tortoisegit"))
                         command = command.Replace("/", "-");
 
                     return String.Format(command, exeFile);
-                case "diffmerge":
-                    return "\"" + exeFile + "\" /m /r=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"";
             }
             return "";
         }

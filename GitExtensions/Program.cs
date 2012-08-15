@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -33,6 +34,11 @@ namespace GitExtensions
 
                 FormFixHome.CheckHomePath();
             }
+            //Current encodings
+            Debug.WriteLine("Files content encoding: " + Settings.FilesEncoding.EncodingName);
+            Debug.WriteLine("Commit encoding: " + Settings.CommitEncoding.EncodingName);
+            if (Settings.LogOutputEncoding.CodePage != Settings.CommitEncoding.CodePage)
+                Debug.WriteLine("Log output encoding: " + Settings.LogOutputEncoding.EncodingName);
             //Register plugins
             FormSplash.SetAction("Loading plugins...");
             Application.DoEvents();
