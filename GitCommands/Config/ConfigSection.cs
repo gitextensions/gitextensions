@@ -9,10 +9,14 @@ namespace GitCommands.Config
     ///   [section "subsection"] (subsection is case sensitive)
     ///   or
     ///   [section.subsection] (subsection is case insensitive)
+    ///   
+    ///   Case insensitive sections are deprecated. Dot separated subsections are treated
+    ///   as case insensitive only when loaded from config file. Dot separated subsections
+    ///   added from code, are treated as case sensitive.
     /// </summary>
     public class ConfigSection
     {
-        internal ConfigSection(string name)
+        internal ConfigSection(string name, bool forceCaseSensitive)
         {
             Keys = new Dictionary<string, IList<string>>(StringComparer.OrdinalIgnoreCase);
 
@@ -39,6 +43,8 @@ namespace GitCommands.Config
                 SubSection = name.Substring(subSectionIndex + 1).Trim();
                 SubSectionCaseSensitive = false;
             }
+            if (forceCaseSensitive)
+                SubSectionCaseSensitive = true;
         }
 
         internal IDictionary<string, IList<string>> Keys { get; set; }

@@ -41,3 +41,4 @@ GitPlugin/Properties/Resources.resources
 *.ncrunchsolution
 test-results/*
 GitCommandsTests/test-results/*
+/!runTests.bat
