@@ -546,10 +546,10 @@ namespace GitCommandsTests
 				Assert.AreEqual("origin1", configFile.GetValue(remote), remote);
 				
 				remote = "branch.branchName1.remote";
-				Assert.AreEqual("origin1", configFile.GetValue(remote), remote);
-				
-				remote = "branch \"branchName1\".remote";
 				Assert.AreNotEqual("origin1", configFile.GetValue(remote), remote);
+				
+				remote = "branch \"BranchName1\".remote";
+				Assert.AreEqual("origin1", configFile.GetValue(remote), remote);
 				
 				remote = "branch \"BranchName2\".remote";
 				Assert.AreEqual("origin2", configFile.GetValue(remote), remote);
