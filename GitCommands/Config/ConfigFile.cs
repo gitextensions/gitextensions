@@ -79,7 +79,7 @@ namespace GitCommands.Config
                 {
                     var name = m.Groups["SectionName"].Value;
 
-                    configSection = new ConfigSection(name);
+                    configSection = new ConfigSection(name, false);
                     _sections.Add(configSection);
                 }
                 else
@@ -273,7 +273,7 @@ namespace GitCommands.Config
             var result = FindConfigSection(name);
             if (result == null)
             {
-                result = new ConfigSection(name);
+                result = new ConfigSection(name, true);
                 _sections.Add(result);
             }
             
@@ -292,7 +292,7 @@ namespace GitCommands.Config
 
         private ConfigSection FindConfigSection(string name)
         {
-            var configSectionToFind = new ConfigSection(name);
+            var configSectionToFind = new ConfigSection(name, true);
 
             foreach (var configSection in _sections)
             {
