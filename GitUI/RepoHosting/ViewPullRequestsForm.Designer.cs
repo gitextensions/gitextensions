@@ -48,19 +48,19 @@
             this._diffViewer = new GitUI.Editor.FileViewer();
             this._refreshCommentsBtn = new System.Windows.Forms.Button();
             this._discussionWB = new System.Windows.Forms.WebBrowser();
-#if !__MonoCS__ //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-#if !__MonoCS__ //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
 #endif
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-#if !__MonoCS__ //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
 #endif
             this.splitContainer3.Panel1.SuspendLayout();
@@ -307,20 +307,20 @@
             this.Load += new System.EventHandler(this.ViewPullRequestsForm_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-#if !__MonoCS__ //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 #endif
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
-#if !__MonoCS__ //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
 #endif
             this.splitContainer2.ResumeLayout(false);
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
-#if !__MonoCS__ //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
 #endif
             this.splitContainer3.ResumeLayout(false);
