@@ -47,7 +47,7 @@
             this.Currentbranch = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.strategyToolTip = new System.Windows.Forms.ToolTip(this.components);
-#if !__MonoCS__ //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
             this.splitContainer1.Panel1.SuspendLayout();
@@ -292,7 +292,7 @@
             this.Load += new System.EventHandler(this.FormMergeBranchLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-#if !__MonoCS__ //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 #endif
             this.splitContainer1.ResumeLayout(false);

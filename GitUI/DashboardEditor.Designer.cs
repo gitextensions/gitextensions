@@ -214,7 +214,7 @@ namespace GitUI
             this.splitContainer2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             
-#if !__MonoCS__ //waiting for mono 2.12
+#if Mono212Released //waiting for mono 2.12
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
 #endif
 			((System.ComponentModel.ISupportInitialize)(this.RepositoriesGrid)).EndInit();

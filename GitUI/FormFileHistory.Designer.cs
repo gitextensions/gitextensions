@@ -61,7 +61,7 @@ namespace GitUI
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripTextBoxFilter = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
-#if !__MonoCS__ //waiting for mono 2.12					
+#if Mono212Released //waiting for mono 2.12					
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -406,7 +406,7 @@ namespace GitUI
             this.Load += new System.EventHandler(this.FormFileHistoryLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-#if !__MonoCS__ //waiting for mono 2.12					
+#if Mono212Released //waiting for mono 2.12					
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 #endif
             this.splitContainer1.ResumeLayout(false);
