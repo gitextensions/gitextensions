@@ -276,12 +276,11 @@ namespace GitUI
             if (ConflictedFiles.SelectedRows.Count != 1)
                 return;
 
-            string filename = GetFileName();
-            string[] filenames = Settings.Module.GetConflictedFiles(filename);
-
             try
             {
-                if (Directory.Exists(Settings.WorkingDir + filename) && !File.Exists(Settings.WorkingDir + filename))
+                string filename = GetFileName();
+                string fullname = Path.Combine(Settings.WorkingDir, filename);
+                if (Directory.Exists(fullname) && !File.Exists(fullname))
                 {
                     var submodulesList = Settings.Module.GetSubmodulesLocalPathes();
                     if (submodulesList.Any(configSection => configSection.Equals(filename.Trim())))
@@ -295,8 +294,20 @@ namespace GitUI
                     //END: REPLACED WITH FASTER, BUT DIRTIER SUBMODULE CHECK
                 }
 
-                string arguments = mergetoolCmd;
+                ResolveFilesConflict(filename);
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+                Initialize();
+            }
+        }
 
+        private void ResolveFilesConflict(string filename)
+        {
+            string[] filenames = Settings.Module.GetConflictedFiles(filename);
+            try
+            {
                 if (CheckForLocalRevision(filename) &&
                     CheckForRemoteRevision(filename))
                 {
@@ -315,6 +326,7 @@ namespace GitUI
                         }
                     }
 
+                    string arguments = mergetoolCmd;
                     //Check if there is a base file. If not, ask user to fall back to 2-way merge.
                     //git doesn't support 2-way merge, but we can try to adjust attributes to fix this.
                     //For kdiff3 this is easy; just remove the 3rd file from the arguments. Since the
@@ -369,8 +381,6 @@ namespace GitUI
             finally
             {
                 DeleteTemporaryFiles(filenames);
-                Cursor.Current = Cursors.Default;
-                Initialize();
             }
         }
 
