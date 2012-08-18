@@ -23,10 +23,6 @@ namespace GitCommands
     {
         private static readonly Regex DefaultHeadPattern = new Regex("refs/remotes/[^/]+/HEAD", RegexOptions.Compiled);
 
-        public GitModule()
-        {
-        }
-
         public GitModule(string workingdir)
         {
             WorkingDir = workingdir;
@@ -42,7 +38,7 @@ namespace GitCommands
             {
                 return _workingdir;
             }
-            set
+            private set
             {
                 _workingdir = FindGitWorkingDir(value.Trim());
                 string superprojectDir = FindGitSuperprojectPath(out _submoduleName);
@@ -940,6 +936,12 @@ namespace GitCommands
             string dir = _workingdir + localPath + Settings.PathSeparator.ToString();
             return Path.GetFullPath(dir); // fix slashes
         }
+
+        public GitModule GetSubmodule(string localPath)
+        {
+            return new GitModule(GetSubmoduleFullPath(localPath));
+        }
+
 
         public IList<IGitSubmodule> GetSubmodules()
         {

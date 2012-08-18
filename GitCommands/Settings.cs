@@ -686,12 +686,15 @@ namespace GitCommands
         public delegate void WorkingDirChangedEventHandler(string oldDir, string newDir, string newGitDir);
         public static event WorkingDirChangedEventHandler WorkingDirChanged;
 
-        private static readonly GitModule _module = new GitModule();
+        private static GitModule _module = null;
         public static GitModule Module
         {
             [DebuggerStepThrough]
             get
             {
+                if (_module == null)
+                    throw new NullReferenceException("GitModule was not set yet.");
+
                 return _module;
             }
         }
@@ -700,17 +703,26 @@ namespace GitCommands
         {
             get
             {
-                return _module.WorkingDir;
+                return _module == null ? null : _module.WorkingDir;
             }
             set
             {
-                string old = _module.WorkingDir;
-                _module.WorkingDir = value;
+                string old = WorkingDir;
+                _module = new GitModule(value);
                 RecentWorkingDir = _module.WorkingDir;
                 if (WorkingDirChanged != null)
                 {
                     WorkingDirChanged(old, _module.WorkingDir, _module.GetGitDirectory());
                 }
+
+#if DEBUG
+                //Current encodings
+                Debug.WriteLine("Encodings for " + WorkingDir);
+                Debug.WriteLine("Files content encoding: " + Settings.FilesEncoding.EncodingName);
+                Debug.WriteLine("Commit encoding: " + Settings.CommitEncoding.EncodingName);
+                if (Settings.LogOutputEncoding.CodePage != Settings.CommitEncoding.CodePage)
+                    Debug.WriteLine("Log output encoding: " + Settings.LogOutputEncoding.EncodingName);
+#endif
             }
         }
 

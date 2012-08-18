@@ -1088,8 +1088,7 @@ namespace GitCommands
                             sb.AppendLine("To:\t\t" + hash + dirty);
                         }
 
-                        string path = Settings.Module.GetSubmoduleFullPath(module);
-                        GitModule gitmodule = new GitModule(path);
+                        GitModule gitmodule = Settings.Module.GetSubmodule(module);
                         if (gitmodule.ValidWorkingDir())
                         {
                             string error = "";
