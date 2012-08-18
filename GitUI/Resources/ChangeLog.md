@@ -5,7 +5,29 @@
 * Fixed issue 980: spell check only covers first 5 visible lines in commit dialog
 * Fixed issue 988: status bar for commit message
 * Fixed issue 1018: Git Extensions sets core.editor to its own program without asking the user
+* Fixed issue 1038: Add multiple selected files to gitignore
+* Fixed issue 1053: Exception when processing patch
+* Fixed issue 1076: Added warning before dropping stash
+* Fixed issue 1089: Fixed "n seconds ago" in revision grid
+* Fixed issue 1092: Launching an external difftool (KDiff, or DiffMerge etc) leaves more and more processes (git, less and perl) open.
+* Fixed issue 1113: Show friendly error when deleting current branch
+* Fixed issue 1113: Show friendly error when deleting unmerged branch without selecting force option
+* Fixed issue 1114: Hide remode HEAD
+* Fixed issue 1116: In some cases file differences are shown incorrect
+* Fixed issue 1128: Removed buttons from Visual Studion Xml Editor toolbar
+* Fixed syntax highlighting when + or - is in text
 * Added line and column position to commit window.
+* Implement Mergetool/Difftool command suggestions for p4merge (Merge only) and BeyondCompare3 (Merge and Diff).
+* Allow to specify custom local branch name during remote branch checkout
+* Added extra highlighting for file differences in blocks
+* Go to parent revision context menu item in revision grid added
+* Cherry pick all selected revisions
+* Gource plugin now support users avatars
+* Plugin GitImpact can now display information including submodules
+* Commit per user statistic now include information for submodules
+* Added plugin for Gerrit code review
+* Russian translation updated
+* Updated msysgit to version 1.7.11
 
 ### Version 2.33
 * Fixed issue 843: toolbar is disabled when in a wxs file
