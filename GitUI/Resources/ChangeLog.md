@@ -2,12 +2,17 @@
 =========
 
 ### Version 2.34
+* fixed issue 79: Don't offer to commit when resolving a stash conflict
+* Fixed issue 875: Show untracked files in stash
 * Fixed issue 980: spell check only covers first 5 visible lines in commit dialog
 * Fixed issue 988: status bar for commit message
 * Fixed issue 1018: Git Extensions sets core.editor to its own program without asking the user
 * Fixed issue 1038: Add multiple selected files to gitignore
+* Fixed issue 1042: Added option for force add submodule
 * Fixed issue 1053: Exception when processing patch
+* Fixed issue 1054: Backslash in URL caused invalid config file
 * Fixed issue 1076: Added warning before dropping stash
+* Fixed issue 1082: Always show commit button
 * Fixed issue 1089: Fixed "n seconds ago" in revision grid
 * Fixed issue 1092: Launching an external difftool (KDiff, or DiffMerge etc) leaves more and more processes (git, less and perl) open.
 * Fixed issue 1113: Show friendly error when deleting current branch
@@ -26,6 +31,7 @@
 * Plugin GitImpact can now display information including submodules
 * Commit per user statistic now include information for submodules
 * Added plugin for Gerrit code review
+* Fixed solve merge conflicts on Linux when using kdiff3
 * Russian translation updated
 * Updated msysgit to version 1.7.11
 
