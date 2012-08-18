@@ -444,10 +444,9 @@ namespace GitUI
         {
             // Fast submodules check
             var submodules = Settings.Module.GetSubmodulesLocalPathes();
-            GitModule submodule = new GitModule();
             foreach (var submoduleName in submodules)
             {
-                submodule.WorkingDir = Settings.Module.GetSubmoduleFullPath(submoduleName);
+                GitModule submodule = Settings.Module.GetSubmodule(submoduleName);
                 if (!submodule.ValidWorkingDir())
                     return false;
             }
