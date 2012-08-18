@@ -26,8 +26,6 @@ namespace GitUI
         {
             _containRevison = containRevison;
 
-            Branches.Text = branch;
-
             LocalBranch.Checked = !remote;
             Remotebranch.Checked = remote;
 
@@ -35,6 +33,10 @@ namespace GitUI
                 lnkSettings_LinkClicked(null, null);
 
             Initialize();
+
+            //Set current branch after initialize, because initialize will reset it
+            if (!string.IsNullOrEmpty(branch))
+                Branches.Text = branch;
 
             if (containRevison != null)
             {
