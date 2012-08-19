@@ -59,11 +59,11 @@ namespace GitUI
                 var errorOccurred = !FormProcess.ShowDialog(this, Settings.GitCommand, 
                     GitSvnCommandHelpers.CloneCmd(_NO_TRANSLATE_svnRepositoryComboBox.Text, dirTo, authorsfile));
                 
-                if (errorOccurred || Settings.Module.InTheMiddleOfPatch())
+                if (errorOccurred || GitModule.Current.InTheMiddleOfPatch())
                     return;
                 if (ShowInTaskbar == false && AskIfNewRepositoryShouldBeOpened(dirTo))
                 {
-                    Settings.WorkingDir = dirTo;
+                    GitModule.CurrentWorkingDir = dirTo;
                 }
                 Close();
             }

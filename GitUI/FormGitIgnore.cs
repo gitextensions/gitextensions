@@ -76,8 +76,8 @@ namespace GitUI
         {
             try
             {
-                if (File.Exists(Settings.WorkingDir + ".gitignore"))
-                    _NO_TRANSLATE_GitIgnoreEdit.ViewFile(Settings.WorkingDir + ".gitignore");
+                if (File.Exists(GitModule.CurrentWorkingDir + ".gitignore"))
+                    _NO_TRANSLATE_GitIgnoreEdit.ViewFile(GitModule.CurrentWorkingDir + ".gitignore");
             }
             catch (Exception ex)
             {
@@ -99,7 +99,7 @@ namespace GitUI
             {
                 FileInfoExtensions
                     .MakeFileTemporaryWritable(
-                        Settings.WorkingDir + ".gitignore",
+                        GitModule.CurrentWorkingDir + ".gitignore",
                         x =>
                         {
                             var fileContent = _NO_TRANSLATE_GitIgnoreEdit.GetText();
@@ -141,7 +141,7 @@ namespace GitUI
 
         private void FormGitIgnoreLoad(object sender, EventArgs e)
         {
-            if (!Settings.Module.IsBareRepository())
+            if (!GitModule.Current.IsBareRepository())
                 return;
             MessageBox.Show(this, _gitignoreOnlyInWorkingDirSupported.Text, _gitignoreOnlyInWorkingDirSupportedCaption.Text);
             Close();

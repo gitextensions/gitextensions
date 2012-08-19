@@ -204,16 +204,16 @@ namespace GitCommands
 
         private List<GitHead> GetHeads()
         {
-            var result = Settings.Module.GetHeads(true);
-            bool validWorkingDir = Settings.Module.ValidWorkingDir();
-            selectedBranchName = validWorkingDir ? Settings.Module.GetSelectedBranch() : string.Empty;
+            var result = GitModule.Current.GetHeads(true);
+            bool validWorkingDir = GitModule.Current.ValidWorkingDir();
+            selectedBranchName = validWorkingDir ? GitModule.Current.GetSelectedBranch() : string.Empty;
             GitHead selectedHead = result.Find(head => head.Name == selectedBranchName);
 
             if (selectedHead != null)
             {
                 selectedHead.Selected = true;
 
-                ConfigFile localConfigFile = Settings.Module.GetLocalConfig();
+                ConfigFile localConfigFile = GitModule.Current.GetLocalConfig();
 
                 GitHead selectedHeadMergeSource =
                     result.Find(head => head.IsRemote

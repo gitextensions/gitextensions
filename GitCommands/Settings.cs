@@ -296,7 +296,7 @@ namespace GitCommands
 
         private static Encoding GetEncoding(bool local, string settingName, bool fromSettings)
         {
-            string lname = local ? "_local" + '_' + WorkingDir : "_global";
+            string lname = local ? "_local" + '_' + GitModule.CurrentWorkingDir : "_global";
             lname = settingName + lname;
             object o;
             if (byNameMap.TryGetValue(lname, out o))
@@ -309,7 +309,7 @@ namespace GitCommands
             {
                 ConfigFile cfg;
                 if (local)
-                    cfg = Module.GetLocalConfig();
+                    cfg = GitModule.Current.GetLocalConfig();
                 else
                     cfg = GitCommandHelpers.GetGlobalConfig();
 
@@ -338,7 +338,7 @@ namespace GitCommands
 
         private static void SetEncoding(bool local, string settingName, Encoding encoding, bool toSettings)
         {
-            string lname = local ? "_local" + '_' + WorkingDir : "_global";
+            string lname = local ? "_local" + '_' + GitModule.CurrentWorkingDir : "_global";
             lname = settingName + lname;
             // remove local settings
             var items = (from item in byNameMap.Keys where item.StartsWith(lname) select item).ToList();
@@ -369,7 +369,7 @@ namespace GitCommands
                     string arguments = string.Format("config --get {0}", controlStr);
 
                     int exitCode;
-                    String s = Module.RunGitCmd(arguments, out exitCode, null, Encoding.UTF8);
+                    String s = GitModule.Current.RunGitCmd(arguments, out exitCode, null, Encoding.UTF8);
                     if (s != null && s.IndexOf(controlStr) != -1)
                         _SystemEncoding = Encoding.UTF8;
                     else
@@ -480,8 +480,8 @@ namespace GitCommands
 
         public static PullAction LastPullAction
         {
-            get { return GetEnum<PullAction>("LastPullAction_" + WorkingDir, PullAction.None); }
-            set { SetEnum<PullAction>("LastPullAction_" + WorkingDir, value); }
+            get { return GetEnum<PullAction>("LastPullAction_" + GitModule.CurrentWorkingDir, PullAction.None); }
+            set { SetEnum<PullAction>("LastPullAction_" + GitModule.CurrentWorkingDir, value); }
         }
 
         public static void LastPullActionToPullMerge()
@@ -681,49 +681,6 @@ namespace GitCommands
         {
             get { return SafeGet("maxrevisiongraphcommits", 100000, ref _maxRevisionGraphCommits); }
             set { SafeSet("maxrevisiongraphcommits", value, ref _maxRevisionGraphCommits); }
-        }
-
-        public delegate void WorkingDirChangedEventHandler(string oldDir, string newDir, string newGitDir);
-        public static event WorkingDirChangedEventHandler WorkingDirChanged;
-
-        private static GitModule _module = null;
-        public static GitModule Module
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                if (_module == null)
-                    throw new NullReferenceException("GitModule was not set yet.");
-
-                return _module;
-            }
-        }
-
-        public static string WorkingDir
-        {
-            get
-            {
-                return _module == null ? null : _module.WorkingDir;
-            }
-            set
-            {
-                string old = WorkingDir;
-                _module = new GitModule(value);
-                RecentWorkingDir = _module.WorkingDir;
-                if (WorkingDirChanged != null)
-                {
-                    WorkingDirChanged(old, _module.WorkingDir, _module.GetGitDirectory());
-                }
-
-#if DEBUG
-                //Current encodings
-                Debug.WriteLine("Encodings for " + WorkingDir);
-                Debug.WriteLine("Files content encoding: " + Settings.FilesEncoding.EncodingName);
-                Debug.WriteLine("Commit encoding: " + Settings.CommitEncoding.EncodingName);
-                if (Settings.LogOutputEncoding.CodePage != Settings.CommitEncoding.CodePage)
-                    Debug.WriteLine("Log output encoding: " + Settings.LogOutputEncoding.EncodingName);
-#endif
-            }
         }
 
         public static string RecentWorkingDir

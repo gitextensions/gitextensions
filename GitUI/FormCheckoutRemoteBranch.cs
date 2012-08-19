@@ -55,7 +55,7 @@ namespace GitUI
         private void Initialize()
         {
             Text = String.Format(Text, _branch);
-            _remoteName = GitModule.GetRemoteName(_branch, Settings.Module.GetRemotes(false));
+            _remoteName = GitModule.GetRemoteName(_branch, GitModule.Current.GetRemotes(false));
             _localBranchName = _branch.Substring(_remoteName.Length + 1);
             _newLocalBranchName = string.Concat(_remoteName, "_", _localBranchName);
             int i = 2;
@@ -108,7 +108,7 @@ namespace GitUI
                     DialogResult = DialogResult.None;
                     return;
                 }
-                if (!Settings.Module.CheckRefFormat(customBranchName))
+                if (!GitModule.Current.CheckRefFormat(customBranchName))
                 {
                     MessageBox.Show(string.Format(_customBranchNameIsNotValid.Text, customBranchName), Text);
                     DialogResult = DialogResult.None;
@@ -153,7 +153,7 @@ namespace GitUI
 
         private static bool LocalBranchExists(string name)
         {
-            return Settings.Module.GetHeads(false).Any(head => head.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            return GitModule.Current.GetHeads(false).Any(head => head.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
 
         private void lnkSettings_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

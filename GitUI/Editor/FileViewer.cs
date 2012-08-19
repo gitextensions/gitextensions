@@ -138,7 +138,7 @@ namespace GitUI.Editor
                 this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             Font = Settings.DiffFont;
 
-            Settings.WorkingDirChanged += WorkingDirChanged;
+            GitModule.CurrentWorkingDirChanged += WorkingDirChanged;
             this.Encoding = Settings.FilesEncoding;
         }
 
@@ -322,7 +322,7 @@ namespace GitUI.Editor
 
         public void ViewCurrentChanges(string fileName, string oldFileName, bool staged)
         {
-            _async.Load(() => Settings.Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding), ViewStagingPatch);
+            _async.Load(() => GitModule.Current.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding), ViewStagingPatch);
         }
 
         public void ViewStagingPatch(string text)
@@ -333,7 +333,7 @@ namespace GitUI.Editor
 
         public void ViewSubmoduleChanges(string fileName, string oldFileName, bool staged)
         {
-            _async.Load(() => Settings.Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding), ViewSubmodulePatch);
+            _async.Load(() => GitModule.Current.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding), ViewSubmodulePatch);
         }
 
         public void ViewSubmodulePatch(string text)
@@ -395,14 +395,14 @@ namespace GitUI.Editor
             }
             else
             {
-                string blob = Settings.Module.GetFileBlobHash(fileName, guid);
+                string blob = GitModule.Current.GetFileBlobHash(fileName, guid);
                 ViewGitItem(fileName, blob);
             }
         }
 
         public void ViewGitItem(string fileName, string guid)
         {
-            ViewItem(fileName, () => GetImage(fileName, guid), () => Settings.Module.GetFileText(guid, Encoding));
+            ViewItem(fileName, () => GetImage(fileName, guid), () => GitModule.Current.GetFileText(guid, Encoding));
         }
 
         private void ViewItem(string fileName, Func<Image> getImage, Func<string> getFileText)
@@ -458,7 +458,7 @@ namespace GitUI.Editor
         {
             try
             {
-                using (var stream = Settings.Module.GetFileStream(guid))
+                using (var stream = GitModule.Current.GetFileStream(guid))
                 {
                     return CreateImage(fileName, stream);
                 }
@@ -473,7 +473,7 @@ namespace GitUI.Editor
         {
             try
             {
-                using (Stream stream = File.OpenRead(GitCommands.Settings.WorkingDir + fileName))
+                using (Stream stream = File.OpenRead(GitCommands.GitModule.CurrentWorkingDir + fileName))
                 {
                     return CreateImage(fileName, stream);
                 }
@@ -508,7 +508,7 @@ namespace GitUI.Editor
             if (File.Exists(fileName))
                 path = fileName;
             else
-                path = GitCommands.Settings.WorkingDir + fileName;
+                path = GitCommands.GitModule.CurrentWorkingDir + fileName;
 
             return !File.Exists(path) ? null : FileReader.ReadFileContent(path, GitCommands.Settings.FilesEncoding);
         }

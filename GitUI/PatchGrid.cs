@@ -30,7 +30,7 @@ namespace GitUI
 
         public void Initialize()
         {
-            Patches.DataSource = Settings.Module.GetRebasePatchFiles();
+            Patches.DataSource = GitModule.Current.GetRebasePatchFiles();
         }
 
         private void Patches_DoubleClick(object sender, EventArgs e)

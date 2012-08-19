@@ -58,17 +58,17 @@ namespace GitUI
 
         private void BranchDropDown(object sender, EventArgs e)
         {
-            var realWorkingDir = Settings.WorkingDir;
-            Settings.WorkingDir = Directory.Text;
+            var realWorkingDir = GitModule.CurrentWorkingDir;
+            GitModule.CurrentWorkingDir = Directory.Text;
 
-            var heads = Settings.Module.GetHeads(false);
+            var heads = GitModule.Current.GetHeads(false);
 
             heads.Insert(0, GitHead.NoHead);
 
             Branch.DisplayMember = "Name";
             Branch.DataSource = heads;
 
-            Settings.WorkingDir = realWorkingDir;
+            GitModule.CurrentWorkingDir = realWorkingDir;
         }
 
         private void DirectoryTextUpdate(object sender, EventArgs e)

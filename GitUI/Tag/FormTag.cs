@@ -62,10 +62,10 @@ namespace GitUI.Tag
                     return string.Empty;
                 }
 
-                File.WriteAllText(Settings.Module.WorkingDirGitDir() + "\\TAGMESSAGE", tagMessage.Text);
+                File.WriteAllText(GitModule.Current.WorkingDirGitDir() + "\\TAGMESSAGE", tagMessage.Text);
             }
             
-            var s = Settings.Module.Tag(Tagname.Text, GitRevisions.GetSelectedRevisions()[0].Guid,
+            var s = GitModule.Current.Tag(Tagname.Text, GitRevisions.GetSelectedRevisions()[0].Guid,
                                                 annotate.Checked, ForceTag.Checked);
 
             if (!string.IsNullOrEmpty(s))
@@ -79,7 +79,7 @@ namespace GitUI.Tag
 
         private void PushTag(string tagName)
         {
-            var currentBranchRemote = Settings.Module.GetSetting(string.Format("branch.{0}.remote", Settings.Module.GetSelectedBranch()));
+            var currentBranchRemote = GitModule.Current.GetSetting(string.Format("branch.{0}.remote", GitModule.Current.GetSelectedBranch()));
             var pushCmd = GitCommandHelpers.PushTagCmd(currentBranchRemote, tagName, false);
 
             ScriptManager.RunEventScripts(ScriptEvent.BeforePush);
@@ -93,8 +93,8 @@ namespace GitUI.Tag
 
                 form.ShowDialog();
 
-                if (!Settings.Module.InTheMiddleOfConflictedMerge() &&
-                    !Settings.Module.InTheMiddleOfRebase() && !form.ErrorOccurred())
+                if (!GitModule.Current.InTheMiddleOfConflictedMerge() &&
+                    !GitModule.Current.InTheMiddleOfRebase() && !form.ErrorOccurred())
                 {
                     ScriptManager.RunEventScripts(ScriptEvent.AfterPush);
                 }

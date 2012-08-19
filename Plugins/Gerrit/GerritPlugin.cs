@@ -47,11 +47,11 @@ namespace Gerrit
 
             // Correct enabled/visibility of our menu/tool strip items.
 
-            bool validWorkingDir = GitCommands.Settings.Module.ValidWorkingDir();
+            bool validWorkingDir = GitCommands.GitModule.Current.ValidWorkingDir();
 
             _gitReviewMenuItem.Enabled = validWorkingDir;
 
-            bool showGerritItems = validWorkingDir && File.Exists(GitCommands.Settings.WorkingDir + ".gitreview");
+            bool showGerritItems = validWorkingDir && File.Exists(GitCommands.GitModule.CurrentWorkingDir + ".gitreview");
 
             foreach (var item in _gerritMenuItems)
             {

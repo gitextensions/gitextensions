@@ -13,7 +13,7 @@ namespace GitUI
         {
             get
             {
-                return Settings.Module;
+                return GitModule.Current;
             }
         }
 
@@ -21,13 +21,13 @@ namespace GitUI
         {
             get
             {
-                return Settings.WorkingDir;
+                return GitModule.CurrentWorkingDir;
             }
         }
 
         public override string GetGitDirectory()
         {
-             return Settings.Module.GetGitDirectory();
+             return GitModule.Current.GetGitDirectory();
         }
 
         public override bool IsValidGitWorkingDir(string workingDir)
