@@ -70,7 +70,7 @@ namespace GitUI
                 // show failed assertion for unsupported cases (for developers)
                 // if you get this message, 
                 //     you can implement this format parsing
-                //     or post an issue to https://github.com/spdr870/gitextensions/issues
+                //     or post an issue to https://github.com/gitextensions/gitextensions/issues
                 Debug.Assert(patternMatch.Success, "Lost object's extracted diagnostics format not implemented", raw);
 
                 // skip unsupported raw data format (for end users)

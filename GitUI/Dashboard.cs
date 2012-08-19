@@ -252,12 +252,12 @@ namespace GitUI
 
         private static void GitHubItem_Click(object sender, EventArgs e)
         {
-            Process.Start(@"http://github.com/spdr870/gitextensions");
+            Process.Start(@"http://github.com/gitextensions/gitextensions");
         }
 
         private static void IssuesItem_Click(object sender, EventArgs e)
         {
-            Process.Start(@"http://github.com/spdr870/gitextensions/issues");
+            Process.Start(@"http://github.com/gitextensions/gitextensions/issues");
         }
 
         private void dashboardItem_Click(object sender, EventArgs e)
