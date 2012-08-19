@@ -40,17 +40,13 @@ namespace GitUI
                         return location;
                     continue;
                 }
-                string path = Path.Combine(Environment.GetEnvironmentVariable("ProgramFiles"), location);
-                if (Directory.Exists(path))
+                string programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles");
+
+                string path;
+
+                if (!string.IsNullOrEmpty(programFilesPath))
                 {
-                    string fullName = Path.Combine(path, fileName);
-                    if (File.Exists(fullName))
-                        return fullName;
-                }
-                if (8 == IntPtr.Size
-                    || (!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432"))))
-                {
-                    path = Path.Combine(Environment.GetEnvironmentVariable("ProgramFiles(x86)"), location);
+                    path = Path.Combine(programFilesPath, location);
                     if (Directory.Exists(path))
                     {
                         string fullName = Path.Combine(path, fileName);
@@ -58,9 +54,26 @@ namespace GitUI
                             return fullName;
                     }
                 }
+
+                if (8 == IntPtr.Size
+                    || (!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432"))))
+                {
+                    programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
+
+                    if (!string.IsNullOrEmpty(programFilesPath))
+                    {
+                        path = Path.Combine(programFilesPath, location);
+                        if (Directory.Exists(path))
+                        {
+                            string fullName = Path.Combine(path, fileName);
+                            if (File.Exists(fullName))
+                                return fullName;
+                        }
+                    }
+                }
             }
 
-            return "";
+            return string.Empty;
         }
 
         private static string UnquoteString(string str)
