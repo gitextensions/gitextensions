@@ -249,7 +249,10 @@ namespace GitUI
             if (!CheckComponent(this))
                 OnRuntimeLoad(e);
 
-            AutoScaleMode = AutoScaleMode.Dpi;
+            if (Settings.EnableAutoScale)
+                AutoScaleMode = AutoScaleMode.Dpi;
+            else
+                AutoScaleMode = AutoScaleMode.None;
 
             if (_enablePositionRestore)
                 RestorePosition(this.GetType().Name);

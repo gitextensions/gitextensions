@@ -334,6 +334,8 @@ namespace GitUI
                 GitCommandHelpers.SetEnvironmentVariable();
                 homeIsSetToLabel.Text = string.Concat(_homeIsSetToString.Text, " ", GitCommandHelpers.GetHomeDir());
 
+                chkEnableAutoScale.Checked = Settings.EnableAutoScale;
+
                 scriptEvent.DataSource = Enum.GetValues(typeof(ScriptEvent));
                 EncodingToCombo(Settings.GetFilesEncoding(false), Global_FilesEncoding);
                 EncodingToCombo(Settings.GetFilesEncoding(true), Local_FilesEncoding);
@@ -549,6 +551,8 @@ namespace GitUI
                 FormFixHome.CheckHomePath();
 
             GitCommandHelpers.SetEnvironmentVariable(true);
+
+            Settings.EnableAutoScale = chkEnableAutoScale.Checked;
 
             Settings.StartWithRecentWorkingDir = chkStartWithRecentWorkingDir.Checked;
             Settings.PlaySpecialStartupSound = chkPlaySpecialStartupSound.Checked;
