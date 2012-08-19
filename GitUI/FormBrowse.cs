@@ -1963,7 +1963,6 @@ namespace GitUI
             }
 
             GitUICommands.Instance.StartCreatePullRequest(this, repoHost);
-            Initialize();
         }
 
         #region Hotkey commands
