@@ -28,6 +28,7 @@ namespace GitUI.RepoHosting
         private List<IHostedRemote> _hostedRemotes;
         private string _currentBranch;
         private AsyncLoader remoteLoader = new AsyncLoader();
+        private GitModule currentModule = GitModule.Current;
 
         public CreatePullRequestForm(IRepositoryHostPlugin repoHost, string chooseRemote, string chooseBranch)
         {
@@ -64,7 +65,7 @@ namespace GitUI.RepoHosting
 
                     this.UnMask();
 
-                    _currentBranch = GitModule.Current.ValidWorkingDir() ? GitModule.Current.GetSelectedBranch() : "";
+                    _currentBranch = currentModule.ValidWorkingDir() ? currentModule.GetSelectedBranch() : "";
                     LoadRemotes(foreignHostedRemotes);
                     LoadMyBranches();
                 });
