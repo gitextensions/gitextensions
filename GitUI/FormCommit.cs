@@ -176,6 +176,7 @@ namespace GitUI
             _ResetSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_resetSelectedLines.Text, ResetSelectedLinesToolStripMenuItemClick);
 
             splitMain.SplitterDistance = Settings.CommitDialogSplitter;
+            splitRight.SplitterDistance = Settings.CommitDialogRightSplitter;
 
             HotkeysEnabled = true;
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
@@ -1200,6 +1201,7 @@ namespace GitUI
                 GitCommands.Commit.SetCommitMessage(Message.Text);
 
             Settings.CommitDialogSplitter = splitMain.SplitterDistance;
+            Settings.CommitDialogRightSplitter = splitRight.SplitterDistance;
         }
 
         private void DeleteAllUntrackedFilesToolStripMenuItemClick(object sender, EventArgs e)

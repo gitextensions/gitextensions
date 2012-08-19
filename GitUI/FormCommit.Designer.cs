@@ -792,7 +792,7 @@ namespace GitUI
             this.splitRight.Panel2.Controls.Add(this.toolbarCommit);
             this.splitRight.Panel2.Controls.Add(this.flowCommitButtons);
             this.splitRight.Size = new System.Drawing.Size(517, 644);
-            this.splitRight.SplitterDistance = 485;
+            this.splitRight.SplitterDistance = 445;
             this.splitRight.TabIndex = 0;
             this.splitRight.TabStop = false;
             // 
