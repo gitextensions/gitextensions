@@ -685,7 +685,6 @@ namespace GitUI
             this.Name = "FormRemotes";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Remote repositories";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormRemotes_FormClosing);
             this.Load += new System.EventHandler(this.FormRemotesLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);

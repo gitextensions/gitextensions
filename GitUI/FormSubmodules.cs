@@ -20,16 +20,6 @@ namespace GitUI
             Translate();
         }
 
-        private void FormSubmodulesFormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("submodules");
-        }
-
-        private void FormSubmodulesLoad(object sender, EventArgs e)
-        {
-            RestorePosition("submodules");
-        }
-
         private void AddSubmoduleClick(object sender, EventArgs e)
         {
             using (var formAddSubmodule = new FormAddSubmodule())

@@ -51,7 +51,6 @@ namespace GitUI
             this.Name = "FormChangeLog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Change log";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormChangeLog1FormClosing);
             this.Load += new System.EventHandler(this.FormChangeLog1Load);
             this.ResumeLayout(false);
 

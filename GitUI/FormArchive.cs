@@ -15,20 +15,15 @@ namespace GitUI
             new TranslationString("Save archive as");
 
         public FormArchive()
+            : base(true)
         {
             InitializeComponent(); 
             Translate();
         }
 
-        private void FormArchive_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("archive");
-        }
-
         private void FormArchive_Load(object sender, EventArgs e)
         {
             revisionGrid1.Load();
-            RestorePosition("archive");
         }
 
         private void Save_Click(object sender, EventArgs e)

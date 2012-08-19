@@ -147,7 +147,6 @@
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormBranch";
             this.Text = "Create Branch";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormBranch_FormClosing);
             this.Load += new System.EventHandler(this.FormBranch_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);

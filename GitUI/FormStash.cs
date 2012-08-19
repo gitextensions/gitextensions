@@ -22,6 +22,7 @@ namespace GitUI
         public bool NeedRefresh;
 
         public FormStash()
+            : base(true)
         {
             InitializeComponent();
             Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
@@ -38,14 +39,13 @@ namespace GitUI
         {
             Settings.StashKeepIndex = StashKeepIndex.Checked;
             Settings.IncludeUntrackedFilesInManualStash = chkIncludeUntrackedFiles.Checked;
-            SavePosition("stash");
         }
 
         private void FormStashLoad(object sender, EventArgs e)
         {
             StashKeepIndex.Checked = Settings.StashKeepIndex;
             chkIncludeUntrackedFiles.Checked = Settings.IncludeUntrackedFilesInManualStash;
-            RestorePosition("stash");
+
             splitContainer2_SplitterMoved(null, null);
         }
 

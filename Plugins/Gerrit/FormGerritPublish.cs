@@ -138,8 +138,6 @@ namespace Gerrit
 
         private void FormGerritPublishLoad(object sender, EventArgs e)
         {
-            RestorePosition("public-gerrit-change");
-
             _NO_TRANSLATE_Remotes.DataSource = GitCommands.Settings.Module.GetRemotes();
 
             _currentBranchRemote = Settings.DefaultRemote;
@@ -165,11 +163,6 @@ namespace Gerrit
         {
             _uiCommand.StartRemotesDialog();
             _NO_TRANSLATE_Remotes.DataSource = GitCommands.Settings.Module.GetRemotes();
-        }
-
-        private void FormGerritPublish_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("public-gerrit-change");
         }
     }
 }

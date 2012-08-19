@@ -25,21 +25,15 @@ namespace GitUI
         private readonly string _defaultBranch;
 
         public FormRebase(string defaultBranch)
+            : base(true)
         {
             InitializeComponent();
             Translate();
             _defaultBranch = defaultBranch;
         }
 
-        private void FormRebaseFormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("rebase");
-        }
-
         private void FormRebaseLoad(object sender, EventArgs e)
         {
-            RestorePosition("rebase");
-
             var selectedHead = Settings.Module.GetSelectedBranch();
             Currentbranch.Text = _currentBranchText.Text + " " + selectedHead;
 

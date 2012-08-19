@@ -139,6 +139,7 @@ namespace GitUI
         { }
 
         public FormCommit(CommitKind commitKind, GitRevision editedCommit)
+            : base(true)
         {
             _syncContext = SynchronizationContext.Current;
 
@@ -1198,8 +1199,6 @@ namespace GitUI
             if (CommitKind.Normal == _commitKind)
                 GitCommands.Commit.SetCommitMessage(Message.Text);
 
-            SavePosition("commit");
-
             Settings.CommitDialogSplitter = splitMain.SplitterDistance;
         }
 
@@ -1401,11 +1400,6 @@ namespace GitUI
                      string.Format("checkout -p \"{0}\"", gitItemStatus.Name));
                 Initialize();
             }
-        }
-
-        private void FormCommitLoad(object sender, EventArgs e)
-        {
-            RestorePosition("commit");
         }
 
         private void ResetClick(object sender, EventArgs e)

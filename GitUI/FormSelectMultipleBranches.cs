@@ -14,6 +14,7 @@ namespace GitUI
     {
         // for translation only
         internal FormSelectMultipleBranches()
+            : base(true)
         {
             InitializeComponent();
             Translate();
@@ -59,16 +60,6 @@ namespace GitUI
         private void okButton_Click(object sender, EventArgs e)
         {
             Close();
-        }
-
-        private void FormSelectMultipleBranches_Load(object sender, EventArgs e)
-        {
-            RestorePosition("selectmultiplebranches");
-        }
-
-        private void FormSelectMultipleBranches_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("selectmultiplebranches");
         }
     }
 }

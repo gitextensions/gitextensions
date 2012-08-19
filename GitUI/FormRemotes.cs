@@ -52,6 +52,7 @@ namespace GitUI
             new TranslationString("Url");
 
         public FormRemotes()
+            : base(true)
         {
             InitializeComponent();
             Translate();
@@ -59,7 +60,6 @@ namespace GitUI
 
         private void FormRemotesLoad(object sender, EventArgs e)
         {
-            RestorePosition("remotes");
             Initialize();
         }
 
@@ -371,11 +371,6 @@ namespace GitUI
         private void UpdateBranchClick(object sender, EventArgs e)
         {
             FormRemoteProcess.ShowDialog(this, "remote update");
-        }
-
-        private void FormRemotes_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("remotes");
         }
 
         private void checkBoxSepPushUrl_CheckedChanged(object sender, EventArgs e)

@@ -6,7 +6,7 @@ namespace GitUI.Blame
 {
     public partial class FormBlame : GitExtensionsForm
     {
-        public FormBlame(string fileName, GitRevision revision)
+        public FormBlame(string fileName, GitRevision revision) : base(true)
         {
             InitializeComponent();
             Translate();
@@ -23,14 +23,8 @@ namespace GitUI.Blame
         public string FileName { get; set; }
 
 
-        private void FormBlameFormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("file-blame");
-        }
-
         private void FormBlameLoad(object sender, EventArgs e)
         {
-            RestorePosition("file-blame");
             Text = string.Format("Blame ({0})", FileName);
         }
     }

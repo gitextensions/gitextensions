@@ -20,6 +20,7 @@ namespace GitUI.Tag
         private readonly TranslationString _pushToCaption = new TranslationString("Push tag to {0}");
 
         public FormTag()
+            : base(true)
         {
             InitializeComponent();
             Translate();
@@ -27,16 +28,9 @@ namespace GitUI.Tag
             tagMessage.MistakeFont = new Font(SystemFonts.MessageBoxFont, FontStyle.Underline);
         }
 
-        private void FormTagFormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("tag");
-        }
-
         private void FormTagLoad(object sender, EventArgs e)
         {
             GitRevisions.Load();
-
-            RestorePosition("tag");
         }
         
         private void CreateTagClick(object sender, EventArgs e)

@@ -28,6 +28,7 @@ namespace GitUI
         public string MailMapFile = string.Empty;
 
         public FormMailMap()
+            : base(true)
         {
             InitializeComponent();
             Translate();
@@ -106,13 +107,10 @@ namespace GitUI
 
             if (!needToClose)
                 e.Cancel = true;
-            else
-                SavePosition("edit-mail-map");
         }
 
         private void FormMailMapLoad(object sender, EventArgs e)
         {
-            RestorePosition("edit-mail-map");
             if (!Settings.Module.IsBareRepository()) return;
             MessageBox.Show(this, _mailmapOnlyInWorkingDirSupported.Text,_mailmapOnlyInWorkingDirSupportedCaption.Text);
             Close();

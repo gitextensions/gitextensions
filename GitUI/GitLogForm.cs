@@ -10,6 +10,7 @@ namespace GitUI
         private readonly SynchronizationContext syncContext;
 
         internal GitLogForm()
+            : base(true)
         {
             ShowInTaskbar = true;
             syncContext = SynchronizationContext.Current;
@@ -18,18 +19,11 @@ namespace GitUI
         }
 
         private void GitLogFormLoad(object sender, EventArgs e)
-        {
-            RestorePosition("log");
-
+        {            
             SubscribeToEvents();
             RefreshLogItems();
 
             RefreshCommandCacheItems();
-        }
-
-        private void GitLogFormFormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("log");
         }
 
         private void GitLogForm_FormClosed(object sender, FormClosedEventArgs e)
