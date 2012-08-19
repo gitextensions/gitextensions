@@ -479,7 +479,7 @@ namespace GitCommands
                 writer.WriteLine("@prompt $G");
                 writer.Write(batchFile);
             }
-            string result = GitModule.Current.RunCmd("cmd.exe", "/C \"" + tempFileName + "\"");
+            string result = RunCmd("cmd.exe", "/C \"" + tempFileName + "\"");
             File.Delete(tempFileName);
             return result;
         }
@@ -623,7 +623,7 @@ namespace GitCommands
         {
             using (var ms = (MemoryStream)GetFileStream(blob)) //Ugly, has implementation info.
             {
-                string autocrlf = GitModule.Current.GetEffectiveSetting("core.autocrlf").ToLower();
+                string autocrlf = GetEffectiveSetting("core.autocrlf").ToLower();
                 bool convertcrlf = autocrlf == "true";
 
                 byte[] buf = ms.ToArray();
@@ -2018,7 +2018,7 @@ namespace GitCommands
 
         public ICollection<string> GetMergedBranches()
         {
-            return GitModule.Current.RunGitCmd(GitCommandHelpers.MergedBranches()).Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            return RunGitCmd(GitCommandHelpers.MergedBranches()).Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         private string GetTree(bool tags, bool branches)
