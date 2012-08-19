@@ -175,6 +175,13 @@ namespace GitCommands
             set { SafeSet("customhomedir", value, ref _customHomeDir); }
         }
 
+        private static bool? _enableAutoScale;
+        public static bool EnableAutoScale
+        {
+            get { return SafeGet("enableautoscale", true, ref _enableAutoScale); }
+            set { SafeSet("enableautoscale", value, ref _enableAutoScale); }
+        }
+
         private static string _iconColor;
         public static string IconColor
         {
