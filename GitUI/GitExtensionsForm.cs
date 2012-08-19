@@ -301,12 +301,12 @@ namespace GitUI
             StartPosition = FormStartPosition.Manual;
             Size = position.Rect.Size;
             if (Owner == null || !_windowCentred)
-                Location = position.Rect.Location;
+                Location = new Point(position.Rect.Location.X, Math.Max(0, position.Rect.Location.X));
             else
             {
                 // Calculate location for modal form with parent
                 Location = new Point(Owner.Left + Owner.Width / 2 - Width / 2, 
-                    Owner.Top + Owner.Height / 2 - Height / 2);
+                    Math.Max(0, Owner.Top + Owner.Height / 2 - Height / 2));
             }
             WindowState = position.State;
         }
