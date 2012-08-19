@@ -285,8 +285,8 @@
             // 
             // FileViewer
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.Controls.Add(this.PictureBox);
             this.Controls.Add(this.fileviewerToolbar);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);

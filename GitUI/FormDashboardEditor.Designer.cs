@@ -43,8 +43,8 @@
             // 
             // FormDashboardEditor
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.ClientSize = new System.Drawing.Size(698, 447);
             this.Controls.Add(this.dashboardEditor1);
             this.Name = "FormDashboardEditor";

@@ -153,8 +153,8 @@
             // FormSvnClone
             // 
             this.AcceptButton = this.okButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.ClientSize = new System.Drawing.Size(492, 174);
             this.Controls.Add(this._NO_TRANSLATE_authorsFileTextBox);
             this.Controls.Add(this._NO_TRANSLATE_subdirectoryTextBox);

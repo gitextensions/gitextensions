@@ -141,8 +141,8 @@
             // FormBranch
             // 
             this.AcceptButton = this.Ok;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.ClientSize = new System.Drawing.Size(746, 484);
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormBranch";

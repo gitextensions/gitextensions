@@ -115,8 +115,8 @@
             // 
             // PatchGrid
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.Controls.Add(this.Patches);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "PatchGrid";

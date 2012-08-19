@@ -214,7 +214,7 @@ namespace GitUI
             // 
             // FormProcess
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            
             this.ClientSize = new System.Drawing.Size(565, 326);
             this.Name = "FormProcess";
             this.ResumeLayout(false);
