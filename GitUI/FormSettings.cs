@@ -2180,7 +2180,7 @@ namespace GitUI
 
         private void downloadDictionary_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(@"https://github.com/spdr870/gitextensions/wiki/Spelling");
+            Process.Start(@"https://github.com/gitextensions/gitextensions/wiki/Spelling");
         }
 
         private void ScriptList_SelectionChanged(object sender, EventArgs e)
