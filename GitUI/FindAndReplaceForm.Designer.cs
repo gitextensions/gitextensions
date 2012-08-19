@@ -169,8 +169,8 @@
             // FindAndReplaceForm
             // 
             this.AcceptButton = this.btnFindNext;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(419, 169);
             this.Controls.Add(this.chkMatchCase);

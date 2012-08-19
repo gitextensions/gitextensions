@@ -48,8 +48,8 @@ namespace Github3
             // 
             // OAuth
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.ClientSize = new System.Drawing.Size(980, 600);
             this.Controls.Add(this.webBrowser1);
             this.Name = "OAuth";

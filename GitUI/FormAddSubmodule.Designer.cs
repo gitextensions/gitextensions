@@ -126,8 +126,8 @@
             // 
             // FormAddSubmodule
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.ClientSize = new System.Drawing.Size(492, 131);
             this.Controls.Add(this.chkForce);
             this.Controls.Add(this.Branch);

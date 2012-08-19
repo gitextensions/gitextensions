@@ -323,8 +323,8 @@ namespace GitUI
             // 
             // FormStash
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.ClientSize = new System.Drawing.Size(708, 520);
             this.Controls.Add(this.splitContainer2);
             this.MinimumSize = new System.Drawing.Size(640, 480);

@@ -42,8 +42,8 @@
             // 
             // FileViewerWindows
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.Controls.Add(this.TextEditor);
             this.Name = "FileViewerWindows";
             this.Size = new System.Drawing.Size(649, 415);

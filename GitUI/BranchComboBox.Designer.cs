@@ -60,8 +60,8 @@
             // 
             // BranchComboBox
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.Controls.Add(this.selectMultipleBranchesButton);
             this.Controls.Add(this.branches);
             this.Margin = new System.Windows.Forms.Padding(0);

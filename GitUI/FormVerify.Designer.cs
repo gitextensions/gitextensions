@@ -350,8 +350,8 @@
             // 
             // FormVerify
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.CancelButton = this.btnCloseDialog;
             this.ClientSize = new System.Drawing.Size(859, 575);
             this.Controls.Add(this.Warnings);

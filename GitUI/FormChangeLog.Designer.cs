@@ -44,8 +44,8 @@ namespace GitUI
             // 
             // FormChangeLog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.ClientSize = new System.Drawing.Size(849, 411);
             this.Controls.Add(this.ChangeLog);
             this.Name = "FormChangeLog";

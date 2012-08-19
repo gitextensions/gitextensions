@@ -90,8 +90,8 @@
             // FormResetChanges
             // 
             this.AcceptButton = this.btnCancel;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(392, 101);
             this.Controls.Add(this.label2);

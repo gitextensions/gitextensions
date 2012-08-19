@@ -190,8 +190,8 @@ namespace PatchApply
             // 
             // ViewPatch
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.ClientSize = new System.Drawing.Size(689, 501);
             this.Controls.Add(this.splitContainer4);
             this.Name = "ViewPatch";

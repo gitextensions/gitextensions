@@ -154,8 +154,8 @@
             // 
             // FormResetCurrentBranch
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.ClientSize = new System.Drawing.Size(538, 269);
             this.Controls.Add(this.Cancel);
             this.Controls.Add(this.Ok);

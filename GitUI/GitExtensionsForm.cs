@@ -27,7 +27,8 @@ namespace GitUI
             SetFont();
 
             ShowInTaskbar = Application.OpenForms.Count <= 0 || (Application.OpenForms.Count == 1 && Application.OpenForms[0] is FormSplash);
-            AutoScaleMode = AutoScaleMode.None;
+
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 
             var cancelButton = new Button();
             cancelButton.Click += CancelButtonClick;
@@ -237,6 +238,8 @@ namespace GitUI
 
             if (!CheckComponent(this))
                 OnRuntimeLoad(e);
+
+            AutoScaleMode = AutoScaleMode.Dpi;
         }
 
         private void GitExtensionsFormLoad(object sender, EventArgs e)

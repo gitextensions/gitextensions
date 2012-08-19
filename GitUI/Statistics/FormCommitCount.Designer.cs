@@ -94,8 +94,8 @@ namespace GitUI.Statistics
             // 
             // FormCommitCount
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.ClientSize = new System.Drawing.Size(367, 317);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
