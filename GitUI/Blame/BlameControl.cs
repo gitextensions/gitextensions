@@ -174,7 +174,7 @@ namespace GitUI.Blame
 
             blameLoader.Load(() =>
             {
-                _blame = Settings.Module.Blame(fileName, guid);
+                _blame = GitModule.Current.Blame(fileName, guid);
             },
             () =>
             {
@@ -269,7 +269,7 @@ namespace GitUI.Blame
             if (line < 0)
                 return;
             string commit = _blame.Lines[line].CommitGuid;
-            GitBlame blame = Settings.Module.Blame(_fileName, commit + "^", line + ",+1");
+            GitBlame blame = GitModule.Current.Blame(_fileName, commit + "^", line + ",+1");
             if (blame.Headers.Count > 0)
             {
                 commit = blame.Headers[0].CommitGuid;

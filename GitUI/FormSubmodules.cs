@@ -36,7 +36,7 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
             var submodule = Submodules.SelectedRows.Count == 1 ? Submodules.SelectedRows[0].DataBoundItem as GitSubmodule : null;
-            Submodules.DataSource = Settings.Module.GetSubmodules();
+            Submodules.DataSource = GitModule.Current.GetSubmodules();
             if (submodule != null)
             {
                 DataGridViewRow row = Submodules.Rows
@@ -92,16 +92,16 @@ namespace GitUI
                 return;
 
             Cursor.Current = Cursors.WaitCursor;
-            Settings.Module.RunGitCmd("rm --cached \"" + SubModuleName.Text + "\"");
+            GitModule.Current.RunGitCmd("rm --cached \"" + SubModuleName.Text + "\"");
 
-            var modules = Settings.Module.GetSubmoduleConfigFile();
+            var modules = GitModule.Current.GetSubmoduleConfigFile();
             modules.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
             if (modules.GetConfigSections().Count > 0)
                 modules.Save();
             else
-                Settings.Module.RunGitCmd("rm --cached \".gitmodules\"");
+                GitModule.Current.RunGitCmd("rm --cached \".gitmodules\"");
 
-            var configFile = Settings.Module.GetLocalConfig();
+            var configFile = GitModule.Current.GetLocalConfig();
             configFile.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
             configFile.Save();
 

@@ -802,7 +802,7 @@ namespace GitCommands
             }
 
             // Doesn't work with removed submodules
-            IList<string> Submodules = Settings.Module.GetSubmodulesLocalPathes();
+            IList<string> Submodules = GitModule.Current.GetSubmodulesLocalPathes();
 
             //Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)
             var files = trimmedStatus.Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
@@ -1088,7 +1088,7 @@ namespace GitCommands
                             sb.AppendLine("To:\t\t" + hash + dirty);
                         }
 
-                        GitModule gitmodule = Settings.Module.GetSubmodule(module);
+                        GitModule gitmodule = GitModule.Current.GetSubmodule(module);
                         if (gitmodule.ValidWorkingDir())
                         {
                             string error = "";

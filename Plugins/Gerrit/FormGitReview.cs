@@ -41,8 +41,8 @@ namespace Gerrit
         {
             try
             {
-                if (File.Exists(Settings.WorkingDir + ".gitreview"))
-                    _NO_TRANSLATE_GitReviewEdit.ViewFile(Settings.WorkingDir + ".gitreview");
+                if (File.Exists(GitModule.CurrentWorkingDir + ".gitreview"))
+                    _NO_TRANSLATE_GitReviewEdit.ViewFile(GitModule.CurrentWorkingDir + ".gitreview");
             }
             catch (Exception ex)
             {
@@ -64,7 +64,7 @@ namespace Gerrit
             {
                 FileInfoExtensions
                     .MakeFileTemporaryWritable(
-                        Settings.WorkingDir + ".gitreview",
+                        GitModule.CurrentWorkingDir + ".gitreview",
                         x =>
                         {
                             var fileContent = _NO_TRANSLATE_GitReviewEdit.GetText();
@@ -106,7 +106,7 @@ namespace Gerrit
 
         private void FormGitIgnoreLoad(object sender, EventArgs e)
         {
-            if (!Settings.Module.IsBareRepository())
+            if (!GitModule.Current.IsBareRepository())
                 return;
             MessageBox.Show(this, _gitreviewOnlyInWorkingDirSupported.Text, _gitreviewOnlyInWorkingDirSupportedCaption.Text);
             Close();

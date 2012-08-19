@@ -41,9 +41,9 @@ namespace GitUI
         {
             try
             {
-                if (File.Exists(Settings.WorkingDir + ".gitattributes"))
+                if (File.Exists(GitModule.CurrentWorkingDir + ".gitattributes"))
                 {
-                    _NO_TRANSLATE_GitAttributesText.ViewFile(Settings.WorkingDir + ".gitattributes");
+                    _NO_TRANSLATE_GitAttributesText.ViewFile(GitModule.CurrentWorkingDir + ".gitattributes");
                 }
             }
             catch (Exception ex)
@@ -64,7 +64,7 @@ namespace GitUI
             {
                 FileInfoExtensions
                     .MakeFileTemporaryWritable(
-                        Settings.WorkingDir + ".gitattributes",
+                        GitModule.CurrentWorkingDir + ".gitattributes",
                         x =>
                         {
                             this.GitAttributesFile = _NO_TRANSLATE_GitAttributesText.GetText();
@@ -111,7 +111,7 @@ namespace GitUI
 
         private void FormMailMapLoad(object sender, EventArgs e)
         {
-            if (!Settings.Module.IsBareRepository()) return;
+            if (!GitModule.Current.IsBareRepository()) return;
             MessageBox.Show(this, noWorkingDir.Text, _noWorkingDirCaption.Text);
             Close();
         }

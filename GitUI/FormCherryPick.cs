@@ -38,10 +38,10 @@ namespace GitUI
             }
             bool formClosed = false;
             List<string> arguments = new List<string>();
-            bool IsMerge = Settings.Module.IsMerge(RevisionGrid.GetSelectedRevisions()[0].Guid);
+            bool IsMerge = GitModule.Current.IsMerge(RevisionGrid.GetSelectedRevisions()[0].Guid);
             if (IsMerge && !autoParent.Checked)
             {
-                GitRevision[] ParentsRevisions = Settings.Module.GetParents(RevisionGrid.GetSelectedRevisions()[0].Guid);
+                GitRevision[] ParentsRevisions = GitModule.Current.GetParents(RevisionGrid.GetSelectedRevisions()[0].Guid);
                 using (var choose = new FormCherryPickMerge(ParentsRevisions))
                 {
                     choose.ShowDialog(this);
@@ -59,7 +59,7 @@ namespace GitUI
 
             if (!formClosed)
             {
-                MessageBox.Show(this, _cmdExecutedMsgBox.Text + " " + Environment.NewLine + Settings.Module.CherryPick(RevisionGrid.GetSelectedRevisions()[0].Guid, AutoCommit.Checked, string.Join(" ", arguments.ToArray())), _cmdExecutedMsgBoxCaption.Text);
+                MessageBox.Show(this, _cmdExecutedMsgBox.Text + " " + Environment.NewLine + GitModule.Current.CherryPick(RevisionGrid.GetSelectedRevisions()[0].Guid, AutoCommit.Checked, string.Join(" ", arguments.ToArray())), _cmdExecutedMsgBoxCaption.Text);
                 MergeConflictHandler.HandleMergeConflicts(this, AutoCommit.Checked);
                 RevisionGrid.RefreshRevisions();
                 Cursor.Current = Cursors.Default;

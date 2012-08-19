@@ -58,11 +58,11 @@ namespace GitUI
             {
                 if (LocalBranch.Checked)
                 {
-                    Branches.DataSource = Settings.Module.GetHeads(false).Select(a => a.Name).ToList();
+                    Branches.DataSource = GitModule.Current.GetHeads(false).Select(a => a.Name).ToList();
                 }
                 else
                 {
-                    var heads = Settings.Module.GetHeads(true, true);
+                    var heads = GitModule.Current.GetHeads(true, true);
 
                     var remoteHeads = new List<GitHead>();
 
