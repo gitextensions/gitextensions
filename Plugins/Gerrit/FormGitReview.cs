@@ -28,6 +28,7 @@ namespace Gerrit
         private string _originalGitReviewFileContent = string.Empty;
 
         public FormGitReview()
+            : base(true)
         {
             InitializeComponent();
             Translate();
@@ -101,13 +102,10 @@ namespace Gerrit
                         return;
                 }
             }
-
-            SavePosition("edit-git-review");
         }
 
         private void FormGitIgnoreLoad(object sender, EventArgs e)
         {
-            RestorePosition("edit-git-review");
             if (!Settings.Module.IsBareRepository())
                 return;
             MessageBox.Show(this, _gitreviewOnlyInWorkingDirSupported.Text, _gitreviewOnlyInWorkingDirSupportedCaption.Text);

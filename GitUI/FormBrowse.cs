@@ -103,6 +103,7 @@ namespace GitUI
         private FilterBranchHelper _FilterBranchHelper;
 
         public FormBrowse(string filter)
+            : base(true)
         {
             syncContext = SynchronizationContext.Current;
 
@@ -194,8 +195,6 @@ namespace GitUI
         private void BrowseLoad(object sender, EventArgs e)
         {
             RevisionGrid.Load();
-
-            RestorePosition("browse");
 
             Cursor.Current = Cursors.WaitCursor;
             InternalInitialize(false);
@@ -1306,7 +1305,6 @@ namespace GitUI
         private void FormBrowseFormClosing(object sender, FormClosingEventArgs e)
         {
             SaveUserMenuPosition();
-            SavePosition("browse");
         }
 
         private void SaveUserMenuPosition()

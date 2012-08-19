@@ -141,7 +141,6 @@
             this.Name = "FormGerritDownload";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Download Gerrit Change";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormGerritDownload_FormClosing);
             this.Load += new System.EventHandler(this.FormGerritDownloadLoad);
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -141,7 +141,6 @@ namespace GitUI
             this.Name = "FormDiff";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Diff";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormDiffFormClosing);
             this.Load += new System.EventHandler(this.FormDiffLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);

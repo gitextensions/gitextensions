@@ -20,16 +20,23 @@ namespace GitUI
         private static Icon ApplicationIcon = GetApplicationIcon(Settings.IconStyle, Settings.IconColor);
 
         private bool _translated;
+        private bool _enablePositionRestore;
 
-        public GitExtensionsForm()
+        public GitExtensionsForm() : this(false)
         {
+        }
+
+        public GitExtensionsForm(bool enablePositionRestore)
+        {
+            _enablePositionRestore = enablePositionRestore;
+
             Icon = ApplicationIcon;
             SetFont();
 
             ShowInTaskbar = Application.OpenForms.Count <= 0 || (Application.OpenForms.Count == 1 && Application.OpenForms[0] is FormSplash);
 
             AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-
+            
             var cancelButton = new Button();
             cancelButton.Click += CancelButtonClick;
 
@@ -41,6 +48,9 @@ namespace GitUI
 
         void GitExtensionsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (_enablePositionRestore)
+                SavePosition(this.GetType().Name);
+
 #if !__MonoCS__
             if (TaskbarManager.IsPlatformSupported)
             {
@@ -240,6 +250,9 @@ namespace GitUI
                 OnRuntimeLoad(e);
 
             AutoScaleMode = AutoScaleMode.Dpi;
+
+            if (_enablePositionRestore)
+                RestorePosition(this.GetType().Name);
         }
 
         private void GitExtensionsFormLoad(object sender, EventArgs e)
@@ -272,7 +285,7 @@ namespace GitUI
         /// </summary>
         /// <param name = "name">The name to use when looking up the position in
         ///   the settings</param>
-        protected void RestorePosition(String name)
+        private void RestorePosition(String name)
         {
             if (!this.Visible || 
                 WindowState == FormWindowState.Minimized)
@@ -304,7 +317,7 @@ namespace GitUI
         /// </summary>
         /// <param name = "name">The name to use when writing the position to the
         ///   settings</param>
-        protected void SavePosition(String name)
+        private void SavePosition(String name)
         {
             try
             {

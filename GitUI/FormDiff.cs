@@ -14,6 +14,7 @@ namespace GitUI
         }
 
         public FormDiff(GitModule module)
+            : base(true)
         {
             InitializeComponent();
             Translate();
@@ -28,6 +29,7 @@ namespace GitUI
         }
 
         public FormDiff(GitModule module, GitRevision revision)
+            : base(true)
         {
             InitializeComponent();
             Translate();
@@ -38,16 +40,9 @@ namespace GitUI
 
         private GitModule module_;
 
-        private void FormDiffFormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("diff");
-        }
-
         private void FormDiffLoad(object sender, EventArgs e)
         {
             RevisionGrid.Load();
-
-            RestorePosition("diff");
         }
 
         private void DiffFilesSelectedIndexChanged(object sender, EventArgs e)

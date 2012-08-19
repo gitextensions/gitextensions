@@ -128,8 +128,6 @@ namespace GitUI
             this.Name = "FormDiffSmall";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Diff";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormDiffSmall_FormClosing);
-            this.Load += new System.EventHandler(this.FormDiffSmall_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
 #if Mono212Released //waiting for mono 2.12

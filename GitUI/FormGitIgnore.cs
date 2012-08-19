@@ -63,6 +63,7 @@ namespace GitUI
         #endregion
 
         public FormGitIgnore()
+            : base(true)
         {
             InitializeComponent();
             Translate();
@@ -136,13 +137,10 @@ namespace GitUI
                         return;
                 }
             }
-
-            SavePosition("edit-git-ignore");
         }
 
         private void FormGitIgnoreLoad(object sender, EventArgs e)
         {
-            RestorePosition("edit-git-ignore");
             if (!Settings.Module.IsBareRepository())
                 return;
             MessageBox.Show(this, _gitignoreOnlyInWorkingDirSupported.Text, _gitignoreOnlyInWorkingDirSupportedCaption.Text);

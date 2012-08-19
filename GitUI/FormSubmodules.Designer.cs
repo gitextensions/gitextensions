@@ -378,8 +378,6 @@
             this.Name = "FormSubmodules";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Submodules";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSubmodulesFormClosing);
-            this.Load += new System.EventHandler(this.FormSubmodulesLoad);
             this.Shown += new System.EventHandler(this.FormSubmodulesShown);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);

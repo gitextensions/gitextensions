@@ -10,6 +10,7 @@ namespace GitUI
         private readonly GitRevision revision;
 
         public FormDiffSmall(GitRevision revision)
+            : base(true)
         {
             InitializeComponent(); Translate();
             DiffText.ExtraDiffArgumentsChanged += DiffText_ExtraDiffArgumentsChanged;
@@ -24,16 +25,6 @@ namespace GitUI
 
                 commitInfo.SetRevision(revision.Guid);
             }
-        }
-
-        private void FormDiffSmall_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("diff-small");
-        }
-
-        private void FormDiffSmall_Load(object sender, EventArgs e)
-        {
-            RestorePosition("diff-small");
         }
 
         private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)

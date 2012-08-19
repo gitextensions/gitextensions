@@ -14,6 +14,7 @@ namespace GitUI
             new TranslationString("Checkout");
 
         public FormCheckout()
+            : base(true)
         {
             InitializeComponent();
             Translate();
@@ -42,16 +43,9 @@ namespace GitUI
             }
         }
 
-        private void FormCheckoutFormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("checkout");
-        }
-
         private void FormCheckoutLoad(object sender, EventArgs e)
         {
             RevisionGrid.Load();
-
-            RestorePosition("checkout");
         }
     }
 }

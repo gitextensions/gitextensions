@@ -16,6 +16,7 @@ namespace GitUI
         private string _fileName;
 
         public FormEditor(string fileName)
+            : base(true)
         {
             InitializeComponent();
             Translate();
@@ -39,8 +40,6 @@ namespace GitUI
 
         private void OpenFile(string fileName)
         {
-            RestorePosition("fileeditor");
-
             try
             {
                 _fileName = fileName;
@@ -96,8 +95,6 @@ namespace GitUI
             {
                 DialogResult = DialogResult.OK;
             }
-
-            SavePosition("fileeditor");
         }
 
         private void toolStripSaveButton_Click(object sender, EventArgs e)

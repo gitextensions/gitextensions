@@ -111,7 +111,6 @@
             this.Name = "FormCheckout";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Checkout revision";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCheckoutFormClosing);
             this.Load += new System.EventHandler(this.FormCheckoutLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);

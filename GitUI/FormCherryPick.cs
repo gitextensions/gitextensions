@@ -18,20 +18,14 @@ namespace GitUI
             new TranslationString("Cherry pick");
 
         public FormCherryPick()
+            : base(true)
         {
             InitializeComponent(); Translate();
-        }
-
-        private void FormCherryPick_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("cherry-pick");
         }
 
         private void FormCherryPick_Load(object sender, EventArgs e)
         {
             RevisionGrid.Load();
-
-            RestorePosition("cherry-pick");
         }
 
         private void CherryPick_Click(object sender, EventArgs e)

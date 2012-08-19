@@ -170,7 +170,6 @@
             this.Name = "FormModifiedDeletedCreated";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Solve mergeconflict";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormModifiedDeletedCreated_FormClosing);
             this.Load += new System.EventHandler(this.FormModifiedDeletedCreated_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);

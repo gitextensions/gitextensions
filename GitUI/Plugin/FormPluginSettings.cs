@@ -10,6 +10,7 @@ namespace GitUI.Plugin
         private IGitPlugin _selectedGitPlugin;
 
         public FormPluginSettings()
+            : base(true)
         {
             InitializeComponent();
             Translate();
@@ -19,7 +20,6 @@ namespace GitUI.Plugin
         {
             PluginList.DataSource = LoadedPlugins.Plugins;
             PluginList.DisplayMember = "Description";
-            RestorePosition("plugin-settings");
         }
 
         private void PluginListSelectedIndexChanged(object sender, EventArgs e)
@@ -87,7 +87,6 @@ namespace GitUI.Plugin
 
         private void FormPluginSettingsFormClosing(object sender, FormClosingEventArgs e)
         {
-            SavePosition("plugin-settings");
             SaveSettings();
         }
     }

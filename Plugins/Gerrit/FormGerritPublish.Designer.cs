@@ -154,7 +154,6 @@
             this.Name = "FormGerritPublish";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Publish Gerrit Change";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormGerritPublish_FormClosing);
             this.Load += new System.EventHandler(this.FormGerritPublishLoad);
             this.ResumeLayout(false);
             this.PerformLayout();

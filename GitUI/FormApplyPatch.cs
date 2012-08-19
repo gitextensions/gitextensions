@@ -29,6 +29,7 @@ namespace GitUI
         #endregion
 
         public FormApplyPatch()
+            : base(true)
         {
             InitializeComponent(); Translate();
             EnableButtons();
@@ -192,15 +193,10 @@ namespace GitUI
             GitUICommands.Instance.StartAddFilesDialog(this);
         }
 
-        private void MergePatch_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("merge-patch");
-        }
-
         private void MergePatch_Load(object sender, EventArgs e)
         {
             PatchFile.Select();
-            RestorePosition("merge-patch");
+            
             Text = _applyPatchMsgBox.Text + " (" + Settings.WorkingDir + ")";
             IgnoreWhitespace.Checked = Settings.ApplyPatchIgnoreWhitespace;
         }

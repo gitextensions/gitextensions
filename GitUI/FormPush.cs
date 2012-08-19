@@ -50,6 +50,7 @@ namespace GitUI
         #endregion
 
         public FormPush()
+            : base(true)
         {
             InitializeComponent();
             Translate();
@@ -397,8 +398,6 @@ namespace GitUI
 
         private void FormPushLoad(object sender, EventArgs e)
         {
-            RestorePosition("push");
-
             _NO_TRANSLATE_Remotes.Select();
 
             Text = string.Concat(_pushCaption.Text, " (", Settings.WorkingDir, ")");
@@ -627,10 +626,6 @@ namespace GitUI
 
         #endregion
 
-        private void FormPush_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("push");
-        }
 
         private void ShowOptions_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {

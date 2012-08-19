@@ -429,7 +429,6 @@ namespace GitUI
             this.Name = "FormTranslate";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Translate";
-            this.Load += new System.EventHandler(this.FormTranslate_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);

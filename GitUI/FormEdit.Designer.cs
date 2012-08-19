@@ -53,8 +53,6 @@ namespace GitUI
             this.Name = "FormEdit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "View";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormEditFormClosing);
-            this.Load += new System.EventHandler(this.FormEditLoad);
             this.ResumeLayout(false);
 
         }

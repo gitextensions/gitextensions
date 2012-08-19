@@ -57,7 +57,6 @@ namespace GitUI.Blame
             this.Name = "FormBlame";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "File History";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormBlameFormClosing);
             this.Load += new System.EventHandler(this.FormBlameLoad);
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).EndInit();
             this.ResumeLayout(false);
