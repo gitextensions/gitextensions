@@ -627,6 +627,13 @@ namespace GitCommands
             set { SafeSet("commitdialogsplitter", value, ref _commitDialogSplitter); }
         }
 
+        private static int? _commitDialogRightSplitter;
+        public static int CommitDialogRightSplitter
+        {
+            get { return SafeGet("commitdialogrightsplitter", 445, ref _commitDialogRightSplitter); }
+            set { SafeSet("commitdialogrightsplitter", value, ref _commitDialogRightSplitter); }
+        }
+
         private static int? _revisionGridQuickSearchTimeout;
         public static int RevisionGridQuickSearchTimeout
         {
