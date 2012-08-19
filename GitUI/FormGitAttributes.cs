@@ -28,6 +28,7 @@ namespace GitUI
         public string GitAttributesFile = string.Empty;
 
         public FormGitAttributes()
+            : base(true)
         {
             InitializeComponent();
             Translate();
@@ -106,13 +107,10 @@ namespace GitUI
 
             if (!needToClose)
                 e.Cancel = true;
-            else
-                SavePosition("edit-gitattributes");
         }
 
         private void FormMailMapLoad(object sender, EventArgs e)
         {
-            RestorePosition("edit-gitattributes");
             if (!Settings.Module.IsBareRepository()) return;
             MessageBox.Show(this, noWorkingDir.Text, _noWorkingDirCaption.Text);
             Close();

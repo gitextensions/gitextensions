@@ -11,6 +11,7 @@ namespace GitUI
         private readonly TranslationString _branchCaption = new TranslationString("Branch");
 
         public FormBranch()
+            : base(true)
         {
             InitializeComponent();
             Translate();
@@ -45,16 +46,10 @@ namespace GitUI
             RevisionGrid.RefreshRevisions();
         }
 
-        private void FormBranch_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("branch");
-        }
-
         private void FormBranch_Load(object sender, EventArgs e)
         {
             RevisionGrid.Load();
 
-            RestorePosition("branch");
             BName.Focus();
             AcceptButton = Ok;
         }

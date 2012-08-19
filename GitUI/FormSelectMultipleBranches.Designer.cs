@@ -78,8 +78,6 @@
             this.Name = "FormSelectMultipleBranches";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Select multiple branches";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSelectMultipleBranches_FormClosing);
-            this.Load += new System.EventHandler(this.FormSelectMultipleBranches_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

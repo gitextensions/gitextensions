@@ -199,6 +199,7 @@ namespace GitUI
         private string IconName = "bug";
 
         public FormSettings()
+            : base(true)
         {
             InitializeComponent();
             Translate();
@@ -224,7 +225,7 @@ namespace GitUI
             base.OnClosing(e);
             if (!e.Cancel)
                 diffFontDialog.Dispose();
-            SavePosition("settings");
+            
         }
 
         public static bool AutoSolveAllSettings()
@@ -1429,7 +1430,6 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
             WindowState = FormWindowState.Normal;
-            RestorePosition("settings");
             LoadSettings();
             CheckSettings();
             WindowState = FormWindowState.Normal;

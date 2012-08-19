@@ -21,6 +21,7 @@ namespace GitUI
         { }
 
         public FormStatus(bool useDialogSettings)
+            : base(true)
         {
             outpuTimer = new ProcessOutputTimer(AppendMessageCrossThread);
             syncContext = SynchronizationContext.Current;
@@ -223,14 +224,8 @@ namespace GitUI
                 Abort.Visible = false;
             }
             StartPosition = FormStartPosition.CenterParent;
-            RestorePosition("process");
-            Start();
-        }
 
-        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
-        {
-            SavePosition("process");
-            base.OnClosing(e);
+            Start();
         }
 
         private void FormStatus_FormClosed(object sender, FormClosedEventArgs e)

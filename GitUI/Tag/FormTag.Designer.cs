@@ -173,7 +173,6 @@ namespace GitUI.Tag
             this.Name = "FormTag";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Tag";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormTagFormClosing);
             this.Load += new System.EventHandler(this.FormTagLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);

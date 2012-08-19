@@ -16,6 +16,7 @@ namespace Gerrit
         protected GerritSettings Settings { get; private set; }
 
         protected FormGerritBase()
+            : base(true)
         {
         }
 

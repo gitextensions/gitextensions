@@ -6,6 +6,7 @@ namespace GitUI
     public partial class FormModifiedDeletedCreated : GitExtensionsForm
     {
         public FormModifiedDeletedCreated(string localText, string remoteText, string baseText, string description)
+            : base(true)
         {
             InitializeComponent();
             Translate();
@@ -63,13 +64,7 @@ namespace GitUI
         private void FormModifiedDeletedCreated_Load(object sender, EventArgs e)
         {
             //save position of this dialog, since the teksts could be to large when larger font is used.
-            RestorePosition("formmodifieddeletedcreated");
             CenterToParent();
-        }
-
-        private void FormModifiedDeletedCreated_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
-        {
-            SavePosition("formmodifieddeletedcreated");
         }
     }
 }

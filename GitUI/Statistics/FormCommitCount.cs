@@ -10,23 +10,18 @@ namespace GitUI.Statistics
     public partial class FormCommitCount : GitExtensionsForm
     {
         public FormCommitCount()
+            : base(true)
         {
             InitializeComponent();
             this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
             Translate();
         }
 
-        private void FormCommitCountFormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("commit-count");
-        }
-
         private void FormCommitCountLoad(object sender, EventArgs e)
         {
-            RestorePosition("commit-count");
             FetchData();
-
         }
+
         private void cbIncludeSubmodules_CheckedChanged(object sender, EventArgs e)
         {
             FetchData();

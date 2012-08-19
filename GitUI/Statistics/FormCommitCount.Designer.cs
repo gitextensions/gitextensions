@@ -102,7 +102,6 @@ namespace GitUI.Statistics
             this.Name = "FormCommitCount";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Commit count";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCommitCountFormClosing);
             this.Load += new System.EventHandler(this.FormCommitCountLoad);
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).EndInit();
             this.panel1.ResumeLayout(false);

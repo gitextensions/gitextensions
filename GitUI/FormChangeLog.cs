@@ -7,19 +7,14 @@ namespace GitUI
     public partial class FormChangeLog : GitExtensionsForm
     {
         public FormChangeLog()
+            : base(true)
         {
             InitializeComponent();
             Translate();
         }
 
-        private void FormChangeLog1FormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("change-log");
-        }
-
         private void FormChangeLog1Load(object sender, EventArgs e)
         {
-            RestorePosition("change-log");
             ChangeLog.Text = Resources.ChangeLog;
         }
     }

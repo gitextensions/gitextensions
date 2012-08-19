@@ -594,7 +594,6 @@
             this.Name = "FormPush";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Push";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormPush_FormClosing);
             this.Load += new System.EventHandler(this.FormPushLoad);
             this.TabControlTagBranch.ResumeLayout(false);
             this.BranchTab.ResumeLayout(false);

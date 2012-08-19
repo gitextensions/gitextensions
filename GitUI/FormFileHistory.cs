@@ -18,6 +18,7 @@ namespace GitUI
         private readonly FilterBranchHelper filterBranchHelper;
 
         public FormFileHistory(string fileName, GitRevision revision, bool filterByRevision)
+            : base(true)
         {
             InitializeComponent();
             syncContext = SynchronizationContext.Current;
@@ -172,14 +173,8 @@ namespace GitUI
             UpdateSelectedFileViewers();
         }
 
-        private void FormFileHistoryFormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("file-history");
-        }
-
         private void FormFileHistoryLoad(object sender, EventArgs e)
         {
-            RestorePosition("file-history");
             Text = string.Format("File History ({0})", FileName);
         }
 
