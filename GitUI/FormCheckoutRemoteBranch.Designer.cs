@@ -63,7 +63,7 @@ namespace GitUI
             this.lnkSettings.AutoSize = true;
             this.lnkSettings.Location = new System.Drawing.Point(12, 129);
             this.lnkSettings.Name = "lnkSettings";
-            this.lnkSettings.Size = new System.Drawing.Size(75, 13);
+            this.lnkSettings.Size = new System.Drawing.Size(115, 21);
             this.lnkSettings.TabIndex = 20;
             this.lnkSettings.TabStop = true;
             this.lnkSettings.Text = "Show Settings";
@@ -74,7 +74,7 @@ namespace GitUI
             this.rbDontCreate.AutoSize = true;
             this.rbDontCreate.Location = new System.Drawing.Point(12, 87);
             this.rbDontCreate.Name = "rbDontCreate";
-            this.rbDontCreate.Size = new System.Drawing.Size(143, 17);
+            this.rbDontCreate.Size = new System.Drawing.Size(215, 25);
             this.rbDontCreate.TabIndex = 9;
             this.rbDontCreate.Text = "Checkout remote branch";
             this.rbDontCreate.UseVisualStyleBackColor = true;
@@ -84,7 +84,7 @@ namespace GitUI
             this.rbCreateBranch.AutoSize = true;
             this.rbCreateBranch.Location = new System.Drawing.Point(12, 37);
             this.rbCreateBranch.Name = "rbCreateBranch";
-            this.rbCreateBranch.Size = new System.Drawing.Size(212, 17);
+            this.rbCreateBranch.Size = new System.Drawing.Size(327, 25);
             this.rbCreateBranch.TabIndex = 8;
             this.rbCreateBranch.Text = "Create local branch with the name \'{0}\'";
             this.rbCreateBranch.UseVisualStyleBackColor = true;
@@ -95,7 +95,7 @@ namespace GitUI
             this.rbResetBranch.Checked = true;
             this.rbResetBranch.Location = new System.Drawing.Point(12, 12);
             this.rbResetBranch.Name = "rbResetBranch";
-            this.rbResetBranch.Size = new System.Drawing.Size(207, 17);
+            this.rbResetBranch.Size = new System.Drawing.Size(321, 25);
             this.rbResetBranch.TabIndex = 7;
             this.rbResetBranch.TabStop = true;
             this.rbResetBranch.Text = "Reset local branch with the name \'{0}\'";
@@ -121,7 +121,7 @@ namespace GitUI
             this.rbStash.AutoSize = true;
             this.rbStash.Location = new System.Drawing.Point(169, 17);
             this.rbStash.Name = "rbStash";
-            this.rbStash.Size = new System.Drawing.Size(52, 17);
+            this.rbStash.Size = new System.Drawing.Size(75, 24);
             this.rbStash.TabIndex = 3;
             this.rbStash.TabStop = true;
             this.rbStash.Text = "Stash";
@@ -132,7 +132,7 @@ namespace GitUI
             this.rbDontChange.AutoSize = true;
             this.rbDontChange.Location = new System.Drawing.Point(240, 17);
             this.rbDontChange.Name = "rbDontChange";
-            this.rbDontChange.Size = new System.Drawing.Size(89, 17);
+            this.rbDontChange.Size = new System.Drawing.Size(128, 24);
             this.rbDontChange.TabIndex = 2;
             this.rbDontChange.TabStop = true;
             this.rbDontChange.Text = "Don\'t change";
@@ -143,7 +143,7 @@ namespace GitUI
             this.rbReset.AutoSize = true;
             this.rbReset.Location = new System.Drawing.Point(97, 17);
             this.rbReset.Name = "rbReset";
-            this.rbReset.Size = new System.Drawing.Size(53, 17);
+            this.rbReset.Size = new System.Drawing.Size(76, 24);
             this.rbReset.TabIndex = 1;
             this.rbReset.TabStop = true;
             this.rbReset.Text = "Reset";
@@ -154,7 +154,7 @@ namespace GitUI
             this.rbMerge.AutoSize = true;
             this.rbMerge.Location = new System.Drawing.Point(13, 17);
             this.rbMerge.Name = "rbMerge";
-            this.rbMerge.Size = new System.Drawing.Size(55, 17);
+            this.rbMerge.Size = new System.Drawing.Size(78, 24);
             this.rbMerge.TabIndex = 0;
             this.rbMerge.TabStop = true;
             this.rbMerge.Text = "Merge";
@@ -165,7 +165,7 @@ namespace GitUI
             this.rbCreateBranchWithCustomName.AutoSize = true;
             this.rbCreateBranchWithCustomName.Location = new System.Drawing.Point(12, 62);
             this.rbCreateBranchWithCustomName.Name = "rbCreateBranchWithCustomName";
-            this.rbCreateBranchWithCustomName.Size = new System.Drawing.Size(211, 17);
+            this.rbCreateBranchWithCustomName.Size = new System.Drawing.Size(325, 25);
             this.rbCreateBranchWithCustomName.TabIndex = 21;
             this.rbCreateBranchWithCustomName.Text = "Create local branch with custom name:";
             this.rbCreateBranchWithCustomName.UseVisualStyleBackColor = true;
@@ -177,14 +177,13 @@ namespace GitUI
             this.txtCustomBranchName.Enabled = false;
             this.txtCustomBranchName.Location = new System.Drawing.Point(302, 61);
             this.txtCustomBranchName.Name = "txtCustomBranchName";
-            this.txtCustomBranchName.Size = new System.Drawing.Size(179, 21);
+            this.txtCustomBranchName.Size = new System.Drawing.Size(179, 28);
             this.txtCustomBranchName.TabIndex = 22;
             // 
             // FormCheckoutRemoteBranch
             // 
             this.AcceptButton = this.btOk;
-            
-            
+            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.ClientSize = new System.Drawing.Size(493, 157);
             this.Controls.Add(this.txtCustomBranchName);
             this.Controls.Add(this.rbCreateBranchWithCustomName);
@@ -195,6 +194,7 @@ namespace GitUI
             this.Controls.Add(this.btOk);
             this.Controls.Add(this.localChangesGB);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormCheckoutRemoteBranch";
