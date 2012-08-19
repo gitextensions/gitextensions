@@ -38,7 +38,7 @@ namespace System
         }
 
 
-        public static string Join(this string left, string sep, string right)
+        public static string Combine(this string left, string sep, string right)
         {
             if (left.IsNullOrEmpty())
                 return right;
