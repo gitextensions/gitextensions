@@ -147,8 +147,8 @@
             // FormCleanupRepository
             // 
             this.AcceptButton = this.Preview;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.CancelButton = this.Cancel;
             this.ClientSize = new System.Drawing.Size(465, 361);
             this.Controls.Add(this.PreviewOutput);

@@ -3237,8 +3237,8 @@ namespace GitUI
             // 
             // FormSettings
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.ClientSize = new System.Drawing.Size(744, 603);
             this.Controls.Add(this.splitContainer1);
             this.MaximizeBox = false;
@@ -3320,8 +3320,8 @@ namespace GitUI
             this.tpHotkeys.ResumeLayout(false);
             this.tpShellExt.ResumeLayout(false);
             this.tpShellExt.PerformLayout();
-            this.ResumeLayout(false);
 
+            this.ResumeLayout(false);
         }
 
         #endregion

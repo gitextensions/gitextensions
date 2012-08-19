@@ -50,8 +50,8 @@ namespace GitUI.Blame
             // 
             // FormBlame
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.ClientSize = new System.Drawing.Size(784, 762);
             this.Controls.Add(this.blameControl1);
             this.Name = "FormBlame";

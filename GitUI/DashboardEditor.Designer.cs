@@ -204,7 +204,7 @@ namespace GitUI
             // DashboardEditor
             // 
             resources.ApplyResources(this, "$this");
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
             this.Controls.Add(this.splitContainer2);
             this.Name = "DashboardEditor";
             this.splitContainer2.Panel1.ResumeLayout(false);

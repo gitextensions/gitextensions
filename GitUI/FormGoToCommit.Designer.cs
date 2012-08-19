@@ -64,8 +64,8 @@
             // FormGoToCommit
             // 
             this.AcceptButton = this.goButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.ClientSize = new System.Drawing.Size(524, 69);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.commitExpression);

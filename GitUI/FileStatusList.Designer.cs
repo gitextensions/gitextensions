@@ -59,8 +59,8 @@
             // 
             // FileStatusList
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.Controls.Add(this.NoFiles);
             this.Controls.Add(this.FileStatusListBox);
             this.Name = "FileStatusList";

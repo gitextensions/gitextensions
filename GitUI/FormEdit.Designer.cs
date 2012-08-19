@@ -46,8 +46,8 @@ namespace GitUI
             // 
             // FormEdit
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.ClientSize = new System.Drawing.Size(733, 571);
             this.Controls.Add(this.Viewer);
             this.Name = "FormEdit";

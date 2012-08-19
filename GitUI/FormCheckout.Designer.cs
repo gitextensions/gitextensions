@@ -103,8 +103,8 @@
             // 
             // FormCheckout
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.ClientSize = new System.Drawing.Size(699, 456);
             this.Controls.Add(this.splitContainer1);
             this.MinimumSize = new System.Drawing.Size(400, 200);

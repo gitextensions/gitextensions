@@ -43,8 +43,8 @@
             // 
             // FormCommandlineHelp
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.ClientSize = new System.Drawing.Size(417, 605);
             this.Controls.Add(this.label1);
             this.Name = "FormCommandlineHelp";

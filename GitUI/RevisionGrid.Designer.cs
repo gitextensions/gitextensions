@@ -732,8 +732,8 @@ namespace GitUI
             // 
             // RevisionGrid
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            
+            
             this.Controls.Add(this.NoCommits);
             this.Controls.Add(this.Error);
             this.Controls.Add(this.Loading);
