@@ -86,7 +86,7 @@ namespace GitUI
             fileName = fileName.Replace('\\', '/');
 
             // we will need this later to look up proper casing for the file
-            var fullFilePath = Path.Combine(Settings.WorkingDir, fileName);
+            var fullFilePath = Path.Combine(GitModule.CurrentWorkingDir, fileName);
 
             //The section below contains native windows (kernel32) calls
             //and breaks on Linux. Only use it on Windows. Casing is only
@@ -102,11 +102,11 @@ namespace GitUI
                 NativeMethods.GetLongPathName(shortPath.ToString(), longPath, longPath.Capacity);
 
                 // remove the working dir and now we have a properly cased file name.
-                fileName = longPath.ToString().Substring(Settings.WorkingDir.Length);
+                fileName = longPath.ToString().Substring(GitModule.CurrentWorkingDir.Length);
             }
 
-            if (fileName.StartsWith(Settings.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
-                fileName = fileName.Substring(Settings.WorkingDir.Length);
+            if (fileName.StartsWith(GitModule.CurrentWorkingDir, StringComparison.InvariantCultureIgnoreCase))
+                fileName = fileName.Substring(GitModule.CurrentWorkingDir.Length);
 
             FileName = fileName;
 
@@ -258,7 +258,7 @@ namespace GitUI
                 if (string.IsNullOrEmpty(orgFileName))
                     orgFileName = FileName;
 
-                string fullName = Settings.WorkingDir + orgFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
+                string fullName = GitModule.CurrentWorkingDir + orgFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
 
                 using (var fileDialog = new SaveFileDialog
                 {
@@ -275,7 +275,7 @@ namespace GitUI
                         "|All files (*.*)|*.*";
                     if (fileDialog.ShowDialog(this) == DialogResult.OK)
                     {
-                        Settings.Module.SaveBlobAs(fileDialog.FileName, selectedRows[0].Guid + ":\"" + orgFileName + "\"");
+                        GitModule.Current.SaveBlobAs(fileDialog.FileName, selectedRows[0].Guid + ":\"" + orgFileName + "\"");
                     }
                 }
             }

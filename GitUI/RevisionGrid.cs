@@ -574,7 +574,7 @@ namespace GitUI
                 /* Committer Date */ "%ci%n" +
                 /* Commit Message */ "%s";
             string cmd = "log -n 1 --pretty=format:" + formatString + " " + CurrentCheckout;
-            var RevInfo = Settings.Module.RunGitCmd(cmd);
+            var RevInfo = GitModule.Current.RunGitCmd(cmd);
             string[] Infos = RevInfo.Split('\n');
             var Revision = new GitRevision(CurrentCheckout)
             {
@@ -588,7 +588,7 @@ namespace GitUI
             Revision.AuthorDate = date;
             DateTime.TryParse(Infos[4], out date);
             Revision.CommitDate = date;
-            List<GitHead> heads = Settings.Module.GetHeads(true, true);
+            List<GitHead> heads = GitModule.Current.GetHeads(true, true);
             foreach (GitHead head in heads)
             {
                 if (head.Guid.Equals(Revision.Guid))
@@ -707,8 +707,8 @@ namespace GitUI
 
                 DisposeRevisionGraphCommand();
 
-                var newCurrentCheckout = Settings.Module.GetCurrentCheckout();
-                var newSuperprojectCurrentCheckout = Settings.Module.GetSuperprojectCurrentCheckout();
+                var newCurrentCheckout = GitModule.Current.GetCurrentCheckout();
+                var newSuperprojectCurrentCheckout = GitModule.Current.GetSuperprojectCurrentCheckout();
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
@@ -728,13 +728,13 @@ namespace GitUI
                 Revisions.Clear();
                 Error.Visible = false;
 
-                if (!Settings.Module.ValidWorkingDir())
+                if (!GitModule.Current.ValidWorkingDir())
                 {
                     Revisions.Visible = false;
                     NoCommits.Visible = true;
                     Loading.Visible = false;
                     NoGit.Visible = true;
-                    string dir = Settings.Module.WorkingDir;
+                    string dir = GitModule.Current.WorkingDir;
                     if (String.IsNullOrEmpty(dir) || !Directory.Exists(dir) ||
                         Directory.GetDirectories(dir).Length == 0 &&
                         Directory.GetFiles(dir).Length == 0)
@@ -1559,7 +1559,7 @@ namespace GitUI
             if (Revisions.RowCount < LastRow || LastRow < 0 || Revisions.RowCount == 0)
                 return;
 
-            var inTheMiddleOfBisect = Settings.Module.InTheMiddleOfBisect();
+            var inTheMiddleOfBisect = GitModule.Current.InTheMiddleOfBisect();
             markRevisionAsBadToolStripMenuItem.Visible = inTheMiddleOfBisect;
             markRevisionAsGoodToolStripMenuItem.Visible = inTheMiddleOfBisect;
             bisectSkipRevisionToolStripMenuItem.Visible = inTheMiddleOfBisect;
@@ -1589,7 +1589,7 @@ namespace GitUI
             }
 
             //For now there is no action that could be done on currentBranch
-            string currentBranch = Settings.Module.GetSelectedBranch();
+            string currentBranch = GitModule.Current.GetSelectedBranch();
             var allBranches = revision.Heads.Where(h => !h.IsTag && (h.IsHead || h.IsRemote));
             var localBranches = allBranches.Where(b => !b.IsRemote);
 
@@ -1720,7 +1720,7 @@ namespace GitUI
 
         private void CheckoutBranch(string branch, Settings.LocalChanges changes)
         {
-            if (changes == Settings.LocalChanges.Stash && Settings.Module.IsDirtyDir())
+            if (changes == Settings.LocalChanges.Stash && GitModule.Current.IsDirtyDir())
                 GitUICommands.Instance.Stash(this);
             var command = GitCommandHelpers.CheckoutCmd(branch, changes);
             FormProcess.ShowDialog(this, command);
@@ -1735,7 +1735,7 @@ namespace GitUI
 
             string branch = toolStripItem.Text;
             // TODO: do-do do-do checkbox in checkout branch dialog
-            if (!Settings.Module.IsDirtyDir())
+            if (!GitModule.Current.IsDirtyDir())
                 CheckoutBranch(toolStripItem.Text, Settings.CheckoutBranchAction);
             else
                 GitUICommands.Instance.StartCheckoutBranchDialog(this, branch, false, true);
@@ -1909,9 +1909,9 @@ namespace GitUI
                     bool stagedChanges = false;
                     //Only check for tracked files. This usually makes more sense and it performs a lot
                     //better then checking for untracked files.
-                    if (Settings.Module.GetTrackedChangedFiles().Count > 0)
+                    if (GitModule.Current.GetTrackedChangedFiles().Count > 0)
                         uncommittedChanges = true;
-                    if (Settings.Module.GetStagedFiles().Count > 0)
+                    if (GitModule.Current.GetStagedFiles().Count > 0)
                         stagedChanges = true;
 
                     if (uncommittedChanges)
@@ -2129,7 +2129,7 @@ namespace GitUI
         }
         private void InitRepository_Click(object sender, EventArgs e)
         {
-            if (GitUICommands.Instance.StartInitializeDialog(this, Settings.WorkingDir))
+            if (GitUICommands.Instance.StartInitializeDialog(this, GitModule.CurrentWorkingDir))
                 ForceRefreshRevisions();
         }
 

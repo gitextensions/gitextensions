@@ -173,7 +173,7 @@ namespace GitUI
 
                     foreach (GitItemStatus item in SelectedItems)
                     {
-                        string fileName = GitCommands.Settings.WorkingDir + item.Name;
+                        string fileName = GitCommands.GitModule.CurrentWorkingDir + item.Name;
 
                         fileList.Add(fileName.Replace('/', '\\'));
                     }

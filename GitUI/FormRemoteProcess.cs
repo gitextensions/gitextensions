@@ -94,8 +94,8 @@ namespace GitUI
                     {
                         // To prevent future authentication errors, save this key for this remote.
                         if (!String.IsNullOrEmpty(loadedKey) && !String.IsNullOrEmpty(this.Remote) && 
-                            String.IsNullOrEmpty(Settings.Module.GetPathSetting("remote.{0}.puttykeyfile")))
-                            Settings.Module.SetPathSetting(string.Format("remote.{0}.puttykeyfile", this.Remote), loadedKey);
+                            String.IsNullOrEmpty(GitModule.Current.GetPathSetting("remote.{0}.puttykeyfile")))
+                            GitModule.Current.SetPathSetting(string.Format("remote.{0}.puttykeyfile", this.Remote), loadedKey);
 
                         // Retry the command.
                         Retry();
@@ -108,7 +108,7 @@ namespace GitUI
 
                     if (string.IsNullOrEmpty(UrlTryingToConnect))
                     {
-                        remoteUrl = Settings.Module.GetPathSetting(string.Format("remote.{0}.url", Remote));
+                        remoteUrl = GitModule.Current.GetPathSetting(string.Format("remote.{0}.url", Remote));
                         if (string.IsNullOrEmpty(remoteUrl))
                             remoteUrl = Remote;
                     }
@@ -117,7 +117,7 @@ namespace GitUI
                     if (!string.IsNullOrEmpty(remoteUrl))
                         if (MessageBox.Show(this, _serverHotkeyNotCachedText.Text, "SSH", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
                         {
-                            Settings.Module.RunRealCmd(
+                            GitModule.Current.RunRealCmd(
                                 "cmd.exe",
                                 string.Format("/k \"\"{0}\" -T \"{1}\"\"", Settings.Plink, remoteUrl));
 
@@ -139,12 +139,12 @@ namespace GitUI
                 {
                     if (MessageBox.Show(this, _fingerprintNotRegistredText.Text, _fingerprintNotRegistredTextCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        string remoteUrl = Settings.Module.GetPathSetting(string.Format("remote.{0}.url", Remote));
+                        string remoteUrl = GitModule.Current.GetPathSetting(string.Format("remote.{0}.url", Remote));
 
                         if (string.IsNullOrEmpty(remoteUrl))
-                            Settings.Module.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + Remote + "\"");
+                            GitModule.Current.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + Remote + "\"");
                         else
-                            Settings.Module.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + remoteUrl + "\"");
+                            GitModule.Current.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + remoteUrl + "\"");
 
                         restart = true;
                     }

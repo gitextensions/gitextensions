@@ -84,7 +84,7 @@ namespace GitCommands
         /// </summary>
         public static CommitData GetCommitData(string sha1, ref string error)
         {
-            return GetCommitData(Settings.Module, sha1, ref error);
+            return GetCommitData(GitModule.Current, sha1, ref error);
         }
 
         /// <summary>

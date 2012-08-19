@@ -25,16 +25,16 @@ namespace GitUI
 
         private void FormMergeBranchLoad(object sender, EventArgs e)
         {
-            var selectedHead = Settings.Module.GetSelectedBranch();
+            var selectedHead = GitModule.Current.GetSelectedBranch();
             currentBranchLabel.Text = selectedHead;
 
-            Branches.BranchesToSelect = Settings.Module.GetHeads(true, true);
+            Branches.BranchesToSelect = GitModule.Current.GetHeads(true, true);
 
             if (_defaultBranch != null)
                 Branches.SetSelectedText(_defaultBranch);
             else
             {
-                string merge = Settings.Module.GetRemoteBranch(selectedHead);
+                string merge = GitModule.Current.GetRemoteBranch(selectedHead);
                 if (!String.IsNullOrEmpty(merge))
                     Branches.SetSelectedText(merge);
             }

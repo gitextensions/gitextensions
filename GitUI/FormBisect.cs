@@ -26,7 +26,7 @@ namespace GitUI
 
         private void UpdateButtonsState()
         {
-            bool inTheMiddleOfBisect = Settings.Module.InTheMiddleOfBisect();
+            bool inTheMiddleOfBisect = GitModule.Current.InTheMiddleOfBisect();
             Start.Enabled = !inTheMiddleOfBisect;
             Good.Enabled = inTheMiddleOfBisect;
             Bad.Enabled = inTheMiddleOfBisect;
