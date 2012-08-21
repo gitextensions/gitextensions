@@ -1,7 +1,7 @@
 ﻿Changelog
 =========
 
-### Version 2.34
+### Version 2.40
 * fixed issue 79: Don't offer to commit when resolving a stash conflict
 * Fixed issue 875: Show untracked files in stash
 * Fixed issue 980: spell check only covers first 5 visible lines in commit dialog
