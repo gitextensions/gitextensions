@@ -522,6 +522,12 @@ namespace GitCommands
             set { SetEnum<LocalChanges>("checkoutbranchaction", value); }
         }
 
+        public static bool UseDefaultCheckoutBranchAction
+        {
+            get { return GetBool("UseDefaultCheckoutBranchAction", false).Value; }
+            set { SetBool("UseDefaultCheckoutBranchAction", value); }
+        }
+
         private static bool? _includeUntrackedFilesInAutoStash;
         public static bool IncludeUntrackedFilesInAutoStash
         {
