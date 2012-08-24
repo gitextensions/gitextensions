@@ -1872,7 +1872,7 @@ namespace GitCommands
 
         public bool IsDirtyDir()
         {
-            return GitStatus(UntrackedFilesMode.All, IgnoreSubmodulesMode.Default).Count == 0;
+            return GitStatus(UntrackedFilesMode.All, IgnoreSubmodulesMode.Default).Count > 0;
         }
 
         public string GetCurrentChanges(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
