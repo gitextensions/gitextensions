@@ -3,12 +3,14 @@ using System.Diagnostics;
 using System.Linq;
 using GitCommands;
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace GitUI
 {
     public partial class FormCheckoutBranch : GitExtensionsForm
     {
         private string _containRevison;
+        private bool isDirtyDir;
 
         internal FormCheckoutBranch()
         {
@@ -17,20 +19,17 @@ namespace GitUI
         }
 
         public FormCheckoutBranch(string branch, bool remote)
-            : this(branch, remote, null, false)
+            : this(branch, remote, null)
         {
         }
 
-        public FormCheckoutBranch(string branch, bool remote, string containRevison, bool showOptions)
+        public FormCheckoutBranch(string branch, bool remote, string containRevison)
             : this()
         {
             _containRevison = containRevison;
 
             LocalBranch.Checked = !remote;
             Remotebranch.Checked = remote;
-
-            if (showOptions)
-                lnkSettings_LinkClicked(null, null);
 
             Initialize();
 
@@ -48,7 +47,21 @@ namespace GitUI
                 if (Branches.Items.Count == 1)
                     Branches.SelectedIndex = 0;
             }
+
+            isDirtyDir = Settings.Module.IsDirtyDir();
+            localChangesGB.Visible = isDirtyDir;
+            ChangesMode = Settings.CheckoutBranchAction;
+            defaultActionChx.Checked = Settings.UseDefaultCheckoutBranchAction;
         }
+
+        public DialogResult DoDefaultActionOrShow(IWin32Window owner)
+        {
+            if (!Branches.Text.IsNullOrWhiteSpace() && (!isDirtyDir || Settings.UseDefaultCheckoutBranchAction))
+                return OkClick();
+            else
+                return ShowDialog(owner);
+        }
+
 
         private void Initialize()
         {
@@ -110,27 +123,36 @@ namespace GitUI
 
         private void OkClick(object sender, EventArgs e)
         {
+            DialogResult = OkClick();
+            if (DialogResult == DialogResult.OK)
+                Close();
+        }
+
+        private DialogResult OkClick()
+        {
             Settings.LocalChanges changes = ChangesMode;
             Settings.CheckoutBranchAction = changes;
+            Settings.UseDefaultCheckoutBranchAction = defaultActionChx.Checked;
+
+            IWin32Window _owner = Visible ? this : Owner;
+
+            if (changes == Settings.LocalChanges.Stash && Settings.Module.IsDirtyDir())
+                GitUICommands.Instance.Stash(_owner);
+
             if (Remotebranch.Checked)
             {
                 using (var checkoutRemote = new FormCheckoutRemoteBranch(Branches.Text, changes))
-                    checkoutRemote.ShowDialog(this);
+                    return checkoutRemote.ShowDialog(_owner);
             }
             else
             {
-                try
-                {
-                    var command = GitCommandHelpers.CheckoutCmd(Branches.Text, changes);
-                    var successfullyCheckedOut = FormProcess.ShowDialog(this, command);
-                    if (successfullyCheckedOut)
-                        Close();
-                }
-                catch (Exception ex)
-                {
-                    Trace.WriteLine(ex.Message);
-                }
-            }
+                var command = GitCommandHelpers.CheckoutCmd(Branches.Text, changes);
+                var successfullyCheckedOut = FormProcess.ShowDialog(_owner, command);
+                if (successfullyCheckedOut)
+                    return DialogResult.OK;
+                else
+                    return DialogResult.None;
+            }        
         }
 
         private void BranchTypeChanged()
@@ -148,11 +170,6 @@ namespace GitUI
             BranchTypeChanged();
         }
 
-        private void lnkSettings_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
-        {
-            localChangesGB.Show();
-            lnkSettings.Hide();
-            Height += (localChangesGB.Height - lnkSettings.Height) / 2;
-        }
+        
     }
 }

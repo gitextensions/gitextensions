@@ -1915,16 +1915,8 @@ namespace GitUI
         void BranchSelectToolStripItem_Click(object sender, EventArgs e)
         {
             var toolStripItem = (ToolStripItem)sender;
-            CheckoutBranch(toolStripItem.Text, Settings.CheckoutBranchAction);
-            Initialize();
-        }
-
-        private void CheckoutBranch(string branch, Settings.LocalChanges changes)
-        {
-            if (changes == Settings.LocalChanges.Stash && GitModule.Current.IsDirtyDir())
-                GitUICommands.Instance.Stash(this);
-            var command = GitCommandHelpers.CheckoutCmd(branch, changes);
-            FormProcess.ShowDialog(this, command);
+            if (GitUICommands.Instance.StartCheckoutBranchDialog(this, toolStripItem.Text, false))
+                Initialize();
         }
 
         private void _forkCloneMenuItem_Click(object sender, EventArgs e)
