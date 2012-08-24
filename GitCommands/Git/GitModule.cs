@@ -2321,7 +2321,7 @@ namespace GitCommands
 
         public string RevParse(string revisionExpression)
         {
-            string revparseCommand = string.Format("rev-parse \"{0}\"", revisionExpression);
+            string revparseCommand = string.Format("rev-parse \"{0}~0\"", revisionExpression);
             int exitCode = 0;
             string[] resultStrings = RunCmd(Settings.GitCommand, revparseCommand, out exitCode, "").Split('\n');
             return exitCode == 0 ? resultStrings[0] : "";
