@@ -51,7 +51,7 @@ namespace GitUI
             CommitTranslatedString = "Commit";
             ignoredFilesTimer.Interval = MaxUpdatePeriod;
 
-            Settings.WorkingDirChanged += (_, newDir, newGitDir) => TryStartWatchingChanges(newDir, newGitDir);
+            GitModule.CurrentWorkingDirChanged += (_, newDir, newGitDir) => TryStartWatchingChanges(newDir, newGitDir);
 
             GitUICommands.Instance.PreCheckoutBranch += GitUICommands_PreCheckout;
             GitUICommands.Instance.PreCheckoutRevision += GitUICommands_PreCheckout;
@@ -78,7 +78,7 @@ namespace GitUI
             gitDirWatcher.IncludeSubdirectories = true;
             gitDirWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite;
 
-            TryStartWatchingChanges(Settings.WorkingDir, Settings.Module.GetGitDirectory());
+            TryStartWatchingChanges(GitModule.CurrentWorkingDir, GitModule.Current.GetGitDirectory());
         }
 
 
@@ -174,7 +174,7 @@ namespace GitUI
 
         private HashSet<string> LoadIgnoredFiles()
         { 
-            string lsOutput = Settings.Module.RunGitCmd("ls-files -o -i --exclude-standard");
+            string lsOutput = GitModule.Current.RunGitCmd("ls-files -o -i --exclude-standard");
             string[] tab = lsOutput.Split(new char[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
             return new HashSet<string>(tab);
         }
@@ -220,7 +220,7 @@ namespace GitUI
         private String RunStatusCommand()
         {
             string command = GitCommandHelpers.GetAllChangedFilesCmd(true, true);
-            return Settings.Module.RunGitCmd(command);
+            return GitModule.Current.RunGitCmd(command);
         }
 
         private void UpdatedStatusReceived(string updatedStatus)

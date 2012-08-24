@@ -36,11 +36,10 @@ namespace GitUI.Statistics
             var items = CommitCounter.GroupAllCommitsByContributor().Item1;
             if (cbIncludeSubmodules.Checked)
             {
-                IList<string> submodules = Settings.Module.GetSubmodulesLocalPathes();
-                GitModule submodule = new GitModule();
+                IList<string> submodules = GitModule.Current.GetSubmodulesLocalPathes();
                 foreach (var submoduleName in submodules)
                 {
-                    submodule.WorkingDir = Settings.Module.GetSubmoduleFullPath(submoduleName);
+                    GitModule submodule = GitModule.Current.GetSubmodule(submoduleName);
                     if (submodule.ValidWorkingDir())
                     {
                         var submoduleItems = CommitCounter.GroupAllCommitsByContributor(submodule).Item1;

@@ -128,7 +128,7 @@ namespace Gerrit
 
         private string GetBranchName(string targetBranch)
         {
-            string branch = GitCommands.Settings.Module.GetSelectedBranch();
+            string branch = GitCommands.GitModule.Current.GetSelectedBranch();
 
             if (branch.StartsWith("(no"))
                 return targetBranch;
@@ -138,7 +138,7 @@ namespace Gerrit
 
         private void FormGerritPublishLoad(object sender, EventArgs e)
         {
-            _NO_TRANSLATE_Remotes.DataSource = GitCommands.Settings.Module.GetRemotes();
+            _NO_TRANSLATE_Remotes.DataSource = GitCommands.GitModule.Current.GetRemotes();
 
             _currentBranchRemote = Settings.DefaultRemote;
 
@@ -156,13 +156,13 @@ namespace Gerrit
 
             _NO_TRANSLATE_Branch.Select();
 
-            Text = string.Concat(_downloadGerritChangeCaption.Text, " (", GitCommands.Settings.WorkingDir, ")");
+            Text = string.Concat(_downloadGerritChangeCaption.Text, " (", GitCommands.GitModule.CurrentWorkingDir, ")");
         }
 
         private void AddRemoteClick(object sender, EventArgs e)
         {
             _uiCommand.StartRemotesDialog();
-            _NO_TRANSLATE_Remotes.DataSource = GitCommands.Settings.Module.GetRemotes();
+            _NO_TRANSLATE_Remotes.DataSource = GitCommands.GitModule.Current.GetRemotes();
         }
     }
 }

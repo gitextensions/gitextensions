@@ -36,15 +36,15 @@ namespace GitCommandsTests
         [TestMethod]
         public void TestWorkingDir()
         {
-            Settings.WorkingDir = GetCurrentDir();
+            GitModule.CurrentWorkingDir = GetCurrentDir();
             CheckWorkingDir();
-            Settings.WorkingDir = GetCurrentDir() + "\\testfile.txt";
+            GitModule.CurrentWorkingDir = GetCurrentDir() + "\\testfile.txt";
             CheckWorkingDir();
-            Settings.WorkingDir = GetCurrentDir() + "\\";
+            GitModule.CurrentWorkingDir = GetCurrentDir() + "\\";
             CheckWorkingDir();
-            Settings.WorkingDir = GetCurrentDir() + "\\\\";
+            GitModule.CurrentWorkingDir = GetCurrentDir() + "\\\\";
             CheckWorkingDir();
-            Settings.WorkingDir = GetCurrentDir() + "\\test\\test\\tralala";
+            GitModule.CurrentWorkingDir = GetCurrentDir() + "\\test\\test\\tralala";
             CheckWorkingDir();
 
         }
@@ -52,10 +52,10 @@ namespace GitCommandsTests
         private static void CheckWorkingDir()
         {
             //Should not contain double slashes -> \\
-            Assert.IsFalse(Settings.WorkingDir.Contains("\\\\"), "WorkingDir" + Settings.WorkingDir + "\n" + GetCurrentDir());
+            Assert.IsFalse(GitModule.CurrentWorkingDir.Contains("\\\\"), "WorkingDir" + GitModule.CurrentWorkingDir + "\n" + GetCurrentDir());
 
             //Should end with slash
-            Assert.IsTrue(Settings.WorkingDir.EndsWith("\\"), "WorkingDir" + Settings.WorkingDir + "\n" + GetCurrentDir());
+            Assert.IsTrue(GitModule.CurrentWorkingDir.EndsWith("\\"), "WorkingDir" + GitModule.CurrentWorkingDir + "\n" + GetCurrentDir());
         }
     }
 }

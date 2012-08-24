@@ -26,7 +26,7 @@ namespace GitUI
         private void Revert_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            string output = Settings.Module.ResetFile(fileName);
+            string output = GitModule.Current.ResetFile(fileName);
 
             if (!string.IsNullOrEmpty(output))
                 MessageBox.Show(this, output, _resetChangesCaption.Text);

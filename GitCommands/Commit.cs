@@ -28,9 +28,9 @@ namespace GitCommands
         public void Execute()
         {
             if (Dto.Amend)
-                Dto.Result = Settings.Module.RunGitCmd("commit --amend -m \"" + Dto.Message + "\"");
+                Dto.Result = GitModule.Current.RunGitCmd("commit --amend -m \"" + Dto.Message + "\"");
             else
-                Dto.Result = Settings.Module.RunGitCmd("commit -m \"" + Dto.Message + "\"");
+                Dto.Result = GitModule.Current.RunGitCmd("commit -m \"" + Dto.Message + "\"");
         }
 
         public static void SetCommitMessage(string commitMessageText)
@@ -49,7 +49,7 @@ namespace GitCommands
 
         public static string GetCommitMessagePath()
         {
-            return Settings.Module.WorkingDirGitDir() + Settings.PathSeparator.ToString() + "COMMITMESSAGE";
+            return GitModule.Current.WorkingDirGitDir() + Settings.PathSeparator.ToString() + "COMMITMESSAGE";
         }
     }
 }

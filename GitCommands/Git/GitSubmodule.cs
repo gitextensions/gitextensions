@@ -11,7 +11,7 @@ namespace GitCommands
         {
             get
             {
-                return Settings.Module.GetSubmoduleNameByPath(LocalPath);
+                return GitModule.Current.GetSubmoduleNameByPath(LocalPath);
             }
             set
             {
@@ -22,7 +22,7 @@ namespace GitCommands
         {
             get
             {
-                return Settings.Module.GetSubmoduleRemotePath(Name);
+                return GitModule.Current.GetSubmoduleRemotePath(Name);
             }
             set
             {

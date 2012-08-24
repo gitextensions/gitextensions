@@ -45,9 +45,9 @@ namespace GitUI
         {
             if (Directory.Exists(_NO_TRANSLATE_Directory.Text))
             {
-                Settings.WorkingDir = _NO_TRANSLATE_Directory.Text;
+                GitModule.CurrentWorkingDir = _NO_TRANSLATE_Directory.Text;
 
-                Repositories.AddMostRecentRepository(Settings.WorkingDir);
+                Repositories.AddMostRecentRepository(GitModule.CurrentWorkingDir);
 
                 Close();
             }

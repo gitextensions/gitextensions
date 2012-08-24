@@ -33,7 +33,7 @@ namespace GitUI
 
             try
             {
-                var fileName = Settings.WorkingDir + ".gitignore";
+                var fileName = GitModule.CurrentWorkingDir + ".gitignore";
                 FileInfoExtensions.MakeFileTemporaryWritable(fileName, x =>
                 {
                     var gitIgnoreFileAddition = new StringBuilder();
@@ -63,7 +63,7 @@ namespace GitUI
 
         private void UpdatePreviewPanel()
         {
-            _NO_TRANSLATE_Preview.DataSource = Settings.Module.GetFiles(GetCurrentPatterns());
+            _NO_TRANSLATE_Preview.DataSource = GitModule.Current.GetFiles(GetCurrentPatterns());
             _NO_TRANSLATE_filesWillBeIgnored.Text = string.Format(_matchingFilesString.Text, _NO_TRANSLATE_Preview.Items.Count);
             noMatchPanel.Visible = _NO_TRANSLATE_Preview.Items.Count == 0;
         }

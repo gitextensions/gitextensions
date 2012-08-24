@@ -13,7 +13,7 @@ namespace GitUI
 
         public string GetRevision()
         {
-            return Settings.Module.RevParse(commitExpression.Text);
+            return GitModule.Current.RevParse(commitExpression.Text);
         }
 
 
