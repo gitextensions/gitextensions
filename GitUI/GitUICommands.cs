@@ -228,7 +228,7 @@ namespace GitUI
             return StartBatchFileProcessDialog(null, batchFile);
         }
 
-        public bool StartCommandLineProcessDialog(GitCommand cmd, Form parentForm)
+        public bool StartCommandLineProcessDialog(GitCommand cmd, IWin32Window parentForm)
         {
             if (cmd.AccessesRemote())
                 return FormRemoteProcess.ShowDialog(parentForm, cmd.ToLine());
@@ -357,21 +357,7 @@ namespace GitUI
 
         public bool StartCheckoutRemoteBranchDialog(IWin32Window owner, string branch)
         {
-            if (!RequiresValidWorkingDir(owner))
-                return false;
-
-            if (!InvokeEvent(owner, PreCheckoutBranch))
-                return false;
-
-            using (var form = new FormCheckoutRemoteBranch(branch))
-            {
-                if (form.ShowDialog(owner) == DialogResult.Cancel)
-                    return false;
-            }
-
-            InvokeEvent(owner, PostCheckoutBranch);
-
-            return true;
+            return StartCheckoutBranchDialog(owner, branch, true);
         }
 
         public bool StartCompareRevisionsDialog(IWin32Window owner)
