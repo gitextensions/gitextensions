@@ -124,12 +124,6 @@
     <Compile Include="FormCommitTemplateSettings.Designer.cs">
       <DependentUpon>FormCommitTemplateSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCheckoutRemoteBranch.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormCheckoutRemoteBranch.Designer.cs">
-      <DependentUpon>FormCheckoutRemoteBranch.cs</DependentUpon>
-    </Compile>
     <Compile Include="FormRecentReposSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -773,10 +767,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormCheckoutBranch.resx">
       <DependentUpon>FormCheckoutBranch.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormCheckoutRemoteBranch.resx">
-      <DependentUpon>FormCheckoutRemoteBranch.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormRecentReposSettings.resx">
