@@ -2333,13 +2333,19 @@ namespace GitCommands
 
         public string GetPreviousCommitMessage(int numberBack)
         {
-            string msg = RunCmd(Settings.GitCommand, "log -n 1 HEAD~" + numberBack + " --pretty=format:%e%n%s%n%n%b ", Settings.LosslessEncoding);
+            return GetPreviousCommitMessage("HEAD", numberBack);
+        }
+
+        public string GetPreviousCommitMessage(string revision, int numberBack)
+        {
+            string msg = RunCmd(Settings.GitCommand, "log -n 1 " + revision + "~" + numberBack + " --pretty=format:%e%n%s%n%n%b ", Settings.LosslessEncoding);
             int idx = msg.IndexOf("\n");
             string encodingName = msg.Substring(0, idx);
             msg = msg.Substring(idx + 1, msg.Length - idx - 1);
             msg = GitCommandHelpers.ReEncodeCommitMessage(msg, encodingName);
             return msg;
         }
+
 
         public string MergeBranch(string branch)
         {
