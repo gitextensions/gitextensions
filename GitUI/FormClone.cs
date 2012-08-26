@@ -48,15 +48,15 @@ namespace GitUI
             if (url != null)
             {
                 _NO_TRANSLATE_From.Text = url;
-                if (!Settings.Module.ValidWorkingDir())
-                    _NO_TRANSLATE_To.Text = Settings.WorkingDir;
+                if (!GitModule.Current.ValidWorkingDir())
+                    _NO_TRANSLATE_To.Text = GitModule.CurrentWorkingDir;
             }
             else
             {
-                if (Settings.Module.ValidWorkingDir())
-                    _NO_TRANSLATE_From.Text = Settings.WorkingDir;
+                if (GitModule.Current.ValidWorkingDir())
+                    _NO_TRANSLATE_From.Text = GitModule.CurrentWorkingDir;
                 else
-                    _NO_TRANSLATE_To.Text = Settings.WorkingDir;
+                    _NO_TRANSLATE_To.Text = GitModule.CurrentWorkingDir;
             }
 
             this.openedFromProtocolHandler = openedFromProtocolHandler;
@@ -90,18 +90,18 @@ namespace GitUI
                     fromProcess.SetUrlTryingToConnect(_NO_TRANSLATE_From.Text);
                     fromProcess.ShowDialog(this);
 
-                    if (fromProcess.ErrorOccurred() || Settings.Module.InTheMiddleOfPatch())
+                    if (fromProcess.ErrorOccurred() || GitModule.Current.InTheMiddleOfPatch())
                         return;
                 }
 
                 if (openedFromProtocolHandler && AskIfNewRepositoryShouldBeOpened(dirTo))
                 {
-                    Settings.WorkingDir = dirTo;
+                    GitModule.CurrentWorkingDir = dirTo;
                     Hide();
                     GitUICommands.Instance.StartBrowseDialog();
                 }
                 else if (ShowInTaskbar == false && AskIfNewRepositoryShouldBeOpened(dirTo))
-                    Settings.WorkingDir = dirTo;
+                    GitModule.CurrentWorkingDir = dirTo;
                 Close();
             }
             catch (Exception ex)
@@ -265,7 +265,7 @@ namespace GitUI
             Branches.DisplayMember = "LocalName";
             string from = _NO_TRANSLATE_From.Text;
             Cursor = Cursors.AppStarting;
-            branchListLoader.Load(() => { return Settings.Module.GetRemoteHeads(from, false, true); }, UpdateBranches);
+            branchListLoader.Load(() => { return GitModule.Current.GetRemoteHeads(from, false, true); }, UpdateBranches);
         }
     }
 }

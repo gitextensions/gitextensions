@@ -141,10 +141,10 @@ namespace Github3
         {
             var repoInfos = new List<IHostedRemote>();
 
-            string[] remotes = GitCommands.Settings.Module.GetRemotes(false);
+            string[] remotes = GitCommands.GitModule.Current.GetRemotes(false);
             foreach (string remote in remotes)
             {
-                var url = GitCommands.Settings.Module.GetSetting(string.Format("remote.{0}.url", remote));
+                var url = GitCommands.GitModule.Current.GetSetting(string.Format("remote.{0}.url", remote));
                 if (string.IsNullOrEmpty(url))
                     continue;
 

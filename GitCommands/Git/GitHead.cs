@@ -53,15 +53,15 @@ namespace GitCommands
         {
             get 
             {
-                return GetTrackingRemote(Settings.Module.GetLocalConfig());    
+                return GetTrackingRemote(GitModule.Current.GetLocalConfig());    
             }
             set
             {
                 if (String.IsNullOrEmpty(value))
-                    Settings.Module.UnsetSetting(_remoteSettingName);
+                    GitModule.Current.UnsetSetting(_remoteSettingName);
                 else
                 {
-                    Settings.Module.SetSetting(_remoteSettingName, value);
+                    GitModule.Current.SetSetting(_remoteSettingName, value);
 
                     if (MergeWith == "")
                         MergeWith = Name;
@@ -83,14 +83,14 @@ namespace GitCommands
         {
             get
             {
-                return GetMergeWith(Settings.Module.GetLocalConfig());
+                return GetMergeWith(GitModule.Current.GetLocalConfig());
             }
             set
             {
                 if (String.IsNullOrEmpty(value))
-                    Settings.Module.UnsetSetting(_mergeSettingName);
+                    GitModule.Current.UnsetSetting(_mergeSettingName);
                 else
-                    Settings.Module.SetSetting(_mergeSettingName, "refs/heads/" + value);
+                    GitModule.Current.SetSetting(_mergeSettingName, "refs/heads/" + value);
             }
         }
 
@@ -124,7 +124,7 @@ namespace GitCommands
 
         public List<IGitItem> SubItems
         {
-            get { return _subItems ?? (_subItems = Settings.Module.GetTree(Guid, false)); }
+            get { return _subItems ?? (_subItems = GitModule.Current.GetTree(Guid, false)); }
         }
 
         #endregion

@@ -37,7 +37,7 @@ namespace GitUI
             ProcessCallback = processStart;
             AbortCallback = processAbort;
             ProcessString = process ?? Settings.GitCommand;
-            WorkingDir = module == null ? Settings.WorkingDir : module.WorkingDir;
+            WorkingDir = module == null ? GitModule.CurrentWorkingDir : module.WorkingDir;
             ProcessArguments = arguments;
             Remote = "";
             ProcessInput = input;

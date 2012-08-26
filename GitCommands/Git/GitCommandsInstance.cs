@@ -71,7 +71,7 @@ namespace GitCommands
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         public Process CmdStartProcess(string cmd, string arguments)
         {
-            return CmdStartProcess(cmd, arguments, Settings.WorkingDir);
+            return CmdStartProcess(cmd, arguments, GitModule.CurrentWorkingDir);
         }
 
         public void Kill()

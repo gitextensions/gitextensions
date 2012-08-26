@@ -27,20 +27,20 @@ namespace GitUI
 
         private static void SetFileSystemWatcher()
         {
-            if (!string.IsNullOrEmpty(GitCommands.Settings.Module.WorkingDirGitDir()))
+            if (!string.IsNullOrEmpty(GitCommands.GitModule.Current.WorkingDirGitDir()))
             {
                 try
                 {
                     enabled = GitCommands.Settings.UseFastChecks;
 
-                    Path = GitCommands.Settings.Module.WorkingDirGitDir();
+                    Path = GitCommands.GitModule.Current.WorkingDirGitDir();
 
-                    GitIndexWatcher.Path = GitCommands.Settings.Module.WorkingDirGitDir();
+                    GitIndexWatcher.Path = GitCommands.GitModule.Current.WorkingDirGitDir();
                     GitIndexWatcher.Filter = "index";
                     GitIndexWatcher.IncludeSubdirectories = false;
                     GitIndexWatcher.EnableRaisingEvents = enabled;
 
-                    RefsWatcher.Path = GitCommands.Settings.Module.WorkingDirGitDir() + "\\refs";
+                    RefsWatcher.Path = GitCommands.GitModule.Current.WorkingDirGitDir() + "\\refs";
                     RefsWatcher.IncludeSubdirectories = true;
                     RefsWatcher.EnableRaisingEvents = enabled;
                 }
@@ -59,7 +59,7 @@ namespace GitUI
                 if (!enabled)
                     return true;
 
-                if (Path != GitCommands.Settings.Module.WorkingDirGitDir())
+                if (Path != GitCommands.GitModule.Current.WorkingDirGitDir())
                     return true;
 
                 return indexChanged;
@@ -89,7 +89,7 @@ namespace GitUI
             if (Changed != null)
                 Changed(IndexChanged);
             
-            if (Path != GitCommands.Settings.Module.WorkingDirGitDir() ||
+            if (Path != GitCommands.GitModule.Current.WorkingDirGitDir() ||
                 enabled != GitCommands.Settings.UseFastChecks)
                 SetFileSystemWatcher();
         }
@@ -100,7 +100,7 @@ namespace GitUI
             if (Changed != null)
                 Changed(IndexChanged);
 
-            if (Path != GitCommands.Settings.Module.WorkingDirGitDir() ||
+            if (Path != GitCommands.GitModule.Current.WorkingDirGitDir() ||
                 enabled != GitCommands.Settings.UseFastChecks)
                 SetFileSystemWatcher();
         }

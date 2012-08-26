@@ -9,7 +9,7 @@ namespace GitUI
     public partial class FormDiff : GitExtensionsForm
     {
         public FormDiff()
-            : this(Settings.Module)
+            : this(GitModule.Current)
         {
         }
 
@@ -24,7 +24,7 @@ namespace GitUI
         }
 
         public FormDiff(GitRevision revision)
-            : this(Settings.Module, revision)
+            : this(GitModule.Current, revision)
         {
         }
 
