@@ -34,28 +34,28 @@ namespace GitUI
 
         private void FormRebaseLoad(object sender, EventArgs e)
         {
-            var selectedHead = Settings.Module.GetSelectedBranch();
+            var selectedHead = GitModule.Current.GetSelectedBranch();
             Currentbranch.Text = _currentBranchText.Text + " " + selectedHead;
 
             Branches.DisplayMember = "Name";
-            Branches.DataSource = Settings.Module.GetHeads(true, true);
+            Branches.DataSource = GitModule.Current.GetHeads(true, true);
 
             if (_defaultBranch != null)
                 Branches.Text = _defaultBranch;
 
             Branches.Select();
 
-            splitContainer2.SplitterDistance = Settings.Module.InTheMiddleOfRebase() ? 0 : 70;
+            splitContainer2.SplitterDistance = GitModule.Current.InTheMiddleOfRebase() ? 0 : 70;
             EnableButtons();
 
             // Honor the rebase.autosquash configuration.
-            var autosquashSetting = Settings.Module.GetEffectiveSetting("rebase.autosquash");
+            var autosquashSetting = GitModule.Current.GetEffectiveSetting("rebase.autosquash");
             chkAutosquash.Checked = "true" == autosquashSetting.Trim().ToLower();
         }
 
         private void EnableButtons()
         {
-            if (Settings.Module.InTheMiddleOfRebase())
+            if (GitModule.Current.InTheMiddleOfRebase())
             {
                 if (Height < 200)
                     Height = 500;
@@ -64,8 +64,8 @@ namespace GitUI
                 Ok.Enabled = false;
 
                 AddFiles.Enabled = true;
-                Resolved.Enabled = !Settings.Module.InTheMiddleOfConflictedMerge();
-                Mergetool.Enabled = Settings.Module.InTheMiddleOfConflictedMerge();
+                Resolved.Enabled = !GitModule.Current.InTheMiddleOfConflictedMerge();
+                Mergetool.Enabled = GitModule.Current.InTheMiddleOfConflictedMerge();
                 Skip.Enabled = true;
                 Abort.Enabled = true;
             }
@@ -80,21 +80,21 @@ namespace GitUI
                 Abort.Enabled = false;
             }
 
-            SolveMergeconflicts.Visible = Settings.Module.InTheMiddleOfConflictedMerge();
+            SolveMergeconflicts.Visible = GitModule.Current.InTheMiddleOfConflictedMerge();
 
             Resolved.Text = _continueRebaseText.Text;
             Mergetool.Text = _solveConflictsText.Text;
             ContinuePanel.BackColor = Color.Transparent;
             MergeToolPanel.BackColor = Color.Transparent;
 
-            if (Settings.Module.InTheMiddleOfConflictedMerge())
+            if (GitModule.Current.InTheMiddleOfConflictedMerge())
             {
                 AcceptButton = Mergetool;
                 Mergetool.Focus();
                 Mergetool.Text = _solveConflictsText2.Text;
                 MergeToolPanel.BackColor = Color.Black;
             }
-            else if (Settings.Module.InTheMiddleOfRebase())
+            else if (GitModule.Current.InTheMiddleOfRebase())
             {
                 AcceptButton = Resolved;
                 Resolved.Focus();
@@ -124,7 +124,7 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             FormProcess.ShowDialog(this, GitCommandHelpers.ContinueRebaseCmd());
 
-            if (!Settings.Module.InTheMiddleOfRebase())
+            if (!GitModule.Current.InTheMiddleOfRebase())
                 Close();
 
             EnableButtons();
@@ -137,7 +137,7 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             FormProcess.ShowDialog(this, GitCommandHelpers.SkipRebaseCmd());
 
-            if (!Settings.Module.InTheMiddleOfRebase())
+            if (!GitModule.Current.InTheMiddleOfRebase())
                 Close();
 
             EnableButtons();
@@ -150,7 +150,7 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             FormProcess.ShowDialog(this, GitCommandHelpers.AbortRebaseCmd());
 
-            if (!Settings.Module.InTheMiddleOfRebase())
+            if (!GitModule.Current.InTheMiddleOfRebase())
                 Close();
 
             EnableButtons();
@@ -172,9 +172,9 @@ namespace GitUI
             if (dialogResult.Trim() == "Current branch a is up to date.")
                 MessageBox.Show(this, _branchUpToDateText.Text, _branchUpToDateCaption.Text);
 
-            if (!Settings.Module.InTheMiddleOfConflictedMerge() &&
-                !Settings.Module.InTheMiddleOfRebase() &&
-                !Settings.Module.InTheMiddleOfPatch())
+            if (!GitModule.Current.InTheMiddleOfConflictedMerge() &&
+                !GitModule.Current.InTheMiddleOfRebase() &&
+                !GitModule.Current.InTheMiddleOfPatch())
                 Close();
 
             EnableButtons();

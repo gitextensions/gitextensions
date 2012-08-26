@@ -34,11 +34,6 @@ namespace GitExtensions
 
                 FormFixHome.CheckHomePath();
             }
-            //Current encodings
-            Debug.WriteLine("Files content encoding: " + Settings.FilesEncoding.EncodingName);
-            Debug.WriteLine("Commit encoding: " + Settings.CommitEncoding.EncodingName);
-            if (Settings.LogOutputEncoding.CodePage != Settings.CommitEncoding.CodePage)
-                Debug.WriteLine("Log output encoding: " + Settings.LogOutputEncoding.EncodingName);
             //Register plugins
             FormSplash.SetAction("Loading plugins...");
             Application.DoEvents();
@@ -81,31 +76,31 @@ namespace GitExtensions
             if (args.Length >= 3)
             {
                 if (Directory.Exists(args[2]))
-                    Settings.WorkingDir = args[2];
+                    GitModule.CurrentWorkingDir = args[2];
 
-                if (string.IsNullOrEmpty(Settings.WorkingDir))
+                if (string.IsNullOrEmpty(GitModule.CurrentWorkingDir))
                 {
                     if (args[2].Contains(Settings.PathSeparator.ToString()))
-                        Settings.WorkingDir = args[2].Substring(0, args[2].LastIndexOf(Settings.PathSeparator));
+                        GitModule.CurrentWorkingDir = args[2].Substring(0, args[2].LastIndexOf(Settings.PathSeparator));
                 }
 
                 //Do not add this working dir to the recent repositories. It is a nice feature, but it
                 //also increases the startup time
-                //if (Settings.Module.ValidWorkingDir())
-                //    Repositories.RepositoryHistory.AddMostRecentRepository(Settings.WorkingDir);
+                //if (GitModule.Current.ValidWorkingDir())
+                //    Repositories.RepositoryHistory.AddMostRecentRepository(GitModule.CurrentWorkingDir);
             }
 
-            if (args.Length <= 1 && string.IsNullOrEmpty(Settings.WorkingDir) && Settings.StartWithRecentWorkingDir)
+            if (args.Length <= 1 && string.IsNullOrEmpty(GitModule.CurrentWorkingDir) && Settings.StartWithRecentWorkingDir)
             {
                 if (GitModule.ValidWorkingDir(Settings.RecentWorkingDir))
-                    Settings.WorkingDir = Settings.RecentWorkingDir;
+                    GitModule.CurrentWorkingDir = Settings.RecentWorkingDir;
             }
 
-            if (string.IsNullOrEmpty(Settings.WorkingDir))
+            if (string.IsNullOrEmpty(GitModule.CurrentWorkingDir))
             {
                 string findWorkingDir = GitModule.FindGitWorkingDir(Directory.GetCurrentDirectory());
                 if (GitModule.ValidWorkingDir(findWorkingDir))
-                    Settings.WorkingDir = findWorkingDir;
+                    GitModule.CurrentWorkingDir = findWorkingDir;
             }
 
             FormSplash.HideSplash();
@@ -206,7 +201,7 @@ namespace GitExtensions
                     GitUICommands.Instance.StartFormatPatchDialog();
                     return;
                 case "gitbash":
-                    Settings.Module.RunBash();
+                    GitModule.Current.RunBash();
                     return;
                 case "gitignore":
                     GitUICommands.Instance.StartEditGitIgnoreDialog();
@@ -285,7 +280,7 @@ namespace GitExtensions
         {
             var searchWindow = new SearchWindow<string>(FindFileMatches);
             Application.Run(searchWindow);
-            Console.WriteLine(Settings.WorkingDir + searchWindow.SelectedItem);
+            Console.WriteLine(GitModule.CurrentWorkingDir + searchWindow.SelectedItem);
         }
 
         private static void RunBrowseCommand(string[] args)
@@ -294,7 +289,7 @@ namespace GitExtensions
             {
                 if (Directory.Exists(args[2]))
                 {
-                    Settings.WorkingDir = args[2];
+                    GitModule.CurrentWorkingDir = args[2];
                 }
             }
 
@@ -310,7 +305,7 @@ namespace GitExtensions
                     string path = File.ReadAllText(args[2]).Trim().Split(new char[] {'\n'}, 1).FirstOrDefault();
                     if (Directory.Exists(path))
                     {
-                        Settings.WorkingDir = path;
+                        GitModule.CurrentWorkingDir = path;
                     }
                 }
             }
@@ -346,7 +341,7 @@ namespace GitExtensions
         {
             //Remove working dir from filename. This is to prevent filenames that are too
             //long while there is room left when the workingdir was not in the path.
-            string fileHistoryFileName = args[2].Replace(Settings.WorkingDir, "").Replace('\\', '/');
+            string fileHistoryFileName = args[2].Replace(GitModule.CurrentWorkingDir, "").Replace('\\', '/');
 
             GitUICommands.Instance.StartFileHistoryDialog(fileHistoryFileName);
         }
@@ -371,13 +366,13 @@ namespace GitExtensions
         {
             // Remove working dir from filename. This is to prevent filenames that are too
             // long while there is room left when the workingdir was not in the path.
-            string filenameFromBlame = args[2].Replace(Settings.WorkingDir, "").Replace('\\', '/');
+            string filenameFromBlame = args[2].Replace(GitModule.CurrentWorkingDir, "").Replace('\\', '/');
             GitUICommands.Instance.StartBlameDialog(filenameFromBlame);
         }
 
         private static void RunMergeToolOrConflictCommand(Dictionary<string, string> arguments)
         {
-            if (!arguments.ContainsKey("quiet") || Settings.Module.InTheMiddleOfConflictedMerge())
+            if (!arguments.ContainsKey("quiet") || GitModule.Current.InTheMiddleOfConflictedMerge())
                 GitUICommands.Instance.StartResolveConflictsDialog();
         }
 
@@ -397,7 +392,7 @@ namespace GitExtensions
 
         private static IList<string> FindFileMatches(string name)
         {
-            var candidates = Settings.Module.GetFullTree("HEAD");
+            var candidates = GitModule.Current.GetFullTree("HEAD");
 
             string nameAsLower = name.ToLower();
 

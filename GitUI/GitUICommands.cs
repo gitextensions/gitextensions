@@ -155,17 +155,17 @@ namespace GitUI
 
         public string GitCommand(string arguments)
         {
-            return Settings.Module.RunGitCmd(arguments);
+            return GitModule.Current.RunGitCmd(arguments);
         }
 
         public string CommandLineCommand(string cmd, string arguments)
         {
-            return Settings.Module.RunCmd(cmd, arguments);
+            return GitModule.Current.RunCmd(cmd, arguments);
         }
 
         private bool RequiresValidWorkingDir(object owner)
         {
-            if (!Settings.Module.ValidWorkingDir())
+            if (!GitModule.Current.ValidWorkingDir())
             {
                 MessageBoxes.NotValidGitDirectory(owner as IWin32Window);
                 return false;

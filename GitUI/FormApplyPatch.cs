@@ -42,15 +42,15 @@ namespace GitUI
 
         private void EnableButtons()
         {
-            if (Settings.Module.InTheMiddleOfPatch())
+            if (GitModule.Current.InTheMiddleOfPatch())
             {
                 Apply.Enabled = false;
                 IgnoreWhitespace.Enabled = false;
                 PatchFileMode.Enabled = false;
                 PatchDirMode.Enabled = false;
                 AddFiles.Enabled = true;
-                Resolved.Enabled = !Settings.Module.InTheMiddleOfConflictedMerge();
-                Mergetool.Enabled = Settings.Module.InTheMiddleOfConflictedMerge();
+                Resolved.Enabled = !GitModule.Current.InTheMiddleOfConflictedMerge();
+                Mergetool.Enabled = GitModule.Current.InTheMiddleOfConflictedMerge();
                 Skip.Enabled = true;
                 Abort.Enabled = true;
 
@@ -83,21 +83,21 @@ namespace GitUI
 
             patchGrid1.Initialize();
 
-            SolveMergeconflicts.Visible = Settings.Module.InTheMiddleOfConflictedMerge();
+            SolveMergeconflicts.Visible = GitModule.Current.InTheMiddleOfConflictedMerge();
 
             Resolved.Text = _conflictResolvedText.Text;
             Mergetool.Text = _conflictMergetoolText.Text;
             ContinuePanel.BackColor = Color.Transparent;
             MergeToolPanel.BackColor = Color.Transparent;
 
-            if (Settings.Module.InTheMiddleOfConflictedMerge())
+            if (GitModule.Current.InTheMiddleOfConflictedMerge())
             {
                 Mergetool.Text = ">" + _conflictMergetoolText.Text + "<";
                 Mergetool.Focus();
                 AcceptButton = Mergetool;
                 MergeToolPanel.BackColor = Color.Black;
             }
-            else if (Settings.Module.InTheMiddleOfPatch())
+            else if (GitModule.Current.InTheMiddleOfPatch())
             {
                 Resolved.Text = ">" + _conflictResolvedText.Text + "<";
                 Resolved.Focus();
@@ -153,7 +153,7 @@ namespace GitUI
 
             EnableButtons();
 
-            if (!Settings.Module.InTheMiddleOfConflictedMerge() && !Settings.Module.InTheMiddleOfRebase() && !Settings.Module.InTheMiddleOfPatch())
+            if (!GitModule.Current.InTheMiddleOfConflictedMerge() && !GitModule.Current.InTheMiddleOfRebase() && !GitModule.Current.InTheMiddleOfPatch())
                 Close();
             Cursor.Current = Cursors.Default;
         }
@@ -197,7 +197,7 @@ namespace GitUI
         {
             PatchFile.Select();
             
-            Text = _applyPatchMsgBox.Text + " (" + Settings.WorkingDir + ")";
+            Text = _applyPatchMsgBox.Text + " (" + GitModule.CurrentWorkingDir + ")";
             IgnoreWhitespace.Checked = Settings.ApplyPatchIgnoreWhitespace;
         }
 

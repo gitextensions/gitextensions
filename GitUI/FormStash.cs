@@ -53,7 +53,7 @@ namespace GitUI
 
         private void Initialize()
         {
-            IList<GitStash> stashedItems = Settings.Module.GetStashes();
+            IList<GitStash> stashedItems = GitModule.Current.GetStashes();
 
             currentWorkingDirStashItem = new GitStash
             {
@@ -92,10 +92,10 @@ namespace GitUI
             else if (gitStash == currentWorkingDirStashItem)
             {
                 toolStripButton_customMessage.Enabled = true;
-                AsyncLoader.DoAsync(() => Settings.Module.GetAllChangedFiles(), LoadGitItemStatuses);
+                AsyncLoader.DoAsync(() => GitModule.Current.GetAllChangedFiles(), LoadGitItemStatuses);
             }
             else
-                AsyncLoader.DoAsync(() => Settings.Module.GetStashDiffFiles(gitStash.Name), LoadGitItemStatuses);
+                AsyncLoader.DoAsync(() => GitModule.Current.GetStashDiffFiles(gitStash.Name), LoadGitItemStatuses);
         }
 
         private void LoadGitItemStatuses(IList<GitItemStatus> gitItemStatuses)
@@ -127,7 +127,7 @@ namespace GitUI
                     Encoding encoding = this.View.Encoding;
                     View.ViewPatch(() =>
                     {
-                        PatchApply.Patch patch = Settings.Module.GetSingleDiff(gitStash.Name, gitStash.Name + "^", stashedItem.Name, stashedItem.OldName, extraDiffArguments, encoding);
+                        PatchApply.Patch patch = GitModule.Current.GetSingleDiff(gitStash.Name, gitStash.Name + "^", stashedItem.Name, stashedItem.OldName, extraDiffArguments, encoding);
                         if (patch == null)
                             return String.Empty;
                         return patch.Text;

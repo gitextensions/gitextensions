@@ -38,8 +38,8 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
-            if (!Settings.Module.ValidWorkingDir())
-                Directory.Text = Settings.WorkingDir;
+            if (!GitModule.Current.ValidWorkingDir())
+                Directory.Text = GitModule.CurrentWorkingDir;
         }
 
         private void DirectoryDropDown(object sender, EventArgs e)
@@ -62,12 +62,12 @@ namespace GitUI
                 return;
             }
 
-            Settings.WorkingDir = Directory.Text;
+            GitModule.CurrentWorkingDir = Directory.Text;
 
-            if (!System.IO.Directory.Exists(Settings.WorkingDir))
-                System.IO.Directory.CreateDirectory(Settings.WorkingDir);
+            if (!System.IO.Directory.Exists(GitModule.CurrentWorkingDir))
+                System.IO.Directory.CreateDirectory(GitModule.CurrentWorkingDir);
 
-            MessageBox.Show(this, Settings.Module.Init(Central.Checked, Central.Checked), _initMsgBoxCaption.Text);
+            MessageBox.Show(this, GitModule.Current.Init(Central.Checked, Central.Checked), _initMsgBoxCaption.Text);
 
             Repositories.AddMostRecentRepository(Directory.Text);
 

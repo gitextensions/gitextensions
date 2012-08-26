@@ -54,7 +54,7 @@ namespace GitCommandsTests
 		private void AddConfigValue(string cfgFile, string section, string value)
 		{
 			string args = "config -f " + "\"" +cfgFile + "\"" + " --add " + section + " " + value;
-			Settings.Module.RunGitCmd(args);			
+			GitModule.Current.RunGitCmd(args);			
 		}
 
         [TestMethod]

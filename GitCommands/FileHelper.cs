@@ -66,7 +66,7 @@ namespace GitCommands
         /// <returns>null if no info in .gitattributes. True if marked as binary, false if marked as text</returns>
         private static bool? IsBinaryAccordingToGitAttributes(string fileName)
         {
-            string gitAttributesPath = Path.Combine(GitCommands.Settings.WorkingDir, ".gitattributes");
+            string gitAttributesPath = Path.Combine(GitCommands.GitModule.CurrentWorkingDir, ".gitattributes");
             if (File.Exists(gitAttributesPath))
             {
                 string[] lines = File.ReadAllLines(gitAttributesPath);

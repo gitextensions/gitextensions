@@ -18,14 +18,14 @@ namespace GitUI.Tag
         private void FormDeleteTagLoad(object sender, EventArgs e)
         {
             Tags.DisplayMember = "Name";
-            Tags.DataSource = Settings.Module.GetHeads(true, false);
+            Tags.DataSource = GitModule.Current.GetHeads(true, false);
         }
 
         private void OkClick(object sender, EventArgs e)
         {
             try
             {
-                string s = Settings.Module.DeleteTag(Tags.Text);
+                string s = GitModule.Current.DeleteTag(Tags.Text);
 
                 if (!string.IsNullOrEmpty(s))
                     MessageBox.Show(this, s, _deleteTagMessageBoxCaption.Text);

@@ -92,15 +92,14 @@ namespace GitCommands.Statistics
 
             string command = "log --pretty=tformat:\"--- %ad --- " + authorName + "\" --numstat --date=iso -C --all --no-merges";
 
-            LoadModuleInfo(command, Settings.WorkingDir, taskState);
+            LoadModuleInfo(command, GitModule.CurrentWorkingDir, taskState);
 
             if (ShowSubmodules)
             {
-                IList<string> submodules = Settings.Module.GetSubmodulesLocalPathes();
-                GitModule submodule = new GitModule();
+                IList<string> submodules = GitModule.Current.GetSubmodulesLocalPathes();
                 foreach (var submoduleName in submodules)
                 {
-                    submodule.WorkingDir = Settings.Module.GetSubmoduleFullPath(submoduleName);
+                    GitModule submodule = GitModule.Current.GetSubmodule(submoduleName);
                     if (submodule.ValidWorkingDir())
                         LoadModuleInfo(command, submodule.WorkingDir, taskState);
                 }
