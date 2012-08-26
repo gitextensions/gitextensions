@@ -28,6 +28,7 @@ namespace GitUI.RepoHosting
         private List<IHostedRemote> _hostedRemotes;
         private string _currentBranch;
         private AsyncLoader remoteLoader = new AsyncLoader();
+        private GitModule currentModule = GitModule.Current;
 
         public CreatePullRequestForm(IRepositoryHostPlugin repoHost, string chooseRemote, string chooseBranch)
         {
@@ -37,6 +38,7 @@ namespace GitUI.RepoHosting
             _currentBranch = "";
             InitializeComponent();
             Translate();
+            prevTitle = _titleTB.Text;
         }
 
         private void CreatePullRequestForm_Load(object sender, EventArgs e)
@@ -64,7 +66,7 @@ namespace GitUI.RepoHosting
 
                     this.UnMask();
 
-                    _currentBranch = GitModule.Current.ValidWorkingDir() ? GitModule.Current.GetSelectedBranch() : "";
+                    _currentBranch = currentModule.ValidWorkingDir() ? currentModule.GetSelectedBranch() : "";
                     LoadRemotes(foreignHostedRemotes);
                     LoadMyBranches();
                 });
@@ -120,16 +122,25 @@ namespace GitUI.RepoHosting
                 ex => { throw ex; });
         }
 
+        private IHostedRemote MyRemote
+        {
+            get
+            {
+                var myRemote = _hostedRemotes.FirstOrDefault(r => r.IsOwnedByMe);
+                if (myRemote == null)
+                    throw new InvalidOperationException(_strCouldNotLocateARemoteThatBelongsToYourUser.Text);
+                return myRemote;
+            }
+        }
+
+
         private void LoadMyBranches()
         {
-            var myRemote = _hostedRemotes.FirstOrDefault(r => r.IsOwnedByMe);
-            if (myRemote == null)
-                throw new InvalidOperationException(_strCouldNotLocateARemoteThatBelongsToYourUser.Text);
 
             _yourBranchesCB.Items.Clear();
 
             AsyncLoader.DoAsync(
-                () => myRemote.GetHostedRepository().Branches,
+                () => MyRemote.GetHostedRepository().Branches,
                 branches =>
                 {
                     branches.Sort((a, b) => String.Compare(a.Name, b.Name, true));
@@ -147,8 +158,15 @@ namespace GitUI.RepoHosting
                 ex => { throw ex; });
         }
 
+        private string prevTitle;
+
         private void _yourBranchCB_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (prevTitle.Equals(_titleTB.Text) && !_yourBranchesCB.Text.IsNullOrWhiteSpace())
+            {
+                _titleTB.Text = currentModule.GetPreviousCommitMessage(MyRemote.Name.Combine("/", _yourBranchesCB.Text), 0).TakeUntilStr("\n");
+                prevTitle = _titleTB.Text;
+            }
         }
 
         private void _createBtn_Click(object sender, EventArgs e)
