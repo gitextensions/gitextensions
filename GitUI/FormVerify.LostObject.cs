@@ -104,7 +104,7 @@ namespace GitUI
                 if (string.IsNullOrEmpty(hash) || !GitRevision.Sha1HashRegex.IsMatch(hash))
                     throw new ArgumentOutOfRangeException("hash", hash, "Hash must be a valid SHA1 hash.");
 
-                return Settings.Module.RunGitCmd(string.Format(LogCommandArgumentsFormat, hash), Settings.LosslessEncoding);
+                return GitModule.Current.RunGitCmd(string.Format(LogCommandArgumentsFormat, hash), Settings.LosslessEncoding);
             }
 
             private static LostObjectType GetObjectType(GroupCollection matchedGroup)

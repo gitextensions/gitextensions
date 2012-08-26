@@ -41,9 +41,9 @@ namespace GitUI
         {
             try
             {
-                if (File.Exists(Settings.WorkingDir + ".mailmap"))
+                if (File.Exists(GitModule.CurrentWorkingDir + ".mailmap"))
                 {
-                    _NO_TRANSLATE_MailMapText.ViewFile(Settings.WorkingDir + ".mailmap");
+                    _NO_TRANSLATE_MailMapText.ViewFile(GitModule.CurrentWorkingDir + ".mailmap");
                 }
             }
             catch (Exception ex)
@@ -64,7 +64,7 @@ namespace GitUI
             {
                 FileInfoExtensions
                     .MakeFileTemporaryWritable(
-                        Settings.WorkingDir + ".mailmap",
+                        GitModule.CurrentWorkingDir + ".mailmap",
                         x =>
                         {
                             this.MailMapFile = _NO_TRANSLATE_MailMapText.GetText();
@@ -111,7 +111,7 @@ namespace GitUI
 
         private void FormMailMapLoad(object sender, EventArgs e)
         {
-            if (!Settings.Module.IsBareRepository()) return;
+            if (!GitModule.Current.IsBareRepository()) return;
             MessageBox.Show(this, _mailmapOnlyInWorkingDirSupported.Text,_mailmapOnlyInWorkingDirSupportedCaption.Text);
             Close();
         }

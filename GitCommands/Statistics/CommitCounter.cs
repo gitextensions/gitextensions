@@ -7,7 +7,7 @@ namespace GitCommands.Statistics
     {
         public static Tuple<Dictionary<string, int>, int> GroupAllCommitsByContributor()
         {
-            return GroupAllCommitsByContributor(Settings.Module);
+            return GroupAllCommitsByContributor(GitModule.Current);
         }
 
         public static Tuple<Dictionary<string, int>, int> GroupAllCommitsByContributor(GitModule module)

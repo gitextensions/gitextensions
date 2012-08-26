@@ -23,10 +23,6 @@ namespace GitCommands
     {
         private static readonly Regex DefaultHeadPattern = new Regex("refs/remotes/[^/]+/HEAD", RegexOptions.Compiled);
 
-        public GitModule()
-        {
-        }
-
         public GitModule(string workingdir)
         {
             WorkingDir = workingdir;
@@ -36,13 +32,66 @@ namespace GitCommands
         private GitModule _superprojectModule;
         private string _submoduleName;
 
+        private static GitModule _Current = null;
+        /// <summary>
+        /// Global module for current working dir
+        /// </summary>
+        public static GitModule Current
+        {
+            get
+            {
+                if (_Current == null)
+                    throw new NullReferenceException("Current module was not set yet.");
+
+                return _Current;
+            }
+
+            private set
+            {
+                _Current = value;
+            }
+        }
+
+        public delegate void WorkingDirChangedEventHandler(string oldDir, string newDir, string newGitDir);
+        public static event WorkingDirChangedEventHandler CurrentWorkingDirChanged;
+
+        public static string CurrentWorkingDir
+        {
+            get
+            {
+                return _Current == null ? null : _Current.WorkingDir;
+            }
+            set
+            {
+                string old = CurrentWorkingDir;
+                Current = new GitModule(value);
+                Settings.RecentWorkingDir = CurrentWorkingDir;
+                if (CurrentWorkingDirChanged != null)
+                {
+                    CurrentWorkingDirChanged(old, CurrentWorkingDir, Current.GetGitDirectory());
+                }
+
+#if DEBUG
+                //Current encodings
+                Debug.WriteLine("Encodings for " + CurrentWorkingDir);
+                Debug.WriteLine("Files content encoding: " + Settings.FilesEncoding.EncodingName);
+                Debug.WriteLine("Commit encoding: " + Settings.CommitEncoding.EncodingName);
+                if (Settings.LogOutputEncoding.CodePage != Settings.CommitEncoding.CodePage)
+                    Debug.WriteLine("Log output encoding: " + Settings.LogOutputEncoding.EncodingName);
+#endif
+            }
+        }
+
+
+
+
         public string WorkingDir
         {
             get
             {
                 return _workingdir;
             }
-            set
+            private set
             {
                 _workingdir = FindGitWorkingDir(value.Trim());
                 string superprojectDir = FindGitSuperprojectPath(out _submoduleName);
@@ -430,7 +479,7 @@ namespace GitCommands
                 writer.WriteLine("@prompt $G");
                 writer.Write(batchFile);
             }
-            string result = Settings.Module.RunCmd("cmd.exe", "/C \"" + tempFileName + "\"");
+            string result = RunCmd("cmd.exe", "/C \"" + tempFileName + "\"");
             File.Delete(tempFileName);
             return result;
         }
@@ -574,7 +623,7 @@ namespace GitCommands
         {
             using (var ms = (MemoryStream)GetFileStream(blob)) //Ugly, has implementation info.
             {
-                string autocrlf = Settings.Module.GetEffectiveSetting("core.autocrlf").ToLower();
+                string autocrlf = GetEffectiveSetting("core.autocrlf").ToLower();
                 bool convertcrlf = autocrlf == "true";
 
                 byte[] buf = ms.ToArray();
@@ -940,6 +989,12 @@ namespace GitCommands
             string dir = _workingdir + localPath + Settings.PathSeparator.ToString();
             return Path.GetFullPath(dir); // fix slashes
         }
+
+        public GitModule GetSubmodule(string localPath)
+        {
+            return new GitModule(GetSubmoduleFullPath(localPath));
+        }
+
 
         public IList<IGitSubmodule> GetSubmodules()
         {
@@ -1963,7 +2018,7 @@ namespace GitCommands
 
         public ICollection<string> GetMergedBranches()
         {
-            return Settings.Module.RunGitCmd(GitCommandHelpers.MergedBranches()).Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            return RunGitCmd(GitCommandHelpers.MergedBranches()).Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         private string GetTree(bool tags, bool branches)

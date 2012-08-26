@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using GitCommands;
 using GitCommands.Repository;
 using GitUI.Properties;
 using GitUI.RepoHosting;
@@ -280,26 +281,26 @@ namespace GitUI
 
         private void OpenPath(string path)
         {
-            Settings.WorkingDir = path;
+            GitModule.CurrentWorkingDir = path;
 
-            if (!Settings.Module.ValidWorkingDir())
+            if (!GitModule.Current.ValidWorkingDir())
             {
                 DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepository.Text, directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 if (dialogResult == DialogResult.Cancel)
                 {
-                    Settings.WorkingDir = string.Empty;
+                    GitModule.CurrentWorkingDir = string.Empty;
                     return;
                 }
                 if (dialogResult == DialogResult.Yes)
                 {
-                    Settings.WorkingDir = string.Empty;
+                    GitModule.CurrentWorkingDir = string.Empty;
                     Repositories.RepositoryHistory.RemoveRecentRepository(path);
                     Refresh();
                     return;
                 }
             }
 
-            Repositories.AddMostRecentRepository(Settings.WorkingDir);
+            Repositories.AddMostRecentRepository(GitModule.CurrentWorkingDir);
             OnWorkingDirChanged();
         }
 
@@ -326,7 +327,7 @@ namespace GitUI
 
         private void createItem_Click(object sender, EventArgs e)
         {
-            GitUICommands.Instance.StartInitializeDialog(this, Settings.WorkingDir);
+            GitUICommands.Instance.StartInitializeDialog(this, GitModule.CurrentWorkingDir);
 
             OnWorkingDirChanged();
         }

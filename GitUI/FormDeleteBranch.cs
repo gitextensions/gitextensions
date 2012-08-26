@@ -31,8 +31,8 @@ namespace GitUI
 
         private void FormDeleteBranchLoad(object sender, EventArgs e)
         {
-            Branches.BranchesToSelect = Settings.Module.GetHeads(true, true).Where(h => h.IsHead && !h.IsRemote).ToList();
-            foreach (var branch in Settings.Module.GetMergedBranches())
+            Branches.BranchesToSelect = GitModule.Current.GetHeads(true, true).Where(h => h.IsHead && !h.IsRemote).ToList();
+            foreach (var branch in GitModule.Current.GetMergedBranches())
             {
                 if (!branch.StartsWith("* "))
                     mergedBranches.Add(branch.Trim());

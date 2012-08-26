@@ -284,7 +284,7 @@ namespace GitUI.RepoHosting
             }
             else
             {
-                var error = Settings.Module.AddRemote(remoteName, remoteUrl);
+                var error = GitModule.Current.AddRemote(remoteName, remoteUrl);
                 if (!string.IsNullOrEmpty(error))
                 {
                     MessageBox.Show(this, error, string.Format(_strCouldNotAddRemote.Text, remoteName, remoteUrl));

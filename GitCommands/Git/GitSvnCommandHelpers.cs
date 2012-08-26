@@ -41,7 +41,7 @@
 
         public static string GetConfigSvnRemoteFetch()
         {
-            return Settings.Module.RunCmd(Settings.GitCommand, "config svn-remote.svn.fetch");
+            return GitModule.Current.RunCmd(Settings.GitCommand, "config svn-remote.svn.fetch");
         }
 
         public static string RebaseCmd()
@@ -61,7 +61,7 @@
 
         public static bool ValidSvnWorkingDir()
         {
-            return ValidSvnWorkingDir(Settings.WorkingDir);
+            return ValidSvnWorkingDir(GitModule.CurrentWorkingDir);
         }
 
         public static bool ValidSvnWorkingDir(string dir)

@@ -76,17 +76,17 @@ namespace GitUI
             var list = new List<string>();
             if (local && remote)
             {
-                var branches = Settings.Module.GetHeads(true, true);
+                var branches = GitModule.Current.GetHeads(true, true);
                 list.AddRange(branches.Where(branch => !branch.IsTag).Select(branch => branch.Name));
             }
             else if (local)
             {
-                var branches = Settings.Module.GetHeads(false);
+                var branches = GitModule.Current.GetHeads(false);
                 list.AddRange(branches.Select(branch => branch.Name));
             }
             else if (remote)
             {
-                var branches = Settings.Module.GetHeads(true, true);
+                var branches = GitModule.Current.GetHeads(true, true);
                 list.AddRange(branches.Where(branch => branch.IsRemote && !branch.IsTag).Select(branch => branch.Name));
             }
             return list;
@@ -99,12 +99,12 @@ namespace GitUI
                 return list;
             if (local)
             {
-                var tags = Settings.Module.GetHeads(true, true);
+                var tags = GitModule.Current.GetHeads(true, true);
                 list.AddRange(tags.Where(tag => tag.IsTag).Select(tag => tag.Name));
             }
             else
             {
-                var tags = Settings.Module.GetHeads(true, true);
+                var tags = GitModule.Current.GetHeads(true, true);
                 list.AddRange(tags.Where(tag => tag.IsRemote && tag.IsTag).Select(tag => tag.Name));
             }
             return list;

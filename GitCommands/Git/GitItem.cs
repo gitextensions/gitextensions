@@ -38,7 +38,7 @@ namespace GitCommands
             {
                 if (subItems == null)
                 {
-                    subItems = Settings.Module.GetTree(Guid, false);
+                    subItems = GitModule.Current.GetTree(Guid, false);
 
                     foreach (GitItem item in subItems)
                     {

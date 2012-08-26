@@ -56,7 +56,7 @@ namespace GitUI
 
         public static bool AbortCurrentAction()
         {
-            return AbortCurrentAction(Settings.Module);
+            return AbortCurrentAction(GitModule.Current);
         }
     }
 }

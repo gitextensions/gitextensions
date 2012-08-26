@@ -7,7 +7,7 @@ namespace GitUI
     {
         public static bool HandleMergeConflicts(IWin32Window owner, bool offerCommit)
         {
-            if (Settings.Module.InTheMiddleOfConflictedMerge())
+            if (GitModule.Current.InTheMiddleOfConflictedMerge())
             {
                 if (MessageBoxes.UnresolvedMergeConflicts(owner))
                 {
@@ -25,19 +25,19 @@ namespace GitUI
 
         private static void SolveMergeConflicts(IWin32Window owner, bool offerCommit)
         {
-            if (Settings.Module.InTheMiddleOfConflictedMerge())
+            if (GitModule.Current.InTheMiddleOfConflictedMerge())
             {
                 GitUICommands.Instance.StartResolveConflictsDialog(owner, offerCommit);
             }
 
-            if (Settings.Module.InTheMiddleOfPatch())
+            if (GitModule.Current.InTheMiddleOfPatch())
             {
                 if (MessageBoxes.MiddleOfPatchApply(owner))
                 {
                     GitUICommands.Instance.StartApplyPatchDialog(owner);
                 }
             }
-            else if (Settings.Module.InTheMiddleOfRebase())
+            else if (GitModule.Current.InTheMiddleOfRebase())
             {
                 if (MessageBoxes.MiddleOfRebase(owner))
                 {

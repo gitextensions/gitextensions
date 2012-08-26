@@ -27,7 +27,7 @@ namespace Gerrit
                 if (!File.Exists(GitCommands.Settings.Pageant))
                     MessageBox.Show(owner, "Cannot load SSH key. PuTTY is not configured properly.", PuttyText);
                 else
-                    GitCommands.Settings.Module.StartPageantForRemote(remote);
+                    GitCommands.GitModule.Current.StartPageantForRemote(remote);
             }
         }
 
@@ -73,14 +73,14 @@ namespace Gerrit
                 )
                     return false;
 
-                var remotes = GitCommands.Settings.Module.GetRemotes();
+                var remotes = GitCommands.GitModule.Current.GetRemotes();
 
                 return remotes.Contains(DefaultRemote);
             }
 
             public static GerritSettings Load()
             {
-                string path = GitCommands.Settings.WorkingDir + ".gitreview";
+                string path = GitCommands.GitModule.CurrentWorkingDir + ".gitreview";
 
                 if (!File.Exists(path))
                     return null;
