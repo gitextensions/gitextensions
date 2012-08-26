@@ -1430,7 +1430,7 @@ namespace GitUI
             WrapRepoHostingCall("Create pull request", gitHoster,
                                 gh =>
                                 {
-                                    using (var frm = new CreatePullRequestForm(gitHoster, chooseRemote, chooseBranch)) frm.ShowDialog(owner);
+                                    new CreatePullRequestForm(gitHoster, chooseRemote, chooseBranch).Show(owner);
                                 });
         }
 
