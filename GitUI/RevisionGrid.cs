@@ -1718,14 +1718,6 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-        private void CheckoutBranch(string branch, Settings.LocalChanges changes)
-        {
-            if (changes == Settings.LocalChanges.Stash && GitModule.Current.IsDirtyDir())
-                GitUICommands.Instance.Stash(this);
-            var command = GitCommandHelpers.CheckoutCmd(branch, changes);
-            FormProcess.ShowDialog(this, command);
-        }
-
         private void ToolStripItemClickCheckoutBranch(object sender, EventArgs e)
         {
             var toolStripItem = sender as ToolStripItem;
@@ -1734,11 +1726,7 @@ namespace GitUI
                 return;
 
             string branch = toolStripItem.Text;
-            // TODO: do-do do-do checkbox in checkout branch dialog
-            if (!GitModule.Current.IsDirtyDir())
-                CheckoutBranch(toolStripItem.Text, Settings.CheckoutBranchAction);
-            else
-                GitUICommands.Instance.StartCheckoutBranchDialog(this, branch, false, true);
+            GitUICommands.Instance.StartCheckoutBranchDialog(this, branch, false);
 
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
@@ -1807,7 +1795,7 @@ namespace GitUI
                                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
-            CheckoutBranch(GetRevision(LastRow).Guid, Settings.CheckoutBranchAction);
+            GitUICommands.Instance.StartCheckoutBranchDialog(this, GetRevision(LastRow).Guid, false);            
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
         }
