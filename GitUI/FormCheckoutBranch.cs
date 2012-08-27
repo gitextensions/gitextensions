@@ -73,7 +73,7 @@ namespace GitUI
                     Branches.SelectedIndex = 0;
             }
 
-            isDirtyDir = Settings.Module.IsDirtyDir();
+            isDirtyDir = GitModule.Current.IsDirtyDir();
             localChangesGB.Visible = isDirtyDir;
             ChangesMode = Settings.CheckoutBranchAction;
             defaultActionChx.Checked = Settings.UseDefaultCheckoutBranchAction;
@@ -173,7 +173,7 @@ namespace GitUI
                         DialogResult = DialogResult.None;
                         return DialogResult.None;
                     }
-                    if (!Settings.Module.CheckRefFormat(cmd.NewBranchName))
+                    if (!GitModule.Current.CheckRefFormat(cmd.NewBranchName))
                     {
                         MessageBox.Show(string.Format(_customBranchNameIsNotValid.Text, cmd.NewBranchName), Text);
                         DialogResult = DialogResult.None;
@@ -205,7 +205,7 @@ namespace GitUI
 
             IWin32Window _owner = Visible ? this : Owner;
 
-            if (changes == Settings.LocalChanges.Stash && Settings.Module.IsDirtyDir())
+            if (changes == Settings.LocalChanges.Stash && GitModule.Current.IsDirtyDir())
                 GitUICommands.Instance.Stash(_owner);
 
             {
@@ -243,7 +243,7 @@ namespace GitUI
 
         private static bool LocalBranchExists(string name)
         {
-            return Settings.Module.GetHeads(false).Any(head => head.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            return GitModule.Current.GetHeads(false).Any(head => head.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
 
         private void Branches_SelectedIndexChanged(object sender, EventArgs e)
@@ -258,7 +258,7 @@ namespace GitUI
             }
             else
             {
-                _remoteName = GitModule.GetRemoteName(_branch, Settings.Module.GetRemotes(false));
+                _remoteName = GitModule.GetRemoteName(_branch, GitModule.Current.GetRemotes(false));
                 _localBranchName = _branch.Substring(_remoteName.Length + 1);
                 _newLocalBranchName = string.Concat(_remoteName, "_", _localBranchName);
                 int i = 2;
