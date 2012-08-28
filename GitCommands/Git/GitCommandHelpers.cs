@@ -434,12 +434,6 @@ namespace GitCommands
             return string.Format("checkout{0} \"{1}\"", args, branchOrRevisionName);
         }
 
-        public static string CheckoutCmd(string branchOrRevisionName)
-        {
-            Settings.LocalChanges changes = Settings.CheckoutBranchAction;
-            return CheckoutCmd(branchOrRevisionName, changes);
-        }
-
         public static string BranchCmd(string branchName, string revision, bool checkout)
         {
             if (checkout)
