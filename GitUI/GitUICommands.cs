@@ -228,7 +228,7 @@ namespace GitUI
             return StartBatchFileProcessDialog(null, batchFile);
         }
 
-        public bool StartCommandLineProcessDialog(GitCommand cmd, Form parentForm)
+        public bool StartCommandLineProcessDialog(GitCommand cmd, IWin32Window parentForm)
         {
             if (cmd.AccessesRemote())
                 return FormRemoteProcess.ShowDialog(parentForm, cmd.ToLine());
@@ -311,7 +311,7 @@ namespace GitUI
             FormProcess.ShowDialog(owner, arguments);
         }
 
-        public bool StartCheckoutBranchDialog(IWin32Window owner, string branch, bool remote, string containRevison, bool showOptions)
+        public bool StartCheckoutBranchDialog(IWin32Window owner, string branch, bool remote, string containRevison)
         {
             if (!RequiresValidWorkingDir(owner))
                 return false;
@@ -319,69 +319,45 @@ namespace GitUI
             if (!InvokeEvent(owner, PreCheckoutBranch))
                 return false;
 
-            using (var form = new FormCheckoutBranch(branch, remote, containRevison, showOptions))
+            using (var form = new FormCheckoutBranch(branch, remote, containRevison))
             {
-                if (form.ShowDialog(owner) == DialogResult.Cancel)
+                if (form.DoDefaultActionOrShow(owner) == DialogResult.Cancel)
                     return false;
             }
 
             InvokeEvent(owner, PostCheckoutBranch);
 
             return true;
-        }
-
-        public bool StartCheckoutBranchDialog(IWin32Window owner, string branch, bool remote, string containRevison)
-        {
-            return StartCheckoutBranchDialog(owner, branch, remote, containRevison, false);
         }
 
         public bool StartCheckoutBranchDialog(IWin32Window owner, string branch, bool remote)
         {
-            return StartCheckoutBranchDialog(null, branch, remote, null, false);
-        }
-
-        public bool StartCheckoutBranchDialog(IWin32Window owner, string branch, bool remote, bool showOptions)
-        {
-            return StartCheckoutBranchDialog(null, branch, remote, null, showOptions);
+            return StartCheckoutBranchDialog(null, branch, remote, null);
         }
 
         public bool StartCheckoutBranchDialog(string branch, bool remote)
         {
-            return StartCheckoutBranchDialog(null, branch, remote, null, false);
+            return StartCheckoutBranchDialog(null, branch, remote, null);
         }
 
         public bool StartCheckoutBranchDialog(string containRevison)
         {
-            return StartCheckoutBranchDialog(null, "", false, containRevison, false);
+            return StartCheckoutBranchDialog(null, "", false, containRevison);
         }
 
         public bool StartCheckoutBranchDialog(IWin32Window owner)
         {
-            return StartCheckoutBranchDialog(owner, "", false, null, false);
+            return StartCheckoutBranchDialog(owner, "", false, null);
         }
 
         public bool StartCheckoutBranchDialog()
         {
-            return StartCheckoutBranchDialog(null, "", false, null, false);
+            return StartCheckoutBranchDialog(null, "", false, null);
         }
 
         public bool StartCheckoutRemoteBranchDialog(IWin32Window owner, string branch)
         {
-            if (!RequiresValidWorkingDir(owner))
-                return false;
-
-            if (!InvokeEvent(owner, PreCheckoutBranch))
-                return false;
-
-            using (var form = new FormCheckoutRemoteBranch(branch))
-            {
-                if (form.ShowDialog(owner) == DialogResult.Cancel)
-                    return false;
-            }
-
-            InvokeEvent(owner, PostCheckoutBranch);
-
-            return true;
+            return StartCheckoutBranchDialog(owner, branch, true);
         }
 
         public bool StartCompareRevisionsDialog(IWin32Window owner)
