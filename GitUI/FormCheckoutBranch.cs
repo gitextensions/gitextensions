@@ -27,7 +27,6 @@ namespace GitUI
 
         private string _containRevison;
         private bool isDirtyDir;
-        private string _branch = "";
         private string _remoteName = "";
         private string _newLocalBranchName = "";
         private string _localBranchName = "";
