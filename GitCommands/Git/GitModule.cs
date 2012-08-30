@@ -1503,15 +1503,15 @@ namespace GitCommands
 
         public string CommitCmd(bool amend)
         {
-            return CommitCmd(amend, false, "");
+            return CommitCmd(amend, false, "", true);
         }
 
         public string CommitCmd(bool amend, string author)
         {
-            return CommitCmd(amend, false, author);
+            return CommitCmd(amend, false, author, true);
         }
 
-        public string CommitCmd(bool amend, bool signOff, string author)
+        public string CommitCmd(bool amend, bool signOff, string author, bool useExplicitCommitMessage)
         {
             string command = "commit";
             if (amend)
@@ -1523,8 +1523,11 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(author))
                 command += " --author=\"" + author + "\"";
 
-            var path = WorkingDirGitDir() + Settings.PathSeparator.ToString() + "COMMITMESSAGE\"";
-            command += " -F \"" + path;
+            if (useExplicitCommitMessage)
+            {
+                var path = WorkingDirGitDir() + Settings.PathSeparator.ToString() + "COMMITMESSAGE\"";
+                command += " -F \"" + path;
+            }
 
             return command;
         }
