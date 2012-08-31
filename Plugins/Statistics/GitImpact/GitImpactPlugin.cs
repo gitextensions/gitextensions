@@ -18,13 +18,13 @@ namespace GitImpact
         {
         }
 
-        public bool Execute(GitUIBaseEventArgs gitUiCommands)
+        public bool Execute(GitUIBaseEventArgs gitUIEventArgs)
         {
-            if (string.IsNullOrEmpty(gitUiCommands.GitWorkingDir))
+            if (string.IsNullOrEmpty(gitUIEventArgs.Module.GitWorkingDir))
                 return false;
 
             using (FormImpact form = new FormImpact())
-                form.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+                form.ShowDialog(gitUIEventArgs.OwnerForm as IWin32Window);
             return false;
         }
 

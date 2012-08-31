@@ -19,7 +19,7 @@ namespace GitCommands
     /// Class provide non-static methods for manipulation with git module.
     /// You can create several instances for submodules.
     /// </summary>
-    public sealed class GitModule : IGitCommands
+    public sealed class GitModule : IGitModule
     {
         private static readonly Regex DefaultHeadPattern = new Regex("refs/remotes/[^/]+/HEAD", RegexOptions.Compiled);
 
@@ -2416,5 +2416,47 @@ namespace GitCommands
             RunCmd(Settings.GitCommand, string.Format("check-ref-format --allow-onelevel \"{0}\"", refName), out exitCode);
             return exitCode == 0;
         }
+
+        #region IGitCommands
+
+        public string GitWorkingDir
+        {
+            get
+            {
+                return GitModule.CurrentWorkingDir;
+            }
+        }
+
+        public bool IsValidGitWorkingDir(string workingDir)
+        {
+            return ValidWorkingDir(workingDir);
+        }
+
+        public string GitCommand
+        {
+            get
+            {
+                return Settings.GitCommand;
+            }
+        }
+
+        public string GitVersion
+        {
+            get
+            {
+                return Settings.GitExtensionsVersionInt.ToString();
+            }
+        }
+
+        public string GravatarCacheDir
+        {
+            get
+            {
+                return Settings.GravatarCachePath;
+            }
+        }
+
+        #endregion
+
     }
 }

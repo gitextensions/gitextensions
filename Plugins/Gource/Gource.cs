@@ -28,9 +28,11 @@ namespace Gource
             Settings.AddSetting("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
         }
 
-        public bool Execute(GitUIBaseEventArgs gitUiCommands)
+        public bool Execute(GitUIBaseEventArgs eventArgs)
         {
-            var ownerForm = gitUiCommands.OwnerForm as IWin32Window;
+
+            IGitModule gitUiCommands = eventArgs.Module;
+            var ownerForm = eventArgs.OwnerForm as IWin32Window;
             if (!gitUiCommands.IsValidGitWorkingDir(gitUiCommands.GitWorkingDir))
             {
                 MessageBox.Show(ownerForm, "The current directory is not a valid git repository." + Environment.NewLine +
@@ -44,7 +46,7 @@ namespace Gource
             {
                 if (!File.Exists(pathToGource))
                 {
-                    if (MessageBox.Show(gitUiCommands.OwnerForm as IWin32Window,
+                    if (MessageBox.Show(ownerForm,
                             "Cannot find \"gource\" in the configured path: " + pathToGource +
                             ".\n\n.Do you want to reset the configured path?", "Gource", MessageBoxButtons.YesNo) ==
                         DialogResult.Yes)
@@ -94,7 +96,7 @@ namespace Gource
                 }
             }
             
-            using (var gourceStart = new GourceStart(pathToGource, gitUiCommands,
+            using (var gourceStart = new GourceStart(pathToGource, eventArgs,
                                               Settings.GetSetting("Arguments")))
             {
                 gourceStart.ShowDialog(ownerForm);
