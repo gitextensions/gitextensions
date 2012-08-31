@@ -579,6 +579,11 @@ namespace GitUI
         {
             ResetRemoteHeads();
 
+            // update the label text of the Remote Url
+            labelRemoteUrl.Text = GitModule.Current.GetPathSetting(
+                string.Format(FormRemotes.RemoteUrlSettingKey, _NO_TRANSLATE_Remotes.Text));
+
+            // update merge options radio buttons
             Merge.Enabled = !PullAll();
             Rebase.Enabled = !PullAll();
             if (PullAll())
