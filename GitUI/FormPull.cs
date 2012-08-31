@@ -485,9 +485,14 @@ namespace GitUI
         private void PullFromRemoteCheckedChanged(object sender, EventArgs e)
         {
             if (!PullFromRemote.Checked)
+            {
                 return;
+            }
 
             ResetRemoteHeads();
+
+            label3.Visible = true;
+            labelRemoteUrl.Visible = true;
             PullSource.Enabled = false;
             BrowseSource.Enabled = false;
             _NO_TRANSLATE_Remotes.Enabled = true;
@@ -510,9 +515,14 @@ namespace GitUI
         private void PullFromUrlCheckedChanged(object sender, EventArgs e)
         {
             if (!PullFromUrl.Checked)
+            {
                 return;
+            }
 
             ResetRemoteHeads();
+
+            label3.Visible = false;
+            labelRemoteUrl.Visible = false;
             PullSource.Enabled = true;
             BrowseSource.Enabled = true;
             _NO_TRANSLATE_Remotes.Enabled = false;
@@ -560,7 +570,9 @@ namespace GitUI
         private void Remotes_TextChanged(object sender, EventArgs e)
         {
             if (!bInternalUpdate)
+            {
                 RemotesValidating(null, null);
+            }
         }
 
         private void RemotesValidating(object sender, CancelEventArgs e)
@@ -570,14 +582,16 @@ namespace GitUI
             Merge.Enabled = !PullAll();
             Rebase.Enabled = !PullAll();
             if (PullAll())
+            {
                 Fetch.Checked = true;
-
+            }
         }
 
         private void ResetRemoteHeads()
         {
             if (PullAll())
             {
+                // 2012-08-31: this if statement is empty. Why?
             }
 
             Branches.DataSource = null;
