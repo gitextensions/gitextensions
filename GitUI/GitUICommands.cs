@@ -1275,7 +1275,7 @@ namespace GitUI
         {
             try
             {
-                var e = new GitUIEventArgs(ownerForm, Instance);
+                var e = new GitUIEventArgs(ownerForm, Instance, GitModule.Current);
                 if (gitUIEventHandler != null)
                     gitUIEventHandler(sender, e);
 
@@ -1323,7 +1323,7 @@ namespace GitUI
         {
             if (!gitHoster.ConfigurationOk)
             {
-                var eventArgs = new GitUIEventArgs(null, Instance);
+                var eventArgs = new GitUIEventArgs(null, Instance, GitModule.Current);
                 gitHoster.Execute(eventArgs);
             }
 
