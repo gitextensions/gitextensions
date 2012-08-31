@@ -153,9 +153,11 @@ namespace GitUI
             // 
             // New
             // 
+            this.New.Image = global::GitUI.Properties.Resources.New;
+            this.New.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.New.Location = new System.Drawing.Point(3, 10);
             this.New.Name = "New";
-            this.New.Size = new System.Drawing.Size(75, 25);
+            this.New.Size = new System.Drawing.Size(92, 25);
             this.New.TabIndex = 6;
             this.New.Text = "New";
             this.New.UseVisualStyleBackColor = true;
@@ -163,9 +165,11 @@ namespace GitUI
             // 
             // Delete
             // 
+            this.Delete.Image = global::GitUI.Properties.Resources.decrease;
+            this.Delete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Delete.Location = new System.Drawing.Point(3, 41);
             this.Delete.Name = "Delete";
-            this.Delete.Size = new System.Drawing.Size(75, 25);
+            this.Delete.Size = new System.Drawing.Size(92, 25);
             this.Delete.TabIndex = 7;
             this.Delete.Text = "Delete";
             this.Delete.UseVisualStyleBackColor = true;
@@ -173,9 +177,11 @@ namespace GitUI
             // 
             // Save
             // 
+            this.Save.Image = global::GitUI.Properties.Resources.Save;
+            this.Save.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Save.Location = new System.Drawing.Point(3, 72);
             this.Save.Name = "Save";
-            this.Save.Size = new System.Drawing.Size(75, 25);
+            this.Save.Size = new System.Drawing.Size(92, 25);
             this.Save.TabIndex = 5;
             this.Save.Text = "Save";
             this.Save.UseVisualStyleBackColor = true;
