@@ -37,6 +37,8 @@
             this.Stash = new System.Windows.Forms.Button();
             this.Mergetool = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.labelRemoteUrl = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.PullFromUrl = new System.Windows.Forms.RadioButton();
             this.PullFromRemote = new System.Windows.Forms.RadioButton();
             this.AddRemote = new System.Windows.Forms.Button();
@@ -82,7 +84,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.groupBox2);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox3);
-            this.splitContainer1.Size = new System.Drawing.Size(639, 322);
+            this.splitContainer1.Size = new System.Drawing.Size(639, 341);
             this.splitContainer1.SplitterDistance = 80;
             this.splitContainer1.TabIndex = 15;
             this.splitContainer1.TabStop = false;
@@ -95,7 +97,7 @@
             this.PullImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PullImage.Location = new System.Drawing.Point(0, 0);
             this.PullImage.Name = "PullImage";
-            this.PullImage.Size = new System.Drawing.Size(80, 322);
+            this.PullImage.Size = new System.Drawing.Size(80, 341);
             this.PullImage.TabIndex = 18;
             this.PullImage.TabStop = false;
             // 
@@ -106,7 +108,7 @@
             this.panel1.Controls.Add(this.AutoStash);
             this.panel1.Controls.Add(this.Stash);
             this.panel1.Controls.Add(this.Mergetool);
-            this.panel1.Location = new System.Drawing.Point(3, 288);
+            this.panel1.Location = new System.Drawing.Point(3, 307);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(542, 32);
             this.panel1.TabIndex = 41;
@@ -157,6 +159,8 @@
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.labelRemoteUrl);
+            this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.PullFromUrl);
             this.groupBox2.Controls.Add(this.PullFromRemote);
             this.groupBox2.Controls.Add(this.AddRemote);
@@ -165,15 +169,34 @@
             this.groupBox2.Controls.Add(this.PullSource);
             this.groupBox2.Location = new System.Drawing.Point(3, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(541, 80);
+            this.groupBox2.Size = new System.Drawing.Size(541, 109);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Pull from";
             // 
+            // labelRemoteUrl
+            // 
+            this.labelRemoteUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelRemoteUrl.Location = new System.Drawing.Point(145, 44);
+            this.labelRemoteUrl.Name = "labelRemoteUrl";
+            this.labelRemoteUrl.Size = new System.Drawing.Size(387, 15);
+            this.labelRemoteUrl.TabIndex = 7;
+            this.labelRemoteUrl.Text = "...";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(106, 44);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(22, 15);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "Url";
+            // 
             // PullFromUrl
             // 
             this.PullFromUrl.AutoSize = true;
-            this.PullFromUrl.Location = new System.Drawing.Point(7, 49);
+            this.PullFromUrl.Location = new System.Drawing.Point(7, 77);
             this.PullFromUrl.Name = "PullFromUrl";
             this.PullFromUrl.Size = new System.Drawing.Size(38, 17);
             this.PullFromUrl.TabIndex = 1;
@@ -225,7 +248,7 @@
             // 
             this.BrowseSource.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.BrowseSource.Enabled = false;
-            this.BrowseSource.Location = new System.Drawing.Point(398, 46);
+            this.BrowseSource.Location = new System.Drawing.Point(398, 74);
             this.BrowseSource.Name = "BrowseSource";
             this.BrowseSource.Size = new System.Drawing.Size(134, 25);
             this.BrowseSource.TabIndex = 5;
@@ -239,7 +262,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.PullSource.Enabled = false;
             this.PullSource.FormattingEnabled = true;
-            this.PullSource.Location = new System.Drawing.Point(148, 48);
+            this.PullSource.Location = new System.Drawing.Point(148, 76);
             this.PullSource.Name = "PullSource";
             this.PullSource.Size = new System.Drawing.Size(244, 23);
             this.PullSource.TabIndex = 4;
@@ -252,7 +275,7 @@
             this.groupBox1.Controls.Add(this.Fetch);
             this.groupBox1.Controls.Add(this.Merge);
             this.groupBox1.Controls.Add(this.Rebase);
-            this.groupBox1.Location = new System.Drawing.Point(3, 174);
+            this.groupBox1.Location = new System.Drawing.Point(3, 201);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(541, 102);
             this.groupBox1.TabIndex = 10;
@@ -300,7 +323,7 @@
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Controls.Add(this.Branches);
             this.groupBox3.Controls.Add(this.label2);
-            this.groupBox3.Location = new System.Drawing.Point(3, 90);
+            this.groupBox3.Location = new System.Drawing.Point(3, 117);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(541, 78);
             this.groupBox3.TabIndex = 8;
@@ -351,7 +374,7 @@
             // 
             this.AcceptButton = this.Pull;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.ClientSize = new System.Drawing.Size(639, 322);
+            this.ClientSize = new System.Drawing.Size(639, 341);
             this.Controls.Add(this.splitContainer1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -402,5 +425,7 @@
         private System.Windows.Forms.Label _NO_TRANSLATE_localBranch;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label labelRemoteUrl;
+        private System.Windows.Forms.Label label3;
     }
 }
