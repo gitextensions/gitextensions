@@ -408,5 +408,10 @@ namespace GitUI
             else
                 label2.Text = _labelUrlAsFetch.Text;
         }
+
+        private void buttonClose_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }
