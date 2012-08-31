@@ -124,17 +124,23 @@ namespace GitUI
 
             if ((string.IsNullOrEmpty(comboBoxPushUrl.Text) && checkBoxSepPushUrl.Checked) ||
                 (comboBoxPushUrl.Text == Url.Text))
+            {
                 checkBoxSepPushUrl.Checked = false;
+            }
 
             if (string.IsNullOrEmpty(_remote))
             {
                 if (string.IsNullOrEmpty(RemoteName.Text) && string.IsNullOrEmpty(Url.Text))
-                    return;
+                {
+                    return; 
+                }
 
                 output = GitModule.Current.AddRemote(RemoteName.Text, Url.Text);
 
                 if (checkBoxSepPushUrl.Checked)
+                {
                     GitModule.Current.SetPathSetting(string.Format("remote.{0}.pushurl", RemoteName.Text), comboBoxPushUrl.Text);
+                }
 
                 if (MessageBox.Show(this, _questionAutoPullBehaviour.Text, _questionAutoPullBehaviourCaption.Text,
                     MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -147,7 +153,9 @@ namespace GitUI
                         ConfigureRemotes();
                     }
                     else
+                    {
                         MessageBox.Show(this, _warningValidRemote.Text, _warningValidRemoteCaption.Text);
+                    }   
                 }
             }
             else
@@ -160,13 +168,19 @@ namespace GitUI
                 GitModule.Current.SetPathSetting(string.Format("remote.{0}.url", RemoteName.Text), Url.Text);
                 GitModule.Current.SetPathSetting(string.Format("remote.{0}.puttykeyfile", RemoteName.Text), PuttySshKey.Text);
                 if (checkBoxSepPushUrl.Checked)
+                {
                     GitModule.Current.SetPathSetting(string.Format("remote.{0}.pushurl", RemoteName.Text), comboBoxPushUrl.Text);
+                }
                 else
+                {
                     GitModule.Current.UnsetSetting(string.Format("remote.{0}.pushurl", RemoteName.Text));
+                }
             }
 
             if (!string.IsNullOrEmpty(output))
+            {
                 MessageBox.Show(this, output, _hintDelete.Text);
+            }
 
             Initialize();
         }
@@ -198,21 +212,27 @@ namespace GitUI
         {
             var output = GitModule.Current.AddRemote("<new>", "");
             if (!string.IsNullOrEmpty(output))
+            {
                 MessageBox.Show(this, output, _hintDelete.Text);
+            }
             Initialize();
         }
 
         private void DeleteClick(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_remote))
+            {
                 return;
+            }
 
             if (MessageBox.Show(this, _questionDeleteRemote.Text, _questionDeleteRemoteCaption.Text, MessageBoxButtons.YesNo) ==
                 DialogResult.Yes)
             {
                 var output = GitModule.Current.RemoveRemote(_remote);
                 if (!string.IsNullOrEmpty(output))
+                {
                     MessageBox.Show(this, output, _hintDelete.Text);
+                }
             }
 
             Initialize();
@@ -388,7 +408,5 @@ namespace GitUI
             else
                 label2.Text = _labelUrlAsFetch.Text;
         }
-
-
     }
 }
