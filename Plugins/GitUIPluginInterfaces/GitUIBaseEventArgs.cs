@@ -20,19 +20,8 @@ namespace GitUIPluginInterfaces
 
         public object OwnerForm { get; private set; }
 
-        public abstract IGitCommands GitCommands { get; }
+        public abstract IGitModule Module { get; }
 
-        public abstract string GitWorkingDir { get; }
-
-        public abstract string GetGitDirectory();
-
-        public abstract bool IsValidGitWorkingDir(string workingDir);
-
-        public abstract string GitCommand { get; }
-
-        public abstract string GitVersion { get; }
-
-        public abstract string GravatarCacheDir { get; }
     }
 
 }
