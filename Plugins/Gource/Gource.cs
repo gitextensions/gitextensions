@@ -31,7 +31,7 @@ namespace Gource
         public bool Execute(GitUIBaseEventArgs eventArgs)
         {
 
-            IGitModule gitUiCommands = eventArgs.Module;
+            IGitModule gitUiCommands = eventArgs.GitModule;
             var ownerForm = eventArgs.OwnerForm as IWin32Window;
             if (!gitUiCommands.IsValidGitWorkingDir(gitUiCommands.GitWorkingDir))
             {

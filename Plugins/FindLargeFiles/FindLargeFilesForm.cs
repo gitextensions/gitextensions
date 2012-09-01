@@ -24,7 +24,7 @@ namespace FindLargeFiles
 
             this.threshold = threshold;
             this.gitUiCommands = gitUiEventArgs;
-            this.gitCommands = gitUiEventArgs.Module;
+            this.gitCommands = gitUiEventArgs.GitModule;
         }
 
         private void findLargeFilesFunction()

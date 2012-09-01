@@ -14,8 +14,8 @@ namespace Gource
             InitializeComponent();
             PathToGource = pathToGource;
             GitUIArgs = gitUIArgs;
-            GitWorkingDir = gitUIArgs.Module.GitWorkingDir;
-            AvatarsDir = gitUIArgs.Module.GravatarCacheDir;
+            GitWorkingDir = gitUIArgs.GitModule.GitWorkingDir;
+            AvatarsDir = gitUIArgs.GitModule.GravatarCacheDir;
             GourceArguments = gourceArguments;
 
             WorkingDir.Text = GitWorkingDir;
@@ -86,7 +86,7 @@ namespace Gource
             Directory.CreateDirectory(gourceAvatarsDir);
             foreach (var file in Directory.GetFiles(gourceAvatarsDir))
                 File.Delete(file);
-            var lines = GitUIArgs.Module.RunGit("log --pretty=format:\"%aE|%aN\"").Split('\n');
+            var lines = GitUIArgs.GitModule.RunGit("log --pretty=format:\"%aE|%aN\"").Split('\n');
             HashSet<string> authors = new HashSet<string>();
             foreach (var line in lines)
             {

@@ -6,15 +6,21 @@ namespace GitUI
 {
     public class GitUIEventArgs : GitUIBaseEventArgs
     {
-        public GitUIEventArgs(IGitUICommands gitUICommands, IGitModule module)
-            : this(null, gitUICommands, module)
+        public GitUIEventArgs()
+            : this(null)
         {
         }
 
-        public GitUIEventArgs(object ownerForm, IGitUICommands gitUICommands, IGitModule module)
-            : base(ownerForm, gitUICommands, module)
+        public GitUIEventArgs(IWin32Window ownerForm, IGitUICommands gitUICommands)
+            : base(ownerForm, gitUICommands)
         {
         }
+
+        public GitUIEventArgs(IWin32Window ownerForm)
+            : this(ownerForm, GitUI.GitUICommands.Instance)
+        {
+        }
+
 
     }
 }
