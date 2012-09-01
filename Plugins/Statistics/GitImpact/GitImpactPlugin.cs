@@ -20,7 +20,7 @@ namespace GitImpact
 
         public bool Execute(GitUIBaseEventArgs gitUIEventArgs)
         {
-            if (string.IsNullOrEmpty(gitUIEventArgs.Module.GitWorkingDir))
+            if (string.IsNullOrEmpty(gitUIEventArgs.GitModule.GitWorkingDir))
                 return false;
 
             using (FormImpact form = new FormImpact())

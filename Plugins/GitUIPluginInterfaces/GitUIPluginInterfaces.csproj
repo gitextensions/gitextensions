@@ -52,11 +52,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="GitUIPostActionEventArgs.cs" />
     <Compile Include="IGitPluginForRepository.cs" />
     <Compile Include="IGitModule.cs" />
     <Compile Include="IGitRemoteCommand.cs" />
