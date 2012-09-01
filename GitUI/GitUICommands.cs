@@ -37,10 +37,10 @@ namespace GitUI
         public event GitUIEventHandler PostDeleteBranch;
 
         public event GitUIEventHandler PreCheckoutRevision;
-        public event GitUIEventHandler PostCheckoutRevision;
+        public event GitUIPostActionEventHandler PostCheckoutRevision;
 
         public event GitUIEventHandler PreCheckoutBranch;
-        public event GitUIEventHandler PostCheckoutBranch;
+        public event GitUIPostActionEventHandler PostCheckoutBranch;
 
         public event GitUIEventHandler PreFileHistory;
         public event GitUIEventHandler PostFileHistory;
@@ -155,17 +155,17 @@ namespace GitUI
 
         public string GitCommand(string arguments)
         {
-            return GitModule.Current.RunGitCmd(arguments);
+            return Module.RunGitCmd(arguments);
         }
 
         public string CommandLineCommand(string cmd, string arguments)
         {
-            return GitModule.Current.RunCmd(cmd, arguments);
+            return Module.RunCmd(cmd, arguments);
         }
 
         private bool RequiresValidWorkingDir(object owner)
         {
-            if (!GitModule.Current.ValidWorkingDir())
+            if (!Module.ValidWorkingDir())
             {
                 MessageBoxes.NotValidGitDirectory(owner as IWin32Window);
                 return false;
@@ -286,18 +286,13 @@ namespace GitUI
 
         public bool StartCheckoutRevisionDialog(IWin32Window owner)
         {
-            if (!RequiresValidWorkingDir(owner))
-                return false;
-
-            if (!InvokeEvent(owner, PreCheckoutRevision))
-                return false;
-
-            using (var form = new FormCheckout())
-                form.ShowDialog(owner);
-
-            InvokeEvent(owner, PostCheckoutRevision);
-
-            return true;
+            return DoAction(owner, true, PreCheckoutRevision, PostCheckoutRevision, () =>
+                {
+                    using (var form = new FormCheckout())
+                        form.ShowDialog(owner);
+                    return true;
+                }
+            );
         }
 
         public bool StartCheckoutRevisionDialog()
@@ -313,22 +308,38 @@ namespace GitUI
 
         public bool StartCheckoutBranchDialog(IWin32Window owner, string branch, bool remote, string containRevison)
         {
-            if (!RequiresValidWorkingDir(owner))
-                return false;
-
-            if (!InvokeEvent(owner, PreCheckoutBranch))
-                return false;
-
-            using (var form = new FormCheckoutBranch(branch, remote, containRevison))
-            {
-                if (form.DoDefaultActionOrShow(owner) == DialogResult.Cancel)
-                    return false;
-            }
-
-            InvokeEvent(owner, PostCheckoutBranch);
-
-            return true;
+            return DoAction(owner, true, PreCheckoutBranch, PostCheckoutBranch, () =>
+                {
+                    using (var form = new FormCheckoutBranch(branch, remote, containRevison))
+                        return form.DoDefaultActionOrShow(owner) != DialogResult.Cancel;                 
+                }
+            );
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="requiresValidWorkingDir">If action requires valid working directory</param>
+        /// <param name="owner">Owner window</param>
+        /// <param name="preEvent">Event invoked before performing action</param>
+        /// <param name="postEvent">Event invoked after performing action</param>
+        /// <param name="action">Action to do</param>
+        /// <returns>true if action was done, false otherwise</returns>
+        public bool DoAction(IWin32Window owner, bool requiresValidWorkingDir, GitUIEventHandler preEvent, GitUIPostActionEventHandler postEvent, Func<bool> action)
+        {
+            if (requiresValidWorkingDir && !RequiresValidWorkingDir(owner))
+                return false;
+            
+            if (!InvokeEvent(owner, preEvent))
+                return false;
+
+            bool actionDone = action();
+
+            InvokePostEvent(owner, actionDone, postEvent);
+
+            return actionDone;
+        }
+
 
         public bool StartCheckoutBranchDialog(IWin32Window owner, string branch, bool remote)
         {
@@ -1271,6 +1282,32 @@ namespace GitUI
             return InvokeEvent(this, ownerForm, gitUIEventHandler);
         }
 
+        public GitModule Module
+        {
+            get
+            {
+                return GitCommands.GitModule.Current;
+            }
+        }
+
+        public IGitModule GitModule
+        {
+            get
+            {
+                return Module;
+            }
+        }
+
+        private void InvokePostEvent(IWin32Window ownerForm, bool actionDone, GitUIPostActionEventHandler gitUIEventHandler)
+        {
+            
+            if (gitUIEventHandler != null)
+            {
+                var e = new GitUIPostActionEventArgs(ownerForm, this, actionDone);
+                gitUIEventHandler(this, e);
+            }
+        }
+        
         internal static bool InvokeEvent(object sender, IWin32Window ownerForm, GitUIEventHandler gitUIEventHandler)
         {
             try

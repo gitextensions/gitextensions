@@ -11,9 +11,9 @@ namespace DeleteUnusedBranches
         private readonly SortableBranchesList branches = new SortableBranchesList();
         private readonly int days;
 		private readonly string referenceBranch;
-        private readonly IGitCommands gitCommands;
+        private readonly IGitModule gitCommands;
 
-        public DeleteUnusedBranchesForm(int days, string referenceBranch, IGitCommands gitCommands)
+        public DeleteUnusedBranchesForm(int days, string referenceBranch, IGitModule gitCommands)
         {
             InitializeComponent();
 

@@ -2,7 +2,7 @@
 
 namespace GitUIPluginInterfaces
 {
-    public interface IGitCommands
+    public interface IGitModule
     {
         IList<IGitSubmodule> GetSubmodules();
 
@@ -11,5 +11,18 @@ namespace GitUIPluginInterfaces
         string RunGit(string arguments, out int exitCode);
 
         string RunBatchFile(string batchFile);
+
+        string GitWorkingDir { get; }
+
+        string GetGitDirectory();
+
+        bool IsValidGitWorkingDir(string workingDir);
+
+        string GitCommand { get; }
+
+        string GitVersion { get; }
+
+        string GravatarCacheDir { get; }
+
     }
 }
