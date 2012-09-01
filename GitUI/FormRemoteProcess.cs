@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using GitCommands;
 using ResourceManager.Translation;
+using GitCommands.Config;
 
 namespace GitUI
 {
@@ -108,7 +109,7 @@ namespace GitUI
 
                     if (string.IsNullOrEmpty(UrlTryingToConnect))
                     {
-                        remoteUrl = GitModule.Current.GetPathSetting(string.Format("remote.{0}.url", Remote));
+                        remoteUrl = GitModule.Current.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
                         if (string.IsNullOrEmpty(remoteUrl))
                             remoteUrl = Remote;
                     }
@@ -139,7 +140,7 @@ namespace GitUI
                 {
                     if (MessageBox.Show(this, _fingerprintNotRegistredText.Text, _fingerprintNotRegistredTextCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        string remoteUrl = GitModule.Current.GetPathSetting(string.Format("remote.{0}.url", Remote));
+                        string remoteUrl = GitModule.Current.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
 
                         if (string.IsNullOrEmpty(remoteUrl))
                             GitModule.Current.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + Remote + "\"");
