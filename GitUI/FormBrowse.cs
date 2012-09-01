@@ -259,7 +259,7 @@ namespace GitUI
             if (plugin == null)
                 return;
 
-            var eventArgs = new GitUIEventArgs(this, GitUICommands.Instance, GitModule.Current);
+            var eventArgs = new GitUIEventArgs(this, GitUICommands.Instance);
 
             string workingDirBefore = GitModule.CurrentWorkingDir;
             bool refresh = plugin.Execute(eventArgs);
