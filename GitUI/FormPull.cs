@@ -9,6 +9,7 @@ using GitUI.Properties;
 using ResourceManager.Translation;
 using Settings = GitCommands.Settings;
 using GitUI.Script;
+using GitCommands.Config;
 
 namespace GitUI
 {
@@ -581,7 +582,7 @@ namespace GitUI
 
             // update the label text of the Remote Url
             labelRemoteUrl.Text = GitModule.Current.GetPathSetting(
-                string.Format(FormRemotes.RemoteUrlSettingKey, _NO_TRANSLATE_Remotes.Text));
+                string.Format(SettingKeyString.RemoteUrl, _NO_TRANSLATE_Remotes.Text));
             label3.Visible = !string.IsNullOrEmpty(labelRemoteUrl.Text);
 
             // update merge options radio buttons
