@@ -7,6 +7,7 @@ using GitUIPluginInterfaces;
 using Git.hub;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using GitCommands.Config;
 
 namespace Github3
 {
@@ -144,7 +145,7 @@ namespace Github3
             string[] remotes = GitCommands.GitModule.Current.GetRemotes(false);
             foreach (string remote in remotes)
             {
-                var url = GitCommands.GitModule.Current.GetSetting(string.Format("remote.{0}.url", remote));
+                var url = GitCommands.GitModule.Current.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                 if (string.IsNullOrEmpty(url))
                     continue;
 
