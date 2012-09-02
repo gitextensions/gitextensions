@@ -4,6 +4,8 @@ namespace GitUIPluginInterfaces
 {
     [Serializable]
     public delegate void GitUIEventHandler(object sender, GitUIBaseEventArgs e);
+    [Serializable]
+    public delegate void GitUIPostActionEventHandler(object sender, GitUIPostActionEventArgs e);
 
     public interface IGitUICommands
     {
@@ -12,8 +14,8 @@ namespace GitUIPluginInterfaces
         event GitUIEventHandler PostArchive;
         event GitUIEventHandler PostBlame;
         event GitUIEventHandler PostBrowse;
-        event GitUIEventHandler PostCheckoutBranch;
-        event GitUIEventHandler PostCheckoutRevision;
+        event GitUIPostActionEventHandler PostCheckoutBranch;
+        event GitUIPostActionEventHandler PostCheckoutRevision;
         event GitUIEventHandler PostCherryPick;
         event GitUIEventHandler PostClone;
         event GitUIEventHandler PostCommit;
@@ -89,6 +91,7 @@ namespace GitUIPluginInterfaces
         event GitUIEventHandler PreBrowseInitialize;
         event GitUIEventHandler BrowseInitialize;
 
+        IGitModule GitModule { get; }
         string GitCommand(string arguments);
         string CommandLineCommand(string cmd, string arguments);
         IGitRemoteCommand CreateRemoteCommand();

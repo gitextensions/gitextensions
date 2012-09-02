@@ -9,13 +9,13 @@ namespace Gource
 {
     public partial class GourceStart : Form
     {
-        public GourceStart(string pathToGource, GitUIBaseEventArgs gitUiCommands, string gourceArguments)
+        public GourceStart(string pathToGource, GitUIBaseEventArgs gitUIArgs, string gourceArguments)
         {
             InitializeComponent();
             PathToGource = pathToGource;
-            GitUIArgs = gitUiCommands;
-            GitWorkingDir = gitUiCommands.GitWorkingDir;
-            AvatarsDir = gitUiCommands.GravatarCacheDir;
+            GitUIArgs = gitUIArgs;
+            GitWorkingDir = gitUIArgs.GitModule.GitWorkingDir;
+            AvatarsDir = gitUIArgs.GitModule.GravatarCacheDir;
             GourceArguments = gourceArguments;
 
             WorkingDir.Text = GitWorkingDir;
@@ -86,7 +86,7 @@ namespace Gource
             Directory.CreateDirectory(gourceAvatarsDir);
             foreach (var file in Directory.GetFiles(gourceAvatarsDir))
                 File.Delete(file);
-            var lines = GitUIArgs.GitCommands.RunGit("log --pretty=format:\"%aE|%aN\"").Split('\n');
+            var lines = GitUIArgs.GitModule.RunGit("log --pretty=format:\"%aE|%aN\"").Split('\n');
             HashSet<string> authors = new HashSet<string>();
             foreach (var line in lines)
             {

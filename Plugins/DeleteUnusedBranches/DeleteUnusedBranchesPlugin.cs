@@ -25,7 +25,7 @@ namespace DeleteUnusedBranches
                 days = 30;
 
 	    string referenceBranch = Settings.GetSetting("Branch where all branches should be merged in");
-            using (var frm = new DeleteUnusedBranchesForm(days, referenceBranch, gitUiCommands.GitCommands)) frm.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+            using (var frm = new DeleteUnusedBranchesForm(days, referenceBranch, gitUiCommands.GitModule)) frm.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
 
             return true;
         }
