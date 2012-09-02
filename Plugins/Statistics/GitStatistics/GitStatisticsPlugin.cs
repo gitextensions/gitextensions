@@ -25,9 +25,9 @@ namespace GitStatistics
             Settings.AddSetting("Ignore submodules (true/false)", "true");
         }
 
-        public bool Execute(GitUIBaseEventArgs gitUiCommands)
+        public bool Execute(GitUIBaseEventArgs gitUIEventArgs)
         {
-            if (string.IsNullOrEmpty(gitUiCommands.GitWorkingDir))
+            if (string.IsNullOrEmpty(gitUIEventArgs.GitModule.GitWorkingDir))
                 return false;
 
             using (var formGitStatistics =
@@ -41,17 +41,17 @@ namespace GitStatistics
                 if (Settings.GetSetting("Ignore submodules (true/false)")
                     .Equals("true", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    foreach (var submodule in gitUiCommands.GitCommands.GetSubmodules())
+                    foreach (var submodule in gitUIEventArgs.GitModule.GetSubmodules())
                     {
                         formGitStatistics.DirectoriesToIgnore += ";";
-                        formGitStatistics.DirectoriesToIgnore += gitUiCommands.GitWorkingDir + submodule.LocalPath;
+                        formGitStatistics.DirectoriesToIgnore += gitUIEventArgs.GitModule.GitWorkingDir + submodule.LocalPath;
                     }
                 }
 
                 formGitStatistics.DirectoriesToIgnore = formGitStatistics.DirectoriesToIgnore.Replace("/", "\\");
-                formGitStatistics.WorkingDir = new DirectoryInfo(gitUiCommands.GitWorkingDir);
+                formGitStatistics.WorkingDir = new DirectoryInfo(gitUIEventArgs.GitModule.GitWorkingDir);
 
-                formGitStatistics.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+                formGitStatistics.ShowDialog(gitUIEventArgs.OwnerForm as IWin32Window);
             }
             return false;
         }
