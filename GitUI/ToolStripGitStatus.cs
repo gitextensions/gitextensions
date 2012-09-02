@@ -87,7 +87,7 @@ namespace GitUI
             CurrentStatus = WorkingStatus.Paused;
         }
 
-        private void GitUICommands_PostCheckout(object sender, GitUIBaseEventArgs e)
+        private void GitUICommands_PostCheckout(object sender, GitUIPostActionEventArgs e)
         {
             CurrentStatus = WorkingStatus.Started;
         }

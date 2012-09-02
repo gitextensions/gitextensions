@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+using System.Windows.Forms;
+
 
 namespace GitUIPluginInterfaces
 {
@@ -9,7 +11,7 @@ namespace GitUIPluginInterfaces
         {
         }
 
-        protected GitUIBaseEventArgs(object ownerForm, IGitUICommands gitUICommands)
+        protected GitUIBaseEventArgs(IWin32Window ownerForm, IGitUICommands gitUICommands)
             : base(false)
         {
             this.OwnerForm = ownerForm;
@@ -18,21 +20,17 @@ namespace GitUIPluginInterfaces
 
         public IGitUICommands GitUICommands { get; private set; }
 
-        public object OwnerForm { get; private set; }
+        public IWin32Window OwnerForm { get; private set; }
 
-        public abstract IGitCommands GitCommands { get; }
+        public IGitModule GitModule
+        {
+            get
+            {
+                return GitUICommands.GitModule;
+            }
+            
+        }
 
-        public abstract string GitWorkingDir { get; }
-
-        public abstract string GetGitDirectory();
-
-        public abstract bool IsValidGitWorkingDir(string workingDir);
-
-        public abstract string GitCommand { get; }
-
-        public abstract string GitVersion { get; }
-
-        public abstract string GravatarCacheDir { get; }
     }
 
 }
