@@ -39,13 +39,13 @@ namespace AutoCompileSubmodules
         public bool Execute(GitUIBaseEventArgs e)
         {
             // Only build when plugin is enabled
-            if (string.IsNullOrEmpty(e.GitWorkingDir))
+            if (string.IsNullOrEmpty(e.GitModule.GitWorkingDir))
                 return false;
 
             var arguments = Settings.GetSetting("msbuild.exe arguments");
             var msbuildpath = Settings.GetSetting("Path to msbuild.exe");
 
-            var workingDir = new DirectoryInfo(e.GitWorkingDir);
+            var workingDir = new DirectoryInfo(e.GitModule.GitWorkingDir);
             var solutionFiles = workingDir.GetFiles("*.sln", SearchOption.AllDirectories);
 
             for (var n = solutionFiles.Length - 1; n > 0; n--)
