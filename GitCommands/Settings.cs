@@ -371,7 +371,7 @@ namespace GitCommands
                     int exitCode;
                     String s = GitModule.Current.RunGitCmd(arguments, out exitCode, null, Encoding.UTF8);
                     if (s != null && s.IndexOf(controlStr) != -1)
-                        _SystemEncoding = Encoding.UTF8;
+                        _SystemEncoding = new UTF8Encoding(false);
                     else
                         _SystemEncoding = Encoding.Default;
                     Debug.WriteLine("System encoding: " + _SystemEncoding.EncodingName);
