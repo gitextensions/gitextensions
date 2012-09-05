@@ -1639,7 +1639,7 @@ namespace GitCommands
         public List<Patch> GetStashedItems(string stashName)
         {
             var patchManager = new PatchManager();
-            patchManager.LoadPatch(RunGitCmd("stash show -p " + stashName, Settings.LosslessEncoding), false, Settings.FilesEncoding);
+            patchManager.LoadPatch(RunGitCmd("stash show -p " + stashName, Settings.FilesEncoding), false);
 
             return patchManager.Patches;
         }
@@ -1689,7 +1689,7 @@ namespace GitCommands
 
             var patchManager = new PatchManager();
             var arguments = string.Format("diff {0} -M -C {1} -- {2} {3}", extraDiffArguments, commitRange, fileName, oldFileName);
-            patchManager.LoadPatch(this.RunCachableCmd(Settings.GitCommand, arguments, Settings.LosslessEncoding), false, encoding);
+            patchManager.LoadPatch(this.RunCachableCmd(Settings.GitCommand, arguments, encoding), false);
 
             return patchManager.Patches.Count > 0 ? patchManager.Patches[patchManager.Patches.Count - 1] : null;
         }
@@ -1697,6 +1697,18 @@ namespace GitCommands
         public Patch GetSingleDiff(string @from, string to, string fileName, string extraDiffArguments, Encoding encoding)
         {
             return this.GetSingleDiff(from, to, fileName, null, extraDiffArguments, encoding);
+        }
+
+        public List<Patch> GetDiff(string from, string to, string extraDiffArguments)
+        {
+            if (Settings.UsePatienceDiffAlgorithm)
+                extraDiffArguments = string.Concat(extraDiffArguments, " --patience");
+
+            var patchManager = new PatchManager();
+            var arguments = string.Format("diff{0} \"{1}\" \"{2}\"", extraDiffArguments, from, to);
+            patchManager.LoadPatch(this.RunCachableCmd(Settings.GitCommand, arguments), false);
+
+            return patchManager.Patches;
         }
 
         public string GetStatusText(bool untracked)
@@ -1888,11 +1900,8 @@ namespace GitCommands
             if (staged)
                 args = string.Concat("diff -M -C --cached", extraDiffArguments, " -- ", fileName, " ", oldFileName);
 
-            String result = RunGitCmd(args, Settings.LosslessEncoding);
-            var patchManager = new PatchManager();
-            patchManager.LoadPatch(result, false, encoding);
-
-            return patchManager.Patches.Count > 0 ? patchManager.Patches[patchManager.Patches.Count - 1].Text : string.Empty;
+            String result = RunGitCmd(args, encoding);
+            return GitCommandHelpers.ReEncodeFileName(result, 4);
         }
 
         public string StageFile(string file)
@@ -2216,7 +2225,7 @@ namespace GitCommands
                     else if (line.StartsWith("summary"))
                         blameHeader.Summary = GitCommandHelpers.ReEncodeStringFromLossless(line.Substring("summary".Length).Trim());
                     else if (line.StartsWith("filename"))
-                        blameHeader.FileName = GitCommandHelpers.ReEncodeFileNameFromLossless(line.Substring("filename".Length).Trim());
+                        blameHeader.FileName = GitCommandHelpers.ReEncodeFileName(line.Substring("filename".Length).Trim());
                     else if (line.IndexOf(' ') == 40) //SHA1, create new line!
                     {
                         blameLine = new GitBlameLine();
