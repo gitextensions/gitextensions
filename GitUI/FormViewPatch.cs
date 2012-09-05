@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
 using GitUI;
-using GitCommands;
 using ResourceManager.Translation;
 
 namespace PatchApply
@@ -83,7 +82,7 @@ namespace PatchApply
             try
             {
                 PatchManager.PatchFileName = PatchFileNameEdit.Text;
-                PatchManager.LoadPatchFile(false, Settings.FilesEncoding);
+                PatchManager.LoadPatchFile(false);
 
                 GridChangedFiles.DataSource = PatchManager.Patches;
             }
