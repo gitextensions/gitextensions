@@ -69,8 +69,7 @@ namespace PatchApply
                     }
 
                     if ((input = textReader.ReadLine()) != null)
-                    {
-                        input = GitCommandHelpers.ReEncodeFileNameFromLossless(input);
+                    {                        
                         if (IsUnlistedBinaryFileDelete(input))
                         {
                             patch.File = Patch.FileType.Binary;
