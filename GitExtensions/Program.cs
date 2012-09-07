@@ -101,6 +101,8 @@ namespace GitExtensions
                 string findWorkingDir = GitModule.FindGitWorkingDir(Directory.GetCurrentDirectory());
                 if (GitModule.ValidWorkingDir(findWorkingDir))
                     GitModule.CurrentWorkingDir = findWorkingDir;
+                else
+                    GitModule.CurrentWorkingDir = string.Empty;
             }
 
             FormSplash.HideSplash();
