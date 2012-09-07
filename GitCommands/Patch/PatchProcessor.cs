@@ -16,6 +16,13 @@ namespace PatchApply
             FilesContentEncoding = filesContentEncoding;
         }
 
+        private enum PatchProcessorState
+        {
+            InHeader,
+            InBody,
+            OutsidePatch
+        }
+
         /// <summary>
         /// Diff part of patch is printed verbatim, everything else (header, warnings, ...) is printed in git encoding (Settings.SystemEncoding) 
         /// Since patch may contain diff for more than one file, it would be nice to obtaining encoding for each of file
@@ -28,95 +35,80 @@ namespace PatchApply
         {
             var patches = new List<Patch>();
             Patch patch = null;
-            bool gitPatch = false;
+            bool validate;
             string input;
+            PatchProcessorState state = PatchProcessorState.OutsidePatch;
+
             while ((input = textReader.ReadLine()) != null)
             {
+                validate = true;
                 if (IsStartOfANewPatch(input))
                 {
-                    gitPatch = true;
+                    state = PatchProcessorState.InHeader;
+                    validate = false;
                     patch = new Patch();
+                    patches.Add(patch);
                     input = GitCommandHelpers.ReEncodeFileNameFromLossless(input);
                     patch.PatchHeader = input;
-                    patch.AppendTextLine(patch.PatchHeader);
-                    patches.Add(patch);
-                    ExtractPatchFilenames(input, patch);
-                    if ((input = textReader.ReadLine()) != null)
+                    patch.Type = Patch.PatchType.ChangeFile;
+                    ExtractPatchFilenames(patch);
+                }
+                else if (state == PatchProcessorState.InHeader)
+                {
+                    if (IsChunkHeader(input))
+                        state = PatchProcessorState.InBody;
+                    else
                     {
-                        if (IsStartOfANewPatch(input))
-                        {
-                            continue;
-                        }
-
-                        SetPatchType(input, patch);
-
-                        if (patch.Type == Patch.PatchType.ChangeFileMode)
-                        {
-                            patch.AppendTextLine(input);
-                        }
-                        else if (!IsIndexLine(input))
-                        {
-                            if (textReader.ReadLine() == null)
-                            {
-                                break;
-                            }
+                        //header lines are encoded in Settings.SystemEncoding
+                        input = GitCommandHelpers.ReEncodeStringFromLossless(input, Settings.SystemEncoding);
+                        if (IsIndexLine(input))
+                        {                            
+                            validate = false;
+                            patch.PatchIndex = input;
                         }
                         else
                         {
-                            patch.PatchIndex = input;
-                            patch.AppendTextLine(patch.PatchIndex);
-                        }
-                    }
+                            if (SetPatchType(input, patch))
+                            { }
+                            else if (IsUnlistedBinaryFileDelete(input))
+                            {
+                                if (patch.Type != Patch.PatchType.DeleteFile)
+                                    throw new FormatException("Change not parsed correct: " + input);
 
-                    if ((input = textReader.ReadLine()) != null)
-                    {                        
-                        if (IsUnlistedBinaryFileDelete(input))
-                        {
-                            patch.File = Patch.FileType.Binary;
+                                patch.File = Patch.FileType.Binary;
+                                patch = null;
+                                state = PatchProcessorState.OutsidePatch;
+                            }
+                            else if (IsUnlistedBinaryNewFile(input))
+                            {
+                                if (patch.Type != Patch.PatchType.NewFile)
+                                    throw new FormatException("Change not parsed correct: " + input);
 
-                            if (patch.Type != Patch.PatchType.DeleteFile)
-                                throw new FormatException("Change not parsed correct: " + input);
+                                patch.File = Patch.FileType.Binary;
+                                //TODO: NOT SUPPORTED!
+                                patch.Apply = false;
+                                patch = null;
+                                state = PatchProcessorState.OutsidePatch;
+                            }
+                            else if (IsBinaryPatch(input))
+                            {
+                                patch.File = Patch.FileType.Binary;
 
-                            patch = null;
-                            continue;
-                        }
-
-                        if (IsUnlistedBinaryNewFile(input))
-                        {
-                            patch.File = Patch.FileType.Binary;
-
-                            if (patch.Type != Patch.PatchType.NewFile)
-                                throw new FormatException("Change not parsed correct: " + input);
-
-                            //TODO: NOT SUPPORTED!
-                            patch.Apply = false;
-
-                            patch = null;
-
-                            continue;
-                        }
-
-                        if (IsBinaryPatch(input))
-                        {
-                            patch.File = Patch.FileType.Binary;
-
-                            //TODO: NOT SUPPORTED!
-                            patch.Apply = false;
-
-                            patch = null;
-
-                            continue;
+                                //TODO: NOT SUPPORTED!
+                                patch.Apply = false;
+                                patch = null;
+                                state = PatchProcessorState.OutsidePatch;
+                            }
                         }
                     }
                 }
 
-                if (!gitPatch || patch != null)
+                if (state != PatchProcessorState.OutsidePatch)
                 {
-                    ValidateInput(ref input, patch, gitPatch);
-                }
-
-                if (patch != null)
+                    if (validate)
+                        ValidateInput(ref input, patch, state);
                     patch.AppendTextLine(input);
+                }
             }
 
             return patches;
@@ -127,53 +119,59 @@ namespace PatchApply
             return input.StartsWith("index ");
         }
 
-        private void ValidateInput(ref string input, Patch patch, bool gitPatch)
+        private void ValidateInput(ref string input, Patch patch, PatchProcessorState state)
         {
-            //The previous check checked only if the file was binary
-            //--- /dev/null
-            //means there is no old file, so this should be a new file
-            if (IsOldFileMissing(input))
+            if (state == PatchProcessorState.InHeader)
             {
-                if (gitPatch && patch.Type != Patch.PatchType.NewFile)
-                    throw new FormatException("Change not parsed correct: " + input);
-            }
-            //line starts with --- means, old file name
-            else if (HasOldFileName(input))
-            {
-                input = GitCommandHelpers.ReEncodeFileNameFromLossless(input);
-                if (gitPatch && patch.FileNameA != (input.Substring(6).Trim()))
-                    throw new FormatException("Old filename not parsed correct: " + input);
-            }
-            else if (IsNewFileMissing(input))
-            {
-                if (gitPatch && patch.Type != Patch.PatchType.DeleteFile)
-                    throw new FormatException("Change not parsed correct: " + input);
-            }
+                //--- /dev/null
+                //means there is no old file, so this should be a new file
+                if (IsOldFileMissing(input))
+                {
+                    if (patch.Type != Patch.PatchType.NewFile)
+                        throw new FormatException("Change not parsed correct: " + input);
+                }
+                //line starts with --- means, old file name
+                else if (input.StartsWith("--- "))
+                {
+                    input = GitCommandHelpers.UnquoteFileName(input);
+                    Match regexMatch = Regex.Match(input, "[-]{3}[ ][\\\"]{0,1}[a]/(.*)[\\\"]{0,1}");
 
-            //line starts with +++ means, new file name
-            //we expect a new file now!
-            else if (input.StartsWith("+++ ") && !IsNewFileMissing(input))
-            {
-                input = GitCommandHelpers.ReEncodeFileNameFromLossless(input);
-                Match regexMatch = Regex.Match(input, "[+]{3}[ ][\\\"]{0,1}[b]/(.*)[\\\"]{0,1}");
+                    if (!regexMatch.Success || patch.FileNameA != (regexMatch.Groups[1].Value.Trim()))
+                        throw new FormatException("Old filename not parsed correct: " + input);
+                }
+                else if (IsNewFileMissing(input))
+                {
+                    if (patch.Type != Patch.PatchType.DeleteFile)
+                        throw new FormatException("Change not parsed correct: " + input);
+                }
 
-                if (gitPatch && patch.FileNameB != (regexMatch.Groups[1].Value.Trim()))
-                    throw new FormatException("New filename not parsed correct: " + input);
+                //line starts with +++ means, new file name
+                //we expect a new file now!
+                else if (input.StartsWith("+++ "))
+                {
+                    input = GitCommandHelpers.UnquoteFileName(input);
+                    Match regexMatch = Regex.Match(input, "[+]{3}[ ][\\\"]{0,1}[b]/(.*)[\\\"]{0,1}");
+
+                    if (!regexMatch.Success || patch.FileNameB != (regexMatch.Groups[1].Value.Trim()))
+                        throw new FormatException("New filename not parsed correct: " + input);
+                }
             }
-            else if (input.StartsWithAny(new string[] { " ", "-", "+", "@" }))
-                input = GitCommandHelpers.ReEncodeStringFromLossless(input, FilesContentEncoding);
             else
-                input = GitCommandHelpers.ReEncodeStringFromLossless(input, Settings.SystemEncoding);
+            {
+                input = GitCommandHelpers.ReEncodeStringFromLossless(input, FilesContentEncoding);
+                if (!input.StartsWithAny(new string[] { " ", "-", "+", "@", "\\" }))
+                    throw new FormatException("Line starts with unexpected character: " + input);
+            }               
+        }
+
+        private static bool IsChunkHeader(string input)
+        {
+            return input.StartsWith("@@");
         }
 
         private static bool IsNewFileMissing(string input)
         {
             return input.StartsWith("+++ /dev/null");
-        }
-
-        private static bool HasOldFileName(string input)
-        {
-            return input.StartsWith("--- a/");
         }
 
         private static bool IsOldFileMissing(string input)
@@ -196,9 +194,9 @@ namespace PatchApply
             return input.StartsWith("Binary files /dev/null and b/") && input.EndsWith(" differ");
         }
 
-        private static void ExtractPatchFilenames(string input, Patch patch)
+        private static void ExtractPatchFilenames(Patch patch)
         {
-            Match match = Regex.Match(input,
+            Match match = Regex.Match(patch.PatchHeader,
                                       "[ ][\\\"]{0,1}[a]/(.*)[\\\"]{0,1}[ ][\\\"]{0,1}[b]/(.*)[\\\"]{0,1}");
 
             patch.FileNameA = match.Groups[1].Value;
@@ -210,7 +208,7 @@ namespace PatchApply
             return input.StartsWith("diff --git ");
         }
 
-        private static void SetPatchType(string input, Patch patch)
+        private static bool SetPatchType(string input, Patch patch)
         {
             if (input.StartsWith("new file mode "))
                 patch.Type = Patch.PatchType.NewFile;
@@ -219,7 +217,9 @@ namespace PatchApply
             else if (input.StartsWith("old mode "))
                 patch.Type = Patch.PatchType.ChangeFileMode;
             else
-                patch.Type = Patch.PatchType.ChangeFile;
+                return false;
+
+            return true;
         }
     }
 }
