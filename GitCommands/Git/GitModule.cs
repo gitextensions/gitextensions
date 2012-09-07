@@ -32,7 +32,7 @@ namespace GitCommands
         private GitModule _superprojectModule;
         private string _submoduleName;
 
-        private static GitModule _Current = null;
+        private static GitModule _Current = new GitModule(null);
         /// <summary>
         /// Global module for current working dir
         /// </summary>
@@ -93,7 +93,7 @@ namespace GitCommands
             }
             private set
             {
-                _workingdir = FindGitWorkingDir(value.Trim());
+                _workingdir = FindGitWorkingDir(value);
                 string superprojectDir = FindGitSuperprojectPath(out _submoduleName);
                 _superprojectModule = superprojectDir == null ? null : new GitModule(superprojectDir);
             }
@@ -193,6 +193,8 @@ namespace GitCommands
         {
             if (string.IsNullOrEmpty(startDir))
                 return "";
+
+            startDir = startDir.Trim();
 
             var pathSeparators = new[] { Settings.PathSeparator, Settings.PathSeparatorWrong };
             var len = startDir.Length;
