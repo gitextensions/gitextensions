@@ -78,6 +78,7 @@ namespace GitUI
                 Height += _NO_TRANSLATE_Description.Height + 2;
             }
 
+            _NO_TRANSLATE_Panel.MinimumSize = new Size(0, _NO_TRANSLATE_Title.Height);
 
             if (icon != null)
                 Icon.Image = icon;
