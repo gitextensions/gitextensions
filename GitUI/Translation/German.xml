@@ -36,7 +36,7 @@ This action cannot be made undone.</Source>
           <Source>&amp;OK</Source>
           <Value>Ok</Value>
         </TranslationItem>
-        <TranslationItem Name="textBoxDescription" Property="Text">
+        <TranslationItem Name="textBoxDescription" Property="Text" type="obsolete">
           <Source>Git extensions - Visual Studio and Shell Explorer Extensions for Git
 
 This program is destributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.</Source>
@@ -281,7 +281,7 @@ Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen vo
           <Source>Develop</Source>
           <Value>Weiterentwickeln</Value>
         </TranslationItem>
-        <TranslationItem Name="directoryIsNotAValidRepository" Property="Text">
+        <TranslationItem Name="directoryIsNotAValidRepository" Property="Text" type="obsolete">
           <Source>The selected item is not a valid git repository.
 
 Do you want to abort and remove it from the recent repositories list?</Source>
@@ -1112,9 +1112,9 @@ You will have push access. {2}</Source>
           <Source>Git Extensions</Source>
           <Value>Git Extensions</Value>
         </TranslationItem>
-        <TranslationItem Name="_configureWorkingDirMenu" Property="Text" type="unfinished">
+        <TranslationItem Name="_configureWorkingDirMenu" Property="Text">
           <Source>Configure this menu</Source>
-          <Value />
+          <Value>Dieses Menü konfigurieren</Value>
         </TranslationItem>
         <TranslationItem Name="_createPullRequestsToolStripMenuItem" Property="Text">
           <Source>Create pull requests</Source>
@@ -1140,8 +1140,8 @@ You will have push access. {2}</Source>
           <Source>index.lock not found at:</Source>
           <Value>index.lock nicht gefunden in:</Value>
         </TranslationItem>
-        <TranslationItem Name="_noBranchTitle" Property="Text">
-          <Source>no branch</Source>
+        <TranslationItem Name="_noBranchTitle" Property="Text" type="obsolete">
+          <Source>kein Branch</Source>
           <Value>kein Branch</Value>
         </TranslationItem>
         <TranslationItem Name="_noReposHostFound" Property="Text">
@@ -1174,7 +1174,7 @@ You will have push access. {2}</Source>
         </TranslationItem>
         <TranslationItem Name="_stashCount" Property="Text">
           <Source>{0} saved {1}</Source>
-          <Value>{0} gespeicherte {1}</Value>
+          <Value>{0} gespeicherte(r) {1}</Value>
         </TranslationItem>
         <TranslationItem Name="_stashPlural" Property="Text">
           <Source>stashes</Source>
@@ -1188,9 +1188,9 @@ You will have push access. {2}</Source>
           <Source>Commit</Source>
           <Value>Commit</Value>
         </TranslationItem>
-        <TranslationItem Name="_UnsupportedMultiselectAction" Property="Text" type="unfinished">
+        <TranslationItem Name="_UnsupportedMultiselectAction" Property="Text">
           <Source>Operation not supported</Source>
-          <Value />
+          <Value>Operation nicht unterstützt</Value>
         </TranslationItem>
         <TranslationItem Name="_viewPullRequestsToolStripMenuItem" Property="Text">
           <Source>View pull requests</Source>
@@ -1280,9 +1280,9 @@ You will have push access. {2}</Source>
           <Source>Close</Source>
           <Value>Schließen</Value>
         </TranslationItem>
-        <TranslationItem Name="collapseAllToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="collapseAllToolStripMenuItem" Property="Text">
           <Source>Collapse all</Source>
-          <Value />
+          <Value>Alle einklappen</Value>
         </TranslationItem>
         <TranslationItem Name="commandsToolStripMenuItem" Property="Text">
           <Source>Commands</Source>
@@ -1352,9 +1352,9 @@ You will have push access. {2}</Source>
           <Source>Donate</Source>
           <Value>Spenden</Value>
         </TranslationItem>
-        <TranslationItem Name="dontSetAsDefaultToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="dontSetAsDefaultToolStripMenuItem" Property="Text">
           <Source>Don't set as default</Source>
-          <Value />
+          <Value>Nicht als Standard setzen</Value>
         </TranslationItem>
         <TranslationItem Name="editCheckedOutFileToolStripMenuItem" Property="Text">
           <Source>Edit checked out file</Source>
@@ -1380,17 +1380,17 @@ You will have push access. {2}</Source>
           <Source>Exit</Source>
           <Value>Beenden</Value>
         </TranslationItem>
-        <TranslationItem Name="expandAllToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="expandAllToolStripMenuItem" Property="Text">
           <Source>Expand all</Source>
-          <Value />
+          <Value>Alle aufklappen</Value>
         </TranslationItem>
-        <TranslationItem Name="fetchAllToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="fetchAllToolStripMenuItem" Property="Text">
           <Source>Fetch all</Source>
-          <Value />
+          <Value>Alle holen (fetch)</Value>
         </TranslationItem>
-        <TranslationItem Name="fetchToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="fetchToolStripMenuItem" Property="Text">
           <Source>Fetch</Source>
-          <Value />
+          <Value>Holen (fetch)</Value>
         </TranslationItem>
         <TranslationItem Name="fileExplorerToolStripMenuItem" Property="Text">
           <Source>File Explorer</Source>
@@ -1576,9 +1576,9 @@ You will have push access. {2}</Source>
           <Source>Remote</Source>
           <Value>Remote</Value>
         </TranslationItem>
-        <TranslationItem Name="resetFileToToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="resetFileToToolStripMenuItem" Property="Text">
           <Source>Reset file to</Source>
-          <Value />
+          <Value>Datei zurücksetzen (reset) zu</Value>
         </TranslationItem>
         <TranslationItem Name="runMergetoolToolStripMenuItem" Property="Text">
           <Source>Solve mergeconflicts</Source>
@@ -1668,9 +1668,9 @@ You will have push access. {2}</Source>
           <Source>Pull</Source>
           <Value>Pull</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripButtonPull" Property="ToolTipText" type="unfinished">
+        <TranslationItem Name="toolStripButtonPull" Property="ToolTipText">
           <Source>Pull - fetch</Source>
-          <Value />
+          <Value>Pull - fetch</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripButtonPush" Property="Text">
           <Source>Push</Source>
@@ -1768,19 +1768,14 @@ You will have push access. {2}</Source>
           <Source>Auto stash</Source>
           <Value>Automatischer Stash</Value>
         </TranslationItem>
-        <TranslationItem Name="_customBranchNameIsEmpty" Property="Text" type="unfinished">
+        <TranslationItem Name="_customBranchNameIsEmpty" Property="Text" type="obsolete">
           <Source>Custom branch name is empty.
 Enter valid branch name or select predefined value.</Source>
-          <Value />
+          <Value>Auto-Stash</Value>
         </TranslationItem>
-        <TranslationItem Name="_customBranchNameIsNotValid" Property="Text" type="unfinished">
-          <Source>“{0}” is not valid branch name.
-Enter valid branch name or select predefined value.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="defaultActionChx" Property="Text" type="unfinished">
+        <TranslationItem Name="defaultActionChx" Property="Text">
           <Source>Remember as default action</Source>
-          <Value />
+          <Value>Als Standard-Aktion merken</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Select branch</Source>
@@ -1790,29 +1785,29 @@ Enter valid branch name or select predefined value.</Source>
           <Source>Local branch</Source>
           <Value>Lokaler Branch</Value>
         </TranslationItem>
-        <TranslationItem Name="localChangesGB" Property="Text" type="unfinished">
+        <TranslationItem Name="localChangesGB" Property="Text">
           <Source>Local changes</Source>
-          <Value />
+          <Value>Lokale Änderungen</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Source>Checkout</Source>
           <Value>Auschecken</Value>
         </TranslationItem>
-        <TranslationItem Name="rbCreateBranch" Property="Text" type="unfinished">
+        <TranslationItem Name="rbCreateBranch" Property="Text">
           <Source>Create local branch with the name '{0}'</Source>
-          <Value />
+          <Value>Erzeuge lokalen Branch mit Namen '{0}'</Value>
         </TranslationItem>
-        <TranslationItem Name="rbCreateBranchWithCustomName" Property="Text" type="unfinished">
+        <TranslationItem Name="rbCreateBranchWithCustomName" Property="Text">
           <Source>Create local branch with custom name:</Source>
-          <Value />
+          <Value>Erzeuge lokalen Branch mit benutzerdefiniertem Namen:</Value>
         </TranslationItem>
-        <TranslationItem Name="rbDontChange" Property="Text" type="unfinished">
+        <TranslationItem Name="rbDontChange" Property="Text">
           <Source>Don't change</Source>
-          <Value />
+          <Value>Nicht ändern</Value>
         </TranslationItem>
-        <TranslationItem Name="rbDontCreate" Property="Text" type="unfinished">
+        <TranslationItem Name="rbDontCreate" Property="Text">
           <Source>Checkout remote branch</Source>
-          <Value />
+          <Value>Remote Branch auschecken</Value>
         </TranslationItem>
         <TranslationItem Name="rbMerge" Property="Text">
           <Source>Merge</Source>
@@ -1910,9 +1905,9 @@ Enter valid branch name or select predefined value.</Source>
           <Source>Cherry pick this commit:</Source>
           <Value>Mit diesem Commit Cherry Pick durchführen</Value>
         </TranslationItem>
-        <TranslationItem Name="checkAddReference" Property="Text" type="unfinished">
+        <TranslationItem Name="checkAddReference" Property="Text">
           <Source>Add commit reference</Source>
-          <Value />
+          <Value>Füge Commit-Referenz hinzu</Value>
         </TranslationItem>
         <TranslationItem Name="columnHeader1" Property="Text">
           <Source>No.</Source>
@@ -2106,9 +2101,9 @@ Wollen Sie das neue Repository "{0}" jetzt öffnen?</Value>
           <Source>&amp;Branch:</Source>
           <Value>Branch</Value>
         </TranslationItem>
-        <TranslationItem Name="cbIntializeAllSubmodules" Property="Text" type="unfinished">
+        <TranslationItem Name="cbIntializeAllSubmodules" Property="Text">
           <Source>Initialize all submodules</Source>
-          <Value />
+          <Value>Alle Untermodule initialisieren</Value>
         </TranslationItem>
         <TranslationItem Name="Central" Property="Text">
           <Source>Central repository, no working dir  (--bare --shared=all)</Source>
@@ -2348,7 +2343,7 @@ Do you want to continue?</Source>
           <Source>Merge conflicts</Source>
           <Value>Konflikte mergen</Value>
         </TranslationItem>
-        <TranslationItem Name="_noFilesStagedAndConfirmAnEmptyMergeCommit" Property="Text">
+        <TranslationItem Name="_noFilesStagedAndConfirmAnEmptyMergeCommit" Property="Text" type="obsolete">
           <Source>There are no files staged for this commit.
 Are you sure you want to commit?</Source>
           <Value>Es gibt keine gestagten Dateien für diesen Commit. 
@@ -2381,11 +2376,11 @@ Möchten Sie trotzdem fortfahren?</Value>
         </TranslationItem>
         <TranslationItem Name="_notOnBranchCaption" Property="Text">
           <Source>Not on a branch</Source>
-          <Value>Sie arbeiten nicht auf einem Branch.</Value>
+          <Value>Nicht auf einem Branch</Value>
         </TranslationItem>
-        <TranslationItem Name="_notOnBranchMainInstruction" Property="Text" type="unfinished">
+        <TranslationItem Name="_notOnBranchMainInstruction" Property="Text">
           <Source>You are not working on a branch</Source>
-          <Value />
+          <Value>Sie arbeiten nicht auf einem Branch.</Value>
         </TranslationItem>
         <TranslationItem Name="_noUnstagedChanges" Property="Text">
           <Source>There are no unstaged changes</Source>
@@ -2489,13 +2484,13 @@ Möchten Sie trotzdem fortfahren?</Value>
           <Source>C&amp;ommit &amp;&amp; push</Source>
           <Value>Commiten &amp;&amp; &amp;Pushen</Value>
         </TranslationItem>
-        <TranslationItem Name="commitCursorColumnLabel" Property="Text" type="unfinished">
+        <TranslationItem Name="commitCursorColumnLabel" Property="Text">
           <Source>Col</Source>
-          <Value />
+          <Value>Spalte</Value>
         </TranslationItem>
-        <TranslationItem Name="commitCursorLineLabel" Property="Text" type="unfinished">
+        <TranslationItem Name="commitCursorLineLabel" Property="Text">
           <Source>Ln</Source>
-          <Value />
+          <Value>Zeile</Value>
         </TranslationItem>
         <TranslationItem Name="commitMessageToolStripMenuItem" Property="Text">
           <Source>Commit &amp;message</Source>
@@ -2513,9 +2508,9 @@ Möchten Sie trotzdem fortfahren?</Value>
           <Source>Commit &amp;templates</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="commitTemplatesToolStripMenuItem" Property="ToolTipText" type="unfinished">
+        <TranslationItem Name="commitTemplatesToolStripMenuItem" Property="ToolTipText">
           <Source>Commit templates</Source>
-          <Value />
+          <Value>Commit-Vorlagen</Value>
         </TranslationItem>
         <TranslationItem Name="copyFolderNameMenuItem" Property="Text">
           <Source>Copy folder name</Source>
@@ -2880,7 +2875,7 @@ Ein Branch zu löschen kann zu gelöschten Commits führen!</Value>
           <Source>Select branches</Source>
           <Value>Branch auswählen</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
+        <TranslationItem Name="label2" Property="Text" type="obsolete">
           <Source>You can only delete branches when they are fully merged in HEAD. 
 When you delete a branch the commits can get lost because nothing point to them.
 When you want to delete a not-fully merged branch, you can override
@@ -2940,7 +2935,7 @@ löschen wollen, können Sie dies mit der Option 'Löschen erzwingen' erreichen.
           <Source>Donate</Source>
           <Value>Spenden</Value>
         </TranslationItem>
-        <TranslationItem Name="richTextBox1" Property="Text">
+        <TranslationItem Name="richTextBox1" Property="Text" type="obsolete">
           <Source>Donate
 
 You can help by making a financial contribution to the project. Donations will be used to cover the costs of hosting a website and to get the resources needed to keep the project running. 
@@ -3128,7 +3123,7 @@ Wollen Sie dass Git Extensions Ihnen hilft das korrekte Verzeichnis zu finden?</
           <Source>Environment</Source>
           <Value>Umgebung</Value>
         </TranslationItem>
-        <TranslationItem Name="label51" Property="Text">
+        <TranslationItem Name="label51" Property="Text" type="obsolete">
           <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
 to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
           <Value>Die globale Git Konfigurationsdatei wird gespeichert in dem unter der Umgebungsvariable %HOME% angegebenen Verzeichnis.
@@ -3183,13 +3178,13 @@ nur, wenn Sie mit dieser Probleme auftreten.</Value>
           <Source>Patch result</Source>
           <Value>Patch Resultat</Value>
         </TranslationItem>
-        <TranslationItem Name="_sendMailResult" Property="Text">
+        <TranslationItem Name="_sendMailResult" Property="Text" type="obsolete">
           <Source>
 
 Send to:</Source>
           <Value>Senden an:</Value>
         </TranslationItem>
-        <TranslationItem Name="_sendMailResultFailed" Property="Text">
+        <TranslationItem Name="_sendMailResultFailed" Property="Text" type="obsolete">
           <Source>
 
 Failed to send mail.</Source>
@@ -3377,7 +3372,7 @@ Bitte prüfen Sie, ob auf die Datei zugegriffen werden kann.</Value>
           <Source>Save changes?</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
+        <TranslationItem Name="label1" Property="Text" type="obsolete">
           <Source>Edit the git attributes
 Define attributes per path
 
@@ -3460,7 +3455,7 @@ Bitte prüfen Sie, ob auf die Datei zugegriffen werden kann.</Value>
           <Source>Add pattern</Source>
           <Value>Muster ignorieren</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
+        <TranslationItem Name="label1" Property="Text" type="obsolete">
           <Source>Specify filepatterns you want git to ignore.
 
 Example:
@@ -3642,7 +3637,7 @@ defaultrebase=0</Source>
           <Source>Choose directory</Source>
           <Value>Verzeichnis wählen</Value>
         </TranslationItem>
-        <TranslationItem Name="_chooseDirectoryNotFile" Property="Text">
+        <TranslationItem Name="_chooseDirectoryNotFile" Property="Text" type="obsolete">
           <Source>Cannot initialize a new repository on a file.
 Please choose a directory.</Source>
           <Value>Bitte geben Sie ein Verzeichnis und keine Datei an. Ein Repository kann nicht in einer Datei initialisiert werden.</Value>
@@ -3713,7 +3708,7 @@ Bitte prüfen Sie, ob auf die Datei zugegriffen werden kann.</Value>
           <Source>Save changes?</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
+        <TranslationItem Name="label1" Property="Text" type="obsolete">
           <Source>Edit the mailmap.
 This file is meant to correct usernames.
 
@@ -4172,7 +4167,7 @@ Sind Sie sich sicher, dass Sie diesen Branch pushen wollen?</Value>
           <Source>Recursive submodules check</Source>
           <Value>Untermodule rekursiv prüfen</Value>
         </TranslationItem>
-        <TranslationItem Name="RemoteBranch" Property="Text" type="obsolete">
+        <TranslationItem Name="RemoteBranch" Property="Text">
           <Source>topic_german_translation</Source>
           <Value>Fataler Fehler: Kein Git Verzeichnis vorhanden (auch nicht in einem übergeordneten Verzeichnis)</Value>
         </TranslationItem>
@@ -4864,7 +4859,7 @@ Ist der Mergekonflikt behoben?</Value>
           <Source>Delete file</Source>
           <Value>Datei löschen</Value>
         </TranslationItem>
-        <TranslationItem Name="fileBinairyChooseLocalBaseRemote" Property="Text">
+        <TranslationItem Name="fileBinairyChooseLocalBaseRemote" Property="Text" type="obsolete">
           <Source>File ({0}) appears to be a binairy file.
 Choose to keep the local({1}), remote({2}) or base file.</Source>
           <Value>Datei ({0}) scheint eine Binärdatei zu sein.
@@ -4878,7 +4873,7 @@ Wählen Sie, ob Sie die lokale ({1}), die Remote-({2}) oder die Basis-Datei beha
           <Source>A file with the same name has been created locally({0}) and remotely({1}). Choose the file you want to keep or merge the files.</Source>
           <Value>Eine Datei mit dem selben Namen wurde lokal ({0}) und beim Remote ({1}) erzeugt. Wählen Sie die Datei aus, die sie behalten möchten oder mergen Sie die Dateien.</Value>
         </TranslationItem>
-        <TranslationItem Name="fileCreatedLocallyAndRemotelyLong" Property="Text">
+        <TranslationItem Name="fileCreatedLocallyAndRemotelyLong" Property="Text" type="obsolete">
           <Source>File {0} does not have a base revision.
 A file with the same name has been created locally({1}) and remotely({2}) causing this conflict.
 
@@ -4892,7 +4887,7 @@ Bitte wählen Sie die Datei aus, die sie behalten möchten, mergen Sie die Datei
           <Source>The file has been deleted locally({0}) and modified remotely({1}). Choose to delete the file or keep the modified version.</Source>
           <Value>Die Datei wurde lokal ({0}) gelöscht und beim Remote ({1}) verändert. Bitte löschen Sie die Datei oder behalten die geänderte Version.</Value>
         </TranslationItem>
-        <TranslationItem Name="fileDeletedLocallyAndModifiedRemotelyLong" Property="Text">
+        <TranslationItem Name="fileDeletedLocallyAndModifiedRemotelyLong" Property="Text" type="obsolete">
           <Source>File {0} does not have a local revision.
 The file has been deleted locally({1}) but modified remotely({2}).
 
@@ -4916,7 +4911,7 @@ Wollen Sie die Datei wirklich mit {0} öffnen?</Value>
           <Source>The file has been modified locally({0}) and deleted remotely({1}). Choose to delete the file or keep the modified version.</Source>
           <Value>Die Datei wurde lokal ({0}) geändert und beim Remote ({1}) gelöscht. Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möchten.</Value>
         </TranslationItem>
-        <TranslationItem Name="fileModifiedLocallyAndDelededRemotelyLong" Property="Text">
+        <TranslationItem Name="fileModifiedLocallyAndDelededRemotelyLong" Property="Text" type="obsolete">
           <Source>File {0} does not have a remote revision.
 The file has been modified locally({1}) but deleted remotely({2}).
 
@@ -4998,7 +4993,7 @@ Der Merge-Konflikt wird als nicht-gelöst markiert. Bitte versuchen Sie es noch 
           <Source>no base</Source>
           <Value>Keine Basis</Value>
         </TranslationItem>
-        <TranslationItem Name="noBaseRevision" Property="Text">
+        <TranslationItem Name="noBaseRevision" Property="Text" type="obsolete">
           <Source>There is no base revision for {0}.
 Fall back to 2-way merge?</Source>
           <Value>Es gibt keine Basis-Version für {0}. Auf einen 2-Wege-Merge wechseln?</Value>
@@ -5071,7 +5066,7 @@ Wollen Sie dieses Skript verwenden?</Value>
           <Source>Reset changes</Source>
           <Value>Änderungen zurücksetzen</Value>
         </TranslationItem>
-        <TranslationItem Name="_undoChangesIn" Property="Text">
+        <TranslationItem Name="_undoChangesIn" Property="Text" type="obsolete">
           <Source>Undo changes in:
 {0}?</Source>
           <Value>Änderungen zurücknehmen in: 
@@ -6270,7 +6265,7 @@ Wollen Sie den Fingerprint dieses Hosts registrieren und den Prozess neu starten
           <Source>Host Fingerprint not registered</Source>
           <Value>Fingerprint von Host nicht registriert</Value>
         </TranslationItem>
-        <TranslationItem Name="_serverHotkeyNotCachedText" Property="Text">
+        <TranslationItem Name="_serverHotkeyNotCachedText" Property="Text" type="obsolete">
           <Source>The server's host key is not cached in the registry.
 
 Do you want to trust this host key and then try again?</Source>
@@ -6512,106 +6507,106 @@ Wollen Sie dieses neue Repository {0} nun öffnen?</Value>
     </TranslationCategory>
     <TranslationCategory Name="FormTranslate">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Source>Translate</Source>
+        <TranslationItem Name="$this" Property="Text" type="obsolete">
+          <Source>Übersetzen</Source>
           <Value>Übersetzen</Value>
         </TranslationItem>
-        <TranslationItem Name="allText" Property="Text">
-          <Source>All</Source>
+        <TranslationItem Name="allText" Property="Text" type="obsolete">
+          <Source>Alle</Source>
           <Value>Alle</Value>
         </TranslationItem>
-        <TranslationItem Name="categoryDataGridViewTextBoxColumn" Property="HeaderText">
-          <Source>Category</Source>
+        <TranslationItem Name="categoryDataGridViewTextBoxColumn" Property="HeaderText" type="obsolete">
+          <Source>Kategorie</Source>
           <Value>Kategorie</Value>
         </TranslationItem>
-        <TranslationItem Name="editingCellPrefixText" Property="Text">
-          <Source>[EDITING]</Source>
+        <TranslationItem Name="editingCellPrefixText" Property="Text" type="obsolete">
+          <Source>[Bearbeite]</Source>
           <Value>[Bearbeite]</Value>
         </TranslationItem>
-        <TranslationItem Name="googleAll" Property="Text">
-          <Source>Google all empty</Source>
+        <TranslationItem Name="googleAll" Property="Text" type="obsolete">
+          <Source>Alle Leeren googlen</Source>
           <Value>Alle Leeren googlen</Value>
         </TranslationItem>
-        <TranslationItem Name="googleTranslate" Property="Text">
-          <Source>Google translate</Source>
+        <TranslationItem Name="googleTranslate" Property="Text" type="obsolete">
+          <Source>Google Übersetzung</Source>
           <Value>Google Übersetzung</Value>
         </TranslationItem>
         <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
           <Source>Name</Source>
           <Value>Name</Value>
         </TranslationItem>
-        <TranslationItem Name="neutralValueDataGridViewTextBoxColumn" Property="HeaderText">
-          <Source>NeutralValue</Source>
+        <TranslationItem Name="neutralValueDataGridViewTextBoxColumn" Property="HeaderText" type="obsolete">
+          <Source>Text aus Code</Source>
           <Value>Text aus Code</Value>
         </TranslationItem>
-        <TranslationItem Name="nextButton" Property="Text">
-          <Source>&amp;Next</Source>
+        <TranslationItem Name="nextButton" Property="Text" type="obsolete">
+          <Source>Nächster Text</Source>
           <Value>Nächster Text</Value>
         </TranslationItem>
-        <TranslationItem Name="noLanguageCodeSelected" Property="Text">
-          <Source>There is no languagecode selected.
-Do you want to select a language code first?</Source>
+        <TranslationItem Name="noLanguageCodeSelected" Property="Text" type="obsolete">
+          <Source>Es ist keine Ländercode ausgewählt.
+Wollen Sie zuerst einen Ländercode auswählen?</Source>
           <Value>Es ist keine Ländercode ausgewählt.
 Wollen Sie zuerst einen Ländercode auswählen?</Value>
         </TranslationItem>
-        <TranslationItem Name="noLanguageCodeSelectedCaption" Property="Text">
-          <Source>Language code</Source>
+        <TranslationItem Name="noLanguageCodeSelectedCaption" Property="Text" type="obsolete">
+          <Source>Ländercode</Source>
           <Value>Ländercode</Value>
         </TranslationItem>
-        <TranslationItem Name="previousButton" Property="Text">
-          <Source>&amp;Previous</Source>
+        <TranslationItem Name="previousButton" Property="Text" type="obsolete">
+          <Source>Vorheriger Text</Source>
           <Value>Vorheriger Text</Value>
         </TranslationItem>
-        <TranslationItem Name="propertyDataGridViewTextBoxColumn" Property="HeaderText">
-          <Source>Property</Source>
+        <TranslationItem Name="propertyDataGridViewTextBoxColumn" Property="HeaderText" type="obsolete">
+          <Source>Typ</Source>
           <Value>Typ</Value>
         </TranslationItem>
-        <TranslationItem Name="saveAs" Property="ToolTipText">
-          <Source>Save translation</Source>
+        <TranslationItem Name="saveAs" Property="ToolTipText" type="obsolete">
+          <Source>Übersetzung speichern</Source>
           <Value>Übersetzung speichern</Value>
         </TranslationItem>
-        <TranslationItem Name="saveAsText" Property="Text">
-          <Source>Save as</Source>
+        <TranslationItem Name="saveAsText" Property="Text" type="obsolete">
+          <Source>Speichern als</Source>
           <Value>Speichern als</Value>
         </TranslationItem>
         <TranslationItem Name="saveAsTextFilter" Property="Text" type="unfinished">
           <Source>Translation file (*.xml)</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="saveCurrentChangesCaption" Property="Text">
-          <Source>Save changes</Source>
+        <TranslationItem Name="saveCurrentChangesCaption" Property="Text" type="obsolete">
+          <Source>Änderungen speichern</Source>
           <Value>Änderungen speichern</Value>
         </TranslationItem>
-        <TranslationItem Name="saveCurrentChangesText" Property="Text">
-          <Source>Do you want to save the current changes?</Source>
+        <TranslationItem Name="saveCurrentChangesText" Property="Text" type="obsolete">
+          <Source>Wollen Sie die Änderungen speichern?</Source>
           <Value>Wollen Sie die Änderungen speichern?</Value>
         </TranslationItem>
-        <TranslationItem Name="selectLanguageCode" Property="Text">
-          <Source>Select a language code first.</Source>
+        <TranslationItem Name="selectLanguageCode" Property="Text" type="obsolete">
+          <Source>Bitte wählen Sie zuerst eine Sprache aus.</Source>
           <Value>Bitte wählen Sie zuerst eine Sprache aus.</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripButtonNew" Property="Text">
-          <Source>New</Source>
+        <TranslationItem Name="toolStripButtonNew" Property="Text" type="obsolete">
+          <Source>Neu</Source>
           <Value>Neu</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripButtonNew" Property="ToolTipText">
-          <Source>Create new translation</Source>
+        <TranslationItem Name="toolStripButtonNew" Property="ToolTipText" type="obsolete">
+          <Source>Neue Übersetzung erzeugen</Source>
           <Value>Neue Übersetzung erzeugen</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripTranslationLabel" Property="Text">
-          <Source>Current translation:</Source>
+        <TranslationItem Name="toolStripTranslationLabel" Property="Text" type="obsolete">
+          <Source>Gewählte Übersetzung:</Source>
           <Value>Gewählte Übersetzung:</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripTranslationLanguageCode" Property="Text">
-          <Source>Language code:</Source>
+        <TranslationItem Name="toolStripTranslationLanguageCode" Property="Text" type="obsolete">
+          <Source>Ländercode:</Source>
           <Value>Ländercode:</Value>
         </TranslationItem>
-        <TranslationItem Name="translatedValueDataGridViewTextBoxColumn" Property="HeaderText">
-          <Source>TranslatedValue</Source>
+        <TranslationItem Name="translatedValueDataGridViewTextBoxColumn" Property="HeaderText" type="obsolete">
+          <Source>Übersetzer Text</Source>
           <Value>Übersetzer Text</Value>
         </TranslationItem>
-        <TranslationItem Name="translateProgressText" Property="Text">
-          <Source>Translated {0} out of {1}</Source>
+        <TranslationItem Name="translateProgressText" Property="Text" type="obsolete">
+          <Source>{0} von {1} übersetzt</Source>
           <Value>{0} von {1} übersetzt</Value>
         </TranslationItem>
       </translationItems>
@@ -6681,7 +6676,7 @@ sondern auch die, die in alternative Objektpools vorhanden sind.</Value>
           <Source>Double-click on a row for quick view</Source>
           <Value>Doppelklick auf eine Zeile mit SHA1-Hash zeigt das Objekt an.</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
+        <TranslationItem Name="label2" Property="Text" type="obsolete">
           <Source>By default only unreferenced objects that are older than 
 2 weeks are removed when cleaning up the database. All
 other object are only deleted when you run "Remove all
