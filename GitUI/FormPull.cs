@@ -545,7 +545,8 @@ namespace GitUI
             }
             else
             {
-                GitUICommands.Instance.StartRemotesDialog(this); // TODO: later
+                var selectedRemote = _NO_TRANSLATE_Remotes.Text;
+                GitUICommands.Instance.StartRemotesDialog(this, selectedRemote);
             }
 
             bInternalUpdate = true;
