@@ -110,7 +110,8 @@ namespace GitCommands.Config
                 if (section.Keys.Count == 0)
                     continue;
 
-                configFileContent.AppendLine(section.ToString());
+                configFileContent.Append(section.ToString());
+                configFileContent.Append("\n");
 
                 foreach (var key in section.Keys)
                 {
