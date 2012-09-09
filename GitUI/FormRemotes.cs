@@ -61,6 +61,11 @@ namespace GitUI
         private void FormRemotesLoad(object sender, EventArgs e)
         {
             Initialize();
+
+            if (!string.IsNullOrEmpty(PreselectRemoteOnLoad))
+            {
+                Remotes.Text = PreselectRemoteOnLoad;
+            }
         }
 
         private void RemoteBranchesDataError(object sender, DataGridViewDataErrorEventArgs e)
@@ -71,6 +76,12 @@ namespace GitUI
 
             RemoteBranches.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = "";
         }
+
+        /// <summary>
+        /// If this is not null before showing the dialog the given
+        /// remote name will be preselected in the listbox
+        /// </summary>
+        public string PreselectRemoteOnLoad { get; set; }
 
         private void Initialize()
         {
