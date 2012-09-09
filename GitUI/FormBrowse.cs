@@ -2373,26 +2373,41 @@ namespace GitUI
 
         private void mergeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.LastPullAction = Settings.PullAction.Merge;
+            if (!Settings.DonSetAsLastPullAction)
+            {
+                Settings.LastPullAction = Settings.PullAction.Merge;
+            }
+
             PullToolStripMenuItemClick(sender, e);
         }
 
         private void rebaseToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            Settings.LastPullAction = Settings.PullAction.Rebase;
+            if (!Settings.DonSetAsLastPullAction)
+            {
+                Settings.LastPullAction = Settings.PullAction.Rebase;
+            }
+
             PullToolStripMenuItemClick(sender, e);
         }
 
         private void fetchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.LastPullAction = Settings.PullAction.Fetch;
+            if (!Settings.DonSetAsLastPullAction)
+            {
+                Settings.LastPullAction = Settings.PullAction.Fetch;
+            }
+
             PullToolStripMenuItemClick(sender, e);
         }
 
         private void pullToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             if (!Settings.DonSetAsLastPullAction)
+            {
                 Settings.LastPullAction = Settings.PullAction.None;
+            }
+
             PullToolStripMenuItemClick(sender, e);
 
             //restore Settings.PullMerge value
