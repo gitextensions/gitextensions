@@ -4,6 +4,7 @@ using GitCommands;
 using GitCommands.Repository;
 using ResourceManager.Translation;
 using GitCommands.Config;
+using System.IO;
 
 namespace GitUI
 {
@@ -112,21 +113,46 @@ namespace GitUI
 
         private void BrowseClick(object sender, EventArgs e)
         {
-            using (var dialog = new FolderBrowserDialog())
-            {
-                if (dialog.ShowDialog(this) == DialogResult.OK)
-                    Url.Text = dialog.SelectedPath;
-            }
+            ShowFolderBrowserDialogWithPreselectedPath(() => Url.Text, path => Url.Text = path);
         }
 
         private void buttonBrowsePushUrl_Click(object sender, EventArgs e)
         {
-            using (var dialog = new FolderBrowserDialog())
+            ShowFolderBrowserDialogWithPreselectedPath(() => comboBoxPushUrl.Text, path => comboBoxPushUrl.Text = path);
+        }
+
+        /// <summary>
+        /// Opens a a FolderBrowserDialog with the path in "getter" preselected and 
+        /// if the DialogResult.OK is returned uses "setter" to set the path
+        /// 
+        /// TODO: extract this method and use it at more places
+        /// </summary>
+        /// <param name="getter"></param>
+        /// <param name="setter"></param>
+        private void ShowFolderBrowserDialogWithPreselectedPath(Func<string> getter, Action<string> setter)
+        {
+            string directoryInfoPath = null;
+            try
             {
-                if (dialog.ShowDialog(this) == DialogResult.OK)
-                    comboBoxPushUrl.Text = dialog.SelectedPath;
+                directoryInfoPath = new DirectoryInfo(getter()).FullName;
+            }
+            catch (Exception)
+            {
+                // since the DirectoryInfo stuff is for convenience we swallow exceptions
             }
 
+            using (var dialog = new FolderBrowserDialog
+            {
+                RootFolder = Environment.SpecialFolder.Desktop,
+                // if we do not use the DirectoryInfo then a path with slashes instead of backslashes won't work
+                SelectedPath = directoryInfoPath ?? getter()
+            })
+            {
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    setter(dialog.SelectedPath);
+                }
+            }
         }
 
         private void SaveClick(object sender, EventArgs e)
@@ -143,7 +169,7 @@ namespace GitUI
             {
                 if (string.IsNullOrEmpty(RemoteName.Text) && string.IsNullOrEmpty(Url.Text))
                 {
-                    return; 
+                    return;
                 }
 
                 output = GitModule.Current.AddRemote(RemoteName.Text, Url.Text);
@@ -166,7 +192,7 @@ namespace GitUI
                     else
                     {
                         MessageBox.Show(this, _warningValidRemote.Text, _warningValidRemoteCaption.Text);
-                    }   
+                    }
                 }
             }
             else
