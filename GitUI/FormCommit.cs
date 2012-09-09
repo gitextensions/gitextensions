@@ -50,6 +50,7 @@ namespace GitUI
 
         private readonly TranslationString _enterCommitMessage = new TranslationString("Please enter commit message");
         private readonly TranslationString _enterCommitMessageCaption = new TranslationString("Commit message");
+        private readonly TranslationString _commitMessageDisabled = new TranslationString("Commit Message is requested during commit");
 
         private readonly TranslationString _enterCommitMessageHint = new TranslationString("Enter commit message");
 
@@ -132,6 +133,7 @@ namespace GitUI
         private bool shouldRescanChanges = true;
         private bool _shouldReloadCommitTemplates = true;
         private AsyncLoader unstagedLoader = new AsyncLoader();
+        private bool _useFormCommitMessage;
 
 
         public FormCommit()
@@ -142,6 +144,8 @@ namespace GitUI
             : base(true)
         {
             _syncContext = SynchronizationContext.Current;
+
+            _useFormCommitMessage = Settings.UseFormCommitMessage;
 
             InitializeComponent();
 
@@ -160,7 +164,15 @@ namespace GitUI
 
             Unstaged.SetNoFilesText(_noUnstagedChanges.Text);
             Staged.SetNoFilesText(_noStagedChanges.Text);
-            Message.WatermarkText = _enterCommitMessageHint.Text;
+
+            Message.Enabled = _useFormCommitMessage;
+
+            commitMessageToolStripMenuItem.Enabled = _useFormCommitMessage;
+            commitTemplatesToolStripMenuItem.Enabled = _useFormCommitMessage;
+
+            Message.WatermarkText = _useFormCommitMessage
+                ? _enterCommitMessageHint.Text
+                : _commitMessageDisabled.Text;
 
             _commitKind = commitKind;
             _editedCommit = editedCommit;
@@ -661,13 +673,13 @@ namespace GitUI
                 MessageBox.Show(this, _mergeConflicts.Text, _mergeConflictsCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            if (string.IsNullOrEmpty(Message.Text) || Message.Text == commitTemplate)
+            if (_useFormCommitMessage && (string.IsNullOrEmpty(Message.Text) || Message.Text == commitTemplate))
             {
                 MessageBox.Show(this, _enterCommitMessage.Text, _enterCommitMessageCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 return;
             }
 
-            if (!ValidCommitMessage())
+            if (_useFormCommitMessage && !ValidCommitMessage())
                 return;
 
             if (GitModule.Current.GetSelectedBranch().Equals("(no branch)", StringComparison.OrdinalIgnoreCase))
@@ -692,11 +704,14 @@ namespace GitUI
 
             try
             {
-                SetCommitMessageFromTextBox(Message.Text);
+                if (_useFormCommitMessage)
+                {
+                    SetCommitMessageFromTextBox(Message.Text);
+                }
 
                 ScriptManager.RunEventScripts(ScriptEvent.BeforeCommit);
 
-                var errorOccurred = !FormProcess.ShowDialog(this, GitModule.Current.CommitCmd(amend, signOffToolStripMenuItem.Checked, toolAuthor.Text));
+                var errorOccurred = !FormProcess.ShowDialog(this, GitModule.Current.CommitCmd(amend, signOffToolStripMenuItem.Checked, toolAuthor.Text, _useFormCommitMessage));
 
                 NeedRefresh = true;
 
@@ -1144,7 +1159,7 @@ namespace GitUI
                     break;
             }
 
-            if (!string.IsNullOrEmpty(message))
+            if (_useFormCommitMessage && !string.IsNullOrEmpty(message))
                 Message.Text = message;
 
             ThreadPool.QueueUserWorkItem(

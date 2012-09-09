@@ -342,6 +342,7 @@ namespace GitUI
 
                 chkStartWithRecentWorkingDir.Checked = Settings.StartWithRecentWorkingDir;
                 chkPlaySpecialStartupSound.Checked = Settings.PlaySpecialStartupSound;
+                chkWriteCommitMessageInCommitWindow.Checked = Settings.UseFormCommitMessage;
                 chkUsePatienceDiffAlgorithm.Checked = Settings.UsePatienceDiffAlgorithm;
                 chkShowCurrentBranchInVisualStudio.Checked = Settings.ShowCurrentBranchInVisualStudio;
                 RevisionGridQuickSearchTimeout.Value = Settings.RevisionGridQuickSearchTimeout;
@@ -556,6 +557,7 @@ namespace GitUI
 
             Settings.StartWithRecentWorkingDir = chkStartWithRecentWorkingDir.Checked;
             Settings.PlaySpecialStartupSound = chkPlaySpecialStartupSound.Checked;
+            Settings.UseFormCommitMessage = chkWriteCommitMessageInCommitWindow.Checked;
             Settings.UsePatienceDiffAlgorithm = chkUsePatienceDiffAlgorithm.Checked;
             Settings.TruncatePathMethod = _NO_TRANSLATE_truncatePathMethod.Text;
             Settings.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.Checked;
