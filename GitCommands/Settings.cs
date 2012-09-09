@@ -1101,6 +1101,13 @@ namespace GitCommands
             set { SafeSet("ShellVisibleMenuItems", value, ref _ShellVisibleMenuItems); }
         }
 
+        private static bool? _UseFormCommitMessage;
+        public static bool UseFormCommitMessage
+        {
+            get { return SafeGet("UseFormCommitMessage", true, ref _UseFormCommitMessage); }
+            set { SafeSet("UseFormCommitMessage", value, ref _UseFormCommitMessage); }
+        }
+
         public static string GetGitExtensionsFullPath()
         {
             return GetGitExtensionsDirectory() + "\\GitExtensions.exe";
