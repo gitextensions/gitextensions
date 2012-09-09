@@ -1313,6 +1313,7 @@ namespace GitUI
             // 
             // deleteBranchToolStripMenuItem
             // 
+            this.deleteBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources.Delete;
             this.deleteBranchToolStripMenuItem.Name = "deleteBranchToolStripMenuItem";
             this.deleteBranchToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.deleteBranchToolStripMenuItem.Text = "Delete branch";
@@ -1320,6 +1321,7 @@ namespace GitUI
             // 
             // deleteTagToolStripMenuItem
             // 
+            this.deleteTagToolStripMenuItem.Image = global::GitUI.Properties.Resources.Delete;
             this.deleteTagToolStripMenuItem.Name = "deleteTagToolStripMenuItem";
             this.deleteTagToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.deleteTagToolStripMenuItem.Text = "Delete tag";

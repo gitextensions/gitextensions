@@ -162,7 +162,7 @@ namespace GitUI
             // 
             // Delete
             // 
-            this.Delete.Image = global::GitUI.Properties.Resources.decrease;
+            this.Delete.Image = global::GitUI.Properties.Resources.Delete;
             this.Delete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Delete.Location = new System.Drawing.Point(3, 41);
             this.Delete.Name = "Delete";
