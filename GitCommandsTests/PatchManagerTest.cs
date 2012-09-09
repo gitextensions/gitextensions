@@ -46,7 +46,7 @@ namespace GitCommandsTests
             expectedPatch.AppendHeaderLine("--- a/" + expectedPatch.Patch.FileNameA);
             expectedPatch.AppendHeaderLine("+++ b/" + expectedPatch.Patch.FileNameB);
             expectedPatch.AppendDiffLine("@@ -1,2 +1,2 @@", fileEncoding);
-            expectedPatch.AppendDiffLine("iiiiii", fileEncoding);
+            expectedPatch.AppendDiffLine(" iiiiii", fileEncoding);
             expectedPatch.AppendDiffLine("-ąśdkjaldskjlaksd", fileEncoding);
             expectedPatch.AppendDiffLine("+changed again€", fileEncoding);
 
