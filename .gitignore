@@ -42,3 +42,5 @@ GitPlugin/Properties/Resources.resources
 test-results/*
 GitCommandsTests/test-results/*
 /!runTests.bat
+GitExtensionsMono.sln.VisualState.xml
+TestResult.xml
