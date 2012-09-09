@@ -92,6 +92,7 @@ namespace GitUI
             this.Language = new System.Windows.Forms.ComboBox();
             this.helpTranslate = new System.Windows.Forms.LinkLabel();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
+            this.chkWriteCommitMessageInCommitWindow = new System.Windows.Forms.CheckBox();
             this.chkPlaySpecialStartupSound = new System.Windows.Forms.CheckBox();
             this.chkCloseProcessDialog = new System.Windows.Forms.CheckBox();
             this.chkShowGitCommandLine = new System.Windows.Forms.CheckBox();
@@ -1039,6 +1040,7 @@ namespace GitUI
             // 
             this.groupBox12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox12.Controls.Add(this.chkWriteCommitMessageInCommitWindow);
             this.groupBox12.Controls.Add(this.chkPlaySpecialStartupSound);
             this.groupBox12.Controls.Add(this.chkCloseProcessDialog);
             this.groupBox12.Controls.Add(this.chkShowGitCommandLine);
@@ -1057,6 +1059,16 @@ namespace GitUI
             this.groupBox12.TabIndex = 54;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Behaviour";
+            // 
+            // chkWriteCommitMessageInCommitWindow
+            // 
+            this.chkWriteCommitMessageInCommitWindow.AutoSize = true;
+            this.chkWriteCommitMessageInCommitWindow.Location = new System.Drawing.Point(10, 206);
+            this.chkWriteCommitMessageInCommitWindow.Name = "chkWriteCommitMessageInCommitWindow";
+            this.chkWriteCommitMessageInCommitWindow.Size = new System.Drawing.Size(220, 17);
+            this.chkWriteCommitMessageInCommitWindow.TabIndex = 54;
+            this.chkWriteCommitMessageInCommitWindow.Text = "Write Commit Messages in Commit Dialog";
+            this.chkWriteCommitMessageInCommitWindow.UseVisualStyleBackColor = true;
             // 
             // chkPlaySpecialStartupSound
             // 
@@ -1101,7 +1113,7 @@ namespace GitUI
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(7, 245);
+            this.label23.Location = new System.Drawing.Point(7, 262);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(205, 13);
             this.label23.TabIndex = 18;
@@ -1109,7 +1121,7 @@ namespace GitUI
             // 
             // SmtpServer
             // 
-            this.SmtpServer.Location = new System.Drawing.Point(395, 238);
+            this.SmtpServer.Location = new System.Drawing.Point(395, 255);
             this.SmtpServer.Name = "SmtpServer";
             this.SmtpServer.Size = new System.Drawing.Size(242, 21);
             this.SmtpServer.TabIndex = 17;
@@ -1121,7 +1133,7 @@ namespace GitUI
             0,
             0,
             0});
-            this.RevisionGridQuickSearchTimeout.Location = new System.Drawing.Point(395, 207);
+            this.RevisionGridQuickSearchTimeout.Location = new System.Drawing.Point(395, 224);
             this.RevisionGridQuickSearchTimeout.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -1154,7 +1166,7 @@ namespace GitUI
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(7, 214);
+            this.label24.Location = new System.Drawing.Point(7, 231);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(193, 13);
             this.label24.TabIndex = 32;
@@ -3589,6 +3601,7 @@ namespace GitUI
         private CheckedListBox chlMenuEntries;
         private CheckBox chkCascadedContextMenu;
         private CheckBox chkEnableAutoScale;
+        private CheckBox chkWriteCommitMessageInCommitWindow;
 
     }
 }
