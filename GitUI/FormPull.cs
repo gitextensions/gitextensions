@@ -237,7 +237,7 @@ namespace GitUI
                 MessageBox.Show(this, _selectSourceDirectory.Text);
                 return false;
             }
-            if (PullFromRemote.Checked && string.IsNullOrEmpty(_NO_TRANSLATE_Remotes.Text) && !PullAll())
+            if (PullFromRemote.Checked && string.IsNullOrEmpty(_NO_TRANSLATE_Remotes.Text) && !IsPullAll())
             {
                 MessageBox.Show(this, _selectRemoteRepository.Text);
                 return false;
@@ -337,7 +337,7 @@ namespace GitUI
         {
             if (process == null)
                 return;
-            if (!PullAll())
+            if (!IsPullAll())
                 process.Remote = source;
             process.ShowDialog(owner);
             ErrorOccurred = process.ErrorOccurred();
@@ -400,7 +400,7 @@ namespace GitUI
             if (PullFromUrl.Checked)
                 return PullSource.Text;
             LoadPuttyKey();
-            return PullAll() ? "--all" : _NO_TRANSLATE_Remotes.Text;
+            return IsPullAll() ? "--all" : _NO_TRANSLATE_Remotes.Text;
         }
 
         private bool MergeCommitExists()
@@ -499,11 +499,11 @@ namespace GitUI
             _NO_TRANSLATE_Remotes.Enabled = true;
             AddRemote.Enabled = true;
 
-            Merge.Enabled = !PullAll();
-            Rebase.Enabled = !PullAll();
+            Merge.Enabled = !IsPullAll();
+            Rebase.Enabled = !IsPullAll();
         }
 
-        private bool PullAll()
+        private bool IsPullAll()
         {
             return _NO_TRANSLATE_Remotes.Text.Equals("[ All ]", StringComparison.InvariantCultureIgnoreCase);
         }
@@ -539,7 +539,14 @@ namespace GitUI
 
         private void AddRemoteClick(object sender, EventArgs e)
         {
-            GitUICommands.Instance.StartRemotesDialog(this);
+            if (IsPullAll())
+            {
+                GitUICommands.Instance.StartRemotesDialog(this);
+            }
+            else
+            {
+                GitUICommands.Instance.StartRemotesDialog(this); // TODO: later
+            }
 
             bInternalUpdate = true;
             string text = _NO_TRANSLATE_Remotes.Text;
@@ -586,9 +593,9 @@ namespace GitUI
             label3.Visible = !string.IsNullOrEmpty(labelRemoteUrl.Text);
 
             // update merge options radio buttons
-            Merge.Enabled = !PullAll();
-            Rebase.Enabled = !PullAll();
-            if (PullAll())
+            Merge.Enabled = !IsPullAll();
+            Rebase.Enabled = !IsPullAll();
+            if (IsPullAll())
             {
                 Fetch.Checked = true;
             }
@@ -596,7 +603,7 @@ namespace GitUI
 
         private void ResetRemoteHeads()
         {
-            if (PullAll())
+            if (IsPullAll())
             {
                 // 2012-08-31: this if statement is empty. Why?
             }
