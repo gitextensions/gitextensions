@@ -54,7 +54,7 @@ namespace GitUI
         {
             base.OnRuntimeLoad(e);
 
-            bool autoLoad = (tabControl1.SelectedTab == Blame && Settings.LoadBlameOnShow) || Settings.LoadFileHistoryOnShow;
+            bool autoLoad = (tabControl1.SelectedTab == BlameTab && Settings.LoadBlameOnShow) || Settings.LoadFileHistoryOnShow;
 
             if (autoLoad)
                 LoadFileHistory();
@@ -66,7 +66,7 @@ namespace GitUI
 
         public void SelectBlameTab()
         {
-            tabControl1.SelectedTab = Blame;
+            tabControl1.SelectedTab = BlameTab;
         }
 
         private void LoadFileHistory()
@@ -188,9 +188,9 @@ namespace GitUI
             {
                 GitRevision revision = selectedRows[0];
                 if (revision.IsArtificial())
-                    tabControl1.RemoveIfExists(Blame);
+                    tabControl1.RemoveIfExists(BlameTab);
                 else
-                    tabControl1.InsertIfNotExists(2, Blame);
+                    tabControl1.InsertIfNotExists(2, BlameTab);
             }
             UpdateSelectedFileViewers();
         }
@@ -212,12 +212,13 @@ namespace GitUI
             if (!fileName.Equals(FileName))
                 Text = Text + string.Format(" ({0})", fileName);
 
-            if (tabControl1.SelectedTab == Blame)
-                blameControl1.LoadBlame(revision.Guid, fileName, FileChanges, Blame);
+            if (tabControl1.SelectedTab == BlameTab)
+                Blame.LoadBlame(revision.Guid, fileName, FileChanges, BlameTab, Diff.Encoding);
             if (tabControl1.SelectedTab == ViewTab)
             {
                 var scrollpos = View.ScrollPos;
 
+                View.Encoding = Diff.Encoding;
                 View.ViewGitItemRevision(fileName, revision.Guid);
                 View.ScrollPos = scrollpos;
             }
