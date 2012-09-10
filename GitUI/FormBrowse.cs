@@ -1363,7 +1363,34 @@ namespace GitUI
 
         private void RebaseToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (GitUICommands.Instance.StartRebaseDialog(this, null))
+            bool rebaseResult;
+            IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
+            if (2 == revisions.Count)
+            {
+                string to = null;
+                string from = null;
+
+                string currentBranch = GitModule.Current.GetSelectedBranch();
+                string currentCheckout = RevisionGrid.CurrentCheckout;
+                
+                
+                if (revisions[0].Guid == currentCheckout)
+                {
+                    from = revisions[1].Guid.Substring(0, 8);
+                    to = currentBranch;
+                }
+                else if (revisions[1].Guid == currentCheckout)
+                {
+                    from = revisions[0].Guid.Substring(0, 8);
+                    to = currentBranch;
+                }
+                rebaseResult = GitUICommands.Instance.StartRebaseDialog(this, from, to, null);
+            }
+            else
+            {
+                rebaseResult = GitUICommands.Instance.StartRebaseDialog(this, null);
+            }
+            if (rebaseResult)
                 Initialize();
         }
 

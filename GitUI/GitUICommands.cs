@@ -1029,6 +1029,23 @@ namespace GitUI
             return true;
         }
 
+        public bool StartRebaseDialog(IWin32Window owner, string from, string to, string onto)
+        {
+            if (!RequiresValidWorkingDir(owner))
+                return false;
+
+            if (!InvokeEvent(owner, PreRebase))
+                return true;
+
+            using (var form = new FormRebase(from, to, onto))
+                form.ShowDialog(owner);
+
+            InvokeEvent(owner, PostRebase);
+
+            return true;
+        }
+
+
         public bool StartRenameDialog(string branch)
         {
             return StartRenameDialog(null, branch);
