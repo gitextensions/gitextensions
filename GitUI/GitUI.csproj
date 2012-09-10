@@ -115,6 +115,12 @@
     <Compile Include="FormCheckoutBranch.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="FormChooseCommit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormChooseCommit.Designer.cs">
+      <DependentUpon>FormChooseCommit.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormCommitTemplateSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -761,6 +767,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editor\FormGoToLine.resx">
       <DependentUpon>FormGoToLine.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormChooseCommit.resx">
+      <DependentUpon>FormChooseCommit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormCommitTemplateSettings.resx">
       <DependentUpon>FormCommitTemplateSettings.cs</DependentUpon>
