@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using System.ComponentModel;
 
 namespace GitUI.Blame
 {
@@ -12,6 +13,7 @@ namespace GitUI.Blame
         private string _lastRevision;
         private RevisionGrid _revGrid;
         private string _fileName;
+        private Encoding _encoding;
 
         public BlameControl()
         {
@@ -156,10 +158,10 @@ namespace GitUI.Blame
         
         private AsyncLoader blameLoader = new AsyncLoader();
 
-        public void LoadBlame(string guid, string fileName, RevisionGrid revGrid, Control controlToMask)
+        public void LoadBlame(string guid, string fileName, RevisionGrid revGrid, Control controlToMask, Encoding encoding)
         {
             //refresh only when something changed
-            if (guid.Equals(commitInfo.GetRevision()) && fileName.Equals(fileName) && revGrid == _revGrid)
+            if (guid.Equals(commitInfo.GetRevision()) && fileName.Equals(fileName) && revGrid == _revGrid && encoding == _encoding)
                 return;
 
             if (controlToMask != null)
@@ -171,10 +173,11 @@ namespace GitUI.Blame
             var blameFile = new StringBuilder();
             _revGrid = revGrid;
             _fileName = fileName;
+            _encoding = encoding;
 
             blameLoader.Load(() =>
             {
-                _blame = GitModule.Current.Blame(fileName, guid);
+                _blame = GitModule.Current.Blame(fileName, guid, encoding);
             },
             () =>
             {
@@ -269,7 +272,7 @@ namespace GitUI.Blame
             if (line < 0)
                 return;
             string commit = _blame.Lines[line].CommitGuid;
-            GitBlame blame = GitModule.Current.Blame(_fileName, commit + "^", line + ",+1");
+            GitBlame blame = GitModule.Current.Blame(_fileName, commit + "^", line + ",+1", _encoding);
             if (blame.Headers.Count > 0)
             {
                 commit = blame.Headers[0].CommitGuid;

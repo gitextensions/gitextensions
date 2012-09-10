@@ -50,8 +50,8 @@ namespace GitUI
             this.View = new GitUI.Editor.FileViewer();
             this.DiffTab = new System.Windows.Forms.TabPage();
             this.Diff = new GitUI.Editor.FileViewer();
-            this.Blame = new System.Windows.Forms.TabPage();
-            this.blameControl1 = new GitUI.Blame.BlameControl();
+            this.BlameTab = new System.Windows.Forms.TabPage();
+            this.Blame = new GitUI.Blame.BlameControl();
             this.eventLog1 = new System.Diagnostics.EventLog();
             this.ToolStrip = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
@@ -75,7 +75,7 @@ namespace GitUI
             this.tabControl1.SuspendLayout();
             this.ViewTab.SuspendLayout();
             this.DiffTab.SuspendLayout();
-            this.Blame.SuspendLayout();
+            this.BlameTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).BeginInit();
             this.ToolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -214,7 +214,7 @@ namespace GitUI
             // 
             this.tabControl1.Controls.Add(this.ViewTab);
             this.tabControl1.Controls.Add(this.DiffTab);
-            this.tabControl1.Controls.Add(this.Blame);
+            this.tabControl1.Controls.Add(this.BlameTab);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -267,22 +267,22 @@ namespace GitUI
             // 
             // Blame
             // 
-            this.Blame.Controls.Add(this.blameControl1);
-            this.Blame.Location = new System.Drawing.Point(4, 21);
-            this.Blame.Name = "Blame";
-            this.Blame.Size = new System.Drawing.Size(740, 288);
-            this.Blame.TabIndex = 2;
-            this.Blame.Text = "Blame";
-            this.Blame.UseVisualStyleBackColor = true;
+            this.BlameTab.Controls.Add(this.Blame);
+            this.BlameTab.Location = new System.Drawing.Point(4, 21);
+            this.BlameTab.Name = "Blame";
+            this.BlameTab.Size = new System.Drawing.Size(740, 288);
+            this.BlameTab.TabIndex = 2;
+            this.BlameTab.Text = "Blame";
+            this.BlameTab.UseVisualStyleBackColor = true;
             // 
             // blameControl1
             // 
-            this.blameControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.blameControl1.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.blameControl1.Location = new System.Drawing.Point(0, 0);
-            this.blameControl1.Name = "blameControl1";
-            this.blameControl1.Size = new System.Drawing.Size(740, 288);
-            this.blameControl1.TabIndex = 0;
+            this.Blame.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Blame.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.Blame.Location = new System.Drawing.Point(0, 0);
+            this.Blame.Name = "blameControl1";
+            this.Blame.Size = new System.Drawing.Size(740, 288);
+            this.Blame.TabIndex = 0;
             // 
             // eventLog1
             // 
@@ -413,7 +413,7 @@ namespace GitUI
             this.tabControl1.ResumeLayout(false);
             this.ViewTab.ResumeLayout(false);
             this.DiffTab.ResumeLayout(false);
-            this.Blame.ResumeLayout(false);
+            this.BlameTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).EndInit();
             this.ToolStrip.ResumeLayout(false);
             this.ToolStrip.PerformLayout();
@@ -428,14 +428,14 @@ namespace GitUI
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage ViewTab;
         private System.Windows.Forms.TabPage DiffTab;
-        private System.Windows.Forms.TabPage Blame;
+        private System.Windows.Forms.TabPage BlameTab;
         private System.Diagnostics.EventLog eventLog1;
         private FileViewer View;
         private FileViewer Diff;
         private RevisionGrid FileChanges;
         private System.Windows.Forms.ContextMenuStrip DiffContextMenu;
         private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;
-        private Blame.BlameControl blameControl1;
+        private Blame.BlameControl Blame;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem followFileHistoryToolStripMenuItem;
