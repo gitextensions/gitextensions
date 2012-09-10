@@ -112,7 +112,7 @@ namespace GitUI
             }
             catch (Exception e)
             {
-                AddMessageLine(e.Message);
+                AddMessageLine("\n" + e.ToStringWithData());
                 gitCommand.ExitCode = 1;
                 gitCommand_Exited(null, null);
             }

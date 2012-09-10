@@ -64,7 +64,9 @@ namespace GitCommands
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("Error running command: '" + cmd + " " + arguments, ex);
+                ex.Data.Add("command", cmd);
+                ex.Data.Add("arguments", arguments);
+                throw ex;
             }
         }
 
