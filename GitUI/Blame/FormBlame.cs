@@ -17,7 +17,7 @@ namespace GitUI.Blame
                 revision = new GitRevision("Head");
 
 
-            blameControl1.LoadBlame(revision.Guid, fileName, null, null);
+            blameControl1.LoadBlame(revision.Guid, fileName, null, null, Settings.FilesEncoding);
         }
 
         public string FileName { get; set; }

@@ -2161,12 +2161,12 @@ namespace GitCommands
             return GitItem.CreateIGitItemsFromString(tree);
         }
 
-        public GitBlame Blame(string filename, string from)
+        public GitBlame Blame(string filename, string from, Encoding encoding)
         {
-            return Blame(filename, from, null);
+            return Blame(filename, from, null, encoding);
         }
 
-        public GitBlame Blame(string filename, string from, string lines)
+        public GitBlame Blame(string filename, string from, string lines, Encoding encoding)
         {
             from = FixPath(from);
             filename = FixPath(filename);
@@ -2195,7 +2195,7 @@ namespace GitCommands
                     {
                         blameLine.LineText = line.Substring(1) //trim ONLY first tab
                                                  .Trim(new char[] { '\r' }); //trim \r, this is a workaround for a \r\n bug
-                        blameLine.LineText = GitCommandHelpers.ReEncodeStringFromLossless(blameLine.LineText, Settings.FilesEncoding);
+                        blameLine.LineText = GitCommandHelpers.ReEncodeStringFromLossless(blameLine.LineText, encoding);
                     }
                     else if (line.StartsWith("author-mail"))
                         blameHeader.AuthorMail = GitCommandHelpers.ReEncodeStringFromLossless(line.Substring("author-mail".Length).Trim());
