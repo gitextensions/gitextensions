@@ -10,6 +10,8 @@ namespace GitUI.SpellChecker
 {
     public class SpellCheckEditControl : NativeWindow
     {
+        public bool IsImeStartingComposition { get; private set; }
+
         private readonly RichTextBox _richTextBox;
         public List<TextPos> IllFormedLines = new List<TextPos>();
         public List<TextPos> Lines = new List<TextPos>();
@@ -27,6 +29,9 @@ namespace GitUI.SpellChecker
 
         protected override void WndProc(ref Message m)
         {
+            const int WM_IME_STARTCOMPOSITION = 0x010D;
+            const int WM_IME_ENDCOMPOSITION = 0x010E;
+
             switch (m.Msg)
             {
                 case 15: // this is the WM_PAINT message   
@@ -38,6 +43,14 @@ namespace GitUI.SpellChecker
                     CustomPaint();
 
                     break;
+                case WM_IME_STARTCOMPOSITION:
+                    IsImeStartingComposition = true;
+                    base.WndProc(ref m);
+                    break;
+                case WM_IME_ENDCOMPOSITION:
+                    base.WndProc(ref m);
+                    IsImeStartingComposition = false;
+                    break;
                 default:
                     base.WndProc(ref m);
                     break;
@@ -46,6 +59,11 @@ namespace GitUI.SpellChecker
 
         private void CustomPaint()
         {
+            if (IsImeStartingComposition)
+            {
+                return;
+            }
+
             if (_bitmap == null || (_bitmap.Width != _richTextBox.Width || _bitmap.Height != _richTextBox.Height))
             {
                 _bitmap = new Bitmap(_richTextBox.Width, _richTextBox.Height, PixelFormat.Format32bppPArgb);
@@ -63,34 +81,19 @@ namespace GitUI.SpellChecker
             DrawLines(IllFormedLines, DrawType.Mark);
 
             //Mark first line if it is blank
-            // If IME mode equals Hiragana,
-            // input is canceled by some method calls(ex. GetPositionFromCharIndex)
-            // and the process is skipped by this if-statement.
-            if (IsEnableFirstLineEmptyWarning)
-            {
-                var lh = LineHeight();
-                var ypos = _richTextBox.GetPositionFromCharIndex(0).Y;
-                if (_richTextBox.Text.Length > 1 &&
-                    //check for textBox.Text.Length>1 instead of textBox.Text.Length!=0 because there might be only a \n
-                    _richTextBox.Lines.Length > 0 && _richTextBox.Lines[0].Length == 0
-                    && ypos >= -lh && Settings.MarkIllFormedLinesInCommitMsg)
-                    DrawMark(new Point(0, lh + ypos), new Point(_richTextBox.Width - 3, lh + ypos));
-            }
+            var lh = LineHeight();
+            var ypos = _richTextBox.GetPositionFromCharIndex(0).Y;
+            if (_richTextBox.Text.Length > 1 &&
+                //check for textBox.Text.Length>1 instead of textBox.Text.Length!=0 because there might be only a \n
+                _richTextBox.Lines.Length > 0 && _richTextBox.Lines[0].Length == 0
+                && ypos >= -lh && Settings.MarkIllFormedLinesInCommitMsg)
+                DrawMark(new Point(0, lh + ypos), new Point(_richTextBox.Width - 3, lh + ypos));
 
             //Mark misspelled words
             DrawLines(Lines, DrawType.Wave);
             // Now we just draw our internal buffer on top of the TextBox.   
             // Everything should be at the right place.   
             _textBoxGraphics.DrawImageUnscaled(_bitmap, 0, 0);
-        }
-
-        private bool IsEnableFirstLineEmptyWarning
-        {
-            get
-            {
-                var mode = _richTextBox.ImeMode;
-                return mode == ImeMode.Hiragana;
-            }
         }
 
         private void DrawLines(IEnumerable<TextPos> list, DrawType type)
