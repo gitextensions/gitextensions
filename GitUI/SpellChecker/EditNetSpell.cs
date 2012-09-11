@@ -451,10 +451,13 @@ namespace GitUI.SpellChecker
 
         private void SpellCheckTimerTick(object sender, EventArgs e)
         {
-            CheckSpelling();
+            if (!_customUnderlines.IsImeStartingComposition)
+            {
+                CheckSpelling();
 
-            SpellCheckTimer.Enabled = false;
-            SpellCheckTimer.Interval = 250;
+                SpellCheckTimer.Enabled = false;
+                SpellCheckTimer.Interval = 250;
+            }
         }
 
         private void TextBoxTextChanged(object sender, EventArgs e)
