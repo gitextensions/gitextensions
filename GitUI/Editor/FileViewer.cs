@@ -71,6 +71,7 @@ namespace GitUI.Editor
             if (RunTime() && ContextMenuStrip == null)
                 ContextMenuStrip = contextMenu;
             contextMenu.Opening += ContextMenu_Opening; 
+            this.Encoding = Settings.FilesEncoding;
         }
 
         private bool RunTime()
@@ -139,7 +140,6 @@ namespace GitUI.Editor
             Font = Settings.DiffFont;
 
             GitModule.CurrentWorkingDirChanged += WorkingDirChanged;
-            this.Encoding = Settings.FilesEncoding;
         }
 
         void ContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
