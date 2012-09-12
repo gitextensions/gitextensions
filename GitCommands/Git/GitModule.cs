@@ -1675,11 +1675,25 @@ namespace GitCommands
 
         public Patch GetSingleDiff(string @from, string to, string fileName, string oldFileName, string extraDiffArguments, Encoding encoding)
         {
+            string fileA = null;
+            string fileB = null;
+
             if (!string.IsNullOrEmpty(fileName))
+            {
+                fileB = fileName;
                 fileName = string.Concat("\"", FixPath(fileName), "\"");
+            }
 
             if (!string.IsNullOrEmpty(oldFileName))
+            {
+                fileA = oldFileName;
                 oldFileName = string.Concat("\"", FixPath(oldFileName), "\"");
+            }
+
+            if (fileA.IsNullOrEmpty())
+                fileA = fileB;
+            else if (fileB.IsNullOrEmpty())
+                fileB = fileA;
 
             from = FixPath(from);
             to = FixPath(to);
@@ -1696,6 +1710,11 @@ namespace GitCommands
             var arguments = string.Format("diff {0} -M -C {1} -- {2} {3}", extraDiffArguments, commitRange, fileName, oldFileName);
             patchManager.LoadPatch(this.RunCachableCmd(Settings.GitCommand, arguments, Settings.LosslessEncoding), false, encoding);
 
+            foreach (Patch p in patchManager.Patches)
+                if (p.FileNameA.Equals(fileA) && p.FileNameB.Equals(fileB) ||
+                    p.FileNameA.Equals(fileB) && p.FileNameB.Equals(fileA))
+                    return p;
+            
             return patchManager.Patches.Count > 0 ? patchManager.Patches[patchManager.Patches.Count - 1] : null;
         }
 
