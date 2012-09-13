@@ -2441,6 +2441,24 @@ namespace GitCommands
             return exitCode == 0;
         }
 
+        public bool IsLockedIndex()
+        {
+            return IsLockedIndex(_workingdir);
+        }
+
+        public static bool IsLockedIndex(string repositoryPath)
+        {
+            var gitDir = WorkingDirGitDir(repositoryPath);
+            var indexLockFile = Path.Combine(gitDir, "index.lock");
+
+            if (File.Exists(indexLockFile))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         #region IGitCommands
 
         public string GitWorkingDir
@@ -2481,6 +2499,5 @@ namespace GitCommands
         }
 
         #endregion
-
     }
 }
