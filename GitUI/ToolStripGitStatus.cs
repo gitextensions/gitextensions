@@ -203,7 +203,7 @@ namespace GitUI
             {
                 // If the previous status call hasn't exited yet, we'll wait until it is
                 // so we don't queue up a bunch of commands
-                if (commandIsRunning)
+                if (commandIsRunning || GitModule.Current.IsLockedIndex())
                 {
                     statusIsUpToDate = false;//tell that computed status isn't up to date
                     return;
