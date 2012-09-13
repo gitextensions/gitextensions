@@ -158,9 +158,12 @@ namespace PatchApply
             }
             else
             {
-                input = GitCommandHelpers.ReEncodeStringFromLossless(input, FilesContentEncoding);
-                if (!input.StartsWithAny(new string[] { " ", "-", "+", "@", "\\" }))
-                    throw new FormatException("Line starts with unexpected character: " + input);
+                if (input.StartsWithAny(new string[] { " ", "-", "+", "@" }))
+                    //diff content
+                    input = GitCommandHelpers.ReEncodeStringFromLossless(input, FilesContentEncoding);
+                else
+                    //warnings, messages ...
+                    input = GitCommandHelpers.ReEncodeStringFromLossless(input, Settings.SystemEncoding);                    
             }               
         }
 
