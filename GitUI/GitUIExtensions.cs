@@ -21,7 +21,7 @@ namespace GitUI
             DiffAsSelected
         }
 
-        public static void OpenWithDifftool(this RevisionGrid grid, string fileName, DiffWithRevisionKind diffKind)
+        public static void OpenWithDifftool(this RevisionGrid grid, string fileName, string oldFileName, DiffWithRevisionKind diffKind)
         {
             IList<GitRevision> revisions = grid.GetSelectedRevisions();
 
@@ -50,7 +50,7 @@ namespace GitUI
                     secondRevision = revisions[0].Guid;
                 }
 
-                string extraDiffArgs = null;
+                string extraDiffArgs = "-M -C";
 
                 if (firstRevision == GitRevision.UncommittedWorkingDirGuid) //working dir changes
                 {
@@ -87,7 +87,7 @@ namespace GitUI
                 if (secondRevision == null)
                     secondRevision = firstRevision + "^";
 
-                output = GitModule.Current.OpenWithDifftool(fileName, firstRevision, secondRevision, extraDiffArgs);
+                output = GitModule.Current.OpenWithDifftool(fileName, oldFileName, firstRevision, secondRevision, extraDiffArgs);
             }
 
             if (!string.IsNullOrEmpty(output))

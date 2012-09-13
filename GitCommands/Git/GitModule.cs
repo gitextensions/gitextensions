@@ -2378,23 +2378,28 @@ namespace GitCommands
 
         public string OpenWithDifftool(string filename)
         {
-            return OpenWithDifftool(filename, null, null);
+            return OpenWithDifftool(filename, string.Empty, null, null);
         }
 
         public string OpenWithDifftool(string filename, string revision1)
         {
-            return OpenWithDifftool(filename, revision1, null);
+            return OpenWithDifftool(filename, string.Empty, revision1, null);
         }
 
-        public string OpenWithDifftool(string filename, string revision1, string revision2)
+        public string OpenWithDifftool(string filename, string oldFileName, string revision1, string revision2)
         {
-            return OpenWithDifftool(filename, revision1, revision2, string.Empty);
+            return OpenWithDifftool(filename, oldFileName, revision1, revision2, string.Empty);
         }
 
-        public string OpenWithDifftool(string filename, string revision1, string revision2, string extraDiffArguments)
+        public string OpenWithDifftool(string filename, string oldFileName, string revision1, string revision2, string extraDiffArguments)
         {
             var output = "";
-            string args = string.Join(" ", extraDiffArguments, revision2, revision1, "-- \"" + filename + "\"");
+            if (!filename.IsNullOrEmpty())
+                filename = filename.Quote();
+            if (!oldFileName.IsNullOrEmpty())
+                oldFileName = oldFileName.Quote();
+
+            string args = string.Join(" ", extraDiffArguments, revision2, revision1, "--", filename, oldFileName);
             if (GitCommandHelpers.VersionInUse.GuiDiffToolExist)
                 RunCmdAsync(Settings.GitCommand,
                             "difftool --gui --no-prompt " + args);

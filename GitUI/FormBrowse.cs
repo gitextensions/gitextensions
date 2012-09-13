@@ -1604,7 +1604,7 @@ namespace GitUI
             if (DiffFiles.SelectedItem == null)
                 return;
 
-            var selectedItem = (DiffFiles.SelectedItem).Name;
+            var selectedItem = DiffFiles.SelectedItem;
             GitUIExtensions.DiffWithRevisionKind diffKind;
 
             if (sender == diffBaseLocalToolStripMenuItem)
@@ -1614,7 +1614,7 @@ namespace GitUI
             else
                 diffKind = GitUIExtensions.DiffWithRevisionKind.DiffAsSelected;
 
-            RevisionGrid.OpenWithDifftool(selectedItem, diffKind);
+            RevisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind);
         }
 
         private void AddWorkingdirDropDownItem(Repository repo, string caption)
