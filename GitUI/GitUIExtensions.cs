@@ -173,7 +173,10 @@ namespace GitUI
 
             if (revisions.Count == 1 && (revisions[0].ParentGuids == null || revisions[0].ParentGuids.Length == 0))
             {
-                diffViewer.ViewGitItem(file.Name, file.TreeGuid);
+                if (file.TreeGuid.IsNullOrEmpty())
+                    diffViewer.ViewGitItemRevision(file.Name, revisions[0].Guid);
+                else
+                    diffViewer.ViewGitItem(file.Name, file.TreeGuid);
             }
             else
             {
