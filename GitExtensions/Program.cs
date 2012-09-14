@@ -219,7 +219,7 @@ namespace GitExtensions
                 case "openrepo":    // [file]
                     RunOpenRepoCommand(args);
                     return;
-                case "pull":        //  [--rebase] [--merge] [--fetch] [--quiet]
+                case "pull":        //  [--rebase] [--merge] [--fetch] [--quiet] [--remotebranch name]
                     Pull(arguments);
                     return;
                 case "push":        // [--quiet]
@@ -412,7 +412,12 @@ namespace GitExtensions
         private static void Pull(Dictionary<string, string> arguments)
         {
             UpdateSettingsBasedOnArguments(arguments);
-            GitUICommands.Instance.StartPullDialog(arguments.ContainsKey("quiet"));
+
+            string remoteBranch = null;
+            if (arguments.ContainsKey("remotebranch"))
+                remoteBranch = arguments["remotebranch"];
+
+            GitUICommands.Instance.StartPullDialog(arguments.ContainsKey("quiet"), remoteBranch);
         }
 
         private static void UpdateSettingsBasedOnArguments(Dictionary<string, string> arguments)
