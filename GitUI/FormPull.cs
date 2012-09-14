@@ -67,7 +67,7 @@ namespace GitUI
         public bool ErrorOccurred { get; private set; }
         private string branch;
 
-        public FormPull()
+        public FormPull(string defaultRemoteBranch)
         {
             InitializeComponent();
             Translate();
@@ -85,6 +85,11 @@ namespace GitUI
             else
                 _NO_TRANSLATE_Remotes.Text = currentBranchRemote;
             _NO_TRANSLATE_localBranch.Text = branch;
+
+            if (! string.IsNullOrEmpty(defaultRemoteBranch))
+            {
+                Branches.Text = defaultRemoteBranch;
+            }
 
             Merge.Checked = Settings.PullMerge == Settings.PullAction.Merge;
             Rebase.Checked = Settings.PullMerge == Settings.PullAction.Rebase;
