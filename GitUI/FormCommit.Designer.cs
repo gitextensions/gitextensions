@@ -41,6 +41,8 @@ namespace GitUI
             this.UnstagedFileContext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.resetChanges = new System.Windows.Forms.ToolStripMenuItem();
             this.resetPartOfFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.viewFileHistoryToolStripItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
@@ -188,6 +190,8 @@ namespace GitUI
             this.UnstagedFileContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.resetChanges,
             this.resetPartOfFileToolStripMenuItem,
+            this.toolStripSeparator12,
+            this.toolStripMenuItem4,
             this.toolStripSeparator8,
             this.viewFileHistoryToolStripItem,
             this.toolStripSeparator7,
@@ -218,6 +222,18 @@ namespace GitUI
             this.resetPartOfFileToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.resetPartOfFileToolStripMenuItem.Text = "Reset chunk of file";
             this.resetPartOfFileToolStripMenuItem.Click += new System.EventHandler(this.ResetPartOfFileToolStripMenuItemClick);
+            // 
+            // toolStripSeparator12
+            // 
+            this.toolStripSeparator12.Name = "toolStripSeparator12";
+            this.toolStripSeparator12.Size = new System.Drawing.Size(194, 6);
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(197, 22);
+            this.toolStripMenuItem4.Text = "Interactive Add";
+            this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
             // 
             // toolStripSeparator8
             // 
@@ -1378,5 +1394,7 @@ namespace GitUI
         private ToolStripStatusLabel commitCursorLine;
         private ToolStripStatusLabel commitCursorColumnLabel;
         private ToolStripStatusLabel commitCursorColumn;
+        private ToolStripSeparator toolStripSeparator12;
+        private ToolStripMenuItem toolStripMenuItem4;
     }
 }
