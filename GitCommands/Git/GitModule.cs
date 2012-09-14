@@ -362,7 +362,7 @@ namespace GitCommands
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public string RunCmd(string cmd, string arguments)
         {
-            return RunCmd(cmd, arguments, string.Empty);
+            return RunCmd(cmd, arguments, (byte[])null);
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
@@ -372,14 +372,14 @@ namespace GitCommands
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
-        public string RunCmd(string cmd, string arguments, string stdInput, Encoding encoding)
+        public string RunCmd(string cmd, string arguments, byte[] stdInput, Encoding encoding)
         {
             int exitCode;
             return RunCmd(cmd, arguments, out exitCode, stdInput, encoding);
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
-        public string RunCmd(string cmd, string arguments, string stdInput)
+        public string RunCmd(string cmd, string arguments, byte[] stdInput)
         {
             int exitCode;
             return RunCmd(cmd, arguments, out exitCode, stdInput);
@@ -392,13 +392,13 @@ namespace GitCommands
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
-        public string RunCmd(string cmd, string arguments, out int exitCode, string stdInput)
+        public string RunCmd(string cmd, string arguments, out int exitCode, byte[] stdInput)
         {
             return RunCmd(cmd, arguments, out exitCode, stdInput, Settings.SystemEncoding);
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
-        public string RunCmd(string cmd, string arguments, out int exitCode, string stdInput, Encoding encoding)
+        public string RunCmd(string cmd, string arguments, out int exitCode, byte[] stdInput, Encoding encoding)
         {
             byte[] output, error;
             exitCode = RunCmdByte(cmd, arguments, stdInput, out output, out error);
@@ -410,7 +410,7 @@ namespace GitCommands
             return RunCmdByte(cmd, arguments, null, out output, out error);
         }
 
-        private int RunCmdByte(string cmd, string arguments, string stdInput, out byte[] output, out byte[] error)
+        private int RunCmdByte(string cmd, string arguments, byte[] stdInput, out byte[] output, out byte[] error)
         {
             try
             {
@@ -426,12 +426,12 @@ namespace GitCommands
             }
         }
 
-        public string RunGitCmd(string arguments, out int exitCode, string stdInput)
+        public string RunGitCmd(string arguments, out int exitCode, byte[] stdInput)
         {
             return RunGitCmd(arguments, out exitCode, stdInput, Settings.SystemEncoding);
         }
 
-        public string RunGitCmd(string arguments, out int exitCode, string stdInput, Encoding encoding)
+        public string RunGitCmd(string arguments, out int exitCode, byte[] stdInput, Encoding encoding)
         {
             return RunCmd(Settings.GitCommand, arguments, out exitCode, stdInput, encoding);
         }
@@ -441,13 +441,13 @@ namespace GitCommands
             return RunGitCmd(arguments, out exitCode, null);
         }
 
-        public string RunGitCmd(string arguments, string stdInput)
+        public string RunGitCmd(string arguments, byte[] stdInput)
         {
             int exitCode;
             return RunGitCmd(arguments, out exitCode, stdInput);
         }
 
-        public string RunGitCmd(string arguments, string stdInput, Encoding encoding)
+        public string RunGitCmd(string arguments, byte[] stdInput, Encoding encoding)
         {
             int exitCode;
             return RunGitCmd(arguments, out exitCode, stdInput, encoding);
@@ -455,7 +455,7 @@ namespace GitCommands
 
         public string RunGitCmd(string arguments)
         {
-            return RunGitCmd(arguments, (string)null);
+            return RunGitCmd(arguments, (byte[])null);
         }
 
         public string RunGitCmd(string arguments, Encoding encoding)
@@ -2413,7 +2413,7 @@ namespace GitCommands
         {
             string revparseCommand = string.Format("rev-parse \"{0}~0\"", revisionExpression);
             int exitCode = 0;
-            string[] resultStrings = RunCmd(Settings.GitCommand, revparseCommand, out exitCode, "").Split('\n');
+            string[] resultStrings = RunCmd(Settings.GitCommand, revparseCommand, out exitCode).Split('\n');
             return exitCode == 0 ? resultStrings[0] : "";
         }
 
