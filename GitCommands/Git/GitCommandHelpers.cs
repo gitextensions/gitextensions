@@ -156,7 +156,7 @@ namespace GitCommands
                    (arguments.Contains("pull"));
         }
 
-        internal static int CreateAndStartProcess(string arguments, string cmd, string workDir, out byte[] stdOutput, out byte[] stdError, string stdInput)
+        internal static int CreateAndStartProcess(string arguments, string cmd, string workDir, out byte[] stdOutput, out byte[] stdError, byte[] stdInput)
         {
             if (string.IsNullOrEmpty(cmd))
             {
@@ -177,9 +177,9 @@ namespace GitCommands
 
             using (var process = Process.Start(startInfo))
             {
-                if (!string.IsNullOrEmpty(stdInput))
+                if (stdInput != null && stdInput.Length > 0)
                 {
-                    process.StandardInput.Write(stdInput);
+                    process.StandardInput.BaseStream.Write(stdInput, 0, stdInput.Length);
                     process.StandardInput.Close();
                 }
 

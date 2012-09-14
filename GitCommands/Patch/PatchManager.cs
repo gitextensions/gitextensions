@@ -20,7 +20,7 @@ namespace PatchApply
             set { _patches = value; }
         }
 
-        public static string GetSelectedLinesAsPatch(string text, int selectionPosition, int selectionLength, bool staged)
+        public static byte[] GetSelectedLinesAsPatch(string text, int selectionPosition, int selectionLength, bool staged, Encoding fileContentEncoding)
         {
             //When there is no patch, return nothing
             if (string.IsNullOrEmpty(text))
@@ -262,8 +262,12 @@ namespace PatchApply
             }
             // we are almost done, $wholepatch should no contain all the 
             // (modified) hunks
-
-            return header + wholepatch;
+            byte[] hb = EncodingHelper.ConvertTo(Settings.SystemEncoding, header);
+            byte[] bb = EncodingHelper.ConvertTo(fileContentEncoding, wholepatch);
+            byte[] result = new byte[hb.Length + bb.Length];
+            hb.CopyTo(result, 0);
+            bb.CopyTo(result, hb.Length);
+            return result;
         }
 
         public string GetMD5Hash(string input)
