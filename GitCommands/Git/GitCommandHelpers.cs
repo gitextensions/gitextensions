@@ -371,11 +371,22 @@ namespace GitCommands
             return gitSubmodule;
         }
 
-        public static string RevertCmd(string commit, bool autoCommit)
+        public static string RevertCmd(string commit, bool autoCommit, int parentIndex)
         {
-            if (autoCommit)
-                return "revert " + commit;
-            return "revert --no-commit " + commit;
+            var cmd = new StringBuilder("revert ");
+            if (!autoCommit)
+            {
+                cmd.Append("--no-commit ");
+            }
+
+            if (parentIndex > 0)
+            {
+                cmd.AppendFormat("-m {0} ", parentIndex);
+            }
+
+            cmd.Append(commit);
+
+            return cmd.ToString();
         }
 
         public static string ResetSoftCmd(string commit)
