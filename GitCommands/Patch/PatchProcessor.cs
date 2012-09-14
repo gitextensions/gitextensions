@@ -31,16 +31,17 @@ namespace PatchApply
         /// </summary>
         /// <param name="textReader"></param>
         /// <returns></returns>
-        public List<Patch> CreatePatchesFromReader(TextReader textReader)
+        public List<Patch> CreatePatchesFromString(String patchText)
         {
             var patches = new List<Patch>();
             Patch patch = null;
             bool validate;
             string input;
             PatchProcessorState state = PatchProcessorState.OutsidePatch;
-
-            while ((input = textReader.ReadLine()) != null)
+            string[] lines = patchText.Split('\n');
+            for(int i = 0; i < lines.Length; i++)
             {
+                input = lines[i];
                 validate = true;
                 if (IsStartOfANewPatch(input))
                 {

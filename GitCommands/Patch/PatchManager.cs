@@ -288,9 +288,18 @@ namespace PatchApply
         //TODO encoding for each file in patch should be obtained separatly from .gitattributes
         public void LoadPatch(string text, bool applyPatch, Encoding filesContentEncoding)
         {
-            using (var stream = new StringReader(text))
+
+            PatchProcessor _patchProcessor = new PatchProcessor(filesContentEncoding);
+
+            _patches = _patchProcessor.CreatePatchesFromString(text);
+
+            if (!applyPatch)
+                return;
+
+            foreach (Patch patchApply in _patches)
             {
-                LoadPatchStream(stream, applyPatch, filesContentEncoding);
+                if (patchApply.Apply)
+                    patchApply.ApplyPatch();
             }
         }
 
@@ -304,18 +313,7 @@ namespace PatchApply
 
         private void LoadPatchStream(TextReader reader, bool applyPatch, Encoding filesContentEncoding)
         {
-            PatchProcessor _patchProcessor = new PatchProcessor(filesContentEncoding);
-
-            _patches = _patchProcessor.CreatePatchesFromReader(reader);
-
-            if (!applyPatch)
-                return;
-
-            foreach (Patch patchApply in _patches)
-            {
-                if (patchApply.Apply)
-                    patchApply.ApplyPatch();
-            }
+            LoadPatch(reader.ReadToEnd(), applyPatch, filesContentEncoding);
         }
     }
 }
