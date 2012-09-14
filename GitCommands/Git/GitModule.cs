@@ -803,7 +803,7 @@ namespace GitCommands
             }
         }
 
-        public Process RunBash()
+        public Process RunBash(string bashCommand = null)
         {
             if (Settings.RunningOnUnix())
             {
@@ -828,10 +828,20 @@ namespace GitCommands
             }
             else
             {
-                if (File.Exists(Settings.GitBinDir + "bash.exe"))
-                    return RunRealCmdDetached("cmd.exe", "/c \"\"" + Settings.GitBinDir + "bash\" --login -i\"");
+                string args;
+                if (string.IsNullOrWhiteSpace(bashCommand))
+                {
+                    args = " --login -i\"";
+                }
                 else
-                    return RunRealCmdDetached("cmd.exe", "/c \"\"" + Settings.GitBinDir + "sh\" --login -i\"");
+                {
+                    args = " --login -i -c \"" + bashCommand.Replace("\"", "\\\"") + "\"";
+                }
+
+                if (File.Exists(Settings.GitBinDir + "bash.exe"))
+                    return RunRealCmdDetached("cmd.exe", "/c \"\"" + Settings.GitBinDir + "bash\"" + args);
+                else
+                    return RunRealCmdDetached("cmd.exe", "/c \"\"" + Settings.GitBinDir + "sh\"" + args);
             }
         }
 
