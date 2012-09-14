@@ -262,19 +262,21 @@ namespace GitCommands
             RunRealCmd(Settings.GitCommand, arguments);
         }
 
-        public void RunRealCmdDetached(string cmd, string arguments)
+        public Process RunRealCmdDetached(string cmd, string arguments)
         {
             try
             {
-                CreateAndStartCommand(cmd, arguments, false);
+                return CreateAndStartCommand(cmd, arguments, false);
             }
             catch (Exception ex)
             {
                 Trace.WriteLine(ex.Message);
             }
+
+            return null;
         }
 
-        private void CreateAndStartCommand(string cmd, string arguments, bool waitForExit)
+        private Process CreateAndStartCommand(string cmd, string arguments, bool waitForExit)
         {
             GitCommandHelpers.SetEnvironmentVariable();
 
@@ -301,10 +303,12 @@ namespace GitCommands
                 {
                     process.WaitForExit();
                 }
+
+                return null;
             }
             else
             {
-                Process.Start(info);
+                return Process.Start(info);
             }
         }
 
@@ -799,7 +803,7 @@ namespace GitCommands
             }
         }
 
-        public void RunBash()
+        public Process RunBash()
         {
             if (Settings.RunningOnUnix())
             {
@@ -820,14 +824,14 @@ namespace GitCommands
                     args = "--login -i";
                 }
 
-                RunRealCmdDetached(cmd, args);
+                return RunRealCmdDetached(cmd, args);
             }
             else
             {
                 if (File.Exists(Settings.GitBinDir + "bash.exe"))
-                    RunRealCmdDetached("cmd.exe", "/c \"\"" + Settings.GitBinDir + "bash\" --login -i\"");
+                    return RunRealCmdDetached("cmd.exe", "/c \"\"" + Settings.GitBinDir + "bash\" --login -i\"");
                 else
-                    RunRealCmdDetached("cmd.exe", "/c \"\"" + Settings.GitBinDir + "sh\" --login -i\"");
+                    return RunRealCmdDetached("cmd.exe", "/c \"\"" + Settings.GitBinDir + "sh\" --login -i\"");
             }
         }
 
@@ -1211,7 +1215,7 @@ namespace GitCommands
         {
             return annotation
                 ? RunCmd(Settings.GitCommand,
-                                "tag \"" + tagName.Trim() + "\" -a " + (force ? "-f" : "")  + " -F \"" + WorkingDirGitDir() +
+                                "tag \"" + tagName.Trim() + "\" -a " + (force ? "-f" : "") + " -F \"" + WorkingDirGitDir() +
                                 "\\TAGMESSAGE\" -- \"" + revision + "\"")
                 : RunGitCmd("tag " + (force ? "-f" : "") + " \"" + tagName.Trim() + "\" \"" + revision + "\"");
         }
@@ -1714,7 +1718,7 @@ namespace GitCommands
                 if (p.FileNameA.Equals(fileA) && p.FileNameB.Equals(fileB) ||
                     p.FileNameA.Equals(fileB) && p.FileNameB.Equals(fileA))
                     return p;
-            
+
             return patchManager.Patches.Count > 0 ? patchManager.Patches[patchManager.Patches.Count - 1] : null;
         }
 
