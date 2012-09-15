@@ -26,12 +26,18 @@ namespace GitUI.RepoHosting
 
         private readonly IRepositoryHostPlugin _gitHoster;
         private bool _isFirstLoad;
+        private AsyncLoader loader = new AsyncLoader();
 
         // for translation only
         internal ViewPullRequestsForm()
         {
             InitializeComponent();
             Translate();
+            loader.LoadingError += (sender, ex) =>
+                {
+                    MessageBox.Show(this, ex.Exception.Message, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    this.UnMask();
+                };
         }
 
         public ViewPullRequestsForm(IRepositoryHostPlugin gitHoster)
@@ -56,7 +62,8 @@ namespace GitUI.RepoHosting
         {
             _isFirstLoad = true;
 
-            AsyncLoader.DoAsync(
+            this.Mask();
+            loader.Load(
                 () =>
                 {
                     var t = _gitHoster.GetHostedRemotesForCurrentWorkingDirRepo().ToList();
@@ -72,8 +79,8 @@ namespace GitUI.RepoHosting
                         _selectHostedRepoCB.Items.Add(hostedRepo.GetHostedRepository());
 
                     SelectNextHostedRepository();
-                },
-                ex => MessageBox.Show(this, ex.Message, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error));
+                    this.UnMask();
+                });
         }
 
         private void _selectedOwner_SelectedIndexChanged(object sender, EventArgs e)
