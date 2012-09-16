@@ -108,7 +108,9 @@ namespace PatchApply
                 {
                     if (validate)
                         ValidateInput(ref input, patch, state);
-                    patch.AppendTextLine(input);
+                    patch.AppendText(input);
+                    if (i < lines.Length - 1)
+                        patch.AppendText("\n");
                 }
             }
 
@@ -203,8 +205,8 @@ namespace PatchApply
             Match match = Regex.Match(patch.PatchHeader,
                                       "[ ][\\\"]{0,1}[a]/(.*)[\\\"]{0,1}[ ][\\\"]{0,1}[b]/(.*)[\\\"]{0,1}");
 
-            patch.FileNameA = match.Groups[1].Value;
-            patch.FileNameB = match.Groups[2].Value;
+            patch.FileNameA = match.Groups[1].Value.Trim();
+            patch.FileNameB = match.Groups[2].Value.Trim();
         }
 
         private static bool IsStartOfANewPatch(string input)
