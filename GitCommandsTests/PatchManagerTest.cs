@@ -144,13 +144,15 @@ namespace GitCommandsTests
         public void AppendHeaderLine(string line)
         {
             Patch.AppendTextLine(line);
-            PatchOutput.AppendLine(GitCommandHelpers.ReEncodeString(line, Settings.SystemEncoding, Settings.LosslessEncoding));
+            PatchOutput.Append(GitCommandHelpers.ReEncodeString(line, Settings.SystemEncoding, Settings.LosslessEncoding));
+            PatchOutput.Append("\n");
         }
 
         public void AppendDiffLine(string line, Encoding fileEncoding)
         {
             Patch.AppendTextLine(line);
-            PatchOutput.AppendLine(GitCommandHelpers.ReEncodeString(line, fileEncoding, Settings.LosslessEncoding));
+            PatchOutput.Append(GitCommandHelpers.ReEncodeString(line, fileEncoding, Settings.LosslessEncoding));
+            PatchOutput.Append("\n");
         }
 
     }
