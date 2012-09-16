@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
@@ -14,7 +15,6 @@ using GitUI.Hotkey;
 using GitUI.Script;
 using PatchApply;
 using ResourceManager.Translation;
-
 using Timer = System.Windows.Forms.Timer;
 
 namespace GitUI
@@ -134,6 +134,7 @@ namespace GitUI
         private bool _shouldReloadCommitTemplates = true;
         private AsyncLoader unstagedLoader = new AsyncLoader();
         private bool _useFormCommitMessage;
+        private CancellationTokenSource interactiveAddBashCloseWaitCTS;
 
 
         public FormCommit()
@@ -355,8 +356,8 @@ namespace GitUI
                     else
                         Close();
 #if !__MonoCS__ // animated GIFs are not supported in Mono/Linux
-            //trying to properly dispose loading image issue #1037
-            Loading.Image.Dispose();
+                    //trying to properly dispose loading image issue #1037
+                    Loading.Image.Dispose();
 #endif
                 }
             );
@@ -456,7 +457,7 @@ namespace GitUI
 
         private void Initialize()
         {
-            Initialize(true);        
+            Initialize(true);
         }
 
         private void UpdateMergeHead()
@@ -1760,7 +1761,7 @@ namespace GitUI
             foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
             {
                 GitModule module = new GitModule(GitModule.CurrentWorkingDir + item.Name + Settings.PathSeparator.ToString());
-                FormProcess.ShowDialog(this, module, arguments);                
+                FormProcess.ShowDialog(this, module, arguments);
             }
 
             Initialize();
@@ -1896,6 +1897,36 @@ namespace GitUI
         private void toolStripMenuItem10_Click(object sender, EventArgs e)
         {
             openContainingFolder(Staged);
+        }
+
+        private void toolStripMenuItem4_Click(object sender, EventArgs e)
+        {
+            if (Unstaged.SelectedItem == null)
+                return;
+
+            Process bashProcess = GitModule.Current.RunBash("git add -p \"" + Unstaged.SelectedItem.Name + "\"");
+
+            if (bashProcess != null)
+            {
+                // Reusing CTS if one has already been created by another unfinished interactive add
+                interactiveAddBashCloseWaitCTS =
+                    interactiveAddBashCloseWaitCTS ??
+                    new CancellationTokenSource();
+                
+                var formsTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+
+                Task.Factory.StartNew(() =>
+                {
+                    bashProcess.WaitForExit();
+                    using (bashProcess) { }
+                }).ContinueWith(_ =>
+                {
+                    RescanChanges();
+                },
+                interactiveAddBashCloseWaitCTS.Token,
+                TaskContinuationOptions.NotOnCanceled,
+                formsTaskScheduler);
+            }
         }
     }
 
