@@ -134,6 +134,7 @@ namespace GitUI
         private bool _shouldReloadCommitTemplates = true;
         private AsyncLoader unstagedLoader = new AsyncLoader();
         private bool _useFormCommitMessage;
+        private CancellationTokenSource interactiveAddBashCloseWaitCTS;
 
 
         public FormCommit()
@@ -1907,6 +1908,11 @@ namespace GitUI
 
             if (bashProcess != null)
             {
+                // Reusing CTS if one has already been created by another unfinished interactive add
+                interactiveAddBashCloseWaitCTS =
+                    interactiveAddBashCloseWaitCTS ??
+                    new CancellationTokenSource();
+                
                 var formsTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 
                 Task.Factory.StartNew(() =>
@@ -1917,8 +1923,8 @@ namespace GitUI
                 {
                     RescanChanges();
                 },
-                CancellationToken.None,
-                TaskContinuationOptions.None,
+                interactiveAddBashCloseWaitCTS.Token,
+                TaskContinuationOptions.NotOnCanceled,
                 formsTaskScheduler);
             }
         }

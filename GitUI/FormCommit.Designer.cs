@@ -22,6 +22,12 @@ namespace GitUI
                 unstagedLoader.Cancel();
             }
 
+            if (disposing && interactiveAddBashCloseWaitCTS != null)
+            {
+                interactiveAddBashCloseWaitCTS.Cancel();
+                interactiveAddBashCloseWaitCTS = null;
+            }
+
             if (disposing && (components != null))
             {
                 components.Dispose();
