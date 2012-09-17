@@ -301,16 +301,16 @@ namespace GitUI
             this.lblRangeFrom.AutoSize = true;
             this.lblRangeFrom.Location = new System.Drawing.Point(111, 28);
             this.lblRangeFrom.Name = "lblRangeFrom";
-            this.lblRangeFrom.Size = new System.Drawing.Size(35, 15);
+            this.lblRangeFrom.Size = new System.Drawing.Size(80, 15);
             this.lblRangeFrom.TabIndex = 9;
-            this.lblRangeFrom.Text = "From";
+            this.lblRangeFrom.Text = "From (exc.)";
             // 
             // txtFrom
             // 
             this.txtFrom.Enabled = false;
-            this.txtFrom.Location = new System.Drawing.Point(155, 25);
+            this.txtFrom.Location = new System.Drawing.Point(185, 25);
             this.txtFrom.Name = "txtFrom";
-            this.txtFrom.Size = new System.Drawing.Size(112, 23);
+            this.txtFrom.Size = new System.Drawing.Size(80, 23);
             this.txtFrom.TabIndex = 8;
             // 
             // chkInteractive
