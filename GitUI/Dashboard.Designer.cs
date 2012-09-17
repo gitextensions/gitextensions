@@ -110,7 +110,6 @@
             this.CommonActions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.CommonActions.BackColor = System.Drawing.Color.Transparent;
             this.CommonActions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CommonActions.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.CommonActions.Location = new System.Drawing.Point(0, 0);
             this.CommonActions.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.CommonActions.Name = "CommonActions";
@@ -147,7 +146,6 @@
             this.RecentRepositories.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.RecentRepositories.BackColor = System.Drawing.Color.Transparent;
             this.RecentRepositories.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RecentRepositories.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.RecentRepositories.Location = new System.Drawing.Point(0, 0);
             this.RecentRepositories.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.RecentRepositories.Name = "RecentRepositories";
@@ -162,7 +160,6 @@
             this.DonateCategory.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.DonateCategory.BackColor = System.Drawing.Color.Transparent;
             this.DonateCategory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DonateCategory.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.DonateCategory.Location = new System.Drawing.Point(0, 0);
             this.DonateCategory.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.DonateCategory.Name = "DonateCategory";

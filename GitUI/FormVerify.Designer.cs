@@ -94,7 +94,6 @@
             // 
             this.btnRestoreSelectedObjects.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRestoreSelectedObjects.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRestoreSelectedObjects.Location = new System.Drawing.Point(298, 21);
             this.btnRestoreSelectedObjects.Name = "btnRestoreSelectedObjects";
             this.btnRestoreSelectedObjects.Size = new System.Drawing.Size(317, 25);
@@ -243,7 +242,6 @@
             // 
             // mnuLostObjectView
             // 
-            this.mnuLostObjectView.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.mnuLostObjectView.Name = "mnuLostObjectView";
             this.mnuLostObjectView.Size = new System.Drawing.Size(163, 22);
             this.mnuLostObjectView.Text = "View";

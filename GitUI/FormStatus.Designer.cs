@@ -71,7 +71,6 @@ namespace GitUI
             this.MessageTextBox.BackColor = System.Drawing.SystemColors.Window;
             this.MessageTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.MessageTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MessageTextBox.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.MessageTextBox.Location = new System.Drawing.Point(0, 0);
             this.MessageTextBox.Name = "Output";
             this.MessageTextBox.ReadOnly = true;

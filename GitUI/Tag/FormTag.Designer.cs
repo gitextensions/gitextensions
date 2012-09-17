@@ -78,14 +78,12 @@ namespace GitUI.Tag
             this.GitRevisions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.GitRevisions.Filter = "";
             this.GitRevisions.FixedFilter = "";
-            this.GitRevisions.Font = new System.Drawing.Font("Segoe UI", 7.5F);
             this.GitRevisions.InMemAuthorFilter = "";
             this.GitRevisions.InMemCommitterFilter = "";
             this.GitRevisions.InMemMessageFilter = "";
             this.GitRevisions.LastRow = 0;
             this.GitRevisions.Location = new System.Drawing.Point(0, 0);
             this.GitRevisions.Name = "GitRevisions";
-            this.GitRevisions.NormalFont = new System.Drawing.Font("Tahoma", 8.75F);
             this.GitRevisions.Size = new System.Drawing.Size(734, 352);
             this.GitRevisions.SuperprojectCurrentCheckout = null;
             this.GitRevisions.TabIndex = 0;
@@ -105,10 +103,8 @@ namespace GitUI.Tag
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tagMessage.Enabled = false;
-            this.tagMessage.Font = new System.Drawing.Font("Segoe UI", 7.5F);
             this.tagMessage.Location = new System.Drawing.Point(110, 73);
             this.tagMessage.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.tagMessage.MistakeFont = new System.Drawing.Font("Segoe UI", 7.5F, System.Drawing.FontStyle.Underline);
             this.tagMessage.Name = "tagMessage";
             this.tagMessage.Size = new System.Drawing.Size(612, 82);
             this.tagMessage.TabIndex = 13;

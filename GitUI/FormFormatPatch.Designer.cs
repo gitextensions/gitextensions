@@ -210,14 +210,12 @@ namespace GitUI
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RevisionGrid.Filter = "";
             this.RevisionGrid.FixedFilter = "";
-            this.RevisionGrid.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.RevisionGrid.InMemAuthorFilter = "";
             this.RevisionGrid.InMemCommitterFilter = "";
             this.RevisionGrid.InMemMessageFilter = "";
             this.RevisionGrid.LastRow = 0;
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Name = "RevisionGrid";
-            this.RevisionGrid.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RevisionGrid.Size = new System.Drawing.Size(824, 313);
             this.RevisionGrid.SuperprojectCurrentCheckout = null;
             this.RevisionGrid.TabIndex = 0;

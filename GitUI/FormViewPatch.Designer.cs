@@ -131,7 +131,6 @@ namespace PatchApply
             // ChangesList
             // 
             this.ChangesList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ChangesList.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.ChangesList.Location = new System.Drawing.Point(0, 0);
             this.ChangesList.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.ChangesList.Name = "ChangesList";

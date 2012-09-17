@@ -64,7 +64,6 @@
             this._NO_TRANSLATE_GitAttributesText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._NO_TRANSLATE_GitAttributesText.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this._NO_TRANSLATE_GitAttributesText.IsReadOnly = false;
             this._NO_TRANSLATE_GitAttributesText.Location = new System.Drawing.Point(0, 0);
             this._NO_TRANSLATE_GitAttributesText.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);

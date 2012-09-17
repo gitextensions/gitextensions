@@ -815,6 +815,13 @@ namespace GitCommands
             set { SafeSet("difffont", value, ref _diffFont); }
         }
 
+        private static Font _font;
+        public static Font Font
+        {
+            get { return SafeGet("font", new Font(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.Size), ref _font); }
+            set { SafeSet("font", value, ref _font); }
+        }
+
         #endregion
 
         private static bool? _multicolorBranches;

@@ -34,7 +34,6 @@
             // dashboardEditor1
             // 
             this.dashboardEditor1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dashboardEditor1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F);
             this.dashboardEditor1.Location = new System.Drawing.Point(0, 0);
             this.dashboardEditor1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.dashboardEditor1.Name = "dashboardEditor1";

@@ -5,6 +5,7 @@ using System.ComponentModel;
 using ResourceManager;
 using ResourceManager.Translation;
 using System.Collections.Generic;
+using GitCommands;
 
 namespace GitUI
 {
@@ -12,7 +13,7 @@ namespace GitUI
     {
         public GitExtensionsControl()
         {
-            Font = SystemFonts.MessageBoxFont;
+            Font = Settings.Font;
 
             Load += GitExtensionsControl_Load;
         }

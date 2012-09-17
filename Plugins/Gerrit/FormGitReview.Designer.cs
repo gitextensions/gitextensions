@@ -112,7 +112,6 @@
             this._NO_TRANSLATE_GitReviewEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._NO_TRANSLATE_GitReviewEdit.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this._NO_TRANSLATE_GitReviewEdit.IsReadOnly = false;
             this._NO_TRANSLATE_GitReviewEdit.Location = new System.Drawing.Point(0, 0);
             this._NO_TRANSLATE_GitReviewEdit.Name = "_NO_TRANSLATE_GitReviewEdit";

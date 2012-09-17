@@ -145,10 +145,8 @@
             // 
             this._postCommentText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._postCommentText.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this._postCommentText.Location = new System.Drawing.Point(3, 582);
             this._postCommentText.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this._postCommentText.MistakeFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Underline);
             this._postCommentText.Name = "_postCommentText";
             this._postCommentText.Size = new System.Drawing.Size(280, 66);
             this._postCommentText.TabIndex = 0;
@@ -252,7 +250,6 @@
             // _fileStatusList
             // 
             this._fileStatusList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._fileStatusList.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this._fileStatusList.GitItemStatuses = null;
             this._fileStatusList.Location = new System.Drawing.Point(0, 0);
             this._fileStatusList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -266,7 +263,6 @@
             // _diffViewer
             // 
             this._diffViewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._diffViewer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this._diffViewer.Location = new System.Drawing.Point(0, 0);
             this._diffViewer.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this._diffViewer.Name = "_diffViewer";

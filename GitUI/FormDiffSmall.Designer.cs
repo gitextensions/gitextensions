@@ -70,7 +70,6 @@ namespace GitUI
             // DiffFiles
             // 
             this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DiffFiles.Font = new System.Drawing.Font("Segoe UI", 7.5F);
             this.DiffFiles.GitItemStatuses = null;
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
             this.DiffFiles.Name = "DiffFiles";
@@ -84,7 +83,6 @@ namespace GitUI
             // DiffText
             // 
             this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DiffText.Font = new System.Drawing.Font("Segoe UI", 7.5F);
             this.DiffText.Location = new System.Drawing.Point(0, 0);
             this.DiffText.Margin = new System.Windows.Forms.Padding(4);
             this.DiffText.Name = "DiffText";
@@ -112,7 +110,6 @@ namespace GitUI
             // commitInfo
             // 
             this.commitInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.commitInfo.Font = new System.Drawing.Font("Segoe UI", 7.5F);
             this.commitInfo.Location = new System.Drawing.Point(0, 0);
             this.commitInfo.Name = "commitInfo";
             this.commitInfo.Size = new System.Drawing.Size(717, 115);
