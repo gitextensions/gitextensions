@@ -426,7 +426,6 @@ namespace GitUI
             // Unstaged
             // 
             this.Unstaged.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Unstaged.Font = new System.Drawing.Font("Tahoma", 9.75F);
             this.Unstaged.GitItemStatuses = null;
             this.Unstaged.Location = new System.Drawing.Point(0, 0);
             this.Unstaged.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -617,7 +616,6 @@ namespace GitUI
             // 
             this.Staged.ContextMenuStrip = this.StagedFileContext;
             this.Staged.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Staged.Font = new System.Drawing.Font("Tahoma", 9.75F);
             this.Staged.GitItemStatuses = null;
             this.Staged.Location = new System.Drawing.Point(0, 28);
             this.Staged.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -848,7 +846,6 @@ namespace GitUI
             // SelectedDiff
             // 
             this.SelectedDiff.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SelectedDiff.Font = new System.Drawing.Font("Tahoma", 9.75F);
             this.SelectedDiff.Location = new System.Drawing.Point(0, 0);
             this.SelectedDiff.Margin = new System.Windows.Forms.Padding(2, 3, 3, 3);
             this.SelectedDiff.Name = "SelectedDiff";
@@ -869,10 +866,8 @@ namespace GitUI
             // Message
             // 
             this.Message.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Message.Font = new System.Drawing.Font("Tahoma", 9.75F);
             this.Message.Location = new System.Drawing.Point(0, 0);
             this.Message.Margin = new System.Windows.Forms.Padding(0);
-            this.Message.MistakeFont = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Underline);
             this.Message.Name = "Message";
             this.Message.Size = new System.Drawing.Size(342, 102);
             this.Message.TabIndex = 13;

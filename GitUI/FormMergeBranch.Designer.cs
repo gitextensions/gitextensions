@@ -115,7 +115,6 @@
             // Branches
             // 
             this.Branches.BranchesToSelect = null;
-            this.Branches.Font = new System.Drawing.Font("Segoe UI", 7.5F);
             this.Branches.Location = new System.Drawing.Point(130, 68);
             this.Branches.Margin = new System.Windows.Forms.Padding(0);
             this.Branches.Name = "Branches";

@@ -141,7 +141,6 @@
             this._NO_TRANSLATE_GitIgnoreEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._NO_TRANSLATE_GitIgnoreEdit.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this._NO_TRANSLATE_GitIgnoreEdit.IsReadOnly = false;
             this._NO_TRANSLATE_GitIgnoreEdit.Location = new System.Drawing.Point(0, 0);
             this._NO_TRANSLATE_GitIgnoreEdit.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);

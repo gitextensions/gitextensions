@@ -106,14 +106,12 @@ namespace GitUI
             this.FileChanges.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FileChanges.Filter = "";
             this.FileChanges.FixedFilter = "";
-            this.FileChanges.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.FileChanges.InMemAuthorFilter = "";
             this.FileChanges.InMemCommitterFilter = "";
             this.FileChanges.InMemMessageFilter = "";
             this.FileChanges.LastRow = 0;
             this.FileChanges.Location = new System.Drawing.Point(0, 0);
             this.FileChanges.Name = "FileChanges";
-            this.FileChanges.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.FileChanges.Size = new System.Drawing.Size(748, 102);
             this.FileChanges.SuperprojectCurrentCheckout = null;
             this.FileChanges.TabIndex = 2;
@@ -237,7 +235,6 @@ namespace GitUI
             // View
             // 
             this.View.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.View.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.View.Location = new System.Drawing.Point(3, 3);
             this.View.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.View.Name = "View";
@@ -258,7 +255,6 @@ namespace GitUI
             // Diff
             // 
             this.Diff.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Diff.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.Diff.Location = new System.Drawing.Point(3, 3);
             this.Diff.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Diff.Name = "Diff";
@@ -278,7 +274,6 @@ namespace GitUI
             // blameControl1
             // 
             this.Blame.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Blame.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.Blame.Location = new System.Drawing.Point(0, 0);
             this.Blame.Name = "blameControl1";
             this.Blame.Size = new System.Drawing.Size(740, 288);

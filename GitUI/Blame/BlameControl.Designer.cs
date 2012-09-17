@@ -78,7 +78,6 @@
             // 
             this.commitInfo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.commitInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.commitInfo.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.commitInfo.Location = new System.Drawing.Point(0, 0);
             this.commitInfo.Margin = new System.Windows.Forms.Padding(4);
             this.commitInfo.Name = "commitInfo";
@@ -108,7 +107,6 @@
             // 
             this.BlameCommitter.ContextMenuStrip = this.contextMenu;
             this.BlameCommitter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BlameCommitter.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.BlameCommitter.IsReadOnly = false;
             this.BlameCommitter.Location = new System.Drawing.Point(0, 0);
             this.BlameCommitter.Margin = new System.Windows.Forms.Padding(4);
@@ -157,7 +155,6 @@
             // BlameFile
             // 
             this.BlameFile.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BlameFile.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.BlameFile.IsReadOnly = false;
             this.BlameFile.Location = new System.Drawing.Point(0, 0);
             this.BlameFile.Margin = new System.Windows.Forms.Padding(4);

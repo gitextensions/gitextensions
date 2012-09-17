@@ -67,7 +67,6 @@
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RevisionGrid.Filter = "";
             this.RevisionGrid.FixedFilter = "";
-            this.RevisionGrid.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.RevisionGrid.InMemAuthorFilter = "";
             this.RevisionGrid.InMemCommitterFilter = "";
             this.RevisionGrid.InMemMessageFilter = "";

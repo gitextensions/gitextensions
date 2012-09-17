@@ -94,10 +94,8 @@
             this._bodyTB.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._bodyTB.Font = new System.Drawing.Font("Segoe UI", 9F);
             this._bodyTB.Location = new System.Drawing.Point(58, 45);
             this._bodyTB.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this._bodyTB.MistakeFont = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Underline);
             this._bodyTB.Name = "_bodyTB";
             this._bodyTB.Size = new System.Drawing.Size(462, 124);
             this._bodyTB.TabIndex = 1;

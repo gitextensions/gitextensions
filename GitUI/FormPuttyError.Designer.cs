@@ -85,7 +85,7 @@
             // 
             this.lblPleaseLoadKey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblPleaseLoadKey.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPleaseLoadKey.Font = new System.Drawing.Font(this.Font,System.Drawing.FontStyle.Bold);
             this.lblPleaseLoadKey.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             this.lblPleaseLoadKey.Location = new System.Drawing.Point(64, 18);
             this.lblPleaseLoadKey.Name = "lblPleaseLoadKey";

@@ -112,7 +112,7 @@ namespace GitUI
 
         private void SetFont()
         {
-            Font = SystemFonts.MessageBoxFont;
+            Font = Settings.Font;
         }
 
         #region icon

@@ -604,7 +604,6 @@ namespace GitUI
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RevisionGrid.Filter = "";
             this.RevisionGrid.FixedFilter = "";
-            this.RevisionGrid.Font = new System.Drawing.Font("Tahoma", 9.75F);
             this.RevisionGrid.InMemAuthorFilter = "";
             this.RevisionGrid.InMemCommitterFilter = "";
             this.RevisionGrid.InMemMessageFilter = "";
@@ -647,7 +646,6 @@ namespace GitUI
             this.RevisionInfo.BackColor = System.Drawing.SystemColors.Window;
             this.RevisionInfo.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RevisionInfo.Font = new System.Drawing.Font("Tahoma", 9.75F);
             this.RevisionInfo.Location = new System.Drawing.Point(0, 0);
             this.RevisionInfo.Margin = new System.Windows.Forms.Padding(10);
             this.RevisionInfo.Name = "RevisionInfo";
@@ -811,7 +809,6 @@ namespace GitUI
             // FileText
             // 
             this.FileText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FileText.Font = new System.Drawing.Font("Tahoma", 9.75F);
             this.FileText.Location = new System.Drawing.Point(0, 0);
             this.FileText.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.FileText.Name = "FileText";
@@ -851,7 +848,6 @@ namespace GitUI
             // 
             this.DiffFiles.ContextMenuStrip = this.DiffContextMenu;
             this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DiffFiles.Font = new System.Drawing.Font("Tahoma", 9.75F);
             this.DiffFiles.GitItemStatuses = null;
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
             this.DiffFiles.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -975,7 +971,6 @@ namespace GitUI
             // DiffText
             // 
             this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DiffText.Font = new System.Drawing.Font("Tahoma", 9.75F);
             this.DiffText.Location = new System.Drawing.Point(0, 0);
             this.DiffText.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DiffText.Name = "DiffText";

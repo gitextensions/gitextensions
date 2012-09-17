@@ -75,7 +75,6 @@
             this.Message,
             this.Author,
             this.CommitDate});
-            this.ParentsList.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.ParentsList.FullRowSelect = true;
             this.ParentsList.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.ParentsList.HideSelection = false;

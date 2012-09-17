@@ -195,6 +195,7 @@ namespace GitUI
         #endregion
 
         private Font diffFont;
+        private Font applicationFont;
         private const string GitExtensionsShellExName = "GitExtensionsShellEx32.dll";
         private string IconName = "bug";
 
@@ -217,14 +218,17 @@ namespace GitUI
 
             GlobalEditor.Items.AddRange(new Object[] { "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", npp + " -multiInst -nosession" });
 
-            SetCurrentDiffFont(Settings.DiffFont);
+            SetCurrentDiffFont(Settings.Font, Settings.DiffFont);
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             base.OnClosing(e);
             if (!e.Cancel)
+            {
                 diffFontDialog.Dispose();
+                applicationDialog.Dispose();
+            }
             
         }
 
@@ -621,6 +625,7 @@ namespace GitUI
             Settings.DiffAddedExtraColor = _NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor;
             Settings.DiffRemovedExtraColor = _NO_TRANSLATE_ColorRemovedLineDiffLabel.BackColor;
             Settings.DiffFont = diffFont;
+            Settings.Font = applicationFont;
             Settings.DiffSectionColor = _NO_TRANSLATE_ColorSectionLabel.BackColor;
 
             Settings.IconColor = GetSelectedApplicationIconColor();
@@ -2294,17 +2299,30 @@ namespace GitUI
 
             if (result == DialogResult.OK || result == DialogResult.Yes)
             {
-                SetCurrentDiffFont(diffFontDialog.Font);
+                SetCurrentDiffFont(applicationFont, diffFontDialog.Font);
             }
         }
 
-        private void SetCurrentDiffFont(Font font)
+        private void applicationFontChangeButton_Click(object sender, EventArgs e)
         {
-            diffFont = font;
+            applicationDialog.Font = applicationFont;
+            DialogResult result = applicationDialog.ShowDialog(this);
+
+            if (result == DialogResult.OK || result == DialogResult.Yes)
+            {
+                SetCurrentDiffFont(applicationDialog.Font, diffFont);
+            }
+        }
+
+        private void SetCurrentDiffFont(Font applicationFont, Font diffFont)
+        {
+            this.diffFont = diffFont;
+            this.applicationFont = applicationFont;
 
             diffFontChangeButton.Text =
-                string.Format("{0}, {1}", diffFont.FontFamily.Name, (int)diffFont.Size);
-
+                string.Format("{0}, {1}", this.diffFont.FontFamily.Name, (int)this.diffFont.Size);
+            applicationFontChangeButton.Text =
+                string.Format("{0}, {1}", this.applicationFont.FontFamily.Name, (int)this.applicationFont.Size);
         }
 
         private void BrowseCommitTemplate_Click(object sender, EventArgs e)
@@ -2365,5 +2383,7 @@ namespace GitUI
             LoadSettings();
             Rescan_Click(null, null);
         }
+
+
     }
 }
