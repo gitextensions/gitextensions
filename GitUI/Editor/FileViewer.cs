@@ -439,6 +439,7 @@ namespace GitUI.Editor
             }
         }
 
+
         private static bool IsBinaryFile(string fileName)
         {
             return FileHelper.IsBinaryFile(fileName);
@@ -663,6 +664,11 @@ namespace GitUI.Editor
             return _internalFileViewer.GetSelectionLength();
         }
 
+        public void GoToLine(int line)
+        {
+            _internalFileViewer.GoToLine(line);
+        }
+
         private void NextChangeButtonClick(object sender, EventArgs e)
         {
             var firstVisibleLine = _internalFileViewer.FirstVisibleLine;
@@ -863,7 +869,7 @@ namespace GitUI.Editor
             {
                 formGoToLine.SetMaxLineNumber(_internalFileViewer.TotalNumberOfLines);
                 if (formGoToLine.ShowDialog(this) == DialogResult.OK)
-                    _internalFileViewer.GoToLine(formGoToLine.GetLineNumber() - 1);
+                    GoToLine(formGoToLine.GetLineNumber() - 1);
             }
         }
     }
