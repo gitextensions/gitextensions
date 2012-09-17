@@ -235,7 +235,7 @@ namespace GitUI
 
         private void btnChooseFromRevision_Click(object sender, EventArgs e)
         {
-            using(var chooseForm = new FormChooseCommit())
+            using(var chooseForm = new FormChooseCommit(txtFrom.Text))
             {
                 if (DialogResult.OK == chooseForm.ShowDialog() && null != chooseForm.SelectedRevision)
                 {

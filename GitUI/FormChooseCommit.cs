@@ -7,17 +7,28 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Threading;
+using GitCommands;
 
 namespace GitUI
 {
     public partial class FormChooseCommit : GitExtensionsForm
     {
-        public FormChooseCommit()
+
+        public FormChooseCommit(string preselectCommit)
             : base(true)
         {
             InitializeComponent();
             Translate();
             revisionGrid.MultiSelect = false;
+
+            if (!String.IsNullOrEmpty(preselectCommit))
+            {
+                string guid = GitModule.Current.RevParse(preselectCommit);
+                if (!String.IsNullOrEmpty(guid))
+                {
+                    revisionGrid.SetInitialRevision(new GitRevision(guid));
+                }
+            }
 
         }
 
@@ -28,7 +39,6 @@ namespace GitUI
 
         protected override void OnLoad(EventArgs e)
         {
-            
             revisionGrid.Load();
             base.OnLoad(e);
         }
