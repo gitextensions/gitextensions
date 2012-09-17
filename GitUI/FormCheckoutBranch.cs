@@ -27,6 +27,7 @@ namespace GitUI
 
         private string _containRevison;
         private bool isDirtyDir;
+        private bool isLoading = false;
         private string _remoteName = "";
         private string _newLocalBranchName = "";
         private string _localBranchName = "";
@@ -50,32 +51,41 @@ namespace GitUI
         public FormCheckoutBranch(string branch, bool remote, string containRevison)
             : this()
         {
-            _containRevison = containRevison;
+            isLoading = true;
 
-            LocalBranch.Checked = !remote;
-            Remotebranch.Checked = remote;
-
-            Initialize();
-
-            //Set current branch after initialize, because initialize will reset it
-            if (!string.IsNullOrEmpty(branch))
-                Branches.Text = branch;
-
-            if (containRevison != null)
+            try
             {
-                if (Branches.Items.Count == 0)
-                {
-                    Remotebranch.Checked = true;
-                    Initialize();
-                }
-                if (Branches.Items.Count == 1)
-                    Branches.SelectedIndex = 0;
-            }
+                _containRevison = containRevison;
 
-            isDirtyDir = GitModule.Current.IsDirtyDir();
-            localChangesGB.Visible = isDirtyDir;
-            ChangesMode = Settings.CheckoutBranchAction;
-            defaultActionChx.Checked = Settings.UseDefaultCheckoutBranchAction;
+                LocalBranch.Checked = !remote;
+                Remotebranch.Checked = remote;
+
+                Initialize();
+
+                //Set current branch after initialize, because initialize will reset it
+                if (!string.IsNullOrEmpty(branch))
+                    Branches.Text = branch;
+
+                if (containRevison != null)
+                {
+                    if (Branches.Items.Count == 0)
+                    {
+                        Remotebranch.Checked = true;
+                        Initialize();
+                    }
+                    if (Branches.Items.Count == 1)
+                        Branches.SelectedIndex = 0;
+                }
+
+                isDirtyDir = GitModule.Current.IsDirtyDir();
+                localChangesGB.Visible = isDirtyDir;
+                ChangesMode = Settings.CheckoutBranchAction;
+                defaultActionChx.Checked = Settings.UseDefaultCheckoutBranchAction;
+            }
+            finally
+            {
+                isLoading = false;
+            }
         }
 
         public DialogResult DoDefaultActionOrShow(IWin32Window owner)
@@ -219,12 +229,14 @@ namespace GitUI
 
         private void BranchTypeChanged()
         {
-            Initialize();
+            if (!isLoading)
+                Initialize();
         }
 
         private void LocalBranchCheckedChanged(object sender, EventArgs e)
         {
-            BranchTypeChanged();
+            //We only need to refresh the dialog once -> RemoteBranchCheckedChanged will trigger this
+            //BranchTypeChanged();
         }
 
         private void RemoteBranchCheckedChanged(object sender, EventArgs e)
