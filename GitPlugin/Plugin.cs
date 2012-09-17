@@ -144,46 +144,6 @@ namespace GitPlugin.Commands
             }
         }
 
-        //private void LoadCommandBarSettings(CommandBar commandBar)
-        //{
-        //    if (commandBar == null)
-        //        return;
-
-        //    try
-        //    {
-        //        if (GitPluginConfig.Default.CommandBarPosition > -1)
-        //            commandBar.Position = (MsoBarPosition)GitPluginConfig.Default.CommandBarPosition;
-
-        //        if (GitPluginConfig.Default.CommandBarRowIndex > -1)
-        //            commandBar.RowIndex = GitPluginConfig.Default.CommandBarRowIndex;
-
-        //        commandBar.Visible = GitPluginConfig.Default.CommandBarVisible;
-        //    }
-        //    catch
-        //    {
-        //        // Ignore error and return with default settings
-        //    }
-        //}
-
-        //private void SaveCommandBarSettings(CommandBar commandBar)
-        //{
-        //    if (commandBar == null)
-        //        return;
-
-        //    try
-        //    {
-        //        GitPluginConfig.Default.CommandBarPosition = (int)commandBar.Position;
-        //        GitPluginConfig.Default.CommandBarRowIndex = commandBar.RowIndex;
-        //        GitPluginConfig.Default.CommandBarVisible = commandBar.Visible;
-
-        //        GitPluginConfig.Default.Save();
-        //    }
-        //    catch
-        //    {
-        //        // Ignore errors
-        //    }
-        //}
-
         public static void ChangeCommandCaption(DTE2 application, string commandBarName, string tooltipText, string caption)
         {
             try
