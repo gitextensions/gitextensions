@@ -277,6 +277,12 @@ namespace GitUI
                 ResetSoftClick(this, null);
                 return true;
             }
+            else if (SelectedDiff.ContainsFocus && _currentItemStaged)
+            {
+                ResetSelectedLinesToolStripMenuItemClick(this, null);
+                return true;
+            }
+            
             return false;
         }
 
@@ -287,6 +293,12 @@ namespace GitUI
                 StageClick(this, null);
                 return true;
             }
+            else if (SelectedDiff.ContainsFocus && !_currentItemStaged)
+            {
+                StageSelectedLinesToolStripMenuItemClick(this, null);
+                return true;
+            }
+
             return false;
         }
 
@@ -295,6 +307,11 @@ namespace GitUI
             if (Staged.Focused)
             {
                 UnstageFilesClick(this, null);
+                return true;
+            }
+            else if (SelectedDiff.ContainsFocus && _currentItemStaged)
+            {
+                StageSelectedLinesToolStripMenuItemClick(this, null);
                 return true;
             }
             return false;
@@ -380,8 +397,28 @@ namespace GitUI
                 {
                     MessageBox.Show(this, output);
                 }
-                RescanChanges();
+                if (_currentItemStaged)
+                    Staged.StoreNextIndexToSelect();
+                else
+                    Unstaged.StoreNextIndexToSelect();
+                ScheduleGoToLine();
+                RescanChanges();                
             }
+        }
+
+        private void ScheduleGoToLine()
+        {
+            int SelectedDifflineToSelect = SelectedDiff.GetText().Substring(0, SelectedDiff.GetSelectionPosition()).Count(c => c == '\n');
+            string selectedFileName = _currentItem.Name;
+            EventHandler textLoaded = null;
+            textLoaded = (a, b) =>
+            {
+                if (_currentItem != null && _currentItem.Name.Equals(selectedFileName))
+                    SelectedDiff.GoToLine(SelectedDifflineToSelect);
+                SelectedDiff.TextLoaded -= textLoaded;
+            };
+
+            SelectedDiff.TextLoaded += textLoaded;
         }
 
         private void ResetSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
@@ -404,6 +441,8 @@ namespace GitUI
                 {
                     MessageBox.Show(this, output);
                 }
+                Staged.StoreNextIndexToSelect();
+                ScheduleGoToLine();
                 RescanChanges();
             }
         }
@@ -513,6 +552,7 @@ namespace GitUI
             var inTheMiddleOfConflictedMerge = GitModule.Current.InTheMiddleOfConflictedMerge();
             SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
             Unstaged.SelectStoredNextIndex();
+            Staged.SelectStoredNextIndex();
 
             if (LoadUnstagedOutputFirstTime)
             {
