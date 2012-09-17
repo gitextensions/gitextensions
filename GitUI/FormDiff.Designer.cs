@@ -75,7 +75,6 @@ namespace GitUI
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RevisionGrid.Filter = "";
             this.RevisionGrid.FixedFilter = "";
-            this.RevisionGrid.Font = new System.Drawing.Font("Segoe UI", 7.5F);
             this.RevisionGrid.InMemAuthorFilter = "";
             this.RevisionGrid.InMemCommitterFilter = "";
             this.RevisionGrid.InMemMessageFilter = "";
@@ -110,7 +109,6 @@ namespace GitUI
             // DiffFiles
             // 
             this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DiffFiles.Font = new System.Drawing.Font("Segoe UI", 7.5F);
             this.DiffFiles.GitItemStatuses = null;
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
             this.DiffFiles.Name = "DiffFiles";
@@ -124,7 +122,6 @@ namespace GitUI
             // diffViewer
             // 
             this.diffViewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.diffViewer.Font = new System.Drawing.Font("Segoe UI", 7.5F);
             this.diffViewer.Location = new System.Drawing.Point(0, 0);
             this.diffViewer.Margin = new System.Windows.Forms.Padding(4);
             this.diffViewer.Name = "diffViewer";

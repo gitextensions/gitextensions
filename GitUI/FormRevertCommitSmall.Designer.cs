@@ -82,7 +82,6 @@
             this.columnHeader2,
             this.columnHeader3,
             this.columnHeader4});
-            this.ParentsList.Font = new System.Drawing.Font("Tahoma", 9F);
             this.ParentsList.FullRowSelect = true;
             this.ParentsList.HideSelection = false;
             this.ParentsList.Location = new System.Drawing.Point(12, 148);

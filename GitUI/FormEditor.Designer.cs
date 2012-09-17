@@ -40,7 +40,6 @@
             // fileViewer
             // 
             this.fileViewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.fileViewer.Font = new System.Drawing.Font("Tahoma", 9.75F);
             this.fileViewer.Location = new System.Drawing.Point(0, 25);
             this.fileViewer.Margin = new System.Windows.Forms.Padding(0);
             this.fileViewer.Name = "fileViewer";

@@ -299,7 +299,6 @@ namespace GitUI
             this.Stashed.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Stashed.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.Stashed.GitItemStatuses = null;
             this.Stashed.Location = new System.Drawing.Point(0, 0);
             this.Stashed.Margin = new System.Windows.Forms.Padding(4);
@@ -314,7 +313,6 @@ namespace GitUI
             // View
             // 
             this.View.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.View.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.View.Location = new System.Drawing.Point(0, 0);
             this.View.Margin = new System.Windows.Forms.Padding(4);
             this.View.Name = "View";

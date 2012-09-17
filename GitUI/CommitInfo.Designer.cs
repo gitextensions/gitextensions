@@ -76,7 +76,6 @@ namespace GitUI
             // 
             this.gravatar1.BackColor = System.Drawing.SystemColors.Window;
             this.gravatar1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gravatar1.Font = new System.Drawing.Font("Tahoma", 9.75F);
             this.gravatar1.Location = new System.Drawing.Point(0, 0);
             this.gravatar1.Margin = new System.Windows.Forms.Padding(0);
             this.gravatar1.Name = "gravatar1";
@@ -111,7 +110,6 @@ namespace GitUI
             this._RevisionHeader.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this._RevisionHeader.ContextMenuStrip = this.commitInfoContextMenuStrip;
             this._RevisionHeader.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._RevisionHeader.Font = new System.Drawing.Font("Tahoma", 9.75F);
             this._RevisionHeader.Location = new System.Drawing.Point(0, 0);
             this._RevisionHeader.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this._RevisionHeader.Name = "_RevisionHeader";

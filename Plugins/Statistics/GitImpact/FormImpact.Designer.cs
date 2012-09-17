@@ -58,7 +58,6 @@
             // lblAuthor
             // 
             this.lblAuthor.AutoSize = true;
-            this.lblAuthor.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAuthor.Location = new System.Drawing.Point(30, 8);
             this.lblAuthor.Name = "lblAuthor";
             this.lblAuthor.Size = new System.Drawing.Size(46, 16);
@@ -67,7 +66,6 @@
             // 
             // cbIncludingSubmodules
             // 
-            this.cbIncludingSubmodules.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cbIncludingSubmodules.AutoSize = true;
             this.cbIncludingSubmodules.Location = new System.Drawing.Point(692, 9);
             this.cbIncludingSubmodules.Name = "cbIncludingSubmodules";
@@ -81,7 +79,6 @@
             // 
             this.Impact.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.Impact.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Impact.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.Impact.Location = new System.Drawing.Point(0, 32);
             this.Impact.Name = "Impact";
             this.Impact.ShowSubmodules = false;

@@ -92,7 +92,6 @@
             // Branches
             // 
             this.Branches.BranchesToSelect = null;
-            this.Branches.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.Branches.Location = new System.Drawing.Point(146, 96);
             this.Branches.Margin = new System.Windows.Forms.Padding(0);
             this.Branches.Name = "Branches";

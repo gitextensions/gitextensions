@@ -95,10 +95,8 @@ namespace GitUI.Tag
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tagMessage.Enabled = false;
-            this.tagMessage.Font = new System.Drawing.Font("Segoe UI", 7.5F);
             this.tagMessage.Location = new System.Drawing.Point(108, 73);
             this.tagMessage.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.tagMessage.MistakeFont = new System.Drawing.Font("Segoe UI", 7.5F, System.Drawing.FontStyle.Underline);
             this.tagMessage.Name = "tagMessage";
             this.tagMessage.Size = new System.Drawing.Size(339, 82);
             this.tagMessage.TabIndex = 11;

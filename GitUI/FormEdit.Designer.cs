@@ -37,7 +37,6 @@ namespace GitUI
             // Viewer
             // 
             this.Viewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Viewer.Font = new System.Drawing.Font("Segoe UI", 7.5F);
             this.Viewer.Location = new System.Drawing.Point(0, 0);
             this.Viewer.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Viewer.Name = "Viewer";
