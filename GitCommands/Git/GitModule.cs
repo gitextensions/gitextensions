@@ -1345,7 +1345,7 @@ namespace GitCommands
                 remoteBranchArguments = "+refs/heads/" + remoteBranch + "";
 
             string localBranchArguments;
-            var remoteUrl = GetPathSetting(string.Format("remote.{0}.url", remote));
+            var remoteUrl = GetPathSetting(string.Format(SettingKeyString.RemoteUrl, remote));
 
             if (PathIsUrl(remote) && !string.IsNullOrEmpty(localBranch) && string.IsNullOrEmpty(remoteUrl))
                 localBranchArguments = ":refs/heads/" + localBranch + "";
