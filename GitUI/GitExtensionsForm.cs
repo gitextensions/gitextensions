@@ -304,14 +304,41 @@ namespace GitUI
             StartPosition = FormStartPosition.Manual;
             Size = position.Rect.Size;
             if (Owner == null || !_windowCentred)
-                Location = new Point(position.Rect.Location.X, Math.Max(0, position.Rect.Location.X));
+            {
+                Point location = position.Rect.Location;
+                Rectangle? rect = FindWindowScreen(location);
+                if (rect != null)
+                    location.Y = rect.Value.Y;
+                Location = location;
+            }
             else
             {
                 // Calculate location for modal form with parent
-                Location = new Point(Owner.Left + Owner.Width / 2 - Width / 2, 
+                Location = new Point(Owner.Left + Owner.Width / 2 - Width / 2,
                     Math.Max(0, Owner.Top + Owner.Height / 2 - Height / 2));
             }
             WindowState = position.State;
+        }
+
+        private Rectangle? FindWindowScreen(Point location)
+        {
+            SortedDictionary<float, Rectangle> distance = new SortedDictionary<float, Rectangle>();
+            foreach (var rect in (from screen in Screen.AllScreens
+                                  select screen.WorkingArea))
+            {
+                if (rect.Contains(location) && !distance.ContainsKey(0.0f))
+                    return null; // title in screen
+
+                int midPointX = (rect.X + rect.Width / 2);
+                int midPointY = (rect.Y + rect.Height / 2);
+                float d = (float)Math.Sqrt((location.X - midPointX) * (location.X - midPointX) +
+                    (location.Y - midPointY) * (location.Y - midPointY));
+                distance.Add(d, rect);
+            }
+            if (distance.Count > 0)
+                return distance.First().Value;
+            else
+                return null;
         }
 
         /// <summary>
