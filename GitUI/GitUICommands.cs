@@ -311,7 +311,7 @@ namespace GitUI
             return DoAction(owner, true, PreCheckoutBranch, PostCheckoutBranch, () =>
                 {
                     using (var form = new FormCheckoutBranch(branch, remote, containRevison))
-                        return form.DoDefaultActionOrShow(owner) != DialogResult.Cancel;                 
+                        return form.DoDefaultActionOrShow(owner) != DialogResult.Cancel;
                 }
             );
         }
@@ -329,7 +329,7 @@ namespace GitUI
         {
             if (requiresValidWorkingDir && !RequiresValidWorkingDir(owner))
                 return false;
-            
+
             if (!InvokeEvent(owner, preEvent))
                 return false;
 
@@ -992,7 +992,13 @@ namespace GitUI
             return StartVerifyDatabaseDialog(null);
         }
 
-        public bool StartRemotesDialog(IWin32Window owner)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="owner"></param>
+        /// <param name="preselectRemote">makes the FormRemotes initialially select the given remote</param>
+        /// <returns></returns>
+        public bool StartRemotesDialog(IWin32Window owner, string preselectRemote)
         {
             if (!RequiresValidWorkingDir(owner))
                 return false;
@@ -1001,11 +1007,19 @@ namespace GitUI
                 return true;
 
             using (var form = new FormRemotes())
+            {
+                form.PreselectRemoteOnLoad = preselectRemote;
                 form.ShowDialog(owner);
+            }
 
             InvokeEvent(owner, PostRemotes);
 
             return true;
+        }
+
+        public bool StartRemotesDialog(IWin32Window owner)
+        {
+            return StartRemotesDialog(owner, null);
         }
 
         public bool StartRemotesDialog()
@@ -1300,14 +1314,14 @@ namespace GitUI
 
         private void InvokePostEvent(IWin32Window ownerForm, bool actionDone, GitUIPostActionEventHandler gitUIEventHandler)
         {
-            
+
             if (gitUIEventHandler != null)
             {
                 var e = new GitUIPostActionEventArgs(ownerForm, this, actionDone);
                 gitUIEventHandler(this, e);
             }
         }
-        
+
         internal static bool InvokeEvent(object sender, IWin32Window ownerForm, GitUIEventHandler gitUIEventHandler)
         {
             try
