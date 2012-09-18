@@ -45,16 +45,13 @@ namespace GitUI
 
         public IEnumerable<GitHead> GetSelectedBranches()
         {
-            foreach (var branchName in branches.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string branch in branches.Text.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                foreach (string branch in branches.Text.Split(new char[]{',', ' '}, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    GitHead gitHead = _branchesToSelect.FirstOrDefault(g => g.Name == branch);
-                    if (gitHead == null)
-                        MessageBox.Show(string.Format(_branchCheckoutError.Text, branch));
-                    else
-                        yield return gitHead;
-                }
+                GitHead gitHead = _branchesToSelect.FirstOrDefault(g => g.Name == branch);
+                if (gitHead == null)
+                    MessageBox.Show(string.Format(_branchCheckoutError.Text, branch));
+                else
+                    yield return gitHead;
             }
         }
 
