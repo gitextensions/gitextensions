@@ -126,8 +126,8 @@ namespace GitUI
         private bool _currentItemStaged;
         private readonly CommitKind _commitKind;
         private readonly GitRevision _editedCommit;
-        private readonly ToolStripItem _StageSelectedLinesToolStripMenuItem;
-        private readonly ToolStripItem _ResetSelectedLinesToolStripMenuItem;
+        private readonly ToolStripMenuItem _StageSelectedLinesToolStripMenuItem;
+        private readonly ToolStripMenuItem _ResetSelectedLinesToolStripMenuItem;
         private string commitTemplate;
         private bool IsMergeCommit { get; set; }
         private bool shouldRescanChanges = true;
@@ -184,15 +184,17 @@ namespace GitUI
             Unstaged.DoubleClick += Unstaged_DoubleClick;
             Staged.DoubleClick += Staged_DoubleClick;
 
-            SelectedDiff.AddContextMenuEntry(null, null);
+            HotkeysEnabled = true;
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+
+            SelectedDiff.AddContextMenuSeparator();
             _StageSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_stageSelectedLines.Text, StageSelectedLinesToolStripMenuItemClick);
+            _StageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.StageSelectedFile).ToShortcutKeyDisplayString();
             _ResetSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_resetSelectedLines.Text, ResetSelectedLinesToolStripMenuItemClick);
+            _ResetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ResetSelectedFiles).ToShortcutKeyDisplayString();
 
             splitMain.SplitterDistance = Settings.CommitDialogSplitter;
             splitRight.SplitterDistance = Settings.CommitDialogRightSplitter;
-
-            HotkeysEnabled = true;
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
 
             SelectedDiff.ContextMenuOpening += SelectedDiff_ContextMenuOpening;
         }
@@ -591,6 +593,8 @@ namespace GitUI
             }
 
             _StageSelectedLinesToolStripMenuItem.Text = staged ? _unstageSelectedLines.Text : _stageSelectedLines.Text;
+            _StageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = 
+                GetShortcutKeys((int) (staged ? Commands.UnStageSelectedFile : Commands.StageSelectedFile)).ToShortcutKeyDisplayString();
             _ResetSelectedLinesToolStripMenuItem.Enabled = staged;
         }
 

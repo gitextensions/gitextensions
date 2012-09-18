@@ -178,16 +178,17 @@ namespace GitUI.Editor
         public event EventHandler TextLoaded;
         public event CancelEventHandler ContextMenuOpening;
 
-        public ToolStripItem AddContextMenuEntry(string text, EventHandler toolStripItem_Click)
+        public ToolStripSeparator AddContextMenuSeparator()
         {
-            if (string.IsNullOrEmpty(text))
-            {
-                ToolStripSeparator separator =new ToolStripSeparator();
-                contextMenu.Items.Add(separator);
-                return separator;
-            }
+            ToolStripSeparator separator = new ToolStripSeparator();
+            contextMenu.Items.Add(separator);
+            return separator;        
+        }
 
-            ToolStripItem toolStripItem = contextMenu.Items.Add(text);
+        public ToolStripMenuItem AddContextMenuEntry(string text, EventHandler toolStripItem_Click)
+        {
+            ToolStripMenuItem toolStripItem = new ToolStripMenuItem(text);
+            contextMenu.Items.Add(toolStripItem);
             toolStripItem.Click += toolStripItem_Click;
             return toolStripItem;
         }
