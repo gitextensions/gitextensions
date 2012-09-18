@@ -1,4 +1,4 @@
-﻿namespace GitUI
+namespace GitUI
 {
     partial class FormRebase
     {
@@ -41,6 +41,12 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.OptionsPanel = new System.Windows.Forms.Panel();
+            this.btnChooseFromRevision = new System.Windows.Forms.Button();
+            this.cboTo = new System.Windows.Forms.ComboBox();
+            this.chkSpecificRange = new System.Windows.Forms.CheckBox();
+            this.lblRangeTo = new System.Windows.Forms.Label();
+            this.lblRangeFrom = new System.Windows.Forms.Label();
+            this.txtFrom = new System.Windows.Forms.TextBox();
             this.chkInteractive = new System.Windows.Forms.CheckBox();
             this.chkPreserveMerges = new System.Windows.Forms.CheckBox();
             this.chkAutosquash = new System.Windows.Forms.CheckBox();
@@ -233,14 +239,79 @@
             // 
             // OptionsPanel
             // 
+            this.OptionsPanel.Controls.Add(this.btnChooseFromRevision);
+            this.OptionsPanel.Controls.Add(this.cboTo);
+            this.OptionsPanel.Controls.Add(this.chkSpecificRange);
+            this.OptionsPanel.Controls.Add(this.lblRangeTo);
+            this.OptionsPanel.Controls.Add(this.lblRangeFrom);
+            this.OptionsPanel.Controls.Add(this.txtFrom);			
             this.OptionsPanel.Controls.Add(this.chkInteractive);
             this.OptionsPanel.Controls.Add(this.chkPreserveMerges);
             this.OptionsPanel.Controls.Add(this.chkAutosquash);
             this.OptionsPanel.Location = new System.Drawing.Point(7, 72);
             this.OptionsPanel.Name = "OptionsPanel";
-            this.OptionsPanel.Size = new System.Drawing.Size(519, 26);
+            this.OptionsPanel.Size = new System.Drawing.Size(519, 51);
             this.OptionsPanel.TabIndex = 28;
             this.OptionsPanel.Visible = false;
+			// 
+            // btnChooseFromRevision
+            // 
+            this.btnChooseFromRevision.Enabled = false;
+            this.btnChooseFromRevision.Image = global::GitUI.Properties.Resources.Goto;
+            this.btnChooseFromRevision.Location = new System.Drawing.Point(270, 23);
+            this.btnChooseFromRevision.Name = "btnChooseFromRevision";
+            this.btnChooseFromRevision.Size = new System.Drawing.Size(25, 24);
+            this.btnChooseFromRevision.TabIndex = 30;
+            this.btnChooseFromRevision.UseVisualStyleBackColor = true;
+            this.btnChooseFromRevision.Click += new System.EventHandler(this.btnChooseFromRevision_Click);
+            // 
+            // cboTo
+            // 
+            this.cboTo.Enabled = false;
+            this.cboTo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.cboTo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cboTo.FormattingEnabled = true;
+            this.cboTo.Location = new System.Drawing.Point(332, 23);
+            this.cboTo.Name = "cboTo";
+            this.cboTo.Size = new System.Drawing.Size(184, 23);
+            this.cboTo.TabIndex = 29;
+            // 
+            // chkSpecificRange
+            // 
+            this.chkSpecificRange.AutoSize = true;
+            this.chkSpecificRange.Location = new System.Drawing.Point(2, 27);
+            this.chkSpecificRange.Name = "chkSpecificRange";
+            this.chkSpecificRange.Size = new System.Drawing.Size(100, 19);
+            this.chkSpecificRange.TabIndex = 12;
+            this.chkSpecificRange.Text = "Specific range";
+            this.chkSpecificRange.UseVisualStyleBackColor = true;
+            this.chkSpecificRange.CheckedChanged += new System.EventHandler(this.chkUseFromOnto_CheckedChanged);
+            // 
+            // lblRangeTo
+            // 
+            this.lblRangeTo.AutoSize = true;
+            this.lblRangeTo.Location = new System.Drawing.Point(295, 27);
+            this.lblRangeTo.Name = "lblRangeTo";
+            this.lblRangeTo.Size = new System.Drawing.Size(26, 15);
+            this.lblRangeTo.TabIndex = 11;
+            this.lblRangeTo.Text = "To";
+            // 
+            // lblRangeFrom
+            // 
+            this.lblRangeFrom.AutoSize = true;
+            this.lblRangeFrom.Location = new System.Drawing.Point(111, 28);
+            this.lblRangeFrom.Name = "lblRangeFrom";
+            this.lblRangeFrom.Size = new System.Drawing.Size(80, 15);
+            this.lblRangeFrom.TabIndex = 9;
+            this.lblRangeFrom.Text = "From (exc.)";
+            // 
+            // txtFrom
+            // 
+            this.txtFrom.Enabled = false;
+            this.txtFrom.Location = new System.Drawing.Point(185, 25);
+            this.txtFrom.Name = "txtFrom";
+            this.txtFrom.Size = new System.Drawing.Size(80, 23);
+            this.txtFrom.TabIndex = 8;
             // 
             // chkInteractive
             // 
@@ -453,10 +524,16 @@
         private System.Windows.Forms.Button SolveMergeconflicts;
         private System.Windows.Forms.Panel ContinuePanel;
         private System.Windows.Forms.Panel MergeToolPanel;
+        private System.Windows.Forms.CheckBox chkSpecificRange;
+        private System.Windows.Forms.Label lblRangeTo;
+        private System.Windows.Forms.Label lblRangeFrom;
+        private System.Windows.Forms.TextBox txtFrom;
         private System.Windows.Forms.CheckBox chkInteractive;
         private System.Windows.Forms.CheckBox chkAutosquash;
         private System.Windows.Forms.CheckBox chkPreserveMerges;
         private System.Windows.Forms.Panel OptionsPanel;
         private System.Windows.Forms.LinkLabel ShowOptions;
+        private System.Windows.Forms.ComboBox cboTo;
+        private System.Windows.Forms.Button btnChooseFromRevision;		
     }
 }
