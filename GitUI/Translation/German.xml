@@ -4285,6 +4285,10 @@ Kein Rebase möglich.</Value>
           <Source>Preserve Merges</Source>
           <Value>Merges beibehalten</Value>
         </TranslationItem>
+        <TranslationItem Name="chkSpecificRange" Property="Text">
+          <Source>Specific range</Source>
+          <Value>Commits</Value>
+        </TranslationItem>
         <TranslationItem Name="Currentbranch" Property="Text">
           <Source>Current</Source>
           <Value>Aktuell</Value>
@@ -4300,6 +4304,14 @@ Kein Rebase möglich.</Value>
         <TranslationItem Name="label3" Property="Text">
           <Source>Commits to re-apply:</Source>
           <Value>Wiederanzuwendende Commits:</Value>
+        </TranslationItem>
+        <TranslationItem Name="lblRangeFrom" Property="Text">
+          <Source>From</Source>
+          <Value>von</Value>
+        </TranslationItem>
+        <TranslationItem Name="lblRangeTo" Property="Text">
+          <Source>To</Source>
+          <Value>bis</Value>
         </TranslationItem>
         <TranslationItem Name="Mergetool" Property="Text">
           <Source>Solve conflicts</Source>

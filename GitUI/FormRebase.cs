@@ -23,6 +23,7 @@ namespace GitUI
         private readonly TranslationString _branchUpToDateCaption = new TranslationString("Rebase");
 
         private readonly string _defaultBranch;
+        private readonly string _defaultToBranch;
 
         public FormRebase(string defaultBranch)
             : base(true)
@@ -30,6 +31,13 @@ namespace GitUI
             InitializeComponent();
             Translate();
             _defaultBranch = defaultBranch;
+        }
+
+        public FormRebase(string from, string to, string defaultBranch)
+            : this(defaultBranch)
+        {
+            txtFrom.Text = from;
+            _defaultToBranch = to;
         }
 
         private void FormRebaseLoad(object sender, EventArgs e)
@@ -44,6 +52,14 @@ namespace GitUI
                 Branches.Text = _defaultBranch;
 
             Branches.Select();
+
+            cboTo.DisplayMember = "Name";
+            cboTo.DataSource = GitModule.Current.GetHeads(false, true);
+
+            if (_defaultToBranch != null)
+                cboTo.Text = _defaultToBranch;
+            else
+                cboTo.Text = selectedHead;
 
             splitContainer2.SplitterDistance = GitModule.Current.InTheMiddleOfRebase() ? 0 : 70;
             EnableButtons();
@@ -167,7 +183,18 @@ namespace GitUI
                 return;
             }
 
-            var rebaseCmd = GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked, chkPreserveMerges.Checked, chkAutosquash.Checked);
+            string rebaseCmd;
+            if (chkSpecificRange.Checked && !String.IsNullOrWhiteSpace(txtFrom.Text) && !String.IsNullOrWhiteSpace(cboTo.Text))
+            {
+                rebaseCmd = GitCommandHelpers.RebaseRangeCmd(txtFrom.Text, cboTo.Text, Branches.Text,
+                                                             chkInteractive.Checked, chkPreserveMerges.Checked,
+                                                             chkAutosquash.Checked);
+            }
+            else
+            {
+                rebaseCmd = GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked, chkPreserveMerges.Checked, chkAutosquash.Checked);
+            }
+
             var dialogResult = FormProcess.ReadDialog(this, rebaseCmd);
             if (dialogResult.Trim() == "Current branch a is up to date.")
                 MessageBox.Show(this, _branchUpToDateText.Text, _branchUpToDateCaption.Text);
@@ -196,7 +223,25 @@ namespace GitUI
         {
             ShowOptions.Visible = false;
             OptionsPanel.Visible = true;
-            splitContainer2.SplitterDistance = 100;
+            splitContainer2.SplitterDistance = 125;
+        }
+
+        private void chkUseFromOnto_CheckedChanged(object sender, EventArgs e)
+        {
+            txtFrom.Enabled = chkSpecificRange.Checked;
+            cboTo.Enabled = chkSpecificRange.Checked;
+            btnChooseFromRevision.Enabled = chkSpecificRange.Checked;
+        }
+
+        private void btnChooseFromRevision_Click(object sender, EventArgs e)
+        {
+            using(var chooseForm = new FormChooseCommit(txtFrom.Text))
+            {
+                if (DialogResult.OK == chooseForm.ShowDialog() && null != chooseForm.SelectedRevision)
+                {
+                    txtFrom.Text = chooseForm.SelectedRevision.Guid.Substring(0, 8);
+                }
+            }
         }
     }
 }
