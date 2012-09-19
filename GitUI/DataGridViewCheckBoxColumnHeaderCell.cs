@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
+using System.ComponentModel;
 
 namespace GitUI
 {
@@ -25,9 +26,20 @@ namespace GitUI
             owningColumn.HeaderCell = this;
             owningColumn.HeaderText = string.Empty;
             DataGridView.CurrentCellDirtyStateChanged += OnCurrentCellDirtyStateChanged;
-            DataGridView.Rows.CollectionChanged += (s, e) => UpdateCheckedState();
+            DataGridView.Rows.CollectionChanged += OnCollectionChanged;
             UpdateCheckedState();
             wasAttached = true;
+        }
+
+        public void Detach()
+        {
+            DataGridView.CurrentCellDirtyStateChanged -= OnCurrentCellDirtyStateChanged;
+            DataGridView.Rows.CollectionChanged -= OnCollectionChanged;
+        }
+
+        private void OnCollectionChanged(object sender, CollectionChangeEventArgs e)
+        {
+            UpdateCheckedState();
         }
 
         private void OnCurrentCellDirtyStateChanged(object sender, EventArgs e)
