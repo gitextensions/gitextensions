@@ -630,7 +630,7 @@ namespace GitUI
         /// <param name="pullOnShow"></param>
         /// <param name="pullCompleted">true if pull completed with no errors</param>
         /// <returns>if revision grid should be refreshed</returns>
-        public bool StartPullDialog(IWin32Window owner, bool pullOnShow, out bool pullCompleted, ConfigureFormPull configProc)
+        public bool StartPullDialog(IWin32Window owner, bool pullOnShow, string remoteBranch, out bool pullCompleted, ConfigureFormPull configProc)
         {
             pullCompleted = false;
 
@@ -640,7 +640,7 @@ namespace GitUI
             if (!InvokeEvent(owner, PrePull))
                 return true;
 
-            using (FormPull formPull = new FormPull())
+            using (FormPull formPull = new FormPull(remoteBranch))
             {
                 if (configProc != null)
                     configProc(formPull);
@@ -661,6 +661,11 @@ namespace GitUI
             return true;//maybe InvokeEvent should have 'needRefresh' out parameter?
         }
 
+        public bool StartPullDialog(IWin32Window owner, bool pullOnShow, out bool pullCompleted, ConfigureFormPull configProc)
+        {
+            return StartPullDialog(owner, pullOnShow, null, out pullCompleted, null);
+        }
+
         public bool StartPullDialog(IWin32Window owner, bool pullOnShow, out bool pullCompleted)
         {
             return StartPullDialog(owner, pullOnShow, out pullCompleted, null);
@@ -677,10 +682,20 @@ namespace GitUI
             return StartPullDialog(null, pullOnShow, out pullCompleted, null);
         }
 
+        public bool StartPullDialog(bool pullOnShow, string remoteBranch, out bool pullCompleted)
+        {
+            return StartPullDialog(null, pullOnShow, remoteBranch, out pullCompleted, null);
+        }
+
         public bool StartPullDialog(bool pullOnShow)
         {
+            return StartPullDialog(pullOnShow, null);
+        }
+
+        public bool StartPullDialog(bool pullOnShow, string remoteBranch)
+        {
             bool errorOccurred;
-            return StartPullDialog(pullOnShow, out errorOccurred);
+            return StartPullDialog(pullOnShow, remoteBranch, out errorOccurred);
         }
 
         public bool StartPullDialog(IWin32Window owner)
