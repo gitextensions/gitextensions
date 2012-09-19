@@ -145,7 +145,7 @@ merge [--branch name]
 mergeconflicts [--quiet]
 mergetool [--quiet]
 openrepo [file] [-filter=]
-pull [--rebase] [--merge] [--fetch]  [--quiet] [--remotebranch name]
+pull [--rebase] [--merge] [--fetch] [--quiet] [--remotebranch name]
 push [--quiet]
 rebase [--branch name]
 remotes
