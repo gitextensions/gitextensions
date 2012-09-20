@@ -1166,6 +1166,7 @@ namespace GitUI
             // 
             // archiveToolStripMenuItem
             // 
+            this.archiveToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconArchiveRevision;
             this.archiveToolStripMenuItem.Name = "archiveToolStripMenuItem";
             this.archiveToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.archiveToolStripMenuItem.Text = "Archive revision";
@@ -1173,6 +1174,7 @@ namespace GitUI
             // 
             // cleanupToolStripMenuItem
             // 
+            this.cleanupToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCleanupRepo;
             this.cleanupToolStripMenuItem.Name = "cleanupToolStripMenuItem";
             this.cleanupToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.cleanupToolStripMenuItem.Text = "Cleanup repository";
