@@ -1284,7 +1284,7 @@ namespace GitUI
             // 
             // checkoutBranchToolStripMenuItem
             // 
-            this.checkoutBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources.Icon_33;
+            this.checkoutBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources.BranchCheckout;
             this.checkoutBranchToolStripMenuItem.Name = "checkoutBranchToolStripMenuItem";
             this.checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+.";
             this.checkoutBranchToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.OemPeriod)));
@@ -1294,7 +1294,7 @@ namespace GitUI
             // 
             // branchToolStripMenuItem
             // 
-            this.branchToolStripMenuItem.Image = global::GitUI.Properties.Resources.Icon_33;
+            this.branchToolStripMenuItem.Image = global::GitUI.Properties.Resources.BranchCreate;
             this.branchToolStripMenuItem.Name = "branchToolStripMenuItem";
             this.branchToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.branchToolStripMenuItem.Text = "Create branch";
@@ -1302,7 +1302,7 @@ namespace GitUI
             // 
             // tagToolStripMenuItem
             // 
-            this.tagToolStripMenuItem.Image = global::GitUI.Properties.Resources.Icon_35;
+            this.tagToolStripMenuItem.Image = global::GitUI.Properties.Resources.TagCreate;
             this.tagToolStripMenuItem.Name = "tagToolStripMenuItem";
             this.tagToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.tagToolStripMenuItem.Text = "Create tag";
@@ -1388,6 +1388,7 @@ namespace GitUI
             // 
             // checkoutToolStripMenuItem
             // 
+            this.checkoutToolStripMenuItem.Image = global::GitUI.Properties.Resources.RevisionCheckout;
             this.checkoutToolStripMenuItem.Name = "checkoutToolStripMenuItem";
             this.checkoutToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.checkoutToolStripMenuItem.Text = "Checkout revision";
