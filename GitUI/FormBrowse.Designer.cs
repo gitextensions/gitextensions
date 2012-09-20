@@ -485,7 +485,7 @@ namespace GitUI
             // toolStripButtonPush
             // 
             this.toolStripButtonPush.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonPush.Image = global::GitUI.Properties.Resources._3;
+            this.toolStripButtonPush.Image = global::GitUI.Properties.Resources.Icon_3;
             this.toolStripButtonPush.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonPush.Name = "toolStripButtonPush";
             this.toolStripButtonPush.Size = new System.Drawing.Size(23, 22);
@@ -1227,7 +1227,7 @@ namespace GitUI
             // 
             // pushToolStripMenuItem
             // 
-            this.pushToolStripMenuItem.Image = global::GitUI.Properties.Resources._3;
+            this.pushToolStripMenuItem.Image = global::GitUI.Properties.Resources.Icon_3;
             this.pushToolStripMenuItem.Name = "pushToolStripMenuItem";
             this.pushToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Up)));
             this.pushToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
@@ -1282,7 +1282,7 @@ namespace GitUI
             // 
             // checkoutBranchToolStripMenuItem
             // 
-            this.checkoutBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources._33;
+            this.checkoutBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources.Icon_33;
             this.checkoutBranchToolStripMenuItem.Name = "checkoutBranchToolStripMenuItem";
             this.checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+.";
             this.checkoutBranchToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.OemPeriod)));
@@ -1292,7 +1292,7 @@ namespace GitUI
             // 
             // branchToolStripMenuItem
             // 
-            this.branchToolStripMenuItem.Image = global::GitUI.Properties.Resources._33;
+            this.branchToolStripMenuItem.Image = global::GitUI.Properties.Resources.Icon_33;
             this.branchToolStripMenuItem.Name = "branchToolStripMenuItem";
             this.branchToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.branchToolStripMenuItem.Text = "Create branch";
