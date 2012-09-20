@@ -1423,6 +1423,7 @@ namespace GitUI
             // 
             // manageRemoteRepositoriesToolStripMenuItem1
             // 
+            this.manageRemoteRepositoriesToolStripMenuItem1.Image = global::GitUI.Properties.Resources.IconRemotes;
             this.manageRemoteRepositoriesToolStripMenuItem1.Name = "manageRemoteRepositoriesToolStripMenuItem1";
             this.manageRemoteRepositoriesToolStripMenuItem1.Size = new System.Drawing.Size(192, 22);
             this.manageRemoteRepositoriesToolStripMenuItem1.Text = "Manage remote repositories";
