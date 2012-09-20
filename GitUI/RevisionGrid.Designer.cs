@@ -248,6 +248,7 @@ namespace GitUI
             // 
             // copyToClipboardToolStripMenuItem
             // 
+            this.copyToClipboardToolStripMenuItem.Image = global::GitUI.Properties.Resources.Copied;
             this.copyToClipboardToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.messageToolStripMenuItem,
             this.authorToolStripMenuItem,
@@ -351,6 +352,7 @@ namespace GitUI
             // 
             // mergeBranchToolStripMenuItem
             // 
+            this.mergeBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconMerge;
             this.mergeBranchToolStripMenuItem.Name = "mergeBranchToolStripMenuItem";
             this.mergeBranchToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.mergeBranchToolStripMenuItem.Text = "Merge into current branch";
@@ -358,6 +360,7 @@ namespace GitUI
             // 
             // rebaseOnToolStripMenuItem
             // 
+            this.rebaseOnToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconRebase;
             this.rebaseOnToolStripMenuItem.Name = "rebaseOnToolStripMenuItem";
             this.rebaseOnToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.rebaseOnToolStripMenuItem.Text = "Rebase current branch on";
@@ -372,6 +375,7 @@ namespace GitUI
             // 
             // renameBranchToolStripMenuItem
             // 
+            this.renameBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources.Renamed;
             this.renameBranchToolStripMenuItem.Name = "renameBranchToolStripMenuItem";
             this.renameBranchToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.renameBranchToolStripMenuItem.Text = "Rename branch";
@@ -410,6 +414,7 @@ namespace GitUI
             // 
             // cherryPickCommitToolStripMenuItem
             // 
+            this.cherryPickCommitToolStripMenuItem.Image = global::GitUI.Properties.Resources.WorkingDirChanges;
             this.cherryPickCommitToolStripMenuItem.Name = "cherryPickCommitToolStripMenuItem";
             this.cherryPickCommitToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.cherryPickCommitToolStripMenuItem.Text = "Cherry pick commit";
