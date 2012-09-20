@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\FxCop.targets" />
   <PropertyGroup>
@@ -378,7 +378,7 @@
     </Compile>
     <Compile Include="Properties\Resources.Custom.cs">
       <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>    
+    </Compile>
     <Compile Include="RepoHosting\CreatePullRequestForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1342,6 +1342,11 @@
     <None Include="Resources\Icons\PullFetchAll.png" />
     <None Include="Resources\Icons\loadingpanel_static.png" />
     <None Include="Resources\Icons\Delete.png" />
+    <None Include="Resources\Icons\ark_3_16.png" />
+    <None Include="Resources\Icons\char_libra_16.png" />
+    <None Include="Resources\Icons\char_scorpio_16.png" />
+    <None Include="Resources\Icons\edit_clear_2_16.png" />
+    <None Include="Resources\Icons\folder_remote_2_16.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

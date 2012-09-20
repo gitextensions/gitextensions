@@ -484,9 +484,23 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap IconArchiveRevision {
+            get {
+                object obj = ResourceManager.GetObject("IconArchiveRevision", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap IconClean {
             get {
                 object obj = ResourceManager.GetObject("IconClean", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconCleanupRepo {
+            get {
+                object obj = ResourceManager.GetObject("IconCleanupRepo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -505,9 +519,30 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap IconMerge {
+            get {
+                object obj = ResourceManager.GetObject("IconMerge", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap IconMixed {
             get {
                 object obj = ResourceManager.GetObject("IconMixed", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconRebase {
+            get {
+                object obj = ResourceManager.GetObject("IconRebase", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconRemotes {
+            get {
+                object obj = ResourceManager.GetObject("IconRemotes", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
