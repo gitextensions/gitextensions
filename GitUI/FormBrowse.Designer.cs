@@ -1326,6 +1326,7 @@ namespace GitUI
             // 
             // mergeBranchToolStripMenuItem
             // 
+            this.mergeBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconMerge;
             this.mergeBranchToolStripMenuItem.Name = "mergeBranchToolStripMenuItem";
             this.mergeBranchToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
             this.mergeBranchToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
@@ -1334,6 +1335,7 @@ namespace GitUI
             // 
             // rebaseToolStripMenuItem
             // 
+            this.rebaseToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconRebase;
             this.rebaseToolStripMenuItem.Name = "rebaseToolStripMenuItem";
             this.rebaseToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.rebaseToolStripMenuItem.Text = "Rebase";
