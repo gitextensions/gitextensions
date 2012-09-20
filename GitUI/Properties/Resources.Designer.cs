@@ -102,6 +102,20 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap BranchCheckout {
+            get {
+                object obj = ResourceManager.GetObject("BranchCheckout", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap BranchCreate {
+            get {
+                object obj = ResourceManager.GetObject("BranchCreate", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap bug {
             get {
                 object obj = ResourceManager.GetObject("bug", resourceCulture);
@@ -214,20 +228,6 @@ namespace GitUI.Properties {
         public static System.Drawing.Bitmap Cow_xmass {
             get {
                 object obj = ResourceManager.GetObject("Cow_xmass", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap CreateNewBranch {
-            get {
-                object obj = ResourceManager.GetObject("CreateNewBranch", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap CreateTag {
-            get {
-                object obj = ResourceManager.GetObject("CreateTag", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -701,6 +701,13 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap RevisionCheckout {
+            get {
+                object obj = ResourceManager.GetObject("RevisionCheckout", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap rss {
             get {
                 object obj = ResourceManager.GetObject("rss", resourceCulture);
@@ -781,6 +788,13 @@ namespace GitUI.Properties {
         public static System.Drawing.Bitmap success {
             get {
                 object obj = ResourceManager.GetObject("success", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap TagCreate {
+            get {
+                object obj = ResourceManager.GetObject("TagCreate", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
