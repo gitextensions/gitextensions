@@ -60,48 +60,6 @@ namespace GitUI.Properties {
             }
         }
         
-        public static System.Drawing.Bitmap _35 {
-            get {
-                object obj = ResourceManager.GetObject("_35", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap _4 {
-            get {
-                object obj = ResourceManager.GetObject("_4", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap _50 {
-            get {
-                object obj = ResourceManager.GetObject("_50", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap _71 {
-            get {
-                object obj = ResourceManager.GetObject("_71", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap _77 {
-            get {
-                object obj = ResourceManager.GetObject("_77", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap _82 {
-            get {
-                object obj = ResourceManager.GetObject("_82", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         public static System.Drawing.Bitmap Added {
             get {
                 object obj = ResourceManager.GetObject("Added", resourceCulture);
@@ -480,6 +438,48 @@ namespace GitUI.Properties {
         public static System.Drawing.Bitmap Icon_33 {
             get {
                 object obj = ResourceManager.GetObject("Icon_33", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap Icon_35 {
+            get {
+                object obj = ResourceManager.GetObject("Icon_35", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap Icon_4 {
+            get {
+                object obj = ResourceManager.GetObject("Icon_4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap Icon_50 {
+            get {
+                object obj = ResourceManager.GetObject("Icon_50", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap Icon_71 {
+            get {
+                object obj = ResourceManager.GetObject("Icon_71", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap Icon_77 {
+            get {
+                object obj = ResourceManager.GetObject("Icon_77", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap Icon_82 {
+            get {
+                object obj = ResourceManager.GetObject("Icon_82", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

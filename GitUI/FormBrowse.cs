@@ -2452,7 +2452,7 @@ namespace GitUI
                     break;
 
                 default:
-                    toolStripButtonPull.Image = Properties.Resources._4;
+                    toolStripButtonPull.Image = Properties.Resources.Icon_4;
                     toolStripButtonPull.ToolTipText = "Open pull dialog";
                     break;
             }

@@ -130,7 +130,7 @@
   <data name="x_with_arrow_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\Bin\Logo\x-with-arrow_yellow.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="_71" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="Icon_71" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\71.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Rebase" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -184,7 +184,7 @@
   <data name="SplitViewLayout" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\SplitViewLayout.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="_35" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="Icon_35" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\35.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="putty" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -214,7 +214,7 @@
   <data name="CreateTag" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\33.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="_77" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="Icon_77" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\77.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="pageant" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -241,7 +241,7 @@
   <data name="git_extensions_logo_final_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\Bin\Logo\git-extensions-logo-final_blue.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="_50" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="Icon_50" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\50.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Cow" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -262,7 +262,7 @@
   <data name="git_extensions_logo_final_mixed_lightblue" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\Bin\Logo\git-extensions-logo-final_mixed_lightblue.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="_4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="Icon_4" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\4.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="pageant_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -403,7 +403,7 @@
   <data name="cow_head" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\Bin\Logo\cow-head.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="_82" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="Icon_82" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\82.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="git_extensions_logo_final_mixed_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
