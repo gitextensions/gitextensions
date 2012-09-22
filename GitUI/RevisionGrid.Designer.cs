@@ -248,6 +248,7 @@ namespace GitUI
             // 
             // copyToClipboardToolStripMenuItem
             // 
+            this.copyToClipboardToolStripMenuItem.Image = global::GitUI.Properties.Resources.Copied;
             this.copyToClipboardToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.messageToolStripMenuItem,
             this.authorToolStripMenuItem,
@@ -312,7 +313,7 @@ namespace GitUI
             // 
             // createTagToolStripMenuItem
             // 
-            this.createTagToolStripMenuItem.Image = global::GitUI.Properties.Resources.CreateTag;
+            this.createTagToolStripMenuItem.Image = global::GitUI.Properties.Resources.TagCreate;
             this.createTagToolStripMenuItem.Name = "createTagToolStripMenuItem";
             this.createTagToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
             this.createTagToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
@@ -329,7 +330,7 @@ namespace GitUI
             // 
             // createNewBranchToolStripMenuItem
             // 
-            this.createNewBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources.CreateNewBranch;
+            this.createNewBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources.BranchCreate;
             this.createNewBranchToolStripMenuItem.Name = "createNewBranchToolStripMenuItem";
             this.createNewBranchToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
             this.createNewBranchToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
@@ -351,6 +352,7 @@ namespace GitUI
             // 
             // mergeBranchToolStripMenuItem
             // 
+            this.mergeBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconMerge;
             this.mergeBranchToolStripMenuItem.Name = "mergeBranchToolStripMenuItem";
             this.mergeBranchToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.mergeBranchToolStripMenuItem.Text = "Merge into current branch";
@@ -358,6 +360,7 @@ namespace GitUI
             // 
             // rebaseOnToolStripMenuItem
             // 
+            this.rebaseOnToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconRebase;
             this.rebaseOnToolStripMenuItem.Name = "rebaseOnToolStripMenuItem";
             this.rebaseOnToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.rebaseOnToolStripMenuItem.Text = "Rebase current branch on";
@@ -372,12 +375,14 @@ namespace GitUI
             // 
             // renameBranchToolStripMenuItem
             // 
+            this.renameBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources.Renamed;
             this.renameBranchToolStripMenuItem.Name = "renameBranchToolStripMenuItem";
             this.renameBranchToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.renameBranchToolStripMenuItem.Text = "Rename branch";
             // 
             // checkoutBranchToolStripMenuItem
             // 
+            this.checkoutBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources.BranchCheckout;
             this.checkoutBranchToolStripMenuItem.Name = "checkoutBranchToolStripMenuItem";
             this.checkoutBranchToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.checkoutBranchToolStripMenuItem.Text = "Checkout branch";
@@ -385,6 +390,7 @@ namespace GitUI
             // 
             // checkoutRevisionToolStripMenuItem
             // 
+            this.checkoutRevisionToolStripMenuItem.Image = global::GitUI.Properties.Resources.RevisionCheckout;
             this.checkoutRevisionToolStripMenuItem.Name = "checkoutRevisionToolStripMenuItem";
             this.checkoutRevisionToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.checkoutRevisionToolStripMenuItem.Text = "Checkout revision";
@@ -410,6 +416,7 @@ namespace GitUI
             // 
             // cherryPickCommitToolStripMenuItem
             // 
+            this.cherryPickCommitToolStripMenuItem.Image = global::GitUI.Properties.Resources.WorkingDirChanges;
             this.cherryPickCommitToolStripMenuItem.Name = "cherryPickCommitToolStripMenuItem";
             this.cherryPickCommitToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.cherryPickCommitToolStripMenuItem.Text = "Cherry pick commit";
