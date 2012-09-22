@@ -75,10 +75,10 @@ namespace GitUI
             if (_NO_TRANSLATE_Description.Visible)
             {
                 _NO_TRANSLATE_Description.Top = _NO_TRANSLATE_Title.Height + 4;
-                Height += _NO_TRANSLATE_Description.Height + 2;
+                Height += _NO_TRANSLATE_Description.Height + 4;
             }
 
-            _NO_TRANSLATE_Panel.MinimumSize = new Size(0, _NO_TRANSLATE_Title.Height);
+            _NO_TRANSLATE_Panel.MinimumSize = new Size(0, Height);
 
             if (icon != null)
                 Icon.Image = icon;
