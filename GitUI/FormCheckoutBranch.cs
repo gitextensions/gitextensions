@@ -77,7 +77,13 @@ namespace GitUI
                         Branches.SelectedIndex = 0;
                 }
 
-                isDirtyDir = GitModule.Current.IsDirtyDir();
+                //The dirty check is very expensive on large repositories. Without this setting
+                //the checkout branch dialog is too slow.
+                if (Settings.CheckForUncommittedChangesInCheckoutBranch)
+                    isDirtyDir = GitModule.Current.IsDirtyDir();
+                else
+                    isDirtyDir = false;
+
                 localChangesGB.Visible = isDirtyDir;
                 ChangesMode = Settings.CheckoutBranchAction;
                 defaultActionChx.Checked = Settings.UseDefaultCheckoutBranchAction;

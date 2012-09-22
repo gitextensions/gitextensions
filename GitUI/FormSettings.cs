@@ -344,6 +344,7 @@ namespace GitUI
                 EncodingToCombo(Settings.GetFilesEncoding(false), Global_FilesEncoding);
                 EncodingToCombo(Settings.GetFilesEncoding(true), Local_FilesEncoding);
 
+                chkCheckForUncommittedChangesInCheckoutBranch.Checked = Settings.CheckForUncommittedChangesInCheckoutBranch;
                 chkStartWithRecentWorkingDir.Checked = Settings.StartWithRecentWorkingDir;
                 chkPlaySpecialStartupSound.Checked = Settings.PlaySpecialStartupSound;
                 chkWriteCommitMessageInCommitWindow.Checked = Settings.UseFormCommitMessage;
@@ -559,6 +560,7 @@ namespace GitUI
 
             Settings.EnableAutoScale = chkEnableAutoScale.Checked;
 
+            Settings.CheckForUncommittedChangesInCheckoutBranch = chkCheckForUncommittedChangesInCheckoutBranch.Checked;
             Settings.StartWithRecentWorkingDir = chkStartWithRecentWorkingDir.Checked;
             Settings.PlaySpecialStartupSound = chkPlaySpecialStartupSound.Checked;
             Settings.UseFormCommitMessage = chkWriteCommitMessageInCommitWindow.Checked;
@@ -2383,6 +2385,7 @@ namespace GitUI
             LoadSettings();
             Rescan_Click(null, null);
         }
+
 
 
     }

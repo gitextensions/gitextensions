@@ -8,7 +8,7 @@ namespace GitUI
 {
     public partial class DashboardEditor : GitExtensionsControl
     {
-        public DashboardEditor()
+        public DashboardEditor() : base()
         {
             InitializeComponent();
             Translate();
