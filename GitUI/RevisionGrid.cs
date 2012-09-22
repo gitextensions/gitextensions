@@ -71,7 +71,7 @@ namespace GitUI
 
             Translate();
 
-            NormalFont = SystemFonts.DefaultFont;
+            NormalFont = Settings.Font;
             Loading.Paint += Loading_Paint;
 
             Revisions.CellPainting += RevisionsCellPainting;
@@ -2170,14 +2170,7 @@ namespace GitUI
             showRevisionGraphToolStripMenuItem.Checked = IsGraphLayout();
             IsCardLayout();
 
-            if (IsFilledBranchesLayout())
-            {
-                NormalFont = new Font("Tahoma", 8.75F); // SystemFonts.DefaultFont.FontFamily, SystemFonts.DefaultFont.Size + 2);
-            }
-            else
-            {
-                NormalFont = new Font("Tahoma", 8.75F);
-            }
+            NormalFont = Settings.Font;// new Font(Settings.Font.Name, Settings.Font.Size + 2); // SystemFonts.DefaultFont.FontFamily, SystemFonts.DefaultFont.Size + 2);
 
             if (IsCardLayout())
             {
