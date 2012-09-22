@@ -376,6 +376,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Resources.Custom.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="RepoHosting\CreatePullRequestForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1339,6 +1342,16 @@
     <None Include="Resources\Icons\PullFetchAll.png" />
     <None Include="Resources\Icons\loadingpanel_static.png" />
     <None Include="Resources\Icons\Delete.png" />
+    <None Include="Resources\Icons\ark_3_16.png" />
+    <None Include="Resources\Icons\char_libra_16.png" />
+    <None Include="Resources\Icons\char_scorpio_16.png" />
+    <None Include="Resources\Icons\edit_clear_2_16.png" />
+    <None Include="Resources\Icons\folder_remote_2_16.png" />
+    <None Include="Resources\Icons\BranchCreate.png" />
+    <None Include="Resources\Icons\TagCreate.png" />
+    <None Include="Resources\Icons\BranchCheckout.png" />
+    <None Include="Resources\Icons\RevisionCheckout.png" />
+    <None Include="Resources\Icons\TagCheckout.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

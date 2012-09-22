@@ -832,7 +832,7 @@ namespace GitUI
             // 
             this.SolveMergeconflicts.BackColor = System.Drawing.Color.SeaShell;
             this.SolveMergeconflicts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SolveMergeconflicts.Image = global::GitUI.Properties.Resources._50;
+            this.SolveMergeconflicts.Image = global::GitUI.Properties.Resources.Icon_50;
             this.SolveMergeconflicts.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SolveMergeconflicts.Location = new System.Drawing.Point(14, 12);
             this.SolveMergeconflicts.Name = "SolveMergeconflicts";
@@ -1352,7 +1352,7 @@ namespace GitUI
         private PictureBox LoadingStaged;
         private ToolStripSeparator toolStripMenuItem2;
         private ToolStripContainer toolStripContainer1;
-		private ToolStripEx toolbarSelectionFilter;
+        private ToolStripEx toolbarSelectionFilter;
         private ToolStripLabel toolStripLabel1;
         private ToolStripComboBox selectionFilter;
         private ToolStripMenuItem selectionFilterToolStripMenuItem;
