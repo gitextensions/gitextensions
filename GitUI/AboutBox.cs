@@ -62,7 +62,8 @@ namespace GitUI
             "Arkadiy Shapkin, Alexander Mueller, marcinmagier, Alexander Puzynia, ferow2k, lynxstv, nitoyon, iamxail, " +
             "Basewq, Edward Brey, Sergey, Nils Fenner, Burim Kameri, Phillip Cohen, Andy Royle, Masanori Tanaka, Alex Ford, Arne Janbu, " +
             "Dan Rigby, pravic, Linquize, Clinton Daniel, Reto Schoening, mabako, Tal952, Aviad Pineles, Markus Stein, Marcus Bauer, " +
-            "Nay, Joe Phillips, Cameron Will, Donatas Mačiūnas, Jesse Bartley, Dave Brotherstone, Pieter van Ginkel ";
+            "Nay, Joe Phillips, Cameron Will, Donatas Mačiūnas, Jesse Bartley, Dave Brotherstone, Pieter van Ginkel, australiensun, " +
+            "vgravade, hiroponz, Isaac Devine, Konstantin Tenzin, Catagorical";
         private const string translators = "Gianni Rosa Gallina, Cheng Huang, Floyd Hung, superlongman, rferriz, gor, " +
             "xaro, bleis-tift, Ralph Haußmann, Jasper Chien, Arkadiy Shapkin, ferow2k, Thibault D'Archivio";
         private const string designers = "Andréj Telle, Oliver Friedrich";
