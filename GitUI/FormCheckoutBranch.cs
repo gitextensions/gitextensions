@@ -112,6 +112,8 @@ namespace GitUI
 
         private void Initialize()
         {
+            Branches.Items.Clear();
+
             if (_containRevison == null)
             {
                 if (LocalBranch.Checked)
