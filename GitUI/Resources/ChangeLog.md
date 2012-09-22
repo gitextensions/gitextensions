@@ -1,6 +1,16 @@
 ﻿Changelog
 =========
 
+### Version 2.41
+* Fixed issue 1254: Visual Studio 2005 plugin not working
+* Fixed issue 1225: Visual Studio 2008 plugin not working
+* Fill title with the most recent commit message
+* New dialog for checkout branch
+* Added option to not use the commit dialog to specify the commit message
+* Remotes dialog layout changes
+* German translation updated
+* Updated msysgit to a more stable build of version 1.7.11
+
 ### Version 2.40
 * fixed issue 79: Don't offer to commit when resolving a stash conflict
 * Fixed issue 875: Show untracked files in stash
