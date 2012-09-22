@@ -408,7 +408,7 @@ namespace GitUI
 
         private void AddRemoteClick(object sender, EventArgs e)
         {
-            GitUICommands.Instance.StartRemotesDialog(this);
+            GitUICommands.Instance.StartRemotesDialog(this, _NO_TRANSLATE_Remotes.Text);
             _NO_TRANSLATE_Remotes.DataSource = GitModule.Current.GetRemotes();
         }
 

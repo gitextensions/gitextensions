@@ -126,6 +126,14 @@ namespace GitCommands
             set { SafeSet("commitinfoshowcontainedinbrancheslocal", value, ref _commitInfoShowContainedInBranchesLocal); }
         }
 
+        private static bool? _checkForUncommittedChangesInCheckoutBranch;
+        public static bool CheckForUncommittedChangesInCheckoutBranch
+        {
+            get { return SafeGet("checkforuncommittedchangesincheckoutbranch", false, ref _checkForUncommittedChangesInCheckoutBranch); }
+            set { SafeSet("checkforuncommittedchangesincheckoutbranch", value, ref _checkForUncommittedChangesInCheckoutBranch); }
+        }
+
+
         private static bool? _commitInfoShowContainedInBranchesRemote;
         public static bool CommitInfoShowContainedInBranchesRemote
         {
