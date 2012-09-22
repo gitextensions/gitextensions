@@ -34,6 +34,9 @@ namespace GitUI
         private readonly string rbResetBranchText;
         private readonly string rbCreateBranchText;
 
+        private List<string> _localBranches = null;
+        private List<string> _remoteBranches = null;
+        private List<string> _containsRevisionBranches = null;
 
         internal FormCheckoutBranch()
         {
@@ -64,7 +67,10 @@ namespace GitUI
 
                 //Set current branch after initialize, because initialize will reset it
                 if (!string.IsNullOrEmpty(branch))
-                    Branches.Text = branch;
+                {
+                    Branches.Items.Add(branch);
+                    Branches.SelectedItem = branch;
+                }
 
                 if (containRevison != null)
                 {
@@ -106,35 +112,20 @@ namespace GitUI
 
         private void Initialize()
         {
-            Branches.DisplayMember = "Name";
-
             if (_containRevison == null)
             {
                 if (LocalBranch.Checked)
                 {
-                    Branches.DataSource = GitModule.Current.GetHeads(false).Select(a => a.Name).ToList();
+                    Branches.Items.AddRange(getLocalBranches().ToArray());
                 }
                 else
                 {
-                    var heads = GitModule.Current.GetHeads(true, true);
-
-                    var remoteHeads = new List<GitHead>();
-
-                    foreach (var head in heads)
-                    {
-                        if (head.IsRemote && !head.IsTag)
-                            remoteHeads.Add(head);
-                    }
-
-                    Branches.DataSource = remoteHeads.Select(a => a.Name).ToList();
+                    Branches.Items.AddRange(getRemoteBranches().ToArray());
                 }
             }
             else
             {
-                var branches = CommitInformation
-                    .GetAllBranchesWhichContainGivenCommit(_containRevison, LocalBranch.Checked, !LocalBranch.Checked)
-                    .Where(a => !a.Equals("(no branch)", StringComparison.OrdinalIgnoreCase));
-                Branches.DataSource = branches.ToList();
+                Branches.Items.AddRange(getContainsRevisionBranches().ToArray());
             }
 
             Branches.Text = null;
@@ -258,9 +249,9 @@ namespace GitUI
                 txtCustomBranchName.SelectAll();
         }
 
-        private static bool LocalBranchExists(string name)
+        private bool LocalBranchExists(string name)
         {
-            return GitModule.Current.GetHeads(false).Any(head => head.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            return getLocalBranches().Any(head => head.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
 
         private void Branches_SelectedIndexChanged(object sender, EventArgs e)
@@ -291,6 +282,31 @@ namespace GitUI
             rbCreateBranch.Text = String.Format(rbCreateBranchText, _newLocalBranchName);
             txtCustomBranchName.Text = _localBranchName;
         }
-        
+
+        private IList<string> getLocalBranches()
+        {
+            if (_localBranches == null)
+                _localBranches = GitModule.Current.GetHeads(false).Select(b => b.Name).ToList();
+
+            return _localBranches;
+        }
+
+        private IList<string> getRemoteBranches()
+        {
+            if (_remoteBranches == null)
+                _remoteBranches = GitModule.Current.GetHeads(true, true).Where(h => h.IsRemote && !h.IsTag).Select(b => b.Name).ToList();
+
+            return _remoteBranches;
+        }
+
+        private IList<string> getContainsRevisionBranches()
+        {
+            if (_containsRevisionBranches == null)
+                _containsRevisionBranches = CommitInformation
+                        .GetAllBranchesWhichContainGivenCommit(_containRevison, LocalBranch.Checked, !LocalBranch.Checked)
+                        .Where(a => !a.Equals("(no branch)", StringComparison.OrdinalIgnoreCase)).ToList();
+
+            return _containsRevisionBranches;
+        }
     }
 }
