@@ -130,7 +130,7 @@
   <data name="x_with_arrow_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\Bin\Logo\x-with-arrow_yellow.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="_71" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="Icon_71" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\71.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Rebase" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -184,14 +184,11 @@
   <data name="SplitViewLayout" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\SplitViewLayout.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="_35" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="Icon_35" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\35.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="putty" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\putty.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="CreateNewBranch" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\35.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ArrowUp" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\3.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -211,10 +208,7 @@
   <data name="TranslateProgress" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\53.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="CreateTag" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\33.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_77" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="Icon_77" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\77.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="pageant" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -241,7 +235,7 @@
   <data name="git_extensions_logo_final_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\Bin\Logo\git-extensions-logo-final_blue.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="_50" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="Icon_50" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\50.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Cow" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -262,7 +256,7 @@
   <data name="git_extensions_logo_final_mixed_lightblue" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\Bin\Logo\git-extensions-logo-final_mixed_lightblue.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="_4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="Icon_4" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\4.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="pageant_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -349,7 +343,7 @@
   <data name="Cow_xmass" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\Cow_xmass.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="_3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="Icon_3" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\3.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="git_extensions_logo_final_128" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -391,7 +385,7 @@
   <data name="git_extensions_logo_final_purple" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\Bin\Logo\git-extensions-logo-final_purple.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="_33" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="Icon_33" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\33.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Modified" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -403,7 +397,7 @@
   <data name="cow_head" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\Bin\Logo\cow-head.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="_82" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="Icon_82" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\82.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="git_extensions_logo_final_mixed_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -441,5 +435,32 @@
   </data>
   <data name="Delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\Delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BranchCheckout" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\BranchCheckout.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BranchCreate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\BranchCreate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconArchiveRevision" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\ark_3_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconCleanupRepo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\edit_clear_2_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconMerge" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\char_scorpio_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconRebase" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\char_libra_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconRemotes" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\folder_remote_2_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RevisionCheckout" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\RevisionCheckout.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TagCreate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\TagCreate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
