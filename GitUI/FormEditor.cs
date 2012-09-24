@@ -5,7 +5,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public sealed partial class FormEditor : GitExtensionsForm
+    public sealed partial class FormEditor : GitModuleForm
     {
         private readonly TranslationString _saveChanges = new TranslationString("Do you want to save changes?");
         private readonly TranslationString _saveChangesCaption = new TranslationString("Save changes");
@@ -15,8 +15,8 @@ namespace GitUI
         private bool _hasChanges;
         private string _fileName;
 
-        public FormEditor(string fileName)
-            : base(true)
+        public FormEditor(GitUICommands aCommands, string fileName)
+            : base(aCommands)
         {
             InitializeComponent();
             Translate();
@@ -113,7 +113,7 @@ namespace GitUI
         {
             if (!string.IsNullOrEmpty(_fileName))
             {
-                File.WriteAllText(_fileName, fileViewer.GetText(), GitCommands.Settings.FilesEncoding);
+                File.WriteAllText(_fileName, fileViewer.GetText(), Module.FilesEncoding);
 
                 // we've written the changes out to disk now, nothing to save.
                 HasChanges = false;

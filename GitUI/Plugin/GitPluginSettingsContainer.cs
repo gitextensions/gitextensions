@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using GitUIPluginInterfaces;
 using GitCommands;
 
-namespace GitExtensions
+namespace GitUI
 {
     public class GitPluginSettingsContainer : IGitPluginSettingsContainer
     {

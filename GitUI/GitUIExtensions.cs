@@ -33,11 +33,11 @@ namespace GitUI
             {
                 if (revisions[0].ParentGuids.Length == 0)
                     return;
-                output = GitModule.Current.OpenWithDifftool(fileName, revisions[0].ParentGuids[0]);
+                output = grid.Module.OpenWithDifftool(fileName, revisions[0].ParentGuids[0]);
 
             }
             else if (diffKind == DiffWithRevisionKind.DiffRemoteLocal)
-                output = GitModule.Current.OpenWithDifftool(fileName, revisions[0].Guid);
+                output = grid.Module.OpenWithDifftool(fileName, revisions[0].Guid);
             else
             {
                 string firstRevision = revisions[0].Guid;
@@ -87,7 +87,7 @@ namespace GitUI
                 if (secondRevision == null)
                     secondRevision = firstRevision + "^";
 
-                output = GitModule.Current.OpenWithDifftool(fileName, oldFileName, firstRevision, secondRevision, extraDiffArgs);
+                output = grid.Module.OpenWithDifftool(fileName, oldFileName, firstRevision, secondRevision, extraDiffArgs);
             }
 
             if (!string.IsNullOrEmpty(output))
@@ -119,11 +119,11 @@ namespace GitUI
                 {
                     if (file.IsTracked)
                     {
-                        return ProcessDiffText(GitModule.Current.GetCurrentChanges(file.Name, file.OldName, false,
+                        return ProcessDiffText(grid.Module, grid.Module.GetCurrentChanges(file.Name, file.OldName, false,
                             diffViewer.GetExtraDiffArguments(), diffViewer.Encoding), file.IsSubmodule);
                     }
 
-                    return FileReader.ReadFileContent(GitModule.CurrentWorkingDir + file.Name, diffViewer.Encoding);
+                    return FileReader.ReadFileContent(grid.Module.WorkingDir + file.Name, diffViewer.Encoding);
                 }
                 else
                 {
@@ -135,7 +135,7 @@ namespace GitUI
             {
                 if (secondRevision == null)
                 {
-                    return ProcessDiffText(GitModule.Current.GetCurrentChanges(file.Name, file.OldName, true,
+                    return ProcessDiffText(grid.Module, grid.Module.GetCurrentChanges(file.Name, file.OldName, true,
                         diffViewer.GetExtraDiffArguments(), diffViewer.Encoding), file.IsSubmodule);
                 }
 
@@ -148,21 +148,21 @@ namespace GitUI
             Debug.Assert(!GitRevision.IsArtificial(firstRevision), string.Join(" ", firstRevision,secondRevision));                
 
             if (secondRevision == null)
-                secondRevision = firstRevision + "^";            
+                secondRevision = firstRevision + "^";
 
-            PatchApply.Patch patch = GitModule.Current.GetSingleDiff(firstRevision, secondRevision, file.Name, file.OldName,
+            PatchApply.Patch patch = grid.Module.GetSingleDiff(firstRevision, secondRevision, file.Name, file.OldName,
                                                     string.Join(" ", diffViewer.GetExtraDiffArguments(), extraDiffArgs), diffViewer.Encoding);
 
             if (patch == null)
                 return string.Empty;
 
-            return ProcessDiffText(patch.Text, file.IsSubmodule);
+            return ProcessDiffText(grid.Module, patch.Text, file.IsSubmodule);
         }
 
-        private static string ProcessDiffText(string diff, bool isSubmodule)
+        private static string ProcessDiffText(GitModule module, string diff, bool isSubmodule)
         {
             if (isSubmodule)
-                return GitCommandHelpers.ProcessSubmodulePatch(diff);
+                return GitCommandHelpers.ProcessSubmodulePatch(module, diff);
 
             return diff;
         }

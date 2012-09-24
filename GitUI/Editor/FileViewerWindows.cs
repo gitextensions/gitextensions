@@ -267,7 +267,6 @@ namespace GitUI.Editor
                 MarkDifference(document, linesRemoved, linesAdded, numberOfParents);
             }
             
-            //TODO add support of combined diff format
             numberOfParents = 1;
             while (line < document.TotalNumberOfLines)
             {

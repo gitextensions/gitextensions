@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace GitUI
 {
-    public partial class FormClone : GitExtensionsForm
+    public partial class FormClone : GitModuleForm
     {
         private readonly TranslationString _infoNewRepositoryLocation = 
             new TranslationString("The repository will be cloned to a new directory located here:"  + Environment.NewLine +
@@ -31,35 +31,44 @@ namespace GitUI
             new TranslationString("Open");
 
         private bool openedFromProtocolHandler;
+        private readonly string url;
+        private GitModuleChangedEventHandler GitModuleChanged;
 
         // for translation only
-        internal FormClone()
-            : this(null, false)
+        private FormClone()
+            : this(null, null, false, null)
         {
         }
 
-        public FormClone(string url, bool openedFromProtocolHandler)
+        public FormClone(GitUICommands aCommands, string url, bool openedFromProtocolHandler, GitModuleChangedEventHandler GitModuleChanged)
+            : base(aCommands)
         {
+            this.GitModuleChanged = GitModuleChanged;
             InitializeComponent();
             Translate();
+            this.openedFromProtocolHandler = openedFromProtocolHandler;
+            this.url = url;
+        }
 
+        protected override void OnRuntimeLoad(EventArgs e)
+        {
+            base.OnRuntimeLoad(e);
             FillFromDropDown();
 
             if (url != null)
             {
                 _NO_TRANSLATE_From.Text = url;
-                if (!GitModule.Current.ValidWorkingDir())
-                    _NO_TRANSLATE_To.Text = GitModule.CurrentWorkingDir;
+                if (!Module.ValidWorkingDir())
+                    _NO_TRANSLATE_To.Text = Module.WorkingDir;
             }
             else
             {
-                if (GitModule.Current.ValidWorkingDir())
-                    _NO_TRANSLATE_From.Text = GitModule.CurrentWorkingDir;
+                if (Module.ValidWorkingDir())
+                    _NO_TRANSLATE_From.Text = Module.WorkingDir;
                 else
-                    _NO_TRANSLATE_To.Text = GitModule.CurrentWorkingDir;
+                    _NO_TRANSLATE_To.Text = Module.WorkingDir;
             }
 
-            this.openedFromProtocolHandler = openedFromProtocolHandler;
 
             FromTextUpdate(null, null);
         }
@@ -85,23 +94,25 @@ namespace GitUI
 
                 var cloneCmd = GitCommandHelpers.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
                             CentralRepository.Checked, cbIntializeAllSubmodules.Checked, Branches.Text, null);
-                using (var fromProcess = new FormRemoteProcess(Settings.GitCommand, cloneCmd))
+                using (var fromProcess = new FormRemoteProcess(Module, Settings.GitCommand, cloneCmd))
                 {
                     fromProcess.SetUrlTryingToConnect(_NO_TRANSLATE_From.Text);
                     fromProcess.ShowDialog(this);
 
-                    if (fromProcess.ErrorOccurred() || GitModule.Current.InTheMiddleOfPatch())
+                    if (fromProcess.ErrorOccurred() || Module.InTheMiddleOfPatch())
                         return;
                 }
 
                 if (openedFromProtocolHandler && AskIfNewRepositoryShouldBeOpened(dirTo))
                 {
-                    GitModule.CurrentWorkingDir = dirTo;
                     Hide();
-                    GitUICommands.Instance.StartBrowseDialog();
+                    GitUICommands uiCommands = new GitUICommands(dirTo);
+                    uiCommands.StartBrowseDialog();
                 }
                 else if (ShowInTaskbar == false && AskIfNewRepositoryShouldBeOpened(dirTo))
-                    GitModule.CurrentWorkingDir = dirTo;
+                    if (GitModuleChanged != null)
+                        GitModuleChanged(new GitModule(dirTo));
+
                 Close();
             }
             catch (Exception ex)
@@ -265,7 +276,7 @@ namespace GitUI
             Branches.DisplayMember = "LocalName";
             string from = _NO_TRANSLATE_From.Text;
             Cursor = Cursors.AppStarting;
-            branchListLoader.Load(() => { return GitModule.Current.GetRemoteHeads(from, false, true); }, UpdateBranches);
+            branchListLoader.Load(() => { return Module.GetRemoteHeads(from, false, true); }, UpdateBranches);
         }
     }
 }

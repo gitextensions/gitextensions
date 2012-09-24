@@ -61,7 +61,7 @@ namespace GitCommandsTests
         public void TestCorrectlyLoadsTheRightNumberOfDiffsInAPatchFile()
         {
             PatchManager manager = NewManager();
-            var testPatch = Settings.LosslessEncoding.GetString(TestResource.TestPatch);
+            var testPatch = GitModule.LosslessEncoding.GetString(TestResource.TestPatch);
             manager.LoadPatch(testPatch, false, Encoding.UTF8);
 
             Assert.AreEqual(12, manager.Patches.Count);
@@ -71,7 +71,7 @@ namespace GitCommandsTests
         public void TestCorrectlyLoadsTheRightFilenamesInAPatchFile()
         {
             PatchManager manager = NewManager();
-            var testPatch = Settings.LosslessEncoding.GetString(TestResource.TestPatch);
+            var testPatch = GitModule.LosslessEncoding.GetString(TestResource.TestPatch);
             manager.LoadPatch(testPatch, false, Encoding.UTF8);
 
             Assert.AreEqual(12, manager.Patches.Select(p => p.FileNameA).Distinct().Count());
@@ -82,7 +82,7 @@ namespace GitCommandsTests
         public void TestCorrectlyLoadsOneBinaryPatch()
         {
             PatchManager manager = NewManager();
-            var testPatch = Settings.LosslessEncoding.GetString(TestResource.TestPatch);
+            var testPatch = GitModule.LosslessEncoding.GetString(TestResource.TestPatch);
             manager.LoadPatch(testPatch, false, Encoding.UTF8);
             
             Assert.AreEqual(1, manager.Patches.Count(p => p.File == Patch.FileType.Binary));
@@ -92,7 +92,7 @@ namespace GitCommandsTests
         public void TestCorrectlyLoadsOneNewFile()
         {
             PatchManager manager = NewManager();
-            var testPatch = Settings.LosslessEncoding.GetString(TestResource.TestPatch);
+            var testPatch = GitModule.LosslessEncoding.GetString(TestResource.TestPatch);
             manager.LoadPatch(testPatch, false, Encoding.UTF8);
 
             Assert.AreEqual(1, manager.Patches.Count(p => p.Type == Patch.PatchType.NewFile));
@@ -102,7 +102,7 @@ namespace GitCommandsTests
         public void TestCorrectlyLoadsOneDeleteFile()
         {
             PatchManager manager = NewManager();
-            var testPatch = Settings.LosslessEncoding.GetString(TestResource.TestPatch);
+            var testPatch = GitModule.LosslessEncoding.GetString(TestResource.TestPatch);
             manager.LoadPatch(testPatch, false, Encoding.UTF8);
 
             Assert.AreEqual(1, manager.Patches.Count(p => p.Type == Patch.PatchType.DeleteFile));
@@ -112,7 +112,7 @@ namespace GitCommandsTests
         public void TestCorrectlyLoadsTenChangeFiles()
         {
             PatchManager manager = NewManager();
-            var testPatch = Settings.LosslessEncoding.GetString(TestResource.TestPatch);
+            var testPatch = GitModule.LosslessEncoding.GetString(TestResource.TestPatch);
             manager.LoadPatch(testPatch, false, Encoding.UTF8);
 
             Assert.AreEqual(10, manager.Patches.Count(p => p.Type == Patch.PatchType.ChangeFile));
@@ -144,14 +144,14 @@ namespace GitCommandsTests
         public void AppendHeaderLine(string line)
         {
             Patch.AppendTextLine(line);
-            PatchOutput.Append(GitCommandHelpers.ReEncodeString(line, Settings.SystemEncoding, Settings.LosslessEncoding));
+            PatchOutput.Append(GitModule.ReEncodeString(line, GitModule.SystemEncoding, GitModule.LosslessEncoding));
             PatchOutput.Append("\n");
         }
 
         public void AppendDiffLine(string line, Encoding fileEncoding)
         {
             Patch.AppendTextLine(line);
-            PatchOutput.Append(GitCommandHelpers.ReEncodeString(line, fileEncoding, Settings.LosslessEncoding));
+            PatchOutput.Append(GitModule.ReEncodeString(line, fileEncoding, GitModule.LosslessEncoding));
             PatchOutput.Append("\n");
         }
 

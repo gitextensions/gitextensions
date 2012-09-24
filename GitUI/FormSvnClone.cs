@@ -10,7 +10,7 @@ namespace GitUI
 
     using ResourceManager.Translation;
 
-    public partial class FormSvnClone : GitExtensionsForm
+    public partial class FormSvnClone : GitModuleForm
     {
         private readonly TranslationString _questionOpenRepo =
            new TranslationString("The repository has been cloned successfully." + Environment.NewLine +
@@ -23,9 +23,16 @@ namespace GitUI
             new TranslationString("Authors file \"{0}\" does not exists. Continue without authors file?");
 
         private readonly TranslationString _questionContinueWithoutAuthorsCaption = new TranslationString("Authors file");
+        private readonly GitModuleChangedEventHandler GitModuleChanged;
 
-        public FormSvnClone()
+        private FormSvnClone()
+            : this(null, null)
+        { }
+
+        public FormSvnClone(GitUICommands aCommands, GitModuleChangedEventHandler GitModuleChanged)
+            : base(aCommands)
         {
+            this.GitModuleChanged = GitModuleChanged;
             InitializeComponent();
             this.Translate();
         }
@@ -59,11 +66,12 @@ namespace GitUI
                 var errorOccurred = !FormProcess.ShowDialog(this, Settings.GitCommand, 
                     GitSvnCommandHelpers.CloneCmd(_NO_TRANSLATE_svnRepositoryComboBox.Text, dirTo, authorsfile));
                 
-                if (errorOccurred || GitModule.Current.InTheMiddleOfPatch())
+                if (errorOccurred || Module.InTheMiddleOfPatch())
                     return;
                 if (ShowInTaskbar == false && AskIfNewRepositoryShouldBeOpened(dirTo))
                 {
-                    GitModule.CurrentWorkingDir = dirTo;
+                    if (GitModuleChanged != null)
+                        GitModuleChanged(new GitModule(dirTo));
                 }
                 Close();
             }

@@ -25,31 +25,31 @@ namespace GitCommands
 
         public CommitDto Dto { get; set; }
 
-        public void Execute()
+        public void Execute(GitModule module)
         {
             if (Dto.Amend)
-                Dto.Result = GitModule.Current.RunGitCmd("commit --amend -m \"" + Dto.Message + "\"");
+                Dto.Result = module.RunGitCmd("commit --amend -m \"" + Dto.Message + "\"");
             else
-                Dto.Result = GitModule.Current.RunGitCmd("commit -m \"" + Dto.Message + "\"");
+                Dto.Result = module.RunGitCmd("commit -m \"" + Dto.Message + "\"");
         }
 
-        public static void SetCommitMessage(string commitMessageText)
+        public static void SetCommitMessage(GitModule module, string commitMessageText)
         {
             if (String.IsNullOrEmpty(commitMessageText))
             {
-                File.Delete(GetCommitMessagePath());
+                File.Delete(GetCommitMessagePath(module));
                 return;
             }
 
-            using (var textWriter = new StreamWriter(GetCommitMessagePath(), false, Settings.CommitEncoding))
+            using (var textWriter = new StreamWriter(GetCommitMessagePath(module), false, module.CommitEncoding))
             {
                 textWriter.Write(commitMessageText);
             }
         }
 
-        public static string GetCommitMessagePath()
+        public static string GetCommitMessagePath(GitModule module)
         {
-            return GitModule.Current.WorkingDirGitDir() + Settings.PathSeparator.ToString() + "COMMITMESSAGE";
+            return module.WorkingDirGitDir() + Settings.PathSeparator.ToString() + "COMMITMESSAGE";
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands.Statistics;
+using GitUIPluginInterfaces;
 
 namespace GitImpact
 {
@@ -9,12 +10,13 @@ namespace GitImpact
     {
         private readonly SynchronizationContext syncContext;
 
-        public FormImpact()
+        public FormImpact(IGitModule Module)
         {
             syncContext = SynchronizationContext.Current;
 
             InitializeComponent();
             UpdateAuthorInfo("");
+            Impact.Init(Module);
             Impact.UpdateData();
             Impact.Invalidated += Impact_Invalidated;
         }

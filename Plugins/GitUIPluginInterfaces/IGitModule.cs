@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GitUIPluginInterfaces
 {
@@ -24,5 +25,12 @@ namespace GitUIPluginInterfaces
 
         string GravatarCacheDir { get; }
 
+        IList<string> GetSubmodulesLocalPathes();
+
+        IGitModule GetISubmodule(string submoduleName);
+
+        string[] GetIRemotes(bool allowEmpty);
+
+        string GetISetting(string setting);
     }
 }
