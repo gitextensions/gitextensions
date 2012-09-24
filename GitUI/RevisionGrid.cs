@@ -1404,10 +1404,11 @@ namespace GitUI
 
             using (var frm = new FormTagSmall(GetRevision(LastRow)))
             {
-                frm.ShowDialog(this);
-            }
-
-            RefreshRevisions();
+                if (frm.ShowDialog(this) == DialogResult.OK)
+                {
+                    RefreshRevisions();
+                }
+            }           
         }
 
         private void ResetCurrentBranchToHereToolStripMenuItemClick(object sender, EventArgs e)
