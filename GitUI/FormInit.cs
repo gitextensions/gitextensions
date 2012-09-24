@@ -24,22 +24,14 @@ namespace GitUI
         private readonly TranslationString _initMsgBoxCaption =
             new TranslationString("Initialize new repository");
 
-        
+        private readonly GitModuleChangedEventHandler GitModuleChanged;
 
-        public FormInit(string dir)
+        public FormInit(string dir, GitModuleChangedEventHandler GitModuleChanged)
         {
+            this.GitModuleChanged = GitModuleChanged;
             InitializeComponent();
             Translate();
             Directory.Text = dir;
-        }
-
-        public FormInit()
-        {
-            InitializeComponent();
-            Translate();
-
-            if (!GitModule.Current.ValidWorkingDir())
-                Directory.Text = GitModule.CurrentWorkingDir;
         }
 
         private void DirectoryDropDown(object sender, EventArgs e)
@@ -62,12 +54,15 @@ namespace GitUI
                 return;
             }
 
-            GitModule.CurrentWorkingDir = Directory.Text;
+            GitModule module = new GitModule(Directory.Text);
 
-            if (!System.IO.Directory.Exists(GitModule.CurrentWorkingDir))
-                System.IO.Directory.CreateDirectory(GitModule.CurrentWorkingDir);
+            if (!System.IO.Directory.Exists(module.WorkingDir))
+                System.IO.Directory.CreateDirectory(module.WorkingDir);
 
-            MessageBox.Show(this, GitModule.Current.Init(Central.Checked, Central.Checked), _initMsgBoxCaption.Text);
+            MessageBox.Show(this, module.Init(Central.Checked, Central.Checked), _initMsgBoxCaption.Text);
+
+            if (GitModuleChanged != null)
+                GitModuleChanged(module);
 
             Repositories.AddMostRecentRepository(Directory.Text);
 

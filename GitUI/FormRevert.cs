@@ -5,13 +5,14 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public sealed partial class FormRevert : GitExtensionsForm
+    public sealed partial class FormRevert : GitModuleForm
     {
         private readonly TranslationString _resetChangesCaption = new TranslationString("Reset changes");
         private readonly TranslationString _undoChangesIn = new TranslationString("Undo changes in:\n{0}?");
         private readonly string fileName;
 
-        public FormRevert(string fileName)
+        public FormRevert(GitUICommands aCommands, string fileName)
+            : base(aCommands)
         {
             this.fileName = fileName;
             InitializeComponent();
@@ -26,7 +27,7 @@ namespace GitUI
         private void Revert_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            string output = GitModule.Current.ResetFile(fileName);
+            string output = Module.ResetFile(fileName);
 
             if (!string.IsNullOrEmpty(output))
                 MessageBox.Show(this, output, _resetChangesCaption.Text);

@@ -11,21 +11,28 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public sealed partial class FormFileHistory : GitExtensionsForm
+    public sealed partial class FormFileHistory : GitModuleForm
     {
         private readonly SynchronizationContext syncContext;
         private readonly FilterRevisionsHelper filterRevisionsHelper;
         private readonly FilterBranchHelper filterBranchHelper;
 
-        public FormFileHistory(string fileName, GitRevision revision, bool filterByRevision)
-            : base(true)
+        private FormFileHistory()
+            : this(null)
+        { }
+
+        internal FormFileHistory(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
             syncContext = SynchronizationContext.Current;
             filterBranchHelper = new FilterBranchHelper(toolStripBranches, toolStripDropDownButton2, FileChanges);
-
             filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, FileChanges, toolStripLabel2, this);
+        }
 
+        public FormFileHistory(GitUICommands aCommands, string fileName, GitRevision revision, bool filterByRevision)
+            : this(aCommands)
+        {
             FileChanges.SetInitialRevision(revision);
             Translate();
 
@@ -45,8 +52,8 @@ namespace GitUI
                 filterBranchHelper.SetBranchFilter(revision.Guid, false);
         }
 
-        public FormFileHistory(string fileName)
-            : this(fileName, null, false)
+        public FormFileHistory(GitUICommands aCommands, string fileName)
+            : this(aCommands, fileName, null, false)
         {
         }
 
@@ -86,7 +93,7 @@ namespace GitUI
             fileName = fileName.Replace('\\', '/');
 
             // we will need this later to look up proper casing for the file
-            var fullFilePath = Path.Combine(GitModule.CurrentWorkingDir, fileName);
+            var fullFilePath = Path.Combine(Module.WorkingDir, fileName);
 
             //The section below contains native windows (kernel32) calls
             //and breaks on Linux. Only use it on Windows. Casing is only
@@ -102,11 +109,11 @@ namespace GitUI
                 NativeMethods.GetLongPathName(shortPath.ToString(), longPath, longPath.Capacity);
 
                 // remove the working dir and now we have a properly cased file name.
-                fileName = longPath.ToString().Substring(GitModule.CurrentWorkingDir.Length);
+                fileName = longPath.ToString().Substring(Module.WorkingDir.Length);
             }
 
-            if (fileName.StartsWith(GitModule.CurrentWorkingDir, StringComparison.InvariantCultureIgnoreCase))
-                fileName = fileName.Substring(GitModule.CurrentWorkingDir.Length);
+            if (fileName.StartsWith(Module.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
+                fileName = fileName.Substring(Module.WorkingDir.Length);
 
             FileName = fileName;
 
@@ -122,7 +129,7 @@ namespace GitUI
                 // note: This implementation is quite a quick hack (by someone who does not speak C# fluently).
                 // 
 
-                var gitGetGraphCommand = new GitCommandsInstance { StreamOutput = true, CollectOutput = false };
+                var gitGetGraphCommand = new GitCommandsInstance(Module) { StreamOutput = true, CollectOutput = false };
 
                 string arg = "log --format=\"%n\" --name-only --follow -- \"" + fileName + "\"";
                 Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arg);
@@ -266,7 +273,7 @@ namespace GitUI
                 if (string.IsNullOrEmpty(orgFileName))
                     orgFileName = FileName;
 
-                string fullName = GitModule.CurrentWorkingDir + orgFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
+                string fullName = Module.WorkingDir + orgFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
 
                 using (var fileDialog = new SaveFileDialog
                 {
@@ -283,7 +290,7 @@ namespace GitUI
                         "|All files (*.*)|*.*";
                     if (fileDialog.ShowDialog(this) == DialogResult.OK)
                     {
-                        GitModule.Current.SaveBlobAs(fileDialog.FileName, selectedRows[0].Guid + ":\"" + orgFileName + "\"");
+                        Module.SaveBlobAs(fileDialog.FileName, selectedRows[0].Guid + ":\"" + orgFileName + "\"");
                     }
                 }
             }
@@ -309,7 +316,7 @@ namespace GitUI
             var selectedRevisions = FileChanges.GetSelectedRevisions();
             if (selectedRevisions.Count == 1)
             {
-                using (var frm = new FormCherryPickCommitSmall(selectedRevisions[0]))
+                using (var frm = new FormCherryPickCommitSmall(UICommands, selectedRevisions[0]))
                     frm.ShowDialog(this);
             }
         }
@@ -319,7 +326,7 @@ namespace GitUI
             var selectedRevisions = FileChanges.GetSelectedRevisions();
             if (selectedRevisions.Count == 1)
             {
-                var frm = new FormRevertCommitSmall(selectedRevisions[0]);
+                var frm = new FormRevertCommitSmall(UICommands, selectedRevisions[0]);
                 frm.ShowDialog(this);
             }
         }

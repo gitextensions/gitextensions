@@ -21,7 +21,7 @@ namespace GitUI
         public string ProcessString { get; set; }
         public string ProcessArguments { get; set; }
         public string ProcessInput { get; set; }
-        public string WorkingDir { get; set; }
+        public readonly string WorkingDirectory;
         public Process Process { get; set; }
         public HandleOnExit HandleOnExitCallback { get; set; }
 
@@ -31,55 +31,67 @@ namespace GitUI
             : base(true)
         { }
 
-        protected FormProcess(string process, string arguments, GitModule module, string input, bool useDialogSettings)
+        protected FormProcess(string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
             : base(useDialogSettings)
         {
             ProcessCallback = processStart;
             AbortCallback = processAbort;
             ProcessString = process ?? Settings.GitCommand;
-            WorkingDir = module == null ? GitModule.CurrentWorkingDir : module.WorkingDir;
             ProcessArguments = arguments;
             Remote = "";
             ProcessInput = input;
+            WorkingDirectory = aWorkingDirectory;
+            Text = Text + " (" + WorkingDirectory + ")";
         }
 
         public static bool ShowDialog(IWin32Window owner, GitModule module, string arguments)
         {
-            return ShowDialog(owner, null, arguments, module, null, true);
+            return ShowDialog(owner, null, arguments, module.WorkingDir, null, true);
         }
 
-        public static bool ShowDialog(IWin32Window owner, string arguments)
+        public static bool ShowDialog(IWin32Window owner, GitModule module, string process, string arguments)
         {
-            return ShowDialog(owner, arguments, true);
+            return ShowDialog(owner, process, arguments, module.WorkingDir, null, true);
         }
 
-        public static bool ShowDialog(IWin32Window owner, string process, string arguments)
+        public static bool ShowDialog(GitModuleForm owner, string arguments)
         {
-            return ShowDialog(owner, process, arguments, null, null, true);
+            return ShowDialog(owner, (string)null, arguments);
         }
 
-        public static bool ShowDialog(IWin32Window owner, string arguments, bool useDialogSettings)
+        public static bool ShowDialog(GitModuleForm owner, string process, string arguments)
         {
-            return ShowDialog(owner, null, arguments, null, null, useDialogSettings);
+            return ShowDialog(owner, process, arguments, owner.Module.WorkingDir, null, true);
         }
 
-        public static bool ShowDialog(IWin32Window owner, string process, string arguments, GitModule module, string input, bool useDialogSettings)
+        public static bool ShowDialog(GitModuleForm owner, string arguments, bool useDialogSettings)
         {
-            using (var formProcess = new FormProcess(process, arguments, module, input, useDialogSettings))
+            return ShowDialog(owner, owner.Module, arguments, useDialogSettings);
+        }
+
+        public static bool ShowDialog(IWin32Window owner, GitModule module, string arguments, bool useDialogSettings)
+        {
+            return ShowDialog(owner, null, arguments, module.WorkingDir, null, useDialogSettings);
+        }
+
+
+        public static bool ShowDialog(IWin32Window owner, string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
+        {
+            using (var formProcess = new FormProcess(process, arguments, aWorkingDirectory, input, useDialogSettings))
             {
                 formProcess.ShowDialog(owner);
                 return !formProcess.ErrorOccurred();
             }
         }
 
-        public static string ReadDialog(IWin32Window owner, string arguments)
+        public static string ReadDialog(GitModuleForm owner, string arguments)
         {
-            return ReadDialog(owner, null, arguments, null, null, true);
+            return ReadDialog(owner, null, arguments, owner.Module, null, true);
         }
 
         public static string ReadDialog(IWin32Window owner, string process, string arguments, GitModule module, string input, bool useDialogSettings)
         {
-            using (var formProcess = new FormProcess(process, arguments, module, input, useDialogSettings))
+            using (var formProcess = new FormProcess(process, arguments, module.WorkingDir, input, useDialogSettings))
             {
                 formProcess.ShowDialog(owner);
                 return formProcess.OutputString.ToString();
@@ -95,11 +107,11 @@ namespace GitUI
         {
             BeforeProcessStart();
             AddMessageLine(ProcessString + " " + ProcessArguments);
-            gitCommand = new GitCommandsInstance { CollectOutput = false };
+            gitCommand = new GitCommandsInstance(WorkingDirectory) { CollectOutput = false };
 
             try
             {
-                Process = gitCommand.CmdStartProcess(ProcessString, ProcessArguments, WorkingDir);
+                Process = gitCommand.CmdStartProcess(ProcessString, ProcessArguments);
 
                 gitCommand.Exited += gitCommand_Exited;
                 gitCommand.DataReceived += gitCommand_DataReceived;

@@ -14,6 +14,7 @@ namespace GitUI
 
         private readonly TranslationString _warningOpenFailedCaption =
             new TranslationString("Error");
+        private GitModule choosenModule = null;
 
         public Open()
         {
@@ -27,6 +28,16 @@ namespace GitUI
 
             _NO_TRANSLATE_Directory.Focus();
             _NO_TRANSLATE_Directory.Select();
+        }
+
+        public static GitModule OpenModule(IWin32Window owner)
+        {
+            using (var open = new Open())
+            {
+                open.ShowDialog(owner);
+                return open.choosenModule;
+            }
+
         }
 
         private void BrowseClick(object sender, EventArgs e)
@@ -45,9 +56,9 @@ namespace GitUI
         {
             if (Directory.Exists(_NO_TRANSLATE_Directory.Text))
             {
-                GitModule.CurrentWorkingDir = _NO_TRANSLATE_Directory.Text;
+                choosenModule = new GitModule(_NO_TRANSLATE_Directory.Text);
 
-                Repositories.AddMostRecentRepository(GitModule.CurrentWorkingDir);
+                Repositories.AddMostRecentRepository(choosenModule.WorkingDir);
 
                 Close();
             }

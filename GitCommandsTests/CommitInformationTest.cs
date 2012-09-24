@@ -37,7 +37,7 @@ namespace GitCommandsTests
             var rawData = commitGuid + "\n" +
                           treeGuid + "\n" +
                           parentGuid1 + " " + parentGuid2 + "\n" +
-                          "John Doe (Acme Inc) <John.Doe@test.com>\n" + 
+                          "John Doe (Acme Inc) <John.Doe@test.com>\n" +
                           authorUnixTime + "\n" +
                           "Jane Doe (Acme Inc) <Jane.Doe@test.com>\n" +
                           commitUnixTime + "\n" +
@@ -56,11 +56,12 @@ namespace GitCommandsTests
                                "Notes (p4notes):" + Environment.NewLine +
                                "\tP4@547123\n\n";
 
-            var commitData = CommitData.CreateFromFormatedData(rawData);
+            var commitData = CommitData.CreateFromFormatedData(rawData, new GitModule(""));
             var commitInformation = CommitInformation.GetCommitInfo(commitData);
-            
-            Assert.AreEqual(expectedHeader,commitInformation.Header);
+
+            Assert.AreEqual(expectedHeader, commitInformation.Header);
             Assert.AreEqual(expectedBody, commitInformation.Body);
+
         }
 
         [TestMethod]
@@ -80,7 +81,7 @@ namespace GitCommandsTests
         [TestMethod]
         public void GetAllBranchesWhichContainGivenCommitTestReturnsEmptyList()
         {
-            var actualResult = CommitInformation.GetAllBranchesWhichContainGivenCommit("fakesha1", false, false);
+            var actualResult = CommitInformation.GetAllBranchesWhichContainGivenCommit(new GitModule(""), "fakesha1", false, false);
 
             Assert.IsNotNull(actualResult);
             Assert.IsTrue(!actualResult.Any());

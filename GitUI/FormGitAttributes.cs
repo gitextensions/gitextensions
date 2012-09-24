@@ -8,7 +8,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormGitAttributes : GitExtensionsForm
+    public partial class FormGitAttributes : GitModuleForm
     {
         private readonly TranslationString noWorkingDir = 
             new TranslationString(".gitattributes is only supported when there is a working dir.");
@@ -27,12 +27,16 @@ namespace GitUI
 
         public string GitAttributesFile = string.Empty;
 
-        public FormGitAttributes()
-            : base(true)
+        public FormGitAttributes(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
             Translate();
+        }
 
+        protected override void OnRuntimeLoad(EventArgs e)
+        {
+            base.OnRuntimeLoad(e);
             LoadFile();
             _NO_TRANSLATE_GitAttributesText.TextLoaded += GitAttributesFileLoaded;
         }
@@ -41,9 +45,9 @@ namespace GitUI
         {
             try
             {
-                if (File.Exists(GitModule.CurrentWorkingDir + ".gitattributes"))
+                if (File.Exists(Module.WorkingDir + ".gitattributes"))
                 {
-                    _NO_TRANSLATE_GitAttributesText.ViewFile(GitModule.CurrentWorkingDir + ".gitattributes");
+                    _NO_TRANSLATE_GitAttributesText.ViewFile(Module.WorkingDir + ".gitattributes");
                 }
             }
             catch (Exception ex)
@@ -64,13 +68,13 @@ namespace GitUI
             {
                 FileInfoExtensions
                     .MakeFileTemporaryWritable(
-                        GitModule.CurrentWorkingDir + ".gitattributes",
+                        Module.WorkingDir + ".gitattributes",
                         x =>
                         {
                             this.GitAttributesFile = _NO_TRANSLATE_GitAttributesText.GetText();
                             if (!this.GitAttributesFile.EndsWith(Environment.NewLine))
                                 this.GitAttributesFile += Environment.NewLine;
-                            File.WriteAllBytes(x, Settings.SystemEncoding.GetBytes(this.GitAttributesFile));
+                            File.WriteAllBytes(x, GitModule.SystemEncoding.GetBytes(this.GitAttributesFile));
                         });
 
                 return true;
@@ -111,7 +115,7 @@ namespace GitUI
 
         private void FormMailMapLoad(object sender, EventArgs e)
         {
-            if (!GitModule.Current.IsBareRepository()) return;
+            if (!Module.IsBareRepository()) return;
             MessageBox.Show(this, noWorkingDir.Text, _noWorkingDirCaption.Text);
             Close();
         }

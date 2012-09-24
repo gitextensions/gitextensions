@@ -6,7 +6,24 @@ namespace GitUI.Script
 {
     public static class ScriptRunner
     {
-        public static void RunScript(string script, RevisionGrid RevisionGrid)
+        public static bool ExecuteScriptCommand(GitModule aModule, int command)
+        {
+            var curScripts = ScriptManager.GetScripts();
+            bool anyScriptExecuted = false;
+
+            foreach (ScriptInfo s in curScripts)
+            {
+                if (s.HotkeyCommandIdentifier == command)
+                {
+                    RunScript(aModule, s.Name, null);
+                    anyScriptExecuted = true;
+                }
+            }
+            return anyScriptExecuted;
+        }
+
+
+        public static void RunScript(GitModule aModule, string script, RevisionGrid RevisionGrid)
         {
             if (string.IsNullOrEmpty(script))
                 return;
@@ -36,10 +53,10 @@ namespace GitUI.Script
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            RunScript(scriptInfo, RevisionGrid);
+            RunScript(aModule, scriptInfo, RevisionGrid);
         }
 
-        internal static void RunScript(ScriptInfo scriptInfo, RevisionGrid RevisionGrid)
+        internal static void RunScript(GitModule aModule, ScriptInfo scriptInfo, RevisionGrid RevisionGrid)
         {
             string command = scriptInfo.Command;
             string argument = scriptInfo.Arguments;
@@ -65,7 +82,7 @@ namespace GitUI.Script
                     continue;
                 if (!option.StartsWith("{s") || selectedRevision != null)
                 {
-                    currentRevision = GetCurrentRevision(RevisionGrid, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches, currentRevision, option);
+                    currentRevision = GetCurrentRevision(aModule, RevisionGrid, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches, currentRevision, option);
                 }
                 else
                 {
@@ -198,11 +215,11 @@ namespace GitUI.Script
                     case "{cDefaultRemote}":
                         if (currentBranches.Count == 1)
                             argument = argument.Replace(option,
-                                                        GitModule.Current.GetSetting(string.Format("branch.{0}.remote",
+                                                        aModule.GetSetting(string.Format("branch.{0}.remote",
                                                                                                  currentBranches[0].Name)));
                         else if (currentBranches.Count != 0)
                             argument = argument.Replace(option,
-                                                        GitModule.Current.GetSetting(string.Format("branch.{0}.remote",
+                                                        aModule.GetSetting(string.Format("branch.{0}.remote",
                                                                                                  askToSpecify(
                                                                                                      currentBranches,
                                                                                                      "Current Revision Branch"))));
@@ -219,7 +236,7 @@ namespace GitUI.Script
                 }
             }
 
-            FormProcess.ShowDialog(null, command, argument);
+            FormProcess.ShowDialog(null, command, argument, aModule.WorkingDir, null, true);
         }
 
         private static GitRevision CalculateSelectedRevision(RevisionGrid RevisionGrid, List<GitHead> selectedRemoteBranches,
@@ -248,7 +265,7 @@ namespace GitUI.Script
             return selectedRevision;
         }
 
-        private static GitRevision GetCurrentRevision(RevisionGrid RevisionGrid, List<GitHead> currentTags, List<GitHead> currentLocalBranches,
+        private static GitRevision GetCurrentRevision(GitModule aModule, RevisionGrid RevisionGrid, List<GitHead> currentTags, List<GitHead> currentLocalBranches,
                                                       List<GitHead> currentRemoteBranches, List<GitHead> currentBranches,
                                                       GitRevision currentRevision, string option)
         {
@@ -259,8 +276,8 @@ namespace GitUI.Script
                 if (RevisionGrid == null)
                 {
                     heads = new List<GitHead>();
-                    string currentRevisionGuid = GitModule.Current.GetCurrentCheckout();
-                    foreach (GitHead head in GitModule.Current.GetHeads(true, true))
+                    string currentRevisionGuid = aModule.GetCurrentCheckout();
+                    foreach (GitHead head in aModule.GetHeads(true, true))
                     {
                         if (head.Guid == currentRevisionGuid)
                             heads.Add(head);

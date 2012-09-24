@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using GitUIPluginInterfaces;
 
 namespace GitCommands.Statistics
 {
@@ -63,7 +64,12 @@ namespace GitCommands.Statistics
         
 
         private AsyncLoader backgroundLoader = new AsyncLoader();
+        private readonly IGitModule Module;
 
+        public ImpactLoader(IGitModule aModule)
+        {
+            Module = aModule;
+        }
         ~ImpactLoader()
         {
             Dispose();
@@ -92,27 +98,29 @@ namespace GitCommands.Statistics
 
             string command = "log --pretty=tformat:\"--- %ad --- " + authorName + "\" --numstat --date=iso -C --all --no-merges";
 
-            LoadModuleInfo(command, GitModule.CurrentWorkingDir, taskState);
+            LoadModuleInfo(command, Module, taskState);
 
             if (ShowSubmodules)
             {
-                IList<string> submodules = GitModule.Current.GetSubmodulesLocalPathes();
+                IList<string> submodules = Module.GetSubmodulesLocalPathes();
                 foreach (var submoduleName in submodules)
                 {
-                    GitModule submodule = GitModule.Current.GetSubmodule(submoduleName);
-                    if (submodule.ValidWorkingDir())
-                        LoadModuleInfo(command, submodule.WorkingDir, taskState);
+                    IGitModule submodule = Module.GetISubmodule(submoduleName);
+
+                    if (submodule.IsValidGitWorkingDir(submodule.GitWorkingDir))
+                        LoadModuleInfo(command, submodule, taskState);
+
                 }
             }
         }
 
-        private void LoadModuleInfo(string command, string workingDir, ILoadingTaskState taskState)
+        private void LoadModuleInfo(string command, IGitModule module, ILoadingTaskState taskState)
         {
-            using (GitCommandsInstance git = new GitCommandsInstance())
+            using (GitCommandsInstance git = new GitCommandsInstance(module))
             {
                 git.StreamOutput = true;
                 git.CollectOutput = false;
-                Process p = git.CmdStartProcess(Settings.GitCommand, command, workingDir);
+                Process p = git.CmdStartProcess(Settings.GitCommand, command);
 
                 // Read line
                 string line = p.StandardOutput.ReadLine();

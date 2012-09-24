@@ -33,15 +33,15 @@
             }
             return sb.ToString();
         }
-        public static bool CheckRefsRemoteSvn()
+        public static bool CheckRefsRemoteSvn(GitModule aModule)
         {
-            string svnremote = GetConfigSvnRemoteFetch();
+            string svnremote = GetConfigSvnRemoteFetch(aModule);
             return svnremote != null && svnremote.Trim().Contains(":refs/remote");
         }
 
-        public static string GetConfigSvnRemoteFetch()
+        public static string GetConfigSvnRemoteFetch(GitModule aModule)
         {
-            return GitModule.Current.RunCmd(Settings.GitCommand, "config svn-remote.svn.fetch");
+            return aModule.RunCmd(Settings.GitCommand, "config svn-remote.svn.fetch");
         }
 
         public static string RebaseCmd()
@@ -59,9 +59,9 @@
             return SvnPrefix + " fetch";
         }
 
-        public static bool ValidSvnWorkingDir()
+        public static bool ValidSvnWorkingDir(GitModule aModule)
         {
-            return ValidSvnWorkingDir(GitModule.CurrentWorkingDir);
+            return ValidSvnWorkingDir(aModule.WorkingDir);
         }
 
         public static bool ValidSvnWorkingDir(string dir)

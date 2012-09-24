@@ -178,6 +178,12 @@
       <DependentUpon>FormVerify.cs</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="GitModuleControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GitModuleForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GitUIExtensions.cs" />
     <Compile Include="Hotkey\ControlHotkeys.cs">
       <SubType>UserControl</SubType>
@@ -198,6 +204,8 @@
     <Compile Include="Hotkey\TextboxHotkey.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="IGitUICommandsSource.cs" />
+    <Compile Include="IndexWatcher.cs" />
     <Compile Include="MenuStripEx.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -369,6 +377,9 @@
     <Compile Include="GitFileTreeComparer.cs" />
     <Compile Include="Google.cs" />
     <Compile Include="Lemmings.cs" />
+    <Compile Include="Plugin\GitPluginSettingsContainer.cs" />
+    <Compile Include="Plugin\LoadPlugins.cs" />
+    <Compile Include="Plugin\PluginExtraction.cs" />
     <Compile Include="ProcessOutputTimer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -707,7 +718,6 @@
     <Compile Include="GravatarControl.Designer.cs">
       <DependentUpon>GravatarControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="IndexWatcher.cs" />
     <Compile Include="MergeConflictHandler.cs" />
     <Compile Include="FormApplyPatch.cs">
       <SubType>Form</SubType>

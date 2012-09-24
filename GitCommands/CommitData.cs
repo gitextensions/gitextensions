@@ -80,14 +80,6 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Gets the commit info.
-        /// </summary>
-        public static CommitData GetCommitData(string sha1, ref string error)
-        {
-            return GetCommitData(GitModule.Current, sha1, ref error);
-        }
-
-        /// <summary>
         /// Gets the commit info for submodule.
         /// </summary>
         public static CommitData GetCommitData(GitModule module, string sha1, ref string error)
@@ -104,7 +96,7 @@ namespace GitCommands
                 module.RunCmd(
                     Settings.GitCommand,
                     arguments,
-                    Settings.LosslessEncoding
+                    GitModule.LosslessEncoding
                     );
 
             if (info.Trim().StartsWith("fatal"))
@@ -126,7 +118,7 @@ namespace GitCommands
                 return null;
             }
 
-            CommitData commitInformation = CreateFromFormatedData(info);
+            CommitData commitInformation = CreateFromFormatedData(info, module);
 
             return commitInformation;
         }
@@ -139,7 +131,7 @@ namespace GitCommands
         /// </summary>
         /// <param name="data">Formated commit data from git.</param>
         /// <returns>CommitData object populated with parsed info from git string.</returns>
-        public static CommitData CreateFromFormatedData(string data)
+        public static CommitData CreateFromFormatedData(string data, GitModule aModule)
         {
             if (data == null)
                 throw new ArgumentNullException("Data");
@@ -155,10 +147,10 @@ namespace GitCommands
             string[] parentLines = lines[2].Split(new char[]{' '});
             ReadOnlyCollection<string> parentGuids = parentLines.ToList().AsReadOnly();
 
-            var author = GitCommandHelpers.ReEncodeStringFromLossless(lines[3]);
+            var author = aModule.ReEncodeStringFromLossless(lines[3]);
             var authorDate = DateTimeUtils.ParseUnixTime(lines[4]);
 
-            var committer = GitCommandHelpers.ReEncodeStringFromLossless(lines[5]);
+            var committer = aModule.ReEncodeStringFromLossless(lines[5]);
             var commitDate = DateTimeUtils.ParseUnixTime(lines[6]);
 
             string commitEncoding = lines[7];
@@ -181,7 +173,7 @@ namespace GitCommands
             }
 
             //commit message is not reencoded by git when format is given
-            var body = GitCommandHelpers.ReEncodeCommitMessage(message.ToString(), commitEncoding);
+            var body = aModule.ReEncodeCommitMessage(message.ToString(), commitEncoding);
 
             var commitInformation = new CommitData(guid, treeGuid, parentGuids, author, authorDate,
                 committer, commitDate, body);

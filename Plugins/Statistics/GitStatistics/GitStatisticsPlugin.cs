@@ -5,19 +5,18 @@ using GitUIPluginInterfaces;
 
 namespace GitStatistics
 {
-    public class GitStatisticsPlugin : IGitPluginForRepository
+    public class GitStatisticsPlugin : GitPluginBase, IGitPluginForRepository
     {
         #region IGitPlugin Members
 
-        public string Description
+        public override string Description
         {
             get { return "Statistics"; }
         }
 
-        public IGitPluginSettingsContainer Settings { get; set; }
-
-        public void Register(IGitUICommands gitUiCommands)
+        protected override void RegisterSettings()
         {
+            base.RegisterSettings();
             Settings.AddSetting("Code files",
                                 "*.c;*.cpp;*.cc;*.h;*.hpp;*.inl;*.idl;*.asm;*.inc;*.cs;*.xsd;*.wsdl;*.xml;*.htm;*.html;*.css;" + 
                                 "*.vbs;*.vb;*.sql;*.aspx;*.asp;*.php;*.nav;*.pas;*.py;*.rb");
@@ -25,13 +24,13 @@ namespace GitStatistics
             Settings.AddSetting("Ignore submodules (true/false)", "true");
         }
 
-        public bool Execute(GitUIBaseEventArgs gitUIEventArgs)
+        public override bool Execute(GitUIBaseEventArgs gitUIEventArgs)
         {
             if (string.IsNullOrEmpty(gitUIEventArgs.GitModule.GitWorkingDir))
                 return false;
 
             using (var formGitStatistics =
-                new FormGitStatistics(Settings.GetSetting("Code files"))
+                new FormGitStatistics(gitUIEventArgs.GitModule, Settings.GetSetting("Code files"))
                     {
                         DirectoriesToIgnore =
                             Settings.GetSetting("Directories to ignore (EndsWith)")

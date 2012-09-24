@@ -8,7 +8,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public sealed partial class FormBisect : GitExtensionsForm
+    public sealed partial class FormBisect : GitModuleForm
     {
         // TODO: Improve me
         private readonly TranslationString _bisectStart =
@@ -16,7 +16,12 @@ namespace GitUI
 
         private readonly RevisionGrid _revisionGrid;
 
+        private FormBisect()
+            : base(null)
+        { }
+
         public FormBisect(RevisionGrid revisionGrid)
+            : base(revisionGrid.UICommands)
         {
             InitializeComponent();
             Translate();
@@ -26,7 +31,7 @@ namespace GitUI
 
         private void UpdateButtonsState()
         {
-            bool inTheMiddleOfBisect = GitModule.Current.InTheMiddleOfBisect();
+            bool inTheMiddleOfBisect = Module.InTheMiddleOfBisect();
             Start.Enabled = !inTheMiddleOfBisect;
             Good.Enabled = inTheMiddleOfBisect;
             Bad.Enabled = inTheMiddleOfBisect;

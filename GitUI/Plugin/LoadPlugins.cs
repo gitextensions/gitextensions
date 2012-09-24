@@ -6,21 +6,10 @@ using System.Windows.Forms;
 using System.Threading;
 using GitCommands;
 
-namespace GitExtensions
+namespace GitUI
 {
     internal static class PluginLoader
     {
-        public static void LoadAsync()
-        {
-            // Create the thread object, passing in the Alpha.Beta method
-            // via a ThreadStart delegate. This does not start the thread.
-            var oThread = new Thread(Load);
-
-            // Start the thread
-            oThread.Start();
-
-        }
-
         public static void Load()
         {
             var file = new FileInfo(Application.ExecutablePath);

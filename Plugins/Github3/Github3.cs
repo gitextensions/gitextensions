@@ -65,7 +65,7 @@ namespace Github3
         }
     }
 
-    public class Github3 : IRepositoryHostPlugin
+    public class Github3 : GitPluginBase, IRepositoryHostPlugin
     {
         internal static Github3 instance;
         internal static Client github;
@@ -79,16 +79,19 @@ namespace Github3
             github = new Client();
         }
 
-        public string Description
+        public override string Description
         {
             get { return "Github"; }
         }
 
-        public IGitPluginSettingsContainer Settings { get; set; }
-
-        public void Register(IGitUICommands gitUiCommands)
+        protected override void RegisterSettings()
         {
+            base.RegisterSettings();
             Settings.AddSetting("OAuth Token", "");
+        }
+
+        public override void Register(IGitUICommands gitUiCommands)
+        {
 
             if (GithubLoginInfo.OAuthToken.Length > 0)
             {
@@ -96,7 +99,7 @@ namespace Github3
             }
         }
 
-        public bool Execute(GitUIBaseEventArgs gitUiCommands)
+        public override bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
             if (GithubLoginInfo.OAuthToken.Length == 0)
             {
@@ -132,20 +135,23 @@ namespace Github3
         }
 
         public bool ConfigurationOk { get { return true; } }
-        public bool CurrentWorkingDirRepoIsRelevantToMe { get { return GetHostedRemotesForCurrentWorkingDirRepo().Count > 0; } }
+        public bool GitModuleIsRelevantToMe(IGitModule aModule)
+        {
+            return GetHostedRemotesForModule(aModule).Count > 0;
+        }
 
         /// <summary>
         /// Returns all relevant github-remotes for the current working directory
         /// </summary>
         /// <returns></returns>
-        public List<IHostedRemote> GetHostedRemotesForCurrentWorkingDirRepo()
+        public List<IHostedRemote> GetHostedRemotesForModule(IGitModule aModule)
         {
             var repoInfos = new List<IHostedRemote>();
 
-            string[] remotes = GitCommands.GitModule.Current.GetRemotes(false);
+            string[] remotes = aModule.GetIRemotes(false);
             foreach (string remote in remotes)
             {
-                var url = GitCommands.GitModule.Current.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
+                var url = aModule.GetISetting(string.Format(SettingKeyString.RemoteUrl, remote));
                 if (string.IsNullOrEmpty(url))
                     continue;
 

@@ -10,7 +10,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class CommitInfo : GitExtensionsControl
+    public partial class CommitInfo : GitModuleControl
     {
         private readonly TranslationString containedInBranches = new TranslationString("Contained in branches:");
         private readonly TranslationString containedInNoBranch = new TranslationString("Contained in no branch");
@@ -79,7 +79,7 @@ namespace GitUI
                 return;
             _RevisionHeader.Text = string.Empty;
             _RevisionHeader.Refresh();
-            CommitInformation commitInformation = CommitInformation.GetCommitInfo(_revision);
+            CommitInformation commitInformation = CommitInformation.GetCommitInfo(Module, _revision);
             _RevisionHeader.SetXHTMLText(commitInformation.Header);
             splitContainer1.SplitterDistance = _RevisionHeader.GetPreferredSize(new System.Drawing.Size(0, 0)).Height;
             _revisionInfo = commitInformation.Body;
@@ -146,7 +146,7 @@ namespace GitUI
             // Include remote branches if requested
             bool getRemote = Settings.CommitInfoShowContainedInBranchesRemote ||
                              Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
-            var branches = CommitInformation.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote);
+            var branches = CommitInformation.GetAllBranchesWhichContainGivenCommit(Module, revision, getLocal, getRemote);
             var branchString = "";
             bool allowLocal = Settings.CommitInfoShowContainedInBranchesLocal;
             bool allowRemote = getRemote;
@@ -187,7 +187,7 @@ namespace GitUI
         private string GetTagsWhichContainsThisCommit(string revision)
         {
             var tagString = "";
-            foreach (var tag in CommitInformation.GetAllTagsWhichContainGivenCommit(revision))
+            foreach (var tag in CommitInformation.GetAllTagsWhichContainGivenCommit(Module, revision))
             {
                 if (tagString != string.Empty)
                     tagString += ", ";
@@ -235,7 +235,7 @@ namespace GitUI
 
         private void addNoteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GitModule.Current.EditNotes(_revision);
+            Module.EditNotes(_revision);
             ReloadCommitInfo();
         }
     }
