@@ -102,20 +102,6 @@ namespace GitUI.Properties {
             }
         }
         
-        public static System.Drawing.Bitmap BranchCheckout {
-            get {
-                object obj = ResourceManager.GetObject("BranchCheckout", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap BranchCreate {
-            get {
-                object obj = ResourceManager.GetObject("BranchCreate", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         public static System.Drawing.Bitmap bug {
             get {
                 object obj = ResourceManager.GetObject("bug", resourceCulture);
@@ -493,6 +479,34 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap IconBranchCheckout {
+            get {
+                object obj = ResourceManager.GetObject("IconBranchCheckout", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconBranchCreate {
+            get {
+                object obj = ResourceManager.GetObject("IconBranchCreate", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconBranchDelete {
+            get {
+                object obj = ResourceManager.GetObject("IconBranchDelete", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconCherryPick {
+            get {
+                object obj = ResourceManager.GetObject("IconCherryPick", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap IconClean {
             get {
                 object obj = ResourceManager.GetObject("IconClean", resourceCulture);
@@ -552,6 +566,20 @@ namespace GitUI.Properties {
         public static System.Drawing.Bitmap IconStaged {
             get {
                 object obj = ResourceManager.GetObject("IconStaged", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconTagCreate {
+            get {
+                object obj = ResourceManager.GetObject("IconTagCreate", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconTagDelete {
+            get {
+                object obj = ResourceManager.GetObject("IconTagDelete", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -790,13 +818,6 @@ namespace GitUI.Properties {
         public static System.Drawing.Bitmap success {
             get {
                 object obj = ResourceManager.GetObject("success", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap TagCreate {
-            get {
-                object obj = ResourceManager.GetObject("TagCreate", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
