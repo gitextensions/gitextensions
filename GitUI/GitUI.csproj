@@ -1355,6 +1355,7 @@
     <None Include="Resources\Icons\BranchDelete.png" />
     <None Include="Resources\Icons\IconCherryPick.png" />
     <None Include="Resources\Icons\TagDelete.png" />
+    <None Include="Resources\Icons\IconPreview.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
