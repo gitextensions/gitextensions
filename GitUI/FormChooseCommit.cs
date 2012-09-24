@@ -11,22 +11,30 @@ using GitCommands;
 
 namespace GitUI
 {
-    public partial class FormChooseCommit : GitExtensionsForm
+    public partial class FormChooseCommit : GitModuleForm
     {
+        private FormChooseCommit()
+            : this(null)
+        { }
 
-        public FormChooseCommit(string preselectCommit)
-            : base(true)
+        private FormChooseCommit(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
-            Translate();
+            Translate();        
+        }
+
+        public FormChooseCommit(GitUICommands aCommands, string preselectCommit)
+            : this(aCommands)
+        {
             revisionGrid.MultiSelect = false;
 
             if (!String.IsNullOrEmpty(preselectCommit))
             {
-                string guid = GitModule.Current.RevParse(preselectCommit);
+                string guid = Module.RevParse(preselectCommit);
                 if (!String.IsNullOrEmpty(guid))
                 {
-                    revisionGrid.SetInitialRevision(new GitRevision(guid));
+                    revisionGrid.SetInitialRevision(new GitRevision(Module, guid));
                 }
             }
 

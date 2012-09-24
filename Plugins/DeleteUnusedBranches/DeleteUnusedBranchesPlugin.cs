@@ -3,22 +3,21 @@ using GitUIPluginInterfaces;
 
 namespace DeleteUnusedBranches
 {
-    public class DeleteUnusedBranchesPlugin : IGitPluginForRepository
+    public class DeleteUnusedBranchesPlugin : GitPluginBase, IGitPluginForRepository
     {
-        public string Description
+        public override string Description
         {
             get { return "Delete obsolete branches"; }
         }
 
-        public IGitPluginSettingsContainer Settings { get; set; }
-
-        public void Register(IGitUICommands gitUiCommands)
+        protected override void RegisterSettings()
         {
+            base.RegisterSettings();
             Settings.AddSetting("Delete obsolete branches older than (days)", "30");
 			Settings.AddSetting("Branch where all branches should be merged in", "HEAD");
         }
 
-        public bool Execute(GitUIBaseEventArgs gitUiCommands)
+        public override bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
             int days;
             if (!int.TryParse(Settings.GetSetting("Delete obsolete branches older than (days)"), out days))

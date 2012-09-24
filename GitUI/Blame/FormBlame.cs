@@ -4,20 +4,30 @@ using GitCommands;
 
 namespace GitUI.Blame
 {
-    public partial class FormBlame : GitExtensionsForm
+    public partial class FormBlame : GitModuleForm
     {
-        public FormBlame(string fileName, GitRevision revision) : base(true)
+        private FormBlame()
+            : this(null)
+        {         
+        }
+
+        private FormBlame(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
-            Translate();
+            Translate();        
+        }
 
+        public FormBlame(GitUICommands aCommands, string fileName, GitRevision revision) : this(aCommands)
+        {
             if (string.IsNullOrEmpty(fileName))
                 return;
+
             if (revision == null)
-                revision = new GitRevision("Head");
+                revision = new GitRevision(Module, "Head");
 
 
-            blameControl1.LoadBlame(revision.Guid, fileName, null, null, Settings.FilesEncoding);
+            blameControl1.LoadBlame(revision.Guid, fileName, null, null, Module.FilesEncoding);
         }
 
         public string FileName { get; set; }

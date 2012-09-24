@@ -7,14 +7,15 @@ using GitCommands.Config;
 
 namespace GitUI
 {
-    public partial class FormSubmodules : GitExtensionsForm
+    public partial class FormSubmodules : GitModuleForm
     {
         private readonly TranslationString _removeSelectedSubmodule =
              new TranslationString("Are you sure you want remove the selected submodule?");
 
         private readonly TranslationString _removeSelectedSubmoduleCaption = new TranslationString("Remove");
 
-        public FormSubmodules()
+        public FormSubmodules(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
             Translate();
@@ -22,7 +23,7 @@ namespace GitUI
 
         private void AddSubmoduleClick(object sender, EventArgs e)
         {
-            using (var formAddSubmodule = new FormAddSubmodule())
+            using (var formAddSubmodule = new FormAddSubmodule(UICommands))
                 formAddSubmodule.ShowDialog(this);
             Initialize();
         }
@@ -36,7 +37,7 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
             var submodule = Submodules.SelectedRows.Count == 1 ? Submodules.SelectedRows[0].DataBoundItem as GitSubmodule : null;
-            Submodules.DataSource = GitModule.Current.GetSubmodules();
+            Submodules.DataSource = Module.GetSubmodules();
             if (submodule != null)
             {
                 DataGridViewRow row = Submodules.Rows
@@ -92,16 +93,16 @@ namespace GitUI
                 return;
 
             Cursor.Current = Cursors.WaitCursor;
-            GitModule.Current.RunGitCmd("rm --cached \"" + SubModuleName.Text + "\"");
+            Module.RunGitCmd("rm --cached \"" + SubModuleName.Text + "\"");
 
-            var modules = GitModule.Current.GetSubmoduleConfigFile();
+            var modules = Module.GetSubmoduleConfigFile();
             modules.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
             if (modules.GetConfigSections().Count > 0)
                 modules.Save();
             else
-                GitModule.Current.RunGitCmd("rm --cached \".gitmodules\"");
+                Module.RunGitCmd("rm --cached \".gitmodules\"");
 
-            var configFile = GitModule.Current.GetLocalConfig();
+            var configFile = Module.GetLocalConfig();
             configFile.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
             configFile.Save();
 

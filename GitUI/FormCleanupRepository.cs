@@ -5,14 +5,15 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormCleanupRepository : GitExtensionsForm
+    public partial class FormCleanupRepository : GitModuleForm
     {
         private readonly TranslationString _reallyCleanupQuestion =
             new TranslationString("Are you sure you want to cleanup the repository?");
         private readonly TranslationString _reallyCleanupQuestionCaption = new TranslationString("Cleanup");
 
 
-        public FormCleanupRepository()
+        public FormCleanupRepository(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent(); Translate();
             PreviewOutput.ReadOnly = true;

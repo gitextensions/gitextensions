@@ -262,7 +262,7 @@ namespace PatchApply
             }
             // we are almost done, $wholepatch should no contain all the 
             // (modified) hunks
-            byte[] hb = EncodingHelper.ConvertTo(Settings.SystemEncoding, header);
+            byte[] hb = EncodingHelper.ConvertTo(GitModule.SystemEncoding, header);
             byte[] bb = EncodingHelper.ConvertTo(fileContentEncoding, wholepatch);
             byte[] result = new byte[hb.Length + bb.Length];
             hb.CopyTo(result, 0);
@@ -303,13 +303,13 @@ namespace PatchApply
             foreach (Patch patchApply in _patches)
             {
                 if (patchApply.Apply)
-                    patchApply.ApplyPatch();
+                    patchApply.ApplyPatch(filesContentEncoding);
             }
         }
 
         public void LoadPatchFile(bool applyPatch, Encoding filesContentEncoding)
         {
-            using (var re = new StreamReader(PatchFileName, Settings.LosslessEncoding))
+            using (var re = new StreamReader(PatchFileName, GitModule.LosslessEncoding))
             {
                 LoadPatchStream(re, applyPatch, filesContentEncoding);
             }

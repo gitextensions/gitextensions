@@ -9,11 +9,11 @@ namespace GitUIPluginInterfaces
 
     public interface IGitUICommands
     {
-        event GitUIEventHandler PostAddFiles;
-        event GitUIEventHandler PostApplyPatch;
-        event GitUIEventHandler PostArchive;
-        event GitUIEventHandler PostBlame;
-        event GitUIEventHandler PostBrowse;
+        event GitUIPostActionEventHandler PostAddFiles;
+        event GitUIPostActionEventHandler PostApplyPatch;
+        event GitUIPostActionEventHandler PostArchive;
+        event GitUIPostActionEventHandler PostBlame;
+        event GitUIPostActionEventHandler PostBrowse;
         event GitUIPostActionEventHandler PostCheckoutBranch;
         event GitUIPostActionEventHandler PostCheckoutRevision;
         event GitUIEventHandler PostCherryPick;
@@ -90,7 +90,7 @@ namespace GitUIPluginInterfaces
         event GitUIEventHandler PreViewPatch;
         event GitUIEventHandler PreBrowseInitialize;
         event GitUIEventHandler BrowseInitialize;
-
+        
         IGitModule GitModule { get; }
         string GitCommand(string arguments);
         string CommandLineCommand(string cmd, string arguments);

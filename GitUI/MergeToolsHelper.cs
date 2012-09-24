@@ -96,7 +96,7 @@ namespace GitUI
                 if (Settings.RunningOnUnix())
                 {
                     // Maybe command -v is better, but didn't work
-                    kdiff3path = GitModule.Current.RunCmd("which", "kdiff3").Replace("\n", string.Empty);
+                    kdiff3path = GitCommandHelpers.RunCmd("which", "kdiff3").Replace("\n", string.Empty);
                     if (string.IsNullOrEmpty(kdiff3path))
                         return null;
                 }

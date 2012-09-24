@@ -3,9 +3,10 @@ using GitCommands;
 
 namespace GitUI
 {
-    public sealed partial class FormGoToCommit : GitExtensionsForm
+    public sealed partial class FormGoToCommit : GitModuleForm
     {
-        public FormGoToCommit()
+        public FormGoToCommit(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
             Translate();
@@ -13,7 +14,7 @@ namespace GitUI
 
         public string GetRevision()
         {
-            return GitModule.Current.RevParse(commitExpression.Text);
+            return Module.RevParse(commitExpression.Text);
         }
 
 

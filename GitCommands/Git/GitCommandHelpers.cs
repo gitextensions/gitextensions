@@ -123,7 +123,7 @@ namespace GitCommands
         internal static ProcessStartInfo CreateProcessStartInfo([CanBeNull] Encoding outputEncoding)
         {
             if (outputEncoding == null)
-                outputEncoding = Settings.SystemEncoding;
+                outputEncoding = GitModule.SystemEncoding;
 
             return new ProcessStartInfo
                        {
@@ -252,7 +252,7 @@ namespace GitCommands
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
-        private static string RunCmd(string cmd, string arguments)
+        public static string RunCmd(string cmd, string arguments)
         {
             try
             {
@@ -350,10 +350,10 @@ namespace GitCommands
             return "submodule add" + forceCmd + branch + " \"" + remotePath.Trim() + "\" \"" + localPath.Trim() + "\"";
         }
 
-        public static GitSubmodule CreateGitSubmodule(string submodule)
+        public static GitSubmodule CreateGitSubmodule(GitModule aModule, string submodule)
         {
             var gitSubmodule =
-                new GitSubmodule
+                new GitSubmodule(aModule)
                     {
                         Initialized = submodule[0] != '-',
                         UpToDate = submodule[0] != '+',
@@ -806,15 +806,15 @@ namespace GitCommands
             return stringBuilder.ToString();
         }
 
-        public static List<GitItemStatus> GetAllChangedFilesFromString(string statusString)
+        public static List<GitItemStatus> GetAllChangedFilesFromString(GitModule module, string statusString)
         {
-            return GetAllChangedFilesFromString(statusString, false);
+            return GetAllChangedFilesFromString(module, statusString, false);
         }
 
         /*
                source: C:\Program Files\msysgit\doc\git\html\git-status.html
         */
-        public static List<GitItemStatus> GetAllChangedFilesFromString(string statusString, bool fromDiff /*old name and new name are switched.. %^&#^% */)
+        public static List<GitItemStatus> GetAllChangedFilesFromString(GitModule module, string statusString, bool fromDiff /*old name and new name are switched.. %^&#^% */)
         {
             var diffFiles = new List<GitItemStatus>();
 
@@ -843,7 +843,7 @@ namespace GitCommands
             }
 
             // Doesn't work with removed submodules
-            IList<string> Submodules = GitModule.Current.GetSubmodulesLocalPathes();
+            IList<string> Submodules = module.GetSubmodulesLocalPathes();
 
             //Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)
             var files = trimmedStatus.Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
@@ -950,156 +950,20 @@ namespace GitCommands
             return gitItemStatus;
         }
 
-        public static string ApplyPatch(string dir, string amCommand)
-        {
-            var output = string.Empty;
-
-            using (var gitCommand = new GitCommandsInstance())
-            {
-
-                var files = Directory.GetFiles(dir);
-
-                if (files.Length > 0)
-                    using (Process process1 = gitCommand.CmdStartProcess(Settings.GitCommand, amCommand))
-                    {
-                        foreach (var file in files)
-                        {
-                            using (FileStream fs = new FileStream(file, FileMode.Open))
-                            {
-                                fs.CopyTo(process1.StandardInput.BaseStream);
-                            }
-                        }
-                        process1.StandardInput.Close();
-                        process1.WaitForExit();
-
-                        if (gitCommand.Output != null)
-                            output = gitCommand.Output.ToString().Trim();
-                    }
-            }
-
-            return output;
-        }
-
-
-        public static string StageFiles(IList<GitItemStatus> files)
-        {
-            var gitCommand = new GitCommandsInstance();
-
-            var output = "";
-
-            Process process1 = null;
-            foreach (var file in files)
-            {
-                if (file.IsDeleted)
-                    continue;
-                if (process1 == null)
-                    process1 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --add --stdin");
-
-                //process1.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
-                byte[] bytearr = EncodingHelper.ConvertTo(Settings.SystemEncoding, "\"" + FixPath(file.Name) + "\"" + process1.StandardInput.NewLine);
-                process1.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
-            }
-            if (process1 != null)
-            {
-                process1.StandardInput.Close();
-                process1.WaitForExit();
-
-                if (gitCommand.Output != null)
-                    output = gitCommand.Output.ToString().Trim();
-            }
-
-            Process process2 = null;
-            foreach (var file in files)
-            {
-                if (!file.IsDeleted)
-                    continue;
-                if (process2 == null)
-                    process2 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --remove --stdin");
-                //process2.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
-                byte[] bytearr = EncodingHelper.ConvertTo(Settings.SystemEncoding, "\"" + FixPath(file.Name) + "\"" + process2.StandardInput.NewLine);
-                process2.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
-            }
-            if (process2 != null)
-            {
-                process2.StandardInput.Close();
-                process2.WaitForExit();
-
-                if (gitCommand.Output != null)
-                {
-                    if (!string.IsNullOrEmpty(output))
-                    {
-                        output += Environment.NewLine;
-                    }
-                    output += gitCommand.Output.ToString().Trim();
-                }
-            }
-
-            return output;
-        }
-
-        public static string UnstageFiles(List<GitItemStatus> files)
-        {
-            var gitCommand = new GitCommandsInstance();
-
-            var output = "";
-
-            Process process1 = null;
-            foreach (var file in files)
-            {
-                if (file.IsNew)
-                    continue;
-                if (process1 == null)
-                    process1 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --info-only --index-info");
-
-                process1.StandardInput.WriteLine("0 0000000000000000000000000000000000000000\t\"" + FixPath(file.Name) +
-                                                 "\"");
-            }
-            if (process1 != null)
-            {
-                process1.StandardInput.Close();
-                process1.WaitForExit();
-            }
-
-            if (gitCommand.Output != null)
-                output = gitCommand.Output.ToString();
-
-            Process process2 = null;
-            foreach (var file in files)
-            {
-                if (!file.IsNew)
-                    continue;
-                if (process2 == null)
-                    process2 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --force-remove --stdin");
-                //process2.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
-                byte[] bytearr = EncodingHelper.ConvertTo(Settings.SystemEncoding, "\"" + FixPath(file.Name) + "\"" + process2.StandardInput.NewLine);
-                process2.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
-            }
-            if (process2 != null)
-            {
-                process2.StandardInput.Close();
-                process2.WaitForExit();
-            }
-
-            if (gitCommand.Output != null)
-                output += gitCommand.Output.ToString();
-
-            return output;
-        }
-
-        public static string ProcessSubmodulePatch(string text)
+        public static string ProcessSubmodulePatch(GitModule module, string text)
         {
             StringBuilder sb = new StringBuilder();
             using (StringReader reader = new StringReader(text))
             {
                 string line = reader.ReadLine();
-                string module = "";
+                string moduleName = "";
                 if (line != null)
                 {
                     var match = Regex.Match(line, @"diff --git a/(\S+) b/(\S+)");
                     if (match != null && match.Groups.Count > 0)
-                        module = match.Groups[1].Value;
+                        moduleName = match.Groups[1].Value;
                 }
-                sb.AppendLine("Submodule " + module + " Change");
+                sb.AppendLine("Submodule " + moduleName + " Change");
                 string fromHash = null;
                 string toHash = null;
                 bool dirtyFlag = false;
@@ -1129,7 +993,8 @@ namespace GitCommands
                             sb.AppendLine("To:\t\t" + hash + dirty);
                         }
 
-                        GitModule gitmodule = GitModule.Current.GetSubmodule(module);
+                        GitModule gitmodule = module.GetSubmodule(moduleName);
+
                         if (gitmodule.ValidWorkingDir())
                         {
                             string error = "";
@@ -1164,6 +1029,7 @@ namespace GitCommands
                         }
                         else
                             sb.AppendLine();
+
                     }
                 }
             }
@@ -1260,183 +1126,6 @@ namespace GitCommands
         public static string GetRelativeDateString(DateTime originDate, DateTime previousDate)
         {
             return  GetRelativeDateString(originDate, previousDate, true);
-        }
-
-        public static string ReEncodeFileName(string diffStr, int headerLines)
-        {
-            StringReader r = new StringReader(diffStr);
-            StringWriter w = new StringWriter();
-            string line;
-            while (headerLines > 0 && (line = r.ReadLine()) != null)
-            {
-                headerLines--;
-                line = ReEncodeFileNameFromLossless(line);
-                w.WriteLine(line);
-            }
-            w.Write(r.ReadToEnd());
-
-            return w.ToString();
-        }
-
-        public static string UnquoteFileName(string fileName)
-        {
-            char[] chars = fileName.ToCharArray();
-            List<byte> blist = new List<byte>();
-            int i = 0;
-            StringBuilder sb = new StringBuilder();
-            while (i < chars.Length)
-            {
-                char c = chars[i];
-                if (c == '\\')
-                {
-                    //there should be 3 digits
-                    if (chars.Length >= i + 3)
-                    {
-                        string octNumber = "" + chars[i + 1] + chars[i + 2] + chars[i + 3];
-
-                        try
-                        {
-                            int code = System.Convert.ToInt32(octNumber, 8);
-                            blist.Add((byte)code);
-                            i += 4;
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-                else
-                {
-                    if (blist.Count > 0)
-                    {
-                        sb.Append(Settings.SystemEncoding.GetString(blist.ToArray()));
-                        blist.Clear();
-                    }
-
-                    sb.Append(c);
-                    i++;
-                }
-            }
-            if (blist.Count > 0)
-            {
-                sb.Append(Settings.SystemEncoding.GetString(blist.ToArray()));
-                blist.Clear();
-            }
-            return sb.ToString();
-        }
-
-        public static string ReEncodeFileNameFromLossless(string fileName)
-        {
-            fileName = ReEncodeStringFromLossless(fileName, Settings.SystemEncoding);
-            return UnquoteFileName(fileName);
-        }
-
-        public static string ReEncodeString(string s, Encoding fromEncoding, Encoding toEncoding)
-        {
-            if (s == null || fromEncoding.HeaderName.Equals(toEncoding.HeaderName))
-                return s;
-            else
-            {
-                byte[] bytes = fromEncoding.GetBytes(s);
-                s = toEncoding.GetString(bytes);
-                return s;
-            }
-        }
-
-        /// <summary>
-        /// reencodes string from GitCommandHelpers.LosslessEncoding to Settings.LogOutputEncoding
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public static string ReEncodeStringFromLossless(string s)
-        {
-            return ReEncodeString(s, Settings.LosslessEncoding, Settings.LogOutputEncoding);
-        }
-
-        public static string ReEncodeStringFromLossless(string s, Encoding toEncoding)
-        {
-            if (toEncoding == null)
-                return s;
-            else
-                return ReEncodeString(s, Settings.LosslessEncoding, toEncoding);
-
-        }
-
-        //there is a bug: git does not recode commit message when format is given
-        //Lossless encoding is used, because LogOutputEncoding might not be lossless and not recoded
-        //characters could be replaced by replacement character while reencoding to LogOutputEncoding
-        public static string ReEncodeCommitMessage(string s, string toEncodingName)
-        {
-
-            bool isABug = true;
-
-            Encoding encoding;
-            try
-            {
-                if (isABug)
-                {
-                    if (toEncodingName.IsNullOrEmpty())
-                        encoding = Encoding.UTF8;
-                    else if (toEncodingName.Equals(Settings.LosslessEncoding.HeaderName, StringComparison.InvariantCultureIgnoreCase))
-                        encoding = null; //no recoding is needed
-                    else
-                        encoding = Encoding.GetEncoding(toEncodingName);
-                }
-                else//if bug will be fixed, git should recode commit message to LogOutputEncoding
-                    encoding = Settings.LogOutputEncoding;
-
-            }
-            catch (Exception)
-            {
-                return "! Unsupported commit message encoding: " + toEncodingName + " !\n\n" + s;
-            }
-            return ReEncodeStringFromLossless(s, encoding);
-        }
-
-        /// <summary>
-        /// header part of show result is encoded in logoutputencoding (including reencoded commit message)
-        /// diff part is raw data in file's original encoding
-        /// s should be encoded in LosslessEncoding
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public static string ReEncodeShowString(string s)
-        {
-            if (s.IsNullOrEmpty())
-                return s;
-
-            int p = s.IndexOf("diff --git");
-            string header;
-            string diffHeader;
-            string diffContent;
-            string diff;
-            if (p > 0)
-            {
-                header = s.Substring(0, p);
-                diff = s.Substring(p);
-            }
-            else
-            {
-                header = string.Empty;
-                diff = s;
-            }
-
-            p = diff.IndexOf("@@");
-            if (p > 0)
-            {
-                diffHeader = diff.Substring(0, p);
-                diffContent = diff.Substring(p);
-            }
-            else
-            {
-                diffHeader = string.Empty;
-                diffContent = diff;
-            }
-
-            header = ReEncodeString(header, Settings.LosslessEncoding, Settings.LogOutputEncoding);
-            diffHeader = ReEncodeFileNameFromLossless(diffHeader);
-            diffContent = ReEncodeString(diffContent, Settings.LosslessEncoding, Settings.FilesEncoding);
-            return header + diffHeader + diffContent;
         }
 
         // look into patch file and try to figure out if it's a raw diff (i.e from git diff -p)

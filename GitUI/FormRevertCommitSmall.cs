@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace GitUI
 {
-    public partial class FormRevertCommitSmall : GitExtensionsForm
+    public partial class FormRevertCommitSmall : GitModuleForm
     {
         private readonly TranslationString _commitInfo = new TranslationString("Commit: {0}");
         private readonly TranslationString _authorInfo = new TranslationString("Author: {0}");
@@ -16,7 +16,8 @@ namespace GitUI
 
         private bool _isMerge;
 
-        public FormRevertCommitSmall(GitRevision Revision)
+        public FormRevertCommitSmall(GitUICommands aCommands, GitRevision Revision)
+            : base(aCommands)
         {
             this.Revision = Revision;
 
@@ -32,10 +33,10 @@ namespace GitUI
             Date.Text = string.Format(_dateInfo.Text, Revision.CommitDate);
             Message.Text = string.Format(_commitMessage.Text, Revision.Message);
 
-            _isMerge = GitModule.Current.IsMerge(Revision.Guid);
+            _isMerge = Module.IsMerge(Revision.Guid);
             if (_isMerge)
             {
-                var parents = GitModule.Current.GetParents(Revision.Guid);
+                var parents = Module.GetParents(Revision.Guid);
                 for (int i = 0; i < parents.Length; i++)
                 {
                     ParentsList.Items.Add(i + 1 + "");
@@ -70,7 +71,7 @@ namespace GitUI
             }
 
             FormProcess.ShowDialog(this, GitCommandHelpers.RevertCmd(Revision.Guid, AutoCommit.Checked, parentIndex));
-            MergeConflictHandler.HandleMergeConflicts(this, AutoCommit.Checked);
+            MergeConflictHandler.HandleMergeConflicts(UICommands, this, AutoCommit.Checked);
             Close();
         }
     }

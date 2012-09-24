@@ -121,7 +121,6 @@
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "PatchGrid";
             this.Size = new System.Drawing.Size(675, 406);
-            this.Load += new System.EventHandler(this.PatchGrid_Load);
             ((System.ComponentModel.ISupportInitialize)(this.Patches)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.patchFileBindingSource)).EndInit();
             this.ResumeLayout(false);

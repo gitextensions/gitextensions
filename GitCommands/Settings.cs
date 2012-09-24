@@ -302,167 +302,20 @@ namespace GitCommands
 
         public static readonly Dictionary<string, Encoding> availableEncodings = new Dictionary<string, Encoding>();
 
-        private static Encoding GetEncoding(bool local, string settingName, bool fromSettings)
+        public static Encoding GetEncoding(string settingName)
         {
-            string lname = local ? "_local" + '_' + GitModule.CurrentWorkingDir : "_global";
-            lname = settingName + lname;
             object o;
-            if (byNameMap.TryGetValue(lname, out o))
-                return o as Encoding;
+            byNameMap.TryGetValue(settingName, out o);
 
-            string encodingName;
-            if (fromSettings)
-                encodingName = GetString("n_" + lname, null);
-            else
-            {
-                ConfigFile cfg;
-                if (local)
-                    cfg = GitModule.Current.GetLocalConfig();
-                else
-                    cfg = GitCommandHelpers.GetGlobalConfig();
-
-                encodingName = cfg.GetValue(settingName);
-            }
-
-            Encoding result;
-            if (string.IsNullOrEmpty(encodingName))
-                result = null;
-            else if (!availableEncodings.TryGetValue(encodingName, out result))
-            {
-                try
-                {
-                    result = Encoding.GetEncoding(encodingName);
-                }
-                catch (ArgumentException)
-                {
-                    Debug.WriteLine(string.Format("Unsupported encoding set in git config file: {0}\nPlease check the setting {1} in your {2} config file.", encodingName, settingName, (local ? "local" : "global")));
-                    result = null;
-                }
-            }
-
-            byNameMap[lname] = result;
-            return result;
+            return o as Encoding;
         }
 
-        private static void SetEncoding(bool local, string settingName, Encoding encoding, bool toSettings)
+        public static void SetEncoding(string settingName, Encoding encoding)
         {
-            string lname = local ? "_local" + '_' + GitModule.CurrentWorkingDir : "_global";
-            lname = settingName + lname;
-            // remove local settings
-            var items = (from item in byNameMap.Keys where item.StartsWith(lname) select item).ToList();
+            var items = (from item in byNameMap.Keys where item.StartsWith(settingName) select item).ToList();
             foreach (var item in items)
                 byNameMap.Remove(item);
-            byNameMap[lname] = encoding;
-            //storing to config file is handled by FormSettings
-            if (toSettings)
-                SetString("n_" + lname, encoding == null ? null : encoding.HeaderName);
-        }
-
-        //encoding for files paths
-        private static Encoding _SystemEncoding = null;
-        public static Encoding SystemEncoding 
-        {
-            get 
-            {
-                if (_SystemEncoding == null)
-                {
-                    //check whether GitExtensions works with standard msysgit or msysgit-unicode
-
-                    // invoke a git command that returns an invalid argument in its response, and
-                    // check if a unicode-only character is reported back. If so assume msysgit-unicode
-
-                    // git config --get with a malformed key (no section) returns:
-                    // "error: key does not contain a section: <key>"
-                    const string controlStr = "ą"; // "a caudata"
-                    string arguments = string.Format("config --get {0}", controlStr);
-
-                    int exitCode;
-                    String s = GitModule.Current.RunGitCmd(arguments, out exitCode, null, Encoding.UTF8);
-                    if (s != null && s.IndexOf(controlStr) != -1)
-                        _SystemEncoding = new UTF8Encoding(false);
-                    else
-                        _SystemEncoding = Encoding.Default;
-                    Debug.WriteLine("System encoding: " + _SystemEncoding.EncodingName);
-                }
-
-                return _SystemEncoding;
-            }
-        }
-        //Encoding that let us read all bytes without replacing any char
-        //It is using to read output of commands, which may consist of:
-        //1) commit header (message, author, ...) encoded in CommitEncoding, recoded to LogOutputEncoding or not dependent of 
-        //   pretty parameter (pretty=raw - recoded, pretty=format - not recoded)
-        //2) file content encoded in its original encoding
-        //3) file path (file name is encoded in system default encoding),
-        //   when core.quotepath is on, every non ASCII character is escaped 
-        //   with \ followed by its code as a three digit octal number
-        //4) branch, tag name, errors, warnings, hints encoded in system default encoding
-        public static readonly Encoding LosslessEncoding = Encoding.GetEncoding("ISO-8859-1");//is any better?
-
-        public static Encoding GetFilesEncoding(bool local) 
-        {
-            return GetEncoding(local, "i18n.filesEncoding", false);                 
-        }
-        public static void SetFilesEncoding(bool local, Encoding encoding)
-        {
-            SetEncoding(local, "i18n.filesEncoding", encoding, false);
-        }
-        public static Encoding FilesEncoding
-        {
-            get
-            {
-                Encoding result = GetFilesEncoding(true);
-                if (result == null)
-                    result = GetFilesEncoding(false);
-                if (result == null)
-                    result = new UTF8Encoding(false);
-                return result;
-            }
-        }
-
-        public static Encoding GetCommitEncoding(bool local)
-        {
-            return GetEncoding(local, "i18n.commitEncoding", false);
-        }
-        public static void SetCommitEncoding(bool local, Encoding encoding)
-        {
-            SetEncoding(local, "i18n.commitEncoding", encoding, false);
-        }
-        public static Encoding CommitEncoding
-        {
-            get
-            {
-                Encoding result = GetCommitEncoding(true);
-                if (result == null)
-                    result = GetCommitEncoding(false);
-                if (result == null)
-                    result = new UTF8Encoding(false);
-                return result;
-            }
-        }
-
-        public static Encoding GetLogOutputEncoding(bool local)
-        {
-            return GetEncoding(local, "i18n.logoutputencoding", false);
-        }
-        public static void SetLogOutputEncoding(bool local, Encoding encoding)
-        {
-            SetEncoding(local, "i18n.logoutputencoding", encoding, false);
-        }
-        /// <summary>
-        /// Encoding for commit header (message, notes, author, commiter, emails)
-        /// </summary>
-        public static Encoding LogOutputEncoding
-        {
-            get
-            {
-                Encoding result = GetLogOutputEncoding(true);
-                if (result == null)
-                    result = GetLogOutputEncoding(false);
-                if (result == null)
-                    result = CommitEncoding;
-                return result;
-            }
+            byNameMap[settingName] = encoding;
         }
 
         public enum PullAction
@@ -485,21 +338,6 @@ namespace GitCommands
             get { return GetBool("DonSetAsLastPullAction", true).Value; }
             set { SetBool("DonSetAsLastPullAction", value); }
         }
-
-        public static PullAction LastPullAction
-        {
-            get { return GetEnum<PullAction>("LastPullAction_" + GitModule.CurrentWorkingDir, PullAction.None); }
-            set { SetEnum<PullAction>("LastPullAction_" + GitModule.CurrentWorkingDir, value); }
-        }
-
-        public static void LastPullActionToPullMerge()
-        {
-            if (LastPullAction == PullAction.FetchAll)
-                PullMerge = PullAction.Fetch;
-            else if (LastPullAction != PullAction.None)
-                PullMerge = LastPullAction;
-        }
-
 
         private static string _smtp;
         public static string Smtp
@@ -932,32 +770,6 @@ namespace GitCommands
             { }
         }
 
-        private static void TransferEncodings()
-        {
-            string encoding = GetValue("encoding", "");
-            if (!encoding.IsNullOrEmpty())
-            {
-                Encoding _encoding;
-
-                if (encoding.Equals("Default", StringComparison.CurrentCultureIgnoreCase))
-                    _encoding = Encoding.Default;
-                else if (encoding.Equals("Unicode", StringComparison.CurrentCultureIgnoreCase))
-                    _encoding = new UnicodeEncoding();
-                else if (encoding.Equals("ASCII", StringComparison.CurrentCultureIgnoreCase))
-                    _encoding = new ASCIIEncoding();
-                else if (encoding.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
-                    _encoding = new UTF7Encoding();
-                else if (encoding.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
-                    _encoding = new UTF32Encoding(true, false);
-                else
-                    _encoding = new UTF8Encoding(false);
-
-                SetFilesEncoding(false, _encoding);
-                SetValue("encoding", null as string);
-            }
-        }
-
-
         public static void LoadSettings()
         {
             Action<Encoding> addEncoding = delegate(Encoding e) { availableEncodings[e.HeaderName] = e; };
@@ -969,7 +781,6 @@ namespace GitCommands
 
             try
             {
-                TransferEncodings();
                 TransferVerDependentReg();
             }
             catch

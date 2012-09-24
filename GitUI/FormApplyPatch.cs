@@ -6,7 +6,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormApplyPatch : GitExtensionsForm
+    public partial class FormApplyPatch : GitModuleForm
     {
         #region Translation
 
@@ -28,8 +28,16 @@ namespace GitUI
 
         #endregion
 
-        public FormApplyPatch()
-            : base(true)
+        /// <summary>
+        /// For VS designer
+        /// </summary>
+        private FormApplyPatch()
+            : this(null)
+        {
+        }
+
+        public FormApplyPatch(GitUICommands aCommands)
+            : base(true, aCommands)
         {
             InitializeComponent(); Translate();
             EnableButtons();
@@ -42,15 +50,15 @@ namespace GitUI
 
         private void EnableButtons()
         {
-            if (GitModule.Current.InTheMiddleOfPatch())
+            if (Module.InTheMiddleOfPatch())
             {
                 Apply.Enabled = false;
                 IgnoreWhitespace.Enabled = false;
                 PatchFileMode.Enabled = false;
                 PatchDirMode.Enabled = false;
                 AddFiles.Enabled = true;
-                Resolved.Enabled = !GitModule.Current.InTheMiddleOfConflictedMerge();
-                Mergetool.Enabled = GitModule.Current.InTheMiddleOfConflictedMerge();
+                Resolved.Enabled = !Module.InTheMiddleOfConflictedMerge();
+                Mergetool.Enabled = Module.InTheMiddleOfConflictedMerge();
                 Skip.Enabled = true;
                 Abort.Enabled = true;
 
@@ -83,21 +91,21 @@ namespace GitUI
 
             patchGrid1.Initialize();
 
-            SolveMergeconflicts.Visible = GitModule.Current.InTheMiddleOfConflictedMerge();
+            SolveMergeconflicts.Visible = Module.InTheMiddleOfConflictedMerge();
 
             Resolved.Text = _conflictResolvedText.Text;
             Mergetool.Text = _conflictMergetoolText.Text;
             ContinuePanel.BackColor = Color.Transparent;
             MergeToolPanel.BackColor = Color.Transparent;
 
-            if (GitModule.Current.InTheMiddleOfConflictedMerge())
+            if (Module.InTheMiddleOfConflictedMerge())
             {
                 Mergetool.Text = ">" + _conflictMergetoolText.Text + "<";
                 Mergetool.Focus();
                 AcceptButton = Mergetool;
                 MergeToolPanel.BackColor = Color.Black;
             }
-            else if (GitModule.Current.InTheMiddleOfPatch())
+            else if (Module.InTheMiddleOfPatch())
             {
                 Resolved.Text = ">" + _conflictResolvedText.Text + "<";
                 Resolved.Focus();
@@ -144,23 +152,23 @@ namespace GitUI
             else
                 if (IgnoreWhitespace.Checked)
                 {
-                    GitCommandHelpers.ApplyPatch(PatchDir.Text, GitCommandHelpers.PatchDirCmdIgnoreWhitespace());
+                    Module.ApplyPatch(PatchDir.Text, GitCommandHelpers.PatchDirCmdIgnoreWhitespace());
                 }
                 else
                 {
-                    GitCommandHelpers.ApplyPatch(PatchDir.Text, GitCommandHelpers.PatchDirCmd());
+                    Module.ApplyPatch(PatchDir.Text, GitCommandHelpers.PatchDirCmd());
                 }
 
             EnableButtons();
 
-            if (!GitModule.Current.InTheMiddleOfConflictedMerge() && !GitModule.Current.InTheMiddleOfRebase() && !GitModule.Current.InTheMiddleOfPatch())
+            if (!Module.InTheMiddleOfConflictedMerge() && !Module.InTheMiddleOfRebase() && !Module.InTheMiddleOfPatch())
                 Close();
             Cursor.Current = Cursors.Default;
         }
 
         private void Mergetool_Click(object sender, EventArgs e)
         {
-            GitUICommands.Instance.StartResolveConflictsDialog(this);
+            UICommands.StartResolveConflictsDialog(this);
             EnableButtons();
         }
 
@@ -190,14 +198,14 @@ namespace GitUI
 
         private void AddFiles_Click(object sender, EventArgs e)
         {
-            GitUICommands.Instance.StartAddFilesDialog(this);
+            UICommands.StartAddFilesDialog(this);
         }
 
         private void MergePatch_Load(object sender, EventArgs e)
         {
             PatchFile.Select();
             
-            Text = _applyPatchMsgBox.Text + " (" + GitModule.CurrentWorkingDir + ")";
+            Text = _applyPatchMsgBox.Text + " (" + Module.WorkingDir + ")";
             IgnoreWhitespace.Checked = Settings.ApplyPatchIgnoreWhitespace;
         }
 

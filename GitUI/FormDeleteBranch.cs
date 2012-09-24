@@ -8,7 +8,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public sealed partial class FormDeleteBranch : GitExtensionsForm
+    public sealed partial class FormDeleteBranch : GitModuleForm
     {
         private readonly TranslationString _deleteBranchCaption = new TranslationString("Delete branches");
         private readonly TranslationString _deleteBranchQuestion = new TranslationString(
@@ -22,7 +22,8 @@ namespace GitUI
         private string _currentBranch;
         private readonly HashSet<string> mergedBranches = new HashSet<string>();
 
-        public FormDeleteBranch(string defaultBranch)
+        public FormDeleteBranch(GitUICommands aCommands, string defaultBranch)
+            : base(aCommands)
         {
             InitializeComponent();
             Translate();
@@ -31,8 +32,8 @@ namespace GitUI
 
         private void FormDeleteBranchLoad(object sender, EventArgs e)
         {
-            Branches.BranchesToSelect = GitModule.Current.GetHeads(true, true).Where(h => h.IsHead && !h.IsRemote).ToList();
-            foreach (var branch in GitModule.Current.GetMergedBranches())
+            Branches.BranchesToSelect = Module.GetHeads(true, true).Where(h => h.IsHead && !h.IsRemote).ToList();
+            foreach (var branch in Module.GetMergedBranches())
             {
                 if (!branch.StartsWith("* "))
                     mergedBranches.Add(branch.Trim());
@@ -73,7 +74,7 @@ namespace GitUI
                     return;
 
                 var cmd = new GitDeleteBranchCmd(selectedBranches, ForceDelete.Checked);
-                GitUICommands.Instance.StartCommandLineProcessDialog(cmd, this);
+                UICommands.StartCommandLineProcessDialog(cmd, this);
             }
             catch (Exception ex)
             {

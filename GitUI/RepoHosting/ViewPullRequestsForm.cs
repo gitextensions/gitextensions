@@ -9,7 +9,7 @@ using ResourceManager.Translation;
 
 namespace GitUI.RepoHosting
 {
-    public partial class ViewPullRequestsForm : GitExtensionsForm
+    public partial class ViewPullRequestsForm : GitModuleForm
     {
         #region Translation
         private readonly TranslationString _strFailedToFetchPullData = new TranslationString("Failed to fetch pull data!\r\n");
@@ -29,7 +29,12 @@ namespace GitUI.RepoHosting
         private AsyncLoader loader = new AsyncLoader();
 
         // for translation only
-        internal ViewPullRequestsForm()
+        private ViewPullRequestsForm()
+            : this(null)
+        { }
+
+        private ViewPullRequestsForm(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
             Translate();
@@ -40,8 +45,9 @@ namespace GitUI.RepoHosting
                 };
         }
 
-        public ViewPullRequestsForm(IRepositoryHostPlugin gitHoster)
-            : this()
+
+        public ViewPullRequestsForm(GitUICommands aCommands, IRepositoryHostPlugin gitHoster)
+            : this(aCommands)
         {
             _gitHoster = gitHoster;
         }
@@ -66,7 +72,7 @@ namespace GitUI.RepoHosting
             loader.Load(
                 () =>
                 {
-                    var t = _gitHoster.GetHostedRemotesForCurrentWorkingDirRepo().ToList();
+                    var t = _gitHoster.GetHostedRemotesForModule(Module).ToList();
                     foreach (var el in t)
                         el.GetHostedRepository(); // We do this now because we want to do it in the async part.
                     return t;
@@ -291,7 +297,7 @@ namespace GitUI.RepoHosting
             }
             else
             {
-                var error = GitModule.Current.AddRemote(remoteName, remoteUrl);
+                var error = Module.AddRemote(remoteName, remoteUrl);
                 if (!string.IsNullOrEmpty(error))
                 {
                     MessageBox.Show(this, error, string.Format(_strCouldNotAddRemote.Text, remoteName, remoteUrl));

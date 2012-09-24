@@ -14,9 +14,20 @@ namespace GitCommands
     {
         private readonly object processLock = new object();
         public SetupStartInfo SetupStartInfoCallback { get; set; }
+        public readonly string WorkingDirectory;
+
+        public GitCommandsInstance(IGitModule module)
+            : this(module.GitWorkingDir)
+        {
+        }
+
+        public GitCommandsInstance(string aWorkingDirectory)
+        {
+            WorkingDirectory = aWorkingDirectory;
+        }
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-        public Process CmdStartProcess(string cmd, string arguments, string workingDir)
+        public Process CmdStartProcess(string cmd, string arguments)
         {
             try
             {
@@ -33,7 +44,7 @@ namespace GitCommands
                 process.StartInfo.CreateNoWindow = (!ssh && !Settings.ShowGitCommandLine);
                 process.StartInfo.FileName = cmd;
                 process.StartInfo.Arguments = arguments;
-                process.StartInfo.WorkingDirectory = workingDir;
+                process.StartInfo.WorkingDirectory = WorkingDirectory;
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
                 process.StartInfo.LoadUserProfile = true;
                 if (SetupStartInfoCallback != null)
@@ -68,12 +79,6 @@ namespace GitCommands
                 ex.Data.Add("arguments", arguments);
                 throw ex;
             }
-        }
-
-        [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-        public Process CmdStartProcess(string cmd, string arguments)
-        {
-            return CmdStartProcess(cmd, arguments, GitModule.CurrentWorkingDir);
         }
 
         public void Kill()
