@@ -549,6 +549,13 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap IconPreview {
+            get {
+                object obj = ResourceManager.GetObject("IconPreview", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap IconRebase {
             get {
                 object obj = ResourceManager.GetObject("IconRebase", resourceCulture);
