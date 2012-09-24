@@ -127,14 +127,16 @@ namespace GitUI.Properties {
         ///   Looks up a localized string similar to Changelog
         ///=========
         ///
-        ///### Version 2.40
-        ///* fixed issue 79: Don&apos;t offer to commit when resolving a stash conflict
-        ///* Fixed issue 875: Show untracked files in stash
-        ///* Fixed issue 980: spell check only covers first 5 visible lines in commit dialog
-        ///* Fixed issue 988: status bar for commit message
-        ///* Fixed issue 1018: Git Extensions sets core.editor to its own program without asking the user
-        ///* Fixed issue 1038: Add multiple selected files to gitignore
-        ///* Fixed issue 1042: Added option for force add submodule [rest of string was truncated]&quot;;.
+        ///### Version 2.41
+        ///* Fixed issue 1254: Visual Studio 2005 plugin not working
+        ///* Fixed issue 1225: Visual Studio 2008 plugin not working
+        ///* Fixed window position in multi monitor configuration
+        ///* Fill title with the most recent commit message
+        ///* New dialog for checkout branch
+        ///* Remote repositories dialog layout changes
+        ///* Added option to not use the commit dialog to specify the commit message
+        ///* Added option to change application font
+        ///* Updated msysgit to a more stable build of versi [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ChangeLog {
             get {
