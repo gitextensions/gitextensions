@@ -2022,7 +2022,10 @@ namespace GitUI
             foreach (var path in GetGitLocations())
             {
                 if (Directory.Exists(path + @"cmd\"))
+                {
+                    yield return path + @"cmd\git.exe";
                     yield return path + @"cmd\git.cmd";
+                }
             }
             yield return "git";
             yield return "git.cmd";
@@ -2375,7 +2378,7 @@ namespace GitUI
 
         private void downloadMsysgit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(@"http://code.google.com/p/msysgit/");
+            Process.Start(@"http://msysgit.github.com/");
         }
 
         private void ChangeHomeButton_Click(object sender, EventArgs e)
@@ -2385,8 +2388,6 @@ namespace GitUI
             LoadSettings();
             Rescan_Click(null, null);
         }
-
-
 
     }
 }
