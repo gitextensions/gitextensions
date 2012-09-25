@@ -80,7 +80,8 @@ namespace GitUI
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(392, 255);
-            this.tableLayoutPanel1.TabIndex = 18;
+            this.tableLayoutPanel1.TabIndex = 0;
+            this.tableLayoutPanel1.TabStop = true;
             // 
             // remoteOptionsPanel
             // 
@@ -104,7 +105,7 @@ namespace GitUI
             this.remoteOptionsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.remoteOptionsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.remoteOptionsPanel.Size = new System.Drawing.Size(382, 103);
-            this.remoteOptionsPanel.TabIndex = 27;
+            this.remoteOptionsPanel.TabIndex = 2;
             this.remoteOptionsPanel.Visible = false;
             // 
             // rbDontCreate
@@ -114,7 +115,7 @@ namespace GitUI
             this.rbDontCreate.Location = new System.Drawing.Point(3, 80);
             this.rbDontCreate.Name = "rbDontCreate";
             this.rbDontCreate.Size = new System.Drawing.Size(166, 20);
-            this.rbDontCreate.TabIndex = 9;
+            this.rbDontCreate.TabIndex = 3;
             this.rbDontCreate.Text = "Checkout remote branch";
             this.rbDontCreate.UseVisualStyleBackColor = true;
             // 
@@ -126,7 +127,7 @@ namespace GitUI
             this.rbCreateBranch.Margin = new System.Windows.Forms.Padding(3, 1, 3, 3);
             this.rbCreateBranch.Name = "rbCreateBranch";
             this.rbCreateBranch.Size = new System.Drawing.Size(252, 20);
-            this.rbCreateBranch.TabIndex = 8;
+            this.rbCreateBranch.TabIndex = 2;
             this.rbCreateBranch.Text = "Create local branch with the name \'{0}\'";
             this.rbCreateBranch.UseVisualStyleBackColor = true;
             // 
@@ -138,7 +139,7 @@ namespace GitUI
             this.rbResetBranch.Location = new System.Drawing.Point(3, 3);
             this.rbResetBranch.Name = "rbResetBranch";
             this.rbResetBranch.Size = new System.Drawing.Size(246, 20);
-            this.rbResetBranch.TabIndex = 7;
+            this.rbResetBranch.TabIndex = 0;
             this.rbResetBranch.TabStop = true;
             this.rbResetBranch.Text = "Reset local branch with the name \'{0}\'";
             this.rbResetBranch.UseVisualStyleBackColor = true;
@@ -150,7 +151,7 @@ namespace GitUI
             this.rbCreateBranchWithCustomName.Margin = new System.Windows.Forms.Padding(3, 3, 3, 4);
             this.rbCreateBranchWithCustomName.Name = "rbCreateBranchWithCustomName";
             this.rbCreateBranchWithCustomName.Size = new System.Drawing.Size(251, 20);
-            this.rbCreateBranchWithCustomName.TabIndex = 21;
+            this.rbCreateBranchWithCustomName.TabIndex = 1;
             this.rbCreateBranchWithCustomName.Text = "Create local branch with custom name:";
             this.rbCreateBranchWithCustomName.UseVisualStyleBackColor = true;
             this.rbCreateBranchWithCustomName.CheckedChanged += new System.EventHandler(this.rbCreateBranchWithCustomName_CheckedChanged);
@@ -210,7 +211,7 @@ namespace GitUI
             this.defaultActionChx.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
             this.defaultActionChx.Name = "defaultActionChx";
             this.defaultActionChx.Size = new System.Drawing.Size(188, 20);
-            this.defaultActionChx.TabIndex = 21;
+            this.defaultActionChx.TabIndex = 5;
             this.defaultActionChx.Text = "Remember as default action";
             this.defaultActionChx.UseVisualStyleBackColor = true;
             // 
@@ -234,7 +235,7 @@ namespace GitUI
             this.rbDontChange.Margin = new System.Windows.Forms.Padding(2);
             this.rbDontChange.Name = "rbDontChange";
             this.rbDontChange.Size = new System.Drawing.Size(100, 20);
-            this.rbDontChange.TabIndex = 5;
+            this.rbDontChange.TabIndex = 2;
             this.rbDontChange.Text = "Don\'t change";
             this.rbDontChange.UseVisualStyleBackColor = true;
             // 
@@ -246,7 +247,7 @@ namespace GitUI
             this.rbReset.Margin = new System.Windows.Forms.Padding(2);
             this.rbReset.Name = "rbReset";
             this.rbReset.Size = new System.Drawing.Size(58, 20);
-            this.rbReset.TabIndex = 2;
+            this.rbReset.TabIndex = 4;
             this.rbReset.Text = "Reset";
             this.rbReset.UseVisualStyleBackColor = true;
             // 
@@ -258,7 +259,7 @@ namespace GitUI
             this.rbStash.Margin = new System.Windows.Forms.Padding(2);
             this.rbStash.Name = "rbStash";
             this.rbStash.Size = new System.Drawing.Size(58, 20);
-            this.rbStash.TabIndex = 4;
+            this.rbStash.TabIndex = 3;
             this.rbStash.Text = "Stash";
             this.rbStash.UseVisualStyleBackColor = true;
             // 
@@ -286,7 +287,7 @@ namespace GitUI
             this.LocalBranch.Margin = new System.Windows.Forms.Padding(2);
             this.LocalBranch.Name = "LocalBranch";
             this.LocalBranch.Size = new System.Drawing.Size(98, 20);
-            this.LocalBranch.TabIndex = 4;
+            this.LocalBranch.TabIndex = 0;
             this.LocalBranch.TabStop = true;
             this.LocalBranch.Text = "Local branch";
             this.LocalBranch.UseVisualStyleBackColor = true;
@@ -301,7 +302,7 @@ namespace GitUI
             this.Remotebranch.Name = "Remotebranch";
             this.Remotebranch.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
             this.Remotebranch.Size = new System.Drawing.Size(119, 20);
-            this.Remotebranch.TabIndex = 5;
+            this.Remotebranch.TabIndex = 0;
             this.Remotebranch.Text = "Remote branch";
             this.Remotebranch.UseVisualStyleBackColor = true;
             this.Remotebranch.CheckedChanged += new System.EventHandler(this.RemoteBranchCheckedChanged);
@@ -328,11 +329,12 @@ namespace GitUI
             this.Branches.Margin = new System.Windows.Forms.Padding(2, 10, 6, 2);
             this.Branches.Name = "Branches";
             this.Branches.Size = new System.Drawing.Size(282, 24);
-            this.Branches.TabIndex = 8;
+            this.Branches.TabIndex = 1;
             this.Branches.SelectedIndexChanged += new System.EventHandler(this.Branches_SelectedIndexChanged);
             // 
             // FormCheckoutBranch
             // 
+            this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
@@ -344,6 +346,7 @@ namespace GitUI
             this.Name = "FormCheckoutBranch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Checkout branch";
+            this.Activated += new System.EventHandler(this.FormCheckoutBranch_Activated);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.remoteOptionsPanel.ResumeLayout(false);
