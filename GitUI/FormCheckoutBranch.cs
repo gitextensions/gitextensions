@@ -316,5 +316,10 @@ namespace GitUI
 
             return _containsRevisionBranches;
         }
+
+        private void FormCheckoutBranch_Activated(object sender, EventArgs e)
+        {
+            Branches.Focus();
+        }
     }
 }
