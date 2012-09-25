@@ -1284,7 +1284,7 @@ namespace GitUI
             // 
             // checkoutBranchToolStripMenuItem
             // 
-            this.checkoutBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources.BranchCheckout;
+            this.checkoutBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconBranchCheckout;
             this.checkoutBranchToolStripMenuItem.Name = "checkoutBranchToolStripMenuItem";
             this.checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+.";
             this.checkoutBranchToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.OemPeriod)));
@@ -1294,7 +1294,7 @@ namespace GitUI
             // 
             // branchToolStripMenuItem
             // 
-            this.branchToolStripMenuItem.Image = global::GitUI.Properties.Resources.BranchCreate;
+            this.branchToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconBranchCreate;
             this.branchToolStripMenuItem.Name = "branchToolStripMenuItem";
             this.branchToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.branchToolStripMenuItem.Text = "Create branch";
@@ -1302,7 +1302,7 @@ namespace GitUI
             // 
             // tagToolStripMenuItem
             // 
-            this.tagToolStripMenuItem.Image = global::GitUI.Properties.Resources.TagCreate;
+            this.tagToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconTagCreate;
             this.tagToolStripMenuItem.Name = "tagToolStripMenuItem";
             this.tagToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.tagToolStripMenuItem.Text = "Create tag";
@@ -1310,7 +1310,7 @@ namespace GitUI
             // 
             // deleteBranchToolStripMenuItem
             // 
-            this.deleteBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources.Delete;
+            this.deleteBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconBranchDelete;
             this.deleteBranchToolStripMenuItem.Name = "deleteBranchToolStripMenuItem";
             this.deleteBranchToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.deleteBranchToolStripMenuItem.Text = "Delete branch";
@@ -1318,7 +1318,7 @@ namespace GitUI
             // 
             // deleteTagToolStripMenuItem
             // 
-            this.deleteTagToolStripMenuItem.Image = global::GitUI.Properties.Resources.Delete;
+            this.deleteTagToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconTagDelete;
             this.deleteTagToolStripMenuItem.Name = "deleteTagToolStripMenuItem";
             this.deleteTagToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.deleteTagToolStripMenuItem.Text = "Delete tag";
@@ -1396,7 +1396,7 @@ namespace GitUI
             // 
             // cherryPickToolStripMenuItem
             // 
-            this.cherryPickToolStripMenuItem.Image = global::GitUI.Properties.Resources.WorkingDirChanges;
+            this.cherryPickToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCherryPick;
             this.cherryPickToolStripMenuItem.Name = "cherryPickToolStripMenuItem";
             this.cherryPickToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.cherryPickToolStripMenuItem.Text = "Cherry pick";
