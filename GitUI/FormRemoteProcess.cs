@@ -25,6 +25,11 @@ namespace GitUI
         private bool restart;
         protected readonly GitModule Module;
 
+        //for translation
+        protected FormRemoteProcess()
+            : base()
+        { }
+
         public FormRemoteProcess(GitModule module, string process, string arguments)
             : base(process, arguments, module.WorkingDir, null, true)
         {
