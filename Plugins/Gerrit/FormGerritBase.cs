@@ -18,6 +18,9 @@ namespace Gerrit
         protected readonly IGitUICommands UICommands;
         protected IGitModule Module { get { return UICommands.GitModule; } }
 
+        private FormGerritBase()
+            : this(null)
+        { }
 
         protected FormGerritBase(IGitUICommands agitUiCommands)
             : base(true)

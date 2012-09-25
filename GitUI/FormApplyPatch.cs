@@ -40,7 +40,8 @@ namespace GitUI
             : base(true, aCommands)
         {
             InitializeComponent(); Translate();
-            EnableButtons();
+            if (aCommands != null)
+                EnableButtons();
         }
 
         public void SetPatchFile(string name)

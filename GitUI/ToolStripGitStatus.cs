@@ -65,7 +65,13 @@ namespace GitUI
             }
         }
 
-        public GitModule Module { get { return UICommands.Module; } }
+        public GitModule Module 
+        {
+            get
+            {
+                return UICommands.Module;
+            }
+        }
 
         public ToolStripGitStatus()
         {
@@ -76,9 +82,11 @@ namespace GitUI
             components.Add(gitDirWatcher);
             CommitTranslatedString = "Commit";
             ignoredFilesTimer.Interval = MaxUpdatePeriod;
+            CurrentStatus = WorkingStatus.Stopped;
 
             // Setup a file watcher to detect changes to our files. When they
             // change, we'll update our status.
+            workTreeWatcher.EnableRaisingEvents = false;
             workTreeWatcher.Changed += WorkTreeChanged;
             workTreeWatcher.Created += WorkTreeChanged;
             workTreeWatcher.Deleted += WorkTreeChanged;
@@ -89,6 +97,7 @@ namespace GitUI
 
             // Setup a file watcher to detect changes to the .git repo files. When they
             // change, we'll update our status.
+            gitDirWatcher.EnableRaisingEvents = false;
             gitDirWatcher.Changed += GitDirChanged;
             gitDirWatcher.Created += GitDirChanged;
             gitDirWatcher.Deleted += GitDirChanged;
@@ -236,6 +245,9 @@ namespace GitUI
 
         private void Update()
         {
+            if (CurrentStatus != WorkingStatus.Started)
+                return;
+
             if (Environment.TickCount >= nextUpdateTime || 
                 (Environment.TickCount < 0 && nextUpdateTime > 0))
             {

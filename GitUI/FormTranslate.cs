@@ -301,7 +301,6 @@ namespace GitUI
             return obj;
         }
 
-
         public void GetPropertiesToTranslate()
         {
             translateCategories.Items.Clear();

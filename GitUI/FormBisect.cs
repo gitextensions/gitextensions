@@ -17,14 +17,19 @@ namespace GitUI
         private readonly RevisionGrid _revisionGrid;
 
         private FormBisect()
-            : base(null)
+            : this((GitUICommands)null)
         { }
 
-        public FormBisect(RevisionGrid revisionGrid)
-            : base(revisionGrid.UICommands)
+        private FormBisect(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
-            Translate();
+            Translate();        
+        }
+
+        public FormBisect(RevisionGrid revisionGrid)
+            : this(revisionGrid.UICommands)
+        {
             _revisionGrid = revisionGrid;
             UpdateButtonsState();
         }
