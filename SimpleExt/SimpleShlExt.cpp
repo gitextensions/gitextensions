@@ -139,6 +139,7 @@ int CSimpleShlExt::PopulateMenu(HMENU hMenu, int id, bool isSubMenu)
     CheckoutRevisionId = -1;
     CloneId = -1;
     CommitId = -1;
+	StashId = -1;
     FileHistoryId = -1;
     PullId = -1;
     PushId = -1;
@@ -173,6 +174,9 @@ int CSimpleShlExt::PopulateMenu(HMENU hMenu, int id, bool isSubMenu)
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 7))
             AddMenuItem(hMenu, "Commit", ++id, CommitId=pos++);
+
+		if (IsMenuItemVisible(szShellVisibleMenuItems, 14))
+            AddMenuItem(hMenu, "Sash", ++id, StashId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 8))
             AddMenuItem(hMenu, "File history", ++id, FileHistoryId=pos++);
@@ -218,6 +222,9 @@ int CSimpleShlExt::PopulateMenu(HMENU hMenu, int id, bool isSubMenu)
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 7))
             AddMenuItem(hMenu, "GitExtensions Commit", ++id, CommitId=pos++);
+
+		if (IsMenuItemVisible(szShellVisibleMenuItems, 14))
+            AddMenuItem(hMenu, "GitExtensions Stash", ++id, StashId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 8))
             AddMenuItem(hMenu, "GitExtensions File history", ++id, FileHistoryId=pos++);
@@ -347,6 +354,11 @@ STDMETHODIMP CSimpleShlExt::InvokeCommand ( LPCMINVOKECOMMANDINFO pCmdInfo )
     if (invokeId == CommitId)
     {
         RunGitEx(_T("commit"));
+        return S_OK;
+    } else
+	if (invokeId == StashId)
+    {
+        RunGitEx(_T("stash"));
         return S_OK;
     } else
     if (invokeId == FileHistoryId)
