@@ -133,9 +133,10 @@ namespace GitUI
             {
                 _toolStripGitStatus = new ToolStripGitStatus
                                  {
-                                     ImageTransparentColor = System.Drawing.Color.Magenta,
-                                     UICommandsSource = this
-                                 };                
+                                     ImageTransparentColor = System.Drawing.Color.Magenta
+                                 };
+                if (aCommands != null)
+                    _toolStripGitStatus.UICommandsSource = this;
                 _toolStripGitStatus.Click += StatusClick;
                 ToolStrip.Items.Insert(ToolStrip.Items.IndexOf(toolStripButton1), _toolStripGitStatus);
                 ToolStrip.Items.Remove(toolStripButton1);
@@ -159,9 +160,12 @@ namespace GitUI
             this.toolPanel.SplitterDistance = this.ToolStrip.Height;
             this._dontUpdateOnIndexChange = false;
             GitUICommandsChanged += (a, b) => RefreshPullIcon();
-            RefreshPullIcon();
+            if (aCommands != null)
+            {
+                RefreshPullIcon();
+                UICommands.BrowseInitialize += (a, b) => Initialize();
+            }
             dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
-            UICommands.BrowseInitialize += (a, b) => Initialize();
         }
 
         private void ShowDashboard()

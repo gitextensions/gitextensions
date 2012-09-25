@@ -12,12 +12,17 @@ namespace GitUI
     {
         public static void Load()
         {
-            var file = new FileInfo(Application.ExecutablePath);
+            lock (GitUI.Plugin.LoadedPlugins.Plugins)
+            {
+                if (GitUI.Plugin.LoadedPlugins.Plugins.Count > 0)
+                    return;
 
-            // Only search for plugins in the plugins folder. This increases performance a little bit.
-            // In DEBUG search for plugins in the root folder to make debugging plugins easier.
+                var file = new FileInfo(Application.ExecutablePath);
+
+                // Only search for plugins in the plugins folder. This increases performance a little bit.
+                // In DEBUG search for plugins in the root folder to make debugging plugins easier.
 #if DEBUG
-            var plugins = file.Directory.GetFiles("*.dll", SearchOption.AllDirectories);
+                var plugins = file.Directory.GetFiles("*.dll", SearchOption.AllDirectories);
 #else
             FileInfo[] plugins =
                            Directory.Exists(Path.Combine(file.Directory.FullName, "Plugins"))
@@ -25,37 +30,38 @@ namespace GitUI
                                : new FileInfo[] { };
 #endif
 
-            foreach (var pluginFile in plugins)
-            {
-                if (pluginFile.FullName.Contains("Microsoft.WindowsAPICodePack"))
+                foreach (var pluginFile in plugins)
                 {
-                    continue;
-                }
-                
-                try
-                {
-                    var types = Assembly.LoadFile(pluginFile.FullName).GetTypes();
-                    PluginExtraction.ExtractPluginTypes(types);
-                }
-                catch (Exception ex)
-                {
-                    string exInfo = "Exception info:\r\n";
-
-                    var rtle = ex as ReflectionTypeLoadException;
-                    if (rtle != null)
+                    if (pluginFile.FullName.Contains("Microsoft.WindowsAPICodePack"))
                     {
-                        foreach (var el in rtle.LoaderExceptions)
-                            exInfo += el.Message + "\r\n";
-                    }
-                    else
-                    {
-                        Action<Exception> getEx = null;
-                        getEx = arg => { exInfo += arg.Message + "\r\n"; if (arg.InnerException != null) getEx(arg.InnerException); };
-                        getEx(ex);
+                        continue;
                     }
 
-                    MessageBox.Show(string.Format("Failed to load plugin {0} : \r\n{1}", pluginFile, exInfo));
-                    Trace.WriteLine(ex.Message);
+                    try
+                    {
+                        var types = Assembly.LoadFile(pluginFile.FullName).GetTypes();
+                        PluginExtraction.ExtractPluginTypes(types);
+                    }
+                    catch (Exception ex)
+                    {
+                        string exInfo = "Exception info:\r\n";
+
+                        var rtle = ex as ReflectionTypeLoadException;
+                        if (rtle != null)
+                        {
+                            foreach (var el in rtle.LoaderExceptions)
+                                exInfo += el.Message + "\r\n";
+                        }
+                        else
+                        {
+                            Action<Exception> getEx = null;
+                            getEx = arg => { exInfo += arg.Message + "\r\n"; if (arg.InnerException != null) getEx(arg.InnerException); };
+                            getEx(ex);
+                        }
+
+                        MessageBox.Show(string.Format("Failed to load plugin {0} : \r\n{1}", pluginFile, exInfo));
+                        Trace.WriteLine(ex.Message);
+                    }
                 }
             }
         }
