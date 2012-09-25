@@ -11,7 +11,7 @@ using ResourceManager.Translation;
 
 namespace Gerrit
 {
-    public class GerritPlugin : IGitPluginForRepository
+    public class GerritPlugin : GitPluginBase, IGitPluginForRepository
     {
         private bool _initialized;
         private ToolStripItem[] _gerritMenuItems;
@@ -26,18 +26,21 @@ namespace Gerrit
         private readonly TranslationString _publishGerritChange = new TranslationString("Publish Gerrit Change");
         #endregion
 
-        public string Description
+        public override string Description
         {
             get { return _pluginDescription.Text; }
         }
 
-        public IGitPluginSettingsContainer Settings { get; set; }
-
-        public void Register(IGitUICommands gitUiCommands)
+        public override void Register(IGitUICommands gitUiCommands)
         {
             _gitUiCommands = gitUiCommands;
-
             gitUiCommands.PostBrowseInitialize += gitUiCommands_PostBrowseInitialize;
+        }
+
+        public override void Unregister(IGitUICommands gitUiCommands)
+        {
+            gitUiCommands.PostBrowseInitialize -= gitUiCommands_PostBrowseInitialize;
+            _gitUiCommands = null;
         }
 
         void gitUiCommands_PostBrowseInitialize(object sender, GitUIBaseEventArgs e)
@@ -47,11 +50,11 @@ namespace Gerrit
 
             // Correct enabled/visibility of our menu/tool strip items.
 
-            bool validWorkingDir = GitCommands.GitModule.Current.ValidWorkingDir();
+            bool validWorkingDir = e.GitModule.IsValidGitWorkingDir(e.GitModule.GitWorkingDir);
 
             _gitReviewMenuItem.Enabled = validWorkingDir;
 
-            bool showGerritItems = validWorkingDir && File.Exists(GitCommands.GitModule.CurrentWorkingDir + ".gitreview");
+            bool showGerritItems = validWorkingDir && File.Exists(e.GitModule.GitWorkingDir + ".gitreview");
 
             foreach (var item in _gerritMenuItems)
             {
@@ -171,7 +174,7 @@ namespace Gerrit
 
         void gitReviewMenuItem_Click(object sender, EventArgs e)
         {
-            using (var form = new FormGitReview())
+            using (var form = new FormGitReview(_gitUiCommands))
             {
                 form.ShowDialog(_mainForm);
             }
@@ -204,7 +207,7 @@ namespace Gerrit
             return null;
         }
 
-        public bool Execute(GitUIBaseEventArgs gitUiCommands)
+        public override bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
             using (var form = new FormPluginInformation())
             {

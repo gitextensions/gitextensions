@@ -1831,11 +1831,6 @@ namespace GitCommands
             return allowEmpty ? remotes.Split('\n') : remotes.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        public string[] GetIRemotes(bool allowEmpty)
-        {
-            return GetRemotes(allowEmpty);
-        }
-
         public ConfigFile GetLocalConfig()
         {
             return new ConfigFile(WorkingDirGitDir() + Settings.PathSeparator.ToString() + "config", true);

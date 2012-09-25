@@ -13,7 +13,6 @@ namespace Gerrit
 {
     public partial class FormGerritDownload : FormGerritBase
     {
-        private readonly IGitUICommands _uiCommand;
         private string _currentBranchRemote;
 
         #region Translation
@@ -27,9 +26,8 @@ namespace Gerrit
         #endregion
 
         public FormGerritDownload(IGitUICommands uiCommand)
+            : base(uiCommand)
         {
-            _uiCommand = uiCommand;
-
             InitializeComponent();
             Translate();
         }
@@ -90,14 +88,14 @@ namespace Gerrit
             string branchName = "review/" + author + "/" + topic;
             string refspec = (string)((JValue)reviewInfo["currentPatchSet"]["ref"]).Value;
 
-            var fetchCommand = _uiCommand.CreateRemoteCommand();
+            var fetchCommand = UICommands.CreateRemoteCommand();
 
             fetchCommand.CommandText = FetchCommand(_NO_TRANSLATE_Remotes.Text, refspec);
 
             if (!RunCommand(fetchCommand, change))
                 return false;
 
-            var checkoutCommand = _uiCommand.CreateRemoteCommand();
+            var checkoutCommand = UICommands.CreateRemoteCommand();
 
             checkoutCommand.CommandText = GitCommandHelpers.BranchCmd(branchName, "FETCH_HEAD", true);
             checkoutCommand.Completed += (s, e) =>
@@ -108,14 +106,14 @@ namespace Gerrit
                     {
                         // Recycle the current review branch.
 
-                        var recycleCommand = _uiCommand.CreateRemoteCommand();
+                        var recycleCommand = UICommands.CreateRemoteCommand();
 
                         recycleCommand.CommandText = "checkout " + branchName;
 
                         if (!RunCommand(recycleCommand, change))
                             return;
 
-                        var resetCommand = _uiCommand.CreateRemoteCommand();
+                        var resetCommand = UICommands.CreateRemoteCommand();
 
                         resetCommand.CommandText = GitCommandHelpers.ResetHardCmd("FETCH_HEAD");
 
@@ -164,7 +162,7 @@ namespace Gerrit
 
         private JObject LoadReviewInfo()
         {
-            string remotes = GitCommands.GitModule.Current.RunGitCmd("remote show -n \"" + _currentBranchRemote + "\"");
+            string remotes = Module.RunGit("remote show -n \"" + _currentBranchRemote + "\"");
 
             string fetchUrlLine = remotes.Split('\n').Select(p => p.Trim()).First(p => p.StartsWith("Push"));
             var fetchUrl = new Uri(fetchUrlLine.Split(new[] { ':' }, 2)[1].Trim());
@@ -214,7 +212,7 @@ namespace Gerrit
             sb.Append(_NO_TRANSLATE_Change.Text);
             sb.Append('"');
 
-            string change = GitCommands.GitModule.Current.RunCmd(
+            string change = Module.RunCmd(
                 sshCmd,
                 sb.ToString()
             );
@@ -236,7 +234,7 @@ namespace Gerrit
 
         private void FormGerritDownloadLoad(object sender, EventArgs e)
         {
-            _NO_TRANSLATE_Remotes.DataSource = GitCommands.GitModule.Current.GetRemotes();
+            _NO_TRANSLATE_Remotes.DataSource = Module.GetRemotes(true);
 
             _currentBranchRemote = Settings.DefaultRemote;
 
@@ -246,13 +244,13 @@ namespace Gerrit
 
             _NO_TRANSLATE_Change.Select();
 
-            Text = string.Concat(_downloadGerritChangeCaption.Text, " (", GitCommands.GitModule.CurrentWorkingDir, ")");
+            Text = string.Concat(_downloadGerritChangeCaption.Text, " (", Module.GitWorkingDir, ")");
         }
 
         private void AddRemoteClick(object sender, EventArgs e)
         {
-            _uiCommand.StartRemotesDialog();
-            _NO_TRANSLATE_Remotes.DataSource = GitCommands.GitModule.Current.GetRemotes();
+            UICommands.StartRemotesDialog();
+            _NO_TRANSLATE_Remotes.DataSource = Module.GetRemotes(true);
         }
     }
 }

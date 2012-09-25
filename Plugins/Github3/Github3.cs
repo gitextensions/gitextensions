@@ -148,7 +148,7 @@ namespace Github3
         {
             var repoInfos = new List<IHostedRemote>();
 
-            string[] remotes = aModule.GetIRemotes(false);
+            string[] remotes = aModule.GetRemotes(false);
             foreach (string remote in remotes)
             {
                 var url = aModule.GetISetting(string.Format(SettingKeyString.RemoteUrl, remote));

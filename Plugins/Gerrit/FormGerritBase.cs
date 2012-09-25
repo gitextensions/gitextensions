@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI;
+using GitUIPluginInterfaces;
 
 namespace Gerrit
 {
@@ -14,10 +15,14 @@ namespace Gerrit
         private const string PuttyText = "PuTTY";
 
         protected GerritSettings Settings { get; private set; }
+        protected readonly IGitUICommands UICommands;
+        protected IGitModule Module { get { return UICommands.GitModule; } }
 
-        protected FormGerritBase()
+
+        protected FormGerritBase(IGitUICommands agitUiCommands)
             : base(true)
         {
+            UICommands = agitUiCommands;
         }
 
         protected void StartAgent(IWin32Window owner, string remote)
@@ -27,7 +32,7 @@ namespace Gerrit
                 if (!File.Exists(GitCommands.Settings.Pageant))
                     MessageBox.Show(owner, "Cannot load SSH key. PuTTY is not configured properly.", PuttyText);
                 else
-                    GitCommands.GitModule.Current.StartPageantForRemote(remote);
+                    Module.StartPageantForRemote(remote);
             }
         }
 
@@ -36,7 +41,7 @@ namespace Gerrit
             if (DesignMode)
                 return;
 
-            Settings = GerritSettings.Load();
+            Settings = GerritSettings.Load(Module);
 
             if (Settings == null)
             {
@@ -56,9 +61,11 @@ namespace Gerrit
             public string DefaultBranch { get; private set; }
             public string DefaultRemote { get; private set; }
             public bool DefaultRebase { get; private set; }
+            private readonly IGitModule Module;
 
-            private GerritSettings()
+            private GerritSettings(IGitModule aModule)
             {
+                Module = aModule;
                 Port = 29418;
                 DefaultBranch = "master";
                 DefaultRemote = "gerrit";
@@ -73,20 +80,20 @@ namespace Gerrit
                 )
                     return false;
 
-                var remotes = GitCommands.GitModule.Current.GetRemotes();
+                var remotes = Module.GetRemotes(true);
 
                 return remotes.Contains(DefaultRemote);
             }
 
-            public static GerritSettings Load()
+            public static GerritSettings Load(IGitModule aModule)
             {
-                string path = GitCommands.GitModule.CurrentWorkingDir + ".gitreview";
+                string path = aModule.GitWorkingDir + ".gitreview";
 
                 if (!File.Exists(path))
                     return null;
 
                 bool inHeader = false;
-                var result = new GerritSettings();
+                var result = new GerritSettings(aModule);
 
                 foreach (string line in File.ReadAllLines(path))
                 {

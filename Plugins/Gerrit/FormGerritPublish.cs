@@ -11,7 +11,6 @@ namespace Gerrit
 {
     public partial class FormGerritPublish : FormGerritBase
     {
-        private readonly IGitUICommands _uiCommand;
         private string _currentBranchRemote;
 
         #region Translation
@@ -24,9 +23,8 @@ namespace Gerrit
         #endregion
 
         public FormGerritPublish(IGitUICommands uiCommand)
+            : base(uiCommand)
         {
-            _uiCommand = uiCommand;
-
             InitializeComponent();
             Translate();
         }
@@ -56,7 +54,7 @@ namespace Gerrit
 
             string targetRef = PublishDraft.Checked ? "drafts" : "publish";
 
-            var pushCommand = _uiCommand.CreateRemoteCommand();
+            var pushCommand = UICommands.CreateRemoteCommand();
 
             string targetBranch = "refs/" + targetRef + "/" + branch;
             string topic = _NO_TRANSLATE_Topic.Text.Trim();
@@ -128,7 +126,7 @@ namespace Gerrit
 
         private string GetBranchName(string targetBranch)
         {
-            string branch = GitCommands.GitModule.Current.GetSelectedBranch();
+            string branch = Module.GetSelectedBranch();
 
             if (branch.StartsWith("(no"))
                 return targetBranch;
@@ -138,7 +136,7 @@ namespace Gerrit
 
         private void FormGerritPublishLoad(object sender, EventArgs e)
         {
-            _NO_TRANSLATE_Remotes.DataSource = GitCommands.GitModule.Current.GetRemotes();
+            _NO_TRANSLATE_Remotes.DataSource = Module.GetRemotes(true);
 
             _currentBranchRemote = Settings.DefaultRemote;
 
@@ -156,13 +154,13 @@ namespace Gerrit
 
             _NO_TRANSLATE_Branch.Select();
 
-            Text = string.Concat(_downloadGerritChangeCaption.Text, " (", GitCommands.GitModule.CurrentWorkingDir, ")");
+            Text = string.Concat(_downloadGerritChangeCaption.Text, " (", Module.GitWorkingDir, ")");
         }
 
         private void AddRemoteClick(object sender, EventArgs e)
         {
-            _uiCommand.StartRemotesDialog();
-            _NO_TRANSLATE_Remotes.DataSource = GitCommands.GitModule.Current.GetRemotes();
+            UICommands.StartRemotesDialog();
+            _NO_TRANSLATE_Remotes.DataSource = Module.GetRemotes(true);
         }
     }
 }

@@ -29,8 +29,16 @@ namespace GitUIPluginInterfaces
 
         IGitModule GetISubmodule(string submoduleName);
 
-        string[] GetIRemotes(bool allowEmpty);
+        string[] GetRemotes(bool allowEmpty);
 
         string GetISetting(string setting);
+
+        bool StartPageantForRemote(string remote);
+
+        string RunCmd(string cmd, string arguments);
+
+        string GetSelectedBranch();
+
+        bool IsBareRepository();
     }
 }
