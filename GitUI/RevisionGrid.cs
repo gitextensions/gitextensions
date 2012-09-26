@@ -568,7 +568,7 @@ namespace GitUI
                 .Cast<DataGridViewRow>()
                 .Where(row => Revisions.RowCount > row.Index);
 
-            
+
             if (direction.HasValue)
             {
                 int d = direction.Value == SortDirection.Ascending ? 1 : -1;
@@ -1425,9 +1425,9 @@ namespace GitUI
 
             using (var frm = new FormTagSmall(UICommands, GetRevision(LastRow)))
             {
-                frm.ShowDialog(this);    
+                frm.ShowDialog(this);
             }
-            
+
             RefreshRevisions();
         }
 
@@ -1446,6 +1446,7 @@ namespace GitUI
         {
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
+
             var frm = new FormBranchSmall(UICommands) { Revision = GetRevision(LastRow) };
 
             if (frm.ShowDialog(this) == DialogResult.OK)
