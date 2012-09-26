@@ -547,7 +547,7 @@ namespace GitUI
                 .Cast<DataGridViewRow>()
                 .Where(row => Revisions.RowCount > row.Index);
 
-            
+
             if (direction.HasValue)
             {
                 int d = direction.Value == SortDirection.Ascending ? 1 : -1;
@@ -1404,9 +1404,9 @@ namespace GitUI
 
             using (var frm = new FormTagSmall(GetRevision(LastRow)))
             {
-                frm.ShowDialog(this);    
+                frm.ShowDialog(this);
             }
-            
+
             RefreshRevisions();
         }
 
@@ -1425,6 +1425,7 @@ namespace GitUI
         {
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
+
             var frm = new FormBranchSmall { Revision = GetRevision(LastRow) };
 
             if (frm.ShowDialog(this) == DialogResult.OK)
@@ -1795,7 +1796,7 @@ namespace GitUI
                                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
-            GitUICommands.Instance.StartCheckoutBranchDialog(this, GetRevision(LastRow).Guid, false);            
+            GitUICommands.Instance.StartCheckoutBranchDialog(this, GetRevision(LastRow).Guid, false);
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
         }
@@ -1860,7 +1861,7 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
 
-            using(var frm = new FormCommit(commitKind, GetRevision(LastRow))) frm.ShowDialog(this);
+            using (var frm = new FormCommit(commitKind, GetRevision(LastRow))) frm.ShowDialog(this);
 
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
