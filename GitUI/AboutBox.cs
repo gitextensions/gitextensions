@@ -50,20 +50,21 @@ namespace GitUI
         }
 
         //Contributers list 
-        private const string coders = "Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide, " +
-            "Dominique Plante, Grzegorz Pachocki, Seth Behunin, bleis-tift, Chris Meaney, Nathanael Schmied, " +
-            "Adrian Codrington, Troels Thomsen, Wilbert van Dolleweerd, Tobias Bieniek, Radoslaw Miazio, Stan Angeloff, " +
-            "Matt McCormick, Bjørn Moe, William Swanson, Daniel Locantore, Harald Deischinger, Radek Miazio, " +
-            "Stefan Rueckl, Emanuel Henrique do Prado, Lukasz Byczynski, Steffen M. Colding-Jørgensen, alexeik, " +
-            "arBmind, mausch, xaro, Xharze, Kim Christensen, Charles Brossollet, Patrick Earl, ultonis, Michael Frenzel, " +
+        private const string coders = "Arkadiy Shapkin, Janusz Białobrzewski, Steffen Forkmann, Jacob Stanley, " +
+            "Nick Mayer, Kevin Moore, Davide, Dominique Plante, Grzegorz Pachocki, Seth Behunin, bleis-tift, " +
+            "Chris Meaney, Nathanael Schmied, Adrian Codrington, Troels Thomsen, Wilbert van Dolleweerd, " +
+            "Tobias Bieniek, Radoslaw Miazio, Stan Angeloff, Matt McCormick, Bjørn Moe, William Swanson, " +
+            "Daniel Locantore, Harald Deischinger, Radek Miazio, Stefan Rueckl, Emanuel Henrique do Prado, " +
+            "Lukasz Byczynski, Steffen M. Colding-Jørgensen, alexeik, arBmind, mausch, xaro, Xharze, Kim Christensen, " +
             "showell, Daniel Doubrovkine, mdk, Marc Murray, rferriz, Jacek Pasternak, miloja, Ed Starback, Alberto Chiesa, " +
-            "Airat Salikhov, Max Malook, ikke, Simon Walker, Arnaud Fabre, Andy Lee, Janusz Białobrzewski, Joe Brown, " +
-            "Rodrigo, John Gietzen, Ralph Haußmann, Rodrigo Fraga, Michael West, David Vierra, Mark Pizzolato, " +
-            "Arkadiy Shapkin, Alexander Mueller, marcinmagier, Alexander Puzynia, ferow2k, lynxstv, nitoyon, iamxail, " +
-            "Basewq, Edward Brey, Sergey, Nils Fenner, Burim Kameri, Phillip Cohen, Andy Royle, Masanori Tanaka, Alex Ford, Arne Janbu, " +
-            "Dan Rigby, pravic, Linquize, Clinton Daniel, Reto Schoening, mabako, Tal952, Aviad Pineles, Markus Stein, Marcus Bauer, " +
-            "Nay, Joe Phillips, Cameron Will, Donatas Mačiūnas, Jesse Bartley, Dave Brotherstone, Pieter van Ginkel, australiensun, " +
-            "vgravade, hiroponz, Isaac Devine, Konstantin Tenzin, Catagorical";
+            "Charles Brossollet, Patrick Earl, ultonis, Michael Frenzel, Airat Salikhov, Max Malook, ikke, Simon Walker, " +
+            "Arnaud Fabre, Andy Lee, Joe Brown, Rodrigo, John Gietzen, Ralph Haußmann, Rodrigo Fraga, Michael West, " +
+            "David Vierra, Mark Pizzolato, Alexander Mueller, marcinmagier, Alexander Puzynia, ferow2k, lynxstv, nitoyon, " +
+            "iamxail, Basewq, Edward Brey, Sergey, Nils Fenner, Burim Kameri, Phillip Cohen, Andy Royle, Masanori Tanaka, " +
+            "Alex Ford, Arne Janbu, Dan Rigby, pravic, Linquize, Clinton Daniel, Reto Schoening, mabako, Tal952, " +
+            "Aviad Pineles, Markus Stein, Marcus Bauer, Nay, Joe Phillips, Cameron Will, Donatas Mačiūnas, Jesse Bartley, " +
+            "Dave Brotherstone, Pieter van Ginkel, australiensun, Vincent Gravade, Hiroyuki Sato, Isaac Devine, " +
+            "Konstantin Tenzin, Stefan Laut, Jeromy Johnson, Kate von Roeder";
         private const string translators = "Gianni Rosa Gallina, Cheng Huang, Floyd Hung, superlongman, rferriz, gor, " +
             "xaro, bleis-tift, Ralph Haußmann, Jasper Chien, Arkadiy Shapkin, ferow2k, Thibault D'Archivio";
         private const string designers = "Andréj Telle, Oliver Friedrich";
