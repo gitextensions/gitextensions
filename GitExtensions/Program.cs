@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Repository;
 using GitUI;
-using System.Collections.Generic;
 
 namespace GitExtensions
 {
