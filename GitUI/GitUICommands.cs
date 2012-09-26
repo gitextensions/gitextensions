@@ -946,6 +946,11 @@ namespace GitUI
 
         public bool StartArchiveDialog(IWin32Window owner)
         {
+            return StartArchiveDialog(owner, null);
+        }
+
+        public bool StartArchiveDialog(IWin32Window owner, GitRevision preselectRevision)
+        {
             if (!RequiresValidWorkingDir(owner))
                 return false;
 
@@ -953,7 +958,10 @@ namespace GitUI
                 return true;
 
             using (var form = new FormArchive())
+            {
+                form.PreselectRevisionOnLoad = preselectRevision;
                 form.ShowDialog(owner);
+            }
 
             InvokeEvent(owner, PostArchive);
 
