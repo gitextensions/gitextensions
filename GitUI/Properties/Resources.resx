@@ -436,10 +436,10 @@
   <data name="Delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\Delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="BranchCheckout" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="IconBranchCheckout" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\BranchCheckout.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="BranchCreate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="IconBranchCreate" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\BranchCreate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconArchiveRevision" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -449,10 +449,10 @@
     <value>..\Resources\Icons\edit_clear_2_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconMerge" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\char_scorpio_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\Resources\Icons\IconMerge.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconRebase" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\char_libra_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\Resources\Icons\IconRebase.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconRemotes" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\folder_remote_2_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -460,7 +460,19 @@
   <data name="RevisionCheckout" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\RevisionCheckout.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="TagCreate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="IconTagCreate" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\TagCreate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconBranchDelete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\BranchDelete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconCherryPick" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\IconCherryPick.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconPreview" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\IconPreview.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconTagDelete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\TagDelete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
