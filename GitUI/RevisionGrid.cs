@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.DirectoryServices;
@@ -1425,10 +1425,11 @@ namespace GitUI
 
             using (var frm = new FormTagSmall(UICommands, GetRevision(LastRow)))
             {
-                frm.ShowDialog(this);
+                if (frm.ShowDialog(this) == DialogResult.OK)
+                {
+                    RefreshRevisions();
+                }
             }
-
-            RefreshRevisions();
         }
 
         private void ResetCurrentBranchToHereToolStripMenuItemClick(object sender, EventArgs e)
