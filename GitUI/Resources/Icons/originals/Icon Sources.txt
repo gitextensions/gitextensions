@@ -6,3 +6,8 @@ ark-3.png
 char-libra.png
 edit-clear-2.png
 folder-remote-2.png
+zoom-2.png
+
+IconArchive
+-----------
+cherry-icon.png: http://www.iconarchive.com/show/fruit-icons-by-miniartx/cherry-icon.html
