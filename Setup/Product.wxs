@@ -675,10 +675,14 @@
 
     <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.7.11-preview20120710.exe"/>
     <CustomAction Id="MsysGit" Impersonate="no" BinaryKey="MsysGit" Execute="deferred" ExeCommand="" Return="ignore"/>
+
+    <Binary Id="GCS" SourceFile="..\Bin\git-credential-winstore.exe"/>
+    <CustomAction Id="GCS" Impersonate="no" BinaryKey="GCS" Execute="deferred" ExeCommand="-s" Return="ignore"/>
+    
     <InstallExecuteSequence>
-      <Custom Action="KDiff" After="InstallFiles"><![CDATA[INSTALLKDIFF3=1]]>
-      </Custom>
+      <Custom Action="KDiff" After="InstallFiles"><![CDATA[INSTALLKDIFF3=1]]></Custom>
       <Custom Action="MsysGit" After="InstallFiles"><![CDATA[INSTALLMSYSGIT=1]]></Custom>
+      <Custom Action="GCS" After="InstallFiles"><![CDATA[INSTALLGCS=1]]></Custom>
     </InstallExecuteSequence>
     <?endif?>
 
