@@ -176,7 +176,7 @@ int CSimpleShlExt::PopulateMenu(HMENU hMenu, int id, bool isSubMenu)
             AddMenuItem(hMenu, "Commit", ++id, CommitId=pos++);
 
 		if (IsMenuItemVisible(szShellVisibleMenuItems, 14))
-            AddMenuItem(hMenu, "Sash", ++id, StashId=pos++);
+            AddMenuItem(hMenu, "Stash", ++id, StashId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 8))
             AddMenuItem(hMenu, "File history", ++id, FileHistoryId=pos++);
