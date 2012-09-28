@@ -259,10 +259,23 @@ namespace GitUI
 
         private void Use2WayMerge(ref string arguments)
         {
-            arguments = arguments.Replace("-merge -3", "-merge"); // Araxis
-            arguments = arguments.Replace("base:\"$BASE\"", ""); // TortoiseMerge
-            arguments = arguments.Replace("mine:\"$LOCAL\"", "base:\"$LOCAL\""); // TortoiseMerge
-            arguments = arguments.Replace("\"$BASE\"", ""); // Perforce, Beyond Compare 3, Araxis, DiffMerge
+            string mergeToolLower = mergetool.ToLowerInvariant();
+            switch (mergeToolLower)
+            {
+                case "kdiff3":
+                case "diffmerge":
+                case "beyondcompare3":
+                    arguments = arguments.Replace("\"$BASE\"", "");
+                    break;
+                case "araxis":
+                    arguments = arguments.Replace("-merge -3", "-merge");
+                    arguments = arguments.Replace("\"$BASE\"", "");
+                    break;
+                case "tortoisemerge":
+                    arguments = arguments.Replace("-base:\"$BASE\"", "").Replace("/base:\"$BASE\"", "");
+                    arguments = arguments.Replace("mine:\"$LOCAL\"", "base:\"$LOCAL\"");
+                    break;
+            }
         }
 
         private void ConflictedFiles_DoubleClick(object sender, EventArgs e)
@@ -340,7 +353,7 @@ namespace GitUI
                     arguments = arguments.Replace("$BASE", filenames[0]);
                     arguments = arguments.Replace("$LOCAL", filenames[1]);
                     arguments = arguments.Replace("$REMOTE", filenames[2]);
-                    arguments = arguments.Replace("$MERGED", filename + "");
+                    arguments = arguments.Replace("$MERGED", filename);
 
                     //get timestamp of file before merge. This is an extra check to verify if merge was successful
                     DateTime lastWriteTimeBeforeMerge = DateTime.Now;
