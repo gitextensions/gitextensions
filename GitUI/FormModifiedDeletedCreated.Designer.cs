@@ -160,8 +160,8 @@
             // 
             // FormModifiedDeletedCreated
             // 
-            
-            
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(496, 98);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.Abort);

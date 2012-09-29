@@ -49,15 +49,15 @@ namespace GitUI
             this.label2 = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_Caption = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-
-			((System.ComponentModel.ISupportInitialize)(this.RepositoriesGrid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
-
+#if Mono212Released //waiting for mono 2.12
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+#endif
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.panel1.SuspendLayout();
-            
+            ((System.ComponentModel.ISupportInitialize)(this.RepositoriesGrid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer2
@@ -203,21 +203,19 @@ namespace GitUI
             // 
             // DashboardEditor
             // 
-            resources.ApplyResources(this, "$this");
-            
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.splitContainer2);
+            resources.ApplyResources(this, "$this");
             this.Name = "DashboardEditor";
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.Panel2.PerformLayout();
-            
+#if Mono212Released //waiting for mono 2.12
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+#endif
             this.splitContainer2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
-            
-#if Mono212Released //waiting for mono 2.12
-			((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
-#endif
-			((System.ComponentModel.ISupportInitialize)(this.RepositoriesGrid)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.RepositoriesGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).EndInit();
             this.ResumeLayout(false);
 

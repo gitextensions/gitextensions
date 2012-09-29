@@ -47,13 +47,13 @@ namespace GitUI
             this.CurrentBranch = new System.Windows.Forms.Label();
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
-#if Mono212Released //waiting for mono 2.12					
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12					
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
 #endif
             this.splitContainer2.Panel1.SuspendLayout();
@@ -95,7 +95,7 @@ namespace GitUI
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(28, 96);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(28, 12);
+            this.label2.Size = new System.Drawing.Size(34, 15);
             this.label2.TabIndex = 15;
             this.label2.Text = "Body";
             // 
@@ -104,7 +104,7 @@ namespace GitUI
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(28, 69);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(37, 12);
+            this.label1.Size = new System.Drawing.Size(46, 15);
             this.label1.TabIndex = 14;
             this.label1.Text = "Subject";
             // 
@@ -124,7 +124,7 @@ namespace GitUI
             | System.Windows.Forms.AnchorStyles.Right)));
             this.MailSubject.Location = new System.Drawing.Point(254, 66);
             this.MailSubject.Name = "MailSubject";
-            this.MailSubject.Size = new System.Drawing.Size(452, 21);
+            this.MailSubject.Size = new System.Drawing.Size(452, 23);
             this.MailSubject.TabIndex = 12;
             // 
             // MailAddress
@@ -134,7 +134,7 @@ namespace GitUI
             this.MailAddress.FormattingEnabled = true;
             this.MailAddress.Location = new System.Drawing.Point(254, 38);
             this.MailAddress.Name = "MailAddress";
-            this.MailAddress.Size = new System.Drawing.Size(452, 20);
+            this.MailAddress.Size = new System.Drawing.Size(452, 23);
             this.MailAddress.TabIndex = 11;
             // 
             // SendToMail
@@ -142,7 +142,7 @@ namespace GitUI
             this.SendToMail.AutoSize = true;
             this.SendToMail.Location = new System.Drawing.Point(12, 40);
             this.SendToMail.Name = "SendToMail";
-            this.SendToMail.Size = new System.Drawing.Size(90, 16);
+            this.SendToMail.Size = new System.Drawing.Size(106, 19);
             this.SendToMail.TabIndex = 10;
             this.SendToMail.Text = "Mail patches to";
             this.SendToMail.UseVisualStyleBackColor = true;
@@ -153,7 +153,7 @@ namespace GitUI
             this.SaveToDir.Checked = true;
             this.SaveToDir.Location = new System.Drawing.Point(12, 14);
             this.SaveToDir.Name = "SaveToDir";
-            this.SaveToDir.Size = new System.Drawing.Size(132, 16);
+            this.SaveToDir.Size = new System.Drawing.Size(156, 19);
             this.SaveToDir.TabIndex = 9;
             this.SaveToDir.TabStop = true;
             this.SaveToDir.Text = "Save patches in directory";
@@ -179,7 +179,7 @@ namespace GitUI
             this.OutputPath.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this.OutputPath.Location = new System.Drawing.Point(254, 11);
             this.OutputPath.Name = "OutputPath";
-            this.OutputPath.Size = new System.Drawing.Size(452, 21);
+            this.OutputPath.Size = new System.Drawing.Size(452, 23);
             this.OutputPath.TabIndex = 7;
             // 
             // splitContainer2
@@ -205,19 +205,10 @@ namespace GitUI
             // 
             // RevisionGrid
             // 
-            this.RevisionGrid.BranchFilter = "";
-            this.RevisionGrid.CurrentCheckout = "";
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RevisionGrid.Filter = "";
-            this.RevisionGrid.FixedFilter = "";
-            this.RevisionGrid.InMemAuthorFilter = "";
-            this.RevisionGrid.InMemCommitterFilter = "";
-            this.RevisionGrid.InMemMessageFilter = "";
-            this.RevisionGrid.LastRow = 0;
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Name = "RevisionGrid";
             this.RevisionGrid.Size = new System.Drawing.Size(824, 313);
-            this.RevisionGrid.SuperprojectCurrentCheckout = null;
             this.RevisionGrid.TabIndex = 0;
             // 
             // FormatPatch
@@ -236,7 +227,7 @@ namespace GitUI
             this.SelectedBranch.AutoSize = true;
             this.SelectedBranch.Location = new System.Drawing.Point(12, 12);
             this.SelectedBranch.Name = "SelectedBranch";
-            this.SelectedBranch.Size = new System.Drawing.Size(36, 12);
+            this.SelectedBranch.Size = new System.Drawing.Size(44, 15);
             this.SelectedBranch.TabIndex = 4;
             this.SelectedBranch.Text = "Branch";
             // 
@@ -245,7 +236,7 @@ namespace GitUI
             this.CurrentBranch.AutoSize = true;
             this.CurrentBranch.Location = new System.Drawing.Point(60, 13);
             this.CurrentBranch.Name = "CurrentBranch";
-            this.CurrentBranch.Size = new System.Drawing.Size(0, 12);
+            this.CurrentBranch.Size = new System.Drawing.Size(0, 15);
             this.CurrentBranch.TabIndex = 5;
             // 
             // gitRevisionBindingSource
@@ -258,8 +249,8 @@ namespace GitUI
             // 
             // FormFormatPatch
             // 
-            
-            
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(824, 532);
             this.Controls.Add(this.splitContainer1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -273,7 +264,7 @@ namespace GitUI
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12					
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 #endif
             this.splitContainer1.ResumeLayout(false);

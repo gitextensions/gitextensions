@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.Panel panel1;
             System.Windows.Forms.Panel panel2;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormGitIgnore));
@@ -43,7 +42,7 @@
             panel2 = new System.Windows.Forms.Panel();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
             this.splitContainer1.Panel1.SuspendLayout();
@@ -108,9 +107,9 @@
             // 
             this.lnkGitIgnorePatterns.AutoSize = true;
             this.lnkGitIgnorePatterns.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lnkGitIgnorePatterns.Location = new System.Drawing.Point(122, 0);
+            this.lnkGitIgnorePatterns.Location = new System.Drawing.Point(98, 0);
             this.lnkGitIgnorePatterns.Name = "lnkGitIgnorePatterns";
-            this.lnkGitIgnorePatterns.Size = new System.Drawing.Size(108, 12);
+            this.lnkGitIgnorePatterns.Size = new System.Drawing.Size(132, 15);
             this.lnkGitIgnorePatterns.TabIndex = 6;
             this.lnkGitIgnorePatterns.TabStop = true;
             this.lnkGitIgnorePatterns.Text = "More gitignore patterns";
@@ -163,8 +162,8 @@
             // 
             // FormGitIgnore
             // 
-            
-            
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(634, 519);
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormGitIgnore";
@@ -178,7 +177,7 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 #endif
             this.splitContainer1.ResumeLayout(false);

@@ -51,7 +51,7 @@
             this.Tags.FormattingEnabled = true;
             this.Tags.Location = new System.Drawing.Point(126, 12);
             this.Tags.Name = "Tags";
-            this.Tags.Size = new System.Drawing.Size(236, 20);
+            this.Tags.Size = new System.Drawing.Size(236, 23);
             this.Tags.TabIndex = 7;
             // 
             // label1
@@ -60,14 +60,14 @@
             this.label1.ForeColor = System.Drawing.Color.Black;
             this.label1.Location = new System.Drawing.Point(7, 15);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(47, 12);
+            this.label1.Size = new System.Drawing.Size(58, 15);
             this.label1.TabIndex = 6;
             this.label1.Text = "Select tag";
             // 
             // FormDeleteTag
             // 
-            
-            
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(453, 40);
             this.Controls.Add(this.Ok);
             this.Controls.Add(this.Tags);

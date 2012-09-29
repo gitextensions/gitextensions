@@ -109,11 +109,12 @@
             // 
             // _NO_TRANSLATE_GitReviewEdit
             // 
-            this._NO_TRANSLATE_GitReviewEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this._NO_TRANSLATE_GitReviewEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this._NO_TRANSLATE_GitReviewEdit.IsReadOnly = false;
             this._NO_TRANSLATE_GitReviewEdit.Location = new System.Drawing.Point(0, 0);
+            this._NO_TRANSLATE_GitReviewEdit.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this._NO_TRANSLATE_GitReviewEdit.Name = "_NO_TRANSLATE_GitReviewEdit";
             this._NO_TRANSLATE_GitReviewEdit.Size = new System.Drawing.Size(400, 519);
             this._NO_TRANSLATE_GitReviewEdit.TabIndex = 0;
@@ -133,8 +134,8 @@
             // 
             // FormGitReview
             // 
-            
-            
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(634, 519);
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormGitReview";

@@ -209,16 +209,17 @@ namespace GitUI
 
         private void InitializeComponent()
         {
-            //TODO: this was automatically created by visual studio
             this.SuspendLayout();
             // 
             // FormProcess
             // 
-            
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(565, 326);
             this.Name = "FormProcess";
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
     }
 }

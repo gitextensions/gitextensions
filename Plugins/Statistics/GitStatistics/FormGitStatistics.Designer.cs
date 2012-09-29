@@ -420,8 +420,8 @@ namespace GitStatistics
             // 
             // FormGitStatistics
             // 
-            
-            
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(751, 465);
             this.Controls.Add(this.LoadingLabel);
             this.Controls.Add(this.Tabs);

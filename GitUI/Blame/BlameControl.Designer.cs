@@ -40,13 +40,13 @@
             this.showChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.BlameFile = new GitUI.Editor.FileViewer();
             this.blameTooltip = new System.Windows.Forms.ToolTip(this.components);
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
 #endif
             this.splitContainer2.Panel1.SuspendLayout();
@@ -123,7 +123,7 @@
             this.blamePreviousRevisionToolStripMenuItem,
             this.showChangesToolStripMenuItem});
             this.contextMenu.Name = "ContextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(239, 98);
+            this.contextMenu.Size = new System.Drawing.Size(239, 76);
             this.contextMenu.Opened += new System.EventHandler(this.contextMenu_Opened);
             // 
             // copyLogMessageToolStripMenuItem
@@ -164,21 +164,20 @@
             // 
             // BlameControl
             // 
-            
-            
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.splitContainer1);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "BlameControl";
             this.Size = new System.Drawing.Size(858, 740);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 #endif
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
 #endif
             this.splitContainer2.ResumeLayout(false);

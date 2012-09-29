@@ -115,7 +115,7 @@
             // 
             // PatchGrid
             // 
-            
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             
             this.Controls.Add(this.Patches);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);

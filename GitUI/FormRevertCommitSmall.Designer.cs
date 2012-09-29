@@ -58,9 +58,9 @@
             // 
             this.AutoCommit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.AutoCommit.AutoSize = true;
-            this.AutoCommit.Location = new System.Drawing.Point(12, 227);
+            this.AutoCommit.Location = new System.Drawing.Point(12, 230);
             this.AutoCommit.Name = "AutoCommit";
-            this.AutoCommit.Size = new System.Drawing.Size(214, 22);
+            this.AutoCommit.Size = new System.Drawing.Size(194, 19);
             this.AutoCommit.TabIndex = 11;
             this.AutoCommit.Text = "Automatically creates a commit";
             this.AutoCommit.UseVisualStyleBackColor = true;
@@ -70,7 +70,7 @@
             this.ParentsLabel.AutoSize = true;
             this.ParentsLabel.Location = new System.Drawing.Point(12, 128);
             this.ParentsLabel.Name = "ParentsLabel";
-            this.ParentsLabel.Size = new System.Drawing.Size(236, 18);
+            this.ParentsLabel.Size = new System.Drawing.Size(207, 15);
             this.ParentsLabel.TabIndex = 15;
             this.ParentsLabel.Text = "This commit is a merge, select parent:";
             // 
@@ -117,7 +117,7 @@
             this.BranchInfo.AutoSize = true;
             this.BranchInfo.Location = new System.Drawing.Point(12, 9);
             this.BranchInfo.Name = "BranchInfo";
-            this.BranchInfo.Size = new System.Drawing.Size(126, 18);
+            this.BranchInfo.Size = new System.Drawing.Size(110, 15);
             this.BranchInfo.TabIndex = 5;
             this.BranchInfo.Text = "Revert this commit:";
             // 
@@ -126,7 +126,7 @@
             this.Commit.AutoSize = true;
             this.Commit.Location = new System.Drawing.Point(30, 30);
             this.Commit.Name = "Commit";
-            this.Commit.Size = new System.Drawing.Size(85, 18);
+            this.Commit.Size = new System.Drawing.Size(71, 15);
             this.Commit.TabIndex = 6;
             this.Commit.Text = "Commit: {0}";
             // 
@@ -135,7 +135,7 @@
             this.Author.AutoSize = true;
             this.Author.Location = new System.Drawing.Point(30, 53);
             this.Author.Name = "Author";
-            this.Author.Size = new System.Drawing.Size(77, 18);
+            this.Author.Size = new System.Drawing.Size(64, 15);
             this.Author.TabIndex = 7;
             this.Author.Text = "Author: {0}";
             // 
@@ -144,7 +144,7 @@
             this.Message.AutoSize = true;
             this.Message.Location = new System.Drawing.Point(30, 102);
             this.Message.Name = "Message";
-            this.Message.Size = new System.Drawing.Size(88, 18);
+            this.Message.Size = new System.Drawing.Size(73, 15);
             this.Message.TabIndex = 8;
             this.Message.Text = "Message: {0}";
             // 
@@ -153,13 +153,14 @@
             this.Date.AutoSize = true;
             this.Date.Location = new System.Drawing.Point(30, 78);
             this.Date.Name = "Date";
-            this.Date.Size = new System.Drawing.Size(115, 18);
+            this.Date.Size = new System.Drawing.Size(97, 15);
             this.Date.TabIndex = 9;
             this.Date.Text = "Commit date: {0}";
             // 
             // FormRevertCommitSmall
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(574, 261);
             this.Controls.Add(this.ParentsLabel);
             this.Controls.Add(this.ParentsList);
