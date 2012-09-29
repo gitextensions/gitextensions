@@ -39,7 +39,8 @@ namespace GitUI.Tag
             this.label1 = new System.Windows.Forms.Label();
             this.btnCreateTag = new System.Windows.Forms.Button();
             this.pushTag = new System.Windows.Forms.CheckBox();
-#if Mono212Released //waiting for mono 2.12			
+            this.ForceTag = new System.Windows.Forms.CheckBox();
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
             this.splitContainer1.Panel1.SuspendLayout();
@@ -73,19 +74,10 @@ namespace GitUI.Tag
             // 
             // GitRevisions
             // 
-            this.GitRevisions.BranchFilter = "";
-            this.GitRevisions.CurrentCheckout = null;
             this.GitRevisions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GitRevisions.Filter = "";
-            this.GitRevisions.FixedFilter = "";
-            this.GitRevisions.InMemAuthorFilter = "";
-            this.GitRevisions.InMemCommitterFilter = "";
-            this.GitRevisions.InMemMessageFilter = "";
-            this.GitRevisions.LastRow = 0;
             this.GitRevisions.Location = new System.Drawing.Point(0, 0);
             this.GitRevisions.Name = "GitRevisions";
             this.GitRevisions.Size = new System.Drawing.Size(734, 352);
-            this.GitRevisions.SuperprojectCurrentCheckout = null;
             this.GitRevisions.TabIndex = 0;
             // 
             // label2
@@ -93,7 +85,7 @@ namespace GitUI.Tag
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(9, 73);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(43, 12);
+            this.label2.Size = new System.Drawing.Size(53, 15);
             this.label2.TabIndex = 14;
             this.label2.Text = "Message";
             // 
@@ -104,18 +96,17 @@ namespace GitUI.Tag
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tagMessage.Enabled = false;
             this.tagMessage.Location = new System.Drawing.Point(110, 73);
-            this.tagMessage.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tagMessage.Margin = new System.Windows.Forms.Padding(2);
             this.tagMessage.Name = "tagMessage";
             this.tagMessage.Size = new System.Drawing.Size(612, 82);
             this.tagMessage.TabIndex = 13;
-            this.tagMessage.WatermarkText = "";
             // 
             // annotate
             // 
             this.annotate.AutoSize = true;
             this.annotate.Location = new System.Drawing.Point(110, 52);
             this.annotate.Name = "annotate";
-            this.annotate.Size = new System.Drawing.Size(116, 16);
+            this.annotate.Size = new System.Drawing.Size(137, 19);
             this.annotate.TabIndex = 12;
             this.annotate.Text = "Create annotated tag";
             this.annotate.UseVisualStyleBackColor = true;
@@ -127,7 +118,7 @@ namespace GitUI.Tag
             | System.Windows.Forms.AnchorStyles.Right)));
             this.Tagname.Location = new System.Drawing.Point(110, 7);
             this.Tagname.Name = "Tagname";
-            this.Tagname.Size = new System.Drawing.Size(457, 21);
+            this.Tagname.Size = new System.Drawing.Size(457, 23);
             this.Tagname.TabIndex = 2;
             // 
             // label1
@@ -135,7 +126,7 @@ namespace GitUI.Tag
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(9, 7);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(49, 12);
+            this.label1.Size = new System.Drawing.Size(60, 15);
             this.label1.TabIndex = 1;
             this.label1.Text = "Tag name";
             // 
@@ -155,15 +146,25 @@ namespace GitUI.Tag
             this.pushTag.AutoSize = true;
             this.pushTag.Location = new System.Drawing.Point(110, 33);
             this.pushTag.Name = "pushTag";
-            this.pushTag.Size = new System.Drawing.Size(63, 16);
+            this.pushTag.Size = new System.Drawing.Size(72, 19);
             this.pushTag.TabIndex = 12;
             this.pushTag.Text = "Push tag";
             this.pushTag.UseVisualStyleBackColor = true;
             // 
+            // ForceTag
+            // 
+            this.ForceTag.AutoSize = true;
+            this.ForceTag.Location = new System.Drawing.Point(275, 33);
+            this.ForceTag.Name = "ForceTag";
+            this.ForceTag.Size = new System.Drawing.Size(55, 19);
+            this.ForceTag.TabIndex = 15;
+            this.ForceTag.Text = "Force";
+            this.ForceTag.UseVisualStyleBackColor = true;
+            // 
             // FormTag
             // 
-            
-            
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(734, 523);
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormTag";
@@ -173,22 +174,11 @@ namespace GitUI.Tag
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 #endif
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
-          this.ForceTag = new System.Windows.Forms.CheckBox();
-          // 
-          // ForceTag
-          // 
-          this.ForceTag.AutoSize = true;
-          this.ForceTag.Location = new System.Drawing.Point(275, 33);
-          this.ForceTag.Name = "ForceTag";
-          this.ForceTag.Size = new System.Drawing.Size(55, 19);
-          this.ForceTag.TabIndex = 15;
-          this.ForceTag.Text = "Force";
-          this.ForceTag.UseVisualStyleBackColor = true;
 
         }
 

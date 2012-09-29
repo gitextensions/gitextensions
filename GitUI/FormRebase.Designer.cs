@@ -59,26 +59,26 @@ namespace GitUI
             this.MergeToolPanel = new System.Windows.Forms.Panel();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
 #endif
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.OptionsPanel.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
 #endif
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
 #endif
             this.splitContainer4.Panel1.SuspendLayout();
@@ -92,7 +92,7 @@ namespace GitUI
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 3);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(220, 12);
+            this.label1.Size = new System.Drawing.Size(261, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Rebase current branch on top of another branch";
             // 
@@ -101,7 +101,7 @@ namespace GitUI
             this.Currentbranch.AutoSize = true;
             this.Currentbranch.Location = new System.Drawing.Point(4, 26);
             this.Currentbranch.Name = "Currentbranch";
-            this.Currentbranch.Size = new System.Drawing.Size(37, 12);
+            this.Currentbranch.Size = new System.Drawing.Size(47, 15);
             this.Currentbranch.TabIndex = 2;
             this.Currentbranch.Text = "Current";
             // 
@@ -122,7 +122,7 @@ namespace GitUI
             this.Branches.FormattingEnabled = true;
             this.Branches.Location = new System.Drawing.Point(88, 47);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(218, 20);
+            this.Branches.Size = new System.Drawing.Size(218, 23);
             this.Branches.TabIndex = 6;
             // 
             // label2
@@ -130,7 +130,7 @@ namespace GitUI
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(3, 50);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(51, 12);
+            this.label2.Size = new System.Drawing.Size(61, 15);
             this.label2.TabIndex = 5;
             this.label2.Text = "Rebase on";
             // 
@@ -244,7 +244,7 @@ namespace GitUI
             this.OptionsPanel.Controls.Add(this.chkSpecificRange);
             this.OptionsPanel.Controls.Add(this.lblRangeTo);
             this.OptionsPanel.Controls.Add(this.lblRangeFrom);
-            this.OptionsPanel.Controls.Add(this.txtFrom);			
+            this.OptionsPanel.Controls.Add(this.txtFrom);
             this.OptionsPanel.Controls.Add(this.chkInteractive);
             this.OptionsPanel.Controls.Add(this.chkPreserveMerges);
             this.OptionsPanel.Controls.Add(this.chkAutosquash);
@@ -253,7 +253,7 @@ namespace GitUI
             this.OptionsPanel.Size = new System.Drawing.Size(519, 51);
             this.OptionsPanel.TabIndex = 28;
             this.OptionsPanel.Visible = false;
-			// 
+            // 
             // btnChooseFromRevision
             // 
             this.btnChooseFromRevision.Enabled = false;
@@ -267,9 +267,9 @@ namespace GitUI
             // 
             // cboTo
             // 
-            this.cboTo.Enabled = false;
             this.cboTo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.cboTo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cboTo.Enabled = false;
             this.cboTo.FormattingEnabled = true;
             this.cboTo.Location = new System.Drawing.Point(332, 23);
             this.cboTo.Name = "cboTo";
@@ -292,7 +292,7 @@ namespace GitUI
             this.lblRangeTo.AutoSize = true;
             this.lblRangeTo.Location = new System.Drawing.Point(295, 27);
             this.lblRangeTo.Name = "lblRangeTo";
-            this.lblRangeTo.Size = new System.Drawing.Size(26, 15);
+            this.lblRangeTo.Size = new System.Drawing.Size(21, 15);
             this.lblRangeTo.TabIndex = 11;
             this.lblRangeTo.Text = "To";
             // 
@@ -301,7 +301,7 @@ namespace GitUI
             this.lblRangeFrom.AutoSize = true;
             this.lblRangeFrom.Location = new System.Drawing.Point(111, 28);
             this.lblRangeFrom.Name = "lblRangeFrom";
-            this.lblRangeFrom.Size = new System.Drawing.Size(80, 15);
+            this.lblRangeFrom.Size = new System.Drawing.Size(66, 15);
             this.lblRangeFrom.TabIndex = 9;
             this.lblRangeFrom.Text = "From (exc.)";
             // 
@@ -318,7 +318,7 @@ namespace GitUI
             this.chkInteractive.AutoSize = true;
             this.chkInteractive.Location = new System.Drawing.Point(1, 3);
             this.chkInteractive.Name = "chkInteractive";
-            this.chkInteractive.Size = new System.Drawing.Size(103, 16);
+            this.chkInteractive.Size = new System.Drawing.Size(121, 19);
             this.chkInteractive.TabIndex = 7;
             this.chkInteractive.Text = "Interactive Rebase";
             this.chkInteractive.UseVisualStyleBackColor = true;
@@ -329,7 +329,7 @@ namespace GitUI
             this.chkPreserveMerges.AutoSize = true;
             this.chkPreserveMerges.Location = new System.Drawing.Point(162, 3);
             this.chkPreserveMerges.Name = "chkPreserveMerges";
-            this.chkPreserveMerges.Size = new System.Drawing.Size(95, 16);
+            this.chkPreserveMerges.Size = new System.Drawing.Size(112, 19);
             this.chkPreserveMerges.TabIndex = 7;
             this.chkPreserveMerges.Text = "Preserve Merges";
             this.chkPreserveMerges.UseVisualStyleBackColor = true;
@@ -342,7 +342,7 @@ namespace GitUI
             this.chkAutosquash.Enabled = false;
             this.chkAutosquash.Location = new System.Drawing.Point(330, 3);
             this.chkAutosquash.Name = "chkAutosquash";
-            this.chkAutosquash.Size = new System.Drawing.Size(76, 16);
+            this.chkAutosquash.Size = new System.Drawing.Size(89, 19);
             this.chkAutosquash.TabIndex = 7;
             this.chkAutosquash.Text = "Autosquash";
             this.chkAutosquash.UseVisualStyleBackColor = true;
@@ -352,7 +352,7 @@ namespace GitUI
             this.ShowOptions.AutoSize = true;
             this.ShowOptions.Location = new System.Drawing.Point(312, 50);
             this.ShowOptions.Name = "ShowOptions";
-            this.ShowOptions.Size = new System.Drawing.Size(65, 12);
+            this.ShowOptions.Size = new System.Drawing.Size(79, 15);
             this.ShowOptions.TabIndex = 27;
             this.ShowOptions.TabStop = true;
             this.ShowOptions.Text = "Show options";
@@ -384,13 +384,14 @@ namespace GitUI
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(3, 1);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(97, 12);
+            this.label3.Size = new System.Drawing.Size(120, 15);
             this.label3.TabIndex = 0;
             this.label3.Text = "Commits to re-apply:";
             // 
             // patchGrid1
             // 
             this.patchGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.patchGrid1.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.patchGrid1.Location = new System.Drawing.Point(0, 0);
             this.patchGrid1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.patchGrid1.Name = "patchGrid1";
@@ -460,8 +461,8 @@ namespace GitUI
             // FormRebase
             // 
             this.AcceptButton = this.Ok;
-            
-            
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(803, 368);
             this.Controls.Add(this.splitContainer4);
@@ -471,14 +472,14 @@ namespace GitUI
             this.Load += new System.EventHandler(this.FormRebaseLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 #endif
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
 #endif
             this.splitContainer2.ResumeLayout(false);
@@ -487,13 +488,13 @@ namespace GitUI
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel1.PerformLayout();
             this.splitContainer3.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
 #endif			
             this.splitContainer3.ResumeLayout(false);
             this.splitContainer4.Panel1.ResumeLayout(false);
             this.splitContainer4.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
 #endif
             this.splitContainer4.ResumeLayout(false);

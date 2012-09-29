@@ -43,7 +43,7 @@ namespace PatchApply
             this.PatchFileNameEdit = new System.Windows.Forms.TextBox();
             this.labelPatch = new System.Windows.Forms.Label();
             this.changedFileBindingSource = new System.Windows.Forms.BindingSource(this.components);
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
             this.splitContainer1.Panel1.SuspendLayout();
@@ -51,7 +51,7 @@ namespace PatchApply
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GridChangedFiles)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.patchBindingSource)).BeginInit();
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
 #endif
             this.splitContainer4.Panel1.SuspendLayout();
@@ -174,7 +174,7 @@ namespace PatchApply
             this.PatchFileNameEdit.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
             this.PatchFileNameEdit.Location = new System.Drawing.Point(93, 9);
             this.PatchFileNameEdit.Name = "PatchFileNameEdit";
-            this.PatchFileNameEdit.Size = new System.Drawing.Size(256, 21);
+            this.PatchFileNameEdit.Size = new System.Drawing.Size(256, 23);
             this.PatchFileNameEdit.TabIndex = 3;
             this.PatchFileNameEdit.TextChanged += new System.EventHandler(this.PatchFileNameEdit_TextChanged);
             // 
@@ -183,14 +183,14 @@ namespace PatchApply
             this.labelPatch.AutoSize = true;
             this.labelPatch.Location = new System.Drawing.Point(3, 13);
             this.labelPatch.Name = "labelPatch";
-            this.labelPatch.Size = new System.Drawing.Size(30, 12);
+            this.labelPatch.Size = new System.Drawing.Size(37, 15);
             this.labelPatch.TabIndex = 1;
             this.labelPatch.Text = "Patch";
             // 
             // ViewPatch
             // 
-            
-            
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(689, 501);
             this.Controls.Add(this.splitContainer4);
             this.Name = "ViewPatch";
@@ -199,7 +199,7 @@ namespace PatchApply
             this.Load += new System.EventHandler(this.ViewPatch_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 #endif
             this.splitContainer1.ResumeLayout(false);
@@ -208,7 +208,7 @@ namespace PatchApply
             this.splitContainer4.Panel1.ResumeLayout(false);
             this.splitContainer4.Panel1.PerformLayout();
             this.splitContainer4.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
 #endif
             this.splitContainer4.ResumeLayout(false);

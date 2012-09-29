@@ -52,20 +52,20 @@ namespace GitUI
             this.Stashed = new GitUI.FileStatusList();
             this.View = new GitUI.Editor.FileViewer();
             ((System.ComponentModel.ISupportInitialize)(this.gitStashBindingSource)).BeginInit();
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
 #endif
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
 #endif
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
             this.toolStrip1.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).BeginInit();
 #endif
             this.splitContainer5.Panel1.SuspendLayout();
@@ -151,7 +151,7 @@ namespace GitUI
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
             this.toolStripLabel1.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.toolStripLabel1.Size = new System.Drawing.Size(31, 24);
+            this.toolStripLabel1.Size = new System.Drawing.Size(39, 24);
             this.toolStripLabel1.Text = "Show:";
             // 
             // Stashes
@@ -225,9 +225,9 @@ namespace GitUI
             // 
             this.chkIncludeUntrackedFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.chkIncludeUntrackedFiles.AutoSize = true;
-            this.chkIncludeUntrackedFiles.Location = new System.Drawing.Point(158, 333);
+            this.chkIncludeUntrackedFiles.Location = new System.Drawing.Point(136, 330);
             this.chkIncludeUntrackedFiles.Name = "chkIncludeUntrackedFiles";
-            this.chkIncludeUntrackedFiles.Size = new System.Drawing.Size(123, 16);
+            this.chkIncludeUntrackedFiles.Size = new System.Drawing.Size(145, 19);
             this.chkIncludeUntrackedFiles.TabIndex = 14;
             this.chkIncludeUntrackedFiles.Text = "Include untracked files";
             this.chkIncludeUntrackedFiles.UseVisualStyleBackColor = true;
@@ -236,9 +236,9 @@ namespace GitUI
             // 
             this.StashKeepIndex.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.StashKeepIndex.AutoSize = true;
-            this.StashKeepIndex.Location = new System.Drawing.Point(5, 333);
+            this.StashKeepIndex.Location = new System.Drawing.Point(5, 330);
             this.StashKeepIndex.Name = "StashKeepIndex";
-            this.StashKeepIndex.Size = new System.Drawing.Size(73, 16);
+            this.StashKeepIndex.Size = new System.Drawing.Size(83, 19);
             this.StashKeepIndex.TabIndex = 13;
             this.StashKeepIndex.Text = "Keep index";
             this.StashKeepIndex.UseVisualStyleBackColor = true;
@@ -299,6 +299,7 @@ namespace GitUI
             this.Stashed.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.Stashed.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.Stashed.GitItemStatuses = null;
             this.Stashed.Location = new System.Drawing.Point(0, 0);
             this.Stashed.Margin = new System.Windows.Forms.Padding(4);
@@ -313,6 +314,7 @@ namespace GitUI
             // View
             // 
             this.View.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.View.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.View.Location = new System.Drawing.Point(0, 0);
             this.View.Margin = new System.Windows.Forms.Padding(4);
             this.View.Name = "View";
@@ -321,8 +323,8 @@ namespace GitUI
             // 
             // FormStash
             // 
-            
-            
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(708, 520);
             this.Controls.Add(this.splitContainer2);
             this.MinimumSize = new System.Drawing.Size(640, 480);
@@ -336,14 +338,14 @@ namespace GitUI
             ((System.ComponentModel.ISupportInitialize)(this.gitStashBindingSource)).EndInit();
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
 #endif
             this.splitContainer2.ResumeLayout(false);
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel1.PerformLayout();
             this.splitContainer3.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
 #endif
             this.splitContainer3.ResumeLayout(false);
@@ -352,7 +354,7 @@ namespace GitUI
             this.splitContainer5.Panel1.ResumeLayout(false);
             this.splitContainer5.Panel2.ResumeLayout(false);
             this.splitContainer5.Panel2.PerformLayout();
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).EndInit();
 #endif
             this.splitContainer5.ResumeLayout(false);
