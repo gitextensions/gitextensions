@@ -171,6 +171,7 @@ namespace GitUI
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public object[] SelectedData
         {
@@ -189,6 +190,7 @@ namespace GitUI
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public IComparable[] SelectedIds
         {
@@ -274,6 +276,7 @@ namespace GitUI
             backgroundEvent.Set();
         }
 
+        [DefaultValue(true)]
         [Browsable(false)]
         public bool RevisionGraphVisible
         {

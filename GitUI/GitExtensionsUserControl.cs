@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Windows.Forms;
-using System.Drawing;
-using System.ComponentModel;
-using ResourceManager;
-using ResourceManager.Translation;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
@@ -16,6 +15,14 @@ namespace GitUI
             Font = Settings.Font;
 
             Load += GitExtensionsControl_Load;
+        }
+
+        [Browsable(false)] // because we always read from settings
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public override Font Font
+        {
+            get { return base.Font; }
+            set { base.Font = value; }
         }
 
         private bool translated;
@@ -116,7 +123,6 @@ namespace GitUI
             // 
             this.Name = "GitExtensionsControl";
             this.ResumeLayout(false);
-
         }
     }
 }
