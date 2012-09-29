@@ -27,7 +27,7 @@ namespace GitUI
             FileStatusListBox.DoubleClick += FileStatusListBox_DoubleClick;
             FileStatusListBox.Sorted = true;
             FileStatusListBox.SelectionMode = SelectionMode.MultiExtended;
-#if !__MonoCS__ // TODO Drag'n'Drop doesnt work on Mono/Linux
+#if !__MonoCS__ // TODO Drag'n'Drop doesn't work on Mono/Linux
             FileStatusListBox.MouseMove += FileStatusListBox_MouseMove;
             FileStatusListBox.MouseDown += FileStatusListBox_MouseDown;
 #endif
@@ -243,6 +243,7 @@ namespace GitUI
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public GitItemStatus SelectedItem
         {
@@ -257,6 +258,7 @@ namespace GitUI
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public int SelectedIndex
         {
@@ -357,11 +359,13 @@ namespace GitUI
         }
 
         [Browsable(false)]
+        [DefaultValue(true)]
         public bool IsEmpty
         {
             get { return GitItemStatuses == null || GitItemStatuses.Count == 0; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public IList<GitItemStatus> GitItemStatuses
         {
@@ -391,6 +395,7 @@ namespace GitUI
         /// Gets or sets the revision.
         /// </summary>
         /// <value>The revision.</value>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public GitRevision Revision { get; set; }
 
