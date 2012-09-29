@@ -31,6 +31,7 @@ namespace GitUI.Editor
 
         public new Font Font 
         {
+            get { return TextEditor.Font; } 
             set { TextEditor.Font = value; } 
         }
 

@@ -138,7 +138,8 @@ namespace GitUI
         [Browsable(false)]
         public Font RefsFont { get; private set; }
         private Font _normalFont;
-        [Category("Appearance")]
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Font NormalFont
         {
             get { return _normalFont; }
@@ -155,29 +156,38 @@ namespace GitUI
         }
 
         [Category("Filter")]
+        [DefaultValue("")]
         public string Filter { get; set; }
         [Category("Filter")]
+        [DefaultValue("")]
         public string FixedFilter { get; set; }
         [Category("Filter")]
         [DefaultValue(false)]
         public bool InMemFilterIgnoreCase { get; set; }
         [Category("Filter")]
+        [DefaultValue("")]
         public string InMemAuthorFilter { get; set; }
         [Category("Filter")]
+        [DefaultValue("")]
         public string InMemCommitterFilter { get; set; }
         [Category("Filter")]
+        [DefaultValue("")]
         public string InMemMessageFilter { get; set; }
         [Category("Filter")]
+        [DefaultValue("")]
         public string BranchFilter { get; set; }
         [Category("Filter")]
         [DefaultValue(false)]
         public bool AllowGraphWithFilter { get; set; }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public string CurrentCheckout { get; set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public string SuperprojectCurrentCheckout { get; set; }
         [Browsable(false)]
+        [DefaultValue(0)]
         public int LastRow { get; set; }
 
         [Description("Indicates whether the user is allowed to select more than one commit at a time.")]

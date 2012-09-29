@@ -62,10 +62,9 @@ namespace GitUI.SpellChecker
             }
         }
 
-        [Description("The font for spelling errors.")]
-        [Category("Appearance")]
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Font MistakeFont { get; set; }
-
 
         [Browsable(false)]
         public int CurrentColumn
@@ -96,6 +95,7 @@ namespace GitUI.SpellChecker
         private bool IsWatermarkShowing;
         private string _WatermarkText = "";
         [Category("Appearance")]
+        [DefaultValue("")]
         public string WatermarkText
         {
             get { return _WatermarkText; }
