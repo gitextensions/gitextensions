@@ -61,9 +61,9 @@ namespace GitUI.SpellChecker
             this.TextBox.ContextMenuStrip = this.SpellCheckContextMenu;
             this.TextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TextBox.Location = new System.Drawing.Point(0, 0);
-            this.TextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.TextBox.Margin = new System.Windows.Forms.Padding(2);
             this.TextBox.Name = "TextBox";
-            this.TextBox.Size = new System.Drawing.Size(331, 269);
+            this.TextBox.Size = new System.Drawing.Size(386, 336);
             this.TextBox.TabIndex = 1;
             this.TextBox.Text = "";
             this.TextBox.SelectionChanged += new System.EventHandler(this.TextBox_SelectionChanged);
@@ -77,12 +77,11 @@ namespace GitUI.SpellChecker
             // 
             // EditNetSpell
             // 
-            
-            
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.TextBox);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "EditNetSpell";
-            this.Size = new System.Drawing.Size(331, 269);
+            this.Size = new System.Drawing.Size(386, 336);
             this.Load += new System.EventHandler(this.EditNetSpellLoad);
             this.SpellCheckContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);

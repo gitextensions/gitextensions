@@ -49,7 +49,7 @@
             this.Date.AutoSize = true;
             this.Date.Location = new System.Drawing.Point(30, 78);
             this.Date.Name = "Date";
-            this.Date.Size = new System.Drawing.Size(64, 12);
+            this.Date.Size = new System.Drawing.Size(80, 15);
             this.Date.TabIndex = 9;
             this.Date.Text = "Commit date:";
             // 
@@ -58,7 +58,7 @@
             this.Message.AutoSize = true;
             this.Message.Location = new System.Drawing.Point(30, 102);
             this.Message.Name = "Message";
-            this.Message.Size = new System.Drawing.Size(45, 12);
+            this.Message.Size = new System.Drawing.Size(56, 15);
             this.Message.TabIndex = 8;
             this.Message.Text = "Message:";
             // 
@@ -67,7 +67,7 @@
             this.Author.AutoSize = true;
             this.Author.Location = new System.Drawing.Point(30, 53);
             this.Author.Name = "Author";
-            this.Author.Size = new System.Drawing.Size(37, 12);
+            this.Author.Size = new System.Drawing.Size(47, 15);
             this.Author.TabIndex = 7;
             this.Author.Text = "Author:";
             // 
@@ -76,7 +76,7 @@
             this.Commit.AutoSize = true;
             this.Commit.Location = new System.Drawing.Point(30, 30);
             this.Commit.Name = "Commit";
-            this.Commit.Size = new System.Drawing.Size(42, 12);
+            this.Commit.Size = new System.Drawing.Size(54, 15);
             this.Commit.TabIndex = 6;
             this.Commit.Text = "Commit:";
             // 
@@ -85,7 +85,7 @@
             this.BranchInfo.AutoSize = true;
             this.BranchInfo.Location = new System.Drawing.Point(12, 9);
             this.BranchInfo.Name = "BranchInfo";
-            this.BranchInfo.Size = new System.Drawing.Size(111, 12);
+            this.BranchInfo.Size = new System.Drawing.Size(137, 15);
             this.BranchInfo.TabIndex = 5;
             this.BranchInfo.Text = "Cherry pick this commit:";
             // 
@@ -104,7 +104,7 @@
             this.AutoCommit.AutoSize = true;
             this.AutoCommit.Location = new System.Drawing.Point(12, 216);
             this.AutoCommit.Name = "AutoCommit";
-            this.AutoCommit.Size = new System.Drawing.Size(161, 16);
+            this.AutoCommit.Size = new System.Drawing.Size(194, 19);
             this.AutoCommit.TabIndex = 11;
             this.AutoCommit.Text = "Automatically creates a commit";
             this.AutoCommit.UseVisualStyleBackColor = true;
@@ -152,7 +152,7 @@
             this.ParentsLabel.AutoSize = true;
             this.ParentsLabel.Location = new System.Drawing.Point(12, 129);
             this.ParentsLabel.Name = "ParentsLabel";
-            this.ParentsLabel.Size = new System.Drawing.Size(169, 12);
+            this.ParentsLabel.Size = new System.Drawing.Size(207, 15);
             this.ParentsLabel.TabIndex = 13;
             this.ParentsLabel.Text = "This commit is a merge, select parent:";
             // 
@@ -161,15 +161,15 @@
             this.checkAddReference.AutoSize = true;
             this.checkAddReference.Location = new System.Drawing.Point(12, 236);
             this.checkAddReference.Name = "checkAddReference";
-            this.checkAddReference.Size = new System.Drawing.Size(122, 16);
+            this.checkAddReference.Size = new System.Drawing.Size(145, 19);
             this.checkAddReference.TabIndex = 14;
             this.checkAddReference.Text = "Add commit reference";
             this.checkAddReference.UseVisualStyleBackColor = true;
             // 
             // FormCherryPickCommitSmall
             // 
-            
-            
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(574, 262);
             this.Controls.Add(this.checkAddReference);

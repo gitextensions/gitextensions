@@ -198,7 +198,7 @@
             // 
             this.pbRevisions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbRevisions.Location = new System.Drawing.Point(2, 2);
-            this.pbRevisions.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pbRevisions.Margin = new System.Windows.Forms.Padding(2);
             this.pbRevisions.Name = "pbRevisions";
             this.pbRevisions.Size = new System.Drawing.Size(450, 27);
             this.pbRevisions.TabIndex = 2;
@@ -220,8 +220,8 @@
             // 
             // FindLargeFilesForm
             // 
-            
-            
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.Cancel;
             this.ClientSize = new System.Drawing.Size(760, 421);
             this.Controls.Add(this.tableLayoutPanel1);

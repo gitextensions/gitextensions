@@ -86,6 +86,9 @@ namespace GitUI
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+#if Mono212Released //waiting for mono 2.12
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+#endif
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -96,9 +99,15 @@ namespace GitUI
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+#if Mono212Released //waiting for mono 2.12
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+#endif
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+#if Mono212Released //waiting for mono 2.12
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
+#endif
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
@@ -339,7 +348,7 @@ namespace GitUI
             this.checkBoxSepPushUrl.AutoSize = true;
             this.checkBoxSepPushUrl.Location = new System.Drawing.Point(16, 77);
             this.checkBoxSepPushUrl.Name = "checkBoxSepPushUrl";
-            this.checkBoxSepPushUrl.Size = new System.Drawing.Size(112, 17);
+            this.checkBoxSepPushUrl.Size = new System.Drawing.Size(118, 19);
             this.checkBoxSepPushUrl.TabIndex = 5;
             this.checkBoxSepPushUrl.Text = "Separate Push Url";
             this.checkBoxSepPushUrl.UseVisualStyleBackColor = true;
@@ -715,6 +724,7 @@ namespace GitUI
             // FormRemotes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(654, 287);
             this.Controls.Add(this.tabControl1);
             this.MaximizeBox = false;
@@ -726,6 +736,9 @@ namespace GitUI
             this.Load += new System.EventHandler(this.FormRemotesLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+#if Mono212Released //waiting for mono 2.12
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+#endif
             this.splitContainer1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panelButtons.ResumeLayout(false);
@@ -738,10 +751,16 @@ namespace GitUI
             this.tabPage2.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
+#if Mono212Released //waiting for mono 2.12
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+#endif
             this.splitContainer2.ResumeLayout(false);
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
             this.splitContainer3.Panel2.PerformLayout();
+#if Mono212Released //waiting for mono 2.12
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
+#endif
             this.splitContainer3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.RemoteBranches)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitHeadBindingSource)).EndInit();

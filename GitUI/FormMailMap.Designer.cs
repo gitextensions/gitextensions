@@ -33,7 +33,7 @@
             this._NO_TRANSLATE_MailMapText = new GitUI.Editor.FileViewer();
             this.label1 = new System.Windows.Forms.Label();
             this.Save = new System.Windows.Forms.Button();
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
             this.splitContainer1.Panel1.SuspendLayout();
@@ -93,8 +93,8 @@
             // 
             // FormMailMap
             // 
-            
-            
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(634, 474);
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormMailMap";
@@ -104,7 +104,7 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 #endif
             this.splitContainer1.ResumeLayout(false);

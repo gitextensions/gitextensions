@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.panel2 = new System.Windows.Forms.Panel();
             this._NO_TRANSLATE_filesWillBeIgnored = new System.Windows.Forms.Label();
             this.noMatchPanel = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
@@ -39,13 +40,12 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnCancel = new System.Windows.Forms.Button();
             this.groupFilePattern = new System.Windows.Forms.GroupBox();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.groupBox1.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.noMatchPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.groupFilePattern.SuspendLayout();
-            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -61,6 +61,15 @@
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Preview";
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this._NO_TRANSLATE_filesWillBeIgnored);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel2.Location = new System.Drawing.Point(12, 181);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(575, 23);
+            this.panel2.TabIndex = 12;
             // 
             // _NO_TRANSLATE_filesWillBeIgnored
             // 
@@ -108,8 +117,8 @@
             // 
             this._NO_TRANSLATE_Preview.Dock = System.Windows.Forms.DockStyle.Fill;
             this._NO_TRANSLATE_Preview.FormattingEnabled = true;
-            this._NO_TRANSLATE_Preview.ItemHeight = 12;
-            this._NO_TRANSLATE_Preview.Location = new System.Drawing.Point(12, 22);
+            this._NO_TRANSLATE_Preview.ItemHeight = 15;
+            this._NO_TRANSLATE_Preview.Location = new System.Drawing.Point(12, 24);
             this._NO_TRANSLATE_Preview.Name = "_NO_TRANSLATE_Preview";
             this._NO_TRANSLATE_Preview.Size = new System.Drawing.Size(575, 180);
             this._NO_TRANSLATE_Preview.TabIndex = 1;
@@ -171,19 +180,11 @@
             this.groupFilePattern.TabStop = false;
             this.groupFilePattern.Text = "Enter a file pattern to ignore:";
             // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this._NO_TRANSLATE_filesWillBeIgnored);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(12, 181);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(575, 23);
-            this.panel2.TabIndex = 12;
-            // 
             // FormAddToGitIgnore
             // 
             this.AcceptButton = this.AddToIngore;
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(599, 341);
             this.Controls.Add(this.groupBox1);
@@ -194,14 +195,14 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add files(s) to .gitIgnore";
             this.groupBox1.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.noMatchPanel.ResumeLayout(false);
             this.noMatchPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.groupFilePattern.ResumeLayout(false);
             this.groupFilePattern.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
             this.ResumeLayout(false);
 
         }

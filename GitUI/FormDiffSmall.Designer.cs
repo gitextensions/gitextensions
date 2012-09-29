@@ -30,19 +30,18 @@ namespace GitUI
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.DiffFiles = new GitUI.FileStatusList();
             this.DiffText = new GitUI.Editor.FileViewer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.commitInfo = new GitUI.CommitInfo();
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12					
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
 #endif
             this.splitContainer2.Panel1.SuspendLayout();
@@ -70,12 +69,8 @@ namespace GitUI
             // DiffFiles
             // 
             this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DiffFiles.GitItemStatuses = null;
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
             this.DiffFiles.Name = "DiffFiles";
-            this.DiffFiles.Revision = null;
-            this.DiffFiles.SelectedIndex = -1;
-            this.DiffFiles.SelectedItem = null;
             this.DiffFiles.Size = new System.Drawing.Size(239, 410);
             this.DiffFiles.TabIndex = 0;
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
@@ -111,14 +106,15 @@ namespace GitUI
             // 
             this.commitInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.commitInfo.Location = new System.Drawing.Point(0, 0);
+            this.commitInfo.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.commitInfo.Name = "commitInfo";
             this.commitInfo.Size = new System.Drawing.Size(717, 115);
             this.commitInfo.TabIndex = 0;
             // 
             // FormDiffSmall
             // 
-            
-            
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(717, 529);
             this.Controls.Add(this.splitContainer2);
             this.MinimumSize = new System.Drawing.Size(150, 150);
@@ -126,14 +122,14 @@ namespace GitUI
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Diff";
             this.splitContainer1.Panel1.ResumeLayout(false);
-			this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
 #if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 #endif
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12			
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
 #endif
             this.splitContainer2.ResumeLayout(false);

@@ -30,7 +30,6 @@ namespace GitUI
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.Viewer = new GitUI.Editor.FileViewer();
             this.SuspendLayout();
             // 
@@ -45,8 +44,8 @@ namespace GitUI
             // 
             // FormEdit
             // 
-            
-            
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(733, 571);
             this.Controls.Add(this.Viewer);
             this.Name = "FormEdit";

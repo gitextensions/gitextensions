@@ -156,13 +156,13 @@ namespace GitUI
             this.copyFolderNameMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitItemStatusBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.UnstagedFileContext.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12					
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
 #endif
             this.splitMain.Panel1.SuspendLayout();
             this.splitMain.Panel2.SuspendLayout();
             this.splitMain.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12					
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitLeft)).BeginInit();
 #endif
             this.splitLeft.Panel1.SuspendLayout();
@@ -177,7 +177,7 @@ namespace GitUI
             ((System.ComponentModel.ISupportInitialize)(this.LoadingStaged)).BeginInit();
             this.StagedFileContext.SuspendLayout();
             this.toolbarStaged.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12					
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitRight)).BeginInit();
 #endif
             this.splitRight.Panel1.SuspendLayout();
@@ -426,14 +426,9 @@ namespace GitUI
             // Unstaged
             // 
             this.Unstaged.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Unstaged.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.Unstaged.GitItemStatuses = null;
             this.Unstaged.Location = new System.Drawing.Point(0, 0);
             this.Unstaged.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Unstaged.Name = "Unstaged";
-            this.Unstaged.Revision = null;
-            this.Unstaged.SelectedIndex = -1;
-            this.Unstaged.SelectedItem = null;
             this.Unstaged.Size = new System.Drawing.Size(397, 259);
             this.Unstaged.TabIndex = 1;
             // 
@@ -617,14 +612,9 @@ namespace GitUI
             // 
             this.Staged.ContextMenuStrip = this.StagedFileContext;
             this.Staged.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Staged.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.Staged.GitItemStatuses = null;
             this.Staged.Location = new System.Drawing.Point(0, 28);
             this.Staged.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Staged.Name = "Staged";
-            this.Staged.Revision = null;
-            this.Staged.SelectedIndex = -1;
-            this.Staged.SelectedItem = null;
             this.Staged.Size = new System.Drawing.Size(397, 328);
             this.Staged.TabIndex = 16;
             this.Staged.TabStop = false;
@@ -848,7 +838,6 @@ namespace GitUI
             // SelectedDiff
             // 
             this.SelectedDiff.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SelectedDiff.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.SelectedDiff.Location = new System.Drawing.Point(0, 0);
             this.SelectedDiff.Margin = new System.Windows.Forms.Padding(2, 3, 3, 3);
             this.SelectedDiff.Name = "SelectedDiff";
@@ -869,14 +858,11 @@ namespace GitUI
             // Message
             // 
             this.Message.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Message.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.Message.Location = new System.Drawing.Point(0, 0);
             this.Message.Margin = new System.Windows.Forms.Padding(0);
-            this.Message.MistakeFont = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Underline);
             this.Message.Name = "Message";
             this.Message.Size = new System.Drawing.Size(342, 139);
             this.Message.TabIndex = 13;
-            this.Message.WatermarkText = "";
             this.Message.SelectionChanged += new System.EventHandler(this.Message_SelectionChanged);
             this.Message.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Message_KeyDown);
             this.Message.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Message_KeyPress);
@@ -1230,6 +1216,8 @@ namespace GitUI
             // 
             // FormCommit
             // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.Cancel;
             this.ClientSize = new System.Drawing.Size(918, 644);
             this.Controls.Add(this.splitMain);
@@ -1243,13 +1231,13 @@ namespace GitUI
             this.UnstagedFileContext.ResumeLayout(false);
             this.splitMain.Panel1.ResumeLayout(false);
             this.splitMain.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12					
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
 #endif
             this.splitMain.ResumeLayout(false);
             this.splitLeft.Panel1.ResumeLayout(false);
             this.splitLeft.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12					
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitLeft)).EndInit();
 #endif
             this.splitLeft.ResumeLayout(false);
@@ -1271,7 +1259,7 @@ namespace GitUI
             this.splitRight.Panel1.PerformLayout();
             this.splitRight.Panel2.ResumeLayout(false);
             this.splitRight.Panel2.PerformLayout();
-#if Mono212Released //waiting for mono 2.12					
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitRight)).EndInit();
 #endif
             this.splitRight.ResumeLayout(false);

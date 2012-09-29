@@ -30,19 +30,18 @@ namespace GitUI
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.RevisionGrid = new GitUI.RevisionGrid();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.DiffFiles = new GitUI.FileStatusList();
             this.diffViewer = new GitUI.Editor.FileViewer();
-#if Mono212Released //waiting for mono 2.12					
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12					
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
 #endif
             this.splitContainer3.Panel1.SuspendLayout();
@@ -70,21 +69,11 @@ namespace GitUI
             // 
             // RevisionGrid
             // 
-            this.RevisionGrid.BranchFilter = "";
-            this.RevisionGrid.CurrentCheckout = "\nfatal: Not a git repository\n";
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RevisionGrid.Filter = "";
-            this.RevisionGrid.FixedFilter = "";
-            this.RevisionGrid.InMemAuthorFilter = "";
-            this.RevisionGrid.InMemCommitterFilter = "";
-            this.RevisionGrid.InMemMessageFilter = "";
-            this.RevisionGrid.LastRow = 0;
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Margin = new System.Windows.Forms.Padding(4);
             this.RevisionGrid.Name = "RevisionGrid";
-            this.RevisionGrid.NormalFont = new System.Drawing.Font("Tahoma", 8.75F);
             this.RevisionGrid.Size = new System.Drawing.Size(750, 205);
-            this.RevisionGrid.SuperprojectCurrentCheckout = null;
             this.RevisionGrid.TabIndex = 1;
             this.RevisionGrid.SelectionChanged += new System.EventHandler(this.RevisionGridSelectionChanged);
             // 
@@ -109,12 +98,8 @@ namespace GitUI
             // DiffFiles
             // 
             this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DiffFiles.GitItemStatuses = null;
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
             this.DiffFiles.Name = "DiffFiles";
-            this.DiffFiles.Revision = null;
-            this.DiffFiles.SelectedIndex = -1;
-            this.DiffFiles.SelectedItem = null;
             this.DiffFiles.Size = new System.Drawing.Size(188, 320);
             this.DiffFiles.TabIndex = 0;
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFilesSelectedIndexChanged);
@@ -130,8 +115,8 @@ namespace GitUI
             // 
             // FormDiff
             // 
-            
-            
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(750, 529);
             this.Controls.Add(this.splitContainer1);
             this.MinimumSize = new System.Drawing.Size(250, 250);
@@ -141,13 +126,13 @@ namespace GitUI
             this.Load += new System.EventHandler(this.FormDiffLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12		
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 #endif
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12		
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
 #endif
             this.splitContainer3.ResumeLayout(false);

@@ -180,15 +180,12 @@ namespace GitUI
         [DefaultValue(false)]
         public bool AllowGraphWithFilter { get; set; }
 
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public string CurrentCheckout { get; set; }
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public string CurrentCheckout { get; private set; }
         [Browsable(false)]
-        public string SuperprojectCurrentCheckout { get; set; }
+        public string SuperprojectCurrentCheckout { get; private set; }
         [Browsable(false)]
-        [DefaultValue(0)]
-        public int LastRow { get; set; }
+        public int LastRow { get; private set; }
 
         [Description("Indicates whether the user is allowed to select more than one commit at a time.")]
         [Category("Behavior")]

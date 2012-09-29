@@ -47,13 +47,13 @@
             this.IgnoreWhitespace = new System.Windows.Forms.CheckBox();
             this.ContinuePanel = new System.Windows.Forms.Panel();
             this.MergeToolPanel = new System.Windows.Forms.Panel();
-#if Mono212Released //waiting for mono 2.12					
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12					
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
 #endif
             this.splitContainer2.Panel1.SuspendLayout();
@@ -77,7 +77,7 @@
             this.PatchFile.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
             this.PatchFile.Location = new System.Drawing.Point(166, 10);
             this.PatchFile.Name = "PatchFile";
-            this.PatchFile.Size = new System.Drawing.Size(281, 21);
+            this.PatchFile.Size = new System.Drawing.Size(281, 23);
             this.PatchFile.TabIndex = 1;
             // 
             // Apply
@@ -205,7 +205,7 @@
             this.PatchDir.Enabled = false;
             this.PatchDir.Location = new System.Drawing.Point(166, 36);
             this.PatchDir.Name = "PatchDir";
-            this.PatchDir.Size = new System.Drawing.Size(281, 21);
+            this.PatchDir.Size = new System.Drawing.Size(281, 23);
             this.PatchDir.TabIndex = 1;
             // 
             // BrowseDir
@@ -224,7 +224,7 @@
             this.PatchDirMode.AutoSize = true;
             this.PatchDirMode.Location = new System.Drawing.Point(13, 36);
             this.PatchDirMode.Name = "PatchDirMode";
-            this.PatchDirMode.Size = new System.Drawing.Size(62, 16);
+            this.PatchDirMode.Size = new System.Drawing.Size(72, 19);
             this.PatchDirMode.TabIndex = 1;
             this.PatchDirMode.Text = "Patch dir";
             this.PatchDirMode.UseVisualStyleBackColor = true;
@@ -236,7 +236,7 @@
             this.PatchFileMode.Checked = true;
             this.PatchFileMode.Location = new System.Drawing.Point(13, 11);
             this.PatchFileMode.Name = "PatchFileMode";
-            this.PatchFileMode.Size = new System.Drawing.Size(63, 16);
+            this.PatchFileMode.Size = new System.Drawing.Size(74, 19);
             this.PatchFileMode.TabIndex = 0;
             this.PatchFileMode.TabStop = true;
             this.PatchFileMode.Text = "Patch file";
@@ -271,7 +271,7 @@
             this.IgnoreWhitespace.AutoSize = true;
             this.IgnoreWhitespace.Location = new System.Drawing.Point(8, 34);
             this.IgnoreWhitespace.Name = "IgnoreWhitespace";
-            this.IgnoreWhitespace.Size = new System.Drawing.Size(90, 16);
+            this.IgnoreWhitespace.Size = new System.Drawing.Size(105, 19);
             this.IgnoreWhitespace.TabIndex = 5;
             this.IgnoreWhitespace.Text = "Ignore Wh.spc.";
             this.IgnoreWhitespace.UseVisualStyleBackColor = true;
@@ -296,8 +296,8 @@
             // FormApplyPatch
             // 
             this.AcceptButton = this.Apply;
-            
-            
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(764, 391);
             this.Controls.Add(this.splitContainer1);
             this.MinimumSize = new System.Drawing.Size(720, 400);
@@ -308,14 +308,14 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
-#if Mono212Released //waiting for mono 2.12					
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 #endif
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12					
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
 #endif
             this.splitContainer2.ResumeLayout(false);
