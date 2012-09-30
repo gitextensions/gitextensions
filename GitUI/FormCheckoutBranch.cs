@@ -209,12 +209,21 @@ namespace GitUI
             Settings.LocalChanges changes = ChangesMode;
             Settings.CheckoutBranchAction = changes;
             Settings.UseDefaultCheckoutBranchAction = defaultActionChx.Checked;
-            cmd.SetLocalChangesFromSettings(changes);
+
+            //If the setting CheckForUncommittedChangesInCheckoutBranch is false, ignore the 'localchanges' radiobutton.
+            if (Settings.CheckForUncommittedChangesInCheckoutBranch)
+                cmd.SetLocalChangesFromSettings(changes);
+            else
+                cmd.SetLocalChangesFromSettings(Settings.LocalChanges.DontChange);
 
             IWin32Window _owner = Visible ? this : Owner;
 
-            if (changes == Settings.LocalChanges.Stash && GitModule.Current.IsDirtyDir())
+            //Stash local changes, but only if the setting CheckForUncommittedChangesInCheckoutBranch is true
+            if (Settings.CheckForUncommittedChangesInCheckoutBranch &&
+                changes == Settings.LocalChanges.Stash && GitModule.Current.IsDirtyDir())
+            {
                 GitUICommands.Instance.Stash(_owner);
+            }
 
             {
                 var successfullyCheckedOut = GitUICommands.Instance.StartCommandLineProcessDialog(cmd, _owner);
