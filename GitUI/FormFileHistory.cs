@@ -1,12 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
-using PatchApply;
-using System.Diagnostics;
-using System.Collections.Generic;
-using System.Threading;
 using ResourceManager.Translation;
 
 namespace GitUI

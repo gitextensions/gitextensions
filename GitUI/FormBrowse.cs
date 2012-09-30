@@ -16,7 +16,7 @@ using GitUI.RepoHosting;
 using GitUI.Script;
 using GitUI.Statistics;
 using GitUIPluginInterfaces;
-using ICSharpCode.TextEditor.Util;
+
 #if !__MonoCS__
 using Microsoft.WindowsAPICodePack.Taskbar;
 #endif
@@ -84,7 +84,6 @@ namespace GitUI
         private string _NoDiffFilesChangesText;
 
         private readonly SynchronizationContext syncContext;
-        private readonly IndexWatcher _indexWatcher = new IndexWatcher();
 
         private Dashboard _dashboard;
         private ToolStripItem _rebase;

@@ -7,9 +7,9 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
-using ResourceManager.Translation;
 using GitUI.RepoHosting;
 using GitUI.Script;
+using ResourceManager.Translation;
 
 namespace GitUI
 {

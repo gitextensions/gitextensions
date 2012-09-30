@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
-using System.Collections.Generic;
-using System.Windows.Forms;
 using ResourceManager.Translation;
 
 namespace GitUI

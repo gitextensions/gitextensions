@@ -1,10 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Config;
 using GitCommands.Repository;
 using ResourceManager.Translation;
-using GitCommands.Config;
-using System.IO;
 
 namespace GitUI
 {

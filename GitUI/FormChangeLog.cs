@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Forms;
 using GitUI.Properties;
 
 namespace GitUI

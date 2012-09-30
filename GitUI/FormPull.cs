@@ -4,12 +4,12 @@ using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Config;
 using GitCommands.Repository;
 using GitUI.Properties;
+using GitUI.Script;
 using ResourceManager.Translation;
 using Settings = GitCommands.Settings;
-using GitUI.Script;
-using GitCommands.Config;
 
 namespace GitUI
 {

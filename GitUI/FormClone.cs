@@ -1,13 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
 using ResourceManager.Translation;
-using System.Collections.Generic;
 
 namespace GitUI
 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.DirectoryServices;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
@@ -15,7 +16,6 @@ using GitUI.Script;
 using GitUI.Tag;
 using Gravatar;
 using ResourceManager.Translation;
-using System.DirectoryServices;
 
 namespace GitUI
 {
