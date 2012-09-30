@@ -509,6 +509,8 @@
             // AddRemote
             // 
             this.AddRemote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.AddRemote.Image = global::GitUI.Properties.Resources.IconRemotes;
+            this.AddRemote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.AddRemote.Location = new System.Drawing.Point(514, 17);
             this.AddRemote.Name = "AddRemote";
             this.AddRemote.Size = new System.Drawing.Size(101, 25);
