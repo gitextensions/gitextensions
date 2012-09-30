@@ -175,6 +175,7 @@
     <Content Include="GitPlugin.AddIn">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\15.bmp" />
     <None Include="Resources\14.bmp" />
     <None Include="Resources\13.bmp" />
     <None Include="Resources\12.bmp" />
