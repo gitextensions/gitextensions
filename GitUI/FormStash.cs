@@ -1,10 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using PatchApply;
-using System.Collections.Generic;
-using System.Drawing;
 using ResourceManager.Translation;
 
 namespace GitUI

@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
-using System.ComponentModel;
 
 namespace GitUI.Blame
 {

@@ -1,5 +1,5 @@
-using GitUI.Editor;
 using System.Windows.Forms;
+using GitUI.Editor;
 
 namespace GitUI
 {

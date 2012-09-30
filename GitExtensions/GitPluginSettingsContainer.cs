@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
-using GitUIPluginInterfaces;
 using GitCommands;
+using GitUIPluginInterfaces;
 
 namespace GitExtensions
 {

@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Windows.Forms;
-
+﻿
 namespace GitUI
 {
     public partial class FormEdit : GitExtensionsForm

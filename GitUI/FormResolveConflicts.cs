@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Config;
 using GitUI.Hotkey;
 using ResourceManager.Translation;
 
