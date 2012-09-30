@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
-using GitUIPluginInterfaces.RepositoryHosts;
-using GitCommands;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using GitCommands;
+using GitUIPluginInterfaces.RepositoryHosts;
 using ResourceManager.Translation;
 
 namespace GitUI.RepoHosting

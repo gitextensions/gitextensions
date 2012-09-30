@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Text;
-using System.Threading;
-using System.Windows.Forms;
-using GitCommands.Config;
 using System.Linq;
+using System.Text;
+using GitCommands.Config;
 
 namespace GitCommands
 {

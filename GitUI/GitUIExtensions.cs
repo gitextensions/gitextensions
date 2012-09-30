@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using GitCommands;
-using System.Windows.Forms;
-using GitUI.Editor;
-using ICSharpCode.TextEditor.Util;
 using System.Diagnostics;
 using System.Drawing;
+using System.Windows.Forms;
+using GitCommands;
+using GitUI.Editor;
+using ICSharpCode.TextEditor.Util;
 
 namespace GitUI
 {

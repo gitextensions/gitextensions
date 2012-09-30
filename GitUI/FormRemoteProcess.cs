@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Windows.Forms;
 using System.Diagnostics;
+using System.Windows.Forms;
 using GitCommands;
-using ResourceManager.Translation;
 using GitCommands.Config;
+using ResourceManager.Translation;
 
 namespace GitUI
 {

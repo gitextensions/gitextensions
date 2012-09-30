@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
+using System.Windows.Forms;
 using EnvDTE;
 using EnvDTE80;
-using System.Windows.Forms;
 
 namespace GitPlugin.Commands
 {

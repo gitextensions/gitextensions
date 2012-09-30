@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 using GitCommands.Repository;
-using System.Drawing;
 
 namespace GitUI
 {

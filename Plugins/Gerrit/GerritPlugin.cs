@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using GitUIPluginInterfaces;
 using System.Windows.Forms;
-using System.Drawing;
+using GitUIPluginInterfaces;
 using ResourceManager.Translation;
 
 namespace Gerrit

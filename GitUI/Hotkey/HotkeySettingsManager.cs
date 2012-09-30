@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
-using System.IO;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 using GitUI.Editor;
 
 namespace GitUI.Hotkey

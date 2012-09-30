@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
-using System.Collections.Generic;
 
 namespace GitUI
 {

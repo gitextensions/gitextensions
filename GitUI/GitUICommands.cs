@@ -7,14 +7,13 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.Blame;
 using GitUI.Plugin;
-using GitUI.Properties;
 using GitUI.RepoHosting;
 using GitUI.Tag;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
+using Gravatar;
 using PatchApply;
 using Settings = GitCommands.Settings;
-using Gravatar;
 
 namespace GitUI
 {
