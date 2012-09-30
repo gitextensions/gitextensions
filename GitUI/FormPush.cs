@@ -409,7 +409,12 @@ namespace GitUI
         private void AddRemoteClick(object sender, EventArgs e)
         {
             GitUICommands.Instance.StartRemotesDialog(this, _NO_TRANSLATE_Remotes.Text);
+            string origText = _NO_TRANSLATE_Remotes.Text;
             _NO_TRANSLATE_Remotes.DataSource = GitModule.Current.GetRemotes();
+            if (_NO_TRANSLATE_Remotes.Items.Contains(origText)) // else first item gets selected
+            {
+                _NO_TRANSLATE_Remotes.Text = origText;
+            }
         }
 
         private void PullFromRemoteCheckedChanged(object sender, EventArgs e)
