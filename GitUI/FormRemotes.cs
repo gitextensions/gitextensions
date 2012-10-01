@@ -307,7 +307,11 @@ namespace GitUI
             {
                 if (!string.IsNullOrEmpty(uri.UserInfo))
                     sshURL = uri.UserInfo + "@";
-                sshURL += uri.Host + ":" + uri.LocalPath.Substring(1);
+                sshURL += uri.Authority;
+                if (uri.IsDefaultPort)
+                    sshURL += ":" + uri.LocalPath.Substring(1);
+                else
+                    sshURL += uri.LocalPath;
             }
             else
                 sshURL = Url.Text;
