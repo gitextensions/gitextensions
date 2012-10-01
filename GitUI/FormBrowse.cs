@@ -1333,7 +1333,7 @@ namespace GitUI
 
         private void ArchiveToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (GitUICommands.Instance.StartArchiveDialog(this))
+            if (GitUICommands.Instance.StartArchiveDialog(this, RevisionGrid.GetCurrentRevision()))
                 Initialize();
         }
 
