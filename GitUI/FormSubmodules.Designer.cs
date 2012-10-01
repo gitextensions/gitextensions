@@ -51,10 +51,10 @@
             this.SubModuleLocalPath = new System.Windows.Forms.TextBox();
             this.SubModuleCommit = new System.Windows.Forms.TextBox();
             this.SubModuleBranch = new System.Windows.Forms.TextBox();
-            this.splitContainer4 = new System.Windows.Forms.SplitContainer();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.RemoveSubmodule = new System.Windows.Forms.Button();
-            this.SynchronizeSubmodule = new System.Windows.Forms.Button();
             this.UpdateSubmodule = new System.Windows.Forms.Button();
+            this.SynchronizeSubmodule = new System.Windows.Forms.Button();
 #if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
@@ -77,11 +77,7 @@
             this.splitContainer3.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
-#endif
-            this.splitContainer4.Panel2.SuspendLayout();
-            this.splitContainer4.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -98,7 +94,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer3);
-            this.splitContainer1.Size = new System.Drawing.Size(744, 287);
+            this.splitContainer1.Size = new System.Drawing.Size(684, 287);
             this.splitContainer1.SplitterDistance = 222;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -186,8 +182,8 @@
             // 
             // splitContainer3.Panel2
             // 
-            this.splitContainer3.Panel2.Controls.Add(this.splitContainer4);
-            this.splitContainer3.Size = new System.Drawing.Size(518, 287);
+            this.splitContainer3.Panel2.Controls.Add(this.flowLayoutPanel1);
+            this.splitContainer3.Size = new System.Drawing.Size(458, 287);
             this.splitContainer3.SplitterDistance = 247;
             this.splitContainer3.TabIndex = 13;
             // 
@@ -197,7 +193,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(518, 247);
+            this.groupBox1.Size = new System.Drawing.Size(458, 247);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Details";
@@ -205,8 +201,8 @@
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 28.96552F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 71.03448F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.SubModuleStatus, 1, 5);
             this.tableLayoutPanel1.Controls.Add(this.label6, 0, 5);
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
@@ -229,12 +225,12 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(512, 225);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(452, 225);
             this.tableLayoutPanel1.TabIndex = 12;
             // 
             // SubModuleStatus
             // 
-            this.SubModuleStatus.Location = new System.Drawing.Point(151, 128);
+            this.SubModuleStatus.Location = new System.Drawing.Point(84, 128);
             this.SubModuleStatus.Name = "SubModuleStatus";
             this.SubModuleStatus.ReadOnly = true;
             this.SubModuleStatus.Size = new System.Drawing.Size(172, 23);
@@ -278,7 +274,7 @@
             // 
             // SubModuleName
             // 
-            this.SubModuleName.Location = new System.Drawing.Point(151, 3);
+            this.SubModuleName.Location = new System.Drawing.Point(84, 3);
             this.SubModuleName.Name = "SubModuleName";
             this.SubModuleName.ReadOnly = true;
             this.SubModuleName.Size = new System.Drawing.Size(172, 23);
@@ -295,7 +291,7 @@
             // 
             // SubModuleRemotePath
             // 
-            this.SubModuleRemotePath.Location = new System.Drawing.Point(151, 28);
+            this.SubModuleRemotePath.Location = new System.Drawing.Point(84, 28);
             this.SubModuleRemotePath.Name = "SubModuleRemotePath";
             this.SubModuleRemotePath.ReadOnly = true;
             this.SubModuleRemotePath.Size = new System.Drawing.Size(238, 23);
@@ -312,7 +308,7 @@
             // 
             // SubModuleLocalPath
             // 
-            this.SubModuleLocalPath.Location = new System.Drawing.Point(151, 53);
+            this.SubModuleLocalPath.Location = new System.Drawing.Point(84, 53);
             this.SubModuleLocalPath.Name = "SubModuleLocalPath";
             this.SubModuleLocalPath.ReadOnly = true;
             this.SubModuleLocalPath.Size = new System.Drawing.Size(238, 23);
@@ -320,7 +316,7 @@
             // 
             // SubModuleCommit
             // 
-            this.SubModuleCommit.Location = new System.Drawing.Point(151, 78);
+            this.SubModuleCommit.Location = new System.Drawing.Point(84, 78);
             this.SubModuleCommit.Name = "SubModuleCommit";
             this.SubModuleCommit.ReadOnly = true;
             this.SubModuleCommit.Size = new System.Drawing.Size(238, 23);
@@ -328,31 +324,28 @@
             // 
             // SubModuleBranch
             // 
-            this.SubModuleBranch.Location = new System.Drawing.Point(151, 103);
+            this.SubModuleBranch.Location = new System.Drawing.Point(84, 103);
             this.SubModuleBranch.Name = "SubModuleBranch";
             this.SubModuleBranch.ReadOnly = true;
             this.SubModuleBranch.Size = new System.Drawing.Size(238, 23);
             this.SubModuleBranch.TabIndex = 12;
             // 
-            // splitContainer4
+            // flowLayoutPanel1
             // 
-            this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer4.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer4.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer4.Name = "splitContainer4";
-            // 
-            // splitContainer4.Panel2
-            // 
-            this.splitContainer4.Panel2.Controls.Add(this.RemoveSubmodule);
-            this.splitContainer4.Panel2.Controls.Add(this.SynchronizeSubmodule);
-            this.splitContainer4.Panel2.Controls.Add(this.UpdateSubmodule);
-            this.splitContainer4.Size = new System.Drawing.Size(518, 36);
-            this.splitContainer4.SplitterDistance = 150;
-            this.splitContainer4.TabIndex = 0;
+            this.flowLayoutPanel1.Controls.Add(this.RemoveSubmodule);
+            this.flowLayoutPanel1.Controls.Add(this.UpdateSubmodule);
+            this.flowLayoutPanel1.Controls.Add(this.SynchronizeSubmodule);
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(458, 36);
+            this.flowLayoutPanel1.TabIndex = 0;
+            this.flowLayoutPanel1.WrapContents = false;
             // 
             // RemoveSubmodule
             // 
-            this.RemoveSubmodule.Location = new System.Drawing.Point(245, 3);
+            this.RemoveSubmodule.Location = new System.Drawing.Point(340, 3);
             this.RemoveSubmodule.Name = "RemoveSubmodule";
             this.RemoveSubmodule.Size = new System.Drawing.Size(115, 25);
             this.RemoveSubmodule.TabIndex = 6;
@@ -360,19 +353,9 @@
             this.RemoveSubmodule.UseVisualStyleBackColor = true;
             this.RemoveSubmodule.Click += new System.EventHandler(this.RemoveSubmoduleClick);
             // 
-            // SynchronizeSubmodule
-            // 
-            this.SynchronizeSubmodule.Location = new System.Drawing.Point(3, 3);
-            this.SynchronizeSubmodule.Name = "SynchronizeSubmodule";
-            this.SynchronizeSubmodule.Size = new System.Drawing.Size(115, 25);
-            this.SynchronizeSubmodule.TabIndex = 5;
-            this.SynchronizeSubmodule.Text = "Synchronize";
-            this.SynchronizeSubmodule.UseVisualStyleBackColor = true;
-            this.SynchronizeSubmodule.Click += new System.EventHandler(this.SynchronizeSubmoduleClick);
-            // 
             // UpdateSubmodule
             // 
-            this.UpdateSubmodule.Location = new System.Drawing.Point(124, 3);
+            this.UpdateSubmodule.Location = new System.Drawing.Point(219, 3);
             this.UpdateSubmodule.Name = "UpdateSubmodule";
             this.UpdateSubmodule.Size = new System.Drawing.Size(115, 25);
             this.UpdateSubmodule.TabIndex = 3;
@@ -380,13 +363,23 @@
             this.UpdateSubmodule.UseVisualStyleBackColor = true;
             this.UpdateSubmodule.Click += new System.EventHandler(this.UpdateSubmoduleClick);
             // 
+            // SynchronizeSubmodule
+            // 
+            this.SynchronizeSubmodule.Location = new System.Drawing.Point(98, 3);
+            this.SynchronizeSubmodule.Name = "SynchronizeSubmodule";
+            this.SynchronizeSubmodule.Size = new System.Drawing.Size(115, 25);
+            this.SynchronizeSubmodule.TabIndex = 5;
+            this.SynchronizeSubmodule.Text = "Synchronize";
+            this.SynchronizeSubmodule.UseVisualStyleBackColor = true;
+            this.SynchronizeSubmodule.Click += new System.EventHandler(this.SynchronizeSubmoduleClick);
+            // 
             // FormSubmodules
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(744, 287);
+            this.ClientSize = new System.Drawing.Size(684, 287);
             this.Controls.Add(this.splitContainer1);
-            this.MinimumSize = new System.Drawing.Size(760, 325);
+            this.MinimumSize = new System.Drawing.Size(620, 325);
             this.Name = "FormSubmodules";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Submodules";
@@ -414,11 +407,7 @@
             this.groupBox1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            this.splitContainer4.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
-#endif
-            this.splitContainer4.ResumeLayout(false);
+            this.flowLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -447,9 +436,9 @@
         private System.Windows.Forms.TextBox SubModuleBranch;
         private System.Windows.Forms.SplitContainer splitContainer3;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.SplitContainer splitContainer4;
         private System.Windows.Forms.Button SynchronizeSubmodule;
         private System.Windows.Forms.Button UpdateSubmodule;
         private System.Windows.Forms.Button RemoveSubmodule;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
     }
 }
