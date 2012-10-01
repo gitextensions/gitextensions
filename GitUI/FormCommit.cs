@@ -675,12 +675,19 @@ namespace GitUI
 
         private void CommitClick(object sender, EventArgs e)
         {
-            CheckForStagedAndCommit(false, false);
+            CheckForStagedAndCommit(Amend.Checked, false);
         }
 
         private void CheckForStagedAndCommit(bool amend, bool push)
         {
-            if (Staged.IsEmpty)
+            if ( amend )
+            {
+                // This is an amend commit.  Confirm the user understands the implications.  We don't want to prompt for an empty
+                // commit, because amend may be used just to change the commit message or timestamp.
+                if (MessageBox.Show(this, _amendCommit.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo) != DialogResult.Yes)
+                    return;
+            }
+            else if (Staged.IsEmpty)
             {
                 if (IsMergeCommit)
                 {
@@ -1490,19 +1497,6 @@ namespace GitUI
             NeedRefresh = true;
         }
 
-        private void AmendClick(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(Message.Text))
-            {
-                Message.Text = GitModule.Current.GetPreviousCommitMessage(0).Trim();
-                return;
-            }
-
-            if (MessageBox.Show(this, _amendCommit.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo) ==
-                DialogResult.Yes)
-                DoCommit(true, false);
-        }
-
         private void ShowUntrackedFilesToolStripMenuItemClick(object sender, EventArgs e)
         {
             showUntrackedFilesToolStripMenuItem.Checked = !showUntrackedFilesToolStripMenuItem.Checked;
@@ -1525,7 +1519,7 @@ namespace GitUI
 
         private void CommitAndPush_Click(object sender, EventArgs e)
         {
-            CheckForStagedAndCommit(false, true);
+            CheckForStagedAndCommit(Amend.Checked, true);
         }
 
         private void FormCommitActivated(object sender, EventArgs e)
@@ -1969,6 +1963,15 @@ namespace GitUI
                 interactiveAddBashCloseWaitCTS.Token,
                 TaskContinuationOptions.NotOnCanceled,
                 formsTaskScheduler);
+            }
+        }
+
+        private void Amend_CheckedChanged(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(Message.Text))
+            {
+                Message.Text = GitModule.Current.GetPreviousCommitMessage(0).Trim();
+                return;
             }
         }
     }
