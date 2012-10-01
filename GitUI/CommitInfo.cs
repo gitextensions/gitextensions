@@ -79,12 +79,16 @@ namespace GitUI
                 return;
             _RevisionHeader.Text = string.Empty;
             _RevisionHeader.Refresh();
-            CommitInformation commitInformation = CommitInformation.GetCommitInfo(_revision);
+
+            string error = "";
+            CommitData data = CommitData.GetCommitData(GitModule.Current, _revision, ref error);
+            CommitInformation commitInformation = CommitInformation.GetCommitInfo(data);
+
             _RevisionHeader.SetXHTMLText(commitInformation.Header);
             splitContainer1.SplitterDistance = _RevisionHeader.GetPreferredSize(new System.Drawing.Size(0, 0)).Height;
             _revisionInfo = commitInformation.Body;
             updateText();
-            LoadAuthorImage();
+            LoadAuthorImage(data.Author ?? data.Committer);
 
             if (Settings.CommitInfoShowContainedInBranches)
                 ThreadPool.QueueUserWorkItem(_ => loadBranchInfo(_revision));
@@ -123,17 +127,14 @@ namespace GitUI
             gravatar1.LoadImageForEmail("");
         }
 
-        private void LoadAuthorImage()
+        private void LoadAuthorImage(string author)
         {
-            var matches =
-                Regex.Matches(
-                    _RevisionHeader.Text,
-                    @"([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})");
+            var matches = Regex.Matches(author, @"<([\w\-\.]+@[\w\-\.]+)>");
 
             if (matches.Count == 0)
                 return;
 
-            gravatar1.LoadImageForEmail(matches[0].Value);
+            gravatar1.LoadImageForEmail(matches[0].Groups[1].Value);
         }
 
 
