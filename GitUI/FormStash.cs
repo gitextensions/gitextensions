@@ -177,7 +177,6 @@ namespace GitUI
 
             if (Settings.StashConfirmDropShow)
             {
-                
                 DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
                                         this,
                                        stashDropConfirmTitle.Text,

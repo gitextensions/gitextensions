@@ -30,6 +30,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.Central = new System.Windows.Forms.RadioButton();
+            this.Personal = new System.Windows.Forms.RadioButton();
+            this.Ok = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
@@ -48,9 +51,6 @@
             this.CentralRepository = new System.Windows.Forms.RadioButton();
             this.PersonalRepository = new System.Windows.Forms.RadioButton();
             this.LoadSSHKey = new System.Windows.Forms.Button();
-            this.Ok = new System.Windows.Forms.Button();
-            this.Central = new System.Windows.Forms.RadioButton();
-            this.Personal = new System.Windows.Forms.RadioButton();
 #if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
@@ -60,6 +60,39 @@
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // Central
+            // 
+            this.Central.AutoSize = true;
+            this.Central.Location = new System.Drawing.Point(6, 42);
+            this.Central.Name = "Central";
+            this.Central.Size = new System.Drawing.Size(274, 17);
+            this.Central.TabIndex = 1;
+            this.Central.Text = "Central repository, no working dir  (--bare --shared=all)";
+            this.Central.UseVisualStyleBackColor = true;
+            // 
+            // Personal
+            // 
+            this.Personal.AutoSize = true;
+            this.Personal.Checked = true;
+            this.Personal.Location = new System.Drawing.Point(6, 19);
+            this.Personal.Name = "Personal";
+            this.Personal.Size = new System.Drawing.Size(114, 17);
+            this.Personal.TabIndex = 0;
+            this.Personal.TabStop = true;
+            this.Personal.Text = "Personal repository";
+            this.Personal.UseVisualStyleBackColor = true;
+            // 
+            // Ok
+            // 
+            this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.Ok.Location = new System.Drawing.Point(489, 7);
+            this.Ok.Name = "Ok";
+            this.Ok.Size = new System.Drawing.Size(115, 25);
+            this.Ok.TabIndex = 1;
+            this.Ok.Text = "Clone";
+            this.Ok.UseVisualStyleBackColor = true;
+            this.Ok.Click += new System.EventHandler(this.OkClick);
             // 
             // splitContainer1
             // 
@@ -126,7 +159,6 @@
             // 
             this._NO_TRANSLATE_From.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._NO_TRANSLATE_From.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this._NO_TRANSLATE_From.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this._NO_TRANSLATE_From.FormattingEnabled = true;
             this._NO_TRANSLATE_From.Location = new System.Drawing.Point(135, 3);
@@ -297,39 +329,6 @@
             this.LoadSSHKey.Text = "&Load SSH key";
             this.LoadSSHKey.UseVisualStyleBackColor = true;
             this.LoadSSHKey.Click += new System.EventHandler(this.LoadSshKeyClick);
-            // 
-            // Ok
-            // 
-            this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Ok.Location = new System.Drawing.Point(489, 7);
-            this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(115, 25);
-            this.Ok.TabIndex = 1;
-            this.Ok.Text = "Clone";
-            this.Ok.UseVisualStyleBackColor = true;
-            this.Ok.Click += new System.EventHandler(this.OkClick);
-            // 
-            // Central
-            // 
-            this.Central.AutoSize = true;
-            this.Central.Location = new System.Drawing.Point(6, 42);
-            this.Central.Name = "Central";
-            this.Central.Size = new System.Drawing.Size(274, 17);
-            this.Central.TabIndex = 1;
-            this.Central.Text = "Central repository, no working dir  (--bare --shared=all)";
-            this.Central.UseVisualStyleBackColor = true;
-            // 
-            // Personal
-            // 
-            this.Personal.AutoSize = true;
-            this.Personal.Checked = true;
-            this.Personal.Location = new System.Drawing.Point(6, 19);
-            this.Personal.Name = "Personal";
-            this.Personal.Size = new System.Drawing.Size(114, 17);
-            this.Personal.TabIndex = 0;
-            this.Personal.TabStop = true;
-            this.Personal.Text = "Personal repository";
-            this.Personal.UseVisualStyleBackColor = true;
             // 
             // FormClone
             // 
