@@ -474,8 +474,7 @@ namespace GitUI
             UpdateMergeHead();
 
             // Check if commit.template is used
-            ConfigFile globalConfig = GitCommandHelpers.GetGlobalConfig();
-            string fileName = globalConfig.GetValue("commit.template");
+            string fileName = GitModule.Current.GetEffectivePathSetting("commit.template");
             if (!string.IsNullOrEmpty(fileName))
             {
                 using (var commitReader = new StreamReader(fileName))
