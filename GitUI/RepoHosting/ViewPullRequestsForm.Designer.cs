@@ -149,7 +149,6 @@
             this._postCommentText.Name = "_postCommentText";
             this._postCommentText.Size = new System.Drawing.Size(280, 66);
             this._postCommentText.TabIndex = 0;
-            this._postCommentText.WatermarkText = "";
             this._postCommentText.KeyUp += new System.Windows.Forms.KeyEventHandler(this._postCommentText_KeyUp);
             // 
             // _postComment
@@ -249,13 +248,9 @@
             // _fileStatusList
             // 
             this._fileStatusList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._fileStatusList.GitItemStatuses = null;
             this._fileStatusList.Location = new System.Drawing.Point(0, 0);
             this._fileStatusList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this._fileStatusList.Name = "_fileStatusList";
-            this._fileStatusList.Revision = null;
-            this._fileStatusList.SelectedIndex = -1;
-            this._fileStatusList.SelectedItem = null;
             this._fileStatusList.Size = new System.Drawing.Size(801, 171);
             this._fileStatusList.TabIndex = 0;
             // 
@@ -299,7 +294,7 @@
             this.ClientSize = new System.Drawing.Size(1089, 680);
             this.Controls.Add(this.splitContainer1);
             this.Name = "ViewPullRequestsForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "View Pull Requests";
             this.Load += new System.EventHandler(this.ViewPullRequestsForm_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
