@@ -96,7 +96,7 @@
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(400, 80);
             this.Name = "FormDashboardCategoryTitle";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Enter Caption";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();

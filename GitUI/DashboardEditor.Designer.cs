@@ -1,5 +1,4 @@
-﻿using GitCommands.Repository;
-namespace GitUI
+﻿namespace GitUI
 {
     partial class DashboardEditor
     {
@@ -42,13 +41,14 @@ namespace GitUI
             this.Title = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.panel2 = new System.Windows.Forms.Panel();
             this.RepositoriesType = new System.Windows.Forms.RadioButton();
+            this.label1 = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_Caption = new System.Windows.Forms.TextBox();
             this._NO_TRANSLATE_RssFeed = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.RssFeedType = new System.Windows.Forms.RadioButton();
-            this.label2 = new System.Windows.Forms.Label();
-            this._NO_TRANSLATE_Caption = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
 #if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
 #endif
@@ -58,6 +58,7 @@ namespace GitUI
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RepositoriesGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer2
@@ -74,13 +75,7 @@ namespace GitUI
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.RepositoriesGrid);
-            this.splitContainer2.Panel2.Controls.Add(this.RepositoriesType);
-            this.splitContainer2.Panel2.Controls.Add(this._NO_TRANSLATE_RssFeed);
-            this.splitContainer2.Panel2.Controls.Add(this.label3);
-            this.splitContainer2.Panel2.Controls.Add(this.RssFeedType);
-            this.splitContainer2.Panel2.Controls.Add(this.label2);
-            this.splitContainer2.Panel2.Controls.Add(this._NO_TRANSLATE_Caption);
-            this.splitContainer2.Panel2.Controls.Add(this.label1);
+            this.splitContainer2.Panel2.Controls.Add(this.panel2);
             resources.ApplyResources(this.splitContainer2.Panel2, "splitContainer2.Panel2");
             // 
             // _NO_TRANSLATE_Categories
@@ -118,7 +113,6 @@ namespace GitUI
             // 
             // RepositoriesGrid
             // 
-            resources.ApplyResources(this.RepositoriesGrid, "RepositoriesGrid");
             this.RepositoriesGrid.AutoGenerateColumns = false;
             this.RepositoriesGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.RepositoriesGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -126,6 +120,7 @@ namespace GitUI
             this.Title,
             this.descriptionDataGridViewTextBoxColumn});
             this.RepositoriesGrid.DataSource = this.repositoryBindingSource;
+            resources.ApplyResources(this.RepositoriesGrid, "RepositoriesGrid");
             this.RepositoriesGrid.MultiSelect = false;
             this.RepositoriesGrid.Name = "RepositoriesGrid";
             this.RepositoriesGrid.RowHeadersVisible = false;
@@ -157,6 +152,18 @@ namespace GitUI
             // 
             this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository.Repository);
             // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.RepositoriesType);
+            this.panel2.Controls.Add(this.label1);
+            this.panel2.Controls.Add(this._NO_TRANSLATE_Caption);
+            this.panel2.Controls.Add(this._NO_TRANSLATE_RssFeed);
+            this.panel2.Controls.Add(this.label2);
+            this.panel2.Controls.Add(this.label3);
+            this.panel2.Controls.Add(this.RssFeedType);
+            resources.ApplyResources(this.panel2, "panel2");
+            this.panel2.Name = "panel2";
+            // 
             // RepositoriesType
             // 
             resources.ApplyResources(this.RepositoriesType, "RepositoriesType");
@@ -164,12 +171,29 @@ namespace GitUI
             this.RepositoriesType.UseVisualStyleBackColor = true;
             this.RepositoriesType.Validating += new System.ComponentModel.CancelEventHandler(this.RepositoriesType_Validating);
             // 
+            // label1
+            // 
+            resources.ApplyResources(this.label1, "label1");
+            this.label1.Name = "label1";
+            // 
+            // _NO_TRANSLATE_Caption
+            // 
+            resources.ApplyResources(this._NO_TRANSLATE_Caption, "_NO_TRANSLATE_Caption");
+            this._NO_TRANSLATE_Caption.Name = "_NO_TRANSLATE_Caption";
+            this._NO_TRANSLATE_Caption.TextChanged += new System.EventHandler(this.Caption_TextChanged);
+            this._NO_TRANSLATE_Caption.Validating += new System.ComponentModel.CancelEventHandler(this.Caption_Validating);
+            // 
             // _NO_TRANSLATE_RssFeed
             // 
             resources.ApplyResources(this._NO_TRANSLATE_RssFeed, "_NO_TRANSLATE_RssFeed");
             this._NO_TRANSLATE_RssFeed.Name = "_NO_TRANSLATE_RssFeed";
             this._NO_TRANSLATE_RssFeed.TextChanged += new System.EventHandler(this.RssFeed_TextChanged);
             this._NO_TRANSLATE_RssFeed.Validating += new System.ComponentModel.CancelEventHandler(this.RssFeed_Validating);
+            // 
+            // label2
+            // 
+            resources.ApplyResources(this.label2, "label2");
+            this.label2.Name = "label2";
             // 
             // label3
             // 
@@ -184,23 +208,6 @@ namespace GitUI
             this.RssFeedType.CheckedChanged += new System.EventHandler(this.RssFeedType_CheckedChanged);
             this.RssFeedType.Validating += new System.ComponentModel.CancelEventHandler(this.RssFeedType_Validating);
             // 
-            // label2
-            // 
-            resources.ApplyResources(this.label2, "label2");
-            this.label2.Name = "label2";
-            // 
-            // _NO_TRANSLATE_Caption
-            // 
-            resources.ApplyResources(this._NO_TRANSLATE_Caption, "_NO_TRANSLATE_Caption");
-            this._NO_TRANSLATE_Caption.Name = "_NO_TRANSLATE_Caption";
-            this._NO_TRANSLATE_Caption.TextChanged += new System.EventHandler(this.Caption_TextChanged);
-            this._NO_TRANSLATE_Caption.Validating += new System.ComponentModel.CancelEventHandler(this.Caption_Validating);
-            // 
-            // label1
-            // 
-            resources.ApplyResources(this.label1, "label1");
-            this.label1.Name = "label1";
-            // 
             // DashboardEditor
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -209,7 +216,6 @@ namespace GitUI
             this.Name = "DashboardEditor";
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
-            this.splitContainer2.Panel2.PerformLayout();
 #if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
 #endif
@@ -217,6 +223,8 @@ namespace GitUI
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.RepositoriesGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).EndInit();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -228,18 +236,19 @@ namespace GitUI
         private System.Windows.Forms.Label CategoriesLabel;
         private System.Windows.Forms.DataGridView RepositoriesGrid;
         private System.Windows.Forms.BindingSource repositoryBindingSource;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox _NO_TRANSLATE_Caption;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox _NO_TRANSLATE_RssFeed;
-        private System.Windows.Forms.RadioButton RssFeedType;
-        private System.Windows.Forms.RadioButton RepositoriesType;
         private System.Windows.Forms.DataGridViewTextBoxColumn pathDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn Title;
         private System.Windows.Forms.DataGridViewTextBoxColumn descriptionDataGridViewTextBoxColumn;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button Remove;
         private System.Windows.Forms.Button Add;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.RadioButton RepositoriesType;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox _NO_TRANSLATE_Caption;
+        private System.Windows.Forms.TextBox _NO_TRANSLATE_RssFeed;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.RadioButton RssFeedType;
     }
 }

@@ -99,7 +99,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormBisect";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Bisect";
             this.ResumeLayout(false);
 
