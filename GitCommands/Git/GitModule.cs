@@ -2460,6 +2460,26 @@ namespace GitCommands
             return exitCode == 0;
         }
 
+        /// <summary>
+        /// Uses check-ref-format to ensure that a branch name is well formed.
+        /// </summary>
+        /// <param name="branchName">Branch name to test.</param>
+        /// <returns>true if <see cref="refName"/> is valid reference name, otherwise false.</returns>
+        public bool CheckBranchFormat([NotNull] string branchName)
+        {
+            if (branchName == null)
+                throw new ArgumentNullException("branchName");
+
+            if (branchName.IsNullOrWhiteSpace())
+                return false;
+
+            branchName = branchName.Replace("\"", "\\\"");
+
+            int exitCode;
+            RunCmd(Settings.GitCommand, string.Format("check-ref-format --branch \"{0}\"", branchName), out exitCode);
+            return exitCode == 0;
+        }
+
         public bool IsLockedIndex()
         {
             return IsLockedIndex(_workingdir);
