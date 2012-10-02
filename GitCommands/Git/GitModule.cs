@@ -2676,24 +2676,23 @@ namespace GitCommands
             return Directory.Exists(candidatePath) ? candidatePath : repositoryPath;
         }
 
-        // NOTE: probably the rules should be inlined to avoid external process call overhead
         /// <summary>
-        /// Uses check-ref-format to ensure that a reference name is well formed.
+        /// Uses check-ref-format to ensure that a branch name is well formed.
         /// </summary>
-        /// <param name="refName">Reference name to test.</param>
-        /// <returns>true if <see cref="refName"/> is valid reference name, otherwise false.</returns>
-        public bool CheckRefFormat([NotNull] string refName)
+        /// <param name="branchName">Branch name to test.</param>
+        /// <returns>true if <see cref="branchName"/> is valid reference name, otherwise false.</returns>
+        public bool CheckBranchFormat([NotNull] string branchName)
         {
-            if (refName == null)
-                throw new ArgumentNullException("refName");
+            if (branchName == null)
+                throw new ArgumentNullException("branchName");
 
-            if (refName.IsNullOrWhiteSpace())
+            if (branchName.IsNullOrWhiteSpace())
                 return false;
 
-            refName = refName.Replace("\"", "\\\"");
+            branchName = branchName.Replace("\"", "\\\"");
 
             int exitCode;
-            RunCmd(Settings.GitCommand, string.Format("check-ref-format --allow-onelevel \"{0}\"", refName), out exitCode);
+            RunCmd(Settings.GitCommand, string.Format("check-ref-format --branch \"{0}\"", branchName), out exitCode);
             return exitCode == 0;
         }
 
