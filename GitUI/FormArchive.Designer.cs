@@ -33,13 +33,13 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.revisionGrid1 = new GitUI.RevisionGrid();
-#if Mono212Released //waiting for mono 2.12					
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12					
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
 #endif
             this.splitContainer2.Panel1.SuspendLayout();
@@ -52,7 +52,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 6);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(102, 12);
+            this.label1.Size = new System.Drawing.Size(123, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Select a revision to zip";
             // 
@@ -107,26 +107,16 @@
             // 
             // revisionGrid1
             // 
-            this.revisionGrid1.BranchFilter = "";
-            this.revisionGrid1.CurrentCheckout = "";
             this.revisionGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.revisionGrid1.Filter = "";
-            this.revisionGrid1.FixedFilter = "";
-            this.revisionGrid1.InMemAuthorFilter = "";
-            this.revisionGrid1.InMemCommitterFilter = "";
-            this.revisionGrid1.InMemMessageFilter = "";
-            this.revisionGrid1.LastRow = 0;
             this.revisionGrid1.Location = new System.Drawing.Point(0, 0);
             this.revisionGrid1.Name = "revisionGrid1";
-            this.revisionGrid1.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.revisionGrid1.Size = new System.Drawing.Size(809, 315);
-            this.revisionGrid1.SuperprojectCurrentCheckout = null;
             this.revisionGrid1.TabIndex = 0;
             // 
             // FormArchive
             // 
-            
-            
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(809, 380);
             this.Controls.Add(this.splitContainer1);
             this.MinimumSize = new System.Drawing.Size(400, 200);
@@ -137,13 +127,13 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12					
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 #endif
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12					
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
 #endif
             this.splitContainer2.ResumeLayout(false);

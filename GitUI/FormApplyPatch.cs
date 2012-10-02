@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
-using System.Drawing;
 using ResourceManager.Translation;
 
 namespace GitUI

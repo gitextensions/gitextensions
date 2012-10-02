@@ -1,11 +1,8 @@
-﻿namespace GitCommands
-{
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
+﻿using System.IO;
+using System.Text;
 
+namespace GitCommands
+{
     /// <summary>
     /// git svn commands:
     /// svn clone

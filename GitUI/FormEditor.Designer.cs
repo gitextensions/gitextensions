@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.fileViewer = new GitUI.Editor.FileViewer();
             this.toolStrip1 = new GitUI.ToolStripEx();
             this.toolStripSaveButton = new System.Windows.Forms.ToolStripButton();
@@ -84,8 +83,8 @@
             // 
             // FormEditor
             // 
-            
-            
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(659, 543);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "FormEditor";

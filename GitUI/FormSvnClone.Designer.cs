@@ -49,7 +49,7 @@
             this._NO_TRANSLATE_svnRepositoryComboBox.FormattingEnabled = true;
             this._NO_TRANSLATE_svnRepositoryComboBox.Location = new System.Drawing.Point(160, 13);
             this._NO_TRANSLATE_svnRepositoryComboBox.Name = "_NO_TRANSLATE_svnRepositoryComboBox";
-            this._NO_TRANSLATE_svnRepositoryComboBox.Size = new System.Drawing.Size(320, 21);
+            this._NO_TRANSLATE_svnRepositoryComboBox.Size = new System.Drawing.Size(320, 23);
             this._NO_TRANSLATE_svnRepositoryComboBox.TabIndex = 1;
             // 
             // _NO_TRANSLATE_destinationComboBox
@@ -59,7 +59,7 @@
             this._NO_TRANSLATE_destinationComboBox.FormattingEnabled = true;
             this._NO_TRANSLATE_destinationComboBox.Location = new System.Drawing.Point(160, 41);
             this._NO_TRANSLATE_destinationComboBox.Name = "_NO_TRANSLATE_destinationComboBox";
-            this._NO_TRANSLATE_destinationComboBox.Size = new System.Drawing.Size(217, 21);
+            this._NO_TRANSLATE_destinationComboBox.Size = new System.Drawing.Size(217, 23);
             this._NO_TRANSLATE_destinationComboBox.TabIndex = 2;
             this._NO_TRANSLATE_destinationComboBox.DropDown += new System.EventHandler(this.destinationComboBox_DropDown);
             // 
@@ -79,7 +79,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 16);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(118, 13);
+            this.label1.Size = new System.Drawing.Size(128, 15);
             this.label1.TabIndex = 4;
             this.label1.Text = "Svn repository to clone";
             // 
@@ -88,7 +88,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(13, 44);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(61, 13);
+            this.label2.Size = new System.Drawing.Size(67, 15);
             this.label2.TabIndex = 5;
             this.label2.Text = "Destination";
             // 
@@ -98,7 +98,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this._NO_TRANSLATE_subdirectoryTextBox.Location = new System.Drawing.Point(160, 69);
             this._NO_TRANSLATE_subdirectoryTextBox.Name = "_NO_TRANSLATE_subdirectoryTextBox";
-            this._NO_TRANSLATE_subdirectoryTextBox.Size = new System.Drawing.Size(217, 21);
+            this._NO_TRANSLATE_subdirectoryTextBox.Size = new System.Drawing.Size(217, 23);
             this._NO_TRANSLATE_subdirectoryTextBox.TabIndex = 4;
             // 
             // label3
@@ -106,7 +106,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(12, 72);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(115, 13);
+            this.label3.Size = new System.Drawing.Size(123, 15);
             this.label3.TabIndex = 7;
             this.label3.Text = "Subdirectory to create";
             // 
@@ -127,7 +127,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this._NO_TRANSLATE_authorsFileTextBox.Location = new System.Drawing.Point(160, 97);
             this._NO_TRANSLATE_authorsFileTextBox.Name = "_NO_TRANSLATE_authorsFileTextBox";
-            this._NO_TRANSLATE_authorsFileTextBox.Size = new System.Drawing.Size(217, 21);
+            this._NO_TRANSLATE_authorsFileTextBox.Size = new System.Drawing.Size(217, 23);
             this._NO_TRANSLATE_authorsFileTextBox.TabIndex = 8;
             // 
             // authorsFileBrowseButton
@@ -146,16 +146,16 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(12, 100);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(62, 13);
+            this.label4.Size = new System.Drawing.Size(68, 15);
             this.label4.TabIndex = 10;
             this.label4.Text = "Authors file";
             // 
             // FormSvnClone
             // 
             this.AcceptButton = this.okButton;
-            
-            
-            this.ClientSize = new System.Drawing.Size(492, 174);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(492, 170);
             this.Controls.Add(this._NO_TRANSLATE_authorsFileTextBox);
             this.Controls.Add(this._NO_TRANSLATE_subdirectoryTextBox);
             this.Controls.Add(this._NO_TRANSLATE_destinationComboBox);

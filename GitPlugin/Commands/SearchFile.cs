@@ -1,6 +1,6 @@
-﻿using EnvDTE;
+﻿using System.Threading;
+using EnvDTE;
 using GitPlugin.Git;
-using System.Threading;
 
 namespace GitPlugin.Commands
 {

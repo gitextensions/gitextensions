@@ -6,7 +6,6 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using ResourceManager;
 using ResourceManager.Translation;
 
 namespace GitUI

@@ -7,9 +7,9 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
-using ResourceManager.Translation;
 using GitUI.RepoHosting;
 using GitUI.Script;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
@@ -420,7 +420,12 @@ namespace GitUI
         private void AddRemoteClick(object sender, EventArgs e)
         {
             UICommands.StartRemotesDialog(this, _NO_TRANSLATE_Remotes.Text);
+            string origText = _NO_TRANSLATE_Remotes.Text;
             _NO_TRANSLATE_Remotes.DataSource = Module.GetRemotes();
+            if (_NO_TRANSLATE_Remotes.Items.Contains(origText)) // else first item gets selected
+            {
+                _NO_TRANSLATE_Remotes.Text = origText;
+            }
         }
 
         private void PullFromRemoteCheckedChanged(object sender, EventArgs e)

@@ -9,9 +9,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands.Config;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using PatchApply;
-using GitUIPluginInterfaces;
 
 namespace GitCommands
 {

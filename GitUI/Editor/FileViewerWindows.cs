@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
-using System.Collections.Generic;
 
 namespace GitUI.Editor
 {
@@ -31,6 +31,7 @@ namespace GitUI.Editor
 
         public new Font Font 
         {
+            get { return TextEditor.Font; } 
             set { TextEditor.Font = value; } 
         }
 

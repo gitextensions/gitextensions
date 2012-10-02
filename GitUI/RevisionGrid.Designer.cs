@@ -740,7 +740,7 @@ namespace GitUI
             // RevisionGrid
             // 
             
-            
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.NoCommits);
             this.Controls.Add(this.Error);
             this.Controls.Add(this.Loading);

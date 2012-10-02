@@ -1,13 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
-using System.Windows.Forms;
-using GitCommands.Statistics;
-using GitCommands;
-using GitStatistics.PieChart;
 using System.Threading;
-using System.Collections.Generic;
+using System.Windows.Forms;
+using GitCommands;
+using GitCommands.Statistics;
+using GitStatistics.PieChart;
 using GitUIPluginInterfaces;
 
 namespace GitStatistics

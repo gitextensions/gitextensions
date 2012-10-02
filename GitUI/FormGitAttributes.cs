@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
-using ICSharpCode.TextEditor.Util;
 using ResourceManager.Translation;
 
 namespace GitUI
