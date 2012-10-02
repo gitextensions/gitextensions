@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Reflection;
 using System.ComponentModel;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace ResourceManager.Translation

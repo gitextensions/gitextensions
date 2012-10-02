@@ -2326,8 +2326,9 @@ namespace GitUI
         private void SplitButtonMenuItem_Click(object sender, EventArgs e)
         {
             //reset bold item to regular
-            var item = contextMenuStrip_SplitButton.Items.OfType<ToolStripMenuItem>().First(s => s.Font.Bold);
-            item.Font = new Font(contextMenuStrip_SplitButton.Font, FontStyle.Regular);
+            var item = contextMenuStrip_SplitButton.Items.OfType<ToolStripMenuItem>().FirstOrDefault(s => s.Font.Bold);
+            if (item != null)
+                item.Font = new Font(contextMenuStrip_SplitButton.Font, FontStyle.Regular);
 
             //make new item bold
             ((ToolStripMenuItem)sender).Font = new Font(((ToolStripMenuItem)sender).Font, FontStyle.Bold);

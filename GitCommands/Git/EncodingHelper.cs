@@ -1,10 +1,8 @@
-﻿namespace GitCommands
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
+﻿using System;
+using System.Text;
 
+namespace GitCommands
+{
     /// <summary>
     /// Encoding Helper
     /// </summary>

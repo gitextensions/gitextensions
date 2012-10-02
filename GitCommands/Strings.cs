@@ -1,6 +1,5 @@
 ﻿using System;
 using ResourceManager.Translation;
-using ResourceManager;
 
 namespace GitCommands
 {

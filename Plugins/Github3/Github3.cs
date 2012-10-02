@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using GitUIPluginInterfaces.RepositoryHosts;
-using GitUIPluginInterfaces;
-using Git.hub;
-using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using Git.hub;
 using GitCommands.Config;
+using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.RepositoryHosts;
 
 namespace Github3
 {

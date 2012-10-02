@@ -46,7 +46,7 @@
             this.lHotkey.Location = new System.Drawing.Point(3, 471);
             this.lHotkey.MinimumSize = new System.Drawing.Size(120, 0);
             this.lHotkey.Name = "lHotkey";
-            this.lHotkey.Size = new System.Drawing.Size(120, 12);
+            this.lHotkey.Size = new System.Drawing.Size(120, 15);
             this.lHotkey.TabIndex = 3;
             this.lHotkey.Text = "Hotkey";
             // 
@@ -77,7 +77,7 @@
             this.lHotkeyableItems.AutoSize = true;
             this.lHotkeyableItems.Location = new System.Drawing.Point(3, 3);
             this.lHotkeyableItems.Name = "lHotkeyableItems";
-            this.lHotkeyableItems.Size = new System.Drawing.Size(81, 12);
+            this.lHotkeyableItems.Size = new System.Drawing.Size(99, 15);
             this.lHotkeyableItems.TabIndex = 0;
             this.lHotkeyableItems.Text = "Hotkeyable Items";
             // 
@@ -128,7 +128,7 @@
             this.cmbSettings.DisplayMember = "Name";
             this.cmbSettings.FormattingEnabled = true;
             this.cmbSettings.IntegralHeight = false;
-            this.cmbSettings.ItemHeight = 12;
+            this.cmbSettings.ItemHeight = 15;
             this.cmbSettings.Location = new System.Drawing.Point(6, 27);
             this.cmbSettings.Name = "cmbSettings";
             this.cmbSettings.Size = new System.Drawing.Size(232, 433);
@@ -143,13 +143,13 @@
             this.txtHotkey.KeyData = System.Windows.Forms.Keys.None;
             this.txtHotkey.Location = new System.Drawing.Point(129, 468);
             this.txtHotkey.Name = "txtHotkey";
-            this.txtHotkey.Size = new System.Drawing.Size(445, 21);
+            this.txtHotkey.Size = new System.Drawing.Size(445, 23);
             this.txtHotkey.TabIndex = 4;
             this.txtHotkey.Text = "None";
             // 
             // ControlHotkeys
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.cmbSettings);
             this.Controls.Add(this.bResetToDefaults);
             this.Controls.Add(this.listMappings);

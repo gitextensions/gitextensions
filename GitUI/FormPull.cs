@@ -4,12 +4,12 @@ using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Config;
 using GitCommands.Repository;
 using GitUI.Properties;
+using GitUI.Script;
 using ResourceManager.Translation;
 using Settings = GitCommands.Settings;
-using GitUI.Script;
-using GitCommands.Config;
 
 namespace GitUI
 {
@@ -566,9 +566,12 @@ namespace GitUI
             }
 
             bInternalUpdate = true;
-            string text = _NO_TRANSLATE_Remotes.Text;
+            string origText = _NO_TRANSLATE_Remotes.Text;
             UpdateRemotesList();
-            _NO_TRANSLATE_Remotes.Text = text;
+            if (_NO_TRANSLATE_Remotes.Items.Contains(origText)) // else first item gets selected
+            {
+                _NO_TRANSLATE_Remotes.Text = origText;
+            }
             bInternalUpdate = false;
         }
 

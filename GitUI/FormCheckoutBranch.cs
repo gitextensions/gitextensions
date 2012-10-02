@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
-using System.Collections.Generic;
-using System.Windows.Forms;
 using ResourceManager.Translation;
 
 namespace GitUI
@@ -215,12 +214,21 @@ namespace GitUI
             Settings.LocalChanges changes = ChangesMode;
             Settings.CheckoutBranchAction = changes;
             Settings.UseDefaultCheckoutBranchAction = defaultActionChx.Checked;
-            cmd.SetLocalChangesFromSettings(changes);
+
+            //If the setting CheckForUncommittedChangesInCheckoutBranch is false, ignore the 'localchanges' radiobutton.
+            if (Settings.CheckForUncommittedChangesInCheckoutBranch)
+                cmd.SetLocalChangesFromSettings(changes);
+            else
+                cmd.SetLocalChangesFromSettings(Settings.LocalChanges.DontChange);
 
             IWin32Window _owner = Visible ? this : Owner;
 
-            if (changes == Settings.LocalChanges.Stash && Module.IsDirtyDir())
+            //Stash local changes, but only if the setting CheckForUncommittedChangesInCheckoutBranch is true
+            if (Settings.CheckForUncommittedChangesInCheckoutBranch &&
+                changes == Settings.LocalChanges.Stash && Module.IsDirtyDir())
+            {
                 UICommands.Stash(_owner);
+            }
 
             {
                 var successfullyCheckedOut = UICommands.StartCommandLineProcessDialog(cmd, _owner);

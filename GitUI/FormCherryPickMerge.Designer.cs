@@ -60,7 +60,7 @@
             this.label1.Location = new System.Drawing.Point(1, 11);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(214, 12);
+            this.label1.Size = new System.Drawing.Size(260, 15);
             this.label1.TabIndex = 3;
             this.label1.Text = "This commit is a merge, please select the parent";
             // 
@@ -139,8 +139,8 @@
             // 
             // FormCherryPickMerge
             // 
-            
-            
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(544, 162);
             this.Controls.Add(this.ParentsList);
             this.Controls.Add(this.label1);

@@ -1,8 +1,6 @@
 ﻿using System.Windows.Forms;
-using PSTaskDialog;
-using ResourceManager.Translation;
-using ResourceManager;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {

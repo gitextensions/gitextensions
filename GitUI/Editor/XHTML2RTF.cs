@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
-using System.IO;
-using System.Xml;
-using System.Runtime.InteropServices;
-using System.Drawing;
 using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
+using System.Xml;
 
 namespace GitUI.Editor.RichTextBoxExtension
 {

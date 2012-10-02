@@ -43,7 +43,7 @@
             this.Branches.FormattingEnabled = true;
             this.Branches.Location = new System.Drawing.Point(12, 32);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(239, 180);
+            this.Branches.Size = new System.Drawing.Size(239, 166);
             this.Branches.TabIndex = 2;
             // 
             // okButton
@@ -62,14 +62,14 @@
             this.selectBranchesLabel.AutoSize = true;
             this.selectBranchesLabel.Location = new System.Drawing.Point(12, 9);
             this.selectBranchesLabel.Name = "selectBranchesLabel";
-            this.selectBranchesLabel.Size = new System.Drawing.Size(73, 12);
+            this.selectBranchesLabel.Size = new System.Drawing.Size(89, 15);
             this.selectBranchesLabel.TabIndex = 4;
             this.selectBranchesLabel.Text = "Select branches";
             // 
             // FormSelectMultipleBranches
             // 
-            
-            
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(263, 252);
             this.Controls.Add(this.selectBranchesLabel);
             this.Controls.Add(this.okButton);

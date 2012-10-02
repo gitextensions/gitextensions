@@ -16,7 +16,7 @@ using GitUI.RepoHosting;
 using GitUI.Script;
 using GitUI.Statistics;
 using GitUIPluginInterfaces;
-using ICSharpCode.TextEditor.Util;
+
 #if !__MonoCS__
 using Microsoft.WindowsAPICodePack.Taskbar;
 #endif

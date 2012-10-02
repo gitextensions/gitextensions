@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.DirectoryServices;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
@@ -15,7 +16,6 @@ using GitUI.Script;
 using GitUI.Tag;
 using Gravatar;
 using ResourceManager.Translation;
-using System.DirectoryServices;
 
 namespace GitUI
 {
@@ -138,7 +138,8 @@ namespace GitUI
         [Browsable(false)]
         public Font RefsFont { get; private set; }
         private Font _normalFont;
-        [Category("Appearance")]
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Font NormalFont
         {
             get { return _normalFont; }
@@ -155,30 +156,36 @@ namespace GitUI
         }
 
         [Category("Filter")]
+        [DefaultValue("")]
         public string Filter { get; set; }
         [Category("Filter")]
+        [DefaultValue("")]
         public string FixedFilter { get; set; }
         [Category("Filter")]
         [DefaultValue(false)]
         public bool InMemFilterIgnoreCase { get; set; }
         [Category("Filter")]
+        [DefaultValue("")]
         public string InMemAuthorFilter { get; set; }
         [Category("Filter")]
+        [DefaultValue("")]
         public string InMemCommitterFilter { get; set; }
         [Category("Filter")]
+        [DefaultValue("")]
         public string InMemMessageFilter { get; set; }
         [Category("Filter")]
+        [DefaultValue("")]
         public string BranchFilter { get; set; }
         [Category("Filter")]
         [DefaultValue(false)]
         public bool AllowGraphWithFilter { get; set; }
 
         [Browsable(false)]
-        public string CurrentCheckout { get; set; }
+        public string CurrentCheckout { get; private set; }
         [Browsable(false)]
-        public string SuperprojectCurrentCheckout { get; set; }
+        public string SuperprojectCurrentCheckout { get; private set; }
         [Browsable(false)]
-        public int LastRow { get; set; }
+        public int LastRow { get; private set; }
 
         [Description("Indicates whether the user is allowed to select more than one commit at a time.")]
         [Category("Behavior")]

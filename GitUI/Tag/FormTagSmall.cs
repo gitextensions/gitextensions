@@ -3,8 +3,8 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
-using ResourceManager.Translation;
 using GitUI.Script;
+using ResourceManager.Translation;
 
 namespace GitUI.Tag
 {

@@ -1,8 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Repository;
 using ResourceManager.Translation;
 
 namespace GitUI
@@ -16,16 +14,6 @@ namespace GitUI
             new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");
         private static readonly TranslationString _pageantNotFoundCaption =
             new TranslationString("PuTTY");
-
-        private static readonly TranslationString _loadKeyFailed =
-            new TranslationString("Could not load key.");
-        private static readonly TranslationString _loadKeyFailedCaption =
-            new TranslationString("PuTTY");
-
-        private static readonly TranslationString _browsePrivateKeyFilter =
-            new TranslationString("Private key");
-        private static readonly TranslationString _browsePrivateKeyCaption =
-            new TranslationString("Select SSH key file");
 
         /// <summary>
         /// Prompts the user to browse for a key, and attempts to load it. Returns the path to the key, if successful.
