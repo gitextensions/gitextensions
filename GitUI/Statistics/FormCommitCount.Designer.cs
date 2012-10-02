@@ -32,8 +32,8 @@ namespace GitUI.Statistics
             this.CommitCount = new System.Windows.Forms.RichTextBox();
             this.Loading = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.cbIncludeSubmodules = new System.Windows.Forms.CheckBox();
+            this.panel2 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -68,16 +68,6 @@ namespace GitUI.Statistics
             this.panel1.Size = new System.Drawing.Size(367, 30);
             this.panel1.TabIndex = 2;
             // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.CommitCount);
-            this.panel2.Controls.Add(this.Loading);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 0);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(367, 287);
-            this.panel2.TabIndex = 3;
-            // 
             // cbIncludeSubmodules
             // 
             this.cbIncludeSubmodules.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -92,10 +82,20 @@ namespace GitUI.Statistics
             this.cbIncludeSubmodules.UseVisualStyleBackColor = true;
             this.cbIncludeSubmodules.CheckedChanged += new System.EventHandler(this.cbIncludeSubmodules_CheckedChanged);
             // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.CommitCount);
+            this.panel2.Controls.Add(this.Loading);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(0, 0);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(367, 287);
+            this.panel2.TabIndex = 3;
+            // 
             // FormCommitCount
             // 
-            
-            
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(367, 317);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);

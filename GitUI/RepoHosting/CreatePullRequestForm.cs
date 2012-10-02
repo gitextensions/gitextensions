@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using GitCommands;
 using GitUIPluginInterfaces.RepositoryHosts;
 using ResourceManager.Translation;
-using GitCommands;
 
 namespace GitUI.RepoHosting
 {

@@ -79,11 +79,11 @@ namespace GitUI.Editor
             return (System.Diagnostics.Process.GetCurrentProcess().ProcessName != "devenv");
         }
 
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        [Description("The base font of the text area. No bold or italic fonts can be used because bold/italic is reserved for highlighting purposes.")]
-        [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public new Font Font
         {
+            get { return _internalFileViewer.Font; }
             set { _internalFileViewer.Font = value; }
         }
 

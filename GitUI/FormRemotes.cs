@@ -1,10 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Config;
 using GitCommands.Repository;
 using ResourceManager.Translation;
-using GitCommands.Config;
-using System.IO;
 
 namespace GitUI
 {
@@ -307,7 +307,11 @@ namespace GitUI
             {
                 if (!string.IsNullOrEmpty(uri.UserInfo))
                     sshURL = uri.UserInfo + "@";
-                sshURL += uri.Host + ":" + uri.LocalPath.Substring(1);
+                sshURL += uri.Authority;
+                if (uri.IsDefaultPort)
+                    sshURL += ":" + uri.LocalPath.Substring(1);
+                else
+                    sshURL += uri.LocalPath;
             }
             else
                 sshURL = Url.Text;

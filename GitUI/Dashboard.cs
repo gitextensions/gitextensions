@@ -1,7 +1,8 @@
 ﻿using System;
-using System.IO;
+using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -11,8 +12,6 @@ using GitUI.Properties;
 using GitUI.RepoHosting;
 using GitUIPluginInterfaces.RepositoryHosts;
 using ResourceManager.Translation;
-using Settings = GitCommands.Settings;
-using System.Configuration;
 
 namespace GitUI
 {

@@ -8,8 +8,6 @@ namespace GitUI
 {
     public partial class FormRebase : GitModuleForm
     {
-        private readonly TranslationString _currentBranchText = new TranslationString("Current branch:");
-
         private readonly TranslationString _continueRebaseText = new TranslationString("Continue rebase");
         private readonly TranslationString _solveConflictsText = new TranslationString("Solve conflicts");
 
@@ -52,7 +50,7 @@ namespace GitUI
         private void FormRebaseLoad(object sender, EventArgs e)
         {
             var selectedHead = Module.GetSelectedBranch();
-            Currentbranch.Text = _currentBranchText.Text + " " + selectedHead;
+            Currentbranch.Text = selectedHead;
 
             Branches.DisplayMember = "Name";
             Branches.DataSource = Module.GetHeads(true, true);
@@ -70,7 +68,7 @@ namespace GitUI
             else
                 cboTo.Text = selectedHead;
 
-            splitContainer2.SplitterDistance = Module.InTheMiddleOfRebase() ? 0 : 70;
+            rebasePanel.Visible = !Module.InTheMiddleOfRebase();
             EnableButtons();
 
             // Honor the rebase.autosquash configuration.
@@ -232,7 +230,6 @@ namespace GitUI
         {
             ShowOptions.Visible = false;
             OptionsPanel.Visible = true;
-            splitContainer2.SplitterDistance = 125;
         }
 
         private void chkUseFromOnto_CheckedChanged(object sender, EventArgs e)

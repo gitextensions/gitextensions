@@ -36,20 +36,9 @@
             // 
             // revisionGrid
             // 
-            this.revisionGrid.BranchFilter = "";
-            this.revisionGrid.CurrentCheckout = null;
-            this.revisionGrid.Filter = "";
-            this.revisionGrid.FixedFilter = "";
-            this.revisionGrid.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.revisionGrid.InMemAuthorFilter = "";
-            this.revisionGrid.InMemCommitterFilter = "";
-            this.revisionGrid.InMemMessageFilter = "";
-            this.revisionGrid.LastRow = 0;
             this.revisionGrid.Location = new System.Drawing.Point(0, 0);
             this.revisionGrid.Name = "revisionGrid";
-            this.revisionGrid.NormalFont = new System.Drawing.Font("Tahoma", 8.75F);
             this.revisionGrid.Size = new System.Drawing.Size(842, 313);
-            this.revisionGrid.SuperprojectCurrentCheckout = null;
             this.revisionGrid.TabIndex = 0;
             // 
             // btnOK
@@ -74,8 +63,7 @@
             // 
             // FormChooseCommit
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.ClientSize = new System.Drawing.Size(842, 378);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.revisionGrid);

@@ -52,13 +52,13 @@
             panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             panel1.Location = new System.Drawing.Point(0, 480);
             panel1.Name = "panel1";
-            panel1.Size = new System.Drawing.Size(230, 39);
+            panel1.Size = new System.Drawing.Size(241, 39);
             panel1.TabIndex = 5;
             // 
             // Save
             // 
             this.Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Save.Location = new System.Drawing.Point(67, 11);
+            this.Save.Location = new System.Drawing.Point(78, 11);
             this.Save.Name = "Save";
             this.Save.Size = new System.Drawing.Size(160, 25);
             this.Save.TabIndex = 1;
@@ -72,14 +72,14 @@
             panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
             panel2.Location = new System.Drawing.Point(0, 458);
             panel2.Name = "panel2";
-            panel2.Size = new System.Drawing.Size(230, 22);
+            panel2.Size = new System.Drawing.Size(241, 22);
             panel2.TabIndex = 7;
             // 
             // lnkGitReviewHelp
             // 
             this.lnkGitReviewHelp.AutoSize = true;
             this.lnkGitReviewHelp.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lnkGitReviewHelp.Location = new System.Drawing.Point(82, 0);
+            this.lnkGitReviewHelp.Location = new System.Drawing.Point(93, 0);
             this.lnkGitReviewHelp.Name = "lnkGitReviewHelp";
             this.lnkGitReviewHelp.Size = new System.Drawing.Size(148, 15);
             this.lnkGitReviewHelp.TabIndex = 6;
@@ -104,18 +104,17 @@
             this.splitContainer1.Panel2.Controls.Add(panel2);
             this.splitContainer1.Panel2.Controls.Add(panel1);
             this.splitContainer1.Size = new System.Drawing.Size(634, 519);
-            this.splitContainer1.SplitterDistance = 400;
+            this.splitContainer1.SplitterDistance = 389;
             this.splitContainer1.TabIndex = 0;
             // 
             // _NO_TRANSLATE_GitReviewEdit
             // 
-            this._NO_TRANSLATE_GitReviewEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this._NO_TRANSLATE_GitReviewEdit.Dock = System.Windows.Forms.DockStyle.Fill;
             this._NO_TRANSLATE_GitReviewEdit.IsReadOnly = false;
             this._NO_TRANSLATE_GitReviewEdit.Location = new System.Drawing.Point(0, 0);
+            this._NO_TRANSLATE_GitReviewEdit.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this._NO_TRANSLATE_GitReviewEdit.Name = "_NO_TRANSLATE_GitReviewEdit";
-            this._NO_TRANSLATE_GitReviewEdit.Size = new System.Drawing.Size(400, 519);
+            this._NO_TRANSLATE_GitReviewEdit.Size = new System.Drawing.Size(389, 519);
             this._NO_TRANSLATE_GitReviewEdit.TabIndex = 0;
             // 
             // label1
@@ -126,15 +125,15 @@
             this.label1.Name = "label1";
             this.label1.ReadOnly = true;
             this.label1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.label1.Size = new System.Drawing.Size(230, 458);
+            this.label1.Size = new System.Drawing.Size(241, 458);
             this.label1.TabIndex = 4;
             this.label1.Text = resources.GetString("label1.Text");
             this.label1.WordWrap = false;
             // 
             // FormGitReview
             // 
-            
-            
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(634, 519);
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormGitReview";
