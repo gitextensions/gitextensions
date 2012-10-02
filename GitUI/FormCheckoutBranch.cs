@@ -186,7 +186,7 @@ namespace GitUI
                         DialogResult = DialogResult.None;
                         return DialogResult.None;
                     }
-                    if (!Module.CheckRefFormat(cmd.NewBranchName))
+                    if (!Module.CheckBranchFormat(cmd.NewBranchName))
                     {
                         MessageBox.Show(string.Format(_customBranchNameIsNotValid.Text, cmd.NewBranchName), Text);
                         DialogResult = DialogResult.None;
