@@ -180,7 +180,7 @@ namespace GitUI
                         DialogResult = DialogResult.None;
                         return DialogResult.None;
                     }
-                    if (!GitModule.Current.CheckRefFormat(cmd.NewBranchName))
+                    if (!GitModule.Current.CheckBranchFormat(cmd.NewBranchName))
                     {
                         MessageBox.Show(string.Format(_customBranchNameIsNotValid.Text, cmd.NewBranchName), Text);
                         DialogResult = DialogResult.None;
