@@ -34,7 +34,7 @@ namespace GitUI
                 DialogResult = DialogResult.None;
                 return;
             }
-            if (!Module.CheckRefFormat(branchName))
+            if (!Module.CheckBranchFormat(branchName))
             {
                 MessageBox.Show(string.Format(_branchNameIsNotValud.Text, branchName), Text);
                 DialogResult = DialogResult.None;
