@@ -13,12 +13,12 @@ namespace GitUI.RepoHosting
             GitHosters = new List<IRepositoryHostPlugin>();
         }
 
-        public static IRepositoryHostPlugin TryGetGitHosterForCurrentWorkingDir()
+        public static IRepositoryHostPlugin TryGetGitHosterForModule(GitModule aModule)
         {
-            if (!GitModule.Current.ValidWorkingDir())
+            if (!aModule.ValidWorkingDir())
                 return null;
 
-            return GitHosters.FirstOrDefault(gitHoster => gitHoster.CurrentWorkingDirRepoIsRelevantToMe);
+            return GitHosters.FirstOrDefault(gitHoster => gitHoster.GitModuleIsRelevantToMe(aModule));
         }
     }
 }

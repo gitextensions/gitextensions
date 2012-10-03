@@ -9,11 +9,13 @@ namespace GitCommands
         private readonly string _mergeSettingName;
         private readonly string _remoteSettingName;
         private List<IGitItem> _subItems;
+        public GitModule Module { get; private set; }
 
-        public GitHead(string guid, string completeName) : this(guid, completeName, string.Empty) {}
+        public GitHead(GitModule module, string guid, string completeName) : this(module, guid, completeName, string.Empty) {}
 
-        public GitHead(string guid, string completeName, string remote)
+        public GitHead(GitModule module, string guid, string completeName, string remote)
         {
+            Module = module;
             Guid = guid;
             Selected = false;
             CompleteName = completeName;
@@ -53,15 +55,15 @@ namespace GitCommands
         {
             get 
             {
-                return GetTrackingRemote(GitModule.Current.GetLocalConfig());    
+                return GetTrackingRemote(Module.GetLocalConfig());    
             }
             set
             {
                 if (String.IsNullOrEmpty(value))
-                    GitModule.Current.UnsetSetting(_remoteSettingName);
+                    Module.UnsetSetting(_remoteSettingName);
                 else
                 {
-                    GitModule.Current.SetSetting(_remoteSettingName, value);
+                    Module.SetSetting(_remoteSettingName, value);
 
                     if (MergeWith == "")
                         MergeWith = Name;
@@ -83,14 +85,14 @@ namespace GitCommands
         {
             get
             {
-                return GetMergeWith(GitModule.Current.GetLocalConfig());
+                return GetMergeWith(Module.GetLocalConfig());
             }
             set
             {
                 if (String.IsNullOrEmpty(value))
-                    GitModule.Current.UnsetSetting(_mergeSettingName);
+                    Module.UnsetSetting(_mergeSettingName);
                 else
-                    GitModule.Current.SetSetting(_mergeSettingName, "refs/heads/" + value);
+                    Module.SetSetting(_mergeSettingName, "refs/heads/" + value);
             }
         }
 
@@ -107,14 +109,14 @@ namespace GitCommands
         }
 
 
-        public static GitHead NoHead
+        public static GitHead NoHead(GitModule module)
         {
-            get { return new GitHead(null, ""); }
+            return new GitHead(module, null, "");
         }
 
-        public static GitHead AllHeads
+        public static GitHead AllHeads(GitModule module)
         {
-            get { return new GitHead(null, "*"); }
+            return new GitHead(module, null, "*");
         }
 
         #region IGitItem Members
@@ -124,7 +126,7 @@ namespace GitCommands
 
         public List<IGitItem> SubItems
         {
-            get { return _subItems ?? (_subItems = GitModule.Current.GetTree(Guid, false)); }
+            get { return _subItems ?? (_subItems = Module.GetTree(Guid, false)); }
         }
 
         #endregion

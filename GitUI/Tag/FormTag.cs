@@ -8,7 +8,7 @@ using ResourceManager.Translation;
 
 namespace GitUI.Tag
 {
-    public partial class FormTag : GitExtensionsForm
+    public partial class FormTag : GitModuleForm
     {
         private readonly TranslationString _messageCaption = new TranslationString("Tag");
 
@@ -19,8 +19,13 @@ namespace GitUI.Tag
 
         private readonly TranslationString _pushToCaption = new TranslationString("Push tag to {0}");
 
-        public FormTag()
-            : base(true)
+        private FormTag()
+            : this(null)
+        { 
+        }
+
+        public FormTag(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
             Translate();
@@ -62,10 +67,10 @@ namespace GitUI.Tag
                     return string.Empty;
                 }
 
-                File.WriteAllText(GitModule.Current.WorkingDirGitDir() + "\\TAGMESSAGE", tagMessage.Text);
+                File.WriteAllText(Module.WorkingDirGitDir() + "\\TAGMESSAGE", tagMessage.Text);
             }
             
-            var s = GitModule.Current.Tag(Tagname.Text, GitRevisions.GetSelectedRevisions()[0].Guid,
+            var s = Module.Tag(Tagname.Text, GitRevisions.GetSelectedRevisions()[0].Guid,
                                                 annotate.Checked, ForceTag.Checked);
 
             if (!string.IsNullOrEmpty(s))
@@ -79,12 +84,12 @@ namespace GitUI.Tag
 
         private void PushTag(string tagName)
         {
-            var currentBranchRemote = GitModule.Current.GetSetting(string.Format("branch.{0}.remote", GitModule.Current.GetSelectedBranch()));
+            var currentBranchRemote = Module.GetSetting(string.Format("branch.{0}.remote", Module.GetSelectedBranch()));
             var pushCmd = GitCommandHelpers.PushTagCmd(currentBranchRemote, tagName, false);
 
-            ScriptManager.RunEventScripts(ScriptEvent.BeforePush);
+            ScriptManager.RunEventScripts(Module, ScriptEvent.BeforePush);
 
-            using (var form = new FormRemoteProcess(pushCmd)
+            using (var form = new FormRemoteProcess(Module, pushCmd)
             {
                 Remote = currentBranchRemote,
                 Text = string.Format(_pushToCaption.Text, currentBranchRemote),
@@ -93,10 +98,10 @@ namespace GitUI.Tag
 
                 form.ShowDialog();
 
-                if (!GitModule.Current.InTheMiddleOfConflictedMerge() &&
-                    !GitModule.Current.InTheMiddleOfRebase() && !form.ErrorOccurred())
+                if (!Module.InTheMiddleOfConflictedMerge() &&
+                    !Module.InTheMiddleOfRebase() && !form.ErrorOccurred())
                 {
-                    ScriptManager.RunEventScripts(ScriptEvent.AfterPush);
+                    ScriptManager.RunEventScripts(Module, ScriptEvent.AfterPush);
                 }
             }
         }

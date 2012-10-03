@@ -6,7 +6,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormCherryPickCommitSmall : GitExtensionsForm
+    public partial class FormCherryPickCommitSmall : GitModuleForm
     {
         #region Translation
         private readonly TranslationString _noneParentSelectedText =
@@ -16,7 +16,13 @@ namespace GitUI
         #endregion
 
         private bool IsMerge;
-        public FormCherryPickCommitSmall(GitRevision revision)
+
+        private FormCherryPickCommitSmall()
+            : this(null, null)
+        { }
+
+        public FormCherryPickCommitSmall(GitUICommands aCommands, GitRevision revision)
+            : base(aCommands)
         {
             Revision = revision;
             InitializeComponent();
@@ -28,10 +34,10 @@ namespace GitUI
         {
             base.OnLoad(e);
 
-            IsMerge = GitModule.Current.IsMerge(Revision.Guid);
+            IsMerge = Module.IsMerge(Revision.Guid);
             if (IsMerge)
             {
-                GitRevision[] Parents = GitModule.Current.GetParents(Revision.Guid);
+                GitRevision[] Parents = Module.GetParents(Revision.Guid);
                 for (int i = 0; i < Parents.Length; i++)
                 {
                     ParentsList.Items.Add(i + 1 + "");
@@ -89,7 +95,7 @@ namespace GitUI
             if (CanExecute)
             {
                 FormProcess.ShowDialog(this, GitCommandHelpers.CherryPickCmd(Revision.Guid, AutoCommit.Checked, string.Join(" ", argumentsList.ToArray())));
-                MergeConflictHandler.HandleMergeConflicts(this, AutoCommit.Checked);
+                MergeConflictHandler.HandleMergeConflicts(UICommands, this, AutoCommit.Checked);
                 DialogResult = DialogResult.OK;
                 Close();
             }

@@ -1,45 +1,45 @@
 ﻿using System;
 using System.IO;
 
-namespace GitUI
+namespace GitCommands
 {
     [Serializable]
     public delegate void IndexChangedEventHandler(bool indexChanged);
 
-    public class IndexWatcher
+    public class IndexWatcher : IDisposable
     {
-        public static event IndexChangedEventHandler Changed;
+        public event IndexChangedEventHandler Changed;
 
-        public IndexWatcher()
+        private readonly GitModule Module;
+
+        public IndexWatcher(GitModule aModule)
         {
-            if (GitIndexWatcher == null)
-            {
-                GitIndexWatcher = new FileSystemWatcher();
-                RefsWatcher = new FileSystemWatcher();
-                SetFileSystemWatcher();
+            Module = aModule;
+            GitIndexWatcher = new FileSystemWatcher();
+            RefsWatcher = new FileSystemWatcher();
+            SetFileSystemWatcher();
 
-                IndexChanged = true;
-                GitIndexWatcher.Changed += fileSystemWatcher_Changed;
-                RefsWatcher.Changed += fileSystemWatcher_Changed;
-            }
+            IndexChanged = true;
+            GitIndexWatcher.Changed += fileSystemWatcher_Changed;
+            RefsWatcher.Changed += fileSystemWatcher_Changed;
         }
 
-        private static void SetFileSystemWatcher()
+        private void SetFileSystemWatcher()
         {
-            if (!string.IsNullOrEmpty(GitCommands.GitModule.Current.WorkingDirGitDir()))
+            if (!string.IsNullOrEmpty(Module.WorkingDirGitDir()))
             {
                 try
                 {
                     enabled = GitCommands.Settings.UseFastChecks;
 
-                    Path = GitCommands.GitModule.Current.WorkingDirGitDir();
+                    Path = Module.WorkingDirGitDir();
 
-                    GitIndexWatcher.Path = GitCommands.GitModule.Current.WorkingDirGitDir();
+                    GitIndexWatcher.Path = Module.WorkingDirGitDir();
                     GitIndexWatcher.Filter = "index";
                     GitIndexWatcher.IncludeSubdirectories = false;
                     GitIndexWatcher.EnableRaisingEvents = enabled;
 
-                    RefsWatcher.Path = GitCommands.GitModule.Current.WorkingDirGitDir() + "\\refs";
+                    RefsWatcher.Path = Module.WorkingDirGitDir() + "\\refs";
                     RefsWatcher.IncludeSubdirectories = true;
                     RefsWatcher.EnableRaisingEvents = enabled;
                 }
@@ -50,15 +50,15 @@ namespace GitUI
             }
         }
 
-        private static bool indexChanged;
-        public static bool IndexChanged 
+        private bool indexChanged;
+        public bool IndexChanged 
         { 
             get
             {
                 if (!enabled)
                     return true;
 
-                if (Path != GitCommands.GitModule.Current.WorkingDirGitDir())
+                if (Path != Module.WorkingDirGitDir())
                     return true;
 
                 return indexChanged;
@@ -67,41 +67,49 @@ namespace GitUI
             {
                 indexChanged = value;
                 GitIndexWatcher.EnableRaisingEvents = !IndexChanged;
+
+                if (Changed != null)
+                    Changed(IndexChanged);
             }
         }
 
-        static private bool enabled;
-        static private string Path;
-        static private FileSystemWatcher GitIndexWatcher { get; set; }
-        static private FileSystemWatcher RefsWatcher { get; set; }
+        private bool enabled;
+        private string Path;
+        private FileSystemWatcher GitIndexWatcher { get; set; }
+        private FileSystemWatcher RefsWatcher { get; set; }
 
-        private static void fileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
+        private void fileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
         {
             IndexChanged = true;
-            if (Changed != null)
-                Changed(IndexChanged);
         }
 
-        public static void Reset()
+        public void Reset()
         {
             IndexChanged = false;
-            if (Changed != null)
-                Changed(IndexChanged);
-            
-            if (Path != GitCommands.GitModule.Current.WorkingDirGitDir() ||
-                enabled != GitCommands.Settings.UseFastChecks)
-                SetFileSystemWatcher();
+            RefreshWatcher();
         }
 
-        public static void Clear()
+        public void Clear()
         {
             IndexChanged = true;
-            if (Changed != null)
-                Changed(IndexChanged);
+            RefreshWatcher();
+        }
 
-            if (Path != GitCommands.GitModule.Current.WorkingDirGitDir() ||
+        private void RefreshWatcher()
+        {
+            if (Path != Module.WorkingDirGitDir() ||
                 enabled != GitCommands.Settings.UseFastChecks)
-                SetFileSystemWatcher();
+                SetFileSystemWatcher();        
+        }
+
+        public void Dispose()
+        {
+            enabled = false;
+            GitIndexWatcher.EnableRaisingEvents = false;
+            GitIndexWatcher.Changed -= fileSystemWatcher_Changed;
+            RefsWatcher.Changed -= fileSystemWatcher_Changed;
+            GitIndexWatcher.Dispose();
+            RefsWatcher.Dispose();
         }
     }
 }

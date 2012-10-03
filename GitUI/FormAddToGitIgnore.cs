@@ -9,16 +9,22 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public sealed partial class FormAddToGitIgnore : GitExtensionsForm
+    public sealed partial class FormAddToGitIgnore : GitModuleForm
     {
         private readonly TranslationString _matchingFilesString = new TranslationString("{0} file(s) matched");
 
-        public FormAddToGitIgnore(params string[] filePatterns)
+        public FormAddToGitIgnore(GitUICommands aCommands, params string[] filePatterns)
+            : base(aCommands)
         {
             InitializeComponent();
             Translate();
             if (filePatterns != null)
                 FilePattern.Text = string.Join(Environment.NewLine, filePatterns);
+        }
+
+        protected override void OnRuntimeLoad(EventArgs e)
+        {
+            base.OnRuntimeLoad(e);
             UpdatePreviewPanel();
         }
 
@@ -33,12 +39,12 @@ namespace GitUI
 
             try
             {
-                var fileName = GitModule.CurrentWorkingDir + ".gitignore";
+                var fileName = Module.WorkingDir + ".gitignore";
                 FileInfoExtensions.MakeFileTemporaryWritable(fileName, x =>
                 {
                     var gitIgnoreFileAddition = new StringBuilder();
 
-                    if (File.Exists(fileName) && !File.ReadAllText(fileName, Settings.SystemEncoding).EndsWith(Environment.NewLine))
+                    if (File.Exists(fileName) && !File.ReadAllText(fileName, GitModule.SystemEncoding).EndsWith(Environment.NewLine))
                         gitIgnoreFileAddition.Append(Environment.NewLine);
 
                     foreach (var pattern in patterns)
@@ -47,7 +53,7 @@ namespace GitUI
                         gitIgnoreFileAddition.Append(Environment.NewLine);
                     }
 
-                    using (TextWriter tw = new StreamWriter(x, true, Settings.SystemEncoding))
+                    using (TextWriter tw = new StreamWriter(x, true, GitModule.SystemEncoding))
                     {
                         tw.Write(gitIgnoreFileAddition);
                     }
@@ -63,7 +69,7 @@ namespace GitUI
 
         private void UpdatePreviewPanel()
         {
-            _NO_TRANSLATE_Preview.DataSource = GitModule.Current.GetFiles(GetCurrentPatterns());
+            _NO_TRANSLATE_Preview.DataSource = Module.GetFiles(GetCurrentPatterns());
             _NO_TRANSLATE_filesWillBeIgnored.Text = string.Format(_matchingFilesString.Text, _NO_TRANSLATE_Preview.Items.Count);
             noMatchPanel.Visible = _NO_TRANSLATE_Preview.Items.Count == 0;
         }

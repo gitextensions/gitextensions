@@ -5,13 +5,19 @@ namespace GitCommands
 {
     public sealed class GitSubmodule : IGitSubmodule
     {
+        private readonly GitModule Module;
         public string LocalPath { get; set; }
+
+        public GitSubmodule(GitModule aModule)
+        {
+            Module = aModule;
+        }
 
         public string Name
         {
             get
             {
-                return GitModule.Current.GetSubmoduleNameByPath(LocalPath);
+                return Module.GetSubmoduleNameByPath(LocalPath);
             }
             set
             {
@@ -22,7 +28,7 @@ namespace GitCommands
         {
             get
             {
-                return GitModule.Current.GetSubmoduleRemotePath(Name);
+                return Module.GetSubmoduleRemotePath(Name);
             }
             set
             {

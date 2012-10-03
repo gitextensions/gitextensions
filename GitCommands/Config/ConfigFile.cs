@@ -57,7 +57,7 @@ namespace GitCommands.Config
 
         private Encoding GetEncoding()
         {
-            return Settings.SystemEncoding;
+            return GitModule.SystemEncoding;
         }
 
         private void Load()

@@ -8,6 +8,8 @@
 
         void Register(IGitUICommands gitUiCommands);
 
+        void Unregister(IGitUICommands gitUiCommands);
+
         bool Execute(GitUIBaseEventArgs gitUiCommands);
     }
 }

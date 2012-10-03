@@ -9,7 +9,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public sealed partial class FormStash : GitExtensionsForm
+    public sealed partial class FormStash : GitModuleForm
     {
         readonly TranslationString currentWorkingDirChanges = new TranslationString("Current working dir changes");
         readonly TranslationString noStashes = new TranslationString("There are no stashes.");
@@ -21,8 +21,12 @@ namespace GitUI
         readonly TranslationString dontShowAgain = new TranslationString("Don't show me this message again.");
         public bool NeedRefresh;
 
-        public FormStash()
-            : base(true)
+        private FormStash()
+            : this(null)
+        { }
+
+        public FormStash(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
             Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
@@ -53,7 +57,7 @@ namespace GitUI
 
         private void Initialize()
         {
-            IList<GitStash> stashedItems = GitModule.Current.GetStashes();
+            IList<GitStash> stashedItems = Module.GetStashes();
 
             currentWorkingDirStashItem = new GitStash
             {
@@ -92,10 +96,10 @@ namespace GitUI
             else if (gitStash == currentWorkingDirStashItem)
             {
                 toolStripButton_customMessage.Enabled = true;
-                AsyncLoader.DoAsync(() => GitModule.Current.GetAllChangedFiles(), LoadGitItemStatuses);
+                AsyncLoader.DoAsync(() => Module.GetAllChangedFiles(), LoadGitItemStatuses);
             }
             else
-                AsyncLoader.DoAsync(() => GitModule.Current.GetStashDiffFiles(gitStash.Name), LoadGitItemStatuses);
+                AsyncLoader.DoAsync(() => Module.GetStashDiffFiles(gitStash.Name), LoadGitItemStatuses);
         }
 
         private void LoadGitItemStatuses(IList<GitItemStatus> gitItemStatuses)
@@ -127,7 +131,7 @@ namespace GitUI
                     Encoding encoding = this.View.Encoding;
                     View.ViewPatch(() =>
                     {
-                        PatchApply.Patch patch = GitModule.Current.GetSingleDiff(gitStash.Name, gitStash.Name + "^", stashedItem.Name, stashedItem.OldName, extraDiffArguments, encoding);
+                        PatchApply.Patch patch = Module.GetSingleDiff(gitStash.Name, gitStash.Name + "^", stashedItem.Name, stashedItem.OldName, extraDiffArguments, encoding);
                         if (patch == null)
                             return String.Empty;
                         return patch.Text;
@@ -216,7 +220,7 @@ namespace GitUI
         {
             FormProcess.ShowDialog(this, string.Format("stash apply {0}", Stashes.Text));
 
-            MergeConflictHandler.HandleMergeConflicts(this, false);
+            MergeConflictHandler.HandleMergeConflicts(UICommands, this, false);
 
             Initialize();
         }

@@ -41,6 +41,38 @@ namespace GitUI
 
         public string CommitTranslatedString { get; set; }
 
+        private IGitUICommandsSource _UICommandsSource;
+        public IGitUICommandsSource UICommandsSource
+        {
+            get
+            {
+                return _UICommandsSource;
+            }
+
+            set
+            {
+                _UICommandsSource = value;
+                _UICommandsSource.GitUICommandsChanged += GitUICommandsChanged;
+                GitUICommandsChanged(UICommandsSource, null);
+            }
+        }
+        
+        public GitUICommands UICommands 
+        {
+            get
+            {
+                return UICommandsSource.UICommands;
+            }
+        }
+
+        public GitModule Module 
+        {
+            get
+            {
+                return UICommands.Module;
+            }
+        }
+
         public ToolStripGitStatus()
         {
             syncContext = SynchronizationContext.Current;
@@ -50,17 +82,11 @@ namespace GitUI
             components.Add(gitDirWatcher);
             CommitTranslatedString = "Commit";
             ignoredFilesTimer.Interval = MaxUpdatePeriod;
-
-            GitModule.CurrentWorkingDirChanged += (_, newDir, newGitDir) => TryStartWatchingChanges(newDir, newGitDir);
-
-            GitUICommands.Instance.PreCheckoutBranch += GitUICommands_PreCheckout;
-            GitUICommands.Instance.PreCheckoutRevision += GitUICommands_PreCheckout;
-            GitUICommands.Instance.PostCheckoutBranch += GitUICommands_PostCheckout;
-            GitUICommands.Instance.PostCheckoutRevision += GitUICommands_PostCheckout;
-            GitUICommands.Instance.PostEditGitIgnore += GitUICommands_PostEditGitIgnore;
+            CurrentStatus = WorkingStatus.Stopped;
 
             // Setup a file watcher to detect changes to our files. When they
             // change, we'll update our status.
+            workTreeWatcher.EnableRaisingEvents = false;
             workTreeWatcher.Changed += WorkTreeChanged;
             workTreeWatcher.Created += WorkTreeChanged;
             workTreeWatcher.Deleted += WorkTreeChanged;
@@ -71,16 +97,37 @@ namespace GitUI
 
             // Setup a file watcher to detect changes to the .git repo files. When they
             // change, we'll update our status.
+            gitDirWatcher.EnableRaisingEvents = false;
             gitDirWatcher.Changed += GitDirChanged;
             gitDirWatcher.Created += GitDirChanged;
             gitDirWatcher.Deleted += GitDirChanged;
             gitDirWatcher.Error += WorkTreeWatcherError;
             gitDirWatcher.IncludeSubdirectories = true;
-            gitDirWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite;
-
-            TryStartWatchingChanges(GitModule.CurrentWorkingDir, GitModule.Current.GetGitDirectory());
+            gitDirWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite;            
         }
 
+        private void GitUICommandsChanged(IGitUICommandsSource source, GitUICommands oldCommands)
+        {
+            if (oldCommands != null)
+            {
+                oldCommands.PreCheckoutBranch -= GitUICommands_PreCheckout;
+                oldCommands.PreCheckoutRevision -= GitUICommands_PreCheckout;
+                oldCommands.PostCheckoutBranch -= GitUICommands_PostCheckout;
+                oldCommands.PostCheckoutRevision -= GitUICommands_PostCheckout;
+                oldCommands.PostEditGitIgnore -= GitUICommands_PostEditGitIgnore;
+            }
+
+            if (UICommands != null)
+            {
+                UICommands.PreCheckoutBranch += GitUICommands_PreCheckout;
+                UICommands.PreCheckoutRevision += GitUICommands_PreCheckout;
+                UICommands.PostCheckoutBranch += GitUICommands_PostCheckout;
+                UICommands.PostCheckoutRevision += GitUICommands_PostCheckout;
+                UICommands.PostEditGitIgnore += GitUICommands_PostEditGitIgnore;
+                
+                TryStartWatchingChanges(Module.WorkingDir, Module.GetGitDirectory());
+            }
+        }
 
         private void GitUICommands_PreCheckout(object sender, GitUIBaseEventArgs e)
         {
@@ -174,7 +221,7 @@ namespace GitUI
 
         private HashSet<string> LoadIgnoredFiles()
         { 
-            string lsOutput = GitModule.Current.RunGitCmd("ls-files -o -i --exclude-standard");
+            string lsOutput = Module.RunGitCmd("ls-files -o -i --exclude-standard");
             string[] tab = lsOutput.Split(new char[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
             return new HashSet<string>(tab);
         }
@@ -198,12 +245,15 @@ namespace GitUI
 
         private void Update()
         {
+            if (CurrentStatus != WorkingStatus.Started)
+                return;
+
             if (Environment.TickCount >= nextUpdateTime || 
                 (Environment.TickCount < 0 && nextUpdateTime > 0))
             {
                 // If the previous status call hasn't exited yet, we'll wait until it is
                 // so we don't queue up a bunch of commands
-                if (commandIsRunning || GitModule.Current.IsLockedIndex())
+                if (commandIsRunning || Module.IsLockedIndex())
                 {
                     statusIsUpToDate = false;//tell that computed status isn't up to date
                     return;
@@ -220,7 +270,7 @@ namespace GitUI
         private String RunStatusCommand()
         {
             string command = GitCommandHelpers.GetAllChangedFilesCmd(true, true);
-            return GitModule.Current.RunGitCmd(command);
+            return Module.RunGitCmd(command);
         }
 
         private void UpdatedStatusReceived(string updatedStatus)
@@ -232,7 +282,7 @@ namespace GitUI
 
             if (statusIsUpToDate)
             {
-                var allChangedFiles = GitCommandHelpers.GetAllChangedFilesFromString(updatedStatus);
+                var allChangedFiles = GitCommandHelpers.GetAllChangedFilesFromString(Module, updatedStatus);
                 var stagedCount = allChangedFiles.Count(status => status.IsStaged);
                 var unstagedCount = allChangedFiles.Count - stagedCount;
                 var unstagedSubmodulesCount = allChangedFiles.Count(status => status.IsSubmodule && !status.IsStaged);

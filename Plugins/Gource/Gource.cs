@@ -9,26 +9,23 @@ using ICSharpCode.SharpZipLib.Zip;
 
 namespace Gource
 {
-    public class Gource : IGitPluginForRepository
+    public class Gource : GitPluginBase, IGitPluginForRepository
     {
         #region IGitPlugin Members
 
-        public string Description
+        public override string Description
         {
             get { return "gource"; }
         }
 
-        //Store settings to use later
-        public IGitPluginSettingsContainer Settings { get; set; }
-
-        public void Register(IGitUICommands gitUiCommands)
+        protected override void RegisterSettings()
         {
-            //Register settings
+            base.RegisterSettings();
             Settings.AddSetting("Path to \"gource\"", "");
             Settings.AddSetting("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
         }
 
-        public bool Execute(GitUIBaseEventArgs eventArgs)
+        public override bool Execute(GitUIBaseEventArgs eventArgs)
         {
 
             IGitModule gitUiCommands = eventArgs.GitModule;

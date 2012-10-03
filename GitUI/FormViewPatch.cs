@@ -6,7 +6,7 @@ using ResourceManager.Translation;
 
 namespace PatchApply
 {
-    public partial class ViewPatch : GitExtensionsForm
+    public partial class ViewPatch : GitModuleForm
     {
         private readonly TranslationString _patchFileFilterString =
             new TranslationString("Patch file (*.Patch)");
@@ -14,7 +14,8 @@ namespace PatchApply
         private readonly TranslationString _patchFileFilterTitle =
             new TranslationString("Select patch file");
 
-        public ViewPatch()
+        public ViewPatch(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent(); Translate();
 
@@ -83,7 +84,7 @@ namespace PatchApply
             try
             {
                 PatchManager.PatchFileName = PatchFileNameEdit.Text;
-                PatchManager.LoadPatchFile(false, Settings.FilesEncoding);
+                PatchManager.LoadPatchFile(false, Module.FilesEncoding);
 
                 GridChangedFiles.DataSource = PatchManager.Patches;
             }

@@ -6,13 +6,14 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public sealed partial class FormRenameBranch : GitExtensionsForm
+    public sealed partial class FormRenameBranch : GitModuleForm
     {
         private readonly TranslationString _branchRenameFailed = new TranslationString("Rename failed.");
 
         private readonly string oldName;
 
-        public FormRenameBranch(string defaultBranch)
+        public FormRenameBranch(GitUICommands aCommands, string defaultBranch)
+            : base(aCommands)
         {
             InitializeComponent();
             Translate();
@@ -31,7 +32,7 @@ namespace GitUI
 
             try
             {
-                var renameBranchResult = GitModule.Current.Rename(oldName, newName);
+                var renameBranchResult = Module.Rename(oldName, newName);
 
                 if (!string.IsNullOrEmpty(renameBranchResult))
                     MessageBox.Show(this, _branchRenameFailed.Text + Environment.NewLine + renameBranchResult, Text,
