@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using GitCommands;
 using GitUIPluginInterfaces;
 
-namespace GitExtensions
+namespace GitUI
 {
     public class GitPluginSettingsContainer : IGitPluginSettingsContainer
     {

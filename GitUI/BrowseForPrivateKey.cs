@@ -59,7 +59,7 @@ namespace GitUI
                 return false;
             }
 
-            GitModule.Current.StartPageantWithKey(path);
+            GitModule.StartPageantWithKey(path);
             return true;
         }
     }

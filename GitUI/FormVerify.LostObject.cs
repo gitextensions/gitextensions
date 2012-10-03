@@ -60,7 +60,7 @@ namespace GitUI
                 this.hash = hash;
             }
 
-            public static LostObject TryParse(string raw)
+            public static LostObject TryParse(GitModule aModule, string raw)
             {
                 if (string.IsNullOrEmpty(raw))
                     throw new ArgumentException("Raw source must be non-empty string", raw);
@@ -85,13 +85,13 @@ namespace GitUI
 
                 if (result.ObjectType == LostObjectType.Commit)
                 {
-                    var commitLog = GetLostCommitLog(hash);
+                    var commitLog = GetLostCommitLog(aModule, hash);
                     var logPatternMatch = LogRegex.Match(commitLog);
                     if (logPatternMatch.Success)
                     {
-                        result.Author = GitCommandHelpers.ReEncodeStringFromLossless(logPatternMatch.Groups[1].Value);
+                        result.Author = aModule.ReEncodeStringFromLossless(logPatternMatch.Groups[1].Value);
                         string encodingName = logPatternMatch.Groups[2].Value;
-                        result.Subject = GitCommandHelpers.ReEncodeCommitMessage(logPatternMatch.Groups[3].Value, encodingName);
+                        result.Subject = aModule.ReEncodeCommitMessage(logPatternMatch.Groups[3].Value, encodingName);
                         result.Date = DateTimeUtils.ParseUnixTime(logPatternMatch.Groups[4].Value);
                     }
                 }
@@ -99,12 +99,12 @@ namespace GitUI
                 return result;
             }
 
-            private static string GetLostCommitLog(string hash)
+            private static string GetLostCommitLog(GitModule aModule, string hash)
             {
                 if (string.IsNullOrEmpty(hash) || !GitRevision.Sha1HashRegex.IsMatch(hash))
                     throw new ArgumentOutOfRangeException("hash", hash, "Hash must be a valid SHA1 hash.");
 
-                return GitModule.Current.RunGitCmd(string.Format(LogCommandArgumentsFormat, hash), Settings.LosslessEncoding);
+                return aModule.RunGitCmd(string.Format(LogCommandArgumentsFormat, hash), GitModule.LosslessEncoding);
             }
 
             private static LostObjectType GetObjectType(GroupCollection matchedGroup)

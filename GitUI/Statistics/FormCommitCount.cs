@@ -6,10 +6,10 @@ using GitCommands.Statistics;
 
 namespace GitUI.Statistics
 {
-    public partial class FormCommitCount : GitExtensionsForm
+    public partial class FormCommitCount : GitModuleForm
     {
-        public FormCommitCount()
-            : base(true)
+        public FormCommitCount(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
             this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
@@ -32,13 +32,13 @@ namespace GitUI.Statistics
 
             CommitCount.Text = "";
             var dict = new Dictionary<string, HashSet<string>>();
-            var items = CommitCounter.GroupAllCommitsByContributor().Item1;
+            var items = CommitCounter.GroupAllCommitsByContributor(Module).Item1;
             if (cbIncludeSubmodules.Checked)
             {
-                IList<string> submodules = GitModule.Current.GetSubmodulesLocalPathes();
+                IList<string> submodules = Module.GetSubmodulesLocalPathes();
                 foreach (var submoduleName in submodules)
                 {
-                    GitModule submodule = GitModule.Current.GetSubmodule(submoduleName);
+                    GitModule submodule = Module.GetSubmodule(submoduleName);
                     if (submodule.ValidWorkingDir())
                     {
                         var submoduleItems = CommitCounter.GroupAllCommitsByContributor(submodule).Item1;

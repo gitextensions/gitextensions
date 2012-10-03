@@ -8,7 +8,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormCheckoutBranch : GitExtensionsForm
+    public partial class FormCheckoutBranch : GitModuleForm
     {
 
         #region Translation
@@ -37,21 +37,27 @@ namespace GitUI
         private List<string> _remoteBranches = null;
         private List<string> _containsRevisionBranches = null;
 
-        internal FormCheckoutBranch()
+        private FormCheckoutBranch()
+            : this(null)
+        {
+        }
+
+        internal FormCheckoutBranch(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
             Translate();
             rbResetBranchText = rbResetBranch.Text;
-            rbCreateBranchText = rbCreateBranch.Text;
+            rbCreateBranchText = rbCreateBranch.Text;        
         }
 
-        public FormCheckoutBranch(string branch, bool remote)
-            : this(branch, remote, null)
+        public FormCheckoutBranch(GitUICommands aCommands, string branch, bool remote)
+            : this(aCommands, branch, remote, null)
         {
         }
 
-        public FormCheckoutBranch(string branch, bool remote, string containRevison)
-            : this()
+        public FormCheckoutBranch(GitUICommands aCommands, string branch, bool remote, string containRevison)
+            : this(aCommands)
         {
             isLoading = true;
 
@@ -85,7 +91,7 @@ namespace GitUI
                 //The dirty check is very expensive on large repositories. Without this setting
                 //the checkout branch dialog is too slow.
                 if (Settings.CheckForUncommittedChangesInCheckoutBranch)
-                    isDirtyDir = GitModule.Current.IsDirtyDir();
+                    isDirtyDir = Module.IsDirtyDir();
                 else
                     isDirtyDir = false;
 
@@ -180,7 +186,7 @@ namespace GitUI
                         DialogResult = DialogResult.None;
                         return DialogResult.None;
                     }
-                    if (!GitModule.Current.CheckRefFormat(cmd.NewBranchName))
+                    if (!Module.CheckRefFormat(cmd.NewBranchName))
                     {
                         MessageBox.Show(string.Format(_customBranchNameIsNotValid.Text, cmd.NewBranchName), Text);
                         DialogResult = DialogResult.None;
@@ -219,13 +225,13 @@ namespace GitUI
 
             //Stash local changes, but only if the setting CheckForUncommittedChangesInCheckoutBranch is true
             if (Settings.CheckForUncommittedChangesInCheckoutBranch &&
-                changes == Settings.LocalChanges.Stash && GitModule.Current.IsDirtyDir())
+                changes == Settings.LocalChanges.Stash && Module.IsDirtyDir())
             {
-                GitUICommands.Instance.Stash(_owner);
+                UICommands.Stash(_owner);
             }
 
             {
-                var successfullyCheckedOut = GitUICommands.Instance.StartCommandLineProcessDialog(cmd, _owner);
+                var successfullyCheckedOut = UICommands.StartCommandLineProcessDialog(cmd, _owner);
 
                 if (successfullyCheckedOut)
                     return DialogResult.OK;
@@ -276,7 +282,7 @@ namespace GitUI
             }
             else
             {
-                _remoteName = GitModule.GetRemoteName(_branch, GitModule.Current.GetRemotes(false));
+                _remoteName = GitModule.GetRemoteName(_branch, Module.GetRemotes(false));
                 _localBranchName = _branch.Substring(_remoteName.Length + 1);
                 _newLocalBranchName = string.Concat(_remoteName, "_", _localBranchName);
                 int i = 2;
@@ -296,7 +302,7 @@ namespace GitUI
         private IList<string> getLocalBranches()
         {
             if (_localBranches == null)
-                _localBranches = GitModule.Current.GetHeads(false).Select(b => b.Name).ToList();
+                _localBranches = Module.GetHeads(false).Select(b => b.Name).ToList();
 
             return _localBranches;
         }
@@ -304,7 +310,7 @@ namespace GitUI
         private IList<string> getRemoteBranches()
         {
             if (_remoteBranches == null)
-                _remoteBranches = GitModule.Current.GetHeads(true, true).Where(h => h.IsRemote && !h.IsTag).Select(b => b.Name).ToList();
+                _remoteBranches = Module.GetHeads(true, true).Where(h => h.IsRemote && !h.IsTag).Select(b => b.Name).ToList();
 
             return _remoteBranches;
         }
@@ -313,7 +319,7 @@ namespace GitUI
         {
             if (_containsRevisionBranches == null)
                 _containsRevisionBranches = CommitInformation
-                        .GetAllBranchesWhichContainGivenCommit(_containRevison, LocalBranch.Checked, !LocalBranch.Checked)
+                        .GetAllBranchesWhichContainGivenCommit(Module, _containRevison, LocalBranch.Checked, !LocalBranch.Checked)
                         .Where(a => !a.Equals("(no branch)", StringComparison.OrdinalIgnoreCase)).ToList();
 
             return _containsRevisionBranches;

@@ -8,7 +8,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public sealed partial class FormGitIgnore : GitExtensionsForm
+    public sealed partial class FormGitIgnore : GitModuleForm
     {
         private readonly TranslationString _gitignoreOnlyInWorkingDirSupported =
             new TranslationString(".gitignore is only supported when there is a working dir.");
@@ -62,12 +62,16 @@ namespace GitUI
         };
         #endregion
 
-        public FormGitIgnore()
-            : base(true)
+        public FormGitIgnore(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
             Translate();
+        }
 
+        protected override void OnRuntimeLoad(EventArgs e)
+        {
+            base.OnRuntimeLoad(e);
             LoadGitIgnore();
             _NO_TRANSLATE_GitIgnoreEdit.TextLoaded += GitIgnoreFileLoaded;
         }
@@ -76,8 +80,8 @@ namespace GitUI
         {
             try
             {
-                if (File.Exists(GitModule.CurrentWorkingDir + ".gitignore"))
-                    _NO_TRANSLATE_GitIgnoreEdit.ViewFile(GitModule.CurrentWorkingDir + ".gitignore");
+                if (File.Exists(Module.WorkingDir + ".gitignore"))
+                    _NO_TRANSLATE_GitIgnoreEdit.ViewFile(Module.WorkingDir + ".gitignore");
             }
             catch (Exception ex)
             {
@@ -99,13 +103,13 @@ namespace GitUI
             {
                 FileInfoExtensions
                     .MakeFileTemporaryWritable(
-                        GitModule.CurrentWorkingDir + ".gitignore",
+                        Module.WorkingDir + ".gitignore",
                         x =>
                         {
                             var fileContent = _NO_TRANSLATE_GitIgnoreEdit.GetText();
                             if (!fileContent.EndsWith(Environment.NewLine))
                                 fileContent += Environment.NewLine;
-                            File.WriteAllBytes(x, Settings.SystemEncoding.GetBytes(fileContent));
+                            File.WriteAllBytes(x, GitModule.SystemEncoding.GetBytes(fileContent));
                             _originalGitIgnoreFileContent = fileContent;
                         });
                 return true;
@@ -141,7 +145,7 @@ namespace GitUI
 
         private void FormGitIgnoreLoad(object sender, EventArgs e)
         {
-            if (!GitModule.Current.IsBareRepository())
+            if (!Module.IsBareRepository())
                 return;
             MessageBox.Show(this, _gitignoreOnlyInWorkingDirSupported.Text, _gitignoreOnlyInWorkingDirSupportedCaption.Text);
             Close();
@@ -169,7 +173,7 @@ namespace GitUI
         private void AddPattern_Click(object sender, EventArgs e)
         {
             SaveGitIgnore();
-            GitUICommands.Instance.StartAddToGitIgnoreDialog(this, "*.dll");
+            UICommands.StartAddToGitIgnoreDialog(this, "*.dll");
             LoadGitIgnore();
         }
 

@@ -6,15 +6,23 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormCheckout : GitExtensionsForm
+    public partial class FormCheckout : GitModuleForm
     {
         private readonly TranslationString _noRevisionSelectedMsgBox =
             new TranslationString("Select 1 revision to checkout.");
         private readonly TranslationString _noRevisionSelectedMsgBoxCaption =
             new TranslationString("Checkout");
 
-        public FormCheckout()
-            : base(true)
+        /// <summary>
+        /// For VS designer
+        /// </summary>
+        private FormCheckout()
+            : this(null)
+        {
+        }
+
+        public FormCheckout(GitUICommands aCommands)
+            : base(true, aCommands)
         {
             InitializeComponent();
             Translate();

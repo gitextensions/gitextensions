@@ -65,9 +65,6 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="LoadPlugins.cs" />
-    <Compile Include="GitPluginSettingsContainer.cs" />
-    <Compile Include="PluginExtraction.cs" />
     <Compile Include="Program.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

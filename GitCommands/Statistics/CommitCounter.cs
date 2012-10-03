@@ -1,27 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using GitUIPluginInterfaces;
 
 namespace GitCommands.Statistics
 {
     public static class CommitCounter
     {
-        public static Tuple<Dictionary<string, int>, int> GroupAllCommitsByContributor()
-        {
-            return GroupAllCommitsByContributor(GitModule.Current);
-        }
-
-        public static Tuple<Dictionary<string, int>, int> GroupAllCommitsByContributor(GitModule module)
+        public static Tuple<Dictionary<string, int>, int> GroupAllCommitsByContributor(IGitModule module)
         {
             return GroupAllCommitsByContributor(module, DateTime.MinValue, DateTime.MaxValue);
         }
 
-        private static Tuple<Dictionary<string, int>, int> GroupAllCommitsByContributor(GitModule module, DateTime since, DateTime until)
+        private static Tuple<Dictionary<string, int>, int> GroupAllCommitsByContributor(IGitModule module, DateTime since, DateTime until)
         {
             var sinceParam = since != DateTime.MinValue ? GetDateParameter(since, "since") : "";
             var untilParam = until != DateTime.MaxValue ? GetDateParameter(since, "until") : "";
 
             var unformattedCommitsPerContributor =
-                module.RunGitCmd(
+                module.RunGit(
                         "shortlog --all -s -n --no-merges" + sinceParam + untilParam)
                     .Split('\n');
 

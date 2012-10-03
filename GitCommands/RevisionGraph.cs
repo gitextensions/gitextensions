@@ -77,9 +77,12 @@ namespace GitCommands
 
         private AsyncLoader backgroundLoader = new AsyncLoader();
 
-        public RevisionGraph()
+        private GitModule Module;
+
+        public RevisionGraph(GitModule module)
         {
             BackgroundThread = true;
+            Module = module;
         }
 
         ~RevisionGraph()
@@ -151,15 +154,15 @@ namespace GitCommands
                 formatString,
                 BranchFilter);
 
-            using (GitCommandsInstance gitGetGraphCommand = new GitCommandsInstance())
+            using (GitCommandsInstance gitGetGraphCommand = new GitCommandsInstance(Module))
             {
                 gitGetGraphCommand.StreamOutput = true;
                 gitGetGraphCommand.CollectOutput = false;
-                Encoding LogOutputEncoding = Settings.LogOutputEncoding;
+                Encoding LogOutputEncoding = Module.LogOutputEncoding;
                 gitGetGraphCommand.SetupStartInfoCallback = startInfo =>
                 {
-                    startInfo.StandardOutputEncoding = Settings.LosslessEncoding;
-                    startInfo.StandardErrorEncoding = Settings.LosslessEncoding;
+                    startInfo.StandardOutputEncoding = GitModule.LosslessEncoding;
+                    startInfo.StandardErrorEncoding = GitModule.LosslessEncoding;
                 };
 
                 Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arguments);
@@ -177,7 +180,7 @@ namespace GitCommands
                     line = p.StandardOutput.ReadLine();
                     //commit message is not encoded by git
                     if (nextStep != ReadStep.CommitMessage)
-                        line = GitCommandHelpers.ReEncodeString(line, Settings.LosslessEncoding, LogOutputEncoding);
+                        line = GitModule.ReEncodeString(line, GitModule.LosslessEncoding, LogOutputEncoding);
 
                     if (line != null)
                     {
@@ -202,16 +205,16 @@ namespace GitCommands
 
         private List<GitHead> GetHeads()
         {
-            var result = GitModule.Current.GetHeads(true);
-            bool validWorkingDir = GitModule.Current.ValidWorkingDir();
-            selectedBranchName = validWorkingDir ? GitModule.Current.GetSelectedBranch() : string.Empty;
+            var result = Module.GetHeads(true);
+            bool validWorkingDir = Module.ValidWorkingDir();
+            selectedBranchName = validWorkingDir ? Module.GetSelectedBranch() : string.Empty;
             GitHead selectedHead = result.Find(head => head.Name == selectedBranchName);
 
             if (selectedHead != null)
             {
                 selectedHead.Selected = true;
 
-                ConfigFile localConfigFile = GitModule.Current.GetLocalConfig();
+                ConfigFile localConfigFile = Module.GetLocalConfig();
 
                 GitHead selectedHeadMergeSource =
                     result.Find(head => head.IsRemote
@@ -268,7 +271,7 @@ namespace GitCommands
                     // Sanity check
                     if (line == COMMIT_BEGIN)
                     {
-                        revision = new GitRevision(null);
+                        revision = new GitRevision(Module, null);
                     }
                     else
                     {
@@ -327,7 +330,7 @@ namespace GitCommands
                     break;
                 
                 case ReadStep.CommitMessage:
-                    revision.Message = GitCommandHelpers.ReEncodeCommitMessage(line, revision.MessageEncoding);
+                    revision.Message = Module.ReEncodeCommitMessage(line, revision.MessageEncoding);
 
                     break;
 

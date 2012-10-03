@@ -44,6 +44,12 @@ namespace GitCommands
             loader.Load(doMe, continueWith);
         }
 
+        public static void DoAsync(Action doMe, Action continueWith)
+        {
+            AsyncLoader loader = new AsyncLoader();
+            loader.Load(doMe, continueWith);
+        }
+        
         public void Load(Action<ILoadingTaskState> loadContent, Action onLoaded)
         { 
             Load((state) => { loadContent(state); return true; }, (b) => onLoaded() );

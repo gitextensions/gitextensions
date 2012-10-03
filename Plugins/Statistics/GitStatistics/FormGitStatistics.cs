@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Statistics;
 using GitStatistics.PieChart;
+using GitUIPluginInterfaces;
 
 namespace GitStatistics
 {
@@ -38,9 +39,11 @@ namespace GitStatistics
         private SynchronizationContext syncContext;
         private LineCounter lineCounter;
         private AsyncLoader loadThread = new AsyncLoader();
+        private readonly IGitModule Module;
 
-        public FormGitStatistics(string codeFilePattern)
+        public FormGitStatistics(IGitModule aModule, string codeFilePattern)
         {
+            Module = aModule;
             _codeFilePattern = codeFilePattern;
             InitializeComponent();
 
@@ -71,7 +74,7 @@ namespace GitStatistics
         {
             Action<FormGitStatistics> a = sender =>
             {
-                var allCommitsByUser = CommitCounter.GroupAllCommitsByContributor();
+                var allCommitsByUser = CommitCounter.GroupAllCommitsByContributor(Module);
                 syncContext.Post(o =>
                 {
                     if (this.IsDisposed)

@@ -41,6 +41,21 @@ namespace GitUI
             return isComponentInDesignMode;
         }
 
+        protected virtual void OnRuntimeLoad(EventArgs e)
+        {
+
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            if (!CheckComponent(this))
+                OnRuntimeLoad(e);
+        }
+
+
+
         void GitExtensionsControl_Load(object sender, EventArgs e)
         {
             // find out if the value is a component and is currently in design mode
@@ -99,20 +114,9 @@ namespace GitUI
         /// <param name="command"></param>
         protected virtual bool ExecuteCommand(int command)
         {
-            ExecuteScriptCommand(command, Keys.None);
-            return true;
+            return false;
         }
-        protected virtual bool ExecuteScriptCommand(int command, Keys keyData)
-        {
-            var curScripts = GitUI.Script.ScriptManager.GetScripts();
 
-            foreach (GitUI.Script.ScriptInfo s in curScripts)
-            {
-                if (s.HotkeyCommandIdentifier == command)
-                    GitUI.Script.ScriptRunner.RunScript(s.Name, null);
-            }
-            return true;
-        }
         #endregion
 
         private void InitializeComponent()
