@@ -14,9 +14,7 @@ using GitCommands;
 
 namespace GitCommandsTests
 {
-    /// <summary>
 
-    /// </summary>
     [TestClass]
     public class FindValidworkingDirTest
     {
