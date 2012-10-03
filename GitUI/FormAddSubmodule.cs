@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.Collections.Generic;
 using GitCommands;
 using GitCommands.Repository;
 using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormAddSubmodule : GitExtensionsForm
+    public partial class FormAddSubmodule : GitModuleForm
     {
         private readonly TranslationString _remoteAndLocalPathRequired
             = new TranslationString("A remote path and local path are required");
 
-        public FormAddSubmodule()
+        public FormAddSubmodule(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
             Translate();
@@ -58,17 +60,14 @@ namespace GitUI
 
         private void BranchDropDown(object sender, EventArgs e)
         {
-            var realWorkingDir = GitModule.CurrentWorkingDir;
-            GitModule.CurrentWorkingDir = Directory.Text;
+            GitModule module = new GitModule(Directory.Text);
 
-            var heads = GitModule.Current.GetHeads(false);
+            var heads = module.GetHeads(false);
 
-            heads.Insert(0, GitHead.NoHead);
+            heads.Insert(0, GitHead.NoHead(module));
 
             Branch.DisplayMember = "Name";
             Branch.DataSource = heads;
-
-            GitModule.CurrentWorkingDir = realWorkingDir;
         }
 
         private void DirectoryTextUpdate(object sender, EventArgs e)

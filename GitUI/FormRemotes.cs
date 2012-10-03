@@ -8,7 +8,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormRemotes : GitExtensionsForm
+    public partial class FormRemotes : GitModuleForm
     {
         private string _remote = "";
 
@@ -52,8 +52,8 @@ namespace GitUI
         private readonly TranslationString _labelUrlAsFetchPush =
             new TranslationString("Url");
 
-        public FormRemotes()
-            : base(true)
+        public FormRemotes(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
             Translate();
@@ -89,9 +89,9 @@ namespace GitUI
             FillUrlDropDown();
             FillPushUrlDropDown();
 
-            Remotes.DataSource = GitModule.Current.GetRemotes();
+            Remotes.DataSource = Module.GetRemotes();
 
-            var heads = GitModule.Current.GetHeads(false, true);
+            var heads = Module.GetHeads(false, true);
             RemoteBranches.DataSource = heads;
 
             RemoteBranches.DataError += RemoteBranchesDataError;
@@ -172,11 +172,11 @@ namespace GitUI
                     return;
                 }
 
-                output = GitModule.Current.AddRemote(RemoteName.Text, Url.Text);
+                output = Module.AddRemote(RemoteName.Text, Url.Text);
 
                 if (checkBoxSepPushUrl.Checked)
                 {
-                    GitModule.Current.SetPathSetting(string.Format(SettingKeyString.RemotePushUrl, RemoteName.Text), comboBoxPushUrl.Text);
+                    Module.SetPathSetting(string.Format(SettingKeyString.RemotePushUrl, RemoteName.Text), comboBoxPushUrl.Text);
                 }
 
                 if (MessageBox.Show(this, _questionAutoPullBehaviour.Text, _questionAutoPullBehaviourCaption.Text,
@@ -199,18 +199,18 @@ namespace GitUI
             {
                 if (RemoteName.Text != _remote)
                 {
-                    output = GitModule.Current.RenameRemote(_remote, RemoteName.Text);
+                    output = Module.RenameRemote(_remote, RemoteName.Text);
                 }
 
-                GitModule.Current.SetPathSetting(string.Format(SettingKeyString.RemoteUrl, RemoteName.Text), Url.Text);
-                GitModule.Current.SetPathSetting(string.Format("remote.{0}.puttykeyfile", RemoteName.Text), PuttySshKey.Text);
+                Module.SetPathSetting(string.Format(SettingKeyString.RemoteUrl, RemoteName.Text), Url.Text);
+                Module.SetPathSetting(string.Format("remote.{0}.puttykeyfile", RemoteName.Text), PuttySshKey.Text);
                 if (checkBoxSepPushUrl.Checked)
                 {
-                    GitModule.Current.SetPathSetting(string.Format(SettingKeyString.RemotePushUrl, RemoteName.Text), comboBoxPushUrl.Text);
+                    Module.SetPathSetting(string.Format(SettingKeyString.RemotePushUrl, RemoteName.Text), comboBoxPushUrl.Text);
                 }
                 else
                 {
-                    GitModule.Current.UnsetSetting(string.Format(SettingKeyString.RemotePushUrl, RemoteName.Text));
+                    Module.UnsetSetting(string.Format(SettingKeyString.RemotePushUrl, RemoteName.Text));
                 }
             }
 
@@ -224,11 +224,11 @@ namespace GitUI
 
         private void ConfigureRemotes()
         {
-            ConfigFile localConfig = GitModule.Current.GetLocalConfig();
+            ConfigFile localConfig = Module.GetLocalConfig();
 
-            foreach (var remoteHead in GitModule.Current.GetHeads(true, true))
+            foreach (var remoteHead in Module.GetHeads(true, true))
             {
-                foreach (var localHead in GitModule.Current.GetHeads(true, true))
+                foreach (var localHead in Module.GetHeads(true, true))
                 {
                     if (!remoteHead.IsRemote ||
                         localHead.IsRemote ||
@@ -247,7 +247,7 @@ namespace GitUI
 
         private void NewClick(object sender, EventArgs e)
         {
-            var output = GitModule.Current.AddRemote("<new>", "");
+            var output = Module.AddRemote("<new>", "");
             if (!string.IsNullOrEmpty(output))
             {
                 MessageBox.Show(this, output, _hintDelete.Text);
@@ -265,7 +265,7 @@ namespace GitUI
             if (MessageBox.Show(this, _questionDeleteRemote.Text, _questionDeleteRemoteCaption.Text, MessageBoxButtons.YesNo) ==
                 DialogResult.Yes)
             {
-                var output = GitModule.Current.RemoveRemote(_remote);
+                var output = Module.RemoveRemote(_remote);
                 if (!string.IsNullOrEmpty(output))
                 {
                     MessageBox.Show(this, output, _hintDelete.Text);
@@ -295,7 +295,7 @@ namespace GitUI
             if (string.IsNullOrEmpty(PuttySshKey.Text))
                 MessageBox.Show(this, _warningNoKeyEntered.Text);
             else
-                GitModule.Current.StartPageantWithKey(PuttySshKey.Text);
+                GitModule.StartPageantWithKey(PuttySshKey.Text);
         }
 
         private void TestConnectionClick(object sender, EventArgs e)
@@ -315,7 +315,7 @@ namespace GitUI
             }
             else
                 sshURL = Url.Text;
-            GitModule.Current.RunRealCmdDetached(
+            Module.RunRealCmdDetached(
                 "cmd.exe",
                 string.Format("/k \"\"{0}\" -T \"{1}\"\"", Settings.Plink, sshURL));
         }
@@ -339,7 +339,7 @@ namespace GitUI
             LocalBranchNameEdit.ReadOnly = true;
             RemoteRepositoryCombo.Items.Clear();
             RemoteRepositoryCombo.Items.Add("");
-            foreach (var remote in GitModule.Current.GetRemotes())
+            foreach (var remote in Module.GetRemotes())
                 RemoteRepositoryCombo.Items.Add(remote);
 
             RemoteRepositoryCombo.Text = head.TrackingRemote;
@@ -366,12 +366,12 @@ namespace GitUI
             if (string.IsNullOrEmpty(head.TrackingRemote) || string.IsNullOrEmpty(currentSelectedRemote))
                 return;
 
-            var remoteUrl = GitModule.Current.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, currentSelectedRemote));
+            var remoteUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, currentSelectedRemote));
 
             if (string.IsNullOrEmpty(remoteUrl))
                 return;
 
-            foreach (var remoteHead in GitModule.Current.GetHeads(true, true))
+            foreach (var remoteHead in Module.GetHeads(true, true))
             {
                 if (remoteHead.IsRemote &&
                     remoteHead.Name.ToLower().Contains(currentSelectedRemote.ToLower()) /*&&
@@ -417,16 +417,16 @@ namespace GitUI
             _remote = (string)Remotes.SelectedItem;
             RemoteName.Text = _remote;
 
-            Url.Text = GitModule.Current.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, _remote));
+            Url.Text = Module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, _remote));
 
-            comboBoxPushUrl.Text = GitModule.Current.GetPathSetting(string.Format(SettingKeyString.RemotePushUrl, _remote));
+            comboBoxPushUrl.Text = Module.GetPathSetting(string.Format(SettingKeyString.RemotePushUrl, _remote));
             if (string.IsNullOrEmpty(comboBoxPushUrl.Text))
                 checkBoxSepPushUrl.Checked = false;
             else
                 checkBoxSepPushUrl.Checked = true;
 
             PuttySshKey.Text =
-                GitModule.Current.GetPathSetting(string.Format("remote.{0}.puttykeyfile", RemoteName.Text));
+                Module.GetPathSetting(string.Format("remote.{0}.puttykeyfile", RemoteName.Text));
         }
 
         private void UpdateBranchClick(object sender, EventArgs e)

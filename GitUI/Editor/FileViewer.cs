@@ -12,7 +12,7 @@ using ICSharpCode.TextEditor.Util;
 namespace GitUI.Editor
 {
     [DefaultEvent("SelectedLineChanged")]
-    public partial class FileViewer : GitExtensionsControl
+    public partial class FileViewer : GitModuleControl
     {
         private readonly AsyncLoader _async;
         private int _currentScrollPos = -1;
@@ -71,7 +71,6 @@ namespace GitUI.Editor
             if (RunTime() && ContextMenuStrip == null)
                 ContextMenuStrip = contextMenu;
             contextMenu.Opening += ContextMenu_Opening; 
-            this.Encoding = Settings.FilesEncoding;
         }
 
         private bool RunTime()
@@ -116,9 +115,25 @@ namespace GitUI.Editor
             set { _internalFileViewer.ShowLineNumbers = value; }
         }
 
+        private Encoding _Encoding;
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public Encoding Encoding { get; set; }
+        public Encoding Encoding 
+        {
+            get
+            {
+                if (_Encoding == null)
+                    _Encoding = Module.FilesEncoding;
+
+                return _Encoding;
+            }
+
+            set
+            {
+                _Encoding = value;
+            }
+        }
+                         
         [DefaultValue(0)]
         [Browsable(false)]
         public int ScrollPos
@@ -127,19 +142,18 @@ namespace GitUI.Editor
             set { _internalFileViewer.ScrollPos = value; }
         }
 
-        private void WorkingDirChanged(string oldDir, string newDir, string newGitDir)
+        private void WorkingDirChanged(IGitUICommandsSource source, GitUICommands old)
         {
-            this.Encoding = Settings.FilesEncoding;
+            this.Encoding = null;
         }
 
 
-        protected override void OnLoad(EventArgs e)
+        protected override void OnRuntimeLoad(EventArgs e)
         {
-            if (!DesignMode)
-                this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             Font = Settings.DiffFont;
-
-            GitModule.CurrentWorkingDirChanged += WorkingDirChanged;
+            UICommandsSource.GitUICommandsChanged += WorkingDirChanged;
+            WorkingDirChanged(UICommandsSource, null);
         }
 
         void ContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -323,7 +337,7 @@ namespace GitUI.Editor
 
         public void ViewCurrentChanges(string fileName, string oldFileName, bool staged)
         {
-            _async.Load(() => GitModule.Current.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding), ViewStagingPatch);
+            _async.Load(() => Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding), ViewStagingPatch);
         }
 
         public void ViewStagingPatch(string text)
@@ -334,13 +348,13 @@ namespace GitUI.Editor
 
         public void ViewSubmoduleChanges(string fileName, string oldFileName, bool staged)
         {
-            _async.Load(() => GitModule.Current.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding), ViewSubmodulePatch);
+            _async.Load(() => Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding), ViewSubmodulePatch);
         }
 
         public void ViewSubmodulePatch(string text)
         {
             ResetForText(null);
-            text = GitCommandHelpers.ProcessSubmodulePatch(text);
+            text = GitCommandHelpers.ProcessSubmodulePatch(Module, text);
             _internalFileViewer.SetText(text);
             if (TextLoaded != null)
                 TextLoaded(this, null);
@@ -396,14 +410,14 @@ namespace GitUI.Editor
             }
             else
             {
-                string blob = GitModule.Current.GetFileBlobHash(fileName, guid);
+                string blob = Module.GetFileBlobHash(fileName, guid);
                 ViewGitItem(fileName, blob);
             }
         }
 
         public void ViewGitItem(string fileName, string guid)
         {
-            ViewItem(fileName, () => GetImage(fileName, guid), () => GitModule.Current.GetFileText(guid, Encoding));
+            ViewItem(fileName, () => GetImage(fileName, guid), () => Module.GetFileText(guid, Encoding));
         }
 
         private void ViewItem(string fileName, Func<Image> getImage, Func<string> getFileText)
@@ -441,9 +455,9 @@ namespace GitUI.Editor
         }
 
 
-        private static bool IsBinaryFile(string fileName)
+        private bool IsBinaryFile(string fileName)
         {
-            return FileHelper.IsBinaryFile(fileName);
+            return FileHelper.IsBinaryFile(Module, fileName);
         }
 
         private static bool IsImage(string fileName)
@@ -456,11 +470,11 @@ namespace GitUI.Editor
             return fileName.EndsWith(".ico", StringComparison.CurrentCultureIgnoreCase);
         }
 
-        private static Image GetImage(string fileName, string guid)
+        private Image GetImage(string fileName, string guid)
         {
             try
             {
-                using (var stream = GitModule.Current.GetFileStream(guid))
+                using (var stream = Module.GetFileStream(guid))
                 {
                     return CreateImage(fileName, stream);
                 }
@@ -471,11 +485,11 @@ namespace GitUI.Editor
             }
         }
 
-        private static Image GetImage(string fileName)
+        private Image GetImage(string fileName)
         {
             try
             {
-                using (Stream stream = File.OpenRead(GitCommands.GitModule.CurrentWorkingDir + fileName))
+                using (Stream stream = File.OpenRead(Module.WorkingDir + fileName))
                 {
                     return CreateImage(fileName, stream);
                 }
@@ -504,15 +518,15 @@ namespace GitUI.Editor
             return new MemoryStream(new BinaryReader(stream).ReadBytes((int)stream.Length));
         }
 
-        private static string GetFileText(string fileName)
+        private string GetFileText(string fileName)
         {
             string path;
             if (File.Exists(fileName))
                 path = fileName;
             else
-                path = GitCommands.GitModule.CurrentWorkingDir + fileName;
+                path = Module.WorkingDir + fileName;
 
-            return !File.Exists(path) ? null : FileReader.ReadFileContent(path, GitCommands.Settings.FilesEncoding);
+            return !File.Exists(path) ? null : FileReader.ReadFileContent(path, Module.FilesEncoding);
         }
 
         private void ResetForImage()
@@ -810,7 +824,7 @@ namespace GitUI.Editor
                 case Commands.DecreaseNumberOfVisibleLines: this.DescreaseNumberOfLinesToolStripMenuItemClick(null, null); break;
                 case Commands.ShowEntireFile: this.ShowEntireFileToolStripMenuItemClick(null, null); break;
                 case Commands.TreatFileAsText: this.TreatAllFilesAsTextToolStripMenuItemClick(null, null); break;
-                default: ExecuteScriptCommand(cmd, Keys.None); break;
+                default: return base.ExecuteCommand(cmd);
             }
 
             return true;
@@ -836,7 +850,7 @@ namespace GitUI.Editor
         {
             Encoding encod = null;
             if (string.IsNullOrEmpty(encodingToolStripComboBox.Text))
-                encod = Settings.FilesEncoding;
+                encod = Module.FilesEncoding;
             else if (encodingToolStripComboBox.Text.StartsWith("Default", StringComparison.CurrentCultureIgnoreCase))
                 encod = Encoding.Default;
             else if (encodingToolStripComboBox.Text.Equals("ASCII", StringComparison.CurrentCultureIgnoreCase))
@@ -850,7 +864,7 @@ namespace GitUI.Editor
             else if (encodingToolStripComboBox.Text.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
                 encod = new UTF32Encoding(true, false);
             else
-                encod = Settings.FilesEncoding;
+                encod = Module.FilesEncoding;
             if (encod != this.Encoding)
             {
                 this.Encoding = encod;

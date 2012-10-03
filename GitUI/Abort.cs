@@ -52,10 +52,5 @@ namespace GitUI
             }
             return false;
         }
-
-        public static bool AbortCurrentAction()
-        {
-            return AbortCurrentAction(GitModule.Current);
-        }
     }
 }

@@ -2,9 +2,19 @@
 
 namespace GitUI
 {
-    public sealed partial class FormAddFiles : GitExtensionsForm
+    public sealed partial class FormAddFiles : GitModuleForm
     {
-        public FormAddFiles()
+
+        /// <summary>
+        /// For VS designer
+        /// </summary>
+        private FormAddFiles()
+            : this(null)
+        {
+        }
+
+        public FormAddFiles(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
             Translate();

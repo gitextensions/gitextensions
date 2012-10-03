@@ -62,8 +62,8 @@ index 974b03a..a189310 100644
          public static IList<string> GetSubmodulesNames()
          {
              IList<string> submodulesNames = new List<string>();
--            ConfigFile configFile = new ConfigFile(GitModule.CurrentWorkingDir + ".gitmodules");
-+            var configFile = new ConfigFile(GitModule.CurrentWorkingDir + ".gitmodules");
+-            ConfigFile configFile = new ConfigFile(Module.WorkingDir + ".gitmodules");
++            var configFile = new ConfigFile(Module.WorkingDir + ".gitmodules");
              foreach (ConfigSection configSection in configFile.GetConfigSections())
              {
                  submodulesNames.Add(configSection.SubSection);
@@ -119,7 +119,7 @@ index 974b03a..a189310 100644
 -                CreateNoWindow = false,
 -                FileName = cmd,
 -                Arguments = arguments,
--                WorkingDirectory = GitModule.CurrentWorkingDir,
+-                WorkingDirectory = Module.WorkingDir,
 -                WindowStyle = ProcessWindowStyle.Normal,
 -                LoadUserProfile = true
 -            };
@@ -132,7 +132,7 @@ index 974b03a..a189310 100644
 +                               CreateNoWindow = false,
 +                               FileName = cmd,
 +                               Arguments = arguments,
-+                               WorkingDirectory = GitModule.CurrentWorkingDir,
++                               WorkingDirectory = Module.WorkingDir,
 +                               WindowStyle = ProcessWindowStyle.Normal,
 +                               LoadUserProfile = true
 +                           };
@@ -148,7 +148,7 @@ index 974b03a..a189310 100644
 -                    UseShellExecute = false,
 -                    RedirectStandardOutput = false,
 -                    FileName = cmd,
--                    WorkingDirectory = GitModule.CurrentWorkingDir,
+-                    WorkingDirectory = Module.WorkingDir,
 -                    Arguments = arguments,
 -                    CreateNoWindow = true
 -                };
@@ -159,7 +159,7 @@ index 974b03a..a189310 100644
 +                                          UseShellExecute = false,
 +                                          RedirectStandardOutput = false,
 +                                          FileName = cmd,
-+                                          WorkingDirectory = GitModule.CurrentWorkingDir,
++                                          WorkingDirectory = Module.WorkingDir,
 +                                          Arguments = arguments,
 +                                          CreateNoWindow = true
 +                                      };
@@ -229,7 +229,7 @@ index 974b03a..a189310 100644
 -                CreateNoWindow = false,
 -                FileName = cmd,
 -                Arguments = arguments,
--                WorkingDirectory = GitModule.CurrentWorkingDir,
+-                WorkingDirectory = Module.WorkingDir,
 -                WindowStyle = ProcessWindowStyle.Hidden
 -            };
 +            var info = new ProcessStartInfo
@@ -244,7 +244,7 @@ index 974b03a..a189310 100644
 +                               CreateNoWindow = false,
 +                               FileName = cmd,
 +                               Arguments = arguments,
-+                               WorkingDirectory = GitModule.CurrentWorkingDir,
++                               WorkingDirectory = Module.WorkingDir,
 +                               WindowStyle = ProcessWindowStyle.Hidden
 +                           };
  
@@ -263,9 +263,9 @@ index 974b03a..a189310 100644
                  var fileline = file.Split(new[] { ' ', '\t' });
                  if (fileline.Length < 3)
                      continue;
--                Directory.SetCurrentDirectory(GitCommands.GitModule.CurrentWorkingDir);
+-                Directory.SetCurrentDirectory(GitCommands.Module.WorkingDir);
 -                using (MemoryStream ms = (MemoryStream)GitCommandHelpers.GetFileStream(fileline[1])) //Ugly, has implementation info.
-+                Directory.SetCurrentDirectory(GitModule.CurrentWorkingDir);
++                Directory.SetCurrentDirectory(Module.WorkingDir);
 +                using (var ms = (MemoryStream)GetFileStream(fileline[1])) //Ugly, has implementation info.
                  {
 -                  using (FileStream fileOut = File.Create(saveAs))
@@ -496,7 +496,7 @@ index 974b03a..a189310 100644
 -                    CreateNoWindow = true,
 -                    FileName = "\"" + Settings.GitCommand + "\"",
 -                    Arguments = "cat-file blob \"" + id + "\"",
--                    WorkingDirectory = GitModule.CurrentWorkingDir,
+-                    WorkingDirectory = Module.WorkingDir,
 -                    WindowStyle = ProcessWindowStyle.Normal,
 -                    LoadUserProfile = true
 -                };
@@ -510,7 +510,7 @@ index 974b03a..a189310 100644
 +                                   CreateNoWindow = true,
 +                                   FileName = "\"" + Settings.GitCommand + "\"",
 +                                   Arguments = "cat-file blob \"" + id + "\"",
-+                                   WorkingDirectory = GitModule.CurrentWorkingDir,
++                                   WorkingDirectory = Module.WorkingDir,
 +                                   WindowStyle = ProcessWindowStyle.Normal,
 +                                   LoadUserProfile = true
 +                               };
@@ -2303,7 +2303,7 @@ index 9277613..d02605a 100644
 +++ b/GitExtensions/PluginExtraction.cs
 @@ -24,8 +24,9 @@ namespace GitExtensions
                  gitPlugin.Settings = new GitPluginSettingsContainer(gitPlugin.Description);
-                 gitPlugin.Register(GitUICommands.Instance);
+                 gitPlugin.Register(UICommands);
  
 -                if (gitPlugin is IRepositoryHostPlugin)
 -                    RepoHosts.GitHosters.Add(gitPlugin as IRepositoryHostPlugin);

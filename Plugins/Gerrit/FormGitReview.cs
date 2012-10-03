@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI;
+using GitUIPluginInterfaces;
 using ResourceManager.Translation;
 
 namespace Gerrit
@@ -26,23 +27,29 @@ namespace Gerrit
             new TranslationString("Save changes?");
 
         private string _originalGitReviewFileContent = string.Empty;
+        protected readonly IGitUICommands UICommands;
+        protected IGitModule Module { get { return UICommands.GitModule; } }
 
-        public FormGitReview()
+        public FormGitReview(IGitUICommands aUICommands)
             : base(true)
         {
             InitializeComponent();
             Translate();
 
-            LoadGitReview();
-            _NO_TRANSLATE_GitReviewEdit.TextLoaded += GitReviewFileLoaded;
+            UICommands = aUICommands;
+            if (UICommands != null)
+            {
+                LoadGitReview();
+                _NO_TRANSLATE_GitReviewEdit.TextLoaded += GitReviewFileLoaded;
+            }
         }
 
         private void LoadGitReview()
         {
             try
             {
-                if (File.Exists(GitModule.CurrentWorkingDir + ".gitreview"))
-                    _NO_TRANSLATE_GitReviewEdit.ViewFile(GitModule.CurrentWorkingDir + ".gitreview");
+                if (File.Exists(Module.GitWorkingDir + ".gitreview"))
+                    _NO_TRANSLATE_GitReviewEdit.ViewFile(Module.GitWorkingDir + ".gitreview");
             }
             catch (Exception ex)
             {
@@ -64,13 +71,13 @@ namespace Gerrit
             {
                 FileInfoExtensions
                     .MakeFileTemporaryWritable(
-                        GitModule.CurrentWorkingDir + ".gitreview",
+                        Module.GitWorkingDir + ".gitreview",
                         x =>
                         {
                             var fileContent = _NO_TRANSLATE_GitReviewEdit.GetText();
                             if (!fileContent.EndsWith(Environment.NewLine))
                                 fileContent += Environment.NewLine;
-                            File.WriteAllBytes(x, Settings.SystemEncoding.GetBytes(fileContent));
+                            File.WriteAllBytes(x, GitModule.SystemEncoding.GetBytes(fileContent));
                             _originalGitReviewFileContent = fileContent;
                         });
                 return true;
@@ -106,7 +113,7 @@ namespace Gerrit
 
         private void FormGitIgnoreLoad(object sender, EventArgs e)
         {
-            if (!GitModule.Current.IsBareRepository())
+            if (!Module.IsBareRepository())
                 return;
             MessageBox.Show(this, _gitreviewOnlyInWorkingDirSupported.Text, _gitreviewOnlyInWorkingDirSupportedCaption.Text);
             Close();

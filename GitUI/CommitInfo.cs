@@ -10,7 +10,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class CommitInfo : GitExtensionsControl
+    public partial class CommitInfo : GitModuleControl
     {
         private readonly TranslationString containedInBranches = new TranslationString("Contained in branches:");
         private readonly TranslationString containedInNoBranch = new TranslationString("Contained in no branch");
@@ -81,7 +81,7 @@ namespace GitUI
             _RevisionHeader.Refresh();
 
             string error = "";
-            CommitData data = CommitData.GetCommitData(GitModule.Current, _revision, ref error);
+            CommitData data = CommitData.GetCommitData(Module, _revision, ref error);
             CommitInformation commitInformation = CommitInformation.GetCommitInfo(data);
 
             _RevisionHeader.SetXHTMLText(commitInformation.Header);
@@ -147,7 +147,7 @@ namespace GitUI
             // Include remote branches if requested
             bool getRemote = Settings.CommitInfoShowContainedInBranchesRemote ||
                              Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
-            var branches = CommitInformation.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote);
+            var branches = CommitInformation.GetAllBranchesWhichContainGivenCommit(Module, revision, getLocal, getRemote);
             var branchString = "";
             bool allowLocal = Settings.CommitInfoShowContainedInBranchesLocal;
             bool allowRemote = getRemote;
@@ -188,7 +188,7 @@ namespace GitUI
         private string GetTagsWhichContainsThisCommit(string revision)
         {
             var tagString = "";
-            foreach (var tag in CommitInformation.GetAllTagsWhichContainGivenCommit(revision))
+            foreach (var tag in CommitInformation.GetAllTagsWhichContainGivenCommit(Module, revision))
             {
                 if (tagString != string.Empty)
                     tagString += ", ";
@@ -236,7 +236,7 @@ namespace GitUI
 
         private void addNoteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GitModule.Current.EditNotes(_revision);
+            Module.EditNotes(_revision);
             ReloadCommitInfo();
         }
     }

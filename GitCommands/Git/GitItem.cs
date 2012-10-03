@@ -5,6 +5,7 @@ namespace GitCommands
     public class GitItem : IGitItem
     {
         internal const int MinimumStringLength = 53;
+        private readonly GitModule Module;
 
         public string Guid { get; set; }
         public string CommitGuid { get; set; }
@@ -14,6 +15,11 @@ namespace GitCommands
         public string Date { get; set; }
         public string FileName { get; set; }
         public string Mode { get; set; }
+
+        public GitItem(GitModule aModule)
+        {
+            Module = aModule;
+        }
 
         private List<IGitItem> subItems;
 
@@ -38,7 +44,7 @@ namespace GitCommands
             {
                 if (subItems == null)
                 {
-                    subItems = GitModule.Current.GetTree(Guid, false);
+                    subItems = Module.GetTree(Guid, false);
 
                     foreach (GitItem item in subItems)
                     {
@@ -50,14 +56,14 @@ namespace GitCommands
             }
         }
 
-        internal static GitItem CreateGitItemFromString(string itemsString)
+        internal static GitItem CreateGitItemFromString(GitModule aModule, string itemsString)
         {
             if ((itemsString == null) || (itemsString.Length <= MinimumStringLength))
                 return null;
 
             var guidStart = itemsString.IndexOf(' ', 7);
 
-            var item = new GitItem
+            var item = new GitItem(aModule)
                            {
                                Mode = itemsString.Substring(0, 6),
                                ItemType = itemsString.Substring(7, guidStart - 7),
@@ -70,7 +76,7 @@ namespace GitCommands
         }
 
 
-        public static List<GitItem> CreateGitItemsFromString(string tree)
+        public static List<GitItem> CreateGitItemsFromString(GitModule aModule, string tree)
         {
             var itemsStrings = tree.Split(new char[] { '\0', '\n' });
 
@@ -81,7 +87,7 @@ namespace GitCommands
                 if (itemsString.Length <= 53)
                     continue;
 
-                var item = GitItem.CreateGitItemFromString(itemsString);
+                var item = GitItem.CreateGitItemFromString(aModule, itemsString);
 
                 items.Add(item);
             }
@@ -89,11 +95,11 @@ namespace GitCommands
             return items;
         }
 
-        public static List<IGitItem> CreateIGitItemsFromString(string tree)
+        public static List<IGitItem> CreateIGitItemsFromString(GitModule aModule, string tree)
         {
             var items = new List<IGitItem>();
 
-            foreach (var item in CreateGitItemsFromString(tree))
+            foreach (var item in CreateGitItemsFromString(aModule, tree))
                 items.Add(item);
 
             return items;

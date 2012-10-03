@@ -7,7 +7,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormMailMap : GitExtensionsForm
+    public partial class FormMailMap : GitModuleForm
     {
         private readonly TranslationString _mailmapOnlyInWorkingDirSupported =
             new TranslationString(".mailmap is only supported when there is a working dir.");
@@ -27,12 +27,16 @@ namespace GitUI
 
         public string MailMapFile = string.Empty;
 
-        public FormMailMap()
-            : base(true)
+        public FormMailMap(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
             Translate();
+        }
 
+        protected override void OnRuntimeLoad(EventArgs e)
+        {
+            base.OnRuntimeLoad(e);
             LoadFile();
             _NO_TRANSLATE_MailMapText.TextLoaded += MailMapFileLoaded;
         }
@@ -41,9 +45,9 @@ namespace GitUI
         {
             try
             {
-                if (File.Exists(GitModule.CurrentWorkingDir + ".mailmap"))
+                if (File.Exists(Module.WorkingDir + ".mailmap"))
                 {
-                    _NO_TRANSLATE_MailMapText.ViewFile(GitModule.CurrentWorkingDir + ".mailmap");
+                    _NO_TRANSLATE_MailMapText.ViewFile(Module.WorkingDir + ".mailmap");
                 }
             }
             catch (Exception ex)
@@ -64,14 +68,14 @@ namespace GitUI
             {
                 FileInfoExtensions
                     .MakeFileTemporaryWritable(
-                        GitModule.CurrentWorkingDir + ".mailmap",
+                        Module.WorkingDir + ".mailmap",
                         x =>
                         {
                             this.MailMapFile = _NO_TRANSLATE_MailMapText.GetText();
                             if (!this.MailMapFile.EndsWith(Environment.NewLine))
                                 this.MailMapFile += Environment.NewLine;
 
-                            File.WriteAllBytes(x, Settings.SystemEncoding.GetBytes(this.MailMapFile));
+                            File.WriteAllBytes(x, GitModule.SystemEncoding.GetBytes(this.MailMapFile));
                         });
                 return true;
             }
@@ -111,7 +115,7 @@ namespace GitUI
 
         private void FormMailMapLoad(object sender, EventArgs e)
         {
-            if (!GitModule.Current.IsBareRepository()) return;
+            if (!Module.IsBareRepository()) return;
             MessageBox.Show(this, _mailmapOnlyInWorkingDirSupported.Text,_mailmapOnlyInWorkingDirSupportedCaption.Text);
             Close();
         }

@@ -15,7 +15,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class Dashboard : GitExtensionsControl
+    public partial class Dashboard : GitModuleControl
     {
         private readonly TranslationString cloneFork = new TranslationString("Clone {0} repository");
         private readonly TranslationString cloneRepository = new TranslationString("Clone repository");
@@ -81,7 +81,7 @@ namespace GitUI
             {
                 IRepositoryHostPlugin gitHoster = el;
                 var di = new DashboardItem(Resources.SaveAs, string.Format(cloneFork.Text, el.Description));
-                di.Click += (repoSender, eventArgs) => GitUICommands.Instance.StartCloneForkFromHoster(this, gitHoster);
+                di.Click += (repoSender, eventArgs) => UICommands.StartCloneForkFromHoster(this, gitHoster, GitModuleChanged);
                 CommonActions.AddItem(di);
             }
 
@@ -118,12 +118,12 @@ namespace GitUI
             }
         }
 
-        public event EventHandler WorkingDirChanged;
+        public event GitModuleChangedEventHandler GitModuleChanged;
 
-        public virtual void OnWorkingDirChanged()
+        public virtual void OnModuleChanged(GitModule aModule)
         {
-            if (WorkingDirChanged != null)
-                WorkingDirChanged(this, null);
+            if (GitModuleChanged != null)
+                GitModuleChanged(aModule);
         }
 
         private void AddDashboardEntry(RepositoryCategory entry)
@@ -280,55 +280,47 @@ namespace GitUI
 
         private void OpenPath(string path)
         {
-            GitModule.CurrentWorkingDir = path;
+            GitModule module = new GitModule(path);
 
-            if (!GitModule.Current.ValidWorkingDir())
+            if (!module.ValidWorkingDir())
             {
                 DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepository.Text, directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 if (dialogResult == DialogResult.Cancel)
                 {
-                    GitModule.CurrentWorkingDir = string.Empty;
                     return;
                 }
                 if (dialogResult == DialogResult.Yes)
                 {
-                    GitModule.CurrentWorkingDir = string.Empty;
                     Repositories.RepositoryHistory.RemoveRecentRepository(path);
                     Refresh();
                     return;
                 }
             }
 
-            Repositories.AddMostRecentRepository(GitModule.CurrentWorkingDir);
-            OnWorkingDirChanged();
+            Repositories.AddMostRecentRepository(module.WorkingDir);
+            OnModuleChanged(module);
         }
 
         private void openItem_Click(object sender, EventArgs e)
         {
-            using (var open = new Open())
-            {
-                open.ShowDialog(this);
-                OnWorkingDirChanged();
-            }
+            GitModule module = Open.OpenModule(this);
+            if (module != null)
+                OnModuleChanged(module);
         }
 
         private void cloneItem_Click(object sender, EventArgs e)
         {
-            if (GitUICommands.Instance.StartCloneDialog(this))
-                OnWorkingDirChanged();
+            UICommands.StartCloneDialog(this, null, false, OnModuleChanged);
         }
 
         private void cloneSvnItem_Click(object sender, EventArgs e)
         {
-            if (GitUICommands.Instance.StartSvnCloneDialog(this))
-                OnWorkingDirChanged();
+            UICommands.StartSvnCloneDialog(this, OnModuleChanged);
         }
 
         private void createItem_Click(object sender, EventArgs e)
         {
-            GitUICommands.Instance.StartInitializeDialog(this, GitModule.CurrentWorkingDir);
-
-            OnWorkingDirChanged();
+            UICommands.StartInitializeDialog(this, Module.WorkingDir, OnModuleChanged);
         }
 
         private static void DonateItem_Click(object sender, EventArgs e)
@@ -367,8 +359,7 @@ namespace GitUI
                 string url = lines[0];
                 if (!string.IsNullOrEmpty(url))
                 {
-                    if (GitUICommands.Instance.StartCloneDialog(this, url))
-                        OnWorkingDirChanged();
+                    UICommands.StartCloneDialog(this, url, false, OnModuleChanged);
                 }
             }
         }

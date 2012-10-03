@@ -34,7 +34,7 @@ namespace GitCommands
         /// <param name="getLocal">Pass true to include local branches</param>
         /// <param name="getRemote">Pass true to include remote branches</param>
         /// <returns></returns>
-        public static IEnumerable<string> GetAllBranchesWhichContainGivenCommit(string sha1, bool getLocal, bool getRemote) 
+        public static IEnumerable<string> GetAllBranchesWhichContainGivenCommit(GitModule module, string sha1, bool getLocal, bool getRemote) 
         {
             string args = "--contains " + sha1;
             if (getRemote && getLocal)
@@ -43,7 +43,7 @@ namespace GitCommands
                 args = "-r "+args;
             else if (!getLocal)
                 return new string[]{};
-            string info = GitModule.Current.RunGitCmd("branch " + args, Settings.SystemEncoding);
+            string info = module.RunGitCmd("branch " + args, GitModule.SystemEncoding);
             if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
                 return new List<string>();
 
@@ -69,9 +69,9 @@ namespace GitCommands
         /// </summary>
         /// <param name="sha1">The sha1.</param>
         /// <returns></returns>
-        public static IEnumerable<string> GetAllTagsWhichContainGivenCommit(string sha1)
+        public static IEnumerable<string> GetAllTagsWhichContainGivenCommit(GitModule module, string sha1)
         {
-            string info = GitModule.Current.RunGitCmd("tag --contains " + sha1, Settings.SystemEncoding);
+            string info = module.RunGitCmd("tag --contains " + sha1, GitModule.SystemEncoding);
 
 
             if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
@@ -80,17 +80,7 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Gets the commit info.
-        /// </summary>
-        /// <param name="sha1">The sha1.</param>
-        /// <returns></returns>
-        public static CommitInformation GetCommitInfo(string sha1)
-        {
-            return GetCommitInfo(GitModule.Current, sha1);
-        }
-
-        /// <summary>
-        /// Gets the commit info for submodule.
+        /// Gets the commit info for module.
         /// </summary>
         /// <param name="module">Git module.</param>
         /// <param name="sha1">The sha1.</param>

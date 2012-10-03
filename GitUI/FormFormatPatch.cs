@@ -7,7 +7,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormFormatPatch : GitExtensionsForm
+    public partial class FormFormatPatch : GitModuleForm
     {
         private readonly TranslationString _currentBranchText = new TranslationString("Current branch:");
         private readonly TranslationString _noOutputPathEnteredText = 
@@ -31,9 +31,16 @@ namespace GitUI
         private readonly TranslationString _noGitMailConfigured =
             new TranslationString("There is no email address configured in the settings dialog.");
 
-        public FormFormatPatch()
+        private FormFormatPatch()
+            : this(null)
+        {         
+        }
+
+        public FormFormatPatch(GitUICommands aCommands)
+            : base(aCommands)
         {
-            InitializeComponent(); Translate();
+            InitializeComponent(); 
+            Translate();
         }
 
         private void Browse_Click(object sender, EventArgs e)
@@ -48,7 +55,7 @@ namespace GitUI
         private void FormFormatPath_Load(object sender, EventArgs e)
         {
             OutputPath.Text = Settings.LastFormatPatchDir;
-            string selectedHead = GitModule.Current.GetSelectedBranch();
+            string selectedHead = Module.GetSelectedBranch();
             SelectedBranch.Text = _currentBranchText.Text + " " + selectedHead;
 
             SaveToDir_CheckedChanged(null, null);
@@ -92,7 +99,7 @@ namespace GitUI
 
             if (!SaveToDir.Checked)
             {
-                savePatchesToDir = GitModule.Current.WorkingDirGitDir() + "\\PatchesToMail";
+                savePatchesToDir = Module.WorkingDirGitDir() + "\\PatchesToMail";
                 if (Directory.Exists(savePatchesToDir))
                 {
                     foreach (string file in Directory.GetFiles(savePatchesToDir, "*.patch"))
@@ -116,14 +123,14 @@ namespace GitUI
                     var parents = revisions[0].ParentGuids;
                     rev1 = parents.Length > 0 ? parents[0] : "";
                     rev2 = revisions[0].Guid;
-                    result = GitModule.Current.FormatPatch(rev1, rev2, savePatchesToDir);
+                    result = Module.FormatPatch(rev1, rev2, savePatchesToDir);
                 }
                 else if (revisions.Count == 2)
                 {
                     var parents = revisions[0].ParentGuids;
                     rev1 = parents.Length > 0 ? parents[0] : "";
                     rev2 = revisions[1].Guid;
-                    result = GitModule.Current.FormatPatch(rev1, rev2, savePatchesToDir);
+                    result = Module.FormatPatch(rev1, rev2, savePatchesToDir);
                 }
                 else if (revisions.Count > 2)
                 {
@@ -134,7 +141,7 @@ namespace GitUI
                         var parents = revision.ParentGuids;
                         rev1 = parents.Length > 0 ? parents[0] : "";
                         rev2 = revision.Guid;
-                        result += GitModule.Current.FormatPatch(rev1, rev2, savePatchesToDir, n);
+                        result += Module.FormatPatch(rev1, rev2, savePatchesToDir, n);
                     }
                 }
             }
@@ -169,7 +176,7 @@ namespace GitUI
         {
             try
             {
-                string from = GitModule.Current.GetEffectiveSetting("user.email");
+                string from = Module.GetEffectiveSetting("user.email");
 
                 if (string.IsNullOrEmpty(from))
                     MessageBox.Show(this, _noGitMailConfigured.Text);

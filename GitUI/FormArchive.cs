@@ -4,7 +4,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormArchive : GitExtensionsForm
+    public partial class FormArchive : GitModuleForm
     {
         private readonly TranslationString _noRevisionSelectedMsgBox =
             new TranslationString("Select 1 revision to archive");
@@ -14,8 +14,16 @@ namespace GitUI
         private readonly TranslationString _saveFileDialogCaption =
             new TranslationString("Save archive as");
 
-        public FormArchive()
-            : base(true)
+        /// <summary>
+        /// For VS designer
+        /// </summary>
+        private FormArchive()
+            : this(null)
+        {
+        }
+
+        public FormArchive(GitUICommands aCommands)
+            : base(true, aCommands)
         {
             InitializeComponent(); 
             Translate();

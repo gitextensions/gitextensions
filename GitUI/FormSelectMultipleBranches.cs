@@ -8,7 +8,7 @@ namespace GitUI
     public partial class FormSelectMultipleBranches : GitExtensionsForm
     {
         // for translation only
-        internal FormSelectMultipleBranches()
+        private FormSelectMultipleBranches()
             : base(true)
         {
             InitializeComponent();

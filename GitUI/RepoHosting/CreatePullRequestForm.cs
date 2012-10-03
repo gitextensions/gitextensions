@@ -8,7 +8,7 @@ using ResourceManager.Translation;
 
 namespace GitUI.RepoHosting
 {
-    public partial class CreatePullRequestForm : GitExtensionsForm
+    public partial class CreatePullRequestForm : GitModuleForm
     {
         #region Translation
         private readonly TranslationString _strLoading = new TranslationString("Loading...");
@@ -28,9 +28,8 @@ namespace GitUI.RepoHosting
         private List<IHostedRemote> _hostedRemotes;
         private string _currentBranch;
         private AsyncLoader remoteLoader = new AsyncLoader();
-        private GitModule currentModule = GitModule.Current;
 
-        public CreatePullRequestForm(IRepositoryHostPlugin repoHost, string chooseRemote, string chooseBranch)
+        public CreatePullRequestForm(GitUICommands aCommands, IRepositoryHostPlugin repoHost, string chooseRemote, string chooseBranch)
         {
             _repoHost = repoHost;
             _chooseBranch = chooseBranch;
@@ -50,7 +49,7 @@ namespace GitUI.RepoHosting
         {
             _createBtn.Enabled = false;
             _yourBranchesCB.Text = _strLoading.Text;
-            _hostedRemotes = _repoHost.GetHostedRemotesForCurrentWorkingDirRepo();
+            _hostedRemotes = _repoHost.GetHostedRemotesForModule(Module);
             this.Mask();
             remoteLoader.Load(
                 () => _hostedRemotes.Where(r => !r.IsOwnedByMe).ToArray(),
@@ -66,7 +65,7 @@ namespace GitUI.RepoHosting
 
                     this.UnMask();
 
-                    _currentBranch = currentModule.ValidWorkingDir() ? currentModule.GetSelectedBranch() : "";
+                    _currentBranch = Module.ValidWorkingDir() ? Module.GetSelectedBranch() : "";
                     LoadRemotes(foreignHostedRemotes);
                     LoadMyBranches();
                 });
@@ -164,7 +163,7 @@ namespace GitUI.RepoHosting
         {
             if (prevTitle.Equals(_titleTB.Text) && !_yourBranchesCB.Text.IsNullOrWhiteSpace())
             {
-                _titleTB.Text = currentModule.GetPreviousCommitMessage(MyRemote.Name.Combine("/", _yourBranchesCB.Text), 0).TakeUntilStr("\n");
+                _titleTB.Text = Module.GetPreviousCommitMessage(MyRemote.Name.Combine("/", _yourBranchesCB.Text), 0).TakeUntilStr("\n");
                 prevTitle = _titleTB.Text;
             }
         }

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands.Statistics;
 using GitUI;
+using GitUIPluginInterfaces;
 
 namespace GitImpact
 {
@@ -43,9 +44,6 @@ namespace GitImpact
 
         public ImpactControl()
         {
-            impact_loader = new ImpactLoader();
-            impact_loader.RespectMailmap = true; // respect the .mailmap file
-            impact_loader.Updated += OnImpactUpdate;
 
             Clear();
 
@@ -57,6 +55,13 @@ namespace GitImpact
                 ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
 
             MouseWheel += ImpactControl_MouseWheel;
+        }
+
+        public void Init(IGitModule Module)
+        {
+            impact_loader = new ImpactLoader(Module);
+            impact_loader.RespectMailmap = true; // respect the .mailmap file
+            impact_loader.Updated += OnImpactUpdate;        
         }
 
         private void Clear()
@@ -136,8 +141,11 @@ namespace GitImpact
 
         public void UpdateData()
         {
-            impact_loader.ShowSubmodules = showSubmodules;
-            impact_loader.Execute();
+            if (impact_loader != null)
+            {
+                impact_loader.ShowSubmodules = showSubmodules;
+                impact_loader.Execute();
+            }
         }
 
         private bool showSubmodules;
@@ -147,7 +155,7 @@ namespace GitImpact
             set
             {
                 showSubmodules = value;
-                impact_loader.Dispose();
+                Stop();
                 Clear();
                 UpdateData();
             }

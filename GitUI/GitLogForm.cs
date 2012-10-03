@@ -9,7 +9,7 @@ namespace GitUI
     {
         private readonly SynchronizationContext syncContext;
 
-        internal GitLogForm()
+        private GitLogForm()
             : base(true)
         {
             ShowInTaskbar = true;
@@ -57,7 +57,7 @@ namespace GitUI
             string command = (string)CommandCacheItems.SelectedItem;
 
             string output;
-            if (GitCommandCache.TryGet(command, Settings.SystemEncoding, out output))
+            if (GitCommandCache.TryGet(command, GitModule.SystemEncoding, out output))
             {
                 commandCacheOutput.Text = command + "\n-------------------------------------\n\n";
                 commandCacheOutput.Text += output.Replace("\0", "\\0");

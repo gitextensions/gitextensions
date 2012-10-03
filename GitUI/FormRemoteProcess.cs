@@ -23,22 +23,33 @@ namespace GitUI
 
         public bool Plink { get; set; }
         private bool restart;
+        protected readonly GitModule Module;
 
-        public FormRemoteProcess(string process, string arguments)
-            : base(process, arguments, null, null, true)
+        //for translation
+        protected FormRemoteProcess()
+            : base()
+        { }
+
+        public FormRemoteProcess(GitModule module, string process, string arguments)
+            : base(process, arguments, module.WorkingDir, null, true)
         {
-
+            this.Module = module;
         }
 
-        public FormRemoteProcess(string arguments)
-            : base(null, arguments, null, null, true)
+        public FormRemoteProcess(GitModule module, string arguments)
+            : base(null, arguments, module.WorkingDir, null, true)
         {
-
+            this.Module = module;
         }
 
-        public new static bool ShowDialog(IWin32Window owner, string arguments)
+        public static new bool ShowDialog(GitModuleForm owner, string arguments)
         {
-            using (var formRemoteProcess = new FormRemoteProcess(arguments) )
+            return ShowDialog(owner, owner.Module, arguments);
+        }
+
+        public static new bool ShowDialog(IWin32Window owner, GitModule module, string arguments)
+        {
+            using (var formRemoteProcess = new FormRemoteProcess(module, arguments))
             {
                 formRemoteProcess.ShowDialog(owner);
                 return !formRemoteProcess.ErrorOccurred();
@@ -95,8 +106,8 @@ namespace GitUI
                     {
                         // To prevent future authentication errors, save this key for this remote.
                         if (!String.IsNullOrEmpty(loadedKey) && !String.IsNullOrEmpty(this.Remote) && 
-                            String.IsNullOrEmpty(GitModule.Current.GetPathSetting("remote.{0}.puttykeyfile")))
-                            GitModule.Current.SetPathSetting(string.Format("remote.{0}.puttykeyfile", this.Remote), loadedKey);
+                            String.IsNullOrEmpty(Module.GetPathSetting("remote.{0}.puttykeyfile")))
+                            Module.SetPathSetting(string.Format("remote.{0}.puttykeyfile", this.Remote), loadedKey);
 
                         // Retry the command.
                         Retry();
@@ -109,7 +120,7 @@ namespace GitUI
 
                     if (string.IsNullOrEmpty(UrlTryingToConnect))
                     {
-                        remoteUrl = GitModule.Current.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
+                        remoteUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
                         if (string.IsNullOrEmpty(remoteUrl))
                             remoteUrl = Remote;
                     }
@@ -118,7 +129,7 @@ namespace GitUI
                     if (!string.IsNullOrEmpty(remoteUrl))
                         if (MessageBox.Show(this, _serverHotkeyNotCachedText.Text, "SSH", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
                         {
-                            GitModule.Current.RunRealCmd(
+                            Module.RunRealCmd(
                                 "cmd.exe",
                                 string.Format("/k \"\"{0}\" -T \"{1}\"\"", Settings.Plink, remoteUrl));
 
@@ -140,12 +151,12 @@ namespace GitUI
                 {
                     if (MessageBox.Show(this, _fingerprintNotRegistredText.Text, _fingerprintNotRegistredTextCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        string remoteUrl = GitModule.Current.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
+                        string remoteUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
 
                         if (string.IsNullOrEmpty(remoteUrl))
-                            GitModule.Current.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + Remote + "\"");
+                            Module.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + Remote + "\"");
                         else
-                            GitModule.Current.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + remoteUrl + "\"");
+                            Module.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + remoteUrl + "\"");
 
                         restart = true;
                     }
