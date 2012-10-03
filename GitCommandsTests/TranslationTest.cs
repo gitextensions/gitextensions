@@ -18,7 +18,7 @@ using ResourceManager.Translation;
 namespace GitCommandsTests
 {
     [TestClass]
-    class TranslationTest
+    public class TranslationTest
     {
 
         [TestMethod]
