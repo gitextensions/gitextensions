@@ -1063,6 +1063,7 @@ namespace GitUI
                 Unstaged.StoreNextIndexToSelect();
 
                 var deleteNewFiles = Unstaged.SelectedItems.Any(item => item.IsNew) && (resetType == FormResetChanges.ResultType.RESET_AND_DELETE);
+                var filesInUse = new List<string>();
                 var output = new StringBuilder();
                 foreach (var item in Unstaged.SelectedItems)
                 {
@@ -1076,6 +1077,7 @@ namespace GitUI
                             }
                             catch (System.IO.IOException)
                             {
+                                filesInUse.Add(item.Name);
                             }
                             catch (System.UnauthorizedAccessException)
                             {
@@ -1087,6 +1089,9 @@ namespace GitUI
                         output.Append(GitModule.Current.ResetFile(item.Name));
                     }
                 }
+
+                if (filesInUse.Count > 0)
+                    MessageBox.Show(this, "The following files are currently in use and will not be reset:" + Environment.NewLine + "\u2022 " + string.Join(Environment.NewLine + "\u2022 ", filesInUse), "Files In Use");
 
                 if (!string.IsNullOrEmpty(output.ToString()))
                     MessageBox.Show(this, output.ToString(), _resetChangesCaption.Text);
