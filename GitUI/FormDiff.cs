@@ -6,39 +6,27 @@ using PatchApply;
 
 namespace GitUI
 {
-    public partial class FormDiff : GitExtensionsForm
+    public partial class FormDiff : GitModuleForm
     {
-        public FormDiff()
-            : this(GitModule.Current)
+        private FormDiff()
+            : this(null)
         {
         }
 
-        public FormDiff(GitModule module)
-            : base(true)
+        public FormDiff(GitUICommands aCommands)
+            : base(true, aCommands)
         {
             InitializeComponent();
             Translate();
 
-            module_ = module;
             diffViewer.ExtraDiffArgumentsChanged += DiffViewerExtraDiffArgumentsChanged;
         }
 
-        public FormDiff(GitRevision revision)
-            : this(GitModule.Current, revision)
+        public FormDiff(GitUICommands aCommands, GitRevision revision)
+            : this(aCommands)
         {
-        }
-
-        public FormDiff(GitModule module, GitRevision revision)
-            : base(true)
-        {
-            InitializeComponent();
-            Translate();
-
-            module_ = module;
             RevisionGrid.SetSelectedRevision(revision);
         }
-
-        private GitModule module_;
 
         private void FormDiffLoad(object sender, EventArgs e)
         {
@@ -63,7 +51,7 @@ namespace GitUI
             if (revisions.Count == 2)
             {
                 selectedPatch = 
-                    module_.GetSingleDiff(
+                    Module.GetSingleDiff(
                             revisions[0].Guid,
                             revisions[1].Guid,
                             DiffFiles.SelectedItem.Name,
@@ -74,7 +62,7 @@ namespace GitUI
             {
                 var revision = revisions[0];
                 selectedPatch =
-                    module_.GetSingleDiff(
+                    Module.GetSingleDiff(
                             revision.Guid,
                             revision.ParentGuids[0],
                             DiffFiles.SelectedItem.Name,
@@ -97,14 +85,14 @@ namespace GitUI
                 if (revisions.Count == 1)
                 {
                     DiffFiles.GitItemStatuses =
-                        module_.GetDiffFiles(
+                        Module.GetDiffFiles(
                             revisions[0].Guid,
                             revisions[0].ParentGuids[0]);
                 }
                 else if (revisions.Count == 2)
                 {
                     DiffFiles.GitItemStatuses =
-                        module_.GetDiffFiles(
+                        Module.GetDiffFiles(
                             revisions[0].Guid,
                             revisions[1].Guid);
                 }

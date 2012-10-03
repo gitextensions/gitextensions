@@ -5,43 +5,43 @@ namespace GitUI
 {
     public static class MergeConflictHandler
     {
-        public static bool HandleMergeConflicts(IWin32Window owner, bool offerCommit)
+        public static bool HandleMergeConflicts(GitUICommands aCommands, IWin32Window owner, bool offerCommit)
         {
-            if (GitModule.Current.InTheMiddleOfConflictedMerge())
+            if (aCommands.Module.InTheMiddleOfConflictedMerge())
             {
                 if (MessageBoxes.UnresolvedMergeConflicts(owner))
                 {
-                    SolveMergeConflicts(owner, offerCommit);
+                    SolveMergeConflicts(aCommands, owner, offerCommit);
                 }
                 return true;
             }
             return false;
         }
 
-        public static bool HandleMergeConflicts(IWin32Window owner)
+        public static bool HandleMergeConflicts(GitUICommands aCommands, IWin32Window owner)
         {
-            return HandleMergeConflicts(owner, true);
+            return HandleMergeConflicts(aCommands, owner, true);
         }
 
-        private static void SolveMergeConflicts(IWin32Window owner, bool offerCommit)
+        private static void SolveMergeConflicts(GitUICommands aCommands, IWin32Window owner, bool offerCommit)
         {
-            if (GitModule.Current.InTheMiddleOfConflictedMerge())
+            if (aCommands.Module.InTheMiddleOfConflictedMerge())
             {
-                GitUICommands.Instance.StartResolveConflictsDialog(owner, offerCommit);
+                aCommands.StartResolveConflictsDialog(owner, offerCommit);
             }
 
-            if (GitModule.Current.InTheMiddleOfPatch())
+            if (aCommands.Module.InTheMiddleOfPatch())
             {
                 if (MessageBoxes.MiddleOfPatchApply(owner))
                 {
-                    GitUICommands.Instance.StartApplyPatchDialog(owner);
+                    aCommands.StartApplyPatchDialog(owner);
                 }
             }
-            else if (GitModule.Current.InTheMiddleOfRebase())
+            else if (aCommands.Module.InTheMiddleOfRebase())
             {
                 if (MessageBoxes.MiddleOfRebase(owner))
                 {
-                    GitUICommands.Instance.StartRebaseDialog(owner, null);
+                    aCommands.StartRebaseDialog(owner, null);
                 }
             }
 

@@ -17,7 +17,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public sealed partial class FormSettings : GitExtensionsForm
+    public sealed partial class FormSettings : GitModuleForm
     {
         #region Translation
         private readonly TranslationString _homeIsSetToString = new TranslationString("HOME is set to:");
@@ -199,8 +199,12 @@ namespace GitUI
         private const string GitExtensionsShellExName = "GitExtensionsShellEx32.dll";
         private string IconName = "bug";
 
-        public FormSettings()
-            : base(true)
+        private FormSettings()
+            : this(null)
+        { }
+
+        public FormSettings(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
             Translate();
@@ -232,7 +236,7 @@ namespace GitUI
             
         }
 
-        public static bool AutoSolveAllSettings()
+        public bool AutoSolveAllSettings()
         {
             if (!Settings.RunningOnWindows())
                 return SolveGitCommand();
@@ -245,12 +249,12 @@ namespace GitUI
                    SolveEditor();
         }
 
-        private static string GetGlobalEditor()
+        private string GetGlobalEditor()
         {
             string editor = Environment.GetEnvironmentVariable("GIT_EDITOR");
             if (!string.IsNullOrEmpty(editor))
                 return editor;
-            editor = GitModule.Current.GetGlobalPathSetting("core.editor");
+            editor = Module.GetGlobalPathSetting("core.editor");
             if (!string.IsNullOrEmpty(editor))
                 return editor;
             editor = Environment.GetEnvironmentVariable("VISUAL");
@@ -259,12 +263,12 @@ namespace GitUI
             return Environment.GetEnvironmentVariable("EDITOR");
         }
 
-        private static bool SolveEditor()
+        private bool SolveEditor()
         {
             string editor = GetGlobalEditor();
             if (string.IsNullOrEmpty(editor))
             {
-                GitModule.Current.SetGlobalPathSetting("core.editor", "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor");
+                Module.SetGlobalPathSetting("core.editor", "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor");
             }
 
             return true;
@@ -341,8 +345,8 @@ namespace GitUI
                 chkEnableAutoScale.Checked = Settings.EnableAutoScale;
 
                 scriptEvent.DataSource = Enum.GetValues(typeof(ScriptEvent));
-                EncodingToCombo(Settings.GetFilesEncoding(false), Global_FilesEncoding);
-                EncodingToCombo(Settings.GetFilesEncoding(true), Local_FilesEncoding);
+                EncodingToCombo(Module.GetFilesEncoding(false), Global_FilesEncoding);
+                EncodingToCombo(Module.GetFilesEncoding(true), Local_FilesEncoding);
 
                 chkCheckForUncommittedChangesInCheckoutBranch.Checked = Settings.CheckForUncommittedChangesInCheckoutBranch;
                 chkStartWithRecentWorkingDir.Checked = Settings.StartWithRecentWorkingDir;
@@ -426,7 +430,7 @@ namespace GitUI
                 GitPath.Text = Settings.GitCommand;
                 GitBinPath.Text = Settings.GitBinDir;
 
-                ConfigFile localConfig = GitModule.Current.GetLocalConfig();
+                ConfigFile localConfig = Module.GetLocalConfig();
                 ConfigFile globalConfig = GitCommandHelpers.GetGlobalConfig();
 
                 UserName.Text = localConfig.GetValue("user.name");
@@ -606,8 +610,8 @@ namespace GitUI
             Settings.Puttygen = PuttygenPath.Text;
             Settings.Pageant = PageantPath.Text;
             Settings.AutoStartPageant = AutostartPageant.Checked;
-            Settings.SetFilesEncoding(false, ComboToEncoding(Global_FilesEncoding));
-            Settings.SetFilesEncoding(true, ComboToEncoding(Local_FilesEncoding));
+            Module.SetFilesEncoding(false, ComboToEncoding(Global_FilesEncoding));
+            Module.SetFilesEncoding(true, ComboToEncoding(Local_FilesEncoding));
             Settings.RevisionGridQuickSearchTimeout = (int)RevisionGridQuickSearchTimeout.Value;
             Settings.MulticolorBranches = MulticolorBranches.Checked;
             Settings.RevisionGraphDrawNonRelativesGray = DrawNonRelativesGray.Checked;
@@ -700,7 +704,7 @@ namespace GitUI
 
         private void handleCanFindGitCommand()
         {
-            ConfigFile localConfig = GitModule.Current.GetLocalConfig();
+            ConfigFile localConfig = Module.GetLocalConfig();
             ConfigFile globalConfig = GitCommandHelpers.GetGlobalConfig();
 
             if (string.IsNullOrEmpty(UserName.Text) || !UserName.Text.Equals(localConfig.GetValue("user.name")))
@@ -762,18 +766,14 @@ namespace GitUI
                 else
                     globalConfig.SetValue(name, value);
             };
-            setEncoding(Settings.GetLogOutputEncoding(false), false, "i18n.logoutputencoding");
-            setEncoding(Settings.GetLogOutputEncoding(true), true, "i18n.logoutputencoding");
-            setEncoding(Settings.GetCommitEncoding(false), false, "i18n.commitEncoding");
-            setEncoding(Settings.GetCommitEncoding(true), true, "i18n.commitEncoding");
-            setEncoding(Settings.GetFilesEncoding(false), false, "i18n.filesEncoding");
-            setEncoding(Settings.GetFilesEncoding(true), true, "i18n.filesEncoding");
+            setEncoding(Module.GetFilesEncoding(false), false, "i18n.filesEncoding");
+            setEncoding(Module.GetFilesEncoding(true), true, "i18n.filesEncoding");
 
 
             globalConfig.Save();
 
             //Only save local settings when we are inside a valid working dir
-            if (GitModule.Current.ValidWorkingDir())
+            if (Module.ValidWorkingDir())
                 localConfig.Save();
         }
 
@@ -798,7 +798,7 @@ namespace GitUI
             return value ?? string.Empty;
         }
 
-        private static void SetRegistryValue(RegistryKey root, string subkey, string key, string value)
+        private void SetRegistryValue(RegistryKey root, string subkey, string key, string value)
         {
             try
             {
@@ -809,7 +809,7 @@ namespace GitUI
                 TextWriter tw = new StreamWriter(Path.GetTempPath() + "GitExtensions.reg", false);
                 tw.Write(reg);
                 tw.Close();
-                GitModule.Current.RunCmd("regedit", "\"" + Path.GetTempPath() + "GitExtensions.reg" + "\"");
+                Module.RunCmd("regedit", "\"" + Path.GetTempPath() + "GitExtensions.reg" + "\"");
             }
             catch (UnauthorizedAccessException)
             {
@@ -846,9 +846,9 @@ namespace GitUI
             return bValid;
         }
 
-        private static bool CanFindGitCmd()
+        private bool CanFindGitCmd()
         {
-            return !string.IsNullOrEmpty(GitModule.Current.RunGitCmd(""));
+            return !string.IsNullOrEmpty(Module.RunGitCmd(""));
         }
 
         private void GitExtensionsInstall_Click(object sender, EventArgs e)
@@ -882,7 +882,7 @@ namespace GitUI
             }
             if (File.Exists(path))
             {
-                GitModule.Current.RunCmd("regsvr32", string.Format("\"{0}\"", path));
+                Module.RunCmd("regsvr32", string.Format("\"{0}\"", path));
             }
             else
             {
@@ -897,24 +897,24 @@ namespace GitUI
             tabControl1.SelectTab(tpGlobalSettings);
         }
 
-        private static string GetMergeTool()
+        private string GetMergeTool()
         {
-            return GitModule.Current.GetGlobalSetting("merge.tool");
+            return Module.GetGlobalSetting("merge.tool");
         }
 
-        private static bool IsMergeTool(string toolName)
+        private bool IsMergeTool(string toolName)
         {
             return GetMergeTool().Equals(toolName,
                 StringComparison.CurrentCultureIgnoreCase);
         }
 
-        public static bool SolveMergeToolForKDiff()
+        public bool SolveMergeToolForKDiff()
         {
             string mergeTool = GetMergeTool();
             if (string.IsNullOrEmpty(mergeTool))
             {
                 mergeTool = "kdiff3";
-                GitModule.Current.SetGlobalSetting("merge.tool", mergeTool);
+                Module.SetGlobalSetting("merge.tool", mergeTool);
             }
 
             if (mergeTool.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
@@ -923,7 +923,7 @@ namespace GitUI
             return true;
         }
 
-        public static bool SolveDiffToolForKDiff()
+        public bool SolveDiffToolForKDiff()
         {
             string diffTool = GetGlobalDiffToolFromConfig();
             if (string.IsNullOrEmpty(diffTool))
@@ -940,29 +940,29 @@ namespace GitUI
             return true;
         }
 
-        public static bool SolveDiffToolPathForKDiff()
+        public bool SolveDiffToolPathForKDiff()
         {
-            string kdiff3path = MergeToolsHelper.FindPathForKDiff(GitModule.Current.GetGlobalSetting("difftool.kdiff3.path"));
+            string kdiff3path = MergeToolsHelper.FindPathForKDiff(Module.GetGlobalSetting("difftool.kdiff3.path"));
             if (string.IsNullOrEmpty(kdiff3path))
                 return false;
 
-            GitModule.Current.SetGlobalPathSetting("difftool.kdiff3.path", kdiff3path);
+            Module.SetGlobalPathSetting("difftool.kdiff3.path", kdiff3path);
             return true;
         }
 
-        public static bool SolveMergeToolPathForKDiff()
+        public bool SolveMergeToolPathForKDiff()
         {
-            string kdiff3path = MergeToolsHelper.FindPathForKDiff(GitModule.Current.GetGlobalSetting("mergetool.kdiff3.path"));
+            string kdiff3path = MergeToolsHelper.FindPathForKDiff(Module.GetGlobalSetting("mergetool.kdiff3.path"));
             if (string.IsNullOrEmpty(kdiff3path))
                 return false;
 
-            GitModule.Current.SetGlobalPathSetting("mergetool.kdiff3.path", kdiff3path);
+            Module.SetGlobalPathSetting("mergetool.kdiff3.path", kdiff3path);
             return true;
         }
 
         private void ResolveDiffToolPath()
         {
-            string kdiff3path = MergeToolsHelper.FindPathForKDiff(GitModule.Current.GetGlobalSetting("difftool.kdiff3.path"));
+            string kdiff3path = MergeToolsHelper.FindPathForKDiff(Module.GetGlobalSetting("difftool.kdiff3.path"));
             if (string.IsNullOrEmpty(kdiff3path))
                 return;
 
@@ -978,7 +978,7 @@ namespace GitUI
             if (!Settings.RunningOnWindows())
                 return;
 
-            GitModule.Current.SetGlobalPathSetting(string.Format("difftool.{0}.path", GlobalMergeTool.Text.Trim()), MergetoolPath.Text.Trim());
+            Module.SetGlobalPathSetting(string.Format("difftool.{0}.path", GlobalMergeTool.Text.Trim()), MergetoolPath.Text.Trim());
             string exeName;
             string exeFile = MergeToolsHelper.FindDiffToolFullPath(GlobalDiffTool.Text, out exeName);
             if (String.IsNullOrEmpty(exeFile))
@@ -1003,7 +1003,7 @@ namespace GitUI
             if (!Settings.RunningOnWindows())
                 return;
 
-            GitModule.Current.SetGlobalPathSetting(string.Format("mergetool.{0}.path", GlobalMergeTool.Text.Trim()), MergetoolPath.Text.Trim());
+            Module.SetGlobalPathSetting(string.Format("mergetool.{0}.path", GlobalMergeTool.Text.Trim()), MergetoolPath.Text.Trim());
             string exeName;
             string exeFile = MergeToolsHelper.FindMergeToolFullPath(GlobalMergeTool.Text, out exeName);
             if (String.IsNullOrEmpty(exeFile))
@@ -1063,7 +1063,7 @@ namespace GitUI
             }
 
             if (GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
-                string.IsNullOrEmpty(GitModule.Current.GetGlobalSetting("difftool.kdiff3.path")))
+                string.IsNullOrEmpty(Module.GetGlobalSetting("difftool.kdiff3.path")))
             {
                 MessageBox.Show(this, _kdiff3NotFoundAuto.Text);
                 tabControl1.SelectTab(tpGlobalSettings);
@@ -1099,12 +1099,12 @@ namespace GitUI
             {
                 AutoConfigMergeToolCmd(true);
 
-                GitModule.Current.SetGlobalPathSetting(
+                Module.SetGlobalPathSetting(
                     string.Format("mergetool.{0}.cmd", GetMergeTool()), MergeToolCmd.Text);
             }
 
             if (IsMergeTool("kdiff3") &&
-                string.IsNullOrEmpty(GitModule.Current.GetGlobalSetting("mergetool.kdiff3.path")))
+                string.IsNullOrEmpty(Module.GetGlobalSetting("mergetool.kdiff3.path")))
             {
                 MessageBox.Show(this, _kdiff3NotFoundAuto.Text);
                 tabControl1.SelectTab(tpGlobalSettings);
@@ -1130,8 +1130,8 @@ namespace GitUI
             if (loadingSettings)
                 return;
             string diffTool = GlobalDiffTool.Text.Trim();
-            DifftoolPath.Text = GitModule.Current.GetGlobalSetting(string.Format("difftool.{0}.path", diffTool));
-            DifftoolCmd.Text = GitModule.Current.GetGlobalSetting(string.Format("difftool.{0}.cmd", diffTool));
+            DifftoolPath.Text = Module.GetGlobalSetting(string.Format("difftool.{0}.path", diffTool));
+            DifftoolCmd.Text = Module.GetGlobalSetting(string.Format("difftool.{0}.cmd", diffTool));
 
             if (diffTool.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
                 ResolveDiffToolPath();
@@ -1154,8 +1154,8 @@ namespace GitUI
         {
             if (loadingSettings)
                 return;
-            MergetoolPath.Text = GitModule.Current.GetGlobalSetting(string.Format("mergetool.{0}.path", GlobalMergeTool.Text.Trim()));
-            MergeToolCmd.Text = GitModule.Current.GetGlobalSetting(string.Format("mergetool.{0}.cmd", GlobalMergeTool.Text.Trim()));
+            MergetoolPath.Text = Module.GetGlobalSetting(string.Format("mergetool.{0}.path", GlobalMergeTool.Text.Trim()));
+            MergeToolCmd.Text = Module.GetGlobalSetting(string.Format("mergetool.{0}.cmd", GlobalMergeTool.Text.Trim()));
 
             if (GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
                 string.IsNullOrEmpty(MergeToolCmd.Text))
@@ -1207,7 +1207,7 @@ namespace GitUI
             InvalidGitPathGlobal.Visible = !canFindGitCmd;
             InvalidGitPathLocal.Visible = !canFindGitCmd;
 
-            bool valid = GitModule.Current.ValidWorkingDir() && canFindGitCmd;
+            bool valid = Module.ValidWorkingDir() && canFindGitCmd;
             UserName.Enabled = valid;
             UserEmail.Enabled = valid;
             Editor.Enabled = valid;
@@ -1799,7 +1799,7 @@ namespace GitUI
             {
                 if (GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    string p = GitModule.Current.GetGlobalSetting("difftool.kdiff3.path");
+                    string p = Module.GetGlobalSetting("difftool.kdiff3.path");
                     if (string.IsNullOrEmpty(p) || !File.Exists(p))
                     {
                         DiffTool.BackColor = Color.LightSalmon;
@@ -1835,7 +1835,7 @@ namespace GitUI
             {
                 if (IsMergeTool("kdiff3"))
                 {
-                    string p = GitModule.Current.GetGlobalSetting("mergetool.kdiff3.path");
+                    string p = Module.GetGlobalSetting("mergetool.kdiff3.path");
                     if (string.IsNullOrEmpty(p) || !File.Exists(p))
                     {
                         MergeTool.BackColor = Color.LightSalmon;
@@ -1851,7 +1851,7 @@ namespace GitUI
                 string mergetool = GetMergeTool().ToLowerInvariant();
                 if (mergetool == "p4merge" || mergetool == "tmerge")
                 {
-                    string p = GitModule.Current.GetGlobalSetting(string.Format("mergetool.{0}.cmd", mergetool));
+                    string p = Module.GetGlobalSetting(string.Format("mergetool.{0}.cmd", mergetool));
                     if (string.IsNullOrEmpty(p))
                     {
                         MergeTool.BackColor = Color.LightSalmon;
@@ -1874,8 +1874,8 @@ namespace GitUI
         private bool CheckGlobalUserSettingsValid()
         {
             UserNameSet.Visible = true;
-            if (string.IsNullOrEmpty(GitModule.Current.GetGlobalSetting("user.name")) ||
-                string.IsNullOrEmpty(GitModule.Current.GetGlobalSetting("user.email")))
+            if (string.IsNullOrEmpty(Module.GetGlobalSetting("user.name")) ||
+                string.IsNullOrEmpty(Module.GetGlobalSetting("user.email")))
             {
                 UserNameSet.BackColor = Color.LightSalmon;
                 UserNameSet.Text = _noEmailSet.Text;
@@ -2031,12 +2031,12 @@ namespace GitUI
             yield return "git.cmd";
         }
 
-        private static bool SolveGitCommand()
+        private bool SolveGitCommand()
         {
             if (Settings.RunningOnWindows())
             {
                 var command = (from cmd in GetWindowsCommandLocations()
-                               let output = GitModule.Current.RunCmd(cmd, string.Empty)
+                               let output = Module.RunCmd(cmd, string.Empty)
                                where !string.IsNullOrEmpty(output)
                                select cmd).FirstOrDefault();
 
@@ -2048,7 +2048,7 @@ namespace GitUI
                 return false;
             }
             Settings.GitCommand = "git";
-            return !string.IsNullOrEmpty(GitModule.Current.RunGitCmd(""));
+            return !string.IsNullOrEmpty(Module.RunGitCmd(""));
         }
 
         private void SaveScripts()
@@ -2239,18 +2239,6 @@ namespace GitUI
         internal enum Commands
         {
             NothingYet
-        }
-
-        protected override bool ExecuteCommand(int cmd)
-        {
-
-            Commands command = (Commands)cmd;
-
-            switch (command)
-            {
-                default: ExecuteScriptCommand(cmd, Keys.None); break;
-            }
-            return true;
         }
 
         #endregion

@@ -6,7 +6,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public sealed partial class FormBranchSmall : GitExtensionsForm
+    public sealed partial class FormBranchSmall : GitModuleForm
     {
         private readonly TranslationString _noRevisionSelected =
             new TranslationString("Select 1 revision to create the branch on.");
@@ -15,7 +15,8 @@ namespace GitUI
         private readonly TranslationString _branchNameIsNotValud =
             new TranslationString("“{0}” is not valid branch name.");
 
-        public FormBranchSmall()
+        public FormBranchSmall(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
             Translate();
@@ -33,7 +34,7 @@ namespace GitUI
                 DialogResult = DialogResult.None;
                 return;
             }
-            if (!GitModule.Current.CheckRefFormat(branchName))
+            if (!Module.CheckRefFormat(branchName))
             {
                 MessageBox.Show(string.Format(_branchNameIsNotValud.Text, branchName), Text);
                 DialogResult = DialogResult.None;

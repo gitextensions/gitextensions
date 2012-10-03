@@ -16,11 +16,13 @@ namespace GitCommands
         public String[] ParentGuids;
         private List<IGitItem> _subItems;
         private readonly List<GitHead> heads = new List<GitHead>();
+        private readonly GitModule Module;
 
-        public GitRevision(string guid)
+        public GitRevision(GitModule aModule, string guid)
         {
             Guid = guid;
             Message = "";
+            Module = aModule;
         }
 
         public List<GitHead> Heads { get { return heads; } }
@@ -44,7 +46,7 @@ namespace GitCommands
 
         public List<IGitItem> SubItems
         {
-            get { return _subItems ?? (_subItems = GitModule.Current.GetTree(TreeGuid, false)); }
+            get { return _subItems ?? (_subItems = Module.GetTree(TreeGuid, false)); }
         }
 
         #endregion

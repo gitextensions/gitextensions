@@ -6,7 +6,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormCherryPick : GitExtensionsForm
+    public partial class FormCherryPick : GitModuleForm
     {
         private readonly TranslationString _noRevisionSelectedMsgBox =
             new TranslationString("Select 1 revision to pick.");
@@ -17,10 +17,16 @@ namespace GitUI
         private readonly TranslationString _cmdExecutedMsgBoxCaption =
             new TranslationString("Cherry pick");
 
-        public FormCherryPick()
-            : base(true)
+        private FormCherryPick()
+            : this(null)
         {
-            InitializeComponent(); Translate();
+        }
+
+        public FormCherryPick(GitUICommands aCommands)
+            : base(aCommands)
+        {
+            InitializeComponent();
+            Translate();
         }
 
         private void FormCherryPick_Load(object sender, EventArgs e)
@@ -38,10 +44,10 @@ namespace GitUI
             }
             bool formClosed = false;
             List<string> arguments = new List<string>();
-            bool IsMerge = GitModule.Current.IsMerge(RevisionGrid.GetSelectedRevisions()[0].Guid);
+            bool IsMerge = Module.IsMerge(RevisionGrid.GetSelectedRevisions()[0].Guid);
             if (IsMerge && !autoParent.Checked)
             {
-                GitRevision[] ParentsRevisions = GitModule.Current.GetParents(RevisionGrid.GetSelectedRevisions()[0].Guid);
+                GitRevision[] ParentsRevisions = Module.GetParents(RevisionGrid.GetSelectedRevisions()[0].Guid);
                 using (var choose = new FormCherryPickMerge(ParentsRevisions))
                 {
                     choose.ShowDialog(this);
@@ -59,8 +65,8 @@ namespace GitUI
 
             if (!formClosed)
             {
-                MessageBox.Show(this, _cmdExecutedMsgBox.Text + " " + Environment.NewLine + GitModule.Current.CherryPick(RevisionGrid.GetSelectedRevisions()[0].Guid, AutoCommit.Checked, string.Join(" ", arguments.ToArray())), _cmdExecutedMsgBoxCaption.Text);
-                MergeConflictHandler.HandleMergeConflicts(this, AutoCommit.Checked);
+                MessageBox.Show(this, _cmdExecutedMsgBox.Text + " " + Environment.NewLine + Module.CherryPick(RevisionGrid.GetSelectedRevisions()[0].Guid, AutoCommit.Checked, string.Join(" ", arguments.ToArray())), _cmdExecutedMsgBoxCaption.Text);
+                MergeConflictHandler.HandleMergeConflicts(UICommands, this, AutoCommit.Checked);
                 RevisionGrid.RefreshRevisions();
                 Cursor.Current = Cursors.Default;
             }

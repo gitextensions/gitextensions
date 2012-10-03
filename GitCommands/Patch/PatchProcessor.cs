@@ -23,7 +23,7 @@ namespace PatchApply
         }
 
         /// <summary>
-        /// Diff part of patch is printed verbatim, everything else (header, warnings, ...) is printed in git encoding (Settings.SystemEncoding) 
+        /// Diff part of patch is printed verbatim, everything else (header, warnings, ...) is printed in git encoding (GitModule.SystemEncoding) 
         /// Since patch may contain diff for more than one file, it would be nice to obtaining encoding for each of file
         /// from .gitattributes, for now there is used one encoding, common for every file in repo (Settings.FilesEncoding)
         /// File path can be quoted see core.quotepath, it is unquoted by GitCommandHelpers.ReEncodeFileNameFromLossless
@@ -48,7 +48,7 @@ namespace PatchApply
                     validate = false;
                     patch = new Patch();
                     patches.Add(patch);
-                    input = GitCommandHelpers.ReEncodeFileNameFromLossless(input);
+                    input = GitModule.ReEncodeFileNameFromLossless(input);
                     patch.PatchHeader = input;
                     patch.Type = Patch.PatchType.ChangeFile;
                     ExtractPatchFilenames(patch);
@@ -59,8 +59,8 @@ namespace PatchApply
                         state = PatchProcessorState.InBody;
                     else
                     {
-                        //header lines are encoded in Settings.SystemEncoding
-                        input = GitCommandHelpers.ReEncodeStringFromLossless(input, Settings.SystemEncoding);
+                        //header lines are encoded in GitModule.SystemEncoding
+                        input = GitModule.ReEncodeStringFromLossless(input, GitModule.SystemEncoding);
                         if (IsIndexLine(input))
                         {                            
                             validate = false;
@@ -135,7 +135,7 @@ namespace PatchApply
                 //line starts with --- means, old file name
                 else if (input.StartsWith("--- "))
                 {
-                    input = GitCommandHelpers.UnquoteFileName(input);
+                    input = GitModule.UnquoteFileName(input);
                     Match regexMatch = Regex.Match(input, "[-]{3}[ ][\\\"]{0,1}[aiwco12]/(.*)[\\\"]{0,1}");
 
                     if (!regexMatch.Success || patch.FileNameA != (regexMatch.Groups[1].Value.Trim()))
@@ -151,7 +151,7 @@ namespace PatchApply
                 //we expect a new file now!
                 else if (input.StartsWith("+++ "))
                 {
-                    input = GitCommandHelpers.UnquoteFileName(input);
+                    input = GitModule.UnquoteFileName(input);
                     Match regexMatch = Regex.Match(input, "[+]{3}[ ][\\\"]{0,1}[biwco12]/(.*)[\\\"]{0,1}");
 
                     if (!regexMatch.Success || patch.FileNameB != (regexMatch.Groups[1].Value.Trim()))
@@ -162,10 +162,10 @@ namespace PatchApply
             {
                 if (input.StartsWithAny(new string[] { " ", "-", "+", "@" }))
                     //diff content
-                    input = GitCommandHelpers.ReEncodeStringFromLossless(input, FilesContentEncoding);
+                    input = GitModule.ReEncodeStringFromLossless(input, FilesContentEncoding);
                 else
                     //warnings, messages ...
-                    input = GitCommandHelpers.ReEncodeStringFromLossless(input, Settings.SystemEncoding);                    
+                    input = GitModule.ReEncodeStringFromLossless(input, GitModule.SystemEncoding);                    
             }               
         }
 

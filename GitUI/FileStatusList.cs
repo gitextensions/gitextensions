@@ -11,7 +11,7 @@ using GitUI.Properties;
 
 namespace GitUI
 {
-    public sealed partial class FileStatusList : GitExtensionsControl
+    public sealed partial class FileStatusList : GitModuleControl
     {
         private const int ImageSize = 16;
 
@@ -173,7 +173,7 @@ namespace GitUI
 
                     foreach (GitItemStatus item in SelectedItems)
                     {
-                        string fileName = GitCommands.GitModule.CurrentWorkingDir + item.Name;
+                        string fileName = Module.WorkingDir + item.Name;
 
                         fileList.Add(fileName.Replace('/', '\\'));
                     }
@@ -301,7 +301,7 @@ namespace GitUI
         void FileStatusListBox_DoubleClick(object sender, EventArgs e)
         {
             if (DoubleClick == null)
-                GitUICommands.Instance.StartFileHistoryDialog(this, SelectedItem.Name, Revision);
+                UICommands.StartFileHistoryDialog(this, SelectedItem.Name, Revision);
             else
                 DoubleClick(sender, e);
         }

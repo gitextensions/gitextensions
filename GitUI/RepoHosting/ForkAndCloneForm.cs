@@ -35,9 +35,11 @@ namespace GitUI.RepoHosting
         #endregion
 
         readonly IRepositoryHostPlugin _gitHoster;
+        private GitModuleChangedEventHandler GitModuleChanged;
 
-        public ForkAndCloneForm(IRepositoryHostPlugin gitHoster)
+        public ForkAndCloneForm(IRepositoryHostPlugin gitHoster, GitModuleChangedEventHandler GitModuleChanged)
         {
+            this.GitModuleChanged = GitModuleChanged;
             _gitHoster = gitHoster;
             InitializeComponent();
             Translate();
@@ -270,20 +272,22 @@ namespace GitUI.RepoHosting
             string repoSrc = repo.CloneReadWriteUrl;
 
             string cmd = GitCommandHelpers.CloneCmd(repoSrc, targetDir);
-            var errorOccurred = !FormProcess.ShowDialog(this, Settings.GitCommand, cmd);
+            var errorOccurred = !FormProcess.ShowDialog(this, Settings.GitCommand, cmd, string.Empty, null, true);
 
             if (errorOccurred)
                 return;
 
-            Repositories.AddMostRecentRepository(targetDir);
-            GitModule.CurrentWorkingDir = targetDir;
+            GitModule module = new GitModule(targetDir);
 
             if (_addRemoteAsTB.Text.Trim().Length > 0 && !string.IsNullOrEmpty(repo.ParentReadOnlyUrl))
             {
-                var error = GitModule.Current.AddRemote(_addRemoteAsTB.Text.Trim(), repo.ParentReadOnlyUrl);
+                var error = module.AddRemote(_addRemoteAsTB.Text.Trim(), repo.ParentReadOnlyUrl);
                 if (!string.IsNullOrEmpty(error))
                     MessageBox.Show(this, error, _strCouldNotAddRemote.Text);
             }
+
+            if (GitModuleChanged != null)
+                GitModuleChanged(module);
 
             Close();
         }

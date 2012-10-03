@@ -6,7 +6,7 @@ using GitCommands;
 
 namespace GitUI.Blame
 {
-    public sealed partial class BlameControl : GitExtensionsControl
+    public sealed partial class BlameControl : GitModuleControl
     {
         private GitBlame _blame;
         private string _lastRevision;
@@ -176,7 +176,7 @@ namespace GitUI.Blame
 
             blameLoader.Load(() =>
             {
-                _blame = GitModule.Current.Blame(fileName, guid, encoding);
+                _blame = Module.Blame(fileName, guid, encoding);
             },
             () =>
             {
@@ -214,14 +214,14 @@ namespace GitUI.Blame
         {
             if (_lastRevision == null)
                 return;
-            var gitRevision = new GitRevision(_lastRevision) { ParentGuids = new[] { _lastRevision + "^" } };
+            var gitRevision = new GitRevision(Module, _lastRevision) { ParentGuids = new[] { _lastRevision + "^" } };
             if (_revGrid != null)
             {
                 _revGrid.SetSelectedRevision(gitRevision);
             }
             else
             {
-                using (var frm = new FormDiffSmall(gitRevision))
+                using (var frm = new FormDiffSmall(UICommands, gitRevision))
                     frm.ShowDialog(this);
             }
         }
@@ -271,18 +271,18 @@ namespace GitUI.Blame
             if (line < 0)
                 return;
             string commit = _blame.Lines[line].CommitGuid;
-            GitBlame blame = GitModule.Current.Blame(_fileName, commit + "^", line + ",+1", _encoding);
+            GitBlame blame = Module.Blame(_fileName, commit + "^", line + ",+1", _encoding);
             if (blame.Headers.Count > 0)
             {
                 commit = blame.Headers[0].CommitGuid;
-                var gitRevision = new GitRevision(commit) { ParentGuids = new[] { commit + "^" } };
+                var gitRevision = new GitRevision(Module, commit) { ParentGuids = new[] { commit + "^" } };
                 if (_revGrid != null)
                 {
                     _revGrid.SetSelectedRevision(gitRevision);
                 }
                 else
                 {
-                    using (var frm = new FormDiffSmall(gitRevision))
+                    using (var frm = new FormDiffSmall(UICommands, gitRevision))
                         frm.ShowDialog(this);
                 }
             }
@@ -293,8 +293,8 @@ namespace GitUI.Blame
             string commit = GetBlameCommit();
             if (commit == null)
                 return;
-            var gitRevision = new GitRevision(commit) { ParentGuids = new[] { commit + "^" } };
-            using (var frm = new FormDiffSmall(gitRevision))
+            var gitRevision = new GitRevision(Module, commit) { ParentGuids = new[] { commit + "^" } };
+            using (var frm = new FormDiffSmall(UICommands, gitRevision))
                 frm.ShowDialog(this);
         }
     }

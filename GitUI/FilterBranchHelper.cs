@@ -13,6 +13,7 @@ namespace GitUI
         private RevisionGrid _NO_TRANSLATE_RevisionGrid;
         private ToolStripMenuItem localToolStripMenuItem;
         private ToolStripMenuItem remoteToolStripMenuItem;
+        private GitModule Module { get { return _NO_TRANSLATE_RevisionGrid.Module; } }
 
         public FilterBranchHelper()
         {
@@ -48,9 +49,7 @@ namespace GitUI
             this._NO_TRANSLATE_toolStripBranches.DropDown += this.toolStripBranches_DropDown;
             this._NO_TRANSLATE_toolStripBranches.TextUpdate += this.toolStripBranches_TextUpdate;
             this._NO_TRANSLATE_toolStripBranches.Leave += this.toolStripBranches_Leave;
-            this._NO_TRANSLATE_toolStripBranches.KeyUp += this.toolStripBranches_KeyUp;
-
-            InitToolStripBranchFilter();
+            this._NO_TRANSLATE_toolStripBranches.KeyUp += this.toolStripBranches_KeyUp;           
         }
 
         public void InitToolStripBranchFilter()
@@ -59,58 +58,64 @@ namespace GitUI
             bool remote = remoteToolStripMenuItem.Checked;
 
             _NO_TRANSLATE_toolStripBranches.Items.Clear();
-            List<string> branches = GetBranchAndTagHeads(local, remote);
-            foreach (var branch in branches)
-                _NO_TRANSLATE_toolStripBranches.Items.Add(branch);
 
-            var autoCompleteList = _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Cast<string>();
-            if (!autoCompleteList.SequenceEqual(branches))
-            {
-                _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Clear();
-                _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.AddRange(branches.ToArray());
-            }
+            AsyncLoader.DoAsync(() => GetBranchAndTagHeads(local, remote),
+                (List<string> branches) =>
+                {
+
+                    foreach (var branch in branches)
+                        _NO_TRANSLATE_toolStripBranches.Items.Add(branch);
+
+                    var autoCompleteList = _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Cast<string>();
+                    if (!autoCompleteList.SequenceEqual(branches))
+                    {
+                        _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Clear();
+                        _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.AddRange(branches.ToArray());
+                    }
+                }
+                    );
         }
 
-        private static List<string> GetBranchHeads(bool local, bool remote)
+        private List<string> GetBranchHeads(bool local, bool remote)
         {
             var list = new List<string>();
             if (local && remote)
             {
-                var branches = GitModule.Current.GetHeads(true, true);
+                var branches = Module.GetHeads(true, true);
                 list.AddRange(branches.Where(branch => !branch.IsTag).Select(branch => branch.Name));
             }
             else if (local)
             {
-                var branches = GitModule.Current.GetHeads(false);
+                var branches = Module.GetHeads(false);
                 list.AddRange(branches.Select(branch => branch.Name));
             }
             else if (remote)
             {
-                var branches = GitModule.Current.GetHeads(true, true);
+                var branches = Module.GetHeads(true, true);
                 list.AddRange(branches.Where(branch => branch.IsRemote && !branch.IsTag).Select(branch => branch.Name));
             }
             return list;
         }
 
-        private static IEnumerable<string> GetTagsHeads(bool local, bool remote)
+        private IEnumerable<string> GetTagsHeads(bool local, bool remote)
         {
             var list = new List<string>();
             if (!remote)
                 return list;
             if (local)
             {
-                var tags = GitModule.Current.GetHeads(true, true);
+                var tags = Module.GetHeads(true, true);
                 list.AddRange(tags.Where(tag => tag.IsTag).Select(tag => tag.Name));
             }
             else
             {
-                var tags = GitModule.Current.GetHeads(true, true);
+                var tags = Module.GetHeads(true, true);
                 list.AddRange(tags.Where(tag => tag.IsRemote && tag.IsTag).Select(tag => tag.Name));
             }
             return list;
         }
 
-        private static List<string> GetBranchAndTagHeads(bool local, bool remote)
+        private List<string> GetBranchAndTagHeads(bool local, bool remote)
         {
             var list = GetBranchHeads(local, remote);
             list.AddRange(GetTagsHeads(local, remote));
