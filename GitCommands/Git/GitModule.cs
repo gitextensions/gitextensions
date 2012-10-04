@@ -101,8 +101,8 @@ namespace GitCommands
         {
             string lname = local ? "_local" + '_' + WorkingDir : "_global";
             lname = settingName + lname;
-            Encoding result = Settings.GetEncoding(lname);
-            if (result != null)
+            Encoding result;
+            if (Settings.GetEncoding(lname, out result))
                 return result;
 
             string encodingName;

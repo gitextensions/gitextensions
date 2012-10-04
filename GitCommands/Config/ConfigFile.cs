@@ -14,7 +14,6 @@ namespace GitCommands.Config
                         ^\s*\[(?<SectionName>[^\]]+)?\]\s*$
                   )",
                 RegexOptions.Compiled |
-                RegexOptions.IgnoreCase |
                 RegexOptions.IgnorePatternWhitespace
                 );
 
@@ -24,7 +23,6 @@ namespace GitCommands.Config
                         ^\s*(?<Key>[^(\s*\=\s*)]+)?\s*\=\s*(?<Value>[\d\D]*)$
                    )",
                 RegexOptions.Compiled |
-                RegexOptions.IgnoreCase |
                 RegexOptions.IgnorePatternWhitespace
                 );
 
