@@ -726,6 +726,11 @@ namespace GitUI.Editor
             _internalFileViewer.HighlightLine(line, color);
         }
 
+        public void HighlightLines(int startLine, int endLine, Color color)
+        {
+            _internalFileViewer.HighlightLines(startLine, endLine, color);
+        }
+
         public void ClearHighlighting()
         {
             _internalFileViewer.ClearHighlighting();
