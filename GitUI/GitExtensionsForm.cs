@@ -311,7 +311,7 @@ namespace GitUI
                 Rectangle? rect = FindWindowScreen(location);
                 if (rect != null)
                     location.Y = rect.Value.Y;
-                Location = location;
+                DesktopLocation = location;
             }
             else
             {

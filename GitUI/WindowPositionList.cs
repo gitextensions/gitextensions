@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Xml;
@@ -12,6 +13,7 @@ namespace GitUI
     /// <summary>
     ///   Stores the state and position of a single window
     /// </summary>
+    [DebuggerDisplay("Rect={Rect} State={State}")]
     public class WindowPosition
     {
         public WindowPosition(Rectangle rect, FormWindowState state)
