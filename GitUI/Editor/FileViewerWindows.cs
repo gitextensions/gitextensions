@@ -424,6 +424,21 @@ namespace GitUI.Editor
                                                     ));
         }
 
+        public void HighlightLines(int startLine, int endLine, Color color)
+        {
+            if (startLine > endLine || endLine >= TextEditor.Document.TotalNumberOfLines)
+                return;
+
+            var document = TextEditor.Document;
+            var markerStrategy = document.MarkerStrategy;
+            var startLineSegment = document.GetLineSegment(startLine);
+            var endLineSegment = document.GetLineSegment(endLine);
+            markerStrategy.AddMarker(new TextMarker(startLineSegment.Offset,
+                                                    endLineSegment.Offset - startLineSegment.Offset + endLineSegment.Length,
+                                                    TextMarkerType.SolidBlock, color
+                                                    ));
+        }
+
         public void ClearHighlighting()
         {
             var document = TextEditor.Document;

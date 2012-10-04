@@ -189,6 +189,12 @@ namespace GitUI.Editor
         {
 
         }
+
+        public void HighlightLines(int startLine, int endLine, Color color)
+        {
+
+        }
+
         public void ClearHighlighting()
         {
         }
