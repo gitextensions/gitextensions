@@ -204,7 +204,7 @@ namespace GitUI
             get
             {
                 if (_IndexWatcher == null)
-                    _IndexWatcher = new IndexWatcher(Module);
+                    _IndexWatcher = new IndexWatcher(UICommandsSource);
 
                 return _IndexWatcher;
             }
