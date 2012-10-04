@@ -302,15 +302,15 @@ namespace GitCommands
 
         public static readonly Dictionary<string, Encoding> availableEncodings = new Dictionary<string, Encoding>();
 
-        public static Encoding GetEncoding(string settingName)
+        internal static bool GetEncoding(string settingName, out Encoding encoding)
         {
             object o;
-            byNameMap.TryGetValue(settingName, out o);
-
-            return o as Encoding;
+            bool result = byNameMap.TryGetValue(settingName, out o);
+            encoding = o as Encoding;
+            return result;
         }
 
-        public static void SetEncoding(string settingName, Encoding encoding)
+        internal static void SetEncoding(string settingName, Encoding encoding)
         {
             var items = (from item in byNameMap.Keys where item.StartsWith(settingName) select item).ToList();
             foreach (var item in items)
