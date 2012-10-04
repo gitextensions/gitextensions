@@ -1,7 +1,8 @@
 ﻿using System;
 using System.IO;
+using GitCommands;
 
-namespace GitCommands
+namespace GitUI
 {
     [Serializable]
     public delegate void IndexChangedEventHandler(bool indexChanged);
@@ -10,11 +11,22 @@ namespace GitCommands
     {
         public event IndexChangedEventHandler Changed;
 
-        private readonly GitModule Module;
+        private readonly IGitUICommandsSource UICommandsSource;
 
-        public IndexWatcher(GitModule aModule)
+        private GitUICommands UICommands
         {
-            Module = aModule;
+            get
+            {
+                return UICommandsSource.UICommands;
+            }
+        }
+
+        private GitModule Module { get { return UICommands.Module; } }
+
+        public IndexWatcher(IGitUICommandsSource aUICommandsSource)
+        {
+            UICommandsSource = aUICommandsSource;
+            UICommandsSource.GitUICommandsChanged += UICommandsSource_GitUICommandsChanged;
             GitIndexWatcher = new FileSystemWatcher();
             RefsWatcher = new FileSystemWatcher();
             SetFileSystemWatcher();
@@ -24,9 +36,19 @@ namespace GitCommands
             RefsWatcher.Changed += fileSystemWatcher_Changed;
         }
 
+        void UICommandsSource_GitUICommandsChanged(IGitUICommandsSource sender, GitUICommands oldCommands)
+        {
+            Clear();
+        }
+
         private void SetFileSystemWatcher()
         {
-            if (!string.IsNullOrEmpty(Module.WorkingDirGitDir()))
+            if (Module.WorkingDirGitDir().IsNullOrEmpty())
+            {
+                GitIndexWatcher.EnableRaisingEvents = false;
+                RefsWatcher.EnableRaisingEvents = false;
+            }
+            else
             {
                 try
                 {
@@ -51,8 +73,8 @@ namespace GitCommands
         }
 
         private bool indexChanged;
-        public bool IndexChanged 
-        { 
+        public bool IndexChanged
+        {
             get
             {
                 if (!enabled)
@@ -99,7 +121,7 @@ namespace GitCommands
         {
             if (Path != Module.WorkingDirGitDir() ||
                 enabled != GitCommands.Settings.UseFastChecks)
-                SetFileSystemWatcher();        
+                SetFileSystemWatcher();
         }
 
         public void Dispose()
