@@ -88,13 +88,28 @@ namespace GitUI.Blame
             {
                 BlameCommitter.ClearHighlighting();
                 BlameFile.ClearHighlighting();
+                int startLine = -1;
+                int prevLine = -1;
                 for (int i = 0; i < _blame.Lines.Count; i++)
                 {
                     if (_blame.Lines[i].CommitGuid == blameHeader.CommitGuid)
                     {
-                        BlameCommitter.HighlightLine(i, Color.FromArgb(225, 225, 225));
-                        BlameFile.HighlightLine(i, Color.FromArgb(225, 225, 225));
+                        if (prevLine != i - 1 && startLine != -1)
+                        {
+                            BlameCommitter.HighlightLines(startLine, prevLine, Color.FromArgb(225, 225, 225));
+                            BlameFile.HighlightLines(startLine, prevLine, Color.FromArgb(225, 225, 225));
+                            startLine = -1;
+                        }
+
+                        prevLine = i;
+                        if (startLine == -1)
+                            startLine = i;
                     }
+                }
+                if (startLine != -1)
+                {
+                    BlameCommitter.HighlightLines(startLine, prevLine, Color.FromArgb(225, 225, 225));
+                    BlameFile.HighlightLines(startLine, prevLine, Color.FromArgb(225, 225, 225));
                 }
                 BlameCommitter.Refresh();
                 BlameFile.Refresh();

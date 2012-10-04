@@ -24,6 +24,7 @@ namespace GitUI.Editor
         void SetText(string text);
         void SetHighlighting(string syntax);
         void HighlightLine(int line, Color color);
+        void HighlightLines(int startLine, int endLine, Color color);
         void ClearHighlighting();
         string GetSelectedText();
         int GetSelectionPosition();
