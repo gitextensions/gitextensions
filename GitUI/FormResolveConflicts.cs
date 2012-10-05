@@ -69,6 +69,19 @@ namespace GitUI
             new TranslationString("Current format (*.{0})");
         private readonly TranslationString _allFilesFilter =
             new TranslationString("All files (*.*)");
+
+        private readonly TranslationString _abortCurrentOpperation =
+            new TranslationString("You can abort the current operation by resetting changes." + Environment.NewLine +
+                "All changes since the last commit will be deleted." + Environment.NewLine +
+                Environment.NewLine + "Do you want to reset changes?");
+
+        private readonly TranslationString _abortCurrentOpperationCaption = new TranslationString("Abort");
+
+        private readonly TranslationString _areYouSureYouWantDeleteFiles =
+            new TranslationString("Are you sure you want to DELETE all changes?" + Environment.NewLine +
+                Environment.NewLine + "This action cannot be made undone.");
+
+        private readonly TranslationString _areYouSureYouWantDeleteFilesCaption = new TranslationString("WARNING!");
         #endregion
 
         public FormResolveConflicts(GitUICommands aCommands)
@@ -443,11 +456,26 @@ namespace GitUI
             Cursor.Current = Cursors.Default;
         }
 
+        private bool ShowAbortMessage()
+        {
+            if (MessageBox.Show(_abortCurrentOpperation.Text, _abortCurrentOpperationCaption.Text,
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                if (MessageBox.Show(_areYouSureYouWantDeleteFiles.Text, _areYouSureYouWantDeleteFilesCaption.Text,
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                    return true;
+            }
+            return false;
+        }
+
         private void Reset_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            if (Abort.AbortCurrentAction(Module))
+            if (ShowAbortMessage())
+            {
+                Module.ResetHard("");
                 Close();
+            }
             Cursor.Current = Cursors.Default;
         }
 
