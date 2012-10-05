@@ -2464,7 +2464,7 @@ namespace GitCommands
         /// Uses check-ref-format to ensure that a branch name is well formed.
         /// </summary>
         /// <param name="branchName">Branch name to test.</param>
-        /// <returns>true if <see cref="refName"/> is valid reference name, otherwise false.</returns>
+        /// <returns>true if <see cref="branchName"/> is valid reference name, otherwise false.</returns>
         public bool CheckBranchFormat([NotNull] string branchName)
         {
             if (branchName == null)
