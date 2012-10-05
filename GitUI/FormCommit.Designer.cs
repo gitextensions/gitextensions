@@ -160,11 +160,15 @@ namespace GitUI
             this.StagedFileContext.SuspendLayout();
             this.UnstagedSubmoduleContext.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).BeginInit();
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
+#endif
             this.splitMain.Panel1.SuspendLayout();
             this.splitMain.Panel2.SuspendLayout();
             this.splitMain.SuspendLayout();
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitLeft)).BeginInit();
+#endif
             this.splitLeft.Panel1.SuspendLayout();
             this.splitLeft.Panel2.SuspendLayout();
             this.splitLeft.SuspendLayout();
@@ -175,8 +179,9 @@ namespace GitUI
             this.toolbarUnstaged.SuspendLayout();
             this.toolbarSelectionFilter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.LoadingStaged)).BeginInit();
-            this.toolbarStaged.SuspendLayout();
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitRight)).BeginInit();
+#endif
             this.splitRight.Panel1.SuspendLayout();
             this.splitRight.Panel2.SuspendLayout();
             this.splitRight.SuspendLayout();
@@ -1245,11 +1250,15 @@ namespace GitUI
             ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).EndInit();
             this.splitMain.Panel1.ResumeLayout(false);
             this.splitMain.Panel2.ResumeLayout(false);
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
+#endif
             this.splitMain.ResumeLayout(false);
             this.splitLeft.Panel1.ResumeLayout(false);
             this.splitLeft.Panel2.ResumeLayout(false);
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitLeft)).EndInit();
+#endif
             this.splitLeft.ResumeLayout(false);
             this.toolStripContainer1.ContentPanel.ResumeLayout(false);
             this.toolStripContainer1.TopToolStripPanel.ResumeLayout(false);
@@ -1267,7 +1276,9 @@ namespace GitUI
             this.splitRight.Panel1.ResumeLayout(false);
             this.splitRight.Panel1.PerformLayout();
             this.splitRight.Panel2.ResumeLayout(false);
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitRight)).EndInit();
+#endif
             this.splitRight.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
