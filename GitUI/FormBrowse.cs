@@ -1239,6 +1239,12 @@ namespace GitUI
                 Initialize();
         }
 
+        private void ResetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (UICommands.StartResetChangesDialog(this))
+                Initialize();
+        }
+
         private void RunMergetoolToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (UICommands.StartResolveConflictsDialog(this))

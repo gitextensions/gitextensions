@@ -205,6 +205,7 @@ namespace GitUI
             this.menuStrip1 = new GitUI.MenuStripEx();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 #if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.toolPanel)).BeginInit();
 #endif
@@ -1121,6 +1122,7 @@ namespace GitUI
             this.pullToolStripMenuItem,
             this.pushToolStripMenuItem,
             this.stashToolStripMenuItem,
+            this.resetToolStripMenuItem,
             this.toolStripSeparator25,
             this.applyPatchToolStripMenuItem,
             this.formatPatchToolStripMenuItem,
@@ -1743,6 +1745,13 @@ namespace GitUI
             this.menuStrip1.Size = new System.Drawing.Size(923, 24);
             this.menuStrip1.TabIndex = 3;
             // 
+            // resetToolStripMenuItem
+            // 
+            this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
+            this.resetToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.resetToolStripMenuItem.Text = "Reset changes";
+            this.resetToolStripMenuItem.Click += new System.EventHandler(this.ResetToolStripMenuItem_Click);
+            // 
             // FormBrowse
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1975,6 +1984,7 @@ namespace GitUI
         private ToolStripMenuItem fetchAllToolStripMenuItem;
         private ToolStripMenuItem resetFileToToolStripMenuItem;
         private ToolStripMenuItem resetFileToBaseToolStripMenuItem;
-        private ToolStripMenuItem resetFileToRemoteToolStripMenuItem;        
+        private ToolStripMenuItem resetFileToRemoteToolStripMenuItem;
+        private ToolStripMenuItem resetToolStripMenuItem;        
     }
 }

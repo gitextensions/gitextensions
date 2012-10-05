@@ -1773,13 +1773,32 @@ namespace GitUI
             if (unStagedFiles.Count == 0)
                 return;
 
-            if (!Abort.ShowAbortMessage())
+            // Show a form asking the user if they want to reset the changes.
+            FormResetChanges.ResultType resetType = FormResetChanges.ShowResetDialog(this, true, true);
+            if (resetType == FormResetChanges.ResultType.CANCEL)
                 return;
 
             foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
             {
                 GitModule module = new GitModule(Module.WorkingDir + item.Name + Settings.PathSeparator.ToString());
+
+                // Reset all changes.
                 module.ResetHard("");
+
+                // Also delete new files, if requested.
+                if (resetType == FormResetChanges.ResultType.RESET_AND_DELETE)
+                {
+                    var unstagedFiles = module.GetUnstagedFiles();
+                    foreach (var file in unstagedFiles.Where(file => file.IsNew))
+                    {
+                        try
+                        {
+                            File.Delete(module.WorkingDir + file.Name);
+                        }
+                        catch (System.IO.IOException) { }
+                        catch (System.UnauthorizedAccessException) { }
+                    }
+                }
             }
 
             Initialize();
