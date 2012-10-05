@@ -302,7 +302,7 @@ namespace GitUI
 
         private void SaveAs()
         {
-            var foreignTranslation = new Translation { LanguageCode = GetSelectedLanguageCode() };
+            var foreignTranslation = new Translation { GitExVersion = GitCommands.Settings.GitExtensionsVersionString, LanguageCode = GetSelectedLanguageCode() };
             foreach (TranslateItem translateItem in translate)
             {
                 string value = translateItem.TranslatedValue ?? String.Empty;
