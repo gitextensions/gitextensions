@@ -13,6 +13,7 @@ namespace GitUI
     public partial class GitModuleForm : GitExtensionsForm, IGitUICommandsSource
     {
         private GitUICommands _UICommands;
+        [Browsable(false)]
         public GitUICommands UICommands
         {
             get
@@ -31,6 +32,8 @@ namespace GitUI
                     GitUICommandsChanged(this, oldCommands);
             }
         }
+
+        [Browsable(false)]
         public GitModule Module { get { return UICommands.Module; } }
         public event GitUICommandsChangedEventHandler GitUICommandsChanged;
 

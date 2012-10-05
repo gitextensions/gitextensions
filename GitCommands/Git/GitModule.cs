@@ -1386,7 +1386,7 @@ namespace GitCommands
             return path.Contains(Settings.PathSeparator.ToString()) || path.Contains(Settings.PathSeparatorWrong.ToString());
         }
 
-        public string FetchCmd(string remote, string remoteBranch, string localBranch)
+        public string FetchCmd(string remote, string remoteBranch, string localBranch, bool noTags)
         {
             var progressOption = "";
             if (GitCommandHelpers.VersionInUse.FetchCanAskForProgress)
@@ -1395,7 +1395,12 @@ namespace GitCommands
             if (string.IsNullOrEmpty(remote) && string.IsNullOrEmpty(remoteBranch) && string.IsNullOrEmpty(localBranch))
                 return "fetch " + progressOption;
 
-            return "fetch " + progressOption + GetFetchArgs(remote, remoteBranch, localBranch);
+            return "fetch " + progressOption + GetFetchArgs(remote, remoteBranch, localBranch, noTags);
+        }
+
+        public string FetchCmd(string remote, string remoteBranch, string localBranch)
+        {
+            return FetchCmd(remote, remoteBranch, localBranch, false);
         }
 
         public string Pull(string remote, string remoteBranch, string localBranch, bool rebase)
@@ -1409,7 +1414,7 @@ namespace GitCommands
             return "Done";
         }
 
-        public string PullCmd(string remote, string remoteBranch, string localBranch, bool rebase)
+        public string PullCmd(string remote, string remoteBranch, string localBranch, bool rebase, bool noTags)
         {
             var progressOption = "";
             if (GitCommandHelpers.VersionInUse.FetchCanAskForProgress)
@@ -1421,10 +1426,15 @@ namespace GitCommands
             if (rebase)
                 return "pull --rebase " + progressOption + remote;
 
-            return "pull " + progressOption + GetFetchArgs(remote, remoteBranch, localBranch);
+            return "pull " + progressOption + GetFetchArgs(remote, remoteBranch, localBranch, noTags);
         }
 
-        private string GetFetchArgs(string remote, string remoteBranch, string localBranch)
+        public string PullCmd(string remote, string remoteBranch, string localBranch, bool rebase)
+        {
+            return PullCmd(remote, remoteBranch, localBranch, rebase, false);
+        }
+
+        private string GetFetchArgs(string remote, string remoteBranch, string localBranch, bool noTags)
         {
             remote = FixPath(remote);
 
@@ -1451,7 +1461,9 @@ namespace GitCommands
             else
                 localBranchArguments = ":" + "refs/remotes/" + remote.Trim() + "/" + localBranch + "";
 
-            return "\"" + remote.Trim() + "\" " + remoteBranchArguments + localBranchArguments;
+            string arguments = noTags ? " --no-tags" : "";
+
+            return "\"" + remote.Trim() + "\" " + remoteBranchArguments + localBranchArguments + arguments;
         }
 
         public string ContinueRebase()
