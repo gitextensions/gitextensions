@@ -27,8 +27,8 @@ namespace Gerrit
             new TranslationString("Save changes?");
 
         private string _originalGitReviewFileContent = string.Empty;
-        protected readonly IGitUICommands UICommands;
-        protected IGitModule Module { get { return UICommands.GitModule; } }
+        private readonly IGitUICommands UICommands;
+        private IGitModule Module { get { return UICommands.GitModule; } }
 
         public FormGitReview(IGitUICommands aUICommands)
             : base(true)

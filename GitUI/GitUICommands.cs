@@ -800,6 +800,38 @@ namespace GitUI
             return StartStashDialog(null);
         }
 
+        public bool StartResetChangesDialog(IWin32Window owner)
+        {
+            var unstagedFiles = Module.GetUnstagedFiles();
+            // Show a form asking the user if they want to reset the changes.
+            FormResetChanges.ResultType resetType = FormResetChanges.ShowResetDialog(owner, unstagedFiles.Any(item => !item.IsNew), unstagedFiles.Any(item => item.IsNew));
+            if (resetType == FormResetChanges.ResultType.CANCEL)
+                return false;
+
+            // Reset all changes.
+            Module.ResetHard("");
+
+            // Also delete new files, if requested.
+            if (resetType == FormResetChanges.ResultType.RESET_AND_DELETE)
+            {
+                foreach (var item in unstagedFiles.Where(item => item.IsNew))
+                {
+                    try
+                    {
+                        File.Delete(Module.WorkingDir + item.Name);
+                    }
+                    catch (System.IO.IOException) { }
+                    catch (System.UnauthorizedAccessException) { }
+                }
+            }
+            return true;
+        }
+
+        public bool StartResetChangesDialog()
+        {
+            return StartResetChangesDialog(null);
+        }
+
         public bool StartResolveConflictsDialog(IWin32Window owner, bool offerCommit)
         {
             if (!RequiresValidWorkingDir(owner))
@@ -1616,6 +1648,9 @@ namespace GitUI
                     return;
                 case "remotes":
                     StartRemotesDialog();
+                    return;
+                case "reset":
+                    StartResetChangesDialog();
                     return;
                 case "revert":      // filename
                     Application.Run(new FormRevert(this, args[2]));

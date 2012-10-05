@@ -149,6 +149,7 @@ pull [--rebase] [--merge] [--fetch] [--quiet] [--remotebranch name]
 push [--quiet]
 rebase [--branch name]
 remotes
+reset
 revert filename
 searchfile
 settings
