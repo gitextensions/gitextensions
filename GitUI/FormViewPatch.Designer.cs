@@ -38,11 +38,12 @@ namespace PatchApply
             this.File = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.patchBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.ChangesList = new GitUI.Editor.FileViewer();
-            this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.BrowsePatch = new System.Windows.Forms.Button();
             this.PatchFileNameEdit = new System.Windows.Forms.TextBox();
             this.labelPatch = new System.Windows.Forms.Label();
             this.changedFileBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 #if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
@@ -51,19 +52,16 @@ namespace PatchApply
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GridChangedFiles)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.patchBindingSource)).BeginInit();
-#if Mono212Released //waiting for mono 2.12
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
-#endif
-            this.splitContainer4.Panel1.SuspendLayout();
-            this.splitContainer4.Panel2.SuspendLayout();
-            this.splitContainer4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.changedFileBindingSource)).BeginInit();
+            this.tableLayoutPanel1.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer1.Location = new System.Drawing.Point(3, 40);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -74,8 +72,8 @@ namespace PatchApply
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.ChangesList);
-            this.splitContainer1.Size = new System.Drawing.Size(689, 457);
-            this.splitContainer1.SplitterDistance = 161;
+            this.splitContainer1.Size = new System.Drawing.Size(683, 458);
+            this.splitContainer1.SplitterDistance = 270;
             this.splitContainer1.TabIndex = 1;
             // 
             // GridChangedFiles
@@ -96,7 +94,7 @@ namespace PatchApply
             this.GridChangedFiles.ReadOnly = true;
             this.GridChangedFiles.RowHeadersVisible = false;
             this.GridChangedFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.GridChangedFiles.Size = new System.Drawing.Size(689, 161);
+            this.GridChangedFiles.Size = new System.Drawing.Size(683, 270);
             this.GridChangedFiles.TabIndex = 0;
             this.GridChangedFiles.SelectionChanged += new System.EventHandler(this.GridChangedFiles_SelectionChanged);
             // 
@@ -134,33 +132,13 @@ namespace PatchApply
             this.ChangesList.Location = new System.Drawing.Point(0, 0);
             this.ChangesList.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.ChangesList.Name = "ChangesList";
-            this.ChangesList.Size = new System.Drawing.Size(689, 292);
+            this.ChangesList.Size = new System.Drawing.Size(683, 184);
             this.ChangesList.TabIndex = 1;
-            // 
-            // splitContainer4
-            // 
-            this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer4.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer4.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer4.Name = "splitContainer4";
-            this.splitContainer4.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer4.Panel1
-            // 
-            this.splitContainer4.Panel1.Controls.Add(this.BrowsePatch);
-            this.splitContainer4.Panel1.Controls.Add(this.PatchFileNameEdit);
-            this.splitContainer4.Panel1.Controls.Add(this.labelPatch);
-            // 
-            // splitContainer4.Panel2
-            // 
-            this.splitContainer4.Panel2.Controls.Add(this.splitContainer1);
-            this.splitContainer4.Size = new System.Drawing.Size(689, 501);
-            this.splitContainer4.SplitterDistance = 40;
-            this.splitContainer4.TabIndex = 2;
             // 
             // BrowsePatch
             // 
-            this.BrowsePatch.Location = new System.Drawing.Point(356, 7);
+            this.BrowsePatch.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.BrowsePatch.Location = new System.Drawing.Point(580, 3);
             this.BrowsePatch.Name = "BrowsePatch";
             this.BrowsePatch.Size = new System.Drawing.Size(100, 25);
             this.BrowsePatch.TabIndex = 5;
@@ -172,27 +150,62 @@ namespace PatchApply
             // 
             this.PatchFileNameEdit.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.PatchFileNameEdit.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
-            this.PatchFileNameEdit.Location = new System.Drawing.Point(93, 9);
+            this.PatchFileNameEdit.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PatchFileNameEdit.Location = new System.Drawing.Point(46, 3);
             this.PatchFileNameEdit.Name = "PatchFileNameEdit";
-            this.PatchFileNameEdit.Size = new System.Drawing.Size(256, 23);
+            this.PatchFileNameEdit.Size = new System.Drawing.Size(528, 23);
             this.PatchFileNameEdit.TabIndex = 3;
             this.PatchFileNameEdit.TextChanged += new System.EventHandler(this.PatchFileNameEdit_TextChanged);
             // 
             // labelPatch
             // 
+            this.labelPatch.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.labelPatch.AutoSize = true;
-            this.labelPatch.Location = new System.Drawing.Point(3, 13);
+            this.labelPatch.Location = new System.Drawing.Point(3, 8);
             this.labelPatch.Name = "labelPatch";
             this.labelPatch.Size = new System.Drawing.Size(37, 15);
             this.labelPatch.TabIndex = 1;
             this.labelPatch.Text = "Patch";
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.splitContainer1, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(689, 501);
+            this.tableLayoutPanel1.TabIndex = 3;
+            // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.AutoSize = true;
+            this.tableLayoutPanel2.ColumnCount = 3;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel2.Controls.Add(this.BrowsePatch, 2, 0);
+            this.tableLayoutPanel2.Controls.Add(this.labelPatch, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.PatchFileNameEdit, 1, 0);
+            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 1;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(683, 31);
+            this.tableLayoutPanel2.TabIndex = 0;
             // 
             // ViewPatch
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(689, 501);
-            this.Controls.Add(this.splitContainer4);
+            this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "ViewPatch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "View patch file";
@@ -205,14 +218,11 @@ namespace PatchApply
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.GridChangedFiles)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.patchBindingSource)).EndInit();
-            this.splitContainer4.Panel1.ResumeLayout(false);
-            this.splitContainer4.Panel1.PerformLayout();
-            this.splitContainer4.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
-#endif
-            this.splitContainer4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.changedFileBindingSource)).EndInit();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -222,7 +232,6 @@ namespace PatchApply
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.DataGridView GridChangedFiles;
         private System.Windows.Forms.BindingSource changedFileBindingSource;
-        private System.Windows.Forms.SplitContainer splitContainer4;
         private System.Windows.Forms.Button BrowsePatch;
         private System.Windows.Forms.TextBox PatchFileNameEdit;
         private System.Windows.Forms.Label labelPatch;
@@ -231,6 +240,8 @@ namespace PatchApply
         private System.Windows.Forms.DataGridViewTextBoxColumn typeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn File;
         private FileViewer ChangesList;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
     }
 }
 

@@ -726,22 +726,36 @@ namespace GitUI
             return StartPullDialog(false);
         }
 
-        public bool StartViewPatchDialog(IWin32Window owner)
+        public bool StartViewPatchDialog(IWin32Window owner, string patchFile)
         {
             if (!InvokeEvent(owner, PreViewPatch))
                 return true;
 
-            using (var applyPatch = new ViewPatch(this))
-                applyPatch.ShowDialog(owner);
+            using (var viewPatch = new ViewPatch(this))
+            {
+                if (!String.IsNullOrEmpty(patchFile))
+                    viewPatch.LoadPatch(patchFile);
+                viewPatch.ShowDialog(owner);
+            }
 
             InvokeEvent(owner, PostViewPatch);
 
             return true;
         }
 
+        public bool StartViewPatchDialog(string patchFile)
+        {
+            return StartViewPatchDialog(null, patchFile);
+        }
+
+        public bool StartViewPatchDialog(IWin32Window owner)
+        {
+            return StartViewPatchDialog(owner, null);
+        }
+
         public bool StartViewPatchDialog()
         {
-            return StartViewPatchDialog(null);
+            return StartViewPatchDialog(null, null);
         }
 
         public bool StartFormatPatchDialog(IWin32Window owner)
@@ -1508,6 +1522,11 @@ namespace GitUI
                 MessageBox.Show("Cannot open file editor, there is no file selected.", "File editor");
                 return;
             }
+            if (args[1].Equals("revert") && args.Length <= 2)
+            {
+                MessageBox.Show("Cannot open revert, there is no file selected.", "Revert");
+                return;
+            }
 
             RunCommandBasedOnArgument(args, arguments);
         }
@@ -1525,11 +1544,11 @@ namespace GitUI
                 case "addfiles":
                     StartAddFilesDialog();
                     return;
-                case "apply":
+                case "apply":       // [filename]
                 case "applypatch":
-                    StartApplyPatchDialog();
+                    StartApplyPatchDialog(args.Length == 3 ? args[2] : "");
                     return;
-                case "blame":       // file
+                case "blame":       // filename
                     RunBlameCommand(args);
                     return;
                 case "branch":
@@ -1558,10 +1577,10 @@ namespace GitUI
                 case "commit":      // [--quiet]
                     Commit(arguments);
                     return;
-                case "filehistory": // [filename]
+                case "filehistory": // filename
                     RunFileHistoryCommand(args);
                     return;
-                case "fileeditor":  // [filename]
+                case "fileeditor":  // filename
                     RunFileEditorCommand(args);
                     return;
                 case "formatpatch":
@@ -1583,7 +1602,7 @@ namespace GitUI
                 case "mergetool":
                     RunMergeToolOrConflictCommand(arguments);
                     return;
-                case "openrepo":    // [file]
+                case "openrepo":    // [path]
                     RunOpenRepoCommand(args);
                     return;
                 case "pull":        //  [--rebase] [--merge] [--fetch] [--quiet] [--remotebranch name]
@@ -1598,7 +1617,7 @@ namespace GitUI
                 case "remotes":
                     StartRemotesDialog();
                     return;
-                case "revert":      // [filename]
+                case "revert":      // filename
                     Application.Run(new FormRevert(this, args[2]));
                     return;
                 case "searchfile":
@@ -1618,6 +1637,9 @@ namespace GitUI
                     return;
                 case "viewdiff":
                     StartCompareRevisionsDialog();
+                    return;
+                case "viewpatch":   // [filename]
+                    StartViewPatchDialog(args.Length == 3 ? args[2] : "");
                     return;
                 default:
                     if (args[1].StartsWith("git://") || args[1].StartsWith("http://") || args[1].StartsWith("https://"))

@@ -124,9 +124,9 @@ browse [path] [-filter=]
 about
 add
 addfiles
-apply
-applypatch
-blame [file]
+apply [filename]
+applypatch [filename]
+blame filename
 branch
 checkout
 checkoutbranch
@@ -135,8 +135,8 @@ cherry
 cleanup
 clone [path]
 commit [--quiet]
-filehistory [file]
-fileeditor [file]
+filehistory filename
+fileeditor filename
 formatpatch
 gitbash
 gitignore
@@ -144,17 +144,18 @@ init [path]
 merge [--branch name]
 mergeconflicts [--quiet]
 mergetool [--quiet]
-openrepo [file] [-filter=]
+openrepo [path] [-filter=]
 pull [--rebase] [--merge] [--fetch] [--quiet] [--remotebranch name]
 push [--quiet]
 rebase [--branch name]
 remotes
-revert [filename]
+revert filename
 searchfile
 settings
 stash
 synchronize [--rebase] [--merge] [--fetch] [--quiet]
 tag
-viewdiff</value>
+viewdiff
+viewpatch [filename]</value>
   </data>
 </root>

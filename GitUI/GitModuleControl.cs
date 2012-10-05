@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -10,8 +7,10 @@ namespace GitUI
 {
     public class GitModuleControl : GitExtensionsControl
     {
-        public bool UICommandsSourceParentSearch { get; set; }
+        public bool UICommandsSourceParentSearch { get; private set; }
         private IGitUICommandsSource _UICommandsSource;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public IGitUICommandsSource UICommandsSource 
         {
             get
