@@ -9,6 +9,7 @@ namespace GitUI
     {
         public bool UICommandsSourceParentSearch { get; private set; }
         private IGitUICommandsSource _UICommandsSource;
+
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public IGitUICommandsSource UICommandsSource 
@@ -38,7 +39,13 @@ namespace GitUI
         }
 
         [Browsable(false)]
-        public GitModule Module { get { return UICommands.Module; } }
+        public GitModule Module
+        {
+            get
+            {
+                return UICommands.Module;
+            }
+        }
 
         public GitModuleControl()
         {

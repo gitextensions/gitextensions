@@ -84,6 +84,7 @@ namespace GitUI
             Merge.Checked = Settings.PullMerge == Settings.PullAction.Merge;
             Rebase.Checked = Settings.PullMerge == Settings.PullAction.Rebase;
             Fetch.Checked = Settings.PullMerge == Settings.PullAction.Fetch;
+            localBranch.Enabled = Fetch.Checked;
             AutoStash.Checked = Settings.AutoStash;
             ErrorOccurred = false;
 
@@ -107,7 +108,7 @@ namespace GitUI
             }
             else
                 _NO_TRANSLATE_Remotes.Text = currentBranchRemote;
-            _NO_TRANSLATE_localBranch.Text = branch;
+            localBranch.Text = branch;
         }
 
         private void UpdateRemotesList()
@@ -390,25 +391,25 @@ namespace GitUI
 
         private FormProcess CreateFormProcess(string source)
         {
+            var curLocalBranch = branch == localBranch.Text ? null : localBranch.Text;
             if (Fetch.Checked)
             {
-                return new FormRemoteProcess(Module, Module.FetchCmd(source, Branches.Text, null));
+                return new FormRemoteProcess(Module, Module.FetchCmd(source, Branches.Text, curLocalBranch, NoTags.Checked));
             }
-            var localBranch = CalculateLocalBranch();
 
+            curLocalBranch = CalculateLocalBranch();
             if (Merge.Checked)
-                return new FormRemoteProcess(Module, Module.PullCmd(source, Branches.Text, localBranch, false));
+                return new FormRemoteProcess(Module, Module.PullCmd(source, Branches.Text, curLocalBranch, false, NoTags.Checked));
             if (Rebase.Checked)
-                return new FormRemoteProcess(Module, Module.PullCmd(source, Branches.Text, localBranch, true));
+                return new FormRemoteProcess(Module, Module.PullCmd(source, Branches.Text, curLocalBranch, true, NoTags.Checked));
             return null;
         }
 
         private string CalculateLocalBranch()
         {
-            string localBranch = Module.GetSelectedBranch();
-            if (localBranch.Equals("(no branch)", StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty(Branches.Text))
-                localBranch = null;
-            return localBranch;
+            if (branch.Equals("(no branch)", StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty(Branches.Text))
+                branch = null;
+            return branch;
         }
 
         private string CalculateSource()
@@ -577,16 +578,21 @@ namespace GitUI
 
         private void MergeCheckedChanged(object sender, EventArgs e)
         {
+            localBranch.Enabled = false;
+            localBranch.Text = branch;
             PullImage.BackgroundImage = Resources.merge;
         }
 
         private void RebaseCheckedChanged(object sender, EventArgs e)
         {
+            localBranch.Enabled = false;
+            localBranch.Text = branch;
             PullImage.BackgroundImage = Resources.Rebase;
         }
 
         private void FetchCheckedChanged(object sender, EventArgs e)
         {
+            localBranch.Enabled = true;
             PullImage.BackgroundImage = Resources.fetch;
         }
 
@@ -623,11 +629,6 @@ namespace GitUI
 
         private void ResetRemoteHeads()
         {
-            if (IsPullAll())
-            {
-                // 2012-08-31: this if statement is empty. Why?
-            }
-
             Branches.DataSource = null;
             _heads = null;
         }
