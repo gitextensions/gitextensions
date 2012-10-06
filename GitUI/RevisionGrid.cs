@@ -545,6 +545,11 @@ namespace GitUI
             Revisions.Select();
         }
 
+        public void HighlightBranch(IComparable aId)
+        {
+            Revisions.HighlightBranch(aId);
+        }
+
         private void RevisionsSelectionChanged(object sender, EventArgs e)
         {
             if (Revisions.SelectedRows.Count > 0)
@@ -554,6 +559,18 @@ namespace GitUI
             SelectionTimer.Stop();
             SelectionTimer.Enabled = true;
             SelectionTimer.Start();
+        }
+
+        public DvcsGraph.RevisionGraphDrawStyleEnum RevisionGraphDrawStyle
+        {
+            get
+            {
+                return Revisions.RevisionGraphDrawStyle;
+            }
+            set
+            {
+                Revisions.RevisionGraphDrawStyle = value;
+            }
         }
 
         public List<GitRevision> GetSelectedRevisions()
@@ -720,6 +737,8 @@ namespace GitUI
         {
             try
             {
+                RevisionGraphDrawStyle = DvcsGraph.RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
+
                 ApplyFilterFromRevisionFilterDialog();
 
                 _initialLoad = true;
@@ -830,6 +849,8 @@ namespace GitUI
                                       Revisions.Visible = false;
                                       Loading.Visible = false;
                                   }, this);
+
+            DisposeRevisionGraphCommand();
         }
 
         private void GitGetCommitsCommandUpdated(object sender, EventArgs e)
@@ -899,6 +920,8 @@ namespace GitUI
                                           _isLoading = false;
                                       }, this);
             }
+
+            DisposeRevisionGraphCommand();
         }
 
         private void SelectInitialRevision()
@@ -2293,7 +2316,8 @@ namespace GitUI
             ToggleRevisionCardLayout,
             ShowAllBranches,
             ShowCurrentBranchOnly,
-            GoToParent
+            GoToParent,
+            ToggleHighlightSelectedBranch
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -2313,6 +2337,7 @@ namespace GitUI
                 case Commands.ShowAllBranches: ShowAllBranchesToolStripMenuItemClick(null, null); break;
                 case Commands.ShowCurrentBranchOnly: ShowCurrentBranchOnlyToolStripMenuItemClick(null, null); break;
                 case Commands.GoToParent: goToParentToolStripMenuItem_Click(null, null); break;
+                case Commands.ToggleHighlightSelectedBranch: ToggleHighlightSelectedBranch(); break;
                 default: return base.ExecuteCommand(cmd);
             }
 
@@ -2320,6 +2345,28 @@ namespace GitUI
         }
 
         #endregion
+
+        private void ToggleHighlightSelectedBranch()
+        {
+            if (_revisionGraphCommand != null)
+            {
+                MessageBox.Show("Cannot highlight selected branch when revision graph is loading.");
+                return;
+            }
+            Revisions.RevisionGraphDrawStyle = DvcsGraph.RevisionGraphDrawStyleEnum.HighlightSelected;
+            HighlightSelectedBranch();
+        }
+
+        public void HighlightSelectedBranch()
+        {
+            var revisions = GetSelectedRevisions();
+            if (RevisionGraphDrawStyle == DvcsGraph.RevisionGraphDrawStyleEnum.HighlightSelected &&
+                revisions.Count > 0)
+            {
+                HighlightBranch(revisions[0].Guid);
+                Refresh();
+            }
+        }
 
         private void toolStripMenuWithOneItem_Click(object sender, EventArgs e)
         {

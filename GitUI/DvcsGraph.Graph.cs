@@ -99,6 +99,38 @@ namespace GitUI
                 //}
             }
 
+            public void ClearHighlightBranch()
+            {
+                foreach (Node node in Nodes.Values)
+                {
+                    foreach (Junction junction in node.Ancestors)
+                    {
+                        junction.HighLight = false;
+                    }
+                }
+            }
+
+            public void HighlightBranch(IComparable aId)
+            {
+                ClearHighlightBranch();
+                HighlightBranchRecursive(aId);
+            }
+
+            public void HighlightBranchRecursive(IComparable aId)
+            {
+                Node startNode = Nodes[aId];
+
+                foreach (Junction junction in startNode.Ancestors)
+                {
+                    if (junction.HighLight)
+                        continue;
+
+                    junction.HighLight = true;
+
+                    HighlightBranchRecursive(junction.Parent.Id);
+                }
+            }
+
             public event GraphUpdatedHandler Updated;
 
             public void Add(IComparable aId, IComparable[] aParentIds, DataType aType, GitRevision aData)

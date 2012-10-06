@@ -48,12 +48,15 @@ namespace GitUI
         private int LANE_LINE_WIDTH = 2;
         private const int MAX_LANES = 30;
         private Brush selectionBrush;
+        
+        private Pen whiteBorderPen;
+        private Pen blackBorderPen;
 
         private readonly AutoResetEvent backgroundEvent = new AutoResetEvent(false);
         private readonly Graph graphData;
         private readonly Dictionary<Junction, int> junctionColors = new Dictionary<Junction, int>();
         private readonly Color nonRelativeColor = Color.LightGray;
-
+        
         private readonly Color[] possibleColors =
             {
                 Color.Red,
@@ -86,6 +89,13 @@ namespace GitUI
         private int rowHeight; // Height of elements in the cache. Is equal to the control's row height.
         private int visibleBottom;
         private int visibleTop;
+
+        public enum RevisionGraphDrawStyleEnum
+        {
+            Normal,
+            DrawNonRelativesGray,
+            HighlightSelected
+        }
 
         public void SetDimensions(int node_dimension, int lane_width, int lane_line_width, int row_height, Brush selectionBrush)
         {
@@ -122,6 +132,9 @@ namespace GitUI
             RowTemplate.DefaultCellStyle.Font = SystemFonts.DefaultFont;
             dataGridColumnGraph.DefaultCellStyle.Font = SystemFonts.DefaultFont;
 
+            whiteBorderPen = new Pen(new SolidBrush(Color.White), LANE_LINE_WIDTH + 2);
+            blackBorderPen = new Pen(new SolidBrush(Color.Black), LANE_LINE_WIDTH + 1);
+            
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             CellPainting += dataGrid_CellPainting;
             ColumnWidthChanged += dataGrid_ColumnWidthChanged;
@@ -572,8 +585,8 @@ namespace GitUI
                 visibleTop = FirstDisplayedCell == null ? 0 : FirstDisplayedCell.RowIndex;
                 visibleBottom = rowHeight > 0 ? visibleTop + (Height / rowHeight) : visibleTop;
 
-                //Subtract 2 for safe merge (1 for rounding and 1 for whitespace)....
-                if (visibleBottom - 2 > graphData.Count)
+                //Add 2 for safe merge (1 for rounding and 1 for whitespace)....
+                if (visibleBottom + 2 > graphData.Count)
                 {
                     //Currently we are doing some important work; we are recieving
                     //rows that the user is viewing
@@ -715,12 +728,33 @@ namespace GitUI
             return colors;
         }
 
+        private RevisionGraphDrawStyleEnum _revisionGraphDrawStyle;
+        public RevisionGraphDrawStyleEnum RevisionGraphDrawStyle
+        {
+            get
+            {
+                if (_revisionGraphDrawStyle == RevisionGraphDrawStyleEnum.HighlightSelected)
+                    return _revisionGraphDrawStyle;
+                if (Settings.RevisionGraphDrawNonRelativesGray)
+                    return RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
+                return RevisionGraphDrawStyleEnum.Normal;
+            }
+            set
+            {
+                _revisionGraphDrawStyle = value;
+            }
+        }
+
         // http://en.wikipedia.org/wiki/File:RBG_color_wheel.svg
 
         private Color GetJunctionColor(Junction aJunction)
         {
             //Draw non-relative branches gray
-            if (!aJunction.IsRelative && Settings.RevisionGraphDrawNonRelativesGray)
+            if (!aJunction.IsRelative && RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.DrawNonRelativesGray)
+                return nonRelativeColor;
+
+            //Draw non-highlighted branches gray
+            if (!aJunction.HighLight && RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.HighlightSelected)
                 return nonRelativeColor;
 
             if (!Settings.MulticolorBranches)
@@ -978,7 +1012,7 @@ namespace GitUI
             wa.Clip = newClip;
             wa.Clear(Color.Transparent);
 
-            for (int r = 0; r < 2; r++)
+            //for (int r = 0; r < 2; r++)
                 for (int lane = 0; lane < row.Count; lane++)
                 {
                     int mid = wa.RenderingOrigin.X + (int)((lane + 0.5) * LANE_WIDTH);
@@ -987,17 +1021,17 @@ namespace GitUI
                     {
                         Graph.LaneInfo laneInfo = row[lane, item];
 
-                        //Draw all non-relative items first, them draw
-                        //all relative items on top
-                        if (laneInfo.Junctions.FirstOrDefault() != null)
-                            if (laneInfo.Junctions.First().IsRelative == (r == 0))
-                                continue;
+                        bool highLight = (RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.DrawNonRelativesGray && laneInfo.Junctions.Any(j => j.IsRelative)) ||
+                                         (RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.HighlightSelected && laneInfo.Junctions.Any(j => j.HighLight)) ||
+                                         (RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.Normal);
 
                         List<Color> curColors = GetJunctionColors(laneInfo.Junctions);
 
                         // Create the brush for drawing the line
-                        Brush brushLineColor;
-                        bool drawBorder = Settings.BranchBorders; //hide border for "non-relatives"
+                        Brush brushLineColor;                        
+                        
+                        bool drawBorder = Settings.BranchBorders && highLight; //hide border for "non-relatives"
+
                         if (curColors.Count == 1 || !Settings.StripedBranchChange)
                         {
                             if (curColors[0] != nonRelativeColor)
@@ -1016,8 +1050,18 @@ namespace GitUI
                         }
                         else
                         {
-                            brushLineColor = new HatchBrush(HatchStyle.DarkDownwardDiagonal, curColors[0], curColors[1]);
-                            if (curColors[0] == nonRelativeColor && curColors[1] == nonRelativeColor) drawBorder = false;
+                            Color lastRealColor = curColors.LastOrDefault(c => c != nonRelativeColor);
+
+
+                            if (lastRealColor.IsEmpty)
+                            {
+                                brushLineColor = new SolidBrush(nonRelativeColor);
+                                drawBorder = false;
+                            }
+                            else
+                            {
+                                brushLineColor = new HatchBrush(HatchStyle.DarkDownwardDiagonal, curColors[0], lastRealColor);
+                            }
                         }
 
                         for (int i = drawBorder ? 0 : 2; i < 3; i++)
@@ -1025,11 +1069,11 @@ namespace GitUI
                             Pen penLine;
                             if (i == 0)
                             {
-                                penLine = new Pen(new SolidBrush(Color.White), LANE_LINE_WIDTH + 2);
+                                penLine = whiteBorderPen;
                             }
                             else if (i == 1)
                             {
-                                penLine = new Pen(new SolidBrush(Color.Black), LANE_LINE_WIDTH + 1);
+                                penLine = blackBorderPen;
                             }
                             else
                             {
@@ -1073,18 +1117,26 @@ namespace GitUI
                     );
 
                 Brush nodeBrush;
-                bool drawBorder = Settings.BranchBorders;
+                
                 List<Color> nodeColors = GetJunctionColors(row.Node.Ancestors);
+                
+                bool highlight = (RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.DrawNonRelativesGray && row.Node.Ancestors.Any(j => j.IsRelative)) ||
+                                 (RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.HighlightSelected && row.Node.Ancestors.Any(j => j.HighLight)) ||
+                                 (RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.Normal);
+
+                bool drawBorder = Settings.BranchBorders && highlight;
+
                 if (nodeColors.Count == 1)
                 {
-                    nodeBrush = new SolidBrush(nodeColors[0]);
+                    nodeBrush = new SolidBrush(highlight ? nodeColors[0] : nonRelativeColor);
                     if (nodeColors[0] == nonRelativeColor) drawBorder = false;
                 }
                 else
                 {
                     nodeBrush = new LinearGradientBrush(nodeRect, nodeColors[0], nodeColors[1],
                                                         LinearGradientMode.Horizontal);
-                    if (nodeColors[0] == nonRelativeColor && nodeColors[1] == Color.LightGray) drawBorder = false;
+                    if (nodeColors.All(c => c == nonRelativeColor)) 
+                        drawBorder = false;
                 }
 
                 if (filterMode == FilterType.Highlight && row.Node.IsFiltered)
@@ -1124,6 +1176,11 @@ namespace GitUI
                 }
             }
             return true;
+        }
+
+        public void HighlightBranch(IComparable aId)
+        {
+            graphData.HighlightBranch(aId);
         }
 
         private void dataGrid_Resize(object sender, EventArgs e)

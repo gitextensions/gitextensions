@@ -1079,6 +1079,8 @@ namespace GitUI
                     CommitInfoTabControl.InsertIfNotExists(1, Tree);
                 }
 
+                //RevisionGrid.HighlightSelectedBranch();
+ 
                 FillFileTree();
                 FillDiff();
                 FillCommitInfo();
