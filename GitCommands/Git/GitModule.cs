@@ -2725,6 +2725,42 @@ namespace GitCommands
             return false;
         }
 
+        public bool IsRunningGitProcess()
+        {
+            if (IsLockedIndex())
+            {
+                return true;
+            }
+
+            // Get processes by "ps" command.
+            var cmd = Path.Combine(Settings.GitBinDir, "ps");
+            var arguments = "x";
+            if (Settings.RunningOnWindows())
+            {
+                // "x" option is unimplemented by msysgit and cygwin.
+                arguments = "";
+            }
+
+            var output = RunCmd(cmd, arguments);
+            var lines = output.Split('\n');
+            var headers = lines[0].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var commandIndex = Array.IndexOf(headers, "COMMAND");
+            for (int i = 1; i < lines.Count(); i++)
+            {
+                var columns = lines[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                if (commandIndex < columns.Count())
+                {
+                    var command = columns[commandIndex];
+                    if (command.EndsWith("/git"))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         public static string ReEncodeFileName(string diffStr, int headerLines)
         {
             StringReader r = new StringReader(diffStr);
