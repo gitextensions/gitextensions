@@ -177,9 +177,7 @@
     </Content>
     <None Include="Resources\14.bmp" />
     <None Include="Resources\13.bmp" />
-    <None Include="Resources\12.bmp" />
     <None Include="Resources\11.bmp" />
-    <None Include="Resources\10.bmp" />
     <None Include="Resources\9.bmp" />
     <None Include="Resources\8.bmp" />
     <None Include="Resources\7.bmp" />
