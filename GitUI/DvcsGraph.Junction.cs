@@ -26,6 +26,7 @@ namespace GitUI
 
             public State CurrentState = State.Unprocessed;
             public bool IsRelative;
+            public bool HighLight;
 
             public Junction(Node aNode, Node aParent)
             {
