@@ -3,4 +3,4 @@
 [assembly: AssemblyDelaySign(false)]
 [assembly: AssemblyKeyFile("")]
 [assembly: AssemblyKeyName("")]
-[assembly: System.CLSCompliant(true)]
+[assembly: System.CLSCompliant(false)]
