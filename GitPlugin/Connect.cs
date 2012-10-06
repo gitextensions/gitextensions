@@ -182,7 +182,7 @@ namespace GitPlugin
                         "&Browse", "Browse repository", 12, n++);
 
                     _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsSwitchBranch",
-                        "Chec&kout branch", "Switch to branch", 10, n++);
+                        "Chec&kout branch", "Switch to branch", 16, n++);
 
                     _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsCherryPick",
                         "Cherry &pick", "Cherry pick commit", 15, n++);
