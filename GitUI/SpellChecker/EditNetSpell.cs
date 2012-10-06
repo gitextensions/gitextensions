@@ -15,8 +15,6 @@ namespace GitUI.SpellChecker
     [DefaultEvent("TextChanged")]
     public partial class EditNetSpell : GitExtensionsControl
     {
-        private readonly TranslationString undoMenuItemText = new TranslationString("Undo");
-        private readonly TranslationString redoMenuItemText = new TranslationString("Redo");
         private readonly TranslationString cutMenuItemText = new TranslationString("Cut");
         private readonly TranslationString copyMenuItemText = new TranslationString("Copy");
         private readonly TranslationString pasteMenuItemText = new TranslationString("Paste");

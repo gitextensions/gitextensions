@@ -22,12 +22,6 @@ namespace GitUI
     public sealed partial class FormCommit : GitModuleForm //, IHotkeyable
     {
         #region Translation
-        private readonly TranslationString _alsoDeleteUntrackedFiles =
-            new TranslationString("Do you also want to delete the new files that are in the selection?" +
-                                  Environment.NewLine + Environment.NewLine + "Choose 'No' to keep all new files.");
-
-        private readonly TranslationString _alsoDeleteUntrackedFilesCaption = new TranslationString("Delete");
-
         private readonly TranslationString _amendCommit =
             new TranslationString("You are about to rewrite history." + Environment.NewLine +
                                   "Only use amend if the commit is not published yet!" + Environment.NewLine +
@@ -78,9 +72,6 @@ namespace GitUI
 
         private readonly TranslationString _onlyStageChunkOfSingleFileError =
             new TranslationString("You can only use this option when selecting a single file");
-
-        private readonly TranslationString _resetChangesText =
-            new TranslationString("Are you sure you want to reset the changes to the selected files?");
 
         private readonly TranslationString _resetChangesCaption = new TranslationString("Reset changes");
 
