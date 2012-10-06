@@ -73,7 +73,7 @@
         #endregion
 
         private System.Windows.Forms.ListBox FileStatusListBox;
-        private System.Windows.Forms.ToolTip DiffFilesTooltip;
+        protected System.Windows.Forms.ToolTip DiffFilesTooltip;
         private System.Windows.Forms.Label NoFiles;
     }
 }

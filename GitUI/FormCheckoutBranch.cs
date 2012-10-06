@@ -12,12 +12,6 @@ namespace GitUI
     {
 
         #region Translation
-        private readonly TranslationString _applyShashedItemsAgain =
-            new TranslationString("Apply stashed items to working dir again?");
-
-        private readonly TranslationString _applyShashedItemsAgainCaption =
-            new TranslationString("Auto stash");
-
         private readonly TranslationString _customBranchNameIsEmpty =
             new TranslationString("Custom branch name is empty.\nEnter valid branch name or select predefined value.");
         private readonly TranslationString _customBranchNameIsNotValid =

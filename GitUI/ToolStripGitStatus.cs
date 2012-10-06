@@ -30,7 +30,6 @@ namespace GitUI
         private const int MaxUpdatePeriod = 5 * 60 * 1000;
 
         private bool statusIsUpToDate = true;
-        private readonly SynchronizationContext syncContext;
         private readonly FileSystemWatcher workTreeWatcher = new FileSystemWatcher();
         private readonly FileSystemWatcher gitDirWatcher = new FileSystemWatcher();
         private string gitPath, submodulesPath;
@@ -74,8 +73,6 @@ namespace GitUI
 
         public ToolStripGitStatus()
         {
-            syncContext = SynchronizationContext.Current;
-
             InitializeComponent();
             components.Add(workTreeWatcher);
             components.Add(gitDirWatcher);
