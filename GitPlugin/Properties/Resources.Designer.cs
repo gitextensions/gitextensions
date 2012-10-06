@@ -104,7 +104,7 @@ namespace GitPlugin.Properties
         
         internal static System.Drawing.Bitmap _15 {
             get {
-                object obj = ResourceManager.GetObject("_15", resourceCulture);
+                object obj = ResourceManager.GetObject("15", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
