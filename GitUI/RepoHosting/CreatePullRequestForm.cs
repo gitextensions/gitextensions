@@ -23,7 +23,6 @@ namespace GitUI.RepoHosting
 
         private readonly IRepositoryHostPlugin _repoHost;
         private IHostedRemote _currentHostedRemote;
-        private string _chooseBranch;
         private readonly string _chooseRemote;
         private List<IHostedRemote> _hostedRemotes;
         private string _currentBranch;
@@ -32,7 +31,6 @@ namespace GitUI.RepoHosting
         public CreatePullRequestForm(GitUICommands aCommands, IRepositoryHostPlugin repoHost, string chooseRemote, string chooseBranch)
         {
             _repoHost = repoHost;
-            _chooseBranch = chooseBranch;
             _chooseRemote = chooseRemote;
             _currentBranch = "";
             InitializeComponent();
