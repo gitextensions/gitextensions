@@ -175,11 +175,13 @@
     <Content Include="GitPlugin.AddIn">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\IconRebase.bmp" />
+    <None Include="Resources\IconMerge.bmp" />
+    <None Include="Resources\IconManageRemotes.bmp" />
+    <None Include="Resources\IconBranchCheckout.bmp" />
     <None Include="Resources\14.bmp" />
     <None Include="Resources\13.bmp" />
-    <None Include="Resources\12.bmp" />
     <None Include="Resources\11.bmp" />
-    <None Include="Resources\10.bmp" />
     <None Include="Resources\9.bmp" />
     <None Include="Resources\8.bmp" />
     <None Include="Resources\7.bmp" />
