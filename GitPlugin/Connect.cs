@@ -143,31 +143,34 @@ namespace GitPlugin
 
                 try
                 {
+                    var n = 1;
+
                     // add the toolbar and menu commands
                     var commandBar = _gitPlugin.AddGitCommandBar(MsoBarPosition.msoBarTop);
 
                     _gitPlugin.AddToolbarCommandWithText(commandBar, "GitExtensionsCommit",
-                        "Commit", "Commit changes", 7, 1);
+                        "Commit", "Commit changes", 7, n++);
 
                     _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsBrowse",
-                        "Browse", "Browse repository", 12, 2);
+                        "Browse", "Browse repository", 12, n++);
 
                     _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsPull",
-                        "Pull", "Pull changes from remote repository", 9, 3);
+                        "Pull", "Pull changes from remote repository", 9, n++);
 
                     _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsPush",
-                        "Push", "Push changes to remote repository", 8, 4);
+                        "Push", "Push changes to remote repository", 8, n++);
 
                     _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsStash",
-                        "Stash", "Stash changes", 3, 5);
+                        "Stash", "Stash changes", 3, n++);
 
                     _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsSettings",
-                        "Settings", "Settings", 2, 6);
+                        "Settings", "Settings", 2, n++);
                 }
                 catch (Exception ex)
                 {
                     _gitPlugin.OutputPane.OutputString("Error creating toolbar: " + ex);
                 }
+
                 try
                 {
                     var n = 1;
@@ -242,7 +245,6 @@ namespace GitPlugin
                 {
                     _gitPlugin.OutputPane.OutputString("Error creating contextmenu: " + ex);
                 }
-
 
                 AddContextMenuItemsToContextMenu("Web Item");
                 AddContextMenuItemsToContextMenu("Item");
