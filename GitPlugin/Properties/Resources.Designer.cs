@@ -116,6 +116,27 @@ namespace GitPlugin.Properties
             }
         }
         
+        internal static System.Drawing.Bitmap _17 {
+            get {
+                object obj = ResourceManager.GetObject("17", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap _18 {
+            get {
+                object obj = ResourceManager.GetObject("18", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap _19 {
+            get {
+                object obj = ResourceManager.GetObject("19", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap _2 {
             get {
                 object obj = ResourceManager.GetObject("2", resourceCulture);
