@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
@@ -56,11 +57,12 @@ namespace GitUI
         {
             string command = (string)CommandCacheItems.SelectedItem;
 
-            string output;
-            if (GitCommandCache.TryGet(command, GitModule.SystemEncoding, out output))
+            byte[] cmdout, cmderr;
+            if (GitCommandCache.TryGet(command, out cmdout, out cmderr))
             {
                 commandCacheOutput.Text = command + "\n-------------------------------------\n\n";
-                commandCacheOutput.Text += output.Replace("\0", "\\0");
+                Encoding encoding = GitModule.SystemEncoding;
+                commandCacheOutput.Text += EncodingHelper.DecodeString(cmdout, cmderr, ref encoding).Replace("\0", "\\0");
             }
             else
             {
