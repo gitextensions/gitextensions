@@ -555,6 +555,7 @@ namespace GitUI
             // 
             this.toggleSplitViewLayout.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toggleSplitViewLayout.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toggleSplitViewLayout.Image = global::GitUI.Properties.Resources.SplitViewLayout;
             this.toggleSplitViewLayout.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toggleSplitViewLayout.Name = "toggleSplitViewLayout";
             this.toggleSplitViewLayout.Size = new System.Drawing.Size(23, 22);
