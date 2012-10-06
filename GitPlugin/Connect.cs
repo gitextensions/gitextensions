@@ -209,10 +209,10 @@ namespace GitPlugin
                         "Initialize new repositor&y", "Initialize new Git repository", 13, n++);
 
                     _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsRemotes",
-                        "Manage rem&otes", "Manage remote repositories", 0, n++);
+                        "Manage rem&otes", "Manage remote repositories", 17, n++);
 
                     _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsMerge",
-                        "&Merge", "merge", 0, n++);
+                        "&Merge", "merge", 18, n++);
 
                     _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsPull",
                         "P&ull", "Pull changes from remote repository", 9, n++);
@@ -221,7 +221,7 @@ namespace GitPlugin
                         "Pu&sh", "Push changes to remote repository", 8, n++);
 
                     _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsRebase",
-                        "R&ebase", "Rebase", 0, n++);
+                        "R&ebase", "Rebase", 19, n++);
 
                     _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsSearchFile",
                         "Search fi&le", "Search a file in the repository", 0, n++);
