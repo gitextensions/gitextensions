@@ -5,7 +5,7 @@ namespace GitCommands
 {
     /// <summary>
     /// Some commands are suitable for caching. All commands used to get info
-    /// for a specific sha1 or gets a diff beteen two sha1's are suitable.
+    /// for a specific sha1 or gets a diff between two sha1's are suitable.
     /// WARNING: Never cache commands that return the diff between a sha1 and the head!
     /// </summary>
     public static class GitCommandCache
@@ -49,12 +49,13 @@ namespace GitCommands
             }
         }
 
-        public static bool TryGet(string cmd, Encoding encoding, out string cmdOutput)
+        public static bool TryGet(string cmd, out byte[] output, out byte[] error)
         {
             //Never cache empty commands
             if (string.IsNullOrEmpty(cmd))
             {
-                cmdOutput = null;
+                output = null;
+                error = null;
                 return false;
             }
 
@@ -63,12 +64,14 @@ namespace GitCommands
             {
                 if (!commandCache.TryGetValue(cmd, out item))
                 {
-                    cmdOutput = null;
+                    output = null;
+                    error = null;
                     return false;
                 }
             }
 
-            cmdOutput = EncodingHelper.GetString(item.Output, item.Error, encoding);
+            output = item.Output;
+            error = item.Error;
             return true;
         }
 
