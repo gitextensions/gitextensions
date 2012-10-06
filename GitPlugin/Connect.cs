@@ -18,14 +18,14 @@ namespace GitPlugin
     public class Connect : IDTExtensibility2, IDTCommandTarget
     {
         private Plugin _gitPlugin;
-        
+
         #region IDTCommandTarget Members
 
-        public void QueryStatus(string commandName, vsCommandStatusTextWanted neededText, 
+        public void QueryStatus(string commandName, vsCommandStatusTextWanted neededText,
             ref vsCommandStatus status, ref object commandText)
         {
             if (neededText != vsCommandStatusTextWanted.vsCommandStatusTextWantedNone ||
-                !_gitPlugin.CanHandleCommand(commandName)) 
+                !_gitPlugin.CanHandleCommand(commandName))
                 return;
 
             if (_gitPlugin.IsCommandEnabled(commandName))
@@ -34,7 +34,7 @@ namespace GitPlugin
                 status = vsCommandStatus.vsCommandStatusSupported;
         }
 
-        public void Exec(string commandName, vsCommandExecOption executeOption, 
+        public void Exec(string commandName, vsCommandExecOption executeOption,
             ref object varIn, ref object varOut, ref bool handled)
         {
             handled = false;
@@ -57,7 +57,7 @@ namespace GitPlugin
         /// <param name="addInInst">The add in inst.</param>
         /// <param name="custom">The custom.</param>
         /// <seealso class="IDTExtensibility2"/>
-        public void OnConnection(object application, ext_ConnectMode connectMode, 
+        public void OnConnection(object application, ext_ConnectMode connectMode,
             object addInInst, ref Array custom)
         {
             if (_gitPlugin == null)
@@ -65,10 +65,10 @@ namespace GitPlugin
                 var cultureInfo = new CultureInfo("en-US");
                 Thread.CurrentThread.CurrentCulture = cultureInfo;
 
-                _gitPlugin = 
-                    new Plugin((DTE2) application, (AddIn) addInInst, "GitExtensions", "GitPlugin.Connect");
+                _gitPlugin =
+                    new Plugin((DTE2)application, (AddIn)addInInst, "GitExtensions", "GitPlugin.Connect");
             }
-            
+
             if (connectMode == ext_ConnectMode.ext_cm_UISetup)
                 this.GitPluginUISetup();
             if (connectMode == ext_ConnectMode.ext_cm_AfterStartup ||
@@ -119,7 +119,7 @@ namespace GitPlugin
                         toolsControl.Caption = "&Git";
                     }
 
-                    toolsPopup = (CommandBarPopup) toolsControl;
+                    toolsPopup = (CommandBarPopup)toolsControl;
                     toolsPopup.Caption = "&Git";
 
                 }
@@ -143,76 +143,108 @@ namespace GitPlugin
 
                 try
                 {
+                    var n = 1;
+
                     // add the toolbar and menu commands
                     var commandBar = _gitPlugin.AddGitCommandBar(MsoBarPosition.msoBarTop);
 
-                    _gitPlugin.AddToolbarCommandWithText(
-                        commandBar, "GitExtensionsCommit", "Commit", "Commit changes", 7,1);
+                    _gitPlugin.AddToolbarCommandWithText(commandBar, "GitExtensionsCommit",
+                        "Commit", "Commit changes", 7, n++);
 
-                    _gitPlugin.AddToolbarCommand(commandBar, 
-                        "GitExtensionsBrowse", "Browse", "Browse repository", 12, 2);
-                    
-                    _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsPull", "Pull",
-                                                "Pull changes from remote repository", 9, 3);
+                    _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsBrowse",
+                        "Browse", "Browse repository", 12, n++);
 
-                    _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsPush", "Push",
-                                                "Push changes to remote repository", 8, 4);
-                    _gitPlugin.AddToolbarCommand(commandBar, 
-                        "GitExtensionsStash", "Stash", "Stash changes", 3, 5);
-                    _gitPlugin.AddToolbarCommand(commandBar,
-                        "GitExtensionsSettings", "Settings", "Settings", 2, 6);
+                    _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsPull",
+                        "Pull", "Pull changes from remote repository", 9, n++);
+
+                    _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsPush",
+                        "Push", "Push changes to remote repository", 8, n++);
+
+                    _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsStash",
+                        "Stash", "Stash changes", 3, n++);
+
+                    _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsSettings",
+                        "Settings", "Settings", 2, n++);
                 }
                 catch (Exception ex)
                 {
                     _gitPlugin.OutputPane.OutputString("Error creating toolbar: " + ex);
                 }
+
                 try
                 {
                     var n = 1;
 
-                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsApplyPatch", "&Apply patch", "Apply patch", 0,
-                                              n++);
-                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsBrowse", "&Browse", "Browse repository", 12, n++);
-                    
-                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsSwitchBranch", "Chec&kout branch",
-                                              "Switch to branch", 10, n++);
-                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsCherryPick", "Cherry &pick", "Cherry pick commit",
-                                              11, n++);
-                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsCommit", "&Commit", "Commit changes", 7, n++);
-                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsCreateBranch", "Create bra&nch",
-                                              "Create new branch", 10, n++);
-                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsClone", "Clone &repository", "Clone existing Git",
-                                              14, n++);
-                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsGitIgnore", "Edit &.gitignore",
-                                              "Edit .gitignore file", 0, n++);
-                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsFormatPatch", "&Format patch", "Format patch", 0,
-                                              n++);
-                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsBash", "&Git bash", "Start git bash", 0, n++);
-                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsInitRepository", "Initialize new repositor&y",
-                                              "Initialize new Git repository", 13, n++);
-                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsRemotes", "Manage rem&otes",
-                                              "Manage remote repositories", 0, n++);
-                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsMerge", "&Merge", "merge", 0, n++);
-                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsPull", "P&ull",
-                                              "Pull changes from remote repository", 9, n++);
-                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsPush", "Pu&sh",
-                                              "Push changes to remote repository", 8, n++);
-                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsRebase", "R&ebase", "Rebase", 0, n++);
-                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsSearchFile", "Search fi&le", "Search a file in the repository", 0, n++);
-                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsSettings", "Se&ttings", "Settings", 2, n++);
-                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsSolveMergeConflicts", "Sol&ve mergeconflicts",
-                                              "Solve mergeconflicts", 0, n++);
-                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsStash", "Stas&h", "Stash changes", 3, n++);
-                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsDiff", "V&iew changes",
-                                              "View commit change history", 0, n++);
-                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsAbout", "About Git E&xtensions",
-                                              "About Git Extensions", 0, n++);
+                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsApplyPatch",
+                        "&Apply patch", "Apply patch", 0, n++);
+
+                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsBrowse",
+                        "&Browse", "Browse repository", 12, n++);
+
+                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsSwitchBranch",
+                        "Chec&kout branch", "Switch to branch", 16, n++);
+
+                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsCherryPick",
+                        "Cherry &pick", "Cherry pick commit", 15, n++);
+
+                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsCommit",
+                        "&Commit", "Commit changes", 7, n++);
+
+                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsCreateBranch",
+                        "Create bra&nch", "Create new branch", 10, n++);
+
+                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsClone",
+                        "Clone &repository", "Clone existing Git", 14, n++);
+
+                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsGitIgnore",
+                        "Edit &.gitignore", "Edit .gitignore file", 0, n++);
+
+                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsFormatPatch",
+                        "&Format patch", "Format patch", 0, n++);
+
+                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsBash",
+                        "&Git bash", "Start git bash", 0, n++);
+
+                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsInitRepository",
+                        "Initialize new repositor&y", "Initialize new Git repository", 13, n++);
+
+                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsRemotes",
+                        "Manage rem&otes", "Manage remote repositories", 17, n++);
+
+                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsMerge",
+                        "&Merge", "merge", 18, n++);
+
+                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsPull",
+                        "P&ull", "Pull changes from remote repository", 9, n++);
+
+                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsPush",
+                        "Pu&sh", "Push changes to remote repository", 8, n++);
+
+                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsRebase",
+                        "R&ebase", "Rebase", 19, n++);
+
+                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsSearchFile",
+                        "Search fi&le", "Search a file in the repository", 0, n++);
+
+                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsSettings",
+                        "Se&ttings", "Settings", 2, n++);
+
+                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsSolveMergeConflicts",
+                        "Sol&ve mergeconflicts", "Solve mergeconflicts", 0, n++);
+
+                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsStash",
+                        "Stas&h", "Stash changes", 3, n++);
+
+                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsDiff",
+                        "V&iew changes", "View commit change history", 0, n++);
+
+                    _gitPlugin.AddPopupCommand(toolsPopup, "GitExtensionsAbout",
+                        "About Git E&xtensions", "About Git Extensions", 0, n++);
                 }
                 catch (Exception ex)
                 {
                     _gitPlugin.OutputPane.OutputString("Error creating contextmenu: " + ex);
                 }
-
 
                 AddContextMenuItemsToContextMenu("Web Item");
                 AddContextMenuItemsToContextMenu("Item");
@@ -276,12 +308,13 @@ namespace GitPlugin
         {
             try
             {
-                _gitPlugin.AddMenuCommand(toolbarName, "GitExtensionsFileHistory", "File history", "Show file history", 
-                                         6, 4);
-                _gitPlugin.AddMenuCommand(toolbarName, "GitExtensionsRevert", "Undo file changes",
-                                         "Undo changes made to this file", 4, 5);
+                _gitPlugin.AddMenuCommand(toolbarName, "GitExtensionsFileHistory",
+                    "File history", "Show file history", 6, 4);
+
+                _gitPlugin.AddMenuCommand(toolbarName, "GitExtensionsRevert",
+                    "Undo file changes", "Undo changes made to this file", 4, 5);
             }
-            catch 
+            catch
             {
                 //ignore all exceptions....
                 //When a commandbar is not found, an exception will be thrown -> todo avoid exceptions!
