@@ -122,6 +122,19 @@ namespace GitPlugin.Commands
             }
         }
 
+        private static MsoButtonStyle CommandStyleToButtonStyle(vsCommandStyle commandStyle)
+        {
+            switch (commandStyle)
+            {
+                case vsCommandStyle.vsCommandStylePict:
+                    return MsoButtonStyle.msoButtonIcon;
+                case vsCommandStyle.vsCommandStyleText:
+                    return MsoButtonStyle.msoButtonCaption;
+                default:
+                    return MsoButtonStyle.msoButtonIconAndCaption;
+            }
+        }
+
         private bool HasCommand(CommandBar commandBar, string caption)
         {
             caption = caption.Trim();
@@ -317,6 +330,7 @@ namespace GitPlugin.Commands
                     OutputPane.OutputString("Add toolbar command: " + caption + Environment.NewLine);
 #endif
                     CommandBarButton control = command.AddControl(bar, insertIndex) as CommandBarButton;
+                    control.Style = CommandStyleToButtonStyle(commandStyle);
                     control.BeginGroup = beginGroup;
                 }
             }
