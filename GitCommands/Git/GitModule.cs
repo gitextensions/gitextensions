@@ -438,16 +438,15 @@ namespace GitCommands
             if (encoding == null)
                 encoding = GitModule.SystemEncoding;
 
-            string output;
-            if (GitCommandCache.TryGet(arguments, encoding, out output))
-                return output;
-
             byte[] cmdout, cmderr;
+            if (GitCommandCache.TryGet(arguments, out cmdout, out cmderr))
+                return EncodingHelper.DecodeString(cmdout, cmderr, ref encoding);
+
             RunCmdByte(cmd, arguments, out cmdout, out cmderr);
 
             GitCommandCache.Add(arguments, cmdout, cmderr);
 
-            return EncodingHelper.GetString(cmdout, cmderr, encoding);
+            return EncodingHelper.DecodeString(cmdout, cmderr, ref encoding);
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
