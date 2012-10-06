@@ -2292,7 +2292,8 @@ namespace GitUI
             ToggleShowGitNotes,
             ToggleRevisionCardLayout,
             ShowAllBranches,
-            ShowCurrentBranchOnly
+            ShowCurrentBranchOnly,
+            GoToParent
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -2311,6 +2312,7 @@ namespace GitUI
                 case Commands.ToggleRevisionCardLayout: ToggleRevisionCardLayout(); break;
                 case Commands.ShowAllBranches: ShowAllBranchesToolStripMenuItemClick(null, null); break;
                 case Commands.ShowCurrentBranchOnly: ShowCurrentBranchOnlyToolStripMenuItemClick(null, null); break;
+                case Commands.GoToParent: goToParentToolStripMenuItem_Click(null, null); break;
                 default: return base.ExecuteCommand(cmd);
             }
 
