@@ -729,6 +729,8 @@ namespace GitUI
         }
 
         private RevisionGraphDrawStyleEnum _revisionGraphDrawStyle;
+        [DefaultValue(RevisionGraphDrawStyleEnum.DrawNonRelativesGray)]
+        [Browsable(false)]
         public RevisionGraphDrawStyleEnum RevisionGraphDrawStyle
         {
             get

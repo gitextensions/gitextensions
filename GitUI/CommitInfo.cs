@@ -34,16 +34,37 @@ namespace GitUI
             RevisionInfo.LinkClicked += RevisionInfoLinkClicked;
         }
 
-        private static void RevisionInfoLinkClicked(object sender, LinkClickedEventArgs e)
+
+        public delegate void CommandClickHandler(string command, string data);
+
+        public event CommandClickHandler CommandClick;
+
+        private void RevisionInfoLinkClicked(object sender, LinkClickedEventArgs e)
         {
             try
             {
-                string url = e.GetUrl();
-                new Process
+                var url = e.LinkText;
+                var data = url.Split(new[] { '#' }, 2);
+                if (data.Length > 1)
+                    url = data[1];
+
+                var result = new Uri(url);
+                if (result.Scheme == "gitex")
+                {
+                    if (CommandClick != null)
                     {
-                        EnableRaisingEvents = false,
-                        StartInfo = { FileName = url }
-                    }.Start();
+                        string path = result.AbsolutePath.TrimStart('/');
+                        CommandClick(result.Host, path);
+                    }
+                }
+                else
+                {
+                    new Process
+                        {
+                            EnableRaisingEvents = false,
+                            StartInfo = { FileName = url }
+                        }.Start();
+                }
             }
             catch (Exception ex)
             {
@@ -85,7 +106,7 @@ namespace GitUI
             CommitInformation commitInformation = CommitInformation.GetCommitInfo(data);
 
             _RevisionHeader.SetXHTMLText(commitInformation.Header);
-            splitContainer1.SplitterDistance = _RevisionHeader.GetPreferredSize(new System.Drawing.Size(0, 0)).Height;
+            _RevisionHeader.Height = _RevisionHeader.GetPreferredSize(new System.Drawing.Size(0, 0)).Height;
             _revisionInfo = commitInformation.Body;
             updateText();
             LoadAuthorImage(data.Author ?? data.Committer);
@@ -174,14 +195,15 @@ namespace GitUI
                 {
                     if (branchString != string.Empty)
                         branchString += ", ";
-                    branchString += noPrefixBranch;
+                    branchString += "<a href='gitex://gotobranch/" + noPrefixBranch + "'>" + 
+                        HttpUtility.HtmlEncode(noPrefixBranch) + "</a>";
                 }
 
                 if (branchIsLocal && Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal)
                     allowRemote = false;
             }
             if (branchString != string.Empty)
-                return Environment.NewLine + HttpUtility.HtmlEncode(containedInBranches.Text + " " + branchString);
+                return Environment.NewLine + HttpUtility.HtmlEncode(containedInBranches.Text) + " " + branchString;
             return Environment.NewLine + HttpUtility.HtmlEncode(containedInNoBranch.Text);
         }
 
@@ -192,11 +214,11 @@ namespace GitUI
             {
                 if (tagString != string.Empty)
                     tagString += ", ";
-                tagString += tag;
+                tagString += "<a href='gitex://gototag/" + tag + "'>" + HttpUtility.HtmlEncode(tag) + "</a>";
             }
 
             if (tagString != string.Empty)
-                return Environment.NewLine + HttpUtility.HtmlEncode(containedInTags.Text + " " + tagString);
+                return Environment.NewLine + HttpUtility.HtmlEncode(containedInTags.Text) + " " + tagString;
             return Environment.NewLine + HttpUtility.HtmlEncode(containedInNoTag.Text);
         }
 

@@ -32,8 +32,7 @@ namespace GitUI
             this.components = new System.ComponentModel.Container();
             this.tableLayout = new System.Windows.Forms.TableLayoutPanel();
             this.gravatar1 = new GitUI.GravatarControl();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this._RevisionHeader = new System.Windows.Forms.RichTextBox();
+            this.RevisionInfo = new System.Windows.Forms.RichTextBox();
             this.commitInfoContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyCommitInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -43,14 +42,8 @@ namespace GitUI
             this.showContainedInTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.addNoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.RevisionInfo = new System.Windows.Forms.RichTextBox();
+            this._RevisionHeader = new System.Windows.Forms.RichTextBox();
             this.tableLayout.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-#endif
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
             this.commitInfoContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -61,13 +54,16 @@ namespace GitUI
             this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayout.Controls.Add(this.gravatar1, 0, 0);
-            this.tableLayout.Controls.Add(this.splitContainer1, 1, 0);
+            this.tableLayout.Controls.Add(this.RevisionInfo, 1, 1);
+            this.tableLayout.Controls.Add(this._RevisionHeader, 1, 0);
             this.tableLayout.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayout.Location = new System.Drawing.Point(0, 0);
             this.tableLayout.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayout.Name = "tableLayout";
-            this.tableLayout.RowCount = 1;
+            this.tableLayout.RowCount = 2;
+            this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayout.Size = new System.Drawing.Size(893, 386);
             this.tableLayout.TabIndex = 3;
             this.tableLayout.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayout_Paint);
@@ -79,44 +75,23 @@ namespace GitUI
             this.gravatar1.Location = new System.Drawing.Point(0, 0);
             this.gravatar1.Margin = new System.Windows.Forms.Padding(0);
             this.gravatar1.Name = "gravatar1";
+            this.tableLayout.SetRowSpan(this.gravatar1, 2);
             this.gravatar1.Size = new System.Drawing.Size(105, 386);
             this.gravatar1.TabIndex = 1;
             // 
-            // splitContainer1
+            // RevisionInfo
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.IsSplitterFixed = true;
-            this.splitContainer1.Location = new System.Drawing.Point(109, 2);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this._RevisionHeader);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.RevisionInfo);
-            this.splitContainer1.Size = new System.Drawing.Size(780, 382);
-            this.splitContainer1.SplitterDistance = 115;
-            this.splitContainer1.SplitterWidth = 2;
-            this.splitContainer1.TabIndex = 2;
-            // 
-            // _RevisionHeader
-            // 
-            this._RevisionHeader.BackColor = System.Drawing.SystemColors.ControlLight;
-            this._RevisionHeader.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this._RevisionHeader.ContextMenuStrip = this.commitInfoContextMenuStrip;
-            this._RevisionHeader.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._RevisionHeader.Location = new System.Drawing.Point(0, 0);
-            this._RevisionHeader.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this._RevisionHeader.Name = "_RevisionHeader";
-            this._RevisionHeader.ReadOnly = true;
-            this._RevisionHeader.Size = new System.Drawing.Size(780, 115);
-            this._RevisionHeader.TabIndex = 0;
-            this._RevisionHeader.Text = "";
+            this.RevisionInfo.BackColor = System.Drawing.SystemColors.Window;
+            this.RevisionInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.RevisionInfo.ContextMenuStrip = this.commitInfoContextMenuStrip;
+            this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionInfo.Location = new System.Drawing.Point(110, 102);
+            this.RevisionInfo.Margin = new System.Windows.Forms.Padding(5);
+            this.RevisionInfo.Name = "RevisionInfo";
+            this.RevisionInfo.ReadOnly = true;
+            this.RevisionInfo.Size = new System.Drawing.Size(778, 279);
+            this.RevisionInfo.TabIndex = 0;
+            this.RevisionInfo.Text = "";
             // 
             // commitInfoContextMenuStrip
             // 
@@ -184,34 +159,28 @@ namespace GitUI
             this.addNoteToolStripMenuItem.Text = "Add notes";
             this.addNoteToolStripMenuItem.Click += new System.EventHandler(this.addNoteToolStripMenuItem_Click);
             // 
-            // RevisionInfo
+            // _RevisionHeader
             // 
-            this.RevisionInfo.BackColor = System.Drawing.SystemColors.Window;
-            this.RevisionInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.RevisionInfo.ContextMenuStrip = this.commitInfoContextMenuStrip;
-            this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RevisionInfo.Location = new System.Drawing.Point(0, 0);
-            this.RevisionInfo.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
-            this.RevisionInfo.Name = "RevisionInfo";
-            this.RevisionInfo.ReadOnly = true;
-            this.RevisionInfo.Size = new System.Drawing.Size(780, 265);
-            this.RevisionInfo.TabIndex = 0;
-            this.RevisionInfo.Text = "";
+            this._RevisionHeader.BackColor = System.Drawing.SystemColors.ControlLight;
+            this._RevisionHeader.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this._RevisionHeader.ContextMenuStrip = this.commitInfoContextMenuStrip;
+            this._RevisionHeader.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._RevisionHeader.Location = new System.Drawing.Point(109, 2);
+            this._RevisionHeader.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this._RevisionHeader.Name = "_RevisionHeader";
+            this._RevisionHeader.ReadOnly = true;
+            this._RevisionHeader.Size = new System.Drawing.Size(780, 93);
+            this._RevisionHeader.TabIndex = 0;
+            this._RevisionHeader.Text = "";
             // 
             // CommitInfo
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.tableLayout);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "CommitInfo";
             this.Size = new System.Drawing.Size(893, 386);
             this.tableLayout.ResumeLayout(false);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-#endif
-            this.splitContainer1.ResumeLayout(false);
             this.commitInfoContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -225,7 +194,6 @@ namespace GitUI
         private System.Windows.Forms.ContextMenuStrip commitInfoContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem showContainedInBranchesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showContainedInTagsToolStripMenuItem;
-        private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.RichTextBox _RevisionHeader;
         private System.Windows.Forms.ToolStripMenuItem copyCommitInfoToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;

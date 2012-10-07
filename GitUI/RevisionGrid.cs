@@ -1737,8 +1737,6 @@ namespace GitUI
             toolStripSeparator6.Visible = tagNameCopy.Items.Count > 0 || branchNameCopy.Items.Count > 0;
 
             RefreshOwnScripts();
-
-            goToParentToolStripMenuItem.Visible = revision.HasParent();
         }
 
         private void ToolStripItemClick(object sender, EventArgs e)
