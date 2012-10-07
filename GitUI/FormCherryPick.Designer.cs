@@ -28,73 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.label1 = new System.Windows.Forms.Label();
             this.RevisionGrid = new GitUI.RevisionGrid();
             this.checkAddReference = new System.Windows.Forms.CheckBox();
             this.autoParent = new System.Windows.Forms.CheckBox();
             this.AutoCommit = new System.Windows.Forms.CheckBox();
             this.CherryPick = new System.Windows.Forms.Button();
-#if Mono212Released //waiting for mono 2.12
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-#endif
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
-#endif
-            this.splitContainer2.Panel1.SuspendLayout();
-            this.splitContainer2.Panel2.SuspendLayout();
-            this.splitContainer2.SuspendLayout();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel1.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.splitContainer2);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.checkAddReference);
-            this.splitContainer1.Panel2.Controls.Add(this.autoParent);
-            this.splitContainer1.Panel2.Controls.Add(this.AutoCommit);
-            this.splitContainer1.Panel2.Controls.Add(this.CherryPick);
-            this.splitContainer1.Size = new System.Drawing.Size(638, 387);
-            this.splitContainer1.SplitterDistance = 303;
-            this.splitContainer1.TabIndex = 0;
-            // 
-            // splitContainer2
-            // 
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Name = "splitContainer2";
-            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer2.Panel1
-            // 
-            this.splitContainer2.Panel1.Controls.Add(this.label1);
-            // 
-            // splitContainer2.Panel2
-            // 
-            this.splitContainer2.Panel2.Controls.Add(this.RevisionGrid);
-            this.splitContainer2.Size = new System.Drawing.Size(638, 303);
-            this.splitContainer2.SplitterDistance = 25;
-            this.splitContainer2.TabIndex = 0;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 9);
+            this.label1.Location = new System.Drawing.Point(5, 5);
+            this.label1.Margin = new System.Windows.Forms.Padding(5);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(544, 15);
             this.label1.TabIndex = 0;
@@ -104,15 +54,15 @@
             // RevisionGrid
             // 
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
+            this.RevisionGrid.Location = new System.Drawing.Point(3, 28);
             this.RevisionGrid.Name = "RevisionGrid";
-            this.RevisionGrid.Size = new System.Drawing.Size(638, 274);
+            this.RevisionGrid.Size = new System.Drawing.Size(632, 266);
             this.RevisionGrid.TabIndex = 0;
             // 
             // checkAddReference
             // 
             this.checkAddReference.AutoSize = true;
-            this.checkAddReference.Location = new System.Drawing.Point(12, 57);
+            this.checkAddReference.Location = new System.Drawing.Point(3, 53);
             this.checkAddReference.Name = "checkAddReference";
             this.checkAddReference.Size = new System.Drawing.Size(145, 19);
             this.checkAddReference.TabIndex = 3;
@@ -124,7 +74,7 @@
             this.autoParent.AutoSize = true;
             this.autoParent.Checked = true;
             this.autoParent.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.autoParent.Location = new System.Drawing.Point(12, 32);
+            this.autoParent.Location = new System.Drawing.Point(3, 28);
             this.autoParent.Name = "autoParent";
             this.autoParent.Size = new System.Drawing.Size(312, 19);
             this.autoParent.TabIndex = 2;
@@ -136,7 +86,7 @@
             this.AutoCommit.AutoSize = true;
             this.AutoCommit.Checked = true;
             this.AutoCommit.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.AutoCommit.Location = new System.Drawing.Point(12, 7);
+            this.AutoCommit.Location = new System.Drawing.Point(3, 3);
             this.AutoCommit.Name = "AutoCommit";
             this.AutoCommit.Size = new System.Drawing.Size(375, 19);
             this.AutoCommit.TabIndex = 1;
@@ -145,7 +95,7 @@
             // 
             // CherryPick
             // 
-            this.CherryPick.Location = new System.Drawing.Point(516, 51);
+            this.CherryPick.Location = new System.Drawing.Point(519, 53);
             this.CherryPick.Name = "CherryPick";
             this.CherryPick.Size = new System.Drawing.Size(110, 25);
             this.CherryPick.TabIndex = 0;
@@ -153,43 +103,69 @@
             this.CherryPick.UseVisualStyleBackColor = true;
             this.CherryPick.Click += new System.EventHandler(this.CherryPick_Click);
             // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.RevisionGrid, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 2);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(638, 387);
+            this.tableLayoutPanel1.TabIndex = 1;
+            // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.ColumnCount = 2;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel2.Controls.Add(this.CherryPick, 1, 2);
+            this.tableLayoutPanel2.Controls.Add(this.autoParent, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.checkAddReference, 0, 2);
+            this.tableLayoutPanel2.Controls.Add(this.AutoCommit, 0, 0);
+            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 300);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 3;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(632, 84);
+            this.tableLayoutPanel2.TabIndex = 1;
+            // 
             // FormCherryPick
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(638, 387);
-            this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.tableLayoutPanel1);
             this.MinimumSize = new System.Drawing.Size(400, 200);
             this.Name = "FormCherryPick";
             this.Text = "Cherry pick";
             this.Load += new System.EventHandler(this.FormCherryPick_Load);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
-#if Mono212Released //waiting for mono 2.12
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-#endif
-            this.splitContainer1.ResumeLayout(false);
-            this.splitContainer2.Panel1.ResumeLayout(false);
-            this.splitContainer2.Panel1.PerformLayout();
-            this.splitContainer2.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
-#endif
-            this.splitContainer2.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel2.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.Label label1;
         private RevisionGrid RevisionGrid;
         private System.Windows.Forms.Button CherryPick;
         private System.Windows.Forms.CheckBox AutoCommit;
         private System.Windows.Forms.CheckBox autoParent;
         private System.Windows.Forms.CheckBox checkAddReference;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
     }
 }

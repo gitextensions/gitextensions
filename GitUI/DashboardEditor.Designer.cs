@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DashboardEditor));
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this._NO_TRANSLATE_Categories = new System.Windows.Forms.ListBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.Remove = new System.Windows.Forms.Button();
@@ -50,33 +50,34 @@
             this.label3 = new System.Windows.Forms.Label();
             this.RssFeedType = new System.Windows.Forms.RadioButton();
 #if Mono212Released //waiting for mono 2.12
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
-            this.splitContainer2.Panel1.SuspendLayout();
-            this.splitContainer2.Panel2.SuspendLayout();
-            this.splitContainer2.SuspendLayout();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RepositoriesGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
-            // splitContainer2
+            // splitContainer1
             // 
-            resources.ApplyResources(this.splitContainer2, "splitContainer2");
-            this.splitContainer2.Name = "splitContainer2";
+            resources.ApplyResources(this.splitContainer1, "splitContainer1");
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer1.Name = "splitContainer1";
             // 
-            // splitContainer2.Panel1
+            // splitContainer1.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this._NO_TRANSLATE_Categories);
-            this.splitContainer2.Panel1.Controls.Add(this.panel1);
-            this.splitContainer2.Panel1.Controls.Add(this.CategoriesLabel);
+            this.splitContainer1.Panel1.Controls.Add(this._NO_TRANSLATE_Categories);
+            this.splitContainer1.Panel1.Controls.Add(this.panel1);
+            this.splitContainer1.Panel1.Controls.Add(this.CategoriesLabel);
             // 
-            // splitContainer2.Panel2
+            // splitContainer1.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.RepositoriesGrid);
-            this.splitContainer2.Panel2.Controls.Add(this.panel2);
-            resources.ApplyResources(this.splitContainer2.Panel2, "splitContainer2.Panel2");
+            this.splitContainer1.Panel2.Controls.Add(this.RepositoriesGrid);
+            this.splitContainer1.Panel2.Controls.Add(this.panel2);
+            resources.ApplyResources(this.splitContainer1.Panel2, "splitContainer1.Panel2");
             // 
             // _NO_TRANSLATE_Categories
             // 
@@ -211,15 +212,15 @@
             // DashboardEditor
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.splitContainer2);
+            this.Controls.Add(this.splitContainer1);
             resources.ApplyResources(this, "$this");
             this.Name = "DashboardEditor";
-            this.splitContainer2.Panel1.ResumeLayout(false);
-            this.splitContainer2.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
 #if Mono212Released //waiting for mono 2.12
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 #endif
-            this.splitContainer2.ResumeLayout(false);
+            this.splitContainer1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.RepositoriesGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).EndInit();
@@ -231,7 +232,7 @@
 
         #endregion
 
-        private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ListBox _NO_TRANSLATE_Categories;
         private System.Windows.Forms.Label CategoriesLabel;
         private System.Windows.Forms.DataGridView RepositoriesGrid;
