@@ -68,6 +68,11 @@ namespace GitCommands
             return Instance._messageText.Text;
         }
 
+        public static string GetParentsText()
+        {
+            return Instance._parentsText.Text;
+        }
+
         private readonly TranslationString _dateText       = new TranslationString("Date");
         private readonly TranslationString _authorText     = new TranslationString("Author");
         private readonly TranslationString _authorDateText = new TranslationString("Author date");
@@ -75,6 +80,7 @@ namespace GitCommands
         private readonly TranslationString _commitDateText = new TranslationString("Commit date");
         private readonly TranslationString _commitHashText = new TranslationString("Commit hash");
         private readonly TranslationString _messageText    = new TranslationString("Message");
+        private readonly TranslationString _parentsText    = new TranslationString("Parent(s)");
 
 
         public static string GetNSecondsAgoText(int value)

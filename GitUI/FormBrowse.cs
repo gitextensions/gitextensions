@@ -2557,6 +2557,21 @@ namespace GitUI
             if (e.Button == MouseButtons.Right) 
                 CheckoutBranchToolStripMenuItemClick(sender, e);
         }
+
+        private void RevisionInfo_CommandClick(string command, string data)
+        {
+            if (command == "gotocommit")
+            {
+                RevisionGrid.SetSelectedRevision(new GitRevision(Module, data));
+            }
+            else if (command == "gotobranch" || command == "gototag")
+            {
+                string error = "";
+                CommitData commit = CommitData.GetCommitData(Module, data, ref error);
+                if (commit != null)
+                    RevisionGrid.SetSelectedRevision(new GitRevision(Module, commit.Guid));
+            }
+        }
       
     }
 
