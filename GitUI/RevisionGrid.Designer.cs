@@ -116,7 +116,6 @@ namespace GitUI
             this.Message = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Author = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.goToParentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
             this.CreateTag.SuspendLayout();
             this.NoCommits.SuspendLayout();
@@ -213,8 +212,7 @@ namespace GitUI
             this.toolStripSeparator3,
             this.filterToolStripMenuItem,
             this.toolStripSeparator7,
-            this.runScriptToolStripMenuItem,
-            this.goToParentToolStripMenuItem});
+            this.runScriptToolStripMenuItem});
             this.CreateTag.Name = "CreateTag";
             this.CreateTag.Size = new System.Drawing.Size(224, 612);
             this.CreateTag.Opening += new System.ComponentModel.CancelEventHandler(this.CreateTagOpening);
@@ -729,13 +727,6 @@ namespace GitUI
             this.Date.ReadOnly = true;
             this.Date.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.Date.Width = 180;
-            //
-            // goToParentToolStripMenuItem
-            // 
-            this.goToParentToolStripMenuItem.Name = "goToParentToolStripMenuItem";
-            this.goToParentToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.goToParentToolStripMenuItem.Text = "Go to parent";
-            this.goToParentToolStripMenuItem.Click += new System.EventHandler(this.goToParentToolStripMenuItem_Click);
             // 
             // RevisionGrid
             // 
@@ -830,6 +821,5 @@ namespace GitUI
         private System.Windows.Forms.DataGridViewTextBoxColumn Message;
         private System.Windows.Forms.DataGridViewTextBoxColumn Author;
         private System.Windows.Forms.DataGridViewTextBoxColumn Date;
-        private System.Windows.Forms.ToolStripMenuItem goToParentToolStripMenuItem;
     }
 }

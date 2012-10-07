@@ -66,6 +66,16 @@ namespace GitCommands
             header.Append(FillToLength(HttpUtility.HtmlEncode(Strings.GetCommitHashText()) + ":", COMMITHEADER_STRING_LENGTH) + 
                 HttpUtility.HtmlEncode(Guid));
 
+            if (ParentGuids.Any())
+            {
+                header.AppendLine();
+                header.Append(FillToLength(HttpUtility.HtmlEncode(Strings.GetParentsText()) + ":",
+                                           COMMITHEADER_STRING_LENGTH));
+
+                foreach (var parentGuid in ParentGuids)
+                    header.Append("<a href='gitex://gotocommit/" + parentGuid + "'>" + parentGuid.Substring(0, 10) + "</a> ");
+            }
+
             return RemoveRedundancies(header.ToString());
         }
 
