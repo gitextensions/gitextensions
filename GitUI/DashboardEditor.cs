@@ -40,12 +40,12 @@ namespace GitUI
             if (_NO_TRANSLATE_Categories.SelectedItem == null)
             {
                 if (!bChangingDataSource)
-                    splitContainer2.Panel2.Enabled = false;
+                    splitContainer1.Panel2.Enabled = false;
                 return;
             }
 
             if (!bChangingDataSource)
-                splitContainer2.Panel2.Enabled = true;
+                splitContainer1.Panel2.Enabled = true;
             var repositoryCategory = (RepositoryCategory)_NO_TRANSLATE_Categories.SelectedItem;
             RepositoriesGrid.DataSource = repositoryCategory.Repositories;
 
