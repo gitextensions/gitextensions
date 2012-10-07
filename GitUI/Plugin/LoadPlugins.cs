@@ -23,10 +23,10 @@ namespace GitUI
 #if DEBUG
                 var plugins = file.Directory.GetFiles("*.dll", SearchOption.AllDirectories);
 #else
-            FileInfo[] plugins =
-                           Directory.Exists(Path.Combine(file.Directory.FullName, "Plugins"))
-                               ? new DirectoryInfo(Path.Combine(file.Directory.FullName, "Plugins")).GetFiles("*.dll")
-                               : new FileInfo[] { };
+                FileInfo[] plugins =
+                               Directory.Exists(Path.Combine(file.Directory.FullName, "Plugins"))
+                                   ? new DirectoryInfo(Path.Combine(file.Directory.FullName, "Plugins")).GetFiles("*.dll")
+                                   : new FileInfo[] { };
 #endif
 
                 foreach (var pluginFile in plugins)
