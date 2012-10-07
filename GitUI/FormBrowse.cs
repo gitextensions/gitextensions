@@ -123,12 +123,6 @@ namespace GitUI
             Translate();
             _NoDiffFilesChangesText = DiffFiles.GetNoFilesText();
 
-#if !__MonoCS__
-            if (Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
-            {
-                TaskbarManager.Instance.ApplicationId = "HenkWesthuis.GitExtensions";
-            }
-#endif
             if (Settings.ShowGitStatusInBrowseToolbar)
             {
                 _toolStripGitStatus = new ToolStripGitStatus
@@ -209,6 +203,13 @@ namespace GitUI
 
         private void BrowseLoad(object sender, EventArgs e)
         {
+#if !__MonoCS__
+            if (Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+            {
+                TaskbarManager.Instance.ApplicationId = "GitExtensions";
+            }
+#endif
+
             RevisionGrid.Load();
             _FilterBranchHelper.InitToolStripBranchFilter();
 
@@ -484,9 +485,6 @@ namespace GitUI
 #if !__MonoCS__
             if (Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
-                //Call this method using reflection.  This is a workaround to *not* reference WPF libraries, becuase of how the WindowsAPICodePack was implimented.
-                TaskbarManager.Instance.GetType().InvokeMember("SetApplicationIdForSpecificWindow", System.Reflection.BindingFlags.InvokeMethod, null, TaskbarManager.Instance, new object[] { Handle, "GitExtensions" });
-
                 if (validWorkingDir)
                 {
                     string repositoryDescription = GetRepositoryShortName(Module.WorkingDir);
@@ -506,6 +504,14 @@ namespace GitUI
                     string path = Path.Combine(baseFolder, String.Format("{0}.{1}", sb, "gitext"));
                     File.WriteAllText(path, Module.WorkingDir);
                     JumpList.AddToRecent(path);
+
+                    var JList = JumpList.CreateJumpListForIndividualWindow(TaskbarManager.Instance.ApplicationId, Handle);
+                    JList.ClearAllUserTasks();
+
+                    //to control which category Recent/Frequent is displayed
+                    JList.KnownCategoryToDisplay = JumpListKnownCategoryType.Recent;
+
+                    JList.Refresh();
                 }
 
                 CreateOrUpdateTaskBarButtons(validWorkingDir);
@@ -533,8 +539,7 @@ namespace GitUI
                     ThumbnailToolBarButton[] buttons = new[] { _commitButton, _pullButton, _pushButton };
 
                     //Call this method using reflection.  This is a workaround to *not* reference WPF libraries, becuase of how the WindowsAPICodePack was implimented.
-                    TaskbarManager.Instance.ThumbnailToolBars.GetType().InvokeMember("AddButtons", System.Reflection.BindingFlags.InvokeMethod, null, TaskbarManager.Instance.ThumbnailToolBars,
-                                                                                     new object[] { Handle, buttons });
+                    TaskbarManager.Instance.ThumbnailToolBars.AddButtons(Handle, buttons);
                 }
 
                 _commitButton.Enabled = validRepo;
