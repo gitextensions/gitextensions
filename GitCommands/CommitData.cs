@@ -44,7 +44,7 @@ namespace GitCommands
         public string Committer { get; private set; }
         public DateTimeOffset CommitDate { get; private set; }
 
-        public string Body{get; private set;}
+        public string Body { get; private set; }
 
         /// <summary>
         /// Generate header.
@@ -55,15 +55,15 @@ namespace GitCommands
             StringBuilder header = new StringBuilder();
             string authorEmail = GetEmail(Author);
             header.AppendLine(FillToLength(HttpUtility.HtmlEncode(Strings.GetAuthorText()) + ":", COMMITHEADER_STRING_LENGTH) +
-                "<a href='mailto:" + HttpUtility.HtmlEncode(authorEmail)  + "'>" + HttpUtility.HtmlEncode(Author) + "</a>");
+                "<a href='mailto:" + HttpUtility.HtmlEncode(authorEmail) + "'>" + HttpUtility.HtmlEncode(Author) + "</a>");
             header.AppendLine(FillToLength(HttpUtility.HtmlEncode(Strings.GetAuthorDateText()) + ":", COMMITHEADER_STRING_LENGTH) +
                 HttpUtility.HtmlEncode(GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, AuthorDate.UtcDateTime) + " (" + AuthorDate.LocalDateTime.ToString("ddd MMM dd HH':'mm':'ss yyyy")) + ")");
             string committerEmail = GetEmail(Committer);
             header.AppendLine(FillToLength(HttpUtility.HtmlEncode(Strings.GetCommitterText()) + ":", COMMITHEADER_STRING_LENGTH) +
                 "<a href='mailto:" + HttpUtility.HtmlEncode(committerEmail) + "'>" + HttpUtility.HtmlEncode(Committer) + "</a>");
-            header.AppendLine(FillToLength(HttpUtility.HtmlEncode(Strings.GetCommitDateText()) + ":", COMMITHEADER_STRING_LENGTH) + 
+            header.AppendLine(FillToLength(HttpUtility.HtmlEncode(Strings.GetCommitDateText()) + ":", COMMITHEADER_STRING_LENGTH) +
                 HttpUtility.HtmlEncode(GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, CommitDate.UtcDateTime) + " (" + CommitDate.LocalDateTime.ToString("ddd MMM dd HH':'mm':'ss yyyy")) + ")");
-            header.Append(FillToLength(HttpUtility.HtmlEncode(Strings.GetCommitHashText()) + ":", COMMITHEADER_STRING_LENGTH) + 
+            header.Append(FillToLength(HttpUtility.HtmlEncode(Strings.GetCommitHashText()) + ":", COMMITHEADER_STRING_LENGTH) +
                 HttpUtility.HtmlEncode(Guid));
 
             if (ParentGuids.Any())
@@ -75,6 +75,28 @@ namespace GitCommands
                 foreach (var parentGuid in ParentGuids)
                     header.Append("<a href='gitex://gotocommit/" + parentGuid + "'>" + parentGuid.Substring(0, 10) + "</a> ");
             }
+
+            return RemoveRedundancies(header.ToString());
+        }
+
+        /// <summary>
+        /// Generate header.
+        /// </summary>
+        /// <returns></returns>
+        public string GetHeaderPlain()
+        {
+            StringBuilder header = new StringBuilder();
+            string authorEmail = GetEmail(Author);
+            header.AppendLine(FillToLength(Strings.GetAuthorText() + ":", COMMITHEADER_STRING_LENGTH) + Author);
+            header.AppendLine(FillToLength(Strings.GetAuthorDateText() + ":", COMMITHEADER_STRING_LENGTH) +
+                GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, AuthorDate.UtcDateTime) + " (" + AuthorDate.LocalDateTime.ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")");
+            string committerEmail = GetEmail(Committer);
+            header.AppendLine(FillToLength(Strings.GetCommitterText() + ":", COMMITHEADER_STRING_LENGTH) +
+                Committer);
+            header.AppendLine(FillToLength(Strings.GetCommitDateText() + ":", COMMITHEADER_STRING_LENGTH) +
+                GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, CommitDate.UtcDateTime) + " (" + CommitDate.LocalDateTime.ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")");
+            header.Append(FillToLength(Strings.GetCommitHashText() + ":", COMMITHEADER_STRING_LENGTH) +
+                Guid);
 
             return RemoveRedundancies(header.ToString());
         }
