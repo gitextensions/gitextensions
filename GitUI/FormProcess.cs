@@ -106,7 +106,10 @@ namespace GitUI
         private void processStart(FormStatus form)
         {
             BeforeProcessStart();
-            AddMessageLine(ProcessString + " " + ProcessArguments);
+            string QuotedProcessString = ProcessString;
+            if (QuotedProcessString.IndexOf(' ') != -1)
+                QuotedProcessString = QuotedProcessString.Quote();
+            AddMessageLine(QuotedProcessString + " " + ProcessArguments);
             gitCommand = new GitCommandsInstance(WorkingDirectory) { CollectOutput = false };
 
             try
