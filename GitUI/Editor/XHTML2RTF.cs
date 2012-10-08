@@ -603,6 +603,7 @@ namespace GitUI.Editor.RichTextBoxExtension
         public static void SetXHTMLText(this RichTextBox rtb, string xhtmlText)
         {
             rtb.Clear();
+            rtb.DetectUrls = false;
 
             Stack<CHARFORMAT> scf = new Stack<CHARFORMAT>();
             Stack<PARAFORMAT> spf = new Stack<PARAFORMAT>();

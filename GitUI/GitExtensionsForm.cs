@@ -35,8 +35,6 @@ namespace GitUI
 
             ShowInTaskbar = Application.OpenForms.Count <= 0 || (Application.OpenForms.Count == 1 && Application.OpenForms[0] is FormSplash);
 
-            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            
             var cancelButton = new Button();
             cancelButton.Click += CancelButtonClick;
 
@@ -304,7 +302,9 @@ namespace GitUI
                 return;
 
             StartPosition = FormStartPosition.Manual;
-            Size = position.Rect.Size;
+            if (FormBorderStyle == FormBorderStyle.Sizable || 
+                FormBorderStyle == FormBorderStyle.SizableToolWindow)
+                Size = position.Rect.Size;
             if (Owner == null || !_windowCentred)
             {
                 Point location = position.Rect.Location;
