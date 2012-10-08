@@ -37,6 +37,7 @@ namespace GitUI
             this.ToolStrip = new GitUI.ToolStripEx();
             this.RefreshButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonLevelUp = new System.Windows.Forms.ToolStripSplitButton();
             this._NO_TRANSLATE_Workingdir = new System.Windows.Forms.ToolStripSplitButton();
             this.branchSelect = new System.Windows.Forms.ToolStripSplitButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -175,9 +176,6 @@ namespace GitUI
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.updateAllSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.synchronizeAllSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
-            this.openSubmoduleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.pluginsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
@@ -286,6 +284,7 @@ namespace GitUI
             this.ToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.RefreshButton,
             this.toolStripSeparator17,
+            this.toolStripButtonLevelUp,
             this._NO_TRANSLATE_Workingdir,
             this.branchSelect,
             this.toolStripSeparator1,
@@ -326,6 +325,18 @@ namespace GitUI
             // 
             this.toolStripSeparator17.Name = "toolStripSeparator17";
             this.toolStripSeparator17.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonLevelUp
+            // 
+            this.toolStripButtonLevelUp.AutoToolTip = false;
+            this.toolStripButtonLevelUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonLevelUp.Image = global::GitUI.Properties.Resources.levelUp;
+            this.toolStripButtonLevelUp.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonLevelUp.Name = "toolStripButtonLevelUp";
+            this.toolStripButtonLevelUp.Size = new System.Drawing.Size(32, 22);
+            this.toolStripButtonLevelUp.Text = "Go to superproject";
+            this.toolStripButtonLevelUp.ButtonClick += new System.EventHandler(this.toolStripButtonLevelUp_ButtonClick);
+            this.toolStripButtonLevelUp.DropDownOpening += new System.EventHandler(this.toolStripButtonLevelUp_DropDownOpening);
             // 
             // _NO_TRANSLATE_Workingdir
             // 
@@ -863,7 +874,7 @@ namespace GitUI
             this.findInDiffToolStripMenuItem,
             this.resetFileToToolStripMenuItem});
             this.DiffContextMenu.Name = "DiffContextMenu";
-            this.DiffContextMenu.Size = new System.Drawing.Size(261, 246);
+            this.DiffContextMenu.Size = new System.Drawing.Size(261, 224);
             this.DiffContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.DiffContextMenu_Opening);
             // 
             // openWithDifftoolToolStripMenuItem
@@ -1494,9 +1505,7 @@ namespace GitUI
             this.manageSubmodulesToolStripMenuItem,
             this.toolStripSeparator8,
             this.updateAllSubmodulesToolStripMenuItem,
-            this.synchronizeAllSubmodulesToolStripMenuItem,
-            this.toolStripSeparator10,
-            this.openSubmoduleToolStripMenuItem});
+            this.synchronizeAllSubmodulesToolStripMenuItem});
             this.submodulesToolStripMenuItem.Name = "submodulesToolStripMenuItem";
             this.submodulesToolStripMenuItem.Size = new System.Drawing.Size(85, 20);
             this.submodulesToolStripMenuItem.Text = "Submodules";
@@ -1526,25 +1535,6 @@ namespace GitUI
             this.synchronizeAllSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.synchronizeAllSubmodulesToolStripMenuItem.Text = "Synchronize all submodules";
             this.synchronizeAllSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.SynchronizeAllSubmodulesToolStripMenuItemClick);
-            // 
-            // toolStripSeparator10
-            // 
-            this.toolStripSeparator10.Name = "toolStripSeparator10";
-            this.toolStripSeparator10.Size = new System.Drawing.Size(218, 6);
-            // 
-            // openSubmoduleToolStripMenuItem
-            // 
-            this.openSubmoduleToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripSeparator11});
-            this.openSubmoduleToolStripMenuItem.Name = "openSubmoduleToolStripMenuItem";
-            this.openSubmoduleToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
-            this.openSubmoduleToolStripMenuItem.Text = "Browse submodule";
-            this.openSubmoduleToolStripMenuItem.DropDownOpening += new System.EventHandler(this.OpenSubmoduleToolStripMenuItemDropDownOpening);
-            // 
-            // toolStripSeparator11
-            // 
-            this.toolStripSeparator11.Name = "toolStripSeparator11";
-            this.toolStripSeparator11.Size = new System.Drawing.Size(57, 6);
             // 
             // pluginsToolStripMenuItem
             // 
@@ -1931,9 +1921,6 @@ namespace GitUI
         private ToolStripSeparator toolStripSeparator8;
         private ToolStripMenuItem updateAllSubmodulesToolStripMenuItem;
         private ToolStripMenuItem synchronizeAllSubmodulesToolStripMenuItem;
-        private ToolStripSeparator toolStripSeparator10;
-        private ToolStripMenuItem openSubmoduleToolStripMenuItem;
-        private ToolStripSeparator toolStripSeparator11;
         private ToolStripMenuItem pluginsToolStripMenuItem;
         private ToolStripMenuItem settingsToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator15;
@@ -1977,6 +1964,7 @@ namespace GitUI
         private ToolStripMenuItem expandAllToolStripMenuItem;
         private ToolStripMenuItem findInDiffToolStripMenuItem;        
         private ToolStripMenuItem collapseAllToolStripMenuItem;
+        private ToolStripSplitButton toolStripButtonLevelUp;
         private ToolStripSplitButton toolStripButtonPull;
         private ToolStripMenuItem mergeToolStripMenuItem;
         private ToolStripMenuItem rebaseToolStripMenuItem1;
