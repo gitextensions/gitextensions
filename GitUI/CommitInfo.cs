@@ -48,23 +48,29 @@ namespace GitUI
                 if (data.Length > 1)
                     url = data[1];
 
-                var result = new Uri(url);
-                if (result.Scheme == "gitex")
+                try
                 {
-                    if (CommandClick != null)
+                    var result = new Uri(url);
+                    if (result.Scheme == "gitex")
                     {
-                        string path = result.AbsolutePath.TrimStart('/');
-                        CommandClick(result.Host, path);
+                        if (CommandClick != null)
+                        {
+                            string path = result.AbsolutePath.TrimStart('/');
+                            CommandClick(result.Host, path);
+                        }
+                        return;
                     }
                 }
-                else
+                catch (UriFormatException)
                 {
-                    new Process
-                        {
-                            EnableRaisingEvents = false,
-                            StartInfo = { FileName = url }
-                        }.Start();
+
                 }
+
+                new Process
+                    {
+                        EnableRaisingEvents = false,
+                        StartInfo = { FileName = url }
+                    }.Start();
             }
             catch (Exception ex)
             {
