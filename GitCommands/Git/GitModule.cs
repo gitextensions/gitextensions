@@ -1139,7 +1139,29 @@ namespace GitCommands
                 return null;
 
             string superprojectPath = null;
-            if (File.Exists(_workingdir + ".git"))
+
+            string currentPath = Path.GetDirectoryName(_workingdir); // remove last slash
+            if (!string.IsNullOrEmpty(currentPath))
+            {
+                string path = Path.GetDirectoryName(currentPath);
+                if (!string.IsNullOrEmpty(path))
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        if (File.Exists(path + Settings.PathSeparator.ToString() + ".gitmodules") &&
+                            ValidWorkingDir(path + Settings.PathSeparator.ToString()))
+                        {
+                            superprojectPath = path + Settings.PathSeparator.ToString();
+                            break;
+                        }
+                        // Check upper directory
+                        path = Path.GetDirectoryName(path);
+                    }
+                }
+            }
+
+            if (File.Exists(_workingdir + ".git") &&
+                superprojectPath == null)
             {
                 var lines = File.ReadAllLines(_workingdir + ".git");
                 foreach (string line in lines)
@@ -1151,27 +1173,12 @@ namespace GitCommands
                         if (pos != -1)
                         {
                             gitpath = gitpath.Substring(0, pos + 1).Replace('/', '\\');
+                            gitpath = Path.GetFullPath(_workingdir + gitpath);
                             if (File.Exists(gitpath + ".gitmodules") && ValidWorkingDir(gitpath))
                                 superprojectPath = gitpath;
                         }
                     }
                 }
-            }
-
-            string currentPath = Path.GetDirectoryName(_workingdir); // remove last slash
-            if (!string.IsNullOrEmpty(currentPath) &&
-                superprojectPath == null)
-            {
-                string path = Path.GetDirectoryName(currentPath);
-                if (!string.IsNullOrEmpty(path) &&
-                    (!File.Exists(path + Settings.PathSeparator.ToString() + ".gitmodules") || !ValidWorkingDir(path + Settings.PathSeparator.ToString())))
-                {
-                    // Check upper directory
-                    path = Path.GetDirectoryName(path);
-                    if (!File.Exists(path + Settings.PathSeparator.ToString() + ".gitmodules") || !ValidWorkingDir(path + Settings.PathSeparator.ToString()))
-                        return null;
-                }
-                superprojectPath = path + Settings.PathSeparator.ToString();
             }
 
             if (!string.IsNullOrEmpty(superprojectPath))
@@ -1180,7 +1187,7 @@ namespace GitCommands
                 var configFile = new ConfigFile(superprojectPath + ".gitmodules", true);
                 foreach (ConfigSection configSection in configFile.GetConfigSections())
                 {
-                    if (configSection.GetPathValue("path") == localPath)
+                    if (configSection.GetPathValue("path") == FixPath(localPath))
                     {
                         submoduleName = configSection.SubSection;
                         return superprojectPath;
@@ -2937,7 +2944,6 @@ namespace GitCommands
             diffContent = ReEncodeString(diffContent, GitModule.LosslessEncoding, FilesEncoding);
             return header + diffHeader + diffContent;
         }
-
 
         #region IGitCommands
 

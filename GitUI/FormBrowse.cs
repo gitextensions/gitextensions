@@ -364,6 +364,7 @@ namespace GitUI
             else
                 ShowDashboard();
             CommitInfoTabControl.Visible = validWorkingDir;
+            toolStripButtonLevelUp.Enabled = validWorkingDir;
             fileExplorerToolStripMenuItem.Enabled = validWorkingDir;
             commandsToolStripMenuItem.Enabled = validWorkingDir;
             manageRemoteRepositoriesToolStripMenuItem1.Enabled = validWorkingDir;
@@ -1553,51 +1554,6 @@ namespace GitUI
                 Initialize();
         }
 
-        private void OpenSubmoduleToolStripMenuItemDropDownOpening(object sender, EventArgs e)
-        {
-            LoadSubmodulesIntoDropDownMenu();
-        }
-
-        private void LoadSubmodulesIntoDropDownMenu()
-        {
-            Cursor.Current = Cursors.WaitCursor;
-
-            RemoveSubmoduleButtons();
-
-            foreach (var submodule in Module.GetSubmodulesLocalPathes().OrderBy(submoduleName => submoduleName))
-            {
-                var submenu = new ToolStripMenuItem(submodule);
-                submenu.Click += SubmoduleToolStripButtonClick;
-                submenu.Width = 200;
-                openSubmoduleToolStripMenuItem.DropDownItems.Add(submenu);
-            }
-
-            if (openSubmoduleToolStripMenuItem.DropDownItems.Count == 0)
-                openSubmoduleToolStripMenuItem.DropDownItems.Add(_noSubmodulesPresent.Text);
-            Cursor.Current = Cursors.Default;
-        }
-
-        private void RemoveSubmoduleButtons()
-        {
-            foreach (var item in openSubmoduleToolStripMenuItem.DropDownItems)
-            {
-                var toolStripButton = item as ToolStripMenuItem;
-                if (toolStripButton != null)
-                    toolStripButton.Click -= SubmoduleToolStripButtonClick;
-            }
-            openSubmoduleToolStripMenuItem.DropDownItems.Clear();
-        }
-
-        private void SubmoduleToolStripButtonClick(object sender, EventArgs e)
-        {
-            var button = sender as ToolStripMenuItem;
-
-            if (button == null)
-                return;
-
-            SetWorkingDir(Module.GetSubmoduleFullPath(button.Text.Trim()));
-        }
-
         private void ExitToolStripMenuItemClick(object sender, EventArgs e)
         {
             Close();
@@ -2599,6 +2555,90 @@ namespace GitUI
                 if (commit != null)
                     RevisionGrid.SetSelectedRevision(new GitRevision(Module, commit.Guid));
             }
+        }
+
+        private void SubmoduleToolStripButtonClick(object sender, EventArgs e)
+        {
+            var button = sender as ToolStripMenuItem;
+
+            if (button == null)
+                return;
+
+            SetWorkingDir(Module.GetSubmoduleFullPath(button.Text.Trim()));
+        }
+
+        private void ParentSubmoduleToolStripButtonClick(object sender, EventArgs e)
+        {
+            var button = sender as ToolStripMenuItem;
+
+            if (button == null)
+                return;
+
+            SetWorkingDir(Module.SuperprojectModule.GetSubmoduleFullPath(button.Text.Trim()));
+        }
+
+        private void toolStripButtonLevelUp_DropDownOpening(object sender, EventArgs e)
+        {
+            LoadSubmodulesIntoDropDownMenu();
+        }
+
+        private void RemoveSubmoduleButtons()
+        {
+            foreach (var item in toolStripButtonLevelUp.DropDownItems)
+            {
+                var toolStripButton = item as ToolStripMenuItem;
+                if (toolStripButton != null)
+                    toolStripButton.Click -= SubmoduleToolStripButtonClick;
+            }
+            toolStripButtonLevelUp.DropDownItems.Clear();
+        }
+
+        private void LoadSubmodulesIntoDropDownMenu()
+        {
+            Cursor.Current = Cursors.WaitCursor;
+
+            RemoveSubmoduleButtons();
+
+            foreach (var submodule in Module.GetSubmodulesLocalPathes().OrderBy(submoduleName => submoduleName))
+            {
+                var submenu = new ToolStripMenuItem(submodule);
+                submenu.Click += SubmoduleToolStripButtonClick;
+                submenu.Width = 200;
+                toolStripButtonLevelUp.DropDownItems.Add(submenu);
+            }
+
+            if (toolStripButtonLevelUp.DropDownItems.Count == 0)
+                toolStripButtonLevelUp.DropDownItems.Add(_noSubmodulesPresent.Text);
+
+            if (Module.SuperprojectModule != null)
+            {
+                var submodules = Module.SuperprojectModule.GetSubmodulesLocalPathes().OrderBy(submoduleName => submoduleName);
+                if (submodules.Any())
+                {
+                    var separator = new ToolStripSeparator();
+                    toolStripButtonLevelUp.DropDownItems.Add(separator);
+
+                    foreach (var submodule in submodules)
+                    {
+                        string localpath = Module.WorkingDir.Substring(Module.SuperprojectModule.WorkingDir.Length);
+                        localpath = localpath.Replace(Settings.PathSeparator, Settings.PathSeparatorWrong).TrimEnd(
+                                Settings.PathSeparatorWrong);
+                        var submenu = new ToolStripMenuItem(submodule);
+                        if (submodule == localpath)
+                            submenu.Font = new Font(submenu.Font, FontStyle.Bold);
+                        submenu.Click += ParentSubmoduleToolStripButtonClick;
+                        submenu.Width = 200;
+                        toolStripButtonLevelUp.DropDownItems.Add(submenu);
+                    }
+                }
+            }
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void toolStripButtonLevelUp_ButtonClick(object sender, EventArgs e)
+        {
+            if (Module.SuperprojectModule != null)
+                SetGitModule(Module.SuperprojectModule);
         }
       
     }

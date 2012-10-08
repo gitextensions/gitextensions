@@ -25,8 +25,8 @@ namespace GitCommandsTests
         {
             var commitGuid = Guid.NewGuid();
             var treeGuid = Guid.NewGuid();
-            var parentGuid1 = Guid.NewGuid();
-            var parentGuid2 = Guid.NewGuid();
+            var parentGuid1 = Guid.NewGuid().ToString();
+            var parentGuid2 = Guid.NewGuid().ToString();
             var authorTime = DateTime.UtcNow.AddDays(-3);
             var commitTime = DateTime.UtcNow.AddDays(-2);
             var authorUnixTime = (int)(authorTime - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds;
@@ -48,7 +48,8 @@ namespace GitCommandsTests
                                  "Author date:\t3 days ago (" + authorTime.ToLocalTime().ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")" + Environment.NewLine +
                                  "Committer:\t<a href='mailto:John.Doe@test.com'>Jane Doe (Acme Inc) &lt;Jane.Doe@test.com&gt;</a>" + Environment.NewLine +
                                  "Commit date:\t2 days ago (" + commitTime.ToLocalTime().ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")" + Environment.NewLine +
-                                 "Commit hash:\t" + commitGuid;
+                                 "Commit hash:\t" + commitGuid + Environment.NewLine +
+                                 "Parent(s):\t<a href='gitex://gotocommit/" + parentGuid1 + "'>" + parentGuid1.Substring(0, 10) + "</a> <a href='gitex://gotocommit/" + parentGuid2 + "'>" + parentGuid2.Substring(0, 10) + "</a> ";
 
             var expectedBody = "\n\nI made a really neato change." + Environment.NewLine + Environment.NewLine +
                                "Notes (p4notes):" + Environment.NewLine +
