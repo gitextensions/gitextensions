@@ -72,7 +72,7 @@ namespace GitCommands
                 header.Append(FillToLength(HttpUtility.HtmlEncode(Strings.GetParentsText()) + ":",
                                            COMMITHEADER_STRING_LENGTH));
 
-                foreach (var parentGuid in ParentGuids)
+                foreach (var parentGuid in ParentGuids.Where(s => !string.IsNullOrEmpty(s)))
                     header.Append("<a href='gitex://gotocommit/" + parentGuid + "'>" + parentGuid.Substring(0, 10) + "</a> ");
             }
 
