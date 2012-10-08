@@ -164,8 +164,18 @@ namespace GitCommands
                 return -1;
             }
 
-            Settings.GitLog.Log(cmd + " " + arguments);
+            string quotedCmd = cmd;
+            if (quotedCmd.IndexOf(' ') != -1)
+                quotedCmd = quotedCmd.Quote();
+            Settings.GitLog.Log(quotedCmd + " " + arguments);
             //process used to execute external commands
+
+            // escape special characters for batch file
+            if (cmd.Contains(".cmd"))
+            {
+                arguments = arguments.Replace("^", "^^").Replace("&", "^&").Replace("|", "^|")
+                    .Replace(">", "^>").Replace("<", "^<");
+            }
 
             //data is read from base stream, so encoding doesn't matter
             var startInfo = CreateProcessStartInfo(Encoding.Default);
