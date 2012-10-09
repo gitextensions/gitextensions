@@ -132,6 +132,7 @@ namespace GitUI
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.AutoScroll = true;
+            this.flowLayoutPanel1.AutoSize = true;
             this.flowLayoutPanel1.Controls.Add(this.rbCreateBranchWithCustomName);
             this.flowLayoutPanel1.Controls.Add(this.txtCustomBranchName);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -337,7 +338,7 @@ namespace GitUI
             // 
             // Branches
             // 
-            this.Branches.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.Branches.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.Branches.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.Branches.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.tableLayoutPanel1.SetColumnSpan(this.Branches, 3);
@@ -351,6 +352,7 @@ namespace GitUI
             // 
             // horLine
             // 
+            this.horLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.horLine.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.tableLayoutPanel1.SetColumnSpan(this.horLine, 4);
             this.horLine.Dock = System.Windows.Forms.DockStyle.Top;
