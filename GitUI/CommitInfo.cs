@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
@@ -175,9 +177,10 @@ namespace GitUI
             bool getRemote = Settings.CommitInfoShowContainedInBranchesRemote ||
                              Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
             var branches = CommitInformation.GetAllBranchesWhichContainGivenCommit(Module, revision, getLocal, getRemote);
-            var branchString = "";
+            var links = new List<string>();
             bool allowLocal = Settings.CommitInfoShowContainedInBranchesLocal;
             bool allowRemote = getRemote;
+            
             foreach (var branch in branches)
             {
                 string noPrefixBranch = branch;
@@ -199,29 +202,22 @@ namespace GitUI
 
                 if ((branchIsLocal && allowLocal) || (!branchIsLocal && allowRemote))
                 {
-                    if (branchString != string.Empty)
-                        branchString += ", ";
-                    branchString += "<a href='gitex://gotobranch/" + noPrefixBranch + "'>" + 
-                        HttpUtility.HtmlEncode(noPrefixBranch) + "</a>";
+                    links.Add(LinkFactory.CreateBranchLink(noPrefixBranch));
                 }
 
                 if (branchIsLocal && Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal)
                     allowRemote = false;
             }
-            if (branchString != string.Empty)
-                return Environment.NewLine + HttpUtility.HtmlEncode(containedInBranches.Text) + " " + branchString;
+            if (links.Any())
+                return Environment.NewLine + HttpUtility.HtmlEncode(containedInBranches.Text) + " " + links.Join(", ");
             return Environment.NewLine + HttpUtility.HtmlEncode(containedInNoBranch.Text);
         }
 
         private string GetTagsWhichContainsThisCommit(string revision)
         {
-            var tagString = "";
-            foreach (var tag in CommitInformation.GetAllTagsWhichContainGivenCommit(Module, revision))
-            {
-                if (tagString != string.Empty)
-                    tagString += ", ";
-                tagString += "<a href='gitex://gototag/" + tag + "'>" + HttpUtility.HtmlEncode(tag) + "</a>";
-            }
+            var tagString = CommitInformation
+                .GetAllTagsWhichContainGivenCommit(Module, revision)
+                .Select(LinkFactory.CreateTagLink).Join(", ");
 
             if (tagString != string.Empty)
                 return Environment.NewLine + HttpUtility.HtmlEncode(containedInTags.Text) + " " + tagString;
