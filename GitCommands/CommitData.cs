@@ -65,11 +65,9 @@ namespace GitCommands
             if (parentGuids.Any())
             {
                 header.AppendLine();
+                var commitsString = parentGuids.Select(LinkFactory.CreateCommitLink).Join(" ");
                 header.Append(FillToLength(HttpUtility.HtmlEncode(Strings.GetParentsText()) + ":",
-                                           COMMITHEADER_STRING_LENGTH));
-
-                foreach (var parentGuid in parentGuids.Where(s => !string.IsNullOrEmpty(s)))
-                    header.Append(LinkFactory.CreateCommitLink(parentGuid));
+                                           COMMITHEADER_STRING_LENGTH) + commitsString);
             }
 
             return RemoveRedundancies(header.ToString());

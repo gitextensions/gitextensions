@@ -147,13 +147,15 @@ namespace GitUI.Editor
             this.Encoding = null;
         }
 
-
         protected override void OnRuntimeLoad(EventArgs e)
         {
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             Font = Settings.DiffFont;
-            UICommandsSource.GitUICommandsChanged += WorkingDirChanged;
-            WorkingDirChanged(UICommandsSource, null);
+            if (UICommandsSource != null)
+            {
+                UICommandsSource.GitUICommandsChanged += WorkingDirChanged;
+                WorkingDirChanged(UICommandsSource, null);
+            }
         }
 
         void ContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
