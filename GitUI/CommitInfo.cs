@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -28,14 +29,12 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
-            tableLayout.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
-            tableLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayout.AutoSize = true;
-
             _RevisionHeader.LinkClicked += RevisionInfoLinkClicked;
             RevisionInfo.LinkClicked += RevisionInfoLinkClicked;
         }
 
+        [DefaultValue(false)]
+        public bool ShowBranchesAsLinks { get; set; }
 
         public delegate void CommandClickHandler(string command, string data);
 
@@ -128,13 +127,13 @@ namespace GitUI
 
         private void loadTagInfo(string revision)
         {
-            _tagInfo = GetTagsWhichContainsThisCommit(revision);
+            _tagInfo = GetTagsWhichContainsThisCommit(revision, ShowBranchesAsLinks);
             _syncContext.Post(  s => updateText(), null);
         }
 
         private void loadBranchInfo(string revision)
         {
-            _branchInfo = GetBranchesWhichContainsThisCommit(revision);
+            _branchInfo = GetBranchesWhichContainsThisCommit(revision, ShowBranchesAsLinks);
             _syncContext.Post(s => updateText(), null);
         }
 
@@ -166,8 +165,7 @@ namespace GitUI
             gravatar1.LoadImageForEmail(matches[0].Groups[1].Value);
         }
 
-
-        private string GetBranchesWhichContainsThisCommit(string revision)
+        private string GetBranchesWhichContainsThisCommit(string revision, bool showBranchesAsLinks)
         {
             const string remotesPrefix= "remotes/";
             // Include local branches if explicitly requested or when needed to decide whether to show remotes
@@ -202,7 +200,12 @@ namespace GitUI
 
                 if ((branchIsLocal && allowLocal) || (!branchIsLocal && allowRemote))
                 {
-                    links.Add(LinkFactory.CreateBranchLink(noPrefixBranch));
+                    string branchText;
+                    if (showBranchesAsLinks)
+                        branchText = LinkFactory.CreateBranchLink(noPrefixBranch);
+                    else 
+                        branchText = HttpUtility.HtmlEncode(noPrefixBranch);
+                    links.Add(branchText);
                 }
 
                 if (branchIsLocal && Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal)
@@ -213,20 +216,15 @@ namespace GitUI
             return Environment.NewLine + HttpUtility.HtmlEncode(containedInNoBranch.Text);
         }
 
-        private string GetTagsWhichContainsThisCommit(string revision)
+        private string GetTagsWhichContainsThisCommit(string revision, bool showBranchesAsLinks)
         {
             var tagString = CommitInformation
                 .GetAllTagsWhichContainGivenCommit(Module, revision)
-                .Select(LinkFactory.CreateTagLink).Join(", ");
+                .Select(s => showBranchesAsLinks ? LinkFactory.CreateTagLink(s) : HttpUtility.HtmlEncode(s)).Join(", ");
 
             if (tagString != string.Empty)
                 return Environment.NewLine + HttpUtility.HtmlEncode(containedInTags.Text) + " " + tagString;
             return Environment.NewLine + HttpUtility.HtmlEncode(containedInNoTag.Text);
-        }
-
-        private void tableLayout_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
         private void showContainedInBranchesToolStripMenuItem_Click(object sender, EventArgs e)

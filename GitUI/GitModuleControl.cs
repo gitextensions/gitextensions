@@ -7,9 +7,10 @@ namespace GitUI
 {
     public class GitModuleControl : GitExtensionsControl
     {
+        [Browsable(false)]
         public bool UICommandsSourceParentSearch { get; private set; }
-        private IGitUICommandsSource _UICommandsSource;
 
+        private IGitUICommandsSource _UICommandsSource;
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public IGitUICommandsSource UICommandsSource 
@@ -18,8 +19,6 @@ namespace GitUI
             {
                 if (_UICommandsSource == null)
                     SearchForUICommandsSource();
-                if (_UICommandsSource == null)
-                    throw new NullReferenceException("UICommandsSource");
                 return _UICommandsSource;
             }
             set
