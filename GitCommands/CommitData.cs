@@ -74,7 +74,7 @@ namespace GitCommands
                                            COMMITHEADER_STRING_LENGTH));
 
                 foreach (var parentGuid in parentGuids.Where(s => !string.IsNullOrEmpty(s)))
-                    header.Append("<a href='gitex://gotocommit/" + parentGuid + "'>" + parentGuid.Substring(0, 10) + "</a> ");
+                    header.Append(LinkFactory.CreateCommitLink(parentGuid));
             }
 
             return RemoveRedundancies(header.ToString());
