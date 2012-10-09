@@ -189,32 +189,6 @@ namespace GitUI
             SetGitModule(module);
         }
 
-        public string GetSubmoduleText(string name, string hash)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("Submodule " + name);
-            sb.AppendLine();
-            GitModule module = Module.GetSubmodule(name);
-            if (module.ValidWorkingDir())
-            {
-                string error = "";
-                CommitData data = CommitData.GetCommitData(module, hash, ref error);
-                if (data == null)
-                {
-                    sb.AppendLine("Commit hash:\t" + hash);
-                    return sb.ToString();
-                }
-
-                string header = data.GetHeaderPlain();
-                string body = "\n" + data.Body.Trim();
-                sb.AppendLine(header);
-                sb.Append(body);
-            }
-            else
-                sb.AppendLine("Commit hash:\t" + hash);
-            return sb.ToString();
-        }
-
         private void GitTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
             var item = e.Node.Tag as GitItem;
@@ -224,7 +198,8 @@ namespace GitUI
             if (item.IsBlob)
                 FileText.ViewGitItem(item.FileName, item.Guid);
             else if (item.IsCommit)
-                FileText.ViewText(item.FileName, GetSubmoduleText(item.FileName, item.Guid));
+                FileText.ViewText(item.FileName, 
+                    GitCommandHelpers.GetSubmoduleText(Module, item.FileName, item.Guid));
             else
                 FileText.ViewText("", "");
         }

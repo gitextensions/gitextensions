@@ -960,6 +960,32 @@ namespace GitCommands
             return gitItemStatus;
         }
 
+        public static string GetSubmoduleText(GitModule superproject, string name, string hash)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Submodule " + name);
+            sb.AppendLine();
+            GitModule module = superproject.GetSubmodule(name);
+            if (module.ValidWorkingDir())
+            {
+                string error = "";
+                CommitData data = CommitData.GetCommitData(module, hash, ref error);
+                if (data == null)
+                {
+                    sb.AppendLine("Commit hash:\t" + hash);
+                    return sb.ToString();
+                }
+
+                string header = data.GetHeaderPlain();
+                string body = "\n" + data.Body.Trim();
+                sb.AppendLine(header);
+                sb.Append(body);
+            }
+            else
+                sb.AppendLine("Commit hash:\t" + hash);
+            return sb.ToString();
+        }
+
         public static string ProcessSubmodulePatch(GitModule module, string text)
         {
             StringBuilder sb = new StringBuilder();

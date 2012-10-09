@@ -2062,7 +2062,7 @@ namespace GitCommands
         {
             var tree = GetTree(treeGuid, full);
 
-            return tree
+            var list = tree
                 .Select(file => new GitItemStatus
                 {
                     IsNew = true,
@@ -2073,6 +2073,15 @@ namespace GitCommands
                     TreeGuid = file.Guid
                 })
                 .ToList();
+
+            // Doesn't work with removed submodules
+            IList<string> Submodules = GetSubmodulesLocalPathes();
+            foreach (var item in list)
+            {
+                if (Submodules.Contains(item.Name))
+                    item.IsSubmodule = true;
+            }
+            return list;
         }
 
 

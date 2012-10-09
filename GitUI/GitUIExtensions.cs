@@ -173,8 +173,11 @@ namespace GitUI
             {
                 if (file.TreeGuid.IsNullOrEmpty())
                     diffViewer.ViewGitItemRevision(file.Name, revisions[0].Guid);
-                else
+                else if (!file.IsSubmodule)
                     diffViewer.ViewGitItem(file.Name, file.TreeGuid);
+                else
+                    diffViewer.ViewText(file.Name, 
+                        GitCommandHelpers.GetSubmoduleText(grid.Module, file.Name, file.TreeGuid));
             }
             else
             {
