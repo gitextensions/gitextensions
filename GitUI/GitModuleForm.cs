@@ -1,16 +1,10 @@
-﻿using GitCommands;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+using GitCommands;
 
 namespace GitUI
 {
-    public partial class GitModuleForm : GitExtensionsForm, IGitUICommandsSource
+    public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource
     {
         private GitUICommands _UICommands;
         [Browsable(false)]
@@ -38,7 +32,6 @@ namespace GitUI
         public event GitUICommandsChangedEventHandler GitUICommandsChanged;
 
         protected GitModuleForm()
-           : base()
         {            
         }
 

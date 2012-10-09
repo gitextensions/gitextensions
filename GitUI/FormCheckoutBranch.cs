@@ -20,16 +20,16 @@ namespace GitUI
 
         private string _containRevison;
         private bool isDirtyDir;
-        private bool isLoading = false;
+        private bool isLoading;
         private string _remoteName = "";
         private string _newLocalBranchName = "";
         private string _localBranchName = "";
         private readonly string rbResetBranchText;
         private readonly string rbCreateBranchText;
 
-        private List<string> _localBranches = null;
-        private List<string> _remoteBranches = null;
-        private List<string> _containsRevisionBranches = null;
+        private List<string> _localBranches;
+        private List<string> _remoteBranches;
+        private List<string> _containsRevisionBranches;
 
         private FormCheckoutBranch()
             : this(null)

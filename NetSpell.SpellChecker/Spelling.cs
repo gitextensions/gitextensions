@@ -8,9 +8,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
-
 using NetSpell.SpellChecker.Dictionary;
-
 
 namespace NetSpell.SpellChecker
 {
@@ -333,9 +331,9 @@ namespace NetSpell.SpellChecker
             List<string> replacementChars = Dictionary.ReplaceCharacters;
             for (int i = 0; i < replacementChars.Count; i++)
             {
-                int split = ((string)replacementChars[i]).IndexOf(' ');
-                string key = ((string)replacementChars[i]).Substring(0, split);
-                string replacement = ((string)replacementChars[i]).Substring(split + 1);
+                int split = replacementChars[i].IndexOf(' ');
+                string key = replacementChars[i].Substring(0, split);
+                string replacement = replacementChars[i].Substring(split + 1);
 
                 int pos = CurrentWord.IndexOf(key, StringComparison.InvariantCulture);
                 while (pos > -1)
@@ -870,7 +868,7 @@ namespace NetSpell.SpellChecker
 					{
 						if(_replaceList.ContainsKey(currentWord)) 
 						{
-							ReplacementWord = _replaceList[currentWord].ToString();
+							ReplacementWord = _replaceList[currentWord];
 							ReplaceWord();
 						}
 						else if(!_ignoreList.Contains(currentWord))
@@ -1188,7 +1186,7 @@ namespace NetSpell.SpellChecker
 		/// </summary>
 		[Browsable(true)]
 		[DefaultValue(true)]
-		[CategoryAttribute("Options")]
+		[Category("Options")]
 		[Description("Display the 'Spell Check Complete' alert.")]
 		public bool AlertComplete
 		{
@@ -1210,7 +1208,7 @@ namespace NetSpell.SpellChecker
 		///     The WordDictionary object to use when spell checking
 		/// </summary>
 		[Browsable(true)]
-		[CategoryAttribute("Dictionary")]
+		[Category("Dictionary")]
 		[Description("The WordDictionary object to use when spell checking")]
 		public WordDictionary Dictionary
 		{
@@ -1233,7 +1231,7 @@ namespace NetSpell.SpellChecker
 		///     Ignore words with all capital letters when spell checking
 		/// </summary>
 		[DefaultValue(true)]
-		[CategoryAttribute("Options")]
+		[Category("Options")]
 		[Description("Ignore words with all capital letters when spell checking")]
 		public bool IgnoreAllCapsWords
 		{
@@ -1245,7 +1243,7 @@ namespace NetSpell.SpellChecker
 		///     Ignore html tags when spell checking
 		/// </summary>
 		[DefaultValue(true)]
-		[CategoryAttribute("Options")]
+		[Category("Options")]
 		[Description("Ignore html tags when spell checking")]
 		public bool IgnoreHtml
 		{
@@ -1270,7 +1268,7 @@ namespace NetSpell.SpellChecker
 		///     Ignore words with digits when spell checking
 		/// </summary>
 		[DefaultValue(false)]
-		[CategoryAttribute("Options")]
+		[Category("Options")]
 		[Description("Ignore words with digits when spell checking")]
 		public bool IgnoreWordsWithDigits
 		{
@@ -1282,7 +1280,7 @@ namespace NetSpell.SpellChecker
 		///     The maximum number of suggestions to generate
 		/// </summary>
 		[DefaultValue(25)]
-		[CategoryAttribute("Options")]
+		[Category("Options")]
 		[Description("The maximum number of suggestions to generate")]
 		public int MaxSuggestions
 		{
@@ -1321,7 +1319,7 @@ namespace NetSpell.SpellChecker
 		///     and options dialogs.
 		/// </summary>
 		[DefaultValue(true)]
-		[CategoryAttribute("Options")]
+		[Category("Options")]
 		[Description("Determines if the spell checker should use its internal dialogs")]
 		public bool ShowDialog
 		{
@@ -1337,7 +1335,7 @@ namespace NetSpell.SpellChecker
 		///     The suggestion strategy to use when generating suggestions
 		/// </summary>
 		[DefaultValue(SuggestionEnum.PhoneticNearMiss)]
-		[CategoryAttribute("Options")]
+		[Category("Options")]
 		[Description("The suggestion strategy to use when generating suggestions")]
 		public SuggestionEnum SuggestionMode
 		{
