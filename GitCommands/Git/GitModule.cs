@@ -2677,7 +2677,7 @@ namespace GitCommands
             if (!oldFileName.IsNullOrEmpty())
                 oldFileName = oldFileName.Quote();
 
-            string args = string.Join(" ", extraDiffArguments, revision2, revision1, "--", filename, oldFileName);
+            string args = string.Join(" ", extraDiffArguments, revision2.QuoteNE(), revision1.QuoteNE(), "--", filename, oldFileName);
             if (GitCommandHelpers.VersionInUse.GuiDiffToolExist)
                 RunCmdAsync(Settings.GitCommand,
                             "difftool --gui --no-prompt " + args);
