@@ -1,15 +1,14 @@
 ﻿
 
+using System;
+using System.IO;
+using System.Windows.Forms;
+using GitCommands;
+using GitCommands.Repository;
+using ResourceManager.Translation;
+
 namespace GitUI
 {
-    using System;
-    using System.IO;
-    using System.Windows.Forms;
-    using GitCommands;
-    using GitCommands.Repository;
-
-    using ResourceManager.Translation;
-
     public partial class FormSvnClone : GitModuleForm
     {
         private readonly TranslationString _questionOpenRepo =
@@ -106,7 +105,7 @@ namespace GitUI
 
         private void authorsFileBrowseButton_Click(object sender, EventArgs e)
         {
-            using (var dialog = new OpenFileDialog() { InitialDirectory = this._NO_TRANSLATE_destinationComboBox.Text })
+            using (var dialog = new OpenFileDialog { InitialDirectory = this._NO_TRANSLATE_destinationComboBox.Text })
             {
                 if (dialog.ShowDialog(this) == DialogResult.OK)
                     this._NO_TRANSLATE_authorsFileTextBox.Text = dialog.FileName;
