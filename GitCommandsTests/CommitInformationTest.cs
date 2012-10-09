@@ -49,7 +49,7 @@ namespace GitCommandsTests
                                  "Committer:\t<a href='mailto:John.Doe@test.com'>Jane Doe (Acme Inc) &lt;Jane.Doe@test.com&gt;</a>" + Environment.NewLine +
                                  "Commit date:\t2 days ago (" + commitTime.ToLocalTime().ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")" + Environment.NewLine +
                                  "Commit hash:\t" + commitGuid + Environment.NewLine +
-                                 "Parent(s):\t<a href='gitex://gotocommit/" + parentGuid1 + "'>" + parentGuid1.Substring(0, 10) + "</a> <a href='gitex://gotocommit/" + parentGuid2 + "'>" + parentGuid2.Substring(0, 10) + "</a> ";
+                                 "Parent(s):\t<a href='gitex://gotocommit/" + parentGuid1 + "'>" + parentGuid1.Substring(0, 10) + "</a> <a href='gitex://gotocommit/" + parentGuid2 + "'>" + parentGuid2.Substring(0, 10) + "</a>";
 
             var expectedBody = "\n\nI made a really neato change." + Environment.NewLine + Environment.NewLine +
                                "Notes (p4notes):" + Environment.NewLine +
@@ -60,7 +60,6 @@ namespace GitCommandsTests
 
             Assert.AreEqual(expectedHeader, commitInformation.Header);
             Assert.AreEqual(expectedBody, commitInformation.Body);
-
         }
 
         [TestMethod]

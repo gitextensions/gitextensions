@@ -49,6 +49,8 @@ namespace GitUI
             // 
             // tableLayout
             // 
+            this.tableLayout.AutoSize = true;
+            this.tableLayout.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayout.BackColor = System.Drawing.SystemColors.Window;
             this.tableLayout.ColumnCount = 2;
             this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
@@ -57,6 +59,7 @@ namespace GitUI
             this.tableLayout.Controls.Add(this.RevisionInfo, 1, 1);
             this.tableLayout.Controls.Add(this._RevisionHeader, 1, 0);
             this.tableLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayout.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
             this.tableLayout.Location = new System.Drawing.Point(0, 0);
             this.tableLayout.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayout.Name = "tableLayout";
@@ -66,7 +69,6 @@ namespace GitUI
             this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayout.Size = new System.Drawing.Size(893, 386);
             this.tableLayout.TabIndex = 3;
-            this.tableLayout.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayout_Paint);
             // 
             // gravatar1
             // 
@@ -92,6 +94,7 @@ namespace GitUI
             this.RevisionInfo.Size = new System.Drawing.Size(778, 279);
             this.RevisionInfo.TabIndex = 0;
             this.RevisionInfo.Text = "";
+            this.RevisionInfo.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.RevisionInfoLinkClicked);
             // 
             // commitInfoContextMenuStrip
             // 
@@ -172,6 +175,7 @@ namespace GitUI
             this._RevisionHeader.Size = new System.Drawing.Size(780, 93);
             this._RevisionHeader.TabIndex = 0;
             this._RevisionHeader.Text = "";
+            this._RevisionHeader.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.RevisionInfoLinkClicked);
             // 
             // CommitInfo
             // 
@@ -183,6 +187,7 @@ namespace GitUI
             this.tableLayout.ResumeLayout(false);
             this.commitInfoContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 

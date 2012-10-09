@@ -16,7 +16,7 @@ namespace GitCommands
 
         public static string CreateCommitLink(string parentGuid)
         {
-            return "<a href='gitex://gotocommit/" + parentGuid + "'>" + parentGuid.Substring(0, 10) + "</a> ";
+            return "<a href='gitex://gotocommit/" + parentGuid + "'>" + parentGuid.Substring(0, 10) + "</a>";
         }
     }
 }

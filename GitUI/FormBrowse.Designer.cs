@@ -650,6 +650,7 @@ namespace GitUI
             this.RevisionInfo.Location = new System.Drawing.Point(0, 0);
             this.RevisionInfo.Margin = new System.Windows.Forms.Padding(10);
             this.RevisionInfo.Name = "RevisionInfo";
+            this.RevisionInfo.ShowBranchesAsLinks = true;
             this.RevisionInfo.Size = new System.Drawing.Size(915, 259);
             this.RevisionInfo.TabIndex = 1;
             this.RevisionInfo.CommandClick += new GitUI.CommitInfo.CommandClickHandler(this.RevisionInfo_CommandClick);
