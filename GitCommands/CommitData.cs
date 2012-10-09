@@ -9,11 +9,6 @@ namespace GitCommands
 {
     public class CommitData
     {
-        private const string COMMIT_LABEL = "commit ";
-        private const string TREE_LABEL = "tree ";
-        private const string PARENT_LABEL = "parent ";
-        private const string AUTHOR_LABEL = "author ";
-        private const string COMMITTER_LABEL = "committer ";
         private const int COMMITHEADER_STRING_LENGTH = 16;
 
         /// <summary>
@@ -87,11 +82,9 @@ namespace GitCommands
         public string GetHeaderPlain()
         {
             StringBuilder header = new StringBuilder();
-            string authorEmail = GetEmail(Author);
             header.AppendLine(FillToLength(Strings.GetAuthorText() + ":", COMMITHEADER_STRING_LENGTH) + Author);
             header.AppendLine(FillToLength(Strings.GetAuthorDateText() + ":", COMMITHEADER_STRING_LENGTH) +
                 GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, AuthorDate.UtcDateTime) + " (" + AuthorDate.LocalDateTime.ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")");
-            string committerEmail = GetEmail(Committer);
             header.AppendLine(FillToLength(Strings.GetCommitterText() + ":", COMMITHEADER_STRING_LENGTH) +
                 Committer);
             header.AppendLine(FillToLength(Strings.GetCommitDateText() + ":", COMMITHEADER_STRING_LENGTH) +
