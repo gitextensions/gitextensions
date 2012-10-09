@@ -170,13 +170,6 @@ namespace GitCommands
             Settings.GitLog.Log(quotedCmd + " " + arguments);
             //process used to execute external commands
 
-            // escape special characters for batch file
-            if (cmd.Contains(".cmd"))
-            {
-                arguments = arguments.Replace("^", "^^").Replace("&", "^&").Replace("|", "^|")
-                    .Replace(">", "^>").Replace("<", "^<");
-            }
-
             //data is read from base stream, so encoding doesn't matter
             var startInfo = CreateProcessStartInfo(Encoding.Default);
             startInfo.CreateNoWindow = true;
