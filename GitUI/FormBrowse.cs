@@ -1128,7 +1128,8 @@ namespace GitUI
         private void OpenToolStripMenuItemClick(object sender, EventArgs e)
         {
             GitModule module = Open.OpenModule(this);
-            SetGitModule(module);
+            if (module != null)
+                SetGitModule(module);
         }
 
         private void CheckoutToolStripMenuItemClick(object sender, EventArgs e)
