@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI;
@@ -49,7 +47,7 @@ namespace GitExtensions
             {
                 if (Application.UserAppDataRegistry == null ||
                     Settings.GetValue<string>("checksettings", null) == null ||
-                    !Settings.GetValue<string>("checksettings", null).ToString().Equals("false", StringComparison.OrdinalIgnoreCase) ||
+                    !Settings.GetValue<string>("checksettings", null).Equals("false", StringComparison.OrdinalIgnoreCase) ||
                     string.IsNullOrEmpty(Settings.GitCommand))
                 {
                     FormSplash.SetAction("Checking settings...");
