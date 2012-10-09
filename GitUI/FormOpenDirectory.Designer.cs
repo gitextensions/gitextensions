@@ -96,6 +96,7 @@
             this.Name = "Open";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Open repository";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Open_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
