@@ -10,12 +10,13 @@ namespace GitUI
 {
     public partial class FormCheckoutBranch : GitModuleForm
     {
-
         #region Translation
         private readonly TranslationString _customBranchNameIsEmpty =
             new TranslationString("Custom branch name is empty.\nEnter valid branch name or select predefined value.");
         private readonly TranslationString _customBranchNameIsNotValid =
             new TranslationString("“{0}” is not valid branch name.\nEnter valid branch name or select predefined value.");
+        private readonly TranslationString _createBranch =
+            new TranslationString("Create local branch with the name:");
         #endregion
 
         private string _containRevison;
@@ -25,7 +26,6 @@ namespace GitUI
         private string _newLocalBranchName = "";
         private string _localBranchName = "";
         private readonly string rbResetBranchText;
-        private readonly string rbCreateBranchText;
 
         private List<string> _localBranches;
         private List<string> _remoteBranches;
@@ -42,7 +42,6 @@ namespace GitUI
             InitializeComponent();
             Translate();
             rbResetBranchText = rbResetBranch.Text;
-            rbCreateBranchText = rbCreateBranch.Text;        
         }
 
         public FormCheckoutBranch(GitUICommands aCommands, string branch, bool remote)
@@ -131,7 +130,7 @@ namespace GitUI
 
             Branches.Text = null;
             remoteOptionsPanel.Visible = Remotebranch.Checked;
-            rbCreateBranch.Checked = Settings.CreateLocalBranchForRemote;
+            rbCreateBranchWithCustomName.Checked = Settings.CreateLocalBranchForRemote;
         }
 
         private Settings.LocalChanges ChangesMode
@@ -186,11 +185,6 @@ namespace GitUI
                         DialogResult = DialogResult.None;
                         return DialogResult.None;
                     }
-                }
-                else if (rbCreateBranch.Checked)
-                {
-                    cmd.NewBranchAction = GitCheckoutBranchCmd.NewBranch.Create;
-                    cmd.NewBranchName = _newLocalBranchName;
                 }
                 else if (rbResetBranch.Checked)
                 {
@@ -288,9 +282,9 @@ namespace GitUI
             }
             bool existsLocalBranch = LocalBranchExists(_localBranchName);
 
-            rbResetBranch.Text = String.Format(existsLocalBranch ? rbResetBranchText : rbCreateBranchText, _localBranchName);
-            rbCreateBranch.Text = String.Format(rbCreateBranchText, _newLocalBranchName);
-            txtCustomBranchName.Text = _localBranchName;
+            rbResetBranch.Text = existsLocalBranch ? rbResetBranchText : _createBranch.Text;
+            branchName.Text = "'" + _localBranchName + "'";
+            txtCustomBranchName.Text = _newLocalBranchName;
         }
 
         private IList<string> getLocalBranches()
