@@ -244,11 +244,6 @@ namespace GitUI
 
         protected override void OnLoad(EventArgs e)
         {
-            base.OnLoad(e);
-
-            if (!CheckComponent(this))
-                OnRuntimeLoad(e);
-
             if (Settings.EnableAutoScale)
                 AutoScaleMode = AutoScaleMode.Dpi;
             else
@@ -256,6 +251,11 @@ namespace GitUI
 
             if (_enablePositionRestore)
                 RestorePosition(this.GetType().Name);
+
+            base.OnLoad(e);
+
+            if (!CheckComponent(this))
+                OnRuntimeLoad(e);
         }
 
         private void GitExtensionsFormLoad(object sender, EventArgs e)
