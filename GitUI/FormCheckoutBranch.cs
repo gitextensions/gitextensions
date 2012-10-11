@@ -87,8 +87,8 @@ namespace GitUI
                     isDirtyDir = Module.IsDirtyDir();
                 else
                     isDirtyDir = false;
-
-                localChangesGB.Visible = isDirtyDir;
+                
+                localChangesGB.Visible = isDirtyDir || !Settings.CheckForUncommittedChangesInCheckoutBranch;
                 ChangesMode = Settings.CheckoutBranchAction;
                 defaultActionChx.Checked = Settings.UseDefaultCheckoutBranchAction;
             }
