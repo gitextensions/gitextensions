@@ -2237,7 +2237,7 @@ namespace GitCommands
             string headFileName = Path.Combine(WorkingDirGitDir(repositoryPath), "HEAD");
             if (File.Exists(headFileName))
             {
-                head = File.ReadAllText(headFileName, GitModule.SystemEncoding);
+                head = File.ReadAllText(headFileName, SystemEncoding);
                 if (!head.Contains("ref:"))
                     return "(no branch)";
             }

@@ -2540,17 +2540,7 @@ namespace GitUI
             if (button == null)
                 return;
 
-            SetWorkingDir(Module.GetSubmoduleFullPath(button.Text.Trim()));
-        }
-
-        private void ParentSubmoduleToolStripButtonClick(object sender, EventArgs e)
-        {
-            var button = sender as ToolStripMenuItem;
-
-            if (button == null)
-                return;
-
-            SetWorkingDir(Module.SuperprojectModule.GetSubmoduleFullPath(button.Text.Trim()));
+            SetWorkingDir(button.Tag as string);
         }
 
         private void toolStripButtonLevelUp_DropDownOpening(object sender, EventArgs e)
@@ -2568,6 +2558,13 @@ namespace GitUI
             }
             toolStripButtonLevelUp.DropDownItems.Clear();
         }
+        private string GetModuleBranch(string path)
+        {
+            string branch = GitModule.GetSelectedBranchFast(path);
+            if (branch == "(no branch)")
+                return "[no branch]";
+            return "[" + branch + "]";
+        }
 
         private void LoadSubmodulesIntoDropDownMenu()
         {
@@ -2577,9 +2574,15 @@ namespace GitUI
 
             foreach (var submodule in Module.GetSubmodulesLocalPathes().OrderBy(submoduleName => submoduleName))
             {
-                var submenu = new ToolStripMenuItem(submodule);
+                var name = submodule;
+                string path = Module.GetSubmoduleFullPath(submodule);
+                if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
+                    name = name + " " + GetModuleBranch(path);
+
+                var submenu = new ToolStripMenuItem(name);
                 submenu.Click += SubmoduleToolStripButtonClick;
                 submenu.Width = 200;
+                submenu.Tag = path;
                 toolStripButtonLevelUp.DropDownItems.Add(submenu);
             }
 
@@ -2589,21 +2592,42 @@ namespace GitUI
 
             if (Module.SuperprojectModule != null)
             {
+                var separator = new ToolStripSeparator();
+                toolStripButtonLevelUp.DropDownItems.Add(separator);
+
+                {
+                    var name = "Superproject";
+                    string path = Module.SuperprojectModule.WorkingDir;
+                    if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
+                        name = name + " " + GetModuleBranch(path);
+
+                    var spmenu = new ToolStripMenuItem(name);
+                    spmenu.Click += SubmoduleToolStripButtonClick;
+                    spmenu.Width = 200;
+                    spmenu.Tag = path;
+                    toolStripButtonLevelUp.DropDownItems.Add(spmenu);
+                }
+
                 var submodules = Module.SuperprojectModule.GetSubmodulesLocalPathes().OrderBy(submoduleName => submoduleName);
                 if (submodules.Any())
                 {
-                    var separator = new ToolStripSeparator();
-                    toolStripButtonLevelUp.DropDownItems.Add(separator);
+
+                    string localpath = Module.WorkingDir.Substring(Module.SuperprojectModule.WorkingDir.Length);
+                    localpath = localpath.Replace(Settings.PathSeparator, Settings.PathSeparatorWrong).TrimEnd(
+                            Settings.PathSeparatorWrong);
 
                     foreach (var submodule in submodules)
                     {
-                        string localpath = Module.WorkingDir.Substring(Module.SuperprojectModule.WorkingDir.Length);
-                        localpath = localpath.Replace(Settings.PathSeparator, Settings.PathSeparatorWrong).TrimEnd(
-                                Settings.PathSeparatorWrong);
-                        var submenu = new ToolStripMenuItem(submodule);
+                        var name = submodule;
+                        string path = Module.SuperprojectModule.GetSubmoduleFullPath(submodule);
+                        if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
+                                name = name + " " + GetModuleBranch(path);
+
+                        var submenu = new ToolStripMenuItem(name);
                         if (submodule == localpath)
                             submenu.Font = new Font(submenu.Font, FontStyle.Bold);
-                        submenu.Click += ParentSubmoduleToolStripButtonClick;
+                        submenu.Click += SubmoduleToolStripButtonClick;
+                        submenu.Tag = path;
                         submenu.Width = 200;
                         toolStripButtonLevelUp.DropDownItems.Add(submenu);
                     }
