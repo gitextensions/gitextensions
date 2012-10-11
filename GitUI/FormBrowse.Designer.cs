@@ -1306,7 +1306,7 @@ namespace GitUI
             this.branchToolStripMenuItem.Name = "branchToolStripMenuItem";
             this.branchToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.branchToolStripMenuItem.Text = "Create branch";
-            this.branchToolStripMenuItem.Click += new System.EventHandler(this.BranchToolStripMenuItemClick);
+            this.branchToolStripMenuItem.Click += new System.EventHandler(this.CreateBranchToolStripMenuItemClick);
             // 
             // tagToolStripMenuItem
             // 

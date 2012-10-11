@@ -1780,7 +1780,7 @@ namespace GitUI
             LoadInTree(item.SubItems, e.Node.Nodes);
         }
 
-        private void BranchToolStripMenuItemClick(object sender, EventArgs e)
+        private void CreateBranchToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (UICommands.StartCreateBranchDialog(this))
                 Initialize();
@@ -2583,7 +2583,8 @@ namespace GitUI
                 toolStripButtonLevelUp.DropDownItems.Add(submenu);
             }
 
-            if (toolStripButtonLevelUp.DropDownItems.Count == 0)
+            bool containSubmodules = toolStripButtonLevelUp.DropDownItems.Count != 0;
+            if (!containSubmodules)
                 toolStripButtonLevelUp.DropDownItems.Add(_noSubmodulesPresent.Text);
 
             if (Module.SuperprojectModule != null)
@@ -2608,6 +2609,17 @@ namespace GitUI
                     }
                 }
             }
+
+            if (containSubmodules)
+            {
+                var separator = new ToolStripSeparator();
+                toolStripButtonLevelUp.DropDownItems.Add(separator);
+
+                var mi = new ToolStripMenuItem(updateAllSubmodulesToolStripMenuItem.Text);
+                mi.Click += UpdateAllSubmodulesToolStripMenuItemClick;
+                toolStripButtonLevelUp.DropDownItems.Add(mi);
+            }
+
             Cursor.Current = Cursors.Default;
         }
 
