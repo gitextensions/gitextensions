@@ -475,14 +475,14 @@ namespace GitCommands
         private static int? _commitDialogSplitter;
         public static int CommitDialogSplitter
         {
-            get { return SafeGet("commitdialogsplitter", 400, ref _commitDialogSplitter); }
+            get { return SafeGet("commitdialogsplitter", -1, ref _commitDialogSplitter); }
             set { SafeSet("commitdialogsplitter", value, ref _commitDialogSplitter); }
         }
 
         private static int? _commitDialogRightSplitter;
         public static int CommitDialogRightSplitter
         {
-            get { return SafeGet("commitdialogrightsplitter", 445, ref _commitDialogRightSplitter); }
+            get { return SafeGet("commitdialogrightsplitter", -1, ref _commitDialogRightSplitter); }
             set { SafeSet("commitdialogrightsplitter", value, ref _commitDialogRightSplitter); }
         }
 

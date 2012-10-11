@@ -55,7 +55,6 @@ namespace GitUI
         }
 
 
-
         void GitExtensionsControl_Load(object sender, EventArgs e)
         {
             // find out if the value is a component and is currently in design mode
