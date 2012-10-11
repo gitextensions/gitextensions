@@ -27,6 +27,8 @@ namespace GitUI.Editor
             InitializeComponent();
             Translate();
 
+            GitUICommandsSourceSet += FileViewer_GitUICommandsSourceSet;
+
             if (GitCommands.Settings.RunningOnWindows())
                 _internalFileViewer = new FileViewerWindows();
             else
@@ -73,9 +75,20 @@ namespace GitUI.Editor
             contextMenu.Opening += ContextMenu_Opening; 
         }
 
+        void FileViewer_GitUICommandsSourceSet(object sender, IGitUICommandsSource uiCommandsSource)
+        {
+            UICommandsSource.GitUICommandsChanged += WorkingDirChanged;
+            WorkingDirChanged(UICommandsSource, null);
+        }
+
+        protected override void DisposeUICommandsSource()
+        {
+            UICommandsSource.GitUICommandsChanged -= WorkingDirChanged;
+            base.DisposeUICommandsSource();
+        }
+
         private bool RunTime()
         {
-
             return (System.Diagnostics.Process.GetCurrentProcess().ProcessName != "devenv");
         }
 
@@ -147,15 +160,11 @@ namespace GitUI.Editor
             this.Encoding = null;
         }
 
+
         protected override void OnRuntimeLoad(EventArgs e)
         {
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             Font = Settings.DiffFont;
-            if (UICommandsSource != null)
-            {
-                UICommandsSource.GitUICommandsChanged += WorkingDirChanged;
-                WorkingDirChanged(UICommandsSource, null);
-            }
         }
 
         void ContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
