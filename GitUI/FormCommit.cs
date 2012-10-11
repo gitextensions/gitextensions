@@ -10,7 +10,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Config;
 using GitUI.Hotkey;
 using GitUI.Script;
 using PatchApply;
@@ -107,8 +106,6 @@ namespace GitUI
         private readonly TranslationString _commitValidationCaption = new TranslationString("Commit validation");
 
         private readonly TranslationString _commitTemplateSettings = new TranslationString("Settings");
-
-
         #endregion
 
         private readonly SynchronizationContext _syncContext;
@@ -150,7 +147,6 @@ namespace GitUI
 
             Loading.Image = Properties.Resources.loadingpanel;
 
-            splitRight.Panel2MinSize = 130;
             Translate();
 
             SolveMergeconflicts.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Bold);
@@ -190,11 +186,25 @@ namespace GitUI
             _StageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.StageSelectedFile).ToShortcutKeyDisplayString();
             _ResetSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_resetSelectedLines.Text, ResetSelectedLinesToolStripMenuItemClick);
             _ResetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ResetSelectedFiles).ToShortcutKeyDisplayString();
+        }
 
-            splitMain.SplitterDistance = Settings.CommitDialogSplitter;
-            splitRight.SplitterDistance = Settings.CommitDialogRightSplitter;
+        private void FormCommit_Load(object sender, EventArgs e)
+        {
+            if (Settings.CommitDialogSplitter != -1)
+                splitMain.SplitterDistance = Settings.CommitDialogSplitter;
+            if (Settings.CommitDialogRightSplitter != -1)
+                splitRight.SplitterDistance = Settings.CommitDialogRightSplitter;
+        }
 
-            SelectedDiff.ContextMenuOpening += SelectedDiff_ContextMenuOpening;
+        private void FormCommitFormClosing(object sender, FormClosingEventArgs e)
+        {
+            // Do not remember commit message of fixup or squash commits, since they have
+            // a special meaning, and can be dangerous if used inappropriately.
+            if (CommitKind.Normal == _commitKind)
+                GitCommands.Commit.SetCommitMessage(Module, Message.Text);
+
+            Settings.CommitDialogSplitter = splitMain.SplitterDistance;
+            Settings.CommitDialogRightSplitter = splitRight.SplitterDistance;
         }
 
         void SelectedDiff_ContextMenuOpening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1260,17 +1270,6 @@ namespace GitUI
                     lineNumber++;
                 }
             }
-        }
-
-        private void FormCommitFormClosing(object sender, FormClosingEventArgs e)
-        {
-            // Do not remember commit message of fixup or squash commits, since they have
-            // a special meaning, and can be dangerous if used inappropriately.
-            if (CommitKind.Normal == _commitKind)
-                GitCommands.Commit.SetCommitMessage(Module, Message.Text);
-
-            Settings.CommitDialogSplitter = splitMain.SplitterDistance;
-            Settings.CommitDialogRightSplitter = splitRight.SplitterDistance;
         }
 
         private void DeleteAllUntrackedFilesToolStripMenuItemClick(object sender, EventArgs e)
