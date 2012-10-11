@@ -24,7 +24,7 @@ namespace GitUI
             /// %ct - committer date, UNIX timestamp (easy to parse format).
             /// </summary>
             private const string LogCommandArgumentsFormat = "log -n1 --pretty=format:\"%aN, %e, %s, %ct\" {0}";
-            private const string LogPattern = @"^([^,]+), (.+), (.+), (\d+)$";            
+            private const string LogPattern = @"^([^,]+), (.*), (.+), (\d+)$";
             private const string RawDataPattern = "^((dangling|missing|unreachable) (commit|blob|tree)|warning in tree) (" + GitRevision.Sha1HashPattern + ")(.)*$";
 
             private static readonly Regex RawDataRegex = new Regex(RawDataPattern, RegexOptions.Compiled);
