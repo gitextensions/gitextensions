@@ -10,6 +10,8 @@ namespace GitUI
         [Browsable(false)]
         public bool UICommandsSourceParentSearch { get; private set; }
 
+        [Browsable(false)]
+        public event GitUICommandsSourceSetEventHandler GitUICommandsSourceSet;
         private IGitUICommandsSource _UICommandsSource;
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
@@ -19,11 +21,21 @@ namespace GitUI
             {
                 if (_UICommandsSource == null)
                     SearchForUICommandsSource();
+                if (_UICommandsSource == null)
+                    throw new NullReferenceException("UICommandsSource");
                 return _UICommandsSource;
             }
             set
             {
+                if (value == null)
+                    throw new ArgumentException("Can not assign null value to UICommandsSource");
+                if (_UICommandsSource != null)
+                    throw new ArgumentException("UICommandsSource is already set");
+
                 _UICommandsSource = value;
+
+                if (GitUICommandsSourceSet != null)
+                    GitUICommandsSourceSet(this, _UICommandsSource);
             }
 
         }
@@ -49,6 +61,19 @@ namespace GitUI
         public GitModuleControl()
         {
             UICommandsSourceParentSearch = true;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (_UICommandsSource != null)
+                DisposeUICommandsSource();
+
+            base.Dispose(disposing);
+        }
+
+        protected virtual void DisposeUICommandsSource()
+        {
+            _UICommandsSource = null;
         }
 
         private void SearchForUICommandsSource()
