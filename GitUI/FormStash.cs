@@ -194,7 +194,7 @@ namespace GitUI
                                        PSTaskDialog.eSysIcons.Information);
                 if (res == DialogResult.OK)
                 {
-                    FormProcess.ShowDialog(this, string.Format("stash drop {0}", Stashes.Text));
+                    FormProcess.ShowDialog(this, string.Format("stash drop \"{0}\"", Stashes.Text));
                     NeedRefresh = true;
                     Initialize();
                     Cursor.Current = Cursors.Default;
@@ -207,7 +207,7 @@ namespace GitUI
             }
             else
             {
-                FormProcess.ShowDialog(this, string.Format("stash drop {0}", Stashes.Text));
+                FormProcess.ShowDialog(this, string.Format("stash drop \"{0}\"", Stashes.Text));
                 NeedRefresh = true;
                 Initialize();
                 Cursor.Current = Cursors.Default;
@@ -218,7 +218,7 @@ namespace GitUI
 
         private void ApplyClick(object sender, EventArgs e)
         {
-            FormProcess.ShowDialog(this, string.Format("stash apply {0}", Stashes.Text));
+            FormProcess.ShowDialog(this, string.Format("stash apply \"{0}\"", Stashes.Text));
 
             MergeConflictHandler.HandleMergeConflicts(UICommands, this, false);
 
