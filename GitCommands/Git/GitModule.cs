@@ -2725,13 +2725,7 @@ namespace GitCommands
 
         public bool IsLockedIndex()
         {
-            return IsLockedIndex(_workingdir);
-        }
-
-        public static bool IsLockedIndex(string repositoryPath)
-        {
-            var gitDir = WorkingDirGitDir(repositoryPath);
-            var indexLockFile = Path.Combine(gitDir, "index.lock");
+            var indexLockFile = GetIndexLockFile();
 
             if (File.Exists(indexLockFile))
             {
@@ -2741,13 +2735,23 @@ namespace GitCommands
             return false;
         }
 
-        public bool IsRunningGitProcess()
+        public string GetIndexLockFile()
+        {
+            var gitDir = WorkingDirGitDir(_workingdir);
+            return Path.Combine(gitDir, "index.lock");
+        }
+
+        public void DeleteIndexLockFile()
         {
             if (IsLockedIndex())
             {
-                return true;
+                var indexLockFile = GetIndexLockFile();
+                File.Delete(indexLockFile);
             }
+        }
 
+        public bool IsRunningGitProcess()
+        {
             // Get processes by "ps" command.
             var cmd = Path.Combine(Settings.GitBinDir, "ps");
             var arguments = "x";

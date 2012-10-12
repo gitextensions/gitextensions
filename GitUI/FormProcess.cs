@@ -138,6 +138,9 @@ namespace GitUI
             if (Process != null)
             {
                 Process.Kill();
+
+                var module = new GitModule(gitCommand.WorkingDirectory);
+                module.DeleteIndexLockFile();
             }
         }
 
