@@ -133,6 +133,11 @@ namespace GitCommands
             set { SafeSet("checkforuncommittedchangesincheckoutbranch", value, ref _checkForUncommittedChangesInCheckoutBranch); }
         }
 
+        public static bool AlwaysShowCheckoutBranchDlg
+        {
+            get { return GetBool("AlwaysShowCheckoutBranchDlg", false).Value; }
+            set { SetBool("AlwaysShowCheckoutBranchDlg", value); }
+        }
 
         private static bool? _commitInfoShowContainedInBranchesRemote;
         public static bool CommitInfoShowContainedInBranchesRemote

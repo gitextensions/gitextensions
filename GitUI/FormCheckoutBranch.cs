@@ -100,7 +100,8 @@ namespace GitUI
 
         public DialogResult DoDefaultActionOrShow(IWin32Window owner)
         {
-            if (Branches.Text.IsNullOrWhiteSpace() || Remotebranch.Checked
+            if (Settings.AlwaysShowCheckoutBranchDlg ||
+                Branches.Text.IsNullOrWhiteSpace() || Remotebranch.Checked
                 || (isDirtyDir && !Settings.UseDefaultCheckoutBranchAction))
                 return ShowDialog(owner);
             else
