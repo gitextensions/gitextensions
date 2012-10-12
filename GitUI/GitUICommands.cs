@@ -680,7 +680,7 @@ namespace GitUI
 
         public bool StartPullDialog(IWin32Window owner, bool pullOnShow, out bool pullCompleted, ConfigureFormPull configProc)
         {
-            return StartPullDialog(owner, pullOnShow, null, out pullCompleted, null);
+            return StartPullDialog(owner, pullOnShow, null, out pullCompleted, configProc);
         }
 
         public bool StartPullDialog(IWin32Window owner, bool pullOnShow, out bool pullCompleted)
