@@ -1,0 +1,38 @@
+// GitExtensionsShellEx.idl : IDL source for GitExtensionsShellEx.dll
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (GitExtensionsShellEx.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+	[
+		object,
+		uuid(5E2121ED-0300-11D4-8D3B-444553540000),
+		dual,
+		helpstring("IGitExtensionsShellEx Interface"),
+		pointer_default(unique)
+	]
+	interface IGitExtensionsShellEx : IDispatch
+	{
+	};
+
+[
+	uuid(5E2121E1-0300-11D4-8D3B-444553540000),
+	version(1.0),
+	helpstring("GitExtensionsShellEx 1.0 Type Library")
+]
+library GITEXTENSIONSSHELLEXLib
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	[
+		uuid(3C16B20A-BA16-4156-916F-0A375ECFFE24),
+		helpstring("GitExtensionsShellEx Class")
+	]
+	coclass GitExtensionsShellEx
+	{
+		[default] interface IGitExtensionsShellEx;
+	};
+};

@@ -1,9 +1,9 @@
-// SimpleShlExt.cpp : Implementation of CSimpleShlExt
+// GitExtensionsShellEx.cpp : Implementation of CGitExtensionsShellEx
 
 #include "stdafx.h"
 #include "resource.h"
-#include "Generated/SimpleExt.h"
-#include "SimpleShlExt.h"
+#include "Generated/GitExtensionsShellEx.h"
+#include "GitExtensionsShellEx.h"
 //#include "afx.h"
 
 
@@ -12,9 +12,9 @@
 #define MIIM_FTYPE       0x00000100
 
 /////////////////////////////////////////////////////////////////////////////
-// CSimpleShlExt
+// CGitExtensionsShellEx
 
-STDMETHODIMP CSimpleShlExt::Initialize (
+STDMETHODIMP CGitExtensionsShellEx::Initialize (
     LPCITEMIDLIST pidlFolder, LPDATAOBJECT pDataObj, HKEY hProgID )
 {
     FORMATETC fmt = { CF_HDROP, NULL, DVASPECT_CONTENT, -1, TYMED_HGLOBAL };
@@ -56,7 +56,7 @@ STDMETHODIMP CSimpleShlExt::Initialize (
     return hr;
 }
 
-STDMETHODIMP CSimpleShlExt::QueryContextMenu  (
+STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu  (
     HMENU hmenu, UINT uMenuIndex, UINT uidFirstCmd,
     UINT uidLastCmd, UINT uFlags )
 {
@@ -99,7 +99,7 @@ STDMETHODIMP CSimpleShlExt::QueryContextMenu  (
     return MAKE_HRESULT ( SEVERITY_SUCCESS, FACILITY_NULL, id-uidFirstCmd );
 }
 
-void CSimpleShlExt::AddMenuItem(HMENU hMenu, LPSTR text, int id, UINT position)
+void CGitExtensionsShellEx::AddMenuItem(HMENU hMenu, LPSTR text, int id, UINT position)
 {
     MENUITEMINFO mii;
     memset(&mii, 0, sizeof(mii));
@@ -115,7 +115,7 @@ void CSimpleShlExt::AddMenuItem(HMENU hMenu, LPSTR text, int id, UINT position)
     //InsertMenu(hMenu, position, MF_BYPOSITION, id, _T("test"));
 }
 
-bool CSimpleShlExt::IsMenuItemVisible(CString settings, int id)
+bool CGitExtensionsShellEx::IsMenuItemVisible(CString settings, int id)
 {
     if (settings.GetLength() < id)
     {
@@ -126,7 +126,7 @@ bool CSimpleShlExt::IsMenuItemVisible(CString settings, int id)
     }
 }
 
-int CSimpleShlExt::PopulateMenu(HMENU hMenu, int id, bool isSubMenu)
+int CGitExtensionsShellEx::PopulateMenu(HMENU hMenu, int id, bool isSubMenu)
 {
     CString szShellVisibleMenuItems = GetRegistryValue(HKEY_CURRENT_USER, "SOFTWARE\\GitExtensions\\GitExtensions", "ShellVisibleMenuItems");
 
@@ -242,7 +242,7 @@ int CSimpleShlExt::PopulateMenu(HMENU hMenu, int id, bool isSubMenu)
     return id;
 }
 
-STDMETHODIMP CSimpleShlExt::GetCommandString (
+STDMETHODIMP CGitExtensionsShellEx::GetCommandString (
     UINT_PTR idCmd, UINT uFlags, UINT* pwReserved, LPSTR pszName, UINT cchMax )
 {
     USES_CONVERSION;
@@ -275,7 +275,7 @@ STDMETHODIMP CSimpleShlExt::GetCommandString (
     return E_INVALIDARG;
 }
 
-void CSimpleShlExt::RunGitEx(const char * command)
+void CGitExtensionsShellEx::RunGitEx(const char * command)
 {
     CString szFile = m_szFile;
     CString szCommandName = command;
@@ -299,7 +299,7 @@ void CSimpleShlExt::RunGitEx(const char * command)
     //system(szMsg);
 }
 
-STDMETHODIMP CSimpleShlExt::InvokeCommand ( LPCMINVOKECOMMANDINFO pCmdInfo )
+STDMETHODIMP CGitExtensionsShellEx::InvokeCommand ( LPCMINVOKECOMMANDINFO pCmdInfo )
 {
     // If lpVerb really points to a string, ignore this function call and bail out.
     if ( pCmdInfo == NULL ||0 != HIWORD( pCmdInfo->lpVerb ) )
