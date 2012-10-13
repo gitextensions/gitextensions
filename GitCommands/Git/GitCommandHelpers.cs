@@ -229,7 +229,10 @@ namespace GitCommands
                 return -1;
             }
 
-            Settings.GitLog.Log(cmd + " " + arguments);
+            string quotedCmd = cmd;
+            if (quotedCmd.IndexOf(' ') != -1)
+                quotedCmd = quotedCmd.Quote();
+            Settings.GitLog.Log(quotedCmd + " " + arguments);
             //process used to execute external commands
 
             var startInfo = CreateProcessStartInfo(null);
@@ -251,6 +254,46 @@ namespace GitCommands
                 stdError = process.StandardError.ReadToEnd();
                 process.WaitForExit();
                 return process.ExitCode;
+            }
+        }
+
+        internal static IEnumerable<string> CreateAndStartProcessAsync(string arguments, string cmd, string workDir, string stdInput, Encoding encoding)
+        {
+            if (string.IsNullOrEmpty(cmd))
+                yield break;
+
+            string quotedCmd = cmd;
+            if (quotedCmd.IndexOf(' ') != -1)
+                quotedCmd = quotedCmd.Quote();
+            Settings.GitLog.Log(quotedCmd + " " + arguments);
+
+            //process used to execute external commands
+            using (var process = new Process { StartInfo = CreateProcessStartInfo(null) })
+            {
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.FileName = cmd;
+                process.StartInfo.Arguments = arguments;
+                process.StartInfo.WorkingDirectory = workDir;
+                process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+                process.StartInfo.LoadUserProfile = true;
+                process.StartInfo.StandardOutputEncoding = encoding;
+                process.StartInfo.StandardErrorEncoding = encoding;
+                process.Start();
+
+                string line = null;
+                do{
+                    line = process.StandardOutput.ReadLine();
+                    if (line != null)
+                        yield return line;
+                } while (line != null);
+
+                do{
+                    line = process.StandardError.ReadLine();
+                    if (line != null)
+                        yield return line;
+                } while (line != null);
+
+                process.WaitForExit();
             }
         }
 

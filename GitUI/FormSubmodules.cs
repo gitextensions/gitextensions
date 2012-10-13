@@ -1,7 +1,10 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using GitUIPluginInterfaces;
 using ResourceManager.Translation;
 
 namespace GitUI
@@ -13,11 +16,15 @@ namespace GitUI
 
         private readonly TranslationString _removeSelectedSubmoduleCaption = new TranslationString("Remove");
 
+        private BindingList<IGitSubmodule> modules = new BindingList<IGitSubmodule>();
+        private GitSubmodule oldSubmodule;
+
         public FormSubmodules(GitUICommands aCommands)
             : base(aCommands)
         {
             InitializeComponent();
             Translate();
+            gitSubmoduleBindingSource.DataSource = modules;
         }
 
         private void AddSubmoduleClick(object sender, EventArgs e)
@@ -32,56 +39,78 @@ namespace GitUI
             Initialize();
         }
 
-        private void Initialize()
+        private void bw_DoWork(object sender, DoWorkEventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            var submodule = Submodules.SelectedRows.Count == 1 ? Submodules.SelectedRows[0].DataBoundItem as GitSubmodule : null;
-            Submodules.DataSource = Module.GetSubmodules();
-            if (submodule != null)
+            BackgroundWorker bw = sender as BackgroundWorker;
+            foreach (var oldSubmodule in Module.GetSubmodules())
             {
-                DataGridViewRow row = Submodules.Rows
-                    .Cast<DataGridViewRow>()
-                    .FirstOrDefault(r => r.DataBoundItem as GitSubmodule == submodule);
-
-                if (row != null)
-                    row.Selected = true;
+                if (bw.CancellationPending)
+                {
+                    e.Cancel = true;
+                    break;
+                }
+                bw.ReportProgress(0, oldSubmodule);
             }
-            Cursor.Current = Cursors.Default;
         }
 
-        private void SubmodulesSelectionChanged(object sender, EventArgs e)
+        private void bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            if (Submodules.SelectedRows.Count != 1)
-                return;
+            lock (modules)
+            {
+                lock (modules)
+                    modules.Add(e.UserState as GitSubmodule);
+                if (oldSubmodule != null)
+                {
+                    DataGridViewRow row = Submodules.Rows
+                        .Cast<DataGridViewRow>()
+                        .FirstOrDefault(r => r.DataBoundItem as GitSubmodule == oldSubmodule);
 
-            var submodule = Submodules.SelectedRows[0].DataBoundItem as GitSubmodule;
-            if (submodule == null)
-                return;
+                    if (row != null)
+                        row.Selected = true;
+                }
+            }
+        }
 
-            Cursor.Current = Cursors.WaitCursor;
-            SubModuleName.Text = submodule.Name;
-            SubModuleRemotePath.Text = submodule.RemotePath;
-            SubModuleLocalPath.Text = submodule.LocalPath;
-            SubModuleCommit.Text = submodule.CurrentCommitGuid;
-            SubModuleBranch.Text = submodule.Branch;
-            SubModuleStatus.Text = submodule.Status;
-            Cursor.Current = Cursors.Default;
+        private void bw_RunWorkerCompleted(object sender, EventArgs e)
+        {
+            UseWaitCursor = false;
+        }
+
+        private BackgroundWorker bw;
+
+        private void Initialize()
+        {
+            if (bw != null)
+                bw.CancelAsync();
+            UseWaitCursor = true;
+            oldSubmodule = null;
+            if (Submodules.SelectedRows.Count == 1)
+                oldSubmodule = Submodules.SelectedRows[0].DataBoundItem as GitSubmodule;
+            lock (modules)
+                modules.Clear();
+            bw = new BackgroundWorker();
+            bw.DoWork += bw_DoWork;
+            bw.ProgressChanged += bw_ProgressChanged;
+            bw.RunWorkerCompleted += bw_RunWorkerCompleted;
+            bw.WorkerReportsProgress = true;
+            bw.WorkerSupportsCancellation = true;
+            bw.RunWorkerAsync();
         }
 
         private void SynchronizeSubmoduleClick(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
+            UseWaitCursor = true;
             FormProcess.ShowDialog(this, GitCommandHelpers.SubmoduleSyncCmd(SubModuleName.Text));
             Initialize();
-            Cursor.Current = Cursors.Default;
+            UseWaitCursor = false;
         }
 
         private void UpdateSubmoduleClick(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
+            UseWaitCursor = true;
             FormProcess.ShowDialog(this, GitCommandHelpers.SubmoduleUpdateCmd(SubModuleName.Text));
             Initialize();
-            Cursor.Current = Cursors.Default;
+            UseWaitCursor = false;
         }
 
         private void RemoveSubmoduleClick(object sender, EventArgs e)
@@ -91,22 +120,22 @@ namespace GitUI
                 DialogResult.Yes)
                 return;
 
-            Cursor.Current = Cursors.WaitCursor;
+            UseWaitCursor = true;
             Module.RunGitCmd("rm --cached \"" + SubModuleName.Text + "\"");
 
             var modules = Module.GetSubmoduleConfigFile();
-            modules.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
+            modules.RemoveConfigSection("oldSubmodule \"" + SubModuleName.Text + "\"");
             if (modules.GetConfigSections().Count > 0)
                 modules.Save();
             else
                 Module.RunGitCmd("rm --cached \".gitmodules\"");
 
             var configFile = Module.GetLocalConfig();
-            configFile.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
+            configFile.RemoveConfigSection("oldSubmodule \"" + SubModuleName.Text + "\"");
             configFile.Save();
 
             Initialize();
-            Cursor.Current = Cursors.Default;
+            UseWaitCursor = false;
         }
     }
 }

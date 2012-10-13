@@ -5,7 +5,7 @@ namespace GitUIPluginInterfaces
 {
     public interface IGitModule
     {
-        IList<IGitSubmodule> GetSubmodules();
+        IEnumerable<IGitSubmodule> GetSubmodules();
 
         string RunGit(string arguments);
 
