@@ -2,7 +2,7 @@ HKCR
 {
     NoRemove CLSID
     {
-        ForceRemove {3C16B20A-BA16-4156-916F-0A375ECFFE24} = s 'SimpleShlExt Class'
+        ForceRemove {3C16B20A-BA16-4156-916F-0A375ECFFE24} = s 'GitExtensionsShellEx Class'
         {
             InprocServer32 = s '%MODULE%'
             {
@@ -16,7 +16,7 @@ HKCR
         {
             NoRemove ContextMenuHandlers
             {
-                ForceRemove SimpleShlExt = s '{3C16B20A-BA16-4156-916F-0A375ECFFE24}'
+                ForceRemove GitExtensionsShellEx = s '{3C16B20A-BA16-4156-916F-0A375ECFFE24}'
             }
         }
     }
