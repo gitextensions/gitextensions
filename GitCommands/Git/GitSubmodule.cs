@@ -86,5 +86,12 @@ namespace GitCommands
         {
             return LocalPath != null ? LocalPath.GetHashCode() : 0;
         }
+
+        public override string ToString()
+        {
+            if (String.IsNullOrEmpty(Branch))
+                return LocalPath;
+            return LocalPath + " [" + Branch + "]";
+        }
     }
 }

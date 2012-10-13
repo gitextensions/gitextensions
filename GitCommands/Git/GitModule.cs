@@ -524,7 +524,7 @@ namespace GitCommands
 
         public string RunGitCmd(string arguments, out int exitCode, byte[] stdInput)
         {
-            return RunGitCmd(arguments, out exitCode, stdInput, GitModule.SystemEncoding);
+            return RunGitCmd(arguments, out exitCode, stdInput, SystemEncoding);
         }
 
         public string RunGitCmd(string arguments, out int exitCode, byte[] stdInput, Encoding encoding)
@@ -567,6 +567,20 @@ namespace GitCommands
         public string RunGit(string arguments, out int exitCode)
         {
             return RunGitCmd(arguments, out exitCode);
+        }
+
+
+        [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
+        private IEnumerable<string> RunCmdAsync(string cmd, string arguments, string stdInput, Encoding encoding)
+        {
+            GitCommandHelpers.SetEnvironmentVariable();
+            arguments = arguments.Replace("$QUOTE$", "\\\"");
+            return GitCommandHelpers.CreateAndStartProcessAsync(arguments, cmd, _workingdir, stdInput, encoding);
+        }
+
+        public IEnumerable<string> RunGitCmdAsync(string arguments)
+        {
+            return RunCmdAsync(Settings.GitCommand, arguments, null, GitModule.SystemEncoding);
         }
 
         public string RunBatchFile(string batchFile)
@@ -1108,11 +1122,9 @@ namespace GitCommands
             return GetSubmodule(submoduleName);
         }
 
-        public IList<IGitSubmodule> GetSubmodules()
+        public IEnumerable<IGitSubmodule> GetSubmodules()
         {
-            var submodules = RunGitCmd("submodule status").Split('\n');
-
-            IList<IGitSubmodule> submoduleList = new List<IGitSubmodule>();
+            var submodules = RunGitCmdAsync("submodule status");
 
             string lastLine = null;
 
@@ -1126,10 +1138,8 @@ namespace GitCommands
 
                 lastLine = submodule;
 
-                submoduleList.Add(GitModule.CreateGitSubmodule(this, submodule));
+                yield return CreateGitSubmodule(this, submodule);
             }
-
-            return submoduleList;
         }
 
         public string FindGitSuperprojectPath(out string submoduleName)

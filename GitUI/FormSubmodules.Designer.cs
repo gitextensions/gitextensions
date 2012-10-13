@@ -75,7 +75,7 @@
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -98,7 +98,7 @@
             this.tableLayoutPanel2.Controls.Add(this.Submodules, 0, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -109,7 +109,7 @@
             // AddSubmodule
             // 
             this.AddSubmodule.Location = new System.Drawing.Point(4, 320);
-            this.AddSubmodule.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.AddSubmodule.Margin = new System.Windows.Forms.Padding(4);
             this.AddSubmodule.Name = "AddSubmodule";
             this.AddSubmodule.Size = new System.Drawing.Size(202, 31);
             this.AddSubmodule.TabIndex = 0;
@@ -121,6 +121,7 @@
             // 
             this.Submodules.AllowUserToAddRows = false;
             this.Submodules.AllowUserToDeleteRows = false;
+            this.Submodules.AllowUserToResizeRows = false;
             this.Submodules.AutoGenerateColumns = false;
             this.Submodules.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Submodules.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -129,7 +130,7 @@
             this.Submodules.DataSource = this.gitSubmoduleBindingSource;
             this.Submodules.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Submodules.Location = new System.Drawing.Point(4, 4);
-            this.Submodules.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Submodules.Margin = new System.Windows.Forms.Padding(4);
             this.Submodules.MultiSelect = false;
             this.Submodules.Name = "Submodules";
             this.Submodules.ReadOnly = true;
@@ -137,7 +138,6 @@
             this.Submodules.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.Submodules.Size = new System.Drawing.Size(214, 308);
             this.Submodules.TabIndex = 0;
-            this.Submodules.SelectionChanged += new System.EventHandler(this.SubmodulesSelectionChanged);
             // 
             // nameDataGridViewTextBoxColumn
             // 
@@ -167,7 +167,7 @@
             this.tableLayoutPanel3.Controls.Add(this.groupBox1, 0, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 2;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -193,7 +193,7 @@
             // RemoveSubmodule
             // 
             this.RemoveSubmodule.Location = new System.Drawing.Point(407, 4);
-            this.RemoveSubmodule.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.RemoveSubmodule.Margin = new System.Windows.Forms.Padding(4);
             this.RemoveSubmodule.Name = "RemoveSubmodule";
             this.RemoveSubmodule.Size = new System.Drawing.Size(144, 31);
             this.RemoveSubmodule.TabIndex = 6;
@@ -204,7 +204,7 @@
             // UpdateSubmodule
             // 
             this.UpdateSubmodule.Location = new System.Drawing.Point(255, 4);
-            this.UpdateSubmodule.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.UpdateSubmodule.Margin = new System.Windows.Forms.Padding(4);
             this.UpdateSubmodule.Name = "UpdateSubmodule";
             this.UpdateSubmodule.Size = new System.Drawing.Size(144, 31);
             this.UpdateSubmodule.TabIndex = 3;
@@ -215,7 +215,7 @@
             // SynchronizeSubmodule
             // 
             this.SynchronizeSubmodule.Location = new System.Drawing.Point(103, 4);
-            this.SynchronizeSubmodule.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.SynchronizeSubmodule.Margin = new System.Windows.Forms.Padding(4);
             this.SynchronizeSubmodule.Name = "SynchronizeSubmodule";
             this.SynchronizeSubmodule.Size = new System.Drawing.Size(144, 31);
             this.SynchronizeSubmodule.TabIndex = 5;
@@ -228,9 +228,9 @@
             this.groupBox1.Controls.Add(this.tableLayoutPanel1);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(4, 4);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox1.Size = new System.Drawing.Size(547, 308);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
@@ -255,7 +255,7 @@
             this.tableLayoutPanel1.Controls.Add(this.SubModuleBranch, 1, 4);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(4, 24);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 7;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -271,8 +271,9 @@
             // SubModuleStatus
             // 
             this.SubModuleStatus.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.SubModuleStatus.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.gitSubmoduleBindingSource, "Status", true));
             this.SubModuleStatus.Location = new System.Drawing.Point(108, 190);
-            this.SubModuleStatus.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.SubModuleStatus.Margin = new System.Windows.Forms.Padding(5);
             this.SubModuleStatus.Name = "SubModuleStatus";
             this.SubModuleStatus.ReadOnly = true;
             this.SubModuleStatus.Size = new System.Drawing.Size(214, 27);
@@ -325,8 +326,9 @@
             // SubModuleName
             // 
             this.SubModuleName.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.SubModuleName.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.gitSubmoduleBindingSource, "Name", true));
             this.SubModuleName.Location = new System.Drawing.Point(108, 5);
-            this.SubModuleName.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.SubModuleName.Margin = new System.Windows.Forms.Padding(5);
             this.SubModuleName.Name = "SubModuleName";
             this.SubModuleName.ReadOnly = true;
             this.SubModuleName.Size = new System.Drawing.Size(214, 27);
@@ -345,9 +347,10 @@
             // 
             // SubModuleRemotePath
             // 
+            this.SubModuleRemotePath.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.gitSubmoduleBindingSource, "RemotePath", true));
             this.SubModuleRemotePath.Dock = System.Windows.Forms.DockStyle.Top;
             this.SubModuleRemotePath.Location = new System.Drawing.Point(108, 42);
-            this.SubModuleRemotePath.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.SubModuleRemotePath.Margin = new System.Windows.Forms.Padding(5);
             this.SubModuleRemotePath.Name = "SubModuleRemotePath";
             this.SubModuleRemotePath.ReadOnly = true;
             this.SubModuleRemotePath.Size = new System.Drawing.Size(426, 27);
@@ -366,9 +369,10 @@
             // 
             // SubModuleLocalPath
             // 
+            this.SubModuleLocalPath.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.gitSubmoduleBindingSource, "LocalPath", true));
             this.SubModuleLocalPath.Dock = System.Windows.Forms.DockStyle.Top;
             this.SubModuleLocalPath.Location = new System.Drawing.Point(108, 79);
-            this.SubModuleLocalPath.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.SubModuleLocalPath.Margin = new System.Windows.Forms.Padding(5);
             this.SubModuleLocalPath.Name = "SubModuleLocalPath";
             this.SubModuleLocalPath.ReadOnly = true;
             this.SubModuleLocalPath.Size = new System.Drawing.Size(426, 27);
@@ -376,9 +380,10 @@
             // 
             // SubModuleCommit
             // 
+            this.SubModuleCommit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.gitSubmoduleBindingSource, "CurrentCommitGuid", true));
             this.SubModuleCommit.Dock = System.Windows.Forms.DockStyle.Top;
             this.SubModuleCommit.Location = new System.Drawing.Point(108, 116);
-            this.SubModuleCommit.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.SubModuleCommit.Margin = new System.Windows.Forms.Padding(5);
             this.SubModuleCommit.Name = "SubModuleCommit";
             this.SubModuleCommit.ReadOnly = true;
             this.SubModuleCommit.Size = new System.Drawing.Size(426, 27);
@@ -386,9 +391,10 @@
             // 
             // SubModuleBranch
             // 
+            this.SubModuleBranch.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.gitSubmoduleBindingSource, "Branch", true));
             this.SubModuleBranch.Dock = System.Windows.Forms.DockStyle.Top;
             this.SubModuleBranch.Location = new System.Drawing.Point(108, 153);
-            this.SubModuleBranch.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.SubModuleBranch.Margin = new System.Windows.Forms.Padding(5);
             this.SubModuleBranch.Name = "SubModuleBranch";
             this.SubModuleBranch.ReadOnly = true;
             this.SubModuleBranch.Size = new System.Drawing.Size(426, 27);
@@ -400,7 +406,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(782, 355);
             this.Controls.Add(this.splitContainer1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimumSize = new System.Drawing.Size(710, 350);
             this.Name = "FormSubmodules";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
