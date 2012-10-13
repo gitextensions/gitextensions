@@ -10,8 +10,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtensions", "GitExtensi
 		{EC6988F6-0E8E-42D2-8E41-E562C5FB65BC} = {EC6988F6-0E8E-42D2-8E41-E562C5FB65BC}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimpleExt", "SimpleExt\SimpleExt.VS2012.vcxproj", "{BBE7B8AD-D175-4679-A614-38BFF28B0269}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitPlugin", "GitPlugin\GitPlugin.csproj", "{E996BE2D-B07D-472D-9D74-3EA2D48EF269}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitUI", "GitUI\GitUI.csproj", "{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}"
@@ -52,6 +50,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Github3", "Plugins\Github3\Github3.csproj", "{B1B0C273-AB3F-48BF-92C7-DE0BE90D5870}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gerrit", "Plugins\Gerrit\Gerrit.csproj", "{EC6988F6-0E8E-42D2-8E41-E562C5FB65BC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GitExtensionsShellEx", "GitExtensionsShellEx\GitExtensionsShellEx.VS2012.vcxproj", "{BBE7B8AD-D175-4679-A614-38BFF28B0269}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

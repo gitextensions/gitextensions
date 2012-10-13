@@ -74,7 +74,7 @@ BEGIN
             VALUE "FileVersion", "2, 42\0"
             VALUE "InternalName", "Git Extensions\0"
             VALUE "LegalCopyright", "Copyright 2012\0"
-            VALUE "OriginalFilename", "GitExtensionsShellExt.dll\0"
+            VALUE "OriginalFilename", "GitExtensionsShellEx.dll\0"
             VALUE "ProductName", "Git Extensions\0"
             VALUE "ProductVersion", "2, 42\0"
             VALUE "OLESelfRegister", "\0"
@@ -94,7 +94,7 @@ END
 // REGISTRY
 //
 
-IDR_SIMPLESHLEXT        REGISTRY DISCARDABLE    "SimpleShlExt.rgs"
+IDR_GITEXTENSIONSSHELLEX    REGISTRY DISCARDABLE    "GitExtensionsShellEx.rgs"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -103,7 +103,7 @@ IDR_SIMPLESHLEXT        REGISTRY DISCARDABLE    "SimpleShlExt.rgs"
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    IDS_PROJNAME            "SimpleExt"
+    IDS_PROJNAME            "GitExtensionsShellEx"
 END
 
 #endif    // English (U.S.) resources

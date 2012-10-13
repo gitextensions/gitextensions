@@ -1,25 +1,25 @@
-// SimpleShlExt.h : Declaration of the CSimpleShlExt
+// GitExtensionsShellEx.h : Declaration of the CGitExtensionsShellEx
 
-#ifndef __SIMPLESHLEXT_H_
-#define __SIMPLESHLEXT_H_
+#ifndef __GITEXTENSIONSSHELLEX_H_
+#define __GITEXTENSIONSSHELLEX_H_
 
 #include "atlstr.h"
 
 /////////////////////////////////////////////////////////////////////////////
-// CSimpleShlExt
+// CGitExtensionsShellEx
 
-class ATL_NO_VTABLE CSimpleShlExt : 
+class ATL_NO_VTABLE CGitExtensionsShellEx : 
     public CComObjectRootEx<CComSingleThreadModel>,
-    public CComCoClass<CSimpleShlExt, &CLSID_SimpleShlExt>,
+    public CComCoClass<CGitExtensionsShellEx, &CLSID_GitExtensionsShellEx>,
     public IShellExtInit,
     public IContextMenu
 {
 public:
-    CSimpleShlExt() { }
+    CGitExtensionsShellEx() { }
 
-    DECLARE_REGISTRY_RESOURCEID(IDR_SIMPLESHLEXT)
+    DECLARE_REGISTRY_RESOURCEID(IDR_GITEXTENSIONSSHELLEX)
 
-    BEGIN_COM_MAP(CSimpleShlExt)
+    BEGIN_COM_MAP(CGitExtensionsShellEx)
         COM_INTERFACE_ENTRY(IShellExtInit)
         COM_INTERFACE_ENTRY(IContextMenu)
     END_COM_MAP()
@@ -91,7 +91,7 @@ protected:
 	}
 
 private:
-    bool CSimpleShlExt::IsMenuItemVisible(CString settings, int id);
+    bool CGitExtensionsShellEx::IsMenuItemVisible(CString settings, int id);
 };
 
-#endif //__SIMPLESHLEXT_H_
+#endif //__GITEXTENSIONSSHELLEX_H_

@@ -1,9 +1,9 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Developer Studio generated include file.
-// Used by SimpleExt.rc
+// Used by GitExtensionsShellEx.rc
 //
 #define IDS_PROJNAME                    100
-#define IDR_SIMPLESHLEXT                101
+#define IDR_GITEXTENSIONSSHELLEX        101
 
 // Next default values for new objects
 // 

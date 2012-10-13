@@ -1,21 +1,17 @@
-// SimpleExt.cpp : Implementation of DLL Exports.
-
-// Note: Proxy/Stub Information
-//      To build a separate proxy/stub DLL, 
-//      run nmake -f SimpleExtps.mk in the project directory.
+// ShellEx.cpp : Implementation of DLL Exports.
 
 #include "stdafx.h"
 #include "resource.h"
 #include <initguid.h>
-#include "Generated/SimpleExt.h"
+#include "Generated/GitExtensionsShellEx.h"
 
-#include "Generated/SimpleExt_i.c"
-#include "SimpleShlExt.h"
+#include "Generated/GitExtensionsShellEx_i.c"
+#include "GitExtensionsShellEx.h"
 
 CComModule _Module;
 
 BEGIN_OBJECT_MAP(ObjectMap)
-OBJECT_ENTRY(CLSID_SimpleShlExt, CSimpleShlExt)
+OBJECT_ENTRY(CLSID_GitExtensionsShellEx, CGitExtensionsShellEx)
 END_OBJECT_MAP()
 
 
@@ -27,7 +23,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*lpReserved*/)
 {
     if (dwReason == DLL_PROCESS_ATTACH)
     {
-        _Module.Init(ObjectMap, hInstance, &LIBID_SIMPLEEXTLib);
+        _Module.Init(ObjectMap, hInstance, &LIBID_GITEXTENSIONSSHELLEXLib);
         DisableThreadLibraryCalls(hInstance);
     }
     else if (dwReason == DLL_PROCESS_DETACH)
