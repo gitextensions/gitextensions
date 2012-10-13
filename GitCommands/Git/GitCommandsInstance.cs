@@ -10,7 +10,9 @@ namespace GitCommands
     
     public sealed class GitCommandsInstance : IDisposable
     {
-        private readonly object processLock = new object();
+        private Process _myProcess;
+        private readonly object _processLock = new object();
+
         public SetupStartInfo SetupStartInfoCallback { get; set; }
         public readonly string WorkingDirectory;
 
@@ -35,7 +37,10 @@ namespace GitCommands
 
                 Kill();
 
-                Settings.GitLog.Log(cmd + " " + arguments);
+                string quotedCmd = cmd;
+                if (quotedCmd.IndexOf(' ') != -1)
+                    quotedCmd = quotedCmd.Quote();
+                Settings.GitLog.Log(quotedCmd + " " + arguments);
 
                 //process used to execute external commands
                 var process = new Process { StartInfo = GitCommandHelpers.CreateProcessStartInfo(null) };
@@ -59,9 +64,9 @@ namespace GitCommands
 
                 process.Exited += ProcessExited;
                 process.Start();
-                lock (processLock)
+                lock (_processLock)
                 {
-                    myProcess = process;
+                    _myProcess = process;
                 }
                 if (!StreamOutput)
                 {
@@ -81,21 +86,21 @@ namespace GitCommands
 
         public void Kill()
         {
-            lock (processLock)
+            lock (_processLock)
             {
                 //If there was another process running, kill it
-                if (myProcess == null)
+                if (_myProcess == null)
                     return;
                 try
                 {
-                    if (!myProcess.HasExited)
+                    if (!_myProcess.HasExited)
                     {
-                        myProcess.Exited -= ProcessExited;
-                        myProcess.Kill();
+                        _myProcess.Exited -= ProcessExited;
+                        _myProcess.Kill();
                     }
-                    if (myProcess != null) // process is null here if filter is a slow diff
+                    if (_myProcess != null) // process is null here if filter is a slow diff
                     {
-                        myProcess.Close();
+                        _myProcess.Close();
                     }
                 }
                 catch (Exception ex)
@@ -117,23 +122,23 @@ namespace GitCommands
         {
             try
             {
-                if (myProcess != null)
+                if (_myProcess != null)
                 {
-                    ExitCode = myProcess.ExitCode;
+                    ExitCode = _myProcess.ExitCode;
                     if (Exited != null)
                     {
-                        //The process is exited already, but this command waits also until all output is recieved.
-                        //Only WaitForExit when someone is conntected to the exited event. For some reason a
+                        //The process is exited already, but this command waits also until all output is received.
+                        //Only WaitForExit when someone is connected to the exited event. For some reason a
                         //null reference is thrown sometimes when staging/unstaging in the commit dialog when
                         //we wait for exit, probably a timing issue... 
-                        myProcess.WaitForExit();
+                        _myProcess.WaitForExit();
 
                         Exited(this, e);
                     }
 
-                    lock (processLock)
+                    lock (_processLock)
                     {
-                        myProcess = null;
+                        _myProcess = null;
                     }
                 }
             }
@@ -161,10 +166,8 @@ namespace GitCommands
         public bool CollectOutput = true;
         public bool StreamOutput;
         public int ExitCode { get; set; }
-        public bool IsRunning { get { return myProcess != null && !myProcess.HasExited; } }
+        public bool IsRunning { get { return _myProcess != null && !_myProcess.HasExited; } }
         public StringBuilder Output { get; private set; }
         public StringBuilder ErrorOutput { get; private set; }
-
-        private Process myProcess;
     }
 }
