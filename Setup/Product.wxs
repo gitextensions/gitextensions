@@ -143,7 +143,7 @@
       <Component Id="GitExtensionsShellEx32.dll" Guid="*">
         <File
           Name="GitExtensionsShellEx32.dll"
-          Source="..\SimpleExt\Release\GitExtensionsShellEx.dll"
+          Source="..\GitExtensionsShellEx\Release\GitExtensionsShellEx32.dll"
           KeyPath="yes"/>
         
         <?foreach ShellExFileName in GitExtensionsShellEx32.dll?>
@@ -155,7 +155,7 @@
         <Condition>VersionNT64</Condition>
         <File
           Name="GitExtensionsShellEx64.dll"
-          Source="..\SimpleExt\Release-x64\GitExtensionsShellEx64.dll"
+          Source="..\GitExtensionsShellEx\Release-x64\GitExtensionsShellEx64.dll"
           KeyPath="yes"/>
 
         <?foreach ShellExFileName in GitExtensionsShellEx64.dll?>
