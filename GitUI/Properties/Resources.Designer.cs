@@ -479,6 +479,13 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap IconBlame {
+            get {
+                object obj = ResourceManager.GetObject("IconBlame", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap IconBranchCheckout {
             get {
                 object obj = ResourceManager.GetObject("IconBranchCheckout", resourceCulture);
@@ -517,6 +524,13 @@ namespace GitUI.Properties {
         public static System.Drawing.Bitmap IconCleanupRepo {
             get {
                 object obj = ResourceManager.GetObject("IconCleanupRepo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconCopyToClipboard {
+            get {
+                object obj = ResourceManager.GetObject("IconCopyToClipboard", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
