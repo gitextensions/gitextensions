@@ -1371,6 +1371,8 @@
     <None Include="Resources\Icons\IconFileHistory.png" />
     <None Include="Resources\Icons\IconCopyToClipboard.png" />
     <None Include="Resources\Icons\IconBlame.png" />
+    <None Include="Resources\Icons\IconEditFile.png" />
+    <None Include="Resources\Icons\IconFind.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
