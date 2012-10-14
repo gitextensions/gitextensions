@@ -372,6 +372,7 @@ namespace GitUI
             // 
             // resetCurrentBranchToHereToolStripMenuItem
             // 
+            this.resetCurrentBranchToHereToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconResetCurrentBranchToHere;
             this.resetCurrentBranchToHereToolStripMenuItem.Name = "resetCurrentBranchToHereToolStripMenuItem";
             this.resetCurrentBranchToHereToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.resetCurrentBranchToHereToolStripMenuItem.Text = "Reset current branch to here";
