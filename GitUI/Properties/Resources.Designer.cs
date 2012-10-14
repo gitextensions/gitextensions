@@ -528,6 +528,13 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap IconCommit {
+            get {
+                object obj = ResourceManager.GetObject("IconCommit", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap IconCopyToClipboard {
             get {
                 object obj = ResourceManager.GetObject("IconCopyToClipboard", resourceCulture);
@@ -566,6 +573,13 @@ namespace GitUI.Properties {
         public static System.Drawing.Bitmap IconFileHistory {
             get {
                 object obj = ResourceManager.GetObject("IconFileHistory", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconFileTree {
+            get {
+                object obj = ResourceManager.GetObject("IconFileTree", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
