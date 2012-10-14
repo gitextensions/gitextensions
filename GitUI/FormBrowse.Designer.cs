@@ -912,6 +912,7 @@ namespace GitUI
             // 
             // fileHistoryDiffToolstripMenuItem
             // 
+            this.fileHistoryDiffToolstripMenuItem.Image = global::GitUI.Properties.Resources.IconFileHistory;
             this.fileHistoryDiffToolstripMenuItem.Name = "fileHistoryDiffToolstripMenuItem";
             this.fileHistoryDiffToolstripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.fileHistoryDiffToolstripMenuItem.Text = "File history";
@@ -919,6 +920,7 @@ namespace GitUI
             // 
             // blameToolStripMenuItem
             // 
+            this.blameToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconBlame;
             this.blameToolStripMenuItem.Name = "blameToolStripMenuItem";
             this.blameToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.blameToolStripMenuItem.Text = "Blame";
@@ -940,6 +942,7 @@ namespace GitUI
             // 
             // openContainingFolderToolStripMenuItem
             // 
+            this.openContainingFolderToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconFileTree;
             this.openContainingFolderToolStripMenuItem.Name = "openContainingFolderToolStripMenuItem";
             this.openContainingFolderToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.openContainingFolderToolStripMenuItem.Text = "Open containing folder";
@@ -947,6 +950,7 @@ namespace GitUI
             // 
             // findInDiffToolStripMenuItem
             // 
+            this.findInDiffToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconFind;
             this.findInDiffToolStripMenuItem.Name = "findInDiffToolStripMenuItem";
             this.findInDiffToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
             this.findInDiffToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
