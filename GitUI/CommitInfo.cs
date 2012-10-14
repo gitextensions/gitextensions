@@ -28,9 +28,6 @@ namespace GitUI
 
             InitializeComponent();
             Translate();
-
-            _RevisionHeader.LinkClicked += RevisionInfoLinkClicked;
-            RevisionInfo.LinkClicked += RevisionInfoLinkClicked;
         }
 
         [DefaultValue(false)]
