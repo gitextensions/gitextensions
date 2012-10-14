@@ -584,6 +584,13 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap IconFilter {
+            get {
+                object obj = ResourceManager.GetObject("IconFilter", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap IconFind {
             get {
                 object obj = ResourceManager.GetObject("IconFind", resourceCulture);
