@@ -1313,7 +1313,6 @@
     <None Include="Resources\Icons\IconDirty.png" />
     <None Include="Resources\Icons\IconMixed.png" />
     <None Include="Resources\Icons\IconClean.png" />
-    <None Include="Resources\Icons\WorkingDirChanges.png" />
     <None Include="Resources\Icons\arrow_refresh_dirty.png" />
     <None Include="Resources\Icons\double_arrow_down.png" />
     <None Include="Resources\Icons\double_arrow_up.png" />
@@ -1327,18 +1326,13 @@
     <None Include="Resources\Icons\IconDirtySubmodules.png" />
     <None Include="Resources\Icons\stash.png" />
     <None Include="Resources\Icons\50.png" />
-    <None Include="Resources\Icons\increaseNumberOfLines.png" />
     <None Include="Resources\Icons\showEntireFile.png" />
-    <None Include="Resources\Icons\whitespaces.png" />
-    <None Include="Resources\Icons\decreaseNumberOfLines.png" />
     <None Include="Resources\Icons\33.png" />
     <None Include="Resources\Icons\35.png" />
     <None Include="Resources\Icons\3.png" />
     <None Include="Resources\Icons\4.png" />
     <None Include="Resources\Icons\bash.png" />
-    <None Include="Resources\Icons\open.png" />
     <None Include="Resources\Icons\40.png" />
-    <None Include="Resources\Icons\refresh.png" />
     <None Include="Resources\Icons\71.png" />
     <None Include="Resources\Icons\77.png" />
     <None Include="Resources\Icons\pageant_16.png" />
@@ -1352,15 +1346,12 @@
     <None Include="Resources\Icons\loadingpanel_static.png" />
     <None Include="Resources\Icons\Delete.png" />
     <None Include="Resources\Icons\ark_3_16.png" />
-    <None Include="Resources\Icons\char_libra_16.png" />
-    <None Include="Resources\Icons\char_scorpio_16.png" />
     <None Include="Resources\Icons\edit_clear_2_16.png" />
     <None Include="Resources\Icons\folder_remote_2_16.png" />
     <None Include="Resources\Icons\BranchCreate.png" />
     <None Include="Resources\Icons\TagCreate.png" />
     <None Include="Resources\Icons\BranchCheckout.png" />
     <None Include="Resources\Icons\RevisionCheckout.png" />
-    <None Include="Resources\Icons\TagCheckout.png" />
     <None Include="Resources\Icons\BranchDelete.png" />
     <None Include="Resources\Icons\IconCherryPick.png" />
     <None Include="Resources\Icons\TagDelete.png" />
@@ -1375,6 +1366,7 @@
     <None Include="Resources\Icons\IconFind.png" />
     <None Include="Resources\Icons\IconDiff.png" />
     <None Include="Resources\Icons\IconRecoverLostObjects.png" />
+    <None Include="Resources\Icons\IconViewFile.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
