@@ -605,6 +605,13 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap IconRecoverLostObjects {
+            get {
+                object obj = ResourceManager.GetObject("IconRecoverLostObjects", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap IconRemotes {
             get {
                 object obj = ResourceManager.GetObject("IconRemotes", resourceCulture);
