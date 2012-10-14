@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Security.Permissions;
 using System.Text;
+using System.Windows.Forms;
 using GitUIPluginInterfaces;
 
 namespace GitCommands
@@ -96,7 +97,7 @@ namespace GitCommands
                     if (!_myProcess.HasExited)
                     {
                         _myProcess.Exited -= ProcessExited;
-                        _myProcess.Kill();
+                        _myProcess.TerminateTree();
                     }
                     if (_myProcess != null) // process is null here if filter is a slow diff
                     {
