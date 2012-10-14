@@ -763,7 +763,7 @@ namespace GitUI
             // 
             // copyFilenameToClipboardToolStripMenuItem
             // 
-            this.copyFilenameToClipboardToolStripMenuItem.Image = global::GitUI.Properties.Resources.Copied;
+            this.copyFilenameToClipboardToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCopyToClipboard;
             this.copyFilenameToClipboardToolStripMenuItem.Name = "copyFilenameToClipboardToolStripMenuItem";
             this.copyFilenameToClipboardToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
             this.copyFilenameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
@@ -780,6 +780,7 @@ namespace GitUI
             // 
             // blameToolStripMenuItem1
             // 
+            this.blameToolStripMenuItem1.Image = global::GitUI.Properties.Resources.IconBlame;
             this.blameToolStripMenuItem1.Name = "blameToolStripMenuItem1";
             this.blameToolStripMenuItem1.Size = new System.Drawing.Size(268, 22);
             this.blameToolStripMenuItem1.Text = "Blame";
