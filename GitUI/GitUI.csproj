@@ -1369,6 +1369,7 @@
     <None Include="Resources\Icons\IconViewFile.png" />
     <None Include="Resources\Icons\IconFileTree.png" />
     <None Include="Resources\Icons\IconCommit.png" />
+    <None Include="Resources\Icons\IconFilter.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
