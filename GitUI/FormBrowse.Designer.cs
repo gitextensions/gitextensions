@@ -721,7 +721,7 @@ namespace GitUI
             // 
             // saveAsToolStripMenuItem
             // 
-            this.saveAsToolStripMenuItem.Image = global::GitUI.Properties.Resources.Save;
+            this.saveAsToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconSaveAs;
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
             this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.saveAsToolStripMenuItem.Text = "Save as...";
@@ -885,6 +885,7 @@ namespace GitUI
             // 
             // openWithDifftoolToolStripMenuItem
             // 
+            this.openWithDifftoolToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconDiffTool;
             this.openWithDifftoolToolStripMenuItem.Name = "openWithDifftoolToolStripMenuItem";
             this.openWithDifftoolToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
             this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
@@ -893,6 +894,7 @@ namespace GitUI
             // 
             // copyFilenameToClipboardToolStripMenuItem1
             // 
+            this.copyFilenameToClipboardToolStripMenuItem1.Image = global::GitUI.Properties.Resources.IconCopyToClipboard;
             this.copyFilenameToClipboardToolStripMenuItem1.Name = "copyFilenameToClipboardToolStripMenuItem1";
             this.copyFilenameToClipboardToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
             this.copyFilenameToClipboardToolStripMenuItem1.Size = new System.Drawing.Size(260, 22);
@@ -901,10 +903,11 @@ namespace GitUI
             // 
             // saveAsToolStripMenuItem1
             // 
+            this.saveAsToolStripMenuItem1.Image = global::GitUI.Properties.Resources.IconSaveAs;
             this.saveAsToolStripMenuItem1.Name = "saveAsToolStripMenuItem1";
             this.saveAsToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.saveAsToolStripMenuItem1.Size = new System.Drawing.Size(260, 22);
-            this.saveAsToolStripMenuItem1.Text = "Save as";
+            this.saveAsToolStripMenuItem1.Text = "Save as...";
             this.saveAsToolStripMenuItem1.Click += new System.EventHandler(this.saveAsToolStripMenuItem1_Click);
             // 
             // fileHistoryDiffToolstripMenuItem
@@ -1188,7 +1191,7 @@ namespace GitUI
             // 
             // cloneToolStripMenuItem
             // 
-            this.cloneToolStripMenuItem.Image = global::GitUI.Properties.Resources.SaveAs;
+            this.cloneToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCloneRepoGit;
             this.cloneToolStripMenuItem.Name = "cloneToolStripMenuItem";
             this.cloneToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.cloneToolStripMenuItem.Text = "Clone repository";
@@ -1196,7 +1199,7 @@ namespace GitUI
             // 
             // cloneSVNToolStripMenuItem
             // 
-            this.cloneSVNToolStripMenuItem.Image = global::GitUI.Properties.Resources.SaveAs;
+            this.cloneSVNToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCloneRepoSvn;
             this.cloneSVNToolStripMenuItem.Name = "cloneSVNToolStripMenuItem";
             this.cloneSVNToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.cloneSVNToolStripMenuItem.Text = "Clone SVN repository";

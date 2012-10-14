@@ -216,7 +216,7 @@ namespace GitUI
             // 
             // Save
             // 
-            this.Save.Image = global::GitUI.Properties.Resources.Save;
+            this.Save.Image = global::GitUI.Properties.Resources.IconSave;
             this.Save.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Save.Location = new System.Drawing.Point(3, 72);
             this.Save.Name = "Save";
