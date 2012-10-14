@@ -804,9 +804,9 @@ namespace GitUI
         {
             var unstagedFiles = Module.GetUnstagedFiles();
             // Show a form asking the user if they want to reset the changes.
-            FormResetChanges.ResultType resetType = FormResetChanges.ShowResetDialog(owner, unstagedFiles.Any(item => !item.IsNew), unstagedFiles.Any(item => item.IsNew));
+            FormResetChanges.ActionEnum resetAction = FormResetChanges.ShowResetDialog(owner, unstagedFiles.Any(item => !item.IsNew), unstagedFiles.Any(item => item.IsNew));
 
-            if (resetType == FormResetChanges.ResultType.CANCEL)
+            if (resetAction == FormResetChanges.ActionEnum.Cancel)
             {
                 return false;
             }
@@ -815,7 +815,7 @@ namespace GitUI
             Module.ResetHard("");
 
             // Also delete new files, if requested.
-            if (resetType == FormResetChanges.ResultType.RESET_AND_DELETE)
+            if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)
             {
                 foreach (var item in unstagedFiles.Where(item => item.IsNew))
                 {

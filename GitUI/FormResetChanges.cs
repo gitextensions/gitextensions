@@ -10,9 +10,9 @@ namespace GitUI
     {
         // CANCEL must be placed at first position because it is the default value when
         // closing the dialog via the X button
-        public enum ResultType { CANCEL, RESET, RESET_AND_DELETE };
+        public enum ActionEnum { Cancel, Reset, ResetAndDelete };
 
-        public ResultType Result { get; private set; }
+        public ActionEnum SelectedAction { get; private set; }
 
         public FormResetChanges(bool hasExistingFiles, bool hasNewFiles)
         {
@@ -43,24 +43,24 @@ namespace GitUI
         /// <param name="owner">Shows this form as a modal dialog with the specified owner.</param>
         /// <param name="hasExistingFiles">Are there existing (modified) files selected?</param>
         /// <param name="hasNewFiles">Are there new (untracked) files selected?</param>
-        public static ResultType ShowResetDialog(IWin32Window owner, bool hasExistingFiles, bool hasNewFiles)
+        public static ActionEnum ShowResetDialog(IWin32Window owner, bool hasExistingFiles, bool hasNewFiles)
         {
             using (FormResetChanges form = new FormResetChanges(hasExistingFiles, hasNewFiles))
             {
                 form.ShowDialog(owner);
-                return form.Result;
+                return form.SelectedAction;
             }
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            Result = ResultType.CANCEL;
+            SelectedAction = ActionEnum.Cancel;
             Close();
         }
 
         private void btnReset_Click(object sender, EventArgs e)
         {
-            Result = (cbDeleteNewFiles.Checked) ? ResultType.RESET_AND_DELETE : ResultType.RESET;
+            SelectedAction = (cbDeleteNewFiles.Checked) ? ActionEnum.ResetAndDelete : ActionEnum.Reset;
             Close();
         }
     }
